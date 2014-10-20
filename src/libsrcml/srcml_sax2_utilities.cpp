@@ -123,7 +123,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char* context_elemen
     // compile the xpath that will be applied to each unit
     xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
     if (compiled_xpath == 0) {
-        fprintf(stderr, "srcml2src:  Unable to compile XPath '%s'\n", s.c_str());
+        fprintf(stderr, "libsrcml:  Unable to compile XPath '%s'\n", s.c_str());
         return SRCML_STATUS_INVALID_INPUT;
     }
 

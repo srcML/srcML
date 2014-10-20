@@ -272,72 +272,74 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
   if(is_outputting_unit) return false;
 
-    if(first) {
+  bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
-        // Open for write;
-        out.initWriter();
+  if(first) {
 
-        out.outputXMLDecl();
-        out.outputPreRootProcessingInstruction();
+    // Open for write;
+    out.initWriter();
 
-        // root unit for compound srcML documents
+    out.outputXMLDecl();
+    out.outputPreRootProcessingInstruction();
 
-        if((options & SRCML_OPTION_ARCHIVE) > 0)
-            out.startUnit(0, revision, directory, filename, version, 0, 0, attributes, true);
+    // root unit for compound srcML documents
 
-        if ((options & SRCML_OPTION_ARCHIVE) > 0)
-            out.processText("\n\n", 2);
+    if(is_archive)
+        out.startUnit(0, revision, directory, filename, version, 0, 0, attributes, true);
 
-    }
-
-    first = false;
-
-    const char * end_start_unit = (char *)strchr(xml, '>');
-    if(!end_start_unit) return false;
-
-    /** extract language */
-    char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
-
-    char * language_start_value = 0;
-    char * language_end_value = 0;
-    if(language_start_name) {
-
-      language_start_value = (char *)strchr(language_start_name, '"');
-      language_end_value = (char *)strchr(language_start_value + 1, '"');
-      (*language_end_value) = '\0';
-
-    } 
-
-    /** is there a cpp namespace */
-    bool is_cpp = strnstr(xml, SRCML_CPP_NS_URI, end_start_unit - xml) != 0;
-
-    OPTION_TYPE save_options = options;
-    if(is_cpp) options |= SRCML_OPTION_CPP;
-
-    out.startUnit(language_start_value ? language_start_value + 1 : 0, revision, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                         unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
-
-    if(language_start_name) (*language_end_value) = '"';
-
-    options = save_options;
-
-    size_t size = strlen(end_start_unit);
-
-    if(size > 1) {
-
-      while(end_start_unit[--size] != '<')
-        ;
-
-      xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
-
-    }
-
-    out.srcMLTextWriterEndElement(out.getWriter());
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
+    if (is_archive)
         out.processText("\n\n", 2);
 
-    return true;
+  }
+
+  first = false;
+
+  const char * end_start_unit = (char *)strchr(xml, '>');
+  if(!end_start_unit) return false;
+
+  /** extract language */
+  char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
+
+  char * language_start_value = 0;
+  char * language_end_value = 0;
+  if(language_start_name) {
+
+    language_start_value = (char *)strchr(language_start_name, '"');
+    language_end_value = (char *)strchr(language_start_value + 1, '"');
+    (*language_end_value) = '\0';
+
+  } 
+
+  /** is there a cpp namespace */
+  bool is_cpp = strnstr(xml, SRCML_CPP_NS_URI, end_start_unit - xml) != 0;
+
+  OPTION_TYPE save_options = options;
+  if(is_cpp) options |= SRCML_OPTION_CPP;
+
+  out.startUnit(language_start_value ? language_start_value + 1 : 0, is_archive && unit->revision ? unit->revision->c_str() : revision, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+                       unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
+
+  if(language_start_name) (*language_end_value) = '"';
+
+  options = save_options;
+
+  size_t size = strlen(end_start_unit);
+
+  if(size > 1) {
+
+    while(end_start_unit[--size] != '<')
+      ;
+
+    xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
+
+  }
+
+  out.srcMLTextWriterEndElement(out.getWriter());
+
+  if ((options & SRCML_OPTION_ARCHIVE) > 0)
+      out.processText("\n\n", 2);
+
+  return true;
 
 }
 

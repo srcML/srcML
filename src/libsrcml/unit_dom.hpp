@@ -403,6 +403,7 @@ public :
 
             for(std::vector<const xmlChar *>::const_iterator citr = attribute_value_pool.begin(); citr != attribute_value_pool.end(); ++citr)
                 free((void *)*citr);
+            attribute_value_pool.clear();
 
             // free up the document that has this particular unit
             xmlNodePtr aroot = ctxt->myDoc->children;

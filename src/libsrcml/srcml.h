@@ -63,7 +63,7 @@ extern "C" {
 /** number representing libsrcml version */
 #define SRCML_VERSION_NUMBER 8000
 /** string containing libsrcml version */
-#define SRCML_VERSION_STRING "libsrcml 0.8"
+#define SRCML_VERSION_STRING "0.8.0"
 
 /* Cleanup the globally allocated items */
 __LIBSRCML_DECL void srcml_cleanup_globals();
@@ -388,6 +388,7 @@ __LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
 /* Query options of srcml unit */
 __LIBSRCML_DECL const char* srcml_unit_get_encoding (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_revision (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_language (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_filename (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_directory(const struct srcml_unit*);

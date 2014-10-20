@@ -73,12 +73,13 @@ verify_test(srcml.SRCML_VERSION_STRING, srcml.version_string())
 
 # test set/get archive
 archive = srcml.srcml_archive()
-archive.set_filename("project")
 archive.set_language("C++")
+archive.set_filename("project")
 archive.set_directory("dir")
 archive.set_version("1.0")
-verify_test("project", archive.get_filename())
 verify_test("C++", archive.get_language())
+verify_test(srcml.SRCML_VERSION_STRING, archive.get_revision())
+verify_test("project", archive.get_filename())
 verify_test("dir", archive.get_directory())
 verify_test("1.0", archive.get_version())
 
@@ -112,7 +113,7 @@ file = open("a.foo", "w")
 gen = file.write("")
 file.close()
 archive = srcml.srcml_archive()
-archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP | srcml.SRCML_OPTION_HASH)
+archive.disable_option(srcml.SRCML_OPTION_HASH)
 archive.disable_option(srcml.SRCML_OPTION_ARCHIVE)
 archive.register_file_extension("foo", "C++")
 archive.register_namespace("s", "http://www.sdml.info/srcML/src")
@@ -123,14 +124,14 @@ unit.parse_filename("a.foo")
 archive.write_unit(unit)
 archive.close()
 os.remove("a.foo")
-verify_test("""<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><macro-list token="MACRO" type="src:macro"/></s:unit>""", unit.get_xml())
+verify_test("""<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++"><macro-list token="MACRO" type="src:macro"/></s:unit>""", unit.get_xml())
 
 # write/parse tests
 src = "a;\n"
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src">
+<unit xmlns="http://www.sdml.info/srcML/src" revision=\"""" + srcml.SRCML_VERSION_STRING + """\">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
 </unit>
@@ -141,7 +142,7 @@ file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
 archive = srcml.srcml_archive()
-archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP | srcml.SRCML_OPTION_HASH)
+archive.disable_option(srcml.SRCML_OPTION_HASH)
 archive.write_open_filename("project.xml")
 unit = srcml.srcml_unit(archive)
 unit.parse_filename("a.cpp")
@@ -157,7 +158,7 @@ os.remove("project.xml")
 
 # memory
 archive = srcml.srcml_archive()
-archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP | srcml.SRCML_OPTION_HASH)
+archive.disable_option(srcml.SRCML_OPTION_HASH)
 archive.write_open_memory()
 unit = srcml.srcml_unit(archive)
 unit.set_language("C++")
@@ -172,7 +173,7 @@ file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
 archive = srcml.srcml_archive()
-archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP | srcml.SRCML_OPTION_HASH)
+archive.disable_option(srcml.SRCML_OPTION_HASH)
 fd = os.open("project.xml", os.O_WRONLY | os.O_CREAT)
 archive.write_open_fd(fd)
 src_fd = os.open("a.cpp", os.O_RDONLY)
@@ -196,7 +197,7 @@ file = open("a.cpp", "w")
 gen = file.write(src)
 file.close()
 archive = srcml.srcml_archive()
-archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP | srcml.SRCML_OPTION_HASH)
+archive.disable_option(srcml.SRCML_OPTION_HASH)
 file = libc.fopen("project.xml", "w")
 archive.write_open_FILE(file)
 src_file = libc.fopen("a.cpp", "r")
@@ -217,9 +218,9 @@ os.remove("project.xml")
 
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src">
+<unit xmlns="http://www.sdml.info/srcML/src" revision=\"""" + srcml.SRCML_VERSION_STRING + """\">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><f:foo xmlns:s="srcML" s:src="ML" xmlns:f="bar">source</f:foo>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++"><f:foo xmlns:s="srcML" s:src="ML" xmlns:f="bar">source</f:foo>
 </unit>
 
 </unit>
@@ -227,18 +228,19 @@ asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 # write by element
 archive = srcml.srcml_archive()
-archive.disable_option(srcml.SRCML_OPTION_TIMESTAMP | srcml.SRCML_OPTION_HASH)
+archive.disable_option(srcml.SRCML_OPTION_HASH)
 archive.write_open_memory()
 unit = srcml.srcml_unit(archive)
 unit.set_language("C++")
-archive.write_start_unit(unit);
-archive.write_start_element("f","foo", "bar");
-archive.write_namespace("s", "srcML");
-archive.write_attribute("s", "src", None, "ML");
-archive.write_string("source")
-archive.write_end_element();
-archive.write_string("\n")
-archive.write_end_unit();
+unit.write_start_unit();
+unit.write_start_element("f","foo", "bar");
+unit.write_namespace("s", "srcML");
+unit.write_attribute("s", "src", None, "ML");
+unit.write_string("source")
+unit.write_end_element();
+unit.write_string("\n")
+unit.write_end_unit();
+archive.write_unit(unit)
 archive.close()
 
 verify_test(asrcml, archive.srcML())
@@ -246,9 +248,9 @@ verify_test(asrcml, archive.srcML())
 # read/unparse
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src">
+<unit xmlns="http://www.sdml.info/srcML/src" revision=\"""" + srcml.SRCML_VERSION_STRING + """\">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
 </unit>
@@ -323,12 +325,12 @@ os.remove("project.xml")
 
 src = "b;\n"
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src">
+<unit xmlns="http://www.sdml.info/srcML/src" revision=\"""" + srcml.SRCML_VERSION_STRING + """\">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
 </unit>
@@ -466,12 +468,12 @@ archive.close()
 verify_test(asrcml, oarchive.srcML())
 
 python_srcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src">
+<unit xmlns="http://www.sdml.info/srcML/src" revision=\"""" + srcml.SRCML_VERSION_STRING + """\">
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Python"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="Python"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Python"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="Python"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
 </unit>
@@ -518,20 +520,21 @@ oarchive.close()
 archive.close()
 
 verify_test("""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src"/>
+<unit xmlns="http://www.sdml.info/srcML/src" revision=\"""" + srcml.SRCML_VERSION_STRING + """\"/>
 """, oarchive.srcML())
 
 # unit set/get
 archive = srcml.srcml_archive()
 unit = srcml.srcml_unit(archive)
-unit.set_filename("b.cpp")
 unit.set_language("C")
+unit.set_filename("b.cpp")
 unit.set_directory("directory")
 unit.set_version("1.1")
 unit.set_timestamp("today")
 unit.set_hash("0123456789abcdef")
-verify_test("b.cpp", unit.get_filename())
 verify_test("C", unit.get_language())
+verify_test(srcml.SRCML_VERSION_STRING, unit.get_revision())
+verify_test("b.cpp", unit.get_filename())
 verify_test("directory", unit.get_directory())
 verify_test("1.1", unit.get_version())
 verify_test("today", unit.get_timestamp())
@@ -573,7 +576,7 @@ xml = file.read()
 file.close()
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
 verify_test(asrcml, xml)
@@ -586,6 +589,7 @@ srcml.set_timestamp("timestamp")
 srcml.set_hash("hash")
 
 verify_test("C++", srcml.get_language())
+verify_test(srcml.SRCML_VERSION_STRING, srcml.get_revision())
 verify_test("a.cpp", srcml.get_filename())
 verify_test("directory", srcml.get_directory())
 verify_test("version", srcml.get_version())
@@ -641,7 +645,7 @@ file.close()
 os.remove("a.foo")
 
 asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="a.foo" timestamp="timestamp" hash="hash"><macro-list token="MACRO" type="src:macro"/><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
+<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++" filename="a.foo" timestamp="timestamp" hash="hash"><macro-list token="MACRO" type="src:macro"/><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
 """
 

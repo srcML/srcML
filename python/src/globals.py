@@ -126,6 +126,10 @@ libsrcml.srcml_register_namespace.argtypes = [c_char_p, c_char_p]
 libsrcml.srcml_get_encoding.restype = c_char_p
 libsrcml.srcml_get_encoding.argtypes = []
 
+# const char* srcml_get_revision ();
+libsrcml.srcml_get_revision.restype = c_char_p
+libsrcml.srcml_get_revision.argtypes = []
+
 # const char* srcml_get_language ();
 libsrcml.srcml_get_language.restype = c_char_p
 libsrcml.srcml_get_language.argtypes = []
@@ -273,6 +277,9 @@ def register_macro(token, type) :
 
 def get_encoding() :
     return libsrcml.srcml_get_encoding()
+
+def get_revision() :
+    return libsrcml.srcml_get_revision()
 
 def get_language() :
     return libsrcml.srcml_get_language()

@@ -2,15 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="interface" filename="interface_cs">
 
 <unit>
-<class type="interface">interface <name>I</name> 
-<block>{}</block></class>
+<interface>interface <name>I</name> 
+<block>{}</block></interface>
 </unit>
 
 <unit>
-<class type="interface">interface <name>I</name> 
+<interface>interface <name>I</name> 
 <block>{
   <function_decl><type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
-}</block></class>
+}</block></interface>
 </unit>
 
 </unit>

@@ -152,7 +152,7 @@ enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
-    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT
+    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT, ANNOTATION_DEFN
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -546,6 +546,7 @@ tokens {
     SINTERFACE;
     SSYNCHRONIZED_STATEMENT;
     SANNOTATION;
+    SANNOTATION_DEFN;
     SSTATIC_BLOCK;
 
     // C#
@@ -886,6 +887,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
 
         { stmt_type == UNION_DECL }?
         union_declaration |
+
+        { stmt_type == ANNOTATION_DEFN }?
+        annotation_definition |
 
         { stmt_type == ACCESS_REGION }?
         access_specifier_region |
@@ -2928,7 +2932,7 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        class_preamble (interface_annotation | INTERFACE) class_header lcurly
+        class_preamble INTERFACE class_header lcurly
 ;
 
 // match struct declaration
@@ -2968,6 +2972,20 @@ union_declaration[] { ENTRY_DEBUG } :
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
+annotation_definition[] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
+
+            // start the interface definition
+            startElement(SANNOTATION_DEFN);
+
+            // java interfaces end at the end of the block
+            setMode(MODE_END_AT_BLOCK);
+        }
+        class_preamble ATSIGN INTERFACE class_header lcurly
+;
+
 // default private/public section for C++
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
@@ -2998,7 +3016,7 @@ class_default_access_action[int access_token] { ENTRY_DEBUG } :
 // handle class header
 class_header[] { ENTRY_DEBUG } :
 
-        { isoption(parser_options, SRCML_OPTION_CPP) }?
+        { isoption(parser_options, SRCML_OPTION_CPP) && next_token() != DCOLON }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call class_header_base |
 
@@ -3009,7 +3027,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name_inner[false] | keyword_name) (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name | keyword_name) (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -3924,7 +3942,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                     (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
 #endif
                     && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
-                     && (LA(1) != TEMPLATE || next_token() != TEMPOPS) 
+                     && (LA(1) != TEMPLATE || next_token() != TEMPOPS) && (LA(1) != ATOMIC || next_token() != LPAREN)
                  }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
@@ -3973,12 +3991,12 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                                                || (!keyword_name_token_set.member(next_token())
                                                 || (next_token() == LBRACKET && next_token_two() == LBRACKET)))
                                                }?
-                (CLASS               set_type[type, CLASS_DECL]     |
-                 CXX_CLASS           set_type[type, CLASS_DECL]     |
-                 STRUCT              set_type[type, STRUCT_DECL]    |
-                 UNION               set_type[type, UNION_DECL]     |
-                 INTERFACE           set_type[type, INTERFACE_DECL] |
-                 ATSIGN INTERFACE set_type[type, INTERFACE_DECL])
+                (CLASS               set_type[type, CLASS_DECL]       |
+                 CXX_CLASS           set_type[type, CLASS_DECL]       |
+                 STRUCT              set_type[type, STRUCT_DECL]      |
+                 UNION               set_type[type, UNION_DECL]       |
+                 INTERFACE           set_type[type, INTERFACE_DECL]   |
+                 ATSIGN INTERFACE    set_type[type, ANNOTATION_DEFN])
                 set_bool[lcurly, LA(1) == LCURLY]
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
@@ -4043,7 +4061,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION) }?
-                ({ LA(1) == DECLTYPE || LA(1) == ATOMIC }? type_specifier_call | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
+                ({ LA(1) == DECLTYPE }? type_specifier_call | { next_token() == LPAREN }? atomic |pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -4327,7 +4345,7 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         enum_definition_complete |
 
-        type_specifier_call
+        { LA(1) == DECLTYPE }? type_specifier_call | atomic
 
         )
 
@@ -4383,7 +4401,7 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 
 type_specifier_call[] { ENTRY_DEBUG } :
 
-    {inputState->guessing }? (decltype_call_full | atomic_call_full) | decltype_call | atomic_call
+    { inputState->guessing }? (decltype_call_full) | decltype_call
 
 ;
 
@@ -4407,8 +4425,23 @@ decltype_call_full[] { ENTRY_DEBUG } :
         DECLTYPE paren_pair
 ;
 
-
 // C11 markup _Atomic 
+atomic[] { ENTRY_DEBUG } :
+
+    { next_token() == LPAREN }? ({ inputState->guessing }? atomic_call_full | atomic_call) | atomic_specifier
+
+;
+
+// C11 markup _Atomic as specifier
+atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        ATOMIC
+
+;
+
+// C11 markup _Atomic as call
 atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
 
@@ -4421,6 +4454,7 @@ atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCou
         }
         ATOMIC (options { greedy = true; } : complete_argument_list)?
         { setTypeCount(save_type_count); }
+
 ;
 
 // C++ completely match without markup _Atomic
@@ -5312,7 +5346,7 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
 
 // mark specifiers
 specifier[] { ENTRY_DEBUG } :
-        single_keyword_specifier | alignas_specifier | macro_specifier_call
+        single_keyword_specifier | alignas_specifier | macro_specifier_call | atomic
 
 ;
 
@@ -5516,16 +5550,6 @@ destructor_header[] { ENTRY_DEBUG } :
         {
             setMode(MODE_FUNCTION_TAIL);
         }
-;
-
-// @interface
-interface_annotation[] { LightweightElement element(this); ENTRY_DEBUG } :
-        {
-            // start the function call element
-            startElement(SANNOTATION);
-        }
-        ATSIGN INTERFACE
-
 ;
 
 // Java annotation

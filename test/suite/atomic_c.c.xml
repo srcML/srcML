@@ -2,15 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="atomic" filename="atomic_c">
 
 <unit>
-<decl_stmt><decl><type><atomic>_Atomic</atomic> <name>double</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>_Atomic</specifier> <name>double</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>const</specifier> <atomic>_Atomic</atomic> <name>double</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>const</specifier> <specifier>_Atomic</specifier> <name>double</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><atomic>_Atomic</atomic> <specifier>const</specifier> <name>double</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>_Atomic</specifier> <specifier>const</specifier> <name>double</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -35,6 +35,19 @@
 
 <unit>
 <decl_stmt><decl><type><specifier>const</specifier> <atomic>_Atomic<argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></atomic> <name>A</name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+
+<unit>
+<struct_decl><specifier>_Atomic</specifier> struct <name>s</name>;</struct_decl>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><specifier>_Atomic</specifier> struct <name>s</name></type> <name>t</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><atomic>_Atomic<argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></atomic></type> <name>bar</name></decl>;</decl_stmt>
 </unit>
 
 </unit>

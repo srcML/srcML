@@ -88,6 +88,38 @@ int main() {
     }
 
     /*
+      srcml_archive_get_revision
+    */
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        dassert(srcml_archive_get_revision(archive), std::string(SRCML_VERSION_STRING));
+        srcml_free_archive(archive);
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        archive->revision = boost::optional<std::string>();
+        dassert(srcml_archive_get_revision(archive), 0);
+        srcml_free_archive(archive);
+    }
+
+    {
+        dassert(srcml_archive_get_revision(0), 0);
+    }
+
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        archive->revision = "foo";
+        dassert(srcml_archive_get_revision(archive), std::string("foo"));
+        srcml_free_archive(archive);
+    }
+
+    /*
       srcml_archive_get_language
     */
 

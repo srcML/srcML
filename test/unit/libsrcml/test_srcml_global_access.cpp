@@ -328,6 +328,27 @@ int main() {
     }
 
     /*
+      srcml_get_revision
+    */
+
+    {
+
+        dassert(srcml_get_revision(), std::string(SRCML_VERSION_STRING));
+    }
+
+    {
+
+        global_archive.revision = boost::optional<std::string>();
+        dassert(srcml_get_revision(), 0);
+    }
+
+    {
+
+        global_archive.revision = "foo";
+        dassert(srcml_get_revision(), std::string("foo"));
+    }
+
+    /*
       srcml_get_language
     */
 

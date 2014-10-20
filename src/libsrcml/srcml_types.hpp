@@ -190,6 +190,8 @@ struct srcml_unit {
 
     /** source encoding */
     boost::optional<std::string> encoding;
+    /** an attribute for a revision */
+    boost::optional<std::string> revision;
     /** an attribute for a language */
     boost::optional<std::string> language;
     /** an attribute name for a file */

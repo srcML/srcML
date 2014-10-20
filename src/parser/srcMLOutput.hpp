@@ -69,7 +69,7 @@ public:
                 int tabsize);
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
-    void initWriter();
+    int initWriter();
     xmlTextWriter * getWriter();
     void setDepth(int thedepth);
 
@@ -227,7 +227,6 @@ public:
     void processNull(const antlr::RefToken& token);
     void processNil(const antlr::RefToken& token);
     void processComplex(const antlr::RefToken& token);
-    void processInterface(const antlr::RefToken& token);
     void processEscape(const antlr::RefToken& token);
     void processStaticAssert(const antlr::RefToken& token);
     void processClassInterface(const antlr::RefToken& token);
