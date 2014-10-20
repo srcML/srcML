@@ -1353,7 +1353,59 @@ int main() {
     run_xpath_test("is_default_parameter/is_default_parameter.cpp", tempXPath, 1);
     run_xpath_test("is_default_parameter/is_default_parameter.cs", tempXPath, 0);
 
+    // is_in_param
+    tempXPath = 
+        "//src:argument[src:is_in_param()]"
+    ;
+    run_xpath_test("is_in_param/is_in_param.cs", tempXPath, 1);
 
+    // is_constrained
+    tempXPath = 
+        "//src:function[src:is_constrained()]"
+        "| //src:function_decl[src:is_constrained()]"
+        "| //src:class[src:is_constrained()]"
+        "| //src:class_decl[src:is_constrained()]"
+        "| //src:struct[src:is_constrained()]"
+        "| //src:struct_decl[src:is_constrained()]"
+        "| //src:decl[src:is_constrained()]"
+        "| //src:type[src:is_constrained()]"
+        "| //src:param[src:is_constrained()]"
+        "| //src:argument_list[src:is_constrained()]"
+        "| //src:argument[src:is_constrained()]"
+    ;
+    // TODO: AWaiting fix!
+    // run_xpath_test("is_constrained/is_constrained.cs", tempXPath, 4);
+    run_xpath_test("is_constrained/is_constrained.java", tempXPath, 16);
+
+    // is_bound
+    tempXPath = 
+        "//src:argument[src:is_bound()]"
+    ;
+    run_xpath_test("is_bound/is_bound.java", tempXPath, 4);
+
+    // is_unbound
+    tempXPath = 
+        "//src:argument[src:is_unbound()]"
+    ;
+    run_xpath_test("is_unbound/is_unbound.java", tempXPath, 1);
+
+    // is_upper_bound
+    tempXPath = 
+        "//src:argument[src:is_upper_bound()]"
+    ;
+    run_xpath_test("is_upper_bound/is_upper_bound.java", tempXPath, 3);
+
+    // is_wildcard
+    tempXPath = 
+        "//src:argument[src:is_wildcard()]"
+    ;
+    run_xpath_test("is_wildcard/is_wildcard.java", tempXPath, 3);
+
+    // is_lower_bound
+    tempXPath = 
+        "//src:argument[src:is_lower_bound()]"
+    ;
+    run_xpath_test("is_lower_bound/is_lower_bound.java", tempXPath, 1);
 
     // Not implemented yet!
     // // has_friends

@@ -1268,6 +1268,80 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_in_param", "src:specifier[.='in']");
 
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_constrained", 
+        "("
+            "ancestor::src:unit[@language='Java']"
+             " and "
+            "("
+                "("
+                    "(self::src:function or self::src:function_decl)"
+                    "  and "
+                    "("
+                        "src:type/src:argument_list[@type='template']/src:argument[src:extends or src:super]"
+                    ")"
+                ")"
+                " or "
+                "("
+                    "self::src:argument"
+                    "  and "
+                    "("
+                        "src:extends"
+                        "  or "
+                        "src:super"
+                    ")"
+                ")"
+                " or  "
+                "("
+                    "(self::src:type or self::src:class or self::src:class_decl)"
+                    "  and "
+                    "("
+                        "src:name/src:argument_list[@type='template']/src:argument[src:extends or src:super]"
+                        "  or "
+                        "src:name/src:name/src:argument_list[@type='template']/src:argument[src:extends or src:super]"
+                    ")"
+                ")"
+                " or  "
+                "("
+                    "(self::src:decl)"
+                    "  and "
+                    "("
+                        "src:type/src:name/src:argument_list[@type='template']/src:argument[src:extends or src:super]"
+                        " or "
+                        "src:type/src:name/src:name/src:argument_list[@type='template']/src:argument[src:extends or src:super]"
+                    ")"
+                ")"
+                " or  "
+                "("
+                    "(self::src:param)"
+                    "  and "
+                    "("
+                        "src:decl/src:type/src:name/src:argument_list[@type='template']/src:argument[src:extends or src:super]"
+                        "  or "
+                        "src:decl/src:type/src:name/src:name/src:argument_list[@type='template']/src:argument[src:extends or src:super]"
+                    ")"
+                ")"
+                " or "
+                "("
+                    "self::src:argument_list[@type='template']"
+                    "  and "
+                    "src:argument[src:extends or src:super]"
+                ")"
+                " or "
+                "("
+                    "self::src:argument_list[@type='template']"
+                    "  and "
+                    "src:argument[src:extends or src:super]"
+                ")"
+            ")"
+        ")"
+        " or "
+        "("
+            "ancestor::src:unit[@language='C#']"
+            "  and "
+            "src:where"
+        ")"
+    );
+
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_bound", "self::src:argument/ancestor::src:argument_list[@type='template'] and (src:extends or src:super)");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_unbound", "self::src:argument/ancestor::src:argument_list[@type='template'] and not(src:extends or src:super)");
@@ -1404,7 +1478,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "ref_qualifiers", "src:ref_qualifier");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "return_type", "src:type/*[ not( self::src:specifier[ .='static' or .='extern' or .='public' or .='internal' or .='protected' or .='private' or .='unsafe' or .='synchronized' or .='partial' or .='inline' or .='constexpr' or .='override' or .='friend' or .='virtual' or .='explicit' or .='implicit' or .='async' or .='new' or .='sealed' or .='final' or .='native' or .='abstract' or .='default' ] or self::src:annotation or self::src:attribute ) ]");
+    // xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "return_type", "src:type/*[ not( self::src:specifier[ .='static' or .='extern' or .='public' or .='internal' or .='protected' or .='private' or .='unsafe' or .='synchronized' or .='partial' or .='inline' or .='constexpr' or .='override' or .='friend' or .='virtual' or .='explicit' or .='implicit' or .='async' or .='new' or .='sealed' or .='final' or .='native' or .='abstract' or .='default' ] or self::src:annotation or self::src:attribute ) ]");
 
     // register all the xpath extension functions
     for (std::vector<struct xpath_ext_function>::size_type i = 0; i < MACROS.size(); ++i) {
