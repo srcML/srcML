@@ -715,28 +715,29 @@ int main() {
     run_xpath_test("is_private/is_private.java", tempXPath, 6);
 
 
-    // // is_protected
-    // tempXPath =
-    //     "//src:function_decl[src:is_protected()]"
-    //     "| //src:function[src:is_protected()]"
-    //     "| //src:constructor[src:is_protected()]"
-    //     "| //src:constructor_decl[src:is_protected()]"
-    //     "| //src:destructor[src:is_protected()]"
-    //     "| //src:destructor_decl[src:is_protected()]"
-    //     "| //src:decl_stmt[src:is_protected()]"
-    //     "| //src:class[src:is_protected()]"
-    //     "| //src:class_decl[src:is_protected()]"
-    //     "| //src:struct[src:is_protected()]"
-    //     "| //src:struct_decl[src:is_protected()]"
-    //     "| //src:enum[src:is_protected()]"
-    //     "| //src:property[src:is_protected()]"
-    //     "| //src:event[src:is_protected()]"
-    //     "| //src:using[src:is_protected()]"
-    //     "| //src:typedef[src:is_protected()]"
-    // ;
-    // run_xpath_test("is_protected/is_protected.cpp", tempXPath, 32);
-    // run_xpath_test("is_protected/is_protected.cs", tempXPath, 12);
-    // run_xpath_test("is_protected/is_protected.java", tempXPath, 6);
+    // is_protected
+    tempXPath =
+        "//src:function_decl[src:is_protected()]"
+        "| //src:function[src:is_protected()]"
+        "| //src:constructor[src:is_protected()]"
+        "| //src:constructor_decl[src:is_protected()]"
+        "| //src:destructor[src:is_protected()]"
+        "| //src:destructor_decl[src:is_protected()]"
+        "| //src:decl_stmt[src:is_protected()]"
+        "| //src:class[src:is_protected()]"
+        "| //src:class_decl[src:is_protected()]"
+        "| //src:struct[src:is_protected()]"
+        "| //src:struct_decl[src:is_protected()]"
+        "| //src:enum[src:is_protected()]"
+        "| //src:property[src:is_protected()]"
+        "| //src:event[src:is_protected()]"
+        "| //src:using[src:is_protected()]"
+        "| //src:typedef[src:is_protected()]"
+        "| //src:interface[src:is_protected()]"
+    ;
+    run_xpath_test("is_protected/is_protected.cpp", tempXPath, 32);
+    run_xpath_test("is_protected/is_protected.cs", tempXPath, 12);
+    run_xpath_test("is_protected/is_protected.java", tempXPath, 6);
 
 
     // // is_public
@@ -783,96 +784,96 @@ int main() {
     // ;
     // run_xpath_test("is_internal/is_internal.cs", tempXPath, 13);
 
-    // // is_volatile
-    // tempXPath =
-    //     "//src:function_decl[src:is_volatile()]"
-    //     "| //src:function[src:is_volatile()]"
-    //     "| //src:decl_stmt[src:is_volatile()]"
-    //     "| //src:decl[src:is_volatile()]"
-    //     "| //src:asm[src:is_volatile()]"
-    //     "| //src:using[src:is_volatile()]"
-    //     "| //src:type[src:is_volatile()]"
-    //     "| //src:typedef[src:is_volatile()]"
-    // ;
-    // run_xpath_test("is_volatile/is_volatile.c", tempXPath, 3);
-    // run_xpath_test("is_volatile/is_volatile.cpp", tempXPath, 9);
-    // run_xpath_test("is_volatile/is_volatile.cs", tempXPath, 4);
-    // run_xpath_test("is_volatile/is_volatile.java", tempXPath, 3);
+    // is_volatile
+    tempXPath =
+        "//src:function_decl[src:is_volatile()]"
+        "| //src:function[src:is_volatile()]"
+        "| //src:decl_stmt[src:is_volatile()]"
+        "| //src:decl[src:is_volatile()]"
+        "| //src:asm[src:is_volatile()]"
+        "| //src:using[src:is_volatile()]"
+        "| //src:type[src:is_volatile()]"
+        "| //src:typedef[src:is_volatile()]"
+    ;
+    run_xpath_test("is_volatile/is_volatile.c", tempXPath, 3);
+    run_xpath_test("is_volatile/is_volatile.cpp", tempXPath, 9);
+    run_xpath_test("is_volatile/is_volatile.cs", tempXPath, 4);
+    run_xpath_test("is_volatile/is_volatile.java", tempXPath, 3);
 
-    // // is_const
-    // tempXPath =
-    //     "//src:function_decl[src:is_const()]"
-    //     "| //src:function[src:is_const()]"
-    //     "| //src:decl_stmt[src:is_const()]"
-    //     "| //src:decl[src:is_const()]"
-    //     "| //src:asm[src:is_const()]"
-    //     "| //src:using[src:is_const()]"
-    //     "| //src:type[src:is_const()]"
-    //     "| //src:typedef[src:is_const()]"
-    // ;
-    // run_xpath_test("is_const/is_const.c", tempXPath, 3);
-    // run_xpath_test("is_const/is_const.cpp", tempXPath, 8);
-    // run_xpath_test("is_const/is_const.cs", tempXPath, 4);
+    // is_const
+    tempXPath =
+        "//src:function_decl[src:is_const()]"
+        "| //src:function[src:is_const()]"
+        "| //src:decl_stmt[src:is_const()]"
+        "| //src:decl[src:is_const()]"
+        "| //src:asm[src:is_const()]"
+        "| //src:using[src:is_const()]"
+        "| //src:type[src:is_const()]"
+        "| //src:typedef[src:is_const()]"
+    ;
+    run_xpath_test("is_const/is_const.c", tempXPath, 3);
+    run_xpath_test("is_const/is_const.cpp", tempXPath, 8);
+    run_xpath_test("is_const/is_const.cs", tempXPath, 4);
 
-    // // is_inline
-    // tempXPath =
-    //     "//src:function_decl[src:is_inline()]"
-    //     "| //src:function[src:is_inline()]"
-    //     "| //src:namespace[src:is_inline()]"
-    // ;
-    // run_xpath_test("is_inline/is_inline.c", tempXPath, 2);
-    // run_xpath_test("is_inline/is_inline.cpp", tempXPath, 1);
+    // is_inline
+    tempXPath =
+        "//src:function_decl[src:is_inline()]"
+        "| //src:function[src:is_inline()]"
+        "| //src:namespace[src:is_inline()]"
+    ;
+    run_xpath_test("is_inline/is_inline.c", tempXPath, 2);
+    run_xpath_test("is_inline/is_inline.cpp", tempXPath, 1);
 
-    // // is_restrict
-    // tempXPath =
-    //     "//src:decl[src:is_restrict()]"
-    //     "| //src:decl_stmt[src:is_restrict()]"
-    // ;
-    // run_xpath_test("is_restrict/is_restrict.c", tempXPath, 2);
-    // run_xpath_test("is_restrict/is_restrict.cpp", tempXPath, 2);
+    // is_restrict
+    tempXPath =
+        "//src:decl[src:is_restrict()]"
+        "| //src:decl_stmt[src:is_restrict()]"
+    ;
+    run_xpath_test("is_restrict/is_restrict.c", tempXPath, 2);
+    run_xpath_test("is_restrict/is_restrict.cpp", tempXPath, 2);
 
-    // // is_register
-    // tempXPath =
-    //     "//src:decl[src:is_register()]"
-    //     "| //src:decl_stmt[src:is_register()]"
-    // ;
-    // run_xpath_test("is_register/is_register.c", tempXPath, 2);
-    // run_xpath_test("is_register/is_register.cpp", tempXPath, 2);
+    // is_register
+    tempXPath =
+        "//src:decl[src:is_register()]"
+        "| //src:decl_stmt[src:is_register()]"
+    ;
+    run_xpath_test("is_register/is_register.c", tempXPath, 2);
+    run_xpath_test("is_register/is_register.cpp", tempXPath, 2);
 
-    // // is_mutable
-    // tempXPath =
-    //     "//src:decl[src:is_mutable()]"
-    //     "| //src:decl_stmt[src:is_mutable()]"
-    //     "| //src:lambda[src:is_mutable()]"
-    // ;
-    // run_xpath_test("is_mutable/is_mutable.cpp", tempXPath, 3);
+    // is_mutable
+    tempXPath =
+        "//src:decl[src:is_mutable()]"
+        "| //src:decl_stmt[src:is_mutable()]"
+        "| //src:lambda[src:is_mutable()]"
+    ;
+    run_xpath_test("is_mutable/is_mutable.cpp", tempXPath, 3);
 
-    // // is_thread_local
-    // tempXPath =
-    //     "//src:decl[src:is_thread_local()]"
-    //     "| //src:decl_stmt[src:is_thread_local()]"
-    //     "| //src:lambda[src:is_thread_local()]"
-    // ;
-    // run_xpath_test("is_thread_local/is_thread_local.c", tempXPath, 2);
-    // run_xpath_test("is_thread_local/is_thread_local.cpp", tempXPath, 2);
+    // is_thread_local
+    tempXPath =
+        "//src:decl[src:is_thread_local()]"
+        "| //src:decl_stmt[src:is_thread_local()]"
+        "| //src:lambda[src:is_thread_local()]"
+    ;
+    run_xpath_test("is_thread_local/is_thread_local.c", tempXPath, 2);
+    run_xpath_test("is_thread_local/is_thread_local.cpp", tempXPath, 2);
 
-    // // is_constexpr
-    // tempXPath =
-    //     "//src:function[src:is_constexpr()]"
-    //     "| //src:function_decl[src:is_constexpr()]"
-    // ;
-    // run_xpath_test("is_constexpr/is_constexpr.cpp", tempXPath, 2);
+    // is_constexpr
+    tempXPath =
+        "//src:function[src:is_constexpr()]"
+        "| //src:function_decl[src:is_constexpr()]"
+    ;
+    run_xpath_test("is_constexpr/is_constexpr.cpp", tempXPath, 2);
 
-    // // is_override
-    // tempXPath =
-    //     "//src:function[src:is_override()]"
-    //     "| //src:function_decl[src:is_override()]"
-    //     "| //src:event[src:is_override()]"
-    //     "| //src:property[src:is_override()]"
-    // ;
-    // run_xpath_test("is_override/is_override.cpp", tempXPath, 2);
-    // run_xpath_test("is_override/is_override.cs", tempXPath, 1);
-    // run_xpath_test("is_override/is_override.java", tempXPath, 1);
+    // is_override
+    tempXPath =
+        "//src:function[src:is_override()]"
+        "| //src:function_decl[src:is_override()]"
+        "| //src:event[src:is_override()]"
+        "| //src:property[src:is_override()]"
+    ;
+    run_xpath_test("is_override/is_override.cpp", tempXPath, 2);
+    run_xpath_test("is_override/is_override.cs", tempXPath, 1);
+    run_xpath_test("is_override/is_override.java", tempXPath, 1);
 
     // // is_virtual
     // tempXPath =
@@ -898,63 +899,63 @@ int main() {
     // run_xpath_test("is_overridable/is_overridable.cs", tempXPath, 25);
     // run_xpath_test("is_overridable/is_overridable.java", tempXPath, 2);
 
-    // // has_auto_specifier
-    // tempXPath =
-    //     "//src:decl[src:has_auto_specifier()]"
-    //     "| //src:decl_stmt[src:has_auto_specifier()]"
-    // ;
-    // run_xpath_test("has_auto_specifier/has_auto_specifier.cpp", tempXPath, 2);
+    // has_auto_specifier
+    tempXPath =
+        "//src:decl[src:has_auto_specifier()]"
+        "| //src:decl_stmt[src:has_auto_specifier()]"
+    ;
+    run_xpath_test("has_auto_specifier/has_auto_specifier.cpp", tempXPath, 2);
 
-    // // is_extern_block
-    // tempXPath =
-    //     "//src:block[src:is_extern_block()]"
-    // ;
-    // run_xpath_test("is_extern_block/is_extern_block.cpp", tempXPath, 1);
+    // is_extern_block
+    tempXPath =
+        "//src:block[src:is_extern_block()]"
+    ;
+    run_xpath_test("is_extern_block/is_extern_block.cpp", tempXPath, 1);
 
-    // // is_extern
-    // tempXPath =
-    //     "//src:function[src:is_extern()]"
-    //     "| //src:function_decl[src:is_extern()]"
-    //     "| //src:decl_stmt[src:is_extern()]"
-    // ;
-    // run_xpath_test("is_extern/is_extern.cpp", tempXPath, 1);
-    // run_xpath_test("is_extern/is_extern.cs", tempXPath, 2);
+    // is_extern
+    tempXPath =
+        "//src:function[src:is_extern()]"
+        "| //src:function_decl[src:is_extern()]"
+        "| //src:decl_stmt[src:is_extern()]"
+    ;
+    run_xpath_test("is_extern/is_extern.cpp", tempXPath, 1);
+    run_xpath_test("is_extern/is_extern.cs", tempXPath, 2);
 
-    // // has_deduced_type
-    // tempXPath =
-    //     "//src:function[src:has_deduced_type()]"
-    //     "| //src:function_decl[src:has_deduced_type()]"
-    //     "| //src:decl_stmt[src:has_deduced_type()]"
-    //     "| //src:decl[src:has_deduced_type()]"
-    //     "| //src:lambda[src:has_deduced_type()]"
-    // ;
-    // run_xpath_test("has_deduced_type/has_deduced_type.cpp", tempXPath, 7);
-    // run_xpath_test("has_deduced_type/has_deduced_type.cs", tempXPath, 2);
+    // has_deduced_type
+    tempXPath =
+        "//src:function[src:has_deduced_type()]"
+        "| //src:function_decl[src:has_deduced_type()]"
+        "| //src:decl_stmt[src:has_deduced_type()]"
+        "| //src:decl[src:has_deduced_type()]"
+        "| //src:lambda[src:has_deduced_type()]"
+    ;
+    run_xpath_test("has_deduced_type/has_deduced_type.cpp", tempXPath, 7);
+    run_xpath_test("has_deduced_type/has_deduced_type.cs", tempXPath, 2);
 
-    // // is_deleted
-    // tempXPath =
-    //     "//src:function_decl[src:is_deleted()]"
-    //     "| //src:constructor_decl[src:is_deleted()]"
-    //     "| //src:destructor_decl[src:is_deleted()]"
-    // ;
-    // run_xpath_test("is_deleted/is_deleted.cpp", tempXPath, 3);
+    // is_deleted
+    tempXPath =
+        "//src:function_decl[src:is_deleted()]"
+        "| //src:constructor_decl[src:is_deleted()]"
+        "| //src:destructor_decl[src:is_deleted()]"
+    ;
+    run_xpath_test("is_deleted/is_deleted.cpp", tempXPath, 3);
 
-    // // is_explicit
-    // tempXPath =
-    //     "//src:function[src:is_explicit()]"
-    //     "| //src:function_decl[src:is_explicit()]"
-    //     "| //src:constructor[src:is_explicit()]"
-    //     "| //src:constructor_decl[src:is_explicit()]"
-    // ;
-    // run_xpath_test("is_explicit/is_explicit.cpp", tempXPath, 3);
-    // run_xpath_test("is_explicit/is_explicit.cs", tempXPath, 2);
+    // is_explicit
+    tempXPath =
+        "//src:function[src:is_explicit()]"
+        "| //src:function_decl[src:is_explicit()]"
+        "| //src:constructor[src:is_explicit()]"
+        "| //src:constructor_decl[src:is_explicit()]"
+    ;
+    run_xpath_test("is_explicit/is_explicit.cpp", tempXPath, 3);
+    run_xpath_test("is_explicit/is_explicit.cs", tempXPath, 2);
 
-    // // is_bitfield
-    // tempXPath =
-    //     "//src:decl_stmt[src:is_bitfield()]"
-    //     "| //src:decl[src:is_bitfield()]"
-    // ;
-    // run_xpath_test("is_bitfield/is_bitfield.cpp", tempXPath, 4);
+    // is_bitfield
+    tempXPath =
+        "//src:decl_stmt[src:is_bitfield()]"
+        "| //src:decl[src:is_bitfield()]"
+    ;
+    run_xpath_test("is_bitfield/is_bitfield.cpp", tempXPath, 4);
 
     // // is_member
     // tempXPath =
@@ -988,38 +989,38 @@ int main() {
     // run_xpath_test("is_member/is_member.java", tempXPath, 5);
 
 
-    // // is_default
-    // tempXPath =
-    //     "//src:function_decl[src:is_default()]"
-    //     "| //src:function[src:is_default()]"
-    //     "| //src:constructor[src:is_default()]"
-    //     "| //src:constructor_decl[src:is_default()]"
-    //     "| //src:destructor_decl[src:is_default()]"
-    // ;
-    // run_xpath_test("is_default/is_default.cpp", tempXPath, 3);
-    // run_xpath_test("is_default/is_default.java", tempXPath, 2);
+    // is_default
+    tempXPath =
+        "//src:function_decl[src:is_default()]"
+        "| //src:function[src:is_default()]"
+        "| //src:constructor[src:is_default()]"
+        "| //src:constructor_decl[src:is_default()]"
+        "| //src:destructor_decl[src:is_default()]"
+    ;
+    run_xpath_test("is_default/is_default.cpp", tempXPath, 3);
+    run_xpath_test("is_default/is_default.java", tempXPath, 2);
 
-    // // is_pointer
-    // tempXPath =
-    //     "//src:function_decl[src:is_pointer()]"
-    //     "| //src:function[src:is_pointer()]"
-    //     "| //src:decl_stmt[src:is_pointer()]"
-    //     "| //src:decl[src:is_pointer()]"
-    //     "| //src:type[src:is_pointer()]"
-    //     "| //src:param[src:is_pointer()]"
-    //     "| //src:argument[src:is_pointer()]"
-    // ;
-    // run_xpath_test("is_pointer/is_pointer.cpp", tempXPath, 18);
+    // is_pointer
+    tempXPath =
+        "//src:function_decl[src:is_pointer()]"
+        "| //src:function[src:is_pointer()]"
+        "| //src:decl_stmt[src:is_pointer()]"
+        "| //src:decl[src:is_pointer()]"
+        "| //src:type[src:is_pointer()]"
+        "| //src:param[src:is_pointer()]"
+        "| //src:argument[src:is_pointer()]"
+    ;
+    run_xpath_test("is_pointer/is_pointer.cpp", tempXPath, 18);
 
 
-    // // is_parameter_pack
-    // tempXPath =
-    //     "//src:type[src:is_parameter_pack()]"
-    //     "| //src:decl[src:is_parameter_pack()]"
-    //     "| //src:param[src:is_parameter_pack()]"
-    //     "| //src:argument[src:is_parameter_pack()]"
-    // ;
-    // run_xpath_test("is_parameter_pack/is_parameter_pack.cpp", tempXPath, 12);
+    // is_parameter_pack
+    tempXPath =
+        "//src:type[src:is_parameter_pack()]"
+        "| //src:decl[src:is_parameter_pack()]"
+        "| //src:param[src:is_parameter_pack()]"
+        "| //src:argument[src:is_parameter_pack()]"
+    ;
+    run_xpath_test("is_parameter_pack/is_parameter_pack.cpp", tempXPath, 12);
 
     // // is_generic
     // tempXPath = 
@@ -1041,78 +1042,78 @@ int main() {
     // run_xpath_test("is_generic/is_generic.cs", tempXPath, 8);
     // run_xpath_test("is_generic/is_generic.java", tempXPath, 5);
 
-    // // is_noexcept
-    // tempXPath = 
-    //     "//src:function_decl[src:is_noexcept()]"
-    //     "| //src:function[src:is_noexcept()]"
-    // ;
-    // run_xpath_test("is_noexcept/is_noexcept.cpp", tempXPath, 4);
+    // is_noexcept
+    tempXPath = 
+        "//src:function_decl[src:is_noexcept()]"
+        "| //src:function[src:is_noexcept()]"
+    ;
+    run_xpath_test("is_noexcept/is_noexcept.cpp", tempXPath, 4);
 
-    // // is_reference
-    // tempXPath = 
-    //     "//src:argument[src:is_reference()]"
-    //     "| //src:param[src:is_reference()]"
-    //     "| //src:decl[src:is_reference()]"
-    //     "| //src:decl_stmt[src:is_reference()]"
-    //     "| //src:type[src:is_reference()]"
-    // ;
-    // run_xpath_test("is_reference/is_reference.cpp", tempXPath, 7);
-    // run_xpath_test("is_reference/is_reference.cs", tempXPath, 6);
+    // is_reference
+    tempXPath = 
+        "//src:argument[src:is_reference()]"
+        "| //src:param[src:is_reference()]"
+        "| //src:decl[src:is_reference()]"
+        "| //src:decl_stmt[src:is_reference()]"
+        "| //src:type[src:is_reference()]"
+    ;
+    run_xpath_test("is_reference/is_reference.cpp", tempXPath, 7);
+    run_xpath_test("is_reference/is_reference.cs", tempXPath, 6);
 
-    // // is_rvalue_reference
-    // tempXPath = 
-    //     "//src:argument[src:is_rvalue_reference()]"
-    //     "| //src:param[src:is_rvalue_reference()]"
-    //     "| //src:decl[src:is_rvalue_reference()]"
-    //     "| //src:decl_stmt[src:is_rvalue_reference()]"
-    //     "| //src:type[src:is_rvalue_reference()]"
-    // ;
-    // run_xpath_test("is_rvalue_reference/is_rvalue_reference.cpp", tempXPath, 7);
+    // is_rvalue_reference
+    tempXPath = 
+        "//src:argument[src:is_rvalue_reference()]"
+        "| //src:param[src:is_rvalue_reference()]"
+        "| //src:decl[src:is_rvalue_reference()]"
+        "| //src:decl_stmt[src:is_rvalue_reference()]"
+        "| //src:type[src:is_rvalue_reference()]"
+    ;
+    run_xpath_test("is_rvalue_reference/is_rvalue_reference.cpp", tempXPath, 7);
 
-    // // is_noreturn
-    // tempXPath = 
-    //     "//src:function[src:is_noreturn()]"
-    //     "| //src:function_decl[src:is_noreturn()]"
-    // ;
-    // run_xpath_test("is_noreturn/is_noreturn.cpp", tempXPath, 2);
-    // run_xpath_test("is_noreturn/is_noreturn.c", tempXPath, 2);
+    // is_noreturn
+    tempXPath = 
+        "//src:function[src:is_noreturn()]"
+        "| //src:function_decl[src:is_noreturn()]"
+    ;
+    run_xpath_test("is_noreturn/is_noreturn.cpp", tempXPath, 2);
+    run_xpath_test("is_noreturn/is_noreturn.c", tempXPath, 2);
 
-    // // is_readonly
-    // tempXPath = 
-    //     "//src:decl[src:is_readonly()]"
-    //     "| //src:decl_stmt[src:is_readonly()]"
-    //     "| //src:type[src:is_readonly()]"
-    // ;
-    // run_xpath_test("is_readonly/is_readonly.cs", tempXPath, 3);
+    // is_readonly
+    tempXPath = 
+        "//src:decl[src:is_readonly()]"
+        "| //src:decl_stmt[src:is_readonly()]"
+        "| //src:type[src:is_readonly()]"
+    ;
+    run_xpath_test("is_readonly/is_readonly.cs", tempXPath, 3);
 
-
-
-
-
-
-    // string returnsXPath =
-    //     "//src:while[src:is_mutually_exclusive()]"
-    //     "| //src:if[src:is_mutually_exclusive()]"
-    //     "| //src:then[src:is_mutually_exclusive()]"
-    //     "| //src:elseif[src:is_mutually_exclusive()]"
-    //     "| //src:else[src:is_mutually_exclusive()]"
-    //     "| //src:try[src:is_mutually_exclusive()]"
-    //     "| //src:catch[src:is_mutually_exclusive()]"
-    //     "| //src:finally[src:is_mutually_exclusive()]"
-    //     "| //src:do[src:is_mutually_exclusive()]"
-    //     "| //src:for[src:is_mutually_exclusive()]"
-    //     "| //src:foreach[src:is_mutually_exclusive()]"
-    //     "| //src:switch[src:is_mutually_exclusive()]"
-    //     "| //src:using_stmt[src:is_mutually_exclusive()]"
-    //     "| //src:fixed[src:is_mutually_exclusive()]"
-    //     "| //src:synchronized[src:is_mutually_exclusive()]"
-    //     "| //src:fixed[src:is_mutually_exclusive()]"
-    //     "| //src:unsafe[src:is_mutually_exclusive()]"
-    //     "| //src:static[src:is_mutually_exclusive()]"
-    //     "| //src:checked[src:is_mutually_exclusive()]"
-    //     "| //src:unchecked[src:is_mutually_exclusive()]"
-    //     "| //src:expr_stmt[src:is_mutually_exclusive()]"
-    //     "| //src:decl_stmt[src:is_mutually_exclusive()]";
+    tempXPath =
+        "//src:while[src:is_mutually_exclusive()]"
+        "| //src:if[src:is_mutually_exclusive()]"
+        "| //src:then[src:is_mutually_exclusive()]"
+        "| //src:elseif[src:is_mutually_exclusive()]"
+        "| //src:else[src:is_mutually_exclusive()]"
+        "| //src:try[src:is_mutually_exclusive()]"
+        "| //src:catch[src:is_mutually_exclusive()]"
+        "| //src:finally[src:is_mutually_exclusive()]"
+        "| //src:do[src:is_mutually_exclusive()]"
+        "| //src:for[src:is_mutually_exclusive()]"
+        "| //src:foreach[src:is_mutually_exclusive()]"
+        "| //src:switch[src:is_mutually_exclusive()]"
+        "| //src:using_stmt[src:is_mutually_exclusive()]"
+        "| //src:fixed[src:is_mutually_exclusive()]"
+        "| //src:synchronized[src:is_mutually_exclusive()]"
+        "| //src:fixed[src:is_mutually_exclusive()]"
+        "| //src:unsafe[src:is_mutually_exclusive()]"
+        "| //src:static[src:is_mutually_exclusive()]"
+        "| //src:checked[src:is_mutually_exclusive()]"
+        "| //src:unchecked[src:is_mutually_exclusive()]"
+        "| //src:expr_stmt[src:is_mutually_exclusive()]"
+        "| //src:decl_stmt[src:is_mutually_exclusive()]";
+    // run_xpath_test(
+    //     "xpath_test_data/is_mutually_exclusive/is_mutually_exclusive.java",
+    //     tempXPath,
+    //     2
+    // );
 
     // node_set returns()
     // run_xpath_test(
@@ -1121,11 +1122,6 @@ int main() {
     //     1
     // );
 
-    // run_xpath_test(
-    //     "xpath_test_data/is_mutually_exclusive/is_mutually_exclusive.java",
-    //     returnsXPath,
-    //     2
-    // );
 
     xmlCleanupParser();
     // cout <<  << endl;
