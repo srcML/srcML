@@ -1239,6 +1239,13 @@ int main() {
     run_xpath_test("is_operator/is_operator.cs", tempXPath, 2);
     run_xpath_test("is_operator/is_operator.cpp", tempXPath, 2);
 
+    // has_ref_qualifier
+    tempXPath = 
+        "//src:function[src:has_ref_qualifier()]"
+        "| //src:function_decl[src:has_ref_qualifier()]"
+    ;
+    run_xpath_test("has_ref_qualifier/has_ref_qualifier.cpp", tempXPath, 6);
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
