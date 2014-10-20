@@ -478,14 +478,18 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
  *
  * Initializes output xmlWriter.  Supports delayed initialization.
  */
-void srcMLOutput::initWriter() {
+int srcMLOutput::initWriter() {
 
     // open the output text writer stream
     xout = xmlNewTextWriter(output_buffer);
     if (!xout) {
+
         fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
-        exit(2);
+        return SRCML_STATUS_ERROR;
+        
     }
+
+    return SRCML_STATUS_OK;
 
 }
 
@@ -884,7 +888,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     // list of attributes
     const char* const attrs[][2] = {
 
-        { UNIT_ATTRIBUTE_REVISION, depth == 0 ? revision : 0 },
+        { UNIT_ATTRIBUTE_REVISION, revision },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },

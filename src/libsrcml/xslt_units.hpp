@@ -164,8 +164,10 @@ public :
         xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, ctxt->myDoc, params, 0, 0, 0);
 #endif
         if (!res) {
-            fprintf(stderr, "srcml2src:  Error in applying stylesheet\n");
-            exit(1);
+
+            fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
+            return SRCML_STATUS_ERROR;
+
         }
 
         // only interestd in non-empty results

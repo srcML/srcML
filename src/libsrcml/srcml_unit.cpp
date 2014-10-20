@@ -196,6 +196,22 @@ const char* srcml_unit_get_encoding(const struct srcml_unit* unit) {
 }
 
 /**
+ * srcml_unit_get_revision
+ * @param unit a srcml unit
+ *
+ * Get the revision for the srcml unit
+ *
+ * @returns revision on success and NULL on failure.
+ */
+const char* srcml_unit_get_revision(const struct srcml_unit* unit) {
+
+    if(unit == NULL) return 0;
+
+    return unit->revision ? unit->revision->c_str() : 0;
+
+}
+
+/**
  * srcml_unit_get_language
  * @param unit a srcml unit
  *
@@ -347,7 +363,7 @@ static int srcml_parse_unit_internal(srcml_unit * unit, int lang, UTF8CharBuffer
             boost::optional<std::pair<std::string, std::string> >(),
             unit->archive->tabstop,
             lang,
-            unit->archive->revision ? unit->archive->revision->c_str() : 0,
+            unit->revision ? unit->revision->c_str() : 0,
             unit->directory ? unit->directory->c_str() : 0,
             unit->filename ? unit->filename->c_str() : 0,
             unit->version ? unit->version->c_str() : 0,
@@ -928,7 +944,7 @@ int srcml_write_start_unit(struct srcml_unit * unit) {
             boost::optional<std::pair<std::string, std::string> >(),
             unit->archive->tabstop,
             SRCML_LANGUAGE_NONE,
-            unit->archive->revision ? unit->archive->revision->c_str() : 0,
+            unit->revision ? unit->revision->c_str() : 0,
             unit->directory ? unit->directory->c_str() : 0,
             unit->filename ? unit->filename->c_str() : 0,
             unit->version ? unit->version->c_str() : 0,
@@ -1115,6 +1131,7 @@ srcml_unit * srcml_create_unit(srcml_archive * archive) {
         unit = new srcml_unit;
 
     } catch(...) { return 0; }
+    unit->revision = srcml_version_string();
     unit->archive = archive;
     unit->read_header = false;
     unit->unit_translator = 0;

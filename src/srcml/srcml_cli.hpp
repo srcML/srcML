@@ -28,6 +28,7 @@
 #include <vector>
 #include <boost/optional.hpp>
 #include <iostream>
+#include <utility>
 
 // Internal srcml command options
 const int SRCML_COMMAND_LONGINFO                  = 1<<0;
@@ -112,6 +113,7 @@ struct srcml_request_t {
 
     // srcml transformation
     std::vector<std::string> transformations;
+    std::vector< std::pair< boost::optional<std::string>, boost::optional<std::string> >> xpath_query_support;
 
     int unit;
     int max_threads;

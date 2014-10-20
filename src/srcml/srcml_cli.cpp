@@ -370,6 +370,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("xpath", prog_opts::value< std::vector<std::string> >(), "apply XPATH expression arg to each individual unit")
             ("xpathparam", prog_opts::value< std::vector<std::string> >(), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
             ("xslt", prog_opts::value< std::vector<std::string> >(), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
+            ("attribute", prog_opts::value< std::vector<std::string> >(), "add attribute to xpath query")
+            ("element", prog_opts::value< std::vector<std::string> >(), "add element to xpath query")
             ;
 
         srcml_archive_options.add_options()
@@ -410,12 +412,39 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // loop the cli options in the order they were processed/received
         BOOST_FOREACH(const prog_opts::basic_option< char >& option, parsedOptions) {
-          if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam") {
+          if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam" 
+             || option.string_key == "element" || option.string_key == "attribute") {
+
+            if (option.string_key == "xpath")
+              srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
+
             BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
-              srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
+              if (option.string_key == "element" && srcml_request.xpath_query_support.size() > 0) {
+                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first = vals;
+              }
+              else if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() > 0) {
+                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).second = vals;
+              }
+              else {
+                srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
+              }
             }
           }
         }
+
+        // TESTING
+        /*
+        int xpath_index = -1;
+        BOOST_FOREACH(const std::string trans, srcml_request.transformations) {
+          if (src_prefix_protocol(trans) == "xpath") {
+            ++xpath_index;
+            std::cerr << "XPATH: " << trans << "\n";
+          }
+          if (srcml_request.xpath_query_support.at(xpath_index).first)
+            std::cerr << "ELEMENT: " << *srcml_request.xpath_query_support.at(xpath_index).first << "\n";
+          if (srcml_request.xpath_query_support.at(xpath_index).second)
+            std::cerr << "ATTRIBUTE: " << *srcml_request.xpath_query_support.at(xpath_index).second << "\n";
+        }*/
 
         prog_opts::store(cliopts , cli_map);
         prog_opts::notify(cli_map);
