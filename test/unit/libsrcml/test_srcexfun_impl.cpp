@@ -1181,6 +1181,13 @@ int main() {
     ;
     run_xpath_test("is_implicit/is_implicit.cs", tempXPath, 4);
 
+    // is_yield
+    tempXPath = 
+        "//src:return[src:is_yield()]"
+        "| //src:break[src:is_yield()]"
+    ;
+    run_xpath_test("is_yield/is_yield.cs", tempXPath, 2);
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
