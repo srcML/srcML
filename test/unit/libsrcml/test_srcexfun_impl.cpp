@@ -1173,7 +1173,13 @@ int main() {
         "| //src:function_decl[src:is_async()]"
     ;
     run_xpath_test("is_async/is_async.cs", tempXPath, 2);
-    
+
+    // is_implicit
+    tempXPath = 
+        "//src:function[src:is_implicit()]"
+        "| //src:function_decl[src:is_implicit()]"
+    ;
+    run_xpath_test("is_implicit/is_implicit.cs", tempXPath, 4);
 
     xmlCleanupParser();
     // Checking for and displaying failed tests.
