@@ -1426,13 +1426,13 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_arithmetic_operator", "self::src:operator[ .='+' or .='-' or .='*' or .='/' or .='%' or .='+=' or .='-=' or .='*=' or .='/=' or .='%=' ]");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_multipy_operator", "self::src:operator[.='*' or .='*=']");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_multiplicative_operator", "self::src:operator[ .='*' or .='*=']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_divide_operator", "self::src:operator[.='/' or .='/=']");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_divisible_operator", "self::src:operator[.='/' or .='/=']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_add_operator", "self::src:operator[.='+' or .='+=']");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_additive_operator", "self::src:operator[.='+' or .='+=']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_subtract_operator", "self::src:operator[.='-' or .='-=']");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_subtraction_operator", "self::src:operator[.='-' or .='-=']");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_shift_operator", "self::src:operator[ .='>>' or .='<<' or .='>>=' or .='<<=' or .='>>>' or .='>>>=' ]");
 

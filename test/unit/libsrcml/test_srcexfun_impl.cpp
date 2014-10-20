@@ -1626,9 +1626,6 @@ int main() {
     ;
     run_xpath_test("captures_named_variable/captures_named_variable.cpp", tempXPath, 14);
 
-
-
-
     // is_function_try
     tempXPath = 
         "//src:try[src:is_function_try()]"
@@ -1682,6 +1679,154 @@ int main() {
     run_xpath_test("has_call/has_call.cpp", tempXPath, 22);
     run_xpath_test("has_call/has_call.cs", tempXPath, 22);
     run_xpath_test("has_call/has_call.java", tempXPath, 18);
+
+    // is_member_operator
+    tempXPath = 
+        "//src:operator[src:is_member_operator()]"
+    ;
+    run_xpath_test("is_member_operator/is_member_operator.c", tempXPath, 2);
+    run_xpath_test("is_member_operator/is_member_operator.cpp", tempXPath, 5);
+    run_xpath_test("is_member_operator/is_member_operator.cs", tempXPath, 3);
+    run_xpath_test("is_member_operator/is_member_operator.java", tempXPath, 2);
+
+    // is_global_scope_operator
+    tempXPath = 
+        "//src:operator[src:is_global_scope_operator()]"
+    ;
+    run_xpath_test("is_global_scope_operator/is_global_scope_operator.cpp", tempXPath, 2);
+
+    // is_pointer_member_operator
+    tempXPath = 
+        "//src:operator[src:is_pointer_member_operator()]"
+    ;
+    run_xpath_test("is_pointer_member_operator/is_pointer_member_operator.c", tempXPath, 1);
+    run_xpath_test("is_pointer_member_operator/is_pointer_member_operator.cpp", tempXPath, 2);
+    run_xpath_test("is_pointer_member_operator/is_pointer_member_operator.cs", tempXPath, 1);
+
+    // is_bitwise_operator
+    tempXPath = 
+        "//src:operator[src:is_bitwise_operator()]"
+    ;
+    run_xpath_test("is_bitwise_operator/is_bitwise_operator.c", tempXPath, 11);
+    run_xpath_test("is_bitwise_operator/is_bitwise_operator.cpp", tempXPath, 11);
+    run_xpath_test("is_bitwise_operator/is_bitwise_operator.cs", tempXPath, 11);
+    run_xpath_test("is_bitwise_operator/is_bitwise_operator.java", tempXPath, 13);
+
+    // is_arithmetic_operator
+    tempXPath = 
+        "//src:operator[src:is_arithmetic_operator()]"
+    ;
+    run_xpath_test("is_arithmetic_operator/is_arithmetic_operator.c", tempXPath, 10);
+    run_xpath_test("is_arithmetic_operator/is_arithmetic_operator.cpp", tempXPath, 10);
+    run_xpath_test("is_arithmetic_operator/is_arithmetic_operator.cs", tempXPath, 10);
+    run_xpath_test("is_arithmetic_operator/is_arithmetic_operator.java", tempXPath, 10);
+
+    // is_multiplicative_operator
+    tempXPath = 
+        "//src:operator[src:is_multiplicative_operator()]"
+    ;
+    run_xpath_test("is_multiplicative_operator/is_multiplicative_operator.c", tempXPath, 2);
+    run_xpath_test("is_multiplicative_operator/is_multiplicative_operator.cpp", tempXPath, 2);
+    run_xpath_test("is_multiplicative_operator/is_multiplicative_operator.cs", tempXPath, 2);
+    run_xpath_test("is_multiplicative_operator/is_multiplicative_operator.java", tempXPath, 2);
+
+    // is_divisible_operator
+    tempXPath = 
+        "//src:operator[src:is_divisible_operator()]"
+    ;
+    run_xpath_test("is_divisible_operator/is_divisible_operator.c", tempXPath, 2);
+    run_xpath_test("is_divisible_operator/is_divisible_operator.cpp", tempXPath, 2);
+    run_xpath_test("is_divisible_operator/is_divisible_operator.cs", tempXPath, 2);
+    run_xpath_test("is_divisible_operator/is_divisible_operator.java", tempXPath, 2);
+
+    // is_additive_operator
+    tempXPath = 
+        "//src:operator[src:is_additive_operator()]"
+    ;
+    run_xpath_test("is_additive_operator/is_additive_operator.c", tempXPath, 2);
+    run_xpath_test("is_additive_operator/is_additive_operator.cpp", tempXPath, 2);
+    run_xpath_test("is_additive_operator/is_additive_operator.cs", tempXPath, 2);
+    run_xpath_test("is_additive_operator/is_additive_operator.java", tempXPath, 2);
+
+    // is_subtraction_operator
+    tempXPath = 
+        "//src:operator[src:is_subtraction_operator()]"
+    ;
+    run_xpath_test("is_subtract_operator/is_subtract_operator.c", tempXPath, 2);
+    run_xpath_test("is_subtract_operator/is_subtract_operator.cpp", tempXPath, 2);
+    run_xpath_test("is_subtract_operator/is_subtract_operator.cs", tempXPath, 2);
+    run_xpath_test("is_subtract_operator/is_subtract_operator.java", tempXPath, 2);
+
+    // is_shift_operator
+    tempXPath = 
+        "//src:operator[src:is_shift_operator()]"
+    ;
+    run_xpath_test("is_shift_operator/is_shift_operator.c", tempXPath, 4);
+    run_xpath_test("is_shift_operator/is_shift_operator.cpp", tempXPath, 4);
+    run_xpath_test("is_shift_operator/is_shift_operator.cs", tempXPath, 4);
+    run_xpath_test("is_shift_operator/is_shift_operator.java", tempXPath, 6);
+
+    // is_relational_operator
+    tempXPath = 
+        "//src:operator[src:is_relational_operator()]"
+    ;
+    run_xpath_test("is_relational_operator/is_relational_operator.c", tempXPath, 6);
+    run_xpath_test("is_relational_operator/is_relational_operator.cpp", tempXPath, 6);
+    run_xpath_test("is_relational_operator/is_relational_operator.cs", tempXPath, 6);
+    run_xpath_test("is_relational_operator/is_relational_operator.java", tempXPath, 6);
+
+    // is_equality_operator
+    tempXPath = 
+        "//src:operator[src:is_equality_operator()]"
+    ;
+    run_xpath_test("is_equality_operator/is_equality_operator.c", tempXPath, 2);
+    run_xpath_test("is_equality_operator/is_equality_operator.cpp", tempXPath, 2);
+    run_xpath_test("is_equality_operator/is_equality_operator.cs", tempXPath, 2);
+    run_xpath_test("is_equality_operator/is_equality_operator.java", tempXPath, 2);
+
+    // is_logical_operator
+    tempXPath = 
+        "//src:operator[src:is_logical_operator()]"
+    ;
+    run_xpath_test("is_logical_operator/is_logical_operator.c", tempXPath, 3);
+    run_xpath_test("is_logical_operator/is_logical_operator.cpp", tempXPath, 3);
+    run_xpath_test("is_logical_operator/is_logical_operator.cs", tempXPath, 3);
+    run_xpath_test("is_logical_operator/is_logical_operator.java", tempXPath, 3);
+
+    // is_assignment_operator
+    tempXPath = 
+        "//src:operator[src:is_assignment_operator()]"
+    ;
+    run_xpath_test("is_assignment_operator/is_assignment_operator.c", tempXPath, 10);
+    run_xpath_test("is_assignment_operator/is_assignment_operator.cpp", tempXPath, 10);
+    run_xpath_test("is_assignment_operator/is_assignment_operator.cs", tempXPath, 10);
+    run_xpath_test("is_assignment_operator/is_assignment_operator.java", tempXPath, 11);
+
+    // is_compound_assignment
+    tempXPath = 
+        "//src:expr[src:is_compound_assignment()]"
+        "| //src:expr_stmt[src:is_compound_assignment()]"
+    ;
+    run_xpath_test("is_compound_assignment/is_compound_assignment.c", tempXPath, 2);
+    run_xpath_test("is_compound_assignment/is_compound_assignment.cpp", tempXPath, 2);
+    run_xpath_test("is_compound_assignment/is_compound_assignment.cs", tempXPath, 2);
+    run_xpath_test("is_compound_assignment/is_compound_assignment.java", tempXPath, 2);
+
+    // is_shift_assign_operator
+    tempXPath = 
+        "//src:operator[src:is_shift_assign_operator()]"
+    ;
+    run_xpath_test("is_shift_assign_operator/is_shift_assign_operator.c", tempXPath, 2);
+    run_xpath_test("is_shift_assign_operator/is_shift_assign_operator.cpp", tempXPath, 2);
+    run_xpath_test("is_shift_assign_operator/is_shift_assign_operator.cs", tempXPath, 2);
+    run_xpath_test("is_shift_assign_operator/is_shift_assign_operator.java", tempXPath, 3);
+
+    // is_unsigned_shift_operator
+    tempXPath = 
+        "//src:operator[src:is_unsigned_shift_operator()]"
+    ;
+    run_xpath_test("is_unsigned_shift_operator/is_unsigned_shift_operator.java", tempXPath, 2);
+
     // Not implemented yet!
     // // has_friends
     // tempXPath = 
@@ -1693,7 +1838,13 @@ int main() {
     //     "| //src:protected[src:has_friends()]"
     // ;
     // run_xpath_test("has_friends/has_friends.cpp", tempXPath, 6);
-
+    // 
+    // // is_cuda_kernel_call
+    // tempXPath = 
+    //     "//src:call[src:is_cuda_kernel_call()]"
+    // ;
+    // run_xpath_test("is_cuda_kernel_call/is_cuda_kernel_call.c", tempXPath, 50);
+    // run_xpath_test("is_cuda_kernel_call/is_cuda_kernel_call.cpp", tempXPath, 50);
 
 
 
