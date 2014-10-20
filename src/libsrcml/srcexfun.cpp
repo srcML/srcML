@@ -1384,7 +1384,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_property_function", "parent::src:block/parent::src:property");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "defined_event_functions", "self::src:event/src:block[src:function or src:function_decl]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "defined_event_function", "self::src:event/src:block[src:function or src:function_decl]");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_add", "self::src:event/src:block[src:function/src:name[.='add'] or src:function_decl/src:name[.='add']]");
 

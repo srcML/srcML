@@ -1523,6 +1523,49 @@ int main() {
     run_xpath_test("is_single_decl/is_single_decl.cs", tempXPath, 1);
     run_xpath_test("is_single_decl/is_single_decl.java", tempXPath, 1);
 
+    // is_multi_decl
+    tempXPath = 
+        "//src:decl_stmt[src:is_multi_decl()]"
+    ;
+    run_xpath_test("is_multi_decl/is_multi_decl.c", tempXPath, 1);
+    run_xpath_test("is_multi_decl/is_multi_decl.cpp", tempXPath, 1);
+    run_xpath_test("is_multi_decl/is_multi_decl.cs", tempXPath, 1);
+    run_xpath_test("is_multi_decl/is_multi_decl.java", tempXPath, 1);
+
+    // is_array
+    tempXPath = 
+        "//src:argument[src:is_array()]"
+        "| //src:param[src:is_array()]"
+        "| //src:type[src:is_array()]"
+        "| //src:decl_stmt[src:is_array()]"
+        "| //src:decl[src:is_array()]"
+    ;
+    run_xpath_test("is_array/is_array.c", tempXPath, 6);
+    run_xpath_test("is_array/is_array.cpp", tempXPath, 8);
+    run_xpath_test("is_array/is_array.cs", tempXPath, 6);
+    run_xpath_test("is_array/is_array.java", tempXPath, 7);
+
+    // is_event_function
+    tempXPath = 
+        "//src:function[src:is_event_function()]"
+    ;
+    run_xpath_test("is_event_function/is_event_function.cs", tempXPath, 2);
+
+    // is_property_function
+    tempXPath = 
+        "//src:function[src:is_property_function()]"
+        "| //src:function_decl[src:is_property_function()]"
+    ;
+    run_xpath_test("is_property_function/is_property_function.cs", tempXPath, 4);
+
+    // defined_event_function
+    tempXPath = 
+        "//src:event[src:defined_event_function()]"
+    ;
+    run_xpath_test("defined_event_function/defined_event_function.cs", tempXPath, 3);
+
+
+
     // Not implemented yet!
     // // has_friends
     // tempXPath = 
