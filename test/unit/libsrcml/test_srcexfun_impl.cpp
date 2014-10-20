@@ -1259,81 +1259,57 @@ int main() {
     ;
     run_xpath_test("is_empty_return/is_empty_return.cpp", tempXPath, 1);
 
-    // // has_return
-    // tempXPath = 
-    //     "//src:unit[src:has_return()]"
-    //     "| //src:block[src:has_return()]"
-    //     "| //src:function[src:has_return()]"
-    //     "| //src:while[src:has_return()]"
-    //     "| //src:if[src:has_return()]"
-    //     "| //src:then[src:has_return()]"
-    //     "| //src:elseif[src:has_return()]"
-    //     "| //src:else[src:has_return()]"
-    //     "| //src:try[src:has_return()]"
-    //     "| //src:catch[src:has_return()]"
-    //     "| //src:finally[src:has_return()]"
-    //     "| //src:do[src:has_return()]"
-    //     "| //src:for[src:has_return()]"
-    //     "| //src:foreach[src:has_return()]"
-    //     "| //src:switch[src:has_return()]"
-    //     "| //src:lambda[src:has_return()]"
-    //     "| //src:delegate[src:has_return()]"
-    //     "| //src:using_stmt[src:has_return()]"
-    //     "| //src:fixed[src:has_return()]"
-    //     "| //src:lock[src:has_return()]"
-    //     "| //src:synchronized[src:has_return()]"
-    //     "| //src:unsafe[src:has_return()]"
-    //     "| //src:constructor[src:has_return()]"
-    //     "| //src:destructor[src:has_return()]"
-    //     "| //src:delegate[src:has_return()]"
-    //     "| //src:unchecked[src:has_return()]"
-    //     "| //src:checked[src:has_return()]"
-    //     "| //src:static[src:has_return()]"
-    // ;
-    // run_xpath_test("has_return/has_return.cs", tempXPath, 13);
-    // run_xpath_test("has_return/has_return.cs", tempXPath, 11);
-    // run_xpath_test("has_return/has_return.cs", tempXPath, 18);
-    // run_xpath_test("has_return/has_return.cs", tempXPath, 4);
-    // run_xpath_test("has_return/has_return.cpp", tempXPath, 8);
-    // run_xpath_test("has_return/has_return.cpp", tempXPath, 2);
-    // run_xpath_test("has_return/has_return.java", tempXPath, 9);
-    // run_xpath_test("has_return/has_return.java", tempXPath, 16);
+    // has_attributes
+    tempXPath = 
+        "//src:unit[src:has_attributes()]"
+        "| //src:class[src:has_attributes()]"
+        "| //src:class_decl[src:has_attributes()]"
+        "| //src:struct[src:has_attributes()]"
+        "| //src:struct_decl[src:has_attributes()]"
+        "| //src:union[src:has_attributes()]"
+        "| //src:union_decl[src:has_attributes()]"
+        "| //src:function[src:has_attributes()]"
+        "| //src:function_decl[src:has_attributes()]"
+        "| //src:constructor[src:has_attributes()]"
+        "| //src:constructor_decl[src:has_attributes()]"
+        "| //src:destructor[src:has_attributes()]"
+        "| //src:destructor_decl[src:has_attributes()]"
+        "| //src:property[src:has_attributes()]"
+        "| //src:event[src:has_attributes()]"
+        "| //src:param[src:has_attributes()]"
+        "| //src:decl_stmt[src:has_attributes()]"
+        "| //src:decl[src:has_attributes()]"
+    ;
+    run_xpath_test("has_attributes/has_attributes.cs", tempXPath, 9);
+    run_xpath_test("has_attributes/has_attributes.cpp", tempXPath, 2);
+    run_xpath_test("has_attributes/has_attributes.java", tempXPath, 8);
 
-    // // has_throw_stmts
+    // has_function_try
+    tempXPath = 
+        "//src:function[src:has_function_try()]"
+        "| //src:constructor[src:has_function_try()]"
+        "| //src:destructor[src:has_function_try()]"
+    ;
+    run_xpath_test("has_function_try/has_function_try.cpp", tempXPath, 3);
+
+    // is_KnR_C
+    tempXPath = 
+        "//src:function[src:is_KnR_C()]"
+    ;
+    run_xpath_test("is_KnR_C/is_KnR_C.c", tempXPath, 1);
+
+    // Not implemented yet!
+    // // has_friends
     // tempXPath = 
-    //     "//src:unit[src:has_throw_stmts()]"
-    //     "| //src:block[src:has_throw_stmts()]"
-    //     "| //src:function[src:has_throw_stmts()]"
-    //     "| //src:while[src:has_throw_stmts()]"
-    //     "| //src:if[src:has_throw_stmts()]"
-    //     "| //src:then[src:has_throw_stmts()]"
-    //     "| //src:elseif[src:has_throw_stmts()]"
-    //     "| //src:else[src:has_throw_stmts()]"
-    //     "| //src:try[src:has_throw_stmts()]"
-    //     "| //src:catch[src:has_throw_stmts()]"
-    //     "| //src:finally[src:has_throw_stmts()]"
-    //     "| //src:do[src:has_throw_stmts()]"
-    //     "| //src:for[src:has_throw_stmts()]"
-    //     "| //src:foreach[src:has_throw_stmts()]"
-    //     "| //src:switch[src:has_throw_stmts()]"
-    //     "| //src:lambda[src:has_throw_stmts()]"
-    //     "| //src:delegate[src:has_throw_stmts()]"
-    //     "| //src:using_stmt[src:has_throw_stmts()]"
-    //     "| //src:fixed[src:has_throw_stmts()]"
-    //     "| //src:lock[src:has_throw_stmts()]"
-    //     "| //src:synchronized[src:has_throw_stmts()]"
-    //     "| //src:unsafe[src:has_throw_stmts()]"
-    //     "| //src:constructor[src:has_throw_stmts()]"
-    //     "| //src:destructor[src:has_throw_stmts()]"
-    //     "| //src:delegate[src:has_throw_stmts()]"
-    //     "| //src:unchecked[src:has_throw_stmts()]"
-    //     "| //src:checked[src:has_throw_stmts()]"
-    //     "| //src:static[src:has_throw_stmts()]"
+    //     "//src:union[src:has_friends()]"
+    //     "| //src:class[src:has_friends()]"
+    //     "| //src:struct[src:has_friends()]"
+    //     "| //src:public[src:has_friends()]"
+    //     "| //src:private[src:has_friends()]"
+    //     "| //src:protected[src:has_friends()]"
     // ;
-    // run_xpath_test("has_throw_stmts/has_throw_stmts.cs", tempXPath, 13);
-    // run_xpath_test("has_throw_stmts/has_throw_stmts.cs", tempXPath, 4);
-    // run_xpath_test("has_throw_stmts/has_throw_stmts.cpp", tempXPath, 2);
-    // run_xpath_test("has_throw_stmts/has_throw_stmts.java", tempXPath, 9);
+    // run_xpath_test("has_friends/has_friends.cpp", tempXPath, 6);
+
 
     xmlCleanupParser();
     // Checking for and displaying failed tests.
