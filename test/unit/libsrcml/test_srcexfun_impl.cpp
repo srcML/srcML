@@ -1564,7 +1564,6 @@ int main() {
     ;
     run_xpath_test("defined_event_function/defined_event_function.cs", tempXPath, 3);
 
-
     // has_add
     tempXPath = 
         "//src:event[src:has_add()]"
@@ -1595,6 +1594,37 @@ int main() {
     ;
     run_xpath_test("has_set/has_set.cs", tempXPath, 2);
 
+
+
+    // is_indexer
+    tempXPath = 
+        "//src:property[src:is_indexer()]"
+    ;
+    run_xpath_test("is_indexer/is_indexer.cs", tempXPath, 3);
+
+    // is_closure
+    tempXPath = 
+        "//src:lambda[src:is_closure()]"
+        "| //src:delegate[src:is_closure()]"
+    ;
+    run_xpath_test("is_closure/is_closure.cpp", tempXPath, 4);
+    run_xpath_test("is_closure/is_closure.cs", tempXPath, 2);
+
+    // is_capture_all_by_value
+    tempXPath = 
+        "//src:lambda[src:is_capture_all_by_value()]"
+        "| //src:capture[src:is_capture_all_by_value()]"
+        "| //src:argument[src:is_capture_all_by_value()]"
+    ;
+    run_xpath_test("is_capture_all_by_value/is_capture_all_by_value.cpp", tempXPath, 4);
+
+    // captures_named_variable
+    tempXPath = 
+        "//src:lambda[src:captures_named_variable()]"
+        "| //src:capture[src:captures_named_variable()]"
+        "| //src:argument[src:captures_named_variable()]"
+    ;
+    run_xpath_test("captures_named_variable/captures_named_variable.cpp", tempXPath, 14);
 
     // Not implemented yet!
     // // has_friends
