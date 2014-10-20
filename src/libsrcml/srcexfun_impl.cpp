@@ -661,27 +661,35 @@ void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs)
                 if (xmlStrEqual(currentNode->name, synchronized_tag) != 0) {
                     xmlXPathReturnTrue(ctxt); return;
                 }else if(xmlStrEqual(currentNode->name, function_tag) != 0) {
+                    std::cout << "Reached Function Tag!" << std::endl;
                     xmlNodePtr typeNode = xmlFirstElementChild(currentNode);
                     // Function without a return type.
                     if (!typeNode) {
+                        std::cout << "CHILRDREN WTF!" << std::endl;
                         xmlXPathReturnFalse(ctxt); return;
-                    }
-                    if ( !(currentNode->type == XML_ELEMENT_NODE
-                        && xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
-                        && xmlStrEqual(currentNode->name, type_tag) != 0))
+                    }else if ( !(typeNode->type == XML_ELEMENT_NODE
+                        && xmlStrEqual(typeNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
+                        && xmlStrEqual(typeNode->name, type_tag) != 0))
                     {
+                        std::cout << "Not type tag :(" << std::endl;
                         xmlXPathReturnFalse(ctxt); return;
                     }
                     xmlNodePtr currentTypeElement = xmlFirstElementChild(typeNode);
                     while(currentTypeElement) {
                         if (currentTypeElement->type == XML_ELEMENT_NODE
                             && xmlStrEqual(currentTypeElement->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
-                            && xmlStrEqual(currentTypeElement->name, specifier_tag) != 0
-                            && currentTypeElement->children
-                            && currentTypeElement->children->type == XML_TEXT_NODE
-                            && xmlStrEqual(currentTypeElement->children->content, BAD_CAST "synchronized") != 0)
+                            && xmlStrEqual(currentTypeElement->name, specifier_tag) != 0)
                         {
-                            xmlXPathReturnTrue(ctxt); return;
+                            std::cout << "DERP!" << std::endl;
+                            bool result = currentTypeElement->children
+                            && currentTypeElement->children->type == XML_TEXT_NODE
+                            && xmlStrEqual(currentTypeElement->children->content, BAD_CAST "synchronized") != 0;
+                            if(result){
+                                xmlXPathReturnTrue(ctxt); return;
+                            }else{
+                                std::cout << "DERP!" << std::endl;
+                            }
+
                         }
                         currentTypeElement = currentTypeElement->next;
                     }

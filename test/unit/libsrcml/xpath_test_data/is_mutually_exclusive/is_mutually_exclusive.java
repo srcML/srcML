@@ -1,13 +1,13 @@
 public synchronized void increment() {
-    c++;
+    c++; //1
 }
 
 public synchronized void decrement() {
-    c--;
+    c--; //2
 }
 
 synchronized(x) {
-    c--;
+    c--;// 3
 }
 
 c--;
