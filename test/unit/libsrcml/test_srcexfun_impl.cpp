@@ -1626,6 +1626,62 @@ int main() {
     ;
     run_xpath_test("captures_named_variable/captures_named_variable.cpp", tempXPath, 14);
 
+
+
+
+    // is_function_try
+    tempXPath = 
+        "//src:try[src:is_function_try()]"
+    ;
+    run_xpath_test("is_function_try/is_function_try.cpp", tempXPath, 3);
+
+    // has_finally
+    tempXPath = 
+        "//src:catch[src:has_finally()]"
+        "| //src:try[src:has_finally()]"
+    ;
+    run_xpath_test("has_finally/has_finally.cs", tempXPath, 2);
+    run_xpath_test("has_finally/has_finally.java", tempXPath, 2);
+
+    // is_resource_try
+    tempXPath = 
+        "//src:try[src:is_resource_try()]"
+    ;
+    run_xpath_test("is_resource_try/is_resource_try.java", tempXPath, 1);
+
+    // has_indexing_expr
+    tempXPath = 
+        "//src:expr[src:has_indexing_expr()]"
+        "| //src:expr_stmt[src:has_indexing_expr()]"
+        "| //src:init[src:has_indexing_expr()]"
+        "| //src:decl[src:has_indexing_expr()]"
+        "| //src:decl_stmt[src:has_indexing_expr()]"
+        "| //src:argument[src:has_indexing_expr()]"
+        "| //src:param[src:has_indexing_expr()]"
+        "| //src:condition[src:has_indexing_expr()]"
+        "| //src:incr[src:has_indexing_expr()]"
+    ;
+    run_xpath_test("has_indexing_expr/has_indexing_expr.c", tempXPath, 20);
+    run_xpath_test("has_indexing_expr/has_indexing_expr.cpp", tempXPath, 20);
+    run_xpath_test("has_indexing_expr/has_indexing_expr.cs", tempXPath, 22);
+    run_xpath_test("has_indexing_expr/has_indexing_expr.java", tempXPath, 16);
+
+    // has_call
+    tempXPath = 
+        "//src:expr[src:has_call()]"
+        "| //src:expr_stmt[src:has_call()]"
+        "| //src:argument[src:has_call()]"
+        "| //src:param[src:has_call()]"
+        "| //src:decl[src:has_call()]"
+        "| //src:decl_stmt[src:has_call()]"
+        "| //src:init[src:has_call()]"
+        "| //src:condition[src:has_call()]"
+        "| //src:incr[src:has_call()]"
+    ;
+    run_xpath_test("has_call/has_call.c", tempXPath, 22);
+    run_xpath_test("has_call/has_call.cpp", tempXPath, 22);
+    run_xpath_test("has_call/has_call.cs", tempXPath, 22);
+    run_xpath_test("has_call/has_call.java", tempXPath, 18);
     // Not implemented yet!
     // // has_friends
     // tempXPath = 
