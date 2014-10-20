@@ -1871,6 +1871,48 @@ int main() {
     run_xpath_test("is_rethrow/is_rethrow.java", tempXPath, 1);
 
 
+
+    // is_nullable
+    tempXPath = 
+        "//src:decl[src:is_nullable()]"
+        "| //src:param[src:is_nullable()]"
+        "| //src:type[src:is_nullable()]"
+        "| //src:decl_stmt[src:is_nullable()]"
+    ;
+    run_xpath_test("is_nullable/is_nullable.cs", tempXPath, 6);
+
+    // is_type_definition
+    tempXPath = 
+        "//src:*[src:is_type_definition()]"
+    ;
+    run_xpath_test("is_type_definition/is_type_definition.c", tempXPath, 3);
+    run_xpath_test("is_type_definition/is_type_definition.cpp", tempXPath, 5);
+    run_xpath_test("is_type_definition/is_type_definition.cs", tempXPath, 2);
+    run_xpath_test("is_type_definition/is_type_definition.java", tempXPath, 2);
+
+    // is_class
+    tempXPath = 
+        "//src:*[src:is_class()]"
+    ;
+    run_xpath_test("is_class/is_class.cpp", tempXPath, 2);
+    run_xpath_test("is_class/is_class.cs", tempXPath, 2);
+    run_xpath_test("is_class/is_class.java", tempXPath, 2);
+
+    // is_enum
+    tempXPath = 
+        "//src:*[src:is_enum()]"
+    ;
+    run_xpath_test("is_enum/is_enum.c", tempXPath, 2);
+    run_xpath_test("is_enum/is_enum.cpp", tempXPath, 4);
+    run_xpath_test("is_enum/is_enum.cs", tempXPath, 2);
+    run_xpath_test("is_enum/is_enum.java", tempXPath, 1);
+
+    // is_enum_class
+    tempXPath = 
+        "//src:*[src:is_enum_class()]"
+    ;
+    run_xpath_test("is_enum_class/is_enum_class.cpp", tempXPath, 2);
+
     // Not implemented yet!
     // // has_friends
     // tempXPath = 

@@ -1468,6 +1468,8 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_class", "self::src:class[not(@type)] or self::src:class_decl[not(@type)]");
 
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_enum", "self::src:enum");
+
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_enum_class", "self::src:enum[@type='class']");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_struct", "self::src:struct or self::src:struct_decl");
