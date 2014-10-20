@@ -1195,6 +1195,16 @@ int main() {
         "| //src:function_decl[src:is_extension_method()]"
     ;
     run_xpath_test("is_extension_method/is_extension_method.cs", tempXPath, 2);
+
+    // is_main
+    tempXPath = 
+        "//src:function[src:is_main()]"
+        "| //src:function_decl[src:is_main()]"
+    ;
+    run_xpath_test("is_main/is_main.cpp", tempXPath, 6);
+    run_xpath_test("is_main/is_main.cs", tempXPath, 2);
+    run_xpath_test("is_main/is_main.java", tempXPath, 1);
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
