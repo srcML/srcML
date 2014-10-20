@@ -331,7 +331,7 @@ public :
 
                 // append namespace for inserted element/attributes
                 std::vector<const xmlChar *> namespaces;
-                namespaces.reserve((root->nb_namespaces + 1) * 2);
+                namespaces.reserve((root->nb_namespaces + 2) * 2);
                 bool found_ns = false;
 
                 for(size_t pos = 0; pos < (size_t)root->nb_namespaces; ++pos) {
@@ -354,6 +354,34 @@ public :
 
                         namespaces.push_back((const xmlChar *)prefix);
                         namespaces.push_back((const xmlChar *)uri);
+
+                    }
+
+                }
+
+
+                if(attr_uri) {
+
+                    found_ns = false;
+                    for(std::vector<const xmlChar *>::size_type pos = 0; pos < namespaces.size() / 2; ++pos) {
+
+                        if(namespaces[pos * 2 + 1] && strcmp(attr_uri, (const char *)namespaces[pos * 2 + 1]) == 0)
+                            found_ns = true;
+
+                    }
+
+                    if(!found_ns) {
+
+                        for(size_t pos = 0; pos < (size_t)context->nsNr; ++pos)
+                            if(strcmp((const char *)context->namespaces[pos], attr_uri) == 0)
+                                found_ns = true;
+
+                        if(!found_ns) {
+
+                            namespaces.push_back((const xmlChar *)attr_prefix);
+                            namespaces.push_back((const xmlChar *)attr_uri);
+
+                        }
 
                     }
 
