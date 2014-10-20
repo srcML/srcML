@@ -179,6 +179,25 @@ int main() {
 
     {
         srcml_archive * archive = srcml_create_archive();
+        srcml_read_open_memory(archive, s.c_str(), s.size());
+        srcml_append_transform_xpath_element(archive, "//src:unit", "foo", "bar", "element", "foobar", "foobar2", "name", "value");
+
+        dassert(archive->transformations.back().type, SRCML_XPATH);
+        dassert(archive->transformations.back().arguments.str, "//src:unit");
+        dassert(archive->transformations.back().arguments.prefix, "foo");
+        dassert(archive->transformations.back().arguments.uri, "bar");
+        dassert(archive->transformations.back().arguments.element, "element");
+        dassert(archive->transformations.back().arguments.attr_prefix, "foobar");
+        dassert(archive->transformations.back().arguments.attr_uri, "foobar2");
+        dassert(archive->transformations.back().arguments.attr_name, "name");
+        dassert(archive->transformations.back().arguments.attr_value, "value");
+
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+    }
+
+    {
+        srcml_archive * archive = srcml_create_archive();
         dassert(srcml_append_transform_xpath_element(archive, "//src:unit", "foo", "bar", "element", 0, 0, 0, 0), SRCML_STATUS_INVALID_IO_OPERATION);
 
         srcml_free_archive(archive);
