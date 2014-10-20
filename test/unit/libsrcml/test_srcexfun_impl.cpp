@@ -1118,6 +1118,33 @@ int main() {
     ;
     run_xpath_test("is_out_param/is_out_param.cs", tempXPath, 4);
 
+
+    // is_variadic
+    tempXPath = 
+        "//src:function[src:is_variadic()]"
+        "| //src:function_decl[src:is_variadic()]"
+        "| //src:constructor[src:is_variadic()]"
+        "| //src:constructor_decl[src:is_variadic()]"
+        "| //src:class[src:is_variadic()]"
+        "| //src:class_decl[src:is_variadic()]"
+        "| //src:struct[src:is_variadic()]"
+        "| //src:struct_decl[src:is_variadic()]"
+        "| //src:union[src:is_variadic()]"
+        "| //src:union_decl[src:is_variadic()]"
+        "| //src:argument_list[@type='template'][src:is_variadic()]"
+        "| //src:delegate[src:is_variadic()]"
+        "| //src:parameter_list[src:is_variadic()]"
+        "| //src:template[src:is_variadic()]"
+        "| //src:using[src:is_variadic()]"
+    ;
+    run_xpath_test("accepts_variable_arguments/accepts_variable_arguments.cs", tempXPath, 12);
+    run_xpath_test("accepts_variable_arguments/accepts_variable_arguments_1.cpp", tempXPath, 7);
+    run_xpath_test("accepts_variable_arguments/accepts_variable_arguments_2.cpp", tempXPath, 8);
+    run_xpath_test("accepts_variable_arguments/accepts_variable_arguments_3.cpp", tempXPath, 18);
+    run_xpath_test("accepts_variable_arguments/accepts_variable_arguments_4.cpp", tempXPath, 8);
+    run_xpath_test("accepts_variable_arguments/accepts_variable_arguments_5.cpp", tempXPath, 4);
+    run_xpath_test("accepts_variable_arguments/accepts_variable_arguments.java", tempXPath, 4);
+
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
