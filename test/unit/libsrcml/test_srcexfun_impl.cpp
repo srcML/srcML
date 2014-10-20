@@ -1023,25 +1023,27 @@ int main() {
     ;
     run_xpath_test("is_parameter_pack/is_parameter_pack.cpp", tempXPath, 12);
 
-    // // is_generic
-    // tempXPath = 
-    //     "//src:using[src:is_generic()]"
-    //     "| //src:function_decl[src:is_generic()]"
-    //     "| //src:function[src:is_generic()]"
-    //     "| //src:union[src:is_generic()]"
-    //     "| //src:union_decl[src:is_generic()]"
-    //     "| //src:class[src:is_generic()]"
-    //     "| //src:class_decl[src:is_generic()]"
-    //     "| //src:struct[src:is_generic()]"
-    //     "| //src:struct_decl[src:is_generic()]"
-    //     "| //src:constructor[src:is_generic()]"
-    //     "| //src:constructor_decl[src:is_generic()]"
-    //     "| //src:destructor[src:is_generic()]"
-    //     "| //src:destructor_decl[src:is_generic()]"
-    // ;
-    // run_xpath_test("is_generic/is_generic.cpp", tempXPath, 9);
-    // run_xpath_test("is_generic/is_generic.cs", tempXPath, 8);
-    // run_xpath_test("is_generic/is_generic.java", tempXPath, 5);
+    // is_generic
+    tempXPath = 
+        "//src:using[src:is_generic()]"
+        "| //src:function_decl[src:is_generic()]"
+        "| //src:function[src:is_generic()]"
+        "| //src:union[src:is_generic()]"
+        "| //src:union_decl[src:is_generic()]"
+        "| //src:class[src:is_generic()]"
+        "| //src:class_decl[src:is_generic()]"
+        "| //src:struct[src:is_generic()]"
+        "| //src:struct_decl[src:is_generic()]"
+        "| //src:constructor[src:is_generic()]"
+        "| //src:constructor_decl[src:is_generic()]"
+        "| //src:destructor[src:is_generic()]"
+        "| //src:destructor_decl[src:is_generic()]"
+        "| //src:interface[src:is_generic()]"
+        "| //src:annotation_defn[src:is_generic()]"
+    ;
+    run_xpath_test("is_generic/is_generic.cpp", tempXPath, 9);
+    run_xpath_test("is_generic/is_generic.cs", tempXPath, 8);
+    run_xpath_test("is_generic/is_generic.java", tempXPath, 5);
 
     // is_noexcept
     tempXPath = 
