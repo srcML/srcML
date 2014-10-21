@@ -140,3 +140,32 @@ class LanguageSupportInfo:
         return """LanguageSupportInfo
 OutputFile: {0.outputFile}
     {1}""".format(self, "\n    ".join([str(x) for x in self.supportInfo]) )
+
+
+
+class XPExtFuncExample:
+    """ Represents an XPath example for an extension function."""
+
+    def __init__(self):
+        self.title = ""
+        self.desc = ""
+        self.xpath = ""
+
+class XPExtFuncInfo:
+    """ Information about an extension function. """
+    def __init__(self):
+        self.names = []
+        self.desc = ""
+        self.langs = []
+        self.tags = []
+        self.examples = []
+
+
+class XPathExtFuncDocInfo:
+    """ Information about all extension function. """
+    def __init__(self):
+        self.outputFile = "XPathExtFunc.html"
+        self.extFuncs = []
+
+    # def __str__(self):
+    #     return 

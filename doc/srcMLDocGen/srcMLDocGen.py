@@ -63,7 +63,20 @@ def genLangSupportFile(langSupport, nav):
     )
     out.write(page)
     out.close()
-    # pass
+
+def genXPathExtFuncPage(extFuncDocInfo, nav):
+    pageLinks.append(PageLink("srcML XPath Extension Functions", extFuncDocInfo.outputFile))
+    out = open(extFuncDocInfo.outputFile, "w")
+    fileTemplate = loader.get_template("XPathExtFunc.html")
+    page = fileTemplate.render(
+        Context({
+            "doc" : extFuncDocInfo,
+            "title" : "srcML XPath Extension Functions",
+            "nav" : nav
+        })
+    )
+    out.write(page)
+    out.close()
 #
 # Generate documentation index for a language.
 #
@@ -137,6 +150,8 @@ TagDocFileName = "TagDoc.xml"
 grammarFile = "LanguageGrammar.xml"
 grammarOutputFileName = "srcMLGrammar.html"
 languageSupportFileName = "LanguageSupportInfo.xml"
+xpathExtFuncDataFileName = "XPathExtensionFunctions/XPathExtFuncData.xml"
+
 # languageSupportOutputFileName = "LanguageSupportInfo.html"
 pageLinks = []
 
@@ -154,6 +169,7 @@ class Navigation:
         self.menuNavigation = []
         self.grammarPage = PageLink("","")
         self.langSupport = PageLink("","")
+        self.xpathExtFunc = PageLink("", "")
 
 class PagesToGenerate:
     def __init__(self):
@@ -162,7 +178,8 @@ class PagesToGenerate:
         self.mainPageURL = "index.html"
         self.docConfigs = []
         self.nav = Navigation()
-        self.languageSupportInfo = None # LanguageSupportInfo()
+        self.languageSupportInfo = None
+        self.xpathExtFuncInfo = None
 
     def buildNavigation(self):
         self.docConfigs.sort(key=lambda x:x.title)
@@ -170,6 +187,7 @@ class PagesToGenerate:
         self.nav.home.link = "index.html"
         self.nav.grammarPage = PageLink("srcML Grammar", grammarOutputFileName)
         self.nav.langSupport = PageLink("Language Support", self.languageSupportInfo.outputFile)
+        self.nav.xpathExtFunc = PageLink("XPath Extension Functions", self.xpathExtFuncInfo.outputFile)
         for docConfig in self.docConfigs:
             configMenu = DocConfigPageLink()
             configMenu.navTitle = docConfig.navTitle
@@ -186,6 +204,12 @@ class PagesToGenerate:
         print "Generating Language Support "
         print "Beginning HTML generation"
         genLangSupportFile(self.languageSupportInfo, self.nav)
+        print "HTML Generation Complete"
+
+        print 80*"-"
+        print "Generating XPath Extension Function Documentation"
+        print "Beginning HTML generation"
+        genXPathExtFuncPage(self.xpathExtFuncInfo, self.nav)
         print "HTML Generation Complete"
 
         print 80*"-"
@@ -219,6 +243,10 @@ if __name__ == "__main__":
     print "-"*80
     print "Language Support"
     pagesToGenerate.languageSupportInfo = loadLanguageSupport("DocData/" + languageSupportFileName)
+
+    print "-"*80
+    print "XPath Extension Functions"
+    pagesToGenerate.xpathExtFuncInfo = loadXPathExtFuncData(os.path.join("DocData" + xpathExtFuncDataFileName))
 
     print "-"*80
     print "Loading Grammar"
