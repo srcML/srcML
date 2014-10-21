@@ -150,6 +150,11 @@ class XPExtFuncExample:
         self.title = ""
         self.desc = ""
         self.xpath = ""
+    def __str__(self):
+        return """        Title: {title}
+        Desc:{desc}
+        XPath: {xpath}
+""".format(**self.__dict__)
 
 class XPExtFuncInfo:
     """ Information about an extension function. """
@@ -160,6 +165,21 @@ class XPExtFuncInfo:
         self.tags = []
         self.examples = []
 
+    def __str__(self):
+        return """    {names}
+    {desc}
+    Langs: {langs}
+    tags: {tags}
+    Examples:
+{examples}
+    """.format(
+            names="\n".join(self.names),
+            desc=self.desc,
+            langs=",".join(self.langs),
+            tags=",".join(self.tags),
+            examples="\n".join([str(x) for x in self.examples])
+        )
+
 
 class XPathExtFuncDocInfo:
     """ Information about all extension function. """
@@ -167,5 +187,8 @@ class XPathExtFuncDocInfo:
         self.outputFile = "XPathExtFunc.html"
         self.extFuncs = []
 
-    # def __str__(self):
-    #     return 
+    def __str__(self):
+        return """XPathExtFuncDocInfo
+{0.outputFile}
+{1}
+""".format(self, "\n".join([str(x) for x in self.extFuncs]))

@@ -246,7 +246,7 @@ if __name__ == "__main__":
 
     print "-"*80
     print "XPath Extension Functions"
-    pagesToGenerate.xpathExtFuncInfo = loadXPathExtFuncData(os.path.join("DocData" + xpathExtFuncDataFileName))
+    pagesToGenerate.xpathExtFuncInfo = loadXPathExtFuncData(os.path.join("DocData", xpathExtFuncDataFileName))
 
     print "-"*80
     print "Loading Grammar"

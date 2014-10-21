@@ -1,0 +1,71 @@
+<XPathExtensionFunctions outputFile="XPathExtFunc.html">
+    <ExtFunc>
+        <Name>bool is_static()</Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>Checks if something was declared static.</Desc>
+        <Examples>
+            <Example title="" desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name="src:decl_stmt" />
+            <Tag name="src:function_decl" />
+            <Tag name="src:function" />
+            <Tag name="src:event" />
+            <Tag name="src:property" />
+            <Tag name="src:class" />
+            <Tag name="src:struct" />
+            <Tag name="src:constructor" />
+            <Tag name="src:constructor_decl" />
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name>bool has_return()</Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+Checks all block children and all subsequent children for a return
+statement. This is scope respecting, in that it doesn't search within
+closures functions or local classes.
+ 
+has_return can be called on almost anything but the typical case 
+is for it to be used on statements or functions, The behavior it has
+when called on non-complex statements (those that don't combine multiple
+statements using a block such as return, throw, expr_stmt and decl_stmt)
+is to search those statements for a return including the sub elements 
+excluding  lambdas and delegates, This means that because only the sub
+elements are searched that a return doesn't have a return (because it is one).
+        </Desc>
+        <Examples>
+            <Example title="" desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name="block"/>
+            <Tag name="function"/>
+            <Tag name="constructor"/>
+            <Tag name="destructor"/>
+            <Tag name="while"/>
+            <Tag name="if"/>
+            <Tag name="then"/>
+            <Tag name="elseif"/>
+            <Tag name="else"/>
+            <Tag name="try"/>
+            <Tag name="catch"/>
+            <Tag name="finally"/>
+            <Tag name="do"/>
+            <Tag name="for"/>
+            <Tag name="foreach"/>
+            <Tag name="switch"/>
+            <Tag name="lambda"/>
+            <Tag name="delegate"/>
+            <Tag name="using_stmt"/>
+            <Tag name="fixed"/>
+            <Tag name="lock"/>
+            <Tag name="synchronized"/>
+            <Tag name="unsafe"/>
+            <Tag name="static"/>
+            <Tag name="checked"/>
+            <Tag name="unchecked"/>
+        </Tags>
+    </ExtFunc>
+
+</XPathExtensionFunctions>
