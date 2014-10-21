@@ -128,7 +128,8 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Rule rule="classInterfaceOrAnnotation" />
         <Tag elem="class"/>
         <Tag elem="class_decl"/>
-        <AttrRule rule="classTypeAttr"/>
+        <Tag elem="annotation_defn"/>
+        <Tag elem="interface"/>
         <Tag elem="enum"/>
         <AttrRule rule="enumTypeAttr"/>
         <Tag elem="struct"/>
@@ -2298,8 +2299,11 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Def>
             <Choice>
                 <Ref name="CPlusPlusClass" />
-                <Ref name="JavaClassInterfaceAndAnnotation" />
+                <Ref name="JavaClass" />
+                <Ref name="JavaInterface" />
+                <Ref name="JavaAnnotation" />
                 <Ref name="CSharpClass" />
+                <Ref name="CSharpInterface" />
             </Choice>
         </Def>
     </Rule>
@@ -2328,11 +2332,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     </TagRule>
 
     <TagRule name="CSharpClass" lang="C#">
-        <Tag elem="class">
-            <Attrs>
-                <Attr rule="classTypeAttr" isOptional="true"/>
-            </Attrs>
-        </Tag>
+        <Tag elem="class"/>
         <Def>
             <Literal value="class" />
             <Optional>            
@@ -2345,19 +2345,39 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         </Def>
     </TagRule>
     
-    <TagRule name="JavaClassInterfaceAndAnnotation" lang="Java">
-        <Tag elem="class">
-            <Attrs>
-                <Attr rule="classTypeAttr" isOptional="true"/>
-            </Attrs>
-        </Tag>
+    <TagRule name="CSharpInterface" lang="C#">
+        <Tag elem="interface"/>
+        <Def>
+            <Literal value="interface" />
+            <Optional>            
+                <Ref name="simpleName" />
+            </Optional>
+            <Optional>
+                <Ref name="super" />
+            </Optional>
+            <Ref name="block" />
+        </Def>
+    </TagRule>
+    
+    <TagRule name="JavaClass" lang="Java">
+        <Tag elem="class"/>
         <Def>
             <Choice>
                 <Literal value="class" />
+            </Choice>
+            <Optional>
+                <Ref name="simpleName"/>
+            </Optional>
+            <Optional><Ref name="JavaSuper"/></Optional>
+            <Ref name="block" />
+        </Def>
+    </TagRule>
+    
+    <TagRule name="JavaInterface" lang="Java">
+        <Tag elem="interface"/>
+        <Def>
+            <Choice>
                 <Literal value="interface" />
-                <Tag elem="annotation">
-                    <Literal value="@interface" />
-                </Tag>
             </Choice>
             <Optional>
                 <Ref name="simpleName"/>
@@ -2367,6 +2387,22 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             <Ref name="block" />
         </Def>
     </TagRule>
+
+    <TagRule name="JavaAnnotation" lang="Java">
+        <Tag elem="annotation_defn"/>
+        <Def>
+            <Choice>
+                <Literal value="@interface" />
+            </Choice>
+            <Optional>
+                <Ref name="simpleName"/>
+            </Optional>
+            <Optional><Ref name="JavaSuper"/></Optional>
+
+            <Ref name="block" />
+        </Def>
+    </TagRule>    
+
     
     <TagRule name="JavaAnonymousClass" lang="Java">
         <Tag elem="class"/>
@@ -2377,13 +2413,6 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
             <Ref name="block" />
         </Def>
     </TagRule>
-    
-    <AttrRule name="classTypeAttr" lang="C#,Java">
-        <Attr name="type"/>
-        <Def>
-            <Literal value="interface" />
-        </Def>
-    </AttrRule>
 
     <!-- src:class_decl -->
     <TagRule name="classDecl" lang="C++">

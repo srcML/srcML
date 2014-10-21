@@ -1069,15 +1069,13 @@
         <DocEntry title="interface">
         	<Desc>See class for more examples.</Desc>
             <Elements>
-                <Element name="class" >
-                    <AttribStr>type="interface"</AttribStr>
-                </Element>
+                <Element name="interface" />
                 <Subelement name="name" />
                 <Subelement name="super" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[@type='interface']">
+                <XPath path="//src:interface">
                     <Desc>Find all interfaces</Desc>
                 </XPath>
             </XPathQueries>
