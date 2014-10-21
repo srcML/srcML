@@ -906,7 +906,7 @@
                 <Element name="extern" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:extern[src:specifier[.='alias']]">
                     <Desc>Find all externally alias declarations</Desc>
                 </XPath>
             </XPathQueries>

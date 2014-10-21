@@ -158,6 +158,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Tag elem="decltype"/>
         <Tag elem="noexcept"/>
         <Tag elem="sizeof"/>
+        <AttrRule rule="sizeofTypeAttr"/>
         <Tag elem="typeid"/>
         <Tag elem="typeof"/>
         <Tag elem="atomic"/>
@@ -3090,13 +3091,28 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
     </TagRule>
     
     <TagRule name="sizeofParameterPack" lang="C++">
-        <Tag elem="sizeof" />
+        <Tag elem="sizeof">
+            <Attrs>
+                <Attr rule="sizeofTypeAttr"/>
+            </Attrs>
+        </Tag>
         <Def>
             <Literal value="sizeof"/>
             <Literal value="..."/>
             <Ref name="argumentList"/>
         </Def>
     </TagRule>
+    
+    <AttrRule name="sizeofTypeAttr" lang="C++">
+        <Attr name="type"/>
+        <Def>
+            <Literal value="pack"/>
+        </Def>
+        <Desc>
+        This represents when size of is being used to count the number of parameters
+        within a parameter pack, instead of determining the size of a type.
+        </Desc>
+    </AttrRule>
 
     <!-- src:typeid -->
     <TagRule name="typeid" lang="C++">
