@@ -2548,7 +2548,7 @@ extern_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SEXTERN);
         }
-        EXTERN (extern_alias)*
+        EXTERN (extern_alias (variable_identifier)*)*
 ;
 
 // name of extern section

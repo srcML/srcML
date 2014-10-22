@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="extern" filename="extern_cs">
 
 <unit>
-<extern>extern <specifier>alias</specifier> GridV1;</extern>
+<extern>extern <specifier>alias</specifier> <name>GridV1</name>;</extern>
 </unit>
 
 </unit>
