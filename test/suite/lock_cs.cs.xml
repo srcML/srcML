@@ -2,12 +2,12 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="lock" filename="lock_cs">
 
 <unit>
-<lock>lock (<init><expr><name>p</name></expr></init>)
+<lock>lock <init>(<expr><name>p</name></expr>)</init>
 <block>{}</block></lock>
 </unit>
 
 <unit>
-<lock>lock (<init><decl><type><name>Object</name></type> <name>thisLock</name> <init>= <expr><operator>new</operator> <call><name>Object</name><argument_list>()</argument_list></call></expr></init></decl></init>)
+<lock>lock <init>(<decl><type><name>Object</name></type> <name>thisLock</name> <init>= <expr><operator>new</operator> <call><name>Object</name><argument_list>()</argument_list></call></expr></init></decl>)</init>
 <block>{}</block></lock>
 </unit>
 

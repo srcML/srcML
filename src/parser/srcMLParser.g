@@ -2548,7 +2548,7 @@ extern_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SEXTERN);
         }
-        EXTERN (extern_alias)*
+        EXTERN (extern_alias (variable_identifier)*)*
 ;
 
 // name of extern section
@@ -6409,14 +6409,13 @@ using_statement[] { ENTRY_DEBUG } :
 
 for_like_statement_pre[int tag] { ENTRY_DEBUG } :
         {
+            
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start of the try statement
             startElement(tag);
 
-            // expect a condition to follow the keyword
-            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
         }
 
 ;
@@ -6425,16 +6424,18 @@ for_like_statement_post[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE 
 
     {
 
-        startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
+        // expect a condition to follow the keyword
+        startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
 
         startElement(SFOR_LIKE_CONTROL);
+
     }
     LPAREN
     {
 
-        startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
+        startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
 
-        startElement(SFOR_INITIALIZATION);
+        //startElement(SFOR_INITIALIZATION);
     }
 
     (
