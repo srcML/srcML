@@ -10,11 +10,15 @@
 </unit>
 
 <unit>
-<class>class <name><name>C</name><argument_list type="template">&lt;<argument><name>A</name></argument>&gt; <where>where <name>A</name> : class</where></argument_list></name> <block>{}</block></class>
+<class>class <name><name>C</name><argument_list type="template">&lt;<argument><name>A</name></argument>&gt;</argument_list> <where>where <name>A</name> : <constraint>class</constraint></where></name> <block>{}</block></class>
 </unit>
 
 <unit>
 <decl_stmt><decl><type><name>var</name></type> <name>where</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<class>class <name><name>Foo</name><argument_list type="template">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> : <constraint><name>new</name>()</constraint></where></name> <block>{}</block></class>
 </unit>
 
 </unit>
