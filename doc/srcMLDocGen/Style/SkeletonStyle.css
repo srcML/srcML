@@ -265,3 +265,53 @@ div.displayedDocDefinition h2.title a:hover{
 th.languageSupportHeader {
     width:4em;
 }
+
+td.checkMarkCell {
+    text-align:center;
+}
+
+/* Language display. */
+div.languagesDisplayDiv {
+    float:right;
+}
+
+/* Languages table */
+table.languagesTable {
+    text-align:center;
+    border-collapse: collapse;
+    border:.1em solid #D2D2CE;
+    margin-left:0em;
+    margin-right:0em;
+}
+
+table.languagesTable th{
+    width:2em;
+}
+
+table.languagesTable tbody {
+    border:1px solid #D0D0D0;
+}
+
+table.languagesTable tbody tr:nth-child(odd) {
+   background-color: #F0F0F0;
+}
+
+table.languagesTable thead {
+    border-collapse: collapse;
+}
+table.languagesTable td {
+    border-collapse: collapse;
+    border-left:1px solid #D2D2CE;
+    padding:2px;
+    padding-left:5px;
+}
+
+.xpathExample {
+    font-size: 1.1em;
+    border:.1em solid #dddddd;
+    background-color:#EEE;
+    padding:.2em;
+    line-height:2;
+}
+
+

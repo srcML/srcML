@@ -92,14 +92,19 @@ class XPathExtFuncDocHandler(xml.sax.ContentHandler):
                 self.state = ReadingTags
             elif name == ExamplesTag:
                 self.state = ReadingExamples
-            # elif name == XPathTag:
-            #     self.state = ReadingXPath
             else:
                 self.unexpectedTag(name)
 
         elif self.state == ReadingTags:
             if name == TagTag:
-                self.currentXPathExtFunction.tags.append(attrs[nameAttr])
+                tagNameList = attrs[nameAttr].split(":")
+                tempTag = srcMLTag()
+                if len(tagNameList) > 1:
+                    tempTag.ns = tagNameList[0]
+                    if tempTag.ns == "src":
+                        tempTag.ns = ""
+                tempTag.tag = tagNameList[-1]
+                self.currentXPathExtFunction.tags.append(tempTag)
             else:
                 self.unexpectedTag(name)
         elif self.state == ReadingExamples:
@@ -165,7 +170,7 @@ class XPathExtFuncDocHandler(xml.sax.ContentHandler):
             self.state = ProcessingExtFunc
 
         elif self.state == ReadingLangs:
-            self.currentXPathExtFunction.langs = self.tempContentBuffer.split(",")
+            self.currentXPathExtFunction.langs = [l.strip() for l in self.tempContentBuffer.split(",")]
             self.tempContentBuffer = ""
             self.state = ProcessingExtFunc
 
@@ -182,6 +187,6 @@ class XPathExtFuncDocHandler(xml.sax.ContentHandler):
 def loadXPathExtFuncData(inputFileName):
     handler = XPathExtFuncDocHandler()
     xml.sax.parse(inputFileName, handler)
-    print handler.docInfo
+    # print handler.docInfo
     handler.docInfo.languages = ["C", "C++", "C#", "Java"]
     return handler.docInfo

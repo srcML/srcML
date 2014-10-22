@@ -8,6 +8,7 @@ from DocGen import *
 from DocGen.ValidationChecker import *
 from DocGen.templatetags import *
 import DocGen.TagTracker
+
 # -------------------------------------------------
 #                     Main
 # -------------------------------------------------
@@ -64,7 +65,7 @@ def genLangSupportFile(langSupport, nav):
     out.write(page)
     out.close()
 
-def genXPathExtFuncPage(extFuncDocInfo, nav):
+def genXPathExtFuncPage(extFuncDocInfo, grammarOutputFileName, nav):
     pageLinks.append(PageLink("srcML XPath Extension Functions", extFuncDocInfo.outputFile))
     out = open(extFuncDocInfo.outputFile, "w")
     fileTemplate = loader.get_template("XPathExtFunc.html")
@@ -72,6 +73,7 @@ def genXPathExtFuncPage(extFuncDocInfo, nav):
         Context({
             "doc" : extFuncDocInfo,
             "title" : "srcML XPath Extension Functions",
+            "gramarPageName":grammarOutputFileName,
             "nav" : nav
         })
     )
@@ -209,7 +211,7 @@ class PagesToGenerate:
         print 80*"-"
         print "Generating XPath Extension Function Documentation"
         print "Beginning HTML generation"
-        genXPathExtFuncPage(self.xpathExtFuncInfo, self.nav)
+        genXPathExtFuncPage(self.xpathExtFuncInfo, grammarOutputFileName, self.nav)
         print "HTML Generation Complete"
 
         print 80*"-"

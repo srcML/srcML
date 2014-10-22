@@ -217,6 +217,11 @@ def isTerminalUseCase(obj):
     print obj.__class__.__name__
     return isinstance(obj, TerminalUseCase)
 
+formatToLinkRegEx = re.compile("\W")
+@register.filter(name="makeFunctionNameLink")
+def makeFunctionNameLink(callNameList):
+    assert isinstance(callNameList, list), "Received object that wasn't a list"
+    return formatToLinkRegEx.sub("_"," ".join(callNameList))
 
 
 class TrackPageNameNode(template.Node):
@@ -250,3 +255,6 @@ def TrackAnchorId(parser, token):
     if len(tokens) != 2:
         raise TemplateSyntaxError("Incorrect number of arguments for TrackAnchorId, expected: 2. Got: %d" % len(tokens))
     return TrackAnchorIdNode(parser.compile_filter(tokens[1]))
+   
+
+

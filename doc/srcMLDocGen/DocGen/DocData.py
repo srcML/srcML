@@ -156,6 +156,14 @@ class XPExtFuncExample:
         XPath: {xpath}
 """.format(**self.__dict__)
 
+class srcMLTag:
+    def __init__(self):
+        self.ns = ""
+        self.tag = ""
+
+    def __str__(self):
+        return """{ns}:{tag}""".format(**self.__dict__)
+
 class XPExtFuncInfo:
     """ Information about an extension function. """
     def __init__(self):
@@ -176,7 +184,7 @@ class XPExtFuncInfo:
             names="\n".join(self.names),
             desc=self.desc,
             langs=",".join(self.langs),
-            tags=",".join(self.tags),
+            tags=",".join([str(x) for x in self.tags]),
             examples="\n".join([str(x) for x in self.examples])
         )
 

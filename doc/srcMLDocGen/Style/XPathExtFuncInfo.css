@@ -1,0 +1,7 @@
+table.ToC tbody tr:hover {
+    font-weight:bold;
+}
+
+.description {
+    margin-right: 2em;
+}
