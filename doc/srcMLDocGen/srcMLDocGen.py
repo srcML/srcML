@@ -79,6 +79,7 @@ def genXPathExtFuncPage(extFuncDocInfo, grammarOutputFileName, nav):
     )
     out.write(page)
     out.close()
+
 #
 # Generate documentation index for a language.
 #

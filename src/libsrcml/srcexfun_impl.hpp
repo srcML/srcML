@@ -75,7 +75,7 @@ void xpath_exfun_has_return(xmlXPathParserContextPtr ctxt, int nargs);
  *  
  *  Just like has_return but for throw instead.
  *  
- *  Languages: C, C++, C#, Java
+ *  Languages: C++, C#, Java
  *  
  *  Works with srcML elements:
  *      block
