@@ -118,5 +118,730 @@ search all children in the same scope respecting manner looking for a throw stat
             <Tag name="unchecked"/>
         </Tags>
     </ExtFunc>
+    
+    
+    <ExtFunc>
+        <Name>bool is_nested()</Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+Checks to see if a class or type declaration is nested within another
+scope. This function only works for parts of the language which
+can occur at a global scope.
+&lt;br/&gt;
+&lt;br/&gt;
+asm is handled specially it checks to see of the current ASM statement is within another ASM statement.
+        </Desc>
+        <Examples>
+            <Example desc="Find all typedefs nested within a namespace, class, struct union or function" xpath="//src:typedef[src:is_nested()]"/>
+        </Examples>
+        <Tags>
+            <Tag name="asm"/>
+            <Tag name="typedef"/>
+            <Tag name="using"/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+            <Tag name="constructor"/>
+            <Tag name="constructor_decl"/>
+            <Tag name="destructor"/>
+            <Tag name="destructor_decl"/>
+            <Tag name="property"/>
+            <Tag name="event"/>
+            <Tag name="union"/>
+            <Tag name="union_decl"/>
+            <Tag name="class"/>
+            <Tag name="class_decl"/>
+            <Tag name="struct"/>
+            <Tag name="struct_decl"/>
+            <Tag name="enum"/>
+            <Tag name="namespace"/>
+        </Tags>
+    </ExtFunc>
+
+    <ExtFunc>
+        <Name>bool is_class_template_partial_specialization()</Name>
+        <Langs>C++</Langs>
+        <Desc>
+Checks to see if a class template is a partial specialization. This is done
+by checking for a template arguments and a template within the name of the
+class, struct or union.
+        </Desc>
+        <Examples>
+            <Example desc="Find all partial class template specializations" xpath="//src:class[src:is_class_template_partial_specialization()]"/>
+        </Examples>
+        <Tags>
+            <Tag name="struct"/>
+            <Tag name="struct_decl"/>
+            <Tag name="class"/>
+            <Tag name="class_decl"/>
+            <Tag name="union"/>
+            <Tag name="union_decl"/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name>bool has_init()</Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+Checks for an initialization within a declaration statement or the init
+that's part of other statements such as a for, using_stmt, or synchronize.
+        </Desc>
+        <Examples>
+            <Example desc="Find all declaration statements with an initialization" xpath="//src:decl_stmt[src:has_init()]"/>
+        </Examples>
+        <Tags>
+            <Tag name="decl"/>
+            <Tag name="decl_stmt"/>
+            <Tag name="param"/>
+            <Tag name="argument"/>
+            <Tag name="using_stmt"/>
+            <Tag name="using"/>
+            <Tag name="try"/>
+            <Tag name="synchronized"/>
+            <Tag name="fixed"/>
+            <Tag name="lock"/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name>bool has_break()</Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+Checks using scope rules and attempts to locate a break statement within
+a loop construct or switch statement. This respects the scope of other loops
+by not searching their children when they are not the contexts of the
+predicate.
+        </Desc>
+        <Examples>
+            <Example desc="Find all for loops with break statements" xpath="//src:for[src:has_break()]"/>
+        </Examples>
+        <Tags>
+            <Tag name="switch"/>
+            <Tag name="do"/>
+            <Tag name="while"/>
+            <Tag name="foreach"/>
+            <Tag name="for"/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name>bool is_unsafe()</Name>
+        <Langs>C#</Langs>
+        <Desc>
+Checks to see if the current statement, declaration or other element is within
+an unsafe block.
+        </Desc>
+        <Examples>
+            <Example desc="Find all unsafe declaration statements" xpath="//src:decl_stmt[src:is_unsafe()]"/>
+        </Examples>
+        <Tags>
+            <Tag name="Any Statement"/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name>bool is_mutually_exclusive()</Name>
+        <Langs>C#, Java</Langs>
+        <Desc>
+Checks to see if a declaration is within a lock or synchronized function or block.
+        </Desc>
+        <Examples>
+            <Example desc="Find all if statements that are within a mutually exclusive section of code" xpath="//src:if[src:is_mutually_exclusive()]"/>
+        </Examples>
+        <Tags>
+            <Tag name="Any Statement"/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    <ExtFunc>
+        <Name></Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name=""/>
+        </Tags>
+    </ExtFunc>
+    
+    
 
 </XPathExtensionFunctions>

@@ -225,8 +225,8 @@ void xpath_exfun_is_unsafe(xmlXPathParserContextPtr ctxt, int nargs);
 /**
  *  XPath Signature: bool is_mutually_exclusive()
  *  
- *  checks to see if a declaration is within a lock or synchronized function or
- *  block
+ *  Checks to see if a declaration is within a lock or synchronized function or
+ *  block.
  *  
  *  Languages: C#, Java
  *  
