@@ -561,6 +561,7 @@ tokens {
     SUSING_STATEMENT;
     SFUNCTION_DELEGATE;
     SEVENT;
+    SCONSTRAINT;
 
     // linq
     SLINQ;
@@ -2548,7 +2549,7 @@ extern_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SEXTERN);
         }
-        EXTERN (extern_alias (variable_identifier)*)*
+        EXTERN (extern_alias (options { greedy = true; } : variable_identifier)*)*
 ;
 
 // name of extern section
@@ -4952,7 +4953,7 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
         push_namestack identifier (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
             (template_argument_list)=>
-                template_argument_list |
+                template_argument_list (options { greedy = true; } : generic_type_constraint)* |
 
             {
                // set the token to NOP since we did not find a template argument list
@@ -4975,7 +4976,7 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
         }
         push_namestack (template_specifier { is_nop = false; })* identifier
     (
-        (template_argument_list)=> template_argument_list | 
+        (template_argument_list)=> template_argument_list (options { greedy = true; } : generic_type_constraint)*  | 
         {
             // set the token to NOP since we did not find a template argument list
             if(is_nop)
@@ -5082,7 +5083,7 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
         (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
-        identifier (template_argument_list)* DCOLON pointer_dereference |
+        identifier (template_argument_list (generic_type_constraint)*)* DCOLON pointer_dereference |
 
         // typical function pointer name
         // need greedy for general operators and possibly end
@@ -7889,8 +7890,6 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
 
         tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument)* tempope
 
-        (options { greedy = true; } : generic_type_constraint)*
-
         restorenamestack[namestack_save]
 ;
 
@@ -7902,9 +7901,35 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SWHERE);
         }
-        WHERE compound_name_inner[false] COLON
-        (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN)
-        (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN))*
+        WHERE compound_name_inner[false] COLON type_constraint (options { greedy = true; } : COMMA type_constraint)*
+
+;
+
+type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // local mode
+            startNewMode(MODE_LOCAL);
+
+            startElement(SCONSTRAINT);
+        }
+
+        (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | new_constraint)
+;
+
+new_constraint[] { ENTRY_DEBUG } :
+
+    new_name LPAREN RPAREN
+
+;
+
+
+new_name[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        NEW
+
 ;
 
 protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
