@@ -79,13 +79,15 @@ statement. This is scope respecting, in that it doesn't search within
 closures functions, local classes, catches or finallies.
 &lt;br/&gt;
 &lt;br/&gt;
-&lt;code&gt;has_throw&lt;/code&gt; behaves in a similar manner to has_return
+&lt;code&gt;has_throw&lt;/code&gt; behaves in a similar manner to &lt;code&gt;has_return&lt;/code&gt;
 accept that it searches for throw statements instead of return statements, and
-it the scope it follows omits catch and finally.
+it the scope it follows omits catch and finally. The &lt;code&gt;has_throw&lt;/code&gt;
+extension function can be called directly on either a catch or finally and it will
+search all children in the same scope respecting manner looking for a throw statement.
         </Desc>
         <Examples>
-            <Example desc="Find all constructors that have a return" xpath="//src:constructor[src:has_return()]"/>
-            <Example desc="Find all classes that have a constructor that calls return (C#)" xpath="//src:class[src:constructor[src:has_return()]]"/>
+            <Example desc="Find all constructors that have a throw" xpath="//src:constructor[src:has_throw()]"/>
+            <Example desc="Find all classes that have a destructor that contains a throw statement (C++)" xpath="//src:class[node()/src:destructor[src:has_throw()]]"/>
         </Examples>
         <Tags>
             <Tag name="block"/>
