@@ -531,6 +531,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "dynamic_cast"     , DYNAMIC_CAST     , LANGUAGE_CXX },
         { "reinterpret_cast" , REINTERPRET_CAST , LANGUAGE_CXX },
         { "static_cast"      , STATIC_CAST      , LANGUAGE_CXX },
+        { "static_assert"    , STATIC_ASSERT    , LANGUAGE_CXX },
 
         // Add alternative operators
         { "and"           , OPERATORS        , LANGUAGE_CXX }, 
