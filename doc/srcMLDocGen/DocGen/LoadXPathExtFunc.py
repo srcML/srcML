@@ -183,4 +183,5 @@ def loadXPathExtFuncData(inputFileName):
     handler = XPathExtFuncDocHandler()
     xml.sax.parse(inputFileName, handler)
     print handler.docInfo
+    handler.docInfo.languages = ["C", "C++", "C#", "Java"]
     return handler.docInfo

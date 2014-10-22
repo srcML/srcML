@@ -186,6 +186,7 @@ class XPathExtFuncDocInfo:
     def __init__(self):
         self.outputFile = "XPathExtFunc.html"
         self.extFuncs = []
+        self.languages = None
 
     def __str__(self):
         return """XPathExtFuncDocInfo

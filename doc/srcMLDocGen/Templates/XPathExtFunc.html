@@ -1,9 +1,23 @@
 {% extends "Skeleton.html" %}
+{% load DjangoHelpers %}
 
 {% block cssLinks %}<link rel="stylesheet" href="Style/LanguageSupport.css" />{% endblock %}
 
 {% block body %}
-    <h2>srcML XPath Extension Functions</h2>
+    <h1>srcML XPath Extension Functions</h1>
+    <table class="ToC">
+        <thead>
+            <tr>
+                <th>Extension Function</th>
+                {% for lang in doc.languages %}
+                <th class="languageSupportHeader">{{lang}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        
+        <tbody>
+        </tbody>
+    </table>
     <div class="displayedDocDefinition">
         <h3 class="subtitle"></h3>
     </div>
