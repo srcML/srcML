@@ -1152,6 +1152,25 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         </Def>
     </TagRule>
 
+    <TagRule name="resourceInit" lang="C,C++,C#,Java">
+        <Tag elem="init"/>
+        <Def>
+            <Literal value="("/>
+            <Choice>
+                <Ref name="decl"/>
+                <Ref name="expr"/>
+            </Choice>
+            <ZeroOrMore>
+                <Literal value=","/>
+                <Choice>
+                    <Ref name="decl"/>
+                    <Ref name="expr"/>
+                </Choice>
+            </ZeroOrMore>
+            <Literal value=")"/>
+        </Def>
+    </TagRule>
+
     <TagRule name="typeInit" lang="C++">
         <Tag elem="init"/>
         <Def>
@@ -1600,11 +1619,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Tag elem="using_stmt" />
         <Def>
             <Literal value="using"/>
-            <Literal value="("/>
             <Optional>
-                <Ref name="controlInit"/>
+                <Ref name="resourceInit"/>
             </Optional>
-            <Literal value=")"/>
             <Choice>
                 <Ref name="block"/>
                 <Ref name="pseudoBlock"/>
@@ -1617,11 +1634,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Tag elem="lock"/>
         <Def>
             <Literal value="lock"/>
-            <Literal value="("/>
             <Optional>
-                <Ref name="controlInit"/>
+                <Ref name="resourceInit"/>
             </Optional>
-            <Literal value=")"/>
             <Choice>
                 <Ref name="block"/>
                 <Ref name="pseudoBlock"/>
@@ -1634,11 +1649,9 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Tag elem="synchronized" />
         <Def>
             <Literal value="synchronized"/>
-            <Literal value="("/>
             <Optional>
-                <Ref name="controlInit"/>
+                <Ref name="resourceInit"/>
             </Optional>
-            <Literal value=")"/>
             <Choice>
                 <Ref name="block"/>
                 <Ref name="pseudoBlock"/>
@@ -1660,15 +1673,13 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Tag elem="fixed" />
         <Def>
             <Literal value="fixed"/>
-            <Literal value="("/>
             <Optional>
-                <Ref name="controlInit"/>
+                <Ref name="resourceInit"/>
+                <Choice>
+                    <Ref name="block"/>
+                    <Ref name="pseudoBlock"/>
+                </Choice>
             </Optional>
-            <Literal value=")"/>
-            <Choice>
-                <Ref name="block"/>
-                <Ref name="pseudoBlock"/>
-            </Choice>
         </Def>
     </TagRule>
 
@@ -3419,9 +3430,7 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Def>
             <Literal value="try"/>
             <Optional>
-                <Literal value="("/>
-                    <Ref name="controlInit" />
-                <Literal value=")"/>
+                    <Ref name="resourceInit" />
             </Optional>
             <Optional>
                 <Ref name="block"/>
@@ -3593,7 +3602,12 @@ two form depending on input: 1) an archive (multiple files) and 2) compilation u
         <Tag elem="argument"/>
         <Def>
             <Choice>
-                <Ref name="expr"/>
+                <Group>
+                    <Optional>
+                        <Ref name="modifier"/>
+                    </Optional>
+                    <Ref name="expr"/>
+                </Group>
                 <Ref name="name"/>
             </Choice>
         </Def>
