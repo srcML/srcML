@@ -498,6 +498,33 @@ Doesn't work with inheritance.
     </ExtFunc>
     
     <ExtFunc>
+        <Name>bool is_protected_internal()</Name>
+        <Langs>C#</Langs>
+        <Desc>
+Checks to see if a type is declared protected internal. The behaves the same as is_public and is_private.
+        </Desc>
+        <Examples>
+            <Example desc="" xpath=""/>
+        </Examples>
+        <Tags>
+            <Tag name="class"/>
+            <Tag name="class_decl"/>
+            <Tag name="struct"/>
+            <Tag name="struct_decl"/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+            <Tag name="decl_stmt"/>
+            <Tag name="decl"/>
+            <Tag name="constructor"/>
+            <Tag name="constructor_decl"/>
+            <Tag name="destructor"/>
+            <Tag name="destructor_decl"/>
+            <Tag name="event"/>
+            <Tag name="property"/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
         <Name>bool is_volatile()</Name>
         <Langs>C, C++, C#, Java</Langs>
         <Desc>
@@ -780,44 +807,75 @@ C#&lt;br/&gt;
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_bitfield</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_bitfield()</Name>
+        <Langs>C, C++</Langs>
         <Desc>
-
+Checks if a declaration is a bitfield.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all bitfield declarations" xpath="//src:decl_stmt[src:is_bitfield()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:decl_stmt" />
+            <Tag name="src:decl" />
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
         <Name>is_member</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Langs>C, C++</Langs>
         <Desc>
-
+Checks if something is a member of a class struct or union.
+&lt;br/&gt;
+&lt;br/&gt;
+This only works on C and C++ because normally every declaration within other languages
+that work with elements below are already members of a class, struct etc...
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all member variable declarations" xpath="//src:decl_stmt[src:is_member()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:typedef" />
+            <Tag name="src:function" />
+            <Tag name="src:function_decl" />
+            <Tag name="src:using" />
+            <Tag name="src:decl_stmt" />
+            <Tag name="src:decl" />
+            <Tag name="src:class" />
+            <Tag name="src:struct" />
+            <Tag name="src:enum" />
+            <Tag name="src:friend" />
+            <Tag name="src:class_decl" />
+            <Tag name="src:struct_decl" />
+            <Tag name="src:union" />
+            <Tag name="src:union_decl" />
+            <Tag name="src:public" />
+            <Tag name="src:private" />
+            <Tag name="src:protected" />
+            <Tag name="src:constructor" />
+            <Tag name="src:constructor_decl" />
+            <Tag name="src:destructor" />
+            <Tag name="src:destructor_decl" />
+            <Tag name="src:event" />
+            <Tag name="src:property" />
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
-        <Name>is_default</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_default()</Name>
+        <Langs>C++, Java</Langs>
         <Desc>
-
+Checks if something has a default implementation, in C++ this means that t looks for = default.
+In java, this means that it looks for a default implementation for an interface method.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all constructors that are set to = default (C++11)" xpath="//src:constructor_decl[src:is_default()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:function_decl" />
+            <Tag name="src:constructor_decl" />
+            <Tag name="src:destructor_decl" />
+            <Tag name="src:function" />
         </Tags>
     </ExtFunc>
     
@@ -825,441 +883,566 @@ C#&lt;br/&gt;
         <Name>is_pointer</Name>
         <Langs>C, C++, C#, Java</Langs>
         <Desc>
-
+Checks if a variable is a pointer. On function declarations this checks to see
+if the function is declares a function pointer.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all function pointer declarations" xpath="//src:function_decl[src:is_pointer()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:decl_stmt" />
+            <Tag name="src:decl" />
+            <Tag name="src:type" />
+            <Tag name="src:function_decl" />
+            <Tag name="src:function" />
+            <Tag name="src:param" />
+            <Tag name="src:argument" />
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
-        <Name>is_parameter_pack</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_parameter_pack()</Name>
+        <Langs>C++</Langs>
         <Desc>
-
+Checks to see if something is varargs.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all varargs parameters" xpath="//src:param[src:is_parameter_pack()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:decl" />
+            <Tag name="src:type" />
+            <Tag name="src:param" />
+            <Tag name="src:argument" />
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_generic</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_generic()</Name>
+        <Langs>C++, C#, Java</Langs>
         <Desc>
-
+Checks if something is generic by looking for type arguments.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all generic functions" xpath="//src:function[src:is_generic()]"/>
+            <Example desc="Find all generic interfaces" xpath="//src:interface[src:is_generic()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:using" />
+            <Tag name="src:function_decl" />
+            <Tag name="src:function" />
+            <Tag name="src:union" />
+            <Tag name="src:union_decl" />
+            <Tag name="src:class" />
+            <Tag name="src:class_decl" />
+            <Tag name="src:struct_decl" />
+            <Tag name="src:struct" />
+            <Tag name="src:constructor" />
+            <Tag name="src:constructor_decl" />
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
-        <Name>is_aligned</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_aligned()</Name>
+        <Langs>C, C++</Langs>
         <Desc>
-
+Checks to see if something was declared with an alignment specification.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all classes that have an alignment specification" xpath="//src:class[src:is_aligned()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:union" />
+            <Tag name="src:union_decl" />
+            <Tag name="src:class" />
+            <Tag name="src:class_decl" />
+            <Tag name="src:struct_decl" />
+            <Tag name="src:struct" />
+            <Tag name="src:decl" />
+            <Tag name="src:decl_stmt" />
+            <Tag name="src:type" />
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
-        <Name>is_noexcept</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_noexcept()</Name>
+        <Langs>C++</Langs>
         <Desc>
-
+Checks to see if a declaration is declared with noexcept or an empty exception
+specification. 
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all functions that specify that they don't throw exceptions" xpath="//src:function[src:is_noexcept()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:function_decl" />
+            <Tag name="src:function" />
+            <Tag name="src:constructor_decl" />
+            <Tag name="src:constructor" />
+            <Tag name="src:destructor_decl" />
+            <Tag name="src:destructor" />            
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
-        <Name>is_reference</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_reference()</Name>
+        <Langs>C++, C#</Langs>
         <Desc>
-
+Checks to see if a declaration, parameter or argument is declared as by reference.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all parameters that are pass by reference" xpath="//src:param[src:is_reference()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:argument" />
+            <Tag name="src:param" />
+            <Tag name="src:decl" />
+            <Tag name="src:decl_stmt" />
+            <Tag name="src:type" />
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
-        <Name>is_rvalue_reference</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_rvalue_reference()</Name>
+        <Langs>C++</Langs>
         <Desc>
-
+Checks to see if a type, declaration, parameter etc.. was declared as an R-value
+reference.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all functions that return an R-value reference type" xpath="//src:function[src:type[src:is_rvalue_reference()]]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:argument" />
+            <Tag name="src:param" />
+            <Tag name="src:decl" />
+            <Tag name="src:decl_stmt" />
+            <Tag name="src:type" />
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
-        <Name>is_noreturn</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_noreturn()</Name>
+        <Langs>C, C++</Langs>
         <Desc>
-
+Checks to see if a function is declared with the _Noreturn C11 keyword or the
+C++ noreturn attribute.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all noreturn functions" xpath="//src:function[src:is_noreturn()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="src:function_decl" />
+            <Tag name="src:function" />
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
-        <Name>is_readonly</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_readonly()</Name>
+        <Langs>C#</Langs>
         <Desc>
-
+Checks to see if a variable type or declaration statement are declared readonly.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all read only private member variables" xpath="//src:decl_stmt[src:is_readonly() and src:is_private()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="decl"/>
+            <Tag name="decl_stmt"/>
+            <Tag name="type"/>
         </Tags>
     </ExtFunc>
 
-    <ExtFunc>
-        <Name>is_protected_internal</Name>
-        <Langs>C, C++, C#, Java</Langs>
-        <Desc>
 
-        </Desc>
-        <Examples>
-            <Example desc="" xpath=""/>
-        </Examples>
-        <Tags>
-            <Tag name=""/>
-        </Tags>
-    </ExtFunc>
 
     <ExtFunc>
         <Name>bool is_out_param() OR bool is_out_argument()</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Langs>C#</Langs>
         <Desc>
-
+Checks to see if a parameter, argument, type etc.. declares that it is an out variable.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all output parameters" xpath="//src:param[src:is_out_param()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="param"/>
+            <Tag name="decl"/>
+            <Tag name="type"/>
+            <Tag name="argument"/>
+            <Tag name="expr"/>
         </Tags>
     </ExtFunc>
 
     <ExtFunc>
-        <Name>is_variadic</Name>
+        <Name>bool is_variadic()</Name>
         <Langs>C, C++, C#, Java</Langs>
         <Desc>
-
+This function works on varargs or ... or params. This doesn't work for nested
+class template definitions outside of the body of the class that it was
+declared within.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all variadic functions" xpath="//src:function[src:is_variadic()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
-        </Tags>
-    </ExtFunc>
-    
-    <ExtFunc>
-        <Name>is_new_override</Name>
-        <Langs>C, C++, C#, Java</Langs>
-        <Desc>
-
-        </Desc>
-        <Examples>
-            <Example desc="" xpath=""/>
-        </Examples>
-        <Tags>
-            <Tag name=""/>
-        </Tags>
-    </ExtFunc>
-
-    <ExtFunc>
-        <Name>is_sealed</Name>
-        <Langs>C, C++, C#, Java</Langs>
-        <Desc>
-
-        </Desc>
-        <Examples>
-            <Example desc="" xpath=""/>
-        </Examples>
-        <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+            <Tag name="constructor"/>
+            <Tag name="constructor_decl"/>
+            <Tag name="class"/>
+            <Tag name="class_decl"/>
+            <Tag name="struct"/>
+            <Tag name="struct_decl"/>
+            <Tag name="union"/>
+            <Tag name="union_decl"/>
+            <Tag name="argument_list[@type='template']"/>
+            <Tag name="delegate"/>
+            <Tag name="parameter_list"/>
+            <Tag name="template"/>
+            <Tag name="using"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_async</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_new_override()</Name>
+        <Langs>C#</Langs>
         <Desc>
-
+Checks if the new specifier is being applied to a method.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all functions that override a function non-virtually" xpath="//src:function[src:is_new_override()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+        </Tags>
+    </ExtFunc>
+
+    <ExtFunc>
+        <Name>bool is_sealed()</Name>
+        <Langs>C#</Langs>
+        <Desc>
+Checks to see if a class or function has been declared sealed.
+        </Desc>
+        <Examples>
+            <Example desc="Find all of the classes that are declared sealed" xpath="//src:class[src:is_sealed()]"/>
+        </Examples>
+        <Tags>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+            <Tag name="class"/>
+            <Tag name="class_decl"/>
+            <Tag name="struct"/>
+            <Tag name="struct_decl"/>
+            <Tag name="event"/>
+            <Tag name="property"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_implicit</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_async()</Name>
+        <Langs>C#</Langs>
         <Desc>
-
+Checks if a method has been declared asynchronous.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all asynchronous methods" xpath="//src:function[src:is_async()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_yield</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_implicit()</Name>
+        <Langs>C#</Langs>
         <Desc>
-
+Checks for the implicit keyword of the implicit conversion operator.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all implicit conversion operators" xpath="//src:function[src:is_implicit()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_extension_method</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_yield()</Name>
+        <Langs>C#</Langs>
         <Desc>
-
+Checks to see if a return or break statement were declared as a yield return or
+a yield break.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all functions that contain a yield return or break" xpath="//src:function[.//src:break[src:is_yield()] or .//src:return[src:is_yield()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="return"/>
+            <Tag name="break"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_main</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_extension_method()</Name>
+        <Langs>C#</Langs>
         <Desc>
-
+Checks to see if a method was declared as an extension method.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all extension methods" xpath="//src:function[src:is_extension_method()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_extern_c</Name>
+        <Name>bool is_main()</Name>
         <Langs>C, C++, C#, Java</Langs>
         <Desc>
-
+Returns true for the main function.
+The main function is recognized in C# by the name "Main" and a static specifier.
+Java's main function is deduced using the name "main" and the static specifier.
+C and C++ main is recognized as a function that occurs at the unit level with name
+main or one of the MSVC variants.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all main functions" xpath="//src:function[src:is_main()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_global</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_extern_c()</Name>
+        <Langs>C, C++</Langs>
         <Desc>
-
+Checks to see if the declaration is within an extern "C" or extern "C" block.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all functions declared within an extern &quot;C&quot; block or scope" xpath="//src:function[src:is_extern_c()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+            <Tag name="decl_stmt"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_operator</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_global()</Name>
+        <Langs>C, C++</Langs>
         <Desc>
-
+Checks to see if a declaration isn't within a namespace or other type of block.
+Global is determined in the following manner: Check to see if the parent
+is src:unit, if it is then the name of the function is examined to see if
+it uses the namespace qualifier (that isn't the first part of the name), if
+that's true then the declaration is global. If the parent isn't a src:unit
+but instead is a block, the parent of the block is checked, there is a special
+if the parent of the current block is an extern block or an anonymous namespace 
+continue checking until it isn't or the src:unit is reached, If the src:unit
+is reached then the current element is considered global.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all classes declared at the translation unit level" xpath="//src:function[src:is_global()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+            <Tag name="decl_stmt"/>
+            <Tag name="union"/>
+            <Tag name="union_decl"/>
+            <Tag name="class"/>
+            <Tag name="class_decl"/>
+            <Tag name="struct"/>
+            <Tag name="struct_decl"/>
+            <Tag name="namespace"/>
+            <Tag name="using"/>
+            <Tag name="typedef"/>
+            <Tag name="enum"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>has_ref_qualifier</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_operator()</Name>
+        <Langs>C++, C#</Langs>
         <Desc>
-
+Checks if the current function declaration or function definition is an operator declaration.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all operator declarations" xpath="//src:function[src:operator()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
-        </Tags>
-    </ExtFunc>
-
-    <ExtFunc>
-        <Name>has_trailing_return_type</Name>
-        <Langs>C, C++, C#, Java</Langs>
-        <Desc>
-
-        </Desc>
-        <Examples>
-            <Example desc="" xpath=""/>
-        </Examples>
-        <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_empty_return</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool has_ref_qualifier()</Name>
+        <Langs>C++</Langs>
         <Desc>
-
+Checks to see of a function was declared with reference qualifiers.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all ref qualified functions" xpath="//src:function[src:has_ref_qualifiers()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+        </Tags>
+    </ExtFunc>
+
+    <ExtFunc>
+        <Name>bool has_trailing_return_type()</Name>
+        <Langs>C++</Langs>
+        <Desc>
+Checks to see if a function was declared with a trailing return type using the auto
+keyword.
+        </Desc>
+        <Examples>
+            <Example desc="Find all functions declared with a trailing return type" xpath="//src:function[src:has_trailing_return()]"/>
+        </Examples>
+        <Tags>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+        </Tags>
+    </ExtFunc>
+    
+    <ExtFunc>
+        <Name>bool is_empty_return()</Name>
+        <Langs>C, C++, C#, Java</Langs>
+        <Desc>
+Checks to see if a return statement doesn't have an expression to return.
+        </Desc>
+        <Examples>
+            <Example desc="Find all functions that contain an empty return statement" xpath="//src:function[.//src:return[src:has_empty_return()]]"/>
+        </Examples>
+        <Tags>
+            <Tag name="return"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
         <Name>bool has_attributes() OR bool has_annotations()</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Langs>C++, C#, Java</Langs>
         <Desc>
-
+Searches for an attribute or annotation based on language and returns true if
+the current item has attributes or annotations.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all classes with attributes or annotations" xpath="//src:class[src:has_annotation()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="unit" />
+            <Tag name="class"/>
+            <Tag name="class_decl"/>
+            <Tag name="struct"/>
+            <Tag name="struct_decl"/>
+            <Tag name="union"/>
+            <Tag name="union_decl"/>
+            <Tag name="function"/>
+            <Tag name="function_decl"/>
+            <Tag name="constructor"/>
+            <Tag name="constructor_decl"/>
+            <Tag name="destructor"/>
+            <Tag name="destructor_decl"/>
+            <Tag name="property"/>
+            <Tag name="event"/>
+            <Tag name="param"/>
+            <Tag name="decl_stmt"/>
+            <Tag name="decl"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>has_function_try</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool has_function_try()</Name>
+        <Langs>C++</Langs>
         <Desc>
-
+Checks to see if a function, constructor or destructor has a function try block.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all constructors with try return blocks instead of a traditional block" xpath="//src:function[src:has_function_try()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
+            <Tag name="constructor"/>
+            <Tag name="destructor"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_KnR_C</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_KnR_C()</Name>
+        <Langs>C</Langs>
         <Desc>
-
+Checks to see if a function definition declares is declared in K&amp;R C style.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all K&amp;R C style function declarations" xpath="//src:fucntion[src:is_KnR_C()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="function"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
         <Name>bool is_template_parameter() OR bool is_generic_parameter()</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Langs>C++, C#, Java</Langs>
         <Desc>
-
+Checks if the current parameter (or in the case of generics arguments because it's
+marked wrong) is part of template. This also works for template or generic arguments,
+and in C++ specializations arguments.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all template parameters" xpath="//src:param[src:is_template_parameter()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="param"/>
+            <Tag name="argument"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_template_parameter_pack</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_template_parameter_pack()</Name>
+        <Langs>C++</Langs>
         <Desc>
-
+Checks if the current parameter is a template parameter pack.
         </Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all function parameters that are template parameter packs"
+                xpath="//src:parameter_list[not(@type[.='template'])]/src:param[src:is_template_parameter_pack()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="param"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_template_template_parameter</Name>
-        <Langs>C, C++, C#, Java</Langs>
-        <Desc>
-
-        </Desc>
+        <Name>bool is_template_template_parameter()</Name>
+        <Langs>C++</Langs>
+        <Desc>Checks if the current parameter of a template is a template template parameter.</Desc>
         <Examples>
-            <Example desc="" xpath=""/>
+            <Example desc="Find all template template parameters" xpath="//src:param[src:is_template_template_parameter()]"/>
         </Examples>
         <Tags>
-            <Tag name=""/>
+            <Tag name="param"/>
         </Tags>
     </ExtFunc>
     
     <ExtFunc>
-        <Name>is_template</Name>
-        <Langs>C, C++, C#, Java</Langs>
+        <Name>bool is_template() or is_generic_name()</Name>
+        <Langs>C++, C#, Java</Langs>
         <Desc>
-
+Checks to see if the type declaration is generic OR has template parameters or aguments. 
+That includes functions and constructors also. When applied to decl, param,
+type name or any other type of argument that isn't part of the declaration of
+a template.
         </Desc>
         <Examples>
             <Example desc="" xpath=""/>
