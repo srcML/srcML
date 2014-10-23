@@ -235,10 +235,14 @@ namespace {
         // Quick check to see if the remote location exists or is available
         CURL* ping = curl_easy_duphandle(curldata->handle);
         curl_easy_setopt(ping, CURLOPT_NOBODY, 1L);
+        //curl_easy_setopt(ping, CURLOPT_HEADER, 1L);
         curl_easy_perform(ping);
         
         long http_code = 0;
+        double data_size = 0;
         curl_easy_getinfo (ping, CURLINFO_RESPONSE_CODE, &http_code);
+        curl_easy_getinfo (ping, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &data_size);
+
         curl_easy_cleanup(ping);
         if (http_code != 200)
         {   
