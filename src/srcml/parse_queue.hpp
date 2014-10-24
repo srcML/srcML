@@ -29,14 +29,22 @@
 #include <threadpool.hpp>
 #pragma GCC diagnostic pop
 #include <boost/function.hpp>
+#include <write_queue.hpp>
 
 class ParseQueue {
 public:
 
-	ParseQueue(int max_threads, boost::function<void(ParseRequest*)> consumearg)
-	    : consume(consumearg), pool(max_threads), counter(0) {}
+	ParseQueue(int max_threads, boost::function<void(ParseRequest*)> consumearg, WriteQueue& write_queue)
+	    : consume(consumearg), pool(max_threads), counter(0), wqueue(write_queue) {}
 
 	inline void schedule(ParseRequest* pvalue) {
+
+	    // error passthrough to output for proper output in trace
+	    if (pvalue->status) {
+	        pvalue->unit = 0;
+	        wqueue.schedule(pvalue);
+	        return;
+	    }
 
 	    pvalue->position = ++counter;
 
@@ -52,6 +60,7 @@ private:
     boost::function<void(ParseRequest*)> consume;
     boost::threadpool::pool pool;
     int counter;
+    WriteQueue& wqueue;
 };
 
 #endif
