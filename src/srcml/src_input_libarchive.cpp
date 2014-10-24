@@ -25,6 +25,7 @@
 #endif
 
 #include <src_input_libarchive.hpp>
+#include <srcml_options.hpp>
 #include <curl/curl.h>
 #include <archive.h>
 #include <archive_entry.h>
@@ -158,6 +159,12 @@ void src_input_libarchive(ParseQueue& queue,
         if (language.empty())
             if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
                 language = l;
+
+        // if we don't have a language, and are not verbose, then just end this attemp
+        if (language.empty() && !(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
+            ++count;
+            continue;
+        }
 
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
