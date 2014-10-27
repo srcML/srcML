@@ -34,6 +34,7 @@ endif()
 
 if(NOT DYNAMIC_LOAD_ENABLED)
     add_definitions(-DNO_DLLOAD)
+
 endif()
 
 option(RUN_TIMING_TESTS "Run timing tests with ctest" OFF)
