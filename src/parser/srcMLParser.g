@@ -3134,7 +3134,7 @@ lcurly[] { ENTRY_DEBUG } :
 lcurly_base[] { ENTRY_DEBUG } :
         {
             // need to pass on class mode to detect constructors for Java
-            bool inclassmode = inLanguage(LANGUAGE_JAVA_FAMILY) && inMode(MODE_CLASS);
+            bool inclassmode = (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && inMode(MODE_CLASS);
 
             startNewMode(MODE_BLOCK);
 
@@ -3947,7 +3947,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
-                (options { generateAmbigWarnings = false; } : EXTERN (options { greedy = true; } : ALIAS set_int[specifier_count, specifier_count + 1])* | specifier | template_specifier set_bool[sawtemplate, true] |
+                (options { generateAmbigWarnings = false; } : EXTERN (options { greedy = true; } : ALIAS set_int[specifier_count, specifier_count + 1])* |
+                    { LA(1) != NEW || (inLanguage(LANGUAGE_CSHARP) && inPrevMode(MODE_CLASS)) }? specifier | template_specifier set_bool[sawtemplate, true] |
                     { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
