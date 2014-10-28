@@ -512,6 +512,7 @@
                 </XPath>
             </XPathQueries>
             <Example file="CS-output-parameter-1.cs" />
+            <Example file="CS-output-parameter-call-2.cs" />
         </DocEntry>
 
         <DocEntry title="ref">
@@ -524,6 +525,7 @@
                 </XPath>
             </XPathQueries>
             <Example file="CS-ref-1.cs" />
+            <Example file="CS-ref-call-2.cs" />
         </DocEntry>
 
         <DocEntry title="params">
@@ -906,7 +908,7 @@
                 <Element name="extern" />
             </Elements>
             <XPathQueries>
-                <XPath path="None">
+                <XPath path="//src:extern[src:specifier[.='alias']]">
                     <Desc>Find all externally alias declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -1069,15 +1071,13 @@
         <DocEntry title="interface">
         	<Desc>See class for more examples.</Desc>
             <Elements>
-                <Element name="class" >
-                    <AttribStr>type="interface"</AttribStr>
-                </Element>
+                <Element name="interface" />
                 <Subelement name="name" />
                 <Subelement name="super" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[@type='interface']">
+                <XPath path="//src:interface">
                     <Desc>Find all interfaces</Desc>
                 </XPath>
             </XPathQueries>

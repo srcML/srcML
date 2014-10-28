@@ -24,14 +24,6 @@
 
 }
 
-.xpathExample {
-    font-size: 1.1em;
-    border:.1em solid #dddddd;
-    background-color:#EEE;
-    padding:.2em;
-    line-height:2;
-}
-
 h3.subtitle {
     line-height:1.3;
     padding:0em;
@@ -44,9 +36,6 @@ h4.subtitle {
     margin:0em;
     margin-top:2em;
 }
-
-
-
 
 .opTitle {
 }
