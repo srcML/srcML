@@ -804,7 +804,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         namespace_definition |
 
         // C/C++
-        typedef_statement |
+        typedef_statement | friend_statement | 
 
         // C
         static_assert_statement |
@@ -2691,6 +2691,18 @@ emit_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
         EMIT
+;
+
+friend_statement[] { ENTRY_DEBUG } :
+    {
+    
+        startNewMode(MODE_STATEMENT | MODE_NEST);
+
+        startElement(SFRIEND);
+
+    }
+    FRIEND
+
 ;
 
 /* Declarations Definitions CFG */
@@ -5362,7 +5374,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             PUBLIC | PRIVATE | PROTECTED |
 
             // C++
-            FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
+            FINAL | STATIC | ABSTRACT | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
             CONSTEXPR | THREAD_LOCAL |
 
             // C
