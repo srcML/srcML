@@ -161,7 +161,7 @@ void src_input_libarchive(ParseQueue& queue,
                 language = l;
 
         // if we don't have a language, and are not verbose, then just end this attemp
-        if (language.empty() && !(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
+        if (language.empty()) {
             ++count;
             continue;
         }
