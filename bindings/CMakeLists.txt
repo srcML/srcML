@@ -20,12 +20,14 @@
 
 
 if(${BUILD_LANGUAGE_BINDINGS})
-    # Configuring Generator
-    # Running Generator To Create Header
+    # Setting Configuration Variables.
     set(GENERATOR_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR})
     set(SRCML_H_HEADER_PATH ${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h)
     get_target_property(DYNAMIC_LIBSRCML_LOCATION srcml_shared LIBRARY_OUTPUT_DIRECTORY)
     set(SRCML_H_XML_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/srcml.h.xml)
+
+
+    # Configuring the file used for generating the srcml.h.xml file
     configure_file(
         srcmlXMLHeaderGeneratorTemplate.py
         genLibsrcmlXMLHeader.py
@@ -33,15 +35,17 @@ if(${BUILD_LANGUAGE_BINDINGS})
     )
     file(GLOB_RECURSE GENERATOR_LIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/generator/*")
 
+    # Running newly generated python file.
     add_custom_command(
         OUTPUT ${SRCML_H_XML_OUTPUT_PATH}
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/genLibsrcmlXMLHeader.py
         DEPENDS ${GENERATOR_LIB_FILES} ${CMAKE_CURRENT_BINARY_DIR}/genLibsrcmlXMLHeader.py srcml_shared
 
     )
+    # Adding Target so that I can manually invoke this part of the build for testing.
     add_custom_target(build_srcml_h_xml
         DEPENDS ${SRCML_H_XML_OUTPUT_PATH}
-        COMMAND echo "DERP!!!"
+        COMMAND echo "Created srcml.h.xml from srcml.h"
     )
     # add_custom_command(
     #     OUTPUT 
@@ -58,11 +62,11 @@ if(${BUILD_LANGUAGE_BINDINGS})
     # Include individual language Directories
     if(${BUILD_PYTHON_BINDINGS})
         set(SRCML_PY_BINDINGS_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/python/srcml)
-        configure_file(
-            python/config.py
-            python/bindingBuilder.py
-            NEWLINE_STYLE UNIX
-        )
+        # configure_file(
+        #     python/configTemplate.py
+        #     python/bindingBuilder.py
+        #     NEWLINE_STYLE UNIX
+        # )
 
     # set(PYTHON_EXECUTABLE)
     endif()
