@@ -20,13 +20,43 @@
 
 
 if(${BUILD_LANGUAGE_BINDINGS})
-    # message(STATUS "Constructing Bindings for A Language")
-    set(GENERATOR_LIB_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+    # Configuring Generator
+    # Running Generator To Create Header
+    set(GENERATOR_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR})
     set(SRCML_H_HEADER_PATH ${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h)
+    get_target_property(DYNAMIC_LIBSRCML_LOCATION srcml_shared LIBRARY_OUTPUT_DIRECTORY)
+    set(SRCML_H_XML_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/srcml.h.xml)
+    configure_file(
+        srcmlXMLHeaderGeneratorTemplate.py
+        genLibsrcmlXMLHeader.py
+        NEWLINE_STYLE UNIX
+    )
+    file(GLOB_RECURSE GENERATOR_LIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/generator/*")
+
+    add_custom_command(
+        OUTPUT ${SRCML_H_XML_OUTPUT_PATH}
+        COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/genLibsrcmlXMLHeader.py
+        DEPENDS ${GENERATOR_LIB_FILES} ${CMAKE_CURRENT_BINARY_DIR}/genLibsrcmlXMLHeader.py srcml_shared
+
+    )
+    add_custom_target(build_srcml_h_xml
+        DEPENDS ${SRCML_H_XML_OUTPUT_PATH}
+        COMMAND echo "DERP!!!"
+    )
+    # add_custom_command(
+    #     OUTPUT 
+    # )
+    
+    # if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+        # add_custom_target(copy_test_data_target ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data" "${CMAKE_BINARY_DIR}/bin/xpath_test_data")
+        # add_dependencies(test_srcexfun_impl copy_test_data_target)
+        # file(GLOB_RECURSE xpath_test_files "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data/*")
+        # add_dependencies(test_srcexfun_impl ${xpath_test_files})
+    # endif()
+
 
     # Include individual language Directories
     if(${BUILD_PYTHON_BINDINGS})
-        get_target_property(DYNAMIC_LIBSRCML_LOCATION srcml_shared LIBRARY_OUTPUT_DIRECTORY)
         set(SRCML_PY_BINDINGS_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/python/srcml)
         configure_file(
             python/config.py
