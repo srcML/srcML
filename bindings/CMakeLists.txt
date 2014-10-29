@@ -23,7 +23,15 @@ if(${BUILD_LANGUAGE_BINDINGS})
     # Setting Configuration Variables.
     set(GENERATOR_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR})
     set(SRCML_H_HEADER_PATH ${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h)
-    get_target_property(DYNAMIC_LIBSRCML_LOCATION srcml_shared LIBRARY_OUTPUT_DIRECTORY)
+    get_target_property(SHARED_LIBSRCML_OUTPUT_PATH srcml_shared LIBRARY_OUTPUT_DIRECTORY)
+    get_target_property(SHARED_LIBSRCML_OUTPUT_NAME srcml_shared OUTPUT_NAME)
+    if(WIN32)
+        set(DYNAMIC_LIBSRCML_LOCATION ${SHARED_LIBSRCML_OUTPUT_PATH}/lib${SHARED_LIBSRCML_OUTPUT_NAME}.dll)
+    elseif(APPLE)
+        set(DYNAMIC_LIBSRCML_LOCATION ${SHARED_LIBSRCML_OUTPUT_PATH}/lib${SHARED_LIBSRCML_OUTPUT_NAME}.dylib)
+    else()
+        set(DYNAMIC_LIBSRCML_LOCATION ${SHARED_LIBSRCML_OUTPUT_PATH}/lib${SHARED_LIBSRCML_OUTPUT_NAME}.so)
+    endif()
     set(SRCML_H_XML_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/srcml.h.xml)
 
 
@@ -43,7 +51,8 @@ if(${BUILD_LANGUAGE_BINDINGS})
 
     )
     # Adding Target so that I can manually invoke this part of the build for testing.
-    add_custom_target(build_srcml_h_xml
+    add_custom_target(
+        build_srcml_h_xml
         DEPENDS ${SRCML_H_XML_OUTPUT_PATH}
         COMMAND echo "Created srcml.h.xml from srcml.h"
     )
@@ -62,13 +71,24 @@ if(${BUILD_LANGUAGE_BINDINGS})
     # Include individual language Directories
     if(${BUILD_PYTHON_BINDINGS})
         set(SRCML_PY_BINDINGS_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/python/srcml)
-        # configure_file(
-        #     python/configTemplate.py
-        #     python/bindingBuilder.py
-        #     NEWLINE_STYLE UNIX
-        # )
+        configure_file(
+            python/configTemplate.py
+            python/genPythonBindings.py
+            NEWLINE_STYLE UNIX
+        )
+        set(PY_BINDINGS_OUTPUT_FILE ${SRCML_PY_BINDINGS_LOCATION}/bindings.py)
+        add_custom_command(
+            OUTPUT ${PY_BINDINGS_OUTPUT_FILE}
+            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/python/genPythonBindings.py
+            DEPENDS build_srcml_h_xml
 
-    # set(PYTHON_EXECUTABLE)
+        )
+        # Python Target
+        add_custom_target(
+            build_python_bindings
+            DEPENDS ${PY_BINDINGS_OUTPUT_FILE}
+            COMMAND echo "Generated Python C Bindings"
+        )
     endif()
 
     if(${BUILD_CSHARP_BINDINGS})

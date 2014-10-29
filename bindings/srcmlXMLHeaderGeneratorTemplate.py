@@ -19,7 +19,6 @@
 
 srcmlHPath = "${SRCML_H_HEADER_PATH}"
 generatorPath = "${GENERATOR_LIB_DIR}"
-pythonBindingsLocation = "${SRCML_PY_BINDINGS_LOCATION}"
 srcmlLibLocation = "${DYNAMIC_LIBSRCML_LOCATION}"
 srcmlHeaderOutputPath = "${SRCML_H_XML_OUTPUT_PATH}"
 
@@ -28,4 +27,4 @@ import sys
 sys.path.append(generatorPath)
 from generator import *
 
-
+srcml(srcmlLibLocation, srcmlHPath, srcmlHeaderOutputPath)
