@@ -19,13 +19,23 @@
 
 import lxml.etree as ET
 
-class BindingGenerator:
+XPathNamespaces = {
+    "src": "http://www.sdml.info/srcML/src",
+    "cpp": "http://www.sdml.info/srcML/cpp"
+}
+
+class BindingGenerator(object):
     def __init__(self):
-        pass
+        self.srcmlAPI = None
+        self.constantMacros = []
+        self.functionPointerTypes = []
+        self.pointerDecls = []
+        self.functionDecls = []
 
     def run(self, srcMLedHeaderPath):
-        
-        pass
+        # Loading XML File.
+        self.srcmlAPI = ET.parse(srcMLedHeaderPath)
+
 
     def gatherStaticConstantMacros(self):
         pass

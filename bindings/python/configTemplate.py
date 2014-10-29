@@ -23,7 +23,16 @@ pythonBindingsLocation = "${SRCML_PY_BINDINGS_LOCATION}"
 srcmlXMLHeaderFile = "${SRCML_H_XML_OUTPUT_PATH}"
 outputFilePath = "${PY_BINDINGS_OUTPUT_FILE}"
 
-print "Yup Doing stuff!"
+import sys
+
+sys.path.append(generatorPath)
+from generator import *
+
+class GenPythonCode(BindingGenerator):
+    def __init__(self):
+        super(GenPythonCode, self).__init__()
 
 
 
+genCode = GenPythonCode()
+genCode.run(srcmlXMLHeaderFile)
