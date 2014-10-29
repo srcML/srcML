@@ -16,4 +16,12 @@
     <friend>friend <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><operator>,</operator> <name>g</name><parameter_list>()</parameter_list>;</function_decl></friend> </private>}</block>;</class>
 </unit>
 
+<unit>
+<friend>friend <class_decl>class <name>foo</name>;</class_decl></friend>
+</unit>
+
+<unit>
+<friend>friend <class_decl>class <name>foo</name>, <name>bar</name>;</class_decl></friend>
+</unit>
+
 </unit>
