@@ -18,3 +18,23 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import lxml.etree as ET
+
+class BindingGenerator:
+    def __init__(self):
+        pass
+
+    def run(self, srcMLedHeaderPath):
+        
+        pass
+
+    def gatherStaticConstantMacros(self):
+        pass
+
+    def gatherPointerDecls(self):
+        pass
+
+    def gatherFunctionPointerTypes(self):
+        pass
+
+    def gatherFunctionDecls(self):
+        pass
