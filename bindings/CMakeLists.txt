@@ -71,12 +71,12 @@ if(${BUILD_LANGUAGE_BINDINGS})
     # Include individual language Directories
     if(${BUILD_PYTHON_BINDINGS})
         set(SRCML_PY_BINDINGS_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/python/srcml)
+        set(PY_BINDINGS_OUTPUT_FILE ${SRCML_PY_BINDINGS_LOCATION}/bindings.py)
         configure_file(
             python/configTemplate.py
             python/genPythonBindings.py
             NEWLINE_STYLE UNIX
         )
-        set(PY_BINDINGS_OUTPUT_FILE ${SRCML_PY_BINDINGS_LOCATION}/bindings.py)
         add_custom_command(
             OUTPUT ${PY_BINDINGS_OUTPUT_FILE}
             COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/python/genPythonBindings.py

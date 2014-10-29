@@ -32,7 +32,25 @@ class GenPythonCode(BindingGenerator):
     def __init__(self):
         super(GenPythonCode, self).__init__()
 
+    def startBindings(self):
+        """ This is called when the bindings started."""
+        return ""
 
+    def endBindings(self):
+        """ This is called when the bindings end."""
+        return ""
+
+    def defineConstantFromMacro(self, name, valueString):
+        return ""
+
+    def resolveType(self, type):
+        return ""
+
+    def defineFuncPtrType(self, funcPtrInfo):
+        return ""
+
+    def buildFunctionBinding(self, functionDeclInfo):
+        return ""
 
 genCode = GenPythonCode()
-genCode.run(srcmlXMLHeaderFile)
+genCode.run(srcmlXMLHeaderFile, outputFilePath)

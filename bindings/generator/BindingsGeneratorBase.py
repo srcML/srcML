@@ -24,24 +24,59 @@ XPathNamespaces = {
     "cpp": "http://www.sdml.info/srcML/cpp"
 }
 
+class FunctionInfo:
+    def __init__(self):
+        self.returnType = None
+        self.parameterTypes = []
+        self.functionName = ""
+
+    def clear(self):
+        self.returnType = None
+        self.parameterTypes = []
+        self.functionName = ""
+
 class BindingGenerator(object):
     def __init__(self):
         self.srcmlAPI = None
         self.constantMacros = []
         self.functionPointerTypes = []
-        self.pointerDecls = []
         self.functionDecls = []
 
-    def run(self, srcMLedHeaderPath):
-        # Loading XML File.
-        self.srcmlAPI = ET.parse(srcMLedHeaderPath)
 
+    def run(self, srcMLedHeaderFilePath, bindingOutputFilePath):
+        # Loading XML File.
+        self.srcmlAPI = ET.parse(srcMLedHeaderFilePath)
+
+        # Gathering things to use during code generation.
+        self.gatherStaticConstantMacros()
+        self.gatherFunctionPointerTypes()
+        self.gatherFunctionDecls()
+
+        # Open the stream to insert bindings into
+        bindingsFile = open(bindingOutputFilePath, "w")
+        
+        # Write the initial part of any header file
+        # into the documentation.
+        bindingsFile.write(self.startBindings() + "\n")
+
+        for constant in self.constantMacros:
+            bindingsFile.write(self.defineConstantFromMacro("a", "b") + "\n")
+
+        currentFuncInfo = currentFunct()
+        for funcPtr in self.functionPointerTypes:
+            bindingsFile.write(self.defineFuncPtrType(currentFuncInfo) + "\n")
+
+
+        currentFuncInfo = currentFunct()
+        for funcDecl in self.functionDecls:
+            bindingsFile.write(self.buildFunctionBinding(currentFuncInfo) + "\n")
+            pass
+
+
+        bindingsFile.write(self.endBindings() + "\n")
+        bindingsFile.close()
 
     def gatherStaticConstantMacros(self):
-        
-        pass
-
-    def gatherPointerDecls(self):
         pass
 
     def gatherFunctionPointerTypes(self):
