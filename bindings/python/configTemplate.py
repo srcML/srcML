@@ -41,7 +41,7 @@ class GenPythonCode(BindingGenerator):
         return ""
 
     def defineConstantFromMacro(self, name, valueString):
-        return ""
+        return "{0} = {1}".format(name, valueString)
 
     def resolveType(self, type):
         return ""

@@ -80,7 +80,7 @@ if(${BUILD_LANGUAGE_BINDINGS})
         add_custom_command(
             OUTPUT ${PY_BINDINGS_OUTPUT_FILE}
             COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/python/genPythonBindings.py
-            DEPENDS build_srcml_h_xml
+            DEPENDS build_srcml_h_xml ${SRCML_H_XML_OUTPUT_PATH}
 
         )
         # Python Target

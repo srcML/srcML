@@ -60,27 +60,36 @@ class BindingGenerator(object):
         bindingsFile.write(self.startBindings() + "\n")
 
         for constant in self.constantMacros:
-            bindingsFile.write(self.defineConstantFromMacro("a", "b") + "\n")
+            bindingsFile.write(self.defineConstantFromMacro(constant[0], constant[1]) + "\n")
 
-        currentFuncInfo = currentFunct()
+        currentFuncInfo = FunctionInfo()
         for funcPtr in self.functionPointerTypes:
             bindingsFile.write(self.defineFuncPtrType(currentFuncInfo) + "\n")
 
-
-        currentFuncInfo = currentFunct()
+        currentFuncInfo = FunctionInfo()
         for funcDecl in self.functionDecls:
             bindingsFile.write(self.buildFunctionBinding(currentFuncInfo) + "\n")
             pass
-
 
         bindingsFile.write(self.endBindings() + "\n")
         bindingsFile.close()
 
     def gatherStaticConstantMacros(self):
-        pass
+        macroList = self.srcmlAPI.xpath("//cpp:define[cpp:macro/src:name[.!='__LIBSRCML_DECL'] and cpp:value]", namespaces=XPathNamespaces)
+        self.constantMacros = [
+            (
+                x.xpath("cpp:macro/src:name/text()", namespaces=XPathNamespaces)[0],
+                x.xpath("cpp:value/text()", namespaces=XPathNamespaces)[0]
+            )
+            for x in macroList
+        ]
 
     def gatherFunctionPointerTypes(self):
-        pass
+        typicalFunctionPointerList = self.srcmlAPI.xpath("//src:function_decl[contains(.,'(')]", namespaces=XPathNamespaces)
+        erroniousFunctionPointerList = self.srcmlAPI.xpath("//src:argument/src:expr/src:call/src:call", namespaces=XPathNamespaces)
+        print typicalFunctionPointerList
+        print erroniousFunctionPointerList
+
 
     def gatherFunctionDecls(self):
         pass
