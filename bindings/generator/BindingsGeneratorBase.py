@@ -38,6 +38,7 @@ class BindingGenerator(object):
 
 
     def gatherStaticConstantMacros(self):
+        
         pass
 
     def gatherPointerDecls(self):
