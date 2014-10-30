@@ -22,9 +22,22 @@ generatorPath = "${GENERATOR_LIB_DIR}"
 srcmlLibLocation = "${DYNAMIC_LIBSRCML_LOCATION}"
 srcmlHeaderOutputPath = "${SRCML_H_XML_OUTPUT_PATH}"
 
-import sys
+import sys, re, os
 
 sys.path.append(generatorPath)
 from generator import *
+tempFileLocation = "${CMAKE_CURRENT_BINARY_DIR}/srcml.h.temp"
+inputsrcmlH = open(srcmlHPath, "r")
 
-srcml(srcmlLibLocation, srcmlHPath, srcmlHeaderOutputPath)
+srcmlhFileContent = "".join(inputsrcmlH.readlines())
+inputsrcmlH.close()
+
+removeStructKw = re.compile(r"\bstruct\b", re.M)
+
+
+outputStrm = open(tempFileLocation, "w")
+outputStrm.write(removeStructKw.sub("", srcmlhFileContent))
+outputStrm.close()
+
+srcml(srcmlLibLocation, tempFileLocation, srcmlHeaderOutputPath, "temp", "C++")
+os.remove(tempFileLocation)
