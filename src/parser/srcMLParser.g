@@ -8538,12 +8538,13 @@ ENTRY_DEBUG } :
                 if(end_statement)
                     else_handling();
 
-                if(LA(1) == 1) {
 
-                    eol_post(directive_token, markblockzero);
-                    return;
-                }
+            }
 
+            if(LA(1) == 1) {
+
+                eol_post(directive_token, markblockzero);
+                return;
             }
 
         }
