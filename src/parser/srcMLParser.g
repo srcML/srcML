@@ -643,6 +643,7 @@ public:
     int current_column;
     int current_line;
     int nxt_token;
+    int last_consumed;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -658,6 +659,7 @@ public:
 
     static const antlr::BitSet enum_preprocessing_token_set;
     static const antlr::BitSet literal_tokens_set;
+
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -691,6 +693,17 @@ public:
     }
 
     void endAllModes();
+
+
+    virtual void consume() {
+
+        last_consumed = LA(1);
+        LLkParser::consume();
+
+
+
+    }
+
 }
 
 
@@ -3040,7 +3053,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name[true] | keyword_name) (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name | keyword_name) (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -3813,7 +3826,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         }
 
     }
-
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, type_count);
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, type);
     if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
 
@@ -4020,10 +4034,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, last_consumed == MULTOPS || !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
-                (multops)*
                 set_int[type_count, type_count + 1] |
 
                 { type_count == attribute_count + specifier_count + template_count }?
@@ -4033,10 +4046,10 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier (derived)* | enum_class_header | LCURLY)
                 //set_type[type, ENUM_DEFN, type == ENUM_DECL     && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
+                trace_int[last_consumed]
+                set_type[type, NONE, last_consumed == MULTOPS || !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
-                (multops)*
                 set_int[type_count, type_count + 1] |
 
                 (
@@ -5114,15 +5127,15 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
 ;
 
 // Markup names
-compound_name[bool no_multops = false] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
-        compound_name_inner[true, no_multops]
+compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
+        compound_name_inner[true]
         (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
 ;
 
 // name markup internals
-compound_name_inner[bool index, bool no_multops = false] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG 
+compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG 
 } :
         {
             // There is a problem detecting complex names from
@@ -5159,7 +5172,7 @@ compound_name_inner[bool index, bool no_multops = false] { CompleteElement eleme
         compound_name_c[iscompound] |
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
-        compound_name_cpp[iscompound, no_multops] |
+        compound_name_cpp[iscompound] |
 
         macro_type_name_call 
         )
@@ -5185,17 +5198,17 @@ multops_star[] { ENTRY_DEBUG } :
 ;
 
 // C++ compound name handling
-compound_name_cpp[bool& iscompound, bool no_multops = false] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
-        (options { greedy = true; } : { !no_multops && !inTransparentMode(MODE_EXPRESSION) }? multops)*
+        (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
             (dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
-            ( options { greedy = true; } : dcolon)*
+            (options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
