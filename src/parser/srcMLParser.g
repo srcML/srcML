@@ -3826,8 +3826,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         }
 
     }
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, type_count);
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, type);
+
     if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
 
