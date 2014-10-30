@@ -3040,7 +3040,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name | keyword_name) (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name[true] | keyword_name) (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -4023,6 +4023,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
+                (multops)*
                 set_int[type_count, type_count + 1] |
 
                 { type_count == attribute_count + specifier_count + template_count }?
@@ -4035,6 +4036,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
+                (multops)*
                 set_int[type_count, type_count + 1] |
 
                 (
@@ -5112,15 +5114,15 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
 ;
 
 // Markup names
-compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
-        compound_name_inner[true]
+compound_name[bool no_multops = false] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
+        compound_name_inner[true, no_multops]
         (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
 ;
 
 // name markup internals
-compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG 
+compound_name_inner[bool index, bool no_multops = false] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG 
 } :
         {
             // There is a problem detecting complex names from
@@ -5157,7 +5159,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         compound_name_c[iscompound] |
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
-        compound_name_cpp[iscompound] |
+        compound_name_cpp[iscompound, no_multops] |
 
         macro_type_name_call 
         )
@@ -5183,12 +5185,12 @@ multops_star[] { ENTRY_DEBUG } :
 ;
 
 // C++ compound name handling
-compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound, bool no_multops = false] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
         (simple_name_optional_template | push_namestack overloaded_operator)
-        (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
+        (options { greedy = true; } : { !no_multops && !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
