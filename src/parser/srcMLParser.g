@@ -3040,7 +3040,7 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name | keyword_name) (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name[true] | keyword_name) (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -4075,7 +4075,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION) }?
-                ({ LA(1) == DECLTYPE }? type_specifier_call | { next_token() == LPAREN }? atomic |pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
+                ({ LA(1) == DECLTYPE }? type_specifier_call | { next_token() == LPAREN }? atomic | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -5112,15 +5112,15 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
 ;
 
 // Markup names
-compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
-        compound_name_inner[true]
+compound_name[bool is_class_name = false] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
+        compound_name_inner[true, is_class_name]
         (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
 
 ;
 
 // name markup internals
-compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG 
+compound_name_inner[bool index, bool is_class_name = false] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG 
 } :
         {
             // There is a problem detecting complex names from
@@ -5156,8 +5156,12 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { inLanguage(LANGUAGE_C) }?
         compound_name_c[iscompound] |
 
-        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) && !is_class_name }?
         compound_name_cpp[iscompound] |
+
+        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) && is_class_name }?
+        compound_name_cpp_class_name[iscompound] |
+
         macro_type_name_call 
         )
 
@@ -5197,6 +5201,26 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
             (multops)*
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
             (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
+        )*
+
+        { notdestructor = LA(1) == DESTOP; }
+
+;
+exception
+catch[antlr::RecognitionException] {
+}
+
+// C++ compound name handling
+compound_name_cpp_class_name[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+
+        (dcolon { iscompound = true; })*
+        (simple_name_optional_template | push_namestack overloaded_operator)
+
+        // "a::" causes an exception to be thrown
+        ( options { greedy = true; } :
+            (dcolon { iscompound = true; })
+            (options { greedy = true; } : dcolon)*
+            (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
         )*
 
         { notdestructor = LA(1) == DESTOP; }
@@ -7696,6 +7720,8 @@ parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NON
 parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type = true; ENTRY_DEBUG } :
         {
 
+                fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, stmt_type ? "true" : "false");fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, stmt_type);
+fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, VARIABLE);
                 // start the declaration element
                 startElement(SDECLARATION);
 
@@ -7706,6 +7732,7 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
                 output_type = !((inLanguage(LANGUAGE_JAVA) || inLanguage(LANGUAGE_CSHARP)) && type_count == 1 && LA(1) != DOTDOTDOT && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
                     && ((look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA ||
                         look_past_token == RPAREN || look_past_token == TRETURN || look_past_token == LAMBDA));
+
 
         }
 
