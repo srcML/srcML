@@ -643,6 +643,7 @@ public:
     int current_column;
     int current_line;
     int nxt_token;
+    int last_consumed;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -658,6 +659,7 @@ public:
 
     static const antlr::BitSet enum_preprocessing_token_set;
     static const antlr::BitSet literal_tokens_set;
+
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -691,6 +693,17 @@ public:
     }
 
     void endAllModes();
+
+
+    virtual void consume() {
+
+        last_consumed = LA(1);
+        LLkParser::consume();
+
+
+
+    }
+
 }
 
 
@@ -4020,7 +4033,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, last_consumed == MULTOPS || !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
@@ -4032,7 +4045,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier (derived)* | enum_class_header | LCURLY)
                 //set_type[type, ENUM_DEFN, type == ENUM_DECL     && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, last_consumed == MULTOPS || !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
@@ -4075,7 +4088,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION) }?
-                ({ LA(1) == DECLTYPE }? type_specifier_call | { next_token() == LPAREN }? atomic |pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
+                ({ LA(1) == DECLTYPE }? type_specifier_call | { next_token() == LPAREN }? atomic | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -5158,6 +5171,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
         compound_name_cpp[iscompound] |
+
         macro_type_name_call 
         )
 
@@ -5192,7 +5206,7 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
             (dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
-            ( options { greedy = true; } : dcolon)*
+            (options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
@@ -7706,6 +7720,7 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
                 output_type = !((inLanguage(LANGUAGE_JAVA) || inLanguage(LANGUAGE_CSHARP)) && type_count == 1 && LA(1) != DOTDOTDOT && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
                     && ((look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA ||
                         look_past_token == RPAREN || look_past_token == TRETURN || look_past_token == LAMBDA));
+
 
         }
 
