@@ -4033,7 +4033,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
                 set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
                 set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, last_consumed == MULTOPS || !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
@@ -4045,7 +4045,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier (derived)* | enum_class_header | LCURLY)
                 //set_type[type, ENUM_DEFN, type == ENUM_DECL     && (LA(1) == LCURLY || lcurly)]
-                set_type[type, NONE, last_consumed == MULTOPS || !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
+                set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
                 set_int[type_count, type_count + 1] |
@@ -7725,7 +7725,7 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
         }
 
         (
-        { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
+        { stmt_type == VARIABLE || stmt_type == CLASS_DECL || stmt_type == STRUCT_DECL || stmt_type == UNION_DECL || stmt_type == ENUM_DECL || LA(1) == DOTDOTDOT }?
         (parameter_type_count[type_count, output_type])
         // suppress warning caused by ()*
         (options { greedy = true; } : bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
