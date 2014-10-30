@@ -7720,8 +7720,6 @@ parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NON
 parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type = true; ENTRY_DEBUG } :
         {
 
-                fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, stmt_type ? "true" : "false");fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, stmt_type);
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, VARIABLE);
                 // start the declaration element
                 startElement(SDECLARATION);
 
