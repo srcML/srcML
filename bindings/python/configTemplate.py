@@ -153,7 +153,15 @@ def {pyName}({parameters}):
         elif functionDeclInfo.returnType == "c_void_p" or functionDeclInfo.returnType == "c_char_p":
             selectedTemplate = factoryReturnTemplate
         elif functionDeclInfo.returnType == "c_int":
-            selectedTemplate = intResultTemplate
+            if functionDeclInfo.name.find("_get_") == -1:
+                selectedTemplate = intResultTemplate    
+            else:
+                print "Get function"
+                print functionDeclInfo.name
+
+                selectedTemplate = factoryReturnTemplate
+            # if srcml.get_language_list_size()
+            # selectedTemplate = intResultTemplate
         elif functionDeclInfo.returnType == "c_ulonglong":
             selectedTemplate = simpleNoCheckReturnTemplate
         else:
