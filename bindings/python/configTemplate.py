@@ -165,7 +165,10 @@ def {pyName}({parameters}):
             raise Exception("Unhandled return type: {0}".format(functionDeclInfo.returnType))
 
         # Gathering simply variables for template.
-        pyName = functionDeclInfo.name[6:]
+        if len(functionDeclInfo.name) <= 6:
+            pyName = functionDeclInfo.name
+        else:
+            pyName = functionDeclInfo.name[6:]
         nativeName = functionDeclInfo.name
 
         # Computing parameters and invocation arguments

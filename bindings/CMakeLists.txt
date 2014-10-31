@@ -56,20 +56,11 @@ if(${BUILD_LANGUAGE_BINDINGS})
         DEPENDS ${SRCML_H_XML_OUTPUT_PATH}
         COMMAND echo "Created srcml.h.xml from srcml.h"
     )
-    # add_custom_command(
-    #     OUTPUT 
-    # )
-    
-    # if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
-        # add_custom_target(copy_test_data_target ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data" "${CMAKE_BINARY_DIR}/bin/xpath_test_data")
-        # add_dependencies(test_srcexfun_impl copy_test_data_target)
-        # file(GLOB_RECURSE xpath_test_files "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data/*")
-        # add_dependencies(test_srcexfun_impl ${xpath_test_files})
-    # endif()
 
 
     # Include individual language Directories
     if(${BUILD_PYTHON_BINDINGS})
+
         set(SRCML_PY_BINDINGS_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/python/srcml)
         set(PY_BINDINGS_OUTPUT_FILE ${SRCML_PY_BINDINGS_LOCATION}/bindings.py)
         configure_file(
