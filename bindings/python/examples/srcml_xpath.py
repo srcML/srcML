@@ -26,21 +26,18 @@ import srcml
 
 if __name__ == "__main__":
 
-    iarchive = srcml.create_archive();
-    srcml.read_open_filename(iarchive, "project.xml");
-    oarchive = srcml.clone_archive(iarchive);
+    iarchive = srcml.create_archive()
+    srcml.read_open_filename(iarchive, "project.xml")
+    oarchive = srcml.clone_archive(iarchive)
     oarchive = None
-    srcml.write_open_filename(oarchive, "xpath.xml");
+    srcml.write_open_filename(oarchive, "xpath.xml")
 
-    srcml.append_transform_xpath(iarchive, "//src:unit");
+    srcml.append_transform_xpath(iarchive, "//src:unit")
 
-    srcml.apply_transforms(iarchive, oarchive);
+    srcml.apply_transforms(iarchive, oarchive)
 
-    srcml.close_archive(iarchive);
-    srcml.close_archive(oarchive);
+    srcml.close_archive(iarchive)
+    srcml.close_archive(oarchive)
 
-    srcml.free_archive(iarchive);
-    srcml.free_archive(oarchive);
-
-    return 0;
-}
+    srcml.free_archive(iarchive)
+    srcml.free_archive(oarchive)
