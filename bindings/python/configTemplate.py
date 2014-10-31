@@ -71,7 +71,7 @@ class GenPythonCode(BindingGenerator):
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from ctypes import cdll, c_int, c_char_p, pointer, c_ulonglong, CFUNCTYPE, c_void_p
+from ctypes import cdll, c_int, c_char_p, pointer, c_ulonglong, CFUNCTYPE, c_void_p, byref
 
 libsrcml = cdll.LoadLibrary("libsrcml.so")
 """
@@ -194,7 +194,7 @@ def {pyName}({parameters}):
             # in/out variable using pointer to handle
             # that case.
             if param.callingConvention == PARAM_IN_OUT:
-                invocationArguments.append("pointer({0})".format(paramName))
+                invocationArguments.append("byref({0})".format(paramName))
             else:
                 invocationArguments.append(paramName)
 
