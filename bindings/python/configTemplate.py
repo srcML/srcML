@@ -72,8 +72,16 @@ class GenPythonCode(BindingGenerator):
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from ctypes import cdll, c_int, c_char_p, pointer, c_ulonglong, CFUNCTYPE, c_void_p, byref
+from ctypes.util import find_library
 
 libsrcml = cdll.LoadLibrary("libsrcml.so")
+
+libc = cdll.LoadLibrary(find_library('c'))
+libc.free.restype = None
+libc.free.argtypes = [c_void_p]
+
+def free(to_free):
+    libc.free(to_free)
 """
 
 
@@ -156,9 +164,6 @@ def {pyName}({parameters}):
             if functionDeclInfo.name.find("_get_") == -1:
                 selectedTemplate = intResultTemplate    
             else:
-                print "Get function"
-                print functionDeclInfo.name
-
                 selectedTemplate = factoryReturnTemplate
             # if srcml.get_language_list_size()
             # selectedTemplate = intResultTemplate
