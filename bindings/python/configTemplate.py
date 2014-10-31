@@ -86,11 +86,6 @@ libsrcml = cdll.LoadLibrary("libsrcml.so")
 def check_result(rc):
     if rc != SRCML_STATUS_OK:
         raise Exception("srcml has encountered an error. Error Code: {0}".format(rc))
-
-def check_created_result(res):
-    if res == None:
-        raise Exception("srcml allocation failed")
-    return res
 """
 
 
@@ -145,7 +140,7 @@ def {pyName}({parameters}):
 """
         factoryReturnTemplate = """
 def {pyName}({parameters}):
-    return check_created_result(libsrcml.{nativeName}({invocationArguments}))
+    return libsrcml.{nativeName}({invocationArguments})
 """
         simpleNoCheckReturnTemplate = """
 def {pyName}({parameters}):
