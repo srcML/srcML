@@ -1,4 +1,5 @@
 #!/usr/bin/python
+#
 # @file srcml_convenient.py
 #
 # @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
