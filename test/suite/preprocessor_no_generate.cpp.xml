@@ -6,4 +6,7 @@
 <return>return;</return>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></unit>
 
+<unit>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro></cpp:define></unit>
+
 </unit>
