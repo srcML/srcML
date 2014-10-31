@@ -76,10 +76,12 @@ if(${BUILD_LANGUAGE_BINDINGS})
         )
         # Python Target
         add_custom_target(
-            build_python_bindings
+            # build_python_bindings
             DEPENDS ${PY_BINDINGS_OUTPUT_FILE}
             COMMAND echo "Generated Python C Bindings"
         )
+        # project()
+        # add_dependencies(${PROJECT_NAME} build_python_bindings)
     endif()
 
     if(${BUILD_CSHARP_BINDINGS})
@@ -87,4 +89,5 @@ if(${BUILD_LANGUAGE_BINDINGS})
             message(WARNING "C# build hasn't been tested with Non-Visual Studio Projects. This may cause errors or build failures.")
         endif()
     endif()
+
 endif()
