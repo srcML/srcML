@@ -25,7 +25,7 @@
 # Create an archive, file by file, with an output filename.
 
 
-import srcml
+import sys, srcml
 
 if __name__ == "__main__":
     archive = None
@@ -35,11 +35,10 @@ if __name__ == "__main__":
     archive = srcml.create_archive()
 
     # open a srcML archive for output
-    srcml.write_open_filename(archive, "project.xml")
+    srcml.write_open_filename(archive, "srcml_create_archive_filename.xml")
 
     # add all the files to the archive
-    for arg in sys.argv:
-
+    for arg in sys.argv[1:]:
         unit = srcml.create_unit(archive)
         srcml.unit_set_filename(unit, arg)
 
