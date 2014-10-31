@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# @file srcml_direct_language_list.c
+# @file srcml_list.c
 #
 # @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 #
@@ -19,11 +19,25 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-# A null-terminated list of the supported srcML source-code language.
-
+#
+#  Example program of the use of the C API for srcML.
+#
+#  Gather info from an archive from a given unit.
 
 import srcml
 
 if __name__ == "__main__":
-    for i in range(srcml.get_language_list_size()):
-        print srcml.get_language_list(i)
+    archive = None
+    unit = None
+
+    archive = srcml.create_archive()
+    srcml.read_open_filename(archive, "project.xml")
+    unit = srcml.read_unit_header(archive)
+    while unit != None:
+        print srcml.unit_get_filename(unit)
+        srcml.free_unit(unit)
+        unit = srcml.read_unit_header(archive)
+
+
+    srcml.close_archive(archive)
+    srcml.free_archive(archive)

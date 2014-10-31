@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# @file srcml_direct_language_list.c
+# @file srcml_direct_language_xml.c
 #
 # @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 #
@@ -19,11 +19,23 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-# A null-terminated list of the supported srcML source-code language.
+
+# Example program of the use of the C API for srcML.
+
+# A straightforward translation from the srcML format back to source code.
+# Translates the srcML file "a.cpp.xml" to the source-code file "a.cpp", however
+# in this case the language is specified:
+
+# * This creates a single-unit srcML file, i.e., a non-archive srcML
+# * The srcML attribute filename will be the name of the file passed as the first
+# parameter.
+
 
 
 import srcml
 
 if __name__ == "__main__":
-    for i in range(srcml.get_language_list_size()):
-        print srcml.get_language_list(i)
+
+    # Translate from a source-code file to a srcML file
+    srcml.set_language(SRCML_LANGUAGE_XML);
+    srcml.srcml("a.cpp.xml", "a.cpp");
