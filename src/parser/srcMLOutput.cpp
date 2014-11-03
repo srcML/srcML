@@ -472,6 +472,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
 
     }
 
+    if (isoption(options, SRCML_OPTION_POSITION) && isoption(options, SRCML_OPTION_LINE))
+      num2process[2] = &srcMLOutput::processTextPositionLine;
+    else if (isoption(options, SRCML_OPTION_POSITION))
+      num2process[2] = &srcMLOutput::processTextPosition;
+
 }
 
 /**
