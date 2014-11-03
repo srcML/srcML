@@ -48,19 +48,10 @@ if(${BUILD_LANGUAGE_BINDINGS})
         OUTPUT ${SRCML_H_XML_OUTPUT_PATH}
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/genLibsrcmlXMLHeader.py
         DEPENDS ${GENERATOR_LIB_FILES} ${CMAKE_CURRENT_BINARY_DIR}/genLibsrcmlXMLHeader.py srcml_shared
-
     )
-    # Adding Target so that I can manually invoke this part of the build for testing.
-    add_custom_target(
-        build_srcml_h_xml
-        DEPENDS ${SRCML_H_XML_OUTPUT_PATH}
-        COMMAND echo "Created srcml.h.xml from srcml.h"
-    )
-
 
     # Include individual language Directories
     if(${BUILD_PYTHON_BINDINGS})
-
         set(SRCML_PY_BINDINGS_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/python/srcml)
         set(PY_BINDINGS_OUTPUT_FILE ${SRCML_PY_BINDINGS_LOCATION}/bindings.py)
         configure_file(
@@ -71,18 +62,16 @@ if(${BUILD_LANGUAGE_BINDINGS})
         add_custom_command(
             OUTPUT ${PY_BINDINGS_OUTPUT_FILE}
             COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/python/genPythonBindings.py
-            DEPENDS build_srcml_h_xml ${SRCML_H_XML_OUTPUT_PATH} ${CMAKE_CURRENT_BINARY_DIR}/python/genPythonBindings.py
-
+            DEPENDS ${SRCML_H_XML_OUTPUT_PATH} ${CMAKE_CURRENT_BINARY_DIR}/python/genPythonBindings.py
         )
+
         # Python Target
         add_custom_target(
-            # build_python_bindings
+            build_python_bindings ALL
             DEPENDS ${PY_BINDINGS_OUTPUT_FILE}
-            COMMAND echo "Generated Python C Bindings"
         )
-        # project()
-        # add_dependencies(${PROJECT_NAME} build_python_bindings)
     endif()
+    
 
     if(${BUILD_CSHARP_BINDINGS})
         if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
