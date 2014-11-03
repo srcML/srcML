@@ -218,6 +218,8 @@ def {pyName}({parameters}):
         outputStrm.close()
         return ret
 
-genCode = GenPythonCode()
-genCode.run(srcmlXMLHeaderFile, outputFilePath)
+
+if __name__ == "__main__":
+    genCode = GenPythonCode()
+    genCode.run(srcmlXMLHeaderFile, outputFilePath)
 

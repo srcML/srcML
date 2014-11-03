@@ -42,7 +42,6 @@ if(${BUILD_LANGUAGE_BINDINGS})
         genLibsrcmlXMLHeader.py
         NEWLINE_STYLE UNIX
     )
-    
 
     # Running newly generated python file.
     add_custom_command(
@@ -55,6 +54,9 @@ if(${BUILD_LANGUAGE_BINDINGS})
     if(${BUILD_PYTHON_BINDINGS})
         set(SRCML_PY_BINDINGS_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/python/srcml)
         set(PY_BINDINGS_OUTPUT_FILE ${SRCML_PY_BINDINGS_LOCATION}/bindings.py)
+        set(PY_ARCHIVE_CLASS_FILE ${SRCML_PY_BINDINGS_LOCATION}/archive.py)
+        set(PY_UNIT_CLASS_FILE ${SRCML_PY_BINDINGS_LOCATION}/unit.py)
+
         configure_file(
             python/configTemplate.py
             python/genPythonBindings.py
