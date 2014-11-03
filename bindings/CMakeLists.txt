@@ -34,6 +34,7 @@ if(${BUILD_LANGUAGE_BINDINGS})
     endif()
     set(SRCML_H_XML_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/srcml.h.xml)
 
+    file(GLOB_RECURSE GENERATOR_LIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/generator/*")
 
     # Configuring the file used for generating the srcml.h.xml file
     configure_file(
@@ -41,7 +42,7 @@ if(${BUILD_LANGUAGE_BINDINGS})
         genLibsrcmlXMLHeader.py
         NEWLINE_STYLE UNIX
     )
-    file(GLOB_RECURSE GENERATOR_LIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/generator/*")
+    
 
     # Running newly generated python file.
     add_custom_command(
@@ -71,7 +72,7 @@ if(${BUILD_LANGUAGE_BINDINGS})
             DEPENDS ${PY_BINDINGS_OUTPUT_FILE}
         )
     endif()
-    
+
 
     if(${BUILD_CSHARP_BINDINGS})
         if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
