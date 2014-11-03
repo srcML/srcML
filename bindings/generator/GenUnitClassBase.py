@@ -17,11 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
-
-
-
-
 # /* Query options of srcml unit */
 # __LIBSRCML_DECL const char* srcml_unit_get_encoding (const struct srcml_unit*);
 # __LIBSRCML_DECL const char* srcml_unit_get_revision (const struct srcml_unit*);

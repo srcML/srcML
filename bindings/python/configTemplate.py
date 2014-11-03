@@ -218,8 +218,15 @@ def {pyName}({parameters}):
         outputStrm.close()
         return ret
 
+archiveOutputFilePath = "${PY_ARCHIVE_CLASS_FILE}"
+unitOutputFilePath = "${PY_UNIT_CLASS_FILE}"
+class PyL2Bindings(L2BindingGeneratorBase):
+    def __init__(self, l1Bindigs, archFile, untFile):
+        super(PyL2Bindings, self).__init__(l1Bindigs, archFile, untFile)
+
 
 if __name__ == "__main__":
     genCode = GenPythonCode()
     genCode.run(srcmlXMLHeaderFile, outputFilePath)
-
+    l2Generator = PyL2Bindings(genCode, archiveOutputFilePath, unitOutputFilePath)
+    l2Generator.run()
