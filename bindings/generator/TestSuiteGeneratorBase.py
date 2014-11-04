@@ -17,6 +17,9 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+TEST_IS_NOT_NULL = "notnull"
+
+
 class TestSuiteGeneratorBase(object):
     """
     This class is used for generating a test suite for language bindings
@@ -60,10 +63,10 @@ class TestSuiteGeneratorBase(object):
     def genCall(self, assignResultTo, callName, variableNames):
         assert False, "Not Implemented!"
 
-    def genTestStatement(self, comparisonType, expectedVariable, actualVariable, messageBase):
+    def genTestStatement(self, assertionCmpType, expectedVariable, actualVariable, messageBase):
         assert False, "Not Implemented!"
 
-    def genUnaryTestStatement(self, comparisonType, actualVariable, messageBase):
+    def genUnaryTestStatement(self, assertionCmpType, actualVariable, messageBase):
         assert False, "Not Implemented!"
 
     def genVariableDecl(self, variableNativeType, variableName, variableInitializerValue):
@@ -94,46 +97,46 @@ class TestSuiteGeneratorBase(object):
     # Generate the start and end of the class that handles 
     # all of the tests.
     def gen_startTestClass(self, name):
-        self.outStrm.write(self.startTestClass(name) + "\n")
+        self.outStrm.write(self.getIndentStr() + self.startTestClass(name) + "\n")
         self.indentLevel += 1
 
     def gen_endTestClass(self):
-        self.outStrm.write(self.endTestClass() + "\n")
         self.indentLevel -= 1
+        self.outStrm.write(self.getIndentStr() + self.endTestClass() + "\n")
 
     def gen_startTestFuncGen(self, testTitle):
-        self.outStrm.write(self.startTestFuncGen(testTitle) + "\n")
+        self.outStrm.write(self.getIndentStr() + self.startTestFuncGen(testTitle) + "\n")
         self.indentLevel += 1
 
     def gen_endTestFuncGen(self):
-        self.outStrm.write(self.endTestFuncGen() + "\n")
         self.indentLevel -= 1
+        self.outStrm.write(self.getIndentStr() + self.endTestFuncGen() + "\n")
 
-    def gen_genCall(self, assignResultTo, callName, variableNames):
-        self.outStrm.write(self.genCall(assignResultTo, callName, variableNames) + "\n")
+    def gen_genCall(self, assignResultTo, callName, parameters):
+        self.outStrm.write(self.getIndentStr() + self.genCall(assignResultTo, callName, parameters) + "\n")
 
-    def gen_genTestStatement(self, comparisonType, expectedVariable, actualVariable, messageBase):
-        self.outStrm.write(self.genTestStatement(comparisonType, expectedVariable, actualVariable, messageBase) + "\n")
+    def gen_genTestStatement(self, assertionCmpType, expectedVariable, actualVariable, messageBase):
+        self.outStrm.write(self.getIndentStr() + self.genTestStatement(assertionCmpType, expectedVariable, actualVariable, messageBase) + "\n")
 
-    def gen_genUnaryTestStatement(self, comparisonType, actualVariable, messageBase):
-        self.outStrm.write(self.genUnaryTestStatement(comparisonType, actualVariable, messageBase) + "\n")
+    def gen_genUnaryTestStatement(self, assertionCmpType, actualVariable, messageBase):
+        self.outStrm.write(self.getIndentStr() + self.genUnaryTestStatement(assertionCmpType, actualVariable, messageBase) + "\n")
 
     def gen_genVariableDecl(self, variableNativeType, variableName, variableInitializerValue):
-        self.outStrm.write(self.genVariableDecl(variableNativeType, variableName, variableInitializerValue) + "\n")
+        self.outStrm.write(self.getIndentStr() + self.genVariableDecl(variableNativeType, variableName, variableInitializerValue) + "\n")
 
     def gen_genLineComment(self, stringValue):
-        self.outStrm.write(self.genLineComment(stringValue) + "\n")
+        self.outStrm.write(self.getIndentStr() + self.genLineComment(stringValue) + "\n")
 
     def gen_genIncrementVariableExpr(self, variableName, incrementBy = 1):
-        self.outStrm.write(self.genIncrementVariableExpr(variableName, incrementBy) + "\n")
+        self.outStrm.write(self.getIndentStr() + self.genIncrementVariableExpr(variableName, incrementBy) + "\n")
 
     # more complex pseudo-AST functionality.
     def gen_startWhileLoop(self, conditionVariable, testForValue):
-        self.outStrm.write(self.startWhileLoop(conditionVariable, testForValue) + "\n")
+        self.outStrm.write(self.getIndentStr() + self.startWhileLoop(conditionVariable, testForValue) + "\n")
         self.indentLevel += 1
 
     def gen_endWhileLoop(self):
-        self.outStrm.write(self.endWhileLoop() + "\n")
+        self.outStrm.write(self.getIndentStr() + self.endWhileLoop() + "\n")
         self.indentLevel -= 1
 
     # Functions that implement the Pseudo-AST traversal.
@@ -141,15 +144,23 @@ class TestSuiteGeneratorBase(object):
         self.outStrm = open(outputTestFile, "w")
         self.gen_startTestFile()
         self.gen_startTestClass("archive_tests")
-        
+
+        # Generating archive tests.
         self.generateArchiveTests()
+
         self.gen_endTestClass()
 
         self.gen_endTestFile()
         self.outStrm.close()
 
     def generateArchiveTests(self):
-        self.gen_startTestFuncGen("check_extension")
+
+        # Test logic for srcml_create_archve and srcml_free_archive functions.
+        self.gen_startTestFuncGen("srcml_create_archive")
+        self.gen_genVariableDecl("srcml_archive *", "archive", None)
+        self.gen_genCall("archive", "srcml_create_archive", [])
+        self.gen_genUnaryTestStatement(TEST_IS_NOT_NULL, "archive", "Created archive was null.")
+        self.gen_genCall(None, "srcml_free_archive", ["archive"])
         self.gen_endTestFuncGen()
             
 

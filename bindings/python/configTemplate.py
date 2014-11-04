@@ -283,23 +283,51 @@ if __name__ == "__main__":
  
     # Test Function Generating Handler
     def startTestFuncGen(self, testTitle):
-        return "{indentation}def test_{tstName}(self):\n{indentation}    pass".format(indentation=self.getIndentStr(), tstName=testTitle)
+        return "def test_{tstName}(self):".format(tstName=testTitle)
 
     def endTestFuncGen(self):
         return ""
 
     # Test Generating parts without a start and end function pairs
-    def genCall(self, assignResultTo, callName, variableNames):
+    def genCall(self, assignResultTo, callName, parameters):
+        outStr = ""
+        if assignResultTo != None:
+            outStr += assignResultTo + " = "
+
+        if callName[:6] == "srcml_":
+            return outStr + "srcml." + callName[6:] + "(" +", ".join(parameters) +")"
+
+        elif callName == "srcml":
+            return outStr + "srcml.srcml(" + ", ".join(parameters) +")"
+
+        else:
+            return outStr + callName + "(" + ", ".join(parameters) +")"
+
+    def genTestStatement(self, testCmpType, expectedVariable, actualVariable, messageBase):
         return ""
 
-    def genTestStatement(self, comparisonType, expectedVariable, actualVariable, messageBase):
-        return ""
-
-    def genUnaryTestStatement(self, comparisonType, actualVariable, messageBase):
-        return ""
+    def genUnaryTestStatement(self, testCmpType, actualVariable, messageBase):
+        outStr = "self."
+        if testCmpType == TEST_IS_NOT_NULL:
+            outStr += "assertIsNotNone"
+        else:
+            raise Exception("Not Assertion type is not implemented yet! Comparison type: {0}".format(testCmpType))
+        outStr += "(" + actualVariable
+        if messageBase != None:
+            outStr += ", " + "\"{0}\"".format(messageBase)
+        return outStr + ")"
 
     def genVariableDecl(self, variableNativeType, variableName, variableInitializerValue):
-        return ""
+        if variableInitializerValue == None:
+            return "{0} = None".format(variableName)
+        else:
+            if isinstance(variableInitializerValue, str):
+                return "{0} = \"{1}\"".format(variableName, variableInitializerValue)
+            elif isinstance(variableInitializerValue, int):
+                return "{0} = {1}".format(variableName, variableInitializerValue)
+            else:
+                raise Exception("Variable value not handled yet! Type: {0}, Value: {1}".format(variableInitializerValue.__class__.__name__, variableInitializerValue))
+
 
     def genLineComment(self, str):
         return ""
@@ -316,31 +344,6 @@ if __name__ == "__main__":
         # assert False, "Not Implemented!"
         return ""
 
-    """
-class TestSequenceFunctions(unittest.TestCase):
-
-    def setUp(self):
-        self.seq = range(10)
-
-    def test_shuffle(self):
-        # make sure the shuffled sequence does not lose any elements
-        random.shuffle(self.seq)
-        self.seq.sort()
-        self.assertEqual(self.seq, range(10))
-
-        # should raise an exception for an immutable sequence
-        self.assertRaises(TypeError, random.shuffle, (1,2,3))
-
-    def test_choice(self):
-        element = random.choice(self.seq)
-        self.assertTrue(element in self.seq)
-
-    def test_sample(self):
-        with self.assertRaises(ValueError):
-            random.sample(self.seq, 20)
-        for element in random.sample(self.seq, 5):
-            self.assertTrue(element in self.seq)
-"""
 if __name__ == "__main__":
     genCode = GenPythonCode()
     genCode.run(srcmlXMLHeaderFile, outputFilePath)
