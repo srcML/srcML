@@ -225,8 +225,129 @@ class PyL2Bindings(L2BindingGeneratorBase):
         super(PyL2Bindings, self).__init__(l1Bindigs, archFile, untFile)
 
 
+
+class TestSuiteGenerator(TestSuiteGeneratorBase):
+    """
+    This class assists with test suite generation for all of the test suite bindings.
+    """
+    def __init__(self):
+        super(TestSuiteGenerator, self).__init__()
+
+    # Pure-virtual functionality!
+    def startTestFile(self):
+        return """##
+# @file bindings.py
+#
+# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# 
+# The srcML Toolkit is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# The srcML Toolkit is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with the srcML Toolkit; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+import sys
+
+sys.path.append("${SRCML_PY_LIB_SEARCH_PATH_LOCATION}")
+
+import srcml, os, unittest
+"""
+    def startTestClass(self, name):
+        return """
+class TestSequenceFunctions(unittest.TestCase):
+
+    def setUp(self):
+        pass
+    
+    def tearDown(self):
+        pass
+"""
+
+    def endTestClass(self):
+        return ""
+
+    def endTestFile(self):
+        return """
+if __name__ == "__main__":
+    unittest.main()
+"""
+
+ 
+    # Test Function Generating Handler
+    def startTestFuncGen(self, testTitle):
+        return "{indentation}def test_{tstName}(self):\n{indentation}    pass".format(indentation=self.getIndentStr(), tstName=testTitle)
+
+    def endTestFuncGen(self):
+        return ""
+
+    # Test Generating parts without a start and end function pairs
+    def genCall(self, assignResultTo, callName, variableNames):
+        return ""
+
+    def genTestStatement(self, comparisonType, expectedVariable, actualVariable, messageBase):
+        return ""
+
+    def genUnaryTestStatement(self, comparisonType, actualVariable, messageBase):
+        return ""
+
+    def genVariableDecl(self, variableNativeType, variableName, variableInitializerValue):
+        return ""
+
+    def genLineComment(self, str):
+        return ""
+
+    def genIncrementVariableExpr(self, variableName, incrementBy = 1):
+        return ""
+
+    # more complex pseudo-AST functionality.
+    def startWhileLoop(self, conditionVariable, testForValue):
+        # assert False, "Not Implemented!"
+        return ""
+
+    def endWhileLoop(self):
+        # assert False, "Not Implemented!"
+        return ""
+
+    """
+class TestSequenceFunctions(unittest.TestCase):
+
+    def setUp(self):
+        self.seq = range(10)
+
+    def test_shuffle(self):
+        # make sure the shuffled sequence does not lose any elements
+        random.shuffle(self.seq)
+        self.seq.sort()
+        self.assertEqual(self.seq, range(10))
+
+        # should raise an exception for an immutable sequence
+        self.assertRaises(TypeError, random.shuffle, (1,2,3))
+
+    def test_choice(self):
+        element = random.choice(self.seq)
+        self.assertTrue(element in self.seq)
+
+    def test_sample(self):
+        with self.assertRaises(ValueError):
+            random.sample(self.seq, 20)
+        for element in random.sample(self.seq, 5):
+            self.assertTrue(element in self.seq)
+"""
 if __name__ == "__main__":
     genCode = GenPythonCode()
     genCode.run(srcmlXMLHeaderFile, outputFilePath)
-    l2Generator = PyL2Bindings(genCode, archiveOutputFilePath, unitOutputFilePath)
-    l2Generator.run()
+    # l2Generator = PyL2Bindings(genCode, archiveOutputFilePath, unitOutputFilePath)
+    # l2Generator.run()
+
+    testSuiteLocation = "${PY_TEST_SUITE_OUTPUT_FILE_PATH}"
+    suiteGenerator = TestSuiteGenerator()
+    suiteGenerator.run(testSuiteLocation)
+

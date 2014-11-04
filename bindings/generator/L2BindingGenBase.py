@@ -58,9 +58,10 @@ class L2BindingGeneratorBase(object):
         # Archive Class Extraction!
         possibleArchiveFunctions = [x for x in self.srcmlAPI.xpath("//src:function_decl", namespaces=XPathNamespaces)
             if x.xpath("src:name", namespaces=XPathNamespaces)[0].text.startswith("srcml_archive") or
-                len(x.xpath("src:parameter_list[src:param[1]/src:decl/src:name[.='srcml_archive']]", namespaces=XPathNamespaces)) > 1
+                len(x.xpath("src:parameter_list[.//src:name[.='srcml_archive']]", namespaces=XPathNamespaces)) > 0
             ]
-        print "\n".join([extractNormalizedTypeName(x) for x in possibleArchiveFunctions])
+        # print "\n".join([extractNormalizedTypeName(x) for x in possibleArchiveFunctions])
+        # print len(possibleArchiveFunctions)
         self.genUnitOutputFile()
         self.genArchiveClassFile()
 
