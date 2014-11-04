@@ -265,28 +265,20 @@ import srcml, os, unittest, ctypes
 
 class IOContext:
     def __init__(self):
-        print "Created IO Context!"
+        # print "Created IO Context!"
+        pass
 
 
 def writeCallback(ctxt, buffer, size):
-    print ""
-    print "Called write"
-    # localAlteredCtxt = ctypes.py_object(ctxt)
-    # print ctypes.cast(ctxt, ctypes.py_object).value
-
-    print "ctxt: {0}".format(ctxt.__class__.__name__)
-    print "buffer: {0}".format(buffer.__class__.__name__)
-    print "size: {0}".format(size.__class__.__name__)
+    ctxt.calledWrite = True
     return 0
 
 def closeCallback(ctxt):
-    print ""
-    print "Called Close"
-    print "ctxt: {0}".format(ctxt.__class__.__name__)
+    ctxt.calledClose = True
     return 0
 
 def readCallback(ctxt, buffer, size):
-    print "Called Read"
+    ctxt.calledRead = True
     return 0
 
 class TestSequenceFunctions(unittest.TestCase):
@@ -349,6 +341,22 @@ if __name__ == "__main__":
 
     def genTestIOContext(self, ctxtVariable, didWrite, didRead, didClose, messageBase):
         outStr = ""
+        if didWrite:
+            outStr += "assertTrue(" + ctxtVariable + ".calledWrite, " + messageBase + ")"
+        else:
+            outStr += "assertFalse(" + ctxtVariable + ".calledWrite, " + messageBase + ")"
+        outStr  +="\n" + self.getIndentStr()
+        
+        if didRead:
+            outStr += "assertTrue(" + ctxtVariable + ".calledRead, " + messageBase + ")"
+        else:
+            outStr += "assertFalse(" + ctxtVariable + ".calledRead, " + messageBase + ")"
+        outStr  +="\n" + self.getIndentStr()
+
+        if didClose:
+            outStr += "assertTrue(" + ctxtVariable + ".calledClose, " + messageBase + ")"
+        else:
+            outStr += "assertFalse(" + ctxtVariable + ".calledClose, " + messageBase + ")"
         return outStr
 
     def genUnaryTestStatement(self, testCmpType, actualVariable, messageBase):
