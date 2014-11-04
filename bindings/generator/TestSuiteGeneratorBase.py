@@ -18,7 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 TEST_IS_NOT_NULL = "notnull"
-
+TEST_ARE_EQUAL = "equal"
+TEST_FILE_EXISTS = "fileExistsTest"
 
 class TestSuiteGeneratorBase(object):
     """
@@ -63,7 +64,7 @@ class TestSuiteGeneratorBase(object):
     def genCall(self, assignResultTo, callName, variableNames):
         assert False, "Not Implemented!"
 
-    def genTestStatement(self, assertionCmpType, expectedVariable, actualVariable, messageBase):
+    def genTestStatement(self, assertionCmpType, actualVariable, expectedVariable, messageBase):
         assert False, "Not Implemented!"
 
     def genUnaryTestStatement(self, assertionCmpType, actualVariable, messageBase):
@@ -115,7 +116,7 @@ class TestSuiteGeneratorBase(object):
     def gen_genCall(self, assignResultTo, callName, parameters):
         self.outStrm.write(self.getIndentStr() + self.genCall(assignResultTo, callName, parameters) + "\n")
 
-    def gen_genTestStatement(self, assertionCmpType, expectedVariable, actualVariable, messageBase):
+    def gen_genTestStatement(self, assertionCmpType, actualVariable, expectedVariable, messageBase):
         self.outStrm.write(self.getIndentStr() + self.genTestStatement(assertionCmpType, expectedVariable, actualVariable, messageBase) + "\n")
 
     def gen_genUnaryTestStatement(self, assertionCmpType, actualVariable, messageBase):
@@ -153,27 +154,61 @@ class TestSuiteGeneratorBase(object):
         self.gen_endTestFile()
         self.outStrm.close()
 
+
+    def _buildCreateArchive(self, varName):
+        self.gen_genCall(varName, "srcml_create_archive", [])
+
+
+    def _buildCleanUpArchive(self, varName):
+        self.gen_genCall(None, "srcml_free_archive", [varName])
+
     def generateArchiveTests(self):
 
-        # Test logic for srcml_create_archve and srcml_free_archive functions.
+        # Test srcml_create_archve and srcml_free_archive functions.
         self.gen_startTestFuncGen("srcml_create_archive")
         self.gen_genVariableDecl("srcml_archive *", "archive", None)
-        self.gen_genCall("archive", "srcml_create_archive", [])
+        self._buildCreateArchive("archive")
         self.gen_genUnaryTestStatement(TEST_IS_NOT_NULL, "archive", "Created archive was null.")
-        self.gen_genCall(None, "srcml_free_archive", ["archive"])
+        self._buildCleanUpArchive("archive")
         self.gen_endTestFuncGen()
             
+        # Testing srcml_archive_check_extension
+        self.gen_startTestFuncGen("srcml_archive_check_extension")
+        self.gen_genVariableDecl("srcml_archive *", "archive", None)
+        self.gen_genVariableDecl("const char *", "fileName", "file.cpp")
+        self._buildCreateArchive("archive")
+        self.gen_genCall("actual", "srcml_archive_check_extension", ["archive", "fileName"])
+        self.gen_genTestStatement(TEST_ARE_EQUAL, "actual", "srcml.SRCML_LANGUAGE_CXX", "Didn't get expected result from file extension.")
+        self._buildCleanUpArchive("archive")
+        self.gen_endTestFuncGen()
+
+        # # Testing srcml_write_open_filename and srcml_close_archive
+        # TEST_FILE_EXISTS
+        self.gen_startTestFuncGen("srcml_write_open_filename")
+        self.gen_genVariableDecl("srcml_archive *", "oarchive", None)
+        self.gen_genVariableDecl("const char *", "testFileName", "srcml_write_open_filename_test_file.cpp")
+        self._buildCreateArchive("oarchive")
+        self.gen_genCall(None, "srcml_write_open_filename", ["oarchive", "testFileName"])
+        self.gen_genCall(None, "srcml_close_archive", ["oarchive"])
+        self.gen_genUnaryTestStatement(TEST_FILE_EXISTS, "testFileName", "Didn't locate correct test file.")
+        self._buildCleanUpArchive("oarchive")
+        self.gen_endTestFuncGen()
+
+        # __LIBSRCML_DECL void srcml_close_archive(struct srcml_archive*);
+        # int (struct srcml_archive*, const char* srcml_filename);
+        # self.gen_startTestFuncGen("srcml_archive_check_extension")
+        # self.gen_genVariableDecl("srcml_archive *", "archive", None)
+        # self.gen_genVariableDecl("const char *", "fileName", "file.cpp")
+        # self._buildCreateArchive("archive")
+        # self.gen_genCall("actual", "srcml_archive_check_extension", ["archive", "fileName"])
+        # self.gen_genTestStatement(TEST_ARE_EQUAL, "actual", "srcml.SRCML_LANGUAGE_CXX", "Didn't get expected result from file extension.")
+        # self._buildCleanUpArchive("archive")
+        # self.gen_endTestFuncGen()
+
 
     def generateGlobalTest(self):
         assert False, "Not Implemented!"
 
-
-
-# __LIBSRCML_DECL const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
-
-# /* Create a new srcml archive
-#    Client is responsible for freeing memory using srcml_free_archive() */
-# __LIBSRCML_DECL struct srcml_archive* srcml_create_archive();
 
 # /* Clone the setup of an existing archive
 #    Client is responsible for freeing memory using srcml_free_archive() */
@@ -182,8 +217,6 @@ class TestSuiteGeneratorBase(object):
 # /* Open a srcML archive for output */
 # __LIBSRCML_DECL int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
 # __LIBSRCML_DECL int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
-# __LIBSRCML_DECL int srcml_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
-# __LIBSRCML_DECL int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
 # __LIBSRCML_DECL int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
 
 # /* Setup options for srcml archive */
@@ -247,10 +280,7 @@ class TestSuiteGeneratorBase(object):
 # __LIBSRCML_DECL void srcml_free_unit(struct srcml_unit*);
 
 # /* Close the srcML archive */
-# __LIBSRCML_DECL void srcml_close_archive(struct srcml_archive*);
-
-# /* Free the srcML archive data */
-# __LIBSRCML_DECL void srcml_free_archive(struct srcml_archive*);
+# 
 
 # /* Open a srcML archive for reading */
 # __LIBSRCML_DECL int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);

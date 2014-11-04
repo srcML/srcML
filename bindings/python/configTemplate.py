@@ -303,16 +303,30 @@ if __name__ == "__main__":
         else:
             return outStr + callName + "(" + ", ".join(parameters) +")"
 
-    def genTestStatement(self, testCmpType, expectedVariable, actualVariable, messageBase):
-        return ""
+    def genTestStatement(self, testCmpType, actualVariable, expectedVariable, messageBase):
+        outStr = "self."
+        if testCmpType == TEST_ARE_EQUAL:
+            outStr += "assertEqual"
+        else:
+            raise Exception("Not Assertion type is not implemented yet! Comparison type: {0}".format(testCmpType))
+        outStr += "(" + actualVariable + ", " + expectedVariable
+        if messageBase != None:
+            outStr += ", " + "\"{0}\"".format(messageBase)
+        return outStr + ")"
+
 
     def genUnaryTestStatement(self, testCmpType, actualVariable, messageBase):
         outStr = "self."
+        hasSpecialFirstParam = False
         if testCmpType == TEST_IS_NOT_NULL:
             outStr += "assertIsNotNone"
+        elif testCmpType == TEST_FILE_EXISTS:
+            outStr += "assertTrue( os.path.exists(" + actualVariable + ")"
+            hasSpecialFirstParam = True
         else:
             raise Exception("Not Assertion type is not implemented yet! Comparison type: {0}".format(testCmpType))
-        outStr += "(" + actualVariable
+        if not hasSpecialFirstParam:
+            outStr += "(" + actualVariable
         if messageBase != None:
             outStr += ", " + "\"{0}\"".format(messageBase)
         return outStr + ")"
