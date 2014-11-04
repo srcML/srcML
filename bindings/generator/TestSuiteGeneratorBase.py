@@ -20,6 +20,23 @@
 TEST_IS_NOT_NULL = "notnull"
 TEST_ARE_EQUAL = "equal"
 TEST_FILE_EXISTS = "fileExistsTest"
+TEST_BUFFER_HAS_CONTENT = "bufferHasContent"
+TEST_INT_HAS_CONTENT = "intHasContent"
+
+# Special Function calls used by the deriving class to
+# handle non-portable concepts like file deletion, etc...
+DELETE_FILE_FUNC = "DELETE_FILE_FUNCTION"
+
+# Special types for use by the deriving class.
+BUFFER_REF_TYPE = "BUFFER_REF_TYPE"
+INT_REF_TYPE = "INT_REF_TYPE"
+
+# Callback types
+WRITE_CALLBACK_TYPE = "WRITE_CALLBACK_TYPE"
+READ_CALLBACK_TYPE = "READ_CALLBACK_TYPE"
+CLOSE_CALLBACK_TYPE = "CLOSE_CALLBACK_TYPE"
+CALLBACK_CTXT_TYPE = "CALLBACK_CTXT_TYPE"
+
 
 class TestSuiteGeneratorBase(object):
     """
@@ -65,6 +82,9 @@ class TestSuiteGeneratorBase(object):
         assert False, "Not Implemented!"
 
     def genTestStatement(self, assertionCmpType, actualVariable, expectedVariable, messageBase):
+        assert False, "Not Implemented!"
+
+    def genTestIOContext(self, ctxtVariable, didWrite, didRead, didClose, messageBase):
         assert False, "Not Implemented!"
 
     def genUnaryTestStatement(self, assertionCmpType, actualVariable, messageBase):
@@ -118,6 +138,10 @@ class TestSuiteGeneratorBase(object):
 
     def gen_genTestStatement(self, assertionCmpType, actualVariable, expectedVariable, messageBase):
         self.outStrm.write(self.getIndentStr() + self.genTestStatement(assertionCmpType, expectedVariable, actualVariable, messageBase) + "\n")
+
+    def gen_genTestIOContext(self, ctxtVariable, didWrite, didRead, didClose, messageBase):
+        self.outStrm.write(self.getIndentStr() + self.genTestIOContext(ctxtVariable, didWrite, didRead, didClose, messageBase) + "\n")
+
 
     def gen_genUnaryTestStatement(self, assertionCmpType, actualVariable, messageBase):
         self.outStrm.write(self.getIndentStr() + self.genUnaryTestStatement(assertionCmpType, actualVariable, messageBase) + "\n")
@@ -183,7 +207,6 @@ class TestSuiteGeneratorBase(object):
         self.gen_endTestFuncGen()
 
         # # Testing srcml_write_open_filename and srcml_close_archive
-        # TEST_FILE_EXISTS
         self.gen_startTestFuncGen("srcml_write_open_filename")
         self.gen_genVariableDecl("srcml_archive *", "oarchive", None)
         self.gen_genVariableDecl("const char *", "testFileName", "srcml_write_open_filename_test_file.cpp")
@@ -192,18 +215,43 @@ class TestSuiteGeneratorBase(object):
         self.gen_genCall(None, "srcml_close_archive", ["oarchive"])
         self.gen_genUnaryTestStatement(TEST_FILE_EXISTS, "testFileName", "Didn't locate correct test file.")
         self._buildCleanUpArchive("oarchive")
+        self.gen_genCall(None, DELETE_FILE_FUNC, ["testFileName"])
         self.gen_endTestFuncGen()
 
-        # __LIBSRCML_DECL void srcml_close_archive(struct srcml_archive*);
-        # int (struct srcml_archive*, const char* srcml_filename);
-        # self.gen_startTestFuncGen("srcml_archive_check_extension")
-        # self.gen_genVariableDecl("srcml_archive *", "archive", None)
-        # self.gen_genVariableDecl("const char *", "fileName", "file.cpp")
-        # self._buildCreateArchive("archive")
-        # self.gen_genCall("actual", "srcml_archive_check_extension", ["archive", "fileName"])
-        # self.gen_genTestStatement(TEST_ARE_EQUAL, "actual", "srcml.SRCML_LANGUAGE_CXX", "Didn't get expected result from file extension.")
-        # self._buildCleanUpArchive("archive")
-        # self.gen_endTestFuncGen()
+        # Testing srcml_write_open_memory
+        self.gen_startTestFuncGen("srcml_write_open_memory")
+        self.gen_genVariableDecl("srcml_archive *", "oarchive", None)
+        self.gen_genVariableDecl(BUFFER_REF_TYPE, "buffer", None)
+        self.gen_genVariableDecl(INT_REF_TYPE, "bufferSize", None)
+        self._buildCreateArchive("oarchive")
+        self.gen_genCall(None, "srcml_write_open_memory", ["oarchive", "buffer", "bufferSize"])
+        self.gen_genCall(None, "srcml_close_archive", ["oarchive"])
+        self.gen_genUnaryTestStatement(TEST_BUFFER_HAS_CONTENT, "buffer", "Missing buffer content.")
+        self.gen_genUnaryTestStatement(TEST_INT_HAS_CONTENT, "bufferSize", "Missing buffer size's content.")
+        self._buildCleanUpArchive("oarchive")
+        self.gen_endTestFuncGen()
+
+
+        # Testing srcml_write_open_io (
+        #       struct srcml_archive*,
+        #       void * context,
+        #       int (*write_callback)(void * context, const char * buffer, int len),
+        #       int (*close_callback)(void * context)
+        #   );
+        self.gen_startTestFuncGen("srcml_write_open_io")
+        self.gen_genVariableDecl("srcml_archive *", "oarchive", None)
+        self.gen_genVariableDecl(WRITE_CALLBACK_TYPE, "writeCB", None)
+        self.gen_genVariableDecl(CLOSE_CALLBACK_TYPE, "closeCB", None)
+        self.gen_genVariableDecl(CALLBACK_CTXT_TYPE, "ctxt", None)
+        self._buildCreateArchive("oarchive")
+        self.gen_genCall(None, "srcml_write_open_io", ["oarchive", "ctxt", "writeCB", "closeCB"])
+        self.gen_genCall(None, "srcml_close_archive", ["oarchive"])
+        
+        # SELF.GEN_GENUNARYTESTSTATEMENT(TEST_BUFFER_HAS_CONTENT, "BUFFER", "MISSING BUFFER CONTENT.")
+        # SELF.GEN_GENUNARYTESTSTATEMENT(TEST_INT_HAS_CONTENT, "BUFFERSIZE", "MISSING BUFFER SIZE'S CONTENT.")
+        self._buildCleanUpArchive("oarchive")
+        self.gen_endTestFuncGen()
+        
 
 
     def generateGlobalTest(self):
@@ -214,9 +262,6 @@ class TestSuiteGeneratorBase(object):
 #    Client is responsible for freeing memory using srcml_free_archive() */
 # __LIBSRCML_DECL struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
 
-# /* Open a srcML archive for output */
-# __LIBSRCML_DECL int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
-# __LIBSRCML_DECL int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
 # __LIBSRCML_DECL int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
 
 # /* Setup options for srcml archive */

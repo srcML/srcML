@@ -117,7 +117,7 @@ def check_result(rc):
         outputName = funcPtrInfo.functionName[1::]
         output = outputName + " = CFUNCTYPE("
         output += funcPtrInfo.returnType
-        if len(funcPtrInfo.parameterTypes) > 1:
+        if len(funcPtrInfo.parameterTypes) > 0:
             output += ", "
             output += ", ".join([p.type for p in funcPtrInfo.parameterTypes])
         output += ")"
@@ -258,11 +258,35 @@ import sys
 
 sys.path.append("${SRCML_PY_LIB_SEARCH_PATH_LOCATION}")
 
-import srcml, os, unittest
+import srcml, os, unittest, ctypes
 """
     def startTestClass(self, name):
         return """
+
+class IOContext:
+    def __init__(self):
+        print "Created IO Context!"
+
+
+def writeCallback(ctxt, buffer, size):
+    print "Called write"
+    print "ctxt: {0}".format(ctxt.__class__.__name__)
+    print "buffer: {0}".format(buffer.__class__.__name__)
+    print "size: {0}".format(size.__class__.__name__)
+    return 0
+
+def closeCallback(ctxt):
+    print "Called Close"
+    print "ctxt: {0}".format(ctxt.__class__.__name__)
+    return 0
+
+def readCallback(ctxt, buffer, size):
+    print "Called Read"
+    return 0
+
 class TestSequenceFunctions(unittest.TestCase):
+
+
 
     def setUp(self):
         pass
@@ -300,6 +324,9 @@ if __name__ == "__main__":
         elif callName == "srcml":
             return outStr + "srcml.srcml(" + ", ".join(parameters) +")"
 
+        elif callName == DELETE_FILE_FUNC:
+            return outStr + "os.remove(" + ", ".join(parameters) + ")"
+
         else:
             return outStr + callName + "(" + ", ".join(parameters) +")"
 
@@ -315,6 +342,10 @@ if __name__ == "__main__":
         return outStr + ")"
 
 
+    def genTestIOContext(self, ctxtVariable, didWrite, didRead, didClose, messageBase):
+        outStr = ""
+        return outStr
+
     def genUnaryTestStatement(self, testCmpType, actualVariable, messageBase):
         outStr = "self."
         hasSpecialFirstParam = False
@@ -323,8 +354,19 @@ if __name__ == "__main__":
         elif testCmpType == TEST_FILE_EXISTS:
             outStr += "assertTrue( os.path.exists(" + actualVariable + ")"
             hasSpecialFirstParam = True
+        elif testCmpType == TEST_INT_HAS_CONTENT:
+            outStr += "assertTrue(" + actualVariable + ".value > 0"
+            hasSpecialFirstParam = True
+        elif testCmpType == TEST_BUFFER_HAS_CONTENT:
+            outStr += "assertTrue(" + actualVariable + ".value is not None and len(" + actualVariable + ".value) > 0"
+            hasSpecialFirstParam = True
+        # elif testCmpType == TEST_CALLBACK_CONTEXT:
+        #     outStr += "assertTrue(" + actualVariable + ".value is not None and len(" + actualVariable + ".value) > 0"
+        #     hasSpecialFirstParam = True
         else:
             raise Exception("Not Assertion type is not implemented yet! Comparison type: {0}".format(testCmpType))
+
+
         if not hasSpecialFirstParam:
             outStr += "(" + actualVariable
         if messageBase != None:
@@ -332,6 +374,24 @@ if __name__ == "__main__":
         return outStr + ")"
 
     def genVariableDecl(self, variableNativeType, variableName, variableInitializerValue):
+        if variableNativeType == BUFFER_REF_TYPE:
+            return "{0} = ctypes.c_char_p()".format(variableName)
+        
+        elif variableNativeType == INT_REF_TYPE:
+            return "{0} = ctypes.c_int()".format(variableName)
+
+        elif variableNativeType == WRITE_CALLBACK_TYPE:
+            return "{0} = srcml.write_callback(writeCallback)".format(variableName)
+
+        elif variableNativeType == READ_CALLBACK_TYPE:
+            return "{0} = srcml.read_callback(readCallback)".format(variableName)
+
+        elif variableNativeType == CLOSE_CALLBACK_TYPE:
+            return "{0} = srcml.close_callback(closeCallback)".format(variableName)
+
+        elif variableNativeType == CALLBACK_CTXT_TYPE:
+            return "{1}_temp = IOContext()\n{0}{1} = ctypes.c_void_p(ctypes.addressof(ctypes.py_object({1}_temp)))".format(self.getIndentStr(), variableName)
+
         if variableInitializerValue == None:
             return "{0} = None".format(variableName)
         else:
