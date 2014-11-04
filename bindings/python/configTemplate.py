@@ -43,7 +43,7 @@ class GenPythonCode(BindingGenerator):
             "FILE *": "IMPOSSIBLE",
             "int *" : "c_void_p",
             "char *" : "c_char_p",
-            "void *" : "c_void_p",
+            "void *" : "py_object",
             "const char *": "c_char_p",
             "size_t" : "c_int"
         })
@@ -71,7 +71,7 @@ class GenPythonCode(BindingGenerator):
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from ctypes import cdll, c_int, c_char_p, pointer, c_ulonglong, CFUNCTYPE, c_void_p, byref
+from ctypes import cdll, c_int, c_char_p, pointer, c_ulonglong, CFUNCTYPE, c_void_p, byref, py_object
 from ctypes.util import find_library
 
 libsrcml = cdll.LoadLibrary("libsrcml.so")
@@ -269,13 +269,18 @@ class IOContext:
 
 
 def writeCallback(ctxt, buffer, size):
+    print ""
     print "Called write"
+    # localAlteredCtxt = ctypes.py_object(ctxt)
+    # print ctypes.cast(ctxt, ctypes.py_object).value
+
     print "ctxt: {0}".format(ctxt.__class__.__name__)
     print "buffer: {0}".format(buffer.__class__.__name__)
     print "size: {0}".format(size.__class__.__name__)
     return 0
 
 def closeCallback(ctxt):
+    print ""
     print "Called Close"
     print "ctxt: {0}".format(ctxt.__class__.__name__)
     return 0
@@ -390,7 +395,7 @@ if __name__ == "__main__":
             return "{0} = srcml.close_callback(closeCallback)".format(variableName)
 
         elif variableNativeType == CALLBACK_CTXT_TYPE:
-            return "{1}_temp = IOContext()\n{0}{1} = ctypes.c_void_p(ctypes.addressof(ctypes.py_object({1}_temp)))".format(self.getIndentStr(), variableName)
+            return "{1}_temp = IOContext()\n{0}{1} = ctypes.py_object({1}_temp)".format(self.getIndentStr(), variableName)
 
         if variableInitializerValue == None:
             return "{0} = None".format(variableName)
