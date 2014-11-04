@@ -232,12 +232,7 @@ class TestSuiteGeneratorBase(object):
         self.gen_endTestFuncGen()
 
 
-        # Testing srcml_write_open_io (
-        #       struct srcml_archive*,
-        #       void * context,
-        #       int (*write_callback)(void * context, const char * buffer, int len),
-        #       int (*close_callback)(void * context)
-        #   );
+        # Testing srcml_write_open_io
         self.gen_startTestFuncGen("srcml_write_open_io")
         self.gen_genVariableDecl("srcml_archive *", "oarchive", None)
         self.gen_genVariableDecl(WRITE_CALLBACK_TYPE, "writeCB", None)
@@ -246,12 +241,17 @@ class TestSuiteGeneratorBase(object):
         self._buildCreateArchive("oarchive")
         self.gen_genCall(None, "srcml_write_open_io", ["oarchive", "ctxt", "writeCB", "closeCB"])
         self.gen_genCall(None, "srcml_close_archive", ["oarchive"])
-        
+        self.gen_genTestIOContext("ctxt", True, False, True, "Failed to write or close")
         # SELF.GEN_GENUNARYTESTSTATEMENT(TEST_BUFFER_HAS_CONTENT, "BUFFER", "MISSING BUFFER CONTENT.")
         # SELF.GEN_GENUNARYTESTSTATEMENT(TEST_INT_HAS_CONTENT, "BUFFERSIZE", "MISSING BUFFER SIZE'S CONTENT.")
         self._buildCleanUpArchive("oarchive")
         self.gen_endTestFuncGen()
-        
+        # __LIBSRCML_DECL int srcml_archive_set_encoding           (struct srcml_archive*, const char* encoding);
+        # __LIBSRCML_DECL int srcml_archive_set_src_encoding       (struct srcml_archive*, const char* encoding);
+        # __LIBSRCML_DECL int srcml_archive_set_language           (struct srcml_archive*, const char* language);
+        # __LIBSRCML_DECL int srcml_archive_set_filename           (struct srcml_archive*, const char* filename);
+        # __LIBSRCML_DECL int srcml_archive_set_directory          (struct srcml_archive*, const char* directory);
+        # __LIBSRCML_DECL int srcml_archive_set_version            (struct srcml_archive*, const char* version);
 
 
     def generateGlobalTest(self):
@@ -261,8 +261,6 @@ class TestSuiteGeneratorBase(object):
 # /* Clone the setup of an existing archive
 #    Client is responsible for freeing memory using srcml_free_archive() */
 # __LIBSRCML_DECL struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
-
-# __LIBSRCML_DECL int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
 
 # /* Setup options for srcml archive */
 # __LIBSRCML_DECL int srcml_archive_set_encoding           (struct srcml_archive*, const char* encoding);
