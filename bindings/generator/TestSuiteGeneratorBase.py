@@ -200,6 +200,7 @@ class TestSuiteGeneratorBase(object):
         self.gen_startTestFuncGen("srcml_archive_check_extension")
         self.gen_genVariableDecl("srcml_archive *", "archive", None)
         self.gen_genVariableDecl("const char *", "fileName", "file.cpp")
+        self.gen_genVariableDecl("const char *", "actual", "")
         self._buildCreateArchive("archive")
         self.gen_genCall("actual", "srcml_archive_check_extension", ["archive", "fileName"])
         self.gen_genTestStatement(TEST_ARE_EQUAL, "actual", "srcml.SRCML_LANGUAGE_CXX", "Didn't get expected result from file extension.")
@@ -242,16 +243,32 @@ class TestSuiteGeneratorBase(object):
         self.gen_genCall(None, "srcml_write_open_io", ["oarchive", "ctxt", "writeCB", "closeCB"])
         self.gen_genCall(None, "srcml_close_archive", ["oarchive"])
         self.gen_genTestIOContext("ctxt", True, False, True, "Failed to write or close")
-        # SELF.GEN_GENUNARYTESTSTATEMENT(TEST_BUFFER_HAS_CONTENT, "BUFFER", "MISSING BUFFER CONTENT.")
-        # SELF.GEN_GENUNARYTESTSTATEMENT(TEST_INT_HAS_CONTENT, "BUFFERSIZE", "MISSING BUFFER SIZE'S CONTENT.")
         self._buildCleanUpArchive("oarchive")
         self.gen_endTestFuncGen()
-        # __LIBSRCML_DECL int srcml_archive_set_encoding           (struct srcml_archive*, const char* encoding);
-        # __LIBSRCML_DECL int srcml_archive_set_src_encoding       (struct srcml_archive*, const char* encoding);
-        # __LIBSRCML_DECL int srcml_archive_set_language           (struct srcml_archive*, const char* language);
-        # __LIBSRCML_DECL int srcml_archive_set_filename           (struct srcml_archive*, const char* filename);
-        # __LIBSRCML_DECL int srcml_archive_set_directory          (struct srcml_archive*, const char* directory);
-        # __LIBSRCML_DECL int srcml_archive_set_version            (struct srcml_archive*, const char* version);
+
+
+        def genArchiveGetterSetterTest(propertyName, propNativeType, value, defaultValue):
+            setter = "srcml_archive_set_" + propertyName
+            getter = "srcml_archive_get_" + propertyName
+
+            self.gen_startTestFuncGen("srcml_archive_set_" + propertyName + "___AND___srcml_archive_get_" + propertyName )
+            self.gen_genVariableDecl("srcml_archive *", "archive", None)
+            self.gen_genVariableDecl(propNativeType, "propNewValue", value)
+            self.gen_genVariableDecl(propNativeType, "actual", defaultValue)
+            self._buildCreateArchive("archive")
+            self.gen_genCall(None, setter, ["archive", "propNewValue"])
+            self.gen_genCall("actual", getter, ["archive"])
+            self.gen_genTestStatement(TEST_ARE_EQUAL, "actual", "propNewValue", "Incorrect value returned from " + propertyName)
+            self._buildCleanUpArchive("archive")
+            self.gen_endTestFuncGen()
+
+        genArchiveGetterSetterTest("encoding", "char *", "banana", "")
+        genArchiveGetterSetterTest("src_encoding", "char *", "banana", "")
+        genArchiveGetterSetterTest("language", "char *", "C++", "")
+        genArchiveGetterSetterTest("filename", "char *", "aardvark.cpp", "")
+        genArchiveGetterSetterTest("directory", "char *", "Zooooo/", "")
+        genArchiveGetterSetterTest("version", "char *", "11111111111111", "")
+        genArchiveGetterSetterTest("tabstop", "int", 7, 0)
 
 
     def generateGlobalTest(self):
@@ -262,33 +279,21 @@ class TestSuiteGeneratorBase(object):
 #    Client is responsible for freeing memory using srcml_free_archive() */
 # __LIBSRCML_DECL struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
 
+
+
 # /* Setup options for srcml archive */
-# __LIBSRCML_DECL int srcml_archive_set_encoding           (struct srcml_archive*, const char* encoding);
-# __LIBSRCML_DECL int srcml_archive_set_src_encoding       (struct srcml_archive*, const char* encoding);
-# __LIBSRCML_DECL int srcml_archive_set_language           (struct srcml_archive*, const char* language);
-# __LIBSRCML_DECL int srcml_archive_set_filename           (struct srcml_archive*, const char* filename);
-# __LIBSRCML_DECL int srcml_archive_set_directory          (struct srcml_archive*, const char* directory);
-# __LIBSRCML_DECL int srcml_archive_set_version            (struct srcml_archive*, const char* version);
 
 # __LIBSRCML_DECL int srcml_archive_set_options               (struct srcml_archive*, unsigned long long option);
 # __LIBSRCML_DECL int srcml_archive_enable_option             (struct srcml_archive*, unsigned long long option);
 # __LIBSRCML_DECL int srcml_archive_disable_option            (struct srcml_archive*, unsigned long long option);
-# __LIBSRCML_DECL int srcml_archive_set_tabstop               (struct srcml_archive*, int tabstop);
 # __LIBSRCML_DECL int srcml_archive_register_file_extension   (struct srcml_archive*, const char* extension, const char* language);
 # __LIBSRCML_DECL int srcml_archive_register_namespace        (struct srcml_archive*, const char* prefix, const char* ns);
 # __LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive*, const char* target, const char* data); 
 # __LIBSRCML_DECL int srcml_archive_register_macro            (struct srcml_archive*, const char* token, const char* type);  
-
-# /* Query of the options for srcml archive */
-# __LIBSRCML_DECL const char*        srcml_archive_get_encoding                     (const struct srcml_archive*);
-# __LIBSRCML_DECL const char*        srcml_archive_get_src_encoding                 (const struct srcml_archive*);
 # __LIBSRCML_DECL const char*        srcml_archive_get_revision                     (const struct srcml_archive*);
-# __LIBSRCML_DECL const char*        srcml_archive_get_language                     (const struct srcml_archive*);
-# __LIBSRCML_DECL const char*        srcml_archive_get_filename                     (const struct srcml_archive*);
-# __LIBSRCML_DECL const char*        srcml_archive_get_directory                    (const struct srcml_archive*);
-# __LIBSRCML_DECL const char*        srcml_archive_get_version                      (const struct srcml_archive*);
+# /* Query of the options for srcml archive */
+
 # __LIBSRCML_DECL unsigned long long srcml_archive_get_options                      (const struct srcml_archive*);
-# __LIBSRCML_DECL int                srcml_archive_get_tabstop                      (const struct srcml_archive*);
 # __LIBSRCML_DECL int                srcml_archive_get_namespace_size               (const struct srcml_archive*);
 # __LIBSRCML_DECL const char*        srcml_archive_get_namespace_prefix             (const struct srcml_archive*, int pos);
 # __LIBSRCML_DECL const char*        srcml_archive_get_prefix_from_uri              (const struct srcml_archive*, const char* namespace_uri);
