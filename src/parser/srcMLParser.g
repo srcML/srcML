@@ -1247,7 +1247,8 @@ function_type[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
 
         // match auto keyword first as special case do no warn about ambiguity
-        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* |
+        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
+            { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? ((specifier)* class_type_identifier) => (specifier { decTypeCount(); })* class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* |
         (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
@@ -1259,7 +1260,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : {getTypeCount() > 0}? 
             // Mark as name before mark without name
-            (options { generateAmbigWarnings = false;} :  { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* | keyword_name | type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier) { decTypeCount(); })*
+            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier) { decTypeCount(); })*
 
         {
             endMode(MODE_EAT_TYPE);
@@ -6858,9 +6859,12 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : 
             { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] |
-             { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* | lead_type_identifier | EVENT) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+            { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? ((specifier)* class_type_identifier) => (specifier { decTypeCount(); })* class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* |
+            lead_type_identifier | EVENT)
+        { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        (options { generateAmbigWarnings = false; } : { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* | keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
+        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -7834,7 +7838,7 @@ parameter_type_count[int & type_count, bool output_type = true] { CompleteElemen
 
 
         // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] | { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? class_type_identifier set_int[type_count, type_count - 1] (options { greedy = true; } : multops)* | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] | { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? ((specifier)* class_type_identifier) => (specifier set_int[type_count, type_count - 1])* class_type_identifier set_int[type_count, type_count - 1] (options { greedy = true; } : multops)* | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |
@@ -7883,7 +7887,9 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
 
         // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? class_type_identifier set_int[type_count, type_count - 1] (options { greedy = true; } : multops)* | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
+         { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? ((specifier)* class_type_identifier) => (specifier set_int[type_count, type_count - 1])* class_type_identifier set_int[type_count, type_count - 1] (options { greedy = true; } : multops)* |
+         type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 ;
 
 // Template
