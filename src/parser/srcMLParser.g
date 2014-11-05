@@ -1248,7 +1248,7 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
 
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
-            { !inputState->guessing && !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? ((specifier)* class_type_identifier_keyword) => (specifier { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
+            { is_class_type_identifier() }? (specifier { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
         (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
@@ -6859,7 +6859,7 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : 
             { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] |
-            { !inputState->guessing && !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? ((specifier)* class_type_identifier_keyword) => (specifier { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
+            { is_class_type_identifier() }? (specifier { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
             lead_type_identifier | EVENT)
         { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
 
@@ -6867,6 +6867,24 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
+
+specifier_star[] { ENTRY_DEBUG } :
+
+    (options { greedy = true; } : specifier)*
+
+;
+
+is_class_type_identifier[] returns[bool is_class_type = false] { ENTRY_DEBUG 
+
+    if(inputState->guessing || inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) || inTransparentMode(MODE_ASSOCIATION_TYPE))
+        return is_class_type;
+
+    int token = look_past_rule(&srcMLParser::specifier_star);
+
+    if(token == CLASS || token == CXX_CLASS || token == STRUCT || token == UNION || token == ENUM )
+        is_class_type = true;
+
+} :;
 
 class_type_identifier[bool & is_compound] { CompleteElement element(this); ENTRY_DEBUG } :
 
@@ -7838,7 +7856,7 @@ parameter_type_count[int & type_count, bool output_type = true] { CompleteElemen
 
 
         // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] | { !inputState->guessing && !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? ((specifier)* class_type_identifier_keyword) => (specifier set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] | { is_class_type_identifier() }? (specifier set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |
@@ -7888,7 +7906,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
 
         // match auto keyword first as special case do no warn about ambiguity
         ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
-         { !inputState->guessing && !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? ((specifier)* class_type_identifier_keyword) => (specifier set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
+         { is_class_type_identifier() }? (specifier set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
          type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 ;
 
