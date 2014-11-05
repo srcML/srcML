@@ -103,9 +103,14 @@ public:
     void processTextPosition(const antlr::RefToken& token);
     void processTextPositionLine(const antlr::RefToken& token);
 
+
     const char * lineAttributeValue(const antlr::RefToken& token);
     const char * columnAttributeValue(const antlr::RefToken& token);
     const char * lineAttributeValue(int aline);
+    const char * columnAttributeValue(int acolumn);
+
+    int last_line, last_line2, last_column;
+    void outputPosition();
 
     // destructor
     ~srcMLOutput();
