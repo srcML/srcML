@@ -6901,7 +6901,7 @@ class_type_compound_name[] { bool iscompound = true; ENTRY_DEBUG } :
     compound_name_c[iscompound] |
 
     { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
-    compound_name_cpp[iscompound] |
+    compound_name_cpp[iscompound] | keyword_name_inner[iscompound] |
 
     macro_type_name_call 
     )
