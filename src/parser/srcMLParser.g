@@ -6856,7 +6856,7 @@ class_type_identifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
 
-    class_lead_type_identifier identifier
+    class_lead_type_identifier (identifier | keyword_identifier)
 
 ;
 
