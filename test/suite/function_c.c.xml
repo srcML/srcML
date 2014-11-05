@@ -41,15 +41,15 @@
 </unit>
 
 <unit>
-<function><type>struct <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
+<function><type><name><name>struct</name> <name>foo</name></name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>union <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
+<function><type><name><name>union</name> <name>foo</name></name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
-<function><type>enum <name>foo</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
+<function><type><name><name>enum</name> <name>foo</name></name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
 </unit>
