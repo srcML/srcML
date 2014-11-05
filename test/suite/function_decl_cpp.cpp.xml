@@ -54,27 +54,27 @@
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> <modifier>*</modifier></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>a</name></name> <modifier>*</modifier></type></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> <modifier>^</modifier></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>a</name></name> <modifier>^</modifier></type></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> <modifier>&amp;</modifier></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>a</name></name> <modifier>&amp;</modifier></type></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct <name>a</name> <modifier>&amp;&amp;</modifier></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>a</name></name> <modifier>&amp;&amp;</modifier></type></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>__LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_write_open_filename</name><parameter_list>(<param><decl><type>struct <name>srcml_archive</name><modifier>*</modifier></type></decl></param>, <param><decl><type><specifier>const</specifier> <name>char</name><modifier>*</modifier></type> <name>srcml_filename</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>__LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_write_open_filename</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>srcml_archive</name></name><modifier>*</modifier></type></decl></param>, <param><decl><type><specifier>const</specifier> <name>char</name><modifier>*</modifier></type> <name>srcml_filename</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>struct</type> <name>s</name></decl></param>, <param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>s</name></name></type></decl></param>, <param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list>;</function_decl>
 </unit>
 
 </unit>
