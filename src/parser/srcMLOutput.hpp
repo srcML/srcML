@@ -110,6 +110,7 @@ public:
     const char * columnAttributeValue(int acolumn);
 
     int last_line, last_line2, last_column;
+    bool end_position_output;
     void outputPosition();
 
     // destructor

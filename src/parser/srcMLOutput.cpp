@@ -448,7 +448,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const std::vector<std::string> & attributes,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          int ts)
-    : last_line(0), last_line2(0), last_column(0), input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
+    : last_line(0), last_line2(0), last_column(0), end_position_output(false), input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
       unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri), unit_attributes(attributes), processing_instruction(processing_instruction),
       openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), 
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
@@ -635,6 +635,8 @@ const char * srcMLOutput::columnAttributeValue(int acolumn) {
  */
 void srcMLOutput::outputPosition() {
 
+    if(end_position_output) return;
+
     const char * position_localname = "position";
     const char* prefix = num2prefix[(int)ElementPrefix[SPOSITION]].c_str();
 
@@ -652,6 +654,8 @@ void srcMLOutput::outputPosition() {
     xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(last_column));
 
     xmlTextWriterEndElement(xout);
+
+    end_position_output = true;
 
 }
 
@@ -1098,6 +1102,8 @@ void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
     last_line = token->getLine();
     last_column = token->getColumn() + (int)token->getText().size();
 
+    end_position_output = false;
+
     processText(token->getText());
 }
 
@@ -1117,6 +1123,8 @@ void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
     last_line = token->getLine() & 0xFFFF;
     last_line2 = token->getLine() >> 16;
     last_column = token->getColumn() + (int)token->getText().size();
+
+    end_position_output = false;
 
     processText(token->getText());
 }
