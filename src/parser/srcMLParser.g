@@ -6875,7 +6875,44 @@ class_type_identifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
 
-    class_type_identifier_keyword (identifier | keyword_identifier)
+    class_type_identifier_keyword class_type_compound_name
+
+;
+
+class_type_compound_name[] { bool iscompound = true; ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_EXPRESSION);
+
+    }
+
+    (
+    { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+    compound_name_java[iscompound] |
+
+    { inLanguage(LANGUAGE_CSHARP) }?
+    compound_name_csharp[iscompound] |
+
+    { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+    compound_name_objective_c[iscompound] |
+
+    { inLanguage(LANGUAGE_C) }?
+    compound_name_c[iscompound] |
+
+    { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+    compound_name_cpp[iscompound] |
+
+    macro_type_name_call 
+    )
+
+    (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+
+    {
+
+        endMode();
+
+    }
 
 ;
 
