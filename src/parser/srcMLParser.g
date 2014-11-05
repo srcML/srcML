@@ -1247,7 +1247,8 @@ function_type[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
 
         // match auto keyword first as special case do no warn about ambiguity
-        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
+        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* |
+        (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
 
@@ -6839,7 +6840,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : 
-            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | class_type_identifier { decTypeCount(); }  | lead_type_identifier | EVENT) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* | lead_type_identifier | EVENT) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
         (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
@@ -6855,7 +6856,7 @@ class_type_identifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
 
-    class_lead_type_identifier { endMode(); } type_identifier
+    class_lead_type_identifier identifier
 
 ;
 
