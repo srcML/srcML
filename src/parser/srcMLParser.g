@@ -4386,7 +4386,10 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
         {
 
-            startElement(SNAME);
+            if(inTransparentMode(MODE_TEMPLATE))
+                startElement(SNAME);
+            else
+                startElement(SNOP);
 
         }
         (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
@@ -6858,8 +6861,18 @@ class_type_identifier[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
 
-    class_lead_type_identifier (identifier | keyword_identifier)
+    class_type_identifier_keyword (identifier | keyword_identifier)
 
+;
+
+// more lead type identifier
+class_type_identifier_keyword[]  { SingleElement element(this); ENTRY_DEBUG } :
+        {
+
+            startElement(SNAME);
+
+        }
+        (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
 
 // Variable declaration name and optional initialization
