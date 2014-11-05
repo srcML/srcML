@@ -1259,7 +1259,7 @@ function_type[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : {getTypeCount() > 0}? 
             // Mark as name before mark without name
-            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier) { decTypeCount(); })*
+            (options { generateAmbigWarnings = false;} :  { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* | keyword_name | type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier) { decTypeCount(); })*
 
         {
             endMode(MODE_EAT_TYPE);
@@ -6860,7 +6860,7 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
             { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] |
              { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* | lead_type_identifier | EVENT) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
+        (options { generateAmbigWarnings = false; } : { !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) && !inTransparentMode(MODE_ASSOCIATION_TYPE) }? class_type_identifier { decTypeCount(); } (options { greedy = true; } : multops)* | keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
