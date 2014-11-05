@@ -610,6 +610,9 @@ tokens {
     SREINTERPRET_CAST;
     SSTATIC_CAST;
 
+    // srcMLOutput used only
+    SPOSITION;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
