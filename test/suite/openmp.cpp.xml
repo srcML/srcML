@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="openmp">
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>omp</name> <name>parallel</name></cpp:pragma>
+</unit>
+
+
+</unit>
