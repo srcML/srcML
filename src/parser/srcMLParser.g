@@ -613,6 +613,9 @@ tokens {
     // srcMLOutput used only
     SPOSITION;
 
+    // Other
+    SCUDA_ARGUMENT_LIST;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -1866,7 +1869,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | keyword_call_tokens (DOTDOTDOT | template_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
+        (function_identifier | keyword_call_tokens (DOTDOTDOT | template_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -1899,7 +1902,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             { !name || (depth > 0) }?
             (identifier | generic_selection) set_bool[name, true] |
 
-            keyword_call_tokens (options { greedy = true; } : DOTDOTDOT | template_argument_list)* |
+            keyword_call_tokens (options { greedy = true; } : DOTDOTDOT | template_argument_list | cuda_argument_list)* |
 
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous |
@@ -4988,6 +4991,8 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
             (template_argument_list)=>
                 template_argument_list (options { greedy = true; } : generic_type_constraint)* |
 
+            (cuda_argument_list) => cuda_argument_list |
+
             {
                // set the token to NOP since we did not find a template argument list
                tp.setType(SNOP);
@@ -5009,7 +5014,10 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
         }
         push_namestack (template_specifier { is_nop = false; })* identifier
     (
-        (template_argument_list)=> template_argument_list (options { greedy = true; } : generic_type_constraint)*  | 
+        (template_argument_list)=> template_argument_list (options { greedy = true; } : generic_type_constraint)*  |
+
+        (cuda_argument_list) => cuda_argument_list |
+
         {
             // set the token to NOP since we did not find a template argument list
             if(is_nop)
@@ -8026,6 +8034,46 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
         tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument)* tempope
 
         restorenamestack[namestack_save]
+;
+
+// CUDA argument list
+cuda_argument_list[] { CompleteElement element(this); std::string namestack_save[2]; ENTRY_DEBUG } :
+        {
+            // local mode
+            startNewMode(MODE_LOCAL);
+
+            startElement(SCUDA_ARGUMENT_LIST);
+        }
+        savenamestack[namestack_save]
+
+        cuda_start (options { generateAmbigWarnings = false; } : COMMA | template_argument)* cuda_end
+
+        restorenamestack[namestack_save]
+;
+
+// beginning of cuda argument list
+cuda_start[] { ENTRY_DEBUG } :
+        {
+            // make sure we are in a list mode so that we can end correctly
+            // some uses of tempope will have their own mode
+            if (!inMode(MODE_LIST))
+                startNewMode(MODE_LIST);
+        }
+        CUDA
+;
+
+// end of cuda argument list
+cuda_end[] { ENTRY_DEBUG } :
+        {
+            // end down to the mode created by the start cuda argument list operator
+            endDownToMode(MODE_LIST);
+        }
+        TEMPOPE TEMPOPE TEMPOPE
+        {
+            // end the mode created by the start cuda argument list operator
+            while (inMode(MODE_LIST))
+                endMode(MODE_LIST);
+        }
 ;
 
 // generic type constraint
