@@ -24,4 +24,8 @@
 <friend>friend <class_decl>class <name>foo</name>, <name>bar</name>;</class_decl></friend>
 </unit>
 
+<unit>
+<friend>friend <name>T</name>;</friend>
+</unit>
+
 </unit>

@@ -959,6 +959,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { stmt_type == EVENT_STMT}?
         event_statement[type_count] |
 
+        { stmt_type == NONE && inTransparentMode(MODE_FRIEND) }?
+        compound_name |
+
         // "~" which looked like destructor, but isn't
         { stmt_type == NONE }?
         expression_statement_process
@@ -2717,7 +2720,7 @@ emit_statement[] { ENTRY_DEBUG } :
 friend_statement[] { ENTRY_DEBUG } :
     {
     
-        startNewMode(MODE_STATEMENT | MODE_NEST);
+        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_FRIEND);
 
         startElement(SFRIEND);
 
@@ -3276,7 +3279,7 @@ terminate[] { ENTRY_DEBUG } :
 // match the actual terminate token
 terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (inMode(MODE_STATEMENT | MODE_NEST) && (!inMode(MODE_DECL)
+            if (inMode(MODE_STATEMENT | MODE_NEST) && (!inMode(MODE_DECL) && !inTransparentMode(MODE_FRIEND)
             && (!inLanguage(LANGUAGE_JAVA) || !inMode(MODE_ENUM | MODE_LIST))))
                 startElement(SEMPTY);
         }
