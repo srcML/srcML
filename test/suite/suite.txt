@@ -47,6 +47,7 @@ LANGUAGE_C_FAMILY enum
 LANGUAGE_C_FAMILY for
 LANGUAGE_C_FAMILY auto
 LANGUAGE_C_FAMILY block_lambda
+LANGUAGE_C_FAMILY cuda
 
 LANGUAGE_C_ONLY function_c
 LANGUAGE_C_ONLY cast_c
@@ -65,6 +66,7 @@ LANGUAGE_C_ONLY for_c
 LANGUAGE_C_ONLY function_pointer_c
 LANGUAGE_C_ONLY function_decl_c
 LANGUAGE_C_ONLY operator_c
+
 
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
@@ -120,7 +122,6 @@ LANGUAGE_CXX emit
 LANGUAGE_CXX macro_cpp
 LANGUAGE_CXX destructor_cpp
 LANGUAGE_CXX static_assert_cpp
-LANGUAGE_CXX cuda
 
 LANGUAGE_CXX_GEN c_cpp_mode.restrict
 LANGUAGE_CXX_GEN c_cpp_mode.mutable

@@ -5262,12 +5262,12 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (identifier | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
+        ((identifier CUDA) => simple_name_optional_template | identifier | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
             ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
-            identifier
+            ((identifier CUDA) => simple_name_optional_template | identifier)
         )*
 
 ;
@@ -8155,7 +8155,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(STEMPLATE_ARGUMENT);
 
-            if(inLanguage(LANGUAGE_CXX))
+            if(inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C))
                startElement(SEXPRESSION);
         }
         (options { greedy = true; } :
