@@ -357,6 +357,9 @@ namespace {
     // srcMLOutput only
     ELEMENT_MAP(SPOSITION, "position")
 
+    // Other
+    ELEMENT_MAP(SCUDA_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
+
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
 
@@ -1612,6 +1615,18 @@ void srcMLOutput::processIndexerParameterList(const antlr::RefToken& token) {
 void srcMLOutput::processSizeofPack(const antlr::RefToken& token) {
 
     processOptional(token, "type", "pack");
+
+}
+
+/**
+ * processCudaArgumentList
+ * @param token token to output as cuda argument list
+ *
+ * Callback to process/output token as cuda argument list.
+ */
+void srcMLOutput::processCudaArgumentList(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "cuda");
 
 }
 
