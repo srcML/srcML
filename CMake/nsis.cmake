@@ -52,14 +52,13 @@ if(WIN32)
 !macroend")
     set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
 
-!insertmacro IfKeyExists \\\"HKEY_LOCAL_MACHINE\\\" \\\"SOFTWARE\\\\Wow6432Node\\\\Microsoft\\\\DevDiv\\\\vc\\\\Servicing\\\\12.0\\\\RuntimeMinimum\\\" \\\"Version\\\"
-Pop \$R0
-!include LogicLib.nsh
-\\\${If} \$R0 == 1
-  MessageBox MB_OK \\\"No Key!\\\"
-\\\${Else}
-  MessageBox MB_OK \\\"Found KEY!\\\"
-\\\${EndIf}
+#!insertmacro IfKeyExists \\\"HKEY_LOCAL_MACHINE\\\" \\\"SOFTWARE\\\\Wow6432Node\\\\Microsoft\\\\DevDiv\\\\vc\\\\Servicing\\\\12.0\\\\RuntimeMinimum\\\" \\\"Version\\\"
+#Pop \$R0
+#!include LogicLib.nsh
+#\\\${If} \$R0 == 1
+File \\\"D:\\\\OtherProgramFiles\\\\Visual Studio 12.0\\\\VC\\\\redist\\\\1033\\\\vcredist_x86.exe\\\" 	
+ExecWait '\\\"$INSTDIR\\\\vcredist_x86.exe\\\"  /passive /norestart'
+#\\\${EndIf}
 
 ")
 # 
