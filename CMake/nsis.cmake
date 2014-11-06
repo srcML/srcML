@@ -21,48 +21,30 @@
 set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
 set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
 set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
-# D:\ProgrammingProjects\srcMLGitHubRepo\srcML
-# set add to path variable and ask for shortcut
+
 set(CPACK_NSIS_MODIFY_PATH ON)
 if(WIN32)
-    set(CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS "!include LogicLib.nsh
-!macro IfKeyExists ROOT MAIN_KEY KEY
-  Push $R0
-  Push $R1
-  Push $R2
- 
-  StrCpy $R1 \\\"0\\\"
-  StrCpy $R2 \\\"0\\\"
- 
-  \\\${Do}
-    EnumRegKey $R0 \\\${ROOT} \\\"\\\${MAIN_KEY}\\\" \\\"$R1\\\"
-    \\\${If} $R0 == \\\"\\\${KEY}\\\"
-      StrCpy $R2 \\\"1\\\"
-      \\\${Break}
-    \\\${EndIf}
-    IntOp $R1 $R1 + 1
-  \\\${LoopWhile} $R0 != \\\"\\\"
- 
-  ClearErrors
- 
-  Exch 2
-  Pop $R0
-  Pop $R1
-  Exch $R2
-!macroend")
-    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-
-#!insertmacro IfKeyExists \\\"HKEY_LOCAL_MACHINE\\\" \\\"SOFTWARE\\\\Wow6432Node\\\\Microsoft\\\\DevDiv\\\\vc\\\\Servicing\\\\12.0\\\\RuntimeMinimum\\\" \\\"Version\\\"
-#Pop \$R0
-#!include LogicLib.nsh
-#\\\${If} \$R0 == 1
-File \\\"D:\\\\OtherProgramFiles\\\\Visual Studio 12.0\\\\VC\\\\redist\\\\1033\\\\vcredist_x86.exe\\\" 	
-ExecWait '\\\"$INSTDIR\\\\vcredist_x86.exe\\\"  /passive /norestart'
-#\\\${EndIf}
-
-")
-# 
-    message(STATUS "${CPACK_NSIS_EXTRA_INSTALL_COMMANDS}")
+    # Checking the correct version of visual studio we are only supporting
+    # the last 3 versions of the installer. and ONLY the x86 version (we don't have a
+    # 64 bit build of any of the required libraries needed to create a 64 bit version.)
+    if (MSVC12)
+        set(MSVC_VERSION_NUMBER "12.0")
+    elseif(MSVC11)
+        set(MSVC_VERSION_NUMBER "11.0")
+    elseif(MSVC10)
+        set(MSVC_VERSION_NUMBER "10.0")
+    endif()
+    find_program(MSVC_REDIST NAMES vcredist_x86.exe
+      PATHS
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VCExpress\\${MSVC_VERSION_NUMBER};InstallDir]/../../SDK/v${MSVC_VERSION_NUMBER}/BootStrapper/Packages/"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\${MSVC_VERSION_NUMBER};InstallDir]/../../SDK/v${MSVC_VERSION_NUMBER}/BootStrapper/Packages/"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\${MSVC_VERSION_NUMBER};InstallDir]/../../SDK/v${MSVC_VERSION_NUMBER}/BootStrapper/Packages/"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\${MSVC_VERSION_NUMBER};InstallDir]/../../VC/redist/1033"
+      REQUIRED
+    )
+    get_filename_component(vcredist_name "${MSVC_REDIST}" NAME)
+    install(PROGRAMS ${MSVC_REDIST} DESTINATION bin)
+    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\bin\\\\${vcredist_name}\\\" /passive /norestart'")
 endif()
 # set contact in add/remove programs
 set(CPACK_NSIS_CONTACT "Software Developement Laboratories <bugs@srcML.org>")
