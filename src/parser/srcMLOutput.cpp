@@ -354,8 +354,16 @@ namespace {
     ELEMENT_MAP(SREINTERPRET_CAST, "cast")
     ELEMENT_MAP(SSTATIC_CAST,      "cast")
 
+    // srcMLOutput only
+    ELEMENT_MAP(SPOSITION, "position")
+
+    // Other
+    ELEMENT_MAP(SCUDA_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
+
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
+
+
 }
 
 #undef ELEMENT_MAP_CALL_NAME
@@ -413,6 +421,10 @@ namespace {
 
     // modifier namespace
     ELEMENT_MAP(SMODIFIER, SRCML_EXT_MODIFIER_NS_URI_POS)
+
+    // position namespace
+    ELEMENT_MAP(SPOSITION, SRCML_EXT_POSITION_NS_URI_POS)
+
 }
 
 /**
@@ -439,9 +451,9 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const std::vector<std::string> & attributes,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          int ts)
-    : input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
+    : last_line(0), last_line2(0), last_column(0), end_position_output(false), input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
       unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri), unit_attributes(attributes), processing_instruction(processing_instruction),
-      openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0),
+      openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), 
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
 
@@ -471,6 +483,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
         ElementPrefix[SMODIFIER] = SRCML_SRC_NS_URI_POS;
 
     }
+
+    if (isoption(options, SRCML_OPTION_POSITION) && isoption(options, SRCML_OPTION_LINE))
+      num2process[2] = &srcMLOutput::processTextPositionLine;
+    else if (isoption(options, SRCML_OPTION_POSITION))
+      num2process[2] = &srcMLOutput::processTextPosition;
 
 }
 
@@ -594,6 +611,55 @@ const char * srcMLOutput::lineAttributeValue(int aline) {
     snprintf(out, 20, "%d", aline);
 
     return out;
+}
+
+/**
+ * columnAttributeValue
+ * @param acolumn to convert to string
+ *
+ * Convert the column to string attribute.
+ *
+ * @returns the column as a string.
+ */
+const char * srcMLOutput::columnAttributeValue(int acolumn) {
+
+    snprintf(out, 20, "%d", acolumn);
+
+    return out;
+}
+
+/**
+ * lineAttributeValue
+ * @param aline to convert to string
+ *
+ * Convert the line to string attribute.
+ *
+ * @returns the line as a string.
+ */
+void srcMLOutput::outputPosition() {
+
+    if(end_position_output) return;
+
+    const char * position_localname = "position";
+    const char* prefix = num2prefix[(int)ElementPrefix[SPOSITION]].c_str();
+
+    if (prefix[0] == 0)
+        xmlTextWriterStartElement(xout, BAD_CAST position_localname);
+    else
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST position_localname, 0);
+
+
+    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(last_line));
+
+    if(isoption(options,SRCML_OPTION_LINE))
+        xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST lineAttributeValue(last_line2));
+
+    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(last_column));
+
+    xmlTextWriterEndElement(xout);
+
+    end_position_output = true;
+
 }
 
 /**
@@ -1036,6 +1102,11 @@ void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
 
+    last_line = token->getLine();
+    last_column = token->getColumn() + (int)token->getText().size();
+
+    end_position_output = false;
+
     processText(token->getText());
 }
 
@@ -1051,6 +1122,12 @@ void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
     xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() >> 16));
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
+
+    last_line = token->getLine() & 0xFFFF;
+    last_line2 = token->getLine() >> 16;
+    last_column = token->getColumn() + (int)token->getText().size();
+
+    end_position_output = false;
 
     processText(token->getText());
 }
@@ -1135,8 +1212,13 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
     }
 
     if (!isstart(token) || isempty(token)) {
+
+        if(isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
+            outputPosition();
+
         xmlTextWriterEndElement(xout);
         --openelementcount;
+
     }
 }
 
@@ -1355,6 +1437,10 @@ void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr
         if(attr_name)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
     } else {
+
+        if(isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
+            outputPosition();
+
         xmlTextWriterEndElement(xout);
         --openelementcount;
     }
@@ -1529,6 +1615,18 @@ void srcMLOutput::processIndexerParameterList(const antlr::RefToken& token) {
 void srcMLOutput::processSizeofPack(const antlr::RefToken& token) {
 
     processOptional(token, "type", "pack");
+
+}
+
+/**
+ * processCudaArgumentList
+ * @param token token to output as cuda argument list
+ *
+ * Callback to process/output token as cuda argument list.
+ */
+void srcMLOutput::processCudaArgumentList(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "cuda");
 
 }
 

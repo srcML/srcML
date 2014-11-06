@@ -181,19 +181,19 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type>class <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>class</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type>struct <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>struct</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type>union <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>union</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>enum</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
 <unit>

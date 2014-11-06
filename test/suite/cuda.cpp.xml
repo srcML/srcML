@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="cuda" filename="cuda">
+
+<unit>
+<expr_stmt><expr><call><name><name>cuda</name><argument_list type="cuda">&lt;&lt;&lt;&gt;&gt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name><name>cuda</name><argument_list type="cuda">&lt;&lt;&lt;<argument><expr><literal type="number">1</literal></expr></argument>&gt;&gt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name><name>cuda</name><argument_list type="cuda">&lt;&lt;&lt;<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><name>m</name></expr></argument>, <argument><expr><name>n</name></expr></argument>, <argument><expr><name>o</name></expr></argument>, <argument><expr><name>p</name></expr></argument>&gt;&gt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name><name>cuda</name><argument_list type="cuda">&lt;&lt;&lt;<argument><expr><name><name>cuda</name><argument_list type="cuda">&lt;&lt;&lt;&gt;&gt;&gt;</argument_list></name></expr></argument>&gt;&gt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>
