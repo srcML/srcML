@@ -1,4 +1,2 @@
 python/srcml/bindings.py
-python/srcml/archive.py
-python/srcml/unit.py
 python/examples/run.sh

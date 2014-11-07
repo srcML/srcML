@@ -17,7 +17,4 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from bindings import *
-from archive import *
-from unit import *
-
+import test_archive
