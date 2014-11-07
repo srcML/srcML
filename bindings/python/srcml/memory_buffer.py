@@ -18,11 +18,19 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import ctypes
-
+import bindings
 
 class memory_buffer:
     def __init__(self):
         self._buf = ctypes.c_char_p()
-        self._sz = ctypes.c_int(0)
-        
+        self._size = ctypes.c_int(0)
+
+    def __del__(self):
+        bindings.free(self._buf)
+
+    def __getitem__(self, key):
+        raise Exception("Not implemented!")
+
+    def __len__(self):
+        return self._size.value;
     

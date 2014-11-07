@@ -19,3 +19,4 @@
 
 from test_archive import *
 from test_bindings import *
+from test_memory_buffer import *
