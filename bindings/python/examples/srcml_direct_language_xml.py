@@ -37,5 +37,5 @@ import srcml
 if __name__ == "__main__":
 
     # Translate from a source-code file to a srcML file
-    srcml.set_language(SRCML_LANGUAGE_XML);
+    srcml.set_language(srcml.LANGUAGE_XML);
     srcml.srcml("a.cpp.xml", "a.cpp");

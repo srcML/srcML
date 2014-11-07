@@ -101,7 +101,7 @@ def check_result(rc):
         return ""
 
     def defineConstantFromMacro(self, name, valueString):
-        return "{0} = {1}".format(name, valueString)
+        return "{0} = {1}".format(name[6:], valueString)
 
     def resolveType(self, typeInfo):
         if isinstance(typeInfo, str):
@@ -236,7 +236,7 @@ class TestSuiteGenerator(TestSuiteGeneratorBase):
     # Pure-virtual functionality!
     def startTestFile(self):
         return """##
-# @file bindings.py
+# @file test.py
 #
 # @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 

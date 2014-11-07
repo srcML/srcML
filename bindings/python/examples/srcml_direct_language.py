@@ -35,5 +35,5 @@ if __name__ == "__main__":
 
 
     # Translate from a source-code file to a srcML file
-    srcml.set_language(srcml.SRCML_LANGUAGE_CXX)
+    srcml.set_language(srcml.LANGUAGE_CXX)
     srcml.srcml("a.cpp", "a.cpp.xml")
