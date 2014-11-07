@@ -561,6 +561,7 @@ tokens {
     SUSING_STATEMENT;
     SFUNCTION_DELEGATE;
     SEVENT;
+    SCONSTRAINT;
 
     // linq
     SLINQ;
@@ -609,6 +610,12 @@ tokens {
     SREINTERPRET_CAST;
     SSTATIC_CAST;
 
+    // srcMLOutput used only
+    SPOSITION;
+
+    // Other
+    SCUDA_ARGUMENT_LIST;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -642,6 +649,7 @@ public:
     int current_column;
     int current_line;
     int nxt_token;
+    int last_consumed;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -657,6 +665,7 @@ public:
 
     static const antlr::BitSet enum_preprocessing_token_set;
     static const antlr::BitSet literal_tokens_set;
+
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -690,6 +699,17 @@ public:
     }
 
     void endAllModes();
+
+
+    virtual void consume() {
+
+        last_consumed = LA(1);
+        LLkParser::consume();
+
+
+
+    }
+
 }
 
 
@@ -803,7 +823,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         namespace_definition |
 
         // C/C++
-        typedef_statement |
+        typedef_statement | friend_statement | 
 
         // C
         static_assert_statement |
@@ -938,6 +958,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // C# event statement
         { stmt_type == EVENT_STMT}?
         event_statement[type_count] |
+
+        { stmt_type == NONE && inTransparentMode(MODE_FRIEND) }?
+        compound_name |
 
         // "~" which looked like destructor, but isn't
         { stmt_type == NONE }?
@@ -1217,7 +1240,7 @@ function_rest[int& fla] { ENTRY_DEBUG } :
 ;
 
 // function type, including specifiers
-function_type[int type_count] { ENTRY_DEBUG } :
+function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         {
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_TYPE);
@@ -1230,7 +1253,9 @@ function_type[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
 
         // match auto keyword first as special case do no warn about ambiguity
-        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
+        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
+            { is_class_type_identifier() }? (specifier { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
+        (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
 
@@ -1847,7 +1872,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | keyword_call_tokens (DOTDOTDOT | template_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
+        (function_identifier | keyword_call_tokens (DOTDOTDOT | template_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -1880,7 +1905,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             { !name || (depth > 0) }?
             (identifier | generic_selection) set_bool[name, true] |
 
-            keyword_call_tokens (options { greedy = true; } : DOTDOTDOT | template_argument_list)* |
+            keyword_call_tokens (options { greedy = true; } : DOTDOTDOT | template_argument_list | cuda_argument_list)* |
 
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous |
@@ -2548,7 +2573,7 @@ extern_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SEXTERN);
         }
-        EXTERN (extern_alias (variable_identifier)*)*
+        EXTERN (extern_alias (options { greedy = true; } : variable_identifier)*)*
 ;
 
 // name of extern section
@@ -2690,6 +2715,18 @@ emit_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
         EMIT
+;
+
+friend_statement[] { ENTRY_DEBUG } :
+    {
+    
+        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_FRIEND);
+
+        startElement(SFRIEND);
+
+    }
+    FRIEND
+
 ;
 
 /* Declarations Definitions CFG */
@@ -3133,7 +3170,7 @@ lcurly[] { ENTRY_DEBUG } :
 lcurly_base[] { ENTRY_DEBUG } :
         {
             // need to pass on class mode to detect constructors for Java
-            bool inclassmode = inLanguage(LANGUAGE_JAVA_FAMILY) && inMode(MODE_CLASS);
+            bool inclassmode = (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && inMode(MODE_CLASS);
 
             startNewMode(MODE_BLOCK);
 
@@ -3242,7 +3279,7 @@ terminate[] { ENTRY_DEBUG } :
 // match the actual terminate token
 terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (inMode(MODE_STATEMENT | MODE_NEST) && (!inMode(MODE_DECL)
+            if (inMode(MODE_STATEMENT | MODE_NEST) && (!inMode(MODE_DECL) && !inTransparentMode(MODE_FRIEND)
             && (!inLanguage(LANGUAGE_JAVA) || !inMode(MODE_ENUM | MODE_LIST))))
                 startElement(SEMPTY);
         }
@@ -3946,7 +3983,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  }?
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
-                (options { generateAmbigWarnings = false; } : EXTERN (options { greedy = true; } : ALIAS set_int[specifier_count, specifier_count + 1])* | specifier | template_specifier set_bool[sawtemplate, true] |
+                (options { generateAmbigWarnings = false; } : EXTERN (options { greedy = true; } : ALIAS set_int[specifier_count, specifier_count + 1])* |
+                    { LA(1) != NEW || (inLanguage(LANGUAGE_CSHARP) && inPrevMode(MODE_CLASS)) }? specifier | template_specifier set_bool[sawtemplate, true] |
                     { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,
@@ -4061,7 +4099,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // if elaborated type specifier should also be handled above. Reached here because 
                 // non-specifier then class/struct/union.
                 { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION) }?
-                ({ LA(1) == DECLTYPE }? type_specifier_call | { next_token() == LPAREN }? atomic |pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
+                ({ LA(1) == DECLTYPE }? type_specifier_call | { next_token() == LPAREN }? atomic | pure_lead_type_identifier_no_specifiers) set_bool[foundpure] |
 
                 // type parts that must only occur after other type parts (excluding specifiers)
                 non_lead_type_identifier throw_exception[!foundpure]
@@ -4354,10 +4392,12 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 // more lead type identifier
 class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
         {
+
             if(inTransparentMode(MODE_TEMPLATE))
                 startElement(SNAME);
             else
                 startElement(SNOP);
+
         }
         (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
@@ -4952,7 +4992,9 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
         push_namestack identifier (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
             (template_argument_list)=>
-                template_argument_list |
+                template_argument_list (options { greedy = true; } : generic_type_constraint)* |
+
+            (cuda_argument_list) => cuda_argument_list |
 
             {
                // set the token to NOP since we did not find a template argument list
@@ -4975,7 +5017,10 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
         }
         push_namestack (template_specifier { is_nop = false; })* identifier
     (
-        (template_argument_list)=> template_argument_list | 
+        (template_argument_list)=> template_argument_list (options { greedy = true; } : generic_type_constraint)*  |
+
+        (cuda_argument_list) => cuda_argument_list |
+
         {
             // set the token to NOP since we did not find a template argument list
             if(is_nop)
@@ -5082,7 +5127,7 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
         (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
-        identifier (template_argument_list)* DCOLON pointer_dereference |
+        identifier (template_argument_list (generic_type_constraint)*)* DCOLON pointer_dereference |
 
         // typical function pointer name
         // need greedy for general operators and possibly end
@@ -5144,6 +5189,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 
         { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
         compound_name_cpp[iscompound] |
+
         macro_type_name_call 
         )
 
@@ -5178,7 +5224,7 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
             (dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
-            ( options { greedy = true; } : dcolon)*
+            (options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
@@ -5219,12 +5265,12 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (identifier | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
+        ((identifier CUDA) => simple_name_optional_template | identifier | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
             ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
-            identifier
+            ((identifier CUDA) => simple_name_optional_template | identifier)
         )*
 
 ;
@@ -5360,7 +5406,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             PUBLIC | PRIVATE | PROTECTED |
 
             // C++
-            FINAL | STATIC | ABSTRACT | FRIEND | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
+            FINAL | STATIC | ABSTRACT | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
             CONSTEXPR | THREAD_LOCAL |
 
             // C
@@ -6698,8 +6744,22 @@ generic_selection_association[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 generic_selection_association_type[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
 
+    {
+
+        setMode(MODE_ASSOCIATION_TYPE);
+
+    }
+
+    (
     { pattern_check(stmt_type, secondtoken, type_count, true) }?
     variable_declaration_type[type_count + 1] | generic_selection_association_default
+    )
+
+    {
+
+        clearMode(MODE_ASSOCIATION_TYPE);
+
+    }
 
 ;
 
@@ -6796,7 +6856,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
 ;
 
 // declaration type
-variable_declaration_type[int type_count] { ENTRY_DEBUG } :
+variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         {
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_TYPE);
@@ -6809,10 +6869,94 @@ variable_declaration_type[int type_count] { ENTRY_DEBUG } :
 
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : 
-            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] | lead_type_identifier | EVENT) { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] |
+            { is_class_type_identifier() }? (specifier { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
+            lead_type_identifier | EVENT)
+        { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
         (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
+;
+
+specifier_star[] { ENTRY_DEBUG } :
+
+    (options { greedy = true; } : specifier)*
+
+;
+
+is_class_type_identifier[] returns[bool is_class_type = false] { ENTRY_DEBUG 
+
+    if(inputState->guessing || inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) || inTransparentMode(MODE_ASSOCIATION_TYPE))
+        return is_class_type;
+
+    int token = look_past_rule(&srcMLParser::specifier_star);
+
+    if(token == CLASS || token == CXX_CLASS || token == STRUCT || token == UNION || token == ENUM )
+        is_class_type = true;
+
+} :;
+
+class_type_identifier[bool & is_compound] { CompleteElement element(this); ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_LOCAL);
+
+     
+        startElement(SNAME);
+
+    }
+
+    class_type_identifier_keyword class_type_compound_name[is_compound]
+
+;
+
+class_type_compound_name[bool & is_compound] { ; ENTRY_DEBUG } :
+
+    {
+
+        startNewMode(MODE_EXPRESSION);
+
+    }
+
+    (
+    { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+    compound_name_java[is_compound] |
+
+    { inLanguage(LANGUAGE_CSHARP) }?
+    compound_name_csharp[is_compound] |
+
+    { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+    compound_name_objective_c[is_compound] |
+
+    { inLanguage(LANGUAGE_C) }?
+    compound_name_c[is_compound] |
+
+    { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+    compound_name_cpp[is_compound] | keyword_name_inner[is_compound] |
+
+    macro_type_name_call 
+    )
+
+    (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+
+    {
+
+        endMode();
+
+    }
+
+;
+
+// more lead type identifier
+class_type_identifier_keyword[]  { SingleElement element(this); ENTRY_DEBUG } :
+        {
+
+            startElement(SNAME);
+
+        }
+        (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
 
 // Variable declaration name and optional initialization
@@ -7693,10 +7837,11 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
                     && ((look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA ||
                         look_past_token == RPAREN || look_past_token == TRETURN || look_past_token == LAMBDA));
 
+
         }
 
         (
-        { stmt_type == VARIABLE || LA(1) == DOTDOTDOT }?
+        { stmt_type == VARIABLE || stmt_type == CLASS_DECL || stmt_type == STRUCT_DECL || stmt_type == UNION_DECL || stmt_type == ENUM_DECL || LA(1) == DOTDOTDOT }?
         (parameter_type_count[type_count, output_type])
         // suppress warning caused by ()*
         (options { greedy = true; } : bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
@@ -7710,7 +7855,7 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
 ;
 
 // count types in parameter
-parameter_type_count[int & type_count, bool output_type = true] { CompleteElement element(this); ENTRY_DEBUG } :
+parameter_type_count[int & type_count, bool output_type = true] { CompleteElement element(this); bool is_compound = false; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -7722,7 +7867,7 @@ parameter_type_count[int & type_count, bool output_type = true] { CompleteElemen
 
 
         // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] | { is_class_type_identifier() }? (specifier set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |
@@ -7760,7 +7905,7 @@ tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // do a parameter type
-parameter_type[] { CompleteElement element(this); int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+parameter_type[] { CompleteElement element(this); int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; bool is_compound = false; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -7771,7 +7916,9 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
         { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
 
         // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
+         { is_class_type_identifier() }? (specifier set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
+         type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 ;
 
 // Template
@@ -7889,9 +8036,47 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
 
         tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument)* tempope
 
-        (options { greedy = true; } : generic_type_constraint)*
+        restorenamestack[namestack_save]
+;
+
+// CUDA argument list
+cuda_argument_list[] { CompleteElement element(this); std::string namestack_save[2]; ENTRY_DEBUG } :
+        {
+            // local mode
+            startNewMode(MODE_LOCAL);
+
+            startElement(SCUDA_ARGUMENT_LIST);
+        }
+        savenamestack[namestack_save]
+
+        cuda_start (options { generateAmbigWarnings = false; } : COMMA | template_argument)* cuda_end
 
         restorenamestack[namestack_save]
+;
+
+// beginning of cuda argument list
+cuda_start[] { ENTRY_DEBUG } :
+        {
+            // make sure we are in a list mode so that we can end correctly
+            // some uses of tempope will have their own mode
+            if (!inMode(MODE_LIST))
+                startNewMode(MODE_LIST);
+        }
+        CUDA
+;
+
+// end of cuda argument list
+cuda_end[] { ENTRY_DEBUG } :
+        {
+            // end down to the mode created by the start cuda argument list operator
+            endDownToMode(MODE_LIST);
+        }
+        TEMPOPE TEMPOPE TEMPOPE
+        {
+            // end the mode created by the start cuda argument list operator
+            while (inMode(MODE_LIST))
+                endMode(MODE_LIST);
+        }
 ;
 
 // generic type constraint
@@ -7902,9 +8087,35 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SWHERE);
         }
-        WHERE compound_name_inner[false] COLON
-        (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN)
-        (options { greedy = true; } : COMMA (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | NEW LPAREN RPAREN))*
+        WHERE compound_name_inner[false] COLON type_constraint (options { greedy = true; } : COMMA type_constraint)*
+
+;
+
+type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // local mode
+            startNewMode(MODE_LOCAL);
+
+            startElement(SCONSTRAINT);
+        }
+
+        (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | new_constraint)
+;
+
+new_constraint[] { ENTRY_DEBUG } :
+
+    new_name LPAREN RPAREN
+
+;
+
+
+new_name[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        NEW
+
 ;
 
 protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -7947,7 +8158,7 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(STEMPLATE_ARGUMENT);
 
-            if(inLanguage(LANGUAGE_CXX))
+            if(inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C))
                startElement(SEXPRESSION);
         }
         (options { greedy = true; } :
@@ -8485,12 +8696,13 @@ ENTRY_DEBUG } :
                 if(end_statement)
                     else_handling();
 
-                if(LA(1) == 1) {
 
-                    eol_post(directive_token, markblockzero);
-                    return;
-                }
+            }
 
+            if(LA(1) == 1) {
+
+                eol_post(directive_token, markblockzero);
+                return;
             }
 
         }

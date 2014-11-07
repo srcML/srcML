@@ -140,3 +140,64 @@ class LanguageSupportInfo:
         return """LanguageSupportInfo
 OutputFile: {0.outputFile}
     {1}""".format(self, "\n    ".join([str(x) for x in self.supportInfo]) )
+
+
+
+class XPExtFuncExample:
+    """ Represents an XPath example for an extension function."""
+
+    def __init__(self):
+        self.title = ""
+        self.desc = ""
+        self.xpath = ""
+    def __str__(self):
+        return """        Title: {title}
+        Desc:{desc}
+        XPath: {xpath}
+""".format(**self.__dict__)
+
+class srcMLTag:
+    def __init__(self):
+        self.ns = ""
+        self.tag = ""
+
+    def __str__(self):
+        return """{ns}:{tag}""".format(**self.__dict__)
+
+class XPExtFuncInfo:
+    """ Information about an extension function. """
+    def __init__(self):
+        self.names = []
+        self.desc = ""
+        self.langs = []
+        self.tags = []
+        self.examples = []
+
+    def __str__(self):
+        return """    {names}
+    {desc}
+    Langs: {langs}
+    tags: {tags}
+    Examples:
+{examples}
+    """.format(
+            names="\n".join(self.names),
+            desc=self.desc,
+            langs=",".join(self.langs),
+            tags=",".join([str(x) for x in self.tags]),
+            examples="\n".join([str(x) for x in self.examples])
+        )
+
+
+class XPathExtFuncDocInfo:
+    """ Information about all extension function. """
+    def __init__(self):
+        self.outputFile = "XPathExtFunc.html"
+        self.extFuncs = []
+        self.languages = None
+
+    def __str__(self):
+        return """XPathExtFuncDocInfo
+{0.outputFile}
+{1}
+""".format(self, "\n".join([str(x) for x in self.extFuncs]))

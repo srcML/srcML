@@ -5,7 +5,7 @@ from lxml import *
 from xml.sax.handler import ContentHandler
 from LoadData import *
 from LoadGrammarHowTo import *
-# import pydot
+
 
 def getComparableTagName(item):
     return "{0}{1}".format("" if item.ns == "" else (item.ns +":"), item.tag)
@@ -1229,9 +1229,26 @@ def loadGrammar(fileName):
                     if attr.name not in tagDoc.attributes:
                         tagDoc.attributes.append(attr.name)
 
-    print "Computing Languages for Documentation"
-    
+    print "Unique-ing Links and tag names."
+    def uniqueList(seq, key=lambda x:x):
+        seen = set()
+        seen_add = seen.add
+        return [x for x in seq if not (key(x) in seen or seen_add(key(x)))]
 
+
+    for tagDocumentation in documentedTags.values():
+        tagDocumentation.parentRules = uniqueList(tagDocumentation.parentRules, key=lambda x: x.name)
+        tagDocumentation.childRules = uniqueList(tagDocumentation.childRules, key=lambda x: x.name)
+
+    for ruleDocumentation in documentedRules.values():
+        ruleDocumentation.parentRules = uniqueList(ruleDocumentation.parentRules, key=lambda x: x.name)
+        ruleDocumentation.childRules = uniqueList(ruleDocumentation.childRules, key=lambda x: x.name)
+
+    for attrDocumentation in documentedAttrs.values():
+        attrDocumentation.parentRules = uniqueList(attrDocumentation.parentRules, key=lambda x: x.name)
+        attrDocumentation.childRules = uniqueList(attrDocumentation.childRules, key=lambda x: x.name)
+
+    print "Computing Languages for Documentation"
     for tagDoc in documentedTags.values():
         tagDoc.languages = []
         for l in grammarDoc.languages:
@@ -1247,12 +1264,6 @@ def loadGrammar(fileName):
     for attrDoc in documentedAttrs.values():
         if attrDoc.attrRule != None:
             attrDoc.languages = attrDoc.attrRule.languages
-
-    # graph = pydot.graph_from_edges(edge_list=[(e.fromTitle, e.toTitle) for e in grammarDoc.edgeList], directed=True)
-    # for missedNode in notInEdgeList:
-    #     graph.add_node(pydot.Node(missedNode.name))
-    # # def write(self, path, prog=None, format='raw'):
-    # graph.write("Grammar.svg", format="svg")
 
     print "    "+("-"*76)
     print "    Summary"

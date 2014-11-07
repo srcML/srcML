@@ -103,9 +103,15 @@ public:
     void processTextPosition(const antlr::RefToken& token);
     void processTextPositionLine(const antlr::RefToken& token);
 
+
     const char * lineAttributeValue(const antlr::RefToken& token);
     const char * columnAttributeValue(const antlr::RefToken& token);
     const char * lineAttributeValue(int aline);
+    const char * columnAttributeValue(int acolumn);
+
+    int last_line, last_line2, last_column;
+    bool end_position_output;
+    void outputPosition();
 
     // destructor
     ~srcMLOutput();
@@ -238,6 +244,7 @@ public:
     void processPseudoParameterList(const antlr::RefToken& token);
     void processIndexerParameterList(const antlr::RefToken& token);
     void processSizeofPack(const antlr::RefToken& token);
+    void processCudaArgumentList(const antlr::RefToken& token);
 
     /** method pointer for token processing dispatch */
     typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
