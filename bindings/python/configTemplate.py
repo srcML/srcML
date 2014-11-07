@@ -285,7 +285,7 @@ def readCallback(ctxt, buffer, size):
     ctxt.calledRead = True
     return 0
 
-class TestSequenceFunctions(unittest.TestCase):
+class TestBindings(unittest.TestCase):
 
 
 

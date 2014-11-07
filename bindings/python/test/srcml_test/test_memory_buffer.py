@@ -21,7 +21,7 @@ import os, unittest, ctypes
 
 from srcml import memory_buffer
 
-class TestSequenceFunctions(unittest.TestCase):
+class TestMemoryBuffer(unittest.TestCase):
 
     def setUp(self):
         pass
@@ -32,5 +32,5 @@ class TestSequenceFunctions(unittest.TestCase):
         
     def test_createBuffer(self):
         buff = memory_buffer()
-        self.assertIsNotNone(buff._buff, "Didn't find private member _buff")
+        self.assertIsNotNone(buff._buf, "Didn't find private member _buff")
         self.assertIsNotNone(buff._size, "Didn't find private member _size")
