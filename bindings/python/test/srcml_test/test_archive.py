@@ -19,3 +19,70 @@
 
 import srcml, os, unittest, ctypes
 
+class TestArchive(unittest.TestCase):
+
+    def setUp(self):
+        pass
+    
+    def tearDown(self):
+        pass
+
+    def test_newArchive(self):
+        archive = srcml.archive()
+        archive = None
+
+    def test_encodingAttr(self):
+        archive = srcml.archive()
+        self.assertIsNone(archive.encoding, "Incorrect value for encoding.")
+        expected = "encoding"
+        archive.encoding = expected
+        self.assertEqual(archive.encoding, expected, "Incorrect value for encoding.")
+        archive = None
+
+    def test_srcEncodingAttr(self):
+        archive = srcml.archive()
+        self.assertIsNone(archive.src_encoding, "Incorrect value for src_encoding.")
+        expected = "encoding"
+        archive.src_encoding = expected
+        self.assertEqual(archive.src_encoding, expected, "Incorrect value for src_encoding.")
+        archive = None
+
+    def test_languageAttr(self):
+        archive = srcml.archive()
+        self.assertIsNone(archive.language, "Incorrect value for language.")
+        expected = srcml.LANGUAGE_CXX
+        archive.language = expected
+        self.assertEqual(archive.language, expected, "Incorrect value for language.")
+        archive = None
+
+    def test_filenameAttr(self):
+        archive = srcml.archive()
+        self.assertIsNone(archive.filename, "Incorrect value for filename.")
+        expected = "aardvark.cpp"
+        archive.filename = expected
+        self.assertEqual(archive.filename, expected, "Incorrect value for filename.")
+        archive = None
+
+    def test_directoryAttr(self):
+        archive = srcml.archive()
+        self.assertIsNone(archive.directory, "Incorrect value for directory.")
+        expected = "SomeDirectory"
+        archive.directory = expected
+        self.assertEqual(archive.directory, expected, "Incorrect value for directory.")
+        archive = None
+
+    def test_versionAttr(self):
+        archive = srcml.archive()
+        self.assertIsNone(archive.version, "Incorrect value for version.")
+        expected = "1402"
+        archive.version = expected
+        self.assertEqual(archive.version, expected, "Incorrect value for version.")
+        archive = None
+
+    def test_tabstopAttr(self):
+        archive = srcml.archive()
+        self.assertEqual(archive.tabstop, 8, "Incorrect value for tabstop.")
+        expected = 5
+        archive.tabstop = expected
+        self.assertEqual(archive.tabstop, expected, "Incorrect value for tabstop.")
+        archive = None

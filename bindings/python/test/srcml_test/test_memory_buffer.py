@@ -36,3 +36,11 @@ class TestMemoryBuffer(unittest.TestCase):
         self.assertEqual(buff._size.value, 0, "Incorrect size")
         self.assertEqual(buff._buf.value, None, "Incorrect buffer data.")
         buff = None
+
+
+    def test_len(self):
+        buff = memory_buffer()
+        self.assertIsNotNone(buff._buf, "Didn't find private member _buff")
+        self.assertIsNotNone(buff._size, "Didn't find private member _size")
+        self.assertEqual(len(buff), 0, "Incorrect size")
+        buff = None

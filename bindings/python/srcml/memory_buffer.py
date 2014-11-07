@@ -40,7 +40,6 @@ class memory_buffer:
         if self._buf.value != None:
             bindings.free(self._buf)
 
-
     def clear(self):
         if self._buf.value != None:
             bindings.free(self._buf)

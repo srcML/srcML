@@ -21,15 +21,39 @@ from unit import unit
 from bindings import *
 from memory_buffer import memory_buffer
 
-class archive:
+archive_attr_lookup = dict(
+{
+    "encoding": (archive_get_encoding, archive_set_encoding,),
+    "src_encoding" : (archive_get_src_encoding, archive_set_src_encoding,),
+    "language" : (archive_get_language, archive_set_language,),
+    "filename" : (archive_get_filename, archive_set_filename,),
+    "directory" : (archive_get_directory, archive_set_directory,),
+    "version" : (archive_get_version, archive_set_version,),
+    "tabstop" : (archive_get_tabstop, archive_set_tabstop,),
+})
+
+class archive(object):
+    __doc__ = """
+    This class provides access to units within an archive using either
+    a reading or writing interface depending on what's needed.
+    """
+
     def __init__(self):
         self.srcml_archive = create_archive()
-
-
 
     def __del__(self):
         free_archive(self.srcml_archive)
 
 
 
-    # def options(self, options):
+    def __getattr__(self, attrName):
+        if attrName in archive_attr_lookup:
+            return archive_attr_lookup[attrName][0](self.srcml_archive)
+        else:
+            return super(archive, self).__getattr__(attrName)
+
+    def __setattr__(self, attrName, value):
+        if attrName in archive_attr_lookup:
+            archive_attr_lookup[attrName][1](self.srcml_archive, value)
+        else:
+            return super(archive, self).__setattr__(attrName, value)
