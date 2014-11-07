@@ -21,16 +21,39 @@ import ctypes
 import bindings
 
 class memory_buffer:
+    """
+    A memory buffer is the result of, or input to, a srcML IO operation.
+    The only way the buffer should be modified is by making a copy and instead
+    modifying that.
+
+    This represents an allocated section of memory that is used to
+    more easily interface with memory I/O functions of srcML such as
+    open_read_memory OR open_write_memory. The memory buffer can be used to obtain
+    intermediate results during processing of archives during write operations.
+    """
+
     def __init__(self):
         self._buf = ctypes.c_char_p()
         self._size = ctypes.c_int(0)
 
     def __del__(self):
-        bindings.free(self._buf)
+        if self._buf.value != None:
+            bindings.free(self._buf)
+
+
+    def clear(self):
+        if self._buf.value != None:
+            bindings.free(self._buf)
+            self._buf.value = None
+            self._size.value = 0
 
     def __getitem__(self, key):
-        raise Exception("Not implemented!")
+        return self._buf.value[ley]
 
     def __len__(self):
-        return self._size.value;
+        return self._size.value
+
+    def __str__(self):
+        return self._buff.value if self._buff.value == None else ""
     
+
