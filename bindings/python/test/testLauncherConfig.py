@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file testLauncherConfg.py
 #
 # @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 #
@@ -17,5 +17,17 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from test_archive import *
-from test_bindings import *
+"""
+This file is a configuration file that generates another file that can be used to run the
+test suite for the python bindings.
+"""
+
+import os, subprocess, sys
+
+if "LD_LIBRARY_PATH" not in os.environ:
+    os.environ["LD_LIBRARY_PATH"] = "${SHARED_LIBSRCML_OUTPUT_PATH}"
+else:
+    os.environ["LD_LIBRARY_PATH"] = os.environ['LD_LIBRARY_PATH'] + ";${SHARED_LIBSRCML_OUTPUT_PATH}"
+
+proc = subprocess.Popen(["${PYTHON_EXECUTABLE}", "${PY_TEST_SOURCE_LOCATION}"])
+proc.wait()

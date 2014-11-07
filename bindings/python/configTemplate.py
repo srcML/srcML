@@ -300,10 +300,7 @@ class TestSequenceFunctions(unittest.TestCase):
         return ""
 
     def endTestFile(self):
-        return """
-if __name__ == "__main__":
-    unittest.main()
-"""
+        return """"""
 
  
     # Test Function Generating Handler

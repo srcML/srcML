@@ -19,9 +19,8 @@
 
 import unittest
 import sys
-# sys.path.insert(0, "/home/brian/Projects/buildFiles/srcMLBuild/bin")
 sys.path.append("../")
-import srcml_test
+from srcml_test import *
 
 if __name__ == "__main__":
     unittest.main()
