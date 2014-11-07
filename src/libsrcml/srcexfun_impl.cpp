@@ -431,7 +431,7 @@ void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextP
                 }
 
                 // Ignore anonymous structs and things.
-                if(!lastTemplate or !lastNameNode) {
+                if(!lastTemplate || !lastNameNode) {
                     xmlXPathReturnFalse(ctxt); return;
                 }
 
