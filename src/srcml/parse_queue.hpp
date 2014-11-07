@@ -39,14 +39,14 @@ public:
 
 	inline void schedule(ParseRequest* pvalue) {
 
+	    pvalue->position = ++counter;
+
 	    // error passthrough to output for proper output in trace
 	    if (pvalue->status) {
 	        pvalue->unit = 0;
 	        wqueue.schedule(pvalue);
 	        return;
 	    }
-
-	    pvalue->position = ++counter;
 
 	    pool.schedule( boost::bind(consume, pvalue));
 	}
