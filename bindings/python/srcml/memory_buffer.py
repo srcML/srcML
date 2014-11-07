@@ -1,5 +1,5 @@
 ##
-# @file archive.py
+# @file memory_buffer.py
 #
 # @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 #
@@ -17,17 +17,12 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from unit import unit
-from bindings import *
-from memory_buffer import memory_buffer
+import ctypes
 
-class archive:
+
+class memory_buffer:
     def __init__(self):
-        self.srcml_archive = create_archive()
-
-    def __del__(self):
-        free_archive(self.srcml_archive)
-
-
-
-    # def options(self, options):
+        self._buf = ctypes.c_char_p()
+        self._sz = ctypes.c_int(0)
+        
+    
