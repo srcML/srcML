@@ -139,9 +139,9 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // register xml namespaces
-    BOOST_FOREACH(const std::string& ns, srcml_request.xmlns_prefix) {
-        size_t pos = ns.find('=');
-        srcml_archive_register_namespace(srcml_arch, ns.substr(0,pos).c_str(), ns.substr(pos+1).c_str());
+    std::map<std::string, std::string>::const_iterator itr;
+    for(itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
+        srcml_archive_register_namespace(srcml_arch, (*itr).first.c_str(), (*itr).second.c_str());
     }
 
     // create the srcML output file
