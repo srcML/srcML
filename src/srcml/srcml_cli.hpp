@@ -29,6 +29,7 @@
 #include <boost/optional.hpp>
 #include <iostream>
 #include <utility>
+#include <map>
 
 // Internal srcml command options
 const int SRCML_COMMAND_LONGINFO                  = 1<<0;
@@ -110,6 +111,7 @@ struct srcml_request_t {
     boost::optional<std::string> xml_processing;    
 
     std::vector<std::string> xmlns_prefix;
+    std::map<std::string,std::string> xmlns_namespaces;
 
     // srcml transformation
     std::vector<std::string> transformations;
