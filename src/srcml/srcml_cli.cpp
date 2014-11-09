@@ -217,13 +217,10 @@ void option_field<&srcml_request_t::output_filename>(const std::string& value) {
 }
 
 void option_xmlns_uri(const std::string& value) {
-    srcml_request.xmlns_prefix.push_back("=" + value);
     srcml_request.xmlns_namespaces[""] = value;
 }
 
 void option_xmlns_prefix(const std::vector<std::string>& values) {
-    srcml_request.xmlns_prefix.insert(srcml_request.xmlns_prefix.end(), values.begin(), values.end());
-    
     BOOST_FOREACH( std::string value, values )
     {
       std::size_t delim = value.find("=");

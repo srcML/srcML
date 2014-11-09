@@ -27,7 +27,7 @@
 #include <string>
 #include <boost/foreach.hpp>
 
- int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<std::string>, boost::optional<std::string> >& xpath_support, const std::vector<std::string>& xmlns_prefix) {
+ int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<std::string>, boost::optional<std::string> >& xpath_support, const std::map<std::string, std::string>& xmlns_namespaces) {
  	// Check for elemet
  	//if (xpath_support.first)
  		//return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(), const char* prefix, const char* namespace_uri, const char* element);
@@ -108,7 +108,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
 			src_prefix_split_uri(trans, protocol, resource);
 
 			if (protocol == "xpath") {
-				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index), srcml_request.xmlns_prefix) != SRCML_STATUS_OK)
+				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index), srcml_request.xmlns_namespaces) != SRCML_STATUS_OK)
 					throw status;
 			}
 			else if (protocol == "xslt") {
