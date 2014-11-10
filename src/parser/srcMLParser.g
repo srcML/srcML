@@ -7826,8 +7826,8 @@ argument[] { ENTRY_DEBUG } :
             startElement(SARGUMENT);
         }
 
-        ({ inLanguage(LANGUAGE_CSHARP) }? (identifier COLON) => argument_named_csharp)*
-        ({ inLanguage(LANGUAGE_CSHARP) }? argument_modifier_csharp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP)  && look_past_rule(&srcMLParser::identifier) == COLON }? argument_named_csharp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP) }? argument_modifier_csharp)*
 
         (
         { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
