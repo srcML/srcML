@@ -375,7 +375,7 @@ tokens {
 
     // statements
 	SENUM;
-    SENUM_DECL;
+    SENUM_DECLARATION;
 
 	SIF_STATEMENT;
     STERNARY;
@@ -490,7 +490,7 @@ tokens {
     STYPEID;
     SSIZEOF_PACK;
     SENUM_CLASS;
-    SENUM_CLASS_DECL;
+    SENUM_CLASS_DECLARATION;
     SOPERATOR_FUNCTION;
     SOPERATOR_FUNCTION_DECL;
     SREF_QUALIFIER;
@@ -546,6 +546,7 @@ tokens {
     SPACKAGE;
     SASSERT_STATEMENT;
     SINTERFACE;
+    SINTERFACE_DECLARATION;
     SSYNCHRONIZED_STATEMENT;
     SANNOTATION;
     SANNOTATION_DEFN;
@@ -894,6 +895,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
 
         { stmt_type == INTERFACE_DEFN }?
         interface_definition |
+
+        { stmt_type == INTERFACE_DECL }?
+        interface_declaration |
 
         { stmt_type == CLASS_DECL }?
         class_declaration |
@@ -2974,7 +2978,23 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        class_preamble INTERFACE class_header lcurly
+        class_preamble INTERFACE class_post class_header lcurly
+;
+
+// do an interface declaration
+interface_declaration[] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
+
+            // start the interface definition
+            startElement(SINTERFACE_DECLARATION);
+
+            // java interfaces end at the end of the block
+            setMode(MODE_END_AT_BLOCK);
+        }
+        class_preamble INTERFACE class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
 // match struct declaration
@@ -8370,13 +8390,13 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG} :
             if(inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {
 
                 if(decl)
-                    startElement(SENUM_CLASS_DECL);
+                    startElement(SENUM_CLASS_DECLARATION);
                 else
                     startElement(SENUM_CLASS);
 
             } else if(decl) {
 
-                startElement(SENUM_DECL);
+                startElement(SENUM_DECLARATION);
 
             } else {
 
