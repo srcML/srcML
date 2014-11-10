@@ -3099,8 +3099,22 @@ class_header[] { ENTRY_DEBUG } :
 // class header base
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
+    {
+
+        setMode(MODE_CLASS_NAME);
+
+    }
+
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name | keyword_name) (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name | keyword_name)
+
+    {
+
+        clearMode(MODE_CLASS_NAME);
+
+    }
+
+        (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -8091,7 +8105,11 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
             // local mode
             startNewMode(MODE_LOCAL);
 
-            startElement(STEMPLATE_ARGUMENT_LIST);
+            if(!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_CLASS_NAME))
+                startElement(STEMPLATE_ARGUMENT_LIST);
+            else
+                startElement(STEMPLATE_PARAMETER_LIST);
+   
         }
         savenamestack[namestack_save]
 
@@ -8217,7 +8235,10 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
             // local mode
             startNewMode(MODE_LOCAL);
 
-            startElement(STEMPLATE_ARGUMENT);
+            if(!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_CLASS_NAME))
+               startElement(STEMPLATE_ARGUMENT);
+            else
+               startElement(STEMPLATE_PARAMETER);
 
             if(inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C))
                startElement(SEXPRESSION);
