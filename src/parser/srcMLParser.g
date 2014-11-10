@@ -2932,6 +2932,15 @@ enum_class_definition[] { ENTRY_DEBUG } :
 
 ;
 
+// Handle an enum class
+enum_class_declaration[] { ENTRY_DEBUG } :
+
+        class_preprocessing[SENUM_DECLARATION]
+        
+        class_preamble ENUM class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
+;
+
 // anonymous class definition
 anonymous_class_definition[] { ENTRY_DEBUG } :
         {
@@ -8425,7 +8434,7 @@ enum_definition[] { ENTRY_DEBUG } :
 // declaration of an enum
 enum_declaration[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        enum_class_definition |
+        enum_class_declaration |
 
         { inLanguage(LANGUAGE_CSHARP) }?
         enum_csharp_declaration |
@@ -8436,7 +8445,7 @@ enum_declaration[] { ENTRY_DEBUG } :
 enum_class_header[] {} :
         (CLASS | CXX_CLASS | STRUCT | UNION)* 
         ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        variable_identifier (COLON enum_type)*
+        variable_identifier (COLON enum_type)* (options { greedy = true; } : COMMA variable_identifier (COLON enum_type)*)*
 
     ;
 
@@ -8460,6 +8469,7 @@ enum_csharp_declaration[] { ENTRY_DEBUG } :
 
     // may need to modifiy to work with enum_decl
     enum_preprocessing[true] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
+    (COMMA (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*)*
 
 ;
 

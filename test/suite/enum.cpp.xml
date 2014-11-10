@@ -10,6 +10,10 @@
 </unit>
 
 <unit>
+<enum_decl>enum <name>foo</name>, <name>bar</name>;</enum_decl>
+</unit>
+
+<unit>
 <enum>enum <block>{ <decl><name>a</name></decl> }</block>;</enum>
 </unit>
 
