@@ -3501,6 +3501,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         throw_list |
 
         // throw list at end of function header
+        { (inLanguage(LANGUAGE_OO)) }?
+        throw_list complete_arguments (comma complete_arguments)* { endDownToMode(MODE_LIST); endMode(MODE_LIST); } |
+
+        // throw list at end of function header
         { (inLanguage(LANGUAGE_CXX))&& inMode(MODE_FUNCTION_TAIL) }?
         ref_qualifier |
 
