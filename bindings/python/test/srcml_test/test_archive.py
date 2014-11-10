@@ -127,10 +127,23 @@ class TestArchive(unittest.TestCase):
 
     def test_optionsAttr_2(self):
         archive = srcml.archive()
-        # expected = srcml.OPTION_HASH | srcml.OPTION_LINE | srcml.OPTION_PSEUDO_BLOCK
         self.assertEqual(archive.options & srcml.OPTION_HASH, srcml.OPTION_HASH, "Incorrect value for nested if.")
         archive.options = archive.options & ~srcml.OPTION_HASH
         self.assertEqual(archive.options & srcml.OPTION_HASH, 0, "Incorrect value for options.")
+        archive = None
+
+    def test_enable_option(self):
+        archive = srcml.archive()
+        self.assertFalse(archive.option_is_enabled(srcml.OPTION_CPPIF_CHECK), "archive option has incorrect default value.")
+        archive.enable_option(srcml.OPTION_CPPIF_CHECK)
+        self.assertTrue(archive.option_is_enabled(srcml.OPTION_CPPIF_CHECK), "archive option has incorrect value.")
+        archive = None
+
+    def test_disable_option(self):
+        archive = srcml.archive()
+        self.assertTrue(archive.option_is_enabled(srcml.OPTION_ARCHIVE), "archive option has incorrect default value.")
+        archive.disable_option(srcml.OPTION_ARCHIVE)
+        self.assertFalse(archive.option_is_enabled(srcml.OPTION_ARCHIVE), "archive option has incorrect value.")
         archive = None
 
     # def test_derp(self):
