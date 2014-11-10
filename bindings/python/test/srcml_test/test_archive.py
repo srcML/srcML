@@ -31,6 +31,33 @@ class TestArchive(unittest.TestCase):
         archive = srcml.archive()
         archive = None
 
+
+    def test_newArchive_kwargs(self):
+        encodingExpected = "banana"
+        src_encodingExpected = "waffles"
+        languageExpected = srcml.LANGUAGE_CXX
+        filenameExpected = "aardvark.cpp.cxx"
+        directoryExpected = "/someplace"
+        versionExpected = "1234"
+        tabstopExpected = 90
+        archive = srcml.archive(
+            encoding = encodingExpected,
+            src_encoding = src_encodingExpected,
+            language = languageExpected,
+            filename = filenameExpected,
+            directory = directoryExpected,
+            version = versionExpected,
+            tabstop = tabstopExpected
+        )
+        self.assertEqual(archive.encoding, encodingExpected, "Incorrect value for encoding.")
+        self.assertEqual(archive.src_encoding, src_encodingExpected, "Incorrect value for src_encoding.")
+        self.assertEqual(archive.language, languageExpected, "Incorrect value for language.")
+        self.assertEqual(archive.filename, filenameExpected, "Incorrect value for filename.")
+        self.assertEqual(archive.directory, directoryExpected, "Incorrect value for directory.")
+        self.assertEqual(archive.version, versionExpected, "Incorrect value for version.")
+        self.assertEqual(archive.tabstop, tabstopExpected, "Incorrect value for tabstop.")
+        archive = None
+
     def test_encodingAttr(self):
         archive = srcml.archive()
         self.assertIsNone(archive.encoding, "Incorrect value for encoding.")

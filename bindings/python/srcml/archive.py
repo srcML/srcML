@@ -21,25 +21,45 @@ from unit import unit
 from bindings import *
 from memory_buffer import memory_buffer
 
+_ENCODING_PROP = "encoding"
+_SRC_ENCODING_PROP = "src_encoding"
+_LANGUAGE_PROP = "language"
+_FILENAME_PROP = "filename"
+_DIRECTORY_PROP = "directory"
+_VERSION_PROP = "version"
+_TABSTOP_PROP = "tabstop"
+
 archive_attr_lookup = dict(
 {
-    "encoding": (archive_get_encoding, archive_set_encoding,),
-    "src_encoding" : (archive_get_src_encoding, archive_set_src_encoding,),
-    "language" : (archive_get_language, archive_set_language,),
-    "filename" : (archive_get_filename, archive_set_filename,),
-    "directory" : (archive_get_directory, archive_set_directory,),
-    "version" : (archive_get_version, archive_set_version,),
-    "tabstop" : (archive_get_tabstop, archive_set_tabstop,),
+    _ENCODING_PROP: (archive_get_encoding, archive_set_encoding,),
+    _SRC_ENCODING_PROP : (archive_get_src_encoding, archive_set_src_encoding,),
+    _LANGUAGE_PROP : (archive_get_language, archive_set_language,),
+    _FILENAME_PROP : (archive_get_filename, archive_set_filename,),
+    _DIRECTORY_PROP : (archive_get_directory, archive_set_directory,),
+    _VERSION_PROP : (archive_get_version, archive_set_version,),
+    _TABSTOP_PROP : (archive_get_tabstop, archive_set_tabstop,),
 })
 
 class archive(object):
     __doc__ = """
     This class provides access to units within an archive using either
-    a reading or writing interface depending on what's needed.
+    a reading or writing interface depending on how an archive's been opened.
     """
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         self.srcml_archive = create_archive()
+        def _getProp(prop):
+            if prop in kwargs:
+                self.__setattr__(prop, kwargs[prop])
+        
+        _getProp(_ENCODING_PROP)
+        _getProp(_SRC_ENCODING_PROP)
+        _getProp(_LANGUAGE_PROP)
+        _getProp(_FILENAME_PROP)
+        _getProp(_DIRECTORY_PROP)
+        _getProp(_VERSION_PROP)
+        _getProp(_TABSTOP_PROP)
+
 
     def __del__(self):
         free_archive(self.srcml_archive)
