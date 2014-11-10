@@ -23,6 +23,9 @@
 #include <sax2_srcsax_handler.hpp>
 
 #include <cstring>
+#ifdef WIN32
+#include <cstdlib>
+#endif
 
 /** Static sax handler for zero initializing in factory */
 xmlSAXHandler sax2_srcml_handler_init;
@@ -93,6 +96,27 @@ static inline void free_srcsax_namespaces(int /*number_namespaces*/, srcsax_name
     free((void *)namespaces);
 
 }
+
+#ifdef WIN32
+char * strndup(const char *s, size_t size)
+{
+    char *r;
+    char *end = (char*)memchr(s, 0, size);
+
+    if (end)
+        /* Length + 1 */
+        size = end - s + 1;
+
+    r = (char*)malloc(size);
+
+    if (size)
+    {
+        memcpy(r, s, size - 1);
+        r[size - 1] = '\0';
+    }
+    return r;
+}
+#endif
 
 /**
  * libxml2_attributes2srcsax_attributes
