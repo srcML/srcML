@@ -2987,21 +2987,21 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
+
         class_preamble INTERFACE class_post class_header lcurly
 ;
+
 
 // do an interface declaration
 interface_declaration[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
+            startNewMode(MODE_STATEMENT);
 
             // start the interface definition
             startElement(SINTERFACE_DECLARATION);
-
-            // java interfaces end at the end of the block
-            setMode(MODE_END_AT_BLOCK);
         }
+
         class_preamble INTERFACE class_post class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
@@ -3015,6 +3015,7 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
+
         class_preamble STRUCT class_post class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
