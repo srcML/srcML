@@ -49,7 +49,10 @@ class TestArchive(unittest.TestCase):
             directory = directoryExpected,
             version = versionExpected,
             tabstop = tabstopExpected,
-            options = optionsExpected
+            options = optionsExpected,
+            processing_instruction = ("target", "data"),
+            macros = {"to_replace": "src:type", "to_replace2": "src:name"},
+            xml_namespaces = {"waffles": "http://aardvark.or", "banana": "http://bananarepublic.com"},
         )
         self.assertEqual(archive.encoding, encodingExpected, "Incorrect value for encoding.")
         self.assertEqual(archive.src_encoding, src_encodingExpected, "Incorrect value for src_encoding.")
@@ -59,6 +62,10 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(archive.version, versionExpected, "Incorrect value for version.")
         self.assertEqual(archive.tabstop, tabstopExpected, "Incorrect value for tabstop.")
         self.assertEqual(archive.options & optionsExpected, optionsExpected, "Incorrect value for options.")
+        self.assertEqual(archive.processing_instruction[0], "target", "Incorrect value for processing_instruction.")
+        self.assertEqual(archive.processing_instruction[1], "data", "Incorrect value for processing_instruction.")
+        self.assertEqual(len(archive.macros), 2, "incorrect # of macros")
+        self.assertEqual(len(archive.xml_namespaces), 9, "incorrect # of namespaces")
         archive = None
 
     def test_encodingAttr(self):
@@ -117,6 +124,15 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(archive.tabstop, expected, "Incorrect value for tabstop.")
         archive = None
 
+
+    def test_processing_instructionAttr(self):
+        archive = srcml.archive()
+        expected = ("src:type", "something",)
+        archive.processing_instruction = expected
+        self.assertEqual(archive.processing_instruction[0], "src:type", "Incorrect value for target of processing_instruction.")
+        self.assertEqual(archive.processing_instruction[1], "something", "Incorrect value for data of processing_instruction.")
+        archive = None
+
     def test_optionsAttr(self):
         archive = srcml.archive()
         # self.assertEqual(archive.options, 8, "Incorrect value for tabstop.")
@@ -132,6 +148,8 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(archive.options & srcml.OPTION_HASH, 0, "Incorrect value for options.")
         archive = None
 
+
+
     def test_enable_option(self):
         archive = srcml.archive()
         self.assertFalse(archive.option_is_enabled(srcml.OPTION_CPPIF_CHECK), "archive option has incorrect default value.")
@@ -144,13 +162,6 @@ class TestArchive(unittest.TestCase):
         self.assertTrue(archive.option_is_enabled(srcml.OPTION_ARCHIVE), "archive option has incorrect default value.")
         archive.disable_option(srcml.OPTION_ARCHIVE)
         self.assertFalse(archive.option_is_enabled(srcml.OPTION_ARCHIVE), "archive option has incorrect value.")
-        archive = None
-
-    def test_marcos_proxy_len(self):
-        archive = srcml.archive()
-        self.assertEqual(len(archive.macros), 0, "Incorrect # of macros.")
-        archive.macros.update({"__LIBSRCML_DECL": "src:name"})
-        self.assertEqual(len(archive.macros), 1, "Incorrect # of macros.")
         archive = None
 
     def test_marcos_proxy_len(self):
@@ -178,4 +189,44 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(ext, srcml.LANGUAGE_CXX, "Incorrect value for file extension")
         archive = None
 
+    def test_register_file_ext(self):
+        archive = srcml.archive()
+        archive.register_file_ext("banana", srcml.LANGUAGE_JAVA)
+        ext = archive.language_from_filename("file.banana")
+        self.assertEqual(ext, srcml.LANGUAGE_JAVA, "Incorrect value for file extension")
+        archive = None
 
+    def test_ns_proxy_len(self):
+        archive = srcml.archive()
+        self.assertEqual(len(archive.xml_namespaces), 7, "Incorrect # of xml namespaces.")
+        archive.xml_namespaces.update({"waffles": "http://www.google.com"})
+        self.assertEqual(len(archive.xml_namespaces), 8, "Incorrect # of xml namespaces.")
+        archive = None
+
+    def test_ns_proxy_getitem_and_iteration(self):
+        archive = srcml.archive()
+        self.assertEqual(len(archive.xml_namespaces), 7, "Incorrect # of xml namespace.")
+        archive.xml_namespaces.update({"aardvark": "http://aardvark.org", "banana": "http://bananarepublic.com"})
+        self.assertEqual(len(archive.xml_namespaces), 9, "Incorrect # of xml namespace.")
+        index = 0
+        for x in archive.xml_namespaces:
+            index += 1
+        self.assertEqual(index, 9, "Incorrect # of xml namespace iterations.")
+        archive = None
+
+    def test_ns_proxy_get_uri(self):
+        archive = srcml.archive()
+        expectedURI = "http://aardvark.org"
+        archive.xml_namespaces.update({"aardvark": expectedURI, "banana": "http://bananarepublic.com"})
+        actual = archive.xml_namespaces.get_uri("aardvark")
+        self.assertEqual(actual, expectedURI, "Didn't get expected URI.")
+        archive = None
+
+    def test_ns_proxy_get_prefix(self):
+        archive = srcml.archive()
+        expectedURI = "http://aardvark.org"
+        expectedPrefix = "aardvark"
+        archive.xml_namespaces.update({expectedPrefix: expectedURI, "banana": "http://bananarepublic.com"})
+        actual = archive.xml_namespaces.get_prefix(expectedURI)
+        self.assertEqual(actual, expectedPrefix, "Didn't get expected prefix.")
+        archive = None

@@ -29,50 +29,15 @@ _DIRECTORY_ATTR = "directory"
 _VERSION_ATTR = "version"
 _TABSTOP_ATTR = "tabstop"
 _OPTIONS_ATTR = "options"
-
-
-# class _macro_proxy_keyiter:
-#     """Iterator for macro keys."""
-#     def __init__(self, archive, starting_index = 0):
-#         self.srcml_archive = archive
-#         self.index = starting_index
-
-#     def next(self):
-#         # StopIteration
-#         pass
-
+_PROCESSING_INSTRUCTION_ATTR = "processing_instruction"
 
 class _macro_proxy:
     __doc__ ="""
     Provides a dictionary proxy interface for macro
     representations within srcML a srcml archive.
     """
-# __LIBSRCML_DECL int srcml_archive_get_macro_list_size (const struct srcml_archive*);
-# __LIBSRCML_DECL int srcml_archive_register_macro (struct srcml_archive*, const char* token, const char* type);  
-# __LIBSRCML_DECL const char* srcml_archive_get_macro_token (const struct srcml_archive*, int pos);
-# __LIBSRCML_DECL const char* srcml_archive_get_macro_token_type (const struct srcml_archive*, const char* namespace_uri);
-# __LIBSRCML_DECL const char* srcml_archive_get_macro_type (const struct srcml_archive*, int pos);
-
     def __init__(self, archive):
         self.srcml_archive = archive
-
-    # def items(self):
-    #     pass
-
-    # def keys(self):
-    #     pass
-
-    # def values(self):
-    #     pass
-
-    # def iteritems(self):
-    #     pass
-
-    # def iterkeys(self):
-    #     pass
-
-    # def itervalues(self):
-    #     pass
 
     def update(self, *args, **kwargs):
         """ Update the dictionary with a dictionary comprehension AND/OR using kwargs"""
@@ -87,15 +52,6 @@ class _macro_proxy:
         for k, v in kwargs.iteritems():
             archive_register_macro(self.srcml_archive, k, v)
 
-    # def pop(self, key, default=None):
-    #     pass
-
-    # def popitem(self):
-    #     pass
-
-    # def clear(self):
-    #     pass
-
     def __len__(self):
         """ Returns number of registered macros elements."""
         return archive_get_macro_list_size(self.srcml_archive)
@@ -104,61 +60,12 @@ class _macro_proxy:
         """Returns an item registered within the macro."""
         return (archive_get_macro_token(self.srcml_archive, index), archive_get_macro_type(self.srcml_archive, index),) 
 
-    # def __setitem__(self, key, value):
-    #     """Set the value of a macro element."""
-    #     pass
-
-    # def __delitem__(self, key):
-    #     """For removing registered macros from archive."""
-    #     pass
-
-    # def has_key(self, key):
-    #     pass
-
-    # def __contains__(self, item):
-    #     """Test if an element exists within the list of macros"""
-    #     pass
-
     def __iter__(self):
         """TODO: Return iteration over keys."""
         def itemsGen():
             for x in range(len(self)):
                 yield self[x]
         return (k for k in itemsGen())
-        
-
-    # def __reversed__(self):
-    #     """Same as __iter__ but backwards."""
-    #     pass
-
-class _xml_namespaces_proxy:
-    __doc__ ="""
-    Provides a dictionary proxy interface for xml namespaces registered 
-    with the srcml archive.
-    """
-    def __init__(self, archive):
-        self.srcml_archive = archive
-
-    def update(self, *args, **kwargs):
-        """ Update the list of namespaces with other namespace prefix pair."""
-        pass
-
-
-
-    def __len__(self):
-        """ """
-        pass
-
-    def __getitem__(self, index):
-        """ """
-        pass
-
-    def __iter__(self):
-        """Returns a generator for iterating over things."""
-        # def itemsGen():
-        #     for x in range(len(self)):
-        #         yield self[x]
-        # return (k for k in itemsGen())
 
     # def items(self):
     #     pass
@@ -203,6 +110,103 @@ class _xml_namespaces_proxy:
     #     pass
         
 
+    # def __reversed__(self):
+    #     """Same as __iter__ but backwards."""
+    #     pass
+
+class _xml_namespaces_proxy:
+    __doc__ ="""
+    Provides a dictionary proxy interface for xml namespaces registered 
+    with the srcml archive.
+    """
+
+    def __init__(self, archive):
+        self.srcml_archive = archive
+
+    def update(self, *args, **kwargs):
+        """Update the list of xml namespaces with other nsprefix namespace pair."""
+        if len(args) > 0:
+            for arg in args:
+                if isinstance(arg, dict):
+                    for ns in arg.iteritems():
+                        archive_register_namespace(self.srcml_archive, ns[0], ns[1])
+                else:
+                    raise TypeError("Expecting type dict got type:".format(arg))
+        # Handling kwargs
+        for k, v in kwargs.iteritems():
+            archive_register_namespace(self.srcml_archive, k, v)
+
+    def __len__(self):
+        """Returns the number of registered namespaces."""
+        return archive_get_namespace_size(self.srcml_archive)
+        
+
+    def __getitem__(self, index):
+        """Returns a namespace prefix, namespace uri pair."""
+        return (archive_get_namespace_prefix(self.srcml_archive, index), archive_get_namespace_uri(self.srcml_archive, index),) 
+
+    def __iter__(self):
+        """Returns a generator for iterating over ns prefix, ns uri pairs."""
+        def itemsGen():
+            for x in range(len(self)):
+                yield self[x]
+        return (k for k in itemsGen())
+
+    def get_uri(self, prefix):
+        """Resolves prefix to a uri."""
+        return archive_get_uri_from_prefix(self.srcml_archive, prefix)
+
+    def get_prefix(self, prefix):
+        """Resolves uri to a prefix."""
+        return archive_get_prefix_from_uri(self.srcml_archive, prefix)
+
+    # def items(self):
+    #     pass
+
+    # def keys(self):
+    #     pass
+
+    # def values(self):
+    #     pass
+
+    # def iteritems(self):
+    #     pass
+
+    # def iterkeys(self):
+    #     pass
+
+    # def itervalues(self):
+    #     pass
+
+    # def pop(self, key, default=None):
+    #     pass
+
+    # def popitem(self):
+    #     pass
+
+    # def clear(self):
+    #     pass
+
+    # def __setitem__(self, key, value):
+    #     """Set the value of a macro element."""
+    #     pass
+
+    # def __delitem__(self, key):
+    #     """For removing registered macros from archive."""
+    #     pass
+
+    # def has_key(self, key):
+    #     pass
+
+    # def __contains__(self, item):
+    #     """Test if an element exists within the list of macros"""
+    #     pass
+        
+def _get_processing_instruction(archive):
+    return (archive_get_processing_instruction_target(archive), archive_get_processing_instruction_data(archive),)
+
+def _set_processing_instruction(archive, value):
+    archive_set_processing_instruction(archive, value[0], value[1])
 
 archive_attr_lookup = dict(
 {
@@ -214,6 +218,7 @@ archive_attr_lookup = dict(
     _VERSION_ATTR : (archive_get_version, archive_set_version,),
     _TABSTOP_ATTR : (archive_get_tabstop, archive_set_tabstop,),
     _OPTIONS_ATTR : (archive_get_options, archive_set_options,),
+    _PROCESSING_INSTRUCTION_ATTR : (_get_processing_instruction, _set_processing_instruction)
 })
 
 class archive(object):
@@ -232,9 +237,14 @@ class archive(object):
         - version
         - tabstop
         - options
+        - processing_instruction - tuple of two elements, target and data in that order.
 
         - macros - special attribute that's used for interfacing with
             the internal macro representation.
+
+        - xml_namespaces - special attribute that provides a proxy to the internal
+            representation of xml namespaces.
+
     Valid options for options attribute:
         OPTION_ARCHIVE
         OPTION_POSITION
@@ -276,15 +286,26 @@ class archive(object):
             - version
             - tabstop
             - options
+            - processing_instruction
+
+            - xml_namespaces
             - macros
         """
         self.srcml_archive = create_archive()
         self.macros = _macro_proxy(self.srcml_archive)
+        self.xml_namespaces = _xml_namespaces_proxy(self.srcml_archive)
         def _getAttr(attr):
-            if attr in kwargs:
-                self.__setattr__(attr, kwargs[attr])
-        for attr in [key for key in archive_attr_lookup.keys()]:
-            _getAttr(attr)
+            if attr not in archive_attr_lookup:
+                raise KeyError("Unknown argument: '{0}'".format(attr))
+            self.__setattr__(attr, kwargs[attr])
+
+        for attr in kwargs.keys():
+            if attr == "xml_namespaces":
+                self.xml_namespaces.update(kwargs[attr])
+            elif attr == "macros":
+                self.macros.update(kwargs[attr])
+            else:
+                _getAttr(attr)
         
 
     def __del__(self):
