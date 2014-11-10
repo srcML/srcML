@@ -7812,7 +7812,8 @@ argument[] { ENTRY_DEBUG } :
             startElement(SARGUMENT);
         }
 
-        (argument_modifier_csharp)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? (identifier COLON) => argument_named_csharp)*
+        ({ inLanguage(LANGUAGE_CSHARP) }? argument_modifier_csharp)*
 
         (
         { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
@@ -7829,6 +7830,12 @@ argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SMODIFIER);
         }
         (OUT | REF)
+
+;
+
+argument_named_csharp[] { ENTRY_DEBUG } :
+
+        identifier COLON
 
 ;
 
