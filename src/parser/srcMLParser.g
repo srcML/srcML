@@ -920,9 +920,10 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { stmt_type == ACCESS_REGION }?
         access_specifier_region |
 
-        // @todo  Why no interface declaration?
+        { inLanguage(LANGUAGE_CXX) && stmt_type == GLOBAL_ATTRIBUTE }?
+        attribute_cpp |
 
-        { stmt_type == GLOBAL_ATTRIBUTE }?
+        { inLanguage(LANGUAGE_CSHARP) && stmt_type == GLOBAL_ATTRIBUTE }?
         attribute_csharp |
 
         { stmt_type == PROPERTY_ACCESSOR }?
@@ -4051,6 +4052,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                         //complete_expression
                         (~(RBRACKET))*
                 RBRACKET RBRACKET
+                set_type[type, GLOBAL_ATTRIBUTE]
                 set_int[attribute_count, attribute_count + 1] |
 
                 { type_count == (attribute_count + specifier_count) }?
