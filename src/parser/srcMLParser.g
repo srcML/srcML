@@ -150,7 +150,7 @@ header "post_include_hpp" {
 
 enum STMT_TYPE { 
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
-    SINGLE_MACRO, NULLOPERATOR, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
+    SINGLE_MACRO, NULLOPERATOR, ENUM_DEFN, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
     USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT, ANNOTATION_DEFN
 };
@@ -375,6 +375,7 @@ tokens {
 
     // statements
 	SENUM;
+    SENUM_DECL;
 
 	SIF_STATEMENT;
     STERNARY;
@@ -489,6 +490,7 @@ tokens {
     STYPEID;
     SSIZEOF_PACK;
     SENUM_CLASS;
+    SENUM_CLASS_DECL;
     SOPERATOR_FUNCTION;
     SOPERATOR_FUNCTION_DECL;
     SREF_QUALIFIER;
@@ -945,8 +947,11 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         destructor_declaration |
 
         // enum definition as opposed to part of type or declaration
-        { stmt_type == ENUM_DECL }?
+        { stmt_type == ENUM_DEFN }?
         enum_definition |
+
+        { stmt_type == ENUM_DECL }?
+        enum_declaration |
 
         { stmt_type == USING_STMT }?
         using_namespace_statement |
@@ -4055,7 +4060,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
                 ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier (derived)* | enum_class_header | LCURLY)
-                //set_type[type, ENUM_DEFN, type == ENUM_DECL     && (LA(1) == LCURLY || lcurly)]
+                set_type[type, ENUM_DEFN, type == ENUM_DECL && (LA(1) == LCURLY || lcurly)]
                 set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
                 set_bool[foundpure]
@@ -7114,7 +7119,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             OPERATORS | ASSIGNMENT | TEMPOPS |
             TEMPOPE (options { greedy = true;  } : ({ SkipBufferSize() == 0 }? TEMPOPE) ({ SkipBufferSize() == 0 }? TEMPOPE)?
              | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == "&gt;&gt;=" }? ASSIGNMENT))? |
-            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR | REF | OUT |
+            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA | DOTDOTDOT |
@@ -7770,11 +7775,24 @@ argument[] { ENTRY_DEBUG } :
             // start the argument
             startElement(SARGUMENT);
         }
+
+        (argument_modifier_csharp)*
+
         (
         { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
 
         (type_identifier) => expression_process type_identifier
         )
+
+;
+
+argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // markup type modifiers if option is on
+            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_MODIFIER))
+                startElement(SMODIFIER);
+        }
+        (OUT | REF)
 
 ;
 
@@ -7841,7 +7859,7 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
         }
 
         (
-        { stmt_type == VARIABLE || stmt_type == CLASS_DECL || stmt_type == STRUCT_DECL || stmt_type == UNION_DECL || stmt_type == ENUM_DECL || LA(1) == DOTDOTDOT }?
+        { stmt_type == VARIABLE || stmt_type == CLASS_DECL || stmt_type == STRUCT_DECL || stmt_type == UNION_DECL || stmt_type == ENUM_DECL|| LA(1) == DOTDOTDOT }?
         (parameter_type_count[type_count, output_type])
         // suppress warning caused by ()*
         (options { greedy = true; } : bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
@@ -8336,7 +8354,8 @@ nested_terminate[] {
 } :
         TERMINATE
 ;
-enum_preprocessing[] { ENTRY_DEBUG} :
+
+enum_preprocessing[bool decl] { ENTRY_DEBUG} :
 
         {
             bool intypedef = inMode(MODE_TYPEDEF);
@@ -8348,10 +8367,22 @@ enum_preprocessing[] { ENTRY_DEBUG} :
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL);
 
             // start the enum definition
-            if(inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION))
-                startElement(SENUM_CLASS);
-            else
-                startElement(SENUM);
+            if(inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {
+
+                if(decl)
+                    startElement(SENUM_CLASS_DECL);
+                else
+                    startElement(SENUM_CLASS);
+
+            } else if(decl) {
+
+                startElement(SENUM_DECL);
+
+            } else {
+
+                 startElement(SENUM);
+
+             }
 
             // classes end at the end of the block
             if (intypedef) {
@@ -8368,7 +8399,17 @@ enum_definition[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_CSHARP) }?
         enum_csharp_definition |
-        enum_preprocessing (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
+        enum_preprocessing[false] (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
+;
+
+// declaration of an enum
+enum_declaration[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        enum_class_definition |
+
+        { inLanguage(LANGUAGE_CSHARP) }?
+        enum_csharp_declaration |
+        enum_preprocessing[true] (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
 ;
 
 // header for enum class
@@ -8390,7 +8431,15 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
 
 enum_csharp_definition[] { ENTRY_DEBUG } :
 
-    enum_preprocessing class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
+    // may need to modifiy to work with enum_decl
+    enum_preprocessing[false] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
+
+;
+
+enum_csharp_declaration[] { ENTRY_DEBUG } :
+
+    // may need to modifiy to work with enum_decl
+    enum_preprocessing[true] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
 ;
 

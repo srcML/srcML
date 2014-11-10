@@ -141,6 +141,7 @@ namespace {
     ELEMENT_MAP(SASM, "asm")
     ELEMENT_MAP(SMACRO_CALL, "macro")
     ELEMENT_MAP(SENUM, "enum")
+    ELEMENT_MAP(SENUM_DECL, "enum_decl")
 
     ELEMENT_MAP(SIF_STATEMENT, "if")
     ELEMENT_MAP(STERNARY, "ternary")
@@ -321,6 +322,7 @@ namespace {
     ELEMENT_MAP(STYPEID,                 "typeid")
     ELEMENT_MAP(SSIZEOF_PACK,            "sizeof")
     ELEMENT_MAP(SENUM_CLASS,             "enum")
+    ELEMENT_MAP(SENUM_CLASS_DECL,        "enum_decl")
     ELEMENT_MAP(SOPERATOR_FUNCTION,      "function")
     ELEMENT_MAP(SOPERATOR_FUNCTION_DECL, "function_decl")
     ELEMENT_MAP(SREF_QUALIFIER,          "ref_qualifier")
