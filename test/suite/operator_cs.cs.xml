@@ -109,12 +109,4 @@
 }</block></then></if>
 </unit>
 
-<unit>
-<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><operator>ref</operator> <name>bar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit>
-<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><operator>out</operator> <name>bar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
 </unit>

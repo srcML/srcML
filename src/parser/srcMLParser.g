@@ -7114,7 +7114,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             OPERATORS | ASSIGNMENT | TEMPOPS |
             TEMPOPE (options { greedy = true;  } : ({ SkipBufferSize() == 0 }? TEMPOPE) ({ SkipBufferSize() == 0 }? TEMPOPE)?
              | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == "&gt;&gt;=" }? ASSIGNMENT))? |
-            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR | REF | OUT |
+            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA | DOTDOTDOT |
@@ -7770,11 +7770,24 @@ argument[] { ENTRY_DEBUG } :
             // start the argument
             startElement(SARGUMENT);
         }
+
+        (argument_modifier_csharp)*
+
         (
         { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
 
         (type_identifier) => expression_process type_identifier
         )
+
+;
+
+argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            // markup type modifiers if option is on
+            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_MODIFIER))
+                startElement(SMODIFIER);
+        }
+        (OUT | REF)
 
 ;
 
