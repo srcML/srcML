@@ -201,14 +201,41 @@ class _xml_namespaces_proxy:
     # def __contains__(self, item):
     #     """Test if an element exists within the list of macros"""
     #     pass
-        
+
+
+# Contexts for reading and writing to/from python to the libsrcml
+# interface.
+class _str_reader_context(object):
+    def __init__(self, xml_string, size):
+        self.xml_str = xml_string
+        self.index = 0
+        self.end_index = size
+
+    def read(self, buff, size):
+        print buff.__class__.__name__
+        if self.index == self.end_index:
+            return 0
+        outBufferIndex = 0
+        while self.index < self.end_index and outBufferIndex < size:
+            buff[outBufferIndex] = self.xml_str[self.index]
+            outBufferIndex += 1
+            self.index += 1
+        return outBufferIndex
+        # buff = self.xml_str[self.index : self.end_index]
+
+
+    def close(self):
+        return 0
+
+# Attribute processing        
 def _get_processing_instruction(archive):
     return (archive_get_processing_instruction_target(archive), archive_get_processing_instruction_data(archive),)
 
 def _set_processing_instruction(archive, value):
     archive_set_processing_instruction(archive, value[0], value[1])
 
-archive_attr_lookup = dict(
+_PRIVATE_READER_CONTEXT_ATTR = "_readerCtxt"
+_archive_attr_lookup = dict(
 {
     _ENCODING_ATTR: (archive_get_encoding, archive_set_encoding,),
     _SRC_ENCODING_ATTR : (archive_get_src_encoding, archive_set_src_encoding,),
@@ -221,6 +248,13 @@ archive_attr_lookup = dict(
     _PROCESSING_INSTRUCTION_ATTR : (_get_processing_instruction, _set_processing_instruction)
 })
 
+
+
+
+
+#
+#   srcml.archive
+#
 class archive(object):
     __doc__ = """
     This class provides access to units within an archive using either
@@ -295,7 +329,7 @@ class archive(object):
         self.macros = _macro_proxy(self.srcml_archive)
         self.xml_namespaces = _xml_namespaces_proxy(self.srcml_archive)
         def _getAttr(attr):
-            if attr not in archive_attr_lookup:
+            if attr not in _archive_attr_lookup:
                 raise KeyError("Unknown argument: '{0}'".format(attr))
             self.__setattr__(attr, kwargs[attr])
 
@@ -306,7 +340,6 @@ class archive(object):
                 self.macros.update(kwargs[attr])
             else:
                 _getAttr(attr)
-        
 
     def __del__(self):
         """
@@ -319,8 +352,8 @@ class archive(object):
         This is used in order to provide an interface to all attributes
         that are held, natively, by srcml archive.
         """
-        if attrName in archive_attr_lookup:
-            return archive_attr_lookup[attrName][0](self.srcml_archive)
+        if attrName in _archive_attr_lookup:
+            return _archive_attr_lookup[attrName][0](self.srcml_archive)
         elif attrName in self.__dict__:
             return self.__dict__[attrName]
         else:
@@ -331,8 +364,8 @@ class archive(object):
         This is used in order to provide an interface to all attributes
         that are held, natively, by srcml archive.
         """
-        if attrName in archive_attr_lookup:
-            archive_attr_lookup[attrName][1](self.srcml_archive, value)
+        if attrName in _archive_attr_lookup:
+            _archive_attr_lookup[attrName][1](self.srcml_archive, value)
         else:
             self.__dict__[attrName] = value
 
@@ -368,7 +401,9 @@ class archive(object):
         """
         archive_register_file_extension(self.srcml_archive, ext, srcml_language)
 
-    # Read function.
+
+
+    # I/O Related function.
     def open_read(self, **kwargs):
         """
         Opens an archive for reading.
@@ -396,8 +431,8 @@ class archive(object):
             3) filename:
                 archive.open_read(filename = "somefile.xml")
 
-            4) raw xml string:
-                archive.open_read(xml = preloadedXMLString)
+            4) raw xml string (size is optional, if not given the entire string is used):
+                archive.open_read(xml = preloadedXMLString, size=lengthOfXML)
 
             5) srcml.memory_buffer (creating a srcml memory buffer in this way is NOT recommended,
                     a memory buffer is usually created using open_write(buff = mem_buff)):
@@ -435,6 +470,56 @@ class archive(object):
                     def close(self):
                         return zero_for_sucess_not_zero_for_failure
         """
+        STREAM_PARAM = "stream"
+        FILE_OBJ_PARAM = "file_obj"
+        FILENAME_PARAM = "filename"
+        XML_PARAM = "xml"
+        SIZE_PARAM = "size"
+        BUFF_PARAM = "buff"
+        CONTEXT_PARAM = "context"
+
+
+        if STREAM_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+
+        elif FILE_OBJ_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+
+        elif FILENAME_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+
+        elif XML_PARAM in kwargs:
+            if len(kwargs) > 2 or len(kwargs) == 2 and SIZE_PARAM not in kwargs:
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            amount_to_read = 0
+            if SIZE_PARAM in kwargs:
+                amount_to_read = kwargs[SIZE_PARAM]
+            else:
+                amount_to_read = len(kwargs[XML_PARAM])
+            self._readerCtxt = _str_reader_context(kwargs[XML_PARAM], amount_to_read)
+            read_open_io(self.srcml_archive, self._readerCtxt, read_callback(lambda ctxt, buff, size: ctxt.read(buff, size)), close_callback(lambda ctxt: ctxt.close()))
+
+        elif BUFF_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+
+        elif CONTEXT_PARAM in kwargs:
+            if len(kwargs) > 3 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+
+        else:
+            raise Exception("No known parameters")
+
+        
+# read_open_filename(self.srcml_archive, )
+# __LIBSRCML_DECL int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
+# __LIBSRCML_DECL int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
+# __LIBSRCML_DECL int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
+# __LIBSRCML_DECL int srcml_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
+
         pass
 
     def open_write(self, **kwargs):
@@ -500,4 +585,14 @@ class archive(object):
                     def close(self):
                         return zero_for_sucess_not_zero_for_failure
         """
+# __LIBSRCML_DECL int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
+# __LIBSRCML_DECL int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
+# __LIBSRCML_DECL int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
+# __LIBSRCML_DECL int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
         pass
+
+        def close(self):
+            """Closes archive for both reading and writing."""
+            if _PRIVATE_READER_ATTR in self.__dict__:
+                del self.__dict__[_PRIVATE_READER_ATTR]
+            close_archive(self.srcml_archive)

@@ -230,3 +230,54 @@ class TestArchive(unittest.TestCase):
         actual = archive.xml_namespaces.get_prefix(expectedURI)
         self.assertEqual(actual, expectedPrefix, "Didn't get expected prefix.")
         archive = None
+
+    def test_open_read_io__xml_string(self):
+        archive = srcml.archive()
+        xml_data = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp"><comment type="block" format="doxygen">/**
+ * @file srcml.h
+ *
+ * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */</comment>
+
+<comment type="block" format="doxygen">/**
+ * @mainpage srcML Project
+ *
+ * @section libsrcml
+ * 
+ * The srcml functions available in libsrcml for the purposes of:
+ *
+ * * Converting source code to the srcML format
+ * * Converting the srcML format back to source code
+ * * Querying and transformation in the srcML format
+ * 
+ * The general categories:
+ * 
+ * * The srcML convenience function srcml() for conversion of
+ *   individual source files to srcML, and back. Includes helper
+ *   functions to set options in the form srcml_set_*() and srcml_get_*()
+ * 
+ * * Query functions of the form srcml_check_*() to see the
+ *   capabilities of the library. E.g., what languages are supported
+ * 
+ * * API for full control over the construction of srcML archives
+ *   from multiple input source-code files, srcml_archive_*() and srcml_unit_*()
+ */</comment>
+</unit>
+        """
+        archive.open_read(xml=xml_data)
+        archive = None

@@ -104,6 +104,7 @@ def extractNormalizedTypeName(element):
 class BindingGenerator(object):
     def __init__(self):
         self.srcmlAPI = None
+        self.processingFunctionPointers = False
         self.constantMacros = []
         self.functionPointerTypes = []
         self.functionDecls = []
@@ -182,6 +183,7 @@ class BindingGenerator(object):
         ]
 
     def gatherFunctionPointerTypes(self):
+        self.processingFunctionPointers = True
         typicalFunctionPointerList = self.srcmlAPI.xpath("//src:function_decl[src:modifier[.='*']]", namespaces=XPathNamespaces)
         # Extracting function pointers and building a list of function pointers
         functionPointerSet = set()
@@ -189,6 +191,7 @@ class BindingGenerator(object):
             currentFuncPtrInfo = self.getTypeInfo(funcPtr)
             functionPointerSet.add(currentFuncPtrInfo)
         self.functionPointerTypes = list(functionPointerSet)
+        self.processingFunctionPointers = False
 
 
     def gatherFunctionDecls(self):
