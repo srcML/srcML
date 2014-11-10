@@ -2,11 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="enum">
 
 <unit>
-<enum>enum;</enum>
+<enum_decl>enum;</enum_decl>
 </unit>
 
 <unit>
-<enum>enum <name>a</name>;</enum>
+<enum_decl>enum <name>a</name>;</enum_decl>
+</unit>
+
+<unit>
+<enum_decl>enum <name>foo</name>, <name>bar</name>;</enum_decl>
 </unit>
 
 <unit>

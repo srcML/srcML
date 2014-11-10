@@ -2,6 +2,14 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="interface" filename="interface_java">
 
 <unit>
+<interface_decl>interface <name>A</name>;</interface_decl>
+</unit>
+
+<unit>
+<interface_decl>interface <name>A</name>, <name>B</name>;</interface_decl>
+</unit>
+
+<unit>
 <interface>interface <name>A</name> <block>{}</block></interface>
 </unit>
 

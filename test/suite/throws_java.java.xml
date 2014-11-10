@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="throws" filename="throws_java">
+
+<unit>
+<throws>throws <argument><expr><name>foo</name></expr></argument></throws>
+</unit>
+
+<unit>
+<throws>throws <argument><expr><name>foo</name></expr></argument>, <argument><expr><name>bar</name></expr></argument></throws>
+</unit>
+
+</unit>
