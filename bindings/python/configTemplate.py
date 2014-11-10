@@ -154,7 +154,7 @@ def {pyName}({parameters}):
 """
         simpleNoCheckReturnTemplate = """
 def {pyName}({parameters}):
-    libsrcml.{nativeName}({invocationArguments})
+    return libsrcml.{nativeName}({invocationArguments})
 """
 
         selectedTemplate = ""

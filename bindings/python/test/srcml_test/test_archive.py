@@ -40,6 +40,7 @@ class TestArchive(unittest.TestCase):
         directoryExpected = "/someplace"
         versionExpected = "1234"
         tabstopExpected = 90
+        optionsExpected = srcml.OPTION_HASH | srcml.OPTION_LINE | srcml.OPTION_PSEUDO_BLOCK
         archive = srcml.archive(
             encoding = encodingExpected,
             src_encoding = src_encodingExpected,
@@ -47,7 +48,8 @@ class TestArchive(unittest.TestCase):
             filename = filenameExpected,
             directory = directoryExpected,
             version = versionExpected,
-            tabstop = tabstopExpected
+            tabstop = tabstopExpected,
+            options = optionsExpected
         )
         self.assertEqual(archive.encoding, encodingExpected, "Incorrect value for encoding.")
         self.assertEqual(archive.src_encoding, src_encodingExpected, "Incorrect value for src_encoding.")
@@ -56,6 +58,7 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(archive.directory, directoryExpected, "Incorrect value for directory.")
         self.assertEqual(archive.version, versionExpected, "Incorrect value for version.")
         self.assertEqual(archive.tabstop, tabstopExpected, "Incorrect value for tabstop.")
+        self.assertEqual(archive.options & optionsExpected, optionsExpected, "Incorrect value for options.")
         archive = None
 
     def test_encodingAttr(self):
@@ -113,3 +116,22 @@ class TestArchive(unittest.TestCase):
         archive.tabstop = expected
         self.assertEqual(archive.tabstop, expected, "Incorrect value for tabstop.")
         archive = None
+
+    def test_optionsAttr(self):
+        archive = srcml.archive()
+        # self.assertEqual(archive.options, 8, "Incorrect value for tabstop.")
+        expected = srcml.OPTION_HASH | srcml.OPTION_LINE | srcml.OPTION_PSEUDO_BLOCK
+        archive.options = expected
+        self.assertEqual(archive.options & expected, expected, "Incorrect value for options.")
+        archive = None
+
+    def test_optionsAttr_2(self):
+        archive = srcml.archive()
+        # expected = srcml.OPTION_HASH | srcml.OPTION_LINE | srcml.OPTION_PSEUDO_BLOCK
+        self.assertEqual(archive.options & srcml.OPTION_HASH, srcml.OPTION_HASH, "Incorrect value for nested if.")
+        archive.options = archive.options & ~srcml.OPTION_HASH
+        self.assertEqual(archive.options & srcml.OPTION_HASH, 0, "Incorrect value for options.")
+        archive = None
+
+    # def test_derp(self):
+    #     print help(srcml.archive)
