@@ -2,6 +2,14 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="enum">
 
 <unit>
+<enum_decl>enum <name>foo</name>;</enum_decl>
+</unit>
+
+<unit>
+<enum_decl>enum <name>foo</name>, <name>bar</name>;</enum_decl>
+</unit>
+
+<unit>
 <enum>enum <block>{ <decl><name>a</name></decl> }</block></enum>
 </unit>
 

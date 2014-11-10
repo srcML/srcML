@@ -18,6 +18,10 @@
 </unit>
 
 <unit>
+<enum_decl type="class">enum class <name>Enum4</name> : <type><name>unsigned</name> <name>int</name></type>, <name>Enum5</name> : <type><name>unsigned</name> <name>double</name></type>;</enum_decl>
+</unit>
+
+<unit>
 <enum><specifier>const</specifier> enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl> }</block> <decl><name>a</name></decl>;</enum>
 </unit>
 

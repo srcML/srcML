@@ -243,4 +243,7 @@ const static srcMLState::MODE_TYPE MODE_ASSOCIATION_TYPE;
 /** mode for friend */
 const static srcMLState::MODE_TYPE MODE_FRIEND;
 
+/** mode for class header */
+const static srcMLState::MODE_TYPE MODE_CLASS_NAME;
+
 #endif

@@ -375,7 +375,7 @@ tokens {
 
     // statements
 	SENUM;
-    SENUM_DECL;
+    SENUM_DECLARATION;
 
 	SIF_STATEMENT;
     STERNARY;
@@ -490,7 +490,7 @@ tokens {
     STYPEID;
     SSIZEOF_PACK;
     SENUM_CLASS;
-    SENUM_CLASS_DECL;
+    SENUM_CLASS_DECLARATION;
     SOPERATOR_FUNCTION;
     SOPERATOR_FUNCTION_DECL;
     SREF_QUALIFIER;
@@ -546,6 +546,7 @@ tokens {
     SPACKAGE;
     SASSERT_STATEMENT;
     SINTERFACE;
+    SINTERFACE_DECLARATION;
     SSYNCHRONIZED_STATEMENT;
     SANNOTATION;
     SANNOTATION_DEFN;
@@ -895,6 +896,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { stmt_type == INTERFACE_DEFN }?
         interface_definition |
 
+        { stmt_type == INTERFACE_DECL }?
+        interface_declaration |
+
         { stmt_type == CLASS_DECL }?
         class_declaration |
 
@@ -916,9 +920,10 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { stmt_type == ACCESS_REGION }?
         access_specifier_region |
 
-        // @todo  Why no interface declaration?
+        { inLanguage(LANGUAGE_CXX) && stmt_type == GLOBAL_ATTRIBUTE }?
+        attribute_cpp |
 
-        { stmt_type == GLOBAL_ATTRIBUTE }?
+        { inLanguage(LANGUAGE_CSHARP) && stmt_type == GLOBAL_ATTRIBUTE }?
         attribute_csharp |
 
         { stmt_type == PROPERTY_ACCESSOR }?
@@ -2928,6 +2933,15 @@ enum_class_definition[] { ENTRY_DEBUG } :
 
 ;
 
+// Handle an enum class
+enum_class_declaration[] { ENTRY_DEBUG } :
+
+        class_preprocessing[SENUM_DECLARATION]
+        
+        class_preamble ENUM class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
+;
+
 // anonymous class definition
 anonymous_class_definition[] { ENTRY_DEBUG } :
         {
@@ -2974,7 +2988,23 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        class_preamble INTERFACE class_header lcurly
+
+        class_preamble INTERFACE class_post class_header lcurly
+;
+
+
+// do an interface declaration
+interface_declaration[] { ENTRY_DEBUG } :
+        {
+            // statement
+            startNewMode(MODE_STATEMENT);
+
+            // start the interface definition
+            startElement(SINTERFACE_DECLARATION);
+        }
+
+        class_preamble INTERFACE class_post class_header
+        (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
 // match struct declaration
@@ -2986,6 +3016,7 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
+
         class_preamble STRUCT class_post class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
@@ -3068,8 +3099,22 @@ class_header[] { ENTRY_DEBUG } :
 // class header base
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
+    {
+
+        setMode(MODE_CLASS_NAME);
+
+    }
+
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name | keyword_name) (options { greedy = true; } : specifier)*
+        ({ LA(1) != FINAL }? compound_name | keyword_name)
+
+    {
+
+        clearMode(MODE_CLASS_NAME);
+
+    }
+
+        (options { greedy = true; } : specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
@@ -3468,6 +3513,10 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         // throw list at end of function header
         { (inLanguage(LANGUAGE_OO)) && inMode(MODE_FUNCTION_TAIL) }?
         throw_list |
+
+        // throw list at end of function header
+        { (inLanguage(LANGUAGE_OO)) }?
+        throw_list complete_arguments (comma complete_arguments)* { endDownToMode(MODE_LIST); endMode(MODE_LIST); } |
 
         // throw list at end of function header
         { (inLanguage(LANGUAGE_CXX))&& inMode(MODE_FUNCTION_TAIL) }?
@@ -4021,6 +4070,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                         //complete_expression
                         (~(RBRACKET))*
                 RBRACKET RBRACKET
+                set_type[type, GLOBAL_ATTRIBUTE]
                 set_int[attribute_count, attribute_count + 1] |
 
                 { type_count == (attribute_count + specifier_count) }?
@@ -7776,7 +7826,8 @@ argument[] { ENTRY_DEBUG } :
             startElement(SARGUMENT);
         }
 
-        (argument_modifier_csharp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP)  && look_past_rule(&srcMLParser::identifier) == COLON }? argument_named_csharp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP) }? argument_modifier_csharp)*
 
         (
         { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
@@ -7793,6 +7844,12 @@ argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SMODIFIER);
         }
         (OUT | REF)
+
+;
+
+argument_named_csharp[] { ENTRY_DEBUG } :
+
+        identifier COLON
 
 ;
 
@@ -8048,7 +8105,11 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
             // local mode
             startNewMode(MODE_LOCAL);
 
-            startElement(STEMPLATE_ARGUMENT_LIST);
+            if(!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_CLASS_NAME))
+                startElement(STEMPLATE_ARGUMENT_LIST);
+            else
+                startElement(STEMPLATE_PARAMETER_LIST);
+   
         }
         savenamestack[namestack_save]
 
@@ -8174,7 +8235,10 @@ template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
             // local mode
             startNewMode(MODE_LOCAL);
 
-            startElement(STEMPLATE_ARGUMENT);
+            if(!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_CLASS_NAME))
+               startElement(STEMPLATE_ARGUMENT);
+            else
+               startElement(STEMPLATE_PARAMETER);
 
             if(inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C))
                startElement(SEXPRESSION);
@@ -8370,13 +8434,13 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG} :
             if(inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {
 
                 if(decl)
-                    startElement(SENUM_CLASS_DECL);
+                    startElement(SENUM_CLASS_DECLARATION);
                 else
                     startElement(SENUM_CLASS);
 
             } else if(decl) {
 
-                startElement(SENUM_DECL);
+                startElement(SENUM_DECLARATION);
 
             } else {
 
@@ -8405,7 +8469,7 @@ enum_definition[] { ENTRY_DEBUG } :
 // declaration of an enum
 enum_declaration[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        enum_class_definition |
+        enum_class_declaration |
 
         { inLanguage(LANGUAGE_CSHARP) }?
         enum_csharp_declaration |
@@ -8416,7 +8480,7 @@ enum_declaration[] { ENTRY_DEBUG } :
 enum_class_header[] {} :
         (CLASS | CXX_CLASS | STRUCT | UNION)* 
         ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        variable_identifier (COLON enum_type)*
+        variable_identifier (COLON enum_type)* (options { greedy = true; } : COMMA variable_identifier (COLON enum_type)*)*
 
     ;
 
@@ -8440,6 +8504,7 @@ enum_csharp_declaration[] { ENTRY_DEBUG } :
 
     // may need to modifiy to work with enum_decl
     enum_preprocessing[true] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
+    (COMMA (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*)*
 
 ;
 
