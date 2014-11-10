@@ -31,15 +31,15 @@ _TABSTOP_ATTR = "tabstop"
 _OPTIONS_ATTR = "options"
 
 
-class _macro_proxy_keyiter:
-    """Iterator for macro keys."""
-    def __init__(self, srcml_archive, starting_index = 0):
-        self.archive = srcml_archive
-        self.index = starting_index
+# class _macro_proxy_keyiter:
+#     """Iterator for macro keys."""
+#     def __init__(self, archive, starting_index = 0):
+#         self.srcml_archive = archive
+#         self.index = starting_index
 
-    def next(self):
-        # StopIteration
-        pass
+#     def next(self):
+#         # StopIteration
+#         pass
 
 
 class _macro_proxy:
@@ -47,87 +47,162 @@ class _macro_proxy:
     Provides a dictionary proxy interface for macro
     representations within srcML a srcml archive.
     """
-# __LIBSRCML_DECL int srcml_archive_register_macro (struct srcml_archive*, const char* token, const char* type);  
 # __LIBSRCML_DECL int srcml_archive_get_macro_list_size (const struct srcml_archive*);
+# __LIBSRCML_DECL int srcml_archive_register_macro (struct srcml_archive*, const char* token, const char* type);  
 # __LIBSRCML_DECL const char* srcml_archive_get_macro_token (const struct srcml_archive*, int pos);
 # __LIBSRCML_DECL const char* srcml_archive_get_macro_token_type (const struct srcml_archive*, const char* namespace_uri);
 # __LIBSRCML_DECL const char* srcml_archive_get_macro_type (const struct srcml_archive*, int pos);
 
-    def __init__(self, srcml_archive):
-        self.archive = srcml_archive
+    def __init__(self, archive):
+        self.srcml_archive = archive
 
-    def items(self):
-        pass
+    # def items(self):
+    #     pass
 
-    def keys(self):
-        pass
+    # def keys(self):
+    #     pass
 
-    def values(self):
-        pass
+    # def values(self):
+    #     pass
 
-    def iteritems(self):
-        pass
+    # def iteritems(self):
+    #     pass
 
-    def iterkeys(self):
-        pass
+    # def iterkeys(self):
+    #     pass
 
-    def itervalues(self):
-        pass
+    # def itervalues(self):
+    #     pass
 
     def update(self, *args, **kwargs):
         """ Update the dictionary with a dictionary comprehension AND/OR using kwargs"""
         if len(args) > 0:
             for arg in args:
                 if isinstance(arg, dict):
-                    archive_register_macro(self.archive, arg[0], arg[1])
+                    for macro in arg.iteritems():
+                        archive_register_macro(self.srcml_archive, macro[0], macro[1])
                 else:
                     raise TypeError("Expecting type dict got type:".format(arg))
         # Handling kwargs
         for k, v in kwargs.iteritems():
-            archive_register_macro(self.archive, k, v)
+            archive_register_macro(self.srcml_archive, k, v)
 
+    # def pop(self, key, default=None):
+    #     pass
 
+    # def popitem(self):
+    #     pass
 
-
-    def pop(self, key, default=None):
-        pass
-
-    def popitem(self):
-        pass
-
-    def clear(self):
-        pass
+    # def clear(self):
+    #     pass
 
     def __len__(self):
         """ Returns number of registered macros elements."""
-        return archive_get_macro_list_size(self.archive)
+        return archive_get_macro_list_size(self.srcml_archive)
 
-    def __getitem__(self, key):
+    def __getitem__(self, index):
         """Returns an item registered within the macro."""
-        pass
+        return (archive_get_macro_token(self.srcml_archive, index), archive_get_macro_type(self.srcml_archive, index),) 
 
-    def __setitem__(self, key, value):
-        """Set the value of a macro element."""
-        pass
+    # def __setitem__(self, key, value):
+    #     """Set the value of a macro element."""
+    #     pass
 
-    def __delitem__(self, key):
-        """For removing registered macros from archive."""
-        pass
+    # def __delitem__(self, key):
+    #     """For removing registered macros from archive."""
+    #     pass
 
-    def has_key(self, key):
-        pass
+    # def has_key(self, key):
+    #     pass
 
-    def __contains__(self, item):
-        """Test if an element exists within the list of macros"""
-        pass
+    # def __contains__(self, item):
+    #     """Test if an element exists within the list of macros"""
+    #     pass
 
     def __iter__(self):
         """TODO: Return iteration over keys."""
+        def itemsGen():
+            for x in range(len(self)):
+                yield self[x]
+        return (k for k in itemsGen())
+        
+
+    # def __reversed__(self):
+    #     """Same as __iter__ but backwards."""
+    #     pass
+
+class _xml_namespaces_proxy:
+    __doc__ ="""
+    Provides a dictionary proxy interface for xml namespaces registered 
+    with the srcml archive.
+    """
+    def __init__(self, archive):
+        self.srcml_archive = archive
+
+    def update(self, *args, **kwargs):
+        """ Update the list of namespaces with other namespace prefix pair."""
         pass
 
-    def __reversed__(self):
-        """Same as __iter__ but backwards."""
+
+
+    def __len__(self):
+        """ """
         pass
+
+    def __getitem__(self, index):
+        """ """
+        pass
+
+    def __iter__(self):
+        """Returns a generator for iterating over things."""
+        # def itemsGen():
+        #     for x in range(len(self)):
+        #         yield self[x]
+        # return (k for k in itemsGen())
+
+    # def items(self):
+    #     pass
+
+    # def keys(self):
+    #     pass
+
+    # def values(self):
+    #     pass
+
+    # def iteritems(self):
+    #     pass
+
+    # def iterkeys(self):
+    #     pass
+
+    # def itervalues(self):
+    #     pass
+
+    # def pop(self, key, default=None):
+    #     pass
+
+    # def popitem(self):
+    #     pass
+
+    # def clear(self):
+    #     pass
+
+    # def __setitem__(self, key, value):
+    #     """Set the value of a macro element."""
+    #     pass
+
+    # def __delitem__(self, key):
+    #     """For removing registered macros from archive."""
+    #     pass
+
+    # def has_key(self, key):
+    #     pass
+
+    # def __contains__(self, item):
+    #     """Test if an element exists within the list of macros"""
+    #     pass
+        
+
 
 archive_attr_lookup = dict(
 {
@@ -204,15 +279,13 @@ class archive(object):
             - macros
         """
         self.srcml_archive = create_archive()
+        self.macros = _macro_proxy(self.srcml_archive)
         def _getAttr(attr):
             if attr in kwargs:
                 self.__setattr__(attr, kwargs[attr])
         for attr in [key for key in archive_attr_lookup.keys()]:
             _getAttr(attr)
-
-        self.macros = _macro_proxy(self.srcml_archive)
-
-
+        
 
     def __del__(self):
         """
@@ -227,8 +300,10 @@ class archive(object):
         """
         if attrName in archive_attr_lookup:
             return archive_attr_lookup[attrName][0](self.srcml_archive)
+        elif attrName in self.__dict__:
+            return self.__dict__[attrName]
         else:
-            return super(archive, self).__getattr__(attrName)
+            raise KeyError("Attribute doesn't exist. Attribute: {0}".format(attrName))
 
     def __setattr__(self, attrName, value):
         """
@@ -238,7 +313,7 @@ class archive(object):
         if attrName in archive_attr_lookup:
             archive_attr_lookup[attrName][1](self.srcml_archive, value)
         else:
-            return super(archive, self).__setattr__(attrName, value)
+            self.__dict__[attrName] = value
 
     # Options functions.
     def enable_option(self, option):
@@ -259,7 +334,18 @@ class archive(object):
         """
         return (self.options & option) == option
 
+    # Other function
+    def language_from_filename(self, filename):
+        """
+        Resolves the extension of the filename to a srcml language.
+        """
+        return archive_check_extension(self.srcml_archive, filename)
 
+    def register_file_ext(self, ext, srcml_language):
+        """
+        Registers a file extension with a srcml language.
+        """
+        archive_register_file_extension(self.srcml_archive, ext, srcml_language)
 
     # Read function.
     def open_read(self, **kwargs):

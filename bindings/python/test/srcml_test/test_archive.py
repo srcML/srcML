@@ -146,5 +146,36 @@ class TestArchive(unittest.TestCase):
         self.assertFalse(archive.option_is_enabled(srcml.OPTION_ARCHIVE), "archive option has incorrect value.")
         archive = None
 
-    # def test_derp(self):
-    #     print help(srcml.archive)
+    def test_marcos_proxy_len(self):
+        archive = srcml.archive()
+        self.assertEqual(len(archive.macros), 0, "Incorrect # of macros.")
+        archive.macros.update({"__LIBSRCML_DECL": "src:name"})
+        self.assertEqual(len(archive.macros), 1, "Incorrect # of macros.")
+        archive = None
+
+    def test_marcos_proxy_len(self):
+        archive = srcml.archive()
+        self.assertEqual(len(archive.macros), 0, "Incorrect # of macros.")
+        archive.macros.update({"__LIBSRCML_DECL": "src:name"})
+        self.assertEqual(len(archive.macros), 1, "Incorrect # of macros.")
+        archive = None
+
+    def test_marcos_proxy_getitem_and_iteration(self):
+        archive = srcml.archive()
+        self.assertEqual(len(archive.macros), 0, "Incorrect # of macros.")
+        archive.macros.update({"__LIBSRCML_DECL": "src:name", "BANANA":"src:type", "aardvark":"src:event"})
+        self.assertEqual(len(archive.macros), 3, "Incorrect # of macros.")
+        # self.assertEqual(len(archive.macros), 3, "Incorrect # of macros.")
+        index = 0
+        for x in archive.macros:
+            index += 1
+        self.assertEqual(index, 3, "Incorrect # of macros iterations.")
+        archive = None
+
+    def test_language_from_filename(self):
+        archive = srcml.archive()
+        ext = archive.language_from_filename("file.cpp")
+        self.assertEqual(ext, srcml.LANGUAGE_CXX, "Incorrect value for file extension")
+        archive = None
+
+
