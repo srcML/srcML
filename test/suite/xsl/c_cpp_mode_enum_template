@@ -1,6 +1,6 @@
 
 <unit>
-<enum>enum <name>NAME</name>;</enum>
+<enum_decl>enum <name>NAME</name>;</enum_decl>
 </unit>
 
 <unit>

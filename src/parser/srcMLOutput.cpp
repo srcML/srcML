@@ -137,10 +137,11 @@ namespace {
     ELEMENT_MAP(SGOTO_STATEMENT, "goto")
     ELEMENT_MAP(SLABEL_STATEMENT, "label")
 
-    ELEMENT_MAP(STYPEDEF, "typedef")
-    ELEMENT_MAP(SASM, "asm")
-    ELEMENT_MAP(SMACRO_CALL, "macro")
-    ELEMENT_MAP(SENUM, "enum")
+    ELEMENT_MAP(STYPEDEF,          "typedef")
+    ELEMENT_MAP(SASM,              "asm")
+    ELEMENT_MAP(SMACRO_CALL,       "macro")
+    ELEMENT_MAP(SENUM,             "enum")
+    ELEMENT_MAP(SENUM_DECLARATION, "enum_decl")
 
     ELEMENT_MAP(SIF_STATEMENT, "if")
     ELEMENT_MAP(STERNARY, "ternary")
@@ -289,6 +290,7 @@ namespace {
     ELEMENT_MAP(SASSERT_STATEMENT,       "assert")
     ELEMENT_MAP(SSYNCHRONIZED_STATEMENT, "synchronized")
     ELEMENT_MAP(SINTERFACE,              "interface")
+    ELEMENT_MAP(SINTERFACE_DECLARATION,  "interface_decl")
     ELEMENT_MAP(SANNOTATION_DEFN,        "annotation_defn")
     ELEMENT_MAP(SSTATIC_BLOCK,           "static")
 
@@ -321,6 +323,7 @@ namespace {
     ELEMENT_MAP(STYPEID,                 "typeid")
     ELEMENT_MAP(SSIZEOF_PACK,            "sizeof")
     ELEMENT_MAP(SENUM_CLASS,             "enum")
+    ELEMENT_MAP(SENUM_CLASS_DECLARATION, "enum_decl")
     ELEMENT_MAP(SOPERATOR_FUNCTION,      "function")
     ELEMENT_MAP(SOPERATOR_FUNCTION_DECL, "function_decl")
     ELEMENT_MAP(SREF_QUALIFIER,          "ref_qualifier")

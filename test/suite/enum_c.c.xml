@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="enum" filename="enum_c">
 
 <unit>
-<enum>enum <name>Enum2</name> : <type><name>unsigned</name> <name>int</name></type>;</enum>
+<enum_decl>enum <name>Enum2</name> : <type><name>unsigned</name> <name>int</name></type>;</enum_decl>
 </unit>
 
 <unit>
