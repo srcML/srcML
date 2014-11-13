@@ -79,6 +79,17 @@ const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP | 
     SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
+struct attribute {
+    boost::optional<std::string> prefix;
+    boost::optional<std::string> name;
+    boost::optional<std::string> value;
+};
+
+struct element {
+    boost::optional<std::string> prefix;
+    boost::optional<std::string> name;
+};
+
 // request for srcml client processing
 struct srcml_request_t {
 
@@ -114,7 +125,7 @@ struct srcml_request_t {
 
     // srcml transformation
     std::vector<std::string> transformations;
-    std::vector< std::pair< boost::optional<std::string>, boost::optional<std::string> > > xpath_query_support;
+    std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;
 
     int unit;
     int max_threads;
