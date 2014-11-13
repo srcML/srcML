@@ -237,4 +237,13 @@ const static srcMLState::MODE_TYPE MODE_INITIALIZATION_LIST;
 /** mode for C++ ranged for */
 const static srcMLState::MODE_TYPE MODE_RANGED_FOR;
 
+/** mode for associationt type */
+const static srcMLState::MODE_TYPE MODE_ASSOCIATION_TYPE;
+
+/** mode for friend */
+const static srcMLState::MODE_TYPE MODE_FRIEND;
+
+/** mode for class header */
+const static srcMLState::MODE_TYPE MODE_CLASS_NAME;
+
 #endif

@@ -94,6 +94,9 @@ BLOCKOP;
 FALSE;
 TRUE;
 
+// Other
+CUDA;
+
 ATSIGN;
 
 ALLOPERATORS;
@@ -164,7 +167,7 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
        '>' { $setText("&gt;"); } (('>' '=') => '>' '=' { $setText("&gt;&gt;="); $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' { $setText("&gt;="); })?  { do_not_apply = false; } |
 
        '<' { $setText("&lt;"); }
-            (options { greedy = true; } : '<' { $setText("&lt;&lt;"); } | '=' { $setText("&lt;="); })?
+            (options { greedy = true; } : '<' { $setText("&lt;&lt;"); } (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setText("&lt;&lt;&lt;"); $setType(CUDA); })? | '=' { $setText("&lt;="); })?
             ('=' { $setText("&lt;&lt;="); $setType(ASSIGNMENT); })? |
 
 //       '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; realbegin += 3; } 

@@ -2,15 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="decl_simple" filename="decl_simple_cs">
 
 <unit>
-<decl_stmt><decl><type>class <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>class</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type>struct <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>struct</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type>enum <name>a</name></type> <name>b</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>enum</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
 </unit>

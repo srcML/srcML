@@ -37,7 +37,8 @@ set(CPACK_CREATE_DESKTOP_LINKS srcml)
 # Generator settings
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CPACK_PACKAGE_FILE_NAME "srcML-Win")
-    set(CPACK_GENERATOR "ZIP")
+    # set(CPACK_GENERATOR "ZIP")
+    # set(CPACK_BINARY_NS
 else()
     set(CPACK_PACKAGE_FILE_NAME "srcML")
     set(CPACK_GENERATOR "TGZ;TBZ2")
@@ -64,16 +65,16 @@ set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING.txt)
 
 # README
-set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.txt)
+set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
 
 # welcome message
 set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/CMake/welcome.txt)
 
-# icon
-set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
-
 if(WIN32)
-install(FILES ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico DESTINATION .)
+    install(FILES ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico DESTINATION .)
+else()
+    # icon
+    set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico)
 endif()
 
 # strip executables

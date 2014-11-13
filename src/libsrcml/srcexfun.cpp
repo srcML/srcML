@@ -1134,7 +1134,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_parameter_pack", "(self::src:decl and src:type/src:modifier[.='...']) or (self::src:param and ( src:decl/src:type/src:modifier[.='...'] or src:type/src:modifier[.='...'] ) ) or (self::src:argument and src:expr/src:modifier[.='...']) or (self::src:type and src:modifier[.='...'])");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_generic",
+/*    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_generic",
         "("
             "ancestor::src:unit[@language='C#']"
             " and "
@@ -1186,7 +1186,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
             ")"
         ")"
     );
-
+*/
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_aligned", "(src:type/src:alignas or src:alignas or src:decl/src:type/src:alignas)");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_noexcept", "(src:noexcept or src:throw/src:argument_list[count(src:argument) = 0])");
@@ -1261,8 +1261,101 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_template_template_parameter", "src:type/src:template");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_template", "( ancestor::src:unit[@language='C++'] and ( self::src:class or self::src:class_decl or self::src:struct or self::src:struct_decl or self::src:union or self::src:union_decl or self::src:enum or self::src:using or self::src:function or self::src:function_decl or self::src:constructor or self::src:constructor_decl or self::src:destructor or self::src:destructor_decl ) and src:template ) or ( self::src:name and ( src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ) ) or ( (self::src:decl_stmt or self::src:param) and src:decl/src:type/src:name[ src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ] ) or ( (self::src:decl or self::src:argument/src:expr[count(*)=1]) and src:type/src:name[ src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ] ) or ( (self::src:type or self::src:call or self::src:argument/src:expr[count(*)=1]) and src:name[ src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ] ) or ( ancestor::src:unit[@language='Java'] and ( ((self::src:class or self::src:class_decl) and src:argument_list[@type='template']) or ( ( self::src:function or self::src:function_decl or self::src:constructor or self::src:constructor_decl or self::src:destructor or self::src:destructor_decl ) and src:type/src:argument_list[@type='template'] ) ) ) or ( ancestor::src:unit[@language='C#'] and ( ( ( self::src:class or self::src:class_decl or self::src:struct or self::src:struct_decl ) and ( src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ) ) or ( ( self::src:function or self::src:function_decl or self::src:constructor or self::src:constructor_decl or self::src:destructor or self::src:destructor_decl ) and ( src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ) ) ) )");
-    // xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_generic", "( ancestor::src:unit[@language='C++'] and ( self::src:class or self::src:class_decl or self::src:struct or self::src:struct_decl or self::src:union or self::src:union_decl or self::src:enum or self::src:using or self::src:function or self::src:function_decl or self::src:constructor or self::src:constructor_decl or self::src:destructor or self::src:destructor_decl ) and src:template ) or ( self::src:name and ( src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ) ) or ( (self::src:decl_stmt or self::src:param) and src:decl/src:type/src:name[ src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ] ) or ( (self::src:decl or self::src:argument/src:expr[count(*)=1]) and src:type/src:name[ src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ] ) or ( (self::src:type or self::src:call or self::src:argument/src:expr[count(*)=1]) and src:name[ src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ] ) or ( ancestor::src:unit[@language='Java'] and ( ((self::src:class or self::src:class_decl) and src:argument_list[@type='template']) or ( ( self::src:function or self::src:function_decl or self::src:constructor or self::src:constructor_decl or self::src:destructor or self::src:destructor_decl ) and src:type/src:argument_list[@type='template'] ) ) ) or ( ancestor::src:unit[@language='C#'] and ( ( ( self::src:class or self::src:class_decl or self::src:struct or self::src:struct_decl ) and ( src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ) ) or ( ( self::src:function or self::src:function_decl or self::src:constructor or self::src:constructor_decl or self::src:destructor or self::src:destructor_decl ) and ( src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] ) ) ) )");
+    char const* const is_tempalateAndis_generic_impl =
+    "("
+        "ancestor::src:unit[@language='C++']"
+        " and "
+        "("
+            "self::src:class or self::src:class_decl or self::src:struct or self::src:struct_decl or self::src:union or self::src:union_decl or self::src:enum or self::src:using or self::src:function or self::src:function_decl or self::src:constructor or self::src:constructor_decl or self::src:destructor or self::src:destructor_decl "
+        ")"
+        " and "
+        "src:template "
+    ")"
+    " or "
+    "("
+        "self::src:name"
+        " and "
+        "(src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'])"
+    ")"
+    " or "
+    "("
+        "(self::src:decl_stmt or self::src:param)"
+        " and "
+        "src:decl/src:type/src:name["
+            " src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] "
+        "]"
+    ")"
+    " or "
+    "("
+        "("
+            "self::src:decl or self::src:argument/src:expr[count(*)=1])"
+            " and "
+            "src:type/src:name["
+                "src:argument_list[@type='template']"
+                " or src:name/src:argument_list[@type='template']"
+                " or src:name/src:name/src:argument_list[@type='template'] "
+            "]"
+        ")"
+    " or "
+    "("
+        "("
+            "self::src:type "
+            "or self::src:call "
+            "or self::src:argument/src:expr[count(*)=1]"
+        ")"
+        " and "
+        "src:name["
+            "src:argument_list[@type='template']"
+            " or src:name/src:argument_list[@type='template']"
+            " or src:name/src:name/src:argument_list[@type='template'] "
+        "]"
+    ")"
+    " or "
+    "("
+        "ancestor::src:unit[@language='Java']"
+        " and "
+        "("
+            "("
+                "(self::src:class or self::src:interface or self::src:annotation_defn)"
+                " and "
+                "("
+                    "src:name[last()]/src:argument_list[@type='template']"
+                    " or "
+                    "src:name/src:name[last()]/src:argument_list[@type='template']"
+                ")"
+            ")"
+            " or "
+            "("
+                "(self::src:function or self::src:function_decl)"
+                " and "
+                "src:type/src:argument_list[@type='template']"
+            ")"
+        ")"
+    ")"
+    " or "
+    "("
+        "ancestor::src:unit[@language='C#']"
+        " and "
+        "("
+            "("
+                "(self::src:class or self::src:class_decl or self::src:struct or self::src:struct_decl)"
+                " and "
+                "("
+                    "src:name/src:argument_list[@type='template'] "
+                    "or src:name/src:name/src:argument_list[@type='template']"
+                ")"
+            ")"
+            " or "
+            "("
+                "(self::src:function or self::src:function_decl or self::src:constructor or self::src:constructor_decl or self::src:destructor or self::src:destructor_decl)"
+                " and "
+                "(src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'])"
+            ")"
+        ")"
+    ")";
+
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_template", is_tempalateAndis_generic_impl);
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_generic", is_tempalateAndis_generic_impl);
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_default_parameter", "src:decl/src:init or src:init");
 

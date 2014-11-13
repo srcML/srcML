@@ -1343,7 +1343,7 @@ int main() {
     ;
     run_xpath_test("is_template/is_template.cpp", tempXPath, 11);
     run_xpath_test("is_template/is_template.cs", tempXPath, 12);
-    run_xpath_test("is_template/is_template.java", tempXPath, 6);
+    run_xpath_test("is_template/is_template.java", tempXPath, 7);
 
     // is_default_parameter
     tempXPath = 
@@ -1752,10 +1752,10 @@ int main() {
     tempXPath = 
         "//src:operator[src:is_subtraction_operator()]"
     ;
-    run_xpath_test("is_subtract_operator/is_subtract_operator.c", tempXPath, 2);
-    run_xpath_test("is_subtract_operator/is_subtract_operator.cpp", tempXPath, 2);
-    run_xpath_test("is_subtract_operator/is_subtract_operator.cs", tempXPath, 2);
-    run_xpath_test("is_subtract_operator/is_subtract_operator.java", tempXPath, 2);
+    run_xpath_test("is_subtraction_operator/is_subtraction_operator.c", tempXPath, 2);
+    run_xpath_test("is_subtraction_operator/is_subtraction_operator.cpp", tempXPath, 2);
+    run_xpath_test("is_subtraction_operator/is_subtraction_operator.cs", tempXPath, 2);
+    run_xpath_test("is_subtraction_operator/is_subtraction_operator.java", tempXPath, 2);
 
     // is_shift_operator
     tempXPath = 

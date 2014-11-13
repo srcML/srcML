@@ -579,9 +579,7 @@
 
         <DocEntry title="interface">
             <Elements>
-                <Element name="class">
-                    <AttribStr>type="interface"</AttribStr>
-                </Element>
+                <Element name="interface"/>
                 <Subelement name="name" />
                 <Subelement name="block" />
             </Elements>
@@ -595,9 +593,7 @@
 
         <DocEntry title="annotation definition">
             <Elements>
-                <Element name="class">
-                    <AttribStr>type="interface"</AttribStr>
-                </Element>
+                <Element name="annotation_defn"/>
                 <Subelement name="name" />
                 <Subelement name="block" />
             </Elements>
