@@ -34,7 +34,7 @@ public:
 		start_time = clock();
 	}
 
-	// time in seconds
+	// time in milliseconds
 	inline double elapsed() {
 		return (double)((clock() - start_time) / (CLOCKS_PER_SEC / 1000));
 	}
