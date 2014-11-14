@@ -29,18 +29,16 @@
 
  int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support) {
  	// FIRST IS ELEMENT / SECOND IS ATTRIBUTE
-
     const char* element_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str());
     const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
 
     // Must have a uri for the element
     if (xpath_support.first && !(element_uri))
-        return -1;
+        return -1; // Error Code TBD
 
     // Must have a uri for the attribute
     if (xpath_support.second && !(attribute_uri))
-        return -1;
-
+        return -1; // Error Code TBD
 
  	// Check for element
  	if (xpath_support.first){
