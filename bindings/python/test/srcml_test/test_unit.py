@@ -111,3 +111,11 @@ class TestUnit(unittest.TestCase):
         self.assertEqual(unit.language, expected, "language has incorrect value..")
         unit = None
         archive = None
+
+    def test_unit_revision(self):
+        archive = srcml.archive()
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit = None
+        archive = None
