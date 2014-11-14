@@ -36,7 +36,7 @@ public:
 
 	// time in seconds
 	inline double elapsed() {
-		return (double)((clock() - start_time)/CLOCKS_PER_SEC);
+		return (double)((clock() - start_time) / (CLOCKS_PER_SEC / 1000));
 	}
 
 	inline bool is_expired() {
