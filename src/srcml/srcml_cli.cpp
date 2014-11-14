@@ -531,12 +531,16 @@ void option_dependency(const prog_opts::variables_map& vm,
 
 element clean_element_input(const std::basic_string< char >& element_input) {
   std::string vals = element_input;
-  element elem;
   size_t elemn_index = vals.find(":");
-  if (elemn_index != std::string::npos) {
-    elem.prefix = vals.substr(0, elemn_index);
-    elem.name = vals.substr(elemn_index + 1);
+
+  // Element requires a prefix
+  if (elemn_index == std::string::npos) {
+    exit(1);
   }
+
+  element elem;
+  elem.prefix = vals.substr(0, elemn_index);
+  elem.name = vals.substr(elemn_index + 1);
   return elem;
 }
 
