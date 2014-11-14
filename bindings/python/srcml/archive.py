@@ -20,17 +20,10 @@
 from unit import unit
 from bindings import *
 from memory_buffer import memory_buffer
+from helper_constants import *
 import ctypes
 
-_ENCODING_ATTR = "encoding"
-_SRC_ENCODING_ATTR = "src_encoding"
-_LANGUAGE_ATTR = "language"
-_FILENAME_ATTR = "filename"
-_DIRECTORY_ATTR = "directory"
-_VERSION_ATTR = "version"
-_TABSTOP_ATTR = "tabstop"
-_OPTIONS_ATTR = "options"
-_PROCESSING_INSTRUCTION_ATTR = "processing_instruction"
+
 
 class _macro_proxy:
     __doc__ ="""
@@ -67,53 +60,6 @@ class _macro_proxy:
             for x in range(len(self)):
                 yield self[x]
         return (k for k in itemsGen())
-
-    # def items(self):
-    #     pass
-
-    # def keys(self):
-    #     pass
-
-    # def values(self):
-    #     pass
-
-    # def iteritems(self):
-    #     pass
-
-    # def iterkeys(self):
-    #     pass
-
-    # def itervalues(self):
-    #     pass
-
-    # def pop(self, key, default=None):
-    #     pass
-
-    # def popitem(self):
-    #     pass
-
-    # def clear(self):
-    #     pass
-
-    # def __setitem__(self, key, value):
-    #     """Set the value of a macro element."""
-    #     pass
-
-    # def __delitem__(self, key):
-    #     """For removing registered macros from archive."""
-    #     pass
-
-    # def has_key(self, key):
-    #     pass
-
-    # def __contains__(self, item):
-    #     """Test if an element exists within the list of macros"""
-    #     pass
-        
-
-    # def __reversed__(self):
-    #     """Same as __iter__ but backwards."""
-    #     pass
 
 class _xml_namespaces_proxy:
     __doc__ ="""
@@ -161,48 +107,6 @@ class _xml_namespaces_proxy:
         """Resolves uri to a prefix."""
         return archive_get_prefix_from_uri(self.srcml_archive, prefix)
 
-    # def items(self):
-    #     pass
-
-    # def keys(self):
-    #     pass
-
-    # def values(self):
-    #     pass
-
-    # def iteritems(self):
-    #     pass
-
-    # def iterkeys(self):
-    #     pass
-
-    # def itervalues(self):
-    #     pass
-
-    # def pop(self, key, default=None):
-    #     pass
-
-    # def popitem(self):
-    #     pass
-
-    # def clear(self):
-    #     pass
-
-    # def __setitem__(self, key, value):
-    #     """Set the value of a macro element."""
-    #     pass
-
-    # def __delitem__(self, key):
-    #     """For removing registered macros from archive."""
-    #     pass
-
-    # def has_key(self, key):
-    #     pass
-
-    # def __contains__(self, item):
-    #     """Test if an element exists within the list of macros"""
-    #     pass
-
 
 # Contexts for reading and writing to/from python to the libsrcml
 # interface.
@@ -225,6 +129,8 @@ class _str_reader_context(object):
     def close(self):
         return 0
 
+
+# Callback helper functions.
 def _cb_read_helper(ctxt, buff, size):
     return ctxt.read(buff, size)
 
@@ -233,6 +139,8 @@ def _cb_write_helper(ctxt, buff, size):
 
 def _cb_close_helper(ctxt):
     return ctxt.close()
+
+
 
 # Attribute processing        
 def _get_processing_instruction(archive):
@@ -244,18 +152,16 @@ def _set_processing_instruction(archive, value):
 _PRIVATE_READER_CONTEXT_ATTR = "_readerCtxt"
 _archive_attr_lookup = dict(
 {
-    _ENCODING_ATTR: (archive_get_encoding, archive_set_encoding,),
-    _SRC_ENCODING_ATTR : (archive_get_src_encoding, archive_set_src_encoding,),
-    _LANGUAGE_ATTR : (archive_get_language, archive_set_language,),
-    _FILENAME_ATTR : (archive_get_filename, archive_set_filename,),
-    _DIRECTORY_ATTR : (archive_get_directory, archive_set_directory,),
-    _VERSION_ATTR : (archive_get_version, archive_set_version,),
-    _TABSTOP_ATTR : (archive_get_tabstop, archive_set_tabstop,),
-    _OPTIONS_ATTR : (archive_get_options, archive_set_options,),
-    _PROCESSING_INSTRUCTION_ATTR : (_get_processing_instruction, _set_processing_instruction)
+    ENCODING_ATTR: (archive_get_encoding, archive_set_encoding,),
+    SRC_ENCODING_ATTR : (archive_get_src_encoding, archive_set_src_encoding,),
+    LANGUAGE_ATTR : (archive_get_language, archive_set_language,),
+    FILENAME_ATTR : (archive_get_filename, archive_set_filename,),
+    DIRECTORY_ATTR : (archive_get_directory, archive_set_directory,),
+    VERSION_ATTR : (archive_get_version, archive_set_version,),
+    TABSTOP_ATTR : (archive_get_tabstop, archive_set_tabstop,),
+    OPTIONS_ATTR : (archive_get_options, archive_set_options,),
+    PROCESSING_INSTRUCTION_ATTR : (_get_processing_instruction, _set_processing_instruction)
 })
-
-
 
 
 
@@ -409,6 +315,14 @@ class archive(object):
         archive_register_file_extension(self.srcml_archive, ext, srcml_language)
 
 
+    def create_unit(self):
+        """
+        Unit creation factory. Units are for reading and writing different to/from srcml/source code.
+        Units provide an interface for both reading and writing but one cannot write a unit to an archive that
+        has been opened for reading, and vice-versa.
+        """
+        return create_unit(self.srcml_archive)
+
 
     # I/O Related function.
     def open_read(self, **kwargs):
@@ -526,13 +440,18 @@ class archive(object):
             raise Exception("No known parameters")
 
         
-# read_open_filename(self.srcml_archive, )
-# __LIBSRCML_DECL int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
-# __LIBSRCML_DECL int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
-# __LIBSRCML_DECL int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
-# __LIBSRCML_DECL int srcml_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
+        # read_open_filename(self.srcml_archive, )
+        # __LIBSRCML_DECL int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
+        # __LIBSRCML_DECL int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
+        # __LIBSRCML_DECL int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
+        # __LIBSRCML_DECL int srcml_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
 
         pass
+
+    # __LIBSRCML_DECL struct srcml_unit* srcml_read_unit_header(struct srcml_archive*);
+    # __LIBSRCML_DECL struct srcml_unit* srcml_read_unit_xml(struct srcml_archive*);
+    # __LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
+
 
     def open_write(self, **kwargs):
         """

@@ -280,4 +280,6 @@ class TestArchive(unittest.TestCase):
 </unit>
         """
         archive.open_read(xml=xml_data)
+        self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
+        self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
         archive = None
