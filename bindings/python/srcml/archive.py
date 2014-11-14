@@ -117,12 +117,9 @@ class _str_reader_context(object):
         self.end_index = size
 
     def read(self, buff, size):
-        mutableCBuffer = ctypes.cast(buff, ctypes.POINTER(ctypes.c_char))
-        addr = ctypes.addressof(mutableCBuffer.contents)
-        bufferArray = (ctypes.c_char * size).from_address(addr)
         outBufferIndex = 0
         amountToWrite = min(len(self.xml_str), size - 1)
-        bufferArray[:amountToWrite] = self.xml_str[:amountToWrite]
+        buff[:amountToWrite] = self.xml_str[:amountToWrite]
         self.xml_str = self.xml_str[amountToWrite:]
         return amountToWrite
 
@@ -130,9 +127,31 @@ class _str_reader_context(object):
         return 0
 
 
+class _stream_reader_context(object):
+    def __init__(self, input_stream):
+        self.strm = input_stream
+
+    def read(self, buff, size):
+        # outBufferIndex = 0
+        # amountToWrite = min(len(self.xml_str), size - 1)
+        # buff[:amountToWrite] = self.xml_str[:amountToWrite]
+        # self.xml_str = self.xml_str[amountToWrite:]
+        # return amountToWrite
+        return -1
+
+    def close(self):
+        try:
+            self.strm.close()
+        except:
+            return -1
+        return 0
+
 # Callback helper functions.
 def _cb_read_helper(ctxt, buff, size):
-    return ctxt.read(buff, size)
+    mutableCBuffer = ctypes.cast(buff, ctypes.POINTER(ctypes.c_char))
+    addr = ctypes.addressof(mutableCBuffer.contents)
+    bufferArray = (ctypes.c_char * size).from_address(addr)
+    return ctxt.read(bufferArray, size)
 
 def _cb_write_helper(ctxt, buff, size):
     return ctxt.write(buff, size)
@@ -315,16 +334,48 @@ class archive(object):
         archive_register_file_extension(self.srcml_archive, ext, srcml_language)
 
 
+    # Unit creation functions for both reading and writing.
+    def read_unit_header(self):
+        """
+        Reads the attribute information for the next unit
+        within the archive.
+        """
+        unit_ptr = read_unit_header(self.srcml_archive)
+        return unit(unit_ptr)
+
+    def read_unit_xml(self):
+        """
+        Reads the xml of the next unit within the archive.
+        """
+        unit_ptr = read_unit_xml(self.srcml_archive)
+        return unit(unit_ptr)
+
+    def read_unit(self):
+        """
+        Reads the next unit from the archive.
+        The header information such as attributes etc..
+        """
+        unit_ptr = read_unit(self.srcml_archive)
+        return unit(unit_ptr)
+
     def create_unit(self):
         """
         Unit creation factory. Units are for reading and writing different to/from srcml/source code.
         Units provide an interface for both reading and writing but one cannot write a unit to an archive that
         has been opened for reading, and vice-versa.
+
+        A typical use case for a unit created in this manner is to use it to write source code into srcml
+        then into a srcml archive.
         """
-        return unit(self)
+        unit_ptr = create_unit(self.srcml_archive)
+        return unit(unit_ptr)
+
+    def write_unit(self, unit):
+        """Write a unit into the current archive archive."""
+        write_unit(self.srcml_archive, unit.srcml_unit)
 
 
-    # I/O Related function.
+    # I/O starting functions.
     def open_read(self, **kwargs):
         """
         Opens an archive for reading.
@@ -404,6 +455,7 @@ class archive(object):
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 
+
         elif FILE_OBJ_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
@@ -447,10 +499,6 @@ class archive(object):
         # __LIBSRCML_DECL int srcml_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
 
         pass
-
-    # __LIBSRCML_DECL struct srcml_unit* srcml_read_unit_header(struct srcml_archive*);
-    # __LIBSRCML_DECL struct srcml_unit* srcml_read_unit_xml(struct srcml_archive*);
-    # __LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
 
     def open_write(self, **kwargs):

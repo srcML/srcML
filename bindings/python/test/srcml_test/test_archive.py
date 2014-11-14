@@ -233,8 +233,9 @@ class TestArchive(unittest.TestCase):
 
     def test_open_read_io__xml_string(self):
         archive = srcml.archive()
-        xml_data = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp"><comment type="block" format="doxygen">/**
+        xml_data_header = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+"""
+        xml_data_body = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp"><comment type="block" format="doxygen">/**
  * @file srcml.h
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
@@ -277,9 +278,12 @@ class TestArchive(unittest.TestCase):
  * * API for full control over the construction of srcML archives
  *   from multiple input source-code files, srcml_archive_*() and srcml_unit_*()
  */</comment>
-</unit>
-        """
-        archive.open_read(xml=xml_data)
+</unit>"""
+        archive.open_read(xml=xml_data_header + xml_data_body)
         self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
         self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
+        unit = archive.read_unit()
+        self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
+        self.assertEqual(unit.xml(), xml_data_body, "Didn't get correct unit information!")
+        # self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
         archive = None
