@@ -5320,12 +5320,12 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        ((identifier CUDA) => simple_name_optional_template | identifier | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
+        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
             ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
-            ((identifier CUDA) => simple_name_optional_template | identifier)
+            identifier
         )*
 
 ;
