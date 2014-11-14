@@ -289,6 +289,12 @@ std::pair<std::string, std::string> custom_parser(const std::string& s);
 // Debug
 void debug_cli_opts(const struct srcml_request_t srcml_request);
 
+// Sanitize element input
+element clean_element_input(const std::basic_string< char >& element_input);
+
+// Sanitize attribute input
+attribute clean_attribute_input(const std::basic_string< char >& attribute_input);
+
 // Interpretation of CLI options
 srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
@@ -426,11 +432,11 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
               srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
 
             BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
-              if (option.string_key == "element" && srcml_request.xpath_query_support.size() > 0) {
-                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first = vals;
+             if (option.string_key == "element" && srcml_request.xpath_query_support.size() > 0) {
+                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first = clean_element_input(vals);
               }
               else if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() > 0) {
-                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).second = vals;
+                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).second = clean_attribute_input(vals);
               }
               else {
                 srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
@@ -521,4 +527,38 @@ void option_dependency(const prog_opts::variables_map& vm,
                                     + "' requires option '" + dependent_option + "'.");
         }
     }
+}
+
+element clean_element_input(const std::basic_string< char >& element_input) {
+  std::string vals = element_input;
+  element elem;
+  size_t elemn_index = vals.find(":");
+  if (elemn_index != std::string::npos) {
+    elem.prefix = vals.substr(0, elemn_index);
+    elem.name = vals.substr(elemn_index + 1);
+  }
+  return elem;
+}
+
+attribute clean_attribute_input(const std::basic_string< char >& attribute_input) {
+  std::string vals = attribute_input;
+  size_t attrib_colon = vals.find(":");
+  size_t attrib_equals = vals.find("=");
+  attribute attrib;
+
+  if (attrib_equals != std::string::npos) {
+    if (attrib_colon != std::string::npos) {  
+      attrib.prefix = vals.substr(0, attrib_colon);
+      attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
+    }
+    else {
+      if (srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)  {
+        attrib.prefix = srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first->prefix;
+      }
+      attrib.name = vals.substr(0, attrib_equals);
+    }
+    attrib.value = vals.substr(attrib_equals + 1);
+  }
+
+  return attrib;
 }
