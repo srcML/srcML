@@ -321,7 +321,7 @@ class archive(object):
         Units provide an interface for both reading and writing but one cannot write a unit to an archive that
         has been opened for reading, and vice-versa.
         """
-        return create_unit(self.srcml_archive)
+        return unit(self)
 
 
     # I/O Related function.
