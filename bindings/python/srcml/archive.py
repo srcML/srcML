@@ -20,6 +20,7 @@
 from unit import unit
 from bindings import *
 from memory_buffer import memory_buffer
+import ctypes
 
 _ENCODING_ATTR = "encoding"
 _SRC_ENCODING_ATTR = "src_encoding"
@@ -212,20 +213,26 @@ class _str_reader_context(object):
         self.end_index = size
 
     def read(self, buff, size):
-        print buff.__class__.__name__
-        if self.index == self.end_index:
-            return 0
+        mutableCBuffer = ctypes.cast(buff, ctypes.POINTER(ctypes.c_char))
+        addr = ctypes.addressof(mutableCBuffer.contents)
+        bufferArray = (ctypes.c_char * size).from_address(addr)
         outBufferIndex = 0
-        while self.index < self.end_index and outBufferIndex < size:
-            buff[outBufferIndex] = self.xml_str[self.index]
-            outBufferIndex += 1
-            self.index += 1
-        return outBufferIndex
-        # buff = self.xml_str[self.index : self.end_index]
-
+        amountToWrite = min(len(self.xml_str), size - 1)
+        bufferArray[:amountToWrite] = self.xml_str[:amountToWrite]
+        self.xml_str = self.xml_str[amountToWrite:]
+        return amountToWrite
 
     def close(self):
         return 0
+
+def _cb_read_helper(ctxt, buff, size):
+    return ctxt.read(buff, size)
+
+def _cb_write_helper(ctxt, buff, size):
+    return ctxt.write(buff, size)
+
+def _cb_close_helper(ctxt):
+    return ctxt.close()
 
 # Attribute processing        
 def _get_processing_instruction(archive):
@@ -500,7 +507,12 @@ class archive(object):
             else:
                 amount_to_read = len(kwargs[XML_PARAM])
             self._readerCtxt = _str_reader_context(kwargs[XML_PARAM], amount_to_read)
-            read_open_io(self.srcml_archive, self._readerCtxt, read_callback(lambda ctxt, buff, size: ctxt.read(buff, size)), close_callback(lambda ctxt: ctxt.close()))
+            read_open_io(
+                self.srcml_archive,
+                self._readerCtxt,
+                read_callback(_cb_read_helper),
+                close_callback(_cb_close_helper)
+            )
 
         elif BUFF_PARAM in kwargs:
             if len(kwargs) > 1 :

@@ -107,6 +107,8 @@ def check_result(rc):
 
     def resolveType(self, typeInfo):
         if isinstance(typeInfo, str):
+            if self.processingFunctionPointers and typeInfo == "char *":
+                return "c_void_p"
             return self.typeStrLookup[typeInfo]
         elif isinstance(typeInfo, FunctionPtrInfo):
             return self.fpLookup[typeInfo]

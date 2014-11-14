@@ -111,6 +111,7 @@ class BindingGenerator(object):
 
     def getTypeInfo(self, xmlType):
         if xmlType.tag == "{http://www.sdml.info/srcML/src}function_decl":
+            self.processingFunctionPointers = True
             # Function Pointer Type handled first
             currentFuncPtrInfo = FunctionPtrInfo()
             xmlReturnType = xmlType.xpath("src:type", namespaces=XPathNamespaces)[0]
@@ -130,7 +131,7 @@ class BindingGenerator(object):
                 if nameNode != None and len(nameNode) > 0:
                     paramInfo.name = extractNormalizedTypeName(nameNode[0])
                 currentFuncPtrInfo.parameterTypes.append(paramInfo)
-
+            self.processingFunctionPointers = False
             return currentFuncPtrInfo
         else:
             # Handling typical type name resolution hand off.
@@ -183,7 +184,7 @@ class BindingGenerator(object):
         ]
 
     def gatherFunctionPointerTypes(self):
-        self.processingFunctionPointers = True
+        # self.processingFunctionPointers = True
         typicalFunctionPointerList = self.srcmlAPI.xpath("//src:function_decl[src:modifier[.='*']]", namespaces=XPathNamespaces)
         # Extracting function pointers and building a list of function pointers
         functionPointerSet = set()
@@ -191,7 +192,7 @@ class BindingGenerator(object):
             currentFuncPtrInfo = self.getTypeInfo(funcPtr)
             functionPointerSet.add(currentFuncPtrInfo)
         self.functionPointerTypes = list(functionPointerSet)
-        self.processingFunctionPointers = False
+        # self.processingFunctionPointers = False
 
 
     def gatherFunctionDecls(self):
