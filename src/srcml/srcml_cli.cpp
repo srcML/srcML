@@ -548,21 +548,29 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
   std::string vals = attribute_input;
   size_t attrib_colon = vals.find(":");
   size_t attrib_equals = vals.find("=");
-  attribute attrib;
-
-  if (attrib_equals != std::string::npos) {
-    if (attrib_colon != std::string::npos) {  
-      attrib.prefix = vals.substr(0, attrib_colon);
-      attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
-    }
-    else {
-      if (srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)  {
-        attrib.prefix = srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first->prefix;
-      }
-      attrib.name = vals.substr(0, attrib_equals);
-    }
-    attrib.value = vals.substr(attrib_equals + 1);
+  
+  // Attribute must have a value
+  if (attrib_equals == std::string::npos) {
+    exit(1);
   }
+
+  // Missing prefix requires an element with a prefix
+  if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)) {
+    exit(1);
+  }
+
+  attribute attrib;
+  
+  if (attrib_colon != std::string::npos) {  
+    attrib.prefix = vals.substr(0, attrib_colon);
+    attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
+  }
+  else {
+    attrib.prefix = srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first->prefix;
+    attrib.name = vals.substr(0, attrib_equals);
+  }
+    
+  attrib.value = vals.substr(attrib_equals + 1);
 
   return attrib;
 }
