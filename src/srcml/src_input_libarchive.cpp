@@ -25,6 +25,7 @@
 #endif
 
 #include <src_input_libarchive.hpp>
+#include <srcml_options.hpp>
 #include <curl/curl.h>
 #include <archive.h>
 #include <archive_entry.h>
@@ -159,6 +160,12 @@ void src_input_libarchive(ParseQueue& queue,
             if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
                 language = l;
 
+        // if we don't have a language, and are not verbose, then just end this attemp
+        if (language.empty() && !(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
+            ++count;
+            continue;
+        }
+
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
 
@@ -174,7 +181,7 @@ void src_input_libarchive(ParseQueue& queue,
         prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
         // fill up the parse request buffer
-        if (!status) {
+        if (!status && !prequest->status) {
             // if we know the size, create the right sized data_buffer
             if (archive_entry_size_is_set(entry))
                 prequest->buffer.reserve(archive_entry_size(entry));
@@ -235,10 +242,14 @@ namespace {
         // Quick check to see if the remote location exists or is available
         CURL* ping = curl_easy_duphandle(curldata->handle);
         curl_easy_setopt(ping, CURLOPT_NOBODY, 1L);
+        //curl_easy_setopt(ping, CURLOPT_HEADER, 1L);
         curl_easy_perform(ping);
         
         long http_code = 0;
+        double data_size = 0;
         curl_easy_getinfo (ping, CURLINFO_RESPONSE_CODE, &http_code);
+        curl_easy_getinfo (ping, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &data_size);
+
         curl_easy_cleanup(ping);
         if (http_code != 200)
         {   
