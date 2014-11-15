@@ -120,6 +120,7 @@ prog_opts::options_description src2srcml("src2srcml");
 prog_opts::options_description srcml2src("srcml2src");
 prog_opts::options_description positional_options("positional");
 prog_opts::options_description deprecated_options("Deprecated Options");
+prog_opts::options_description debug_options("Debug Options");
 prog_opts::options_description all("All Options");
 
 // Positional Args
@@ -400,6 +401,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("units,n", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
             ;
 
+        debug_options.add_options()
+            ("dev", prog_opts::bool_switch()->notifier(&option_command<SRCML_DEBUG_MODE>), "Enable developer debug mode.")
+            ;
+
         // Group src2srcml Options
         src2srcml.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
 
@@ -410,7 +415,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         all.add(general).add(src2srcml_options).add(srcml2src_options).
             add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).
             add(srcml2src_metadata).add(prefix).add(query_transform).add(srcml_archive_options).
-            add(positional_options).add(deprecated_options);
+            add(positional_options).add(deprecated_options).add(debug_options);
 
         // Positional Args
         input_file.add("input-files", -1);
