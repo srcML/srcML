@@ -40,7 +40,7 @@ public:
 		gettimeofday(&end,NULL);
 		long microseconds = (end.tv_sec - start_t.tv_sec) * 1000000 + ((long)end.tv_usec - (long)start_t.tv_usec);
 		long milliseconds = microseconds / 1000;
-		return milliseconds; /* microseconds */
+		return milliseconds;
 	}
 
 	inline bool is_expired() {
