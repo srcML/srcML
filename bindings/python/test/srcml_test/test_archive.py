@@ -231,11 +231,10 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(actual, expectedPrefix, "Didn't get expected prefix.")
         archive = None
 
-    def test_open_read_io__xml_string(self):
-        archive = srcml.archive()
-        xml_data_header = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+    xml_data_header = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 """
-        xml_data_body = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp"><comment type="block" format="doxygen">/**
+    xml_data_body = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp"><comment type="block" format="doxygen">/**
  * @file srcml.h
  *
  * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
@@ -279,11 +278,31 @@ class TestArchive(unittest.TestCase):
  *   from multiple input source-code files, srcml_archive_*() and srcml_unit_*()
  */</comment>
 </unit>"""
-        archive.open_read(xml=xml_data_header + xml_data_body)
+
+
+    def test_open_read_io__xml_string(self):
+        archive = srcml.archive()
+
+        archive.open_read(xml=TestArchive.xml_data_header + TestArchive.xml_data_body)
         self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
         self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
         unit = archive.read_unit()
         self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
-        self.assertEqual(unit.xml(), xml_data_body, "Didn't get correct unit information!")
-        # self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
+        self.assertEqual(unit.xml(), TestArchive.xml_data_body, "Didn't get correct unit information!")
+        archive = None
+
+    def test_open_read_io__python_stream(self):
+        archive = srcml.archive()
+        first_data_file = "test_open_read_io__python_stream.xml"
+        out_stream = open(first_data_file, "w")
+        out_stream.write(TestArchive.xml_data_header + TestArchive.xml_data_body)
+        out_stream.close()
+        in_strm = open(first_data_file, "r")
+        archive.open_read(stream=in_strm)
+        self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
+        self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
+        unit = archive.read_unit()
+        self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
+        self.assertEqual(unit.xml(), TestArchive.xml_data_body, "Didn't get correct unit information!")
+        os.remove(first_data_file)
         archive = None

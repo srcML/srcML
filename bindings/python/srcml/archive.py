@@ -132,12 +132,10 @@ class _stream_reader_context(object):
         self.strm = input_stream
 
     def read(self, buff, size):
-        # outBufferIndex = 0
-        # amountToWrite = min(len(self.xml_str), size - 1)
-        # buff[:amountToWrite] = self.xml_str[:amountToWrite]
-        # self.xml_str = self.xml_str[amountToWrite:]
-        # return amountToWrite
-        return -1
+        data = self.strm.read(size - 1)
+        buff[:len(data)] = data[:len(data)]
+        buff[len(data)] = '\0'
+        return len(data)
 
     def close(self):
         try:
@@ -215,7 +213,7 @@ class archive(object):
         OPTION_ARCHIVE
         OPTION_POSITION
         OPTION_CPP_NOMACRO
-        OPTION_CPP =
+        OPTION_CPP
         OPTION_XML_DECL
         OPTION_NAMESPACE_DECL
         OPTION_CPP_TEXT_ELSE
@@ -449,20 +447,24 @@ class archive(object):
         SIZE_PARAM = "size"
         BUFF_PARAM = "buff"
         CONTEXT_PARAM = "context"
-
+        READ_CB_PARAM = "read_cb"
+        WRITE_CB_PARAM = "write_cb"
+        CLOSE_CB_PARAM = "close_cb"
 
         if STREAM_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-
+            self.open_read(context=_stream_reader_context(kwargs[STREAM_PARAM]))
 
         elif FILE_OBJ_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 
+
         elif FILENAME_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+
 
         elif XML_PARAM in kwargs:
             if len(kwargs) > 2 or len(kwargs) == 2 and SIZE_PARAM not in kwargs:
@@ -472,22 +474,33 @@ class archive(object):
                 amount_to_read = kwargs[SIZE_PARAM]
             else:
                 amount_to_read = len(kwargs[XML_PARAM])
-            self._readerCtxt = _str_reader_context(kwargs[XML_PARAM], amount_to_read)
-            read_open_io(
-                self.srcml_archive,
-                self._readerCtxt,
-                read_callback(_cb_read_helper),
-                close_callback(_cb_close_helper)
-            )
+            self.open_read(context=_str_reader_context(kwargs[XML_PARAM], amount_to_read))
 
         elif BUFF_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 
         elif CONTEXT_PARAM in kwargs:
-            if len(kwargs) > 3 :
+            if len(kwargs) > 3:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-
+            elif len(kwargs) == 2:
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            elif len(kwargs) == 1:
+                self._readerCtxt = kwargs[CONTEXT_PARAM]
+                read_open_io(
+                    self.srcml_archive,
+                    self._readerCtxt,
+                    read_callback(_cb_read_helper),
+                    close_callback(_cb_close_helper)
+                )
+            else:
+                self._readerCtxt = kwargs[CONTEXT_PARAM]
+                read_open_io(
+                    self.srcml_archive,
+                    self._readerCtxt,
+                    read_callback(kwargs[READ_CB_PARAM]),
+                    close_callback(kwargs[CLOSE_CB_PARAM])
+                )
         else:
             raise Exception("No known parameters")
 
