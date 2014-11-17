@@ -334,7 +334,7 @@ class archive(object):
         archive_register_file_extension(self.srcml_archive, ext, srcml_language)
 
 
-    # Unit creation functions for both reading and writing.
+    # Unit reading functions.
     def read_unit_header(self):
         """
         Reads the attribute information for the next unit
@@ -353,11 +353,37 @@ class archive(object):
     def read_unit(self):
         """
         Reads the next unit from the archive.
-        The header information such as attributes etc..
+        Reads entire unit.
         """
         unit_ptr = read_unit(self.srcml_archive)
         return unit(unit_ptr)
 
+    # Read Iteration Utilities
+    def unit_headers(self):
+        """
+        Generator function that allows for the following python code:
+        for unit in archive.unit_headers():
+            print unit.language
+        """
+        current_unit_header = self.read_unit_header()
+        while current_unit_header != None:
+            yield current_unit_header
+            current_unit_header = self.read_unit_header()
+
+    def units(self):
+        """
+        Generator that allows iteration through all units within an archive easily.
+        Example:
+        for unit in archive.units():
+            unit_dom = lxml.etree.fromstring(unit.xml())
+        """
+        current_unit = self.read_unit()
+        while current_unit != None:
+            yield current_unit
+            current_unit = self.read_unit()
+
+
+    # Unit writing utilities.
     def create_unit(self):
         """
         Unit creation factory. Units are for reading and writing different to/from srcml/source code.
@@ -373,6 +399,7 @@ class archive(object):
     def write_unit(self, unit):
         """Write a unit into the current archive archive."""
         write_unit(self.srcml_archive, unit.srcml_unit)
+
 
 
     # I/O starting functions.
@@ -572,10 +599,10 @@ class archive(object):
                     def close(self):
                         return zero_for_sucess_not_zero_for_failure
         """
-# __LIBSRCML_DECL int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
-# __LIBSRCML_DECL int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
-# __LIBSRCML_DECL int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
-# __LIBSRCML_DECL int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
+        # __LIBSRCML_DECL int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
+        # __LIBSRCML_DECL int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
+        # __LIBSRCML_DECL int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
+        # __LIBSRCML_DECL int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
         pass
 
         def close(self):

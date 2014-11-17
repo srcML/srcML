@@ -355,8 +355,7 @@ class TestArchive(unittest.TestCase):
         initial_buffer = "".join(open(data_file, 'r').readlines())
         mem_buff._buff = ctypes.create_string_buffer(initial_buffer)
         mem_buff._size = len(initial_buffer)
-
-        archive.open_read(filename=data_file)
+        archive.open_read(buff=mem_buff)
         self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
         self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
         unit = archive.read_unit()
@@ -366,3 +365,17 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(et.tostring(tree), et.tostring(tree_from_file), "File from tree doesn't match tree loaded from unit.")
         archive = None
         mem_buff._buff = ctypes.c_char_p()
+
+    def test_open_read__units(self):
+        
+        archive = srcml.archive()
+        data_file = os.path.join(os.path.dirname(__file__), "anonymous_class_java.comment.java.xml")
+        archive.open_read(filename=data_file)
+        self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
+        self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
+        unit = archive.read_unit()
+        self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
+        tree = et.fromstring(unit.xml())
+        tree_from_file = et.parse(data_file)
+        self.assertEqual(et.tostring(tree), et.tostring(tree_from_file), "File from tree doesn't match tree loaded from unit.")
+        archive = None
