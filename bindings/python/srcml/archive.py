@@ -109,60 +109,6 @@ class _xml_namespaces_proxy:
         return archive_get_prefix_from_uri(self.srcml_archive, prefix)
 
 
-# Contexts for reading and writing to/from python to the libsrcml
-# interface.
-class _str_reader_context(object):
-    def __init__(self, xml_string, size):
-        self.xml_str = xml_string
-        self.index = 0
-        self.end_index = size
-
-    def read(self, buff, size):
-        outBufferIndex = 0
-        amountToWrite = min(len(self.xml_str), size - 1)
-        buff[:amountToWrite] = self.xml_str[:amountToWrite]
-        self.xml_str = self.xml_str[amountToWrite:]
-        return amountToWrite
-
-    def close(self):
-        return 0
-
-
-class _stream_context(object):
-    def __init__(self, stream, close_on_complete=True):
-        self.strm = stream
-        self.close_when_done = close_on_complete
-
-    def read(self, buff, size):
-        data = self.strm.read(size)
-        buff[:len(data)] = data[:len(data)]
-        return len(data)
-
-    def write(self, buff, size):
-        self.strm.write(buff)
-        return size
-
-    def close(self):
-        try:
-            if self.close_when_done:
-                self.strm.close()
-        except:
-            return -1
-        return 0
-
-# Callback helper functions.
-def _cb_read_helper(ctxt, buff, size):
-    mutableCBuffer = ctypes.cast(buff, ctypes.POINTER(ctypes.c_char))
-    addr = ctypes.addressof(mutableCBuffer.contents)
-    bufferArray = (ctypes.c_char * size).from_address(addr)
-    return ctxt.read(bufferArray, size)
-
-def _cb_write_helper(ctxt, buff, size):
-    return ctxt.write(buff, size)
-
-def _cb_close_helper(ctxt):
-    return ctxt.close()
-
 
 
 # Attribute processing        
@@ -479,7 +425,7 @@ class archive(object):
         if STREAM_PARAM in kwargs:
             if len(kwargs) > 1:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            self.open_read(context=_stream_context(kwargs[STREAM_PARAM]))
+            self.open_read(context=stream_context(kwargs[STREAM_PARAM]))
 
         elif FILENAME_PARAM in kwargs:
             if len(kwargs) > 1 :
@@ -494,7 +440,7 @@ class archive(object):
                 amount_to_read = kwargs[SIZE_PARAM]
             else:
                 amount_to_read = len(kwargs[XML_PARAM])
-            self.open_read(context=_str_reader_context(kwargs[XML_PARAM], amount_to_read))
+            self.open_read(context=str_reader_context(kwargs[XML_PARAM], amount_to_read))
 
         elif BUFF_PARAM in kwargs:
             if len(kwargs) > 1 :
@@ -512,8 +458,8 @@ class archive(object):
                 read_open_io(
                     self.srcml_archive,
                     self._ctxt,
-                    read_callback(_cb_read_helper),
-                    close_callback(_cb_close_helper)
+                    read_callback(cb_read_helper),
+                    close_callback(cb_close_helper)
                 )
             else:
                 self._ctxt = kwargs[CONTEXT_PARAM]
@@ -606,9 +552,9 @@ class archive(object):
         """
         if STREAM_PARAM in kwargs:
             if len(kwargs) == 1:
-                self.open_write(context=_stream_context(kwargs[STREAM_PARAM]))
+                self.open_write(context=stream_context(kwargs[STREAM_PARAM]))
             elif len(kwargs) == 2:
-                self.open_write(context=_stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
+                self.open_write(context=stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
             else:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 
@@ -635,8 +581,8 @@ class archive(object):
                 write_open_io(
                     self.srcml_archive,
                     self._ctxt,
-                    write_callback(_cb_write_helper),
-                    close_callback(_cb_close_helper)
+                    write_callback(cb_write_helper),
+                    close_callback(cb_close_helper)
                 )
             else:
                 self._ctxt = kwargs[CONTEXT_PARAM]
