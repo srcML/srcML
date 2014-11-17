@@ -240,8 +240,9 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         bool is_xml = false;
         size_t len = strlen(input_filename);
-        if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
-            && input_filename[len - 3] == 'x' && input_filename[len - 4] == '.')
+        if((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
+            && ((tolower(input_filename[len - 3]) == 'x' && input_filename[len - 4] == '.')
+             || (tolower(input_filename[len - 3]) == 'c' && tolower(input_filename[len - 4]) == 'r' && tolower(input_filename[len - 5]) == 's' && tolower(input_filename[len - 6]) == '.')))
            || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
             is_xml = true;
 
