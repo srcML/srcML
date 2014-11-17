@@ -39,6 +39,7 @@ class memory_buffer:
     def __del__(self):
         if self._buff.value != None:
             bindings.free(self._buff)
+        pass
 
     def clear(self):
         if self._buff.value != None:

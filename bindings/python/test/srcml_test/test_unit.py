@@ -130,8 +130,7 @@ int main() {
 """
 
     # Testing Parse
-    def test_unit_parse(self):
-        # print "Running test_unit_parse"
+    def test_unit_parse_str(self):
         archive = srcml.archive()
         outputStringBuffer = StringIO.StringIO()
         archive.open_write(stream=outputStringBuffer, close_stream=False)
@@ -139,11 +138,81 @@ int main() {
         self.assertIsNotNone(unit, "Didn't get a unit.")
         self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
         unit.language = srcml.LANGUAGE_CXX
-        # print "Calling Parse"
         unit.parse(TestUnit.test_code)
-        # print "Calling write_unit"
         archive.write_unit(unit)
-        # print outputStringBuffer.getvalue()
         archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+    def test_unit_parse_str_int(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.parse(TestUnit.test_code, 94)
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+    def test_unit_parse_strlist(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.parse(TestUnit.test_code.split("\n"))
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+    def test_unit_parse_filename(self):
+        archive = srcml.archive()
+        output_filename = "test_unit_parse_filename.cpp"
+        strm = open(output_filename, "w")
+        strm.write(TestUnit.test_code)
+        strm.close()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.parse(filename=output_filename)
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+        os.remove(output_filename)
+
+    def test_unit_parse_memory(self):
+        archive = srcml.archive()
+        # output_filename = "test_unit_parse_filename.cpp"
+        # strm = open(output_filename, "w")
+        # strm.write(TestUnit.test_code)
+        # strm.close()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        # print "Derp"
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        mem_buff = srcml.memory_buffer()
+        mem_buff._buff = ctypes.create_string_buffer(TestUnit.test_code)
+        mem_buff._size = len(TestUnit.test_code)
+        unit.language=srcml.LANGUAGE_CXX
+        unit.parse(buff=mem_buff)
+        archive.write_unit(unit)
+        archive.close()
+        mem_buff._buff = ctypes.c_char_p()
+        # self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+        # os.remove(output_filename)
+        # archive = srcml.archive()
+
+        
+        # archive.open_write()
+        # archive.close()
+        # self.assertTrue(str(mem_buff)>0, "Didn't XML to buffer.")
 
 

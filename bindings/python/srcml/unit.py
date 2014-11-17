@@ -300,11 +300,11 @@ class unit:
         elif BUFF_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            # self._ctxt = 
+            self.buff = kwargs[BUFF_PARAM]
             parse_unit_memory(
                 self.srcml_unit,
-                kwargs[BUFF_PARAM]._buff,
-                kwargs[BUFF_PARAM]._size
+                self.buff._buff,
+                self.buff._size
             )
 
         elif CONTEXT_PARAM in kwargs:
