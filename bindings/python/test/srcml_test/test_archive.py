@@ -18,6 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import srcml, os, unittest, ctypes
+import lxml.etree as et
 
 class TestArchive(unittest.TestCase):
 
@@ -280,9 +281,8 @@ class TestArchive(unittest.TestCase):
 </unit>"""
 
 
-    def test_open_read_io__xml_string(self):
+    def test_open_read__xml_string(self):
         archive = srcml.archive()
-
         archive.open_read(xml=TestArchive.xml_data_header + TestArchive.xml_data_body)
         self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
         self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
@@ -291,7 +291,7 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(unit.xml(), TestArchive.xml_data_body, "Didn't get correct unit information!")
         archive = None
 
-    def test_open_read_io__python_stream(self):
+    def test_open_read__python_stream(self):
         archive = srcml.archive()
         first_data_file = "test_open_read_io__python_stream.xml"
         out_stream = open(first_data_file, "w")
@@ -304,5 +304,65 @@ class TestArchive(unittest.TestCase):
         unit = archive.read_unit()
         self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
         self.assertEqual(unit.xml(), TestArchive.xml_data_body, "Didn't get correct unit information!")
+        parsed_xml = et.fromstring(unit.xml())
         os.remove(first_data_file)
         archive = None
+
+    def test_open_read__python_stream_2(self):
+        archive = srcml.archive()
+        data_file = os.path.join(os.path.dirname(__file__), "test_data.xml")
+        in_strm = open(data_file, "r")
+        archive.open_read(stream=in_strm)
+        self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
+        self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
+        unit = archive.read_unit()
+        self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
+        tree = et.fromstring(unit.xml())
+        tree_from_file = et.parse(data_file)
+        self.assertEqual(et.tostring(tree), et.tostring(tree_from_file), "File from tree doesn't match tree loaded from unit.")
+        archive = None
+
+    def test_open_read__python_file_obj(self):
+        archive = srcml.archive()
+        data_file = os.path.join(os.path.dirname(__file__), "test_data.xml")
+        archive.open_read(file_obj=file(data_file))
+        self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
+        self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
+        unit = archive.read_unit()
+        self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
+        tree = et.fromstring(unit.xml())
+        tree_from_file = et.parse(data_file)
+        self.assertEqual(et.tostring(tree), et.tostring(tree_from_file), "File from tree doesn't match tree loaded from unit.")
+        archive = None
+
+    def test_open_read__filename(self):
+        archive = srcml.archive()
+        data_file = os.path.join(os.path.dirname(__file__), "test_data.xml")
+        archive.open_read(filename=data_file)
+        self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
+        self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
+        unit = archive.read_unit()
+        self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
+        tree = et.fromstring(unit.xml())
+        tree_from_file = et.parse(data_file)
+        self.assertEqual(et.tostring(tree), et.tostring(tree_from_file), "File from tree doesn't match tree loaded from unit.")
+        archive = None
+
+    def test_open_read__memory_buffer(self):
+        archive = srcml.archive()
+        data_file = os.path.join(os.path.dirname(__file__), "test_data.xml")
+        mem_buff = srcml.memory_buffer()
+        initial_buffer = "".join(open(data_file, 'r').readlines())
+        mem_buff._buff = ctypes.create_string_buffer(initial_buffer)
+        mem_buff._size = len(initial_buffer)
+
+        archive.open_read(filename=data_file)
+        self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
+        self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
+        unit = archive.read_unit()
+        self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
+        tree = et.fromstring(unit.xml())
+        tree_from_file = et.parse(data_file)
+        self.assertEqual(et.tostring(tree), et.tostring(tree_from_file), "File from tree doesn't match tree loaded from unit.")
+        archive = None
+        mem_buff._buff = ctypes.c_char_p()

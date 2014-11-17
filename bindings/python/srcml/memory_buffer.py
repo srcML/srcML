@@ -33,21 +33,21 @@ class memory_buffer:
     """
 
     def __init__(self):
-        self._buf = ctypes.c_char_p()
+        self._buff = ctypes.c_char_p()
         self._size = ctypes.c_int(0)
 
     def __del__(self):
-        if self._buf.value != None:
-            bindings.free(self._buf)
+        if self._buff.value != None:
+            bindings.free(self._buff)
 
     def clear(self):
-        if self._buf.value != None:
-            bindings.free(self._buf)
-            self._buf.value = None
+        if self._buff.value != None:
+            bindings.free(self._buff)
+            self._buff.value = None
             self._size.value = 0
 
     def __getitem__(self, key):
-        return self._buf.value[ley]
+        return self._buff.value[ley]
 
     def __len__(self):
         return self._size.value

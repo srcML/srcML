@@ -25,6 +25,7 @@ import ctypes
 
 
 
+
 class _macro_proxy:
     __doc__ ="""
     Provides a dictionary proxy interface for macro
@@ -132,9 +133,10 @@ class _stream_reader_context(object):
         self.strm = input_stream
 
     def read(self, buff, size):
-        data = self.strm.read(size - 1)
+        data = self.strm.read(size)
         buff[:len(data)] = data[:len(data)]
-        buff[len(data)] = '\0'
+        # buff[len(data)] = '\0'
+        # print "Read Data: ", len(data)
         return len(data)
 
     def close(self):
@@ -166,7 +168,7 @@ def _get_processing_instruction(archive):
 def _set_processing_instruction(archive, value):
     archive_set_processing_instruction(archive, value[0], value[1])
 
-_PRIVATE_READER_CONTEXT_ATTR = "_readerCtxt"
+_PRIVATE_READER_CONTEXT_ATTR = "_reader_ctxt"
 _archive_attr_lookup = dict(
 {
     ENCODING_ATTR: (archive_get_encoding, archive_set_encoding,),
@@ -459,12 +461,12 @@ class archive(object):
         elif FILE_OBJ_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-
+            self.open_read(context=_stream_reader_context(kwargs[FILE_OBJ_PARAM]))
 
         elif FILENAME_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-
+            read_open_filename(self.srcml_archive, kwargs[FILENAME_PARAM])
 
         elif XML_PARAM in kwargs:
             if len(kwargs) > 2 or len(kwargs) == 2 and SIZE_PARAM not in kwargs:
@@ -479,6 +481,8 @@ class archive(object):
         elif BUFF_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            self._reader_ctxt = kwargs[BUFF_PARAM]
+            read_open_memory(self.srcml_archive, self._reader_ctxt._buff, self._reader_ctxt._size)
 
         elif CONTEXT_PARAM in kwargs:
             if len(kwargs) > 3:
@@ -486,32 +490,23 @@ class archive(object):
             elif len(kwargs) == 2:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             elif len(kwargs) == 1:
-                self._readerCtxt = kwargs[CONTEXT_PARAM]
+                self._reader_ctxt = kwargs[CONTEXT_PARAM]
                 read_open_io(
                     self.srcml_archive,
-                    self._readerCtxt,
+                    self._reader_ctxt,
                     read_callback(_cb_read_helper),
                     close_callback(_cb_close_helper)
                 )
             else:
-                self._readerCtxt = kwargs[CONTEXT_PARAM]
+                self._reader_ctxt = kwargs[CONTEXT_PARAM]
                 read_open_io(
                     self.srcml_archive,
-                    self._readerCtxt,
+                    self._reader_ctxt,
                     read_callback(kwargs[READ_CB_PARAM]),
                     close_callback(kwargs[CLOSE_CB_PARAM])
                 )
         else:
             raise Exception("No known parameters")
-
-        
-        # read_open_filename(self.srcml_archive, )
-        # __LIBSRCML_DECL int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
-        # __LIBSRCML_DECL int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
-        # __LIBSRCML_DECL int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
-        # __LIBSRCML_DECL int srcml_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
-
-        pass
 
 
     def open_write(self, **kwargs):
