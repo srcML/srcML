@@ -455,19 +455,23 @@ class archive(object):
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             elif len(kwargs) == 1:
                 self._ctxt = kwargs[CONTEXT_PARAM]
+                self._read_cb_helper = read_callback(cb_read_helper)
+                self._read_close_helper = close_callback(cb_close_helper)
                 read_open_io(
                     self.srcml_archive,
                     self._ctxt,
-                    read_callback(cb_read_helper),
-                    close_callback(cb_close_helper)
+                    self._read_cb_helper,
+                    self._read_close_helper
                 )
             else:
                 self._ctxt = kwargs[CONTEXT_PARAM]
+                self._read_cb_helper = read_callback(kwargs[READ_CB_PARAM])
+                self._read_close_helper = close_callback(kwargs[CLOSE_CB_PARAM])
                 read_open_io(
                     self.srcml_archive,
                     self._ctxt,
-                    read_callback(kwargs[READ_CB_PARAM]),
-                    close_callback(kwargs[CLOSE_CB_PARAM])
+                    self._read_cb_helper,
+                    self._read_close_helper
                 )
 
         elif FD_PARAM in kwargs:
@@ -552,9 +556,9 @@ class archive(object):
         """
         if STREAM_PARAM in kwargs:
             if len(kwargs) == 1:
-                self.open_write(context=stream_context(kwargs[STREAM_PARAM]))
+                self.open_write(context=write_stream_context(kwargs[STREAM_PARAM]))
             elif len(kwargs) == 2:
-                self.open_write(context=stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
+                self.open_write(context=write_stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
             else:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 
@@ -578,19 +582,23 @@ class archive(object):
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             elif len(kwargs) == 1:
                 self._ctxt = kwargs[CONTEXT_PARAM]
+                self._write_cb_helper = write_callback(cb_write_helper)
+                self._close_write_cb_helper = close_callback(cb_close_helper)
                 write_open_io(
                     self.srcml_archive,
                     self._ctxt,
-                    write_callback(cb_write_helper),
-                    close_callback(cb_close_helper)
+                    self._write_cb_helper,
+                    self._close_write_cb_helper
                 )
             else:
                 self._ctxt = kwargs[CONTEXT_PARAM]
+                self._write_cb_helper = write_callback(kwargs[WRITE_CB_PARAM])
+                self._close_write_cb_helper = close_callback(kwargs[CLOSE_CB_PARAM])
                 write_open_io(
                     self.srcml_archive,
                     self._ctxt,
-                    write_callback(kwargs[WRITE_CB_PARAM]),
-                    close_callback(kwargs[CLOSE_CB_PARAM])
+                     self._write_cb_helper,
+                    self._close_write_cb_helper
                 )
 
         elif FD_PARAM in kwargs:

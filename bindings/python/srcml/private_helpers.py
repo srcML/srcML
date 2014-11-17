@@ -67,7 +67,22 @@ class str_reader_context(object):
     def close(self):
         return 0
 
+class write_stream_context(object):
+    def __init__(self, stream, close_on_complete=True):
+        self.strm = stream
+        self.close_when_done = close_on_complete
 
+    def write(self, buff, size):
+        self.strm.write(buff)
+        return size
+
+    def close(self):
+        try:
+            if self.close_when_done:
+                self.strm.close()
+        except:
+            return -1
+        return 0
 class stream_context(object):
     def __init__(self, stream, close_on_complete=True):
         self.strm = stream

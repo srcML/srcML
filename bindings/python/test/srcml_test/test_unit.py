@@ -120,18 +120,30 @@ class TestUnit(unittest.TestCase):
         unit = None
         archive = None
 
+
+    test_code = """
+#include <iostream>
+int main() {
+    std::cout << "hello world" << std::endl;
+    return 0;
+}
+"""
+
     # Testing Parse
-    def test_unit_parse_(self):
+    def test_unit_parse(self):
+        # print "Running test_unit_parse"
         archive = srcml.archive()
         outputStringBuffer = StringIO.StringIO()
         archive.open_write(stream=outputStringBuffer, close_stream=False)
         unit = archive.create_unit()
         self.assertIsNotNone(unit, "Didn't get a unit.")
         self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
-
-        archive.close()
+        unit.language = srcml.LANGUAGE_CXX
+        # print "Calling Parse"
+        unit.parse(TestUnit.test_code)
+        # print "Calling write_unit"
+        archive.write_unit(unit)
         # print outputStringBuffer.getvalue()
-        unit = None
-        archive = None
+        archive.close()
 
 
