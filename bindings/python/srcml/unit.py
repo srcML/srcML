@@ -19,7 +19,7 @@
 
 from bindings import *
 from private_helpers import *
-import ctypes
+import ctypes, cStringIO
 
 _unit_attr_lookup = dict({
     ENCODING_ATTR       : (unit_get_encoding, unit_set_encoding,),
@@ -147,57 +147,66 @@ class unit:
                         return zero_for_sucess_not_zero_for_failure
 
         """
-        # if STREAM_PARAM in kwargs:
-        #     if len(kwargs) == 1:
-        #         self.open_write(context=_stream_context(kwargs[STREAM_PARAM]))
-        #     elif len(kwargs) == 2:
-        #         self.open_write(context=_stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
-        #     else:
-        #         raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+        if len(kwargs) == 0:
+            tempStrm = cStringIO.StringIO()
+            self.unparse(context=stream_context(tempStrm, close_stream=False))
+            val = tempStrm.getvalue()
+            tempStrm.close()
+            return val
+        elif STREAM_PARAM in kwargs:
+            if len(kwargs) == 1:
+                self.unparse(context=stream_context(kwargs[STREAM_PARAM]))
+            elif len(kwargs) == 2:
+                self.parse(context=stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
+            else:
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 
-        # elif FILENAME_PARAM in kwargs:
-        #     if len(kwargs) > 1 :
-        #         raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-        #     write_open_filename(self.srcml_unit, kwargs[FILENAME_PARAM])
+        elif FILENAME_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            unparse_unit_filename(self.srcml_unit, kwargs[FILENAME_PARAM])
 
-        # elif BUFF_PARAM in kwargs:
-        #     if len(kwargs) > 1 :
-        #         raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-        #     self._ctxt = kwargs[BUFF_PARAM]
-        #     write_open_memory(
-        #         self.srcml_archive,
-        #         self._ctxt._buff,
-        #         self._ctxt._size
-        #     )
+        elif BUFF_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            self.buff = kwargs[BUFF_PARAM]
+            unparse_unit_memory(
+                self.srcml_unit,
+                self.buff._buff,
+                self.buff._size
+            )
 
-        # elif CONTEXT_PARAM in kwargs:
-        #     if len(kwargs) > 3 or len(kwargs) == 2:
-        #         raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-        #     elif len(kwargs) == 1:
-        #         self._ctxt = kwargs[CONTEXT_PARAM]
-        #         write_open_io(
-        #             self.srcml_archive,
-        #             self._ctxt,
-        #             write_callback(_cb_write_helper),
-        #             close_callback(_cb_close_helper)
-        #         )
-        #     else:
-        #         self._ctxt = kwargs[CONTEXT_PARAM]
-        #         write_open_io(
-        #             self.srcml_archive,
-        #             self._ctxt,
-        #             write_callback(kwargs[WRITE_CB_PARAM]),
-        #             close_callback(kwargs[CLOSE_CB_PARAM])
-        #         )
+        elif CONTEXT_PARAM in kwargs:
+            if len(kwargs) > 3 or len(kwargs) == 2:
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            elif len(kwargs) == 1:
+                self._ctxt = kwargs[CONTEXT_PARAM]
+                self._write_helper = write_callback(cb_write_helper)
+                self._close_read_helper = close_callback(cb_close_helper)
+                unparse_unit_io(
+                    self.srcml_unit,
+                    self._ctxt,
+                    self._write_helper,
+                    self._close_read_helper
+                )
+            else:
+                self._ctxt = kwargs[CONTEXT_PARAM]
+                self._write_helper = write_callback(kwargs[WRITE_CB_PARAM])
+                self._close_read_helper = close_callback(kwargs[CLOSE_CB_PARAM])
+                unparse_unit_io(
+                    self.srcml_unit,
+                    self._ctxt,
+                    self._write_helper,
+                    self._close_read_helper
+                )
 
-        # elif FD_PARAM in kwargs:
-        #     if len(kwargs) > 1 :
-        #         raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-        #     write_open_fd(self.srcml_archive, kwargs[FD_PARAM])
+        elif FD_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            parse_unit_fd(self.srcml_unit, kwargs[FD_PARAM])
 
-        # else:
-        #     raise Exception("No known parameters")
-        pass
+        else:
+            raise Exception("No known parameters")
 
 
     def parse(self, *args, **kwargs):
@@ -287,8 +296,6 @@ class unit:
         elif STREAM_PARAM in kwargs:
             if len(kwargs) == 1:
                 self.parse(context=stream_context(kwargs[STREAM_PARAM]))
-            elif len(kwargs) == 2:
-                self.parse(context=stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
             else:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 

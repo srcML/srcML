@@ -188,14 +188,9 @@ int main() {
 
     def test_unit_parse_memory(self):
         archive = srcml.archive()
-        # output_filename = "test_unit_parse_filename.cpp"
-        # strm = open(output_filename, "w")
-        # strm.write(TestUnit.test_code)
-        # strm.close()
         outputStringBuffer = StringIO.StringIO()
         archive.open_write(stream=outputStringBuffer, close_stream=False)
         unit = archive.create_unit()
-        # print "Derp"
         self.assertIsNotNone(unit, "Didn't get a unit.")
         self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
         mem_buff = srcml.memory_buffer()
@@ -206,13 +201,5 @@ int main() {
         archive.write_unit(unit)
         archive.close()
         mem_buff._buff = ctypes.c_char_p()
-        # self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
-        # os.remove(output_filename)
-        # archive = srcml.archive()
-
-        
-        # archive.open_write()
-        # archive.close()
-        # self.assertTrue(str(mem_buff)>0, "Didn't XML to buffer.")
 
 
