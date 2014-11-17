@@ -996,7 +996,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
 
 
-        { LA(1) == ATSIGN }? annotation |
+        { inLangauge(LANGUAGE_JAVA) && LA(1) == ATSIGN }? annotation |
 
         expression_statement[type, call_count]
 ;
