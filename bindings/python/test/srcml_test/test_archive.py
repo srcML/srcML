@@ -17,7 +17,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import srcml, os, unittest, ctypes
+import srcml, os, unittest, ctypes, StringIO
 import lxml.etree as et
 
 class TestArchive(unittest.TestCase):
@@ -386,6 +386,14 @@ class TestArchive(unittest.TestCase):
             unit_count += 1
         self.assertEqual(unit_count, 6,"Incorrect # of units.")
         archive = None
+
+    def test_open_write__python_stream(self):
+        archive = srcml.archive()
+        strm = StringIO.StringIO()
+        archive.open_write(stream=strm, close_stream=False)
+        archive.close()
+        # print strm.getvalue()
+
 
 
     # Testing operators.

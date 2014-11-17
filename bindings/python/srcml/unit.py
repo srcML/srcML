@@ -115,8 +115,15 @@ class unit:
         callbacks.
         myUnit.unparse(context = myWriterContext())
 
+        Note: both the I/O callbacks have the optional argument of close_stream (which is boolean)
+        and if true closes the stream after it's done (default behavior) and false it doesn't
+        close the stream
+
         6) to file stream
         myUnit.unparse(stream = open("filepath.cpp"))
+
+        Note: the python stream has an optional argument close_stream, which defaults to true
+        and doesn't close the stream if false.
 
         7) to string
         if called with no arguments a python string is returned containing the extracted file.

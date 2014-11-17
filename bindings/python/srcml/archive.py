@@ -129,8 +129,9 @@ class _str_reader_context(object):
 
 
 class _stream_context(object):
-    def __init__(self, stream):
+    def __init__(self, stream, close_on_complete=True):
         self.strm = stream
+        self.close_when_done = close_on_complete
 
     def read(self, buff, size):
         data = self.strm.read(size)
@@ -138,12 +139,13 @@ class _stream_context(object):
         return len(data)
 
     def write(self, buff, size):
-        self.strm.write(buff, size)
+        self.strm.write(buff)
         return size
 
     def close(self):
         try:
-            self.strm.close()
+            if self.close_when_done:
+                self.strm.close()
         except:
             return -1
         return 0
@@ -352,6 +354,12 @@ class archive(object):
         unit_ptr = read_unit_xml(self.srcml_archive)
         return unit(unit_ptr)
 
+    def close(self):
+        """Closes archive for both reading and writing."""
+        close_archive(self.srcml_archive)
+        if _PRIVATE_READER_CONTEXT_ATTR in self.__dict__:
+            del self.__dict__[_PRIVATE_READER_CONTEXT_ATTR]
+
     def read_unit(self):
         """
         Reads the next unit from the archive.
@@ -446,6 +454,8 @@ class archive(object):
             7) file descriptor:
                 archive.open_read(fd = file_descriptor)
 
+
+
         Description of callbacks and interfaces:
             1) read/close callback signature:
                 def read(context, buffer, size_of_buffer):
@@ -467,7 +477,7 @@ class archive(object):
                         return zero_for_sucess_not_zero_for_failure
         """
         if STREAM_PARAM in kwargs:
-            if len(kwargs) > 1 :
+            if len(kwargs) > 1:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             self.open_read(context=_stream_context(kwargs[STREAM_PARAM]))
 
@@ -523,6 +533,16 @@ class archive(object):
             raise Exception("No known parameters")
 
 
+    # Comparison operators.
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __eq__(self, other):
+        if other == None:
+            return self.srcml_archive == None
+        else:
+            return self is other
+
     def open_write(self, **kwargs):
         """
         Opens an archive for writing.
@@ -540,6 +560,9 @@ class archive(object):
             1) Python Stream:
                 strm = open("somefile.xml","2")
                 archive.open_write(stream = strm)
+
+            Note: the python stream has an optional argument close_stream, which defaults to true
+            and doesn't close the stream if false.
 
             3) filename:
                 archive.open_write(filename = "somefile.xml")
@@ -582,9 +605,12 @@ class archive(object):
                         return zero_for_sucess_not_zero_for_failure
         """
         if STREAM_PARAM in kwargs:
-            if len(kwargs) > 1 :
+            if len(kwargs) == 1:
+                self.open_write(context=_stream_context(kwargs[STREAM_PARAM]))
+            elif len(kwargs) == 2:
+                self.open_write(context=_stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
+            else:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            self.open_write(context=_stream_context(kwargs[STREAM_PARAM]))
 
         elif FILENAME_PARAM in kwargs:
             if len(kwargs) > 1 :
@@ -602,9 +628,7 @@ class archive(object):
             )
 
         elif CONTEXT_PARAM in kwargs:
-            if len(kwargs) > 3:
-                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            elif len(kwargs) == 2:
+            if len(kwargs) > 3 or len(kwargs) == 2:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             elif len(kwargs) == 1:
                 self._ctxt = kwargs[CONTEXT_PARAM]
@@ -630,22 +654,3 @@ class archive(object):
 
         else:
             raise Exception("No known parameters")
-
-
-
-        def close(self):
-            """Closes archive for both reading and writing."""
-            if _PRIVATE_READER_ATTR in self.__dict__:
-                del self.__dict__[_PRIVATE_READER_ATTR]
-            close_archive(self.srcml_archive)
-
-
-        # Comparison operators.
-        def __ne__(self, other):
-            return not (self == other)
-
-        def __eq__(self, other):
-            if other == None:
-                return self.srcml_archive == None
-            else:
-                return self is other
