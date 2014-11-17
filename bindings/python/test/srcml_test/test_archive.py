@@ -387,13 +387,40 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(unit_count, 6,"Incorrect # of units.")
         archive = None
 
+
+    # Testing stream writing function.
     def test_open_write__python_stream(self):
         archive = srcml.archive()
         strm = StringIO.StringIO()
         archive.open_write(stream=strm, close_stream=False)
         archive.close()
-        # print strm.getvalue()
+        self.assertTrue(len(strm.getvalue())>0, "didn't correctly write to stream.")
 
+    def test_open_write__filename(self):
+        archive = srcml.archive()
+        outputFile = "test_open_write__filename.xml"
+        archive.open_write(filename=outputFile)
+        archive.close()
+        self.assertTrue(os.path.exists(outputFile), "Didn't result in file creation")
+        xml_text = "".join(open(outputFile, "r").readlines())
+        self.assertTrue(len(xml_text)>0, "Didn't write XML to file.")
+        os.remove(outputFile)
+
+    def test_open_write__mem_buff(self):
+        archive = srcml.archive()
+        mem_buff = srcml.memory_buffer()
+        archive.open_write(buff=mem_buff)
+        archive.close()
+        self.assertTrue(str(mem_buff)>0, "Didn't XML to buffer.")
+
+    def test_open_write__mem_buff(self):
+        archive = srcml.archive()
+        mem_buff = srcml.memory_buffer()
+        archive.open_write(buff=mem_buff)
+        archive.close()
+        self.assertTrue(str(mem_buff)>0, "Didn't XML to buffer.")
+
+    # testing unit writing functions.
 
 
     # Testing operators.

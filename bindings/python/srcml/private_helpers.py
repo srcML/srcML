@@ -36,7 +36,7 @@ TIMESTAMP_ATTR = "timestamp"
 REVISION_ATTR = "revision"
 HASH_ATTR = "hash"
 STREAM_PARAM = "stream"
-# FILE_OBJ_PARAM = "file_obj"
+
 FILENAME_PARAM = "filename"
 XML_PARAM = "xml"
 SIZE_PARAM = "size"

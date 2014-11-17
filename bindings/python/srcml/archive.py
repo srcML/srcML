@@ -20,7 +20,7 @@
 from unit import unit
 from bindings import *
 from memory_buffer import memory_buffer
-from helper_constants import *
+from private_helpers import *
 import ctypes
 
 
@@ -396,8 +396,8 @@ class archive(object):
     # Unit writing utilities.
     def create_unit(self):
         """
-        Unit creation factory. Units are for reading and writing different to/from srcml/source code.
-        Units provide an interface for both reading and writing but one cannot write a unit to an archive that
+        Unit creation factory. Units are for writing different to/from srcml/source code.
+        Units provide an interface for writing but one cannot write a unit to an archive that
         has been opened for reading, and vice-versa.
 
         A typical use case for a unit created in this manner is to use it to write source code into srcml
@@ -406,10 +406,10 @@ class archive(object):
         unit_ptr = create_unit(self.srcml_archive)
         return unit(unit_ptr)
 
+
     def write_unit(self, unit):
         """Write a unit into the current archive archive."""
         write_unit(self.srcml_archive, unit.srcml_unit)
-
 
 
     # I/O starting functions.
@@ -471,10 +471,10 @@ class archive(object):
                     
                 class MyReaderInterface:
                     def read(self, buffer, size_of_buffer):
-                        return number_of_bytes_writen_to_buffer
+                        return number_of_bytes_writen_to_buffer # or -1 for error
 
                     def close(self):
-                        return zero_for_sucess_not_zero_for_failure
+                        return zero_for_sucess_not_zero_for_failure 
         """
         if STREAM_PARAM in kwargs:
             if len(kwargs) > 1:
@@ -599,7 +599,7 @@ class archive(object):
                     
                 class MyWriterInterface:
                     def writer(self, buffer, size_of_data_in_buffer):
-                        return number_of_bytes_writen_to_buffer
+                        return number_of_bytes_writen_to_buffer # or -1 for error
 
                     def close(self):
                         return zero_for_sucess_not_zero_for_failure

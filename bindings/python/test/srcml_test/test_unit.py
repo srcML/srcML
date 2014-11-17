@@ -17,7 +17,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import srcml, os, unittest, ctypes
+import srcml, os, unittest, ctypes, StringIO
 
 class TestUnit(unittest.TestCase):
 
@@ -119,3 +119,19 @@ class TestUnit(unittest.TestCase):
         self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
         unit = None
         archive = None
+
+    # Testing Parse
+    def test_unit_parse_(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+
+        archive.close()
+        # print outputStringBuffer.getvalue()
+        unit = None
+        archive = None
+
+
