@@ -174,14 +174,14 @@ namespace {
     ELEMENT_MAP(SFUNCTION_CALL,          "call")
     ELEMENT_MAP(SSIZEOF_CALL,            "sizeof")
     ELEMENT_MAP(SPARAMETER_LIST,         "parameter_list")
-    ELEMENT_MAP(SPARAMETER,              "param")
+    ELEMENT_MAP(SPARAMETER,              "parameter")
     ELEMENT_MAP(SKRPARAMETER_LIST,       "krparameter_list")
-    ELEMENT_MAP(SKRPARAMETER,            "krparam")
+    ELEMENT_MAP(SKRPARAMETER,            "krparameter")
     ELEMENT_MAP(SARGUMENT_LIST,          "argument_list")
     ELEMENT_MAP(SARGUMENT,               "argument")
     ELEMENT_MAP(SLAMBDA_CAPTURE,         "capture")
-    ELEMENT_MAP(SPSEUDO_PARAMETER_LIST,  "parameter_list")
-    ELEMENT_MAP(SINDEXER_PARAMETER_LIST, "parameter_list")
+    ELEMENT_MAP(SPSEUDO_PARAMETER_LIST,  ELEMENT_MAP_CALL(SPARAMETER_LIST))
+    ELEMENT_MAP(SINDEXER_PARAMETER_LIST, ELEMENT_MAP_CALL(SPARAMETER_LIST))
 
     // struct, union
     ELEMENT_MAP(SSTRUCT, "struct")

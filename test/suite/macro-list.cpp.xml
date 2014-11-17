@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>NAME</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>name</cpp:value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>NAME</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>name</cpp:value></cpp:define>
 </unit>
 
 <unit>
@@ -18,7 +18,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>TYPE</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>type</cpp:value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>TYPE</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>type</cpp:value></cpp:define>
 </unit>
 
 <unit>
@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>CASE</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>case A</cpp:value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>CASE</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>case A</cpp:value></cpp:define>
 </unit>
 
 <unit>
@@ -38,7 +38,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>LABEL</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>A</cpp:value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>LABEL</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>A</cpp:value></cpp:define>
 </unit>
 
 <unit>
@@ -50,7 +50,7 @@
 </unit>
 
 <unit>
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>SPECIFIER</name><parameter_list>(<param><type><name>A</name></type></param>)</parameter_list></cpp:macro> <cpp:value>name</cpp:value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>SPECIFIER</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>name</cpp:value></cpp:define>
 </unit>
 
 <unit>

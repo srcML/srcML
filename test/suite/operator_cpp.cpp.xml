@@ -190,7 +190,7 @@
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<param><type><name>A</name></type></param>, <param><type><name>B</name></type></param>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+<template>template<parameter_list>&lt;<parameter><type><name>A</name></type></parameter>, <parameter><type><name>B</name></type></parameter>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
 </unit>
 
 <unit>

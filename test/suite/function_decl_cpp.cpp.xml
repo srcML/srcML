@@ -2,23 +2,23 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="function_decl" filename="function_decl_cpp">
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <init>= <expr><name>b</name></expr></init></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <init>= <expr><name>b</name></expr></init></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>int</name></type> <init>= <expr><name>b</name> <operator>+</operator> <name>c</name></expr></init></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <init>= <expr><name>b</name> <operator>+</operator> <name>c</name></expr></init></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl type="operator"><type><specifier>virtual</specifier> <name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></param>)</parameter_list> = <literal type="number">0</literal>;</function_decl>
+<function_decl type="operator"><type><specifier>virtual</specifier> <name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> = <literal type="number">0</literal>;</function_decl>
 </unit>
 
 <unit>
-<function_decl type="operator"><type><name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<param><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></param>)</parameter_list> = <specifier>delete</specifier>;</function_decl>
+<function_decl type="operator"><type><name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> = <specifier>delete</specifier>;</function_decl>
 </unit>
 
 <unit>
@@ -26,55 +26,55 @@
 </unit>
 
 <unit>
-<function_decl><type><specifier>virtual</specifier> <name>void</name></type> <name>some_func</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list> <specifier>override</specifier>;</function_decl>
+<function_decl><type><specifier>virtual</specifier> <name>void</name></type> <name>some_func</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list> <specifier>override</specifier>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>auto</name></type> <name>func_name</name><parameter_list>(<param><decl><type><name>int</name></type> <name>x</name></decl></param>, <param><decl><type><name>int</name></type> <name>y</name></decl></param>)</parameter_list> -&gt; <type><name>int</name></type>;</function_decl>
+<function_decl><type><name>auto</name></type> <name>func_name</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>x</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>y</name></decl></parameter>)</parameter_list> -&gt; <type><name>int</name></type>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>auto</name></type> <name>func_name</name><parameter_list>(<param><decl><type><name>int</name></type> <name>x</name></decl></param>, <param><decl><type><name>int</name></type> <name>y</name></decl></param>)</parameter_list> -&gt; <type><specifier>const</specifier> <name>int</name></type>;</function_decl>
+<function_decl><type><name>auto</name></type> <name>func_name</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>x</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>y</name></decl></parameter>)</parameter_list> -&gt; <type><specifier>const</specifier> <name>int</name></type>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>auto</name></type> <name>fpif</name><parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list>-&gt;<function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<param><decl><type><name>int</name></type></decl></param>)</parameter_list></function_decl>;</function_decl>
+<function_decl><type><name>auto</name></type> <name>fpif</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list>-&gt;<function_decl><type><name>int</name></type> (<modifier>*</modifier>)<parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list></function_decl>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>int</name></type> <name>match</name><parameter_list>(<param><decl><type><name>Flags</name></type> <name>flags</name> <init>= <expr><call><name>Flags</name><argument_list>( <argument><expr><name>MatchStartsWith</name> <operator>|</operator> <name>MatchWrap</name></expr></argument> )</argument_list></call></expr></init></decl></param> )</parameter_list>;</function_decl>
+<function_decl><type><name>int</name></type> <name>match</name><parameter_list>(<parameter><decl><type><name>Flags</name></type> <name>flags</name> <init>= <expr><call><name>Flags</name><argument_list>( <argument><expr><name>MatchStartsWith</name> <operator>|</operator> <name>MatchWrap</name></expr></argument> )</argument_list></call></expr></init></decl></parameter> )</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>int</name></type> <name>match</name><parameter_list>(<param><decl><type><name>Flags</name></type> <name>flags</name> <init>= <expr><name>MatchStartsWith</name> <operator>|</operator> <name>MatchWrap</name></expr></init></decl></param> )</parameter_list>;</function_decl>
+<function_decl><type><name>int</name></type> <name>match</name><parameter_list>(<parameter><decl><type><name>Flags</name></type> <name>flags</name> <init>= <expr><name>MatchStartsWith</name> <operator>|</operator> <name>MatchWrap</name></expr></init></decl></parameter> )</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>int</name></type> <name>match</name><parameter_list>(<param><decl><type><name>Flags</name></type> <name>flags</name> <init>= <expr><operator>(</operator> <name>MatchStartsWith</name> <operator>|</operator> <name>MatchWrap</name> <operator>)</operator></expr></init></decl></param> )</parameter_list>;</function_decl>
+<function_decl><type><name>int</name></type> <name>match</name><parameter_list>(<parameter><decl><type><name>Flags</name></type> <name>flags</name> <init>= <expr><operator>(</operator> <name>MatchStartsWith</name> <operator>|</operator> <name>MatchWrap</name> <operator>)</operator></expr></init></decl></parameter> )</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>a</name></name> <modifier>*</modifier></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>*</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>a</name></name> <modifier>^</modifier></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>^</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>a</name></name> <modifier>&amp;</modifier></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>&amp;</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>a</name></name> <modifier>&amp;&amp;</modifier></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>&amp;&amp;</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>__LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_write_open_filename</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>srcml_archive</name></name><modifier>*</modifier></type></decl></param>, <param><decl><type><specifier>const</specifier> <name>char</name><modifier>*</modifier></type> <name>srcml_filename</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>__LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_write_open_filename</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>srcml_archive</name></name><modifier>*</modifier></type></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>char</name><modifier>*</modifier></type> <name>srcml_filename</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name><name>struct</name> <name>s</name></name></type></decl></param>, <param><decl><type><name>int</name></type> <name>i</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>s</name></name></type></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 </unit>

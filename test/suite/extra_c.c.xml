@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="extra" filename="extra_c">
 
 <unit>
-<function_decl><type><name>int</name></type> (<modifier>*</modifier><name>a</name>)<parameter_list>(<param><decl><type><name>int</name></type> <name>b</name></decl></param>, <param><decl><type><name><name>int</name><index>[]</index></name></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>int</name></type> (<modifier>*</modifier><name>a</name>)<parameter_list>(<parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>, <parameter><decl><type><name><name>int</name><index>[]</index></name></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
