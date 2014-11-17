@@ -28,28 +28,34 @@
 class Timer {
 public:
 	Timer() : time_limit(0) {}
-	Timer(double limit) : time_limit(limit) {}
+	Timer(int limit) : time_limit(limit) {}
 
 	inline void start() {
-		start_time = clock();
+		gettimeofday(&start_t,NULL);
 	}
 
-	// time in seconds
+	// time in milliseconds
 	inline double elapsed() {
-		return (double)((clock() - start_time)/CLOCKS_PER_SEC);
+		struct timeval end;
+		gettimeofday(&end,NULL);
+		long microseconds = (end.tv_sec - start_t.tv_sec) * 1000000 + ((long)end.tv_usec - (long)start_t.tv_usec);
+		long milliseconds = microseconds / 1000;
+		return milliseconds;
 	}
 
 	inline bool is_expired() {
-		return ((((clock() - start_time)/CLOCKS_PER_SEC) >= time_limit) && time_limit != 0);
+		struct timeval end;
+		gettimeofday(&end,NULL);
+		return (((end.tv_sec - start_t.tv_sec) >= time_limit) && time_limit != 0);
 	}
 
-	inline void set_limit(double limit) {
+	inline void set_limit(int limit) {
 		time_limit = limit;
 	}
 
 private:
-    double time_limit; // in seconds
-    clock_t start_time; // start_timeing time
+	struct timeval start_t;
+    int time_limit; // in seconds
 };
 
 #endif

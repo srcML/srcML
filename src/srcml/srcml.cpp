@@ -31,6 +31,7 @@
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
+#include <timer.hpp>
 
 #include <archive.h>
 #include <iostream>
@@ -42,7 +43,9 @@ bool request_additional_compression(const srcml_request_t&, const srcml_input_t&
 bool request_create_src            (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 
 int main(int argc, char * argv[]) {
-
+    Timer runtime = Timer();
+    runtime.start();
+    
     // parse the command line
     srcml_request_t srcml_request = parseCLI(argc, argv);
 
@@ -133,6 +136,9 @@ int main(int argc, char * argv[]) {
     srcml_execute(srcml_request, pipeline, input_sources, destination);
 
     srcml_cleanup_globals();
+
+    if (srcml_request.command & SRCML_DEBUG_MODE)
+        std::cerr << "Total Runtime: " << runtime.elapsed() << " ms\n";
 
     return 0;
 }
