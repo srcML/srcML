@@ -93,9 +93,8 @@ class unit:
         3) extract to file descriptor
         4) extract to I/O functions
         5) extract to I/O interface
-        6) extract to python file object
-        7) extract to python file stream
-        8) extract to python string
+        6) extract to python file stream
+        7) extract to python string
 
         Recognized argument structures:
         1) to filename
@@ -116,13 +115,10 @@ class unit:
         callbacks.
         myUnit.unparse(context = myWriterContext())
 
-        6) to file object
-        myUnit.unparse(file_obj = file("filepath.cpp"))
-
-        7) to file stream
+        6) to file stream
         myUnit.unparse(stream = open("filepath.cpp"))
 
-        8) to string
+        7) to string
         if called with no arguments a python string is returned containing the extracted file.
 
         """
@@ -139,10 +135,9 @@ class unit:
         3) file descriptor
         4) I/O functions
         5) I/O interface
-        6) python file object
-        7) python file stream
-        8) python string
-        9) list of python strings
+        6) python file stream
+        7) python string
+        8) list of python strings
 
         Recognized argument structures:
         1) from filename
@@ -163,16 +158,13 @@ class unit:
         the ones used with the context callbacks, but with a self instead of a context parameter.
         myUnit.parse(context = myReaderContext())
 
-        6) from file object
-        myUnit.parse(file_obj = file("filepath.cpp"))
-
-        7) from file stream
+        6) from file stream
         myUnit.parse(stream = open("filepath.cpp"))
 
-        8) from string
+        7) from string
         myUnit.parse(string_to_run_srcml_on)
         
-        9) from list of strings
+        8) from list of strings
         myUnit.parse(list_of_string_to_run_srcml_on)
         """
         pass
@@ -199,6 +191,19 @@ class unit:
     def write_string(self, content):
         write_string(self.srcml_unit, content)
 
+
+    # Operators
+    def __ne__(self, other):
+        if other == None:
+            return self.srcml_unit != None
+        else:
+            return self is not other
+
+    def __eq__(self, other):
+        if other == None:
+            return self.srcml_unit == None
+        else:
+            return self is other
 
 
 

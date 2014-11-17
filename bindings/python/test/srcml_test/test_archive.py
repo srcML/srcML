@@ -280,6 +280,7 @@ class TestArchive(unittest.TestCase):
  */</comment>
 </unit>"""
 
+    java_archive_file = os.path.join(os.path.dirname(__file__), "anonymous_class_java.comment.java.xml")
 
     def test_open_read__xml_string(self):
         archive = srcml.archive()
@@ -325,7 +326,7 @@ class TestArchive(unittest.TestCase):
     def test_open_read__python_file_obj(self):
         archive = srcml.archive()
         data_file = os.path.join(os.path.dirname(__file__), "test_data.xml")
-        archive.open_read(file_obj=file(data_file))
+        archive.open_read(stream=file(data_file))
         self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
         self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
         unit = archive.read_unit()
@@ -367,15 +368,34 @@ class TestArchive(unittest.TestCase):
         mem_buff._buff = ctypes.c_char_p()
 
     def test_open_read__units(self):
-        
         archive = srcml.archive()
-        data_file = os.path.join(os.path.dirname(__file__), "anonymous_class_java.comment.java.xml")
-        archive.open_read(filename=data_file)
-        self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
-        self.assertEqual(archive.language, srcml.LANGUAGE_CXX, "Incorrect value for language.")
-        unit = archive.read_unit()
-        self.assertIsNotNone(unit, "Didn't read unit/didn't find unit!")
-        tree = et.fromstring(unit.xml())
-        tree_from_file = et.parse(data_file)
-        self.assertEqual(et.tostring(tree), et.tostring(tree_from_file), "File from tree doesn't match tree loaded from unit.")
+        archive.open_read(filename=TestArchive.java_archive_file)
+        self.assertEqual(archive.language, srcml.LANGUAGE_JAVA, "Incorrect value for language.")
+        unit_count = 0
+        for u in archive.units():
+            unit_count += 1
+        self.assertEqual(unit_count, 6,"Incorrect # of units.")
         archive = None
+
+    def test_open_read__unit_headers(self):
+        archive = srcml.archive()
+        archive.open_read(filename=TestArchive.java_archive_file)
+        self.assertEqual(archive.language, srcml.LANGUAGE_JAVA, "Incorrect value for language.")
+        unit_count = 0
+        for u in archive.unit_headers():
+            unit_count += 1
+        self.assertEqual(unit_count, 6,"Incorrect # of units.")
+        archive = None
+
+
+    # Testing operators.
+    def test_eq(self):
+        archive = srcml.archive()
+        self.assertFalse(archive == None, "Archive wasn't created correctly.")
+        self.assertTrue(archive == archive, "Archive wasn't created correctly.")
+
+    def test_ne(self):
+        archive = srcml.archive()
+        self.assertTrue(archive != None, "Archive wasn't created correctly.")
+        self.assertFalse(archive != archive, "Archive wasn't created correctly.")
+

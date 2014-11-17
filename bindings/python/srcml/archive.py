@@ -128,16 +128,18 @@ class _str_reader_context(object):
         return 0
 
 
-class _stream_reader_context(object):
-    def __init__(self, input_stream):
-        self.strm = input_stream
+class _stream_context(object):
+    def __init__(self, stream):
+        self.strm = stream
 
     def read(self, buff, size):
         data = self.strm.read(size)
         buff[:len(data)] = data[:len(data)]
-        # buff[len(data)] = '\0'
-        # print "Read Data: ", len(data)
         return len(data)
+
+    def write(self, buff, size):
+        self.strm.write(buff, size)
+        return size
 
     def close(self):
         try:
@@ -168,7 +170,7 @@ def _get_processing_instruction(archive):
 def _set_processing_instruction(archive, value):
     archive_set_processing_instruction(archive, value[0], value[1])
 
-_PRIVATE_READER_CONTEXT_ATTR = "_reader_ctxt"
+_PRIVATE_READER_CONTEXT_ATTR = "_ctxt"
 _archive_attr_lookup = dict(
 {
     ENCODING_ATTR: (archive_get_encoding, archive_set_encoding,),
@@ -409,13 +411,12 @@ class archive(object):
 
         An archive can be opened, for reading, in several ways:
             1) Using a python stream.
-            2) Using a python file object.
-            3) Using a filename,
-            4) Using xml from a python string.
-            5) Using a srcml.memory_buffer.
-            6) Using a I/O callback functions and context.
-            7) Using a I/O interface.
-            8) Using a C file descriptor (this is used to interface with other
+            2) Using a filename,
+            3) Using xml from a python string.
+            4) Using a srcml.memory_buffer.
+            5) Using a I/O callback functions and context.
+            6) Using a I/O interface.
+            7) Using a C file descriptor (this is used to interface with other
                 C libraries that use file descriptors).
 
         Ways to call open_read():
@@ -423,30 +424,26 @@ class archive(object):
                 strm = open("somefile.xml","r")
                 archive.open_read(stream = strm)
 
-            2) Python file:
-                f = file("somefile.xml")
-                archive.open_read(file_obj = f)
-
-            3) filename:
+            2) filename:
                 archive.open_read(filename = "somefile.xml")
 
-            4) raw xml string (size is optional, if not given the entire string is used):
+            3) raw xml string (size is optional, if not given the entire string is used):
                 archive.open_read(xml = preloadedXMLString, size=lengthOfXML)
 
-            5) srcml.memory_buffer (creating a srcml memory buffer in this way is NOT recommended,
+            4) srcml.memory_buffer (creating a srcml memory buffer in this way is NOT recommended,
                     a memory buffer is usually created using open_write(buff = mem_buff)):
                 mem_buff = srcml.memory_buffer()
                 archive.open_read(buff = mem_buff)
 
-            6) I/O callbacks:
+            5) I/O callbacks:
                 context = memory_to_read_from
                 archive.open_read(context = context, read_cb = read_func, close_cb = close_func)
 
-            7) I/O interface:
+            6) I/O interface:
                 readerContext = MyReader()
                 archive.open_read(context = readerContext)
 
-            8) file descriptor:
+            7) file descriptor:
                 archive.open_read(fd = file_descriptor)
 
         Description of callbacks and interfaces:
@@ -469,26 +466,10 @@ class archive(object):
                     def close(self):
                         return zero_for_sucess_not_zero_for_failure
         """
-        STREAM_PARAM = "stream"
-        FILE_OBJ_PARAM = "file_obj"
-        FILENAME_PARAM = "filename"
-        XML_PARAM = "xml"
-        SIZE_PARAM = "size"
-        BUFF_PARAM = "buff"
-        CONTEXT_PARAM = "context"
-        READ_CB_PARAM = "read_cb"
-        WRITE_CB_PARAM = "write_cb"
-        CLOSE_CB_PARAM = "close_cb"
-
         if STREAM_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            self.open_read(context=_stream_reader_context(kwargs[STREAM_PARAM]))
-
-        elif FILE_OBJ_PARAM in kwargs:
-            if len(kwargs) > 1 :
-                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            self.open_read(context=_stream_reader_context(kwargs[FILE_OBJ_PARAM]))
+            self.open_read(context=_stream_context(kwargs[STREAM_PARAM]))
 
         elif FILENAME_PARAM in kwargs:
             if len(kwargs) > 1 :
@@ -508,8 +489,8 @@ class archive(object):
         elif BUFF_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            self._reader_ctxt = kwargs[BUFF_PARAM]
-            read_open_memory(self.srcml_archive, self._reader_ctxt._buff, self._reader_ctxt._size)
+            self._ctxt = kwargs[BUFF_PARAM]
+            read_open_memory(self.srcml_archive, self._ctxt._buff, self._ctxt._size)
 
         elif CONTEXT_PARAM in kwargs:
             if len(kwargs) > 3:
@@ -517,21 +498,27 @@ class archive(object):
             elif len(kwargs) == 2:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             elif len(kwargs) == 1:
-                self._reader_ctxt = kwargs[CONTEXT_PARAM]
+                self._ctxt = kwargs[CONTEXT_PARAM]
                 read_open_io(
                     self.srcml_archive,
-                    self._reader_ctxt,
+                    self._ctxt,
                     read_callback(_cb_read_helper),
                     close_callback(_cb_close_helper)
                 )
             else:
-                self._reader_ctxt = kwargs[CONTEXT_PARAM]
+                self._ctxt = kwargs[CONTEXT_PARAM]
                 read_open_io(
                     self.srcml_archive,
-                    self._reader_ctxt,
+                    self._ctxt,
                     read_callback(kwargs[READ_CB_PARAM]),
                     close_callback(kwargs[CLOSE_CB_PARAM])
                 )
+
+        elif FD_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            read_open_fd(self.srcml_archive, kwargs[FD_PARAM])
+
         else:
             raise Exception("No known parameters")
 
@@ -542,22 +529,17 @@ class archive(object):
 
         An archive can be opened, for writing, in several ways:
             1) Using a python stream.
-            2) Using a python file object.
-            3) Using a filename,
-            4) Using a srcml.memory_buffer.
-            5) Using a I/O callback functions and context.
-            6) Using a I/O interface.
-            7) Using a C file descriptor (this is used to interface with other
+            2) Using a filename,
+            3) Using a srcml.memory_buffer.
+            4) Using a I/O callback functions and context.
+            5) Using a I/O interface.
+            6) Using a C file descriptor (this is used to interface with other
                 C libraries that use file descriptors).
 
         Ways to call open_write():
             1) Python Stream:
                 strm = open("somefile.xml","2")
                 archive.open_write(stream = strm)
-
-            2) Python file:
-                f = file("somefile.cpp.xml")
-                archive.open_write(file_obj = f)
 
             3) filename:
                 archive.open_write(filename = "somefile.xml")
@@ -599,14 +581,71 @@ class archive(object):
                     def close(self):
                         return zero_for_sucess_not_zero_for_failure
         """
-        # __LIBSRCML_DECL int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
-        # __LIBSRCML_DECL int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
-        # __LIBSRCML_DECL int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
-        # __LIBSRCML_DECL int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
-        pass
+        if STREAM_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            self.open_write(context=_stream_context(kwargs[STREAM_PARAM]))
+
+        elif FILENAME_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            write_open_filename(self.srcml_archive, kwargs[FILENAME_PARAM])
+
+        elif BUFF_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            self._ctxt = kwargs[BUFF_PARAM]
+            write_open_memory(
+                self.srcml_archive,
+                self._ctxt._buff,
+                self._ctxt._size
+            )
+
+        elif CONTEXT_PARAM in kwargs:
+            if len(kwargs) > 3:
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            elif len(kwargs) == 2:
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            elif len(kwargs) == 1:
+                self._ctxt = kwargs[CONTEXT_PARAM]
+                write_open_io(
+                    self.srcml_archive,
+                    self._ctxt,
+                    write_callback(_cb_write_helper),
+                    close_callback(_cb_close_helper)
+                )
+            else:
+                self._ctxt = kwargs[CONTEXT_PARAM]
+                write_open_io(
+                    self.srcml_archive,
+                    self._ctxt,
+                    write_callback(kwargs[WRITE_CB_PARAM]),
+                    close_callback(kwargs[CLOSE_CB_PARAM])
+                )
+
+        elif FD_PARAM in kwargs:
+            if len(kwargs) > 1 :
+                raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
+            write_open_fd(self.srcml_archive, kwargs[FD_PARAM])
+
+        else:
+            raise Exception("No known parameters")
+
+
 
         def close(self):
             """Closes archive for both reading and writing."""
             if _PRIVATE_READER_ATTR in self.__dict__:
                 del self.__dict__[_PRIVATE_READER_ATTR]
             close_archive(self.srcml_archive)
+
+
+        # Comparison operators.
+        def __ne__(self, other):
+            return not (self == other)
+
+        def __eq__(self, other):
+            if other == None:
+                return self.srcml_archive == None
+            else:
+                return self is other
