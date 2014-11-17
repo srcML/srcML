@@ -188,7 +188,7 @@ int main() {
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
-            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_POSITION));
+            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
@@ -217,7 +217,7 @@ int main() {
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
-            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_POSITION));
+            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
     }
 
@@ -260,7 +260,7 @@ int main() {
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
         dassert(namespaces.at(7), "bar");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
-            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_POSITION));
+            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
@@ -289,7 +289,7 @@ int main() {
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
         dassert(namespaces.at(7), "bar");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
-            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_POSITION));
+            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
     }
 
@@ -329,7 +329,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO ));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -358,7 +358,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
     }
@@ -399,7 +399,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -428,7 +428,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
     }
@@ -469,7 +469,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK));
+        dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
@@ -497,7 +497,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK));
+        dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
     }
 
@@ -815,7 +815,7 @@ int main() {
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
-            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_POSITION));
+            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
@@ -884,7 +884,7 @@ int main() {
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
         dassert(namespaces.at(7), "bar");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
-            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_POSITION));
+            | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
@@ -951,7 +951,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
@@ -1011,7 +1011,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
@@ -1071,7 +1071,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK));
+        dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), attributes = std::vector<std::string>();
