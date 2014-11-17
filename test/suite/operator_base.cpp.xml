@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="operator" options="TERNARY">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="operator">
 
 <unit>
 <expr_stmt><expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">2</literal></expr>;</expr_stmt>

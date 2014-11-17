@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="lambda" filename="lambda_cpp" options="TERNARY">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="lambda" filename="lambda_cpp">
 
 <unit>
 <expr_stmt><expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
