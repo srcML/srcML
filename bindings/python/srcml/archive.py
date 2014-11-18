@@ -302,7 +302,7 @@ class relaxng_schema:
             def register_filename(srcml_archive):
                 append_transform_relaxng_filename(srcml_archive, filename)
 
-            self._register_func = register_stream
+            self._register_func = register_filename
 
         elif RELAXNG_PARAM in kwargs:
             if len(kwargs) > 2 or len(kwargs) == 2 and SIZE_PARAM not in kwargs:
