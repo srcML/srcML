@@ -107,7 +107,7 @@ class _xml_namespaces_proxy:
 
 
 
-class xpath_transform:
+class xpath:
     """
     Registers an XPath transformation with the srcml.archive class.
 
@@ -137,29 +137,36 @@ class xpath_attribute:
     def __call__(self, srcml_archive_obj):
         append_transform_xpath_attribute(srcml_archive_obj, self.xpath, self.prefix, self.namespace_uri, self.name, self.value)
 
-class xpath_attribute:
+class xpath_element:
     """
     Register an XPath transformation that removes the elements from their current unit and places them within 
     a new unit within the specified element.
 
     Used in conjunction with the xslt attribute of the srcml.archive class
     """
-    def __init__(self, xpath_str, element_name, element_value, element_prefix=None, element_ns_uri=None,
+    def __init__(self, xpath_str, element_name, element_prefix=None, element_ns_uri=None,
             attr_prefix=None, attr_namespace_uri=None, attr_name=None, attr_value=None
         ):
         self.xpath = xpath_str
         self.prefix = element_prefix
         self.namespace_uri = element_ns_uri
         self.name = element_name
-        self.value = element_value
         self.attribute_prefix = attr_prefix
         self.attribute_namespace_uri = attr_namespace_uri
         self.attribute_name = attr_name
         self.attribute_value = attr_value
 
     def __call__(self, srcml_archive_obj):
-        append_transform_xpath_element(srcml_archive_obj, self.xpath, self.prefix, self.namespace_uri, self.name, self.value,
-            self.attribute_prefix, self.attribute_namespace_uri, self.attribute_name, self.attribute_value)
+        append_transform_xpath_element(
+            srcml_archive_obj,
+            self.xpath,
+            self.prefix,
+            self.namespace_uri,
+            self.name,
+            self.attribute_prefix,
+            self.attribute_namespace_uri,
+            self.attribute_name,
+            self.attribute_value)
 
 class xslt_transform:
     """
@@ -209,7 +216,7 @@ class xslt_transform:
             def register_filename(srcml_archive):
                 append_transform_xslt_filename(srcml_archive, filename)
 
-            self._register_func = register_stream
+            self._register_func = register_filename
 
         elif XSLT_PARAM in kwargs:
             if len(kwargs) > 2 or len(kwargs) == 2 and SIZE_PARAM not in kwargs:
@@ -521,6 +528,7 @@ class archive(object):
                 self.macros.update(kwargs[attr])
             else:
                 _getAttr(attr)
+
 
     def __del__(self):
         """

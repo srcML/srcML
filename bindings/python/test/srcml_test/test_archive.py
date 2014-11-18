@@ -439,3 +439,179 @@ class TestArchive(unittest.TestCase):
         self.assertIsNotNone(unit, "Didn't get a unit.")
         self.assertEqual(unit.language, srcml.LANGUAGE_CXX, "Didn't get a unit.")
 
+
+    # Testing XSLT transformations.
+    def test_archive__xslt_xpath(self):
+        iarchive = srcml.archive()
+        iarchive.open_read(filename=TestArchive.java_archive_file)
+
+        outputStringBuffer = StringIO.StringIO()
+        oarchive = srcml.archive()
+        oarchive.open_write(stream=outputStringBuffer, close_stream=False)
+
+        iarchive.xslt.transform.append(srcml.xpath("//src:expr"))
+        iarchive.xslt.apply(oarchive)
+        oarchive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Archive wasn't created correctly.")
+
+    def test_archive__xslt_xpath_attribute(self):
+        iarchive = srcml.archive()
+        iarchive.open_read(filename=TestArchive.java_archive_file)
+
+        outputStringBuffer = StringIO.StringIO()
+        oarchive = srcml.archive()
+        oarchive.open_write(stream=outputStringBuffer, close_stream=False)
+
+        iarchive.xslt.transform.append(srcml.xpath_attribute("//src:expr", "waffles", "syrup"))
+        iarchive.xslt.apply(oarchive)
+        oarchive.close()
+        self.assertTrue(outputStringBuffer.getvalue().find("waffles") != -1, "Archive wasn't created correctly.")
+
+
+    def test_archive__xslt_xpath_element(self):
+        iarchive = srcml.archive()
+        iarchive.open_read(filename=TestArchive.java_archive_file)
+
+        outputStringBuffer = StringIO.StringIO()
+        oarchive = srcml.archive()
+        oarchive.open_write(stream=outputStringBuffer, close_stream=False)
+
+        iarchive.xslt.transform.append(srcml.xpath_element("//src:expr", "thingy"))
+        iarchive.xslt.apply(oarchive)
+        oarchive.close()
+        self.assertTrue(outputStringBuffer.getvalue().find("thingy") != -1, "Archive wasn't created correctly.")
+
+
+    xslt_identity_transform = """<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:template match="*|@*|processing-instruction()|comment()">
+    <xsl:copy>
+      <xsl:apply-templates select="*|@*|text()|processing-instruction()|comment()"/>
+    </xsl:copy>
+  </xsl:template>
+</xsl:stylesheet>
+"""
+    def test_archive__xslt_xslt_transform_filename(self):
+        output_file_name = "test_archive__xslt_xslt_transform_filename.xsl"
+        iarchive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+
+        processing_archive = srcml.archive()
+        processing_archive.open_read(filename=TestArchive.java_archive_file)
+        iarchive.language = processing_archive.language
+        iarchive.open_write(stream=outputStringBuffer, close_stream=False)
+        for u in processing_archive.units():
+            out_unit = iarchive.create_unit()
+            u.unparse()
+            out_unit.parse(u.unparse())
+            iarchive.write_unit(out_unit)
+
+        f = open(output_file_name, "w")
+        f.write(TestArchive.xslt_identity_transform)
+        f.close()
+        iarchive.close()
+        transformed_xml_data = outputStringBuffer.getvalue()
+
+
+        iarchive.open_read(xml=transformed_xml_data)
+
+        outputStringBuffer = StringIO.StringIO()
+        oarchive = srcml.archive()
+        oarchive.open_write(stream=outputStringBuffer, close_stream=False)
+
+        iarchive.xslt.transform.append(srcml.xslt_transform(filename=output_file_name))
+        iarchive.xslt.apply(oarchive)
+        oarchive.close()
+        iarchive.close()
+        os.remove(output_file_name)
+        
+        oarchive.open_read(xml=outputStringBuffer.getvalue())
+        transformed_unit = oarchive.read_unit()
+        iarchive.open_read(xml=transformed_xml_data)
+        input_unit = iarchive.read_unit()
+
+        self.assertEqual(transformed_unit.xml(), input_unit.xml(), "Archive wasn't transformed correctly.")
+
+    def test_archive__xslt_xslt_transform_stream(self):
+        output_file_name = "test_archive__xslt_xslt_transform_filename.xsl"
+        iarchive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+
+        processing_archive = srcml.archive()
+        processing_archive.open_read(filename=TestArchive.java_archive_file)
+        iarchive.language = processing_archive.language
+        iarchive.open_write(stream=outputStringBuffer, close_stream=False)
+        for u in processing_archive.units():
+            out_unit = iarchive.create_unit()
+            u.unparse()
+            out_unit.parse(u.unparse())
+            iarchive.write_unit(out_unit)
+
+        f = open(output_file_name, "w")
+        f.write(TestArchive.xslt_identity_transform)
+        f.close()
+        iarchive.close()
+        transformed_xml_data = outputStringBuffer.getvalue()
+
+        
+        iarchive.open_read(xml=transformed_xml_data)
+
+        outputStringBuffer = StringIO.StringIO()
+        oarchive = srcml.archive()
+        oarchive.open_write(stream=outputStringBuffer, close_stream=False)
+
+        iarchive.xslt.transform.append(srcml.xslt_transform(stream=open(output_file_name, "r")))
+        iarchive.xslt.apply(oarchive)
+        oarchive.close()
+        iarchive.close()
+        os.remove(output_file_name)
+        
+        oarchive.open_read(xml=outputStringBuffer.getvalue())
+        transformed_unit = oarchive.read_unit()
+        iarchive.open_read(xml=transformed_xml_data)
+        input_unit = iarchive.read_unit()
+
+        self.assertEqual(transformed_unit.xml(), input_unit.xml(), "Archive wasn't transformed correctly.")
+
+
+    def test_archive__xslt_xslt_transform_stream(self):
+        output_file_name = "test_archive__xslt_xslt_transform_filename.xsl"
+        iarchive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+
+        processing_archive = srcml.archive()
+        processing_archive.open_read(filename=TestArchive.java_archive_file)
+        iarchive.language = processing_archive.language
+        iarchive.open_write(stream=outputStringBuffer, close_stream=False)
+        for u in processing_archive.units():
+            out_unit = iarchive.create_unit()
+            u.unparse()
+            out_unit.parse(u.unparse())
+            iarchive.write_unit(out_unit)
+
+        f = open(output_file_name, "w")
+        f.write(TestArchive.xslt_identity_transform)
+        f.close()
+        iarchive.close()
+        transformed_xml_data = outputStringBuffer.getvalue()
+
+        
+        iarchive.open_read(xml=transformed_xml_data)
+
+        outputStringBuffer = StringIO.StringIO()
+        oarchive = srcml.archive()
+        oarchive.open_write(stream=outputStringBuffer, close_stream=False)
+
+        iarchive.xslt.transform.append(srcml.xslt_transform(stream=open(output_file_name, "r")))
+        iarchive.xslt.apply(oarchive)
+        oarchive.close()
+        iarchive.close()
+        os.remove(output_file_name)
+        
+        oarchive.open_read(xml=outputStringBuffer.getvalue())
+        transformed_unit = oarchive.read_unit()
+        iarchive.open_read(xml=transformed_xml_data)
+        input_unit = iarchive.read_unit()
+
+        self.assertEqual(transformed_unit.xml(), input_unit.xml(), "Archive wasn't transformed correctly.")
+
+

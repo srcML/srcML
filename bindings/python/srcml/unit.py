@@ -80,6 +80,10 @@ class unit:
         else:
             self.__dict__[attrName] = value
 
+    # def set_attributes_from(self, other_unit):
+    #     for attr in _unit_attr_lookup.keys():
+    #         self.__setattr__(attr, other_unit.__getattr__(attr))
+
     def srcml_revision(self):
         return unit_get_revision(self.srcml_unit)
 
