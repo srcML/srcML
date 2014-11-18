@@ -24,8 +24,6 @@ from private_helpers import *
 import ctypes
 
 
-
-
 class _macro_proxy:
     __doc__ ="""
     Provides a dictionary proxy interface for macro

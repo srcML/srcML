@@ -203,3 +203,68 @@ int main() {
         mem_buff._buff = ctypes.c_char_p()
 
 
+    # Testing unparse
+    def test_unit_unparse_str(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.parse(TestUnit.test_code)
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+        rarchive = srcml.archive()
+        rarchive.open_read(xml=outputStringBuffer.getvalue())
+        runit = rarchive.read_unit()
+        code = runit.unparse()
+        self.assertEqual(code, TestUnit.test_code)
+        rarchive.close()
+
+    def test_unit_unparse_filename(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.parse(TestUnit.test_code)
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+        data_file_name = "test_unit_unparse_filename.cpp"
+        rarchive = srcml.archive()
+        rarchive.open_read(xml=outputStringBuffer.getvalue())
+        runit = rarchive.read_unit()
+        runit.unparse(filename=data_file_name)
+        code = "".join(open(data_file_name,"r").readlines())
+        self.assertEqual(code, TestUnit.test_code)
+        rarchive.close()
+        os.remove(data_file_name)
+
+    def test_unit_unparse_memory(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.parse(TestUnit.test_code)
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+        mem_buff = srcml.memory_buffer()
+        rarchive = srcml.archive()
+        rarchive.open_read(xml=outputStringBuffer.getvalue())
+        runit = rarchive.read_unit()
+        runit.unparse(buff=mem_buff)
+        code = str(mem_buff)
+        self.assertEqual(code, TestUnit.test_code, "Mismatched code and test code. Code:\"{0}\" Expected: \"{1}\"".format(code, TestUnit.test_code))
+        rarchive.close()

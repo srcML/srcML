@@ -149,7 +149,7 @@ class unit:
         """
         if len(kwargs) == 0:
             tempStrm = cStringIO.StringIO()
-            self.unparse(context=stream_context(tempStrm, close_stream=False))
+            self.unparse(context=stream_context(tempStrm, False))
             val = tempStrm.getvalue()
             tempStrm.close()
             return val
@@ -170,11 +170,8 @@ class unit:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             self.buff = kwargs[BUFF_PARAM]
-            unparse_unit_memory(
-                self.srcml_unit,
-                self.buff._buff,
-                self.buff._size
-            )
+            self._buff = self.buff._buff
+            unparse_unit_memory(self.srcml_unit, self._buff, self.buff._size)
 
         elif CONTEXT_PARAM in kwargs:
             if len(kwargs) > 3 or len(kwargs) == 2:
@@ -381,18 +378,3 @@ class unit:
             return self.srcml_unit == None
         else:
             return self is other
-
-
-
-
-# __LIBSRCML_DECL int srcml_unparse_unit_filename(struct srcml_unit*, const char* src_filename);
-# __LIBSRCML_DECL int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer, int * src_size);
-# __LIBSRCML_DECL int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
-# __LIBSRCML_DECL int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
-# __LIBSRCML_DECL int srcml_unparse_unit_io      (struct srcml_unit*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
-
-# __LIBSRCML_DECL int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename);
-# __LIBSRCML_DECL int srcml_parse_unit_memory  (struct srcml_unit*, const char* src_buffer, size_t buffer_size);
-# __LIBSRCML_DECL int srcml_parse_unit_FILE    (struct srcml_unit*, FILE* src_file);
-# __LIBSRCML_DECL int srcml_parse_unit_fd      (struct srcml_unit*, int src_fd);
-# __LIBSRCML_DECL int srcml_parse_unit_io      (struct srcml_unit*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));

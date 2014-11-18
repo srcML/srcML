@@ -54,6 +54,6 @@ class memory_buffer:
         return self._size.value
 
     def __str__(self):
-        return self._buff.value if self._buff.value == None else ""
+        return self._buff.value if self._buff != ctypes.c_char_p() else ""
     
 
