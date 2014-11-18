@@ -348,9 +348,16 @@ class archive(object):
         then into a srcml archive.
 
         Possible Parameters and default their values:
+            encoding
+            language
+            filename
+            directory
+            version
+            timestamp
+            hash
         """
         unit_ptr = create_unit(self.srcml_archive)
-        return unit(unit_ptr)
+        return unit(unit_ptr, **kwargs)
 
 
     def write_unit(self, unit):

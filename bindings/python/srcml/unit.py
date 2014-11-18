@@ -46,8 +46,14 @@ class unit:
     of an archive which can then be written into another archive.
     """
 
-    def __init__(self, unit_ptr):
+    def __init__(self, unit_ptr, **kwargs):
         self.srcml_unit = unit_ptr
+        for attr_name, attr_value in kwargs.items():
+            # print attr_name, attr_value
+            if attr_name not in _unit_attr_lookup:
+                raise KeyError("Unknown argument: {0}".format(attr_name) )
+            self.__setattr__(attr_name, attr_value)
+
 
     def __del__(self):
         free_unit(self.srcml_unit)

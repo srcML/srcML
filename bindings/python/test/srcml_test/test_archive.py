@@ -388,7 +388,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
 
-    # Testing stream writing function.
+    # Testing xml writer interface function.
     def test_open_write__python_stream(self):
         archive = srcml.archive()
         strm = StringIO.StringIO()
@@ -420,9 +420,6 @@ class TestArchive(unittest.TestCase):
         archive.close()
         self.assertTrue(str(mem_buff)>0, "Didn't XML to buffer.")
 
-    # testing unit writing functions.
-
-
     # Testing operators.
     def test_eq(self):
         archive = srcml.archive()
@@ -433,4 +430,12 @@ class TestArchive(unittest.TestCase):
         archive = srcml.archive()
         self.assertTrue(archive != None, "Archive wasn't created correctly.")
         self.assertFalse(archive != archive, "Archive wasn't created correctly.")
+
+    def test_archive_create_unit_kwargs(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit(language=srcml.LANGUAGE_CXX)
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertEqual(unit.language, srcml.LANGUAGE_CXX, "Didn't get a unit.")
 
