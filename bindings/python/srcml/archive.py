@@ -347,7 +347,7 @@ class archive(object):
         A typical use case for a unit created in this manner is to use it to write source code into srcml
         then into a srcml archive.
 
-        Possible Parameters and default their values:
+        Valid Parameters:
             encoding
             language
             filename
@@ -355,6 +355,7 @@ class archive(object):
             version
             timestamp
             hash
+        This parameters correspond with the native attributes of a srcml_unit.
         """
         unit_ptr = create_unit(self.srcml_archive)
         return unit(unit_ptr, **kwargs)
