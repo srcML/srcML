@@ -268,3 +268,133 @@ int main() {
         code = str(mem_buff)
         self.assertEqual(code, TestUnit.test_code, "Mismatched code and test code. Code:\"{0}\" Expected: \"{1}\"".format(code, TestUnit.test_code))
         rarchive.close()
+
+
+    def test_unit_write_unit(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.write_start_unit()
+        # unit.write_string("blah blah blah")
+        unit.write_end_unit()
+
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+        rarchive = srcml.archive()
+        rarchive.open_read(xml=outputStringBuffer.getvalue())
+        runit = rarchive.read_unit()
+        code = runit.xml()
+        self.assertTrue(len(code) > 0, "Incorrect unit content. Code:\"{0}\"".format(code))
+        rarchive.close()
+
+
+    def test_unit_write_string(self):
+        content_str = "my content str"
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.write_start_unit()
+        unit.write_string(content_str)
+        unit.write_end_unit()
+
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+        rarchive = srcml.archive()
+        rarchive.open_read(xml=outputStringBuffer.getvalue())
+        runit = rarchive.read_unit()
+        code = runit.unparse()
+        self.assertEqual(code, content_str, "Incorrect unit content. Code:\"{0}\"".format(code))
+        rarchive.close()
+
+
+    def test_unit_write_element(self):
+        content_str = "my content str"
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.write_start_unit()
+        unit.write_start_element(None, "aardvark", None)
+        unit.write_string(content_str)
+        unit.write_end_unit()
+
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+        rarchive = srcml.archive()
+        rarchive.open_read(xml=outputStringBuffer.getvalue())
+        runit = rarchive.read_unit()
+        code = runit.xml()
+        self.assertTrue(code.find("aardvark") != -1, "Incorrect unit content. Code:\"{0}\"".format(code))
+        rarchive.close()
+
+    def test_unit_write_namespace(self):
+        content_str = "my content str"
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.write_start_unit()
+        unit.write_start_element("", "aardvark")
+        unit.write_namespace("banana", "http://banana.com")
+        unit.write_string(content_str)
+        unit.write_end_element()
+        unit.write_end_unit()
+
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+        rarchive = srcml.archive()
+        rarchive.open_read(xml=outputStringBuffer.getvalue())
+        runit = rarchive.read_unit()
+        code = runit.xml()
+        self.assertTrue(code.find("banana") != -1, "Incorrect unit content. Code:\"{0}\"".format(code))
+        rarchive.close()
+
+    def test_unit_write_attribute(self):
+        content_str = "my content str"
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        unit = archive.create_unit()
+        self.assertIsNotNone(unit, "Didn't get a unit.")
+        self.assertIsNotNone(unit.srcml_revision(), "Didn't get a revision number.")
+        unit.language = srcml.LANGUAGE_CXX
+        unit.write_start_unit()
+        unit.write_start_element("", "aardvark")
+        unit.write_attribute("", "waffles", "waffleData")
+        unit.write_string(content_str)
+        unit.write_end_element()
+        unit.write_end_unit()
+
+        archive.write_unit(unit)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+        rarchive = srcml.archive()
+        rarchive.open_read(xml=outputStringBuffer.getvalue())
+        runit = rarchive.read_unit()
+        code = runit.xml()
+        self.assertTrue(code.find("waffles") != -1, "Incorrect unit content. Code:\"{0}\"".format(code))
+        rarchive.close()
+

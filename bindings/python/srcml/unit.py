@@ -343,26 +343,55 @@ class unit:
         else:
             raise Exception("No known parameters")
 
-    # Unit low-level srcml writer interface.
+    # Writer interface functions.
     def write_start_unit(self):
+        """
+        Writes the start of a unit.
+        """
         write_start_unit(self.srcml_unit)
 
     def write_end_unit(self):
+        """
+        Writes the end of a unit.
+        """
         write_end_unit(self.srcml_unit)
 
-    def write_start_element(self, prefix, name, uri):
-        write_start_element(self.srcml_unit, prefix, name, uri)
+    def write_start_element(self, prefix, name, uri=None):
+        """
+        Writes the start of an element
+        """
+        if prefix == "":
+            prefix_actual = None
+        else:
+            prefix_actual = prefix
+        write_start_element(self.srcml_unit, prefix_actual, name, uri)
 
     def write_end_element(self):
-        write_end_element(self.srcml_unit, prefix, name, uri)        
+        """
+        Writes the end of an element.
+        """
+        write_end_element(self.srcml_unit)
 
     def write_namespace(self, prefix, uri):
+        """
+        writes a namespace declaration to the current element.
+        """
         write_namespace(self.srcml_unit, prefix, uri)
 
-    def write_attribute(self, prefix, name, content):
-        write_attribute(self.srcml_unit, prefix, name, content)
+    def write_attribute(self, prefix, name, content, uri=None):
+        """
+        Writes an attribute to the current element.
+        """
+        if prefix == "":
+            prefix_actual = None
+        else:
+            prefix_actual = prefix
+        write_attribute(self.srcml_unit, prefix_actual, name, uri, content)
 
     def write_string(self, content):
+        """
+        Writes content into the stream.
+        """
         write_string(self.srcml_unit, content)
 
 
