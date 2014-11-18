@@ -47,7 +47,8 @@ WRITE_CB_PARAM = "write_cb"
 CLOSE_CB_PARAM = "close_cb"
 FD_PARAM = "fd"
 CLOSE_STREAM_PARAM = "close_stream"
-
+XSLT_PARAM = "xslt"
+RELAXNG_PARAM = "relaxng"
 
 # Contexts for reading and writing to/from python to the libsrcml
 # interface.
