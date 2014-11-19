@@ -43,7 +43,7 @@ public:
 	}
 
 	// time in milliseconds
-	inline double cpu_time_elapsed() {
+	inline long cpu_time_elapsed() {
 		return cpu_time.elapsed() * 10000;
 	}
 

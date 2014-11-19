@@ -36,6 +36,8 @@
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
+    request->runtime.start();
+
     // error passthrough to output for proper output in trace
     if (request->status) {
         request->unit = 0;
