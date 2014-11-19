@@ -1,5 +1,5 @@
 ##
-# @file config.cmake
+# @file CMakeLists.txt
 #
 # @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 

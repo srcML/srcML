@@ -1,3 +1,5 @@
+*.suo
+
 python/srcml/bindings.py
 python/examples/run.sh
 python/test/testLauncher.py

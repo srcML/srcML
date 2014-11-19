@@ -1,5 +1,5 @@
 ##
-# @file config.cmake
+# @file CMakeLists.txt
 #
 # @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 
@@ -27,7 +27,7 @@ configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/Properties/AssemblyInfo.cs
 )
 
-include_external_msproject(
-    CSharp_SrcML ${CMAKE_CURRENT_SOURCE_DIR}
-    TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC
-)
+# include_external_msproject(
+    # CSharp_SrcML ${CMAKE_CURRENT_SOURCE_DIR}/CSharp_SrcML.csproj
+    # TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC
+# )
