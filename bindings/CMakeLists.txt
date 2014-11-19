@@ -26,7 +26,7 @@ if(${BUILD_LANGUAGE_BINDINGS})
     get_target_property(SHARED_LIBSRCML_OUTPUT_PATH srcml_shared LIBRARY_OUTPUT_DIRECTORY)
     get_target_property(SHARED_LIBSRCML_OUTPUT_NAME srcml_shared OUTPUT_NAME)
     if(WIN32)
-        set(DYNAMIC_LIBSRCML_LOCATION ${SHARED_LIBSRCML_OUTPUT_PATH}/lib${SHARED_LIBSRCML_OUTPUT_NAME}.dll)
+        set(DYNAMIC_LIBSRCML_LOCATION ${SHARED_LIBSRCML_OUTPUT_PATH}/${SHARED_LIBSRCML_OUTPUT_NAME}.dll)
     elseif(APPLE)
         set(DYNAMIC_LIBSRCML_LOCATION ${SHARED_LIBSRCML_OUTPUT_PATH}/lib${SHARED_LIBSRCML_OUTPUT_NAME}.dylib)
     else()
@@ -58,7 +58,6 @@ if(${BUILD_LANGUAGE_BINDINGS})
         set(PY_ARCHIVE_CLASS_FILE ${SRCML_PY_BINDINGS_LOCATION}/archive.py)
         set(PY_UNIT_CLASS_FILE ${SRCML_PY_BINDINGS_LOCATION}/unit.py)
         set(PY_TEST_SUITE_OUTPUT_FILE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/python/test/srcml_test/test_bindings.py)
-        
         configure_file(
             python/configTemplate.py
             python/genPythonBindings.py
