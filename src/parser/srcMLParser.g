@@ -2320,13 +2320,13 @@ section_entry_action[] :
 switch_case[] { ENTRY_DEBUG } :
         {
             // start a new mode
-            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
+            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON);
 
             // start of case element
             startElement(SCASE);
 
             // expect an expression ended by a colon
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_DETECT_COLON);
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
         (CASE | macro_case_call)
 ;
@@ -2335,7 +2335,7 @@ switch_case[] { ENTRY_DEBUG } :
 switch_default[] { ENTRY_DEBUG } :
         {
             // start a new mode
-            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
+            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON);
   
             // start of case element
             startElement(SDEFAULT);
@@ -3835,8 +3835,8 @@ colon[] { ENTRY_DEBUG } :
         }
         COLON
         {
-            if(inMode(MODE_TOP_SECTION) && inTransparentMode(MODE_SWITCH))
-                endMode(MODE_TOP_SECTION);
+            if(inMode(MODE_DETECT_COLON))
+                endMode(MODE_DETECT_COLON);
         }
 ;
 
