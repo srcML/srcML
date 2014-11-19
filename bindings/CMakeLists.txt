@@ -89,6 +89,7 @@ if(${BUILD_LANGUAGE_BINDINGS})
         if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
             message(WARNING "C# build hasn't been tested with Non-Visual Studio Projects. This may cause errors or build failures.")
         endif()
+        subdirs(csharp)
     endif()
 
 endif()
