@@ -16,8 +16,5 @@
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
 subdirs(SrcML test)
-# include_external_msproject(
-    # srcml_csharp_bindings srcML.csproj
-    # TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC
-# )

@@ -17,7 +17,17 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+configure_file(
+    CSharp_SrcML.csproj.template
+    ${CMAKE_CURRENT_SOURCE_DIR}/CSharp_SrcML.csproj
+)
+
+configure_file(
+    Properties/AssemblyInfo.cs.template
+    ${CMAKE_CURRENT_SOURCE_DIR}/Properties/AssemblyInfo.cs
+)
+
 include_external_msproject(
-    srcml_csharp_bindings SrcML.csproj
+    CSharp_SrcML ${CMAKE_CURRENT_SOURCE_DIR}
     TYPE FAE04EC0-301F-11D3-BF4B-00C04F79EFBC
 )
