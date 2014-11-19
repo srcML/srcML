@@ -2296,10 +2296,7 @@ switch_statement[] { ENTRY_DEBUG } :
 section_entry_action_first[] :
         {
             // start a new section inside the block with nested statements
-            if(inMode(MODE_SWITCH))
-                startNewMode(MODE_TOP_SECTION | MODE_STATEMENT | MODE_NEST);
-            else
-                startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
+            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
         }
 ;
 
@@ -2307,7 +2304,7 @@ section_entry_action_first[] :
 section_entry_action[] :
         {
             // end any statements inside the section
-            endDownToModeSet(MODE_TOP | MODE_SWITCH);
+            endDownToModeSet(MODE_TOP);
 
             // flush any whitespace tokens since sections should
             // end at the last possible place
@@ -2321,23 +2318,25 @@ section_entry_action[] :
 
 // case treated as a statement
 switch_case[] { ENTRY_DEBUG } :
-        // start a new section
-        section_entry_action
         {
+            // start a new mode
+            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON);
+
             // start of case element
             startElement(SCASE);
 
             // expect an expression ended by a colon
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_DETECT_COLON);
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
         (CASE | macro_case_call)
 ;
 
 // default treated as a statement
 switch_default[] { ENTRY_DEBUG } :
-        // start a new section
-        section_entry_action
         {
+            // start a new mode
+            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON);
+  
             // start of case element
             startElement(SDEFAULT);
 
@@ -3835,6 +3834,10 @@ colon[] { ENTRY_DEBUG } :
 
         }
         COLON
+        {
+            if(inMode(MODE_DETECT_COLON))
+                endMode(MODE_DETECT_COLON);
+        }
 ;
 
 /*
