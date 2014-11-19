@@ -39,6 +39,8 @@ continue.c.xml
 continue.cs.xml
 continue.java.xml
 continue.m.xml
+cuda.c.xml
+cuda.m.xml
 decl_pointer.c.xml
 decl_pointer.cs.xml
 decl_pointer.m.xml

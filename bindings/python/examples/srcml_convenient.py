@@ -30,7 +30,7 @@ if __name__ == "__main__":
     srcml.set_tabstop(4)
 
     # treat files with the .h file extension as C++
-    srcml.register_file_extension("h", srcml.SRCML_LANGUAGE_CXX)
+    srcml.register_file_extension("h", srcml.LANGUAGE_CXX)
 
     # change prefix of standard namespace
     srcml.register_namespace("s", "http://www.sdml.info/srcML/src")

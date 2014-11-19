@@ -29,6 +29,7 @@
 #include <boost/optional.hpp>
 #include <iostream>
 #include <utility>
+#include <map>
 
 // Internal srcml command options
 const int SRCML_COMMAND_LONGINFO                  = 1<<0;
@@ -61,7 +62,9 @@ const int SRCML_COMMAND_DISPLAY_SRCML_ENCODING    = 1<<21;
 const int SRCML_COMMAND_OUTPUT_ORDERED            = 1<<22;
 const int SRCML_COMMAND_UPDATE                    = 1<<23;
 
-const int SRCML_COMMAND_NOARCHIVE                 = 1<<24; 
+const int SRCML_COMMAND_NOARCHIVE                 = 1<<24;
+
+const int SRCML_DEBUG_MODE                        = 1<<25;
 
 // commands that are simple queries on srcml
 const int SRCML_COMMAND_INSRCML =
@@ -77,6 +80,17 @@ const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
     SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP | 
     SRCML_COMMAND_DISPLAY_SRCML_HASH;
+
+struct attribute {
+    boost::optional<std::string> prefix;
+    boost::optional<std::string> name;
+    boost::optional<std::string> value;
+};
+
+struct element {
+    boost::optional<std::string> prefix;
+    boost::optional<std::string> name;
+};
 
 // request for srcml client processing
 struct srcml_request_t {
@@ -109,11 +123,11 @@ struct srcml_request_t {
     // xml processing attributes
     boost::optional<std::string> xml_processing;    
 
-    std::vector<std::string> xmlns_prefix;
+    std::map<std::string,std::string> xmlns_namespaces;
 
     // srcml transformation
     std::vector<std::string> transformations;
-    std::vector< std::pair< boost::optional<std::string>, boost::optional<std::string> > > xpath_query_support;
+    std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;
 
     int unit;
     int max_threads;

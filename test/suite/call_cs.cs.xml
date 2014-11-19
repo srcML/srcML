@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="call_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="call" filename="call_cs">
 
 <unit>
 <expr_stmt><expr><call><name>~<name>f</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>Method</name><argument_list>(<argument><modifier>out</modifier> <expr><name>str1</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>Method</name><argument_list>(<argument><modifier>ref</modifier> <expr><name>str2</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>Method</name><argument_list>(<argument><modifier>out</modifier> <expr><name>str1</name></expr></argument>, <argument><modifier>ref</modifier> <expr><name>str2</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>Method</name><argument_list>(<argument><modifier>ref</modifier> <expr><name>str2</name></expr></argument>, <argument><modifier>out</modifier> <expr><name>str1</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>CalculateBMI</name><argument_list>(<argument><name>height</name>: <expr><literal type="number">64</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>CalculateBMI</name><argument_list>(<argument><name>height</name>: <expr><literal type="number">64</literal></expr></argument>, <argument><name>weight</name>: <expr><literal type="number">123</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 </unit>

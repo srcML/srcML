@@ -123,4 +123,15 @@ create_token_set(literal_tokens, srcMLParser::CHAR_START, srcMLParser::COMPLEX_N
 
 const antlr::BitSet srcMLParser::literal_tokens_set(bitset_buckets<literal_tokens>::data, bitset_buckets<literal_tokens>::num_token_longs);
 
+create_token_set(modifier_tokens, srcMLParser::MULTOPS, srcMLParser::REFOPS, srcMLParser::RVALUEREF, srcMLParser::QMARK, srcMLParser::BLOCKOP);
+
+const antlr::BitSet srcMLParser::modifier_tokens_set(bitset_buckets<modifier_tokens>::data, bitset_buckets<modifier_tokens>::num_token_longs);
+
+
+create_token_set(skip_tokens, srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLParser::EOL_BACKSLASH, srcMLParser::COMMENT_START, srcMLParser::COMMENT_END, srcMLParser::LINECOMMENT_END, srcMLParser::COMMENT_TEXT, 
+                srcMLParser::LINECOMMENT_START, srcMLParser::JAVADOC_COMMENT_START, srcMLParser::DOXYGEN_COMMENT_START, srcMLParser::LINE_DOXYGEN_COMMENT_START, srcMLParser::EOL);
+
+const antlr::BitSet srcMLParser::skip_tokens_set(bitset_buckets<skip_tokens>::data, bitset_buckets<skip_tokens>::num_token_longs);
+
+
 #endif

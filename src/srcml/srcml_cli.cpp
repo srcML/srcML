@@ -120,6 +120,7 @@ prog_opts::options_description src2srcml("src2srcml");
 prog_opts::options_description srcml2src("srcml2src");
 prog_opts::options_description positional_options("positional");
 prog_opts::options_description deprecated_options("Deprecated Options");
+prog_opts::options_description debug_options("Debug Options");
 prog_opts::options_description all("All Options");
 
 // Positional Args
@@ -217,11 +218,18 @@ void option_field<&srcml_request_t::output_filename>(const std::string& value) {
 }
 
 void option_xmlns_uri(const std::string& value) {
-    srcml_request.xmlns_prefix.push_back("=" + value);
+    srcml_request.xmlns_namespaces[""] = value;
 }
 
 void option_xmlns_prefix(const std::vector<std::string>& values) {
-    srcml_request.xmlns_prefix.insert(srcml_request.xmlns_prefix.end(), values.begin(), values.end());
+    BOOST_FOREACH( std::string value, values )
+    {
+      std::size_t delim = value.find("=");
+      if (delim == std::string::npos)
+        exit(1); //ERROR CODE TBD
+
+      srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
+    }
 }
 
 // option language attribute
@@ -281,6 +289,12 @@ std::pair<std::string, std::string> custom_parser(const std::string& s);
 
 // Debug
 void debug_cli_opts(const struct srcml_request_t srcml_request);
+
+// Sanitize element input
+element clean_element_input(const std::basic_string< char >& element_input);
+
+// Sanitize attribute input
+attribute clean_attribute_input(const std::basic_string< char >& attribute_input);
 
 // Interpretation of CLI options
 srcml_request_t parseCLI(int argc, char* argv[]) {
@@ -387,6 +401,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("units,n", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
             ;
 
+        debug_options.add_options()
+            ("dev", prog_opts::bool_switch()->notifier(&option_command<SRCML_DEBUG_MODE>), "Enable developer debug mode.")
+            ;
+
         // Group src2srcml Options
         src2srcml.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
 
@@ -397,7 +415,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         all.add(general).add(src2srcml_options).add(srcml2src_options).
             add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).
             add(srcml2src_metadata).add(prefix).add(query_transform).add(srcml_archive_options).
-            add(positional_options).add(deprecated_options);
+            add(positional_options).add(deprecated_options).add(debug_options);
 
         // Positional Args
         input_file.add("input-files", -1);
@@ -419,11 +437,11 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
               srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
 
             BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
-              if (option.string_key == "element" && srcml_request.xpath_query_support.size() > 0) {
-                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first = vals;
+             if (option.string_key == "element" && srcml_request.xpath_query_support.size() > 0) {
+                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first = clean_element_input(vals);
               }
               else if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() > 0) {
-                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).second = vals;
+                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).second = clean_attribute_input(vals);
               }
               else {
                 srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
@@ -514,4 +532,50 @@ void option_dependency(const prog_opts::variables_map& vm,
                                     + "' requires option '" + dependent_option + "'.");
         }
     }
+}
+
+element clean_element_input(const std::basic_string< char >& element_input) {
+  std::string vals = element_input;
+  size_t elemn_index = vals.find(":");
+
+  // Element requires a prefix
+  if (elemn_index == std::string::npos) {
+    exit(1);
+  }
+
+  element elem;
+  elem.prefix = vals.substr(0, elemn_index);
+  elem.name = vals.substr(elemn_index + 1);
+  return elem;
+}
+
+attribute clean_attribute_input(const std::basic_string< char >& attribute_input) {
+  std::string vals = attribute_input;
+  size_t attrib_colon = vals.find(":");
+  size_t attrib_equals = vals.find("=");
+  
+  // Attribute must have a value
+  if (attrib_equals == std::string::npos) {
+    exit(1);
+  }
+
+  // Missing prefix requires an element with a prefix
+  if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)) {
+    exit(1);
+  }
+
+  attribute attrib;
+  
+  if (attrib_colon != std::string::npos) {  
+    attrib.prefix = vals.substr(0, attrib_colon);
+    attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
+  }
+  else {
+    attrib.prefix = srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first->prefix;
+    attrib.name = vals.substr(0, attrib_equals);
+  }
+    
+  attrib.value = vals.substr(attrib_equals + 1);
+
+  return attrib;
 }

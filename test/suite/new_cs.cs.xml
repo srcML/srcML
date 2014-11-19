@@ -30,7 +30,7 @@
 <unit>
 <class>class <name>Foo</name> <block>{ 
 
-	<property><type><specifier>new</specifier> <specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list type="indexer">[<param><decl><type><name>int</name></type> <name>i</name></decl></param>]</parameter_list> <block>{
+	<property><type><specifier>new</specifier> <specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
     	<function><name>get</name> <block>{}</block></function>
 	}</block></property>
 

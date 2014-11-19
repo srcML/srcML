@@ -39,7 +39,7 @@ if __name__ == "__main__":
     srcml.archive_set_tabstop(archive, 4)
 
     # treat "*.h" as C++ 
-    srcml.archive_register_file_extension(archive, "h", SRCML_LANGUAGE_CXX)
+    srcml.archive_register_file_extension(archive, "h", srcml.LANGUAGE_CXX)
 
      # change prefix of standard namespace 
     srcml.archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src")

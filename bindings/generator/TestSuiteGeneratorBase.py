@@ -203,7 +203,7 @@ class TestSuiteGeneratorBase(object):
         self.gen_genVariableDecl("const char *", "actual", "")
         self._buildCreateArchive("archive")
         self.gen_genCall("actual", "srcml_archive_check_extension", ["archive", "fileName"])
-        self.gen_genTestStatement(TEST_ARE_EQUAL, "actual", "srcml.SRCML_LANGUAGE_CXX", "Didn't get expected result from file extension.")
+        self.gen_genTestStatement(TEST_ARE_EQUAL, "actual", "srcml.LANGUAGE_CXX", "Didn't get expected result from file extension.")
         self._buildCleanUpArchive("archive")
         self.gen_endTestFuncGen()
 
@@ -270,6 +270,17 @@ class TestSuiteGeneratorBase(object):
         genArchiveGetterSetterTest("version", "char *", "11111111111111", "")
         genArchiveGetterSetterTest("tabstop", "int", 7, 0)
 
+        # Set Options Test
+        # self.gen_startTestFuncGen("srcml_archive_set_options")
+        # self.gen_genVariableDecl("srcml_archive *", "archive", None)
+        # self.gen_genVariableDecl("unsigned long long", "expected", 123)
+        # self.gen_genVariableDecl("unsigned long long", "actual", 0)
+        # self._buildCreateArchive("archive")
+        # self.gen_genCall(None, "srcml_archive_set_options", ["archive", "expected"])
+        # self.gen_genCall("actual", "srcml_archive_get_options", ["archive"])
+        # self.gen_genTestStatement(TEST_ARE_EQUAL, "actual", "expected", "Incorrect value returned from set/get options")
+        # self._buildCleanUpArchive("archive")
+        # self.gen_endTestFuncGen()
 
     def generateGlobalTest(self):
         assert False, "Not Implemented!"
@@ -278,8 +289,6 @@ class TestSuiteGeneratorBase(object):
 # /* Clone the setup of an existing archive
 #    Client is responsible for freeing memory using srcml_free_archive() */
 # __LIBSRCML_DECL struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
-
-
 
 # /* Setup options for srcml archive */
 

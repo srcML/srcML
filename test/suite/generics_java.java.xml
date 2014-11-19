@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="generics" filename="generics_java">
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list type="template">&lt;<argument><name>T</name></argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
@@ -22,11 +22,11 @@
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <argument_list type="template">&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>void</name></type> <name>f</name><parameter_list>(<param><decl><type><name>U</name></type> <name>u</name></decl></param>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <argument_list type="template">&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<constructor><specifier>public</specifier> <argument_list type="template">&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>Class</name><parameter_list>(<param><decl><type><name>U</name></type> <name>u</name></decl></param>)</parameter_list> <block>{}</block></constructor>
+<constructor><specifier>public</specifier> <argument_list type="template">&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>Class</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></constructor>
 </unit>
 
 <unit>
@@ -34,31 +34,31 @@
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list type="template">&lt;<argument><name>T</name> <extends>extends <name>Object</name></extends></argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name> <extends>extends <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list type="template">&lt;<argument><name>?</name> <extends>extends <name>Object</name></extends></argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>?</name> <extends>extends <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list type="template">&lt;<argument><name>?</name></argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>?</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list type="template">&lt;<argument><name>T</name> <super>super <name>Object</name></super></argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name> <super>super <name>Object</name></super></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name><name>Class</name><argument_list type="template">&lt;<argument><name>?</name> <super>super <name>Object</name></super></argument>&gt;</argument_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>?</name> <super>super <name>Object</name></super></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit>
-<interface><specifier>public</specifier> interface <name><name>Cage</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
+<interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface><specifier>public</specifier> interface <name><name>Cage</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name> <super><extends>extends <name><name>Collection</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></extends></super> <block>{}</block></interface>
+<interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>Collection</name><argument_list type="template">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></extends></super> <block>{}</block></interface>
 </unit>
 
 </unit>

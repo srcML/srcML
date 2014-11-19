@@ -31,3 +31,7 @@ Makefile
 !timing/Makefile
 srcML.sublime-project
 srcML.sublime-workspace
+
+
+# Windoes Extra files/folders
+src/parser/PhaseOne.txt

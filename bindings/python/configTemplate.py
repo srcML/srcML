@@ -74,7 +74,9 @@ class GenPythonCode(BindingGenerator):
 from ctypes import cdll, c_int, c_char_p, pointer, c_ulonglong, CFUNCTYPE, c_void_p, byref, py_object
 from ctypes.util import find_library
 
-libsrcml = cdll.LoadLibrary("libsrcml.so")
+# libsrcmlLocation = "libsrcml.so"
+
+libsrcml = cdll.LoadLibrary(find_library("srcml"))
 
 libc = cdll.LoadLibrary(find_library('c'))
 libc.free.restype = None
@@ -92,7 +94,7 @@ def free(to_free):
     def postStaticConstants(self):
         return"""
 def check_result(rc):
-    if rc != SRCML_STATUS_OK:
+    if rc != STATUS_OK:
         raise Exception("srcml has encountered an error. Error Code: {0}".format(rc))
 """
 
@@ -101,10 +103,12 @@ def check_result(rc):
         return ""
 
     def defineConstantFromMacro(self, name, valueString):
-        return "{0} = {1}".format(name, valueString)
+        return "{0} = {1}".format(name[6:], valueString)
 
     def resolveType(self, typeInfo):
         if isinstance(typeInfo, str):
+            if self.processingFunctionPointers and typeInfo == "char *":
+                return "c_void_p"
             return self.typeStrLookup[typeInfo]
         elif isinstance(typeInfo, FunctionPtrInfo):
             return self.fpLookup[typeInfo]
@@ -152,7 +156,7 @@ def {pyName}({parameters}):
 """
         simpleNoCheckReturnTemplate = """
 def {pyName}({parameters}):
-    libsrcml.{nativeName}({invocationArguments})
+    return libsrcml.{nativeName}({invocationArguments})
 """
 
         selectedTemplate = ""
@@ -236,7 +240,7 @@ class TestSuiteGenerator(TestSuiteGeneratorBase):
     # Pure-virtual functionality!
     def startTestFile(self):
         return """##
-# @file bindings.py
+# @file test.py
 #
 # @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
 # 
@@ -283,7 +287,7 @@ def readCallback(ctxt, buffer, size):
     ctxt.calledRead = True
     return 0
 
-class TestSequenceFunctions(unittest.TestCase):
+class TestBindings(unittest.TestCase):
 
 
 
@@ -298,10 +302,7 @@ class TestSequenceFunctions(unittest.TestCase):
         return ""
 
     def endTestFile(self):
-        return """
-if __name__ == "__main__":
-    unittest.main()
-"""
+        return """"""
 
  
     # Test Function Generating Handler

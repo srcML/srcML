@@ -64,7 +64,7 @@
 
 	<xsl:choose>
 	<xsl:when test="name()='formal_params'">
-	        <formal_params>(<param><xsl:copy-of select="$newdecl"/></param>)</formal_params>
+	        <formal_params>(<parameter><xsl:copy-of select="$newdecl"/></parameter>)</formal_params>
 	</xsl:when>
 	<xsl:otherwise>
 		<xsl:copy>

@@ -2,6 +2,14 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="interface" filename="interface_cs">
 
 <unit>
+<interface_decl>interface <name>A</name>;</interface_decl>
+</unit>
+
+<unit>
+<interface_decl>interface <name>A</name>, <name>B</name>;</interface_decl>
+</unit>
+
+<unit>
 <interface>interface <name>I</name> 
 <block>{}</block></interface>
 </unit>

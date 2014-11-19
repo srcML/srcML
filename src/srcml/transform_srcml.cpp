@@ -27,14 +27,49 @@
 #include <string>
 #include <boost/foreach.hpp>
 
- int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<std::string>, boost::optional<std::string> >& xpath_support, const std::vector<std::string>& xmlns_prefix) {
- 	// Check for elemet
- 	//if (xpath_support.first)
- 		//return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(), const char* prefix, const char* namespace_uri, const char* element);
+ int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support) {
+ 	// FIRST IS ELEMENT / SECOND IS ATTRIBUTE
+    const char* element_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str());
+    const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
+
+    // Must have a uri for the element
+    if (xpath_support.first && !(element_uri))
+        return -1; // Error Code TBD
+
+    // Must have a uri for the attribute
+    if (xpath_support.second && !(attribute_uri))
+        return -1; // Error Code TBD
+
+ 	// Check for element
+ 	if (xpath_support.first){
+ 		// See if an attribute is present as well
+ 		if (xpath_support.second) {
+ 			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
+                                                            xpath_support.first->prefix->c_str(),
+                                                            element_uri,
+                                                            xpath_support.first->name->c_str(),
+                                                            xpath_support.second->prefix->c_str(),
+                                                            attribute_uri,
+                                                            xpath_support.second->name->c_str(),
+                                                            xpath_support.second->value->c_str());
+ 		}
+ 		else {
+ 			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
+                                                            xpath_support.first->prefix->c_str(),
+                                                            element_uri,
+                                                            xpath_support.first->name->c_str(),
+                                                            NULL, NULL, NULL, NULL);
+ 		}
+ 	}
 
  	// Check for attribute
- 	//if (xpath_support.second)
- 		//return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(), const char* prefix, const char* namespace_uri, const char* attr_name, const char* attr_value);
+ 	if (xpath_support.second) {
+ 		return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
+                                                            xpath_support.second->prefix->c_str(),
+                                                            attribute_uri,
+                                                            xpath_support.second->name->c_str(),
+                                                            xpath_support.second->value->c_str());
+ 	}
 
  	return srcml_append_transform_xpath(in_arch, transform_input.c_str());
  }
@@ -108,7 +143,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
 			src_prefix_split_uri(trans, protocol, resource);
 
 			if (protocol == "xpath") {
-				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index), srcml_request.xmlns_prefix) != SRCML_STATUS_OK)
+				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index)) != SRCML_STATUS_OK)
 					throw status;
 			}
 			else if (protocol == "xslt") {

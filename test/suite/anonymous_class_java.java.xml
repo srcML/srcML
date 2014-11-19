@@ -25,7 +25,7 @@
 
 <unit>
 <expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Foo</name></super><argument_list>()</argument_list> <block>{ 
-  <function><type><name>void</name></type> <name>bar</name><parameter_list>(<param><decl><type><name>a</name></type></decl></param>)</parameter_list> <block>{}</block></function>
+  <function><type><name>void</name></type> <name>bar</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list> <block>{}</block></function>
 }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -54,7 +54,7 @@
 <unit>
 <class><specifier>public</specifier> class <name>SysTray</name> <block>{ 
 
-    <function><type><specifier>public</specifier> <name>boolean</name></type> <name>init</name><parameter_list>(<param><decl><type><specifier>final</specifier> <name>Shell</name></type> <name>aMainShell</name></decl></param>)</parameter_list> <block>{ 
+    <function><type><specifier>public</specifier> <name>boolean</name></type> <name>init</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Shell</name></type> <name>aMainShell</name></decl></parameter>)</parameter_list> <block>{ 
 
         <if>if<condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then><block>{ 
               <return>return <expr><literal type="boolean">false</literal></expr>;</return> 
@@ -62,7 +62,7 @@
               
               <expr_stmt><expr><call><name><name>trayItem</name><operator>.</operator><name>addSelectionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>SelectionAdapter</name></super> <argument_list>()</argument_list> <block>{ 
                               
-                              <function><type><specifier>public</specifier> <name>void</name></type> <name>widgetDefaultSelected</name><parameter_list>(<param><decl><type><name>SelectionEvent</name></type> <name>anEvent</name></decl></param>)</parameter_list> <block>{}</block></function>
+                              <function><type><specifier>public</specifier> <name>void</name></type> <name>widgetDefaultSelected</name><parameter_list>(<parameter><decl><type><name>SelectionEvent</name></type> <name>anEvent</name></decl></parameter>)</parameter_list> <block>{}</block></function>
  
               }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 

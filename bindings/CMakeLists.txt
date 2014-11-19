@@ -57,8 +57,8 @@ if(${BUILD_LANGUAGE_BINDINGS})
         set(PY_BINDINGS_OUTPUT_FILE ${SRCML_PY_BINDINGS_LOCATION}/bindings.py)
         set(PY_ARCHIVE_CLASS_FILE ${SRCML_PY_BINDINGS_LOCATION}/archive.py)
         set(PY_UNIT_CLASS_FILE ${SRCML_PY_BINDINGS_LOCATION}/unit.py)
-        set(PY_TEST_SUITE_OUTPUT_FILE_PATH ${CMAKE_CURRENT_BINARY_DIR}/tests.py)
-
+        set(PY_TEST_SUITE_OUTPUT_FILE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/python/test/srcml_test/test_bindings.py)
+        
         configure_file(
             python/configTemplate.py
             python/genPythonBindings.py
@@ -68,12 +68,20 @@ if(${BUILD_LANGUAGE_BINDINGS})
             OUTPUT ${PY_BINDINGS_OUTPUT_FILE} ${PY_TEST_SUITE_OUTPUT_FILE_PATH}
             COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/python/genPythonBindings.py
             DEPENDS ${SRCML_H_XML_OUTPUT_PATH} ${CMAKE_CURRENT_BINARY_DIR}/python/genPythonBindings.py
+
+        )
+
+        set(PY_TEST_SOURCE_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/python/test/testRunner.py)
+        configure_file(
+            python/test/testLauncherConfig.py
+            ${CMAKE_CURRENT_SOURCE_DIR}/python/test/testLauncher.py
+            NEWLINE_STYLE UNIX
         )
 
         # Python Target
         add_custom_target(
             build_python_bindings ALL
-            DEPENDS ${PY_BINDINGS_OUTPUT_FILE}
+            DEPENDS ${PY_BINDINGS_OUTPUT_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/python/test/testLauncher.py python/test/testLauncherConfig.py
         )
     endif()
 
