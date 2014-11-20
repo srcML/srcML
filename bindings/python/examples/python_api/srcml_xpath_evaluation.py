@@ -27,9 +27,9 @@
 #       
 #       Reopen the archive for reading using the memory buffer.
 #       
-#       Register an XPath with the XSLT transformations
+#       Register an XPath with the XSLT transformations.
 #
-#       Apply the XPath to the current archive
+#       Apply the XPath to the current archive.
 #
 #       Display the contents of the resulting archive.
 
