@@ -398,7 +398,6 @@ class archive(object):
 
         A typical use case for a unit created in this manner is to use it to write source code into srcml
         then into a srcml archive.
-
             Valid Parameters:
             encoding
             language
@@ -412,6 +411,60 @@ class archive(object):
         unit_ptr = create_unit(self.srcml_archive)
         return unit(unit_ptr, **kwargs)
 
+    def parse_and_write_unit(self, *args, **kwargs):
+        """
+        As it's name suggests, this function does two steps for a unit
+        parses and writes it to a file.
+
+        Basic steps followed by this function.
+        1) Creates a new unit with specified configuration.
+        2) Configures the unit using provided settings.
+        3) Parses data into the unit.
+        4) Writes the unit into the archive and frees the unit.
+
+        Unnamed optional parameter:
+            A string, list of strings, or a string with a size  may be given as
+            the first unnamed argument/s. The argument/s are treated as the input
+            to the unit. In the same way that the would be if called directly
+            on parse.
+
+        The possible named parameters are as follows:
+
+            settings - A dictionary containing the options used to build the unit.
+                See create unit for a more in depth description of expected options.
+                This can be paired with all input sources but it is required when a
+                default language isn't set and can't be inferred from a file extension.
+            
+            filename - The name of a file to read from
+
+            buff - A memory buffer, this requires the language to be set within settings.
+            
+            fd - file descriptor, requires language to be set.
+
+            I/O Context/callback parameters:
+                context - This must be paired with a read_cb and close_cb If context is used by itself then
+                        it's treated like a class with read and write functions. See unit.parse for more
+                        information.
+                read_cb - the read callback function.
+                close_cb - The close callback function.
+            stream - A python stream-like object, this include StringIO and file
+                objects.
+
+        Usages/Examples:
+        
+            my_archive.parse_and_write(settings=dict(language=srcml.LANGUAGE_CXX), stream=open("main.cpp"))
+            my_archive.parse_and_write_unit(filename=test_filename)
+            my_archive.parse_and_write_unit(source_code_str, 50, settings=dict(language=srcml.LANGUAGE_CXX))
+            my_archive.parse_and_write_unit(stream=open("a_sourece_file.cpp", "r"), settings=dict(language=srcml.LANGUAGE_CXX))
+        """
+        settings = dict()
+        if "settings" in kwargs:
+            settings = kwargs["settings"]
+            del kwargs["settings"]
+        unit_ptr = create_unit(self.srcml_archive)
+        u = unit(unit_ptr, **settings)
+        u.parse(*args, **kwargs)
+        self.write_unit(u)
 
     def write_unit(self, unit):
         """Write a unit into the current archive archive."""

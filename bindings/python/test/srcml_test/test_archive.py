@@ -615,3 +615,41 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(transformed_unit.xml(), input_unit.xml(), "Archive wasn't transformed correctly.")
 
 
+    test_code = """
+#include <iostream>
+int main() {
+    std::cout << "hello world" << std::endl;
+    return 0;
+}
+"""
+
+    def test_archive_quick_write(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        archive.parse_and_write_unit(TestArchive.test_code, settings=dict(language=srcml.LANGUAGE_CXX))
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+    def test_archive_quick_write_2(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        archive.parse_and_write_unit(TestArchive.test_code, 50, settings=dict(language=srcml.LANGUAGE_CXX))
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+
+    def test_archive_quick_write_3(self):
+        archive = srcml.archive()
+        outputStringBuffer = StringIO.StringIO()
+        archive.open_write(stream=outputStringBuffer, close_stream=False)
+        test_filename = "test_archive_quick_write_3.cpp"
+        o = open(test_filename, "w")
+        o.write(TestArchive.test_code)
+        o.close()
+        archive.parse_and_write_unit(filename=test_filename)
+        archive.close()
+        self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Didn't get any output.")
+        os.remove(test_filename)
+
+

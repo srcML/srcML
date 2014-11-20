@@ -31,8 +31,6 @@ _unit_attr_lookup = dict({
     HASH_ATTR           : (unit_get_hash, unit_set_hash,),
 })
 
-
-
 class unit:
     __doc__ = """
     This class represents a native srcml_unit instance.
