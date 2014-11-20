@@ -29,21 +29,21 @@
 
  int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support) {
  	// FIRST IS ELEMENT / SECOND IS ATTRIBUTE
-    const char* element_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str());
-    const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
-
-    // Must have a uri for the element
-    if (xpath_support.first && !(element_uri))
-        return -1; // Error Code TBD
-
-    // Must have a uri for the attribute
-    if (xpath_support.second && !(attribute_uri))
-        return -1; // Error Code TBD
 
  	// Check for element
  	if (xpath_support.first){
+        const char* element_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str());
+        
+        if (!element_uri)
+            return -1;
+
  		// See if an attribute is present as well
  		if (xpath_support.second) {
+            const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
+            
+            if (!attribute_uri)
+                return -1;
+
  			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
                                                             element_uri,
@@ -64,7 +64,12 @@
 
  	// Check for attribute
  	if (xpath_support.second) {
- 		return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
+        const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
+        
+        if (!attribute_uri)
+                return -1;
+ 		
+        return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
                                                             xpath_support.second->prefix->c_str(),
                                                             attribute_uri,
                                                             xpath_support.second->name->c_str(),
