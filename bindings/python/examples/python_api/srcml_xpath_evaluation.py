@@ -37,23 +37,16 @@ import srcml, os, StringIO
 
 if __name__ == "__main__":
 
-    # Create archive.
-    archive = srcml.archive()
-
     # Using the srcml memory buffer 
     #   The memory buffer type is used to handle memory allocated by srcml.
     mem_buff = srcml.memory_buffer()
 
-    archive.open_write(buff=mem_buff)
+    # Creates an archive and opens it for reading.
+    archive = srcml.create_writing_archive(buff=mem_buff)
 
-    # Create a unit to parse data.cpp
-    unit = archive.create_unit()
-
-    # Parse the data using srcml.
-    unit.parse(filename="data.cpp")
-
-    # Write the unit into the archive.
-    archive.write_unit(unit)
+    # Create a unit, parses parse data.cpp and writes it into
+    # the current archive.
+    unit = archive.parse_and_write_unit(filename="data.cpp")
 
     # Close the archive
     archive.close()
