@@ -48,7 +48,7 @@ struct ParseRequest {
     int position;
     int status;
     long loc;
-    Timer runtime;
+    long runtime;
 };
 
 #endif

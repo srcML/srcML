@@ -53,11 +53,9 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
             s += str;
             s += "\t";
+            s += "10";
+            s += "\t";
             s += "HASH";
-
-            s += "\t";
-            s += std::to_string(request->runtime.cpu_time_elapsed());
-            s += "\t";
 
             log << 'a' << s;
         }

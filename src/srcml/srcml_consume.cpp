@@ -36,8 +36,6 @@
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
-    request->runtime.start();
-
     // error passthrough to output for proper output in trace
     if (request->status) {
         request->unit = 0;
@@ -138,7 +136,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             
             srcml_unit_set_hash(unit, outmd);
         }
-
+        
         // parse the buffer/file (unless it is already form a srcml archive)
         if (request->disk_filename)
             status = srcml_parse_unit_filename(unit, request->disk_filename->c_str());
