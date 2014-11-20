@@ -10,4 +10,5 @@ csharp/SrcML/bin
 csharp/SrcML/obj
 
 python/examples/launcher.sh
+python/examples/python_api/launcher.sh
 
