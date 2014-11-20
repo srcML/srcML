@@ -23,7 +23,6 @@
 #ifndef TIMER_HPP
 #define TIMER_HPP
 
-#include <time.h>
 #include <boost/timer.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
