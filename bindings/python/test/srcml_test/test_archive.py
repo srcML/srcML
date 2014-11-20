@@ -653,3 +653,30 @@ int main() {
         os.remove(test_filename)
 
 
+    # Testing xml writer interface function.
+    def test_create_writing_archive__python_stream(self):
+        strm = StringIO.StringIO()
+        archive = srcml.create_writing_archive(stream=strm, close_stream=False)
+        archive.close()
+        self.assertTrue(len(strm.getvalue())>0, "didn't correctly write to stream.")
+
+    def test_create_writing_archive__filename(self):
+        outputFile = "test_create_writing_archive__filename.xml"
+        archive = srcml.create_writing_archive(filename=outputFile)
+        archive.close()
+        self.assertTrue(os.path.exists(outputFile), "Didn't result in file creation")
+        xml_text = "".join(open(outputFile, "r").readlines())
+        self.assertTrue(len(xml_text)>0, "Didn't write XML to file.")
+        os.remove(outputFile)
+
+    def test_create_writing_archive__mem_buff(self):
+        mem_buff = srcml.memory_buffer()
+        archive = srcml.create_writing_archive(buff=mem_buff)
+        archive.close()
+        self.assertTrue(str(mem_buff)>0, "Didn't XML to buffer.")
+
+    def test_create_writing_archive__mem_buff(self):
+        mem_buff = srcml.memory_buffer()
+        archive = srcml.create_writing_archive(buff=mem_buff)
+        archive.close()
+        self.assertTrue(str(mem_buff)>0, "Didn't XML to buffer.")

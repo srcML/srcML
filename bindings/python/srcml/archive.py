@@ -25,7 +25,7 @@ import ctypes
 
 
 class _macro_proxy:
-    __doc__ ="""
+    """
     Provides a dictionary proxy interface for macro
     representations within srcML a srcml archive.
     """
@@ -61,7 +61,7 @@ class _macro_proxy:
         return (k for k in itemsGen())
 
 class _xml_namespaces_proxy:
-    __doc__ ="""
+    """
     Provides a dictionary proxy interface for xml namespaces registered 
     with the srcml archive.
     """
@@ -121,15 +121,17 @@ class _transform_proxy:
         clear_transforms(self.srcml_archive)
 
 
-    def append(self, transformation):
+    def append(self, *transformations):
         """
-        Add a native transformation.
+        Add a native transformation to the
+        native XSLT transformation list.
         """
-        transformation(self.srcml_archive)
+        for t in transformations:
+            t(self.srcml_archive)
 
 
 class _xslt_proxy(object):
-    __doc__ ="""
+    """
     This provides an interface to the srcml archive's XSLT transformation.
 
     Transformations are saved natively as soon as append is called.
@@ -162,6 +164,7 @@ def _set_processing_instruction(archive, value):
     archive_set_processing_instruction(archive, value[0], value[1])
 
 _PRIVATE_READER_CONTEXT_ATTR = "_ctxt"
+
 _archive_attr_lookup = dict(
 {
     ENCODING_ATTR: (archive_get_encoding, archive_set_encoding,),
@@ -175,13 +178,47 @@ _archive_attr_lookup = dict(
     PROCESSING_INSTRUCTION_ATTR : (_get_processing_instruction, _set_processing_instruction)
 })
 
+def create_reading_archive(*args, **kwargs):
+    """
+    Creates a new archive applies the supplied settings to the archive configuration
+    and calls open_read on that archive and returns the archive.
+
+    This function takes the exact same arguments as the archive.open_read function
+    does, except that it takes an optional settings dictionary argument that is used
+    for constructing the archive.
+    """
+    settings = dict()
+    if "settings" in kwargs:
+        settings = kwargs["settings"]
+        del kwargs["settings"]
+    ret_archive = archive(**settings)
+    ret_archive.open_read(*args, **kwargs)
+    return ret_archive
+
+
+def create_writing_archive(**kwargs):
+    """
+    Convenience function that replaces the construction of an archive followed by the
+    opening of that archive for writing.
+
+    This function takes the exact same arguments as the archive.open_write function
+    does, except that it takes an optional settings dictionary argument that is used
+    for constructing the archive.
+    """
+    settings = dict()
+    if "settings" in kwargs:
+        settings = kwargs["settings"]
+        del kwargs["settings"]
+    ret_archive = archive(**settings)
+    ret_archive.open_write(**kwargs)
+    return ret_archive
 
 
 #
 #   srcml.archive
 #
 class archive(object):
-    __doc__ = """
+    """
     This class provides access to units within an archive using either
     a reading or writing interface depending on how an archive's been opened.
 
@@ -256,9 +293,9 @@ class archive(object):
             - xslt - expects list of transformation objects.
         """
         self.srcml_archive = create_archive()
-        self.macros = _macro_proxy(self.srcml_archive)
-        self.xml_namespaces = _xml_namespaces_proxy(self.srcml_archive)
-        self.xslt = _xslt_proxy(self.srcml_archive)
+        self.__dict__["macros"] = _macro_proxy(self.srcml_archive)
+        self.__dict__["xml_namespaces"] = _xml_namespaces_proxy(self.srcml_archive)
+        self.__dict__["xslt"] = _xslt_proxy(self.srcml_archive)
         def _getAttr(attr):
             if attr not in _archive_attr_lookup:
                 raise KeyError("Unknown argument: '{0}'".format(attr))
@@ -279,27 +316,29 @@ class archive(object):
         """
         free_archive(self.srcml_archive)
 
-    def __getattr__(self, attrName):
+    def __getattr__(self, attr_name):
         """
         This is used in order to provide an interface to all attributes
         that are held, natively, by srcml archive.
         """
-        if attrName in _archive_attr_lookup:
-            return _archive_attr_lookup[attrName][0](self.srcml_archive)
-        elif attrName in self.__dict__:
-            return self.__dict__[attrName]
+        if attr_name in _archive_attr_lookup:
+            return _archive_attr_lookup[attr_name][0](self.srcml_archive)
+        elif attr_name in self.__dict__:
+            return self.__dict__[attr_name]
         else:
-            raise KeyError("Attribute doesn't exist. Attribute: {0}".format(attrName))
+            raise KeyError("Attribute doesn't exist. Attribute: {0}".format(attr_name))
 
-    def __setattr__(self, attrName, value):
+    def __setattr__(self, attr_name, value):
         """
         This is used in order to provide an interface to all attributes
         that are held, natively, by srcml archive.
         """
-        if attrName in _archive_attr_lookup:
-            _archive_attr_lookup[attrName][1](self.srcml_archive, value)
+        if attr_name in _archive_attr_lookup:
+            _archive_attr_lookup[attr_name][1](self.srcml_archive, value)
+        elif attr_name == "macros" or attr_name == "xml_namespaces" or attr_name == "xslt":
+            raise KeyError("{0} is a native attribute. Native attributes cannot be assigned to.".format(attr_name))
         else:
-            self.__dict__[attrName] = value
+            self.__dict__[attr_name] = value
 
     # Options functions.
     def enable_option(self, option):
