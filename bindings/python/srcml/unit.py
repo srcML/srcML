@@ -42,12 +42,16 @@ class unit:
 
     Attribute access or modification may change the internal representation
     of an archive which can then be written into another archive.
+
+
+    Implementation Notes:
+    units are implemented in a lazy fashion in that they
+    only read the header unless the .xml function is called.
     """
 
     def __init__(self, unit_ptr, **kwargs):
         self.srcml_unit = unit_ptr
         for attr_name, attr_value in kwargs.items():
-            # print attr_name, attr_value
             if attr_name not in _unit_attr_lookup:
                 raise KeyError("Unknown argument: {0}".format(attr_name) )
             self.__setattr__(attr_name, attr_value)
@@ -151,6 +155,7 @@ class unit:
                         return zero_for_sucess_not_zero_for_failure
 
         """
+
         if len(kwargs) == 0:
             tempStrm = cStringIO.StringIO()
             self.unparse(context=stream_context(tempStrm, False))

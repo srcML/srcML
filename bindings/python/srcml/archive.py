@@ -365,20 +365,19 @@ class archive(object):
         Reads the next unit from the archive.
         Reads entire unit.
         """
-        unit_ptr = read_unit(self.srcml_archive)
-        return unit(unit_ptr)
+        return self.read_unit_header()
 
     # Read Iteration Utilities
-    def unit_headers(self):
-        """
-        Generator function that allows for the following python code:
-        for unit in archive.unit_headers():
-            print unit.language
-        """
-        current_unit_header = self.read_unit_header()
-        while current_unit_header != None:
-            yield current_unit_header
-            current_unit_header = self.read_unit_header()
+    # def unit_headers(self):
+    #     """
+    #     Generator function that allows for the following python code:
+    #     for unit in archive.unit_headers():
+    #         print unit.language
+    #     """
+    #     current_unit_header = self.read_unit_header()
+    #     while current_unit_header != None:
+    #         yield current_unit_header
+    #         current_unit_header = self.read_unit_header()
 
     def units(self):
         """

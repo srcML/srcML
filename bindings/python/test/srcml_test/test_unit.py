@@ -395,6 +395,7 @@ int main() {
         rarchive.open_read(xml=outputStringBuffer.getvalue())
         runit = rarchive.read_unit()
         code = runit.xml()
+        # print runit.xml()
         self.assertTrue(code.find("waffles") != -1, "Incorrect unit content. Code:\"{0}\"".format(code))
         rarchive.close()
 
