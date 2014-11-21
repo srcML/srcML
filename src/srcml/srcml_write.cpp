@@ -53,6 +53,8 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
             s += str;
             s += "\t";
+            s += "10";
+            s += "\t";
             s += "HASH";
 
             log << 'a' << s;
