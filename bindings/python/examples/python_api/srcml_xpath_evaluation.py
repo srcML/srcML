@@ -41,12 +41,15 @@ if __name__ == "__main__":
     #   The memory buffer type is used to handle memory allocated by srcml.
     mem_buff = srcml.memory_buffer()
 
-    # Creates an archive and opens it for reading.
-    archive = srcml.create_writing_archive(buff=mem_buff)
+    # Creates an archive and opens it for writing.
+    archive = srcml.archive()
+    archive.open_write(buff=mem_buff)
 
     # Create a unit, parses parse data.cpp and writes it into
     # the current archive.
-    unit = archive.parse_and_write_unit(filename="data.cpp")
+    unit = archive.create_unit()
+    unit.parse(filename="data.cpp")
+    archive.write_unit(unit)
 
     # Close the archive
     archive.close()

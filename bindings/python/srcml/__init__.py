@@ -19,7 +19,7 @@
 
 from bindings import *
 from xslt_transform_classes import *
-from archive import archive, create_writing_archive, create_reading_archive
+from archive import archive
 from unit import *
 from memory_buffer import memory_buffer
 
