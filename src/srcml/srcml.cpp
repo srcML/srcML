@@ -138,7 +138,8 @@ int main(int argc, char * argv[]) {
     srcml_cleanup_globals();
 
     if (srcml_request.command & SRCML_DEBUG_MODE)
-        std::cerr << "Total Runtime: " << runtime.elapsed() << " ms\n";
+        std::cerr << "CPU Time: " << runtime.cpu_time_elapsed() << " ms\n";
+        std::cerr << "Real Time: " << runtime.real_world_elapsed() << "ms\n";
 
     return 0;
 }
