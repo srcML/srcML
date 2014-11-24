@@ -32,21 +32,31 @@
 
  	// Check for element
  	if (xpath_support.first){
+        const char* element_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str());
+        
+        if (!element_uri)
+            return -1;
+
  		// See if an attribute is present as well
  		if (xpath_support.second) {
+            const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
+            
+            if (!attribute_uri)
+                return -1;
+
  			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
-                                                            srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str()),
+                                                            element_uri,
                                                             xpath_support.first->name->c_str(),
                                                             xpath_support.second->prefix->c_str(),
-                                                            srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str()),
+                                                            attribute_uri,
                                                             xpath_support.second->name->c_str(),
                                                             xpath_support.second->value->c_str());
  		}
  		else {
  			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
-                                                            srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str()),
+                                                            element_uri,
                                                             xpath_support.first->name->c_str(),
                                                             NULL, NULL, NULL, NULL);
  		}
@@ -54,9 +64,14 @@
 
  	// Check for attribute
  	if (xpath_support.second) {
- 		return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
+        const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
+        
+        if (!attribute_uri)
+                return -1;
+ 		
+        return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
                                                             xpath_support.second->prefix->c_str(),
-                                                            srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str()),
+                                                            attribute_uri,
                                                             xpath_support.second->name->c_str(),
                                                             xpath_support.second->value->c_str());
  	}

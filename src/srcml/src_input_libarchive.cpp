@@ -260,7 +260,7 @@ namespace {
         curldata->multi_handle = curl_multi_init();
         curl_multi_add_handle(curldata->multi_handle, curldata->handle);
         curl_multi_perform(curldata->multi_handle, &curldata->still_running);
-        curldata->stopwatch = Timer(10.0); // 10 second timeout
+        curldata->stopwatch = Timer(10); // 10 second timeout
 
         return ARCHIVE_OK;
     }
