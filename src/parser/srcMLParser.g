@@ -668,7 +668,8 @@ public:
 
     static const antlr::BitSet enum_preprocessing_token_set;
     static const antlr::BitSet literal_tokens_set;
-
+    static const antlr::BitSet modifier_tokens_set;
+    static const antlr::BitSet skip_tokens_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -706,7 +707,7 @@ public:
 
     virtual void consume() {
 
-        last_consumed = LA(1);
+        if(!skip_tokens_set.member(LA(1))) last_consumed = LA(1);
         LLkParser::consume();
 
 
@@ -993,6 +994,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         macro_call |
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
+
+
+        { inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN }? annotation |
 
         expression_statement[type, call_count]
 ;
@@ -2292,10 +2296,7 @@ switch_statement[] { ENTRY_DEBUG } :
 section_entry_action_first[] :
         {
             // start a new section inside the block with nested statements
-            if(inMode(MODE_SWITCH))
-                startNewMode(MODE_TOP_SECTION | MODE_STATEMENT | MODE_NEST);
-            else
-                startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
+            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST);
         }
 ;
 
@@ -2303,7 +2304,7 @@ section_entry_action_first[] :
 section_entry_action[] :
         {
             // end any statements inside the section
-            endDownToModeSet(MODE_TOP | MODE_SWITCH);
+            endDownToModeSet(MODE_TOP);
 
             // flush any whitespace tokens since sections should
             // end at the last possible place
@@ -2317,23 +2318,25 @@ section_entry_action[] :
 
 // case treated as a statement
 switch_case[] { ENTRY_DEBUG } :
-        // start a new section
-        section_entry_action
         {
+            // start a new mode
+            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON);
+
             // start of case element
             startElement(SCASE);
 
             // expect an expression ended by a colon
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_DETECT_COLON);
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
         (CASE | macro_case_call)
 ;
 
 // default treated as a statement
 switch_default[] { ENTRY_DEBUG } :
-        // start a new section
-        section_entry_action
         {
+            // start a new mode
+            startNewMode(MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON);
+  
             // start of case element
             startElement(SDEFAULT);
 
@@ -3831,6 +3834,10 @@ colon[] { ENTRY_DEBUG } :
 
         }
         COLON
+        {
+            if(inMode(MODE_DETECT_COLON))
+                endMode(MODE_DETECT_COLON);
+        }
 ;
 
 /*
@@ -5278,12 +5285,12 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
-            (dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
+            ({ !modifier_tokens_set.member(last_consumed) }? dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
             (options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
-            (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
+            //(options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 
         { notdestructor = LA(1) == DESTOP; }
@@ -5304,12 +5311,12 @@ compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
-            (dcolon { iscompound = true; } | (period | member_pointer) { iscompound = true; })
+            ({ !modifier_tokens_set.member(last_consumed) }? dcolon { iscompound = true; } | (period | member_pointer) { iscompound = true; })
             ( options { greedy = true; } : dcolon)*
             (multops)*
             (DESTOP set_bool[isdestructor])*
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
-            (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
+            //(options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 
 ;

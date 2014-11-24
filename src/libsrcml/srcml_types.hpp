@@ -73,7 +73,7 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
  struct xpath_arguments {
 
     /** the xpath expression */
-    const char * str;
+    boost::optional<std::string> str;
 
     /** the optional element prefix */
     const char * prefix;

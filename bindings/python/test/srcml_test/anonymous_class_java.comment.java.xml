@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="anonymous_class.comment" filename="anonymous_class_java">
+
+<unit>
+<comment type="line">// anonymous class expression</comment>
+<expr_stmt><expr><operator>new</operator> <comment type="block">/* a */</comment> <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <comment type="block">/* a */</comment> <block>{
+ <comment type="block">/* a */</comment>      <decl_stmt><decl><type><name>int</name></type> <comment type="block">/* a */</comment> <name>i</name> <comment type="block">/* a */</comment> <init>= <comment type="block">/* a */</comment> <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+
+ <comment type="block">/* a */</comment>      <function><type><specifier>public</specifier> <comment type="block">/* a */</comment> <name>void</name></type> <comment type="block">/* a */</comment> <name>a</name><parameter_list>()</parameter_list> <comment type="block">/* a */</comment> <block>{
+ <comment type="block">/* a */</comment>        <decl_stmt><decl><type><name>int</name></type> <comment type="block">/* a */</comment> <name>a</name> <comment type="block">/* a */</comment> <init>= <comment type="block">/* a */</comment> <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+ <comment type="block">/* a */</comment>      }</block></function>
+}</block></class></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<comment type="line">// anonymous class as an argument </comment>
+<expr_stmt><expr><call><name>addActionListener</name><argument_list>(<argument><expr><operator>new</operator> <comment type="block">/* a */</comment> <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <comment type="block">/* a */</comment> <block>{
+ <comment type="block">/* a */</comment>      <decl_stmt><decl><type><name>int</name></type> <comment type="block">/* a */</comment> <name>i</name> <comment type="block">/* a */</comment> <init>= <comment type="block">/* a */</comment> <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+ <comment type="block">/* a */</comment>      <function><type><specifier>public</specifier> <comment type="block">/* a */</comment> <name>void</name></type> <comment type="block">/* a */</comment> <name>a</name><parameter_list>()</parameter_list> <comment type="block">/* a */</comment> <block>{
+ <comment type="block">/* a */</comment>        <decl_stmt><decl><type><name>int</name></type> <comment type="block">/* a */</comment> <name>a</name> <comment type="block">/* a */</comment> <init>= <comment type="block">/* a */</comment> <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+ <comment type="block">/* a */</comment>      }</block></function>
+ <comment type="block">/* a */</comment>    }</block></class></expr></argument>
+)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><operator>new</operator> <comment type="block">/* a */</comment> <class><super><name>Foo</name></super><argument_list>()</argument_list> <comment type="block">/* a */</comment> <block>{ <comment type="block">/* a */</comment> 
+  <function><type><name>void</name></type> <comment type="block">/* a */</comment> <name>bar</name><parameter_list>(<param><decl><type><name>a</name></type></decl></param>)</parameter_list> <comment type="block">/* a */</comment> <block>{}</block></function>
+}</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<comment type="line">// complex name on call with anonymous class as an argument </comment>
+ <comment type="block">/* a */</comment>      <expr_stmt><expr><call><name><name>jbutton1</name><operator>.</operator><name>addActionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <comment type="block">/* a */</comment> <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <comment type="block">/* a */</comment> <block>{
+ <comment type="block">/* a */</comment>      <decl_stmt><decl><type><name>int</name></type> <comment type="block">/* a */</comment> <name>i</name> <comment type="block">/* a */</comment> <init>= <comment type="block">/* a */</comment> <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+ <comment type="block">/* a */</comment>      <function><type><specifier>public</specifier> <comment type="block">/* a */</comment> <name>void</name></type> <comment type="block">/* a */</comment> <name>a</name><parameter_list>()</parameter_list> <comment type="block">/* a */</comment> <block>{
+ <comment type="block">/* a */</comment>        <decl_stmt><decl><type><name>int</name></type> <comment type="block">/* a */</comment> <name>a</name> <comment type="block">/* a */</comment> <init>= <comment type="block">/* a */</comment> <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+ <comment type="block">/* a */</comment>      }</block></function>
+ <comment type="block">/* a */</comment>    }</block></class></expr></argument>
+)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<comment type="line">// complex name on call with anonymous class with complex nameas an argument </comment>
+<expr_stmt><expr><call><name><name>jButton1</name><operator>.</operator><name>addActionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <comment type="block">/* a */</comment> <class><super><name><name>java</name><operator>.</operator><name>awt</name><operator>.</operator><name>event</name><operator>.</operator><name>ActionListener</name></name></super><argument_list>()</argument_list> <comment type="block">/* a */</comment> <block>{
+ <comment type="block">/* a */</comment>      <decl_stmt><decl><type><name>int</name></type> <comment type="block">/* a */</comment> <name>i</name> <comment type="block">/* a */</comment> <init>= <comment type="block">/* a */</comment> <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+ <comment type="block">/* a */</comment>      <function><type><specifier>public</specifier> <comment type="block">/* a */</comment> <name>void</name></type> <comment type="block">/* a */</comment> <name>a</name><parameter_list>()</parameter_list> <comment type="block">/* a */</comment> <block>{
+ <comment type="block">/* a */</comment>        <decl_stmt><decl><type><name>int</name></type> <comment type="block">/* a */</comment> <name>a</name> <comment type="block">/* a */</comment> <init>= <comment type="block">/* a */</comment> <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+ <comment type="block">/* a */</comment>      }</block></function>
+ <comment type="block">/* a */</comment>    }</block></class></expr></argument>
+)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<class><specifier>public</specifier> <comment type="block">/* a */</comment> class <name>SysTray</name> <comment type="block">/* a */</comment> <block>{ <comment type="block">/* a */</comment> 
+
+    <function><type><specifier>public</specifier> <comment type="block">/* a */</comment> <name>boolean</name></type> <comment type="block">/* a */</comment> <name>init</name><parameter_list>(<param><decl><type><specifier>final</specifier> <comment type="block">/* a */</comment> <name>Shell</name></type> <comment type="block">/* a */</comment> <name>aMainShell</name></decl></param>)</parameter_list> <comment type="block">/* a */</comment> <block>{ <comment type="block">/* a */</comment> 
+
+        <if>if<condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then><block>{ <comment type="block">/* a */</comment> 
+              <return>return <comment type="block">/* a */</comment> <expr><literal type="boolean">false</literal></expr>;</return> <comment type="block">/* a */</comment> 
+        }</block></then><else>else<block>{ <comment type="block">/* a */</comment> 
+              
+              <expr_stmt><expr><call><name><name>trayItem</name><operator>.</operator><name>addSelectionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <comment type="block">/* a */</comment> <class><super><name>SelectionAdapter</name></super> <comment type="block">/* a */</comment> <argument_list>()</argument_list> <comment type="block">/* a */</comment> <block>{ <comment type="block">/* a */</comment> 
+                              
+                              <function><type><specifier>public</specifier> <comment type="block">/* a */</comment> <name>void</name></type> <comment type="block">/* a */</comment> <name>widgetDefaultSelected</name><parameter_list>(<param><decl><type><name>SelectionEvent</name></type> <comment type="block">/* a */</comment> <name>anEvent</name></decl></param>)</parameter_list> <comment type="block">/* a */</comment> <block>{}</block></function>
+ <comment type="block">/* a */</comment> 
+              }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+ <comment type="block">/* a */</comment>              <return>return <comment type="block">/* a */</comment> <expr><literal type="boolean">true</literal></expr>;</return>
+
+ <comment type="block">/* a */</comment>        }</block></else></if>
+
+ <comment type="block">/* a */</comment>    }</block></function>
+ <comment type="block">/* a */</comment>    
+    <function><type><specifier>private</specifier> <comment type="block">/* a */</comment> <name>void</name></type> <comment type="block">/* a */</comment> <name>otherClassMethod</name><parameter_list>()</parameter_list> <comment type="block">/* a */</comment> <block>{}</block></function> <comment type="block">/* a */</comment> 
+    
+}</block></class> <comment type="block">/* a */</comment> 
+</unit>
+
+</unit>

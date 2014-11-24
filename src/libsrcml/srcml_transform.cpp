@@ -56,7 +56,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
     if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { xpath_string, 0, 0, 0, 0, 0, 0, 0 };
+    struct xpath_arguments arguments = { std::string(xpath_string), 0, 0, 0, 0, 0, 0, 0 };
 
     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
@@ -88,7 +88,7 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
     if(archive == NULL || xpath_string == 0 || attr_name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { xpath_string, 0, 0, 0, prefix, namespace_uri, attr_name, attr_value };
+    struct xpath_arguments arguments = { std::string(xpath_string), 0, 0, 0, prefix, namespace_uri, attr_name, attr_value };
 
     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
@@ -120,7 +120,7 @@ int srcml_append_transform_xpath_element (struct srcml_archive* archive, const c
     if(archive == NULL || xpath_string == 0 || element == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, element, attr_prefix, attr_namespace_uri, attr_name, attr_value };
+    struct xpath_arguments arguments = { std::string(xpath_string), prefix, namespace_uri, element, attr_prefix, attr_namespace_uri, attr_name, attr_value };
 
     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
@@ -475,7 +475,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
             case SRCML_XPATH: {
 
                 error = srcml_xpath(pinput, "src:unit",
-                                    iarchive->transformations.at(i).arguments.str,
+                                    iarchive->transformations.at(i).arguments.str->c_str(),
                                     iarchive->transformations.at(i).arguments.prefix, iarchive->transformations.at(i).arguments.uri,
                                     iarchive->transformations.at(i).arguments.element,
                                     iarchive->transformations.at(i).arguments.attr_prefix, iarchive->transformations.at(i).arguments.attr_uri,

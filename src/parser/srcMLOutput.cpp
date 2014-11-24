@@ -174,14 +174,14 @@ namespace {
     ELEMENT_MAP(SFUNCTION_CALL,          "call")
     ELEMENT_MAP(SSIZEOF_CALL,            "sizeof")
     ELEMENT_MAP(SPARAMETER_LIST,         "parameter_list")
-    ELEMENT_MAP(SPARAMETER,              "param")
+    ELEMENT_MAP(SPARAMETER,              "parameter")
     ELEMENT_MAP(SKRPARAMETER_LIST,       "krparameter_list")
-    ELEMENT_MAP(SKRPARAMETER,            "krparam")
+    ELEMENT_MAP(SKRPARAMETER,            "krparameter")
     ELEMENT_MAP(SARGUMENT_LIST,          "argument_list")
     ELEMENT_MAP(SARGUMENT,               "argument")
     ELEMENT_MAP(SLAMBDA_CAPTURE,         "capture")
-    ELEMENT_MAP(SPSEUDO_PARAMETER_LIST,  "parameter_list")
-    ELEMENT_MAP(SINDEXER_PARAMETER_LIST, "parameter_list")
+    ELEMENT_MAP(SPSEUDO_PARAMETER_LIST,  ELEMENT_MAP_CALL(SPARAMETER_LIST))
+    ELEMENT_MAP(SINDEXER_PARAMETER_LIST, ELEMENT_MAP_CALL(SPARAMETER_LIST))
 
     // struct, union
     ELEMENT_MAP(SSTRUCT, "struct")
@@ -951,7 +951,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     if(isoption(options, SRCML_OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
     if(isoption(options, SRCML_OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
     if(isoption(options, SRCML_OPTION_WRAP_TEMPLATE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "WRAP_TEMPLATE"; }
-    if(isoption(options, SRCML_OPTION_TERNARY))        { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "TERNARY"; }
+    if(!isoption(options, SRCML_OPTION_TERNARY))       { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "OPERTOR_TERNARY"; }
 
     std::string stab = stabs.str();
 
@@ -982,7 +982,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         { UNIT_ATTRIBUTE_HASH, hash },
 
         { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && (isoption(options, SRCML_OPTION_NESTIF)
-         || isoption(options, SRCML_OPTION_CPPIF_CHECK) || isoption(options, SRCML_OPTION_WRAP_TEMPLATE) || isoption(options, SRCML_OPTION_TERNARY)) ? soptions.c_str() : 0 },
+         || isoption(options, SRCML_OPTION_CPPIF_CHECK) || isoption(options, SRCML_OPTION_WRAP_TEMPLATE) || !isoption(options, SRCML_OPTION_TERNARY)) ? soptions.c_str() : 0 },
 
     };
 

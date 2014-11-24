@@ -10,97 +10,97 @@
 </unit>
 
 <unit>
-<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><case>case <expr><name>foo</name></expr>: <break>break;</break></case></block></switch>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><case>case <expr><name>foo</name></expr>:</case> <break>break;</break></block></switch>
 </unit>
 
 <unit>
-<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><default>default: <break>break;</break></default></block></switch>
-</unit>
-
-<unit>
-<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr><literal type="number">1</literal></expr>:
-</case>}</block></switch>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><default>default:</default> <break>break;</break></block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr><literal type="number">1</literal></expr>:
-   <break>break;</break>
-</case>}</block></switch>
+ <case>case <expr><literal type="number">1</literal></expr>:</case>
+}</block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr><name>b</name></expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:</case>
    <break>break;</break>
-</case>}</block></switch>
+}</block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr><name>b</name></expr>:
-</case>}</block></switch>
+ <case>case <expr><name>b</name></expr>:</case>
+   <break>break;</break>
+}</block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr><literal type="number">1</literal></expr>:
-   <break>break;</break>
- </case><case>case <expr><literal type="number">2</literal></expr>:
-   <break>break;</break>
-</case>}</block></switch>
+ <case>case <expr><name>b</name></expr>:</case>
+}</block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr><name>b</name></expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:</case>
    <break>break;</break>
- </case><case>case <expr><name>c</name></expr>:
+ <case>case <expr><literal type="number">2</literal></expr>:</case>
    <break>break;</break>
-</case>}</block></switch>
+}</block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr><literal type="number">1</literal></expr>:
+ <case>case <expr><name>b</name></expr>:</case>
    <break>break;</break>
- </case><case>case <expr><literal type="number">2</literal></expr>:
+ <case>case <expr><name>c</name></expr>:</case>
    <break>break;</break>
- </case><default>default:
-   <break>break;</break>
-</default>}</block></switch>
+}</block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr><literal type="number">1</literal></expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:</case>
+   <break>break;</break>
+<case>case <expr><literal type="number">2</literal></expr>:</case>
+   <break>break;</break>
+<default>default:</default>
+   <break>break;</break>
+}</block></switch>
+</unit>
+
+<unit>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
+ <case>case <expr><literal type="number">1</literal></expr>:</case>
    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
    <break>break;</break>
- </case><case>case <expr><literal type="number">2</literal></expr>:
+<case>case <expr><literal type="number">2</literal></expr>:</case>
    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
    <break>break;</break>
-</case>}</block></switch>
+}</block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
- <case>case <expr><literal type="number">1</literal></expr>:
+ <case>case <expr><literal type="number">1</literal></expr>:</case>
    <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
    <break>break;</break>
- </case><case>case <expr><literal type="number">2</literal></expr>:
+<case>case <expr><literal type="number">2</literal></expr>:</case>
    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
    <break>break;</break>
- </case><default>default:
+<default>default:</default>
    <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
    <break>break;</break>
-</default>}</block></switch>
+}</block></switch>
 </unit>
 
 <unit>
 <switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block>{
-	<case>case <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>:
-	</case>}</block></switch>
+	<case>case <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>:</case>
+	}</block></switch>
 </unit>
 
 </unit>

@@ -2,19 +2,19 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="catch">
 
 <unit>
-<catch>catch <parameter_list>(<param><decl><type><name>a</name></type></decl></param>)</parameter_list> <block>{}</block></catch>
+<catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list> <block>{}</block></catch>
 </unit>
 
 <unit>
-<catch>catch <parameter_list>(<param><decl><type><name>a</name></type> <name>b</name></decl></param>)</parameter_list> <block>{}</block></catch>
+<catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type> <name>b</name></decl></parameter>)</parameter_list> <block>{}</block></catch>
 </unit>
 
 <unit>
-<catch>catch <parameter_list>(<param><decl><type><name>a</name> <name>b</name></type> <name>c</name></decl></param>)</parameter_list> <block>{}</block></catch>
+<catch>catch <parameter_list>(<parameter><decl><type><name>a</name> <name>b</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{}</block></catch>
 </unit>
 
 <unit>
-<catch>catch <parameter_list>(<param><decl><type><modifier>...</modifier></type></decl></param>)</parameter_list> <block>{}</block></catch>
+<catch>catch <parameter_list>(<parameter><decl><type><modifier>...</modifier></type></decl></parameter>)</parameter_list> <block>{}</block></catch>
 </unit>
 
 </unit>

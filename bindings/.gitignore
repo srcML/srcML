@@ -1,0 +1,4 @@
+python/srcml/bindings.py
+python/examples/run.sh
+python/test/testLauncher.py
+python/test/srcml_test/test_bindings.py

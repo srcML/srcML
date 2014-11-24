@@ -56,3 +56,7 @@ endif()
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
+
+if(${BUILD_LANGUAGE_BINDINGS})
+    add_subdirectory(bindings)
+endif()
