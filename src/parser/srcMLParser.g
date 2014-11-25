@@ -152,7 +152,7 @@ enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, ENUM_DEFN, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
-    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT, ANNOTATION_DEFN
+    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT, ANNOTATION_DEFN, GLOBAL_TEMPLATE
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -969,6 +969,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         // C# event statement
         { stmt_type == EVENT_STMT}?
         event_statement[type_count] |
+
+        { stmt_type == GLOBAL_TEMPLATE }?
+        template_declaration |
 
         { stmt_type == NONE && inTransparentMode(MODE_FRIEND) }?
         compound_name |
@@ -3945,6 +3948,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
 
+
+
     int save_la = LA(1);
 
     inputState->guessing--;
@@ -3954,6 +3959,9 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
        && (enum_preprocessing_token_set.member(LA(1)) || LA(1) == DECLTYPE) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
+
+    if(type == NONE && LA(1) == TEMPLATE)
+        type = GLOBAL_TEMPLATE;
 
 } :;
 
@@ -4223,7 +4231,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             For now attribute and template counts are left out on purpose.
         */
         /*! @todo verify this is correct */
-        set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
+        set_type[type, VARIABLE, ((((type_count - specifier_count - template_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
                                               || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL || LA(1) == IN
                                               || ((inTransparentMode(MODE_FOR_CONDITION) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && LA(1) == COLON)

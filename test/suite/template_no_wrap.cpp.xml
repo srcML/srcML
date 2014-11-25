@@ -179,4 +179,8 @@ struct <name><name>CTest1</name><argument_list type="template">&lt;<argument><ex
 <struct><template>template<parameter_list>&lt;<parameter><type><typename>typename</typename><modifier>...</modifier></type></parameter>&gt;</parameter_list></template> struct <name>Tuple</name> <block>{<public type="default"/>}</block>;</struct>
 </unit>
 
+<unit>
+<template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>n</name></parameter>&gt;</parameter_list></template>
+</unit>
+
 </unit>

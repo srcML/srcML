@@ -179,4 +179,8 @@
 <template>template<parameter_list>&lt;<parameter><type><typename>typename</typename><modifier>...</modifier></type></parameter>&gt;</parameter_list> <struct>struct <name>Tuple</name> <block>{<public type="default"/>}</block>;</struct></template>
 </unit>
 
+<unit>
+<template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>n</name></parameter>&gt;</parameter_list></template>
+</unit>
+
 </unit>
