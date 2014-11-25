@@ -5141,7 +5141,10 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
 typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            startElement(STYPENAME);
+            if(!inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
+                startElement(STYPENAME);
+            else
+                startElement(SNAME);
         }
         TYPENAME
 ;
