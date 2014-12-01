@@ -3923,6 +3923,13 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
         pattern_check(type, token, type_count, inparam);
         type_count += 1;
 
+        if(type == CLASS_DECL || type == CLASS_DEFN || type == UNION_DECL || type == UNION_DEFN || type == STRUCT_DECL || type == STRUCT_DEFN || type == ENUM_DECL || type == ENUM_DEFN) {
+
+            type = SINGLE_MACRO;
+            type_count = 1;
+
+        }
+
     }
 
     // may just have an expression
