@@ -201,4 +201,8 @@
 <decl_stmt><decl><type><specifier>register</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>int</name></type> <name>f</name><argument_list>()</argument_list></decl>, <decl><type ref="prev"/><name>g</name><argument_list>()</argument_list></decl>;</decl_stmt>
+</unit>
+
 </unit>

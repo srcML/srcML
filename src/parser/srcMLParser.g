@@ -3960,7 +3960,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
 
-
+    if((type == FUNCTION || type == FUNCTION_DECL) && fla == COMMA && !inparam)
+        type = VARIABLE;
 
     int save_la = LA(1);
 
