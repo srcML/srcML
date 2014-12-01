@@ -670,6 +670,7 @@ public:
     static const antlr::BitSet literal_tokens_set;
     static const antlr::BitSet modifier_tokens_set;
     static const antlr::BitSet skip_tokens_set;
+    static const antlr::BitSet class_tokens_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -6960,7 +6961,7 @@ specifiers_or_macro[] { bool first = true; ENTRY_DEBUG } :
 
     (options { greedy = true; } : specifier)*
 
-    (options { greedy = true; } : { first }? macro_call set_bool[first, false])*
+    (options { greedy = true; } : { first && !class_tokens_set.member(LA(1)) }? macro_call set_bool[first, false])*
 
     (options { greedy = true; } : specifier)*
 
@@ -6974,7 +6975,7 @@ is_class_type_identifier[] returns[bool is_class_type = false] { ENTRY_DEBUG
 
     int token = look_past_rule(&srcMLParser::specifiers_or_macro);
 
-    if(token == CLASS || token == CXX_CLASS || token == STRUCT || token == UNION || token == ENUM )
+    if(class_tokens_set.member(token))
         is_class_type = true;
 
 
