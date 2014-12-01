@@ -3917,8 +3917,12 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
         type = SINGLE_MACRO;
 
-    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION))
-        type = SINGLE_MACRO;
+    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION)) {
+
+        pattern_check(type, token, type_count, inparam);
+        type_count += 1;
+
+    }
 
     // may just have an expression
     else if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
