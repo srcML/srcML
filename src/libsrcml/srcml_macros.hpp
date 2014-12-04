@@ -12,6 +12,26 @@
  */
 #define isoption(options, flag) (((options) & (flag)) > 0)
 
+/**
+ * optional_string_create
+ * @param c_str const char * to convert to optional<std::string>
+ *
+ * Create a optional<std::string> from const char *.
+ *
+ * @returns the new optional<std::string>
+ */
+#define optional_string_create(c_str) (c_str ? boost::optional<std::string>(std::string(c_str)) : boost::optional<std::string>())
+
+ /**
+ * optional_get_c_str
+ * @param str optional<std;:string> to extract c string.
+ *
+ * Get c string from optional<std::string>
+ *
+ * @returns the c string
+ */
+#define optional_get_c_str(str) (str ? str->c_str() : 0)
+
 #ifndef _MSC_BUILD
 
 #define OPEN(FILE, ACCESS, PERM) open(FILE, ACCESS, PERM)
