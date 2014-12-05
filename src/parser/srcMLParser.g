@@ -276,7 +276,7 @@ private:
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parser_options(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
-    current_column(-1), current_line(-1), nxt_token(-1)
+    current_column(-1), current_line(-1), nxt_token(-1), last_consumed(-1), wait_terminate_post(false)
 {
 
     // root, single mode
@@ -653,6 +653,7 @@ public:
     int current_line;
     int nxt_token;
     int last_consumed;
+    bool wait_terminate_post;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -3339,6 +3340,9 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (inMode(MODE_STATEMENT | MODE_NEST) && (!inMode(MODE_DECL) && !inTransparentMode(MODE_FRIEND)
             && (!inLanguage(LANGUAGE_JAVA) || !inMode(MODE_ENUM | MODE_LIST))))
                 startElement(SEMPTY);
+
+            wait_terminate_post = true;
+
         }
         TERMINATE
         set_bool[skip_ternary, false]
@@ -3391,6 +3395,8 @@ terminate_post[] { ENTRY_DEBUG } :
                 endMode();
 
             }
+
+            wait_terminate_post = false;
 
         }
 
@@ -8912,7 +8918,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
-        if(LA(1) == TERMINATE && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) {
+        if(LA(1) == TERMINATE && !wait_terminate_post && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) {
             end_order.push_back(TERMINATE);
 
         }
