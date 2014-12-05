@@ -68,6 +68,32 @@ void src_input_libarchive(ParseQueue& queue,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input_file) {
 
+    // don't process if non-archive, non-compressed, and we don't handle the extension
+    // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
+    // which then hangs
+    // Note: may need to fix in libsrcml
+    if (input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) {
+
+        // if we are not verbose, then just end this attemp
+        if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
+            return;
+        }
+
+        // form the parsing request
+        ParseRequest* prequest = new ParseRequest;
+        prequest->filename = input_file.resource;
+        prequest->directory = srcml_request.att_directory;
+        prequest->version = srcml_request.att_version;
+        prequest->srcml_arch = srcml_arch;
+        prequest->language = "";
+        prequest->status = SRCML_STATUS_UNSET_LANGUAGE;
+
+        // schedule for parsing
+        queue.schedule(prequest);
+
+        return;
+    }
+
     archive* arch = archive_read_new();
 
     archive_read_support_format_ar(arch);
