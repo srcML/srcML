@@ -191,42 +191,8 @@ public :
      */
     void append_attribute_to_node(xmlNodePtr node, const char * attr_prefix, const char * attr_uri) {
 
-           // set up inserted attribute
-        xmlAttrPtr result_attr = (xmlAttrPtr)xmlMalloc((sizeof(xmlAttr)));
-        memset(result_attr, 0, sizeof(xmlAttr));
-        result_attr->type = XML_ATTRIBUTE_NODE;
-        result_attr->name = (const xmlChar *)strdup(attr_name);
-
-        // set up attribute value
-        xmlNodePtr attr_value_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
-        memset(attr_value_node, 0, sizeof(xmlNode));                    
-        attr_value_node->type = XML_TEXT_NODE;
-        attr_value_node->content = (xmlChar *)strdup(attr_value);
-        result_attr->children = attr_value_node;
-
-        result_attr->parent = node;
-
-        // place as last attribute
-        xmlAttrPtr last_attr = node->properties;
-        for(; last_attr && last_attr->next; last_attr = last_attr->next)
-            ;
-        result_attr->prev = last_attr;
-
-        result_attr->doc = node->doc;
-
-        // set up namespace
-        xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
-        memset(ns, 0, sizeof(xmlNs));
-        ns->type = XML_NAMESPACE_DECL;
-        ns->href = attr_uri ? (const xmlChar *)strdup(attr_uri) : 0;
-        ns->prefix = attr_prefix ? (const xmlChar *)strdup(attr_prefix) : 0;
-        result_attr->ns = ns;
-
-        if(last_attr)
-            last_attr->next = result_attr;
-        else
-            node->properties = result_attr;
-
+        xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) attr_uri, (const xmlChar *) attr_prefix);
+        xmlNewNsProp(node, ns, (const xmlChar *) attr_name, (const xmlChar *) attr_value);
     }
 
     /**
@@ -505,11 +471,7 @@ public :
                     onode = result_nodes->nodesetval->nodeTab[i];
 
                     // set up namespace
-                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
-                    memset(ns, 0, sizeof(xmlNs));
-                    ns->type = XML_NAMESPACE_DECL;
-                    ns->href = uri ? (const xmlChar *)strdup(uri) : 0;
-                    ns->prefix = prefix ? (const xmlChar *)strdup(prefix) : 0;
+                    xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar*) uri, (const xmlChar*) prefix);
 
                     // set up node to insert
                     xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) element);
