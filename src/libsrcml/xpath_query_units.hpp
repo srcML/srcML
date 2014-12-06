@@ -504,16 +504,15 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
-                    // set up node to insert
-                    xmlNodePtr element_node = xmlNewNode(NULL, (const xmlChar*) element);
-
                     // set up namespace
                     xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
                     memset(ns, 0, sizeof(xmlNs));
                     ns->type = XML_NAMESPACE_DECL;
                     ns->href = uri ? (const xmlChar *)strdup(uri) : 0;
                     ns->prefix = prefix ? (const xmlChar *)strdup(prefix) : 0;
-                    element_node->ns = ns;
+
+                    // set up node to insert
+                    xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) element);
 
                     if(attr_name) append_attribute_to_node(element_node, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
 
