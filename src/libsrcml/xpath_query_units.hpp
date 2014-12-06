@@ -76,7 +76,7 @@ public :
                       const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0, int fd = 0)
         : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), found(false), needroot(true), closetag(false), fd(fd) {
+          total(0), found(false), needroot(true), closetag(false), fd(fd), context(0) {
     }
 
     /**
@@ -256,8 +256,6 @@ public :
      * @returns true on success false on failure.
      */
      virtual bool apply() {
-
-     	static xmlXPathContextPtr context = 0;
 
      	if (!context) {
 
@@ -893,7 +891,6 @@ public :
 
         // finished with the result nodes
         xmlXPathFreeObject(result_nodes);
-//        if(context) xmlXPathFreeContext(context);
 
 #if LIBEXSLT_VERSION > 813
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
@@ -957,6 +954,9 @@ public :
         default:
             break;
         }
+
+        if(context) xmlXPathFreeContext(context);
+        context = 0;
 
         // all done with the buffer
         xmlOutputBufferClose(buf);
@@ -1140,6 +1140,7 @@ private :
     bool needroot;
     bool closetag;
     int fd;
+    xmlXPathContextPtr context;
 
     static const char * const simple_xpath_attribute_name;
 
