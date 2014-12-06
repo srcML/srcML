@@ -504,11 +504,20 @@ public :
 
                     onode = result_nodes->nodesetval->nodeTab[i];
 
-                    // set up node to insert
+                    // set up node to insert                   
+
+                    // set up namespace
+                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
+                    memset(ns, 0, sizeof(xmlNs));
+                    ns->type = XML_NAMESPACE_DECL;
+                    ns->href = uri ? (const xmlChar *)strdup(uri) : 0;
+                    ns->prefix = prefix ? (const xmlChar *)strdup(prefix) : 0;
+
                     xmlNodePtr element_node = (xmlNodePtr)xmlMalloc((sizeof(xmlNode)));
                     memset(element_node, 0, sizeof(xmlNode));                    
                     element_node->type = XML_ELEMENT_NODE;
                     element_node->name = (xmlChar *)strdup(element);
+                    element_node->ns = ns;
 
                     if(attr_name) append_attribute_to_node(element_node, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
 
@@ -550,13 +559,7 @@ public :
 
                     element_node->doc = onode->doc;
 
-                    // set up namespace
-                    xmlNsPtr ns = (xmlNsPtr)xmlMalloc(sizeof(xmlNs));
-                    memset(ns, 0, sizeof(xmlNs));
-                    ns->type = XML_NAMESPACE_DECL;
-                    ns->href = uri ? (const xmlChar *)strdup(uri) : 0;
-                    ns->prefix = prefix ? (const xmlChar *)strdup(prefix) : 0;
-                    element_node->ns = ns;
+
 
                 }
 
