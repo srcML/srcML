@@ -516,8 +516,6 @@ public :
 
                     element_node->doc = onode->doc;
 
-
-
                 }
 
                 // remove src namespace and save for reassignment
