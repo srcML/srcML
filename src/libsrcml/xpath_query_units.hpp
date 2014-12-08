@@ -73,10 +73,10 @@ public :
      * Constructor.
      */
     xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath,
-                      const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0, int fd = 0)
+                      const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0, int fd = 0, xmlOutputBufferPtr output = 0)
         : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), found(false), needroot(true), closetag(false), fd(fd), context(0) {
+          total(0), found(false), needroot(true), closetag(false), fd(fd), context(0), output(output) {
     }
 
     /**
@@ -202,7 +202,11 @@ public :
      */
     virtual void start_output() {
 
-        buf = xmlOutputBufferCreateFd(fd, NULL);
+        if (output) {
+            buf = output;
+        }
+        else
+            buf = xmlOutputBufferCreateFd(fd, NULL);
 
         // TODO:  Detect error
 
@@ -1099,6 +1103,7 @@ private :
     bool closetag;
     int fd;
     xmlXPathContextPtr context;
+    xmlOutputBufferPtr output;
 
     static const char * const simple_xpath_attribute_name;
 

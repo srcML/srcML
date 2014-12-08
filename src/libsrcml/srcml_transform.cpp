@@ -23,6 +23,7 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
+#include <srcml_translator.hpp>
 
 #include <stdio.h>
 
@@ -436,11 +437,15 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     if((iarchive->type != SRCML_ARCHIVE_READ && iarchive->type != SRCML_ARCHIVE_RW)
         || (oarchive->type != SRCML_ARCHIVE_WRITE && oarchive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_INVALID_IO_OPERATION;
 
+    // use the output archive output buffer
+    xmlOutputBufferPtr obuffer = oarchive->translator->output_buffer();
+/*
     static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
 
     const char * last_transform_filename = 0;
+    */
     for(std::vector<transform>::size_type i = 0; i < iarchive->transformations.size(); ++i) {
-
+/*
         char * transform_filename = STRDUP(transform_filename_template);
         if(!transform_filename) {
 
@@ -456,11 +461,11 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
         MKTEMP(transform_filename);
         int transform_fd = OPEN(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 #endif
-
-        xmlParserInputBufferPtr pinput = 0;
-        if(i == 0) pinput = iarchive->input;
-        else pinput = xmlParserInputBufferCreateFilename(last_transform_filename, xmlParseCharEncoding(0));
-
+*/
+        xmlParserInputBufferPtr pinput /* = 0; */
+        /* if(i == 0) pinput*/ = iarchive->input;
+//        else pinput = xmlParserInputBufferCreateFilename(last_transform_filename, xmlParseCharEncoding(0));
+/*
         if(pinput == NULL) {
 
             CLOSE(transform_fd);
@@ -468,6 +473,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
             return SRCML_STATUS_INVALID_INPUT;
 
         }
+        */
         int error = 0;
         try {
 
@@ -481,7 +487,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.element),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_prefix), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_uri),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_name), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_value),
-                                    transform_fd, oarchive->options);
+                                    0, oarchive->options, obuffer);
                 break;
             }
 
@@ -489,7 +495,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_xslt(pinput, "src:unit",
                                    iarchive->transformations.at(i).doc,
-                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, transform_fd, oarchive->options);
+                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, 0, oarchive->options);
                 break;
             }
 
@@ -497,7 +503,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_relaxng(pinput,
                                       iarchive->transformations.at(i).doc,
-                                      transform_fd, oarchive->options);
+                                      0, oarchive->options);
                 break;
             }
 
@@ -507,14 +513,17 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         } catch(...) {
 
+/*
             CLOSE(transform_fd);
             if(i != 0) xmlFreeParserInputBuffer(pinput);
             if(last_transform_filename)  UNLINK(last_transform_filename);
             free((void *)last_transform_filename);
+            */
 
             return SRCML_STATUS_INVALID_INPUT;
         }
 
+/*
         if(i != 0) xmlFreeParserInputBuffer(pinput);
         if(last_transform_filename) UNLINK(last_transform_filename);
         free((void *)last_transform_filename);
@@ -524,16 +533,23 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
             free((void *)last_transform_filename);
             return error;
         }
+*/
+        break;
 
     }
 
+//    srcml_close_archive(oarchive);
+
+  //  srcml_free_archive(oarchive);
+
+/*
     srcml_archive * tmp_archive = srcml_create_archive();
 
     srcml_read_open_filename(tmp_archive, last_transform_filename);
     tmp_archive->prefixes.swap(oarchive->prefixes);
     tmp_archive->namespaces.swap(oarchive->namespaces);
  
-    /** @todo ask if should rely on user to have correct to bit-or these */
+    / ** @todo ask if should rely on user to have correct to bit-or these * /
     srcml_archive_set_options(oarchive, srcml_archive_get_options(tmp_archive));
 
     srcml_unit * unit;
@@ -549,6 +565,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     if(last_transform_filename) UNLINK(last_transform_filename);
     free((void *)last_transform_filename);
 
+*/
     srcml_clear_transforms(iarchive);
 
     return SRCML_STATUS_OK;

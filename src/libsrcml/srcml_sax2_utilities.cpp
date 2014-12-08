@@ -112,7 +112,7 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  */
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
                 const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
-                int fd, OPTION_TYPE options) {
+                int fd, OPTION_TYPE options, xmlOutputBufferPtr obuffer) {
 
     if(input_buffer == NULL || context_element == NULL ||
        xpath == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
@@ -130,7 +130,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
     }
 
     // setup process handling
-    xpath_query_units process(options, compiled_xpath, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value, fd);
+    xpath_query_units process(options, compiled_xpath, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value, fd, obuffer);
     srcSAXController control(input_buffer);
 
     try {

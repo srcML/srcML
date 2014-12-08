@@ -105,6 +105,8 @@ public:
     bool add_attribute(const char * prefix, const char * name, const char * uri, const char * content);
     bool add_string(const char * content);
 
+    xmlOutputBufferPtr output_buffer() { return out.output_buffer; }
+
     // destructor
     ~srcml_translator();
 
