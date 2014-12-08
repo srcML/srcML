@@ -110,7 +110,7 @@
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><typename>typename</typename></type> <name>F</name></parameter>&gt;</parameter_list>
+<template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>F</name></parameter>&gt;</parameter_list>
 <function><type><name>auto</name></type> <name>run</name><parameter_list>(<parameter><decl><type><name>F</name></type> <name>f</name></decl></parameter>)</parameter_list> -&gt; <type><typename>typename</typename> <name><name>Q</name><operator>::</operator><name><name>Q</name><argument_list type="template">&lt;<argument><expr><operator>!</operator><name><name>Q</name><operator>::</operator><name><name>H</name><argument_list type="template">&lt;<argument><expr><name>Functor</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>V</name></name></expr></argument>, <argument><expr><name><name>Q</name><argument_list type="template">&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>f</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name><operator>::</operator><name>T</name></name></type>
             <block>{}</block></function></template>
 </unit>

@@ -152,7 +152,7 @@ enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, ENUM_DEFN, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
-    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT, ANNOTATION_DEFN
+    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT, ANNOTATION_DEFN, GLOBAL_TEMPLATE
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -276,7 +276,7 @@ private:
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parser_options(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
-    current_column(-1), current_line(-1), nxt_token(-1)
+    current_column(-1), current_line(-1), nxt_token(-1), last_consumed(-1), wait_terminate_post(false)
 {
 
     // root, single mode
@@ -653,6 +653,7 @@ public:
     int current_line;
     int nxt_token;
     int last_consumed;
+    bool wait_terminate_post;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -670,6 +671,7 @@ public:
     static const antlr::BitSet literal_tokens_set;
     static const antlr::BitSet modifier_tokens_set;
     static const antlr::BitSet skip_tokens_set;
+    static const antlr::BitSet class_tokens_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -970,6 +972,9 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = f
         { stmt_type == EVENT_STMT}?
         event_statement[type_count] |
 
+        { stmt_type == GLOBAL_TEMPLATE }?
+        template_declaration |
+
         { stmt_type == NONE && inTransparentMode(MODE_FRIEND) }?
         compound_name |
 
@@ -1268,7 +1273,7 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
 
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
-            { is_class_type_identifier() }? (specifier { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
+            { is_class_type_identifier() }? (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }? (options { generateAmbigWarnings = false; } : specifier | macro_call) { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
         (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
@@ -3335,6 +3340,9 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (inMode(MODE_STATEMENT | MODE_NEST) && (!inMode(MODE_DECL) && !inTransparentMode(MODE_FRIEND)
             && (!inLanguage(LANGUAGE_JAVA) || !inMode(MODE_ENUM | MODE_LIST))))
                 startElement(SEMPTY);
+
+            wait_terminate_post = true;
+
         }
         TERMINATE
         set_bool[skip_ternary, false]
@@ -3387,6 +3395,8 @@ terminate_post[] { ENTRY_DEBUG } :
                 endMode();
 
             }
+
+            wait_terminate_post = false;
 
         }
 
@@ -3914,8 +3924,19 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
         type = SINGLE_MACRO;
 
-    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION))
-        type = SINGLE_MACRO;
+    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION)) {
+
+        pattern_check(type, token, type_count, inparam);
+        type_count += 1;
+
+        if(type == CLASS_DECL || type == CLASS_DEFN || type == UNION_DECL || type == UNION_DEFN || type == STRUCT_DECL || type == STRUCT_DEFN || type == ENUM_DECL || type == ENUM_DEFN || type == 0) {
+
+            type = SINGLE_MACRO;
+            type_count = 1;
+
+        }
+
+    }
 
     // may just have an expression
     else if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
@@ -3945,6 +3966,9 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
 
+    if((type == FUNCTION || type == FUNCTION_DECL) && fla == COMMA && !inparam)
+        type = VARIABLE;
+
     int save_la = LA(1);
 
     inputState->guessing--;
@@ -3954,6 +3978,9 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
        && (enum_preprocessing_token_set.member(LA(1)) || LA(1) == DECLTYPE) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && save_la == TERMINATE)
         type = VARIABLE;
+
+    if(type == NONE && LA(1) == TEMPLATE)
+        type = GLOBAL_TEMPLATE;
 
 } :;
 
@@ -4223,7 +4250,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             For now attribute and template counts are left out on purpose.
         */
         /*! @todo verify this is correct */
-        set_type[type, VARIABLE, ((((type_count - specifier_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
+        set_type[type, VARIABLE, ((((type_count - specifier_count - template_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
                                               || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL || LA(1) == IN
                                               || ((inTransparentMode(MODE_FOR_CONDITION) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && LA(1) == COLON)
@@ -5133,7 +5160,10 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
 typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            startElement(STYPENAME);
+            if(!inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
+                startElement(STYPENAME);
+            else
+                startElement(SNAME);
         }
         TYPENAME
 ;
@@ -6932,7 +6962,7 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : 
             { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] |
-            { is_class_type_identifier() }? (specifier { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
+            { is_class_type_identifier() }? (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }? (options { generateAmbigWarnings = false; } : specifier | macro_call) { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
             lead_type_identifier | EVENT)
         { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
 
@@ -6941,9 +6971,14 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
-specifier_star[] { ENTRY_DEBUG } :
+specifiers_or_macro[] { bool first = true; ENTRY_DEBUG } :
 
     (options { greedy = true; } : specifier)*
+
+    (options { greedy = true; } : { first && !class_tokens_set.member(LA(1)) }? macro_call set_bool[first, false])*
+
+    (options { greedy = true; } : specifier)*
+
 
 ;
 
@@ -6952,10 +6987,11 @@ is_class_type_identifier[] returns[bool is_class_type = false] { ENTRY_DEBUG
     if(inputState->guessing || inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) || inTransparentMode(MODE_ASSOCIATION_TYPE))
         return is_class_type;
 
-    int token = look_past_rule(&srcMLParser::specifier_star);
+    int token = look_past_rule(&srcMLParser::specifiers_or_macro);
 
-    if(token == CLASS || token == CXX_CLASS || token == STRUCT || token == UNION || token == ENUM )
+    if(class_tokens_set.member(token))
         is_class_type = true;
+
 
 } :;
 
@@ -7949,7 +7985,8 @@ parameter_type_count[int & type_count, bool output_type = true] { CompleteElemen
 
 
         // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] | { is_class_type_identifier() }? (specifier set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] |
+         { is_class_type_identifier() }? (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }? (options { generateAmbigWarnings = false; } : specifier | macro_call) set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |
@@ -7999,7 +8036,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
 
         // match auto keyword first as special case do no warn about ambiguity
         ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
-         { is_class_type_identifier() }? (specifier set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
+         { is_class_type_identifier() }? (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }? (options { generateAmbigWarnings = false; } : specifier | macro_call) set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
          type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 ;
 
@@ -8881,7 +8918,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
-        if(LA(1) == TERMINATE && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) {
+        if(LA(1) == TERMINATE && !wait_terminate_post && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) {
             end_order.push_back(TERMINATE);
 
         }

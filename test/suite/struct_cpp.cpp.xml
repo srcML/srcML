@@ -30,10 +30,10 @@
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><typename>typename</typename></type> <name>B</name></parameter>&gt;</parameter_list>
+<template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>B</name></parameter>&gt;</parameter_list>
 <struct>struct <name>A</name> <block>{<public type="default">
 
-  <template>template <parameter_list>&lt;<parameter><type><typename>typename</typename></type> <name>C</name></parameter>&gt;</parameter_list>
+  <template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>C</name></parameter>&gt;</parameter_list>
   <constructor_decl><name>A</name><parameter_list>()</parameter_list>;</constructor_decl></template>
 
 </public>}</block>;</struct></template>
