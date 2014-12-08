@@ -190,7 +190,7 @@ void dlexsltRegisterAll(void * handle) {
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, int fd, OPTION_TYPE options) {
+int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, int fd, OPTION_TYPE options, xmlOutputBufferPtr output) {
 
     if(input_buffer == NULL || context_element == NULL ||
        xslt == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
