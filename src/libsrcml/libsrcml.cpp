@@ -931,3 +931,21 @@ int srcml_check_exslt() {
  * @returns Return a string describing last recorded error.
  */
 const char* srcml_error_string() { return srcml_error.c_str(); }
+
+
+/******************************************************************************
+ *                                                                            *
+ *                           libsrcml misc functions                          *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * srcml_free_memory
+ *
+ * Free a buffer allocated by functions such as srcml_write_open_memory and srcml_unparse_unit_memory.
+ */
+void srcml_free_memory(char * buffer) {
+
+    free((void*)buffer);
+
+}
