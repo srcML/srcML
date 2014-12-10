@@ -136,7 +136,10 @@ public :
     virtual void start_output() {
 
         // setup output
-        buf = xmlOutputBufferCreateFd(fd, NULL);
+        if (output)
+            buf = output;
+        else
+            buf = xmlOutputBufferCreateFd(fd, NULL);
         // TODO:  Detect error
 
 #ifdef _MSC_BUILD
