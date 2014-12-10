@@ -440,6 +440,8 @@ public :
                 archive->options |= SRCML_OPTION_MODIFIER;
             else if(uri == SRCML_EXT_POSITION_NS_URI)
                 archive->options |= SRCML_OPTION_POSITION;
+            else if(uri == SRCML_EXT_OPENMP_NS_URI)
+                archive->options |= SRCML_OPTION_OPENMP;
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
 

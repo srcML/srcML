@@ -48,7 +48,9 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_LITERAL_NS_URI_POS,
        SRCML_EXT_OPERATOR_NS_URI_POS,
        SRCML_EXT_MODIFIER_NS_URI_POS,
-       SRCML_EXT_POSITION_NS_URI_POS
+       SRCML_EXT_POSITION_NS_URI_POS,
+       SRCML_EXT_OPENMP_NS_URI_POS,
+
 };
 
 /** name of element call map */
@@ -363,6 +365,14 @@ namespace {
     // Other
     ELEMENT_MAP(SCUDA_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
 
+    // OpenMP
+    ELEMENT_MAP(SOMP_DIRECTIVE,    "directive")
+    ELEMENT_MAP(SOMP_NAME,         "name")
+    ELEMENT_MAP(SOMP_CLAUSE,       "clause")
+    ELEMENT_MAP(SOMP_ARGUMENT_LIST, ELEMENT_MAP_CALL(SARGUMENT_LIST))
+    ELEMENT_MAP(SOMP_ARGUMENT,      ELEMENT_MAP_CALL(SARGUMENT))
+    ELEMENT_MAP(SOMP_EXPRESSION,    ELEMENT_MAP_CALL(SEXPRESSION))
+
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
 
@@ -427,6 +437,14 @@ namespace {
 
     // position namespace
     ELEMENT_MAP(SPOSITION, SRCML_EXT_POSITION_NS_URI_POS)
+
+    // OpenMP namespace
+    ELEMENT_MAP(SOMP_DIRECTIVE,     SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_NAME,          SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_CLAUSE,        SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_ARGUMENT_LIST, SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_ARGUMENT,      SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_EXPRESSION,    SRCML_EXT_OPENMP_NS_URI_POS)
 
 }
 
@@ -863,6 +881,9 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         // optional position xml namespace
         (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
 
+        // optional position xml namespace
+        (depth == 0) && isoption(options, SRCML_OPTION_OPENMP) ? SRCML_EXT_OPENMP_NS_URI : 0,
+
     };
 
     // output the namespaces
@@ -881,7 +902,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
     if(depth == 0) {
 
-        for(std::vector<std::string>::size_type pos =  SRCML_EXT_POSITION_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
+        for(std::vector<std::string>::size_type pos =  SRCML_EXT_OPENMP_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
 
             std::string prefix = "xmlns";
             if (num2prefix[pos][0] != '\0') {

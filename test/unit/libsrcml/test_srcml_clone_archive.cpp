@@ -77,8 +77,8 @@ int main() {
         dassert(new_archive->options, (1 | 2));
 
         dassert(new_archive->tabstop, 4);
-        dassert(new_archive->prefixes.size(), 8);
-        dassert(new_archive->namespaces.size(), 8);
+        dassert(new_archive->prefixes.size(), 9);
+        dassert(new_archive->namespaces.size(), 9);
         dassert(new_archive->registered_languages.size(), archive->registered_languages.size());
 
         dassert(new_archive->prefixes.at(0), SRCML_SRC_NS_PREFIX_DEFAULT);
@@ -95,8 +95,10 @@ int main() {
         dassert(new_archive->namespaces.at(5), SRCML_EXT_MODIFIER_NS_URI);
         dassert(new_archive->prefixes.at(6), SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
         dassert(new_archive->namespaces.at(6), SRCML_EXT_POSITION_NS_URI);
-        dassert(new_archive->prefixes.at(7), "foo");
-        dassert(new_archive->namespaces.at(7), "bar");
+        dassert(new_archive->prefixes.at(7), SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT);
+        dassert(new_archive->namespaces.at(7), SRCML_EXT_OPENMP_NS_URI);
+        dassert(new_archive->prefixes.at(8), "foo");
+        dassert(new_archive->namespaces.at(8), "bar");
 
         dassert(new_archive->user_macro_list.size(), 2);
         dassert(new_archive->user_macro_list.at(0), "foo");

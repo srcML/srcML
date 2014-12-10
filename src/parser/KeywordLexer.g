@@ -328,6 +328,9 @@ tokens {
     COMPATIBILITY_ALIAS;
     NIL;
 
+    // OpenMp
+    OMP_OMP;
+
 }
 
 {
@@ -668,6 +671,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "try"          , CXX_TRY           , LANGUAGE_CXX },
         { "catch"        , CXX_CATCH         , LANGUAGE_CXX },
         { "class"        , CXX_CLASS         , LANGUAGE_CXX },
+
+        // OpenMp
+        { "omp"          , OMP_OMP           , LANGUAGE_C_FAMILY }, 
 
    };
 
