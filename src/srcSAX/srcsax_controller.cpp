@@ -197,7 +197,7 @@ struct srcsax_context * srcsax_create_context_memory(const char * buffer, size_t
     srcsax_controller_init();
 
     xmlParserInputBufferPtr input =
-        xmlParserInputBufferCreateMem(buffer, buffer_size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+        xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     return srcsax_create_context_inner(input, 1);
 
