@@ -8755,7 +8755,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } (omp_directive | (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)*) |
+        } ({ isoption(parser_options, SRCML_OPTION_OPENMP) }? omp_directive | (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)*) |
 
         ERRORPREC
         {
@@ -9287,7 +9287,7 @@ omp_directive[] { CompleteElement element(this); ENTRY_DEBUG} :
         startElement(SOMP_DIRECTIVE);
     }
 
-    OMP_OMP ({ next_token() == LPAREN }? omp_clause | omp_name | COMMA)*
+    OMP_OMP (COMMA | { next_token() == LPAREN }? omp_clause | omp_name)*
 
 ;
 
@@ -9318,7 +9318,12 @@ omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
         startElement(SOMP_ARGUMENT_LIST);
     }
 
-    LPAREN omp_argument (COMMA omp_argument)* RPAREN
+    (
+
+    { next_token() != RPAREN }? LPAREN omp_argument (COMMA omp_argument)* RPAREN |
+    LPAREN RPAREN
+
+    )
 
 ;
 

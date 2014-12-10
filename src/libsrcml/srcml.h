@@ -142,6 +142,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_OPERATOR          1<<24
 /** Markups operator in special namespace */
 #define SRCML_OPTION_DEBUG             1<<25
+/** Markups OpenMP in special namespace */
+#define SRCML_OPTION_OPENMP            1<<26
 
 /* srcml status messages */
 /** Return status indicating no errors */

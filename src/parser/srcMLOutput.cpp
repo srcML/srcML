@@ -881,6 +881,9 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         // optional position xml namespace
         (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
 
+        // optional position xml namespace
+        (depth == 0) && isoption(options, SRCML_OPTION_OPENMP) ? SRCML_EXT_OPENMP_NS_URI : 0,
+
     };
 
     // output the namespaces
@@ -899,7 +902,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
     if(depth == 0) {
 
-        for(std::vector<std::string>::size_type pos =  SRCML_EXT_POSITION_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
+        for(std::vector<std::string>::size_type pos =  SRCML_EXT_OPENMP_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
 
             std::string prefix = "xmlns";
             if (num2prefix[pos][0] != '\0') {
