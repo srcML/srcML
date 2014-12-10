@@ -96,7 +96,7 @@
 
 <unit>
 <function><type><specifier>static</specifier> <name>void</name></type>
-<name>lto_read_decls</name> <parameter_list>(<param><decl><type><macro><name>VEC</name><argument_list>(<argument>ld_plugin_symbol_resolution_t</argument>,<argument>heap</argument>)</argument_list></macro> <modifier>*</modifier></type><name>resolutions</name></decl></param>)</parameter_list>
+<name>lto_read_decls</name> <parameter_list>(<parameter><decl><type><macro><name>VEC</name><argument_list>(<argument>ld_plugin_symbol_resolution_t</argument>,<argument>heap</argument>)</argument_list></macro> <modifier>*</modifier></type><name>resolutions</name></decl></parameter>)</parameter_list>
 <block>{}</block></function>
 </unit>
 
@@ -142,6 +142,18 @@
 
 <unit>
 <macro><name>M</name><argument_list>(<argument><literal type="complex">3i</literal></argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<function_decl><type><macro><name>MACRO</name></macro> <name><name>struct</name> <name>s</name></name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function><type><macro><name>MACRO</name></macro> <name><name>struct</name> <name>s</name></name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><macro><name>MACRO</name></macro> <name><name>struct</name> <name>s</name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 </unit>

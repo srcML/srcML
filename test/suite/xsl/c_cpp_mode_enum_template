@@ -8,18 +8,18 @@
 </unit>
 <!--
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>enum <name>NAME</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>NAME</name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>enum <name>NAME</name></type> <name>NAME</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>NAME</name></type> <name>NAME</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>enum <name>NAME</name> <modifier>*</modifier></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>NAME</name> <modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<param><decl><type>enum <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>NAME</name> <modifier>*</modifier></type> <name>NAME</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 -->

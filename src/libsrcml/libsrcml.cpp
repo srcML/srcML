@@ -63,7 +63,7 @@ std::string srcml_error;
 static
 #endif
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, std::vector<std::string>(),
-                                 SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL,
+                                 SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY,
                                  8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
                                  language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
 
@@ -240,8 +240,9 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         bool is_xml = false;
         size_t len = strlen(input_filename);
-        if((len > 4 && input_filename[len - 1] == 'l' && input_filename[len - 2] == 'm'
-            && input_filename[len - 3] == 'x' && input_filename[len - 4] == '.')
+        if((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
+            && ((tolower(input_filename[len - 3]) == 'x' && input_filename[len - 4] == '.')
+             || (tolower(input_filename[len - 3]) == 'c' && tolower(input_filename[len - 4]) == 'r' && tolower(input_filename[len - 5]) == 's' && tolower(input_filename[len - 6]) == '.')))
            || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
             is_xml = true;
 
@@ -930,3 +931,21 @@ int srcml_check_exslt() {
  * @returns Return a string describing last recorded error.
  */
 const char* srcml_error_string() { return srcml_error.c_str(); }
+
+
+/******************************************************************************
+ *                                                                            *
+ *                           libsrcml misc functions                          *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * srcml_free_memory
+ *
+ * Free a buffer allocated by functions such as srcml_write_open_memory and srcml_unparse_unit_memory.
+ */
+void srcml_free_memory(char * buffer) {
+
+    free((void*)buffer);
+
+}

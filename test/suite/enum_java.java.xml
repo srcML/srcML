@@ -55,7 +55,7 @@
 
     <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>mass</name></decl>;</decl_stmt>   <comment type="line">// in kilograms</comment>
     <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>radius</name></decl>;</decl_stmt> <comment type="line">// in meters</comment>
-    <constructor><name>Planet</name><parameter_list>(<param><decl><type><name>double</name></type> <name>mass</name></decl></param>, <param><decl><type><name>double</name></type> <name>radius</name></decl></param>)</parameter_list> <block>{
+    <constructor><name>Planet</name><parameter_list>(<parameter><decl><type><name>double</name></type> <name>mass</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mass</name></name> <operator>=</operator> <name>mass</name></expr>;</expr_stmt>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>radius</name></name> <operator>=</operator> <name>radius</name></expr>;</expr_stmt>
     }</block></constructor>
@@ -66,6 +66,6 @@
 <unit>
 <enum><specifier>private</specifier> <specifier>static</specifier> enum <name>RelTypes</name> <super><implements>implements <name>RelationshipType</name></implements></super> <block>{}</block></enum>
 
-<function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>main</name><parameter_list>(<param><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>args</name></decl></param>)</parameter_list> <block>{}</block></function></unit>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>main</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{}</block></function></unit>
 
 </unit>

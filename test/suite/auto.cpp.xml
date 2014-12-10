@@ -42,28 +42,28 @@
 </unit>
 
 <unit>
-<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><name>auto</name></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>auto</name></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><name>auto</name></type> <name>a</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>auto</name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 
 <unit>
-<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>const</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>auto</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>auto</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<param><decl><type><specifier>auto</specifier> <specifier>auto</specifier></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>auto</specifier> <specifier>auto</specifier></type> <name>b</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 </unit>

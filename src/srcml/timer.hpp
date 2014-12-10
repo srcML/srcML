@@ -23,7 +23,8 @@
 #ifndef TIMER_HPP
 #define TIMER_HPP
 
-#include <time.h>
+#include <boost/timer.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 class Timer {
 public:
@@ -31,16 +32,22 @@ public:
 	Timer(double limit) : time_limit(limit) {}
 
 	inline void start() {
-		start_time = clock();
+		real_world_time = boost::posix_time::microsec_clock::local_time();
+		cpu_time.restart();
 	}
 
-	// time in seconds
-	inline double elapsed() {
-		return (double)((clock() - start_time)/CLOCKS_PER_SEC);
+	// time in milliseconds
+	inline long real_world_elapsed() {
+		return  (boost::posix_time::microsec_clock::local_time() - real_world_time).total_milliseconds();
+	}
+
+	// time in milliseconds
+	inline long cpu_time_elapsed() {
+		return cpu_time.elapsed() * 10000;
 	}
 
 	inline bool is_expired() {
-		return ((((clock() - start_time)/CLOCKS_PER_SEC) >= time_limit) && time_limit != 0);
+		return ((cpu_time.elapsed() >= time_limit) && time_limit != 0);
 	}
 
 	inline void set_limit(double limit) {
@@ -48,8 +55,9 @@ public:
 	}
 
 private:
-    double time_limit; // in seconds
-    clock_t start_time; // start_timeing time
+	boost::posix_time::ptime real_world_time;
+	boost::timer cpu_time;
+    int time_limit; // in seconds
 };
 
 #endif

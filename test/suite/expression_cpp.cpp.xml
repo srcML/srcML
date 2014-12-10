@@ -47,6 +47,14 @@
 
 <unit>
 <expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>args</name><operator>...</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>    
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name><operator>*</operator><call><name><operator>::</operator><name>qPow</name></name><argument_list>(<argument><expr><literal type="number">2.0f</literal></expr></argument>, <argument><expr><literal type="number">10</literal> <operator>*</operator> <name>t_adj</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<expr_stmt><expr><name>a</name> <operator>*</operator> <call><name><operator>::</operator><name>qPow</name></name><argument_list>(<argument><expr><literal type="number">2.0f</literal></expr></argument>, <argument><expr><literal type="number">10</literal> <operator>*</operator> <name>t_adj</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
 
 </unit>

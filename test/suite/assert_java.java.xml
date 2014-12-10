@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="assert" filename="assert_java" options="TERNARY">
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="assert" filename="assert_java">
 
 <unit>
 <assert>assert <expr><name>a</name></expr>;</assert>

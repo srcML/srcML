@@ -69,7 +69,7 @@ int main() {
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_HASH));
+                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -108,11 +108,11 @@ int main() {
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_HASH));
+                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
+        srcml_free_memory(s);
 
         //dassert(s, 0);
     }
@@ -133,14 +133,14 @@ int main() {
         dassert(srcml_write_open_memory(archive, &s, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_free_archive(archive);
-        free(s);
+        srcml_free_memory(s);
     }
 
     {
         char * s = 0;
         int size;
         dassert(srcml_write_open_memory(0, &s, &size), SRCML_STATUS_INVALID_ARGUMENT);
-        free(s);
+        srcml_free_memory(s);
     }
 
     /*
@@ -156,7 +156,7 @@ int main() {
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_HASH));
+                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -198,7 +198,7 @@ int main() {
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_HASH));
+                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -239,7 +239,7 @@ int main() {
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
-                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_HASH));
+                                                     | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);

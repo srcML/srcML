@@ -397,8 +397,8 @@ public :
                         archive->options |= SRCML_OPTION_CPPIF_CHECK;
                     else if(option == "WRAP_TEMPLATE")
                         archive->options |= SRCML_OPTION_WRAP_TEMPLATE;
-                    else if(option == "TERNARY")
-                        archive->options |= SRCML_OPTION_TERNARY;
+                    else if(option == "OPERATOR_TERNARY")
+                        archive->options &= ~SRCML_OPTION_TERNARY;
 
                 }
 

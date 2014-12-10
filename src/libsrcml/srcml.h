@@ -404,6 +404,9 @@ __LIBSRCML_DECL int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_
 __LIBSRCML_DECL int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 __LIBSRCML_DECL int srcml_unparse_unit_io      (struct srcml_unit*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
 
+/* Free memmory buffer */
+__LIBSRCML_DECL void srcml_free_memory(char * buffer);
+
 /* srcML XPath query and XSLT transform functions */
 __LIBSRCML_DECL int srcml_clear_transforms                 (struct srcml_archive*);
 __LIBSRCML_DECL int srcml_append_transform_xpath           (struct srcml_archive*, const char* xpath_string);
