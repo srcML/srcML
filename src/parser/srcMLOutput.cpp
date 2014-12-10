@@ -48,7 +48,9 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_LITERAL_NS_URI_POS,
        SRCML_EXT_OPERATOR_NS_URI_POS,
        SRCML_EXT_MODIFIER_NS_URI_POS,
-       SRCML_EXT_POSITION_NS_URI_POS
+       SRCML_EXT_POSITION_NS_URI_POS,
+       SRCML_EXT_OPENMP_NS_URI_POS,
+
 };
 
 /** name of element call map */
@@ -363,6 +365,9 @@ namespace {
     // Other
     ELEMENT_MAP(SCUDA_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
 
+    // OpenMP
+    ELEMENT_MAP(SOMP_DIRECTIVE, "directive")
+
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
 
@@ -427,6 +432,9 @@ namespace {
 
     // position namespace
     ELEMENT_MAP(SPOSITION, SRCML_EXT_POSITION_NS_URI_POS)
+
+    // OpenMP namespace
+    ELEMENT_MAP(SOMP_DIRECTIVE, SRCML_EXT_OPENMP_NS_URI_POS)
 
 }
 

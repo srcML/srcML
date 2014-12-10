@@ -619,6 +619,9 @@ tokens {
     // Other
     SCUDA_ARGUMENT_LIST;
 
+    // OpenMP
+    SOMP_DIRECTIVE;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -8747,7 +8750,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)* |
+        } (omp_directive | (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)*) |
 
         ERRORPREC
         {
@@ -9270,4 +9273,16 @@ cpp_literal[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SCPP_LITERAL);
         }
         (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
+;
+
+omp_directive[] { CompleteElement element(this); ENTRY_DEBUG} :
+
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SOMP_DIRECTIVE);
+    }
+
+    OMP_OMP
+
 ;
