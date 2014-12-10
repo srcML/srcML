@@ -50,8 +50,8 @@ int main() {
                                    | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
         dassert(archive->tabstop, 8);
-        dassert(archive->prefixes.size(), 7);
-        dassert(archive->namespaces.size(), 7);
+        dassert(archive->prefixes.size(), 8);
+        dassert(archive->namespaces.size(), 8);
         dassert(!archive->registered_languages.size(), 0);
 
         dassert(archive->prefixes.at(0), SRCML_SRC_NS_PREFIX_DEFAULT);
@@ -68,6 +68,8 @@ int main() {
         dassert(archive->namespaces.at(5), SRCML_EXT_MODIFIER_NS_URI);
         dassert(archive->prefixes.at(6), SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
         dassert(archive->namespaces.at(6), SRCML_EXT_POSITION_NS_URI);
+        dassert(archive->prefixes.at(7), SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT);
+        dassert(archive->namespaces.at(7), SRCML_EXT_OPENMP_NS_URI);
 
         dassert(archive->user_macro_list.size(), 0);
 
