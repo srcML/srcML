@@ -75,10 +75,10 @@ public :
      * Constructor.  Dynamically loads XSLT functions.
      */
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
-               const char** params, int fd = 0)
+               const char** params, int fd = 0, xmlOutputBufferPtr output = 0)
         : unit_dom(options), options(options),
           stylesheet(stylesheet), found(false),
-          result_type(0), params(params), fd(fd) {
+          result_type(0), params(params), fd(fd), output(output) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         handle = dlopen("libxslt.so", RTLD_LAZY);
@@ -463,6 +463,7 @@ private :
     xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 #endif
     void * handle;
+    xmlOutputBufferPtr output;
 
 };
 

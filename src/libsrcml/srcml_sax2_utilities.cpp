@@ -254,7 +254,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     xsltsrcMLRegister();
 
     // setup process handling
-    xslt_units process(context_element, options, stylesheet, params, fd);
+    xslt_units process(context_element, options, stylesheet, params, fd, output);
     srcSAXController control(input_buffer);
 
     try {
