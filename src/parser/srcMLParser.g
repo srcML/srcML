@@ -9318,7 +9318,7 @@ omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
         startElement(SOMP_ARGUMENT_LIST);
     }
 
-    LPAREN omp_argument RPAREN
+    LPAREN omp_argument (COMMA omp_argument)* RPAREN
 
 ;
 
@@ -9330,6 +9330,6 @@ omp_argument[] { CompleteElement element(this); ENTRY_DEBUG} :
         startElement(SOMP_EXPRESSION);
     }
 
-    (~(RPAREN))*
+    (~(RPAREN | COMMA))*
 
 ;
