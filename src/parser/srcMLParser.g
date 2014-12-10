@@ -9287,7 +9287,7 @@ omp_directive[] { CompleteElement element(this); ENTRY_DEBUG} :
         startElement(SOMP_DIRECTIVE);
     }
 
-    OMP_OMP (COMMA | { next_token() == LPAREN }? omp_clause | omp_name)*
+    OMP_OMP (options { generateAmbigWarnings = false; } : COMMA | { next_token() == LPAREN }? omp_clause | omp_name)*
 
 ;
 
