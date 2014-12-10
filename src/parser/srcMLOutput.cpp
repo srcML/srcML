@@ -367,6 +367,8 @@ namespace {
 
     // OpenMP
     ELEMENT_MAP(SOMP_DIRECTIVE, "directive")
+    ELEMENT_MAP(SOMP_NAME,      "name")
+    ELEMENT_MAP(SOMP_CLAUSE,    "clause")
 
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
@@ -435,6 +437,8 @@ namespace {
 
     // OpenMP namespace
     ELEMENT_MAP(SOMP_DIRECTIVE, SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_NAME,      SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_CLAUSE,    SRCML_EXT_OPENMP_NS_URI_POS)
 
 }
 

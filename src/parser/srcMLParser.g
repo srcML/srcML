@@ -621,6 +621,8 @@ tokens {
 
     // OpenMP
     SOMP_DIRECTIVE;
+    SOMP_NAME;
+    SOMP_CLAUSE;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -9276,13 +9278,32 @@ cpp_literal[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 omp_directive[] { CompleteElement element(this); ENTRY_DEBUG} :
-
     {
         startNewMode(MODE_LOCAL);
 
         startElement(SOMP_DIRECTIVE);
     }
 
-    OMP_OMP
+    OMP_OMP ({ next_token() == LPAREN }? omp_clause | omp_name)*
+
+;
+
+omp_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SOMP_NAME);
+        }
+        cpp_garbage
+
+;
+
+
+omp_clause[] { CompleteElement element(this); ENTRY_DEBUG} :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SOMP_CLAUSE);
+    }
+
+    omp_name LPAREN (~(RPAREN))* RPAREN
 
 ;
