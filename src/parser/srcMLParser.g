@@ -623,6 +623,9 @@ tokens {
     SOMP_DIRECTIVE;
     SOMP_NAME;
     SOMP_CLAUSE;
+    SOMP_ARGUMENT_LIST;
+    SOMP_ARGUMENT;
+    SOMP_EXPRESSION;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -9284,7 +9287,7 @@ omp_directive[] { CompleteElement element(this); ENTRY_DEBUG} :
         startElement(SOMP_DIRECTIVE);
     }
 
-    OMP_OMP ({ next_token() == LPAREN }? omp_clause | omp_name)*
+    OMP_OMP ({ next_token() == LPAREN }? omp_clause | omp_name | COMMA)*
 
 ;
 
@@ -9304,6 +9307,29 @@ omp_clause[] { CompleteElement element(this); ENTRY_DEBUG} :
         startElement(SOMP_CLAUSE);
     }
 
-    omp_name LPAREN (~(RPAREN))* RPAREN
+    omp_name omp_argument_list
+
+;
+
+omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SOMP_ARGUMENT_LIST);
+    }
+
+    LPAREN omp_argument RPAREN
+
+;
+
+omp_argument[] { CompleteElement element(this); ENTRY_DEBUG} :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SOMP_ARGUMENT);
+        startElement(SOMP_EXPRESSION);
+    }
+
+    (~(RPAREN))*
 
 ;
