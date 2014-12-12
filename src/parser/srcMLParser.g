@@ -3238,10 +3238,15 @@ lcurly_base[] { ENTRY_DEBUG } :
             // need to pass on class mode to detect constructors for Java
             bool inclassmode = (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && inMode(MODE_CLASS);
 
+            bool in_function_body = inTransparentMode(MODE_FUNCTION_TAIL);
+
             startNewMode(MODE_BLOCK);
 
             if (inclassmode)
                 setMode(MODE_CLASS);
+
+            if(in_function_body)
+                setMode(MODE_FUNCTION_BODY);
 
             startElement(SBLOCK);
 
@@ -4328,6 +4333,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             { real_type_count == 0 && specifier_count == 0 && attribute_count == 0 }? (objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY])
 
         )
+    
+        // default to variable in function body.  However, if anonymous function (does not end in :) not a variable
+        throw_exception[inTransparentMode(MODE_FUNCTION_BODY) && type == VARIABLE && fla == TERMINATE]
 
         // since we got this far, we have a function
         set_type[type, FUNCTION, !isoperator]

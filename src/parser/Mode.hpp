@@ -246,4 +246,7 @@ const static srcMLState::MODE_TYPE MODE_FRIEND;
 /** mode for class header */
 const static srcMLState::MODE_TYPE MODE_CLASS_NAME;
 
+/** mode for function body */
+const static srcMLState::MODE_TYPE MODE_FUNCTION_BODY;
+
 #endif
