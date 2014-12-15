@@ -55,8 +55,8 @@ public :
      *
      * Constructor.
      */
-    relaxng_units(OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, int fd = 0)
-        : unit_dom(options), options(options), rngctx(rngctx), fd(fd), found(false), root_prefix(0) {
+    relaxng_units(OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, xmlOutputBufferPtr obuffer)
+        : unit_dom(options), options(options), rngctx(rngctx), found(false), root_prefix(0), output(obuffer) {
     }
 
     /**
@@ -73,7 +73,7 @@ public :
      */
     virtual void start_output() {
 
-        buf = xmlOutputBufferCreateFd(fd, NULL);
+        buf = output;
         // TODO:  Detect error
 
 #ifdef _MSC_BUILD
@@ -433,9 +433,9 @@ private :
     OPTION_TYPE options;
     xmlOutputBufferPtr buf;
     xmlRelaxNGValidCtxtPtr rngctx;
-    int fd;
     bool found;
     const xmlChar * root_prefix;
+    xmlOutputBufferPtr output;
 
 };
 

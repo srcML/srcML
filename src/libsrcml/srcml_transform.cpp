@@ -474,7 +474,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_relaxng(pinput,
                                       iarchive->transformations.at(i).doc,
-                                      0, oarchive->options);
+                                      obuffer, oarchive->options);
                 break;
             }
 

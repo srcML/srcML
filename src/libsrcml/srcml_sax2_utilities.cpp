@@ -288,15 +288,15 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, int fd, OPTION_TYPE options) {
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, xmlOutputBufferPtr obuffer, OPTION_TYPE options) {
 
-    if(input_buffer == NULL || relaxng == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(input_buffer == NULL || relaxng == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlRelaxNGParserCtxtPtr relaxng_parser_ctxt = xmlRelaxNGNewDocParserCtxt(relaxng);
     xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng_parser_ctxt);
     xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
 
-    relaxng_units process(options, rngctx, fd);
+    relaxng_units process(options, rngctx, obuffer);
     srcSAXController control(input_buffer);
 
     try {
