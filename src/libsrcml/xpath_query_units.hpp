@@ -72,8 +72,8 @@ public :
      *
      * Constructor.
      */
-    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath,
-                      const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0, xmlOutputBufferPtr output = 0)
+    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, xmlOutputBufferPtr output,
+                      const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0)
         : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
           total(0), found(false), needroot(true), closetag(false), context(0), output(output) {
@@ -202,11 +202,7 @@ public :
      */
     virtual void start_output() {
 
-        if (output) {
-            buf = output;
-        }
-        else
-            buf = xmlOutputBufferCreateFd(fd, NULL);
+        buf = output;
 
         // TODO:  Detect error
 
@@ -1101,7 +1097,6 @@ private :
     xmlOutputBufferPtr buf;
     bool needroot;
     bool closetag;
-    int fd;
     xmlXPathContextPtr context;
     xmlOutputBufferPtr output;
 
