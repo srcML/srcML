@@ -103,7 +103,6 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  * @param attr_uri an attribute namepace uri
  * @param attr_name the attribute name
  * @param attr_value the attribute value
- * @param fd output file descriptor
  * @param options srcml options
  *
  * XPath evaluation of the nested units.
@@ -112,10 +111,10 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  */
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
                 const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
-                int fd, OPTION_TYPE options, xmlOutputBufferPtr obuffer) {
+                OPTION_TYPE options, xmlOutputBufferPtr obuffer) {
 
     if(input_buffer == NULL || context_element == NULL ||
-       xpath == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
+       xpath == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     // relative xpath changed to at any level
     std::string s = xpath;
@@ -130,7 +129,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
     }
 
     // setup process handling
-    xpath_query_units process(options, compiled_xpath, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value, fd, obuffer);
+    xpath_query_units process(options, compiled_xpath, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value, obuffer);
     srcSAXController control(input_buffer);
 
     try {
@@ -183,17 +182,16 @@ void dlexsltRegisterAll(void * handle) {
  * @param xslt xmlDocPtr containing an XSLT program
  * @param params NULL-terminated list of XSLT parameters
  * @param paramcount number of XSLT parameters
- * @param fd output file descriptor
  * @param options srcml options
  *
  * XSLT evaluation of the nested units.
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, int fd, OPTION_TYPE options, xmlOutputBufferPtr output) {
+int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, OPTION_TYPE options, xmlOutputBufferPtr output) {
 
     if(input_buffer == NULL || context_element == NULL ||
-       xslt == NULL || fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
+       xslt == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlInitParser();
 
@@ -254,7 +252,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     xsltsrcMLRegister();
 
     // setup process handling
-    xslt_units process(context_element, options, stylesheet, params, fd, output);
+    xslt_units process(context_element, options, stylesheet, params, output);
     srcSAXController control(input_buffer);
 
     try {

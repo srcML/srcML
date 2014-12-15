@@ -70,15 +70,14 @@ public :
      * @param options list of srcML options
      * @param stylesheet an XSLT stylesheet
      * @param params XSLT parameters
-     * @param fd file descriptor in which to write
      *
      * Constructor.  Dynamically loads XSLT functions.
      */
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
-               const char** params, int fd = 0, xmlOutputBufferPtr output = 0)
+               const char** params, xmlOutputBufferPtr output = 0)
         : unit_dom(options), options(options),
           stylesheet(stylesheet), found(false),
-          result_type(0), params(params), fd(fd), output(output) {
+          result_type(0), params(params), output(output) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         handle = dlopen("libxslt.so", RTLD_LAZY);
@@ -136,10 +135,7 @@ public :
     virtual void start_output() {
 
         // setup output
-        if (output)
-            buf = output;
-        else
-            buf = xmlOutputBufferCreateFd(fd, NULL);
+        buf = output;
         // TODO:  Detect error
 
 #ifdef _MSC_BUILD
@@ -459,7 +455,6 @@ private :
     xmlOutputBufferPtr buf;
     int result_type;
     const char** params;
-    int fd;
     const xmlChar * root_prefix;
 #ifndef WIN32
     xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;

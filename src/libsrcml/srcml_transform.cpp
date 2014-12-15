@@ -458,7 +458,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.element),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_prefix), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_uri),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_name), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_value),
-                                    0, oarchive->options, obuffer);
+                                    oarchive->options, obuffer);
                 break;
             }
 
@@ -466,7 +466,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_xslt(pinput, "src:unit",
                                    iarchive->transformations.at(i).doc,
-                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, 0, oarchive->options, obuffer);
+                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, oarchive->options, obuffer);
                 break;
             }
 
