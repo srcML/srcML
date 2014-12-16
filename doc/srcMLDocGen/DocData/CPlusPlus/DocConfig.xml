@@ -1438,6 +1438,21 @@
             </XPathQueries>
             <Example file="../C/C-array-access.c" />
         </DocEntry>
+        
+        <DocEntry title="ternary operator">
+            <Elements>
+                <Element name="ternary" />
+                <Subelement name="condition" />
+                <Subelement name="then"/>
+                <Subelement name="else"/>
+            </Elements>
+            <Example file="../C/C-ternary-operator.c"/>
+            <XPathQueries>
+                <XPath path="//src:ternary">
+                    <Desc>Find all uses of the ternary operator</Desc>
+                </XPath>
+            </XPathQueries>
+        </DocEntry>
 
         <DocEntry title="dereference member access">
             <Elements>
@@ -1520,7 +1535,6 @@
 	    <OperatorEntry title="pointer to member" op=".*" example="CPP-Operator-member-ptr.cpp" />
 	    <OperatorEntry title="dereference pointer to member" op="->*" example="CPP-Operator-deref-member-ptr.cpp" />
 	    <OperatorEntry title="comma" op="," example="../C/C-Operator-comma.c" />
-        <OperatorEntry title="conditional" op="?  :" example="../C/C-Operator-turnary.c" />
         <OperatorEntry title="dot" op="." example="../C/C-member-access.c" />
         <OperatorEntry title="arrow" op="-&gt;" example="../C/C-deref-member-access.c" />
     </Category>

@@ -732,6 +732,22 @@
             <Example file="C-array-access.c" />
         </DocEntry>
 
+        <DocEntry title="ternary operator">
+            <Elements>
+                <Element name="ternary" />
+                <Subelement name="condition" />
+                <Subelement name="then"/>
+                <Subelement name="else"/>
+            </Elements>
+            <Example file="C-ternary-operator.c"/>
+            <XPathQueries>
+                <XPath path="//src:ternary">
+                    <Desc>Find all uses of the ternary operator</Desc>
+                </XPath>
+            </XPathQueries>
+        </DocEntry>
+
+
         <DocEntry title="dereference member access">
             <Elements>
                 <Element name="expr" />
@@ -740,8 +756,8 @@
             </Elements>
             <Example file="C-deref-member-access.c"/>
             <XPathQueries>
-                <XPath path="//op:operator[.='-&gt;']">
-                    <Desc>Find all uses of the `-&gt;` operator</Desc>
+                <XPath path="//src:operator[.='-&gt;']">
+                    <Desc>Find all uses of the -&gt; operator</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -754,8 +770,8 @@
             </Elements>
             <Example file="C-member-access.c"/>
             <XPathQueries>
-                <XPath path="//op:operator[.='.']">
-                    <Desc>Find all uses of the `.` operator</Desc>
+                <XPath path="//src:operator[.='.']">
+                    <Desc>Find all uses of the . operator</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -798,7 +814,6 @@
 	    <OperatorEntry example="C-Operator-bitwise-xor-assign.c" op="^=" title="bitwise xor assign" />
 	    <OperatorEntry example="C-Operator-bitwise-or-assign.c" op="|=" title="bitwise or assign" />
 	    <OperatorEntry example="C-Operator-comma.c" op="," title="comma" />
-        <OperatorEntry example="C-Operator-turnary.c" op="?  :" title="conditional" />
         <OperatorEntry example="C-member-access.c" op="." title="dot" />
         <OperatorEntry example="C-deref-member-access.c" op="-&gt;" title="arrow" />
     </Category>

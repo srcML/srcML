@@ -1411,6 +1411,21 @@
             <Example file="CS-array-index-2.cs" />
         </DocEntry>
 
+        <DocEntry title="ternary operator">
+            <Elements>
+                <Element name="ternary" />
+                <Subelement name="condition" />
+                <Subelement name="then"/>
+                <Subelement name="else"/>
+            </Elements>
+            <Example file="../C/C-ternary-operator.c"/>
+            <XPathQueries>
+                <XPath path="//src:ternary">
+                    <Desc>Find all uses of the ternary operator</Desc>
+                </XPath>
+            </XPathQueries>
+        </DocEntry>
+
         <DocEntry title="dereference member access">
             <Elements>
                 <Element name="expr"/>
@@ -1503,7 +1518,6 @@
 	    <OperatorEntry title="sceope" op="::" example="../CPlusPlus/CPP-Operator-scope.cpp" />
         <OperatorEntry title="null coalescing" op="??" example="CS-Operator-null-coalescing-1.cs" />
 	    <OperatorEntry title="comma" op="," example="../C/C-Operator-comma.c" />
-        <OperatorEntry title="conditional" op="?  :" example="../C/C-Operator-turnary.c" />
         <OperatorEntry title="dot" op="." example="../C/C-member-access.c" />
         <OperatorEntry title="arrow" op="-&gt;" example="../C/C-deref-member-access.c" />
         <OperatorEntry title="lambda" op="=&gt;" example="CS-lambda-1.cs" />
