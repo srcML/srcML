@@ -83,13 +83,4 @@ if(${BUILD_LANGUAGE_BINDINGS})
             DEPENDS ${PY_BINDINGS_OUTPUT_FILE} ${CMAKE_CURRENT_SOURCE_DIR}/python/test/testLauncher.py python/test/testLauncherConfig.py
         )
     endif()
-
-
-    if(${BUILD_CSHARP_BINDINGS})
-        if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-            message(WARNING "C# build hasn't been tested with Non-Visual Studio Projects. This may cause errors or build failures.")
-        endif()
-        subdirs(csharp)
-    endif()
-
 endif()
