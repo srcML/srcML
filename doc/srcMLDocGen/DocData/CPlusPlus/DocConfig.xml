@@ -623,16 +623,16 @@
                 <XPath path="//src:function_decl/src:type">
                     <Desc>Find all return types from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl/src:parameter_list/src:param">
+                <XPath path="//src:function_decl/src:parameter_list/src:parameter">
                     <Desc>Find all parameters from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list[count(src:param) = 2]]">
+                <XPath path="//src:function_decl[src:parameter_list[count(src:parameter) = 2]]">
                     <Desc>Find all function declarations with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function_decl/src:name">
                     <Desc>Find the names of all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list/src:param/src:decl/src:type/src:modifier[.='...']]">
+                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
                     <Desc>Find all function declarations that has variadic arguments</Desc>
                 </XPath>
             </XPathQueries>
@@ -658,16 +658,16 @@
                 <XPath path="//src:function/src:type">
                     <Desc>Find all return types from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function/src:parameter_list/src:param">
+                <XPath path="//src:function/src:parameter_list/src:parameter">
                     <Desc>Find all parameters from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list[count(src:param) = 2]]">
+                <XPath path="//src:function[src:parameter_list[count(src:parameter) = 2]]">
                     <Desc>Find all function definitions with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function/src:name">
                     <Desc>Find the names of all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:modifier[.='...']]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
                     <Desc>Find all function definition that has variadic arguments</Desc>
                 </XPath>
                 <XPath path="//src:function[src:decl_stmt]">
@@ -688,7 +688,7 @@
                 <Subelement name="expr" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:parameter_list/src:param/src:decl/src:init]">
+                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:init]">
                     <Desc>Find all function declarations with default parameters</Desc>
                 </XPath>
             </XPathQueries>
@@ -1202,13 +1202,13 @@
                 <XPath path="//src:constuctor">
                     <Desc>Find all constructors</Desc>
                 </XPath>
-                <XPath path="//src:constuctor[src:parameter_list[not(src:param)]]">
+                <XPath path="//src:constuctor[src:parameter_list[not(src:parameter)]]">
                     <Desc>Find all default constructors</Desc>
                 </XPath>
-                <XPath path="//src:constructor[src:parameter_list[not(src:param)] or (count(src:parameter_list/src:param) = count(src:parameter_list/src:param/src:decl/src:init))]">
+                <XPath path="//src:constructor[src:parameter_list[not(src:parameter)] or (count(src:parameter_list/src:parameter) = count(src:parameter_list/src:parameter/src:decl/src:init))]">
                     <Desc>Find all possible default constructors, including constructors with all default parameters</Desc>
                 </XPath>
-                <XPath path="//src:constructor[ (src:name | src:name/src:name[last()]) = (src:parameter_list/src:param[1]/src:decl/src:type/src:name | src:parameter_list/src:param[1]/src:decl/src:type/src:name[last()])] [( (count(src:parameter_list/src:param) - 1) = count(src:parameter_list/src:param/src:decl/src:init))]">
+                <XPath path="//src:constructor[ (src:name | src:name/src:name[last()]) = (src:parameter_list/src:parameter[1]/src:decl/src:type/src:name | src:parameter_list/src:parameter[1]/src:decl/src:type/src:name[last()])] [( (count(src:parameter_list/src:parameter) - 1) = count(src:parameter_list/src:parameter/src:decl/src:init))]">
                     <Desc>Find all possible copy constructors, including those which are not defined with the body of class and those with default parameters</Desc>
                 </XPath>
             </XPathQueries>
@@ -1768,10 +1768,10 @@
                 <Subelement name="param" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:template/src:parameter_list/src:param">
+                <XPath path="//src:template/src:parameter_list/src:parameter">
                     <Desc>Find all template parameters</Desc>
                 </XPath>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:template]">
+                <XPath path="//src:class[src:template/src:parameter_list/src:parameter/src:type/src:template]">
                     <Desc>Find all class templates which use a template template parameter</Desc>
                 </XPath>
             </XPathQueries>
@@ -1787,7 +1787,7 @@
                 <Element name="typename" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_iist/src:param/src:type/src:typename]">
+                <XPath path="//src:class[src:template/src:parameter_iist/src:parameter/src:type/src:typename]">
                     <Desc>Find all class templates which use typename as part of its parameter list</Desc>
                 </XPath>
             </XPathQueries>
@@ -1799,7 +1799,7 @@
                 <Element name="typename" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:name[.='class']]">
+                <XPath path="//src:class[src:template/src:parameter_list/src:parameter/src:type/src:name[.='class']]">
                     <Desc>Find all class which use class within instead of type name in at least one template parameter</Desc>
                 </XPath>
             </XPathQueries>
@@ -1811,7 +1811,7 @@
                 <Element name="modifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:modifier[.='...']]">
+                <XPath path="//src:class[src:template/src:parameter_list/src:parameter/src:type/src:modifier[.='...']]">
                     <Desc>Find all class templates that use a template parameter pack</Desc>
                 </XPath>
             </XPathQueries>

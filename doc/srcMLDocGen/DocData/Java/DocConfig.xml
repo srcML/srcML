@@ -513,10 +513,10 @@
                 <XPath path="//src:function/src:type">
                     <Desc>Find all return types from all method definitions</Desc>
                 </XPath>
-                <XPath path="//src:function/src:parameter_list/src:param">
+                <XPath path="//src:function/src:parameter_list/src:parameter">
                     <Desc>Find all parameters from all method definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list[count(src:param) = 2]]">
+                <XPath path="//src:function[src:parameter_list[count(src:parameter) = 2]]">
                     <Desc>Find all method definitions with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function/src:name">
@@ -694,7 +694,7 @@
                 <Element name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:constructor[src:parameter_list/src:param/src:decl/src:name/src:name[.='this']]">
+                <XPath path="//src:constructor[src:parameter_list/src:parameter/src:decl/src:name/src:name[.='this']]">
                     <Desc>Find all constructors which have a receiver parameter</Desc>
                 </XPath>
             </XPathQueries>
@@ -1064,13 +1064,13 @@
                 <Subelement name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:name/src:argument_list/src:argument[src:name[.='?']][src:extends]]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:name/src:argument_list/src:argument[src:name[.='?']][src:extends]]">
                     <Desc>Find all functions with a generic wildcard parameter that has an upper bound</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:name/src:argument_list/src:argument[src:name[.='?']][not(src:extends)][not(src:super)]]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:name/src:argument_list/src:argument[src:name[.='?']][not(src:extends)][not(src:super)]]">
                     <Desc>Find all functions with a generic wildcard parameters that is unbound</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:name/src:argument_list/src:argument[src:name[.='?']][src:super]]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:name/src:argument_list/src:argument[src:name[.='?']][src:super]]">
                     <Desc>Find all functions with a generic wildcard parameters that has a lower</Desc>
                 </XPath>
             </XPathQueries>

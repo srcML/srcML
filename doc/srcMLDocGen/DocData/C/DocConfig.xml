@@ -444,16 +444,16 @@
                 <XPath path="//src:function_decl/src:type">
                     <Desc>Find all return types from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl/src:parameter_list/src:param">
+                <XPath path="//src:function_decl/src:parameter_list/src:parameter">
                     <Desc>Find all parameters from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list[count(src:param) = 2]]">
+                <XPath path="//src:function_decl[src:parameter_list[count(src:parameter) = 2]]">
                     <Desc>Find all function declarations with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function_decl/src:name">
                     <Desc>Find the names of all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list/src:param/src:decl/src:type/type:modifier[.='...']]">
+                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:type/type:modifier[.='...']]">
                     <Desc>Find all function declarations that has variadic arguments</Desc>
                 </XPath>
             </XPathQueries>
@@ -478,16 +478,16 @@
                 <XPath path="//src:function/src:type">
                     <Desc>Find all return types from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function/src:parameter_list/src:param">
+                <XPath path="//src:function/src:parameter_list/src:parameter">
                     <Desc>Find all parameters from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list[count(src:param) = 2]]">
+                <XPath path="//src:function[src:parameter_list[count(src:parameter) = 2]]">
                     <Desc>Find all function definitions with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function/src:name">
                     <Desc>Find the names of all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/type:modifier[.='...']]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/type:modifier[.='...']]">
                     <Desc>Find all function definition that has variadic arguments</Desc>
                 </XPath>
                 <XPath path="//src:function[src:decl_stmt]">

@@ -507,7 +507,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:specifier[.='out']]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:specifier[.='out']]">
                     <Desc>Find all functions with out parameters</Desc>
                 </XPath>
             </XPathQueries>
@@ -520,7 +520,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:specifier[.='ref']]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:specifier[.='ref']]">
                     <Desc>Find all functions with ref parameters</Desc>
                 </XPath>
             </XPathQueries>
@@ -533,7 +533,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:specifier[.='params']]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:specifier[.='params']]">
                     <Desc>Find all functions with a variable number of arguments</Desc>
                 </XPath>
             </XPathQueries>
@@ -683,7 +683,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:specifier[.='this']]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:specifier[.='this']]">
                     <Desc>Find all extension methods</Desc>
                 </XPath>
             </XPathQueries>
@@ -777,10 +777,10 @@
                 <XPath path="//src:function_decl/src:type">
                     <Desc>Find all return types from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl/src:parameter_list/src:param">
+                <XPath path="//src:function_decl/src:parameter_list/src:parameter">
                     <Desc>Find all parameters from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list[count(src:param) = 2]]">
+                <XPath path="//src:function_decl[src:parameter_list[count(src:parameter) = 2]]">
                     <Desc>Find all function declarations with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function_decl/src:name">
@@ -804,10 +804,10 @@
                 <XPath path="//src:function/src:type">
                     <Desc>Find all return types from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function/src:parameter_list/src:param">
+                <XPath path="//src:function/src:parameter_list/src:parameter">
                     <Desc>Find all parameters from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list[count(src:param) = 2]]">
+                <XPath path="//src:function[src:parameter_list[count(src:parameter) = 2]]">
                     <Desc>Find all function definitions with only two parameters</Desc>
                 </XPath>
             </XPathQueries>
@@ -820,7 +820,7 @@
                 <Subelement name="expr" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:parameter_list/src:param/src:decl/src:init]">
+                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:init]">
                     <Desc>Find all function declarations with default parameters</Desc>
                 </XPath>
             </XPathQueries>
@@ -941,7 +941,7 @@
                 <XPath path="//src:property[src:parameter_list]">
                     <Desc>Find all indexer method declarations</Desc>
                 </XPath>
-                <XPath path="//src:property[src:parameter_list[count(src:param) > 1]]">
+                <XPath path="//src:property[src:parameter_list[count(src:parameter) > 1]]">
                     <Desc>Find all indexer method declarations with more then one dimension</Desc>
                 </XPath>
             </XPathQueries>
@@ -1244,10 +1244,10 @@
                 <XPath path="//src:constuctor">
                     <Desc>Find all constructors</Desc>
                 </XPath>
-                <XPath path="//src:constuctor[src:parameter_list[not(src:param)]]">
+                <XPath path="//src:constuctor[src:parameter_list[not(src:parameter)]]">
                     <Desc>Find all default constructors</Desc>
                 </XPath>
-                <XPath path="//src:constructor[src:parameter_list[not(src:param)] or (count(src:parameter_list/src:param) = count(src:parameter_list/src:param/src:decl/src:init))]">
+                <XPath path="//src:constructor[src:parameter_list[not(src:parameter)] or (count(src:parameter_list/src:parameter) = count(src:parameter_list/src:parameter/src:decl/src:init))]">
                     <Desc>Find all possible default constructors, including constructors with all default parameters</Desc>
                 </XPath>
             </XPathQueries>

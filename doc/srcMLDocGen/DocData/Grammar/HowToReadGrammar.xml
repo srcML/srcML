@@ -38,7 +38,7 @@ a literal.
     <Entry title="EBNF rule">
         <Desc>
 A EBNF Rule is the most general rule that doesn't include any additional information from
-XML as part of its name. Each rule is broken down into to parts the left hand side
+XML as part of its name. Each rule is broken down into to parts: the left hand side
 and right hand side, both sides are separated by a <code>:</code>(colon). The left hand side
 of the rule represents its name and the right the rule's contents. The right hand side
 is terminated by a <code>;</code>(semi-colon).
@@ -56,7 +56,7 @@ rule may have parameters. Parameters are always last as part of a rule's left ha
 side before the colon. An <span class="replacableText"><code>attribute-list</code></span>
 is an unordered comma separated list of attributes that are part of the
 <span class="replacableText"><code>tag-name</code></span>. An attribute within
-the list may be optional indicated by a <code>?</code> following it's name,
+the list may be optional, indicated by a <code>?</code> following it's name,
 but no other grammar constructs can be used to describe it.
         </Desc>
         <Example type="pre"><span class="replacableText">rule-name</span> &lt;<span class="replacableText">tag-name</span>&gt; : <span class="replacableText">rule-contents</span> ;</Example>
@@ -68,7 +68,7 @@ but no other grammar constructs can be used to describe it.
         <Desc>
 An attribute rule describes an XML attribute for an element. The XML attribute's
 name is given as meta information following the rule name and prefixed with a
-<code>@</code>. An attribute rules can not have parameters. 
+<code>@</code>. Attribute rules can not have parameters. 
 XML attributes take the form <code>attribute-name="content"</code> and the 
 <span class="replacableText"><code>rule-contents</code></span> represents what to expected
 within the <code>content</code> of an attribute.
@@ -84,9 +84,9 @@ The parameters of a rule can be used to pass any information that can be used to
 a rule. The use of a parameter within the description of a rule is indicated by using
 a <code>$</code> before the variable's name. An example of this would be if an
 element only has content based on the context it's used in. Each rule that would
-use the parameterized rule would indicate its content using it's parameter. For example, the rule
+use the parameterized rule would indicate its content using its parameter. For example, the rule
 <pre class="sourceCodeExample">type &amp;lt;type&amp;gt; [value]: $value ;</pre>
-describes an element with the name <code>description</code> whose value
+describes an element with the name <code>type</code> whose value
 is specified by the caller. This is illustrated in the following example:
 <pre class="sourceCodeExample">documentation &amp;lt;documentation&amp;gt; : type["docbook"] ;</pre>
 This means that the <code>documentation</code> rule would match the following XML,
@@ -166,9 +166,9 @@ whenever possible.
     <Entry title="Identifier keyword">
         <Desc>
 The <code>Identifier</code> keyword indicates any possible identifier within the
-language you are interested in. In some cases this also include keywords, typically
-that means the keywords that are names of built-in types, such as int, double, and auto,
-or implicit variable names such as this or base.
+language you are interested in. In some cases this also includes keywords. Typically
+that means keywords that are names of built-in types, such as int, double, or auto,
+or implicit variable names such as this, or base.
         </Desc>
         <Example type="pre"><span style="font-weight:bold">Identifier</span></Example>
     </Entry>
@@ -177,7 +177,7 @@ or implicit variable names such as this or base.
     <Entry title="Text keyword">
         <Desc>
 The <code>Text</code> keyword is used to indicate that literally ANY text (that isn't an XML element),
-including whitespace could occur at that location within the grammar.
+including whitespace, could occur at that location within the grammar.
         </Desc>
         <Example type="pre"><span style="font-weight:bold">Text</span></Example>
     </Entry>
