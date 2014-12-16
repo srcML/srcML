@@ -1,7 +1,7 @@
 /**
  * @file srcml_reader_handler.hpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -440,6 +440,8 @@ public :
                 archive->options |= SRCML_OPTION_MODIFIER;
             else if(uri == SRCML_EXT_POSITION_NS_URI)
                 archive->options |= SRCML_OPTION_POSITION;
+            else if(uri == SRCML_EXT_OPENMP_NS_URI)
+                archive->options |= SRCML_OPTION_OPENMP;
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
 

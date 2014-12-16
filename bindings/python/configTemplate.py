@@ -1,7 +1,7 @@
 ##
 # @file config.py
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,7 +55,7 @@ class GenPythonCode(BindingGenerator):
         return """##
 # @file bindings.py
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -242,7 +242,7 @@ class TestSuiteGenerator(TestSuiteGeneratorBase):
         return """##
 # @file test.py
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

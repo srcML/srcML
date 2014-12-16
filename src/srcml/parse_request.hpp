@@ -1,7 +1,7 @@
 /**
  * @file parse_request.hpp
  *
- * @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -30,6 +30,8 @@
 
 #include <boost/optional.hpp>
 
+#include <timer.hpp>
+
 struct ParseRequest {
     ParseRequest(int size = 0) : buffer(size), srcml_arch(0), unit(0), position(0), status(0), loc(0) {}
 
@@ -46,6 +48,7 @@ struct ParseRequest {
     int position;
     int status;
     long loc;
+    long runtime;
 };
 
 #endif

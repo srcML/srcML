@@ -1,7 +1,7 @@
 /**
  * @file test_srcml_append_transform.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,7 +76,7 @@ int main() {
         srcml_append_transform_xpath(archive, "//src:unit");
 
         dassert(archive->transformations.back().type, SRCML_XPATH);
-        dassert(archive->transformations.back().arguments.str, "//src:unit");
+        dassert(archive->transformations.back().arguments.str, std::string("//src:unit"));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -112,14 +112,14 @@ int main() {
         srcml_append_transform_xpath_attribute(archive, "//src:unit", "foo", "bar", "name", "value");
 
         dassert(archive->transformations.back().type, SRCML_XPATH);
-        dassert(archive->transformations.back().arguments.str, "//src:unit");
+        dassert(archive->transformations.back().arguments.str, std::string("//src:unit"));
         dassert(archive->transformations.back().arguments.prefix, 0);
         dassert(archive->transformations.back().arguments.uri, 0);
         dassert(archive->transformations.back().arguments.element, 0);
-        dassert(archive->transformations.back().arguments.attr_prefix, "foo");
-        dassert(archive->transformations.back().arguments.attr_uri, "bar");
-        dassert(archive->transformations.back().arguments.attr_name, "name");
-        dassert(archive->transformations.back().arguments.attr_value, "value");
+        dassert(archive->transformations.back().arguments.attr_prefix, std::string("foo"));
+        dassert(archive->transformations.back().arguments.attr_uri, std::string("bar"));
+        dassert(archive->transformations.back().arguments.attr_name, std::string("name"));
+        dassert(archive->transformations.back().arguments.attr_value, std::string("value"));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -164,10 +164,10 @@ int main() {
         srcml_append_transform_xpath_element(archive, "//src:unit", "foo", "bar", "element", 0, 0, 0, 0);
 
         dassert(archive->transformations.back().type, SRCML_XPATH);
-        dassert(archive->transformations.back().arguments.str, "//src:unit");
-        dassert(archive->transformations.back().arguments.prefix, "foo");
-        dassert(archive->transformations.back().arguments.uri, "bar");
-        dassert(archive->transformations.back().arguments.element, "element");
+        dassert(archive->transformations.back().arguments.str, std::string("//src:unit"));
+        dassert(archive->transformations.back().arguments.prefix, std::string("foo"));
+        dassert(archive->transformations.back().arguments.uri, std::string("bar"));
+        dassert(archive->transformations.back().arguments.element, std::string("element"));
         dassert(archive->transformations.back().arguments.attr_prefix, 0);
         dassert(archive->transformations.back().arguments.attr_uri, 0);
         dassert(archive->transformations.back().arguments.attr_name, 0);
@@ -183,14 +183,14 @@ int main() {
         srcml_append_transform_xpath_element(archive, "//src:unit", "foo", "bar", "element", "foobar", "foobar2", "name", "value");
 
         dassert(archive->transformations.back().type, SRCML_XPATH);
-        dassert(archive->transformations.back().arguments.str, "//src:unit");
-        dassert(archive->transformations.back().arguments.prefix, "foo");
-        dassert(archive->transformations.back().arguments.uri, "bar");
-        dassert(archive->transformations.back().arguments.element, "element");
-        dassert(archive->transformations.back().arguments.attr_prefix, "foobar");
-        dassert(archive->transformations.back().arguments.attr_uri, "foobar2");
-        dassert(archive->transformations.back().arguments.attr_name, "name");
-        dassert(archive->transformations.back().arguments.attr_value, "value");
+        dassert(archive->transformations.back().arguments.str, std::string("//src:unit"));
+        dassert(archive->transformations.back().arguments.prefix, std::string("foo"));
+        dassert(archive->transformations.back().arguments.uri, std::string("bar"));
+        dassert(archive->transformations.back().arguments.element, std::string("element"));
+        dassert(archive->transformations.back().arguments.attr_prefix, std::string("foobar"));
+        dassert(archive->transformations.back().arguments.attr_uri, std::string("foobar2"));
+        dassert(archive->transformations.back().arguments.attr_name, std::string("name"));
+        dassert(archive->transformations.back().arguments.attr_value, std::string("value"));
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
@@ -687,7 +687,7 @@ int main() {
 
         dassert(archive->transformations.size(), 9);
         dassert(archive->transformations.at(0).type, SRCML_XPATH);
-        dassert(archive->transformations.at(0).arguments.str, "//src:unit");
+        dassert(archive->transformations.at(0).arguments.str, std::string("//src:unit"));
         dassert(archive->transformations.at(1).type, SRCML_XSLT);
         assert(archive->transformations.at(1).doc != 0);
         dassert(archive->transformations.at(1).type, SRCML_XSLT);

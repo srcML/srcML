@@ -1,7 +1,7 @@
 /**
  * @timer.hpp
  *
- * @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -23,38 +23,40 @@
 #ifndef TIMER_HPP
 #define TIMER_HPP
 
-#include <time.h>
+#include <boost/timer.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 class Timer {
 public:
 	Timer() : time_limit(0) {}
-	Timer(int limit) : time_limit(limit) {}
+	Timer(double limit) : time_limit(limit) {}
 
 	inline void start() {
-		gettimeofday(&start_t,NULL);
+		real_world_time = boost::posix_time::microsec_clock::local_time();
+		cpu_time.restart();
 	}
 
 	// time in milliseconds
-	inline double elapsed() {
-		struct timeval end;
-		gettimeofday(&end,NULL);
-		long microseconds = (end.tv_sec - start_t.tv_sec) * 1000000 + ((long)end.tv_usec - (long)start_t.tv_usec);
-		long milliseconds = microseconds / 1000;
-		return milliseconds;
+	inline long real_world_elapsed() {
+		return  (boost::posix_time::microsec_clock::local_time() - real_world_time).total_milliseconds();
+	}
+
+	// time in milliseconds
+	inline long cpu_time_elapsed() {
+		return cpu_time.elapsed() * 10000;
 	}
 
 	inline bool is_expired() {
-		struct timeval end;
-		gettimeofday(&end,NULL);
-		return (((end.tv_sec - start_t.tv_sec) >= time_limit) && time_limit != 0);
+		return ((cpu_time.elapsed() >= time_limit) && time_limit != 0);
 	}
 
-	inline void set_limit(int limit) {
+	inline void set_limit(double limit) {
 		time_limit = limit;
 	}
 
 private:
-	struct timeval start_t;
+	boost::posix_time::ptime real_world_time;
+	boost::timer cpu_time;
     int time_limit; // in seconds
 };
 

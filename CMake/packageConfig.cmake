@@ -1,7 +1,7 @@
 ##
 # @file packageConfig.cmake
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/doc/src2srcml.xml)
 
 # vendor
-set(CPACK_PACKAGE_VENDOR "Software Developement Laboratories (SDML)")
+set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
 set(CPACK_PACKAGE_CONTACT "Software Developement Laboratories <bugs@srcML.org>")

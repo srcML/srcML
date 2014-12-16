@@ -1,7 +1,7 @@
 /**
  * @file test_srcml_archive_get.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -269,7 +269,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_get_namespace_size(archive), 7);
+        dassert(srcml_archive_get_namespace_size(archive), 8);
 
         srcml_free_archive(archive);
 
@@ -281,7 +281,7 @@ int main() {
 
         srcml_archive_register_namespace(archive, "foo1", "bar1");
         srcml_archive_register_namespace(archive, "foo2", "bar2");
-        dassert(srcml_archive_get_namespace_size(archive), 9);
+        dassert(srcml_archive_get_namespace_size(archive), 10);
 
         srcml_free_archive(archive);
 
@@ -319,7 +319,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_get_namespace_prefix(archive, 7), 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, 8), 0);
 
         srcml_free_archive(archive);
 
@@ -394,7 +394,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
 
-        dassert(srcml_archive_get_namespace_uri(archive, 7), 0);
+        dassert(srcml_archive_get_namespace_uri(archive, 8), 0);
 
         srcml_free_archive(archive);
 

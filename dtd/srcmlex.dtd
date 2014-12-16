@@ -6,9 +6,9 @@
 
     This is an extension of the srcML DTD.
 
-    srcML is a project of the Software DevelopMent Laboratory (SDML).
-    For more information see the SDML website at:
-        www.sdml.info
+    srcML is a project of srcML, LLC.
+    For more information see the srcML website at:
+        www.srcML.org
 -->
 
 <!ENTITY % srcML SYSTEM "srcml.dtd">

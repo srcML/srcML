@@ -1,7 +1,7 @@
 /**
  * @file srcml_transform.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
     if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { xpath_string, 0, 0, 0, 0, 0, 0, 0 };
+    struct xpath_arguments arguments = { optional_string_create(xpath_string), 0, 0, 0, 0, 0, 0, 0 };
 
     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
@@ -88,7 +88,7 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
     if(archive == NULL || xpath_string == 0 || attr_name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { xpath_string, 0, 0, 0, prefix, namespace_uri, attr_name, attr_value };
+    struct xpath_arguments arguments = { optional_string_create(xpath_string), 0, 0, 0, optional_string_create(prefix),optional_string_create(namespace_uri), optional_string_create(attr_name), optional_string_create(attr_value) };
 
     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
@@ -120,7 +120,8 @@ int srcml_append_transform_xpath_element (struct srcml_archive* archive, const c
     if(archive == NULL || xpath_string == 0 || element == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { xpath_string, prefix, namespace_uri, element, attr_prefix, attr_namespace_uri, attr_name, attr_value };
+    struct xpath_arguments arguments = { optional_string_create(xpath_string), optional_string_create(prefix), optional_string_create(namespace_uri), optional_string_create(element), optional_string_create(attr_prefix),
+     optional_string_create(attr_namespace_uri), optional_string_create(attr_name), optional_string_create(attr_value) };
 
     transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
     archive->transformations.push_back(tran);
@@ -475,11 +476,11 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
             case SRCML_XPATH: {
 
                 error = srcml_xpath(pinput, "src:unit",
-                                    iarchive->transformations.at(i).arguments.str,
-                                    iarchive->transformations.at(i).arguments.prefix, iarchive->transformations.at(i).arguments.uri,
-                                    iarchive->transformations.at(i).arguments.element,
-                                    iarchive->transformations.at(i).arguments.attr_prefix, iarchive->transformations.at(i).arguments.attr_uri,
-                                    iarchive->transformations.at(i).arguments.attr_name, iarchive->transformations.at(i).arguments.attr_value,
+                                    optional_get_c_str(iarchive->transformations.at(i).arguments.str),
+                                    optional_get_c_str(iarchive->transformations.at(i).arguments.prefix), optional_get_c_str(iarchive->transformations.at(i).arguments.uri),
+                                    optional_get_c_str(iarchive->transformations.at(i).arguments.element),
+                                    optional_get_c_str(iarchive->transformations.at(i).arguments.attr_prefix), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_uri),
+                                    optional_get_c_str(iarchive->transformations.at(i).arguments.attr_name), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_value),
                                     transform_fd, oarchive->options);
                 break;
             }

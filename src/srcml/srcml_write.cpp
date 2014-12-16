@@ -1,7 +1,7 @@
 /**
  * @file srcml_write.cpp
  *
- * @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -52,6 +52,8 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
             sprintf(str,"%ld", request->loc);
 
             s += str;
+            s += "\t";
+            s += "10";
             s += "\t";
             s += "HASH";
 

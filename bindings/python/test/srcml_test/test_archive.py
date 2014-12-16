@@ -1,7 +1,7 @@
 ##
 # @file test_archive.py
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -238,7 +238,7 @@ class TestArchive(unittest.TestCase):
     xml_data_body = """<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp"><comment type="block" format="doxygen">/**
  * @file srcml.h
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

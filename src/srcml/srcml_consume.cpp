@@ -1,7 +1,7 @@
 /**
  * @file srcml_consume.cpp
  *
- * @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -136,7 +136,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             
             srcml_unit_set_hash(unit, outmd);
         }
-
+        
         // parse the buffer/file (unless it is already form a srcml archive)
         if (request->disk_filename)
             status = srcml_parse_unit_filename(unit, request->disk_filename->c_str());
