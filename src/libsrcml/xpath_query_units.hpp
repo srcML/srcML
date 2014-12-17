@@ -332,7 +332,7 @@ public :
 
         // process the resulting nodes
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
-        std::string wrap;
+        bool haswrap = false;
         xmlBufferPtr wrapbuffer = xmlBufferCreate();
         xmlTextWriterPtr wrapwritter = xmlNewTextWriterMemory(wrapbuffer, 0);
         bool outputunit = false;
@@ -586,41 +586,36 @@ public :
 
                         // form text for wrapping unit.  Cached in a string since we may need it for
                         // each result
-                        if (wrap.empty()) {
+                        if (!haswrap) {
 
-                            wrap = "A";
+                            haswrap = true;
 
                             // output a wrapping element, just like the one read in
                             // note that this has to be ended somewhere
                             xmlTextWriterStartElementNS(wrapwritter, root->prefix, root->localname, root->URI);
-                            if(is_archive) {
 
-                                for(std::vector<const xmlChar *>::size_type i = rootsize; i < data.size(); i+=2)
-                                    xmlTextWriterWriteAttributeNS(wrapwritter, BAD_CAST "xmlns", BAD_CAST data[i], BAD_CAST "", BAD_CAST data[i+1]);
-                            }
-                            else {
-
-                                // if the root unit (?) has cpp namespace, then output it here also
-                                std::vector<const xmlChar *>::size_type pos;
-                                for(pos = 1; pos < data.size(); pos += 2)
+                            // copy the cpp namespace from the curren unit
+                            /*
+                            if (is_archive) {
+                                for(std::vector<const xmlChar *>::size_type pos = 1; pos < data.size(); pos += 2)
                                     if(strcmp((const char *)data[pos], "http://www.sdml.info/srcML/cpp") == 0) {
                                         xmlTextWriterWriteAttributeNS(wrapwritter, BAD_CAST "xmlns", BAD_CAST "cpp", BAD_CAST "", BAD_CAST "http://www.sdml.info/srcML/cpp");
                                         break;
-                                    }
-
-                                for(std::vector<const xmlChar *>::size_type i = rootsize; i < data.size(); i+=2)
-                                    xmlTextWriterWriteAttributeNS(wrapwritter, BAD_CAST "xmlns", BAD_CAST data[i], BAD_CAST "", BAD_CAST data[i+1]);
-
+                                }
                             }
+*/
+                            // copy all namespaces from the current unit
+                            for(std::vector<const xmlChar *>::size_type i = rootsize; i < data.size(); i+=2)
+                                xmlTextWriterWriteAttributeNS(wrapwritter, BAD_CAST "xmlns", BAD_CAST data[i], BAD_CAST "", BAD_CAST data[i+1]);
 
-                            // output all the current attributes from the individual unit
+                            // copy all the attributes from the current unit
                             for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
                                 xmlTextWriterWriteAttribute(wrapwritter, pAttr->name, pAttr->children->content);
 
+                            // get this text into wrapbuffer
                             xmlTextWriterFlush(wrapwritter);
 
                         }
-
 
                         // output the start of the wrapping unit
                         //xmlOutputBufferWrite(buf, (int)wrap.size(), wrap.c_str());
