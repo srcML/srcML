@@ -1,7 +1,7 @@
 /**
  * @file test_srcml_unparse_unit.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -339,8 +339,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
-
+        srcml_free_memory(s);
     }
 
     {
@@ -357,8 +356,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
-
+        srcml_free_memory(s);
     }
 
     {
@@ -375,8 +373,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
-
+        srcml_free_memory(s);
     }
 
     {
@@ -393,8 +390,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
-
+        srcml_free_memory(s);
     }
 
     {
@@ -411,8 +407,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
-
+        srcml_free_memory(s);
     }
 
     {
@@ -428,8 +423,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
-
+        srcml_free_memory(s);
     }
 
     {
@@ -445,8 +439,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
-
+        srcml_free_memory(s);
     }
 
     {
@@ -461,8 +454,7 @@ int main() {
         srcml_free_unit(unit);
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
-
+        srcml_free_memory(s);
     }
 
     {

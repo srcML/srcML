@@ -8,9 +8,9 @@
     structure to source code using XML elements.  It is defined in the DTD
     srcml.dtd.
 
-    srcML is a project of the Software DevelopMent Laboratory (SDML).
-    For more information see the SDML website at:
-        www.sdml.info
+    srcML is a project of srcML, LLC.
+    For more information see the srcML website at:
+        www.srcML.org
 -->
 
 <!-- Define the difference elements with no restrictions on content -->

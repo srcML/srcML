@@ -1,7 +1,7 @@
 /**
  * @file srcml.h
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -142,6 +142,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_OPERATOR          1<<24
 /** Markups operator in special namespace */
 #define SRCML_OPTION_DEBUG             1<<25
+/** Markups OpenMP in special namespace */
+#define SRCML_OPTION_OPENMP            1<<26
 
 /* srcml status messages */
 /** Return status indicating no errors */
@@ -403,6 +405,9 @@ __LIBSRCML_DECL int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_b
 __LIBSRCML_DECL int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
 __LIBSRCML_DECL int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
 __LIBSRCML_DECL int srcml_unparse_unit_io      (struct srcml_unit*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
+
+/* Free memmory buffer */
+__LIBSRCML_DECL void srcml_free_memory(char * buffer);
 
 /* srcML XPath query and XSLT transform functions */
 __LIBSRCML_DECL int srcml_clear_transforms                 (struct srcml_archive*);

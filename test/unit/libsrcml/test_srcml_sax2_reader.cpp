@@ -1,7 +1,7 @@
 /**
  * @file test_srcml_sax2_reader.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -171,7 +171,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -179,7 +179,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -187,6 +188,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -200,7 +202,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -208,7 +210,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -216,6 +219,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -241,7 +245,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 8);
+        dassert(prefixes.size(), 9);
         dassert(prefixes.at(0), "s");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -249,8 +253,9 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(prefixes.at(7), "foo");
-        dassert(namespaces.size(), 8);
+        dassert(prefixes.at(7), "omp");
+        dassert(prefixes.at(8), "foo");
+        dassert(namespaces.size(), 9);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -258,7 +263,8 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(namespaces.at(7), "bar");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
+        dassert(namespaces.at(8), "bar");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -270,7 +276,7 @@ int main() {
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
-        dassert(prefixes.size(), 8);
+        dassert(prefixes.size(), 9);
         dassert(prefixes.at(0), "s");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -278,8 +284,9 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(prefixes.at(7), "foo");
-        dassert(namespaces.size(), 8);
+        dassert(prefixes.at(7), "omp");
+        dassert(prefixes.at(8), "foo");
+        dassert(namespaces.size(), 9);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -287,7 +294,8 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(namespaces.at(7), "bar");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
+        dassert(namespaces.at(8), "bar");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -313,7 +321,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -321,7 +329,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -329,6 +338,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO ));
         dassert(tabstop, 4);
@@ -342,7 +352,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -350,7 +360,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -358,6 +369,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
@@ -383,7 +395,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -391,7 +403,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -399,6 +412,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
@@ -412,7 +426,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -420,7 +434,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -428,6 +443,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
@@ -453,7 +469,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -461,7 +477,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -469,6 +486,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -481,7 +499,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -489,7 +507,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -497,6 +516,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
     }
@@ -798,7 +818,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -806,7 +826,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -814,6 +835,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -865,7 +887,7 @@ int main() {
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
-        dassert(prefixes.size(), 8);
+        dassert(prefixes.size(), 9);
         dassert(prefixes.at(0), "s");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -873,8 +895,9 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(prefixes.at(7), "foo");
-        dassert(namespaces.size(), 8);
+        dassert(prefixes.at(7), "omp");
+        dassert(prefixes.at(8), "foo");
+        dassert(namespaces.size(), 9);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -882,7 +905,8 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
-        dassert(namespaces.at(7), "bar");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
+        dassert(namespaces.at(8), "bar");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -935,7 +959,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -943,7 +967,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -951,6 +976,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
@@ -995,7 +1021,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -1003,7 +1029,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -1011,6 +1038,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
                           | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
         dassert(tabstop, 4);
@@ -1055,7 +1083,7 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 7);
+        dassert(prefixes.size(), 8);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(prefixes.at(2), "err");
@@ -1063,7 +1091,8 @@ int main() {
         dassert(prefixes.at(4), "op");
         dassert(prefixes.at(5), "type");
         dassert(prefixes.at(6), "pos");
-        dassert(namespaces.size(), 7);
+        dassert(prefixes.at(7), "omp");
+        dassert(namespaces.size(), 8);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
         dassert(namespaces.at(2), "http://www.sdml.info/srcML/srcerr");
@@ -1071,6 +1100,7 @@ int main() {
         dassert(namespaces.at(4), "http://www.sdml.info/srcML/operator");
         dassert(namespaces.at(5), "http://www.sdml.info/srcML/modifier");
         dassert(namespaces.at(6), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(7), "http://www.sdml.info/srcML/OpenMP");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
