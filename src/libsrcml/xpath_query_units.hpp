@@ -98,7 +98,7 @@
      */
      void form_simple_xpath(xmlTextWriterPtr bufwriter, xmlNodePtr root_result_node) {
 
-        if (!root_result_node) {
+        if ((!root_result_node) || (strcmp((const char*) root_result_node->name, "unit") == 0)) {
            return;
         }
 
@@ -113,7 +113,7 @@
 
         // predicate
         xmlTextWriterWriteString(bufwriter, BAD_CAST "[");
-        xmlTextWriterWriteString(bufwriter, BAD_CAST child_offset(root_result_node).c_str());
+        xmlTextWriterWriteFormatString(bufwriter, "%d", child_offset(root_result_node));
         xmlTextWriterWriteString(bufwriter, BAD_CAST "]");
 
     }
@@ -153,7 +153,7 @@
      * Find the child offset.
      * @returns the child offset number as a string.
      */
-     std::string child_offset(xmlNodePtr root_result_node) {
+     int child_offset(xmlNodePtr root_result_node) {
 
         int child_count = 1;
         for(xmlNodePtr sibling_node = root_result_node->prev; sibling_node; sibling_node = sibling_node->prev) {
@@ -163,14 +163,7 @@
                     ++child_count;
         }
 
-        if (child_count == 1)
-            return "1";
-
-        std::ostringstream child_offset_string("");
-        child_offset_string << child_count;
-
-        return child_offset_string.str();
-
+        return child_count;
     }
 
     /**
