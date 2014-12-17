@@ -130,9 +130,14 @@
         int child_count = 1;
         for(xmlNodePtr sibling_node = root_result_node->prev; sibling_node; sibling_node = sibling_node->prev) {
 
+            if (sibling_node->type != XML_ELEMENT_NODE)
+                continue;
+
             if ((strcmp((const char*) root_result_node->name, (const char*) sibling_node->name) == 0) &&
-                ((root_result_node->ns == NULL && sibling_node->ns == NULL) || (root_result_node->ns->prefix == sibling_node->ns->prefix)))
+                ((root_result_node->ns == NULL && sibling_node->ns == NULL) || (root_result_node->ns->prefix == sibling_node->ns->prefix))) {
                     ++child_count;
+
+                }
         }
 
         return child_count;
@@ -622,7 +627,7 @@
                     */
 
                     // input was an archive, xpath result is a unit
-                      if (onode->type == XML_ELEMENT_NODE && is_archive && !outputunit) {
+                    if (onode->type == XML_ELEMENT_NODE && is_archive && !outputunit) {
 
                         // create a new list of namespaces
                         // skip over the namespaces on the root
@@ -637,9 +642,6 @@
 
                         // restore original namespaces
                         onode->nsDef = savens;
-
-                        // space between internal units
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
 
                     } else if (onode->type == XML_ELEMENT_NODE && !is_archive && !outputunit) {
 
@@ -677,16 +679,15 @@
 
                         // xpath of nodeset, that is not a unit, or the value of an attribute
 
-                        // dump the namespace-modified tree
+                            // dump the namespace-modified tree
                             xmlNodeDumpOutput(buf, ctxt->myDoc, onode->type == XML_ATTRIBUTE_NODE ? onode->children : onode, 0, 0, 0);
 
-                        // wrapped in a unit, so output the end tag
-                            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
+                            // wrapped in a unit, so end the wrapping unit
+                            xmlTextWriterEndElement(bufwriter);
                         }
 
                     // space between internal units
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-
+                    xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
                     }
 
                 }
