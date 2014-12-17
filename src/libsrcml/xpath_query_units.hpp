@@ -584,7 +584,7 @@ public :
 
                         // form text for wrapping unit.  Cached in a string since we may need it for
                         // each result
-                        if (wrap == "") {
+                        if (wrap.empty()) {
 
                             // output a wrapping element, just like the one read in
                             // note that this has to be ended somewhere
