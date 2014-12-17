@@ -117,35 +117,7 @@
         xmlTextWriterWriteString(bufwriter, BAD_CAST "]");
 
     }
-
-    /**
-     * form_full_name
-     * @param prefix the xml prefix
-     * @param name the xml name;
-     *
-     * Form the full xpath name.
-     * @returns the full name as a string.
-     */
-     std::string form_full_name(xmlNodePtr root_result_node) {
-
-        std::string full_name = ""; 
-        if(root_result_node->ns && root_result_node->ns->prefix) {
-
-            full_name += (const char *)root_result_node->ns->prefix;
-
-        } else {
-
-            full_name += "src";
-
-        }
-
-        full_name += ":";
-        full_name += (const char *)root_result_node->name;
-
-        return full_name;
-
-    }
-
+    
     /**
      * child_offset
      * @param root_result_node the root node form xpath query result
