@@ -204,6 +204,8 @@ public :
 
         buf = output;
 
+        bufwriter = xmlNewTextWriter(buf);
+
         // TODO:  Detect error
 
 #ifdef _MSC_BUILD
@@ -880,6 +882,8 @@ public :
         // all done with the buffer
         xmlOutputBufferClose(buf);
 
+        xmlFreeTextWriter(bufwriter);
+
     }
 
     /**
@@ -998,6 +1002,7 @@ private :
     int nodetype;
     bool found;
     xmlOutputBufferPtr buf;
+    xmlTextWriterPtr bufwriter;
     bool needroot;
     bool closetag;
     xmlXPathContextPtr context;
