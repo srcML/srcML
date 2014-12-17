@@ -618,6 +618,7 @@ public :
                                 xmlTextWriterWriteAttribute(wrapwritter, pAttr->name, pAttr->children->content);
 
                             xmlTextWriterFlush(wrapwritter);
+
                         }
 
 
@@ -705,22 +706,12 @@ public :
                             xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
                         }
 
-                    } else if (onode->type == XML_ATTRIBUTE_NODE) {
-
-                        // xpath of attribute is value of attribute
-
-                        // dump the namespace-modified tree
-                        xmlNodeDumpOutput(buf, ctxt->myDoc, onode->children, 0, 0, 0);
-
-                        // wrapped in a unit, so output the end tag
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
-
                     } else {
 
-                        // xpath of nodeset, that is not a unit
+                        // xpath of nodeset, that is not a unit, or the value of an attribute
 
                         // dump the namespace-modified tree
-                        xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
+                        xmlNodeDumpOutput(buf, ctxt->myDoc, onode->type == XML_ATTRIBUTE_NODE ? onode->children : onode, 0, 0, 0);
 
                         // wrapped in a unit, so output the end tag
                         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
@@ -823,6 +814,8 @@ public :
         // finished with the result nodes
         xmlXPathFreeObject(result_nodes);
 
+        xmlTextWriterEndDocument(wrapwritter);
+
 #if LIBEXSLT_VERSION > 813
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 //        dlclose(handle);
@@ -891,6 +884,7 @@ public :
 
         // all done with the buffer
         xmlOutputBufferClose(buf);
+
     }
 
     /**
