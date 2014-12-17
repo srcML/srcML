@@ -96,27 +96,25 @@
      * Form a simple xpath expression that marks the location of the result.
      * @returns the simple xpath to the result node as a string.
      */
-     std::string form_simple_xpath(xmlNodePtr root_result_node) {
+     void form_simple_xpath(xmlTextWriterPtr bufwriter, xmlNodePtr root_result_node) {
 
-        std::string simple_xpath = form_full_name(root_result_node)
-        + std::string("[") + child_offset(root_result_node) + std::string("]");
-        xmlNodePtr parent_node = root_result_node->parent;
-
-        while(parent_node && parent_node->name && (strcmp((const char *)parent_node->name, "unit") != 0
-           || (parent_node->parent && parent_node->parent->name && strcmp((const char *)parent_node->parent->name, "unit") == 0))) {
-
-            if(parent_node->name)
-                simple_xpath = form_full_name(parent_node)
-            + std::string("[") + child_offset(parent_node) + std::string("]")
-            + std::string("/") + simple_xpath;
-
-            parent_node = parent_node->parent;
-
+        if (!root_result_node) {
+           return;
         }
 
-        simple_xpath = "/" + simple_xpath;
+        form_simple_xpath(bufwriter, root_result_node->parent);
 
-        return simple_xpath;
+        xmlTextWriterWriteString(bufwriter, BAD_CAST "/");
+        // current node
+        xmlTextWriterWriteString(bufwriter, BAD_CAST "src");
+//        xmlTextWriterWriteString(bufwriter, BAD_CAST ((root_result_node->ns && root_result_node->ns->prefix) ? (const char*) root_result_node->ns->prefix : "src"));
+        xmlTextWriterWriteString(bufwriter, BAD_CAST ":");
+        xmlTextWriterWriteString(bufwriter, BAD_CAST root_result_node->name);
+
+        // predicate
+        xmlTextWriterWriteString(bufwriter, BAD_CAST "[");
+        xmlTextWriterWriteString(bufwriter, BAD_CAST child_offset(root_result_node).c_str());
+        xmlTextWriterWriteString(bufwriter, BAD_CAST "]");
 
     }
 
@@ -638,7 +636,9 @@
                         xmlTextWriterWriteFormatAttribute(bufwriter, BAD_CAST "item", "%d", i + 1);
 
                         // append path
-                        xmlTextWriterWriteAttribute(bufwriter, BAD_CAST simple_xpath_attribute_name, BAD_CAST form_simple_xpath(onode).c_str());
+                        xmlTextWriterStartAttribute(bufwriter, BAD_CAST simple_xpath_attribute_name);
+                        form_simple_xpath(bufwriter, onode);
+                        xmlTextWriterEndAttribute(bufwriter);
 
                         xmlTextWriterWriteString(bufwriter, BAD_CAST "");
                         xmlTextWriterFlush(bufwriter);
