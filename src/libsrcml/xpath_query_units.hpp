@@ -98,16 +98,16 @@
      */
      void form_simple_xpath(xmlTextWriterPtr bufwriter, xmlNodePtr root_result_node) {
 
-        if ((!root_result_node) || (strcmp((const char*) root_result_node->name, "unit") == 0)) {
+        if ((!root_result_node) || (root_result_node->type != XML_ELEMENT_NODE) || (!root_result_node->name) || (strcmp((const char*) root_result_node->name, "unit") == 0)) {
            return;
         }
 
         form_simple_xpath(bufwriter, root_result_node->parent);
 
         xmlTextWriterWriteString(bufwriter, BAD_CAST "/");
+
         // current node
-        xmlTextWriterWriteString(bufwriter, BAD_CAST "src");
-//        xmlTextWriterWriteString(bufwriter, BAD_CAST ((root_result_node->ns && root_result_node->ns->prefix) ? (const char*) root_result_node->ns->prefix : "src"));
+        xmlTextWriterWriteString(bufwriter, BAD_CAST ((root_result_node->ns && root_result_node->ns->prefix) ? (const char*) root_result_node->ns->prefix : "src"));
         xmlTextWriterWriteString(bufwriter, BAD_CAST ":");
         xmlTextWriterWriteString(bufwriter, BAD_CAST root_result_node->name);
 
