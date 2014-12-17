@@ -628,13 +628,11 @@ public :
                         // append line number and close unit start tag
                         const int MAXSSIZE = 50;
                         static char itoabuf[MAXSSIZE];
-                        xmlOutputBufferWriteAttribute(buf, BAD_CAST "item", itoabuf);
-/*
                         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" item=\""));
                         snprintf(itoabuf, MAXSSIZE, "%d", i + 1);
                         xmlOutputBufferWriteString(buf, itoabuf);
                         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-*/
+
                         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
                         xmlOutputBufferWrite(buf, (int)strlen(simple_xpath_attribute_name), simple_xpath_attribute_name);
                         xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
@@ -701,19 +699,11 @@ public :
                                 onode->nsDef->next = keepcppnext;
                             onode->nsDef = savens;
 
-                            // space between internal units
-                            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-
                         } else {
 
                             // dump the namespace-modified tree
                             xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-
-                            // space between internal units
-                            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
-
                         }
-
 
                     } else if (onode->type == XML_ATTRIBUTE_NODE) {
 
@@ -723,7 +713,7 @@ public :
                         xmlNodeDumpOutput(buf, ctxt->myDoc, onode->children, 0, 0, 0);
 
                         // wrapped in a unit, so output the end tag
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
 
                     } else {
 
@@ -733,8 +723,12 @@ public :
                         xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
 
                         // wrapped in a unit, so output the end tag
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>\n\n"));
+                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("</unit>"));
                     }
+
+                    // space between internal units
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n\n"));
+
                 }
 
             }
