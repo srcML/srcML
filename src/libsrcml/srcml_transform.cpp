@@ -549,8 +549,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     if(last_transform_filename) UNLINK(last_transform_filename);
     free((void *)last_transform_filename);
 
-    srcml_clear_transforms(iarchive);
-
     return SRCML_STATUS_OK;
 
 }

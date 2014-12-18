@@ -98,6 +98,7 @@ int main() {
         srcml_archive * oarchive = srcml_clone_archive(iarchive);
         srcml_write_open_memory(oarchive, &s, &size);
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -119,6 +120,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -141,6 +143,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -163,6 +166,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -188,6 +192,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -209,6 +214,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -230,6 +236,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -251,6 +258,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -273,6 +281,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -298,6 +307,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -319,6 +329,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -340,6 +351,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -361,6 +373,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -383,6 +396,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -405,6 +419,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -432,6 +447,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -455,6 +471,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -478,6 +495,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -501,6 +519,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -525,6 +544,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -552,6 +572,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -576,6 +597,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -600,6 +622,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -624,6 +647,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -649,6 +673,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -674,6 +699,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -695,6 +721,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -716,6 +743,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -737,6 +765,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -762,6 +791,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -783,6 +813,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -804,6 +835,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -825,6 +857,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -853,6 +886,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -877,6 +911,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -901,6 +936,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -925,6 +961,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -953,6 +990,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -977,6 +1015,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -1001,6 +1040,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -1025,6 +1065,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -1070,6 +1111,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -1110,6 +1152,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -1151,6 +1194,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
@@ -1192,6 +1236,7 @@ int main() {
         srcml_write_open_memory(oarchive, &s, &size);
 
         srcml_apply_transforms(iarchive, oarchive);
+        srcml_clear_transforms(iarchive);
 
         srcml_close_archive(oarchive);
         srcml_free_archive(oarchive);
