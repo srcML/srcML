@@ -26,6 +26,7 @@
 #ifdef WIN32
 #include <cstdlib>
 #endif
+#include <iostream>
 
 /** Static sax handler for zero initializing in factory */
 xmlSAXHandler sax2_srcml_handler_init;
@@ -100,21 +101,13 @@ static inline void free_srcsax_namespaces(int /*number_namespaces*/, srcsax_name
 #ifdef WIN32
 char * strndup(const char *s, size_t size)
 {
-    char *r;
-    char *end = (char*)memchr(s, 0, size);
-
-    if (end)
-        /* Length + 1 */
-        size = end - s + 1;
-
-    r = (char*)malloc(size);
-
-    if (size)
-    {
-        memcpy(r, s, size - 1);
-        r[size - 1] = '\0';
+    char* ret = (char*)malloc(sizeof(char) * (size + 1));
+    if (!ret) {
+        return 0;
     }
-    return r;
+    memcpy(ret, s, size);
+    ret[size] = '\0';
+    return ret;
 }
 #endif
 
@@ -137,8 +130,10 @@ static inline srcsax_attribute * libxml2_attributes2srcsax_attributes(int number
         srcsax_attributes[pos].localname = (const char *)libxml2_attributes[index];
         srcsax_attributes[pos].prefix = (const char *)libxml2_attributes[index + 1];
         srcsax_attributes[pos].uri = (const char *)libxml2_attributes[index + 2];
-        srcsax_attributes[pos].value = strndup((const char *)libxml2_attributes[index + 3], libxml2_attributes[index + 4] - libxml2_attributes[index + 3]);
-
+        srcsax_attributes[pos].value = strndup(
+            (const char *)libxml2_attributes[index + 3],
+            libxml2_attributes[index + 4] - libxml2_attributes[index + 3]
+        );
     }
 
     return srcsax_attributes;
