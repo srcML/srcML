@@ -8,6 +8,8 @@
 bin
 dist
 dep
+src/parser/PhaseOne.txt
+
 
 # cmake/ctest/cpack
 CMakeCache.txt

@@ -122,7 +122,7 @@ class BindingGenerator(object):
                 currentFuncPtrInfo.functionName += extractNormalizedTypeName(nameNode)
 
             # Handling Parameter List
-            parameterDecls = xmlType.xpath("src:parameter_list/src:param/src:decl", namespaces=XPathNamespaces)
+            parameterDecls = xmlType.xpath("src:parameter_list/src:parameter/src:decl", namespaces=XPathNamespaces)
             for paramDecl in parameterDecls:
                 paramType = paramDecl.xpath("src:type", namespaces=XPathNamespaces)[0]
                 paramInfo = ParamTypeInfo()
@@ -213,7 +213,7 @@ class BindingGenerator(object):
             funcDeclInfo.name = extractNormalizedTypeName(functionName)
 
             # Handling Parameter List
-            parameters = func.xpath("src:parameter_list/src:param", namespaces=XPathNamespaces)
+            parameters = func.xpath("src:parameter_list/src:parameter", namespaces=XPathNamespaces)
             for param in parameters:
                 paramInfo = ParamInfo()
                 if param[0].tag == "{http://www.sdml.info/srcML/src}decl":

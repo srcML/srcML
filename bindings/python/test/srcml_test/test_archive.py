@@ -377,15 +377,15 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(unit_count, 6,"Incorrect # of units.")
         archive = None
 
-    def test_open_read__unit_headers(self):
-        archive = srcml.archive()
-        archive.open_read(filename=TestArchive.java_archive_file)
-        self.assertEqual(archive.language, srcml.LANGUAGE_JAVA, "Incorrect value for language.")
-        unit_count = 0
-        for u in archive.unit_headers():
-            unit_count += 1
-        self.assertEqual(unit_count, 6,"Incorrect # of units.")
-        archive = None
+    # def test_open_read__unit_headers(self):
+    #     archive = srcml.archive()
+    #     archive.open_read(filename=TestArchive.java_archive_file)
+    #     self.assertEqual(archive.language, srcml.LANGUAGE_JAVA, "Incorrect value for language.")
+    #     unit_count = 0
+    #     for u in archive.unit_headers():
+    #         unit_count += 1
+    #     self.assertEqual(unit_count, 6,"Incorrect # of units.")
+    #     archive = None
 
 
     # Testing xml writer interface function.
@@ -615,3 +615,10 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(transformed_unit.xml(), input_unit.xml(), "Archive wasn't transformed correctly.")
 
 
+    test_code = """
+#include <iostream>
+int main() {
+    std::cout << "hello world" << std::endl;
+    return 0;
+}
+"""
