@@ -319,110 +319,66 @@
                 xmlTextWriterWritePI(bufwriter, BAD_CAST processing_instruction->first.c_str(), BAD_CAST processing_instruction->second.c_str());
 //                xml_output_buffer_write_processing_instruction(buf, processing_instruction);
 
-                /** @todo make more efficient so do not need temp array */
-
-                // append namespace for inserted element/attributes
-            std::vector<const xmlChar *> namespaces;
-            namespaces.reserve((root->nb_namespaces + 2) * 2);
-            bool found_ns = false;
-
-            for(size_t pos = 0; pos < (size_t)root->nb_namespaces; ++pos) {
-
-                namespaces.push_back(root->namespaces[pos * 2]);
-                namespaces.push_back(root->namespaces[pos * 2 + 1]);
-
-                if(uri && root->namespaces[pos * 2 + 1] && strcmp(uri, (const char *)root->namespaces[pos * 2 + 1]) == 0)
-                    found_ns = true;
-
-            }
-
-            if(uri && !found_ns) {
-
-                for(size_t pos = 0; pos < (size_t)context->nsNr; ++pos)
-                    if(strcmp((const char *)context->namespaces[pos], uri) == 0)
-                        found_ns = true;
-
-                    if(!found_ns) {
-
-                        namespaces.push_back((const xmlChar *)prefix);
-                        namespaces.push_back((const xmlChar *)uri);
-
-                    }
-
-                }
-
-                if(attr_uri) {
-
-                    found_ns = false;
-                    for(std::vector<const xmlChar *>::size_type pos = 0; pos < namespaces.size() / 2; ++pos) {
-
-                        if(namespaces[pos * 2 + 1] && strcmp(attr_uri, (const char *)namespaces[pos * 2 + 1]) == 0)
-                            found_ns = true;
-
-                    }
-
-                    if(!found_ns) {
-
-                        for(size_t pos = 0; pos < (size_t)context->nsNr; ++pos)
-                            if(strcmp((const char *)context->namespaces[pos], attr_uri) == 0)
-                                found_ns = true;
-
-                            if(!found_ns) {
-
-                                namespaces.push_back((const xmlChar *)attr_prefix);
-                                namespaces.push_back((const xmlChar *)attr_uri);
-
-                            }
-
-                        }
-
-                    }
-
                 // output a root element, just like the one read in
                 // note that this has to be ended somewhere
                 xmlTextWriterStartElementNS(bufwriter, NULL, root->localname, root->URI);
-/*
-                // copy all namespaces from the current unit
-                for(std::vector<const xmlChar *>::size_type i = 0; i < namespaces.size(); i+=2) {
-                    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-                    fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, namespaces[i]);
-                    fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, namespaces[i + 1]);
 
+                // copy all namespaces from the current unit
+                for (size_t pos = 0; pos < (size_t)context->nsNr; ++pos) {
 //                    xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST namespaces[i], BAD_CAST "", BAD_CAST namespaces[i+1]);
                 }
 
-                for(std::vector<const xmlChar *>::size_type i = 0; i < namespaces.size(); i+=2) {
-                    xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST namespaces[i], BAD_CAST "", BAD_CAST namespaces[i+1]);
+                // add in the element namespace if needed
+                bool found_element_ns = false;
+                if (uri) {
+
+                    for (size_t pos = 0; pos < (size_t)context->nsNr; ++pos)
+                        if (strcmp((const char *)context->namespaces[pos], uri) == 0) {
+                            found_element_ns = true;
+                            break;
+                        }
                 }
 
-//                xmlTextWriterWriteString(bufwriter, BAD_CAST "");
-//                xmlTextWriterFlush(bufwriter);
-//                exit(0);
+                if (uri && !found_element_ns)
+                    xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST prefix, BAD_CAST "", BAD_CAST uri);
 
-*/
-                //xmlTextWriterWriteString(bufwriter, BAD_CAST "");
-/*
+                // add in the attribute namespace if needed
+                bool found_attribute_ns = attr_uri && found_element_ns && (strcmp(uri, attr_uri) == 0);
+                if (attr_uri && !found_attribute_ns) {
+
+                    for (size_t pos = 0; pos < (size_t)context->nsNr; ++pos)
+                        if (strcmp((const char *)context->namespaces[pos], uri) == 0) {
+                            found_attribute_ns = true;
+                            break;
+                        }
+                }
+                if (attr_uri && !found_attribute_ns)
+                    xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST attr_prefix, BAD_CAST "", BAD_CAST attr_uri);
+
                 // copy all the attributes from the current unit
                 for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
-//                                fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, pAttr->name);
                     xmlTextWriterWriteAttribute(bufwriter, pAttr->name, pAttr->children->content);
                 }
 
-*/
                 closetag = true;
 
                 if(meta_tags.size()) {
 
                     xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
                     for(std::vector<std::string>::size_type i = 0; i < meta_tags.size(); ++i) {
-                        xml_output_buffer_write_element_ns(buf, meta_tags.at(i).localname, meta_tags.at(i).prefix, meta_tags.at(i).URI,
-                         meta_tags.at(i).nb_namespaces, meta_tags.at(i).namespaces,
-                         meta_tags.at(i).nb_attributes, meta_tags.at(i).nb_defaulted, meta_tags.at(i).attributes);
 
-                        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("/>"));
+                        xmlTextWriterStartElementNS(bufwriter, meta_tags[i].localname, meta_tags[i].prefix, meta_tags[i].URI);
 
+                        for (int j = 0; j < meta_tags[i].nb_namespaces; j += 2) {
+                            xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST meta_tags[i].namespaces[j], BAD_CAST "", BAD_CAST meta_tags[i].namespaces[j+1]);
+                        }
+
+                        for (int j = 0; j < meta_tags[i].nb_attributes; j += 2) {
+                            xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST meta_tags[i].attributes[j], BAD_CAST "", BAD_CAST meta_tags[i].attributes[j+1]);
+                        }
+
+                        xmlTextWriterEndElement(bufwriter);
                     }
-
 
                 }
 
