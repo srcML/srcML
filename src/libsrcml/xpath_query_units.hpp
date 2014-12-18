@@ -297,7 +297,6 @@
 
         // process the resulting nodes
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
-        bool haswrap = false;
         xmlBufferPtr wrapbuffer = xmlBufferCreate();
         xmlTextWriterPtr wrapwritter = xmlNewTextWriterMemory(wrapbuffer, 0);
         bool outputunit = false;
@@ -588,7 +587,7 @@
                         if (is_archive) {
                             for(std::vector<const xmlChar *>::size_type pos = 1; pos < data.size(); pos += 2)
                                 if(strcmp((const char *)data[pos], "http://www.sdml.info/srcML/cpp") == 0) {
-                                    xmlTextWriterWriteAttributeNS(wrapwritter, BAD_CAST "xmlns", BAD_CAST "cpp", BAD_CAST "", BAD_CAST "http://www.sdml.info/srcML/cpp");
+                                    xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST "cpp", BAD_CAST "", BAD_CAST "http://www.sdml.info/srcML/cpp");
                                     break;
                                 }
                         }
