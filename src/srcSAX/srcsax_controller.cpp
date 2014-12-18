@@ -154,6 +154,8 @@ static struct srcsax_context * srcsax_create_context_inner(xmlParserInputBufferP
 
     context->libxml2_context = libxml2_context;
 
+    context->terminate = 0;
+
     return context;
 
 }
@@ -423,6 +425,8 @@ srcsax_create_parser_context(xmlParserInputBufferPtr buffer_input) {
  * Stop srcSAX parser.
  */
 void srcsax_stop_parser(struct srcsax_context * context) {
+
+    context->terminate = 1;
 
     xmlParserCtxtPtr ctxt = context->libxml2_context;
 

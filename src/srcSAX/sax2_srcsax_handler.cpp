@@ -223,7 +223,8 @@ void start_document(void * ctx) {
     else if(ctxt->input)
         state->context->encoding = (const char *)ctxt->input->encoding;
 
-    //    state->context->init(ctxt);
+    if(state->context->terminate) return;
+
     if(state->context->handler->start_document)
         state->context->handler->start_document(state->context);
 
@@ -255,8 +256,12 @@ void end_document(void * ctx) {
     state->context->stack_size = 0;
     state->context->srcml_element_stack = 0;
 
+    if(state->context->terminate) return;
+
     if(state->mode != END_ROOT && state->mode != START && state->context->handler->end_root)
         state->context->handler->end_root(state->context, (const char *)state->root.localname, (const char *)state->root.prefix, (const char *)state->root.URI);
+
+    if(state->context->terminate) return;
 
     if(state->context->handler->end_document)
         state->context->handler->end_document(state->context);
@@ -362,6 +367,8 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
     state->is_archive = strcmp((const char *)localname, "unit") == 0;
     state->context->is_archive = state->is_archive;
 
+    if(state->context->terminate) return;
+
     if(state->context->handler->start_root) {
 
         srcsax_namespace * srcsax_namespaces_root = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(state->root.nb_namespaces, state->root.namespaces);
@@ -375,9 +382,13 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
 
     }
 
+    if(state->context->terminate) return;
+
     if(state->context->handler->meta_tag && !state->meta_tags.empty()) {
 
         for(std::vector<srcml_element>::const_iterator citr = state->meta_tags.begin(); citr < state->meta_tags.end(); ++citr) {
+
+            if(state->context->terminate) return;
 
             srcml_element_stack_push(state->context, state->srcml_element_stack, (const char *)citr->prefix, (const char *)citr->localname);
 
@@ -393,16 +404,20 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
 
             srcml_element_stack_pop(state->context, state->srcml_element_stack);
 
-
         }
 
     }
+
+    if(state->context->terminate) return;
 
     if(!state->is_archive) {
 
         ++state->context->unit_count;
 
+        if(state->context->terminate) return;
+
         state->mode = UNIT;
+
         if(state->context->handler->start_unit) {
 
             srcsax_namespace * srcsax_namespaces_root = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(state->root.nb_namespaces, state->root.namespaces);
@@ -416,8 +431,12 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
 
         }
 
+        if(state->context->terminate) return;
+
         if(state->context->handler->characters_unit)
             state->context->handler->characters_unit(state->context, state->characters.c_str(), (int)state->characters.size());
+
+        if(state->context->terminate) return;
 
         srcml_element_stack_push(state->context, state->srcml_element_stack, (const char *)prefix, (const char *)localname);
 
@@ -426,6 +445,7 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
                                                       nb_namespaces, srcsax_namespaces, nb_attributes, srcsax_attributes);
     } else {
 
+        if(state->context->terminate) return;
         
         if(state->context->handler->characters_root)
             state->context->handler->characters_root(state->context, state->characters.c_str(), (int)state->characters.size());
@@ -434,6 +454,8 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
 
         srcml_element_stack_push(state->context, state->srcml_element_stack, (const char *)prefix, (const char *)localname);
 
+        if(state->context->terminate) return;
+
         state->mode = UNIT;
         if(state->context->handler->start_unit)
             state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
@@ -441,6 +463,8 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
 
 
     }
+
+    if(state->context->terminate) return;
 
     if(ctxt->sax->startElementNs) ctxt->sax->startElementNs = &start_element_ns;
     if(ctxt->sax->characters) {
@@ -484,11 +508,13 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
 
     if(ctx == NULL) return;
 
-    srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
-    srcsax_attribute * srcsax_attributes = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(nb_attributes, attributes);
-
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;
+
+    if(state->context->terminate) return;
+
+    srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
+    srcsax_attribute * srcsax_attributes = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(nb_attributes, attributes);
 
     srcml_element_stack_push(state->context, state->srcml_element_stack, (const char *)prefix, (const char *)localname);
 
@@ -504,6 +530,7 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
     ++state->context->unit_count;
 
     state->mode = UNIT;
+
 
 
     if(state->context->handler->start_unit)
@@ -552,11 +579,13 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
 
     if(ctx == NULL) return;
 
-    srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
-    srcsax_attribute * srcsax_attributes = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(nb_attributes, attributes);
-
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;
+    
+    if(state->context->terminate) return;
+
+    srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
+    srcsax_attribute * srcsax_attributes = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(nb_attributes, attributes);
 
     srcml_element_stack_push(state->context, state->srcml_element_stack, (const char *)prefix, (const char *)localname);
 
@@ -645,6 +674,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
             state->is_archive = false;
             state->context->is_archive = state->is_archive;
 
+            if(state->context->terminate) return;
 
             srcsax_namespace * srcsax_namespaces_root = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(state->root.nb_namespaces, state->root.namespaces);
             srcsax_attribute * srcsax_attributes_root = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(state->root.nb_attributes, state->root.attributes);            
@@ -653,6 +683,8 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
                 state->context->handler->start_root(state->context, (const char *)state->root.localname, (const char *)state->root.prefix, (const char *)state->root.URI,
                                                     state->root.nb_namespaces, srcsax_namespaces_root, state->root.nb_attributes,
                                                     srcsax_attributes_root);
+
+            if(state->context->terminate) return;
 
             if(state->context->handler->meta_tag && !state->meta_tags.empty()) {
 
@@ -663,6 +695,14 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
                     srcsax_namespace * srcsax_namespaces_meta_tag = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(citr->nb_namespaces, citr->namespaces);
                     srcsax_attribute * srcsax_attributes_meta_tag = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(citr->nb_attributes, citr->attributes);  
 
+                    if(state->context->terminate) {
+
+                        free_srcsax_namespaces(state->root.nb_namespaces, srcsax_namespaces_root);
+                        free_srcsax_attributes(state->root.nb_attributes, srcsax_attributes_root);
+                        return;
+
+                    }
+
                     state->context->handler->meta_tag(state->context, (const char *)citr->localname, (const char *)citr->prefix, (const char *)citr->URI,
                                                         citr->nb_namespaces, srcsax_namespaces_meta_tag, citr->nb_attributes,
                                                         srcsax_attributes_meta_tag);
@@ -672,8 +712,15 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
                     srcml_element_stack_pop(state->context, state->srcml_element_stack);
 
-
                 }
+
+            }
+
+            if(state->context->terminate) {
+
+                free_srcsax_namespaces(state->root.nb_namespaces, srcsax_namespaces_root);
+                free_srcsax_attributes(state->root.nb_attributes, srcsax_attributes_root);
+                return;
 
             }
 
@@ -685,12 +732,16 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
             free_srcsax_namespaces(state->root.nb_namespaces, srcsax_namespaces_root);
             free_srcsax_attributes(state->root.nb_attributes, srcsax_attributes_root);
 
+            if(state->context->terminate) return;
+
             if(state->characters.size() != 0 && state->context->handler->characters_unit)
                 state->context->handler->characters_unit(state->context, state->characters.c_str(), (int)state->characters.size());
 
         }
 
         srcml_element_stack_pop(state->context, state->srcml_element_stack);  
+
+        if(state->context->terminate) return;
 
         if(ctxt->sax->startElementNs == &start_unit) {
 
@@ -712,6 +763,8 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
             }
         }
 
+        if(state->context->terminate) return;
+
     } else {
 
         srcml_element_stack_pop(state->context, state->srcml_element_stack);  
@@ -722,8 +775,12 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
         } else if(!state->in_function_header) {
 
+            if(state->context->terminate) return;
+
             if(state->context->handler->end_element)
                 state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+
+            if(state->context->terminate) return;
 
         } else {
 
@@ -811,6 +868,8 @@ void characters_root(void * ctx, const xmlChar * ch, int len) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;
 
+    if(state->context->terminate) return;
+
     if(state->context->handler->characters_root)
         state->context->handler->characters_root(state->context, (const char *)ch, len);
 
@@ -844,6 +903,8 @@ void characters_unit(void * ctx, const xmlChar * ch, int len) {
 
 
     if(!state->in_function_header) {
+
+        if(state->context->terminate) return;
 
         if(state->context->handler->characters_unit)
             state->context->handler->characters_unit(state->context, (const char *)ch, len);
@@ -890,6 +951,8 @@ void comment(void * ctx, const xmlChar * value) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;
 
+    if(state->context->terminate) return;
+
     if(state->context->handler->comment)
         state->context->handler->comment(state->context, (const char *)value);
 
@@ -919,6 +982,8 @@ void cdata_block(void * ctx, const xmlChar * value, int len) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;
 
+    if(state->context->terminate) return;
+
     if(state->context->handler->cdata_block)
         state->context->handler->cdata_block(state->context, (const char *)value, len);
 
@@ -947,6 +1012,8 @@ void processing_instruction(void * ctx, const xmlChar * target, const xmlChar * 
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;
+
+    if(state->context->terminate) return;
 
     if(state->context->handler->processing_instruction)
         state->context->handler->processing_instruction(state->context, (const char *)target, (const char *)data);

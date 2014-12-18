@@ -66,6 +66,9 @@ struct srcsax_context {
     /** internally used libxml2 context */
     xmlParserCtxtPtr libxml2_context;
 
+    /** indicate stop parser */
+    int terminate;
+
 };
 
 /* srcSAX context creation/open functions */
