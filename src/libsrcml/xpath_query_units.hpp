@@ -297,8 +297,6 @@
 
         // process the resulting nodes
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
-        xmlBufferPtr wrapbuffer = xmlBufferCreate();
-        xmlTextWriterPtr wrapwritter = xmlNewTextWriterMemory(wrapbuffer, 0);
         bool outputunit = false;
         xmlNodePtr onode = 0;
         int result_size = 0;
@@ -581,7 +579,6 @@
                         // output a wrapping element, just like the one read in
                         // note that this has to be ended somewhere
                          xmlTextWriterStartElement(bufwriter, root->localname);
-//                            xmlTextWriterStartElementNS(bufwriter, root->prefix, root->localname, root->URI);
 
                         // copy the cpp namespace from the current if it has one unit
                         if (is_archive) {
@@ -780,8 +777,6 @@
 
         // finished with the result nodes
             xmlXPathFreeObject(result_nodes);
-
-            xmlTextWriterEndDocument(wrapwritter);
 
 #if LIBEXSLT_VERSION > 813
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
