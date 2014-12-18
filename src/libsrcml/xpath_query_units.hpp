@@ -808,46 +808,6 @@
     }
 
     /**
-     * xml_output_buffer_write_xml_decl
-     * @param ctxt an xml parser context
-     * @param buf output buffer to write element
-     *
-     * Write the xml declaration to output buffer.
-     */
-     static void xml_output_buffer_write_xml_decl(xmlParserCtxtPtr ctxt, xmlOutputBufferPtr buf) {
-
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?xml version=\""));
-        xmlOutputBufferWriteString(buf, (const char*) ctxt->version);
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" encoding=\""));
-        xmlOutputBufferWriteString(buf, (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding));
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\" standalone=\""));
-        xmlOutputBufferWriteString(buf, ctxt->standalone ? "yes" : "no");
-        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\"?>\n"));
-        
-    }
-
-    /**
-     * xml_output_buffer_write_processing_instruction
-     * @param buf output buffer to write element
-     * @param processing_instruction the pre-root processing instruction to write
-     *
-     * Write the xml pre-root processing instruction to the output buffer.
-     */
-     static void xml_output_buffer_write_processing_instruction(xmlOutputBufferPtr buf, boost::optional<std::pair<std::string, std::string> > processing_instruction) {
-
-        if(processing_instruction) {
-
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<?"));
-            xmlOutputBufferWriteString(buf, processing_instruction->first.c_str());
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
-            xmlOutputBufferWriteString(buf, processing_instruction->second.c_str());
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("?>\n"));
-
-        }
-
-    }
-
-    /**
      * xml_output_buffer_write_element_ns
      * @param buf output buffer to write element
      * @param localname the name of the element tag
@@ -861,6 +821,7 @@
      *
      * Write an element to output buffer.
      */
+     /*
      void xml_output_buffer_write_element_ns(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
         const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
         int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
@@ -906,6 +867,7 @@
             xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
         }
     }
+    */
 
     private :
 
