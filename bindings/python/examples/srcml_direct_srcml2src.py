@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# @file srcml_direct_srcml2src.c
+# @file srcml_direct_srcml2src.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -36,4 +36,5 @@ import srcml
 if __name__ == "__main__":
 
     # Translate from a srcML file to a source-code file
-    srcml.srcml("a.cpp.xml", "a.cpp");
+    srcml.srcml("a.cpp.xml", "a.cpp")
+

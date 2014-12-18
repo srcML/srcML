@@ -42,11 +42,10 @@ option(BUILD_UNIT_TESTS "Build unit tests for srcML/libsrcml" OFF)
 option(BUILD_CLI_TESTS "Build cli tests" OFF)
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 option(BUILD_PYTHON_BINDINGS "Build Python language bindings/wrapper" OFF)
-option(BUILD_CSHARP_BINDINGS "Build C# language bindings/wrapper" OFF)
 
 
 
-if(${BUILD_PYTHON_BINDINGS} OR ${BUILD_CSHARP_BINDINGS})
+if(${BUILD_PYTHON_BINDINGS})
     set(BUILD_LANGUAGE_BINDINGS true)
 else()
     set(BUILD_LANGUAGE_BINDINGS false)
