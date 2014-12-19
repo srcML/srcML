@@ -518,37 +518,9 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
         if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
             URI = state->root.namespaces[i];
 
-    if(state->parse_function && (strcmp((const char *)localname, "function_decl") == 0 || strcmp((const char *)localname, "function") == 0)) {
-
-        state->in_function_header = true;
-        state->current_function = function_prototype(strcmp((const char *)localname, "function_decl") == 0);
-
-    } else if(!state->in_function_header) {
-
         if(state->context->handler->start_element)
             state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                 nb_namespaces, srcsax_namespaces, nb_attributes, srcsax_attributes);
-
-    } else {
-
-        if(state->current_function.mode == function_prototype::NAME && strcmp((const char *)localname, "parameter_list") == 0) {
-
-            state->current_function.mode = function_prototype::PARAMETER_LIST;
-
-        } else if(state->current_function.mode == function_prototype::PARAMETER_LIST && strcmp((const char *)localname, "param") == 0) {
-
-            state->current_function.parameter_list.push_back(declaration());
-            state->current_function.mode = function_prototype::PARAMETER;
-
-        } else if(state->current_function.mode == function_prototype::PARAMETER && strcmp((const char *)localname, "init") == 0) {
-
-            state->current_function.parameter_list.back().mode = declaration::INIT;
-
-            state->current_function.mode = function_prototype::PARAMETER_LIST;
-
-        }
-
-    }
 
     free_srcsax_namespaces(nb_namespaces, srcsax_namespaces);
     free_srcsax_attributes(nb_attributes, srcsax_attributes);
@@ -656,39 +628,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
     } else {
 
-        if(state->in_function_header && (strcmp((const char *)localname, "function_decl") == 0 || strcmp((const char *)localname, "function") == 0)) {
-
-            //state->context->handler->endFunction();
-
-        } else if(!state->in_function_header) {
-
-            if(state->context->handler->end_element)
                 state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
-
-        } else {
-
-            if(state->current_function.mode == function_prototype::RETURN_TYPE && strcmp((const char *)localname, "type") == 0) {
-
-                state->current_function.mode = function_prototype::NAME;
-
-            } else if(state->current_function.mode == function_prototype::PARAMETER && state->current_function.parameter_list.back().mode == declaration::TYPE
-                    && strcmp((const char *)localname, "type") == 0) {
-
-                state->current_function.parameter_list.back().mode = declaration::NAME;
-
-            } else if(state->current_function.mode == function_prototype::PARAMETER 
-                && (strcmp((const char *)localname, "param") == 0 || strcmp((const char *)localname, "decl") == 0)) {
-
-                state->current_function.mode = function_prototype::PARAMETER_LIST;
-
-            } else if(state->current_function.mode == function_prototype::PARAMETER_LIST && strcmp((const char *)localname, "parameter_list") == 0) {
-
-                state->in_function_header = false;
-                //state->context->handler->startFunction(state->current_function.name, state->current_function.return_type, state->current_function.parameter_list, state->current_function.is_decl);
-
-            }
-
-        }
 
     }
 
