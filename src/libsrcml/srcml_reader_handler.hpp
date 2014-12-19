@@ -511,7 +511,6 @@ public :
 
             std::string attribute = attributes[pos].localname;
             std::string value = attributes[pos].value;
-
             if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
             else if(attribute == "hash")
