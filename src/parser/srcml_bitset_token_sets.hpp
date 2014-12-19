@@ -133,5 +133,8 @@ create_token_set(skip_tokens, srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLP
 
 const antlr::BitSet srcMLParser::skip_tokens_set(bitset_buckets<skip_tokens>::data, bitset_buckets<skip_tokens>::num_token_longs);
 
+create_token_set(class_tokens, srcMLParser::CLASS, srcMLParser::CXX_CLASS, srcMLParser::STRUCT, srcMLParser::UNION, srcMLParser::ENUM);
+
+const antlr::BitSet srcMLParser::class_tokens_set(bitset_buckets<class_tokens>::data, bitset_buckets<class_tokens>::num_token_longs);
 
 #endif

@@ -76,20 +76,20 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
     boost::optional<std::string> str;
 
     /** the optional element prefix */
-    const char * prefix;
+    boost::optional<std::string> prefix;
     /** the element uri */
-    const char * uri;
+    boost::optional<std::string> uri;
     /** the tag name */
-    const char * element;
+    boost::optional<std::string> element;
 
     /** the optional attribute prefix */
-    const char * attr_prefix;
+    boost::optional<std::string> attr_prefix;
     /** the attribute uri */
-    const char * attr_uri;
+    boost::optional<std::string> attr_uri;
     /** the attribute name */
-    const char * attr_name;
+    boost::optional<std::string> attr_name;
     /** the optional attribute value */
-    const char * attr_value;
+    boost::optional<std::string> attr_value;
 
 
  };
