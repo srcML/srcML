@@ -149,7 +149,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
 			if (protocol == "xpath") {
 				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index)) != SRCML_STATUS_OK)
-					throw status;
+					std::cerr << "DREW: FIX THIS BUG\nALSO: WHY IS THERE A THROW WITHOUT A TRY-CATCH\n";
 			}
 			else if (protocol == "xslt") {
 		        if (apply_xslt(in_arch, resource) != SRCML_STATUS_OK)
