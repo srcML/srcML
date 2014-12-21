@@ -130,6 +130,12 @@ void transform_srcml(const srcml_request_t& srcml_request,
         exit(-1);
     }
 
+    // register xml namespaces
+    std::map<std::string, std::string>::const_iterator itr;
+    for (itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
+        srcml_archive_register_namespace(out_arch, (*itr).first.c_str(), (*itr).second.c_str());
+    }
+
     // Convert inputs into srcml archive
 	BOOST_FOREACH(const srcml_input_src& input, input_sources) {
         srcml_archive* in_arch = srcml_create_archive();
