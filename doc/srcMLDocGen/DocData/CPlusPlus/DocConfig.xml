@@ -493,7 +493,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:type/src:specifier [.='friend']]">
+                <XPath path="//src:friend[src:function_decl]">
                     <Desc>Find all friend function declarations</Desc>
                 </XPath>
             </XPathQueries>
