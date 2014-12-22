@@ -569,6 +569,12 @@
 
     <Category title="Declarations, Definitions and Initializations">
         <DocEntry title="variable declaration statement">
+            <Desc>
+            The difference between a declaration statement and a declaration,
+            is that a declaration statement is a statement (ends with a
+            semi-colon) and contains a declaration. Declarations are not a statement
+            but instead contain the type, variable name, and optional initialization.
+            </Desc>
             <Elements>
                 <Element name="decl_stmt" />
                 <Subelement name="decl" />
@@ -633,7 +639,7 @@
                     <Desc>Find the names of all function declarations</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
-                    <Desc>Find all function declarations that has variadic arguments</Desc>
+                    <Desc>Find all function declarations that have variadic arguments</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-function-decl-1.c" />
@@ -668,7 +674,7 @@
                     <Desc>Find the names of all function definitions</Desc>
                 </XPath>
                 <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
-                    <Desc>Find all function definition that has variadic arguments</Desc>
+                    <Desc>Find all function definitions that have variadic arguments</Desc>
                 </XPath>
                 <XPath path="//src:function[src:decl_stmt]">
                     <Desc>Find all K &amp; R function definitions</Desc>
@@ -679,6 +685,7 @@
             <Example file="../C/C-function-def-3.c" />
             <Example file="../C/C-function-def-4.c" />
             <Example file="../C/C-function-def-5.c" />
+            <Example file="../C/C-function-decl-5.c" />
             <Example file="CPP-auto-1.cpp" />
         </DocEntry>
 
@@ -823,7 +830,7 @@
                     <Desc>Find all typedefs that declare a function type</Desc>
                 </XPath>
                 <XPath path="//src:typedef[src:function_decl[contains(., ')')]]">
-                    <Desc>Find all typedefs of a function pointer</Desc>
+                    <Desc>Find all typedefs of a function pointers</Desc>
                 </XPath>
                 <XPath path="//src:typedef/src:function_decl[contains(., ')')]/src:name">
                     <Desc>Find all names from all typedefs of function pointers</Desc>
@@ -840,7 +847,7 @@
                 <Element name="modifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:modifier[.='*']]">
+                <XPath path="//src:decl[src:type/src:modifier[.='*']]">
                     <Desc>Find all of the declarations of pointers</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[contains(., ')')]">
@@ -887,10 +894,10 @@
                 <Subelement name="index" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index]">
+                <XPath path="//src:decl[src:name/src:index]">
                     <Desc>Find all array declarations</Desc>
                 </XPath>
-                <XPath path="//src:decl[src:name/src:name/src:index/src:literal[number(.) &lt; 50]]">
+                <XPath path="//src:decl[src:name/src:index/src:literal[number(.) &lt; 50]]">
                     <Desc>Find all array declarations where the number of elements is less then 50</Desc>
                 </XPath>
             </XPathQueries>
@@ -906,7 +913,7 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index][src:init]">
+                <XPath path="//src:decl[src:name/src:index][src:init]">
                     <Desc>Find all array declarations which initialize the array at the same time</Desc>
                 </XPath>
             </XPathQueries>
@@ -928,14 +935,14 @@
             <Example file="../C/C-bitfields.c" />
         </DocEntry>
 
-        <DocEntry title="universal initialization syntax">
+        <DocEntry title="Uniform initialization syntax">
             <Elements>
                 <Element name="call" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decl_stmt[src:decl/src:argument_list[contains(., '{')]]">
-                    <Desc>Find all declaration statements that use the universal initialization is being used</Desc>
+                    <Desc>Find all declaration statements that use the uniform initialization syntax</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-block-init-ctor-syntax-1.cpp" />
@@ -982,7 +989,7 @@
                     <Desc>Find all implicit conversion operator overload declarations</Desc>
                 </XPath>
             </XPathQueries>
-            <Example file="CPP-implicit-conv-1.cpp" />
+            <Example file="CPP-implicit-conv-2.cpp" />
         </DocEntry>
 
         <DocEntry title="implicit conversion operator definition">
@@ -993,10 +1000,10 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[@type='operator'][not(src:type)]">
-                    <Desc>Find all implicit conversion operator overloads</Desc>
+                    <Desc>Find all implicit conversion operator overload definitions</Desc>
                 </XPath>
             </XPathQueries>
-            <Example file="CPP-implicit-conv-2.cpp" />
+            <Example file="CPP-implicit-conv-1.cpp" />
         </DocEntry>
 
         <DocEntry title="explicit conversion operator declaration">
@@ -1182,7 +1189,7 @@
                 <Element name="specifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:super/src:specifier[.='private']]">
+                <XPath path="//src:class[src:super/src:specifier[.='public']]">
                     <Desc>Find all classes that use private inheritance</Desc>
                 </XPath>
             </XPathQueries>
@@ -1203,7 +1210,7 @@
                     <Desc>Find all constructors</Desc>
                 </XPath>
                 <XPath path="//src:constuctor[src:parameter_list[not(src:parameter)]]">
-                    <Desc>Find all default constructors</Desc>
+                    <Desc>Find all constructors with no parameters</Desc>
                 </XPath>
                 <XPath path="//src:constructor[src:parameter_list[not(src:parameter)] or (count(src:parameter_list/src:parameter) = count(src:parameter_list/src:parameter/src:decl/src:init))]">
                     <Desc>Find all possible default constructors, including constructors with all default parameters</Desc>
@@ -1282,12 +1289,12 @@
                 <XPath path="//src:struct">
                     <Desc>Find the definition of all structs</Desc>
                 </XPath>
-                <XPath path="//src:struct/src:block/src:decl_stmt">
+                <XPath path="//src:struct/src:block/src:specifier/src:decl_stmt">
                     <Desc>Find the members from all structs</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-struct-declaration-1.c" />
-            <Example title="variable Of an anonymous struct type" file="../C/C-struct-declaration-2.c" />
+            <Example title="variable of an anonymous struct type" file="../C/C-struct-declaration-2.c" />
             <Example title="declaring a struct and instance" file="../C/C-struct-declaration-4.c" />
         </DocEntry>
 
@@ -1299,8 +1306,8 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:init/src:block]">
-                    <Desc>Find all of declaration of structs which also initialize it</Desc>
+                <XPath path="//src:decl[src:init/src:expr/src:block]">
+                    <Desc>Find all declaration of structs which also initialize it</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-struct-initialization-1.c" />
@@ -1345,7 +1352,7 @@
                 <XPath path="//src:enum">
                     <Desc>Find all enum definitions</Desc>
                 </XPath>
-                <XPath path="//src:enum/src:decl/src:name">
+                <XPath path="//src:enum/src:block/src:decl/src:name">
                     <Desc>Find the names of all members of all enums</Desc>
                 </XPath>
             </XPathQueries>

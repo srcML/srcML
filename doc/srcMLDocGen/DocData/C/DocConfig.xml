@@ -454,7 +454,7 @@
                     <Desc>Find the names of all function declarations</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:type/type:modifier[.='...']]">
-                    <Desc>Find all function declarations that has variadic arguments</Desc>
+                    <Desc>Find all function declarations that have variadic arguments</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="C-function-decl-1.c"/>
@@ -488,7 +488,7 @@
                     <Desc>Find the names of all function definitions</Desc>
                 </XPath>
                 <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/type:modifier[.='...']]">
-                    <Desc>Find all function definition that has variadic arguments</Desc>
+                    <Desc>Find all function definitions that have variadic arguments</Desc>
                 </XPath>
                 <XPath path="//src:function[src:decl_stmt]">
                     <Desc>Find all K &amp; R function definitions</Desc>
@@ -507,7 +507,7 @@
                 <Element name="modifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[type:modifier[.='*']]">
+                <XPath path="//src:decl[src:type/src:modifier[.='*']]">
                     <Desc>Find all of the declarations of pointers</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[contains(., ')')]">
@@ -547,7 +547,7 @@
                     <Desc>Find all typedefs that declare a function type</Desc>
                 </XPath>
                 <XPath path="//src:typedef[src:function_decl[contains(., ')')]]">
-                    <Desc>Find all typedefs of a function pointer</Desc>
+                    <Desc>Find all typedefs of a function pointers</Desc>
                 </XPath>
                 <XPath path="//src:typedef/src:function_decl[contains(., ')')]/src:name">
                     <Desc>Find all names from all typedefs of function pointers</Desc>
@@ -569,10 +569,10 @@
             <Example file="C-array-declaration-3.c" />
             <Example file="C-array-declaration-4.c" />
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index]">
+                <XPath path="//src:decl[src:name/src:index]">
                     <Desc>Find all array declarations</Desc>
                 </XPath>
-                <XPath path="//src:decl[src:name/src:name/src:index/src:literal[number(.) &lt; 50]]">
+                <XPath path="//src:decl[src:name/src:index/src:literal[number(.) &lt; 50]]">
                     <Desc>Find all array declarations where the number of elements is less then 50</Desc>
                 </XPath>
             </XPathQueries>
@@ -586,7 +586,7 @@
             <Example file="C-array-initialization-1.c"/>
             <Example file="C-array-initialization-2.c" />
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index][src:init]">
+                <XPath path="//src:decl[src:name/src:index][src:init]">
                     <Desc>Find all array declarations which initialize the array at the same time</Desc>
                 </XPath>
             </XPathQueries>
@@ -693,7 +693,7 @@
                 <XPath path="//src:enum">
                     <Desc>Find all enum definitions</Desc>
                 </XPath>
-                <XPath path="//src:enum/src:decl/src:name">
+                <XPath path="//src:enum/src:block/src:decl/src:name">
                     <Desc>Find the names of all members of all enums</Desc>
                 </XPath>
             </XPathQueries>

@@ -133,6 +133,8 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Tag elem="interface"/>
         <Tag elem="enum"/>
         <AttrRule rule="enumTypeAttr"/>
+        <Tag elem="enum_decl"/>
+        
         <Tag elem="struct"/>
         <Tag elem="struct_decl"/>
         <Tag elem="union"/>
@@ -440,6 +442,7 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
                 <Ref name="emptyStmt" />
                 <Ref name="exprStmt" />
                 <Ref name="CEnum" />
+                <Ref name="enumDecl" />
                 <Ref name="CPlusPlusEnum"/>
                 <Ref name="CSharpEnum"/>
                 <Ref name="JavaEnum"/>
@@ -2623,6 +2626,18 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             <Literal value="class"/>
         </Def>
     </AttrRule>
+
+    <!-- src:enum_decl -->
+    <TagRule name="enumDecl" lang="C,C++">
+        <Tag elem="enum_decl"/>
+        <Def>
+            <Literal value="enum"/>
+            <Optional>
+                <Ref name="name"/>
+            </Optional>
+            <Literal value=";"/>
+        </Def>
+    </TagRule>
 
     <!-- src:struct -->
     <TagRule name="CStruct" lang="C">
