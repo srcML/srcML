@@ -412,7 +412,7 @@
                     <Desc>Find all extern variables</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[src:type/src:specifier [.='extern']]">
-                    <Desc>Find all extern functions declarations</Desc>
+                    <Desc>Find all extern function declarations</Desc>
                 </XPath>
             </XPathQueries>
             <Example title="external variable" file="../C/C-extern-1.c" />
@@ -426,7 +426,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decl[src:type/src:specifier [.='mutable']]">
-                    <Desc>Find all mutable variables declarations</Desc>
+                    <Desc>Find all mutable variable declarations</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-mutable-1.cpp" />
@@ -437,8 +437,8 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:type/src:specifier [.='thread_local']]">
-                    <Desc>Find all thread_local variables declarations</Desc>
+                <XPath path="/src:decl[src:type/src:specifier [.='thread_local']]">
+                    <Desc>Find all thread_local variable declarations</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-thread_local-1.cpp" />
@@ -529,11 +529,11 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:constructor[src:specifier [.='default']]">
-                    <Desc>Find all constructors which explicitly use the compilers provided implementation</Desc>
+                <XPath path="//src:constructor_decl[src:specifier [.='default']]">
+                    <Desc>Find all constructors which explicitly use the compiler's provided implementation</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[src:specifier [.='default']]">
-                    <Desc>Find all function which explicitly use the compilers provided implementation</Desc>
+                    <Desc>Find all functions which explicitly use the compiler's provided implementation</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-default-func.cpp" />
