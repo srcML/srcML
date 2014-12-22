@@ -76,7 +76,7 @@
                 <XPath path="//src:for[string-length(src:control/src:init/src:decl/src:name) = 1]">
                     <Desc>Find all for loops which declare a variable with a single character name (e.g. <code class="inline">x</code>, <code class="inline">i</code> or <code class="inline">y</code>)</Desc>
                 </XPath>
-                <XPath path="//src:for[src:control/src:incr/src:expr//node()/following-sibling::op:operator[.= '++']]">
+                <XPath path="//src:for[src:control/src:incr/src:expr//node()/following-sibling::src:operator[.= '++']]">
                     <Desc>Find all for loops which use post decrement as part of the increment expression</Desc>
                 </XPath>
                 <XPath path="//src:for/src:control/src:incr">
@@ -453,7 +453,7 @@
                 <XPath path="//src:function_decl/src:name">
                     <Desc>Find the names of all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:type/type:modifier[.='...']]">
+                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
                     <Desc>Find all function declarations that have variadic arguments</Desc>
                 </XPath>
             </XPathQueries>
@@ -487,7 +487,7 @@
                 <XPath path="//src:function/src:name">
                     <Desc>Find the names of all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/type:modifier[.='...']]">
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
                     <Desc>Find all function definitions that have variadic arguments</Desc>
                 </XPath>
                 <XPath path="//src:function[src:decl_stmt]">
@@ -698,10 +698,24 @@
                 </XPath>
             </XPathQueries>
             <Example file="C-enum-declaration-1.c"/>
-            <Example file="C-enum-declaration-2.c"/>
             <Example file="C-enum-declaration-3.c"/>
         </DocEntry>
+        
+        <DocEntry title="enum declaration">
+            <Elements>
+                <Element name="enum" />
+                <Subelement name="name" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:enum_decl">
+                    <Desc>Find all enum declarations</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="C-enum-declaration-2.c"/>
+        </DocEntry>
     </Category>
+    
+    
 
     <Category title="Expressions">
         <DocEntry title="function call">
@@ -824,7 +838,7 @@
                 <Element name="operator"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//op:operator[.='(']">
+                <XPath path="//src:cast">
                     <Desc>Find all casts</Desc>
                 </XPath>
             </XPathQueries>

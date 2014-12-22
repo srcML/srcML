@@ -2635,7 +2635,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             <Optional>
                 <Ref name="name"/>
             </Optional>
+            <Optional>
             <Literal value=";"/>
+            </Optional>
         </Def>
     </TagRule>
 
