@@ -1,3 +1,5 @@
-private class MyPublicClass
-{
+public class MyPublicClass {
+    private class Helper
+    {
+    }
 }
