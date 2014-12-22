@@ -1626,7 +1626,7 @@
 
         <DocEntry title="static_assert">
             <Elements>
-            	<Element name="assert">
+            	<Element name="assert"/>
                 <Subelement name="argument_list" />
             </Elements>
             <XPathQueries>
