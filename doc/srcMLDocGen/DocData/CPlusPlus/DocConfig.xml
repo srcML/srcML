@@ -85,7 +85,7 @@
                 <XPath path="//src:for/src:control/src:condition">
                     <Desc>Find the conditions of all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for[src:control/src:range]">
+                <XPath path="//src:for[src:control//src:range]">
                     <Desc>Find all range based for loops</Desc>
                 </XPath>
             </XPathQueries>
@@ -234,7 +234,7 @@
                 <XPath path="//src:label">
                     <Desc>Find all labels</Desc>
                 </XPath>
-                <XPath path="//src:label[src:name[. != //src:goto/src:name]]">
+                <XPath path="//src:label[not(src:name[. = //src:goto/src:name])]">
                     <Desc>Find all labels without a goto statement</Desc>
                 </XPath>
             </XPathQueries>
