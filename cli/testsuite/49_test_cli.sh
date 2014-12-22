@@ -212,7 +212,7 @@ define output <<- 'STDOUT'
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src">
+	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
@@ -221,7 +221,7 @@ define output <<- 'STDOUT'
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src">
+	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
@@ -340,7 +340,7 @@ define sxmlfile2 <<- 'STDOUT'
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src">
+	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
 	
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
@@ -421,7 +421,7 @@ check sub/b.cpp.xml "$xsmlfile2"
 
 define nestedfileextra <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src">
+	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
 
 
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>

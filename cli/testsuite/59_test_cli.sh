@@ -41,7 +41,7 @@ define output <<- 'STDOUT'
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src">
+	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
 
 	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" revision="0.8.0" language="C++" filename="sub/a.cpp">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
