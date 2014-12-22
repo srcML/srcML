@@ -7,17 +7,17 @@ source $(dirname "$0")/framework_test.sh
 
 define input <<- 'INPUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C++">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:lc="http://www.sdml.info/srcML/linecol" revision="0.8.0" language="C++">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="sub" mytag="foo" filename="a.cpp">
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C" dir="sub" mytag="foo" filename="a.cpp">
 	<expr_stmt lc:line="1"><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="sub" mytag="foo" filename="b.cpp">
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="Java" dir="sub" mytag="foo" filename="b.cpp">
 	<expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" mytag="foo" filename="c.cpp">
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" mytag="foo" filename="c.cpp">
 	<expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
 	</unit>
 
@@ -26,21 +26,21 @@ define input <<- 'INPUT'
 
 define file1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C" dir="sub" filename="a.cpp" mytag="foo">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" revision="0.8.0" language="C" dir="sub" filename="a.cpp" mytag="foo">
 	<expr_stmt lc:line="1"><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
 define file2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="Java" dir="sub" filename="b.cpp" mytag="foo">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" revision="0.8.0" language="Java" dir="sub" filename="b.cpp" mytag="foo">
 	<expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
 define file3 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" language="C++" dir="sub" filename="c.cpp" mytag="foo">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lc="http://www.sdml.info/srcML/linecol" revision="0.8.0" language="C++" dir="sub" filename="c.cpp" mytag="foo">
 	<expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT

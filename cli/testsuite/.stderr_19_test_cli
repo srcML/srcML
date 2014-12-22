@@ -1,0 +1,1 @@
+/Users/collard/srcML/cli/testsuite/framework_test.sh: line 49:  2234 Segmentation fault: 11  $SRCML2SRC "$@"

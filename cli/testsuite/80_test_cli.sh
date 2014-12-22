@@ -5,7 +5,7 @@ source $(dirname "$0")/framework_test.sh
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" filename="a.cpp" language="C++"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" filename="a.cpp" revision="0.8.0" language="C++"/>
 	STDOUT
 
 createfile sub/a.cpp.xml "$output"

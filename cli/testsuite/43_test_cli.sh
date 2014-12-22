@@ -5,11 +5,11 @@ source $(dirname "$0")/framework_test.sh
 
 # test
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++">
 	STDOUT
 
 f<?xml vrsion="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 src2srcml sub/a.cpp -x --encoding "ISO-8859-1"
 src2srcml sub/a.cpp -x --encoding "ISO-8859-1"

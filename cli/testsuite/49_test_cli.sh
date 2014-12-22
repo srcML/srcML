@@ -39,7 +39,7 @@ define cpp_src <<- 'STDOUT'
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 	<return>return;</return>
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -48,7 +48,7 @@ define output <<- 'STDOUT'
 
 define output2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 	<return>return;</return>
@@ -87,7 +87,7 @@ validate(open(sub/a.cpp.xml 'r').read() fcpp_marked_srcml)
 define output <<- 'STDOUT'
 
 	cpp_textonly_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 INPUT
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -98,7 +98,7 @@ return;
 
 define output <<- 'STDOUT'
 	cpp_textonly_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename=sub/a.cpp>
 	INPUT
 <break>break;</break>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -129,7 +129,7 @@ break;
 
 define output <<- 'STDOUT'
 	cpp_textonly_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
 INPUT
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -138,7 +138,7 @@ INPUT
 
 define output <<- 'STDOUT'
 	cpp_textonly_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename=sub/a.cpp>
 	INPUT
 break;
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -173,7 +173,7 @@ validate(open(sub/a.cpp.xml 'r').read() fcpp_textonly_srcml)
 define output <<- 'STDOUT'
 
 	cpp_marked_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr>0</expr></cpp:if>
 INPUT
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -182,7 +182,7 @@ INPUT
 
 define output <<- 'STDOUT'
 	cpp_marked_<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename=sub/a.cpp>
 	INPUT
 <break>break;</break>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -205,7 +205,7 @@ validate(open(sub/a.cpp.xml 'r').read() fcpp_marked_srcml)
 
 define output <<- 'STDOUT'
 	sxmlfile1 = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp" version="1.2">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" filename="a.cpp" version="1.2">
 	INPUT
 </unit>
 	STDOUT
@@ -225,7 +225,7 @@ define output <<- 'STDOUT'
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
@@ -238,7 +238,7 @@ define output <<- 'STDOUT'
 	<src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
 	</src:unit>
 
-	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
 	<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
 	</src:unit>
 
@@ -328,13 +328,13 @@ define sfile2 <<- 'STDOUT'
 
 define sxmlfile1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" filename="a.cpp">
 	</unit>
 	STDOUT
 
 define sxmlfile2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" filename="b.cpp">
 	</unit>
 	STDOUT
 
@@ -345,7 +345,7 @@ define nestedfile <<- 'STDOUT'
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="b.cpp">
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" filename="b.cpp">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
@@ -427,7 +427,7 @@ define nestedfileextra <<- 'STDOUT'
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Java" dir="emptysrc" mytag=foo filename="empty.java">
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="Java" dir="emptysrc" mytag=foo filename="empty.java">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
@@ -463,7 +463,7 @@ check 3<<< "empty.java\n"
 # prefix extraction
 define sxmlfile1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" filename="a.cpp">
 	</unit>
 	STDOUT
 
@@ -521,7 +521,7 @@ define sfile1 <<< "a;\n"
 
 define sxmlfile1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="sub" filename="a.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" filename="a.cpp">
 	</unit>
 	STDOUT
 

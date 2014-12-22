@@ -9,12 +9,12 @@ source $(dirname "$0")/framework_test.sh
 # version flag
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes">
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" version="1.0"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" version="1.0"/>
 	STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename=sub/a.cpp version="1.0"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename=sub/a.cpp version="1.0"/>
 	INPUT
 src2srcml sub/a.cpp -s "1.0"
 src2srcml sub/a.cpp --src-version "1.0"

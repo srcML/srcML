@@ -9,12 +9,12 @@ source $(dirname "$0")/framework_test.sh
 # filename flag
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes">
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo.cpp"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="foo.cpp"/>
 	INPUT
 
 define output <<- 'STDOUT'
 	f<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo.cpp"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="foo.cpp"/>
 	INPUT
 
 src2srcml sub/a.cpp -f "foo.cpp"

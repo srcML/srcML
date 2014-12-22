@@ -12,7 +12,7 @@ INPUT
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit filename="b.cpp" language="Java">
+<unit filename="b.cpp" revision="0.8.0" language="Java">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 

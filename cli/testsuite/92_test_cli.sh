@@ -11,7 +11,7 @@ define output <<- 'STDOUT'
 INPUT
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="b.cpp"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="b.cpp"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 
 </unit>
@@ -39,7 +39,7 @@ define output <<- 'STDOUT'
 	
 INPUT
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="b.cpp" item="1">b.cpp</unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="b.cpp" item="1">b.cpp</unit>
 
 </unit>
 	STDOUT

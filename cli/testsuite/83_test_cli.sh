@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
 	STDOUT
 INPUT
 relaxng_error = STDOUTsrcml2src: Start tag expected '<' not found in '-'
@@ -71,12 +71,12 @@ if sys.platform != 'cygwin' :
 
 define output <<- 'STDOUT'
 	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" pos:tabs="8"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" revision="0.8.0" language="C++" pos:tabs="8"/>
 	INPUT
 
 define output <<- 'STDOUT'
 	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename="sub/a.cpp" pos:tabs="8"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" revision="0.8.0" language="C++" filename="sub/a.cpp" pos:tabs="8"/>
 	INPUT
 
 f = open(sub/a.cpp 'w')
@@ -97,12 +97,12 @@ readfile input sub/a.cpp.xml').read() fsxmlfile
 
 define output <<- 'STDOUT'
 	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" pos:tabs="4"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" revision="0.8.0" language="C++" pos:tabs="4"/>
 	INPUT
 
 define output <<- 'STDOUT'
 	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename="sub/a.cpp" pos:tabs="4"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" revision="0.8.0" language="C++" filename="sub/a.cpp" pos:tabs="4"/>
 	INPUT
 
 f = open(sub/a.cpp 'w')
@@ -126,12 +126,12 @@ src2srcml -l C++ --tabs 'a' 14)
 
 define output <<- 'STDOUT'
 	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" pos:tabs="2"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" revision="0.8.0" language="C++" pos:tabs="2"/>
 	INPUT
 
 define output <<- 'STDOUT'
 	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" language="C++" filename=sub/a.cpp pos:tabs="2"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:pos="http://www.sdml.info/srcML/position" revision="0.8.0" language="C++" filename=sub/a.cpp pos:tabs="2"/>
 	INPUT
 
 f = open(sub/a.cpp 'w')
@@ -168,7 +168,7 @@ src2srcml -l C++ --tabs 'a' --position 14)
 
 define output <<- 'STDOUT'
 	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename=sub/a.cpp/>
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="Java" filename=sub/a.cpp/>
 	STDOUT
 INPUT
 f = open(sub/a.cpp 'w')
@@ -187,7 +187,7 @@ src2srcml -l C++ --register-ext "cpp=Jawa" )
 
 define output <<- 'STDOUT'
 	fsxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" language="Java" filename="sub/a.xml"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="Java" filename="sub/a.xml"/>
 	STDOUT
 INPUT
 if platform.system() != "Windows":

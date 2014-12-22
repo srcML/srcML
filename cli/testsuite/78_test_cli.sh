@@ -12,7 +12,7 @@ INPUT
 <foo:a/>
 </unit>
 
-<unit xmlns:bar="http://www.cs.uakron.edu/~collard/foo" language="Java">
+<unit xmlns:bar="http://www.cs.uakron.edu/~collard/foo" revision="0.8.0" language="Java">
 <foo:a/><bar:b/>
 </unit>
 

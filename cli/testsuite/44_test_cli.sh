@@ -6,12 +6,12 @@ source $(dirname "$0")/framework_test.sh
 # test
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes">
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
 	STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/a.cpp"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 
 src2srcml -t "ISO-8859-1" sfile1 srcml)
@@ -63,7 +63,7 @@ define output <<- 'STDOUT'
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
@@ -78,7 +78,7 @@ define output <<- 'STDOUT'
 	<src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
 	</src:unit>
 
-	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
 	<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
 	</src:unit>
 
@@ -108,7 +108,7 @@ INPUT
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </unit>
 

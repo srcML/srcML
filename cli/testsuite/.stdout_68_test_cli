@@ -1,0 +1,56 @@
+
+General Options:
+  -z [ --compress ]                     output in gzip format
+  -h [ --help ] arg                     display this help and exit. USAGE: help
+                                        or help [module name]. MODULES: 
+                                        src2srcml, srcml2src
+  --no-archive                          output individual srcml units
+  --no-namespace-decl                   do not output any namespace 
+                                        declarations
+  --no-xml-declaration                  do not output the XML declaration
+  -o [ --output ] arg (=stdout://-)     write result ouput to arg which is a 
+                                        FILE or URI
+  -q [ --quiet ]                        suppresses status messages
+  -t [ --src-encoding ] arg (=ISO-8859-1)
+                                        set the input source encoding to arg 
+                                        (default:  ISO-8859-1)
+  --max-threads arg (=4)                set the maximum number of threads srcml
+                                        can spawn
+  -v [ --verbose ]                      conversion and status information to 
+                                        stderr
+  -V [ --version ]                      display version number and exit
+  --ordered                             enable strict output ordering
+  --update                              output and update existing srcml
+
+
+
+General Options:
+  -z [ --compress ]                     output in gzip format
+  -h [ --help ] arg                     display this help and exit. USAGE: help
+                                        or help [module name]. MODULES: 
+                                        src2srcml, srcml2src
+  --no-archive                          output individual srcml units
+  --no-namespace-decl                   do not output any namespace 
+                                        declarations
+  --no-xml-declaration                  do not output the XML declaration
+  -o [ --output ] arg (=stdout://-)     write result ouput to arg which is a 
+                                        FILE or URI
+  -q [ --quiet ]                        suppresses status messages
+  -t [ --src-encoding ] arg (=ISO-8859-1)
+                                        set the input source encoding to arg 
+                                        (default:  ISO-8859-1)
+  --max-threads arg (=4)                set the maximum number of threads srcml
+                                        can spawn
+  -v [ --verbose ]                      conversion and status information to 
+                                        stderr
+  -V [ --version ]                      display version number and exit
+  --ordered                             enable strict output ordering
+  --update                              output and update existing srcml
+
+
+0.8.0
+srcml Version Number 8000
+libarchive Version 2008005
+0.8.0
+srcml Version Number 8000
+libarchive Version 2008005

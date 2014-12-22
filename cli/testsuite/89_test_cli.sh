@@ -45,7 +45,7 @@ src2srcml sub/a.java' sub/a.cpp -o 'sub/all.xml' '' '')
 readfile input sub/all.xml' 'r').read() srcmlstart + javaempty + cpp + srcmlend)
 
 cpp = STDOUT
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="sub/b.cpp">
+<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 	STDOUT

@@ -12,7 +12,7 @@ INPUT
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" language="Java">
+<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="0.8.0" language="Java">
 <cpp:expr_stmt><cpp:expr><cpp:name>b</cpp:name></cpp:expr>;</cpp:expr_stmt>
 </unit>
 
@@ -25,7 +25,7 @@ define output <<- 'STDOUT'
 	
 INPUT
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" language="Java" item="1"><cpp:name>b</cpp:name></unit>
+<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="0.8.0" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
 </unit>
 	STDOUT
