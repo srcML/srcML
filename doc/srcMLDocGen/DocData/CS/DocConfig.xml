@@ -1483,7 +1483,7 @@
 	    <OperatorEntry title="address of" op="&amp;" example="../C/C-Operator-address_of.c" />
 	    <OperatorEntry title="dereference" op="*" example="../C/C-Operator-deref.c" />
 	    <OperatorEntry title="unary minus" op="-" example="../C/C-Operator-unary-minus.c" />
-	    <OperatorEntry title="unary plus" op="-" example="../C/C-Operator-unary-plus.c" />
+	    <OperatorEntry title="unary plus" op="+" example="../C/C-Operator-unary-plus.c" />
 	    <OperatorEntry title="logical not" op="!" example="../C/C-Operator-logical-not.c" />
 	    <OperatorEntry title="multiplication" op="*" example="../C/C-Operator-multiplication.c" />
 	    <OperatorEntry title="division" op="/" example="../C/C-Operator-divide.c" />
