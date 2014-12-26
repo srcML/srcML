@@ -9,23 +9,18 @@ source $(dirname "$0")/framework_test.sh
 
 src2srcml foo.c
 
-check 3<<- 'STDOUT'
-	STDOUT
-	src2srcml: Unable to open file foo.c
+check 4<<- 'STDERR'
+	srcml: Unable to open file foo.c
 	STDERR
 
 src2srcml abc.c
 
-check 3<<- 'STDOUT'
-	STDOUT
-	src2srcml: Unable to open file abc.c
+check 4<<- 'STDERR'
+	srcml: Unable to open file abc.c
 	STDERR
 
 src2srcml ../src/foo.c
 
-check 3<<- 'STDOUT'
-	STDOUT
-	src2srcml: Unable to open file ../src/foo.c
+check 4<<- 'STDERR'
+	srcml: Unable to open file ../src/foo.c
 	STDERR
-
-
