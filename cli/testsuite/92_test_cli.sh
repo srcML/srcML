@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test
 define output <<- 'STDOUT'
 	srcml_nested = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 	
 INPUT
 </unit>
@@ -23,7 +23,7 @@ xpath_attribute_string = "string(//src:unit/@filename)"
 
 define output <<- 'STDOUT'
 	xpath_attribute_output = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 	
 INPUT
 
@@ -35,7 +35,7 @@ xpath_attribute_string_output = STDOUTa.cpp
 
 define output <<- 'STDOUT'
 	xpath_attribute_nested_output = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 	
 INPUT
 

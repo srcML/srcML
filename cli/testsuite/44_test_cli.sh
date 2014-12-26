@@ -52,14 +52,14 @@ b;
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
@@ -102,7 +102,7 @@ readfile input sub/a.cpp.xml').read() <<< "$nestedfilesrc)"
 # files from
 define output <<- 'STDOUT'
 	<<< "$nestedfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src"" revision="0.8.0">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 	
 INPUT
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
