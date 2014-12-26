@@ -104,17 +104,11 @@
 
         form_simple_xpath(bufwriter, root_result_node->parent);
 
-        xmlTextWriterWriteString(bufwriter, BAD_CAST "/");
-
-        // current node
-        xmlTextWriterWriteString(bufwriter, BAD_CAST ((root_result_node->ns && root_result_node->ns->prefix) ? (const char*) root_result_node->ns->prefix : "src"));
-        xmlTextWriterWriteString(bufwriter, BAD_CAST ":");
-        xmlTextWriterWriteString(bufwriter, BAD_CAST root_result_node->name);
-
-        // predicate
-        xmlTextWriterWriteString(bufwriter, BAD_CAST "[");
-        xmlTextWriterWriteFormatString(bufwriter, "%d", child_offset(root_result_node));
-        xmlTextWriterWriteString(bufwriter, BAD_CAST "]");
+        xmlTextWriterWriteFormatString(bufwriter, "/%s:%s[%d]",
+            ((root_result_node->ns && root_result_node->ns->prefix) ? (const char*) root_result_node->ns->prefix : "src"),
+            root_result_node->name,
+            child_offset(root_result_node)
+            );
 
     }
     
