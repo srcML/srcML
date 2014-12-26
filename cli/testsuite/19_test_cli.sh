@@ -69,27 +69,26 @@ srcml2src --xml --unit "3" <<< "$input"
 
 check 3<<< "$file3"
 
-srcml2src --xml --unit "1" --get-filename <<< "$input"
+srcml2src --unit "1" --get-filename <<< "$input"
 
 check 3<<< "a.cpp"
 
-srcml2src --xml --unit "2" --get-filename <<< "$input"
+srcml2src --unit "2" --get-filename <<< "$input"
 
 check 3<<< "b.cpp"
 
-srcml2src --xml --unit "1" --get-directory <<< "$input"
+srcml2src --unit "1" --get-directory <<< "$input"
 
 check 3<<< "sub"
 
-srcml2src --xml --unit "2" --get-directory <<< "$input"
+srcml2src --unit "2" --get-directory <<< "$input"
 
 check 3<<< "sub"
 
-srcml2src --xml --unit "1" --get-language <<< "$input"
+srcml2src --unit "1" --get-language <<< "$input"
 
 check 3<<< "C"
 
-srcml2src --xml --unit "2" --get-language <<< "$input"
+srcml2src --unit "2" --get-language <<< "$input"
 
 check 3<<< "Java"
-
