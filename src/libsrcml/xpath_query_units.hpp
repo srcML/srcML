@@ -386,7 +386,7 @@
                 xmlTextWriterEndElement(bufwriter);
             }
 
-            if (results != 0)
+            if (result_size != 0)
                 xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
 
             if (result_size == 0 && !element && !attr_name)
