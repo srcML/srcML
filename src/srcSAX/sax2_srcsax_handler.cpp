@@ -137,31 +137,6 @@ static inline void free_srcsax_attributes(int number_attributes, srcsax_attribut
 
 }
 
-/** 
- * srcml_element_stack_pop
- * @param context the srcsax_context
- * @param srcml_element_stack the stack
- *
- * Pop an element off the stack.
- */
- void srcml_element_stack_pop(srcsax_context * context, std::vector<const char *> & srcml_element_stack) {
-
-    if(srcml_element_stack.size() == 0) return;
-
-    const char * srcml_element = srcml_element_stack.back();
-
-    srcml_element_stack.pop_back();
-
-    free((void *)srcml_element);
-
-    context->stack_size = srcml_element_stack.size();
-    if(context->stack_size == 0)
-        context->srcml_element_stack = 0;
-    else
-        context->srcml_element_stack = &srcml_element_stack.front();
-
- }
-
 /**
  * start_document
  * @param ctx an xmlParserCtxtPtr
@@ -363,8 +338,6 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
 
             free_srcsax_namespaces(citr->nb_namespaces, srcsax_namespaces_meta_tag);
             free_srcsax_attributes(citr->nb_attributes, srcsax_attributes_meta_tag);
-
-            srcml_element_stack_pop(state->context, state->srcml_element_stack);
 
         }
 
@@ -662,8 +635,6 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
                     free_srcsax_namespaces(citr->nb_namespaces, srcsax_namespaces_meta_tag);
                     free_srcsax_attributes(citr->nb_attributes, srcsax_attributes_meta_tag);
 
-                    srcml_element_stack_pop(state->context, state->srcml_element_stack);
-
                 }
 
             }
@@ -691,8 +662,6 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
         }
 
-        srcml_element_stack_pop(state->context, state->srcml_element_stack);  
-
         if(state->context->terminate) return;
 
         if(ctxt->sax->startElementNs == &start_unit) {
@@ -718,8 +687,6 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
         if(state->context->terminate) return;
 
     } else {
-
-        srcml_element_stack_pop(state->context, state->srcml_element_stack);  
 
         if(state->in_function_header && (strcmp((const char *)localname, "function_decl") == 0 || strcmp((const char *)localname, "function") == 0)) {
 
