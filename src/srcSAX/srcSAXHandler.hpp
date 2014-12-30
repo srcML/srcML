@@ -335,9 +335,6 @@ public :
      */
     virtual void processingInstruction(const char * target, const char * data) {}
 
-    // current libxml2 namespaces and attributes to get around conversion
-    const xmlChar ** libxml2_namespaces;
-    const xmlChar ** libxml2_attributes;
 
 #pragma GCC diagnostic pop
 

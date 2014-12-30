@@ -289,12 +289,14 @@ public :
     virtual void startElement(const char * localname, const char * prefix, const char * URI,
                                 int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                                 const struct srcsax_attribute * attributes) {
-        const xmlChar ** libxml2_namespaces = srcsax_namespace2libxml2namespace(num_namespaces, namespaces);
-        const xmlChar ** libxml2_attributes = srcsax_attribute2libxml2attribute(num_attributes, attributes);
-        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, libxml2_namespaces, num_attributes, 0, libxml2_attributes);
 
-        free(libxml2_namespaces);
-        free(libxml2_attributes);
+        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+
+//        const xmlChar ** libxml2_namespaces = srcsax_namespace2libxml2namespace(num_namespaces, namespaces);
+//        const xmlChar ** libxml2_attributes = srcsax_attribute2libxml2attribute(num_attributes, attributes);
+        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes, 0, handler->libxml2_attributes);
+//        free(libxml2_namespaces);
+//        free(libxml2_attributes);
 
     }
 
