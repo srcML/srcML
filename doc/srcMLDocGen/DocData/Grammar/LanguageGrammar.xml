@@ -180,6 +180,7 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Tag elem="in"/>
         <Tag elem="select"/>
         <Tag elem="where"/>
+        <Tag elem="constraint"/>
         <Tag elem="group"/>
         <Tag elem="by"/>
         <Tag elem="into"/>
@@ -3390,13 +3391,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             <Literal value="where"/>
             <Ref name="name"/>
             <Literal value=":"/>
-            <Optional>
-                <Ref name="name"/>
-                <ZeroOrMore>
-                    <Literal value=","/>
-                    <Ref name="name"/>
-                </ZeroOrMore>
-            </Optional>
+            <ZeroOrMore>
+                <Ref name="constraint"/>
+            </ZeroOrMore>
         </Def>
     </TagRule>
     
@@ -3410,6 +3407,24 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         </Def>
     </TagRule>
 
+    <!-- src:constraint -->
+    <TagRule name="constraint" lang="C#">
+        <Tag elem="constraint" />
+        <Def>
+            <Choice>
+                <Group>
+                    <Ref name="name"/>
+                    <Optional>
+                        <Text/>
+                    </Optional>
+                </Group>
+                <Literal value="struct"/>
+                <Literal value="class"/>
+            </Choice>
+            
+        </Def>
+    </TagRule>
+    
     <!-- src:group -->
     <TagRule name="group" lang="C#">
         <Tag elem="group"/>
