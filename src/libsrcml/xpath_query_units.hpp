@@ -386,9 +386,10 @@
                 xmlTextWriterEndElement(bufwriter);
             }
 
-            xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
+            if (results != 0)
+                xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
 
-            if (result_size == 0)
+            if (result_size == 0 && !element && !attr_name)
                 break;
 
             // opened the root start element before, now need to close it.
