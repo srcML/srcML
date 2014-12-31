@@ -289,7 +289,17 @@
             return false;
         }
 
-        // process the resulting nodes
+        outputXPathResults(result_nodes);
+
+        // finished with the result nodes
+        xmlXPathFreeObject(result_nodes);
+
+        return true;
+}
+
+virtual void outputXPathResults(xmlXPathObjectPtr result_nodes) {
+
+            // process the resulting nodes
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
         bool outputunit = false;
         xmlNodePtr onode = 0;
@@ -726,15 +736,7 @@
                 break;
             };
 
-        // finished with the result nodes
-            xmlXPathFreeObject(result_nodes);
 
-#if LIBEXSLT_VERSION > 813
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-//        dlclose(handle);
-#endif
-#endif
-            return true;
         }
 
     /**
