@@ -68,7 +68,15 @@ define() { IFS= read -r -d '' ${1} || true; }
 readfile() { ${1}="$(cat $2)"; }
 
 # file with name $1 is created from the contents of string variable $2
-createfile() { echo -ne "${2}" > ${1}; }
+createfile() {
+    # make directory paths as needed
+    if [ ! -d $(dirname $1) ]; then
+        mkdir -p $(dirname $1)
+    fi
+
+    # add contents to file
+    echo -ne "${2}" > ${1};
+}
 
 rmfile() { rm -f ${1}; }
 
