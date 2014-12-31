@@ -348,9 +348,6 @@
             // output the result, with special handling for attribute nodes
             xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
 
-            // end the wrapping unit
-            xmlTextWriterEndElement(bufwriter);
-
             // space between result units
             xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
 
