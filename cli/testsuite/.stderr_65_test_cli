@@ -1,2 +1,0 @@
-Assertion failed: (!pipeline.empty()), function main, file /Users/collard/srcML/src/srcml/srcml.cpp, line 133.
-/Users/collard/srcML/cli/testsuite/framework_test.sh: line 49: 44276 Abort trap: 6           $SRCML2SRC "$@"

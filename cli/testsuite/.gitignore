@@ -1,0 +1,3 @@
+.stderr_*
+.stdout_*
+sub/*
