@@ -4,24 +4,21 @@
 source $(dirname "$0")/framework_test.sh
 
 # test
-
-define output <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="Java"/>
-	STDOT
-INPUT
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="Java" filename="sub/a.cpp"/>
 	STDOUT
-INPUT
-src2srcml sub/a.cpp -l --language "Java"
-src2srcml sub/a.cpp -l --language "Java"
-src2srcml -l 'Java' -o sub/a.cpp.xml sfile1
-validate(open(sub/a.cpp.xml 'r').read() srcml)
-src2srcml -l 'Java' sub/a.cpp-o sub/a.cpp.xml
 
-validate(open(sub/a.cpp.xml 'r').read() fsrcml)
+createfile sub/a.cpp ""
 
+src2srcml sub/a.cpp -l "Java"
+check 3<<< "$output"
 
+src2srcml sub/a.cpp --language "Java"
+check 3<<< "$output"
 
+src2srcml -l 'Java' -o sub/a.cpp.xml sub/a.cpp
+check sub/a.cpp.xml 3<<< "$output"
+
+src2srcml -l 'Java' sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$output"
