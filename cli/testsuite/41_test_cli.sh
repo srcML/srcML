@@ -7,24 +7,34 @@ source $(dirname "$0")/framework_test.sh
 
 ##
 # directory flag
-define output <<- 'STDOUT'
+define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="bar"/>
 	STDOUT
-INPUT
-define output <<- 'STDOUT'
+
+define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="bar" filename="sub/a.cpp"/>
-	INPUT
+	STDOUT
+
+createfile sub/a.cpp ""
+
 src2srcml sub/a.cpp -d "bar"
+
+check 3<<< "$fsrcml"
+
 src2srcml sub/a.cpp --directory "bar"
+
+check 3<<< "$fsrcml"
+
 src2srcml sub/a.cpp --directory="bar"
-src2srcml -l C++ -d 'bar' -o sub/a.cpp.xml sfile1
 
-validate(open(sub/a.cpp.xml 'r').read() srcml)
-src2srcml -d 'bar' sub/a.cpp-o sub/a.cpp.xml
+check 3<<< "$fsrcml"
 
-validate(open(sub/a.cpp.xml 'r').read() fsrcml)
+src2srcml -l C++ -d 'bar' -o sub/a.cpp.xml sub/a.cpp
 
+check sub/a.cpp.xml 3<<< "$fsrcml"
 
+src2srcml -d 'bar' sub/a.cpp -o sub/a.cpp.xml
 
+check sub/a.cpp.xml 3<<< "$fsrcml"
