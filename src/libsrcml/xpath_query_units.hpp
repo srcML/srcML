@@ -346,7 +346,7 @@ public :
             xmlUnlinkNode(onode);
             xmlAddChild(a_node, onode);
 
-            // output the result, with special handling for attribute nodes
+            // output the result
             xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
 
             // space between result units
