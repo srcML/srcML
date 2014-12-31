@@ -321,27 +321,28 @@
         xmlNodePtr a_node = xmlCopyNode(xmlDocGetRootElement(ctxt->myDoc), 2);
 
         // remove src namespace and save for reassignment
+        // TODO: Just remove it directly
         xmlNsPtr src_ns = 0;
-        if(a_node->nsDef && strcmp((const char *)a_node->nsDef->href, "http://www.sdml.info/srcML/src") == 0) {
+        if (false && a_node->nsDef && strcmp((const char *)a_node->nsDef->href, "http://www.sdml.info/srcML/src") == 0) {
 
-                    src_ns = a_node->nsDef;
-                    a_node->nsDef = a_node->nsDef->next;
-
-                }
-
-
-        xmlAttrPtr a_item = xmlNewProp(a_node, BAD_CAST "item", BAD_CAST "0");
+            src_ns = a_node->nsDef;
+            a_node->nsDef = a_node->nsDef->next;
+        }
 
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
             ++result_count;
 
+            // item attribute on wrapping node
+            static char s[100];
+            sprintf(s, "%d", i + 1);
+            xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s);
+
             // index into results
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
             // unlink this result node and link to the master parent
-            xmlNodePtr onode_parent = onode->parent;
             xmlUnlinkNode(onode);
             xmlAddChild(a_node, onode);
 
@@ -356,7 +357,8 @@
            // xmlAddChild(onode_parent, onode);
         }
 
-        a_node->nsDef = src_ns;
+        if (src_ns)
+            a_node->nsDef = src_ns;
 
         xmlFreeNode(a_node);
     }
