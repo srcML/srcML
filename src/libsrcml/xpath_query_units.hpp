@@ -76,7 +76,7 @@ public :
                       const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0)
         : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), found(false), needroot(true), closetag(false), context(0), output(output) {
+          total(0), found(false), needroot(true), closetag(false), context(0), output(output), result_count(0) {
     }
 
     /**
@@ -289,7 +289,9 @@ public :
             return false;
         }
 
-        if (needroot) {
+        // root element if first result
+        // TODO: This should move to start_output(), but that will have to wait because it is shared.
+        if (result_count == 0) {
             outputRoot(xmlDocGetRootElement(ctxt->myDoc));
         }
 
@@ -300,32 +302,28 @@ public :
                 outputXPathResults(result_nodes);
         }
 
-        needroot = false;
-
         // finished with the result nodes
         xmlXPathFreeObject(result_nodes);
 
         return true;
     }
 
+    // process the resulting nodes
     virtual void outputXPathResultsWrap(xmlXPathObjectPtr result_nodes) {
 
-        // process the resulting nodes
-        xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
-        bool outputunit = false;
-        xmlNodePtr onode = 0;
-        int result_size = 0;
         nodetype = result_nodes->type;
 
         // if this is the first real result, then we need space for this internal unit
-        if (needroot)
+        if (result_count == 0)
             xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
 
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
+            ++result_count;
+
             // index into results
-            onode = result_nodes->nodesetval->nodeTab[i];
+            xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
             // output a wrapping element, just like the one read in
             xmlTextWriterStartElement(bufwriter, root->localname);
@@ -345,7 +343,7 @@ public :
             }
 
             // copy all the attributes from the current unit
-            for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
+            for (xmlAttrPtr pAttr = xmlDocGetRootElement(ctxt->myDoc)->properties; pAttr; pAttr = pAttr->next)
                 xmlTextWriterWriteAttribute(bufwriter, pAttr->name, pAttr->children->content);
 
             // append line item number attribute
@@ -1039,6 +1037,7 @@ private :
     bool closetag;
     xmlXPathContextPtr context;
     xmlOutputBufferPtr output;
+    int result_count;
 
     static const char * const simple_xpath_attribute_name;
 
