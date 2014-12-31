@@ -396,33 +396,21 @@
             // set up node to insert
             xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) element);
 
-//            if(attr_name) append_attribute_to_node(element_node, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
+            if(attr_name) append_attribute_to_node(element_node, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
+
+            xmlNodePtr parent = onode->parent;
 
             // result node is not a unit
-            if (a_node != onode) {                    
+            if (a_node != onode) {
 
-                element_node->children = onode;
-                element_node->last = onode;
-                element_node->parent = onode->parent;
-                onode->parent = element_node;
-                element_node->next = onode->next;
-                element_node->prev = onode->prev;
-                onode->next = 0;
-                onode->prev = 0;
-
-                // update former root siblings
-                if (element_node->parent) {
-
-                    if (element_node->parent->children == onode)
-                        element_node->parent->children = element_node;
-                    else
-                        element_node->prev->next = element_node;
-
-                    if(element_node->next)
-                        element_node->next->prev = element_node;
-                } 
+                xmlReplaceNode(onode, element_node);
+                xmlAddChild(element_node, onode);
 
             } else {
+                /*
+                xmlReplaceNode(onode, element_node);
+                xmlAddChild(a_node, element_node);
+                */
 
                 element_node->children = onode->children;
                 element_node->last = onode->last;
@@ -431,10 +419,7 @@
                 element_node->prev = 0;
                 onode->children = element_node;
                 onode->last = element_node;
-
             }
-
-            element_node->doc = onode->doc;
 
         }
 
