@@ -317,6 +317,7 @@ public :
         int result_size = 0;
         nodetype = result_nodes->type;
 
+        // if this is the first real result, then we need space for this internal unit
         if (needroot)
             xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
 
@@ -326,124 +327,53 @@ public :
             // index into results
             onode = result_nodes->nodesetval->nodeTab[i];
 
-            // output a unit element around the fragment, unless
-            // is is already a unit
-            outputunit = !onode->name || strcmp("unit", (const char*) onode->name) != 0;
+            // output a wrapping element, just like the one read in
+            xmlTextWriterStartElement(bufwriter, root->localname);
 
-            // if we need a unit, output the start tag.  Line number starts at 1, not 0
-            if (outputunit) {
-
-                // output a wrapping element, just like the one read in
-                // note that this has to be ended somewhere
-                xmlTextWriterStartElement(bufwriter, root->localname);
-
-                // copy the cpp namespace from the current if it has one unit
-                if (is_archive) {
-                    for(std::vector<const xmlChar *>::size_type pos = 1; pos < data.size(); pos += 2)
-                        if(strcmp((const char *)data[pos], "http://www.sdml.info/srcML/cpp") == 0) {
-                            xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST "cpp", BAD_CAST "", BAD_CAST "http://www.sdml.info/srcML/cpp");
-                            break;
-                        }
-                }
-
-                // copy all namespaces from the current unit
-                for(std::vector<const xmlChar *>::size_type i = rootsize; i < data.size(); i+=2) {
-                    //                                xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST data[i], BAD_CAST "", BAD_CAST data[i+1]);
-                }
-
-                // copy all the attributes from the current unit
-                for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
-                    xmlTextWriterWriteAttribute(bufwriter, pAttr->name, pAttr->children->content);
-
-                // append line item number
-                xmlTextWriterWriteFormatAttribute(bufwriter, BAD_CAST "item", "%d", i + 1);
-
-                // append path
-                if (false) {
-                    xmlTextWriterStartAttribute(bufwriter, BAD_CAST simple_xpath_attribute_name);
-                    form_simple_xpath(bufwriter, onode);
-                    xmlTextWriterEndAttribute(bufwriter);
-                }
-
-                xmlTextWriterWriteString(bufwriter, BAD_CAST "");
-                xmlTextWriterFlush(bufwriter);
-
-                /*
-                  Three possibilities:
-
-                  - Input was an archive, and XPath result is a unit
-                  Resulting namespaces are those that were on the original unit
-
-                  - Input was not an archive, and XPath result is a unit
-                  Need to split the name
-
-                  - XPath result was a node, but not a unit
-                */
-
-                // input was an archive, xpath result is a unit
-                if (onode->type == XML_ELEMENT_NODE && is_archive && !outputunit) {
-
-                    // create a new list of namespaces
-                    // skip over the namespaces on the root
-                    xmlNsPtr savens = onode->nsDef;
-                    if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
-                        onode->nsDef = savens;
-                        for (std::vector<const xmlChar*>::size_type i = 0; i < unit_dom::rootsize / 2; ++i)
-                            onode->nsDef = onode->nsDef->next;
+            // copy the cpp namespace from the current if it has one unit
+            if (is_archive) {
+                for(std::vector<const xmlChar *>::size_type pos = 1; pos < data.size(); pos += 2)
+                    if(strcmp((const char *)data[pos], "http://www.sdml.info/srcML/cpp") == 0) {
+                        xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST "cpp", BAD_CAST "", BAD_CAST "http://www.sdml.info/srcML/cpp");
+                        break;
                     }
-                    // dump the namespace-modified tree
-                    xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-
-                    // restore original namespaces
-                    onode->nsDef = savens;
-
-                } else if (onode->type == XML_ELEMENT_NODE && !is_archive && !outputunit) {
-
-                    // input was not an archive, xpath result is a unit
-
-                    // namespace list only need the cpp namespace, if it exists
-                    if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
-                        xmlNsPtr savens = onode->nsDef;
-                        for (onode->nsDef = savens; onode->nsDef; onode->nsDef = onode->nsDef->next)
-                            if (strcmp((const char*) onode->nsDef->href, SRCML_CPP_NS_URI) == 0)
-                                break;
-
-                        // if we found it, then
-                        xmlNsPtr keepcppnext = 0;
-                        if (onode->nsDef) {
-                            keepcppnext = onode->nsDef->next;
-                            onode->nsDef->next = 0;
-                        }
-
-                        // dump the namespace-modified tree
-                        xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-
-                        // restore original namespaces
-                        if (onode->nsDef)
-                            onode->nsDef->next = keepcppnext;
-                        onode->nsDef = savens;
-
-                    } else {
-
-                        // dump the namespace-modified tree
-                        xmlNodeDumpOutput(buf, ctxt->myDoc, onode, 0, 0, 0);
-                    }
-
-                } else {
-
-                    // xpath of nodeset, that is not a unit, or the value of an attribute
-
-                    // dump the namespace-modified tree
-                    xmlNodeDumpOutput(buf, ctxt->myDoc, onode->type == XML_ATTRIBUTE_NODE ? onode->children : onode, 0, 0, 0);
-
-                    // wrapped in a unit, so end the wrapping unit
-                    xmlTextWriterEndElement(bufwriter);
-                }
-
-                // space between internal units
-                xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
             }
 
+            // copy all namespaces from the current unit
+            for(std::vector<const xmlChar *>::size_type i = rootsize; i < data.size(); i+=2) {
+                //                                xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST data[i], BAD_CAST "", BAD_CAST data[i+1]);
+            }
+
+            // copy all the attributes from the current unit
+            for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
+                xmlTextWriterWriteAttribute(bufwriter, pAttr->name, pAttr->children->content);
+
+            // append line item number attribute
+            xmlTextWriterWriteFormatAttribute(bufwriter, BAD_CAST "item", "%d", i + 1);
+
+            // append path attribute
+            // TODO: Make optional
+            if (false) {
+                xmlTextWriterStartAttribute(bufwriter, BAD_CAST simple_xpath_attribute_name);
+                form_simple_xpath(bufwriter, onode);
+                xmlTextWriterEndAttribute(bufwriter);
+            }
+
+            // complete the start element
+            xmlTextWriterWriteString(bufwriter, BAD_CAST "");
+
+            // flush before we dump directly into the buffer
+            // TODO: Is this really needed? May be causing a slowdown
+            xmlTextWriterFlush(bufwriter);
+
+            // output the result, with special handling for attribute nodes
+            xmlNodeDumpOutput(buf, ctxt->myDoc, onode->type == XML_ATTRIBUTE_NODE ? onode->children : onode, 0, 0, 0);
+
+            // end the wrapping unit
+            xmlTextWriterEndElement(bufwriter);
+
+            // space between result units
+            xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
         }
     }
 
