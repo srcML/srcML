@@ -969,7 +969,7 @@
                     full_unit += ":";
                 }
                 full_unit += "unit>\n";
-
+/*
                 // root unit end tag
                 if (!isoption(options, SRCML_OPTION_APPLY_ROOT))
                     xmlOutputBufferWriteString(buf, found || meta_tags.size() ? full_unit.c_str() : "/>\n");
@@ -977,6 +977,7 @@
                     xmlOutputBufferWriteString(buf, full_unit.c_str());
                 else
                     xmlOutputBufferWriteString(buf, "\n");
+                    */
 
                 break;
 
