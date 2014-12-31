@@ -291,7 +291,6 @@ public :
 
         if (needroot) {
             outputRoot(xmlDocGetRootElement(ctxt->myDoc));
-            needroot = false;
         }
 
         if (result_nodes && xmlXPathNodeSetGetLength(result_nodes->nodesetval)) {
@@ -300,6 +299,8 @@ public :
             else
                 outputXPathResults(result_nodes);
         }
+
+        needroot = false;
 
         // finished with the result nodes
         xmlXPathFreeObject(result_nodes);
@@ -316,7 +317,8 @@ public :
         int result_size = 0;
         nodetype = result_nodes->type;
 
-        xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
+        if (needroot)
+            xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
 
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
@@ -606,7 +608,6 @@ public :
                 }
 
             }
-            needroot = false;
 
             // may not have any values or results
             result_size = xmlXPathNodeSetGetLength(result_nodes->nodesetval);
@@ -618,8 +619,11 @@ public :
             if (result_size != 0)
                 xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
 
+            needroot = false;
+
             if (result_size == 0 && !element && !attr_name)
                 break;
+
 
             // opened the root start element before, now need to close it.
             // why not do this when it is started?  May not have any results, and
@@ -1016,8 +1020,7 @@ public :
         if(context) xmlXPathFreeContext(context);
         context = 0;
 
-        // all done with the buffer
-        // xmlOutputBufferClose(buf);
+        xmlTextWriterEndDocument(bufwriter);
 
         xmlFreeTextWriter(bufwriter);
 
