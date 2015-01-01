@@ -376,10 +376,6 @@ public :
 
         nodetype = result_nodes->type;
 
-        // if this is the first real result, then we need space for this internal unit
-        if (result_count == 0)
-            xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
-
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
         // remove src namespace and save for reassignment
