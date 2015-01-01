@@ -112,6 +112,8 @@ struct srcml_request_t {
     
     boost::optional<std::string> line_ending;
 
+    boost::optional<std::string> external;
+
     boost::optional<std::string> output_filename;
 
     //filelist:// prefix
