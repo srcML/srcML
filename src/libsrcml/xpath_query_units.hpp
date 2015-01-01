@@ -315,10 +315,6 @@
 
         nodetype = result_nodes->type;
 
-        // if this is the first real result, then we need space for this internal unit
-        if (result_count == 0)
-            xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
-
         // using the internal unit node to serve as the wrapper
         xmlNodePtr a_node = xmlCopyNode(xmlDocGetRootElement(ctxt->myDoc), 2);
 
@@ -349,10 +345,7 @@
             xmlAddChild(a_node, onode);
 
             // output the result
-            xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
-
-            // space between result units
-            xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
+            outputResult(a_node);
 
             // put the result node back into place
             xmlUnlinkNode(onode);
@@ -363,6 +356,19 @@
             a_node->nsDef = src_ns;
 
         xmlFreeNode(a_node);
+    }
+
+    virtual void outputResult(xmlNodePtr a_node) {
+
+        // if this is the first real result, then we need space for this internal unit
+        if (result_count == 0)
+            xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
+
+        // output the result
+        xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
+
+        // space between result units
+        xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
     }
 
     // process the resulting nodes
@@ -397,8 +403,6 @@
             xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) element);
 
             if(attr_name) append_attribute_to_node(element_node, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
-
-            xmlNodePtr parent = onode->parent;
 
             // result node is not a unit
             if (a_node != onode) {
