@@ -503,9 +503,6 @@ public :
 
             xmlTextWriterEndElement(bufwriter);
         }
-
-        xmlTextWriterWriteString(bufwriter, BAD_CAST "");
-        xmlTextWriterFlush(bufwriter);
     }
 
     virtual void outputXPathResults(xmlXPathObjectPtr result_nodes) {
