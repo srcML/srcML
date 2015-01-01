@@ -330,8 +330,6 @@ public :
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
-            ++result_count;
-
             // item attribute on wrapping node
             static char s[100];
             sprintf(s, "%d", i + 1);
@@ -505,6 +503,8 @@ public :
             xmlTextWriterEndElement(bufwriter);
         }
 
+        xmlTextWriterWriteString(bufwriter, BAD_CAST "");
+        xmlTextWriterFlush(bufwriter);
     }
 
     virtual void outputXPathResults(xmlXPathObjectPtr result_nodes) {
@@ -780,7 +780,7 @@ public :
                         xmlTextWriterEndAttribute(bufwriter);
 
                         xmlTextWriterWriteString(bufwriter, BAD_CAST "");
-                        xmlTextWriterFlush(bufwriter);
+
                     }
 
                     /*
