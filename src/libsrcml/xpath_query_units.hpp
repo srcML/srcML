@@ -295,6 +295,8 @@ public :
             outputRoot(xmlDocGetRootElement(ctxt->myDoc));
         }
 
+        nodetype = result_nodes->type;
+
         if (result_nodes && xmlXPathNodeSetGetLength(result_nodes->nodesetval)) {
             if (result_nodes->type == XPATH_NODESET && !element && !attr_name)
                 outputXPathResultsWrap(result_nodes);
@@ -332,8 +334,6 @@ public :
 
     // process the resulting nodes
     virtual void outputXPathResultsWrap(xmlXPathObjectPtr result_nodes) {
-
-        nodetype = result_nodes->type;
 
         // using the internal unit node to serve as the wrapper
         xmlNodePtr a_node = xmlCopyNode(xmlDocGetRootElement(ctxt->myDoc), 2);
@@ -389,8 +389,6 @@ public :
     // process the resulting nodes
     virtual void outputXPathResultsElement(xmlXPathObjectPtr result_nodes) {
 
-        nodetype = result_nodes->type;
-
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
         // remove src namespace
@@ -439,8 +437,6 @@ public :
 
     // process the resulting nodes
     virtual void outputXPathResultsAttribute(xmlXPathObjectPtr result_nodes) {
-
-        nodetype = result_nodes->type;
 
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
@@ -534,11 +530,7 @@ public :
     virtual void outputXPathResults(xmlXPathObjectPtr result_nodes) {
 
         // process the resulting nodes
-        nodetype = result_nodes->type;
-
         switch (nodetype) {
-
- 
 
             // numeric result
         case XPATH_NUMBER:
