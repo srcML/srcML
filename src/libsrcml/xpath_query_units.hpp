@@ -310,6 +310,24 @@ public :
         return true;
     }
 
+    // removes the namespace from the element
+    xmlNsPtr* xmlRemoveNs(xmlNodePtr a_node, xmlNsPtr hrefptr) {
+
+        if (!hrefptr)
+            return 0;
+
+        xmlNsPtr* skip = 0;
+        for (xmlNsPtr* pns = &a_node->nsDef; pns; pns = &((*pns)->next)) {
+            if ((*pns) == hrefptr) {
+                skip = pns;
+                *skip = (*skip)->next;
+                break;
+            }
+        }
+
+        return skip;
+    }
+
     // process the resulting nodes
     virtual void outputXPathResultsWrap(xmlXPathObjectPtr result_nodes) {
 
@@ -318,14 +336,9 @@ public :
         // using the internal unit node to serve as the wrapper
         xmlNodePtr a_node = xmlCopyNode(xmlDocGetRootElement(ctxt->myDoc), 2);
 
-        // remove src namespace and save for reassignment
-        // TODO: Just remove it directly
-        xmlNsPtr src_ns = 0;
-        if (false && a_node->nsDef && strcmp((const char *)a_node->nsDef->href, "http://www.sdml.info/srcML/src") == 0) {
-
-            src_ns = a_node->nsDef;
-            a_node->nsDef = a_node->nsDef->next;
-        }
+        // remove src namespace
+        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
+        xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
 
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
@@ -350,8 +363,8 @@ public :
             // xmlAddChild(onode_parent, onode);
         }
 
-        if (src_ns)
-            a_node->nsDef = src_ns;
+        if (skip)
+            *skip = hrefptr;
 
         xmlFreeNode(a_node);
     }
@@ -378,14 +391,9 @@ public :
 
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
-        // remove src namespace and save for reassignment
-        // TODO: Just remove it directly
-        xmlNsPtr src_ns = 0;
-        if (false && a_node->nsDef && strcmp((const char *)a_node->nsDef->href, "http://www.sdml.info/srcML/src") == 0) {
-
-            src_ns = a_node->nsDef;
-            a_node->nsDef = a_node->nsDef->next;
-        }
+        // remove src namespace
+        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
+        xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
 
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
@@ -423,8 +431,8 @@ public :
         // output the result
         outputResult(a_node);
 
-        if (src_ns)
-            a_node->nsDef = src_ns;
+        if (skip)
+            *skip = hrefptr;
     }
 
     virtual void outputRoot(xmlNodePtr a_node) {
