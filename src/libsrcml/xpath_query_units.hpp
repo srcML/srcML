@@ -300,6 +300,8 @@ public :
                 outputXPathResultsWrap(result_nodes);
             else if (result_nodes->type == XPATH_NODESET && element)
                 outputXPathResultsElement(result_nodes);
+            else if (result_nodes->type == XPATH_NODESET && attr_name)
+                outputXPathResultsAttribute(result_nodes);
             else
                 outputXPathResults(result_nodes);
         }
@@ -426,6 +428,32 @@ public :
                 onode->last = element_node;
             }
 
+        }
+
+        // output the result
+        outputResult(a_node);
+
+        if (skip)
+            *skip = hrefptr;
+    }
+
+    // process the resulting nodes
+    virtual void outputXPathResultsAttribute(xmlXPathObjectPtr result_nodes) {
+
+        nodetype = result_nodes->type;
+
+        xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
+
+        // remove src namespace
+        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
+        xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
+
+        // output all the found nodes
+        for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+
+            xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
+
+            append_attribute_to_node(onode, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
         }
 
         // output the result
