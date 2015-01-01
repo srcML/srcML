@@ -109,6 +109,8 @@ struct srcml_request_t {
     boost::optional<std::string> att_version;
 
     boost::optional<std::string> src_encoding;
+    
+    boost::optional<std::string> line_ending;
 
     boost::optional<std::string> output_filename;
 
