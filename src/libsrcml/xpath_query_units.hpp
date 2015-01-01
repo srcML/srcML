@@ -291,21 +291,23 @@ public :
 
         // root element if first result
         // TODO: This should move to start_output(), but that will have to wait because it is shared.
-        if (result_count == 0) {
+        if (result_count == 0 && result_nodes->type == XPATH_NODESET) {
             outputRoot(xmlDocGetRootElement(ctxt->myDoc));
         }
 
         nodetype = result_nodes->type;
 
         if (result_nodes && xmlXPathNodeSetGetLength(result_nodes->nodesetval)) {
+
             if (result_nodes->type == XPATH_NODESET && !element && !attr_name)
                 outputXPathResultsWrap(result_nodes);
             else if (result_nodes->type == XPATH_NODESET && element)
                 outputXPathResultsElement(result_nodes);
             else if (result_nodes->type == XPATH_NODESET && attr_name)
                 outputXPathResultsAttribute(result_nodes);
-            else
-                outputXPathResults(result_nodes);
+
+        } else {
+            outputXPathResults(result_nodes);
         }
 
         // finished with the result nodes
