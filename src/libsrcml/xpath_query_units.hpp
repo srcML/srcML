@@ -406,11 +406,8 @@ public :
                 xmlReplaceNode(onode, element_node);
                 xmlAddChild(element_node, onode);
 
+            // result node is a unit
             } else {
-                /*
-                  xmlReplaceNode(onode, element_node);
-                  xmlAddChild(a_node, element_node);
-                */
 
                 element_node->children = onode->children;
                 element_node->last = onode->last;
