@@ -452,20 +452,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
           }
         }
 
-        // TESTING
-        /*
-        int xpath_index = -1;
-        BOOST_FOREACH(const std::string trans, srcml_request.transformations) {
-          if (src_prefix_protocol(trans) == "xpath") {
-            ++xpath_index;
-            std::cerr << "XPATH: " << trans << "\n";
-          }
-          if (srcml_request.xpath_query_support.at(xpath_index).first)
-            std::cerr << "ELEMENT: " << *srcml_request.xpath_query_support.at(xpath_index).first << "\n";
-          if (srcml_request.xpath_query_support.at(xpath_index).second)
-            std::cerr << "ATTRIBUTE: " << *srcml_request.xpath_query_support.at(xpath_index).second << "\n";
-        }*/
-
         prog_opts::store(cliopts , cli_map);
         prog_opts::notify(cli_map);
 
