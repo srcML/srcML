@@ -674,68 +674,6 @@ public :
 
     }
 
-    /**
-     * xml_output_buffer_write_element_ns
-     * @param buf output buffer to write element
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param nb_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param nb_attributes the number of attributes on the tag
-     * @param nb_defaulted the number of defaulted attributes
-     * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
-     *
-     * Write an element to output buffer.
-     */
-    /*
-      void xml_output_buffer_write_element_ns(xmlOutputBufferPtr buf, const xmlChar* localname, const xmlChar* prefix,
-      const xmlChar* URI, int nb_namespaces, const xmlChar** namespaces,
-      int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
-
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
-      if (prefix != NULL) {
-      xmlOutputBufferWriteString(buf, (const char*) prefix);
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-      }
-      xmlOutputBufferWriteString(buf, (const char*) localname);
-
-      // output the namespaces
-      for (int i = 0; i < nb_namespaces; ++i) {
-
-      // don't put cpp namespace on the root for a non-archive
-      if (!is_archive && strcmp((const char*) namespaces[2 * i + 1], SRCML_CPP_NS_URI) == 0)
-      continue;
-
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" xmlns"));
-      if (namespaces[i * 2]) {
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-      xmlOutputBufferWriteString(buf, (const char*) namespaces[i * 2]);
-      }
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
-      xmlOutputBufferWriteString(buf, (const char*) namespaces[i * 2 + 1]);
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-      }
-
-      // output the attributes
-      for (int i = 0; i < nb_attributes; ++i) {
-
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(" "));
-      if (attributes[i * 5 + 1]) {
-      xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5 + 1]);
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(":"));
-      }
-      xmlOutputBufferWriteString(buf, (const char*) attributes[i * 5]);
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("=\""));
-
-      xmlOutputBufferWrite(buf, (int)(attributes[i * 5 + 4] - attributes[i * 5 + 3]),
-      (const char*) attributes[i * 5 + 3]);
-
-      xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\""));
-      }
-      }
-    */
-
 private :
 
     OPTION_TYPE options;
