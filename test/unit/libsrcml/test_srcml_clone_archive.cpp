@@ -47,7 +47,7 @@ int main() {
         archive->attributes.push_back("a");
         archive->options = 1 | 2;
         archive->tabstop = 4;
-        archive->prefixes.at(1) = "c";
+        archive->prefixes.at(0) = "s";
         archive->prefixes.push_back("foo");
         archive->namespaces.push_back("bar");
         archive->user_macro_list.push_back("foo");
@@ -77,28 +77,13 @@ int main() {
         dassert(new_archive->options, (1 | 2));
 
         dassert(new_archive->tabstop, 4);
-        dassert(new_archive->prefixes.size(), 9);
-        dassert(new_archive->namespaces.size(), 9);
+        dassert(new_archive->prefixes.size(), 2);
+        dassert(new_archive->namespaces.size(), 2);
         dassert(new_archive->registered_languages.size(), archive->registered_languages.size());
 
-        dassert(new_archive->prefixes.at(0), SRCML_SRC_NS_PREFIX_DEFAULT);
-        dassert(new_archive->namespaces.at(0), SRCML_SRC_NS_URI);
-        dassert(new_archive->prefixes.at(1), "c");
-        dassert(new_archive->namespaces.at(1), SRCML_CPP_NS_URI);
-        dassert(new_archive->prefixes.at(2), SRCML_ERR_NS_PREFIX_DEFAULT);
-        dassert(new_archive->namespaces.at(2), SRCML_ERR_NS_URI);
-        dassert(new_archive->prefixes.at(3), SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-        dassert(new_archive->namespaces.at(3), SRCML_EXT_LITERAL_NS_URI);
-        dassert(new_archive->prefixes.at(4), SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-        dassert(new_archive->namespaces.at(4), SRCML_EXT_OPERATOR_NS_URI);
-        dassert(new_archive->prefixes.at(5), SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-        dassert(new_archive->namespaces.at(5), SRCML_EXT_MODIFIER_NS_URI);
-        dassert(new_archive->prefixes.at(6), SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
-        dassert(new_archive->namespaces.at(6), SRCML_EXT_POSITION_NS_URI);
-        dassert(new_archive->prefixes.at(7), SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT);
-        dassert(new_archive->namespaces.at(7), SRCML_EXT_OPENMP_NS_URI);
-        dassert(new_archive->prefixes.at(8), "foo");
-        dassert(new_archive->namespaces.at(8), "bar");
+        dassert(new_archive->prefixes.at(0), "s");
+        dassert(new_archive->prefixes.at(1), "foo");
+        dassert(new_archive->namespaces.at(1), "bar");
 
         dassert(new_archive->user_macro_list.size(), 2);
         dassert(new_archive->user_macro_list.at(0), "foo");
