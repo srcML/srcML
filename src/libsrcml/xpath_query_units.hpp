@@ -614,6 +614,8 @@ public :
 
                     p += end;
                     pos = p;
+                } else {
+                    ++p;
                 }
             } else {
 
@@ -621,7 +623,7 @@ public :
             }
         }
         xmlOutputBufferWrite(buf, (int)(p - pos), pos);
-    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
+        xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
     }
 
     /**
