@@ -634,6 +634,12 @@ public :
         // finalize results
         switch (nodetype) {
 
+        case XPATH_NODESET:
+
+            xmlTextWriterEndElement(bufwriter);
+            xmlTextWriterEndDocument(bufwriter);
+            break;
+
         case XPATH_NUMBER:
             if (isoption(options, SRCML_OPTION_XPATH_TOTAL)) {
                 std::ostringstream out;
