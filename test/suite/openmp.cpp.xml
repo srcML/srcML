@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:omp="http://www.sdml.info/srcML/OpenMP" language="C++" dir="openmp">
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name></omp:directive></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name> <omp:clause><omp:name>if</omp:name><omp:argument_list>()</omp:argument_list></omp:clause></omp:directive></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name> <omp:clause><omp:name>if</omp:name><omp:argument_list>(<omp:argument><omp:expr>list</omp:expr></omp:argument>)</omp:argument_list></omp:clause></omp:directive></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name> <omp:clause><omp:name>if</omp:name><omp:argument_list>(<omp:argument><omp:expr>one</omp:expr></omp:argument>, <omp:argument><omp:expr>two</omp:expr></omp:argument>)</omp:argument_list></omp:clause></omp:directive></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name> <omp:clause><omp:name>if</omp:name><omp:argument_list>(<omp:argument><omp:expr>one</omp:expr></omp:argument>, <omp:argument><omp:expr>two</omp:expr></omp:argument>)</omp:argument_list></omp:clause> <omp:clause><omp:name>if</omp:name><omp:argument_list>(<omp:argument><omp:expr>one</omp:expr></omp:argument>, <omp:argument><omp:expr>two</omp:expr></omp:argument>)</omp:argument_list></omp:clause></omp:directive></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name> <omp:clause><omp:name>if</omp:name><omp:argument_list>(<omp:argument><omp:expr>one</omp:expr></omp:argument>, <omp:argument><omp:expr>two</omp:expr></omp:argument>)</omp:argument_list></omp:clause>, <omp:clause><omp:name>if</omp:name><omp:argument_list>(<omp:argument><omp:expr>one</omp:expr></omp:argument>, <omp:argument><omp:expr>two</omp:expr></omp:argument>)</omp:argument_list></omp:clause></omp:directive></cpp:pragma>
+</unit>
+
+<unit>
+<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name> <omp:clause><omp:name>reduction</omp:name><omp:argument_list>(<omp:argument><omp:expr>+: sum</omp:expr></omp:argument>)</omp:argument_list></omp:clause></omp:directive></cpp:pragma>
+</unit>
+
+</unit>

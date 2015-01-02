@@ -1,0 +1,21 @@
+#!/bin/bash
+
+./prlctlall.py --fedora --test resume
+./test_srcML fedora
+./prlctlall.py --fedora --test suspend
+
+./prlctlall.py --ubuntu --test resume
+./test_srcML ubuntu
+./prlctlall.py --ubuntu --test suspend
+
+./prlctlall.py --mint --test resume
+./test_srcML mint
+./prlctlall.py --mint --test suspend
+
+./prlctlall.py --suse --test resume
+./test_srcML suse
+./prlctlall.py --suse --test suspend
+
+./prlctlall.py --mac --test resume
+./test_srcML mac
+./prlctlall.py --mac --test suspend

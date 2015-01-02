@@ -1,0 +1,21 @@
+#!/bin/bash
+
+./prlctlall.py --fedora --build resume
+./build_srcML fedora
+./prlctlall.py --fedora --build suspend
+
+./prlctlall.py --ubuntu --build resume
+./build_srcML ubuntu
+./prlctlall.py --ubuntu --build suspend
+
+./prlctlall.py --mint --build resume
+./build_srcML mint
+./prlctlall.py --mint --build suspend
+
+./prlctlall.py --suse --build resume
+./build_srcML suse
+./prlctlall.py --suse --build suspend
+
+./prlctlall.py --mac --build resume
+./build_srcML mac
+./prlctlall.py --mac --build suspend

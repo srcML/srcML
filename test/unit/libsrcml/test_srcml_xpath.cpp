@@ -1,7 +1,7 @@
 /**
  * @file test_srcml_xpath.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -818,6 +818,36 @@ int main() {
         UNLINK("input.xml");
         UNLINK("project.xml");
     }
+
+
+    {
+        const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                         "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\"> <empty_stmt>;</empty_stmt>\n"
+                          "</unit>\n";
+        
+        std::ofstream file("input.xml");
+        file << s;
+        file.close();
+        xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
+        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:unit", 0, 0, 0, 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        std::ifstream in("project.xml");
+        std::string output;
+        char temp;
+        while(in.get(temp))
+            output += temp;
+
+        dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
+
+                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\"> <empty_stmt>;</empty_stmt>\n"
+                        "</unit>\n\n"
+
+                        "</unit>\n");
+        xmlFreeParserInputBuffer(buffer_input);
+        UNLINK("input.xml");
+        UNLINK("project.xml");
+    }    
 
     srcml_cleanup_globals();
 

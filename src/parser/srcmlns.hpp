@@ -1,7 +1,7 @@
 /**
  * @file srcmlns.hpp
  *
- * @copyright Copyright (C) 2005-2012 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2005-2012 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -74,6 +74,9 @@ const char* const SRCML_EXT_MODIFIER_NS_URI = "http://www.sdml.info/srcML/modifi
 /** srcML position namespace uri */
 const char* const SRCML_EXT_POSITION_NS_URI = "http://www.sdml.info/srcML/position";
 
+/** srcML OpenMP namespace uri */
+const char* const SRCML_EXT_OPENMP_NS_URI = "http://www.sdml.info/srcML/OpenMP";
+
 /** srcML literal namespace prefix */
 const char* const SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT = "lit";
 
@@ -85,6 +88,9 @@ const char* const SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT = "type";
 
 /** srcML operator namespace prefix */
 const char* const SRCML_EXT_POSITION_NS_PREFIX_DEFAULT = "pos";
+
+/** srcML OpenMP namespace prefix */
+const char* const SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT = "omp";
 
 // srcML standard attributes
 /** revision attribute @todo see if still needed */

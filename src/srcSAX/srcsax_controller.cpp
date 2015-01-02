@@ -1,7 +1,7 @@
 /**
  * @file srcsax_controller.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * srcSAX is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -154,6 +154,8 @@ static struct srcsax_context * srcsax_create_context_inner(xmlParserInputBufferP
 
     context->libxml2_context = libxml2_context;
 
+    context->terminate = 0;
+
     return context;
 
 }
@@ -197,7 +199,7 @@ struct srcsax_context * srcsax_create_context_memory(const char * buffer, size_t
     srcsax_controller_init();
 
     xmlParserInputBufferPtr input =
-        xmlParserInputBufferCreateMem(buffer, buffer_size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+        xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     return srcsax_create_context_inner(input, 1);
 
@@ -423,6 +425,8 @@ srcsax_create_parser_context(xmlParserInputBufferPtr buffer_input) {
  * Stop srcSAX parser.
  */
 void srcsax_stop_parser(struct srcsax_context * context) {
+
+    context->terminate = 1;
 
     xmlParserCtxtPtr ctxt = context->libxml2_context;
 

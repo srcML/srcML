@@ -1,7 +1,7 @@
 /**
  * @file bitset_bucket_sorter.hpp
  * 
- * @copyright Copyright (C) 2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014  srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML translator.
  *

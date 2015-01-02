@@ -1,7 +1,7 @@
 /**
  * @file test_srcml_create_archive.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,24 +50,12 @@ int main() {
                                    | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
         dassert(archive->tabstop, 8);
-        dassert(archive->prefixes.size(), 7);
-        dassert(archive->namespaces.size(), 7);
+        dassert(archive->prefixes.size(), 1);
+        dassert(archive->namespaces.size(), 1);
         dassert(!archive->registered_languages.size(), 0);
 
         dassert(archive->prefixes.at(0), SRCML_SRC_NS_PREFIX_DEFAULT);
         dassert(archive->namespaces.at(0), SRCML_SRC_NS_URI);
-        dassert(archive->prefixes.at(1), SRCML_CPP_NS_PREFIX_DEFAULT);
-        dassert(archive->namespaces.at(1), SRCML_CPP_NS_URI);
-        dassert(archive->prefixes.at(2), SRCML_ERR_NS_PREFIX_DEFAULT);
-        dassert(archive->namespaces.at(2), SRCML_ERR_NS_URI);
-        dassert(archive->prefixes.at(3), SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-        dassert(archive->namespaces.at(3), SRCML_EXT_LITERAL_NS_URI);
-        dassert(archive->prefixes.at(4), SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-        dassert(archive->namespaces.at(4), SRCML_EXT_OPERATOR_NS_URI);
-        dassert(archive->prefixes.at(5), SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-        dassert(archive->namespaces.at(5), SRCML_EXT_MODIFIER_NS_URI);
-        dassert(archive->prefixes.at(6), SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
-        dassert(archive->namespaces.at(6), SRCML_EXT_POSITION_NS_URI);
 
         dassert(archive->user_macro_list.size(), 0);
 

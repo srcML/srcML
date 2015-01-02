@@ -136,6 +136,9 @@ modifier_base.c.xml
 modifier_base.m.xml
 modifier_c.m.xml
 namespace.cs.xml
+openmp.c.xml
+openmp.cs.xml
+openmp.m.xml
 operator.cs.xml
 operator_base.c.xml
 operator_base.cs.xml
