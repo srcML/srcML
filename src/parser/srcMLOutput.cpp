@@ -473,7 +473,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          int ts)
     : last_line(0), last_line2(0), last_column(0), end_position_output(false), input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
-      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri), unit_attributes(attributes), processing_instruction(processing_instruction),
+      unit_version(0), options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), 
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
