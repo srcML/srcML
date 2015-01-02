@@ -410,6 +410,8 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
         if(state->context->terminate) return;
 
         state->mode = UNIT;
+        state->libxml2_attributes = attributes;
+        state->libxml2_namespaces = namespaces;
         if(state->context->handler->start_unit)
             state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                                 nb_namespaces, srcsax_namespaces, nb_attributes, srcsax_attributes);

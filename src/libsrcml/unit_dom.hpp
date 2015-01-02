@@ -66,32 +66,6 @@ public :
     virtual OPTION_TYPE get_options() const { return options; }
 
     /**
-     * srcsax_attribute2libxml2attribute
-     * @param num_attributes number of attributes
-     * @param attributes the srcsax attributes
-     *
-     * Convert the srcsax attributes to libxml2 attributes.
-     * @returns the libxml2 attributes.
-     */
-     const xmlChar ** srcsax_attribute2libxml2attribute(int num_attributes, const struct srcsax_attribute * attributes) {
-
-        const xmlChar ** libxml2_attributes = (const xmlChar **)malloc((num_attributes * 5) * sizeof(const xmlChar *));
-        for(int pos = 0; pos < num_attributes; ++pos) {
-
-            libxml2_attributes[pos * 5] = (const xmlChar *)attributes[pos].localname;
-            libxml2_attributes[pos * 5 + 1] = (const xmlChar *)attributes[pos].prefix;
-            libxml2_attributes[pos * 5 + 2] = (const xmlChar *)attributes[pos].uri;
-            libxml2_attributes[pos * 5 + 3] = (const xmlChar *)strdup(attributes[pos].value);
-            libxml2_attributes[pos * 5 + 4] = libxml2_attributes[pos * 5 + 3] + strlen(attributes[pos].value);
-            attribute_value_pool.push_back(libxml2_attributes[pos * 5 + 3]);
-
-        }
-
-        return libxml2_attributes;
-
-     }
-
-    /**
      * start_output
      *
      * Pure virtual that is called exactly once at beginnning of document  Override for intended behavior.
@@ -194,6 +168,8 @@ public :
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                            const struct srcsax_attribute * attributes) {
 
+        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+
         // remove per-unit namespaces
         data.resize(rootsize);
 
@@ -237,11 +213,8 @@ public :
         //xmlSAX2StartDocument(ctxt);
 
         // start the unit (element) at the root using the merged namespaces
-        const xmlChar ** libxml2_attributes = srcsax_attribute2libxml2attribute(num_attributes, attributes);
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, (int)(data.size() / 2),
-                              &data[0], num_attributes, 0, libxml2_attributes);
-
-        free(libxml2_attributes);
+                              &data[0], num_attributes, 0, handler->libxml2_attributes);
 
     }
 
