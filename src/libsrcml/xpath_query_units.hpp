@@ -297,17 +297,36 @@ public :
 
         nodetype = result_nodes->type;
 
+        switch (nodetype) {
+
+        case XPATH_NODESET:
+
         if (result_nodes && xmlXPathNodeSetGetLength(result_nodes->nodesetval)) {
 
-            if (result_nodes->type == XPATH_NODESET && !element && !attr_name)
+            if (!element && !attr_name)
                 outputXPathResultsWrap(result_nodes);
-            else if (result_nodes->type == XPATH_NODESET && element)
+            else if (element)
                 outputXPathResultsElement(result_nodes);
-            else if (result_nodes->type == XPATH_NODESET && attr_name)
+            else if (attr_name)
                 outputXPathResultsAttribute(result_nodes);
 
-        } else {
-            outputXPathResults(result_nodes);
+        }
+        break;
+
+        case XPATH_NUMBER:
+            outputXPathResultsNumber(result_nodes);
+            break;
+
+        case XPATH_BOOLEAN:
+            outputXPathResultsBoolean(result_nodes);
+            break;
+
+        case XPATH_STRING:
+            outputXPathResultsString(result_nodes);
+            break;
+
+        default :
+            break;
         }
 
         // finished with the result nodes
@@ -529,37 +548,31 @@ public :
         }
     }
 
-    virtual void outputXPathResults(xmlXPathObjectPtr result_nodes) {
+    virtual void outputXPathResultsNumber(xmlXPathObjectPtr result_nodes) {
 
-        // process the resulting nodes
-        switch (nodetype) {
+        total += result_nodes->floatval;
 
-            // numeric result
-        case XPATH_NUMBER:
-            if (!isoption(options, SRCML_OPTION_XPATH_TOTAL)) {
-                std::ostringstream out;
-                if ((int)result_nodes->floatval == result_nodes->floatval)
-                    out << (int)result_nodes->floatval;
-                else
-                    out << result_nodes->floatval;
+        if (isoption(options, SRCML_OPTION_XPATH_TOTAL))
+            return;
 
-                xmlOutputBufferWriteString(buf, out.str().c_str());
-                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
-            }
-            total += result_nodes->floatval;
-            break;
+        if ((int)result_nodes->floatval == result_nodes->floatval)
+            xmlTextWriterWriteFormatString(bufwriter, "%d\n", (int)result_nodes->floatval);
+        else
+            xmlTextWriterWriteFormatString(bufwriter, "%lf\n", result_nodes->floatval);
+    }
 
-            // boolean result
-        case XPATH_BOOLEAN:
-            if (!isoption(options, SRCML_OPTION_XPATH_TOTAL))
-                xmlOutputBufferWriteString(buf, result_nodes->boolval ? "true\n" : "false\n");
+    virtual void outputXPathResultsBoolean(xmlXPathObjectPtr result_nodes) {
 
-            result_bool |= (result_nodes->boolval != 0);
-            break;
+        result_bool |= (result_nodes->boolval != 0);
 
-            // string
-        case XPATH_STRING:
-            {
+        if (isoption(options, SRCML_OPTION_XPATH_TOTAL))
+            return;
+
+        xmlOutputBufferWriteString(buf, result_nodes->boolval ? "true\n" : "false\n");
+    }
+
+    virtual void outputXPathResultsString(xmlXPathObjectPtr result_nodes) {
+
                 char* p = (char*) result_nodes->stringval;
                 char* pos = p;
                 while (*p) {
@@ -608,19 +621,8 @@ public :
                     }
                 }
                 xmlOutputBufferWrite(buf, (int)(p - pos), pos);
-            }
-
             xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
-
-            break;
-
-        default:
-            fprintf(stderr, "Unhandled type %d\n", nodetype);
-            break;
-        };
-
-
-    }
+            }
 
     /**
      * end_output
