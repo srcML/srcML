@@ -573,56 +573,56 @@ public :
 
     virtual void outputXPathResultsString(xmlXPathObjectPtr result_nodes) {
 
-                char* p = (char*) result_nodes->stringval;
-                char* pos = p;
-                while (*p) {
+        char* p = (char*) result_nodes->stringval;
+        char* pos = p;
+        while (*p) {
 
-                    if (p[0] == '&') {
-                        if (p[1] == 'l' && p[2] == 't' && p[3] == ';') {
+            if (p[0] == '&') {
+                if (p[1] == 'l' && p[2] == 't' && p[3] == ';') {
 
-                            xmlOutputBufferWrite(buf, (int)(p - pos), pos);
-                            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
-                            p += 4;
-                            pos = p;
+                    xmlOutputBufferWrite(buf, (int)(p - pos), pos);
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
+                    p += 4;
+                    pos = p;
 
-                        } else if (p[1] == 'g' && p[2] == 't' && p[3] == ';') {
+                } else if (p[1] == 'g' && p[2] == 't' && p[3] == ';') {
 
-                            xmlOutputBufferWrite(buf, (int)(p - pos), pos);
-                            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
-                            p += 4;
-                            pos = p;
+                    xmlOutputBufferWrite(buf, (int)(p - pos), pos);
+                    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
+                    p += 4;
+                    pos = p;
 
-                        } else if (p[1] == '#' && isdigit(p[2]) && isdigit(p[3])) {
+                } else if (p[1] == '#' && isdigit(p[2]) && isdigit(p[3])) {
 
-                            xmlOutputBufferWrite(buf, (int)(p - pos), pos);
+                    xmlOutputBufferWrite(buf, (int)(p - pos), pos);
 
-                            int end = 4;
-                            if(p[4] == ';')
-                                end = 5;
-                            else if (isdigit(p[4]) && p[5] == ';')
-                                end = 6;
+                    int end = 4;
+                    if(p[4] == ';')
+                        end = 5;
+                    else if (isdigit(p[4]) && p[5] == ';')
+                        end = 6;
 
-                            if(end > 4) {
-                                p[end - 1] = '\0';
+                    if(end > 4) {
+                        p[end - 1] = '\0';
 
-                                int c = atoi(p + 2);
-                                xmlOutputBufferWrite(buf, 1, (const char*) &c);
+                        int c = atoi(p + 2);
+                        xmlOutputBufferWrite(buf, 1, (const char*) &c);
 
-                                p[end - 1] = ';';
-                            } else
-                                xmlOutputBufferWrite(buf, 4, (const char*) p);
+                        p[end - 1] = ';';
+                    } else
+                        xmlOutputBufferWrite(buf, 4, (const char*) p);
 
-                            p += end;
-                            pos = p;
-                        }
-                    } else {
-
-                        ++p;
-                    }
+                    p += end;
+                    pos = p;
                 }
-                xmlOutputBufferWrite(buf, (int)(p - pos), pos);
-            xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
+            } else {
+
+                ++p;
             }
+        }
+        xmlOutputBufferWrite(buf, (int)(p - pos), pos);
+    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
+    }
 
     /**
      * end_output
