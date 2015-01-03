@@ -370,6 +370,12 @@ public :
             sprintf(s, "%d", i + 1);
             xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s);
 
+            // location attribute on wrapping node
+            if (true) {
+                const char* s = "/src:unit";
+                xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s);
+            }
+
             // index into results
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
