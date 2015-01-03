@@ -134,10 +134,10 @@ public :
         root = &handler->root;
 
         // record namespaces in an extensible list so we can add the per unit
-        for (int i = 0; i < num_namespaces; ++i) {
+        for (int i = 0; i < num_namespaces; i += 2) {
 
-            data.push_back((const xmlChar *)namespaces[i].prefix);
-            data.push_back((const xmlChar *)namespaces[i].uri);
+            data.push_back((const xmlChar *)handler->libxml2_namespaces[i]);
+            data.push_back((const xmlChar *)handler->libxml2_namespaces[i + 1]);
 
         }
         rootsize = data.size();
