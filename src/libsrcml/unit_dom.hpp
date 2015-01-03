@@ -177,6 +177,7 @@ public :
         for (int i = 0; i < num_namespaces; ++i) {
 
             // make sure not already in
+            /*
             bool found = false;
             for (std::vector<const xmlChar*>::size_type j = 0; j < data.size() / 2; ++j)
                 if (xmlStrEqual(data[j * 2], (const xmlChar *)namespaces[i].prefix) &&
@@ -187,9 +188,9 @@ public :
 
             if (found)
                 continue;
-
-            data.push_back((const xmlChar *)namespaces[i].prefix);
-            data.push_back((const xmlChar *)namespaces[i].uri);
+*/
+            data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2]);
+            data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2 + 1]);
         }
 
         /*

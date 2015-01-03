@@ -460,7 +460,7 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
 
     if(state->context->terminate) return;
 
-    srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
+    srcsax_namespace * srcsax_namespaces = 0; //(srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
     srcsax_attribute * srcsax_attributes = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(nb_attributes, attributes);
 
     int ns_length = state->root.nb_namespaces * 2;
@@ -498,7 +498,7 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
 
     }
 
-    free_srcsax_namespaces(nb_namespaces, srcsax_namespaces);
+    //free_srcsax_namespaces(nb_namespaces, srcsax_namespaces);
     free_srcsax_attributes(nb_attributes, srcsax_attributes);
 
 #ifdef DEBUG
