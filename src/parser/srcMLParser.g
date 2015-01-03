@@ -1,7 +1,7 @@
 /*!
  * @file srcMLParser.g
  * 
- * @copyright Copyright (C) 2004-2014  SDML (www.srcML.org)
+ * @copyright Copyright (C) 2004-2014  srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML translator.
  *
@@ -442,6 +442,7 @@ tokens {
 	SPROTECTED_ACCESS;
     SPROTECTED_ACCESS_DEFAULT;
     SMEMBER_INITIALIZATION_LIST;
+    SMEMBER_INITIALIZATION;
 	SCONSTRUCTOR_DEFINITION;
 	SCONSTRUCTOR_DECLARATION;
 	SDESTRUCTOR_DEFINITION;
@@ -618,6 +619,14 @@ tokens {
 
     // Other
     SCUDA_ARGUMENT_LIST;
+
+    // OpenMP
+    SOMP_DIRECTIVE;
+    SOMP_NAME;
+    SOMP_CLAUSE;
+    SOMP_ARGUMENT_LIST;
+    SOMP_ARGUMENT;
+    SOMP_EXPRESSION;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;
@@ -3230,10 +3239,15 @@ lcurly_base[] { ENTRY_DEBUG } :
             // need to pass on class mode to detect constructors for Java
             bool inclassmode = (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && inMode(MODE_CLASS);
 
+            bool in_function_body = inTransparentMode(MODE_FUNCTION_TAIL);
+
             startNewMode(MODE_BLOCK);
 
             if (inclassmode)
                 setMode(MODE_CLASS);
+
+            if(in_function_body)
+                setMode(MODE_FUNCTION_BODY);
 
             startElement(SBLOCK);
 
@@ -3603,7 +3617,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
-        call |
+        member_init |
 
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
@@ -4320,6 +4334,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             { real_type_count == 0 && specifier_count == 0 && attribute_count == 0 }? (objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY])
 
         )
+    
+        // default to variable in function body.  However, if anonymous function (does not end in :) not a variable
+        throw_exception[inTransparentMode(MODE_FUNCTION_BODY) && type == VARIABLE && fla == TERMINATE]
 
         // since we got this far, we have a function
         set_type[type, FUNCTION, !isoperator]
@@ -5631,6 +5648,21 @@ member_initialization_list[] { ENTRY_DEBUG } :
             startElement(SMEMBER_INITIALIZATION_LIST);
         }
         COLON
+;
+
+// call  function call, macro, etc.
+member_init[] { ENTRY_DEBUG } :
+        {
+
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+
+            // start the function call element
+            startElement(SMEMBER_INITIALIZATION);
+
+        }
+        function_identifier call_argument_list
+        
 ;
 
 // push name onto namestack
@@ -8747,7 +8779,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)* |
+        } ({ isoption(parser_options, SRCML_OPTION_OPENMP) }? omp_directive | (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)*) |
 
         ERRORPREC
         {
@@ -9270,4 +9302,63 @@ cpp_literal[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SCPP_LITERAL);
         }
         (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
+;
+
+omp_directive[] { CompleteElement element(this); ENTRY_DEBUG} :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SOMP_DIRECTIVE);
+    }
+
+    OMP_OMP (options { generateAmbigWarnings = false; } : COMMA | { next_token() == LPAREN }? omp_clause | omp_name)*
+
+;
+
+omp_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SOMP_NAME);
+        }
+        cpp_garbage
+
+;
+
+
+omp_clause[] { CompleteElement element(this); ENTRY_DEBUG} :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SOMP_CLAUSE);
+    }
+
+    omp_name omp_argument_list
+
+;
+
+omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SOMP_ARGUMENT_LIST);
+    }
+
+    (
+
+    { next_token() != RPAREN }? LPAREN omp_argument (COMMA omp_argument)* RPAREN |
+    LPAREN RPAREN
+
+    )
+
+;
+
+omp_argument[] { CompleteElement element(this); ENTRY_DEBUG} :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SOMP_ARGUMENT);
+        startElement(SOMP_EXPRESSION);
+    }
+
+    (~(RPAREN | COMMA))*
+
 ;

@@ -1,7 +1,7 @@
 /**
  * @file libsrcml.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -931,3 +931,21 @@ int srcml_check_exslt() {
  * @returns Return a string describing last recorded error.
  */
 const char* srcml_error_string() { return srcml_error.c_str(); }
+
+
+/******************************************************************************
+ *                                                                            *
+ *                           libsrcml misc functions                          *
+ *                                                                            *
+ ******************************************************************************/
+
+/**
+ * srcml_free_memory
+ *
+ * Free a buffer allocated by functions such as srcml_write_open_memory and srcml_unparse_unit_memory.
+ */
+void srcml_free_memory(char * buffer) {
+
+    free((void*)buffer);
+
+}

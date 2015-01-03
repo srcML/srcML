@@ -1,7 +1,7 @@
 /**
  * @file srcMLOutput.cpp
  *
- * @copyright Copyright (C) 2003-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2003-2014 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -48,7 +48,9 @@ enum { SRCML_SRC_NS_URI_POS,
        SRCML_EXT_LITERAL_NS_URI_POS,
        SRCML_EXT_OPERATOR_NS_URI_POS,
        SRCML_EXT_MODIFIER_NS_URI_POS,
-       SRCML_EXT_POSITION_NS_URI_POS
+       SRCML_EXT_POSITION_NS_URI_POS,
+       SRCML_EXT_OPENMP_NS_URI_POS
+
 };
 
 /** name of element call map */
@@ -204,7 +206,8 @@ namespace {
     ELEMENT_MAP(SFOREVER_STATEMENT,       "forever")
     ELEMENT_MAP(SEMIT_STATEMENT,          "emit")
 
-    ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
+    ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_init_list")
+    ELEMENT_MAP(SMEMBER_INITIALIZATION,      "member_init")
     ELEMENT_MAP(SCONSTRUCTOR_DEFINITION,     "constructor")
     ELEMENT_MAP(SCONSTRUCTOR_DECLARATION,    "constructor_decl")
     ELEMENT_MAP(SDESTRUCTOR_DEFINITION,      "destructor")
@@ -363,6 +366,14 @@ namespace {
     // Other
     ELEMENT_MAP(SCUDA_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
 
+    // OpenMP
+    ELEMENT_MAP(SOMP_DIRECTIVE,    "directive")
+    ELEMENT_MAP(SOMP_NAME,         "name")
+    ELEMENT_MAP(SOMP_CLAUSE,       "clause")
+    ELEMENT_MAP(SOMP_ARGUMENT_LIST, ELEMENT_MAP_CALL(SARGUMENT_LIST))
+    ELEMENT_MAP(SOMP_ARGUMENT,      ELEMENT_MAP_CALL(SARGUMENT))
+    ELEMENT_MAP(SOMP_EXPRESSION,    ELEMENT_MAP_CALL(SEXPRESSION))
+
     //
     ELEMENT_MAP(SEMPTY,         "empty_stmt")
 
@@ -428,6 +439,14 @@ namespace {
     // position namespace
     ELEMENT_MAP(SPOSITION, SRCML_EXT_POSITION_NS_URI_POS)
 
+    // OpenMP namespace
+    ELEMENT_MAP(SOMP_DIRECTIVE,     SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_NAME,          SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_CLAUSE,        SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_ARGUMENT_LIST, SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_ARGUMENT,      SRCML_EXT_OPENMP_NS_URI_POS)
+    ELEMENT_MAP(SOMP_EXPRESSION,    SRCML_EXT_OPENMP_NS_URI_POS)
+
 }
 
 /**
@@ -455,10 +474,47 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          int ts)
     : last_line(0), last_line2(0), last_column(0), end_position_output(false), input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
-      unit_version(0), options(op), xml_encoding(xml_enc), num2prefix(prefix), num2uri(uri), unit_attributes(attributes), processing_instruction(processing_instruction),
+      unit_version(0), options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), 
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
+    num2prefix.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT);
+
+    num2uri.push_back(SRCML_SRC_NS_URI);
+    num2uri.push_back(SRCML_CPP_NS_URI);
+    num2uri.push_back(SRCML_ERR_NS_URI);
+    num2uri.push_back(SRCML_EXT_LITERAL_NS_URI);
+    num2uri.push_back(SRCML_EXT_OPERATOR_NS_URI);
+    num2uri.push_back(SRCML_EXT_MODIFIER_NS_URI);
+    num2uri.push_back(SRCML_EXT_POSITION_NS_URI);
+    num2uri.push_back(SRCML_EXT_OPENMP_NS_URI);
+
+    for(std::vector<std::string>::size_type outer_pos = 0; outer_pos < uri.size(); ++ outer_pos) {
+
+        std::vector<std::string>::size_type pos;
+        for(pos = 0; pos < num2uri.size() && num2uri[pos] != uri[outer_pos]; ++pos)
+            ;
+
+        if(pos < num2uri.size()) {
+
+            num2prefix[pos] = prefix[outer_pos];
+
+        } else {
+
+            num2prefix.push_back(prefix[outer_pos]);
+            num2uri.push_back(uri[outer_pos]);
+
+        }
+
+    }
+
 
     // setup attributes names for line/column position if used
     if (isoption(options, SRCML_OPTION_POSITION)) {
@@ -863,6 +919,9 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         // optional position xml namespace
         (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
 
+        // optional position xml namespace
+        (depth == 0) && isoption(options, SRCML_OPTION_OPENMP) ? SRCML_EXT_OPENMP_NS_URI : 0,
+
     };
 
     // output the namespaces
@@ -881,7 +940,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
     if(depth == 0) {
 
-        for(std::vector<std::string>::size_type pos =  SRCML_EXT_POSITION_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
+        for(std::vector<std::string>::size_type pos =  SRCML_EXT_OPENMP_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
 
             std::string prefix = "xmlns";
             if (num2prefix[pos][0] != '\0') {

@@ -1,7 +1,7 @@
 /**
  * @file Mode.cpp
  *
- * @copyright Copyright (C) 2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -96,3 +96,4 @@ const srcMLState::MODE_TYPE ModeStack::MODE_RANGED_FOR               (std::strin
 const srcMLState::MODE_TYPE ModeStack::MODE_ASSOCIATION_TYPE        (std::string("100000000000000000000000000000000000000000000000000000000000000000"));
 const srcMLState::MODE_TYPE ModeStack::MODE_FRIEND                 (std::string("1000000000000000000000000000000000000000000000000000000000000000000"));
 const srcMLState::MODE_TYPE ModeStack::MODE_CLASS_NAME            (std::string("10000000000000000000000000000000000000000000000000000000000000000000"));
+const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_BODY        (std::string("100000000000000000000000000000000000000000000000000000000000000000000"));

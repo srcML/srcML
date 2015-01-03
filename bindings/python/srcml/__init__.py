@@ -1,7 +1,7 @@
 ##
 # @file __init__.py
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from bindings import *
-from archive import *
+from xslt_transform_classes import *
+from archive import archive
 from unit import *
 from memory_buffer import memory_buffer
+

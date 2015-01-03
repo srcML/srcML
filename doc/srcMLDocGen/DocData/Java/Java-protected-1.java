@@ -1,3 +1,5 @@
-protected class MyPrivateClass
-{
+public class Temp {
+    protected class MyProtectedClass
+    {
+    }
 }

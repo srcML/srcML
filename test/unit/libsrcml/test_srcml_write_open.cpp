@@ -1,7 +1,7 @@
 /**
  * @file test_srcml_write_open.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,7 +112,7 @@ int main() {
 
         srcml_close_archive(archive);
         srcml_free_archive(archive);
-        free(s);
+        srcml_free_memory(s);
 
         //dassert(s, 0);
     }
@@ -133,14 +133,14 @@ int main() {
         dassert(srcml_write_open_memory(archive, &s, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_free_archive(archive);
-        free(s);
+        srcml_free_memory(s);
     }
 
     {
         char * s = 0;
         int size;
         dassert(srcml_write_open_memory(0, &s, &size), SRCML_STATUS_INVALID_ARGUMENT);
-        free(s);
+        srcml_free_memory(s);
     }
 
     /*

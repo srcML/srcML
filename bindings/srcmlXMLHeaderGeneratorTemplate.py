@@ -1,7 +1,7 @@
 ##
 # @file srcmlXMLHeaderGeneratorTemplate
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ srcmlHPath = "${SRCML_H_HEADER_PATH}"
 generatorPath = "${GENERATOR_LIB_DIR}"
 srcmlLibLocation = "${DYNAMIC_LIBSRCML_LOCATION}"
 srcmlHeaderOutputPath = "${SRCML_H_XML_OUTPUT_PATH}"
+windowsDepBinaryPath = "${WINDOWS_DEP_PATH}/bin"
 
 import sys, re, os
 
@@ -39,5 +40,9 @@ outputStrm = open(tempFileLocation, "w")
 outputStrm.write(removeStructKw.sub("", srcmlhFileContent))
 outputStrm.close()
 
-srcml(srcmlLibLocation, tempFileLocation, srcmlHeaderOutputPath, "temp", "C++")
+if os.name == "nt": # windows
+    srcml(srcmlLibLocation, tempFileLocation, srcmlHeaderOutputPath, "temp", "C++", windowsDepBinaryPath)
+else:
+    srcml(srcmlLibLocation, tempFileLocation, srcmlHeaderOutputPath, "temp", "C++")
+
 os.remove(tempFileLocation)

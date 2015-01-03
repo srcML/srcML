@@ -1,7 +1,7 @@
 ##
 # @file test_unit.py
 #
-# @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -395,6 +395,7 @@ int main() {
         rarchive.open_read(xml=outputStringBuffer.getvalue())
         runit = rarchive.read_unit()
         code = runit.xml()
+        # print runit.xml()
         self.assertTrue(code.find("waffles") != -1, "Incorrect unit content. Code:\"{0}\"".format(code))
         rarchive.close()
 

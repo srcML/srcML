@@ -24,7 +24,7 @@
                 <XPath path="//cpp:define[src:parameter_list]">
                     <Desc>Find all macro definitions which have parameters.</Desc>
                 </XPath>
-                <XPath path="//cpp:define/src:parameter_list/src:param">
+                <XPath path="//cpp:define/src:parameter_list/src:parameter">
                     <Desc>Get the names of all parameters within all macro declarations.</Desc>
                 </XPath>
                 <XPath path="//cpp:define[src:parameter_list[ .//src:modifier = '...']]">

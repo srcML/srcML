@@ -67,7 +67,6 @@ LANGUAGE_C_ONLY function_pointer_c
 LANGUAGE_C_ONLY function_decl_c
 LANGUAGE_C_ONLY operator_c
 
-
 LANGUAGE_CXX friend
 LANGUAGE_CXX namespace
 LANGUAGE_CXX template

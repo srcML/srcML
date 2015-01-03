@@ -1,7 +1,7 @@
 /**
  * @file srcml_transform.cpp
  *
- * @copyright Copyright (C) 2013-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -548,8 +548,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     srcml_free_archive(tmp_archive);
     if(last_transform_filename) UNLINK(last_transform_filename);
     free((void *)last_transform_filename);
-
-    srcml_clear_transforms(iarchive);
 
     return SRCML_STATUS_OK;
 

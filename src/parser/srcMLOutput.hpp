@@ -1,7 +1,7 @@
 /**
  * @file srcMLOutput.hpp
  *
- * @copyright Copyright (C) 2003-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2003-2014 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -154,10 +154,10 @@ public:
     const char* xml_encoding;
 
     /** array for a number to prefix */
-    std::vector<std::string> & num2prefix;
+    std::vector<std::string> num2prefix;
 
     /** array for a number to uri */
-    std::vector<std::string> & num2uri;
+    std::vector<std::string> num2uri;
 
     /** an array of name-value attribute pairs */
     const std::vector<std::string> & unit_attributes;

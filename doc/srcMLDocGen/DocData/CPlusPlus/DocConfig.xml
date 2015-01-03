@@ -85,7 +85,7 @@
                 <XPath path="//src:for/src:control/src:condition">
                     <Desc>Find the conditions of all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for[src:control/src:range]">
+                <XPath path="//src:for[src:control//src:range]">
                     <Desc>Find all range based for loops</Desc>
                 </XPath>
             </XPathQueries>
@@ -234,7 +234,7 @@
                 <XPath path="//src:label">
                     <Desc>Find all labels</Desc>
                 </XPath>
-                <XPath path="//src:label[src:name[. != //src:goto/src:name]]">
+                <XPath path="//src:label[not(src:name[. = //src:goto/src:name])]">
                     <Desc>Find all labels without a goto statement</Desc>
                 </XPath>
             </XPathQueries>
@@ -412,7 +412,7 @@
                     <Desc>Find all extern variables</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[src:type/src:specifier [.='extern']]">
-                    <Desc>Find all extern functions declarations</Desc>
+                    <Desc>Find all extern function declarations</Desc>
                 </XPath>
             </XPathQueries>
             <Example title="external variable" file="../C/C-extern-1.c" />
@@ -426,7 +426,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decl[src:type/src:specifier [.='mutable']]">
-                    <Desc>Find all mutable variables declarations</Desc>
+                    <Desc>Find all mutable variable declarations</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-mutable-1.cpp" />
@@ -437,8 +437,8 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:type/src:specifier [.='thread_local']]">
-                    <Desc>Find all thread_local variables declarations</Desc>
+                <XPath path="/src:decl[src:type/src:specifier [.='thread_local']]">
+                    <Desc>Find all thread_local variable declarations</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-thread_local-1.cpp" />
@@ -493,7 +493,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:type/src:specifier [.='friend']]">
+                <XPath path="//src:friend[src:function_decl]">
                     <Desc>Find all friend function declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -529,11 +529,11 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:constructor[src:specifier [.='default']]">
-                    <Desc>Find all constructors which explicitly use the compilers provided implementation</Desc>
+                <XPath path="//src:constructor_decl[src:specifier [.='default']]">
+                    <Desc>Find all constructors which explicitly use the compiler's provided implementation</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[src:specifier [.='default']]">
-                    <Desc>Find all function which explicitly use the compilers provided implementation</Desc>
+                    <Desc>Find all functions which explicitly use the compiler's provided implementation</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-default-func.cpp" />
@@ -569,6 +569,12 @@
 
     <Category title="Declarations, Definitions and Initializations">
         <DocEntry title="variable declaration statement">
+            <Desc>
+            The difference between a declaration statement and a declaration,
+            is that a declaration statement is a statement (ends with a
+            semi-colon) and contains a declaration. Declarations are not a statement
+            but instead contain the type, variable name, and optional initialization.
+            </Desc>
             <Elements>
                 <Element name="decl_stmt" />
                 <Subelement name="decl" />
@@ -623,17 +629,17 @@
                 <XPath path="//src:function_decl/src:type">
                     <Desc>Find all return types from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl/src:parameter_list/src:param">
+                <XPath path="//src:function_decl/src:parameter_list/src:parameter">
                     <Desc>Find all parameters from all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list[count(src:param) = 2]]">
+                <XPath path="//src:function_decl[src:parameter_list[count(src:parameter) = 2]]">
                     <Desc>Find all function declarations with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function_decl/src:name">
                     <Desc>Find the names of all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list/src:param/src:decl/src:type/src:modifier[.='...']]">
-                    <Desc>Find all function declarations that has variadic arguments</Desc>
+                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
+                    <Desc>Find all function declarations that have variadic arguments</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-function-decl-1.c" />
@@ -658,17 +664,17 @@
                 <XPath path="//src:function/src:type">
                     <Desc>Find all return types from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function/src:parameter_list/src:param">
+                <XPath path="//src:function/src:parameter_list/src:parameter">
                     <Desc>Find all parameters from all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list[count(src:param) = 2]]">
+                <XPath path="//src:function[src:parameter_list[count(src:parameter) = 2]]">
                     <Desc>Find all function definitions with only two parameters</Desc>
                 </XPath>
                 <XPath path="//src:function/src:name">
                     <Desc>Find the names of all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list/src:param/src:decl/src:type/src:modifier[.='...']]">
-                    <Desc>Find all function definition that has variadic arguments</Desc>
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
+                    <Desc>Find all function definitions that have variadic arguments</Desc>
                 </XPath>
                 <XPath path="//src:function[src:decl_stmt]">
                     <Desc>Find all K &amp; R function definitions</Desc>
@@ -679,6 +685,7 @@
             <Example file="../C/C-function-def-3.c" />
             <Example file="../C/C-function-def-4.c" />
             <Example file="../C/C-function-def-5.c" />
+            <Example file="../C/C-function-decl-5.c" />
             <Example file="CPP-auto-1.cpp" />
         </DocEntry>
 
@@ -688,7 +695,7 @@
                 <Subelement name="expr" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:function_decl[src:parameter_list/src:param/src:decl/src:init]">
+                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:init]">
                     <Desc>Find all function declarations with default parameters</Desc>
                 </XPath>
             </XPathQueries>
@@ -823,7 +830,7 @@
                     <Desc>Find all typedefs that declare a function type</Desc>
                 </XPath>
                 <XPath path="//src:typedef[src:function_decl[contains(., ')')]]">
-                    <Desc>Find all typedefs of a function pointer</Desc>
+                    <Desc>Find all typedefs of a function pointers</Desc>
                 </XPath>
                 <XPath path="//src:typedef/src:function_decl[contains(., ')')]/src:name">
                     <Desc>Find all names from all typedefs of function pointers</Desc>
@@ -840,7 +847,7 @@
                 <Element name="modifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:modifier[.='*']]">
+                <XPath path="//src:decl[src:type/src:modifier[.='*']]">
                     <Desc>Find all of the declarations of pointers</Desc>
                 </XPath>
                 <XPath path="//src:function_decl[contains(., ')')]">
@@ -887,10 +894,10 @@
                 <Subelement name="index" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index]">
+                <XPath path="//src:decl[src:name/src:index]">
                     <Desc>Find all array declarations</Desc>
                 </XPath>
-                <XPath path="//src:decl[src:name/src:name/src:index/src:literal[number(.) &lt; 50]]">
+                <XPath path="//src:decl[src:name/src:index/src:literal[number(.) &lt; 50]]">
                     <Desc>Find all array declarations where the number of elements is less then 50</Desc>
                 </XPath>
             </XPathQueries>
@@ -906,7 +913,7 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index][src:init]">
+                <XPath path="//src:decl[src:name/src:index][src:init]">
                     <Desc>Find all array declarations which initialize the array at the same time</Desc>
                 </XPath>
             </XPathQueries>
@@ -928,14 +935,14 @@
             <Example file="../C/C-bitfields.c" />
         </DocEntry>
 
-        <DocEntry title="universal initialization syntax">
+        <DocEntry title="Uniform initialization syntax">
             <Elements>
                 <Element name="call" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decl_stmt[src:decl/src:argument_list[contains(., '{')]]">
-                    <Desc>Find all declaration statements that use the universal initialization is being used</Desc>
+                    <Desc>Find all declaration statements that use the uniform initialization syntax</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-block-init-ctor-syntax-1.cpp" />
@@ -982,7 +989,7 @@
                     <Desc>Find all implicit conversion operator overload declarations</Desc>
                 </XPath>
             </XPathQueries>
-            <Example file="CPP-implicit-conv-1.cpp" />
+            <Example file="CPP-implicit-conv-2.cpp" />
         </DocEntry>
 
         <DocEntry title="implicit conversion operator definition">
@@ -993,10 +1000,10 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:function[@type='operator'][not(src:type)]">
-                    <Desc>Find all implicit conversion operator overloads</Desc>
+                    <Desc>Find all implicit conversion operator overload definitions</Desc>
                 </XPath>
             </XPathQueries>
-            <Example file="CPP-implicit-conv-2.cpp" />
+            <Example file="CPP-implicit-conv-1.cpp" />
         </DocEntry>
 
         <DocEntry title="explicit conversion operator declaration">
@@ -1182,7 +1189,7 @@
                 <Element name="specifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:super/src:specifier[.='private']]">
+                <XPath path="//src:class[src:super/src:specifier[.='public']]">
                     <Desc>Find all classes that use private inheritance</Desc>
                 </XPath>
             </XPathQueries>
@@ -1202,13 +1209,13 @@
                 <XPath path="//src:constuctor">
                     <Desc>Find all constructors</Desc>
                 </XPath>
-                <XPath path="//src:constuctor[src:parameter_list[not(src:param)]]">
-                    <Desc>Find all default constructors</Desc>
+                <XPath path="//src:constuctor[src:parameter_list[not(src:parameter)]]">
+                    <Desc>Find all constructors with no parameters</Desc>
                 </XPath>
-                <XPath path="//src:constructor[src:parameter_list[not(src:param)] or (count(src:parameter_list/src:param) = count(src:parameter_list/src:param/src:decl/src:init))]">
+                <XPath path="//src:constructor[src:parameter_list[not(src:parameter)] or (count(src:parameter_list/src:parameter) = count(src:parameter_list/src:parameter/src:decl/src:init))]">
                     <Desc>Find all possible default constructors, including constructors with all default parameters</Desc>
                 </XPath>
-                <XPath path="//src:constructor[ (src:name | src:name/src:name[last()]) = (src:parameter_list/src:param[1]/src:decl/src:type/src:name | src:parameter_list/src:param[1]/src:decl/src:type/src:name[last()])] [( (count(src:parameter_list/src:param) - 1) = count(src:parameter_list/src:param/src:decl/src:init))]">
+                <XPath path="//src:constructor[ (src:name | src:name/src:name[last()]) = (src:parameter_list/src:parameter[1]/src:decl/src:type/src:name | src:parameter_list/src:parameter[1]/src:decl/src:type/src:name[last()])] [( (count(src:parameter_list/src:parameter) - 1) = count(src:parameter_list/src:parameter/src:decl/src:init))]">
                     <Desc>Find all possible copy constructors, including those which are not defined with the body of class and those with default parameters</Desc>
                 </XPath>
             </XPathQueries>
@@ -1282,12 +1289,12 @@
                 <XPath path="//src:struct">
                     <Desc>Find the definition of all structs</Desc>
                 </XPath>
-                <XPath path="//src:struct/src:block/src:decl_stmt">
+                <XPath path="//src:struct/src:block/src:specifier/src:decl_stmt">
                     <Desc>Find the members from all structs</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-struct-declaration-1.c" />
-            <Example title="variable Of an anonymous struct type" file="../C/C-struct-declaration-2.c" />
+            <Example title="variable of an anonymous struct type" file="../C/C-struct-declaration-2.c" />
             <Example title="declaring a struct and instance" file="../C/C-struct-declaration-4.c" />
         </DocEntry>
 
@@ -1299,8 +1306,8 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:init/src:block]">
-                    <Desc>Find all of declaration of structs which also initialize it</Desc>
+                <XPath path="//src:decl[src:init/src:expr/src:block]">
+                    <Desc>Find all declaration of structs which also initialize it</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-struct-initialization-1.c" />
@@ -1345,13 +1352,25 @@
                 <XPath path="//src:enum">
                     <Desc>Find all enum definitions</Desc>
                 </XPath>
-                <XPath path="//src:enum/src:decl/src:name">
+                <XPath path="//src:enum/src:block/src:decl/src:name">
                     <Desc>Find the names of all members of all enums</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-enum-declaration-1.c" />
-            <Example file="../C/C-enum-declaration-2.c" />
             <Example file="../C/C-enum-declaration-3.c" />
+        </DocEntry>
+
+        <DocEntry title="enum declaration">
+            <Elements>
+                <Element name="enum" />
+                <Subelement name="name" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:enum_decl">
+                    <Desc>Find all enum declarations</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="../C/C-enum-declaration-2.c"/>
         </DocEntry>
 
         <DocEntry title="enum class">
@@ -1392,7 +1411,7 @@
                 <XPath path="//src:expr[src:operator[.='new']]">
                     <Desc>Find all expressions which call new</Desc>
                 </XPath>
-                <XPath path="//src:expr[src:operator[.='new']/following-sibling::src:name/src:name/src:index]">
+                <XPath path="//src:expr[src:operator[.='new']/following-sibling::src:name/src:index]">
                     <Desc>Find all expressions which call array new</Desc>
                 </XPath>
                 <XPath path="//src:expr[src:operator[.='new']/following-sibling::src:name[src:name[.='nothrow']]]">
@@ -1432,11 +1451,26 @@
                 <Subelement name="index" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:expr/src:name[src:name/src:index/node()]">
+                <XPath path="//src:expr[src:name/src:index/node()]">
                     <Desc>Find all array indexings</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-array-access.c" />
+        </DocEntry>
+        
+        <DocEntry title="ternary operator">
+            <Elements>
+                <Element name="ternary" />
+                <Subelement name="condition" />
+                <Subelement name="then"/>
+                <Subelement name="else"/>
+            </Elements>
+            <Example file="../C/C-ternary-operator.c"/>
+            <XPathQueries>
+                <XPath path="//src:ternary">
+                    <Desc>Find all uses of the ternary operator</Desc>
+                </XPath>
+            </XPathQueries>
         </DocEntry>
 
         <DocEntry title="dereference member access">
@@ -1484,7 +1518,7 @@
 	    <OperatorEntry title="address of" op="&amp;" example="../C/C-Operator-address_of.c" />
 	    <OperatorEntry title="dereference" op="*" example="../C/C-Operator-deref.c" />
 	    <OperatorEntry title="unary minus" op="-" example="../C/C-Operator-unary-minus.c" />
-	    <OperatorEntry title="unary plus" op="-" example="../C/C-Operator-unary-plus.c" />
+	    <OperatorEntry title="unary plus" op="+" example="../C/C-Operator-unary-plus.c" />
 	    <OperatorEntry title="logical not" op="!" example="../C/C-Operator-logical-not.c" />
 	    <OperatorEntry title="multiplication" op="*" example="../C/C-Operator-multiplication.c" />
 	    <OperatorEntry title="division" op="/" example="../C/C-Operator-divide.c" />
@@ -1520,7 +1554,6 @@
 	    <OperatorEntry title="pointer to member" op=".*" example="CPP-Operator-member-ptr.cpp" />
 	    <OperatorEntry title="dereference pointer to member" op="->*" example="CPP-Operator-deref-member-ptr.cpp" />
 	    <OperatorEntry title="comma" op="," example="../C/C-Operator-comma.c" />
-        <OperatorEntry title="conditional" op="?  :" example="../C/C-Operator-turnary.c" />
         <OperatorEntry title="dot" op="." example="../C/C-member-access.c" />
         <OperatorEntry title="arrow" op="-&gt;" example="../C/C-deref-member-access.c" />
     </Category>
@@ -1584,8 +1617,8 @@
                 <Subelement name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:operator[.='(']">
-                    <Desc>Find all casts</Desc>
+                <XPath path="//src:cast[not(@type)]">
+                    <Desc>Find all C-style casts</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="../C/C-c-style-cast.c" />
@@ -1593,11 +1626,11 @@
 
         <DocEntry title="static_assert">
             <Elements>
-            	<Element name="call"/>
+            	<Element name="assert"/>
                 <Subelement name="argument_list" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:call[src:name/src:name[.='static_assert']]">
+                <XPath path="//src:assert[@type='static']">
                     <Desc>Find all uses of static_assert</Desc>
                 </XPath>
             </XPathQueries>
@@ -1698,7 +1731,7 @@
                 <XPath path="//src:attribute">
                     <Desc>Find all attributes</Desc>
                 </XPath>
-                <XPath path="//src:function[src:attribute/src:expr/src:name[.='noreturn']]">
+                <XPath path="//src:function[src:type/src:attribute/src:expr/src:name[.='noreturn']]">
                     <Desc>Find all noreturn functions</Desc>
                 </XPath>
             </XPathQueries>
@@ -1737,9 +1770,9 @@
                 <XPath path="//src:function[src:template]">
                     <Desc>Find all function templates</Desc>
                 </XPath>
-                <XPath path="//src:function[count(src:template) = 2]">
-                    <Desc>Find all template member function templates</Desc>
-                </XPath>
+                <!--<XPath path="//src:function[count(src:template) &gt;= 2]">
+                    <Desc>Find all template member functions of templated classes/structs/unions that are defined outside of a class/struct/union</Desc>
+                </XPath>-->
             </XPathQueries>
             <Example title="templated class" file="CPP-template-1.cpp" />
             <Example title="templated function" file="CPP-template-2.cpp" />
@@ -1754,10 +1787,10 @@
                 <Subelement name="param" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:template/src:parameter_list/src:param">
+                <XPath path="//src:template/src:parameter_list/src:parameter">
                     <Desc>Find all template parameters</Desc>
                 </XPath>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:template]">
+                <XPath path="//src:class[src:template/src:parameter_list/src:parameter/src:type/src:template]">
                     <Desc>Find all class templates which use a template template parameter</Desc>
                 </XPath>
             </XPathQueries>
@@ -1773,7 +1806,7 @@
                 <Element name="typename" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_iist/src:param/src:type/src:typename]">
+                <XPath path="//src:class[src:template/src:parameter_list/src:parameter/src:type/src:typename]">
                     <Desc>Find all class templates which use typename as part of its parameter list</Desc>
                 </XPath>
             </XPathQueries>
@@ -1785,8 +1818,8 @@
                 <Element name="typename" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:name[.='class']]">
-                    <Desc>Find all class which use class within instead of type name in at least one template parameter</Desc>
+                <XPath path="//src:class[src:template/src:parameter_list/src:parameter/src:type/src:name[.='class']]">
+                    <Desc>Find all classes which use class within instead of typename in at least one template parameter</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-class-template-specifier-1.cpp" />
@@ -1797,7 +1830,7 @@
                 <Element name="modifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:template/src:parameter_list/src:param/src:type/src:modifier[.='...']]">
+                <XPath path="//src:class[src:template/src:parameter_list/src:parameter/src:type/src:modifier[.='...']]">
                     <Desc>Find all class templates that use a template parameter pack</Desc>
                 </XPath>
             </XPathQueries>

@@ -552,7 +552,7 @@ Check to see if a function or variable is declared volatile.
 Checks to see if a function or variable was declared const.
         </Desc>
         <Examples>
-            <Example desc="Find all const formal parameters" xpath="//src:param[src:is_const()]"/>
+            <Example desc="Find all const formal parameters" xpath="//src:parameter[src:is_const()]"/>
         </Examples>
         <Tags>
             <Tag name="function_decl" />
@@ -589,12 +589,12 @@ Checks to see if a function or namespace was declared inline.
 Checks to see if a variable or parameter was declared with the restrict specifier.
         </Desc>
         <Examples>
-            <Example desc="Find all restrict parameters" xpath="//src:param[src:is_restrict()]"/>
+            <Example desc="Find all restrict parameters" xpath="//src:parameter[src:is_restrict()]"/>
         </Examples>
         <Tags>
             <Tag name="src:decl_stmt" />
             <Tag name="src:decl" />
-            <Tag name="src:param" />
+            <Tag name="src:parameter" />
         </Tags>
     </ExtFunc>
     
@@ -895,7 +895,7 @@ if the function is declares a function pointer.
             <Tag name="src:type" />
             <Tag name="src:function_decl" />
             <Tag name="src:function" />
-            <Tag name="src:param" />
+            <Tag name="src:parameter" />
             <Tag name="src:argument" />
         </Tags>
     </ExtFunc>
@@ -907,12 +907,12 @@ if the function is declares a function pointer.
 Checks to see if something is varargs.
         </Desc>
         <Examples>
-            <Example desc="Find all varargs parameters" xpath="//src:param[src:is_parameter_pack()]"/>
+            <Example desc="Find all varargs parameters" xpath="//src:parameter[src:is_parameter_pack()]"/>
         </Examples>
         <Tags>
             <Tag name="src:decl" />
             <Tag name="src:type" />
-            <Tag name="src:param" />
+            <Tag name="src:parameter" />
             <Tag name="src:argument" />
         </Tags>
     </ExtFunc>
@@ -991,11 +991,11 @@ specification.
 Checks to see if a declaration, parameter or argument is declared as by reference.
         </Desc>
         <Examples>
-            <Example desc="Find all parameters that are pass by reference" xpath="//src:param[src:is_reference()]"/>
+            <Example desc="Find all parameters that are pass by reference" xpath="//src:parameter[src:is_reference()]"/>
         </Examples>
         <Tags>
             <Tag name="src:argument" />
-            <Tag name="src:param" />
+            <Tag name="src:parameter" />
             <Tag name="src:decl" />
             <Tag name="src:decl_stmt" />
             <Tag name="src:type" />
@@ -1014,7 +1014,7 @@ reference.
         </Examples>
         <Tags>
             <Tag name="src:argument" />
-            <Tag name="src:param" />
+            <Tag name="src:parameter" />
             <Tag name="src:decl" />
             <Tag name="src:decl_stmt" />
             <Tag name="src:type" />
@@ -1062,7 +1062,7 @@ Checks to see if a variable type or declaration statement are declared readonly.
 Checks to see if a parameter, argument, type etc.. declares that it is an out variable.
         </Desc>
         <Examples>
-            <Example desc="Find all output parameters" xpath="//src:param[src:is_out_param()]"/>
+            <Example desc="Find all output parameters" xpath="//src:parameter[src:is_out_param()]"/>
         </Examples>
         <Tags>
             <Tag name="param"/>
@@ -1400,7 +1400,7 @@ marked wrong) is part of template. This also works for template or generic argum
 and in C++ specializations arguments.
         </Desc>
         <Examples>
-            <Example desc="Find all template parameters" xpath="//src:param[src:is_template_parameter()]"/>
+            <Example desc="Find all template parameters" xpath="//src:parameter[src:is_template_parameter()]"/>
         </Examples>
         <Tags>
             <Tag name="param"/>
@@ -1416,7 +1416,7 @@ Checks if the current parameter is a template parameter pack.
         </Desc>
         <Examples>
             <Example desc="Find all function parameters that are template parameter packs"
-                xpath="//src:parameter_list[not(@type[.='template'])]/src:param[src:is_template_parameter_pack()]"/>
+                xpath="//src:parameter_list[not(@type[.='template'])]/src:parameter[src:is_template_parameter_pack()]"/>
         </Examples>
         <Tags>
             <Tag name="param"/>
@@ -1428,7 +1428,7 @@ Checks if the current parameter is a template parameter pack.
         <Langs>C++</Langs>
         <Desc>Checks if the current parameter of a template is a template template parameter.</Desc>
         <Examples>
-            <Example desc="Find all template template parameters" xpath="//src:param[src:is_template_template_parameter()]"/>
+            <Example desc="Find all template template parameters" xpath="//src:parameter[src:is_template_template_parameter()]"/>
         </Examples>
         <Tags>
             <Tag name="param"/>
@@ -1479,7 +1479,7 @@ Checks to see if a parameter (in C++ this can also be used on template
 parameters) has a default value.
         </Desc>
         <Examples>
-            <Example desc="Find all functions with a default parameter" xpath="//src:function[.//src:param[src:is_default_parameter()]]"/>
+            <Example desc="Find all functions with a default parameter" xpath="//src:function[.//src:parameter[src:is_default_parameter()]]"/>
         </Examples>
         <Tags>
             <Tag name="param"/>
@@ -1822,7 +1822,7 @@ Check to see if a declaration statement declares more then one variable.
 Checks to see if a declaration is an array.
         </Desc>
         <Examples>
-            <Example desc="Find all parameters that are an array type" xpath="//src:param[src:is_array()]"/>
+            <Example desc="Find all parameters that are an array type" xpath="//src:parameter[src:is_array()]"/>
         </Examples>
         <Tags>
             <Tag name="argument"/>
