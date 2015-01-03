@@ -232,7 +232,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
     }
 }
 
-// option language attribute
+// option output to directory
 void option_to_dir(const std::string& value) {
     srcml_request.output_filename = value;
     srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
