@@ -38,6 +38,7 @@ void src_input_file(ParseQueue& queue,
         prequest->filename = *srcml_request.att_filename;
     else if (input_file != "_")
         prequest->filename = input_file;
+
     prequest->directory = srcml_request.att_directory;
     prequest->version = srcml_request.att_version;
     prequest->srcml_arch = srcml_arch;
@@ -45,5 +46,11 @@ void src_input_file(ParseQueue& queue,
     prequest->disk_filename = input_file;
 
     // Hand request off to the processing queue
+    if (prequest->filename) {
+        while (prequest->filename->at(0) == '.' || prequest->filename->at(0) == '/') {
+            prequest->filename->erase(0,1);
+        }
+    }
+
     queue.schedule(prequest);
 }

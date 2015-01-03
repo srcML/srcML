@@ -61,6 +61,14 @@ namespace {
     }
 }
 
+void cleanup_filename(boost::optional<std::string>& filename) {
+    if (filename) {
+        while (filename->at(0) == '.' || filename->at(0) == '/') {
+            filename->erase(0,1);
+        }
+    }
+    return;
+}
 
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_libarchive(ParseQueue& queue,
@@ -87,6 +95,10 @@ void src_input_libarchive(ParseQueue& queue,
         prequest->srcml_arch = srcml_arch;
         prequest->language = "";
         prequest->status = SRCML_STATUS_UNSET_LANGUAGE;
+
+        
+        if (prequest->filename)
+            cleanup_filename(prequest->filename);
 
         // schedule for parsing
         queue.schedule(prequest);
@@ -200,6 +212,8 @@ void src_input_libarchive(ParseQueue& queue,
 
         if (srcml_request.att_filename || (filename != "-"))
             prequest->filename = filename;
+
+
         prequest->directory = srcml_request.att_directory;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
@@ -228,6 +242,9 @@ void src_input_libarchive(ParseQueue& queue,
                 ++prequest->loc;
         }
 
+        if (prequest->filename)
+            cleanup_filename(prequest->filename);
+        
         // schedule for parsing
         queue.schedule(prequest);
 
