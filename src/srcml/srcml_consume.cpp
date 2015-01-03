@@ -91,8 +91,16 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             throw status;
 
         // (optional) filename attribute
-        if (request->filename && ((status = srcml_unit_set_filename(unit, request->filename->c_str())) != SRCML_STATUS_OK))
-            throw status;
+        if (request->filename) {
+            
+            // Cleanup filename
+            while (request->filename->at(0) == '.' || request->filename->at(0) == '/') {
+                request->filename->erase(0,1);
+            }
+            
+            if ((status = srcml_unit_set_filename(unit, request->filename->c_str())) != SRCML_STATUS_OK)
+                throw status;
+        }
 
         // (optional) version attribute
         if (request->version && ((status = srcml_unit_set_version(unit, request->version->c_str())) != SRCML_STATUS_OK))

@@ -46,11 +46,5 @@ void src_input_file(ParseQueue& queue,
     prequest->disk_filename = input_file;
 
     // Hand request off to the processing queue
-    if (prequest->filename) {
-        while (prequest->filename->at(0) == '.' || prequest->filename->at(0) == '/') {
-            prequest->filename->erase(0,1);
-        }
-    }
-
     queue.schedule(prequest);
 }
