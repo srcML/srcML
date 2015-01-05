@@ -157,6 +157,7 @@ public :
      *
      * Create the output buffer and setup XPath.
      */
+     // TODO: start_output needs an error return value
     virtual void start_output() {
 
         buf = output;
@@ -169,22 +170,7 @@ public :
         buf->writecallback = (xmlOutputWriteCallback)_write;
 #endif
 
-    }
-
-#pragma GCC diagnostic push
-
-    /**
-     * apply
-     *
-     * Apply XPath expression, writing results.
-     * 
-     * @returns true on success false on failure.
-     */
-    virtual bool apply() {
-
-        if (!context) {
-
-            context = xmlXPathNewContext(ctxt->myDoc);
+                    context = xmlXPathNewContext(ctxt->myDoc);
             // TODO:  Detect error
 
             xpathsrcMLRegister(context);
@@ -208,7 +194,7 @@ public :
                 if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
 
                     fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
-                    return SRCML_STATUS_ERROR;
+                    return; //SRCML_STATUS_ERROR;
 
                 }
 
@@ -281,7 +267,19 @@ public :
 #undef dlsymvar
 #endif
 #endif
-        }
+    }
+
+#pragma GCC diagnostic push
+
+    /**
+     * apply
+     *
+     * Apply XPath expression, writing results.
+     * 
+     * @returns true on success false on failure.
+     */
+    virtual bool apply() {
+
         // evaluate the xpath
         xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
         if (result_nodes == 0) {
