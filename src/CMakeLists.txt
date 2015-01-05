@@ -21,8 +21,11 @@ add_subdirectory(parser)
 add_subdirectory(libsrcml)
 add_subdirectory(srcml)
 
-file(GLOB SRCSAX_HEADERS srcSAX/*.hpp)
-file(GLOB SRCSAX_SOURCE srcSAX/*.cpp)
+file(GLOB SRCSAX_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} srcSAX/*.hpp)
+file(GLOB SRCSAX_SOURCE  RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} srcSAX/*.cpp)
+#if(NOT WIN32)
+list(REMOVE_ITEM SRCSAX_SOURCE srcSAX/srctools_windows.cpp)
+message(${SRCSAX_SOURCE})
 add_library(srcsax OBJECT ${SRCSAX_SOURCE} ${SRCSAX_HEADERS})
 
 # buildLib
