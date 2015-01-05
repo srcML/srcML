@@ -26,7 +26,7 @@
 #include <stdio.h>
 
 TraceLog::TraceLog(int options)
-    : count(0), overallcount(0), num_skipped(), num_error(0) {
+    : count(0), num_skipped(), num_error(0) {
 
     enabled = options & SRCML_COMMAND_VERBOSE;
 }
