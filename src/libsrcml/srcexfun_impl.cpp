@@ -86,7 +86,7 @@ namespace {
 
     xmlChar const* const template_tag = BAD_CAST "template";
     xmlChar const* const name_tag = BAD_CAST "name";
-    xmlChar const* const goto_tag = BAD_CAST "goto";
+//    xmlChar const* const goto_tag = BAD_CAST "goto";
     xmlChar const* const function_tag = BAD_CAST "function";
     xmlChar const* const function_decl_tag = BAD_CAST "function_decl";
     xmlChar const* const delegate_tag = BAD_CAST "delegate";
