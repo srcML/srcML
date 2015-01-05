@@ -72,6 +72,8 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         request->srcml_arch = srcml_arch;
     }
 
+    std::string original_filename;
+
     // construct and parse the unit
     srcml_unit* unit = request->unit;
     int status = SRCML_STATUS_OK;
@@ -92,6 +94,8 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // (optional) filename attribute
         if (request->filename) {
+
+            original_filename = *request->filename;
             
             // Cleanup filename
             while (request->filename->at(0) == '.' || request->filename->at(0) == '/') {
@@ -156,8 +160,8 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             throw status;
 
     } catch (...) {
-        // TODO: Fix for proper filename
-        fprintf(stderr, "srcml: Unable to open file %s\n", request->filename->c_str());
+
+        fprintf(stderr, "srcml: Unable to open file %s\n", original_filename.c_str());
         if (unit)
             srcml_free_unit(unit);
         unit = 0;
