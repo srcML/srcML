@@ -169,104 +169,109 @@ public :
 #ifdef _MSC_BUILD
         buf->writecallback = (xmlOutputWriteCallback)_write;
 #endif
+    }
+    
+    virtual xmlXPathContextPtr set_context() {
 
-                    context = xmlXPathNewContext(ctxt->myDoc);
-            // TODO:  Detect error
+        xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
+        // TODO:  Detect error
 
-            xpathsrcMLRegister(context);
-            // TODO:  Detect error
+        xpathsrcMLRegister(context);
+        // TODO:  Detect error
 
-            // register standard prefixes for standard namespaces
-            const char* prefixes[] = {
-                SRCML_SRC_NS_URI, "src",
-                SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
-                SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
-                SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-                SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-                SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
-                SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
-                SRCML_DIFF_NS_URI, SRCML_DIFF_NS_PREFIX_DEFAULT,
-                0, 0
-            };
+        // register standard prefixes for standard namespaces
+        const char* prefixes[] = {
+            SRCML_SRC_NS_URI, "src",
+            SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
+            SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
+            SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
+            SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
+            SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
+            SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
+            SRCML_DIFF_NS_URI, SRCML_DIFF_NS_PREFIX_DEFAULT,
+            0, 0
+        };
 
-            for (unsigned int i = 0; prefixes[i] != 0; i += 2){
+        for (unsigned int i = 0; prefixes[i] != 0; i += 2){
 
-                if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
+            if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
 
-                    fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
-                    return; //SRCML_STATUS_ERROR;
-
-                }
+                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
+                return 0; //SRCML_STATUS_ERROR;
 
             }
+
+        }
 
 #if LIBEXSLT_VERSION > 813
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-            typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
+        typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
 
-            /** create a variable for dynamically load from library */
-            typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
+        /** create a variable for dynamically load from library */
+        typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
 #define dlsymvar(type, name) type name;  *(VOIDPTR *)(&name) = dlsym(handle, #name)
 
 
-            void* handle = dlopen("libexslt.so", RTLD_LAZY);
+        void* handle = dlopen("libexslt.so", RTLD_LAZY);
+        if (!handle) {
+            handle = dlopen("libexslt.so.0", RTLD_LAZY);
             if (!handle) {
-                handle = dlopen("libexslt.so.0", RTLD_LAZY);
-                if (!handle) {
-                    handle = dlopen("libexslt.dylib", RTLD_LAZY);
-                    if (!handle)
-                        fprintf(stderr, "Unable to open libexslt library\n");
+                handle = dlopen("libexslt.dylib", RTLD_LAZY);
+                if (!handle)
+                    fprintf(stderr, "Unable to open libexslt library\n");
+            }
+        }
+
+        if (handle) {
+
+            dlerror();
+            dlsymvar(exsltXpathCtxtRegister,exsltDateXpathCtxtRegister);
+            if (dlerror() == NULL)  {
+                // register exslt functions for XPath usage
+                if (exsltDateXpathCtxtRegister(context, BAD_CAST "date") == -1) {
+                    fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+                            "libsrcml", "date");
                 }
             }
 
-            if (handle) {
-
-                dlerror();
-                dlsymvar(exsltXpathCtxtRegister,exsltDateXpathCtxtRegister);
-                if (dlerror() == NULL)  {
-                    // register exslt functions for XPath usage
-                    if (exsltDateXpathCtxtRegister(context, BAD_CAST "date") == -1) {
-                        fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                                "libsrcml", "date");
-                    }
+            dlerror();
+            dlsymvar(exsltXpathCtxtRegister,exsltMathXpathCtxtRegister);
+            if (dlerror() == NULL)  {
+                if (exsltMathXpathCtxtRegister(context, BAD_CAST "math") == -1) {
+                    fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+                            "libsrcml", "math");
                 }
 
-                dlerror();
-                dlsymvar(exsltXpathCtxtRegister,exsltMathXpathCtxtRegister);
-                if (dlerror() == NULL)  {
-                    if (exsltMathXpathCtxtRegister(context, BAD_CAST "math") == -1) {
-                        fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                                "libsrcml", "math");
-                    }
-
-                }
-
-                dlerror();
-                dlsymvar(exsltXpathCtxtRegister,exsltSetsXpathCtxtRegister);
-                if (dlerror() == NULL)  {
-
-                    if (exsltSetsXpathCtxtRegister(context, BAD_CAST "set") == -1) {
-                        fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                                "libsrcml", "set");
-                    }
-
-                }
-
-                dlerror();
-                dlsymvar(exsltXpathCtxtRegister,exsltStrXpathCtxtRegister);
-                if (dlerror() == NULL)  {
-
-                    if (exsltStrXpathCtxtRegister(context, BAD_CAST "str") == -1) {
-                        fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
-                                "libsrcml", "str");
-                    }
-
-                }
             }
+
+            dlerror();
+            dlsymvar(exsltXpathCtxtRegister,exsltSetsXpathCtxtRegister);
+            if (dlerror() == NULL)  {
+
+                if (exsltSetsXpathCtxtRegister(context, BAD_CAST "set") == -1) {
+                    fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+                            "libsrcml", "set");
+                }
+
+            }
+
+            dlerror();
+            dlsymvar(exsltXpathCtxtRegister,exsltStrXpathCtxtRegister);
+            if (dlerror() == NULL)  {
+
+                if (exsltStrXpathCtxtRegister(context, BAD_CAST "str") == -1) {
+                    fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
+                            "libsrcml", "str");
+                }
+
+            }
+        }
 
 #undef dlsymvar
 #endif
 #endif
+
+            return context;
     }
 
 #pragma GCC diagnostic push
@@ -279,6 +284,9 @@ public :
      * @returns true on success false on failure.
      */
     virtual bool apply() {
+
+        if (!context)
+            context = set_context();
 
         // evaluate the xpath
         xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
