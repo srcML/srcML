@@ -9,133 +9,114 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
 	STDOUT
 
-define output <<- 'STDOUT'
+define foutput <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 
-src2srcml -t "ISO-8859-1" sfile1 srcml)
+createfile sub/a.cpp ""
 
-src2srcml --src-encoding "ISO-8859-1" sfile1 srcml)
-
-src2srcml --src-encoding="ISO-8859-1" sfile1 srcml)
-
-src2srcml sub/a.cpp -t "ISO-8859-1"
-
-src2srcml sub/a.cpp --src-encoding "ISO-8859-1"
-
-src2srcml sub/a.cpp --src-encoding="ISO-8859-1"
+src2srcml -t "ISO-8859-1" sub/a.cpp
+check 3<<< "$foutput"
 
 src2srcml --src-encoding "ISO-8859-1" sub/a.cpp
+check 3<<< "$foutput"
 
-src2srcml -l C++ --src-encoding "ISO-8859-1" -o sub/a.cpp.xml sfile1
+src2srcml --src-encoding="ISO-8859-1" sub/a.cpp
+check 3<<< "$foutput"
 
-validate(open(sub/a.cpp.xml 'r').read() srcml)
+src2srcml sub/a.cpp -t "ISO-8859-1"
+check 3<<< "$foutput"
+
+src2srcml sub/a.cpp --src-encoding "ISO-8859-1"
+check 3<<< "$foutput"
+
+src2srcml sub/a.cpp --src-encoding="ISO-8859-1"
+check 3<<< "$foutput"
+
+src2srcml --src-encoding "ISO-8859-1" sub/a.cpp
+check 3<<< "$foutput"
+
+src2srcml -l C++ --src-encoding "ISO-8859-1" -o sub/a.cpp.xml sub/a.cpp
+check sub/a.cpp.xml 3<<< "$foutput"
+rmfile sub/a.cpp.xml
 
 src2srcml --src-encoding "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml
-
-validate(open(sub/a.cpp.xml 'r').read() fsrcml)
-
+check sub/a.cpp.xml 3<<< "$foutput"
+rmfile sub/a.cpp.xml
 
 
 # neste 
 
-
-sfile1 = STDOUT
-a;
-	STDOUT
-
-sfile2 = STDOUT
-b;
-	STDOUT
-
-
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
-	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
 	</unit>
 	STDOUT
 
-define output <<- 'STDOUT'
+define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
-	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
-	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-	</unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp" hash="127b042b36b196e169310240b313dd9fc065ccf2">
+	<expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
 	STDOUT
 
-define output <<- 'STDOUT'
+define nestedfilesrc <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<src:unit xmlns:src="http://www.sdml.info/srcML/src">
+	<src:unit xmlns:src="http://www.sdml.info/srcML/src" revision="0.8.0">
 
-	<src:unit>
-	<src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
-	</src:unit>
+	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt></src:unit>
 
-	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
-	<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
-	</src:unit>
+	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp" hash="127b042b36b196e169310240b313dd9fc065ccf2">
+	<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt></src:unit>
 
 	</src:unit>
 	STDOUT
 
-createfile sub/a.cpp "$sfile1"
+createfile sub/a.cpp "
+a;"
+createfile sub/b.cpp "
+b;"
 
-createfile sub/b.cpp "b;"
-
+rmfile sub/a.cpp.xml
 src2srcml --archive sub/a.cpp -o sub/a.cpp.xml
-readfile input sub/a.cpp.xml').read() <<< "$nestedfile1)"
-src2srcml sub/a.cpp 'sub/b.cpp' -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$output"
 
-readfile input sub/a.cpp.xml').read() <<< "$nestedfile)"
-src2srcml --xmlns:src=http://www.sdml.info/srcML/src' sub/a.cpp 'sub/b.cpp' -o sub/a.cpp.xml
+rmfile sub/a.cpp.xml
+src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$nestedfile"
 
-readfile input sub/a.cpp.xml').read() <<< "$nestedfilesrc)"
+rmfile sub/a.cpp.xml
+src2srcml --xmlns:src=http://www.sdml.info/srcML/src sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$nestedfilesrc"
 
 
 # files from
-define output <<- 'STDOUT'
-	<<< "$nestedfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+define nestedfile <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 	
-INPUT
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
-<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-</unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp" hash="127b042b36b196e169310240b313dd9fc065ccf2">
+	<expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
-</unit>
+	</unit>
 	STDOUT
 
-filelist = STDOUT
-sub/a.cpp
-# fff
-sub/b.cpp
-	STDOUT
-
-f = open('filelistab' 'w')
-f.write("\nsub/a.cpp\nsub/b.cpp\n\n")
-f.close()
-
+createfile filelistab "sub/a.cpp\nsub/b.cpp"
+rmfile sub/a.cpp.xml
 src2srcml --files-from "filelistab" -o sub/a.cpp.xml
-validate(open(sub/a.cpp.xml 'r').read() <<< "$nestedfile)"
-
-
-##
-
-# xmlns options
-
-sfile1 = ""
-
-sfile2 = STDOUT
-b;
-	STDOUT
-
+check sub/a.cpp.xml 3<<< "$nestedfile"

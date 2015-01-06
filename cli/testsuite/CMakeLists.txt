@@ -20,5 +20,5 @@
 # add cli tests
 file(GLOB CLI_TESTS *_test_cli.sh)
 foreach(CLI_TEST ${CLI_TESTS})
-  addBashTest(${CLI_TEST} framework_test.sh ../emptysrc)
+  addBashTest(${CLI_TEST} framework_test.sh)
 endforeach()
