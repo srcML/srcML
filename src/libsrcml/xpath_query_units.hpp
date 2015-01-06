@@ -295,6 +295,16 @@ public :
             return false;
         }
 
+        apply(result_nodes);
+
+        // finished with the result nodes
+        xmlXPathFreeObject(result_nodes);
+
+        return true;
+    }
+
+    virtual bool apply(xmlXPathObjectPtr result_nodes) {
+
         nodetype = result_nodes->type;
 
         switch (nodetype) {
@@ -330,9 +340,6 @@ public :
         default :
             break;
         }
-
-        // finished with the result nodes
-        xmlXPathFreeObject(result_nodes);
 
         return true;
     }
