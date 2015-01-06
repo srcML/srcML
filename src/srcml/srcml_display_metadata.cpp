@@ -57,10 +57,12 @@ void srcml_display_info(srcml_archive* srcml_arch) {
 
     for (int i = 0; i < nsSize; ++i) {
         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0)
+            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
                 std::cout << "xmlns=\"" << srcml_archive_get_namespace_uri(srcml_arch, i) << "\"\n";
-            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "cpp") == 0)
+            }
+            else{
                 std::cout << "xmlns:" << srcml_archive_get_namespace_prefix(srcml_arch, i) << "=\"" << srcml_archive_get_namespace_uri(srcml_arch, i) << "\"\n";
+            }
         }
     }
 
