@@ -4,52 +4,50 @@
 source $(dirname "$0")/framework_test.sh
 
 # test
-
-define output <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" revision="0.8.0" language="C++"/>
-	INPUT
-
-define output <<- 'STDOUT'
+define foutput <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:err="http://www.sdml.info/srcML/srcerr" revision="0.8.0" language="C++" filename="sub/a.cpp"/>
-	INPUT
+	STDOUT
 
+
+createfile sub/a.cpp ""
 
 # separate
-src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" "--
+src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp
+check 3<<< "$foutput"
 
-xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cppsrc2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" 
---xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sfile1
-validate(open(sub/a.cpp.xml 'r').read() srcml)
-src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" "--
+src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sub/a.cpp
+check sub/a.cpp.xml 3<<< "$foutput"
+rmfile sub/a.cpp.xml
 
-xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xmlvalidate(open(sub/a.cpp.xml 'r').read() fsrcm)
+src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$foutput"
+rmfile sub/a.cpp.xml
 
+src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp
+check 3<<< "$foutput"
 
+src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp
+check 3<<< "$foutput"
 
+src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$foutput"
+rmfile sub/a.cpp.xml
 
-# multc2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" 'sub/a.
+src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp
+check 3<<< "$foutput"
 
-src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" '
+src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sub/a.cpp
+check sub/a.cpp.xml 3<<< "$foutput"
+rmfile sub/a.cpp.xml
 
-validate(open(sub/a.cpp.xml 'r').read() srcml)
-src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" 'sub/a.
-cpp' -o sub/a.cpp.xml
+src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$foutput"
+rmfile sub/a.cpp.xml
 
-validate(open(sub/a.cpp.xml 'r').read() fsrcml)
+src2srcml --debug --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$foutput"
+rmfile sub/a.cpp.xml
 
-
-src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cppsrc2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sfile1validate(open(sub/a.cpp.xml 'r').read() srcml)
-
-src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xmlvalidate(open(sub/a.cpp.xml 'r').read() fsrcml)
-
-
-
-
-src2srcml --debug --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" 
-'sub/a.c fsrcml)
-src2srcm++ --debug --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sfile1
-src2srcmbug --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xml
-validate(open(sub/a.cpp.xml 'r').read() fsrcml)
-
+src2srcml --debug --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sub/a.cpp
+check sub/a.cpp.xml 3<<< "$foutput"
