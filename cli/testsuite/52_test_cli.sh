@@ -9,23 +9,29 @@ createfile sub/a.cpp ""
 
 define sfilelit <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmlns:lit="http://www.sdml.info/srcML/literal" revision="0.8.0" language="C++" filename="sub/a.cpp"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp"/>
+	STDOUT
+
+define output <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
 	STDOUT
 
 echo -n "" | src2srcml -l C++ --literal
 
-check sub/a.cpp.xml 3<<< "$sfilelit"
+check 3<<< "$output"
 
-src2srcml --literal sub/a.cpp 
+src2srcml --literal sub/a.cpp  -o sub/a.cpp.xml
 
 check sub/a.cpp.xml 3<<< "$sfilelit"
+rmfile sub/a.cpp.xml
 
 echo -n "" | src2srcml -l C++ --literal -o sub/a.cpp.xml
 
-check sub/a.cpp.xml 3<<< "$sfilelit"
+check sub/a.cpp.xml 3<<< "$output"
+rmfile sub/a.cpp.xml
 
 src2srcml --literal sub/a.cpp -o sub/a.cpp.xml
 
 check sub/a.cpp.xml 3<<< "$sfilelit"
-
-exit 0
+rmfile sub/a.cpp.xml
