@@ -105,14 +105,14 @@ const char* SRCML2SRC_FOOTER = "Examples:\
 srcml_request_t srcml_request = { /* 0 */ };
 
 // Define Program Options
-prog_opts::options_description general("General Options");
-prog_opts::options_description src2srcml_options("src2srcml Options");
-prog_opts::options_description srcml2src_options("srcml2src Options");
+prog_opts::options_description general("GENERAL OPTIONS");
+prog_opts::options_description src2srcml_options("SRC2SRCML OPTIONS");
+prog_opts::options_description srcml2src_options("SRCML2SRC OPTIONS");
 prog_opts::options_description cpp_markup("CPP Markup Options");
 prog_opts::options_description line_col("Line/Column Position");
 prog_opts::options_description markup("Markup Extensions");
-prog_opts::options_description src2srcml_metadata("Metadata Options");
-prog_opts::options_description srcml2src_metadata("Metadata Options");
+prog_opts::options_description src2srcml_metadata("src2srcml Metadata Options");
+prog_opts::options_description srcml2src_metadata("srcml2src Metadata Options");
 prog_opts::options_description prefix("Prefix Options");
 prog_opts::options_description query_transform("Query and Transform Options");
 prog_opts::options_description srcml_archive_options("srcML Archive Options");
@@ -256,6 +256,10 @@ void option_help(const std::string& help_opt) {
         // TODO: A new header and footer for the general option
         std::cout << SRCML_HEADER << "\n";
         std::cout << general << "\n";
+        
+        std::cout << src2srcml << "\n";
+        std::cout << srcml2src << "\n";
+
         std::cout << SRCML_FOOTER << "\n";
     }
     else if (help_opt == "src2srcml") {
@@ -270,7 +274,7 @@ void option_help(const std::string& help_opt) {
     }
     else {
         std::cout << "Unknown module '"
-                  << help_opt << "' in the --help-module option\n";
+                  << help_opt << "' in --help\n";
         exit(1);
     }
     exit(0);
@@ -408,10 +412,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         // Group src2srcml Options
-        src2srcml.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
+        src2srcml.add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
 
         // Group srcml2src Options
-        srcml2src.add(general).add(srcml2src_options).add(srcml2src_metadata).add(query_transform).add(srcml_archive_options);
+        srcml2src.add(srcml2src_options).add(srcml2src_metadata).add(query_transform).add(srcml_archive_options);
 
         // Group all Options
         all.add(general).add(src2srcml_options).add(srcml2src_options).
