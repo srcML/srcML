@@ -342,7 +342,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("get-timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP>), "display timestamp and exit")
             ("get-hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_HASH>), "display hash and exit")
             ("get-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_ENCODING>), "display xml encoding and exit")
-            ("xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
+            ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
+            ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in text instead of XML")
             ;
 
         cpp_markup.add_options()
