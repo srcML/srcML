@@ -26,7 +26,7 @@ define nestedfile <<- 'STDOUT'
 createfile sub/a.cpp.xml "$srcml"
 rmfile sub/a.cpp
 
-srcml2src --to-dir=. sub/a.cpp.xml
+srcml2src --quiet --to-dir=. sub/a.cpp.xml
 
 check sub/a.cpp 3<<< "a;"
 
@@ -36,14 +36,14 @@ createfile sub/a.cpp.xml "$nestedfile"
 rmfile sub/a.cpp
 rmfile sub/b.cpp
 
-srcml2src --to-dir=. sub/a.cpp.xml
+srcml2src --quiet --to-dir=. sub/a.cpp.xml
 check sub/a.cpp 3<<< "a;"
 check sub/b.cpp 3<<< "b;"
 
 rmfile sub/a.cpp
 rmfile sub/b.cpp
 
-srcml2src -a '.' sub/a.cpp.xml
+srcml2src --quiet -a '.' sub/a.cpp.xml
 
 check sub/a.cpp 3<<< "a;"
 check sub/b.cpp 3<<< "b;"
