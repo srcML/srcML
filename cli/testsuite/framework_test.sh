@@ -151,6 +151,36 @@ check() {
 
     true
 }
+##
+# checks the result of a command
+#   $1 (optional) file of expected stdout
+#   $2 (optional) file of expected stderr
+#   $STDOUT - filename of captured stdout
+#   $STDERR - filename of captured stderr
+#
+check_null() {
+
+    # return stdout and stderr to standard streams
+    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
+    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+
+    # trace the command
+    echo $(history | head -n 1 | cut -c 8-)
+
+    # verify expected stderr to the captured stdout
+
+    # check that the captured stdout is empty
+    [ ! -s $STDOUT ]
+
+    # check that the captured stderr is empty
+    [ ! -s $STDERR ]
+
+    # # return to capturing stdout and stderr
+    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
+    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+
+    true
+}
 
 ##
 # checks the exit status of a command
