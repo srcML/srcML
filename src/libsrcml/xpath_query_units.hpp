@@ -423,9 +423,9 @@ public :
             xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s);
 
             // location attribute on wrapping node
-            if (true) {
+            if (false) {
                 const char* s = "/src:unit";
-                xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s);
+                xmlSetProp(a_node, BAD_CAST "location", BAD_CAST s);
             }
 
             // index into results
