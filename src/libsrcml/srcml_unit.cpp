@@ -33,7 +33,7 @@
  ******************************************************************************/
 
 /**
- * srcml_unit_set_encoding
+ * srcml_unit_set_src_encoding
  * @param unit a srcml unit
  * @param encoding an encoding
  *
@@ -42,7 +42,7 @@
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_encoding(srcml_unit* unit, const char* encoding) {
+int srcml_unit_set_src_encoding(srcml_unit* unit, const char* encoding) {
 
     if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -180,14 +180,14 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
  ******************************************************************************/
 
 /**
- * srcml_unit_get_encoding
+ * srcml_unit_get_src_encoding
  * @param unit a srcml unit
  *
  * Get the encoding for the srcml unit
  *
  * @returns encoding on success and NULL on failure.
  */
-const char* srcml_unit_get_encoding(const struct srcml_unit* unit) {
+const char* srcml_unit_get_src_encoding(const struct srcml_unit* unit) {
 
     if(unit == NULL) return 0;
 

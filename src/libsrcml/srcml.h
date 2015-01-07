@@ -338,13 +338,13 @@ __LIBSRCML_DECL const char*        srcml_archive_get_macro_type                 
 __LIBSRCML_DECL struct srcml_unit* srcml_create_unit(struct srcml_archive* archive);
 
 /* Setup options for srcml unit */
-__LIBSRCML_DECL int srcml_unit_set_encoding (struct srcml_unit*, const char* language);
-__LIBSRCML_DECL int srcml_unit_set_language (struct srcml_unit*, const char* language);
-__LIBSRCML_DECL int srcml_unit_set_filename (struct srcml_unit*, const char* filename);
-__LIBSRCML_DECL int srcml_unit_set_directory(struct srcml_unit*, const char* directory);
-__LIBSRCML_DECL int srcml_unit_set_version  (struct srcml_unit*, const char* version);
-__LIBSRCML_DECL int srcml_unit_set_timestamp(struct srcml_unit*, const char* timestamp);
-__LIBSRCML_DECL int srcml_unit_set_hash     (struct srcml_unit*, const char* hash);
+__LIBSRCML_DECL int srcml_unit_set_src_encoding (struct srcml_unit*, const char* language);
+__LIBSRCML_DECL int srcml_unit_set_language     (struct srcml_unit*, const char* language);
+__LIBSRCML_DECL int srcml_unit_set_filename     (struct srcml_unit*, const char* filename);
+__LIBSRCML_DECL int srcml_unit_set_directory    (struct srcml_unit*, const char* directory);
+__LIBSRCML_DECL int srcml_unit_set_version      (struct srcml_unit*, const char* version);
+__LIBSRCML_DECL int srcml_unit_set_timestamp    (struct srcml_unit*, const char* timestamp);
+__LIBSRCML_DECL int srcml_unit_set_hash         (struct srcml_unit*, const char* hash);
 
 /* Convert to srcml.  Files/buffer can be compressed, but not a
    source archive format (e.g., not .tar) */
@@ -389,15 +389,15 @@ __LIBSRCML_DECL struct srcml_unit* srcml_read_unit_xml(struct srcml_archive*);
 __LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
 /* Query options of srcml unit */
-__LIBSRCML_DECL const char* srcml_unit_get_encoding (const struct srcml_unit*);
-__LIBSRCML_DECL const char* srcml_unit_get_revision (const struct srcml_unit*);
-__LIBSRCML_DECL const char* srcml_unit_get_language (const struct srcml_unit*);
-__LIBSRCML_DECL const char* srcml_unit_get_filename (const struct srcml_unit*);
-__LIBSRCML_DECL const char* srcml_unit_get_directory(const struct srcml_unit*);
-__LIBSRCML_DECL const char* srcml_unit_get_version  (const struct srcml_unit*);
-__LIBSRCML_DECL const char* srcml_unit_get_timestamp(const struct srcml_unit*);
-__LIBSRCML_DECL const char* srcml_unit_get_hash     (const struct srcml_unit*);
-__LIBSRCML_DECL const char* srcml_unit_get_xml      (struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_src_encoding (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_revision     (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_language     (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_filename     (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_directory    (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_version      (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_timestamp    (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_hash         (const struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_xml          (struct srcml_unit*);
 
 /* Convert from srcML to source code */
 __LIBSRCML_DECL int srcml_unparse_unit_filename(struct srcml_unit*, const char* src_filename);

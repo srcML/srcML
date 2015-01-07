@@ -101,9 +101,9 @@ libsrcml.srcml_create_unit.argtypes = [c_void_p]
 libsrcml.srcml_free_unit.restype = None
 libsrcml.srcml_free_unit.argtypes = [c_void_p]
 
-# int srcml_unit_set_encoding (struct srcml_unit*, const char* encoding);
-libsrcml.srcml_unit_set_encoding.restype = c_int
-libsrcml.srcml_unit_set_encoding.argtypes = [c_void_p, c_char_p]
+# int srcml_unit_set_src_encoding (struct srcml_unit*, const char* encoding);
+libsrcml.srcml_unit_set_src_encoding.restype = c_int
+libsrcml.srcml_unit_set_src_encoding.argtypes = [c_void_p, c_char_p]
 
 # int srcml_unit_set_language (struct srcml_unit*, const char* language);
 libsrcml.srcml_unit_set_language.restype = c_int
@@ -129,9 +129,9 @@ libsrcml.srcml_unit_set_timestamp.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_unit_set_hash.restype = c_int
 libsrcml.srcml_unit_set_hash.argtypes = [c_void_p, c_char_p]
 
-# const char* srcml_unit_get_encoding (const struct srcml_unit*);
-libsrcml.srcml_unit_get_encoding.restype = c_char_p
-libsrcml.srcml_unit_get_encoding.argtypes = [c_void_p]
+# const char* srcml_unit_get_src_encoding (const struct srcml_unit*);
+libsrcml.srcml_unit_get_src_encoding.restype = c_char_p
+libsrcml.srcml_unit_get_src_encoding.argtypes = [c_void_p]
 
 # const char* srcml_unit_get_revision (const struct srcml_unit*);
 libsrcml.srcml_unit_get_revision.restype = c_char_p
@@ -226,8 +226,8 @@ class srcml_unit :
     def write_string(self, content) :
         check_return(libsrcml.srcml_write_string(self.unit, content))
 
-    def set_encoding(self, encoding) :
-        check_return(libsrcml.srcml_unit_set_encoding(self.unit, encoding))
+    def set_src_encoding(self, encoding) :
+        check_return(libsrcml.srcml_unit_set_src_encoding(self.unit, encoding))
 
     def set_language(self, language) :
         check_return(libsrcml.srcml_unit_set_language(self.unit, language))
@@ -247,8 +247,8 @@ class srcml_unit :
     def set_hash(self, hash) :
         check_return(libsrcml.srcml_unit_set_hash(self.unit, hash))
 
-    def get_encoding(self) :
-        return libsrcml.srcml_unit_get_encoding(self.unit)
+    def get_src_encoding(self) :
+        return libsrcml.srcml_unit_get_src_encoding(self.unit)
 
     def get_revision(self) :
         return libsrcml.srcml_unit_get_revision(self.unit)

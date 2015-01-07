@@ -133,7 +133,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_filename(archive, "project_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_filename(unit, "project_utf8.cpp");
         std::ifstream src_file("project_utf8.cpp");
         std::string aunit;
@@ -154,7 +154,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_filename(unit, "project_latin_from_utf8.cpp");
         std::ifstream src_file("project_latin_from_utf8.cpp");
         std::string aunit;
@@ -175,7 +175,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_filename(archive, "project_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_filename(unit, "project_latin.cpp");
         std::ifstream src_file("project_latin.cpp");
         std::string aunit;
@@ -196,7 +196,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_filename(unit, "project_latin_from_latin.cpp");
         std::ifstream src_file("project_latin_from_latin.cpp");
         std::string aunit;
@@ -349,7 +349,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_filename(archive, "project_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_memory(unit, &s, &size);
         dassert(s, utf8_src);
 
@@ -366,7 +366,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_memory(unit, &s, &size);
         dassert(s, utf8_src);
 
@@ -383,7 +383,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_filename(archive, "project_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_memory(unit, &s, &size);
         dassert(s, latin_src);
 
@@ -400,7 +400,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_memory(unit, &s, &size);
         dassert(s, latin_src);
 
@@ -557,7 +557,7 @@ int main() {
         srcml_read_open_filename(archive, "project_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         FILE * file = fopen("project_utf8.cpp", "w");
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_utf8.cpp");
@@ -580,7 +580,7 @@ int main() {
         srcml_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         FILE * file = fopen("project_latin_from_utf8.cpp", "w");
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_latin_from_utf8.cpp");
@@ -603,7 +603,7 @@ int main() {
         srcml_read_open_filename(archive, "project_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         FILE * file = fopen("project_latin.cpp", "w");
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_latin.cpp");
@@ -626,7 +626,7 @@ int main() {
         srcml_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         FILE * file = fopen("project_latin_from_latin.cpp", "w");
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_latin_from_latin.cpp");
@@ -801,7 +801,7 @@ int main() {
         srcml_read_open_filename(archive, "project_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         int fd = OPEN("project_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_utf8.cpp");
@@ -826,7 +826,7 @@ int main() {
         srcml_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         int fd = OPEN("project_latin_from_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_latin_from_utf8.cpp");
@@ -851,7 +851,7 @@ int main() {
         srcml_read_open_filename(archive, "project_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         int fd = OPEN("project_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_latin.cpp");
@@ -876,7 +876,7 @@ int main() {
         srcml_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         int fd = OPEN("project_latin_from_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_latin_from_latin.cpp");
@@ -1057,7 +1057,7 @@ int main() {
         srcml_read_open_filename(archive, "project_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         FILE * file = fopen("project_utf8.cpp", "w");
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_utf8.cpp");
@@ -1080,7 +1080,7 @@ int main() {
         srcml_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         FILE * file = fopen("project_latin_from_utf8.cpp", "w");
-        srcml_unit_set_encoding(unit, "UTF-8");
+        srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unparse_unit_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_latin_from_utf8.cpp");
@@ -1103,7 +1103,7 @@ int main() {
         srcml_read_open_filename(archive, "project_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         FILE * file = fopen("project_latin.cpp", "w");
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_latin.cpp");
@@ -1126,7 +1126,7 @@ int main() {
         srcml_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
         FILE * file = fopen("project_latin_from_latin.cpp", "w");
-        srcml_unit_set_encoding(unit, "ISO-8859-1");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unparse_unit_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_latin_from_latin.cpp");

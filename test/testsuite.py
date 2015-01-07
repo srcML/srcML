@@ -222,7 +222,7 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
         unit = srcml_unit(archive)
         unit.set_language(language)
         if directory.find("unicode") != -1 :
-                unit.set_encoding("UTF-8")
+                unit.set_src_encoding("UTF-8")
 
         unit.parse_memory(text_file)
         srcml = unit.get_xml()
