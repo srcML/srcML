@@ -49,6 +49,8 @@
 #define snprintf _snprintf
 #endif
 
+extern std::vector<transform> global_transformations;
+
 /**
  * xpath_query_units
  *
@@ -173,6 +175,13 @@ public :
     
     virtual xmlXPathContextPtr set_context() {
 
+        // compile all the inner transformations
+        for (unsigned long i = 1; i < global_transformations.size(); ++i) {
+
+            transform& thistransform = global_transformations[i];
+            thistransform.compiled_xpath = xmlXPathCompile(BAD_CAST thistransform.arguments.str->c_str());
+        }
+
         xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
         // TODO:  Detect error
 
@@ -295,10 +304,40 @@ public :
             return false;
         }
 
-        apply(result_nodes);
+        std::vector<transform>::const_iterator tr = global_transformations.begin();
+
+        applyxpath(++tr, global_transformations.end(), result_nodes);
 
         // finished with the result nodes
-        xmlXPathFreeObject(result_nodes);
+        //xmlXPathFreeObject(result_nodes);
+
+        return true;
+    }
+
+    virtual bool applyxpath(std::vector<transform>::const_iterator tr, std::vector<transform>::const_iterator end, xmlXPathObjectPtr result_nodes) {
+
+        if (tr == end || xmlXPathNodeSetGetLength(result_nodes->nodesetval) == 0) {
+            apply(result_nodes);
+            return true;
+        }
+
+        xmlNodePtr savectxt = ctxt->node;
+
+        for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+
+            xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i]; 
+
+            ctxt->node = onode;
+
+            xmlXPathObjectPtr result_nodes2 = xmlXPathCompiledEval(tr->compiled_xpath, context);
+
+
+            applyxpath(++tr, end, result_nodes2);
+
+            //xmlXPathFreeObject(result_nodes2);
+        }
+
+        ctxt->node = savectxt;
 
         return true;
     }
