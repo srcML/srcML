@@ -54,13 +54,13 @@ define nestedfile <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-createfile sub/a.cpp.xml << "$sxmlfile1"
+createfile sub/a.cpp.xml "$output"
 
-srcml2src -i <<< "$sxmlfile"
+srcml2src -i sub/a.cpp.xml
 
 check 3<<< "$info"
 
-srcml2src --info <<< "$sxmlfile"
+srcml2src --info sub/a.cpp.xml
 
 check 3<<< "$info"
 
@@ -72,7 +72,7 @@ srcml2src sub/a.cpp.xml --info
 
 check 3<<< "$info"
 
-srcml2src --longinfo <<< "$sxmlfile"
+srcml2src --longinfo sub/a.cpp.xml
 
 check 3<<< "$longinfo"
 
@@ -80,14 +80,32 @@ srcml2src sub/a.cpp.xml --longinfo
 
 check 3<<< "$longinfo"
 
-createfile sub/a.cpp.xml <<< "$nestedfile"
 
-srcml2src -i --longinfo <<< "$nestedfile longinfonested)"
-srcml2src -i --longinfo <<< "$nestedfile longinfonested)"
-srcml2src -i --longinfo <<< "$nestedfile longinfonested)"
-srcml2src sub/a.cpp.xml -i --longinfo longinfonested)
-srcml2src sub/a.cpp.xml -i --longinfo longinfonested)
-srcml2src sub/a.cpp.xml -i --longinfo longinfonested)
+createfile sub/a.cpp.xml "$nestedfile"
+
+srcml2src -i sub/a.cpp.xml
+
+check 3<<< "$longinfonested"
+
+srcml2src --info sub/a.cpp.xml
+
+check 3<<< "$longinfonested"
+
+srcml2src sub/a.cpp.xml -i
+
+check 3<<< "$longinfonested"
+
+srcml2src sub/a.cpp.xml --info
+
+check 3<<< "$longinfonested"
+
+srcml2src --longinfo sub/a.cpp.xml
+
+check 3<<< "$longinfonested"
+
+srcml2src sub/a.cpp.xml --longinfo
+
+check 3<<< "$longinfonested"
 
 
-
+rmfile sub/a.cpp.xml
