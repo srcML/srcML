@@ -22,7 +22,7 @@ echo "a;" | src2srcml -l C++ --src-encoding="ISO"
 
 check_exit 4
 
-echo "a;" | src2srcml -l C++ --encoding="ISO"
+echo "a;" | src2srcml -l C++ --xml-encoding="ISO"
 
 check_exit 4
 
@@ -54,7 +54,7 @@ echo "a;" | src2srcml -l C++ --src-encoding
 check_exit 7
 
 # xml encoding not given
-echo "a;" | src2srcml -l C++ --encoding
+echo "a;" | src2srcml -l C++ --xml-encoding
 
 check_exit 7
 

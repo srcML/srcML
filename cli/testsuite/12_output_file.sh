@@ -26,6 +26,8 @@ src2srcml -l C++ - -o sub/a.cpp.xml <<< "
 a;"
 
 check sub/a.cpp.xml 3<<< "$output"
+rmfile sub/a.cpp.xml
+
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -43,4 +45,4 @@ src2srcml -l C++ - -o sub/b.cpp.xml <<< "
 b;"
 
 check sub/b.cpp.xml 3<<< "$output"
-
+rmfile sub/b.cpp.xml
