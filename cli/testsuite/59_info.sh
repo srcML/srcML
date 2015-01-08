@@ -27,6 +27,11 @@ define longinfo <<- 'STDOUT'
 	units="1"
 	STDOUT
 
+define infonested <<- 'STDOUT'
+	xmlns="http://www.sdml.info/srcML/src"
+	encoding="UTF-8"
+	STDOUT
+
 define longinfonested <<- 'STDOUT'
 	xmlns="http://www.sdml.info/srcML/src"
 	encoding="UTF-8"
@@ -85,19 +90,19 @@ createfile sub/a.cpp.xml "$nestedfile"
 
 srcml2src -i sub/a.cpp.xml
 
-check 3<<< "$longinfonested"
+check 3<<< "$infonested"
 
 srcml2src --info sub/a.cpp.xml
 
-check 3<<< "$longinfonested"
+check 3<<< "$infonested"
 
 srcml2src sub/a.cpp.xml -i
 
-check 3<<< "$longinfonested"
+check 3<<< "$infonested"
 
 srcml2src sub/a.cpp.xml --info
 
-check 3<<< "$longinfonested"
+check 3<<< "$infonested"
 
 srcml2src --longinfo sub/a.cpp.xml
 
