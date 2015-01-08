@@ -15,15 +15,19 @@ define srcmlout <<- STDOUT
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
 	STDOUT
 
+createfile sub/a.cpp.xml "$srcml"
 
-srcml2src -X --no-xml-declaration <<< "$srcml"
+srcml2src -X --no-xml-declaration < sub/a.cpp.xml
+
+check 3<<< "$srcmlout"
+
+srcml2src -X --no-xml-declaration -o sub/b.cpp.xml < sub/a.cpp.xml
+
+check sub/b.cpp.xml 3<<< "$srcmlout"
+rmfile sub/b.cpp.xml
+
+srcml2src --no-xml-declaration < sub/a.cpp.xml
 
 check 3<<< "$srcmlout"
 
-srcml2src -X --no-xml-declaration -o sub/a.cpp.xml <<< "$srcml"
-
-check sub/a.cpp.xml 3<<< "$srcmlout"
-
-srcml2src --no-xml-declaration <<< "$srcml"
-
-check 3<<< "$srcmlout"
+rmfile sub/a.cpp.xml
