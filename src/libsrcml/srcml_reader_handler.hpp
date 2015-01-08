@@ -356,7 +356,11 @@ public :
             std::string attribute = attributes[pos].localname;
             std::string value = attributes[pos].value;
 
-            if(attribute == "language")
+            if(attribute == "timestamp")
+                ;
+            else if(attribute == "hash")
+                ;
+            else if(attribute == "language")
                 srcml_archive_set_language(archive, value.c_str());
             else if(attribute == "revision")
                 archive->revision = value;
