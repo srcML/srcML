@@ -23,7 +23,7 @@ add_subdirectory(srcml)
 
 file(GLOB SRCSAX_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} srcSAX/*.hpp)
 file(GLOB SRCSAX_SOURCE  RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} srcSAX/*.cpp)
-#if(NOT WIN32)
+if(NOT WIN32)
 	list(REMOVE_ITEM SRCSAX_SOURCE srcSAX/srctools_windows.cpp)
 endif()
 
