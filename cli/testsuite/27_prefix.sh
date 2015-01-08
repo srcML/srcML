@@ -13,8 +13,6 @@ srcml2src -p "http://www.sdml.info/srcML/src" <<< "$input"
 
 check 3<<< ""
 
-exit
-
 srcml2src --prefix "http://www.sdml.info/srcML/src" <<< "$input"
 
 check 3<<< ""
@@ -35,27 +33,15 @@ srcml2src --prefix="http://www.sdml.info/srcML/cpp" <<< "$input"
 
 check 3<<< "cpp"
 
-srcml2src -p "http://www.sdml.info/srcML/literal" <<< "$input"
-
-check 3<<< "lit"
-
-srcml2src --prefix "http://www.sdml.info/srcML/literal" <<< "$input"
-
-check 3<<< "lit"
-
-srcml2src --prefix="http://www.sdml.info/srcML/literal" <<< "$input"
-
-check 3<<< "$input"
-
 srcml2src -p "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 
-check 3<<< "$input"
+check_null
 
 srcml2src --prefix "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 
-check 3<<< "$input"
+check_null
 
 srcml2src --prefix="http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 
-check 3<<< "$input"
+check_null
 
