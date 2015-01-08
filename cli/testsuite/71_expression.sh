@@ -5,29 +5,25 @@ source $(dirname "$0")/framework_test.sh
 
 # test expression_mode
 
-define sxmlfile <<-'STDOUT'
+define sxmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++">
-	<expr><name>a</name></expr>
-	</unit>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"><macro><name>a</name></macro></unit>
 	STDOUT
 
 define fsxmlfile <<- 'STDOUT'
-	<?xml vesion="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename=sub/a.cpp>
-	<expr><name>a</name></expr>
-	</unit>
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp"><macro><name>a</name></macro></unit>
 	STDOUT
 
-echo -n "a" >> sub/a.cpp
+createfile sub/a.cpp "a"
 
-src2srcml -e <<< "a"
+src2srcml -e sub/a.cpp
 
-check 3<<< "$sxmlfile"
+check 3<<< "$fsxmlfile"
 
-src2srcml --expression <<< "a"
+src2srcml --expression sub/a.cpp
 
-check 3<<< "$sxmlfile
+check 3<<< "$fsxmlfile"
 
 src2srcml sub/a.cpp -e
 
@@ -37,18 +33,12 @@ src2srcml sub/a.cpp --expression
 
 check 3<<< "$fsxmlfile"
 
+src2srcml -l C++ --expression -o sub/a.cpp.xml < sub/a.cpp
+check sub/a.cpp.xml 3<<< "$sxmlfile"
+rmfile sub/a.cpp.xml
 
-#src2srcml -l C++ --expression -o sub/a.cpp.xml sfile
-#validate(open(sub/a.cpp.xml 'r').read() sxmlfile)
-#src2srcml --expression sub/a.cpp -o sub/a.cpp.xml
+src2srcml --expression sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$fsxmlfile"
+rmfile sub/a.cpp.xml
 
-#validate(open(sub/a.cpp.xml 'r').read() fsxmlfile)
-
-
-
-##
-
-# Test Query and Transformation Options
-
-# xpath
-
+rmfile sub/a.cpp
