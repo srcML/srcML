@@ -13,11 +13,11 @@ echo -n "" | src2srcml -l C++ -x "ISO-8859-1"
 
 check 3<<< "$output"
 
-echo -n "" | src2srcml -l C++ --encoding "ISO-8859-1"
+echo -n "" | src2srcml -l C++ --xml-encoding "ISO-8859-1"
 
 check 3<<< "$output"
 
-echo -n "" | src2srcml -l C++ --encoding="ISO-8859-1"
+echo -n "" | src2srcml -l C++ --xml-encoding="ISO-8859-1"
 
 check 3<<< "$output"
 
