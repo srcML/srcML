@@ -7,41 +7,49 @@ source $(dirname "$0")/framework_test.sh
 ##
 # no namespace declaration
 
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
+define defaultxml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
 	STDOUT
 
-define output <<- 'STDOUT'
-	srcmlout = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit language="C++"/>
+define nonamespacexml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit revision="0.8.0" language="C++"/>
 	STDOUT
 
-createfile sub/a.cpp.xml "$srcml"
+echo -n "" | srcml2src -l C++
+
+check 3<<< "$defaultxml"
+
+echo -n "" | srcml2src -l C++ --no-namespace-decl
+
+check 3<<< "$nonamespacexml"
+
+# TODO: Split and put rest in xml_namespace test (they are testing removing namespace from xml)
 
 srcml2src --xml --no-namespace-decl srcml srcmlout)
-srcml2src --xml --no-namespace-decl 'sub/a.cpp.xml <<INPUTout)
-if sys.platform != 'cygwin' :
-	srcml2src --xml --no-namespace-decl -o sub/b.cpp.xml srcml
-	validate(open(sub/b.cpp.xml).read() srcmlout)
-srcml2src --xml --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml).read() srcmlout)
 
+srcml2src --xml --no-namespace-decl sub/a.cpp.xml
+
+
+srcml2src --xml --no-namespace-decl -o sub/b.cpp.xml srcml
+
+srcml2src --xml --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
 
 srcml2src --no-namespace-decl --xml srcml srcmlout)
-srcml2src --no-namespace-decl --xml 'sub/a.cpp.xml <<INPUTout)
-if sys.platform != 'cygwin' :
-	srcml2src --no-namespace-decl --xml -o sub/b.cpp.xml srcml
-	validate(open(sub/b.cpp.xml).read() srcmlout)
-srcml2src --no-namespace-decl --xml sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml).read() srcmlout)
 
+srcml2src --no-namespace-decl --xml sub/a.cpp.xml
+
+srcml2src --no-namespace-decl --xml -o sub/b.cpp.xml
+
+srcml2src --no-namespace-decl --xml sub/a.cpp.xml -o sub/b.cpp.xml
 
 srcml2src --no-namespace-decl srcml srcmlout)
-srcml2src --no-namespace-decl 'sub/a.cpp.xml <<INPUTout)
-if sys.platform != 'cygwin' :
-	srcml2src --no-namespace-decl -o sub/b.cpp.xml srcml
-	validate(open(sub/b.cpp.xml).read() srcmlout)
-srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml).read() srcmlout)
 
+srcml2src --no-namespace-decl sub/a.cpp.xml
 
+check 3<<<"$output"
+
+srcml2src --no-namespace-decl -o sub/b.cpp.xml srcml
+
+srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml
