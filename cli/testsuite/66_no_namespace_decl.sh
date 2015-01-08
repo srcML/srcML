@@ -26,30 +26,48 @@ echo -n "" | srcml2src -l C++ --no-namespace-decl
 check 3<<< "$nonamespacexml"
 
 # TODO: Split and put rest in xml_namespace test (they are testing removing namespace from xml)
+createfile sub/a.cpp.xml "$defaultxml"
 
-srcml2src -X --no-namespace-decl srcml srcmlout)
+srcml2src -l C++ -X --no-namespace-decl < sub/a.cpp.xml
+check 3<<< "$nonamespacexml"
 
 srcml2src -X --no-namespace-decl sub/a.cpp.xml
+check 3<<< "$nonamespacexml"
 
+srcml2src -X --no-namespace-decl -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$nonamespacexml"
+rmfile sub/b.cpp.xml
 
-srcml2src -X --no-namespace-decl -o sub/b.cpp.xml srcml
+srcml2src -X --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml 
+check sub/b.cpp.xml 3<<< "$nonamespacexml"
+rmfile sub/b.cpp.xml
 
-srcml2src -X --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
-
-srcml2src --no-namespace-decl -X srcml srcmlout)
+srcml2src -l C++ --no-namespace-decl -X < sub/a.cpp.xml
+check 3<<< "$nonamespacexml"
 
 srcml2src --no-namespace-decl -X sub/a.cpp.xml
+check 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl -X -o sub/b.cpp.xml
+srcml2src --no-namespace-decl -X -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$nonamespacexml"
+rmfile sub/b.cpp.xml
 
 srcml2src --no-namespace-decl -X sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$nonamespacexml"
+rmfile sub/b.cpp.xml
 
-srcml2src --no-namespace-decl srcml srcmlout)
+srcml2src -l C++ --no-namespace-decl < sub/a.cpp.xml
+check 3<<< "$nonamespacexml"
 
 srcml2src --no-namespace-decl sub/a.cpp.xml
+check 3<<< "$output"
 
-check 3<<<"$output"
-
-srcml2src --no-namespace-decl -o sub/b.cpp.xml srcml
+srcml2src --no-namespace-decl -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$nonamespacexml"
+rmfile sub/b.cpp.xml
 
 srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$nonamespacexml"
+rmfile sub/b.cpp.xml
+
+rmfile sub/a.cpp.xml
