@@ -31,22 +31,13 @@ check 3<<< "cpp"
 srcml2src sub/a.cpp.xml --prefix="http://www.sdml.info/srcML/cpp"
 check 3<<< "cpp"
 
-srcml2src sub/a.cpp.xml -p "http://www.sdml.info/srcML/literal"
-check 3<<< "lit"
-
-srcml2src sub/a.cpp.xml --prefix "http://www.sdml.info/srcML/literal"
-check 3<<< "lit"
-
-srcml2src sub/a.cpp.xml --prefix="http://www.sdml.info/srcML/literal"
-check 3<<< "lit"
-
 srcml2src sub/a.cpp.xml -p "http://www.cs.uakron.edu/~collard/foo"
-check 3<<< ""
+check_null
 
 srcml2src sub/a.cpp.xml --prefix "http://www.cs.uakron.edu/~collard/foo"
-check 3<<< ""
+check_null
 
 srcml2src sub/a.cpp.xml --prefix="http://www.cs.uakron.edu/~collard/foo"
-check 3<<< ""
+check_null
 
 rmfile sub/a.cpp.xml
