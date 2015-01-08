@@ -9,42 +9,68 @@ source $(dirname "$0")/framework_test.sh
 
 define sfile <<< "a;"
 
+define sxml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
+	STDOUT
+
 define sxmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++">
-	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
 	STDOUT
+
+define vfoutput <<- 'STDERR'
+	Source encoding:  (null)
+	XML encoding:  UTF-8
+	    1 sub/a.cpp	C++	1	10	HASH
+
+	Translated: 1	Skipped: 0	Error: 0	Total: 1
+	STDERR
+
+define voutput <<- 'STDERR'
+	Source encoding:  (null)
+	XML encoding:  UTF-8
+	    1	C++	1	10	HASH
+
+	Translated: 1	Skipped: 0	Error: 0	Total: 1
+	STDERR
+
 createfile sub/a.cpp "$sfile"
 
 createfile sub/a.cpp.xml "$sxmlfile"
  
-# src2srcml
-if platform.system() != "Windows" and sys.platform != 'cygwin' :
+ # src to srcml
+srcml --verbose sub/a.cpp
+check 3<<< "$sxmlfile" 4<<< "$vfoutput"
 
-	globals()["test_count" += 1
-	globals()["test_line" = os.path.basename(src2srcml) + ' ' + --verbose
-	print test_count os.path.basename(src2srcml) + ' ' + --verbose
-	line = src2srcml --verbose -l C++ sfile)
-	execute(['grep' srcencoding + xmlencoding line)
+srcml --verbose sub/a.cpp -o sub/c.cpp.xml
+check sub/c.cpp.xml 3<<< "$sxmlfile" 4<<< "$vfoutput"
+rmfile sub/c.cpp.xml
 
-	globals()["test_count" += 1
-	globals()["test_line" = os.path.basename(src2srcml) + ' ' + --verbose + ' sub/a.cpp
-	print test_count os.path.basename(src2srcml) + ' ' + --verbose + ' sub/a.cpp
-	line = src2srcml --verbose sub/a.cpp
-	execute(['grep' srcencoding + xmlencoding line)
+srcml --verbose -l C++ < sub/a.cpp
+check 3<<< "$sxml" 4<<< "voutput"
 
-# srcml2src
-if platform.system() != "Windows" and sys.platform != 'cygwin' :
+srcml --verbose -l C++ -o sub/c.cpp.xml < sub/a.cpp
+check 3<<< "$sxml" 4<<< "$voutput"
+rmfile sub/c.cpp.xml
 
-	globals()["test_count" += 1
-	globals()["test_line" = os.path.basename(srcml2src) + ' ' + --verbose
-	print test_count os.path.basename(srcml2src) + ' ' + --verbose
-	line = execute([srcml2src --verbose sxmlfile)
-	execute(['grep' xmlencoding + srcencoding line)
+# srcml to src
+srcml --verbose sub/a.cpp.xml
+check 3<<< "$sfile"
 
-	globals()["test_count" += 1
-	globals()["test_line" = os.path.basename(srcml2src) + ' ' + --verbose + ' sub/a.cpp.xml'
-	print test_count os.path.basename(srcml2src) + ' ' + --verbose + ' sub/a.cpp.xml'
-	line = execute([srcml2src --verbose 'sub/a.cpp.xml'
-	execute(['grep' xmlencoding + srcencoding line)
+srcml --verbose sub/a.cpp.xml -o sub/c.cpp
+check_null
+rmfile sub/c.cpp
 
+srcml --verbose -l C++ < sub/a.cpp.xml
+check 3<<< "$sfile"
+
+srcml --verbose -l C++ -o sub/c.cpp < sub/a.cpp.xml
+check_null
+rmfile sub/c.cpp
+
+
+rmfile sub/a.cpp
+rmfile sub/a.cpp.xml
