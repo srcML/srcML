@@ -16,11 +16,11 @@ define srcmlout <<- STDOUT
 	STDOUT
 
 
-srcml2src --xml --no-xml-declaration <<< "$srcml"
+srcml2src -X --no-xml-declaration <<< "$srcml"
 
 check 3<<< "$srcmlout"
 
-srcml2src --xml --no-xml-declaration -o sub/a.cpp.xml <<< "$srcml"
+srcml2src -X --no-xml-declaration -o sub/a.cpp.xml <<< "$srcml"
 
 check sub/a.cpp.xml 3<<< "$srcmlout"
 

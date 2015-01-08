@@ -27,22 +27,22 @@ check 3<<< "$nonamespacexml"
 
 # TODO: Split and put rest in xml_namespace test (they are testing removing namespace from xml)
 
-srcml2src --xml --no-namespace-decl srcml srcmlout)
+srcml2src -X --no-namespace-decl srcml srcmlout)
 
-srcml2src --xml --no-namespace-decl sub/a.cpp.xml
+srcml2src -X --no-namespace-decl sub/a.cpp.xml
 
 
-srcml2src --xml --no-namespace-decl -o sub/b.cpp.xml srcml
+srcml2src -X --no-namespace-decl -o sub/b.cpp.xml srcml
 
-srcml2src --xml --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
+srcml2src -X --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
 
-srcml2src --no-namespace-decl --xml srcml srcmlout)
+srcml2src --no-namespace-decl -X srcml srcmlout)
 
-srcml2src --no-namespace-decl --xml sub/a.cpp.xml
+srcml2src --no-namespace-decl -X sub/a.cpp.xml
 
-srcml2src --no-namespace-decl --xml -o sub/b.cpp.xml
+srcml2src --no-namespace-decl -X -o sub/b.cpp.xml
 
-srcml2src --no-namespace-decl --xml sub/a.cpp.xml -o sub/b.cpp.xml
+srcml2src --no-namespace-decl -X sub/a.cpp.xml -o sub/b.cpp.xml
 
 srcml2src --no-namespace-decl srcml srcmlout)
 

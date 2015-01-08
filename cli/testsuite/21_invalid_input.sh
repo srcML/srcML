@@ -39,7 +39,7 @@ srcml2src --unit 3 <<< "$nestedfile"
 
 check_exit 1
 
-srcml2src --unit 3 --xml <<< "$nestedfile"
+srcml2src --unit 3 -X <<< "$nestedfile"
 
 check_exit 1
 
@@ -56,6 +56,6 @@ srcml2src --unit 3 --src-version <<< "$nestedfile"
 check_exit 7
 
 # invalid combinations
-srcml2src --xml --src-encoding "UTF-8" "foobar"
+srcml2src -X --src-encoding "UTF-8" "foobar"
 
 check_exit 0

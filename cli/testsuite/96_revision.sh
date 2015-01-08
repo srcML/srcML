@@ -24,16 +24,16 @@ if False :
 	srcml2src --revision '2' 'diff/diff.cpp.xml' -o 'diff/new.cpp' '' '')
 	readfile input diff/new.cpp' 'r').read() src_new)
 
-	srcml2src --xml --revision '1' 'diff/diff.cpp.xml' '' srcml_old)
-	srcml2src --xml --revision '2' 'diff/diff.cpp.xml' '' srcml_new)
+	srcml2src -X --revision '1' 'diff/diff.cpp.xml' '' srcml_old)
+	srcml2src -X --revision '2' 'diff/diff.cpp.xml' '' srcml_new)
 
-	srcml2src --xml --revision '1' -o 'diff/old.cpp.xml' srcdiff '')
+	srcml2src -X --revision '1' -o 'diff/old.cpp.xml' srcdiff '')
 	readfile input diff/old.cpp.xml' 'r').read() srcml_old)
-	srcml2src --xml --revision '1' 'diff/diff.cpp.xml' -o 'diff/old.cpp.xml' '' '')
+	srcml2src -X --revision '1' 'diff/diff.cpp.xml' -o 'diff/old.cpp.xml' '' '')
 	readfile input diff/old.cpp.xml' 'r').read() srcml_old)
-	srcml2src --xml --revision '2' -o 'diff/new.cpp.xml' srcdiff '')
+	srcml2src -X --revision '2' -o 'diff/new.cpp.xml' srcdiff '')
 	readfile input diff/new.cpp.xml' 'r').read() srcml_new)
-	srcml2src --xml --revision '2' 'diff/diff.cpp.xml' -o 'diff/new.cpp.xml' '' '')
+	srcml2src -X --revision '2' 'diff/diff.cpp.xml' -o 'diff/new.cpp.xml' '' '')
 	readfile input diff/new.cpp.xml' 'r').read() srcml_new)
 
 # cpp option

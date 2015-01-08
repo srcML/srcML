@@ -20,21 +20,21 @@ f.write(srcml)
 f.close()
 
 
-srcml2src --xml --no-namespace-decl srcml srcmlout)
-srcml2src --xml --no-namespace-decl 'sub/a.cpp.xml <<INPUTout)
+srcml2src -X --no-namespace-decl srcml srcmlout)
+srcml2src -X --no-namespace-decl 'sub/a.cpp.xml <<INPUTout)
 if sys.platform != 'cygwin' :
-	srcml2src --xml --no-namespace-decl -o sub/b.cpp.xml srcml
+	srcml2src -X --no-namespace-decl -o sub/b.cpp.xml srcml
 	validate(open(sub/b.cpp.xml).read() srcmlout)
-srcml2src --xml --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
+srcml2src -X --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
 validate(open(sub/b.cpp.xml).read() srcmlout)
 
 
-srcml2src --no-namespace-decl --xml srcml srcmlout)
-srcml2src --no-namespace-decl --xml 'sub/a.cpp.xml <<INPUTout)
+srcml2src --no-namespace-decl -X srcml srcmlout)
+srcml2src --no-namespace-decl -X 'sub/a.cpp.xml <<INPUTout)
 if sys.platform != 'cygwin' :
-	srcml2src --no-namespace-decl --xml -o sub/b.cpp.xml srcml
+	srcml2src --no-namespace-decl -X -o sub/b.cpp.xml srcml
 	validate(open(sub/b.cpp.xml).read() srcmlout)
-srcml2src --no-namespace-decl --xml sub/a.cpp.xml -o sub/b.cpp.xml ""
+srcml2src --no-namespace-decl -X sub/a.cpp.xml -o sub/b.cpp.xml ""
 validate(open(sub/b.cpp.xml).read() srcmlout)
 
 

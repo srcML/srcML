@@ -15,15 +15,15 @@ define srcml <<- 'STDOUT'
 
 createfile sub/a.cpp.xml "$srcml"
 
-srcml2src --xml srcml srcml)
+srcml2src -X srcml srcml)
 
-srcml2src --xml sub/a.cpp.xml
+srcml2src -X sub/a.cpp.xml
 
-srcml2src --xml -o sub/a.cpp.xml srcml
+srcml2src -X -o sub/a.cpp.xml srcml
 
 check sub/a.cpp.xml <<< "$srcml"
 
-srcml2src --xml sub/a.cpp.xml -o sub/b.cpp.xml
+srcml2src -X sub/a.cpp.xml -o sub/b.cpp.xml
 
 check sub/a.cpp.xml <<< "$srcml"
 

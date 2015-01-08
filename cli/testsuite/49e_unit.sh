@@ -76,25 +76,25 @@ rmfile sub/b.cpp
 
 
 # check xml and unit option
-srcml2src --xml --unit "1" sub/a.cpp.xml
+srcml2src -X --unit "1" sub/a.cpp.xml
 check 3<<< "$sxmlfile1"
 
-srcml2src --xml --unit "1" -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml2src -X --unit "1" -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$sxmlfile1"
 rmfile sub/b.cpp.xml
 
-srcml2src --xml --unit "1" sub/a.cpp.xml -o sub/b.cpp.xml
+srcml2src -X --unit "1" sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$sxmlfile1"
 rmfile sub/b.cpp.xml
 
-srcml2src --xml --unit "2" sub/a.cpp.xml 
+srcml2src -X --unit "2" sub/a.cpp.xml 
 check 3<<< "$sxmlfile2"
 
-srcml2src --xml --unit "2" -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml2src -X --unit "2" -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$sxmlfile2"
 rmfile sub/b.cpp.xml
 
-srcml2src --xml --unit "2" sub/a.cpp.xml -o sub/b.cpp.xml
+srcml2src -X --unit "2" sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$sxmlfile2"
 rmfile sub/b.cpp.xml
 

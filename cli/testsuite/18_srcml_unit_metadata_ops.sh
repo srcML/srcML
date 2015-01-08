@@ -59,34 +59,34 @@ define file1 <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-srcml2src --xml --unit "1" - <<< "$nestedfileextra"
+srcml2src -X --unit "1" - <<< "$nestedfileextra"
 
 check 3<<< "$file1"
 
-srcml2src --xml --unit "1" <<< "$nestedfileextra"
+srcml2src -X --unit "1" <<< "$nestedfileextra"
 
 check 3<<< "$file1"
 
-srcml2src --xml --unit "1" --get-filename <<< "$nestedfileextra"
+srcml2src -X --unit "1" --get-filename <<< "$nestedfileextra"
 
 check 3<<< "a.cpp"
 
-srcml2src --xml --unit "2" --get-filename <<< "$nestedfileextra"
+srcml2src -X --unit "2" --get-filename <<< "$nestedfileextra"
 
 check 3<<< "b.cpp"
 
-srcml2src --xml --unit "1" --get-directory <<< "$nestedfileextra"
+srcml2src -X --unit "1" --get-directory <<< "$nestedfileextra"
 
 check 3<<< "sub"
 
-srcml2src --xml --unit "2" --get-directory <<< "$nestedfileextra"
+srcml2src -X --unit "2" --get-directory <<< "$nestedfileextra"
 
 check 3<<< "sub"
 
-srcml2src --xml --unit "1" --get-language <<< "$nestedfileextra"
+srcml2src -X --unit "1" --get-language <<< "$nestedfileextra"
 
 check 3<<< "C"
 	
-srcml2src --xml --unit "2" --get-language <<< "$nestedfileextra"
+srcml2src -X --unit "2" --get-language <<< "$nestedfileextra"
 
 check 3<<< "Java"
