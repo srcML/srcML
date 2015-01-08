@@ -10,7 +10,7 @@ define srcml <<- 'STDOUT'
 	STDOUT
 
 define fsrcml <<- 'STDOUT'
-	<?xml vrsion="1.0" encoding="ISO-8859-1" standalone="yes"?>
+	<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 
@@ -20,15 +20,15 @@ src2srcml sub/a.cpp -x "ISO-8859-1"
 
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp --encoding="ISO-8859-1"
+src2srcml sub/a.cpp --xml-encoding="ISO-8859-1"
 
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp --encoding "ISO-8859-1"
+src2srcml sub/a.cpp --xml-encoding "ISO-8859-1"
 
 check 3<<< "$fsrcml"
 
-src2srcml -l C++ -x 'ISO-8859-1' -o sub/a.cpp.xml < ""
+src2srcml -l C++ -x "ISO-8859-1" -o sub/a.cpp.xml < ""
 
 check sub/a.cpp.xml 3<<< "$srcml"
 
