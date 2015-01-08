@@ -423,9 +423,9 @@ public :
             xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s);
 
             // location attribute on wrapping node
-            if (true) {
+            if (false) {
                 const char* s = "/src:unit";
-                xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s);
+                xmlSetProp(a_node, BAD_CAST "location", BAD_CAST s);
             }
 
             // index into results
@@ -481,10 +481,12 @@ public :
             // set up namespace
             xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar*) uri, (const xmlChar*) prefix);
 
-            // set up node to insert
-            xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) element);
+            xpath_arguments& thisarguments = global_transformations[0].arguments;
 
-            if(attr_name) append_attribute_to_node(element_node, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
+            // set up node to insert
+            xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) thisarguments.element->c_str());
+
+            if(attr_name) append_attribute_to_node(element_node, thisarguments.attr_uri ? thisarguments.attr_prefix->c_str() : thisarguments.prefix->c_str(), thisarguments.attr_uri->c_str() ? thisarguments.attr_uri->c_str() : thisarguments.uri->c_str());
 
             // result node is not a unit
             if (a_node != onode) {
