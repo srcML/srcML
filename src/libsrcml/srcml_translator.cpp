@@ -283,6 +283,11 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     out.initWriter();
 
+    if ((options & SRCML_OPTION_XML_DECL) > 0)
+      out.outputXMLDecl();
+  
+    out.outputPreRootProcessingInstruction();
+
     xmlTextWriterWriteRaw(out.getWriter(), BAD_CAST xml);
       
     return true;
@@ -293,7 +298,9 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     // Open for write;
     out.initWriter();
 
-    out.outputXMLDecl();
+    if ((options & SRCML_OPTION_XML_DECL) > 0)
+      out.outputXMLDecl();
+  
     out.outputPreRootProcessingInstruction();
 
     // root unit for compound srcML documents
