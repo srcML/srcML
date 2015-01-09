@@ -3,6 +3,8 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+trap "{ cleanup; }" EXIT
+
 # test archive
 define fileasrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -30,7 +32,8 @@ define nestedfile <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-mkdir -p sub
+createfile sub/a.cpp ""
+createfile sub/b.cpp ""
 echo -e "\na;" > sub/a.cpp
 echo -e "\nb;" > sub/b.cpp
 
@@ -57,4 +60,6 @@ createfile filelistab "$filelist"
 #check 3<< "$nestedfile"
 
 rm -f filelistab
+
+exit 0
 
