@@ -3,6 +3,8 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+trap { cleanup; } EXIT
+
 # files from
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -17,7 +19,16 @@ define nestedfile <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-createfile filelistab "sub/a.cpp\nsub/b.cpp"
-rmfile sub/a.cpp.xml
-src2srcml --files-from "filelistab" -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$nestedfile"
+createfile sub/a.cpp "
+a;"
+
+createfile sub/b.cpp "
+b;"
+
+createfile sub/filelistab "sub/a.cpp
+sub/b.cpp
+"
+
+src2srcml --files-from "sub/filelistab" --ordered -o sub/both.xml
+
+check sub/both.xml 3<<< "$nestedfile"
