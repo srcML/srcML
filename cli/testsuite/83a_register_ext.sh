@@ -3,43 +3,49 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+trap { cleanup; } EXIT
+
 # test register language
 
-define output <<- 'STDOUT'
-	sxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="Java" filename=sub/a.cpp/>
+define fxmlfile <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="Java" filename="sub/a.cpp"/>
 	STDOUT
-INPUT
-f = open(sub/a.cpp 'w')
-f.write
-f.close()
 
-src2srcml --register-ext 'cpp=Java' sub/a.cpp "" fsxmlfile)
-src2srcml --register-ext + '=cpp=Java' sub/a.cpp "" fsxmlfile)
-if sys.platform != 'cygwin' :
-	src2srcml --register-ext 'cpp=Java' sub/a.cpp -o sub/a.cpp.xml
-	readfile input sub/a.cpp.xml').read() fsxmlfile)
+createfile sub/a.cpp ""
 
+src2srcml --register-ext cpp=Java sub/a.cpp
 
-src2srcml -l C++ --register-ext 1)
-src2srcml -l C++ --register-ext "cpp=Jawa" )
+check 3<<< "$fxmlfile"
 
-define output <<- 'STDOUT'
-	fsxmlfile = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+src2srcml --register-ext="cpp=Java" sub/a.cpp 
+
+check 3<<< "$fxmlfile"
+
+rmfile sub/a.cpp.xml
+
+src2srcml --register-ext cpp=Java sub/a.cpp -o sub/a.cpp.xml
+
+check sub/a.cpp.xml 3<<< "$fxmlfile"
+
+#src2srcml -l C++ --register-ext 1)
+#src2srcml -l C++ --register-ext "cpp=Jawa" )
+
+define fsxmlfile <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="Java" filename="sub/a.xml"/>
 	STDOUT
-INPUT
-if platform.system() != "Windows":
-	os.system("touch su
-b/a.xml")
-else :
-	os.system("copy emptysrc\\empty.cpp sub\\a.xml")
 
-src2srcml --register-ext 'xml=Java' 'sub/a.xml' "" fsxmlfile)
-src2srcml --register-ext + '=xml=Java' 'sub/a.xml' "" fsxmlfile)
-if sys.platform != 'cygwin' :
-	src2srcml --register-ext 'xml=Java' 'sub/a.xml' -o sub/a.cpp.xml
-	readfile input sub/a.cpp.xml').read() fsxmlfile)
+createfile sub/a.xml ""
 
+src2srcml --register-ext xml=Java sub/a.xml
 
-src2srcml -l C++ --register-ext "xml=Jawa" 1)
+check 3<<< "$fsxmlfile"
+
+src2srcml --register-ext="xml=Java" sub/a.xml
+
+check 3<<< "$fsxmlfile"
+
+src2srcml --register-ext xml=Java sub/a.xml -o sub/a.cpp.xml
+
+check sub/a.cpp.xml 3<<< "$fsxmlfile"
