@@ -28,6 +28,16 @@
 #
 # * Multiple tests of cli command followed by call to function check
 #   can be made
+#
+# * Put in a trap for cleanup in test file:
+#   trap { cleanup; } EXIT
+
+# generated files, list is kept to cleanup
+genfiles=""
+
+cleanup() {
+    rm -f $genfiles
+}
 
 # make sure to find the srcml executable
 export PATH=.:$PATH
@@ -76,6 +86,9 @@ createfile() {
 
     # add contents to file
     echo -ne "${2}" > ${1};
+
+    # append to our list of files
+    genfiles="$genfiles  "${1}
 }
 
 rmfile() { rm -f ${1}; }
