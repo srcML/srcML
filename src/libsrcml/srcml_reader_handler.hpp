@@ -916,7 +916,25 @@ private :
         // output root unit namespaces
         if (strcmp(localname, "unit") == 0) {
 
-            for(unsigned int pos = 0; pos < root_namespaces.size(); ++pos) {
+            // output root main namespace first
+            *unit->unit += " xmlns";
+            if(root_prefixes[0] != "") {
+
+                *unit->unit += ":";
+                *unit->unit += root_prefixes[0];
+
+            }
+
+            *unit->unit += "=\"";
+            *unit->unit += root_namespaces[0];
+            *unit->unit += "\"";
+
+            // output cpp namespace second (on unit or on root)
+            bool foundcpp = false;
+            for(unsigned int pos = 1; pos < root_namespaces.size(); ++pos) {
+
+                if (root_namespaces[pos] != SRCML_CPP_NS_URI)
+                    continue;
 
                 *unit->unit += " xmlns";
                 if(root_prefixes[pos] != "") {
@@ -930,29 +948,96 @@ private :
                 *unit->unit += root_namespaces[pos];
                 *unit->unit += "\"";
 
-            }
-        }
-
-        // output local unit namespaces
-        for(int pos = 0; pos < num_namespaces; ++pos) {
-
-            if(is_archive && strcmp(localname, "unit") == 0 && strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
-                continue;
-
-            *unit->unit += " xmlns";
-            if(namespaces[pos].prefix) {
-
-                *unit->unit += ":";
-                *unit->unit += namespaces[pos].prefix;
-
+                foundcpp = true;
+                break;
             }
 
-            *unit->unit += "=\"";
-            *unit->unit += namespaces[pos].uri;
-            *unit->unit += "\"";
+            // output local cpp if we did not find it previously
+            for(int pos = 0; !foundcpp && pos < num_namespaces; ++pos) {
 
+                if (strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
+                    continue;
+
+                *unit->unit += " xmlns";
+                if(namespaces[pos].prefix) {
+
+                    *unit->unit += ":";
+                    *unit->unit += namespaces[pos].prefix;
+
+                }
+
+                *unit->unit += "=\"";
+                *unit->unit += namespaces[pos].uri;
+                *unit->unit += "\"";
+
+                break;
+            }
+
+            // output rest of root namespaces
+            for(unsigned int pos = 1; pos < root_namespaces.size(); ++pos) {
+
+                if (root_namespaces[pos] == SRCML_CPP_NS_URI)
+                    continue;
+
+                *unit->unit += " xmlns";
+                if(root_prefixes[pos] != "") {
+
+                    *unit->unit += ":";
+                    *unit->unit += root_prefixes[pos];
+
+                }
+
+                *unit->unit += "=\"";
+                *unit->unit += root_namespaces[pos];
+                *unit->unit += "\"";
+
+                foundcpp = true;
+                break;
+            }
+
+            // output rest of local namespaces
+            for(int pos = 0; !foundcpp && pos < num_namespaces; ++pos) {
+
+                if (strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) == 0)
+                    continue;
+
+                *unit->unit += " xmlns";
+                if(namespaces[pos].prefix) {
+
+                    *unit->unit += ":";
+                    *unit->unit += namespaces[pos].prefix;
+
+                }
+
+                *unit->unit += "=\"";
+                *unit->unit += namespaces[pos].uri;
+                *unit->unit += "\"";
+
+                break;
+            }
+
+        } else {
+
+            // output local unit namespaces
+            for(int pos = 0; pos < num_namespaces; ++pos) {
+
+                if(is_archive && strcmp(localname, "unit") == 0 && strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
+                    continue;
+
+                *unit->unit += " xmlns";
+                if(namespaces[pos].prefix) {
+
+                    *unit->unit += ":";
+                    *unit->unit += namespaces[pos].prefix;
+
+                }
+
+                *unit->unit += "=\"";
+                *unit->unit += namespaces[pos].uri;
+                *unit->unit += "\"";
+
+            }
         }
-
         for(int pos = 0; pos < num_attributes; ++pos) {
 
             *unit->unit += " ";
