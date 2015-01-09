@@ -32,10 +32,11 @@ define nestedfile <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-createfile sub/a.cpp ""
-createfile sub/b.cpp ""
-echo -e "\na;" > sub/a.cpp
-echo -e "\nb;" > sub/b.cpp
+createfile sub/a.cpp "
+a;
+"
+createfile sub/b.cpp "
+b;
 
 # test that two files will output in an archive by default
 src2srcml sub/a.cpp sub/b.cpp
