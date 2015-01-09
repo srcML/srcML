@@ -274,6 +274,20 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
   bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
+  if (!is_archive){
+
+    if (!first) {
+      fprintf(stderr, "libsrcml: internal error attempting to write more then one unit to non-archive\n");
+      return false;
+    }
+
+    out.initWriter();
+
+    xmlTextWriterWriteRaw(out.getWriter(), BAD_CAST xml);
+      
+    return true;
+  }
+
   if(first) {
 
     // Open for write;

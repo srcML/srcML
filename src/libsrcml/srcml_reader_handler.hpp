@@ -328,6 +328,9 @@ public :
 
     }
 
+    std::vector<std::string> root_namespaces;
+    std::vector<std::string> root_prefixes;
+
     /**
      * startRoot
      * @param localname the name of the element tag
@@ -452,7 +455,8 @@ public :
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-
+        root_namespaces = archive->namespaces;
+        root_prefixes = archive->prefixes;
     }
 
     /**
@@ -909,6 +913,27 @@ private :
         }
         *unit->unit += localname;
 
+        // output root unit namespaces
+        if (strcmp(localname, "unit") == 0) {
+
+            for(unsigned int pos = 0; pos < root_namespaces.size(); ++pos) {
+
+                *unit->unit += " xmlns";
+                if(root_prefixes[pos] != "") {
+
+                    *unit->unit += ":";
+                    *unit->unit += root_prefixes[pos];
+
+                }
+
+                *unit->unit += "=\"";
+                *unit->unit += root_namespaces[pos];
+                *unit->unit += "\"";
+
+            }
+        }
+
+        // output local unit namespaces
         for(int pos = 0; pos < num_namespaces; ++pos) {
 
             if(is_archive && strcmp(localname, "unit") == 0 && strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
@@ -945,6 +970,7 @@ private :
 
 
         }
+
         //*unit->unit += ">";
 
     }
