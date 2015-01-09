@@ -105,19 +105,19 @@ const char* SRCML2SRC_FOOTER = "Examples:\
 srcml_request_t srcml_request = { /* 0 */ };
 
 // Define Program Options
-prog_opts::options_description general("General Options");
-prog_opts::options_description src2srcml_options("src2srcml Options");
-prog_opts::options_description srcml2src_options("srcml2src Options");
+prog_opts::options_description general("GENERAL OPTIONS");
+prog_opts::options_description src2srcml_options("SRC2SRCML OPTIONS");
+prog_opts::options_description srcml2src_options("SRCML2SRC OPTIONS");
 prog_opts::options_description cpp_markup("CPP Markup Options");
 prog_opts::options_description line_col("Line/Column Position");
 prog_opts::options_description markup("Markup Extensions");
-prog_opts::options_description src2srcml_metadata("Metadata Options");
-prog_opts::options_description srcml2src_metadata("Metadata Options");
+prog_opts::options_description src2srcml_metadata("src2srcml Metadata Options");
+prog_opts::options_description srcml2src_metadata("srcml2src Metadata Options");
 prog_opts::options_description prefix("Prefix Options");
 prog_opts::options_description query_transform("Query and Transform Options");
 prog_opts::options_description srcml_archive_options("srcML Archive Options");
-prog_opts::options_description src2srcml("src2srcml");
-prog_opts::options_description srcml2src("srcml2src");
+prog_opts::options_description src2srcml("SRC2SRCML");
+prog_opts::options_description srcml2src("SRCML2SRC");
 prog_opts::options_description positional_options("positional");
 prog_opts::options_description deprecated_options("Deprecated Options");
 prog_opts::options_description debug_options("Debug Options");
@@ -232,7 +232,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
     }
 }
 
-// option language attribute
+// option output to directory
 void option_to_dir(const std::string& value) {
     srcml_request.output_filename = value;
     srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
@@ -256,6 +256,10 @@ void option_help(const std::string& help_opt) {
         // TODO: A new header and footer for the general option
         std::cout << SRCML_HEADER << "\n";
         std::cout << general << "\n";
+        
+        std::cout << src2srcml << "\n";
+        std::cout << srcml2src << "\n";
+
         std::cout << SRCML_FOOTER << "\n";
     }
     else if (help_opt == "src2srcml") {
@@ -270,7 +274,7 @@ void option_help(const std::string& help_opt) {
     }
     else {
         std::cout << "Unknown module '"
-                  << help_opt << "' in the --help-module option\n";
+                  << help_opt << "' in --help\n";
         exit(1);
     }
     exit(0);
@@ -313,12 +317,14 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
             ("ordered", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")
+            ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
+            ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
             ;
 
         src2srcml_options.add_options()
             ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_ARCHIVE>), "store output in a srcML archive, default for multiple input files")
             ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
-            ("encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->default_value("UTF-8"),"set the output XML encoding to ENC (default:  UTF-8)")
+            ("xml-encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->default_value("UTF-8"),"set the output XML encoding to ENC (default:  UTF-8)")
             ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
             ("hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_HASH>), "add hash to srcml output")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
@@ -336,7 +342,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("get-timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP>), "display timestamp and exit")
             ("get-hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_HASH>), "display hash and exit")
             ("get-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_ENCODING>), "display xml encoding and exit")
-            ("xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
+            ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
+            ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "output in text instead of XML")
             ;
 
         cpp_markup.add_options()
@@ -406,10 +413,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         // Group src2srcml Options
-        src2srcml.add(general).add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
+        src2srcml.add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
 
         // Group srcml2src Options
-        srcml2src.add(general).add(srcml2src_options).add(srcml2src_metadata).add(query_transform).add(srcml_archive_options);
+        srcml2src.add(srcml2src_options).add(srcml2src_metadata).add(query_transform).add(srcml_archive_options);
 
         // Group all Options
         all.add(general).add(src2srcml_options).add(srcml2src_options).
@@ -449,20 +456,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             }
           }
         }
-
-        // TESTING
-        /*
-        int xpath_index = -1;
-        BOOST_FOREACH(const std::string trans, srcml_request.transformations) {
-          if (src_prefix_protocol(trans) == "xpath") {
-            ++xpath_index;
-            std::cerr << "XPATH: " << trans << "\n";
-          }
-          if (srcml_request.xpath_query_support.at(xpath_index).first)
-            std::cerr << "ELEMENT: " << *srcml_request.xpath_query_support.at(xpath_index).first << "\n";
-          if (srcml_request.xpath_query_support.at(xpath_index).second)
-            std::cerr << "ATTRIBUTE: " << *srcml_request.xpath_query_support.at(xpath_index).second << "\n";
-        }*/
 
         prog_opts::store(cliopts , cli_map);
         prog_opts::notify(cli_map);

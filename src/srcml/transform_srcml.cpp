@@ -190,8 +190,6 @@ void transform_srcml(const srcml_request_t& srcml_request,
 		srcml_free_archive(in_arch);
 	}
 
-// Temporary measure to avoid crash, since using internal parser buffer
-//	srcml_close_archive(out_arch);
-//	srcml_free_archive(out_arch);
-
+	srcml_close_archive(out_arch);
+	srcml_free_archive(out_arch);
 }

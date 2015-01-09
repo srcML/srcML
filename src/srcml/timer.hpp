@@ -23,8 +23,11 @@
 #ifndef TIMER_HPP
 #define TIMER_HPP
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/timer.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#pragma GCC diagnostic pop
 
 class Timer {
 public:

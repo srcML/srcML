@@ -61,7 +61,6 @@ namespace {
     }
 }
 
-
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
@@ -200,6 +199,8 @@ void src_input_libarchive(ParseQueue& queue,
 
         if (srcml_request.att_filename || (filename != "-"))
             prequest->filename = filename;
+
+
         prequest->directory = srcml_request.att_directory;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
@@ -227,7 +228,7 @@ void src_input_libarchive(ParseQueue& queue,
             if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
                 ++prequest->loc;
         }
-
+        
         // schedule for parsing
         queue.schedule(prequest);
 

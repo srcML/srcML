@@ -32,6 +32,7 @@
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <string>
+#include <boost/filesystem.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
@@ -58,6 +59,9 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         //Build the output filename
 
         //Filenames from directories come in as full paths
+        //Setup the directory on the filesystem
+        boost::filesystem::create_directories(*request->disk_dir);
+
         size_t pos = request->filename->find_last_of("/\\");
 
         if (pos != std::string::npos) {
@@ -67,10 +71,16 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             pos = 0;
         }
         
+        //Ensure that the directory path has a final "/" when appended to filename
+        if (request->disk_dir->at(request->disk_dir->length() -1) != '/')
+            *request->disk_dir += "/";
+
         std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";
         srcml_write_open_filename(srcml_arch, xml_filename.c_str());
         request->srcml_arch = srcml_arch;
     }
+
+    std::string original_filename;
 
     // construct and parse the unit
     srcml_unit* unit = request->unit;
@@ -91,8 +101,18 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             throw status;
 
         // (optional) filename attribute
-        if (request->filename && ((status = srcml_unit_set_filename(unit, request->filename->c_str())) != SRCML_STATUS_OK))
-            throw status;
+        if (request->filename) {
+
+            original_filename = *request->filename;
+            
+            // Cleanup filename
+            while (request->filename->at(0) == '.' || request->filename->at(0) == '/') {
+                request->filename->erase(0,1);
+            }
+            
+            if ((status = srcml_unit_set_filename(unit, request->filename->c_str())) != SRCML_STATUS_OK)
+                throw status;
+        }
 
         // (optional) version attribute
         if (request->version && ((status = srcml_unit_set_version(unit, request->version->c_str())) != SRCML_STATUS_OK))
@@ -148,8 +168,8 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             throw status;
 
     } catch (...) {
-        // TODO: Fix for proper filename
-        fprintf(stderr, "srcml: Unable to open file %s\n", request->filename->c_str());
+
+        fprintf(stderr, "srcml: Unable to open file %s\n", original_filename.c_str());
         if (unit)
             srcml_free_unit(unit);
         unit = 0;

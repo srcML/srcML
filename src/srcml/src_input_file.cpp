@@ -38,10 +38,16 @@ void src_input_file(ParseQueue& queue,
         prequest->filename = *srcml_request.att_filename;
     else if (input_file != "_")
         prequest->filename = input_file;
+
     prequest->directory = srcml_request.att_directory;
     prequest->version = srcml_request.att_version;
     prequest->srcml_arch = srcml_arch;
     prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
+
+    if (prequest->language.empty())
+            if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
+                prequest->language = l;
+    
     prequest->disk_filename = input_file;
 
     // Hand request off to the processing queue

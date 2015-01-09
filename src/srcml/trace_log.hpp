@@ -38,7 +38,7 @@ public:
 
 private:
     int count;
-    int overallcount;
+    // int overallcount;
     bool enabled;
     int num_skipped;
     int num_error;
