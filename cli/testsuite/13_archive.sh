@@ -35,9 +35,10 @@ a;
 "
 createfile sub/b.cpp "
 b;
+"
 
 # test that two files will output in an archive by default
-src2srcml sub/a.cpp sub/b.cpp
+src2srcml sub/a.cpp sub/b.cpp --ordered
 
 check 3<<< "$nestedfile"
 

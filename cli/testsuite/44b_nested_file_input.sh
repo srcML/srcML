@@ -51,9 +51,9 @@ src2srcml --archive sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$output"
 
 rmfile sub/a.cpp.xml
-src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+src2srcml sub/a.cpp sub/b.cpp --ordered -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$nestedfile"
 
 rmfile sub/a.cpp.xml
-src2srcml --xmlns:src=http://www.sdml.info/srcML/src sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+src2srcml --xmlns:src=http://www.sdml.info/srcML/src sub/a.cpp sub/b.cpp --ordered  -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$nestedfilesrc"
