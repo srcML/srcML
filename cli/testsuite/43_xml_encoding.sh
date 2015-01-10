@@ -37,5 +37,3 @@ src2srcml -x "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml
 
 check sub/a.cpp.xml 3<<< "$fsrcml"
 rmfile sub/a.cpp.xml
-
-rmfile sub/a.cpp

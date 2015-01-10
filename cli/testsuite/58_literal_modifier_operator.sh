@@ -101,4 +101,3 @@ src2srcml --modifier --operator --literal sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$foutput"
 rmfile sub/a.cpp.xml
 
-rmfile sub/a.cpp

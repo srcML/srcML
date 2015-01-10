@@ -46,5 +46,3 @@ check 3<<< "$sfile"
 src2srcml -l C++ --operator --literal -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml 3<<< "$srcml"
 rmfile sub/a.cpp.xml
-
-rmfile sub/a.cpp

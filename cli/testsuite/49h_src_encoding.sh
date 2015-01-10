@@ -35,6 +35,3 @@ check sub/a.cpp 3<<< "$sfile1"
 srcml2src --get-src-encoding "ISO-8859-1" sub/a.cpp.xml -o sub/a.cpp
 
 check sub/a.cpp 3<<< "$sfile1"
-
-rmfile sub/a.cpp
-rmfile sub/a.cpp.xml

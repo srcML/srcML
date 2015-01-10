@@ -39,5 +39,3 @@ check_null
 
 srcml2src sub/a.cpp.xml --prefix="http://www.cs.uakron.edu/~collard/foo"
 check_null
-
-rmfile sub/a.cpp.xml
