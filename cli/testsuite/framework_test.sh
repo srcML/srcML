@@ -39,6 +39,8 @@ cleanup() {
     rm -f $genfiles
 }
 
+trap "{ cleanup; }" EXIT
+
 # make sure to find the srcml executable
 export PATH=.:$PATH
 

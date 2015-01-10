@@ -3,8 +3,6 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-trap { cleanup; } EXIT
-
 # files from
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
