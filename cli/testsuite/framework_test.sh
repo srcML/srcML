@@ -37,7 +37,7 @@ genfiles=""
 
 cleanup() {
     rm -f $genfiles
-    $genfiles=""
+    genfiles=""
 }
 
 trap "{ cleanup; }" EXIT
@@ -55,12 +55,20 @@ if [ -z "$SRCML2SRC" ]; then
     SRCML2SRC='../../bin/srcml'
 fi
 
+if [ -z "$SRCML"]; then
+    SRCML='../../bin/srcml'
+fi
+
 function src2srcml () {
     $SRC2SRCML "$@"
 }
 
 function srcml2src () {
     $SRCML2SRC "$@"
+}
+
+function srcml () {
+    $SRCML "$@"
 }
 
 # always exit when a command exits with a non-zero status

@@ -17,21 +17,21 @@ define sxmlfile1 <<- 'STDOUT'
 createfile sub/a.cpp "$sfile1"
 createfile sub/a.cpp.xml "$sxmlfile1"
 
-srcml2src --get-src-encoding "ISO-8859-1" sub/a.cpp
+srcml --get-src-encoding "ISO-8859-1" sub/a.cpp
 
 check 3<<< "$sfile1"
 
-srcml2src sub/a.cpp.xml --get-src-encoding "ISO-8859-1"
+srcml sub/a.cpp.xml --get-src-encoding "ISO-8859-1"
 
 check 3<<< "$sfile1"
 
-srcml2src --get-src-encoding "ISO-8859-1" sub/a.cpp.xml
+srcml --get-src-encoding "ISO-8859-1" sub/a.cpp.xml
 
 check 3<<< "$sfile1"
 
-srcml2src --get-src-encoding "ISO-8859-1" -o sub/a.cpp sub/a.cpp.xml
+srcml --get-src-encoding "ISO-8859-1" -o sub/a.cpp sub/a.cpp.xml
 check sub/a.cpp 3<<< "$sfile1"
 
-srcml2src --get-src-encoding "ISO-8859-1" sub/a.cpp.xml -o sub/a.cpp
+srcml --get-src-encoding "ISO-8859-1" sub/a.cpp.xml -o sub/a.cpp
 
 check sub/a.cpp 3<<< "$sfile1"
