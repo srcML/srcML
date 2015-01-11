@@ -37,6 +37,7 @@ genfiles=""
 
 cleanup() {
     rm -f $genfiles
+    $genfiles=""
 }
 
 trap "{ cleanup; }" EXIT
@@ -80,6 +81,7 @@ define() { IFS= read -r -d '' ${1} || true; }
 readfile() { ${1}="$(cat $2)"; }
 
 # file with name $1 is created from the contents of string variable $2
+# created files are recorded so that cleanup can occur
 createfile() {
     # make directory paths as needed
     if [ ! -d $(dirname $1) ]; then
@@ -124,6 +126,8 @@ typeset STDOUT=.stdout_$(basename $0 .sh)
 #   $STDOUT - filename of captured stdout
 #   $STDERR - filename of captured stderr
 #
+# If stdout is not specified, it is assumed to be empty
+# If stderr is not specified, it is assumed to be empty
 check() {
 
     # return stdout and stderr to standard streams
@@ -167,7 +171,7 @@ check() {
     true
 }
 ##
-# checks the result of a command
+# checks the result of a command to verify that it is empty
 #   $1 (optional) file of expected stdout
 #   $2 (optional) file of expected stderr
 #   $STDOUT - filename of captured stdout
