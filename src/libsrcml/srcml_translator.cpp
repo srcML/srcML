@@ -179,6 +179,7 @@ void srcml_translator::close() {
 
         // Open for write;
         out.initWriter();
+        out.initNamespaces(prefix, uri);
 
         out.outputXMLDecl();
         out.outputPreRootProcessingInstruction();
@@ -202,9 +203,13 @@ void srcml_translator::close() {
  */
 void srcml_translator::translate(UTF8CharBuffer * parser_input) {
 
-    if(first)
+    if(first) {
+  
         // Open for write;
         out.initWriter();
+        out.initNamespaces(prefix, uri);
+
+    }
 
     first = false;
 
@@ -278,6 +283,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     // Open for write;
     out.initWriter();
+    out.initNamespaces(prefix, uri);
 
     out.outputXMLDecl();
     out.outputPreRootProcessingInstruction();
@@ -355,8 +361,12 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
  */
 bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
-    if(first)
+    if(first) {
+
         out.initWriter();
+        out.initNamespaces(prefix, uri);
+
+    }
 
     first = false;
 

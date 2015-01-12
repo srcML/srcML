@@ -478,43 +478,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), 
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
-    num2prefix.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT);
-
-    num2uri.push_back(SRCML_SRC_NS_URI);
-    num2uri.push_back(SRCML_CPP_NS_URI);
-    num2uri.push_back(SRCML_ERR_NS_URI);
-    num2uri.push_back(SRCML_EXT_LITERAL_NS_URI);
-    num2uri.push_back(SRCML_EXT_OPERATOR_NS_URI);
-    num2uri.push_back(SRCML_EXT_MODIFIER_NS_URI);
-    num2uri.push_back(SRCML_EXT_POSITION_NS_URI);
-    num2uri.push_back(SRCML_EXT_OPENMP_NS_URI);
-
-    for(std::vector<std::string>::size_type outer_pos = 0; outer_pos < uri.size(); ++ outer_pos) {
-
-        std::vector<std::string>::size_type pos;
-        for(pos = 0; pos < num2uri.size() && num2uri[pos] != uri[outer_pos]; ++pos)
-            ;
-
-        if(pos < num2uri.size()) {
-
-            num2prefix[pos] = prefix[outer_pos];
-
-        } else {
-
-            num2prefix.push_back(prefix[outer_pos]);
-            num2uri.push_back(uri[outer_pos]);
-
-        }
-
-    }
-
 
     // setup attributes names for line/column position if used
     if (isoption(options, SRCML_OPTION_POSITION)) {
@@ -567,6 +530,52 @@ int srcMLOutput::initWriter() {
     }
 
     return SRCML_STATUS_OK;
+
+}
+
+/**
+ * initNamespaces
+ *
+ * Initialize the output namespaces.
+ */
+void srcMLOutput::initNamespaces(const std::vector<std::string> & prefix, const std::vector<std::string> & uri) {
+
+    num2prefix.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT);
+
+    num2uri.push_back(SRCML_SRC_NS_URI);
+    num2uri.push_back(SRCML_CPP_NS_URI);
+    num2uri.push_back(SRCML_ERR_NS_URI);
+    num2uri.push_back(SRCML_EXT_LITERAL_NS_URI);
+    num2uri.push_back(SRCML_EXT_OPERATOR_NS_URI);
+    num2uri.push_back(SRCML_EXT_MODIFIER_NS_URI);
+    num2uri.push_back(SRCML_EXT_POSITION_NS_URI);
+    num2uri.push_back(SRCML_EXT_OPENMP_NS_URI);
+
+    for(std::vector<std::string>::size_type outer_pos = 0; outer_pos < uri.size(); ++ outer_pos) {
+
+        std::vector<std::string>::size_type pos;
+        for(pos = 0; pos < num2uri.size() && num2uri[pos] != uri[outer_pos]; ++pos)
+            ;
+
+        if(pos < num2uri.size()) {
+
+            num2prefix[pos] = prefix[outer_pos];
+
+        } else {
+
+            num2prefix.push_back(prefix[outer_pos]);
+            num2uri.push_back(uri[outer_pos]);
+
+        }
+
+    }
 
 }
 
