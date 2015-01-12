@@ -359,9 +359,10 @@ public :
      * A comment has been parsed.
      * Comments in unit tree.
      */
-    virtual void comments(const char * value) {
+    virtual void comment(const char * value) {
 
         xmlSAX2Comment(ctxt, (const xmlChar *)value);
+
     }
 
     /**
