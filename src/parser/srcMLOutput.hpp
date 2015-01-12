@@ -70,7 +70,7 @@ public:
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
     int initWriter();
-    void initNamespaces(const std::vector<std::string> & prefix, const std::vector<std::string> & uri)
+    void initNamespaces(const std::vector<std::string> & prefix, const std::vector<std::string> & uri);
     xmlTextWriter * getWriter();
     void setDepth(int thedepth);
 
