@@ -104,7 +104,7 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  const char* timestamp,
                                  const char* hash)
     :  Language(language), first(true),
-       revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
+       revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes), prefix(prefix), uri(uri),
        options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, attributes, processing_instruction, tabsize), tabsize(tabsize),
        str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0) {
@@ -150,7 +150,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* timestamp, 
                                  const char* hash)
     : Language(language), first(true),
-      revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
+      revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes), prefix(prefix), uri(uri),
       options(op), buffer(0),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, attributes, processing_instruction, tabsize), tabsize(tabsize),
       str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0) {}

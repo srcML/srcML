@@ -134,6 +134,9 @@ private:
     /** an array of name-value attribute pairs */
     const std::vector<std::string> & attributes;
 
+    std::vector<std::string> & prefix;
+    std::vector<std::string> & uri;
+
     /** translation options */
     OPTION_TYPE& options;
 
