@@ -62,8 +62,6 @@ public:
                 const char* language,
                 const char* encoding,
                 OPTION_TYPE& option,
-                std::vector<std::string> & prefix,
-                std::vector<std::string> & uri,
                 const std::vector<std::string> & attributes,
                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
                 int tabsize);

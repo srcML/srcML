@@ -456,8 +456,6 @@ namespace {
  * @param language the unit language
  * @param xml_enc output encoding
  * @param op output operations
- * @param prefix namespaces prefixes
- * @param uri namespaces uris
  * @param ts tabstop size
  * @param output_buffer if output is to a output buffer
  *
@@ -468,8 +466,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const char* language,
                          const char* xml_enc,
                          OPTION_TYPE& op,
-                         std::vector<std::string> & prefix,
-                         std::vector<std::string> & uri,
                          const std::vector<std::string> & attributes,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          int ts)
