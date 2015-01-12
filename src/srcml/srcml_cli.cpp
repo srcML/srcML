@@ -311,7 +311,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
             ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write result ouput to arg which is a FILE or URI")
             ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
-            ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>)->default_value("ISO-8859-1"), "set the input source encoding to arg (default:  ISO-8859-1)")
+            ("src-encoding,t", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>), "set the input source encoding to arg")
             ("max-threads", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
