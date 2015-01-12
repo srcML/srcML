@@ -35,9 +35,21 @@
 # generated files, list is kept to cleanup
 genfiles=""
 
+# restores environment, deletes files created with createfile command.
+# or registerd with registerfile command
 cleanup() {
+    # remove createfile files, and registerfile files
     rm -f $genfiles
+
     genfiles=""
+}
+
+# registers a file so that it will be cleaned up
+# does not create it
+registerfile() {
+
+    # append to our list of files
+    genfiles="$genfiles  "${1}
 }
 
 trap "{ cleanup; }" EXIT
@@ -99,8 +111,8 @@ createfile() {
     # add contents to file
     echo -ne "${2}" > ${1};
 
-    # append to our list of files
-    genfiles="$genfiles  "${1}
+    # register to cleanup
+    registerfile ${1}
 }
 
 rmfile() { rm -f ${1}; }
@@ -147,6 +159,10 @@ check() {
 
     # verify expected stderr to the captured stdout
     if [ $# -ge 1 ]; then
+
+        # register to cleanup
+        registerfile ${1}
+
         # compare the parameter file to the expected output
         diff $1 <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/3)
 
