@@ -321,8 +321,8 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
         state->libxml2_namespaces = 0;
         state->libxml2_attributes = 0;
 
-//        free_srcsax_namespaces(state->root.nb_namespaces, srcsax_namespaces_root);
-//        free_srcsax_attributes(state->root.nb_attributes, srcsax_attributes_root);
+        free_srcsax_namespaces(state->root.nb_namespaces, srcsax_namespaces_root);
+        free_srcsax_attributes(state->root.nb_attributes, srcsax_attributes_root);
 
     }
 
@@ -334,8 +334,8 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
 
             if(state->context->terminate) return;
 
-            srcsax_namespace * srcsax_namespaces_meta_tag = 0;
-            srcsax_attribute * srcsax_attributes_meta_tag = 0;
+            srcsax_namespace * srcsax_namespaces_meta_tag = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(citr->nb_namespaces, citr->namespaces);
+            srcsax_attribute * srcsax_attributes_meta_tag = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(citr->nb_attributes, citr->attributes);
 
             state->libxml2_namespaces = citr->namespaces;
             state->libxml2_attributes = citr->attributes;
@@ -345,6 +345,8 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
             state->libxml2_namespaces = 0;
             state->libxml2_attributes = 0;
 
+            free_srcsax_namespaces(citr->nb_namespaces, srcsax_namespaces_meta_tag);
+            free_srcsax_attributes(citr->nb_attributes, srcsax_attributes_meta_tag);
         }
 
     }
@@ -372,6 +374,9 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
                                                 srcsax_attributes_root);
             state->libxml2_namespaces = 0;
             state->libxml2_attributes = 0;
+
+            free_srcsax_namespaces(state->root.nb_namespaces, srcsax_namespaces_root);
+            free_srcsax_attributes(state->root.nb_attributes, srcsax_attributes_root);
 
         }
 
@@ -422,6 +427,9 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
         ctxt->sax->ignorableWhitespace = &characters_unit;
 
     }
+
+    free_srcsax_namespaces(nb_namespaces, srcsax_namespaces);
+    free_srcsax_attributes(nb_attributes, srcsax_attributes);
 
 #ifdef DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
