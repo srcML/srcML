@@ -5,76 +5,88 @@ source $(dirname "$0")/framework_test.sh
 
 # test other_prefixes
 
-define output <<- 'STDOUT'
+define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
 	
-<unit language="Java">
-<foo:a/>
-</unit>
+	<unit language="Java">
+	<foo:a/>
+	</unit>
 
-<unit xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="0.8.0" language="Java">
-<bar:b/>
-</unit>
+	<unit xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="0.8.0" language="Java">
+	<bar:b/>
+	</unit>
 
-</unit>
+	</unit>
 	STDOUT
 
-define xpathempty <<-'STDOUT'
+define xpathempty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo"/>
 	STDOUT
 
-file = open(sub/a.cpp.xml 'w')
-file.write(srcml)
-file.close()
+define output <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 
+	<unit revision="0.8.0" language="Java">
+	<foo:a/>
+	</unit>
 
-srcml2src --xpath=/src:unit' srcml srcml)
-echo -n "" | srcml2src --xpath=/src:unit' 'sub/a.cpp.xml
-if sys.platform != 'cygwin' :
-	srcml2src --xpath=/src:unit' -o sub/b.cpp.xml srcml
-	validate(open(sub/b.cpp.xml 'r').read() srcml)
-srcml2src --xpath=/src:unit' sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() srcml)
+	<unit revision="0.8.0" language="Java">
+	<bar:b/>
+	</unit>
 
+	</unit>
+	STDOUT
 
-srcml2src --xpath srcml
+createfile sub/a.cpp.xml "$srcml"
 
-check 4<<< "1"
-srcml2src --xpath=' srcml
+# /src:unit
+srcml2src --xpath=/src:unit sub/a.cpp.xml
+check 3<<< "$output"
 
-check 4<<< "1"
+srcml2src --xpath=/src:unit < sub/a.cpp.xml
+check 3<<< "$output"
 
-srcml2src --xpath=//src:unit srcml srcml)
-srcml2src --xpath=//src:unit 'sub/a.cpp.xml<<< ""
-if sys.platform != 'cygwin' :
-	srcml2src --xpath=//src:unit -o 'sub/b.cp.xml' srcml
-	validate(open(sub/b.cpp.xml 'r').read() srcml)
-srcml2src --xpath=//src:unit 'sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() srcml)
+srcml2src --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
-srcml2src --xpath srcml
+srcml2src --xpath=/src:unit -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
-check 4<<< "1"
-srcml2src --xpath=' srcml
+srcml2src --xpath=/src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
-check 4<<< "1"
+# //src:unit
+srcml2src --xpath=//src:unit sub/a.cpp.xml
+check 3<<< "$output"
 
-srcml2src --xpath=src:unit' srcml xpath_empty)
-srcml2src --xpath=src:unit' sub/a.cpp.xml xpath_empty)
-if sys.platform != 'cygwin' :
-	srcml2src --xpath=src:unit' -o sub/b.cpp.xml srcml
+srcml2src --xpath=//src:unit < sub/a.cpp.xml
+check 3<<< "$output"
 
-	validate(open(sub/b.cpp.xml 'r').read() xpath_empty)
-srcml2src --xpath=src:unit' sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() xpath_empty)
+srcml2src --xpath=//src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
+srcml2src --xpath=//src:unit -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
-srcml2src --xpath srcml
+srcml2src --xpath=//src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
-check 4<<< "1"
-srcml2src --xpath=' srcml
+# src:unit
+srcml2src --xpath=src:unit sub/a.cpp.xml
+check 3<<< "$xpathempty"
 
-check 4<<< "1"
+srcml2src --xpath=src:unit < sub/a.cpp.xml
+check 3<<< "$xpathempty"
+
+srcml2src --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$xpathempty"
+
+srcml2src --xpath=src:unit -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$xpathempty"
+
+srcml2src --xpath=src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$xpathempty"
 
