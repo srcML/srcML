@@ -20,9 +20,6 @@ define output <<- 'STDOUT'
 
 createfile sub/a.cpp.xml ""
 
-# Exit to prevent hanging when srcml is provided empty xml file
-exit 1
-
 srcml2src --xpath=src:unit sub/a.cpp.xml
 check 3<<< "$xpath_empty" 4<<< "$xpath_error"
 

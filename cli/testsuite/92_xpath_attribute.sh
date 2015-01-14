@@ -31,10 +31,6 @@ check 3<<< "$attr_out"
 srcml2src --xpath "//src:unit/@filename" <<< "$srcml_nested"
 check 3<<< "$attr_out"
 
-# the following tests hang the test suite due to:
-# Error Parsing: Start tag expected, '<' not found
-exit 1
-
 srcml2src --xpath "string(//src:unit/@filename)" sub/a.cpp.xml
 check 3<<< "$attr_out"
 
