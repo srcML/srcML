@@ -30,4 +30,3 @@ srcml2src --no-xml-declaration < sub/a.cpp.xml
 
 check 3<<< "$srcmlout"
 
-rmfile sub/a.cpp.xml

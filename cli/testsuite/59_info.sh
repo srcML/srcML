@@ -112,5 +112,3 @@ srcml2src sub/a.cpp.xml --longinfo
 
 check 3<<< "$longinfonested"
 
-
-rmfile sub/a.cpp.xml

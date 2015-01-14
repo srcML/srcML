@@ -69,5 +69,3 @@ rmfile sub/b.cpp.xml
 srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$nonamespacexml"
 rmfile sub/b.cpp.xml
-
-rmfile sub/a.cpp.xml

@@ -30,4 +30,3 @@ srcml2src -X sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 rmfile sub/b.cpp.xml
 
-rmfile sub/a.cpp.xml

@@ -71,6 +71,3 @@ srcml --verbose -l C++ -o sub/c.cpp < sub/a.cpp.xml
 check_null
 rmfile sub/c.cpp
 
-
-rmfile sub/a.cpp
-rmfile sub/a.cpp.xml

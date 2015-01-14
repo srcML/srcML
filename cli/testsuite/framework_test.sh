@@ -35,9 +35,24 @@
 # generated files, list is kept to cleanup
 genfiles=""
 
+# restores environment, deletes files created with createfile command.
+# or registerd with registerfile command
 cleanup() {
+    # remove createfile files, and registerfile files
     rm -f $genfiles
+
+    genfiles=""
 }
+
+# registers a file so that it will be cleaned up
+# does not create it
+registerfile() {
+
+    # append to our list of files
+    genfiles="$genfiles  "${1}
+}
+
+trap "{ cleanup; }" EXIT
 
 # make sure to find the srcml executable
 export PATH=.:$PATH
@@ -52,12 +67,20 @@ if [ -z "$SRCML2SRC" ]; then
     SRCML2SRC='../../bin/srcml'
 fi
 
+if [ -z "$SRCML"]; then
+    SRCML='../../bin/srcml'
+fi
+
 function src2srcml () {
     $SRC2SRCML "$@"
 }
 
 function srcml2src () {
     $SRCML2SRC "$@"
+}
+
+function srcml () {
+    $SRCML "$@"
 }
 
 # always exit when a command exits with a non-zero status
@@ -78,6 +101,7 @@ define() { IFS= read -r -d '' ${1} || true; }
 readfile() { ${1}="$(cat $2)"; }
 
 # file with name $1 is created from the contents of string variable $2
+# created files are recorded so that cleanup can occur
 createfile() {
     # make directory paths as needed
     if [ ! -d $(dirname $1) ]; then
@@ -87,8 +111,8 @@ createfile() {
     # add contents to file
     echo -ne "${2}" > ${1};
 
-    # append to our list of files
-    genfiles="$genfiles  "${1}
+    # register to cleanup
+    registerfile ${1}
 }
 
 rmfile() { rm -f ${1}; }
@@ -122,6 +146,8 @@ typeset STDOUT=.stdout_$(basename $0 .sh)
 #   $STDOUT - filename of captured stdout
 #   $STDERR - filename of captured stderr
 #
+# If stdout is not specified, it is assumed to be empty
+# If stderr is not specified, it is assumed to be empty
 check() {
 
     # return stdout and stderr to standard streams
@@ -133,6 +159,10 @@ check() {
 
     # verify expected stderr to the captured stdout
     if [ $# -ge 1 ]; then
+
+        # register to cleanup
+        registerfile ${1}
+
         # compare the parameter file to the expected output
         diff $1 <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/3)
 
@@ -165,7 +195,7 @@ check() {
     true
 }
 ##
-# checks the result of a command
+# checks the result of a command to verify that it is empty
 #   $1 (optional) file of expected stdout
 #   $2 (optional) file of expected stderr
 #   $STDOUT - filename of captured stdout

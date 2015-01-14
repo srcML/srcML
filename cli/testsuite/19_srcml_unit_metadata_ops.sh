@@ -63,26 +63,26 @@ srcml2src -X --unit "3" <<< "$input"
 
 check 3<<< "$file3"
 
-srcml2src -X --unit "1" --get-filename <<< "$input"
+srcml -X --unit "1" --get-filename <<< "$input"
 
 check 3<<< "a.cpp"
 
-srcml2src -X --unit "2" --get-filename <<< "$input"
+srcml -X --unit "2" --get-filename <<< "$input"
 
 check 3<<< "b.cpp"
 
-srcml2src -X --unit "1" --get-directory <<< "$input"
+srcml -X --unit "1" --get-directory <<< "$input"
 
 check 3<<< "sub"
 
-srcml2src -X --unit "2" --get-directory <<< "$input"
+srcml -X --unit "2" --get-directory <<< "$input"
 
 check 3<<< "sub"
 
-srcml2src -X --unit "1" --get-language <<< "$input"
+srcml -X --unit "1" --get-language <<< "$input"
 
 check 3<<< "C"
 
-srcml2src -X --unit "2" --get-language <<< "$input"
+srcml -X --unit "2" --get-language <<< "$input"
 
 check 3<<< "Java"

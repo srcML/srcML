@@ -41,4 +41,3 @@ src2srcml --expression sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$fsxmlfile"
 rmfile sub/a.cpp.xml
 
-rmfile sub/a.cpp

@@ -9,23 +9,23 @@ define input <<- 'STDOUT'
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="bar" filename="foo" version="1.2"/>
 	STDOUT
 
-srcml2src --get-language <<< "$input"
+srcml --get-language <<< "$input"
 
 check 3<<< "C++"
 
-srcml2src --get-directory <<< "$input"
+srcml --get-directory <<< "$input"
 
 check 3<<< "bar"
 
-srcml2src --get-filename <<< "$input"
+srcml --get-filename <<< "$input"
 
 check 3<<< "foo"
 
-srcml2src --get-src-version <<< "$input"
+srcml --get-src-version <<< "$input"
 
 check 3<<< "1.2"
 
-srcml2src --get-encoding <<< "$input"
+srcml --get-encoding <<< "$input"
 
 check 3<<< "UTF-8"
 
@@ -34,19 +34,19 @@ define input <<- 'STDIN'
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="" dir="" filename="" version=""/>
 	STDIN
 
-srcml2src --get-language <<< "$input"
+srcml --get-language <<< "$input"
 
 check 3<<< ""
 
-srcml2src --get-directory <<< "$input"
+srcml --get-directory <<< "$input"
 
 check 3<<< ""
 
-srcml2src --get-filename <<< "$input"
+srcml --get-filename <<< "$input"
 
 check 3<<< ""
 
-srcml2src --get-src-version <<< "$input"
+srcml --get-src-version <<< "$input"
 
 check 3<<< ""
 
@@ -56,19 +56,19 @@ define input <<- 'STDIN'
 	STDIN
 
 # FIXME: Should be no output, not even a blank line
-# srcml2src --get-language <<< "$input"
+# srcml --get-language <<< "$input"
 
 #check 3<<< ""
 
-#srcml2src --get-directory <<< "$input"
+#srcml --get-directory <<< "$input"
 
 #check 3<<< ""
 
-#srcml2src --get-filename <<< "$input"
+#srcml --get-filename <<< "$input"
 
 #check 3<<< ""
 
-#srcml2src --get-src-version <<< "$input"
+#srcml --get-src-version <<< "$input"
 
 #check 3<<< ""
 
