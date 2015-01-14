@@ -22,7 +22,7 @@
                     <Desc>Find all else statements</Desc>
                 </XPath>
                 <XPath path="//src:if[count(src:else) = 0]">
-                    <Desc>Find all if statements without an else</Desc>
+                    <Desc>Find all if statements without an else, this doesn't exclude else if statements</Desc>
                 </XPath>
                 <XPath path="//src:if//src:if">
                     <Desc>Find all nested if statements</Desc>
@@ -54,7 +54,7 @@
                     <Desc>Find all of the conditions of all while statements</Desc>
                 </XPath>
                 <XPath path="//src:while[src:condition//src:name = 'X']">
-                    <Desc>Find all while statements which have a condition containing the variable `'X'`</Desc>
+                    <Desc>Find all while statements which have a condition containing the variable 'i'</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="C-while-1.c" />
@@ -76,8 +76,8 @@
                 <XPath path="//src:for[string-length(src:control/src:init/src:decl/src:name) = 1]">
                     <Desc>Find all for loops which declare a variable with a single character name (e.g. <code class="inline">x</code>, <code class="inline">i</code> or <code class="inline">y</code>)</Desc>
                 </XPath>
-                <XPath path="//src:for[src:control/src:incr/src:expr//node()/following-sibling::op:operator[.= '++']]">
-                    <Desc>Find all for loops which use post decrement as part of the increment expression</Desc>
+                <XPath path="//src:for[src:control/src:incr/src:expr//node()/following-sibling::src:operator[.= '++']]">
+                    <Desc>Find all for loops which use post increment as part of the increment expression</Desc>
                 </XPath>
                 <XPath path="//src:for/src:control/src:incr">
                     <Desc>Find all of the increments expression of all for loops</Desc>
@@ -101,7 +101,7 @@
                 <XPath path="//src:do">
                     <Desc>Find all do statements</Desc>
                 </XPath>
-                <XPath path="//src:do[src:condition//src:name = 'Z']">
+                <XPath path="//src:do[src:condition//src:name = 'x']">
                     <Desc>Find all do while statements which have a condition containing the variable <code class="inline">'x'</code></Desc>
                 </XPath>
             </XPathQueries>
@@ -143,7 +143,7 @@
                     <Desc>Find all return statements</Desc>
                 </XPath>
                 <XPath path="//src:function[ count(.//src:return) &gt; 1]">
-                    <Desc>Find all functions with more then one return</Desc>
+                    <Desc>Find all functions with more than one return</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="C-return-1.c"/>
@@ -196,7 +196,7 @@
                 <XPath path="//src:default">
                     <Desc>Find all default labels</Desc>
                 </XPath>
-                <XPath path="//src:switch[src:block/src:default]">
+                <XPath path="//src:label[src:name[. != //src:goto/src:name or not(//src:goto/src:name)]]">
                     <Desc>Find all switch statements which have a default label</Desc>
                 </XPath>
             </XPathQueries>
@@ -422,7 +422,7 @@
                 <XPath path="//src:decl[src:init]">
                     <Desc>Find all variable declarations which also initialize the variable</Desc>
                 </XPath>
-                <XPath path="//src:decl[src:type[contains(., 'struct')]]">
+                <XPath path="//src:decl[src:type/src:name/src:name = 'struct']">
                     <Desc>Find all variable declarations with the struct qualifier</Desc>
                 </XPath>
             </XPathQueries>
@@ -453,8 +453,8 @@
                 <XPath path="//src:function_decl/src:name">
                     <Desc>Find the names of all function declarations</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:type/type:modifier[.='...']]">
-                    <Desc>Find all function declarations that has variadic arguments</Desc>
+                <XPath path="//src:function_decl[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
+                    <Desc>Find all function declarations that have variadic arguments</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="C-function-decl-1.c"/>
@@ -487,8 +487,8 @@
                 <XPath path="//src:function/src:name">
                     <Desc>Find the names of all function definitions</Desc>
                 </XPath>
-                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/type:modifier[.='...']]">
-                    <Desc>Find all function definition that has variadic arguments</Desc>
+                <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:modifier[.='...']]">
+                    <Desc>Find all function definitions that have variadic arguments</Desc>
                 </XPath>
                 <XPath path="//src:function[src:decl_stmt]">
                     <Desc>Find all K &amp; R function definitions</Desc>
@@ -507,10 +507,10 @@
                 <Element name="modifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[type:modifier[.='*']]">
+                <XPath path="//src:decl[src:type/src:modifier[.='*']]">
                     <Desc>Find all of the declarations of pointers</Desc>
                 </XPath>
-                <XPath path="//src:function_decl[contains(., ')')]">
+                <XPath path="//src:function_decl[src:modifier ='*']">
                     <Desc>Find all function pointers</Desc>
                 </XPath>
             </XPathQueries>
@@ -546,10 +546,10 @@
                 <XPath path="//src:typedef[src:function_decl]">
                     <Desc>Find all typedefs that declare a function type</Desc>
                 </XPath>
-                <XPath path="//src:typedef[src:function_decl[contains(., ')')]]">
-                    <Desc>Find all typedefs of a function pointer</Desc>
+                <XPath path="//src:typedef[src:function_decl/src:modifier= '*']">
+                    <Desc>Find all typedefs of a function pointers</Desc>
                 </XPath>
-                <XPath path="//src:typedef/src:function_decl[contains(., ')')]/src:name">
+                <XPath path="//src:typedef/src:function_decl/src:modifier[.='*']/src:name">
                     <Desc>Find all names from all typedefs of function pointers</Desc>
                 </XPath>
             </XPathQueries>
@@ -569,11 +569,11 @@
             <Example file="C-array-declaration-3.c" />
             <Example file="C-array-declaration-4.c" />
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index]">
+                <XPath path="//src:decl[src:name/src:index]">
                     <Desc>Find all array declarations</Desc>
                 </XPath>
-                <XPath path="//src:decl[src:name/src:name/src:index/src:literal[number(.) &lt; 50]]">
-                    <Desc>Find all array declarations where the number of elements is less then 50</Desc>
+                <XPath path="//src:decl[src:name/src:index/src:expr/src:literal[number(.) &lt; 50]]">
+                    <Desc>Find all array declarations where the number of elements is less than 50</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
@@ -586,7 +586,7 @@
             <Example file="C-array-initialization-1.c"/>
             <Example file="C-array-initialization-2.c" />
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:index][src:init]">
+                <XPath path="//src:decl[src:name/src:index][src:init]">
                     <Desc>Find all array declarations which initialize the array at the same time</Desc>
                 </XPath>
             </XPathQueries>
@@ -646,7 +646,7 @@
                 <Subelement name="decl" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:init/src:block]">
+                <XPath path="//src:decl[src:init/src:expr/src:block]">
                     <Desc>Find all of declaration of structs which also initialize it</Desc>
                 </XPath>
             </XPathQueries>
@@ -693,15 +693,29 @@
                 <XPath path="//src:enum">
                     <Desc>Find all enum definitions</Desc>
                 </XPath>
-                <XPath path="//src:enum/src:decl/src:name">
+                <XPath path="//src:enum/src:block/src:decl/src:name">
                     <Desc>Find the names of all members of all enums</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="C-enum-declaration-1.c"/>
-            <Example file="C-enum-declaration-2.c"/>
             <Example file="C-enum-declaration-3.c"/>
         </DocEntry>
+        
+        <DocEntry title="enum declaration">
+            <Elements>
+                <Element name="enum" />
+                <Subelement name="name" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:enum_decl">
+                    <Desc>Find all enum declarations</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="C-enum-declaration-2.c"/>
+        </DocEntry>
     </Category>
+    
+    
 
     <Category title="Expressions">
         <DocEntry title="function call">
@@ -725,7 +739,7 @@
                 <Subelement name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:expr/src:name[src:name/src:index/node()]">
+                <XPath path="//src:expr/src:name[src:index/node()]">
                     <Desc>Find all array indexings</Desc>
                 </XPath>
             </XPathQueries>
@@ -824,7 +838,7 @@
                 <Element name="operator"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//op:operator[.='(']">
+                <XPath path="//src:cast">
                     <Desc>Find all casts</Desc>
                 </XPath>
             </XPathQueries>

@@ -23,10 +23,10 @@
                     <Desc>Find all else statements</Desc>
                 </XPath>
                 <XPath path="//src:if[not(src:else)]">
-                    <Desc>Find all if statements without an else statement</Desc>
+                    <Desc>Find all if statements without an else statement (this only refers to <code>else</code> and not <code>else if</code>)</Desc>
                 </XPath>
                 <XPath path="//src:if//src:if">
-                    <Desc>Find all nested if statements</Desc>
+                    <Desc>Find all nested if statements (include else if)</Desc>
                 </XPath>
                 <XPath path="//src:elseif">
                     <Desc>Find all else-if statements</Desc>
@@ -77,7 +77,7 @@
                     <Desc>Find all for loops which declare a variable with a single character name (e.g. <code class="inline">x</code>, <code class="inline">i</code> or <code class="inline">y</code>)</Desc>
                 </XPath>
                 <XPath path="//src:for[src:control/src:incr/src:expr//node()/following-sibling::src:operator[.= '++']]">
-                    <Desc>Find all for loops which use post decrement as part of the increment expression</Desc>
+                    <Desc>Find all for loops which use post-increment as part of the increment expression</Desc>
                 </XPath>
                 <XPath path="//src:for/src:control/src:incr">
                     <Desc>Find the increment expressions from every for loops</Desc>
@@ -85,7 +85,7 @@
                 <XPath path="//src:for/src:control/src:condition">
                     <Desc>Find the conditions of all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for[src:control/src:init/src:range]">
+                <XPath path="//src:for[src:control/src:init/src:expr/src:range]">
                     <Desc>Find all range based for loops</Desc>
                 </XPath>
             </XPathQueries>
@@ -405,7 +405,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:specifier[.='public']][ancestor::src:class]">
+                <XPath path="//src:class[src:specifier[.='public']]">
                     <Desc>Find all public classes</Desc>
                 </XPath>
                 <XPath path="//src:decl_stmt[src:decl/src:type/src:specifier[.='public']][ancestor::src:class]">
@@ -484,11 +484,8 @@
                 <XPath path="//src:decl[src:init]">
                     <Desc>Find all variable declarations which also initialize the variable</Desc>
                 </XPath>
-                <XPath path="//src:decl[src:name/src:name/src:index]">
+                <XPath path="//src:decl[src:name/src:index]">
                     <Desc>Find all array declarations</Desc>
-                </XPath>
-                <XPath path="//src:decl[src:name/src:name/src:index/src:literal[number(.) &lt; 50]]">
-                    <Desc>Find all array declarations where the number of elements is less then 50</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="Java-variable-declarations.java" />
@@ -584,7 +581,7 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[@type='interface' and not(src:annotation[.='@interface'])]">
+                <XPath path="//src:interface">
                     <Desc>Find all interfaces</Desc>
                 </XPath>
             </XPathQueries>
@@ -598,7 +595,7 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[@type='interface' and src:annotation[.='@interface']]">
+                <XPath path="//src:annotation_defn">
                     <Desc>Find all annotation definitions</Desc>
                 </XPath>
             </XPathQueries>
@@ -801,7 +798,7 @@
 	    <OperatorEntry title="pre/post increment" op="++" example="../C/C-Operator-pre_increment.c" />
 	    <OperatorEntry title="pre/post decrement" op="--" example="../C/C-Operator-pre_decrement.c" />
 	    <OperatorEntry title="unary minus" op="-" example="../C/C-Operator-unary-minus.c" />
-	    <OperatorEntry title="unary plus" op="-" example="../C/C-Operator-unary-plus.c" />
+	    <OperatorEntry title="unary plus" op="+" example="../C/C-Operator-unary-plus.c" />
 	    <OperatorEntry title="logical not" op="!" example="../C/C-Operator-logical-not.c" />
 	    <OperatorEntry title="multiplication" op="*" example="../C/C-Operator-multiplication.c" />
 	    <OperatorEntry title="division" op="/" example="../C/C-Operator-divide.c" />
@@ -846,7 +843,7 @@
                 <Element name="operator" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:operator[.='(']">
+                <XPath path="//src:cast">
                     <Desc>Find all casts</Desc>
                 </XPath>
             </XPathQueries>
@@ -998,8 +995,8 @@
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:name/src:argument_list]">
-                    <Desc>Find all </Desc>
+                <XPath path="//src:class[src:name/src:parameter_list]">
+                    <Desc>Find all generic classes</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="Java-generic-class-1.java" />
@@ -1011,7 +1008,7 @@
                 <Subelement name="decl" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:name/src:argument_list]">
+                <XPath path="//src:decl[src:name/src:argument_list]">
                     <Desc>Find all generic types used within variable declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -1046,7 +1043,7 @@
                 <XPath path="//src:argument[src:extends]">
                     <Desc>Find all bound generic parameters</Desc>
                 </XPath>
-                <XPath path="//src:class[src:name/src:argument_list/src:argument/src:extends]">
+                <XPath path="//src:class[src:name/src:parameter_list/src:parameter/src:extends]">
                     <Desc>Find all classes with a bound generic parameter</Desc>
                 </XPath>
                 <XPath path="//src:function[src:type/src:argument_list/src:argument/src:extends]">
@@ -1068,10 +1065,10 @@
                     <Desc>Find all functions with a generic wildcard parameter that has an upper bound</Desc>
                 </XPath>
                 <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:name/src:argument_list/src:argument[src:name[.='?']][not(src:extends)][not(src:super)]]">
-                    <Desc>Find all functions with a generic wildcard parameters that is unbound</Desc>
+                    <Desc>Find all functions with a generic wildcard parameter that is unbound</Desc>
                 </XPath>
                 <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:name/src:argument_list/src:argument[src:name[.='?']][src:super]]">
-                    <Desc>Find all functions with a generic wildcard parameters that has a lower</Desc>
+                    <Desc>Find all functions with a generic wildcard parameter that has a lower</Desc>
                 </XPath>
             </XPathQueries>
             <Example title="upper bound wildcard" file="Java-wildcard-1.java" />

@@ -115,6 +115,7 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Tag elem="function"/>
         <Tag elem="function_decl"/>
         <AttrRule rule="functionTypeAttr"/>
+        <Tag elem="friend"/>
         <Tag elem="ref_qualifier"/>
         <Tag elem="throws"/>
         <Tag elem="lambda"/>
@@ -132,6 +133,8 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Tag elem="interface"/>
         <Tag elem="enum"/>
         <AttrRule rule="enumTypeAttr"/>
+        <Tag elem="enum_decl"/>
+        
         <Tag elem="struct"/>
         <Tag elem="struct_decl"/>
         <Tag elem="union"/>
@@ -177,6 +180,7 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Tag elem="in"/>
         <Tag elem="select"/>
         <Tag elem="where"/>
+        <Tag elem="constraint"/>
         <Tag elem="group"/>
         <Tag elem="by"/>
         <Tag elem="into"/>
@@ -216,6 +220,7 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Tag elem="name" />
         <Tag elem="index"/>
         <Tag elem="specifier"/>
+
         <Tag elem="operator"/>
         <Tag elem="literal"/>
         <AttrRule rule="literalTypeAttr"/>
@@ -438,6 +443,7 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
                 <Ref name="emptyStmt" />
                 <Ref name="exprStmt" />
                 <Ref name="CEnum" />
+                <Ref name="enumDecl" />
                 <Ref name="CPlusPlusEnum"/>
                 <Ref name="CSharpEnum"/>
                 <Ref name="JavaEnum"/>
@@ -449,6 +455,7 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
                 <Ref name="for" />
                 <Ref name="foreach" />
                 <Ref name="CFunction" />
+                <Ref name="friend"/>
                 <Ref name="CPlusPlusFunction"/>
                 <Ref name="CSharpFunction"/>
                 <Ref name="CSharpPropertyFunction" />
@@ -2182,6 +2189,31 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         </Def>
     </AttrRule>
     
+    <!-- src:friend -->
+    <TagRule name="friend" lang="C++">
+        <Tag elem="friend" />
+        <Def>
+            <Literal value="friend"/>
+            <Choice>
+                <Ref name="CPlusPlusFunctionDeclOperator"/>
+                <Ref name="CPlusPlusFunctionDecl"/>
+                <Ref name="constructorDecl"/>
+                <Ref name="destructorDecl"/>
+                <Ref name="name"/>
+            </Choice>
+            <ZeroOrMore>
+                <Literal value=","/>
+                <Choice>
+                    <Ref name="CPlusPlusFunctionDeclOperator"/>
+                    <Ref name="CPlusPlusFunctionDecl"/>
+                    <Ref name="constructorDecl"/>
+                    <Ref name="destructorDecl"/>
+                    <Ref name="name"/>
+                </Choice>
+            </ZeroOrMore>
+        </Def>
+    </TagRule>
+    
     <!-- src:ref_qualifier -->
     <TagRule name="refQualifier" lang="C++">
         <Tag elem="ref_qualifier" />
@@ -2595,6 +2627,20 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             <Literal value="class"/>
         </Def>
     </AttrRule>
+
+    <!-- src:enum_decl -->
+    <TagRule name="enumDecl" lang="C,C++">
+        <Tag elem="enum_decl"/>
+        <Def>
+            <Literal value="enum"/>
+            <Optional>
+                <Ref name="name"/>
+            </Optional>
+            <Optional>
+            <Literal value=";"/>
+            </Optional>
+        </Def>
+    </TagRule>
 
     <!-- src:struct -->
     <TagRule name="CStruct" lang="C">
@@ -3345,13 +3391,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             <Literal value="where"/>
             <Ref name="name"/>
             <Literal value=":"/>
-            <Optional>
-                <Ref name="name"/>
-                <ZeroOrMore>
-                    <Literal value=","/>
-                    <Ref name="name"/>
-                </ZeroOrMore>
-            </Optional>
+            <ZeroOrMore>
+                <Ref name="constraint"/>
+            </ZeroOrMore>
         </Def>
     </TagRule>
     
@@ -3365,6 +3407,24 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         </Def>
     </TagRule>
 
+    <!-- src:constraint -->
+    <TagRule name="constraint" lang="C#">
+        <Tag elem="constraint" />
+        <Def>
+            <Choice>
+                <Group>
+                    <Ref name="name"/>
+                    <Optional>
+                        <Text/>
+                    </Optional>
+                </Group>
+                <Literal value="struct"/>
+                <Literal value="class"/>
+            </Choice>
+            
+        </Def>
+    </TagRule>
+    
     <!-- src:group -->
     <TagRule name="group" lang="C#">
         <Tag elem="group"/>
@@ -3931,6 +3991,8 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             <Text/>
         </Def>
     </TagRule>
+    
+
     
     
     

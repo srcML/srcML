@@ -3,7 +3,7 @@
         <tr>
             <th>Language Element</th>
             <th>Element</th>
-            <th>Sublement</th>
+            <th>Subelements</th>
         </tr>
     </thead>
         {% for cat in doc.categories %}
@@ -28,7 +28,7 @@
             {% if cat.operators|length > 0 %}
             <tr>
                 <td><a href="#operators">operators</a></td>
-                <td><code class="xmlTags">&lt;op:operator&gt;</code></td>
+                <td><code class="xmlTags">&lt;operator&gt;</code></td>
                 <td><code class="xmlTags">&nbsp;</code></td>
             </tr>
             {% endif %}

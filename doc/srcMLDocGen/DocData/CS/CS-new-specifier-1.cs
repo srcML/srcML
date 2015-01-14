@@ -1,1 +1,1 @@
-new public void Invoke() { }
+public new void Invoke() { }

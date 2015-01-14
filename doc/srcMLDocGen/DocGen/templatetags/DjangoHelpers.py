@@ -59,7 +59,8 @@ linkStart = "<a href=\"{0}#{1}\" title=\"View grammar for tag.\">"
 linkEnd = "</a>"
 
 class SyntaxHighlighter(ContentHandler):
-    htmlEscapeTable = {'"': "&quot;", "'": "&apos;" }
+    htmlEscapeTable = {}
+    # '"': "&quot;", "'": "&apos;" 
     spanStart = "<span class=\"{0}\">"
     spanEnd = "</span>"
     # def makeLinkStart(self, name):
