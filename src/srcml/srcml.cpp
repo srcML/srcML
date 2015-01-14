@@ -151,7 +151,7 @@ bool request_create_srcml(const srcml_request_t& srcml_request,
 
     return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
         (input_sources.size() > 1 && destination.state == SRCML) ||
-        (input_sources.size() == 1 && input_sources[0].unit > 0 && (srcml_request.command & SRCML_COMMAND_XML));
+        (input_sources.size() == 1 && input_sources[0].unit >= 0 && (srcml_request.command & SRCML_COMMAND_XML));
 }
 
 bool request_transform_srcml(const srcml_request_t& srcml_request,
