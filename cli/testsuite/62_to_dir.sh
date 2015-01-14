@@ -23,12 +23,17 @@ define nestedfile <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+define output <<- 'STDERR'
+	1 sub/a.cpp
+	2 sub/b.cpp
+	STDERR
+
 createfile sub/a.cpp.xml "$srcml"
 rmfile sub/a.cpp
 
 srcml2src --quiet --to-dir=. sub/a.cpp.xml
 
-check sub/a.cpp 3<<< "a;"
+check sub/a.cpp 3<<< "a;" 4<<< "1 sub/a.cpp"
 
 rmfile sub/a.cpp.xml
 createfile sub/a.cpp.xml "$nestedfile"
@@ -37,7 +42,7 @@ rmfile sub/a.cpp
 rmfile sub/b.cpp
 
 srcml2src --quiet --to-dir=. sub/a.cpp.xml
-check sub/a.cpp 3<<< "a;"
+check sub/a.cpp 3<<< "a;" 4<<< "$output"
 check sub/b.cpp 3<<< "b;"
 
 rmfile sub/a.cpp
@@ -45,6 +50,6 @@ rmfile sub/b.cpp
 
 srcml2src --quiet -a '.' sub/a.cpp.xml
 
-check sub/a.cpp 3<<< "a;"
+check sub/a.cpp 3<<< "a;" 4<<< "$output"
 check sub/b.cpp 3<<< "b;"
 
