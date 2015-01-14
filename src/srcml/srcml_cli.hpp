@@ -82,7 +82,7 @@ const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP | 
     SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
-const int CLI_LINE LENGTH = 120;
+const int CLI_LINE_LENGTH = 120;
 
 struct attribute {
     boost::optional<std::string> prefix;
