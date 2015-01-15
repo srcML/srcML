@@ -3,40 +3,92 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# test
-# single file test
-define output <<- 'STDOUT'
+# xslt identity transformation (single file)
+define identiy_xslt <<- 'STDOUT'
+	<xsl:stylesheet
+	xmlns="http://www.sdml.info/srcML/src"
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:cpp="http://www.sdml.info/srcML/cpp"
+	xmlns:src="http://www.sdml.info/srcML/src"
+	version="1.0">
+	<xsl:template match="@*|node()">
+	  <xsl:copy>
+	   <xsl:apply-templates select="@*|node()"/>
+	  </xsl:copy>
+	 </xsl:template>
+	</xsl:stylesheet>
+	STDOUT
+
+define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" filename="a.cpp" revision="0.8.0" language="C++">
-	INPUT
-</unit>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
 	STDOUT
 
-xslt = STDOUTa.cpp
-C++
-	STDOUT
+createfile sub/a.cpp.xml "$srcml"
+createfile identity.xsl "$identiy_xslt"
 
-file = open(sub/a.cpp.xml 'w')
-file.write(srcml)
-file.close()
+# --xslt=identity.xsl
+srcml2src --xslt=identity.xsl sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
+srcml2src --xslt=identity.xsl < sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt + '=archive.xsl' srcml xslt)
-srcml2src --xslt + '=archive.xsl' sub/a.cpp.xml xslt)
-if sys.platform != 'cygwin' :
-	srcml2src --xslt + '=archive.xsl' -o sub/b.cpp.xml srcml
+srcml2src --xslt=identity.xsl sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-	validate(open(sub/b.cpp.xml 'r').read() xslt)
-srcml2src --xslt + '=archive.xsl' sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() xslt)
+srcml2src --xslt=identity.xsl -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
+srcml2src --xslt=identity.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt srcml
+# --xslt identity.xsl
+srcml2src --xslt identity.xsl sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-check 4<<< "1"
-srcml2src --xslt + '=' srcml
+srcml2src --xslt identity.xsl < sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-check 4<<< "1"
+srcml2src --xslt identity.xsl sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-# archive test
+srcml2src --xslt identity.xsl -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
+srcml2src --xslt identity.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+# --xslt "identity.xsl"
+srcml2src --xslt "identity.xsl" sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+srcml2src --xslt "identity.xsl" < sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+srcml2src --xslt "identity.xsl" sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+srcml2src --xslt "identity.xsl" -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+srcml2src --xslt "identity.xsl" -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+# --xslt="identity.xsl"
+srcml2src --xslt="identity.xsl" sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+srcml2src --xslt="identity.xsl" < sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+srcml2src --xslt="identity.xsl" sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+srcml2src --xslt="identity.xsl" -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
+
+srcml2src --xslt="identity.xsl" -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
