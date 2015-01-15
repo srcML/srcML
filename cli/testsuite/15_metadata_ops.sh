@@ -55,22 +55,17 @@ define input <<- 'STDIN'
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp"/>
 	STDIN
 
-# FIXME: Should be no output, not even a blank line
-# srcml --get-language <<< "$input"
+srcml --get-language <<< "$input"
+check_null
 
-#check 3<<< ""
+srcml --get-directory <<< "$input"
+check_null
 
-#srcml --get-directory <<< "$input"
+srcml --get-filename <<< "$input"
+check_null
 
-#check 3<<< ""
-
-#srcml --get-filename <<< "$input"
-
-#check 3<<< ""
-
-#srcml --get-src-version <<< "$input"
-
-#check 3<<< ""
+srcml --get-src-version <<< "$input"
+check_null
 
 srcml2src --units <<< "$input"
 
