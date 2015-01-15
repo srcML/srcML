@@ -3,6 +3,7 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+# xslt identity transformation (archive of single file)
 define identiy_xslt <<- 'STDOUT'
 	<xsl:stylesheet
 	xmlns="http://www.sdml.info/srcML/src"
@@ -30,68 +31,68 @@ define srcml <<- 'STDOUT'
 	STDOUT
 
 createfile sub/a.cpp.xml "$srcml"
-createfile archive.xsl "$identiy_xslt"
+createfile identity.xsl "$identiy_xslt"
 
-# --xslt=archive.xsl
-srcml2src --xslt=archive.xsl sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+# --xslt=identity.xsl
+srcml2src --xslt=identity.xsl sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt=archive.xsl < sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt=identity.xsl < sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt=archive.xsl sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt=identity.xsl sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt=archive.xsl -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt=identity.xsl -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt=archive.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt=identity.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-# --xslt archive.xsl
-srcml2src --xslt archive.xsl sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+# --xslt identity.xsl
+srcml2src --xslt identity.xsl sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt archive.xsl < sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt identity.xsl < sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt archive.xsl sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt identity.xsl sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt archive.xsl -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt identity.xsl -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt archive.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt identity.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-# --xslt "archive.xsl"
-srcml2src --xslt "archive.xsl" sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+# --xslt "identity.xsl"
+srcml2src --xslt "identity.xsl" sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt "archive.xsl" < sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt "identity.xsl" < sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt "archive.xsl" sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt "identity.xsl" sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt "archive.xsl" -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt "identity.xsl" -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt "archive.xsl" -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt "identity.xsl" -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-# --xslt="archive.xsl"
-srcml2src --xslt="archive.xsl" sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+# --xslt="identity.xsl"
+srcml2src --xslt="identity.xsl" sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt="archive.xsl" < sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt="identity.xsl" < sub/a.cpp.xml
+check 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt="archive.xsl" sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt="identity.xsl" sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt="archive.xsl" -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt="identity.xsl" -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
 
-srcml2src --xslt="archive.xsl" -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : archive.xsl"
+srcml2src --xslt="identity.xsl" -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcml" 4<<< "xslt : identity.xsl"
