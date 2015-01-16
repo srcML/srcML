@@ -3,89 +3,64 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# test
-# xpath apply root
-
-define output <<- 'STDOUT'
+# xpath apply root test
+define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
 	STDOUT
-INPUT
-xpath_error = STDOUTsrcml2src: Start tag expected '<' not found in '-'
+
+define xpath_empty <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/src"/>
 	STDOUT
 
 define output <<- 'STDOUT'
-	xpath = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
-	
-INPUT
 
-</unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
+
+	</unit>
 	STDOUT
 
-define output <<- 'STDOUT'
-	xpath_empty = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src"/>
-	STDOUT
-INPUT
-file = open(sub/a.cpp.xml 'w')
-file.write(srcml)
-file.close()
+createfile sub/a.cpp.xml "$srcml"
 
+# /src:unit
+srcml2src --apply-root --xpath=/src:unit sub/a.cpp.xml
+check 3<<< "$output"
 
-if sys.platform != 'cygwin' :
-	checkError([srcml2src --apply-root --xpath=/src:unit' "" xpath_error)
-	srcml2src --apply-root --xpath=/src:unit
+srcml2src --apply-root --xpath=/src:unit < sub/a.cpp.xml
+check 3<<< "$output"
 
-	check 4<<< "2"
+srcml2src --apply-root --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
-srcml2src --apply-root --xpath=/src:unit' srcml xpath)
-srcml2src --apply-root --xpath=/src:unit' sub/a.cpp.xml xpath)
-if sys.platform != 'cygwin' :
-	srcml2src --apply-root --xpath=/src:unit' -o sub/b.cpp.xml srcml
+srcml2src --apply-root --xpath=/src:unit -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
-	validate(open(sub/b.cpp.xml 'r').read() xpath)
-srcml2src --apply-root --xpath=/src:unit' sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() xpath)
+# //src:unit
+srcml2src --apply-root --xpath=//src:unit sub/a.cpp.xml
+check 3<<< "$output"
 
+srcml2src --apply-root --xpath=//src:unit < sub/a.cpp.xml
+check 3<<< "$output"
 
-srcml2src --apply-root --xpath srcml
+srcml2src --apply-root --xpath=//src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
-check 4<<< "1"
-srcml2src --apply-root --xpath=' srcml
+srcml2src --apply-root --xpath=//src:unit -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output"
 
-check 4<<< "1"
+# src:unit
+srcml2src --apply-root --xpath=src:unit sub/a.cpp.xml
+check 3<<< "$xpath_empty"
 
-srcml2src --apply-root --xpath=//src:unit srcml xpath)
-scml2src --apply-root --xpath=//src:unit 'sub/a.cpp.xml xpath)
-if sys.platform != 'cygwin' :
-	srcml2src --apply-root --xpath=//src:unit -o 'sub/b.cp.xml' srcml
-	validate(open(sub/b.cpp.xml 'r').read() xpath)
-srcml2src --apply-root --xpath=//src:unit 'sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() xpath)
+srcml2src --apply-root --xpath=src:unit < sub/a.cpp.xml
+check 3<<< "$xpath_empty"
 
-srcml2src --apply-root --xpath srcml
+srcml2src --apply-root --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$xpath_empty"
 
-check 4<<< "1"
-srcml2src --apply-root --xpath=' srcml
-
-check 4<<< "1"
-
-srcml2src --apply-root --xpath=src:unit' srcml xpath_empty)
-srcml2src --apply-root --xpath=src:unit' sub/a.cpp.xml xpath_empty)
-if sys.platform != 'cygwin' :
-	srcml2src --apply-root --xpath=src:unit' -o sub/b.cpp.xml srcml
-
-	validate(open(sub/b.cpp.xml 'r').read() xpath_empty)
-srcml2src --apply-root --xpath=src:unit' sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() xpath_empty)
-
-
-srcml2src --apply-root --xpath srcml
-
-check 4<<< "1"
-
-srcml2src --apply-root --xpath='' srcml
-
-check 4<<< "1"
+srcml2src --apply-root --xpath=src:unit -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$xpath_empty"
 

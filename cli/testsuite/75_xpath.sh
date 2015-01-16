@@ -4,74 +4,81 @@
 source $(dirname "$0")/framework_test.sh
 
 # test
-define output <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++">
-	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-	STDOUT
-
-define output <<- 'STDOUT'
+define output1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
+
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" item="1" location="/src:expr_stmt[1]/src:expr[1]/src:name[1]"><name>a</name></unit>
+
 	</unit>
 	STDOUT
 
-define output <<- 'STDOUT'
+define output2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
+
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" item="1" location="/src:expr_stmt[1]/src:expr[1]/src:name[1]"><name>a</name></unit>
+
+	</unit>
 	STDOUT
 
-createfile sub/a.cpp.xml $output
+define output_empty <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns="http://www.sdml.info/srcML/src"/>
+	STDOUT
 
-srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name' srcml xpath)
-srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name' sub/a.cpp.xml xpath)
-if sys.platform != 'cygwin' :
-	srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name' -o sub/b.cpp.xml srcml
+define srcml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
+	STDOUT
 
-	validate(open(sub/b.cpp.xml 'r').read() xpath)
-srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name' sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() xpath)
+createfile sub/a.cpp.xml "$srcml"
 
+# /src:unit/src:expr_stmt/src:expr/src:name
+srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml
+check 3<<< "$output1"
 
-srcml2src --xpath srcml
+srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name < sub/a.cpp.xml
+check 3<<< "$output1"
 
-check 4<<< "1"
+srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$output1"
 
-srcml2src --xpath=''
+srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output1"
 
-check 4<<< "1"
+srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output1"
 
-srcml2src --xpath=//src:name' srcml xpath)
-srcml2src --xpath=//src:name' sub/a.cpp.xml xpath)
-if sys.platform != 'cygwin' :
-	srcml2src --xpath=//src:name' -o sub/b.cpp.xml srcml
+# //src:name
+srcml2src --xpath=//src:name sub/a.cpp.xml
+check 3<<< "$output2"
 
-	validate(open(sub/b.cpp.xml 'r').read() xpath)
-srcml2src --xpath=//src:name' sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() xpath)
+srcml2src --xpath=//src:name < sub/a.cpp.xml
+check 3<<< "$output2"
 
+srcml2src --xpath=//src:name sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$output2"
 
-srcml2src --xpath srcml
+srcml2src --xpath=//src:name -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output2"
 
-check 4<<< "1"
-srcml2src --xpath=' srcml
+srcml2src --xpath=//src:name -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output2"
 
-check 4<<< "1"
+# src:name
+srcml2src --xpath=src:name sub/a.cpp.xml
+check 3<<< "$output_empty"
 
-srcml2src --xpath=src:name' srcml xpath_empty)
-srcml2src --xpath=src:name' sub/a.cpp.xml xpath_empty)
-if sys.platform != 'cygwin' :
-	srcml2src --xpath=src:name' -o sub/b.cpp.xml srcml
+srcml2src --xpath=src:name < sub/a.cpp.xml
+check 3<<< "$output_empty"
 
-	validate(open(sub/b.cpp.xml 'r').read() xpath_empty)
-srcml2src --xpath=src:name' sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml 'r').read() xpath_empty)
+srcml2src --xpath=src:name sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$output_empty"
 
+srcml2src --xpath=src:name -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output_empty"
 
-srcml2src --xpath srcml
-
-check 4<<< "1"
-srcml2src --xpath=' srcml
-
-check 4<<< "1"
-
+srcml2src --xpath=src:name -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$output_empty"

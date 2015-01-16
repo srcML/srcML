@@ -32,8 +32,8 @@ define vfoutput <<- 'STDERR'
 define voutput <<- 'STDERR'
 	Source encoding:  (null)
 	XML encoding:  UTF-8
-	    1	C++	1	10	HASH
-
+	    1 	C++	1	10	HASH
+	
 	Translated: 1	Skipped: 0	Error: 0	Total: 1
 	STDERR
 
@@ -47,27 +47,16 @@ check 3<<< "$sxmlfile" 4<<< "$vfoutput"
 
 srcml --verbose sub/a.cpp -o sub/c.cpp.xml
 check sub/c.cpp.xml 3<<< "$sxmlfile" 4<<< "$vfoutput"
-rmfile sub/c.cpp.xml
 
 srcml --verbose -l C++ < sub/a.cpp
-check 3<<< "$sxml" 4<<< "voutput"
+check 3<<< "$sxml" 4<<< "$voutput"
 
 srcml --verbose -l C++ -o sub/c.cpp.xml < sub/a.cpp
-check 3<<< "$sxml" 4<<< "$voutput"
-rmfile sub/c.cpp.xml
+check sub/c.cpp.xml 3<<< "$sxml" 4<<< "$voutput"
 
 # srcml to src
-srcml --verbose sub/a.cpp.xml
-check 3<<< "$sfile"
-
 srcml --verbose sub/a.cpp.xml -o sub/c.cpp
 check_null
-rmfile sub/c.cpp
-
-srcml --verbose -l C++ < sub/a.cpp.xml
-check 3<<< "$sfile"
 
 srcml --verbose -l C++ -o sub/c.cpp < sub/a.cpp.xml
 check_null
-rmfile sub/c.cpp
-

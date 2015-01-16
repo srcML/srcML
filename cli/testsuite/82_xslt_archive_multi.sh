@@ -3,7 +3,7 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# xslt identity transformation (single file)
+# xslt identity transformation (archive of single file)
 define identiy_xslt <<- 'STDOUT'
 	<xsl:stylesheet
 	xmlns="http://www.sdml.info/srcML/src"
@@ -21,8 +21,14 @@ define identiy_xslt <<- 'STDOUT'
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
-	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
+
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
+
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="b.cpp" hash="520b48acbdb61e411641fd94359a82686d5591eb"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	</unit>
+
 	</unit>
 	STDOUT
 

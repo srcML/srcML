@@ -5,79 +5,29 @@ source $(dirname "$0")/framework_test.sh
 
 # test directory input
 define output <<- 'STDOUT'
-	srcmlstart = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
-	STDOUT
-INPUT
-aj = STDOUT
-<unit language="AspectJ" filename="dir/file.aj">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
-	STDOUT
 
-c = STDOUT
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C" filename="dir/file.c">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
-	STDOUT
+	<unit revision="0.8.0" language="AspectJ" filename="dir/file.aj" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-cpp = STDOUT
-<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="dir/file.cpp">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C" filename="dir/file.c" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="dir/file.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit revision="0.8.0" language="Java" filename="dir/file.java" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	</unit>
 	STDOUT
 
-java = STDOUT
-<unit language="Java" filename="dir/file.java">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</unit>
-	STDOUT
+createfile dir/file.aj "\na;"
+createfile dir/file.c  "\na;"
+createfile dir/file.cpp "\na;"
+createfile dir/file.java "\na;"
 
+src2srcml dir --quiet -o dir/dir.xml
 
-
-srcmlend = STDOUT
-</unit>
-	STDOUT
-
-if platform.system() != "Windows" :
-	dir = execute(['ls' 'dir'.split("\n")
-else :
-	dir = os.listdir('dir')
-
-srcml = srcmlstart
-
-for file in dir :
-	if file == 'file.aj' :
-	srcml += aj
-	if file == 'file.c' :
-	srcml += c
-	if file == 'file.cpp' :
-	srcml += cpp
-	if file == 'file.java' :
-	srcml += java
-
-srcml += srcmlend
-
-if platform.system() == "Windows" or sys.platform == 'cygwin' :
-	srcml = string.replace(srcml "dir/" "dir\\")
-
-echo -n "" | src2srcml dir
-src2srcml dir' -o 'dir/dir.xml' ""
-readfile input dir/dir.xml' 'r').read() srcml)
-
-if platform.system() != "Windows" and sys.platform != 'cygwin' :
-	execute(['tar' 'czf' 'dir/foo.tar' 'dir/file.c'
-
-echo -n "" |	 src2srcml dir
-	src2srcml dir' -o 'dir/dir.xml' ""
-	readfile input dir/dir.xml' 'r').read() srcml)
-
-	execute(['rm' 'dir/foo.tar'
-
-#
-# nested files
-
-src = STDOUT
-a;
-	STDOUT
-
+check dir/dir.xml 3<<< "$output"
