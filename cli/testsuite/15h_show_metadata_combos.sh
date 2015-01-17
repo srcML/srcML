@@ -19,24 +19,24 @@ define output <<- 'STDOUT'
 createfile sub/a.cpp.xml "$input"
 
 # language, directory, filename
-srcml --get-language --get-directory --get-filename sub/a.cpp.xml
+srcml --show-language --show-directory --show-filename sub/a.cpp.xml
 check 3<<< "$output"
 
-srcml --get-language --get-directory --get-filename < sub/a.cpp.xml
+srcml --show-language --show-directory --show-filename < sub/a.cpp.xml
 check 3<<< "$output"
 
 # directory, language, filename
-srcml --get-directory --get-language --get-filename sub/a.cpp.xml
+srcml --show-directory --show-language --show-filename sub/a.cpp.xml
 check 3<<< "$output"
 
-srcml --get-directory --get-language --get-filename < sub/a.cpp.xml
+srcml --show-directory --show-language --show-filename < sub/a.cpp.xml
 check 3<<< "$output"
 
 # filename, directory, language
-srcml --get-filename --get-directory --get-language sub/a.cpp.xml
+srcml --show-filename --show-directory --show-language sub/a.cpp.xml
 check 3<<< "$output"
 
-srcml --get-filename --get-directory --get-language < sub/a.cpp.xml
+srcml --show-filename --show-directory --show-language < sub/a.cpp.xml
 check 3<<< "$output"
 
 
@@ -48,17 +48,17 @@ define output <<- 'STDOUT'
 	STDOUT
 
 # language, directory, filename, encoding
-srcml --get-language --get-directory --get-filename --get-encoding sub/a.cpp.xml
+srcml --show-language --show-directory --show-filename --show-encoding sub/a.cpp.xml
 check 3<<< "$output"
 
-srcml --get-language --get-directory --get-filename --get-encoding < sub/a.cpp.xml
+srcml --show-language --show-directory --show-filename --show-encoding < sub/a.cpp.xml
 check 3<<< "$output"
 
 # encoding, directory, language, filename
-srcml --get-encoding --get-directory --get-language --get-filename sub/a.cpp.xml
+srcml --show-encoding --show-directory --show-language --show-filename sub/a.cpp.xml
 check 3<<< "$output"
 
-srcml --get-encoding --get-directory --get-language --get-filename < sub/a.cpp.xml
+srcml --show-encoding --show-directory --show-language --show-filename < sub/a.cpp.xml
 check 3<<< "$output"
 
 
@@ -71,17 +71,17 @@ define output <<- 'STDOUT'
 	STDOUT
 
 # filename, directory, language, encoding, src version
-srcml --get-filename --get-directory --get-language --get-encoding --get-src-version sub/a.cpp.xml
+srcml --show-filename --show-directory --show-language --show-encoding --show-src-version sub/a.cpp.xml
 check 3<<< "$output"
 
-srcml --get-filename --get-directory --get-language --get-encoding --get-src-version < sub/a.cpp.xml
+srcml --show-filename --show-directory --show-language --show-encoding --show-src-version < sub/a.cpp.xml
 check 3<<< "$output"
 
 # version, language, encoding, filename, directory
-srcml --get-src-version --get-language --get-filename --get-encoding --get-directory sub/a.cpp.xml
+srcml --show-src-version --show-language --show-filename --show-encoding --show-directory sub/a.cpp.xml
 check 3<<< "$output"
 
-srcml --get-src-version --get-language --get-filename --get-encoding --get-directory < sub/a.cpp.xml
+srcml --show-src-version --show-language --show-filename --show-encoding --show-directory < sub/a.cpp.xml
 check 3<<< "$output"
 
 

@@ -12,10 +12,10 @@ define none <<- 'STDOUT'
 createfile sub/a.cpp.xml "$none"
 message "timestamp missing"
 
-srcml --get-timestamp sub/a.cpp.xml
+srcml --show-timestamp sub/a.cpp.xml
 check_null
 
-srcml --get-timestamp < sub/a.cpp.xml
+srcml --show-timestamp < sub/a.cpp.xml
 check_null
 
 # TODO: issue #1042

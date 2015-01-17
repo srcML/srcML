@@ -27,19 +27,19 @@ define nestedfile <<- 'STDOUT'
 
 createfile sub/a.cpp.xml "$sxmlfile1"
 
-srcml sub/a.cpp.xml --get-language
+srcml sub/a.cpp.xml --show-language
 check 3<<< "C++"
 
-srcml sub/a.cpp.xml --get-directory
+srcml sub/a.cpp.xml --show-directory
 check 3<<< "sub"
 
-srcml sub/a.cpp.xml --get-filename
+srcml sub/a.cpp.xml --show-filename
 check 3<<< "a.cpp"
 
-srcml sub/a.cpp.xml --get-src-version
+srcml sub/a.cpp.xml --show-src-version
 check 3<<< "1.2"
 
-srcml sub/a.cpp.xml --get-encoding
+srcml sub/a.cpp.xml --show-encoding
 check 3<<< "UTF-8"
 
 srcml2src --units sub/a.cpp.xml

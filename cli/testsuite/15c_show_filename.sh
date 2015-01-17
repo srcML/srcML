@@ -11,10 +11,10 @@ define input <<- 'STDOUT'
 
 createfile sub/a.cpp.xml "$input"
 
-srcml --get-filename sub/a.cpp.xml
+srcml --show-filename sub/a.cpp.xml
 check 3<<< "foo"
 
-srcml --get-filename < sub/a.cpp.xml
+srcml --show-filename < sub/a.cpp.xml
 check 3<<< "foo"
 
 define empty <<- 'STDIN'
@@ -24,10 +24,10 @@ define empty <<- 'STDIN'
 
 createfile sub/a.cpp.xml "$empty"
 
-srcml --get-filename sub/a.cpp.xml
+srcml --show-filename sub/a.cpp.xml
 check 3<<< ""
 
-srcml --get-filename < sub/a.cpp.xml
+srcml --show-filename < sub/a.cpp.xml
 check 3<<< ""
 
 define none <<- 'STDIN'
@@ -37,9 +37,9 @@ define none <<- 'STDIN'
 
 createfile sub/a.cpp.xml "$none"
 
-srcml --get-filename sub/a.cpp.xml
+srcml --show-filename sub/a.cpp.xml
 check_null
 
-srcml --get-filename < sub/a.cpp.xml
+srcml --show-filename < sub/a.cpp.xml
 check_null
 

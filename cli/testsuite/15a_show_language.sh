@@ -13,10 +13,10 @@ define srcmlcpp <<- 'STDOUT'
 
 createfile sub/a.cpp.xml "$srcmlcpp"
 
-srcml --get-language sub/a.cpp.xml
+srcml --show-language sub/a.cpp.xml
 check 3<<< "C++"
 
-srcml --get-language < sub/a.cpp.xml
+srcml --show-language < sub/a.cpp.xml
 check 3<<< "C++"
 
 # Java
@@ -28,10 +28,10 @@ define srcmljava <<- 'STDOUT'
 
 createfile sub/a.java.xml "$srcmljava"
 
-srcml --get-language sub/a.java.xml
+srcml --show-language sub/a.java.xml
 check 3<<< "Java"
 
-srcml --get-language < sub/a.java.xml
+srcml --show-language < sub/a.java.xml
 check 3<<< "Java"
 
 # C
@@ -43,10 +43,10 @@ define srcmlc <<- 'STDOUT'
 
 createfile sub/a.c.xml "$srcmlc"
 
-srcml --get-language sub/a.c.xml
+srcml --show-language sub/a.c.xml
 check 3<<< "C"
 
-srcml --get-language < sub/a.c.xml
+srcml --show-language < sub/a.c.xml
 check 3<<< "C"
 
 # Objective-C
@@ -58,10 +58,10 @@ define srcmlobjc <<- 'STDOUT'
 
 createfile sub/a.m.xml "$srcmlobjc"
 
-srcml --get-language sub/a.m.xml
+srcml --show-language sub/a.m.xml
 check 3<<< "Objective-C"
 
-srcml --get-language < sub/a.m.xml
+srcml --show-language < sub/a.m.xml
 check 3<<< "Objective-C"
 
 # Aspect J
@@ -73,10 +73,10 @@ define srcmlaj <<- 'STDOUT'
 
 createfile sub/a.aj.xml "$srcmlaj"
 
-srcml --get-language sub/a.aj.xml
+srcml --show-language sub/a.aj.xml
 check 3<<< "AspectJ"
 
-srcml --get-language < sub/a.aj.xml
+srcml --show-language < sub/a.aj.xml
 check 3<<< "AspectJ"
 
 # Empty
@@ -87,10 +87,10 @@ define empty <<- 'STDIN'
 
 createfile sub/a.cpp.xml "$empty"
 
-srcml --get-language sub/a.cpp.xml
+srcml --show-language sub/a.cpp.xml
 check 3<<< ""
 
-srcml --get-language < sub/a.cpp.xml
+srcml --show-language < sub/a.cpp.xml
 check 3<<< ""
 
 # None
@@ -101,9 +101,9 @@ define none <<- 'STDIN'
 
 createfile sub/a.cpp.xml "$none"
 
-srcml --get-language sub/a.cpp.xml
+srcml --show-language sub/a.cpp.xml
 check_null
 
-srcml --get-language < sub/a.cpp.xml
+srcml --show-language < sub/a.cpp.xml
 check_null
 

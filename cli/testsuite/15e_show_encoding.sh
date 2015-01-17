@@ -11,8 +11,8 @@ define input <<- 'STDOUT'
 
 createfile sub/a.cpp.xml "$input"
 
-srcml --get-encoding sub/a.cpp.xml
+srcml --show-encoding sub/a.cpp.xml
 check 3<<< "UTF-8"
 
-srcml --get-encoding < sub/a.cpp.xml
+srcml --show-encoding < sub/a.cpp.xml
 check 3<<< "UTF-8"

@@ -16,16 +16,16 @@ define rev2 <<- 'STDIN'
 
 createfile sub/a.cpp.xml "$rev1"
 
-srcml --get-src-version sub/a.cpp.xml
+srcml --show-src-version sub/a.cpp.xml
 check 3<<< "0.8.0"
 
-srcml --get-src-version < sub/a.cpp.xml
+srcml --show-src-version < sub/a.cpp.xml
 check 3<<< "0.8.0"
 
 createfile sub/a.cpp.xml "$rev2"
 
-srcml --get-src-version sub/a.cpp.xml
+srcml --show-src-version sub/a.cpp.xml
 check 3<<< "0.9.0"
 
-srcml --get-src-version < sub/a.cpp.xml
+srcml --show-src-version < sub/a.cpp.xml
 check 3<<< "0.9.0"
