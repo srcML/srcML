@@ -20,4 +20,3 @@ echo -n "" | src2srcml -l C++ --no-xml-declaration -o sub/a.cpp.xml
 
 check sub/a.cpp.xml 3<<< "$srcml"
 
-exit 0

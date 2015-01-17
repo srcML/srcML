@@ -11,11 +11,14 @@ define output <<- 'STDOUT'
 
 # separate
 echo -n "" | src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr"
+check 3<<< "$output"
 
 # multiple
 echo -n "" | src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp"
+check 3<<< "$output"
 
 echo -n "" | src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr"
+check 3<<< "$output"
 
 echo -n "" | src2srcml -l C++ --debug --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr"
-
+check 3<<< "$output"

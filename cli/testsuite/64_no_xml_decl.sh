@@ -26,7 +26,7 @@ srcml2src -X --no-xml-declaration -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcmlout"
 rmfile sub/b.cpp.xml
 
-srcml2src --no-xml-declaration < sub/a.cpp.xml
+srcml2src -X --no-xml-declaration < sub/a.cpp.xml
 
 check 3<<< "$srcmlout"
 

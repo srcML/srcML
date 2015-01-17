@@ -7,29 +7,93 @@ source $(dirname "$0")/framework_test.sh
 ##
 # Test order of metadata option order
 
-define output <<- 'STDOUT'
+define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" filename="a.cpp" version="1.0"/>
-	INPUT
+	STDOUT
 
-options = [-l -d -f -s -x
-	   -l -d -f -s -x
+createfile sub/a.cpp.xml "$srcml"
 
-values = ['language="C++"\n' 'directory="sub"\n' 'filename="a.cpp"\n' 'src-version="1.0"\n' 'encoding="UTF-8"\n'
-	  'language="C++"\n' 'directory="sub"\n' 'filename="a.cpp"\n' 'src-version="1.0"\n' 'encoding="UTF-8"\n'
+# TODO: Add get-hash and get-timestamp
+options=( --get-language --get-directory --get-filename --get-src-version --get-encoding )
 
-index = 0
-srcml2src options[index + options[index + 1[1 + options[index + 2[1 + options[index + 3[1 + options[index + 4[1 srcml values[index + values[index + 1 + values[index + 2 + values[index + 3 + values[index + 4)
+size="${#options[@]}"
 
-index += 1
-srcml2src options[index + options[index + 1[1 + options[index + 2[1 + options[index + 3[1 + options[index + 4[1 srcml values[index + values[index + 1 + values[index + 2 + values[index + 3 + values[index + 4)
+define values <<- 'STDOUT'
+	language="C++"
+	filename="a.cpp"
+	directory="sub"
+	version="1.0"
+	encoding="UTF-8"
+	STDOUT
 
-index += 1
-srcml2src options[index + options[index + 1[1 + options[index + 2[1 + options[index + 3[1 + options[index + 4[1 srcml values[index + values[index + 1 + values[index + 2 + values[index + 3 + values[index + 4)
+index=-1
 
-index += 1
-srcml2src options[index + options[index + 1[1 + options[index + 2[1 + options[index + 3[1 + options[index + 4[1 srcml values[index + values[index + 1 + values[index + 2 + values[index + 3 + values[index + 4)
+# Re-order the options as argument flags to srcml
+new_arg() {
+	index=$[$index+1]
 
-index += 1
-srcml2src options[index + options[index + 1[1 + options[index + 2[1 + options[index + 3[1 + options[index + 4[1 srcml values[index + values[index + 1 + values[index + 2 + values[index + 3 + values[index + 4)
+	# Assign argument based on index value into options
+	val="${options[(($index % $size))]} ${options[(($[$index+1] % $size))]} ${options[(($[$index+2] % $size))]} ${options[(($[$index+3] % $size))]} ${options[(($[$index+4] % $size))]}"
+	message "$val"
+
+}
+
+# TODO: This would be cleaner, if only bash didn't output the new_arg history instead
+# of the srcml input
+
+#for (( i = 0; i < $size; i++ )); do
+#	new_arg
+#
+#	srcml2src $val sub/a.cpp.xml
+#	check 3<<< "$values"
+#
+#	srcml2src $val < sub/a.cpp.xml
+#	check 3<<< "$values"
+#done
+
+new_arg
+
+srcml2src $val sub/a.cpp.xml
+check 3<<< "$values"
+
+srcml2src $val < sub/a.cpp.xml
+check 3<<< "$values"
+
+
+new_arg
+
+srcml2src $val sub/a.cpp.xml
+check 3<<< "$values"
+
+srcml2src $val < sub/a.cpp.xml
+check 3<<< "$values"
+
+
+new_arg
+
+srcml2src $val sub/a.cpp.xml
+check 3<<< "$values"
+
+srcml2src $val < sub/a.cpp.xml
+check 3<<< "$values"
+
+
+new_arg
+
+srcml2src $val sub/a.cpp.xml
+check 3<<< "$values"
+
+srcml2src $val < sub/a.cpp.xml
+check 3<<< "$values"
+
+
+new_arg
+
+srcml2src $val sub/a.cpp.xml
+check 3<<< "$values"
+
+srcml2src $val < sub/a.cpp.xml
+check 3<<< "$values"
+
 
