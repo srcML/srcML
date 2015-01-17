@@ -4,46 +4,56 @@
 source $(dirname "$0")/framework_test.sh
 
 # test
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++">
-</unit>
+define srcml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++">
+	</unit>
 	STDOUT
 
-define output <<- 'STDOUT'
-	srcmlout = STDOUT<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+define srcmlout <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit language="C++">
 	</unit>
-INPUT
+	STDOUT
 
-f = open(sub/a.cpp.xml 'w')
-f.write(srcml)
-f.close()
+createfile sub/a.cpp.xml "$srcml"
 
+# -X --no-namespace-decl
+srcml2src -X --no-namespace-decl sub/a.cpp.xml 
+check 3<<< "$srcmlout"
 
-srcml2src -X --no-namespace-decl srcml srcmlout)
-srcml2src -X --no-namespace-decl 'sub/a.cpp.xml <<INPUTout)
-if sys.platform != 'cygwin' :
-	srcml2src -X --no-namespace-decl -o sub/b.cpp.xml srcml
-	validate(open(sub/b.cpp.xml).read() srcmlout)
-srcml2src -X --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml).read() srcmlout)
+srcml2src -X --no-namespace-decl < sub/a.cpp.xml
+check 3<<< "$srcmlout"
 
+srcml2src -X --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcmlout"
 
-srcml2src --no-namespace-decl -X srcml srcmlout)
-srcml2src --no-namespace-decl -X 'sub/a.cpp.xml <<INPUTout)
-if sys.platform != 'cygwin' :
-	srcml2src --no-namespace-decl -X -o sub/b.cpp.xml srcml
-	validate(open(sub/b.cpp.xml).read() srcmlout)
-srcml2src --no-namespace-decl -X sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml).read() srcmlout)
+srcml2src -X --no-namespace-decl -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcmlout"
 
+srcml2src -X --no-namespace-decl -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcmlout"
 
-srcml2src --no-namespace-decl srcml srcmlout)
-srcml2src --no-namespace-decl 'sub/a.cpp.xml <<INPUTout)
-if sys.platform != 'cygwin' :
-	srcml2src --no-namespace-decl -o sub/b.cpp.xml srcml
-	validate(open(sub/b.cpp.xml).read() srcmlout)
-srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml ""
-validate(open(sub/b.cpp.xml).read() srcmlout)
+# --no-namespace-decl -X
+srcml2src --no-namespace-decl -X sub/a.cpp.xml 
+check 3<<< "$srcmlout"
 
+srcml2src --no-namespace-decl -X < sub/a.cpp.xml
+check 3<<< "$srcmlout"
+
+srcml2src --no-namespace-decl -X sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcmlout"
+
+srcml2src --no-namespace-decl -X -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcmlout"
+
+srcml2src --no-namespace-decl -X -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml 3<<< "$srcmlout"
+
+# --no-namespace-decl
+srcml2src --no-namespace-decl sub/a.cpp.xml
+check_null
+
+srcml2src --no-namespace-decl < sub/a.cpp.xml
+check_null
 
