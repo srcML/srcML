@@ -18,6 +18,6 @@ check_null
 srcml --get-timestamp < sub/a.cpp.xml
 check_null
 
-# TODO: find example with timestamp given
+# TODO: issue #1042
 message "timestamp provided"
 exit 1
