@@ -34,22 +34,18 @@ check 3<<< "$foutput"
 
 src2srcml -l C++ -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml 3<<< "$output"
-rmfile sub/a.cpp.xml
 
 src2srcml sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
 
 src2srcml --cpp-text-if0 sub/a.cpp
 check 3<<< "$foutput"
 
 src2srcml -l C++ --cpp-text-if0 -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml 3<<< "$output"
-rmfile sub/a.cpp.xml
 
 src2srcml --cpp-text-if0 sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
 
 
 define output <<- 'STDOUT'
@@ -73,8 +69,7 @@ check 3<<< "$foutput"
 
 src2srcml -l C++ --cpp-markup-if0 -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml 3<<< "$output"
-rmfile sub/a.cpp.xml
 
 src2srcml --cpp-markup-if0 sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
+

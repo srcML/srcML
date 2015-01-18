@@ -61,5 +61,3 @@ createfile filelistab "$filelist"
 
 rm -f filelistab
 
-exit 0
-

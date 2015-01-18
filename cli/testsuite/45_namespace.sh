@@ -54,4 +54,3 @@ src2srcml --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.
 
 check sub/a.cpp.xml 3<<< "$foutput"
 
-exit 0

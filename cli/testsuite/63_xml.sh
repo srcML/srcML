@@ -17,16 +17,12 @@ createfile sub/a.cpp.xml "$srcml"
 
 srcml2src -X sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
-rmfile sub/b.cpp.xml
 
 srcml2src -X sub/a.cpp.xml
 check 3<<< "$srcml"
 
 srcml2src -X -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
-rmfile sub/b.cpp.xml
 
 srcml2src -X sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
-rmfile sub/b.cpp.xml
-

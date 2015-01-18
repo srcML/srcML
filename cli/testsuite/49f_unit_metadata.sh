@@ -40,5 +40,3 @@ check 3<<< "emptysrc"
 
 srcml -X --unit "2" --show-filename sub/a.cpp.xml
 check 3<<< "empty.java"
-
-rmfile sub/a.cpp.xml

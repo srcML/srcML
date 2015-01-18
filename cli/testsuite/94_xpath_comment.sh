@@ -45,16 +45,3 @@ check 3<<<"Comment One Comment Two"
 srcml2src --xpath "//comment()" <<< "$input"
 
 srcml2src --xpath "string(//comment())" <<< "$input"
-
-exit 0
-# check srcml2src diff option
-
-f = open('diff/diff.cpp.xml' 'r')
-srcdiff = f.read()
-f.close()
-
-f = open('diff/a.cpp' 'r')
-src_old = f.read()
-f.close()
-
-f = open('diff/a.cpp.xml' 'r')
