@@ -431,7 +431,7 @@ int srcml_parse_unit_filename(srcml_unit* unit, const char* src_filename) {
 
     UTF8CharBuffer * input = 0;
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
+    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
     try {
 
         input = new UTF8CharBuffer(src_filename, src_encoding, output_hash ? &unit->hash : 0);
@@ -477,7 +477,7 @@ int srcml_parse_unit_memory(srcml_unit* unit, const char* src_buffer, size_t buf
 
     UTF8CharBuffer * input = 0;
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
+    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
     try {
 
         input = new UTF8CharBuffer(src_buffer ? src_buffer : "", buffer_size, src_encoding, output_hash ? &unit->hash : 0);
@@ -522,7 +522,7 @@ int srcml_parse_unit_FILE(srcml_unit* unit, FILE* src_file) {
 
     UTF8CharBuffer * input = 0;
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
+    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
     try {
 
         input = new UTF8CharBuffer(src_file, src_encoding, output_hash ? &unit->hash : 0);
@@ -567,7 +567,7 @@ int srcml_parse_unit_fd(srcml_unit* unit, int src_fd) {
 
     UTF8CharBuffer * input = 0;
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
+    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
     try {
 
         input = new UTF8CharBuffer(src_fd, src_encoding, output_hash ? &unit->hash : 0);
@@ -614,7 +614,7 @@ int srcml_parse_unit_io(srcml_unit* unit, void * context, int (*read_callback)(v
 
     UTF8CharBuffer * input = 0;
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
+    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
     try {
 
         input = new UTF8CharBuffer(context, read_callback, close_callback, src_encoding, output_hash ? &unit->hash : 0);

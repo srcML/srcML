@@ -404,6 +404,8 @@ void UTF8CharBuffer::init(const char * encoding) {
 
             pos = 3;
 
+            this->encoding = "UTF-8";
+
         } else {
 
             // assume ISO-8859-1 unless we can detect it otherwise
