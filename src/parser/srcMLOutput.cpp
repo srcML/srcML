@@ -750,7 +750,7 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
  * Start consumption of tokens/parsing of source code with unit attributes.
  */
 void srcMLOutput::consume(const char* language, const char* revision, const char* directory, const char* filename,
-                          const char* version, const char* timestamp, const char* hash) {
+                          const char* version, const char* timestamp, const char* hash, const char* encoding) {
 
     // store attributes so that first occurrence of unit element will be correct
     unit_revision = revision;
@@ -760,6 +760,7 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
     unit_timestamp = timestamp;
     unit_language = language;
     unit_hash = hash;
+    unit_encoding = encoding;
 
     if (!isoption(options, SRCML_OPTION_INTERACTIVE)) {
 
@@ -970,6 +971,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
  * @param version the version attribute
  * @param timestamp the timestamp attribute
  * @param hash the hash attribute
+ * @param encoding the encoding attribute
  * @param outer is this an outer or inner unit
  *
  * Output the start of a unit tag.
@@ -978,6 +980,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const char* dir, const char* filename,
                             const char* version, const char* timestamp,
                             const char* hash,
+                            const char* encoding,
                             const std::vector<std::string> & attributes,
                             bool output_macrolist) {
 
@@ -1042,8 +1045,11 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         // timestamp attribute
         { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
 
-        // timestamp attribute
+        // hash attribute
         { UNIT_ATTRIBUTE_HASH, hash },
+
+        // source encoding attribute
+        { UNIT_ATTRIBUTE_SOURCE_ENCODING, isoption(options, SRCML_OPTION_STORE_ENCODING) ? encoding : 0 },
 
         { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && (isoption(options, SRCML_OPTION_NESTIF)
          || isoption(options, SRCML_OPTION_CPPIF_CHECK) || isoption(options, SRCML_OPTION_WRAP_TEMPLATE) || !isoption(options, SRCML_OPTION_TERNARY)) ? soptions.c_str() : 0 },
@@ -1109,7 +1115,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
-        startUnit(unit_language, unit_revision, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
+        startUnit(unit_language, unit_revision, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, unit_encoding, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
 
     } else {
 

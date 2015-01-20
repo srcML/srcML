@@ -144,6 +144,8 @@ __LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_DEBUG             1<<25
 /** Markups OpenMP in special namespace */
 #define SRCML_OPTION_OPENMP            1<<26
+/** Encode the original source encoding as an attribute */
+#define SRCML_OPTION_STORE_ENCODING    1<<27
 
 /* srcml status messages */
 /** Return status indicating no errors */

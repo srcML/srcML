@@ -532,6 +532,8 @@ public :
                 srcml_unit_set_version(unit, value.c_str());
             else if(attribute == "tabs" || attribute == "options" || attribute == "hash")
                 ;
+            else if(attribute == "src-encoding")
+                archive->options |= SRCML_OPTION_STORE_ENCODING, srcml_unit_set_src_encoding(unit, value.c_str());
             else {
 
                 unit->attributes.push_back(attribute);

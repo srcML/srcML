@@ -821,7 +821,7 @@ if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
                                                 archive->directory ? archive->directory->c_str() : 0,
                                                 archive->filename ? archive->filename->c_str() : 0,
                                                 archive->version ? archive->version->c_str() : 0,
-                                                archive->attributes);
+                                                archive->attributes, 0, 0, 0);
         archive->translator->set_macro_list(archive->user_macro_list);
 
     } catch(...) { 
@@ -889,7 +889,7 @@ int srcml_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
                                                 archive->directory ? archive->directory->c_str() : 0,
                                                 archive->filename ? archive->filename->c_str() : 0,
                                                 archive->version ? archive->version->c_str() : 0,
-                                                archive->attributes);
+                                                archive->attributes, 0, 0, 0);
 
         archive->translator->set_macro_list(archive->user_macro_list);
 
