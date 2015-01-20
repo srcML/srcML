@@ -366,7 +366,7 @@ public :
                 archive->revision = value;
             else if(attribute == "filename")
                 srcml_archive_set_filename(archive, value.c_str());
-            else if(attribute == "dir")
+            else if(attribute.size() >= 3 && attribute[0] == 'd' && attribute[1] == 'i' && attribute[2] == 'r' && (attribute.size() == 3 || attribute.compare(3, std::string::npos, "ectory")))
                 srcml_archive_set_directory(archive, value.c_str());
             else if(attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
