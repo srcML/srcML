@@ -117,6 +117,9 @@ const char* const UNIT_ATTRIBUTE_TIMESTAMP = "timestamp";
 /** hash checksum attribute */
 const char* const UNIT_ATTRIBUTE_HASH = "hash";
 
+/** hash checksum attribute */
+const char* const UNIT_ATTRIBUTE_SOURCE_ENCODING = "src-encoding";
+
 /** item (XPath) attribute */
 const char* const UNIT_ATTRIBUTE_ITEM = "item";
 

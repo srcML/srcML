@@ -385,6 +385,8 @@ UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback
  */
 void UTF8CharBuffer::init(const char * encoding) {
 
+    this->encoding = encoding;
+
     /* If an encoding was not specified, then try to detect it.
        This is especially important for the BOM for UTF-8.
        If nothing is detected, then use ISO-8859-1 */
@@ -430,6 +432,8 @@ void UTF8CharBuffer::init(const char * encoding) {
 #endif
             // setup the encoder being used
             input->encoder = xmlGetCharEncodingHandler(denc);
+
+            this->encoding = xmlGetCharEncodingName(denc);
 
             // fill up the buffer with even more data
             size = growBuffer();
@@ -525,6 +529,19 @@ int UTF8CharBuffer::getChar() {
     }
 
     return c;
+}
+
+/**
+ * getEncoding
+ *
+ * Get the source encoding used.
+ *
+ * @returns the used source encoding.
+ */
+const std::string & UTF8CharBuffer::getEncoding() const {
+
+    return (const char *)encoding.c_str();
+
 }
 
 /**

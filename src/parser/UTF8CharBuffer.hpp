@@ -100,6 +100,9 @@ public:
     // Get the next character from the stream
     int getChar();
 
+    // Get the used encoding
+    const std::string & getEncoding() const;
+
     ~UTF8CharBuffer();
 
 private:
@@ -109,6 +112,9 @@ private:
 
     /** xml input handles encodings */
     xmlParserInputBufferPtr input;
+
+    /** Store encoding for later queries */
+    std::string encoding;
 
     /* position currently at in input buffer */
     int pos;
