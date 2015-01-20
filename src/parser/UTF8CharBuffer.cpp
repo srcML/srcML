@@ -385,7 +385,7 @@ UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback
  */
 void UTF8CharBuffer::init(const char * encoding) {
 
-    this->encoding = encoding;
+    if(encoding) this->encoding = encoding;
 
     /* If an encoding was not specified, then try to detect it.
        This is especially important for the BOM for UTF-8.
@@ -538,9 +538,9 @@ int UTF8CharBuffer::getChar() {
  *
  * @returns the used source encoding.
  */
-const std::string & UTF8CharBuffer::getEncoding() const {
+const boost::optional<std::string> & UTF8CharBuffer::getEncoding() const {
 
-    return (const char *)encoding.c_str();
+    return encoding;
 
 }
 

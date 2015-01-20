@@ -101,7 +101,7 @@ public:
     int getChar();
 
     // Get the used encoding
-    const std::string & getEncoding() const;
+    const boost::optional<std::string> & getEncoding() const;
 
     ~UTF8CharBuffer();
 
@@ -114,7 +114,7 @@ private:
     xmlParserInputBufferPtr input;
 
     /** Store encoding for later queries */
-    std::string encoding;
+    boost::optional<std::string> encoding;
 
     /* position currently at in input buffer */
     int pos;
