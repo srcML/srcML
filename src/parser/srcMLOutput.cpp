@@ -39,6 +39,8 @@
 #define snprintf _snprintf
 #endif
 
+#define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
+
 /** 
  * anonymous enum for prefix positions
  */
@@ -1025,7 +1027,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     // list of attributes
     const char* const attrs[][2] = {
 
-        { UNIT_ATTRIBUTE_REVISION, revision },
+        { UNIT_ATTRIBUTE_REVISION, !isoption(options, SRCML_OPTION_NO_REVISION) ? revision : 0 },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
