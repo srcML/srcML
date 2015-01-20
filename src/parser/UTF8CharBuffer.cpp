@@ -213,7 +213,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
     }
 
     if(size == 0)
-        input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, encoding ? xmlParseCharEncoding("UTF-8") : XML_CHAR_ENCODING_NONE);
+        input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, xmlParseCharEncoding("UTF-8"));
     else
         input = xmlParserInputBufferCreateMem(c_buffer, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
@@ -394,6 +394,7 @@ void UTF8CharBuffer::init(const char * encoding) {
 
         // input enough characters to detect.
         // 4 is good because you either get 4 or some standard size which is probably larger (really)
+        int save_size = size;
         size = xmlParserInputBufferGrow(input, 4);
 
         // detect (and remove) BOMs for UTF8 and UTF16
@@ -406,6 +407,10 @@ void UTF8CharBuffer::init(const char * encoding) {
 
             this->encoding = "UTF-8";
 
+        } else if(save_size == 0 && size == 0) {
+
+            this->encoding = "ISO-8859-1";
+
         } else {
 
             // assume ISO-8859-1 unless we can detect it otherwise
@@ -413,7 +418,7 @@ void UTF8CharBuffer::init(const char * encoding) {
 
             // now see if we can detect it
             xmlCharEncoding newdenc = xmlDetectCharEncoding(xmlBufContent(input->buffer), size);
-            if (newdenc)
+            if (newdenc && newdenc != XML_CHAR_ENCODING_UTF8)
                 denc = newdenc;
 
             /* Transform the data already read in */
