@@ -69,6 +69,7 @@ int main() {
     const std::string srcml_timestamp = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" timestamp=\"today\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
     const std::string srcml_hash = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" hash=\"0123456789abcdef\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
     const std::string srcml_hash_generated = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" hash=\"\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_encoding = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" src-encoding=\"ISO-8859-1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
 
     std::ofstream src_file_c("project.c");
     src_file_c << src;
@@ -341,6 +342,22 @@ int main() {
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_parse_unit_filename(unit, "project.c");
         dassert(*unit->unit, srcml_hash_generated);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+        srcml_archive_enable_option(archive, SRCML_OPTION_STORE_ENCODING);
+        srcml_write_open_filename(archive, "project.xml");
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_parse_unit_filename(unit, "project.c");
+        dassert(*unit->unit, srcml_encoding);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);
@@ -686,6 +703,23 @@ int main() {
         srcml_unit_set_language(unit, "C");
         srcml_parse_unit_memory(unit, src.c_str(), src.size());
         dassert(*unit->unit, srcml_hash_generated);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+        srcml_archive_enable_option(archive, SRCML_OPTION_STORE_ENCODING);
+        srcml_write_open_filename(archive, "project.xml");
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_language(unit, "C");
+        srcml_parse_unit_memory(unit, src.c_str(), src.size());
+        dassert(*unit->unit, srcml_encoding);
 
         srcml_free_unit(unit);
         srcml_close_archive(archive);
@@ -1055,6 +1089,25 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+        srcml_archive_enable_option(archive, SRCML_OPTION_STORE_ENCODING);
+        srcml_write_open_filename(archive, "project.xml");
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_language(unit, "C");
+        FILE * file = fopen("project.c", "r");
+        srcml_parse_unit_FILE(unit, file);
+        dassert(*unit->unit, srcml_encoding);
+        fclose(file);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_hash(unit, "0123456789abcdef");
@@ -1395,6 +1448,42 @@ int main() {
         int fd = OPEN("project.c", O_RDONLY, 0);
         srcml_parse_unit_fd(unit, fd);
         dassert(*unit->unit, srcml_timestamp);
+        CLOSE(fd);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        srcml_write_open_filename(archive, "project.xml");
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_language(unit, "C");
+        int fd = OPEN("project.c", O_RDONLY, 0);
+        srcml_parse_unit_fd(unit, fd);
+        dassert(*unit->unit, srcml_hash_generated);
+        CLOSE(fd);
+
+        srcml_free_unit(unit);
+        srcml_close_archive(archive);
+        srcml_free_archive(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+        srcml_archive_enable_option(archive, SRCML_OPTION_STORE_ENCODING);
+        srcml_write_open_filename(archive, "project.xml");
+        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_language(unit, "C");
+        int fd = OPEN("project.c", O_RDONLY, 0);
+        srcml_parse_unit_fd(unit, fd);
+        dassert(*unit->unit, srcml_encoding);
         CLOSE(fd);
 
         srcml_free_unit(unit);
@@ -1758,13 +1847,13 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+        srcml_archive_enable_option(archive, SRCML_OPTION_STORE_ENCODING);
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
-        srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_unit_set_language(unit, "C");
         FILE * file = fopen("project.c", "r");
         srcml_parse_unit_io(unit, (void *)file, read_callback, close_callback);
-        dassert(*unit->unit, srcml_hash);
+        dassert(*unit->unit, srcml_encoding);
         fclose(file);
 
         srcml_free_unit(unit);
@@ -1776,12 +1865,14 @@ int main() {
     {
 
         srcml_archive * archive = srcml_create_archive();
+        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_unit_set_language(unit, "C");
         FILE * file = fopen("project.c", "r");
         srcml_parse_unit_io(unit, (void *)file, read_callback, close_callback);
-        dassert(*unit->unit, srcml_hash_generated);
+        dassert(*unit->unit, srcml_hash);
         fclose(file);
 
         srcml_free_unit(unit);
