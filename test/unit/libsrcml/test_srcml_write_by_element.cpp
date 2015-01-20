@@ -35,8 +35,8 @@
 int main() {
 
     std::string xml_decl ="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-    std::string empty_unit = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" dir=\"dir\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"0123456789abcdef\"/>\n";
-    std::string empty_inner_unit = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" dir=\"dir\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"0123456789abcdef\"/>\n";
+    std::string empty_unit = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"directory\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"0123456789abcdef\"/>\n";
+    std::string empty_inner_unit = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"directory\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"0123456789abcdef\"/>\n";
     std::string start_root_unit_tag = "<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\n\n";
     std::string end_root_unit_tag = "\n</unit>\n";
 
@@ -58,7 +58,7 @@ int main() {
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
-        srcml_unit_set_directory(unit, "dir");
+        srcml_unit_set_directory(unit, "directory");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
         srcml_unit_set_hash(unit, "0123456789abcdef");
@@ -81,7 +81,7 @@ int main() {
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
-        srcml_unit_set_directory(unit, "dir");
+        srcml_unit_set_directory(unit, "directory");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
         srcml_unit_set_hash(unit, "0123456789abcdef");
@@ -104,7 +104,7 @@ int main() {
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
-        srcml_unit_set_directory(unit, "dir");
+        srcml_unit_set_directory(unit, "directory");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
         srcml_unit_set_hash(unit, "0123456789abcdef");

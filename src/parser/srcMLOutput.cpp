@@ -475,19 +475,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
 
-    // setup attributes names for line/column position if used
-    if (isoption(options, SRCML_OPTION_POSITION)) {
-
-        lineAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-        lineAttribute += ":line";
-
-        line2Attribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-        line2Attribute += ":line2";
-
-        columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-        columnAttribute += ":column";
-    }
-
     if(!isoption(options, SRCML_OPTION_OPTIONAL_MARKUP)) {
 
         ElementPrefix[SSTRING]   = SRCML_SRC_NS_URI_POS;
@@ -571,6 +558,19 @@ void srcMLOutput::initNamespaces(const std::vector<std::string> & prefix, const 
 
         }
 
+    }
+
+    // setup attributes names for line/column position if used
+    if (isoption(options, SRCML_OPTION_POSITION)) {
+
+        lineAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+        lineAttribute += ":line";
+
+        line2Attribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+        line2Attribute += ":line2";
+
+        columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+        columnAttribute += ":column";
     }
 
 }

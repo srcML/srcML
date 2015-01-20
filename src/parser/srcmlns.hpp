@@ -100,7 +100,7 @@ const char* const UNIT_ATTRIBUTE_REVISION = "revision";
 const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
 
 /** directory attribute */
-const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
+const char* const UNIT_ATTRIBUTE_DIRECTORY = "directory";
 
 /** filename attribute */
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
