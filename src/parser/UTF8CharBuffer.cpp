@@ -212,10 +212,18 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 
     }
 
-    if(size == 0)
+    bool use_init = true;
+    if(size == 0) {
+
         input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, xmlParseCharEncoding("UTF-8"));
-    else
+        this->encoding = encoding ? encoding : "ISO-8859-1";
+        use_init = false;
+
+    } else {
+
         input = xmlParserInputBufferCreateMem(c_buffer, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+
+    }
 
     if(!input) throw UTF8FileError();
 
@@ -224,7 +232,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 #ifdef LIBXML2_NEW_BUFFER
         input->raw = input->buffer;
         input->rawconsumed = 0;
-        xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_8859_1);
+        xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(xmlParseCharEncoding(encoding));
         input->buffer = temp_parser->buffer;
         temp_parser->buffer = 0;
         xmlFreeParserInputBuffer(temp_parser);
@@ -239,7 +247,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 #endif
     }
 
-    init(encoding);
+    if(use_init) init(encoding);
 
 }
 
@@ -280,8 +288,6 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
                                          encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
-
-
 
     init(encoding);
 
@@ -392,13 +398,14 @@ void UTF8CharBuffer::init(const char * encoding) {
        If nothing is detected, then use ISO-8859-1 */
     if (!encoding) {
 
+        // need to save the mem buffer ssize
+        int save_size = size;
         // input enough characters to detect.
         // 4 is good because you either get 4 or some standard size which is probably larger (really)
-        int save_size = size;
         size = xmlParserInputBufferGrow(input, 4);
 
         // detect (and remove) BOMs for UTF8 and UTF16
-        if (size >= 3 &&
+        if ((size >= 3 || save_size >= 3) &&
             xmlBufContent(input->buffer)[0] == 0xEF &&
             xmlBufContent(input->buffer)[1] == 0xBB &&
             xmlBufContent(input->buffer)[2] == 0xBF) {
@@ -407,9 +414,8 @@ void UTF8CharBuffer::init(const char * encoding) {
 
             this->encoding = "UTF-8";
 
-        } else if(save_size == 0 && size == 0) {
-
-            this->encoding = "ISO-8859-1";
+            // restore mem buffer size
+            if(size == 0) size = save_size;
 
         } else {
 
