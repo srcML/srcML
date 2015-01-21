@@ -465,6 +465,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         conflicting_options(cli_map, "output", "to-dir");
         conflicting_options(cli_map, "cpp-text-else", "cpp-markup-else");
         conflicting_options(cli_map, "cpp-text-if0", "cpp-markup-if0");
+        conflicting_options(cli_map, "output-src", "output-xml");
 
         // Check dependent options
         option_dependency(cli_map, "no-archive", "to-dir");
