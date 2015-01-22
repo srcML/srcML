@@ -43,7 +43,7 @@ src2srcml sub/a.cpp sub/b.cpp --ordered
 check 3<<< "$nestedfile"
 
 # test explicit archive flag
-src2srcml --archive sub/a.cpp
+src2srcml --archive --ordered sub/a.cpp
 
 check 3<<< "$fileasrcml"
 
