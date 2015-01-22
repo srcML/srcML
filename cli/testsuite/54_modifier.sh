@@ -27,9 +27,7 @@ check 3<<< "$foutput"
 src2srcml -l C++ --modifier -o sub/a.cpp.xml sub/a.cpp
 
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
 
 src2srcml --modifier sub/a.cpp -o sub/a.cpp.xml
 
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml

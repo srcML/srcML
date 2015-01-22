@@ -23,22 +23,20 @@ define nestedfileextra <<- 'STDOUT'
 
 createfile sub/a.cpp.xml "$nestedfileextra"
 
-srcml -X --unit "1" --get-language sub/a.cpp.xml
+srcml -X --unit "1" --show-language sub/a.cpp.xml
 check 3<<< "C++"
 
-srcml -X --unit "1" --get-directory sub/a.cpp.xml
+srcml -X --unit "1" --show-directory sub/a.cpp.xml
 check 3<<< "sub"
 
-srcml -X --unit "1" --get-filename sub/a.cpp.xml
+srcml -X --unit "1" --show-filename sub/a.cpp.xml
 check 3<<< "a.cpp"
 
-srcml -X --unit "2" --get-language sub/a.cpp.xml
+srcml -X --unit "2" --show-language sub/a.cpp.xml
 check 3<<< "Java"
 
-srcml -X --unit "2" --get-directory sub/a.cpp.xml
+srcml -X --unit "2" --show-directory sub/a.cpp.xml
 check 3<<< "emptysrc"
 
-srcml -X --unit "2" --get-filename sub/a.cpp.xml
+srcml -X --unit "2" --show-filename sub/a.cpp.xml
 check 3<<< "empty.java"
-
-rmfile sub/a.cpp.xml

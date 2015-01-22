@@ -35,7 +35,6 @@ srcml2src --verbose --to-dir=. sub/a.cpp.xml
 
 check sub/a.cpp 3<<< "a;" 4<<< "    1 sub/a.cpp"
 
-rmfile sub/a.cpp.xml
 createfile sub/a.cpp.xml "$nestedfile"
 
 rmfile sub/a.cpp

@@ -29,5 +29,3 @@ check sub/a.java.xml 3<<< "$output"
 src2srcml --cpp sub/a.java -o sub/a.java.xml
 
 check sub/a.java.xml 3<<< "$foutput"
-
-exit 0

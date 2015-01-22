@@ -28,12 +28,10 @@ check 3<<< "$sfile"
 echo -n "" | src2srcml -l C++ --literal --operator -o sub/a.cpp.xml
 
 check sub/a.cpp.xml 3<<< "$srcml"
-rmfile sub/a.cpp.xml
 
 src2srcml --literal --operator sub/a.cpp -o sub/a.cpp.xml
 
 check sub/a.cpp.xml 3<<< "$sfile"
-rmfile sub/a.cpp.xml
 
 src2srcml -l C++ --operator --literal < sub/a.cpp
 
@@ -45,4 +43,3 @@ check 3<<< "$sfile"
 
 src2srcml -l C++ --operator --literal -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml 3<<< "$srcml"
-rmfile sub/a.cpp.xml

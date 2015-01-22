@@ -35,9 +35,6 @@ check 3<<< "$fsxmlfile"
 
 src2srcml -l C++ --expression -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml 3<<< "$sxmlfile"
-rmfile sub/a.cpp.xml
 
 src2srcml --expression sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$fsxmlfile"
-rmfile sub/a.cpp.xml
-

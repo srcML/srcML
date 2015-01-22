@@ -67,26 +67,26 @@ srcml2src -X --unit "1" <<< "$nestedfileextra"
 
 check 3<<< "$file1"
 
-srcml -X --unit "1" --get-filename <<< "$nestedfileextra"
+srcml -X --unit "1" --show-filename <<< "$nestedfileextra"
 
 check 3<<< "a.cpp"
 
-srcml -X --unit "2" --get-filename <<< "$nestedfileextra"
+srcml -X --unit "2" --show-filename <<< "$nestedfileextra"
 
 check 3<<< "b.cpp"
 
-srcml -X --unit "1" --get-directory <<< "$nestedfileextra"
+srcml -X --unit "1" --show-directory <<< "$nestedfileextra"
 
 check 3<<< "sub"
 
-srcml -X --unit "2" --get-directory <<< "$nestedfileextra"
+srcml -X --unit "2" --show-directory <<< "$nestedfileextra"
 
 check 3<<< "sub"
 
-srcml -X --unit "1" --get-language <<< "$nestedfileextra"
+srcml -X --unit "1" --show-language <<< "$nestedfileextra"
 
 check 3<<< "C"
 	
-srcml -X --unit "2" --get-language <<< "$nestedfileextra"
+srcml -X --unit "2" --show-language <<< "$nestedfileextra"
 
 check 3<<< "Java"

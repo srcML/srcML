@@ -31,9 +31,7 @@ check 3<<< "$fsrcml"
 src2srcml -l C++ -x "ISO-8859-1" -o sub/a.cpp.xml < sub/a.cpp
 
 check sub/a.cpp.xml 3<<< "$srcml"
-rmfile sub/a.cpp.xml
 
 src2srcml -x "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml
 
 check sub/a.cpp.xml 3<<< "$fsrcml"
-rmfile sub/a.cpp.xml

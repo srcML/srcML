@@ -18,11 +18,9 @@ check 3<<< "$foutput"
 
 src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sub/a.cpp
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
 
 src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
 
 src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp
 check 3<<< "$foutput"
@@ -32,22 +30,18 @@ check 3<<< "$foutput"
 
 src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
 
 src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp
 check 3<<< "$foutput"
 
 src2srcml -l C++ --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sub/a.cpp
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
 
 src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
 
 src2srcml --debug --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$foutput"
-rmfile sub/a.cpp.xml
 
 src2srcml --debug --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" -o sub/a.cpp.xml sub/a.cpp
 check sub/a.cpp.xml 3<<< "$foutput"
