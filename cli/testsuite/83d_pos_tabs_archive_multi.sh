@@ -19,38 +19,38 @@ define fsrcml <<- 'STDOUT'
 createfile sub/a.cpp ""
 createfile sub/b.cpp ""
 
-srcml --tabs 4 --archive sub/a.cpp sub/b.cpp --ordered
+srcml --tabs 4 --archive --position sub/a.cpp sub/b.cpp
 check 3<<< "$fsrcml"
 
-srcml --archive --tabs 4 sub/a.cpp sub/b.cpp --ordered
+srcml --archive --tabs 4 --position sub/a.cpp sub/b.cpp
 check 3<<< "$fsrcml"
 
-srcml --tabs 4 sub/a.cpp sub/b.cpp --archive --ordered
+srcml --tabs 4 sub/a.cpp sub/b.cpp --position --archive
 check 3<<< "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --archive --tabs 4 --ordered
+srcml sub/a.cpp sub/b.cpp --archive --tabs 4 --position
 check 3<<< "$fsrcml"
 
-srcml --tabs 4 sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --ordered
+srcml --tabs 4 --position sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 sub/a.cpp sub/b.cpp --archive -o sub/a.cpp.xml --ordered
+srcml --position --tabs 4 sub/a.cpp sub/b.cpp --archive -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --archive --tabs 4 sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --ordered
+srcml --archive --tabs 4 --position sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 --archive sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --ordered
+srcml --tabs 4 --archive sub/a.cpp sub/b.cpp --position -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --archive --ordered
+srcml --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --archive --position
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 -o sub/a.cpp.xml --archive sub/a.cpp sub/b.cpp --ordered
+srcml --tabs 4 -o sub/a.cpp.xml --archive sub/a.cpp sub/b.cpp --position 
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 --archive -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --ordered
+srcml --tabs 4 --position --archive -o sub/a.cpp.xml sub/a.cpp sub/b.cpp 
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --archive --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --ordered
+srcml --position --archive --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp 
 check sub/a.cpp.xml 3<<< "$fsrcml"

@@ -5,7 +5,7 @@ source $(dirname "$0")/framework_test.sh
 
 # test tabs
 
-define srcml <<- 'STDOUT'
+define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:pos="http://www.sdml.info/srcML/position" revision="0.8.0" pos:tabs="4">
 
@@ -14,7 +14,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-define fsrcml <<- 'STDOUT'
+define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:pos="http://www.sdml.info/srcML/position" revision="0.8.0" pos:tabs="4">
 
