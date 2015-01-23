@@ -120,8 +120,8 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // sha1 attribute, if hash is on
         // sha1 value based on the code as encoded (source text encoding) in the original file
-        if (srcml_archive_get_options(srcml_arch) & SRCML_OPTION_HASH) {
-
+        if (!request->disk_filename && srcml_archive_get_options(srcml_arch) & SRCML_OPTION_HASH) {
+        
 #ifdef _MSC_BUILD
             unsigned char md[20];
             /** msvc hash provider object */
