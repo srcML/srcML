@@ -51,7 +51,7 @@ int main(int argc, char * argv[]) {
 
     // version
     if (srcml_request.command & SRCML_COMMAND_VERSION) {
-        std::cout <<  srcml_version_string() << "\n";
+        std::cout << "libsrcml Version Number " << srcml_version_string() << "\n";
         std::cout << "srcml Version Number " << srcml_version_number() << "\n";
         std::cout << "libarchive Version " << ARCHIVE_VERSION_NUMBER << "\n";
         return 0;
@@ -137,9 +137,10 @@ int main(int argc, char * argv[]) {
 
     srcml_cleanup_globals();
 
-    if (srcml_request.command & SRCML_DEBUG_MODE)
+    if (srcml_request.command & SRCML_DEBUG_MODE) {
         std::cerr << "CPU Time: " << runtime.cpu_time_elapsed() << " ms\n";
         std::cerr << "Real Time: " << runtime.real_world_elapsed() << "ms\n";
+    }
 
     return 0;
 }
@@ -150,7 +151,7 @@ bool request_create_srcml(const srcml_request_t& srcml_request,
 
     return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
         (input_sources.size() > 1 && destination.state == SRCML) ||
-        (input_sources.size() == 1 && input_sources[0].unit > 0 && (srcml_request.command & SRCML_COMMAND_XML));
+        (input_sources.size() == 1 && input_sources[0].unit >= 0 && (srcml_request.command & SRCML_COMMAND_XML));
 }
 
 bool request_transform_srcml(const srcml_request_t& srcml_request,

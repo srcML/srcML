@@ -67,7 +67,7 @@
         const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
         
         if (!attribute_uri)
-                return -1;
+            return -1;
  		
         return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
                                                             xpath_support.second->prefix->c_str(),
@@ -125,8 +125,16 @@ void transform_srcml(const srcml_request_t& srcml_request,
         status = srcml_write_open_FILE(out_arch, output);
     else
         status = srcml_write_open_filename(out_arch, output.c_str());
-    if (status != SRCML_STATUS_OK)
-        throw status;
+    if (status != SRCML_STATUS_OK) {
+        std::cerr << "srcml: error with output archive for transformation\n";
+        exit(-1);
+    }
+
+    // register xml namespaces
+    std::map<std::string, std::string>::const_iterator itr;
+    for (itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
+        srcml_archive_register_namespace(out_arch, (*itr).first.c_str(), (*itr).second.c_str());
+    }
 
     // Convert inputs into srcml archive
 	BOOST_FOREACH(const srcml_input_src& input, input_sources) {
@@ -137,8 +145,10 @@ void transform_srcml(const srcml_request_t& srcml_request,
             status = srcml_read_open_FILE(in_arch, input);
         else
             status = srcml_read_open_filename(in_arch, input.c_str());
-        if (status != SRCML_STATUS_OK)
-            throw status;
+        if (status != SRCML_STATUS_OK) {
+            std::cerr << "srcml: error with input archive for transformation\n";
+            exit(-1);
+        }
 
 		// iterate through all transformations added during cli parsing
 		int xpath_index = -1;
@@ -148,12 +158,17 @@ void transform_srcml(const srcml_request_t& srcml_request,
 			src_prefix_split_uri(trans, protocol, resource);
 
 			if (protocol == "xpath") {
-				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index)) != SRCML_STATUS_OK)
-					throw status;
+                // TODO: FIX BUG
+				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index)) != SRCML_STATUS_OK) {
+					std::cerr << "srcml: error with xpath transformation\n";
+                    exit(-1);
+                }
 			}
 			else if (protocol == "xslt") {
-		        if (apply_xslt(in_arch, resource) != SRCML_STATUS_OK)
-		            throw status;
+		        if (apply_xslt(in_arch, resource) != SRCML_STATUS_OK) {
+		            std::cerr << "srcml: error with xslt transformation\n";
+                    exit(-1);
+                }
 				
 				std::cerr << protocol << " : " << resource << "\n"; // Debug Printout
 			}
@@ -161,8 +176,10 @@ void transform_srcml(const srcml_request_t& srcml_request,
 				std::cerr << protocol << " : " << resource << "\n"; // Stub
 			}
 			else if (protocol == "relaxng") {
-		        if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK)
-		            throw status;
+		        if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
+		            std::cerr << "srcml: error with relaxng transformation\n";
+                    exit(-1);
+                }
 
 				std::cerr << protocol << " : " << resource << "\n"; //Debug Printout
 			}

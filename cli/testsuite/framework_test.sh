@@ -28,6 +28,31 @@
 #
 # * Multiple tests of cli command followed by call to function check
 #   can be made
+#
+# * Put in a trap for cleanup in test file:
+#   trap { cleanup; } EXIT
+
+# generated files, list is kept to cleanup
+genfiles=""
+
+# restores environment, deletes files created with createfile command.
+# or registerd with registerfile command
+cleanup() {
+    # remove createfile files, and registerfile files
+    rm -f $genfiles
+
+    genfiles=""
+}
+
+# registers a file so that it will be cleaned up
+# does not create it
+registerfile() {
+
+    # append to our list of files
+    genfiles="$genfiles  "${1}
+}
+
+trap "{ cleanup; }" EXIT
 
 # make sure to find the srcml executable
 export PATH=.:$PATH
@@ -42,12 +67,20 @@ if [ -z "$SRCML2SRC" ]; then
     SRCML2SRC='../../bin/srcml'
 fi
 
+if [ -z "$SRCML"]; then
+    SRCML='../../bin/srcml'
+fi
+
 function src2srcml () {
     $SRC2SRCML "$@"
 }
 
 function srcml2src () {
     $SRCML2SRC "$@"
+}
+
+function srcml () {
+    $SRCML "$@"
 }
 
 # always exit when a command exits with a non-zero status
@@ -68,7 +101,19 @@ define() { IFS= read -r -d '' ${1} || true; }
 readfile() { ${1}="$(cat $2)"; }
 
 # file with name $1 is created from the contents of string variable $2
-createfile() { echo -ne "${2}" > ${1}; }
+# created files are recorded so that cleanup can occur
+createfile() {
+    # make directory paths as needed
+    if [ ! -d $(dirname $1) ]; then
+        mkdir -p $(dirname $1)
+    fi
+
+    # add contents to file
+    echo -ne "${2}" > ${1};
+
+    # register to cleanup
+    registerfile ${1}
+}
 
 rmfile() { rm -f ${1}; }
 
@@ -101,6 +146,8 @@ typeset STDOUT=.stdout_$(basename $0 .sh)
 #   $STDOUT - filename of captured stdout
 #   $STDERR - filename of captured stderr
 #
+# If stdout is not specified, it is assumed to be empty
+# If stderr is not specified, it is assumed to be empty
 check() {
 
     # return stdout and stderr to standard streams
@@ -112,6 +159,10 @@ check() {
 
     # verify expected stderr to the captured stdout
     if [ $# -ge 1 ]; then
+
+        # register to cleanup
+        registerfile ${1}
+
         # compare the parameter file to the expected output
         diff $1 <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/3)
 
@@ -136,6 +187,36 @@ check() {
         # check that the captured stderr is empty
         [ ! -s $STDERR ]
     fi
+
+    # # return to capturing stdout and stderr
+    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
+    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+
+    true
+}
+##
+# checks the result of a command to verify that it is empty
+#   $1 (optional) file of expected stdout
+#   $2 (optional) file of expected stderr
+#   $STDOUT - filename of captured stdout
+#   $STDERR - filename of captured stderr
+#
+check_null() {
+
+    # return stdout and stderr to standard streams
+    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
+    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+
+    # trace the command
+    echo $(history | head -n 1 | cut -c 8-)
+
+    # verify expected stderr to the captured stdout
+
+    # check that the captured stdout is empty
+    [ ! -s $STDOUT ]
+
+    # check that the captured stderr is empty
+    [ ! -s $STDERR ]
 
     # # return to capturing stdout and stderr
     [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT

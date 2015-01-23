@@ -44,12 +44,12 @@ const int SRCML_COMMAND_VERSION                   = 1<<6;
 const int SRCML_COMMAND_EXPRESSION                = 1<<7;
 const int SRCML_COMMAND_INTERACTIVE               = 1<<8;
 const int SRCML_COMMAND_XML                       = 1<<9;
-const int SRCML_COMMAND_LIST                      = 1<<10;
-const int SRCML_COMMAND_UNITS                     = 1<<11;
+const int SRCML_COMMAND_SRC                       = 1<<10;
+const int SRCML_COMMAND_LIST                      = 1<<11;
+const int SRCML_COMMAND_UNITS                     = 1<<12;
 
-const int SRCML_COMMAND_TO_DIRECTORY              = 1<<12;
-const int SRCML_COMMAND_TIMESTAMP                 = 1<<13;
-const int SRCML_COMMAND_HASH                      = 1<<14;
+const int SRCML_COMMAND_TO_DIRECTORY              = 1<<13;
+const int SRCML_COMMAND_TIMESTAMP                 = 1<<14;
 
 const int SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE    = 1<<15;
 const int SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY   = 1<<16;
@@ -109,6 +109,10 @@ struct srcml_request_t {
     boost::optional<std::string> att_version;
 
     boost::optional<std::string> src_encoding;
+    
+    boost::optional<std::string> line_ending;
+
+    boost::optional<std::string> external;
 
     boost::optional<std::string> output_filename;
 

@@ -26,7 +26,7 @@
 #include <srcml.h>
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
-
+#include <srcml_options.hpp>
 
 
 class srcMLReadArchive {
@@ -65,7 +65,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // srcml->src extract all archives to the filesystem
 
-            TraceLog log(*srcml_request.markup_options);
+            TraceLog log(SRCMLOptions::get());
 
             BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
                 srcMLReadArchive arch(input_source);
@@ -92,8 +92,86 @@ void create_src(const srcml_request_t& srcml_request,
                 exit(4);
             }
 
+            // SETUP OUTPUT ARCHIVE
             srcml_archive* oarch = srcml_create_archive();
+            
+            // set options for the output srcml archive
+            if (srcml_request.att_xml_encoding)
+                srcml_archive_set_encoding(oarch, srcml_request.att_xml_encoding->c_str());
+
+            if (srcml_request.src_encoding)
+                srcml_archive_set_src_encoding(oarch, srcml_request.src_encoding->c_str());
+
+            // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
+            if (srcml_request.att_filename) {
+                srcml_archive_set_filename(oarch, srcml_request.att_filename->c_str());
+            } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
+                srcml_archive_set_filename(oarch, input_sources[0].filename.c_str());
+            }
+
+            if (srcml_request.att_directory)
+                srcml_archive_set_directory(oarch, srcml_request.att_directory->c_str());
+
+            if (srcml_request.att_version)
+                srcml_archive_set_version(oarch, srcml_request.att_version->c_str());
+
+            if (srcml_request.markup_options)
+                srcml_archive_set_options(oarch, srcml_archive_get_options(oarch) | *srcml_request.markup_options);
+
+            if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
+                srcml_archive_disable_option(oarch, SRCML_OPTION_XML_DECL);
+            else
+                srcml_archive_enable_option(oarch, SRCML_OPTION_XML_DECL);
+
+            if (*srcml_request.markup_options & SRCML_OPTION_NAMESPACE_DECL)
+                srcml_archive_disable_option(oarch, SRCML_OPTION_NAMESPACE_DECL);
+            else
+                srcml_archive_enable_option(oarch, SRCML_OPTION_NAMESPACE_DECL);
+
+            if (srcml_request.att_language)
+                srcml_archive_set_language(oarch, srcml_request.att_language->c_str());
+            else
+                srcml_archive_set_language(oarch, SRCML_LANGUAGE_NONE);
+
+            srcml_archive_set_tabstop(oarch, srcml_request.tabs);
+
+            // non-archive when:
+            //   only one input
+            //   no cli request to make it an archive
+            //   not a directory (if local file)
+            // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
+            if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
+                !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) &&
+                !input_sources[0].isdirectory) {
+
+                srcml_archive_disable_option(oarch, SRCML_OPTION_ARCHIVE);
+                srcml_archive_disable_option(oarch, SRCML_OPTION_HASH);
+            } else {
+                srcml_archive_enable_option(oarch, SRCML_OPTION_ARCHIVE);
+                srcml_archive_enable_option(oarch, SRCML_OPTION_HASH);
+            }
+
+            // register file extensions
+            BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {
+                size_t pos = ext.find('=');
+                srcml_archive_register_file_extension(oarch, ext.substr(0, pos).c_str(), ext.substr(pos+1).c_str());
+            }
+
+            // register xml namespaces
+            std::map<std::string, std::string>::const_iterator itr;
+            for(itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
+                srcml_archive_register_namespace(oarch, (*itr).first.c_str(), (*itr).second.c_str());
+            }
+            
+            /**** SHOULD THIS GO
+            if (srcml_request.markup_options)
+                srcml_archive_set_options(oarch, srcml_archive_get_options(oarch) | *srcml_request.markup_options);
+
+            if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
+                    srcml_archive_disable_option(oarch, SRCML_OPTION_XML_DECL);
+
             srcml_archive_disable_option(oarch, SRCML_OPTION_ARCHIVE);
+            *****/
 
             if (contains<int>(destination))
                 srcml_write_open_fd(oarch, destination);

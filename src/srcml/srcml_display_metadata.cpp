@@ -31,12 +31,27 @@
 
 // display unit names and total count
 int srcml_unit_count(srcml_archive* srcml_arch) {
+
+    //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+
+        //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
         if (srcml_unit_get_filename(unit))
             ++numUnits;
+
+        //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
         srcml_free_unit(unit);
+
+        //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
     }
+
+    //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
     return numUnits;   
 }
 
@@ -57,10 +72,12 @@ void srcml_display_info(srcml_archive* srcml_arch) {
 
     for (int i = 0; i < nsSize; ++i) {
         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0)
+            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
                 std::cout << "xmlns=\"" << srcml_archive_get_namespace_uri(srcml_arch, i) << "\"\n";
-            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "cpp") == 0)
+            }
+            else{
                 std::cout << "xmlns:" << srcml_archive_get_namespace_prefix(srcml_arch, i) << "=\"" << srcml_archive_get_namespace_uri(srcml_arch, i) << "\"\n";
+            }
         }
     }
 
@@ -90,9 +107,13 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                             SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
                             SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
 
+//fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_create_archive();
+
+//fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         if (contains<int>(input)) {
             if (srcml_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {

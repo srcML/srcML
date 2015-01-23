@@ -61,12 +61,37 @@ namespace {
     }
 }
 
-
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input_file) {
+
+    // don't process if non-archive, non-compressed, and we don't handle the extension
+    // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
+    // which then hangs
+    // Note: may need to fix in libsrcml
+    if (!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) {
+
+        // if we are not verbose, then just end this attemp
+        if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
+            return;
+        }
+
+        // form the parsing request
+        ParseRequest* prequest = new ParseRequest;
+        prequest->filename = input_file.resource;
+        prequest->directory = srcml_request.att_directory;
+        prequest->version = srcml_request.att_version;
+        prequest->srcml_arch = srcml_arch;
+        prequest->language = "";
+        prequest->status = SRCML_STATUS_UNSET_LANGUAGE;
+
+        // schedule for parsing
+        queue.schedule(prequest);
+
+        return;
+    }
 
     archive* arch = archive_read_new();
 
@@ -174,6 +199,8 @@ void src_input_libarchive(ParseQueue& queue,
 
         if (srcml_request.att_filename || (filename != "-"))
             prequest->filename = filename;
+
+
         prequest->directory = srcml_request.att_directory;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
@@ -194,14 +221,14 @@ void src_input_libarchive(ParseQueue& queue,
             int64_t offset;
 #endif
             while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
-                prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
+                prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + strlen(buffer));
 
             // LOC count
             prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
             if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
                 ++prequest->loc;
         }
-
+        
         // schedule for parsing
         queue.schedule(prequest);
 

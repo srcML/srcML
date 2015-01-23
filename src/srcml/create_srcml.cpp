@@ -80,8 +80,11 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (srcml_request.att_xml_encoding)
         srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str());
 
-    if (srcml_request.src_encoding)
-        srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
+    if (srcml_request.src_encoding) {
+
+        // TODO: Fix so that default encoding is NULL
+        //srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
+    }
 
     // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
     if (srcml_request.att_filename) {
@@ -117,14 +120,14 @@ void create_srcml(const srcml_request_t& srcml_request,
     srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
 
     // non-archive when:
+    //   only want a single unit
     //   only one input
     //   no cli request to make it an archive
     //   not a directory (if local file)
     // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
-    if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
+    if (srcml_request.unit != 0 || (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) &&
-        !input_sources[0].isdirectory) {
-
+        !input_sources[0].isdirectory)) {
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_HASH);
     } else {
