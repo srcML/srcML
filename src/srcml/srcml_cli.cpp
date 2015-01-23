@@ -326,7 +326,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
             ("xml-encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->default_value("UTF-8"),"set the output XML encoding to ENC (default:  UTF-8)")
             ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
-            ("hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_HASH>), "add hash to srcml output")
+            ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_HASH>), "add hash to srcml output")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
             ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
