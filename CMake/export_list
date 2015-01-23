@@ -17,7 +17,7 @@ _srcml_archive_check_extension
 _srcml_archive_disable_option
 _srcml_archive_enable_option
 _srcml_archive_get_directory
-_srcml_archive_get_encoding
+_srcml_archive_get_xml_encoding
 _srcml_archive_get_filename
 _srcml_archive_get_language
 _srcml_archive_get_macro_list_size
@@ -40,7 +40,7 @@ _srcml_archive_register_file_extension
 _srcml_archive_register_macro
 _srcml_archive_register_namespace
 _srcml_archive_set_directory
-_srcml_archive_set_encoding
+_srcml_archive_set_xml_encoding
 _srcml_archive_set_filename
 _srcml_archive_set_language
 _srcml_archive_set_options
@@ -65,7 +65,7 @@ _srcml_error_string
 _srcml_free_archive
 _srcml_free_unit
 _srcml_get_directory
-_srcml_get_encoding
+_srcml_get_xml_encoding
 _srcml_get_filename
 _srcml_get_language
 _srcml_get_macro_list_size
@@ -105,7 +105,7 @@ _srcml_register_file_extension
 _srcml_register_macro
 _srcml_register_namespace
 _srcml_set_directory
-_srcml_set_encoding
+_srcml_set_xml_encoding
 _srcml_set_filename
 _srcml_set_language
 _srcml_set_options

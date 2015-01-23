@@ -291,16 +291,16 @@ int srcml_set_src_encoding(const char* encoding) {
 }
 
 /**
- * srcml_set_encoding
+ * srcml_set_xml_encoding
  * @param encoding an output encoding
  *
  * Set the xml encoding.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_set_encoding(const char* encoding) {
+int srcml_set_xml_encoding(const char* encoding) {
 
-    return srcml_archive_set_encoding(&global_archive, encoding);
+    return srcml_archive_set_xml_encoding(&global_archive, encoding);
 
 }
 
@@ -522,13 +522,13 @@ const char* srcml_get_src_encoding() {
 }
 
 /**
- * srcml_get_encoding
+ * srcml_get_xml_encoding
  *
  * @returns Get the xml encoding on success and NULL on failure.
  */
-const char* srcml_get_encoding() {
+const char* srcml_get_xml_encoding() {
 
-    return srcml_archive_get_encoding(&global_archive);
+    return srcml_archive_get_xml_encoding(&global_archive);
 
 }
 

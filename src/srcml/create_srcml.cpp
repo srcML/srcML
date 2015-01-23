@@ -78,7 +78,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // set options for the output srcml archive
     if (srcml_request.att_xml_encoding)
-        srcml_archive_set_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str());
+        srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str());
 
     if (srcml_request.src_encoding)
         srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());

@@ -324,7 +324,7 @@ public :
      */
     virtual void startDocument() {
 
-        srcml_archive_set_encoding(archive, encoding ? encoding : "UTF-8");
+        srcml_archive_set_xml_encoding(archive, encoding ? encoding : "UTF-8");
 
     }
 

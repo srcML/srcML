@@ -63,19 +63,19 @@ int main() {
 
 
     /*
-      srcml_archive_get_encoding
+      srcml_archive_get_xml_encoding
     */
 
     {
 
         srcml_archive * archive = srcml_create_archive();
         archive->encoding = boost::optional<std::string>();
-        dassert(srcml_archive_get_encoding(archive), 0);
+        dassert(srcml_archive_get_xml_encoding(archive), 0);
         srcml_free_archive(archive);
     }
 
     {
-        dassert(srcml_archive_get_encoding(0), 0);
+        dassert(srcml_archive_get_xml_encoding(0), 0);
     }
 
 
@@ -83,7 +83,7 @@ int main() {
 
         srcml_archive * archive = srcml_create_archive();
         archive->encoding = "foo";
-        dassert(srcml_archive_get_encoding(archive), std::string("foo"));
+        dassert(srcml_archive_get_xml_encoding(archive), std::string("foo"));
         srcml_free_archive(archive);
     }
 

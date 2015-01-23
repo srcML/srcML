@@ -198,7 +198,7 @@ __LIBSRCML_DECL int srcml(const char* input_filename, const char* output_filenam
   Global settings.  Can be used with convenience function srcml()
 */
 __LIBSRCML_DECL int srcml_set_src_encoding          (const char* encoding);
-__LIBSRCML_DECL int srcml_set_encoding              (const char* encoding);
+__LIBSRCML_DECL int srcml_set_xml_encoding          (const char* encoding);
 __LIBSRCML_DECL int srcml_set_language              (const char* language);
 __LIBSRCML_DECL int srcml_set_filename              (const char* filename);
 __LIBSRCML_DECL int srcml_set_directory             (const char* directory);
@@ -215,7 +215,7 @@ __LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const c
 __LIBSRCML_DECL int srcml_register_macro            (const char* token, const char* type);
 
 __LIBSRCML_DECL const char*        srcml_get_src_encoding ();
-__LIBSRCML_DECL const char*        srcml_get_encoding ();
+__LIBSRCML_DECL const char*        srcml_get_xml_encoding ();
 __LIBSRCML_DECL const char*        srcml_get_revision ();
 __LIBSRCML_DECL const char*        srcml_get_language ();
 __LIBSRCML_DECL const char*        srcml_get_filename ();
@@ -297,7 +297,7 @@ __LIBSRCML_DECL int srcml_write_open_fd      (struct srcml_archive*, int srcml_f
 __LIBSRCML_DECL int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
 
 /* Setup options for srcml archive */
-__LIBSRCML_DECL int srcml_archive_set_encoding           (struct srcml_archive*, const char* encoding);
+__LIBSRCML_DECL int srcml_archive_set_xml_encoding       (struct srcml_archive*, const char* encoding);
 __LIBSRCML_DECL int srcml_archive_set_src_encoding       (struct srcml_archive*, const char* encoding);
 __LIBSRCML_DECL int srcml_archive_set_language           (struct srcml_archive*, const char* language);
 __LIBSRCML_DECL int srcml_archive_set_filename           (struct srcml_archive*, const char* filename);
@@ -314,7 +314,7 @@ __LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archiv
 __LIBSRCML_DECL int srcml_archive_register_macro            (struct srcml_archive*, const char* token, const char* type);  
 
 /* Query of the options for srcml archive */
-__LIBSRCML_DECL const char*        srcml_archive_get_encoding                     (const struct srcml_archive*);
+__LIBSRCML_DECL const char*        srcml_archive_get_xml_encoding                 (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_src_encoding                 (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_revision                     (const struct srcml_archive*);
 __LIBSRCML_DECL const char*        srcml_archive_get_language                     (const struct srcml_archive*);

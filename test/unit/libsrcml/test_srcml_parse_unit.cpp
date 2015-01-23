@@ -227,7 +227,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
@@ -270,7 +270,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
@@ -569,7 +569,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
@@ -612,7 +612,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
@@ -947,7 +947,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
@@ -994,7 +994,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
@@ -1335,7 +1335,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
@@ -1382,7 +1382,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
@@ -1705,7 +1705,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
@@ -1752,7 +1752,7 @@ int main() {
         srcml_archive * archive = srcml_create_archive();
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_archive_set_encoding(archive, "ISO-8859-1");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_write_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_create_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");

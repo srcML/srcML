@@ -64,8 +64,8 @@ void srcml_display_info(srcml_archive* srcml_arch) {
         }
     }
 
-    if (srcml_archive_get_encoding(srcml_arch))
-        std::cout << "encoding=" << "\"" << srcml_archive_get_encoding(srcml_arch) << "\"\n";
+    if (srcml_archive_get_xml_encoding(srcml_arch))
+        std::cout << "encoding=" << "\"" << srcml_archive_get_xml_encoding(srcml_arch) << "\"\n";
     if (srcml_archive_get_language(srcml_arch))
         std::cout << "language=" << "\"" << srcml_archive_get_language(srcml_arch) << "\"\n"; 
     if (srcml_archive_get_directory(srcml_arch))
@@ -179,7 +179,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
         // srcml->src encoding
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING){
-            const char* archive_info = srcml_archive_get_encoding(srcml_arch);
+            const char* archive_info = srcml_archive_get_xml_encoding(srcml_arch);
 
             if (archive_info) {
                 if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_ENCODING)

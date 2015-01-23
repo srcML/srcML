@@ -191,7 +191,7 @@ int srcml_archive_set_src_encoding(srcml_archive* archive, const char* src_encod
 }
 
 /**
- * srcml_archive_set_encoding
+ * srcml_archive_set_xml_encoding
  * @param archive a srcml_archive
  * @param encoding an encoding
  *
@@ -199,7 +199,7 @@ int srcml_archive_set_src_encoding(srcml_archive* archive, const char* src_encod
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_archive_set_encoding(srcml_archive* archive, const char* encoding) {
+int srcml_archive_set_xml_encoding(srcml_archive* archive, const char* encoding) {
 
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -484,12 +484,12 @@ const char* srcml_archive_get_src_encoding(const struct srcml_archive* archive) 
 }
 
 /**
- * srcml_archive_get_encoding
+ * srcml_archive_get_xml_encoding
  * @param archive a srcml_archive
  *
  * @returns Retrieve the currently set xml encoding or NULL.
  */
-const char* srcml_archive_get_encoding(const struct srcml_archive* archive) {
+const char* srcml_archive_get_xml_encoding(const struct srcml_archive* archive) {
 
     return archive && archive->encoding ? archive->encoding->c_str() : 0;
 
