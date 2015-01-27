@@ -18,32 +18,32 @@ define fsrcml <<- 'STDOUT'
 createfile sub/a.cpp ""
 createfile sub/b.cpp ""
 
-src2srcml sub/a.cpp sub/b.cpp --position --archive --ordered
+src2srcml sub/a.cpp sub/b.cpp --position --archive --in-order
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp --archive --position --ordered
+src2srcml sub/a.cpp sub/b.cpp --archive --position --in-order
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp --position -o sub/a.cpp.xml --archive --ordered
+src2srcml sub/a.cpp sub/b.cpp --position -o sub/a.cpp.xml --archive --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --position --archive --ordered
+src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --position --archive --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --position --ordered
+src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --position --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-src2srcml --position sub/a.cpp sub/b.cpp --archive --ordered
+src2srcml --position sub/a.cpp sub/b.cpp --archive --in-order
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp --archive --position --ordered
+src2srcml sub/a.cpp sub/b.cpp --archive --position --in-order
 check 3<<< "$fsrcml"
 
-src2srcml --position sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --ordered
+src2srcml --position sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --position --ordered
+src2srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --position --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-src2srcml -o sub/a.cpp.xml --position sub/a.cpp sub/b.cpp --archive --ordered
+src2srcml -o sub/a.cpp.xml --position sub/a.cpp sub/b.cpp --archive --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
