@@ -399,7 +399,8 @@ __LIBSRCML_DECL const char* srcml_unit_get_directory    (const struct srcml_unit
 __LIBSRCML_DECL const char* srcml_unit_get_version      (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_timestamp    (const struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_hash         (const struct srcml_unit*);
-__LIBSRCML_DECL const char* srcml_unit_get_xml          (struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_raw_xml      (struct srcml_unit*);
+__LIBSRCML_DECL const char* srcml_unit_get_formatted_xml(struct srcml_unit*, const char * xml_encoding);
 
 /* Convert from srcML to source code */
 __LIBSRCML_DECL int srcml_unparse_unit_filename(struct srcml_unit*, const char* src_filename);
