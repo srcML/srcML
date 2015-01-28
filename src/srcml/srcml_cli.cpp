@@ -209,9 +209,7 @@ void option_field<&srcml_request_t::tabs>(int value) {
         std::cerr << "srcml: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
         exit(1); //ERROR CODE TBD
     }
-
-    //Set position in markup for tabs
-    option_markup<SRCML_OPTION_POSITION>(true);
+    
     srcml_request.tabs = value;
 }
 
