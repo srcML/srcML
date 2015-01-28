@@ -332,6 +332,7 @@ const char* srcml_unit_get_raw_xml(struct srcml_unit* unit) {
 /**
  * srcml_unit_get_formatted_xml
  * @param unit a srcml unit
+ * @param xml_encoding the xml encoding to encode the unit
  *
  * Get the parsed or collected srcml from an archive.
  * If only the attributes were collected from a read,
@@ -349,14 +350,13 @@ const char* srcml_unit_get_formatted_xml(struct srcml_unit* unit, const char * x
     if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_srcml(unit->unit);
 
-    struct srcml_archive * formatting_archive = srcml_clone_archive(unit->archive);
-    srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL);
-    if(xml_encoding) srcml_archive_set_xml_encoding(formatting_archive, xml_encoding);
-
     char * buffer = 0;
     int size = 0;
     if(unit->unit) {
 
+        struct srcml_archive * formatting_archive = srcml_clone_archive(unit->archive);
+        srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL);
+        if(xml_encoding) srcml_archive_set_xml_encoding(formatting_archive, xml_encoding);
         srcml_write_open_memory(formatting_archive, &buffer, &size);
         srcml_write_unit(formatting_archive, unit);
         srcml_close_archive(formatting_archive);
