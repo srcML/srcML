@@ -150,6 +150,13 @@ the right location
 
 	perl install.me
 
+* libantlr was not compiled with -fPIC for 64-bit (at least for 13.2). To do so,
+change line 59 of scripts/cxx.sh.in to `cxxflags="-felide-constructors -pipe -fPIC"`.
+You will also need to fix the compilation of lib/cpp/antlr/CharScanner.hpp by adding
+`#include <strings.h>` and replacing EOF in line 475 to 1.  Then you can build using
+```./configure``` and ```make``` do not make install as you need the distributed antlr.
+Instead, copy lib/cpp/src/libantlr.a to /usr/local/lib64/.
+
 #### Ubuntu (and Linux Mint)
 
 ##### Required Packages
