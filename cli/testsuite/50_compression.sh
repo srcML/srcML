@@ -36,7 +36,7 @@ check 3<<< "$xmlfile"
 
 srcml -l C++ -z -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
-check 3<<< "$xmlfile"g
+check 3<<< "$xmlfile"
 
 # srcml2src
 createfile sub/a.cpp.xml "$xmlfile"
