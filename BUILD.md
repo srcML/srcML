@@ -127,6 +127,9 @@ machine.
 * libarchive-devel  
 * libcurl-devel  
 * libopenssl-devel  
+
+*# srcML documentation generation*
+
 * docbook2X
 
 ##### Notes

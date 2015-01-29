@@ -14,8 +14,12 @@ machines = [
     , "fedora21test64"
     , "suse13build"
     , "suse13test"
+    , "suse132build"
+    , "suse132test"
     , "suse13build64"
     , "suse13test64"
+    , "suse132build64"
+    , "suse132test64"
     , "ubuntu10build"
     , "ubuntu10test"
     , "ubuntu12build"
@@ -34,10 +38,14 @@ machines = [
     , "mint13test"
     , "mint17build"
     , "mint17test"
+    , "mint171build"
+    , "mint171test"
     , "mint13build64"
     , "mint13test64"
     , "mint17build64"
     , "mint17test64"
+    , "mint171build64"
+    , "mint171test64"
 ]
 
 options = []
