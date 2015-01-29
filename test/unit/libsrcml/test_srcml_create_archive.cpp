@@ -1,5 +1,5 @@
 /**
- * @file test_srcml_create_archive.cpp
+ * @file test_srcml_archive_new.cpp
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_create_archive.
+  Test cases for srcml_archive_new.
 */
 #include <stdio.h>
 #include <string.h>
@@ -36,7 +36,7 @@ int main() {
 
     {
 
-        srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_archive_new();
         dassert(archive->type, SRCML_ARCHIVE_INVALID);
         dassert(archive->filename, 0);
         dassert(archive->encoding, 0);
@@ -65,7 +65,7 @@ int main() {
 
         dassert(archive->transformations.size(), 0);
 
-        srcml_free_archive(archive);
+        srcml_archive_free(archive);
     }
 
     return 0;

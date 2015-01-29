@@ -55,15 +55,15 @@ _srcml_check_language
 _srcml_check_xslt
 _srcml_cleanup_globals
 _srcml_clear_transforms
-_srcml_clone_archive
-_srcml_close_archive
-_srcml_create_archive
-_srcml_create_unit
+_srcml_archive_clone
+_srcml_archive_close
+_srcml_archive_new
+_srcml_unit_new
 _srcml_disable_option
 _srcml_enable_option
 _srcml_error_string
-_srcml_free_archive
-_srcml_free_unit
+_srcml_archive_free
+_srcml_unit_free
 _srcml_get_directory
 _srcml_get_xml_encoding
 _srcml_get_filename
@@ -152,3 +152,4 @@ _srcml_write_end_element
 _srcml_write_namespace
 _srcml_write_attribute
 _srcml_write_string
+_srcml_memory_free

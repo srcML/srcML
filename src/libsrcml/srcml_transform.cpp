@@ -527,7 +527,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     }
 
-    srcml_archive * tmp_archive = srcml_create_archive();
+    srcml_archive * tmp_archive = srcml_archive_new();
 
     srcml_read_open_filename(tmp_archive, last_transform_filename);
     tmp_archive->prefixes.swap(oarchive->prefixes);
@@ -540,12 +540,12 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     while((unit = srcml_read_unit(tmp_archive))) {
 
         srcml_write_unit(oarchive, unit);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
 
     }
 
-    srcml_close_archive(tmp_archive);
-    srcml_free_archive(tmp_archive);
+    srcml_archive_close(tmp_archive);
+    srcml_archive_free(tmp_archive);
     if(last_transform_filename) UNLINK(last_transform_filename);
     free((void *)last_transform_filename);
 

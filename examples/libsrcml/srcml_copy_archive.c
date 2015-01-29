@@ -33,13 +33,13 @@ int main(int argc, char* argv[]) {
     struct srcml_unit* unit;
 
     /* open up an existing archive */
-    iarchive = srcml_create_archive();
+    iarchive = srcml_archive_new();
     srcml_read_open_filename(iarchive, "project.xml");
 
     /* create a new srcml archive structure */
     /* options and attributes of cloned archive start the same as
        the original archive */
-    oarchive = srcml_clone_archive(iarchive);
+    oarchive = srcml_archive_clone(iarchive);
 
     /* open a srcML archive for output */
     srcml_write_open_filename(oarchive, "project2.xml");
@@ -50,16 +50,16 @@ int main(int argc, char* argv[]) {
         /* Translate to srcml and append to the archive */
         srcml_write_unit(oarchive, unit);
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     /* close the archives */
-    srcml_close_archive(oarchive);
-    srcml_close_archive(iarchive);
+    srcml_archive_close(oarchive);
+    srcml_archive_close(iarchive);
 
     /* free the srcML archive data */
-    srcml_free_archive(oarchive);
-    srcml_free_archive(iarchive);
+    srcml_archive_free(oarchive);
+    srcml_archive_free(iarchive);
 
     return 0;
 }

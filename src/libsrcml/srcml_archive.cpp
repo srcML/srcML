@@ -52,14 +52,14 @@ const char * srcml_archive_check_extension(srcml_archive * archive, const char* 
  ******************************************************************************/
 
 /**
- * srcml_create_archive
+ * srcml_archive_new
  *
  * Create a new srcml archive.
- * Client will have to free it using srcml_free_archive().
+ * Client will have to free it using srcml_archive_free().
  *
  * @returns the created archive.
  */
-srcml_archive* srcml_create_archive()
+srcml_archive* srcml_archive_new()
 
 {
     srcml_archive * archive;
@@ -87,14 +87,14 @@ srcml_archive* srcml_create_archive()
 }
 
 /**
- * srcml_free_archive
+ * srcml_archive_free
  * @param archive a srcml_archive
  *
  * Free a srcml archive that was previously
- * allocated by srcml_create_archive().
+ * allocated by srcml_archive_new().
  * archive must be reallocated/re-created to use again.
  */
-void srcml_free_archive(srcml_archive * archive) {
+void srcml_archive_free(srcml_archive * archive) {
 
     if(archive == NULL) return;
     srcml_clear_transforms(archive);
@@ -103,19 +103,19 @@ void srcml_free_archive(srcml_archive * archive) {
 }
 
 /**
- * srcml_clone_archive
+ * srcml_archive_clone
  * @param archive a srcml_archive
  *
  * Clone the setup of an existing archive.
- * Client will have to free it using srcml_free_archive().
+ * Client will have to free it using srcml_archive_free().
  *
  * @return the cloned archive
  */
-srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
+srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
 
     if(archive == NULL) return 0;
 
-    srcml_archive * new_archive = srcml_create_archive();
+    srcml_archive * new_archive = srcml_archive_new();
 
     if(!new_archive) return 0;
 
@@ -136,7 +136,7 @@ srcml_archive* srcml_clone_archive(const struct srcml_archive* archive) {
     new_archive->options = archive->options;
     new_archive->tabstop = archive->tabstop;
 
-    // clear out those added by srcml_create_archive
+    // clear out those added by srcml_archive_new
     new_archive->prefixes.clear();
     new_archive->namespaces.clear();
     for(std::vector<std::string>::size_type pos = 0; pos < archive->namespaces.size(); ++pos) {
@@ -1173,11 +1173,11 @@ srcml_unit* srcml_read_unit_header(srcml_archive* archive) {
 
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
-    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit * unit = srcml_unit_new(archive);
     int not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version, unit->timestamp, unit->hash, unit->attributes);
 
     if(!not_done) {
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
         return 0;
     }
 
@@ -1202,14 +1202,14 @@ srcml_unit* srcml_read_unit_xml(srcml_archive* archive) {
 
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
-    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit * unit = srcml_unit_new(archive);
     int not_done = 0;
     if(!unit->read_header)
         not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version, unit->timestamp, unit->hash, unit->attributes);
     archive->reader->read_srcml(unit->unit);
 
     if(!not_done || !unit->unit) {
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
         unit = 0;
     }
 
@@ -1233,14 +1233,14 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
 
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
-    srcml_unit * unit = srcml_create_unit(archive);
+    srcml_unit * unit = srcml_unit_new(archive);
     int not_done = 0;
     if(!unit->read_header)
         not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version, unit->timestamp, unit->hash, unit->attributes);
     archive->reader->read_srcml(unit->unit);
 
     if(!not_done || !unit->unit) {
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
         unit = 0;
     }
 
@@ -1254,14 +1254,14 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
  ******************************************************************************/
 
 /**
- * srcml_close_archive
+ * srcml_archive_close
  * @param archive an open srcml archive
  *
  * Close a srcML archive opened using srcml_read_open_*
  * or srcml_write_open_*.
  * Archive can be reopened.
  */
-void srcml_close_archive(srcml_archive * archive) {
+void srcml_archive_close(srcml_archive * archive) {
 
     if(archive == NULL) return;
 

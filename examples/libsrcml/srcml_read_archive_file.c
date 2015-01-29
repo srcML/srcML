@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     struct srcml_unit* unit;
 
     /* create a new srcml archive structure */
-    archive = srcml_create_archive();
+    archive = srcml_archive_new();
 
     /* open a srcML archive for input */
     srcml_input = fopen("project.xml", "r");
@@ -53,16 +53,16 @@ int main(int argc, char* argv[]) {
         srcml_output = fopen(filename, "w");
         srcml_unparse_unit_FILE(unit, srcml_output);
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
         fclose(srcml_output);
     }
 
     /* close the srcML archive */
-    srcml_close_archive(archive);
+    srcml_archive_close(archive);
     fclose(srcml_input);
 
     /* free the srcML archive data */
-    srcml_free_archive(archive);
+    srcml_archive_free(archive);
 
     return 0;
 }

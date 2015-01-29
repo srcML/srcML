@@ -203,12 +203,12 @@ int srcml(const char* input_filename, const char* output_filename) {
     if(srcml_check_extension(input_filename)) {
 
         srcml_write_open_filename(&global_archive, output_filename);
-        srcml_unit * unit = srcml_create_unit(&global_archive);
+        srcml_unit * unit = srcml_unit_new(&global_archive);
 
         int status = srcml_unit_set_language(unit, srcml_archive_get_language(&global_archive));
         if(status != SRCML_STATUS_OK) {
 
-            srcml_free_unit(unit);
+            srcml_unit_free(unit);
             return status;
 
         }
@@ -226,15 +226,15 @@ int srcml(const char* input_filename, const char* output_filename) {
         status = srcml_parse_unit_filename(unit, input_filename);
         if(status != SRCML_STATUS_OK) {
 
-            srcml_free_unit(unit);
+            srcml_unit_free(unit);
             return status;
 
         }
 
         srcml_write_unit(&global_archive, unit);
 
-        srcml_free_unit(unit);
-        srcml_close_archive(&global_archive);
+        srcml_unit_free(unit);
+        srcml_archive_close(&global_archive);
 
     } else {
 
@@ -940,11 +940,11 @@ const char* srcml_error_string() { return srcml_error.c_str(); }
  ******************************************************************************/
 
 /**
- * srcml_free_memory
+ * srcml_memory_free
  *
  * Free a buffer allocated by functions such as srcml_write_open_memory and srcml_unparse_unit_memory.
  */
-void srcml_free_memory(char * buffer) {
+void srcml_memory_free(char * buffer) {
 
     free((void*)buffer);
 

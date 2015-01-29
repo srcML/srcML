@@ -93,13 +93,13 @@ libsrcml.srcml_unparse_unit_fd.argtypes = [c_void_p, c_int]
 libsrcml.srcml_unparse_unit_io.restype = c_int
 libsrcml.srcml_unparse_unit_io.argtypes = [c_void_p, c_void_p, write_callback_t, close_callback_t]
 
-# struct srcml_unit* srcml_create_unit(struct srcml_archive* archive);
-libsrcml.srcml_create_unit.restype = c_void_p
-libsrcml.srcml_create_unit.argtypes = [c_void_p]
+# struct srcml_unit* srcml_unit_new(struct srcml_archive* archive);
+libsrcml.srcml_unit_new.restype = c_void_p
+libsrcml.srcml_unit_new.argtypes = [c_void_p]
 
-# void srcml_free_unit(struct srcml_unit*);
-libsrcml.srcml_free_unit.restype = None
-libsrcml.srcml_free_unit.argtypes = [c_void_p]
+# void srcml_unit_free(struct srcml_unit*);
+libsrcml.srcml_unit_free.restype = None
+libsrcml.srcml_unit_free.argtypes = [c_void_p]
 
 # int srcml_unit_set_src_encoding (struct srcml_unit*, const char* encoding);
 libsrcml.srcml_unit_set_src_encoding.restype = c_int
@@ -171,7 +171,7 @@ class srcml_unit :
     def __init__(self, archive, unit = 0) :
         self.unit = unit
         if self.unit == 0 :
-            self.unit = libsrcml.srcml_create_unit(archive.archive)
+            self.unit = libsrcml.srcml_unit_new(archive.archive)
 
     def parse_filename(self, src_filename) :
         check_return(libsrcml.srcml_parse_unit_filename(self.unit, src_filename))
@@ -278,5 +278,5 @@ class srcml_unit :
         return self.src_buffer.value
 
     def __del__(self) :
-        libsrcml.srcml_free_unit(self.unit)
+        libsrcml.srcml_unit_free(self.unit)
 

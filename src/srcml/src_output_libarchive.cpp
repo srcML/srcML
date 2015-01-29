@@ -63,6 +63,6 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
         archive_entry_free(entry);
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 }

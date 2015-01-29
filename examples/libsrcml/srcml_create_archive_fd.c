@@ -1,5 +1,5 @@
 /**
- * @file srcml_create_archive_fd.c
+ * @file srcml_archive_new_fd.c
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
     struct srcml_unit* unit;
 
     /* create a new srcml archive structure */
-    archive = srcml_create_archive();
+    archive = srcml_archive_new();
 
     /* setup our output file using a file descriptor */
     srcml_output = OPEN("project.xml", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     /* add all the files to the archive */
     for (i = 1; i < argc; ++i) {
 
-        unit = srcml_create_unit(archive);
+        unit = srcml_unit_new(archive);
 
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
@@ -66,18 +66,18 @@ int main(int argc, char* argv[]) {
         /* Append to the archive */
         srcml_write_unit(archive, unit);
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
         CLOSE(srcml_input);
     }
 
     /* close the srcML archive */
-    srcml_close_archive(archive);
+    srcml_archive_close(archive);
 
     /* file can now be closed also */
     CLOSE(srcml_output);
 
     /* free the srcML archive data */
-    srcml_free_archive(archive);
+    srcml_archive_free(archive);
 
     return 0;
 }

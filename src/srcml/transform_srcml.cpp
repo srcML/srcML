@@ -118,7 +118,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
 	// Convert output into srcml archive
 	int status;
-	srcml_archive* out_arch = srcml_create_archive();
+	srcml_archive* out_arch = srcml_archive_new();
     if (contains<int>(output))
         status = srcml_write_open_fd(out_arch, output);
     else if (contains<FILE*>(output))
@@ -138,7 +138,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
     // Convert inputs into srcml archive
 	BOOST_FOREACH(const srcml_input_src& input, input_sources) {
-        srcml_archive* in_arch = srcml_create_archive();
+        srcml_archive* in_arch = srcml_archive_new();
         if (contains<int>(input))
             status = srcml_read_open_fd(in_arch, input);
         else if (contains<FILE*>(input))
@@ -186,10 +186,10 @@ void transform_srcml(const srcml_request_t& srcml_request,
 		}
 		srcml_apply_transforms(in_arch, out_arch);
 
-		srcml_close_archive(in_arch);
-		srcml_free_archive(in_arch);
+		srcml_archive_close(in_arch);
+		srcml_archive_free(in_arch);
 	}
 
-	srcml_close_archive(out_arch);
-	srcml_free_archive(out_arch);
+	srcml_archive_close(out_arch);
+	srcml_archive_free(out_arch);
 }

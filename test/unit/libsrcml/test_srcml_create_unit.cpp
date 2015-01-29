@@ -1,5 +1,5 @@
 /**
- * @file test_srcml_create_unit.cpp
+ * @file test_srcml_unit_new.cpp
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_create_unit.
+  Test cases for srcml_unit_new.
 */
 #include <stdio.h>
 #include <string.h>
@@ -36,8 +36,8 @@ int main() {
 
     {
 
-        srcml_archive * archive = srcml_create_archive();
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_archive * archive = srcml_archive_new();
+        srcml_unit * unit = srcml_unit_new(archive);
 
         dassert(unit->archive, archive);
         dassert(unit->language, 0);
@@ -48,13 +48,13 @@ int main() {
         dassert(unit->hash, 0);
         dassert(unit->unit, 0);
 
-        srcml_free_unit(unit);
-        srcml_free_archive(archive);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
     }
 
     {
 
-        dassert(srcml_create_unit(0), 0);
+        dassert(srcml_unit_new(0), 0);
 
     }
 

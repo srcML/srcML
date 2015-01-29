@@ -33,7 +33,7 @@ class srcMLReadArchive {
 public:
     srcMLReadArchive(const srcml_input_src& input_source) {
 
-        arch = srcml_create_archive();
+        arch = srcml_archive_new();
         if (!arch)
             throw srcMLReadArchiveError(0, input_source);
 
@@ -46,8 +46,8 @@ public:
 
     ~srcMLReadArchive() {
 
-        srcml_close_archive(arch);
-        srcml_free_archive(arch);
+        srcml_archive_close(arch);
+        srcml_archive_free(arch);
     }
 
 private:
@@ -82,7 +82,7 @@ void create_src(const srcml_request_t& srcml_request,
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_read_unit_header(arch);
-                srcml_free_unit(unit);
+                srcml_unit_free(unit);
             }
 
             srcml_unit* unit = srcml_read_unit_header(arch);
@@ -93,7 +93,7 @@ void create_src(const srcml_request_t& srcml_request,
             }
 
             // SETUP OUTPUT ARCHIVE
-            srcml_archive* oarch = srcml_create_archive();
+            srcml_archive* oarch = srcml_archive_new();
             
             // set options for the output srcml archive
             if (srcml_request.att_xml_encoding)
@@ -183,10 +183,10 @@ void create_src(const srcml_request_t& srcml_request,
 
             srcml_write_unit(oarch, unit);
 
-            srcml_free_unit(unit);
+            srcml_unit_free(unit);
 
-            srcml_close_archive(oarch);
-            srcml_free_archive(oarch);
+            srcml_archive_close(oarch);
+            srcml_archive_free(oarch);
 
         } else if (input_sources.size() == 1 && contains<int>(destination) &&
                    destination.compressions.empty() && destination.archives.empty()) {
@@ -198,7 +198,7 @@ void create_src(const srcml_request_t& srcml_request,
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_read_unit_header(arch);
-                srcml_free_unit(unit);
+                srcml_unit_free(unit);
             }
 
             srcml_unit* unit = srcml_read_unit_header(arch);
@@ -210,7 +210,7 @@ void create_src(const srcml_request_t& srcml_request,
             
             srcml_unparse_unit_fd(unit, destination);
 
-            srcml_free_unit(unit);
+            srcml_unit_free(unit);
 
         } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
 
@@ -221,7 +221,7 @@ void create_src(const srcml_request_t& srcml_request,
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_read_unit_header(arch);
-                srcml_free_unit(unit);
+                srcml_unit_free(unit);
             }
 
             srcml_unit* unit = srcml_read_unit_header(arch);
@@ -233,7 +233,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             srcml_unparse_unit_filename(unit, destination.c_str());
 
-            srcml_free_unit(unit);
+            srcml_unit_free(unit);
 
         } else {
 

@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
         "</unit>";
 
     /* create a new srcml archive structure */
-    archive = srcml_create_archive();
+    archive = srcml_archive_new();
 
     srcml_read_open_memory(archive, s, strlen(s));
 
@@ -66,14 +66,14 @@ int main(int argc, char* argv[]) {
 
         printf("%s", buffer);
         free((void *)buffer);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     /* close the srcML archive */
-    srcml_close_archive(archive);
+    srcml_archive_close(archive);
 
     /* free the srcML archive data */
-    srcml_free_archive(archive);
+    srcml_archive_free(archive);
 
     return 0;
 }

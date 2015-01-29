@@ -27,13 +27,13 @@ write_callback_t = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
 read_callback_t  = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
 close_callback_t = CFUNCTYPE(c_int, c_void_p)
 
-# struct srcml_archive* srcml_create_archive();
-libsrcml.srcml_create_archive.restype = c_void_p
-libsrcml.srcml_create_archive.argtypes = []
+# struct srcml_archive* srcml_archive_new();
+libsrcml.srcml_archive_new.restype = c_void_p
+libsrcml.srcml_archive_new.argtypes = []
 
-# struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
-libsrcml.srcml_clone_archive.restype = c_void_p
-libsrcml.srcml_clone_archive.argtypes = [c_void_p]
+# struct srcml_archive* srcml_archive_clone(const struct srcml_archive*);
+libsrcml.srcml_archive_clone.restype = c_void_p
+libsrcml.srcml_archive_clone.argtypes = [c_void_p]
 
 # int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
 libsrcml.srcml_write_open_filename.restype = c_int
@@ -75,13 +75,13 @@ libsrcml.srcml_read_open_fd.argtypes = [c_void_p, c_int]
 libsrcml.srcml_read_open_io.restype = c_int
 libsrcml.srcml_read_open_io.argtypes = [c_void_p, c_void_p, read_callback_t, close_callback_t]
 
-# void srcml_free_archive(struct srcml_archive* archive);
-libsrcml.srcml_free_archive.restype = None
-libsrcml.srcml_free_archive.argtypes = [c_void_p]
+# void srcml_archive_free(struct srcml_archive* archive);
+libsrcml.srcml_archive_free.restype = None
+libsrcml.srcml_archive_free.argtypes = [c_void_p]
 
-# void srcml_close_archive(struct srcml_archive*);
-libsrcml.srcml_close_archive.restype = None
-libsrcml.srcml_close_archive.argtypes = [c_void_p]
+# void srcml_archive_close(struct srcml_archive*);
+libsrcml.srcml_archive_close.restype = None
+libsrcml.srcml_archive_close.argtypes = [c_void_p]
 
 # int srcml_archive_set_src_encoding  (struct srcml_archive*, const char* src_encoding);
 libsrcml.srcml_archive_set_src_encoding.restype = c_int
@@ -277,10 +277,10 @@ class srcml_archive :
     def __init__(self, archive = 0) :
         self.archive = archive
         if self.archive == 0 :
-            self.archive = libsrcml.srcml_create_archive()
+            self.archive = libsrcml.srcml_archive_new()
 
     def clone(self) :
-        return srcml_archive(libsrcml.srcml_clone_archive(self.archive))
+        return srcml_archive(libsrcml.srcml_archive_clone(self.archive))
 
     def write_open_filename(self, srcml_filename) :
         check_return(libsrcml.srcml_write_open_filename(self.archive, srcml_filename))
@@ -463,7 +463,7 @@ class srcml_archive :
         check_return(libsrcml.srcml_apply_transforms(self.archive, oarchive.archive))
 
     def close(self) :
-        libsrcml.srcml_close_archive(self.archive)
+        libsrcml.srcml_archive_close(self.archive)
 
     def __del__(self) :
-        libsrcml.srcml_free_archive(self.archive)
+        libsrcml.srcml_archive_free(self.archive)

@@ -32,7 +32,7 @@ void srcml_input_srcml(ParseQueue& queue,
                        const srcml_input_src& srcml_input) {
 
     // open the srcml input archive
-    srcml_archive* srcml_input_archive = srcml_create_archive();
+    srcml_archive* srcml_input_archive = srcml_archive_new();
     if (contains<int>(srcml_input))
         srcml_read_open_fd(srcml_input_archive, srcml_input);
     else if (contains<FILE*>(srcml_input))
@@ -58,7 +58,7 @@ void srcml_input_srcml(ParseQueue& queue,
     // move to the correct unit
     for (int i = 1; i < srcml_input.unit; ++i) {
         srcml_unit* unit = srcml_read_unit_header(srcml_input_archive);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     bool unitPresent = false;

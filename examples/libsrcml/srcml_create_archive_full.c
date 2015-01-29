@@ -1,5 +1,5 @@
 /**
- * @file srcml_create_archive_full.c
+ * @file srcml_archive_new_full.c
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     */
 
     /* create a new srcml archive structure */
-    archive = srcml_create_archive();
+    archive = srcml_archive_new();
 
     /* setup options and attributes */
     srcml_archive_enable_option(archive, SRCML_OPTION_LITERAL | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION);
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
     for (i = 1; i < argc; ++i) {
 
         /* Setup this entry */
-        struct srcml_unit* unit = srcml_create_unit(archive);
+        struct srcml_unit* unit = srcml_unit_new(archive);
         srcml_unit_set_language(unit, SRCML_LANGUAGE_C);
         srcml_unit_set_filename(unit, argv[i]);
 
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
         srcml_write_unit(archive, unit);
 
         /* Done with the entry for now */
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     /*
@@ -85,10 +85,10 @@ int main(int argc, char* argv[]) {
     */
 
     /* close the srcML archive */
-    srcml_close_archive(archive);
+    srcml_archive_close(archive);
 
     /* free the srcML archive data */
-    srcml_free_archive(archive);
+    srcml_archive_free(archive);
 
     return 0;
 }
