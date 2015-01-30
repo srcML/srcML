@@ -23,23 +23,25 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
     fi
 
     if [[ $OS = "fedora" || $OS = "" ]]; then
-        scp ~/Dropbox/srcML/Unix/Fedora19/srcML.tar.gz fedora19test:/srcML
         scp ~/Dropbox/srcML/Unix/Fedora20/srcML.tar.gz fedora20test:/srcML
-        scp ~/Dropbox/srcML/Unix/Fedora19-64/srcML.tar.gz fedora19test64:/srcML
         scp ~/Dropbox/srcML/Unix/Fedora20-64/srcML.tar.gz fedora20test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Fedora21/srcML.tar.gz fedora21test:/srcML
+        scp ~/Dropbox/srcML/Unix/Fedora21-64/srcML.tar.gz fedora21test64:/srcML
     fi
 
     if [[ $OS = "suse" || $OS = "" ]]; then
         scp ~/Dropbox/srcML/Unix/openSUSE13.1/srcML.tar.gz suse13test:/srcML
         scp ~/Dropbox/srcML/Unix/openSUSE13.1-64/srcML.tar.gz suse13test64:/srcML
+        scp ~/Dropbox/srcML/Unix/openSUSE13.2/srcML.tar.gz suse132test:/srcML
+        scp ~/Dropbox/srcML/Unix/openSUSE13.2-64/srcML.tar.gz suse132test64:/srcML
     fi
 
     if [[ $OS = "ubuntu" || $OS = "" ]]; then
         scp ~/Dropbox/srcML/Unix/Ubuntu10.04/srcML.tar.gz ubuntu10test:/srcML
-        scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
-        scp ~/Dropbox/srcML/Unix/Ubuntu14.04/srcML.tar.gz ubuntu14test:/srcML
         scp ~/Dropbox/srcML/Unix/Ubuntu10.04-64/srcML.tar.gz ubuntu10test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Ubuntu12.04/srcML.tar.gz ubuntu12test:/srcML
         scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Ubuntu14.04/srcML.tar.gz ubuntu14test:/srcML
         scp ~/Dropbox/srcML/Unix/Ubuntu14.04-64/srcML.tar.gz ubuntu14test64:/srcML
     fi
 
@@ -54,6 +56,8 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
         scp ~/Dropbox/srcML/Unix/Mint13-64/srcML.tar.gz mint13test64:/srcML
         scp ~/Dropbox/srcML/Unix/Mint17/srcML.tar.gz mint17test:/srcML
         scp ~/Dropbox/srcML/Unix/Mint17-64/srcML.tar.gz mint17test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Mint17.1/srcML.tar.gz mint171test:/srcML
+        scp ~/Dropbox/srcML/Unix/Mint17.1-64/srcML.tar.gz mint171test64:/srcML
     fi
 
     if [[ $OS = "" ]]; then
