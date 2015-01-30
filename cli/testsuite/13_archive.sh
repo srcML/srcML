@@ -38,12 +38,12 @@ b;
 "
 
 # test that two files will output in an archive by default
-src2srcml sub/a.cpp sub/b.cpp --ordered
+src2srcml sub/a.cpp sub/b.cpp --in-order
 
 check 3<<< "$nestedfile"
 
 # test explicit archive flag
-src2srcml --archive --ordered sub/a.cpp
+src2srcml --archive --in-order sub/a.cpp
 
 check 3<<< "$fileasrcml"
 

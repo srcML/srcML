@@ -161,9 +161,9 @@ libsrcml.srcml_unit_get_timestamp.argtypes = [c_void_p]
 libsrcml.srcml_unit_get_hash.restype = c_char_p
 libsrcml.srcml_unit_get_hash.argtypes = [c_void_p]
 
-# const char* srcml_unit_get_xml      (const struct srcml_unit*);
-libsrcml.srcml_unit_get_xml.restype = c_char_p
-libsrcml.srcml_unit_get_xml.argtypes = [c_void_p]
+# const char* srcml_unit_get_raw_xml      (const struct srcml_unit*);
+libsrcml.srcml_unit_get_raw_xml.restype = c_char_p
+libsrcml.srcml_unit_get_raw_xml.argtypes = [c_void_p]
 
 # srcml_unit wrapper
 class srcml_unit :
@@ -271,8 +271,8 @@ class srcml_unit :
     def get_hash(self) :
         return libsrcml.srcml_unit_get_hash(self.unit)
 
-    def get_xml(self) :
-        return libsrcml.srcml_unit_get_xml(self.unit)
+    def get_raw_xml(self) :
+        return libsrcml.srcml_unit_get_raw_xml(self.unit)
 
     def src(self) :
         return self.src_buffer.value

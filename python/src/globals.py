@@ -74,9 +74,9 @@ def version_string() :
 libsrcml.srcml.restype = c_int
 libsrcml.srcml.argtypes = [c_char_p, c_char_p]
 
-# int srcml_set_encoding  (const char* encoding);
-libsrcml.srcml_set_encoding.restype = c_int
-libsrcml.srcml_set_encoding.argtypes = [c_char_p]
+# int srcml_set_xml_encoding  (const char* encoding);
+libsrcml.srcml_set_xml_encoding.restype = c_int
+libsrcml.srcml_set_xml_encoding.argtypes = [c_char_p]
 
 # int srcml_set_language  (const char* language);
 libsrcml.srcml_set_language.restype = c_int
@@ -122,9 +122,9 @@ libsrcml.srcml_register_file_extension.argtypes = [c_char_p, c_char_p]
 libsrcml.srcml_register_namespace.restype = c_int
 libsrcml.srcml_register_namespace.argtypes = [c_char_p, c_char_p]
 
-# const char* srcml_get_encoding ();
-libsrcml.srcml_get_encoding.restype = c_char_p
-libsrcml.srcml_get_encoding.argtypes = []
+# const char* srcml_get_xml_encoding ();
+libsrcml.srcml_get_xml_encoding.restype = c_char_p
+libsrcml.srcml_get_xml_encoding.argtypes = []
 
 # const char* srcml_get_revision ();
 libsrcml.srcml_get_revision.restype = c_char_p
@@ -233,8 +233,8 @@ libsrcml.srcml_error_string.argtypes = []
 def srcml(input_filename, output_filename) :
     libsrcml.srcml(input_filename, output_filename)
 
-def set_encoding(encoding) :
-    check_return(libsrcml.srcml_set_encoding(encoding))
+def set_xml_encoding(encoding) :
+    check_return(libsrcml.srcml_set_xml_encoding(encoding))
 
 def set_language(language) :
     check_return(libsrcml.srcml_set_language(language))
@@ -275,8 +275,8 @@ def register_namespace(prefix, ns) :
 def register_macro(token, type) :
     check_return(libsrcml.srcml_register_macro(token, type))
 
-def get_encoding() :
-    return libsrcml.srcml_get_encoding()
+def get_xml_encoding() :
+    return libsrcml.srcml_get_xml_encoding()
 
 def get_revision() :
     return libsrcml.srcml_get_revision()

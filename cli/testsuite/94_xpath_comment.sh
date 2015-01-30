@@ -35,13 +35,8 @@ define output <<- 'STDOUT'
 	STDOUT
 
 srcml2src --xpath "//comment()" <<< "$input" 
-
-check 3<<<"Comment One Comment Two"
-
-srcml2src --xpath "string(//comment())" <<< "$input"
-
 check 3<<<"Comment One Comment Two"
 
 srcml2src --xpath "//comment()" <<< "$input"
+check 3<<<"Comment One Comment Two"
 
-srcml2src --xpath "string(//comment())" <<< "$input"
