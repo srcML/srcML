@@ -17,23 +17,26 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import srcml, os, unittest, ctypes, StringIO
+import srcml, os, unittest, ctypes, StringIO, sys
 import lxml.etree as et
 
 class TestArchive(unittest.TestCase):
 
     def setUp(self):
+        #print ""
         pass
     
     def tearDown(self):
-        pass
+        print "\nDone"
 
     def test_newArchive(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         archive = None
 
 
     def test_newArchive_kwargs(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         encodingExpected = "banana"
         src_encodingExpected = "waffles"
         languageExpected = srcml.LANGUAGE_CXX
@@ -70,6 +73,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_encodingAttr(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertIsNone(archive.encoding, "Incorrect value for encoding.")
         expected = "encoding"
@@ -78,6 +82,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_srcEncodingAttr(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertIsNone(archive.src_encoding, "Incorrect value for src_encoding.")
         expected = "encoding"
@@ -86,6 +91,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_languageAttr(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertIsNone(archive.language, "Incorrect value for language.")
         expected = srcml.LANGUAGE_CXX
@@ -94,6 +100,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_filenameAttr(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertIsNone(archive.filename, "Incorrect value for filename.")
         expected = "aardvark.cpp"
@@ -102,6 +109,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_directoryAttr(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertIsNone(archive.directory, "Incorrect value for directory.")
         expected = "SomeDirectory"
@@ -110,6 +118,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_versionAttr(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertIsNone(archive.version, "Incorrect value for version.")
         expected = "1402"
@@ -118,6 +127,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_tabstopAttr(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertEqual(archive.tabstop, 8, "Incorrect value for tabstop.")
         expected = 5
@@ -127,6 +137,7 @@ class TestArchive(unittest.TestCase):
 
 
     def test_processing_instructionAttr(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         expected = ("src:type", "something",)
         archive.processing_instruction = expected
@@ -135,6 +146,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_optionsAttr(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         # self.assertEqual(archive.options, 8, "Incorrect value for tabstop.")
         expected = srcml.OPTION_HASH | srcml.OPTION_LINE | srcml.OPTION_PSEUDO_BLOCK
@@ -143,15 +155,15 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_optionsAttr_2(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertEqual(archive.options & srcml.OPTION_HASH, srcml.OPTION_HASH, "Incorrect value for nested if.")
         archive.options = archive.options & ~srcml.OPTION_HASH
         self.assertEqual(archive.options & srcml.OPTION_HASH, 0, "Incorrect value for options.")
         archive = None
 
-
-
     def test_enable_option(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertFalse(archive.option_is_enabled(srcml.OPTION_CPPIF_CHECK), "archive option has incorrect default value.")
         archive.enable_option(srcml.OPTION_CPPIF_CHECK)
@@ -159,6 +171,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_disable_option(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertTrue(archive.option_is_enabled(srcml.OPTION_ARCHIVE), "archive option has incorrect default value.")
         archive.disable_option(srcml.OPTION_ARCHIVE)
@@ -166,6 +179,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_marcos_proxy_len(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertEqual(len(archive.macros), 0, "Incorrect # of macros.")
         archive.macros.update({"__LIBSRCML_DECL": "src:name"})
@@ -173,11 +187,11 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_marcos_proxy_getitem_and_iteration(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertEqual(len(archive.macros), 0, "Incorrect # of macros.")
         archive.macros.update({"__LIBSRCML_DECL": "src:name", "BANANA":"src:type", "aardvark":"src:event"})
         self.assertEqual(len(archive.macros), 3, "Incorrect # of macros.")
-        # self.assertEqual(len(archive.macros), 3, "Incorrect # of macros.")
         index = 0
         for x in archive.macros:
             index += 1
@@ -185,12 +199,14 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_language_from_filename(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         ext = archive.language_from_filename("file.cpp")
         self.assertEqual(ext, srcml.LANGUAGE_CXX, "Incorrect value for file extension")
         archive = None
 
     def test_register_file_ext(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         archive.register_file_ext("banana", srcml.LANGUAGE_JAVA)
         ext = archive.language_from_filename("file.banana")
@@ -198,6 +214,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_ns_proxy_len(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertEqual(len(archive.xml_namespaces), 7, "Incorrect # of xml namespaces.")
         archive.xml_namespaces.update({"waffles": "http://www.google.com"})
@@ -205,6 +222,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_ns_proxy_getitem_and_iteration(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertEqual(len(archive.xml_namespaces), 7, "Incorrect # of xml namespace.")
         archive.xml_namespaces.update({"aardvark": "http://aardvark.org", "banana": "http://bananarepublic.com"})
@@ -216,6 +234,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_ns_proxy_get_uri(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         expectedURI = "http://aardvark.org"
         archive.xml_namespaces.update({"aardvark": expectedURI, "banana": "http://bananarepublic.com"})
@@ -224,6 +243,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_ns_proxy_get_prefix(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         expectedURI = "http://aardvark.org"
         expectedPrefix = "aardvark"
@@ -283,6 +303,7 @@ class TestArchive(unittest.TestCase):
     java_archive_file = os.path.join(os.path.dirname(__file__), "anonymous_class_java.comment.java.xml")
 
     def test_open_read__xml_string(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         archive.open_read(xml=TestArchive.xml_data_header + TestArchive.xml_data_body)
         self.assertEqual(archive.filename, "/home/brian/Projects/buildFiles/srcMLBuild/bindings/srcml.h.temp", "Incorrect value for file name.")
@@ -293,6 +314,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_open_read__python_stream(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         first_data_file = "test_open_read_io__python_stream.xml"
         out_stream = open(first_data_file, "w")
@@ -310,6 +332,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_open_read__python_stream_2(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         data_file = os.path.join(os.path.dirname(__file__), "test_data.xml")
         in_strm = open(data_file, "r")
@@ -324,6 +347,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_open_read__python_file_obj(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         data_file = os.path.join(os.path.dirname(__file__), "test_data.xml")
         archive.open_read(stream=file(data_file))
@@ -337,6 +361,7 @@ class TestArchive(unittest.TestCase):
         archive = None
 
     def test_open_read__filename(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         data_file = os.path.join(os.path.dirname(__file__), "test_data.xml")
         archive.open_read(filename=data_file)
@@ -349,7 +374,9 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(et.tostring(tree), et.tostring(tree_from_file), "File from tree doesn't match tree loaded from unit.")
         archive = None
 
+    """
     def test_open_read__memory_buffer(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         data_file = os.path.join(os.path.dirname(__file__), "test_data.xml")
         mem_buff = srcml.memory_buffer()
@@ -365,9 +392,12 @@ class TestArchive(unittest.TestCase):
         tree_from_file = et.parse(data_file)
         self.assertEqual(et.tostring(tree), et.tostring(tree_from_file), "File from tree doesn't match tree loaded from unit.")
         archive = None
+        mem_buff.free()
         mem_buff._buff = ctypes.c_char_p()
+   """     
 
     def test_open_read__units(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         archive.open_read(filename=TestArchive.java_archive_file)
         self.assertEqual(archive.language, srcml.LANGUAGE_JAVA, "Incorrect value for language.")
@@ -390,6 +420,7 @@ class TestArchive(unittest.TestCase):
 
     # Testing xml writer interface function.
     def test_open_write__python_stream(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         strm = StringIO.StringIO()
         archive.open_write(stream=strm, close_stream=False)
@@ -397,6 +428,7 @@ class TestArchive(unittest.TestCase):
         self.assertTrue(len(strm.getvalue())>0, "didn't correctly write to stream.")
 
     def test_open_write__filename(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         outputFile = "test_open_write__filename.xml"
         archive.open_write(filename=outputFile)
@@ -407,6 +439,7 @@ class TestArchive(unittest.TestCase):
         os.remove(outputFile)
 
     def test_open_write__mem_buff(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         mem_buff = srcml.memory_buffer()
         archive.open_write(buff=mem_buff)
@@ -414,6 +447,7 @@ class TestArchive(unittest.TestCase):
         self.assertTrue(str(mem_buff)>0, "Didn't XML to buffer.")
 
     def test_open_write__mem_buff(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         mem_buff = srcml.memory_buffer()
         archive.open_write(buff=mem_buff)
@@ -422,16 +456,19 @@ class TestArchive(unittest.TestCase):
 
     # Testing operators.
     def test_eq(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertFalse(archive == None, "Archive wasn't created correctly.")
         self.assertTrue(archive == archive, "Archive wasn't created correctly.")
 
     def test_ne(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         self.assertTrue(archive != None, "Archive wasn't created correctly.")
         self.assertFalse(archive != archive, "Archive wasn't created correctly.")
 
     def test_archive_create_unit_kwargs(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         archive = srcml.archive()
         outputStringBuffer = StringIO.StringIO()
         archive.open_write(stream=outputStringBuffer, close_stream=False)
@@ -442,6 +479,7 @@ class TestArchive(unittest.TestCase):
 
     # Testing XSLT transformations.
     def test_archive__xslt_xpath(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         iarchive = srcml.archive()
         iarchive.open_read(filename=TestArchive.java_archive_file)
 
@@ -455,6 +493,7 @@ class TestArchive(unittest.TestCase):
         self.assertTrue(len(outputStringBuffer.getvalue()) > 0, "Archive wasn't created correctly.")
 
     def test_archive__xslt_xpath_attribute(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         iarchive = srcml.archive()
         iarchive.open_read(filename=TestArchive.java_archive_file)
 
@@ -469,6 +508,7 @@ class TestArchive(unittest.TestCase):
 
 
     def test_archive__xslt_xpath_element(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         iarchive = srcml.archive()
         iarchive.open_read(filename=TestArchive.java_archive_file)
 
@@ -491,6 +531,7 @@ class TestArchive(unittest.TestCase):
 </xsl:stylesheet>
 """
     def test_archive__xslt_xslt_transform_filename(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         output_file_name = "test_archive__xslt_xslt_transform_filename.xsl"
         iarchive = srcml.archive()
         outputStringBuffer = StringIO.StringIO()
@@ -532,6 +573,7 @@ class TestArchive(unittest.TestCase):
         self.assertEqual(transformed_unit.xml(), input_unit.xml(), "Archive wasn't transformed correctly.")
 
     def test_archive__xslt_xslt_transform_stream(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         output_file_name = "test_archive__xslt_xslt_transform_filename.xsl"
         iarchive = srcml.archive()
         outputStringBuffer = StringIO.StringIO()
@@ -574,6 +616,7 @@ class TestArchive(unittest.TestCase):
 
 
     def test_archive__xslt_xslt_transform_stream(self):
+        print "{0}.{1}".format(self.__class__.__name__, sys._getframe().f_code.co_name)
         output_file_name = "test_archive__xslt_xslt_transform_filename.xsl"
         iarchive = srcml.archive()
         outputStringBuffer = StringIO.StringIO()

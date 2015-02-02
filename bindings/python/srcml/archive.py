@@ -167,7 +167,7 @@ _PRIVATE_READER_CONTEXT_ATTR = "_ctxt"
 
 _archive_attr_lookup = dict(
 {
-    ENCODING_ATTR: (archive_get_encoding, archive_set_encoding,),
+    ENCODING_ATTR: (archive_get_xml_encoding, archive_set_xml_encoding,),
     SRC_ENCODING_ATTR : (archive_get_src_encoding, archive_set_src_encoding,),
     LANGUAGE_ATTR : (archive_get_language, archive_set_language,),
     FILENAME_ATTR : (archive_get_filename, archive_set_filename,),
@@ -469,7 +469,7 @@ class archive(object):
                     return number_of_bytes_writen_to_buffer
 
                 def close(context):
-                    return zero_for_sucess_not_zero_for_failure
+                    return zero_for_success_not_zero_for_failure
 
                 A context can by any python object.
 

@@ -22,7 +22,7 @@ from private_helpers import *
 import ctypes, cStringIO
 
 _unit_attr_lookup = dict({
-    ENCODING_ATTR       : (unit_get_encoding, unit_set_encoding,),
+    ENCODING_ATTR       : (unit_get_src_encoding, unit_set_src_encoding,),
     LANGUAGE_ATTR       : (unit_get_language, unit_set_language,),
     FILENAME_ATTR       : (unit_get_filename, unit_set_filename,),
     DIRECTORY_ATTR      : (unit_get_directory, unit_set_directory,),

@@ -33,7 +33,7 @@ class memory_buffer:
     """
 
     def __init__(self):
-        self._buff = ctypes.c_char_p()
+        self._buff = ctypes.c_char_p(0)
         self._size = ctypes.c_int(0)
 
     def __del__(self):
