@@ -69,6 +69,8 @@ srcml_archive* srcml_create_archive()
 
     } catch(...) { return 0; }
 
+    xmlInitParser();
+
     archive->type = SRCML_ARCHIVE_INVALID;
     archive->options = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY;
     archive->revision = srcml_version_string();
