@@ -55,9 +55,11 @@ define filelist <<- 'STDOUT'
 
 createfile filelistab "$filelist"
 
-#src2srcml --files-from filelistab
-
-#check 3<< "$nestedfile"
+# test issue #1063: nondeterministic failures when run multiple times
+for (( i = 0; i < 50; i++ )); do
+	src2srcml sub/a.cpp sub/b.cpp --in-order
+	check 3<<< "$nestedfile"
+done
 
 rm -f filelistab
 
