@@ -40,7 +40,7 @@ define longinfonested <<- 'STDOUT'
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" filename="a.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" directory="sub" filename="a.cpp">
 	</unit>
 	STDOUT
 
@@ -52,7 +52,7 @@ define nestedfile <<- 'STDOUT'
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" dir="sub" filename="b.cpp">
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" directory="sub" filename="b.cpp">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 

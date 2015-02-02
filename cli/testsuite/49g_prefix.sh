@@ -7,7 +7,7 @@ source $(dirname "$0")/framework_test.sh
 # test prefix extraction
 define sxmlfile1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmnls:lit="http://www.sdml.info/srcML/literal" revision="0.8.0" language="C++" dir="sub" filename="a.cpp">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmnls:lit="http://www.sdml.info/srcML/literal" revision="0.8.0" language="C++" directory="sub" filename="a.cpp">
 	</unit>
 	STDOUT
 
