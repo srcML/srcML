@@ -53,16 +53,16 @@ int main() {
     }
 
     /*
-      srcml_set_encoding
+      srcml_set_xml_encoding
     */
 
     {
-        srcml_set_encoding(0);
+        srcml_set_xml_encoding(0);
         dassert(global_archive.encoding, 0);
     }
 
     {
-        srcml_set_encoding("foo");
+        srcml_set_xml_encoding("foo");
         dassert(*global_archive.encoding, "foo");
     }
 
@@ -313,17 +313,17 @@ int main() {
     }
 
     /*
-      srcml_get_encoding
+      srcml_get_xml_encoding
     */
 
     {
         global_archive.encoding = boost::optional<std::string>();
-        dassert(srcml_get_encoding(), 0);
+        dassert(srcml_get_xml_encoding(), 0);
     }
 
     {
         global_archive.encoding = "foo";
-        dassert(srcml_get_encoding(), std::string("foo"));
+        dassert(srcml_get_xml_encoding(), std::string("foo"));
         global_archive.encoding = boost::optional<std::string>();
     }
 

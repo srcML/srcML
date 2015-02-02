@@ -324,12 +324,9 @@ public :
      */
     virtual void startDocument() {
 
-        srcml_archive_set_encoding(archive, encoding ? encoding : "UTF-8");
+        srcml_archive_set_xml_encoding(archive, encoding ? encoding : "UTF-8");
 
     }
-
-    std::vector<std::string> root_namespaces;
-    std::vector<std::string> root_prefixes;
 
     /**
      * startRoot
@@ -359,13 +356,17 @@ public :
             std::string attribute = attributes[pos].localname;
             std::string value = attributes[pos].value;
 
-            if(attribute == "language")
+            if(attribute == "timestamp")
+                ;
+            else if(attribute == "hash")
+                ;
+            else if(attribute == "language")
                 srcml_archive_set_language(archive, value.c_str());
             else if(attribute == "revision")
                 archive->revision = value;
             else if(attribute == "filename")
                 srcml_archive_set_filename(archive, value.c_str());
-            else if(attribute == "dir")
+            else if(attribute.size() >= 3 && attribute[0] == 'd' && attribute[1] == 'i' && attribute[2] == 'r' && (attribute.size() == 3 || attribute.compare(3, std::string::npos, "ectory") == 0))
                 srcml_archive_set_directory(archive, value.c_str());
             else if(attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
@@ -455,8 +456,7 @@ public :
 #ifdef DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-        root_namespaces = archive->namespaces;
-        root_prefixes = archive->prefixes;
+
     }
 
     /**
@@ -515,6 +515,7 @@ public :
 
             std::string attribute = attributes[pos].localname;
             std::string value = attributes[pos].value;
+
             if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
             else if(attribute == "hash")
@@ -525,12 +526,14 @@ public :
                 unit->revision = value;
             else if(attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
-            else if(attribute == "dir")
+            else if(attribute.size() >= 3 && attribute[0] == 'd' && attribute[1] == 'i' && attribute[2] == 'r' && (attribute.size() == 3 || attribute.compare(3, std::string::npos, "ectory") == 0))
                 srcml_unit_set_directory(unit, value.c_str());
             else if(attribute == "version")
                 srcml_unit_set_version(unit, value.c_str());
             else if(attribute == "tabs" || attribute == "options" || attribute == "hash")
                 ;
+            else if(attribute == "src-encoding")
+                archive->options |= SRCML_OPTION_STORE_ENCODING, srcml_unit_set_src_encoding(unit, value.c_str());
             else {
 
                 unit->attributes.push_back(attribute);
@@ -913,131 +916,25 @@ private :
         }
         *unit->unit += localname;
 
-        // output root unit namespaces
-        if (strcmp(localname, "unit") == 0) {
+        for(int pos = 0; pos < num_namespaces; ++pos) {
 
-            // output root main namespace first
+            if(is_archive && strcmp(localname, "unit") == 0 && strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
+                continue;
+
             *unit->unit += " xmlns";
-            if(root_prefixes[0] != "") {
+            if(namespaces[pos].prefix) {
 
                 *unit->unit += ":";
-                *unit->unit += root_prefixes[0];
+                *unit->unit += namespaces[pos].prefix;
 
             }
 
             *unit->unit += "=\"";
-            *unit->unit += root_namespaces[0];
+            *unit->unit += namespaces[pos].uri;
             *unit->unit += "\"";
 
-            // output cpp namespace second (on unit or on root)
-            bool foundcpp = false;
-            for(unsigned int pos = 1; pos < root_namespaces.size(); ++pos) {
-
-                if (root_namespaces[pos] != SRCML_CPP_NS_URI)
-                    continue;
-
-                *unit->unit += " xmlns";
-                if(root_prefixes[pos] != "") {
-
-                    *unit->unit += ":";
-                    *unit->unit += root_prefixes[pos];
-
-                }
-
-                *unit->unit += "=\"";
-                *unit->unit += root_namespaces[pos];
-                *unit->unit += "\"";
-
-                foundcpp = true;
-                break;
-            }
-
-            // output local cpp if we did not find it previously
-            for(int pos = 0; !foundcpp && pos < num_namespaces; ++pos) {
-
-                if (strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
-                    continue;
-
-                *unit->unit += " xmlns";
-                if(namespaces[pos].prefix) {
-
-                    *unit->unit += ":";
-                    *unit->unit += namespaces[pos].prefix;
-
-                }
-
-                *unit->unit += "=\"";
-                *unit->unit += namespaces[pos].uri;
-                *unit->unit += "\"";
-
-                break;
-            }
-
-            // output rest of root namespaces
-            for(unsigned int pos = 1; pos < root_namespaces.size(); ++pos) {
-
-                if (root_namespaces[pos] == SRCML_CPP_NS_URI)
-                    continue;
-
-                *unit->unit += " xmlns";
-                if(root_prefixes[pos] != "") {
-
-                    *unit->unit += ":";
-                    *unit->unit += root_prefixes[pos];
-
-                }
-
-                *unit->unit += "=\"";
-                *unit->unit += root_namespaces[pos];
-                *unit->unit += "\"";
-
-                foundcpp = true;
-                break;
-            }
-
-            // output rest of local namespaces
-            for(int pos = 0; !foundcpp && pos < num_namespaces; ++pos) {
-
-                if (strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) == 0)
-                    continue;
-
-                *unit->unit += " xmlns";
-                if(namespaces[pos].prefix) {
-
-                    *unit->unit += ":";
-                    *unit->unit += namespaces[pos].prefix;
-
-                }
-
-                *unit->unit += "=\"";
-                *unit->unit += namespaces[pos].uri;
-                *unit->unit += "\"";
-
-                break;
-            }
-
-        } else {
-
-            // output local unit namespaces
-            for(int pos = 0; pos < num_namespaces; ++pos) {
-
-                if(is_archive && strcmp(localname, "unit") == 0 && strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
-                    continue;
-
-                *unit->unit += " xmlns";
-                if(namespaces[pos].prefix) {
-
-                    *unit->unit += ":";
-                    *unit->unit += namespaces[pos].prefix;
-
-                }
-
-                *unit->unit += "=\"";
-                *unit->unit += namespaces[pos].uri;
-                *unit->unit += "\"";
-
-            }
         }
+
         for(int pos = 0; pos < num_attributes; ++pos) {
 
             *unit->unit += " ";
@@ -1055,7 +952,6 @@ private :
 
 
         }
-
         //*unit->unit += ">";
 
     }

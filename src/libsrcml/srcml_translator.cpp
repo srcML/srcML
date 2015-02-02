@@ -84,6 +84,7 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * @param version unit directory attribute
  * @param timestamp unit timestamp attribute
  * @param hash unit hash attribute
+ * @param encoding unit source encoding
  * 
  * Constructor for output to memory.
  */
@@ -102,11 +103,12 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  const char* version,
                                  const std::vector<std::string> & attributes,
                                  const char* timestamp,
-                                 const char* hash)
+                                 const char* hash,
+                                 const char* encoding)
     :  Language(language), first(true),
-       revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
+       revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
        options(op), buffer(0),
-       out(0, 0, getLanguageString(), xml_encoding, options, prefix, uri, attributes, processing_instruction, tabsize), tabsize(tabsize),
+       out(0, 0, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
        str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0) {
 
     buffer = xmlBufferCreate();
@@ -131,6 +133,7 @@ srcml_translator::srcml_translator(char ** str_buf,
  * @param version unit directory attribute
  * @param timestamp unit timestamp attribute
  * @param hash unit hash attribute
+ * @param encoding unit source encoding
  * 
  * Constructor for output to libxml2 output buffer.
  */
@@ -148,11 +151,12 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* version,
                                  const std::vector<std::string> & attributes,
                                  const char* timestamp, 
-                                 const char* hash)
+                                 const char* hash,
+                                 const char* encoding)
     : Language(language), first(true),
-      revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), attributes(attributes),
+      revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
       options(op), buffer(0),
-      out(0, output_buffer, getLanguageString(), xml_encoding, options, prefix, uri, attributes, processing_instruction, tabsize), tabsize(tabsize),
+      out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
       str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0) {}
 
 /**
@@ -179,12 +183,13 @@ void srcml_translator::close() {
 
         // Open for write;
         out.initWriter();
+        out.initNamespaces(prefix, uri);
 
         out.outputXMLDecl();
         out.outputPreRootProcessingInstruction();
 
         // root unit for compound srcML documents
-        out.startUnit(0, revision, directory, filename, version, 0, 0, attributes, true);
+        out.startUnit(0, revision, directory, filename, version, 0, 0, 0, attributes, true);
 
     }
 
@@ -202,9 +207,13 @@ void srcml_translator::close() {
  */
 void srcml_translator::translate(UTF8CharBuffer * parser_input) {
 
-    if(first)
+    if(first) {
+  
         // Open for write;
         out.initWriter();
+        out.initNamespaces(prefix, uri);
+
+    }
 
     first = false;
 
@@ -239,7 +248,7 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
         out.setTokenStream(parser);
 
         // parse and form srcML output with unit attributes
-        out.consume(getLanguageString(), revision, directory, filename, version, timestamp, hash);
+        out.consume(getLanguageString(), revision, directory, filename, version, timestamp, hash, encoding);
 
     } catch (const std::exception& e) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
@@ -274,29 +283,11 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
   bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
-  if (!is_archive){
-
-    if (!first) {
-      fprintf(stderr, "libsrcml: internal error attempting to write more then one unit to non-archive\n");
-      return false;
-    }
-
-    out.initWriter();
-
-    if ((options & SRCML_OPTION_XML_DECL) > 0)
-      out.outputXMLDecl();
-  
-    out.outputPreRootProcessingInstruction();
-
-    xmlTextWriterWriteRaw(out.getWriter(), BAD_CAST xml);
-      
-    return true;
-  }
-
   if(first) {
 
     // Open for write;
     out.initWriter();
+    out.initNamespaces(prefix, uri);
 
     if ((options & SRCML_OPTION_XML_DECL) > 0)
       out.outputXMLDecl();
@@ -306,7 +297,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     // root unit for compound srcML documents
 
     if(is_archive)
-        out.startUnit(0, revision, directory, filename, version, 0, 0, attributes, true);
+        out.startUnit(0, revision, directory, filename, version, 0, 0, 0, attributes, true);
 
     if (is_archive)
         out.processText("\n\n", 2);
@@ -338,7 +329,8 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
   if(is_cpp) options |= SRCML_OPTION_CPP;
 
   out.startUnit(language_start_value ? language_start_value + 1 : 0, is_archive && unit->revision ? unit->revision->c_str() : revision, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                       unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
+                       unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, 
+                       unit->encoding ? unit->encoding->c_str() : 0, unit->attributes, false);
 
   if(language_start_name) (*language_end_value) = '"';
 
@@ -376,8 +368,12 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
  */
 bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
-    if(first)
+    if(first) {
+
         out.initWriter();
+        out.initNamespaces(prefix, uri);
+
+    }
 
     first = false;
 
@@ -396,7 +392,8 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
     OPTION_TYPE save_options = options;
 
     out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), revision, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, unit->attributes, false);
+                          unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0,
+                          unit->encoding ? unit->encoding->c_str() : 0, unit->attributes, false);
 
     options = save_options;
 

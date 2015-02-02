@@ -40,6 +40,10 @@ int main() {
     file << "abc";
     file.close();
 
+    file.open("bom.cpp");
+    file << "\xEF\xBB\xBF""abc";
+    file.close();
+
     file.open("iso.cpp");
     file << "/** ";
     file << (char)254;
@@ -515,7 +519,82 @@ int main() {
 
     }
 
+    /** test auto BOM detection */
+
+    {
+
+        UTF8CharBuffer utf8("bom.cpp", 0, 0);
+        assert(utf8.getChar() == 'a');
+        assert(utf8.getChar() == 'b');
+        assert(utf8.getChar() == 'c');
+
+    }
+
+    {
+
+        UTF8CharBuffer utf8("\xEF\xBB\xBF""abc", 6, 0, 0);
+        assert(utf8.getChar() == 'a');
+        assert(utf8.getChar() == 'b');
+        assert(utf8.getChar() == 'c');
+
+    }
+
+
+    {
+
+        FILE * file = fopen("bom.cpp", "r");
+        {
+            UTF8CharBuffer utf8(file, 0, 0);
+            assert(utf8.getChar() == 'a');
+            assert(utf8.getChar() == 'b');
+            assert(utf8.getChar() == 'c');
+        }
+        fclose(file);
+
+    }
+
+    {
+
+        int fd = open("bom.cpp", O_RDONLY);
+        {
+            UTF8CharBuffer utf8(fd, 0, 0);
+            assert(utf8.getChar() == 'a');
+            assert(utf8.getChar() == 'b');
+            assert(utf8.getChar() == 'c');
+        }
+        close(fd);
+
+    }
+
+    /*
+
+    getEncoding
+
+    */
+
+    {
+
+        UTF8CharBuffer utf8("a.cpp", 0, 0);
+        assert(*utf8.getEncoding() == "ISO-8859-1");
+
+    }
+
+    {
+
+        UTF8CharBuffer utf8("bom.cpp", 0, 0);
+        assert(*utf8.getEncoding() == "UTF-8");
+
+    }
+
+    {
+
+        UTF8CharBuffer utf8("a.cpp", "UTF-8", 0);
+        assert(*utf8.getEncoding() == "UTF-8");
+
+    }
+
     unlink("a.cpp");
+    unlink("bom.cpp");
     unlink("iso.cpp");
     unlink("utf8.cpp");
     unlink("long.cpp");

@@ -62,14 +62,13 @@ public:
                 const char* language,
                 const char* encoding,
                 OPTION_TYPE& option,
-                std::vector<std::string> & prefix,
-                std::vector<std::string> & uri,
                 const std::vector<std::string> & attributes,
                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
                 int tabsize);
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
     int initWriter();
+    void initNamespaces(const std::vector<std::string> & prefix, const std::vector<std::string> & uri);
     xmlTextWriter * getWriter();
     void setDepth(int thedepth);
 
@@ -85,12 +84,13 @@ public:
                    const char* unit_directory, const char* unit_filename,
                    const char* unit_version, const char* unit_timestamp,
                    const char* unit_hash,
+                   const char* encoding,
                    const std::vector<std::string> & attributes,
                    bool output_macrolist);
 
     // consume the entire tokenstream with output of srcml
     void consume(const char* language, const char * unit_revision, const char* unit_directory, const char* unit_filename,
-                 const char* unit_version, const char* unit_timestamp, const char* unit_hash);
+                 const char* unit_version, const char* unit_timestamp, const char* unit_hash, const char* encoding);
 
     // close the output
     void close();
@@ -146,6 +146,9 @@ public:
 
     /** unit attribute hash */
     const char* unit_hash;
+
+    /** unit attribute encoding */
+    const char* unit_encoding;
 
     /** output options */
     OPTION_TYPE& options;

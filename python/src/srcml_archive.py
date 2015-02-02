@@ -87,9 +87,9 @@ libsrcml.srcml_close_archive.argtypes = [c_void_p]
 libsrcml.srcml_archive_set_src_encoding.restype = c_int
 libsrcml.srcml_archive_set_src_encoding.argtypes = [c_void_p, c_char_p]
 
-# int srcml_archive_set_encoding  (struct srcml_archive*, const char* encoding);
-libsrcml.srcml_archive_set_encoding.restype = c_int
-libsrcml.srcml_archive_set_encoding.argtypes = [c_void_p, c_char_p]
+# int srcml_archive_set_xml_encoding  (struct srcml_archive*, const char* encoding);
+libsrcml.srcml_archive_set_xml_encoding.restype = c_int
+libsrcml.srcml_archive_set_xml_encoding.argtypes = [c_void_p, c_char_p]
 
 # int srcml_archive_set_language  (struct srcml_archive*, const char* language);
 libsrcml.srcml_archive_set_language.restype = c_int
@@ -139,9 +139,9 @@ libsrcml.srcml_archive_register_macro.argtypes = [c_void_p, c_char_p, c_char_p]
 libsrcml.srcml_archive_get_src_encoding.restype = c_char_p
 libsrcml.srcml_archive_get_src_encoding.argtypes = [c_void_p]
 
-# const char* srcml_archive_get_encoding (const struct srcml_archive*);
-libsrcml.srcml_archive_get_encoding.restype = c_char_p
-libsrcml.srcml_archive_get_encoding.argtypes = [c_void_p]
+# const char* srcml_archive_get_xml_encoding (const struct srcml_archive*);
+libsrcml.srcml_archive_get_xml_encoding.restype = c_char_p
+libsrcml.srcml_archive_get_xml_encoding.argtypes = [c_void_p]
 
 # const char* srcml_archive_get_revision (const struct srcml_archive*);
 libsrcml.srcml_archive_get_revision.restype = c_char_p
@@ -317,8 +317,8 @@ class srcml_archive :
     def set_src_encoding(self, src_encoding) :
         check_return(libsrcml.srcml_archive_set_src_encoding(self.archive, src_encoding))
 
-    def set_encoding(self, encoding) :
-        check_return(libsrcml.srcml_archive_set_encoding(self.archive, encoding))
+    def set_xml_encoding(self, encoding) :
+        check_return(libsrcml.srcml_archive_set_xml_encoding(self.archive, encoding))
 
     def set_language(self, language) :
         check_return(libsrcml.srcml_archive_set_language(self.archive, language))
@@ -356,8 +356,8 @@ class srcml_archive :
     def get_src_encoding(self) :
         return libsrcml.srcml_archive_get_src_encoding(self.archive)
 
-    def get_encoding(self) :
-        return libsrcml.srcml_archive_get_encoding(self.archive)
+    def get_xml_encoding(self) :
+        return libsrcml.srcml_archive_get_xml_encoding(self.archive)
 
     def get_revision(self) :
         return libsrcml.srcml_archive_get_revision(self.archive)

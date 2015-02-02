@@ -216,10 +216,18 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 
     }
 
-    if(size == 0)
-        input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, encoding ? xmlParseCharEncoding("UTF-8") : XML_CHAR_ENCODING_NONE);
-    else
+    bool use_init = true;
+    if(size == 0) {
+
+        input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, xmlParseCharEncoding("UTF-8"));
+        this->encoding = encoding ? encoding : "ISO-8859-1";
+        use_init = false;
+
+    } else {
+
         input = xmlParserInputBufferCreateMem(c_buffer, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+
+    }
 
     if(!input) throw UTF8FileError();
 
@@ -228,7 +236,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 #ifdef LIBXML2_NEW_BUFFER
         input->raw = input->buffer;
         input->rawconsumed = 0;
-        xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(XML_CHAR_ENCODING_8859_1);
+        xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(xmlParseCharEncoding(encoding));
         input->buffer = temp_parser->buffer;
         temp_parser->buffer = 0;
         xmlFreeParserInputBuffer(temp_parser);
@@ -243,7 +251,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 #endif
     }
 
-    init(encoding);
+    if(use_init) init(encoding);
 
 }
 
@@ -286,8 +294,6 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
                                          encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
     if(!input) throw UTF8FileError();
-
-
 
     init(encoding);
 
@@ -392,22 +398,31 @@ UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback
  */
 void UTF8CharBuffer::init(const char * encoding) {
 
+    if(encoding) this->encoding = encoding;
+
     /* If an encoding was not specified, then try to detect it.
        This is especially important for the BOM for UTF-8.
        If nothing is detected, then use ISO-8859-1 */
     if (!encoding) {
 
+        // need to save the mem buffer ssize
+        int save_size = size;
         // input enough characters to detect.
         // 4 is good because you either get 4 or some standard size which is probably larger (really)
         size = xmlParserInputBufferGrow(input, 4);
 
         // detect (and remove) BOMs for UTF8 and UTF16
-        if (size >= 3 &&
+        if ((size >= 3 || save_size >= 3) &&
             xmlBufContent(input->buffer)[0] == 0xEF &&
             xmlBufContent(input->buffer)[1] == 0xBB &&
             xmlBufContent(input->buffer)[2] == 0xBF) {
 
             pos = 3;
+
+            this->encoding = "UTF-8";
+
+            // restore mem buffer size
+            if(size == 0) size = save_size;
 
         } else {
 
@@ -416,7 +431,7 @@ void UTF8CharBuffer::init(const char * encoding) {
 
             // now see if we can detect it
             xmlCharEncoding newdenc = xmlDetectCharEncoding(xmlBufContent(input->buffer), size);
-            if (newdenc)
+            if (newdenc && newdenc != XML_CHAR_ENCODING_UTF8)
                 denc = newdenc;
 
             /* Transform the data already read in */
@@ -437,6 +452,8 @@ void UTF8CharBuffer::init(const char * encoding) {
 #endif
             // setup the encoder being used
             input->encoder = xmlGetCharEncodingHandler(denc);
+
+            this->encoding = xmlGetCharEncodingName(denc);
 
             // fill up the buffer with even more data
             size = growBuffer();
@@ -532,6 +549,19 @@ int UTF8CharBuffer::getChar() {
     }
 
     return c;
+}
+
+/**
+ * getEncoding
+ *
+ * Get the source encoding used.
+ *
+ * @returns the used source encoding.
+ */
+const boost::optional<std::string> & UTF8CharBuffer::getEncoding() const {
+
+    return encoding;
+
 }
 
 /**

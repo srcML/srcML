@@ -39,6 +39,8 @@
 #define snprintf _snprintf
 #endif
 
+#define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
+
 /** 
  * anonymous enum for prefix positions
  */
@@ -456,8 +458,6 @@ namespace {
  * @param language the unit language
  * @param xml_enc output encoding
  * @param op output operations
- * @param prefix namespaces prefixes
- * @param uri namespaces uris
  * @param ts tabstop size
  * @param output_buffer if output is to a output buffer
  *
@@ -468,8 +468,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const char* language,
                          const char* xml_enc,
                          OPTION_TYPE& op,
-                         std::vector<std::string> & prefix,
-                         std::vector<std::string> & uri,
                          const std::vector<std::string> & attributes,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          int ts)
@@ -478,56 +476,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), 
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
-    num2prefix.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT);
-
-    num2uri.push_back(SRCML_SRC_NS_URI);
-    num2uri.push_back(SRCML_CPP_NS_URI);
-    num2uri.push_back(SRCML_ERR_NS_URI);
-    num2uri.push_back(SRCML_EXT_LITERAL_NS_URI);
-    num2uri.push_back(SRCML_EXT_OPERATOR_NS_URI);
-    num2uri.push_back(SRCML_EXT_MODIFIER_NS_URI);
-    num2uri.push_back(SRCML_EXT_POSITION_NS_URI);
-    num2uri.push_back(SRCML_EXT_OPENMP_NS_URI);
-
-    for(std::vector<std::string>::size_type outer_pos = 0; outer_pos < uri.size(); ++ outer_pos) {
-
-        std::vector<std::string>::size_type pos;
-        for(pos = 0; pos < num2uri.size() && num2uri[pos] != uri[outer_pos]; ++pos)
-            ;
-
-        if(pos < num2uri.size()) {
-
-            num2prefix[pos] = prefix[outer_pos];
-
-        } else {
-
-            num2prefix.push_back(prefix[outer_pos]);
-            num2uri.push_back(uri[outer_pos]);
-
-        }
-
-    }
-
-
-    // setup attributes names for line/column position if used
-    if (isoption(options, SRCML_OPTION_POSITION)) {
-
-        lineAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-        lineAttribute += ":line";
-
-        line2Attribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-        line2Attribute += ":line2";
-
-        columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-        columnAttribute += ":column";
-    }
 
     if(!isoption(options, SRCML_OPTION_OPTIONAL_MARKUP)) {
 
@@ -567,6 +515,65 @@ int srcMLOutput::initWriter() {
     }
 
     return SRCML_STATUS_OK;
+
+}
+
+/**
+ * initNamespaces
+ *
+ * Initialize the output namespaces.
+ */
+void srcMLOutput::initNamespaces(const std::vector<std::string> & prefix, const std::vector<std::string> & uri) {
+
+    num2prefix.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
+    num2prefix.push_back(SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT);
+
+    num2uri.push_back(SRCML_SRC_NS_URI);
+    num2uri.push_back(SRCML_CPP_NS_URI);
+    num2uri.push_back(SRCML_ERR_NS_URI);
+    num2uri.push_back(SRCML_EXT_LITERAL_NS_URI);
+    num2uri.push_back(SRCML_EXT_OPERATOR_NS_URI);
+    num2uri.push_back(SRCML_EXT_MODIFIER_NS_URI);
+    num2uri.push_back(SRCML_EXT_POSITION_NS_URI);
+    num2uri.push_back(SRCML_EXT_OPENMP_NS_URI);
+
+    for(std::vector<std::string>::size_type outer_pos = 0; outer_pos < uri.size(); ++ outer_pos) {
+
+        std::vector<std::string>::size_type pos;
+        for(pos = 0; pos < num2uri.size() && num2uri[pos] != uri[outer_pos]; ++pos)
+            ;
+
+        if(pos < num2uri.size()) {
+
+            num2prefix[pos] = prefix[outer_pos];
+
+        } else {
+
+            num2prefix.push_back(prefix[outer_pos]);
+            num2uri.push_back(uri[outer_pos]);
+
+        }
+
+    }
+
+    // setup attributes names for line/column position if used
+    if (isoption(options, SRCML_OPTION_POSITION)) {
+
+        lineAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+        lineAttribute += ":line";
+
+        line2Attribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+        line2Attribute += ":line2";
+
+        columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+        columnAttribute += ":column";
+    }
 
 }
 
@@ -745,7 +752,7 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
  * Start consumption of tokens/parsing of source code with unit attributes.
  */
 void srcMLOutput::consume(const char* language, const char* revision, const char* directory, const char* filename,
-                          const char* version, const char* timestamp, const char* hash) {
+                          const char* version, const char* timestamp, const char* hash, const char* encoding) {
 
     // store attributes so that first occurrence of unit element will be correct
     unit_revision = revision;
@@ -755,6 +762,7 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
     unit_timestamp = timestamp;
     unit_language = language;
     unit_hash = hash;
+    unit_encoding = encoding;
 
     if (!isoption(options, SRCML_OPTION_INTERACTIVE)) {
 
@@ -965,6 +973,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
  * @param version the version attribute
  * @param timestamp the timestamp attribute
  * @param hash the hash attribute
+ * @param encoding the encoding attribute
  * @param outer is this an outer or inner unit
  *
  * Output the start of a unit tag.
@@ -973,6 +982,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const char* dir, const char* filename,
                             const char* version, const char* timestamp,
                             const char* hash,
+                            const char* encoding,
                             const std::vector<std::string> & attributes,
                             bool output_macrolist) {
 
@@ -1017,7 +1027,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     // list of attributes
     const char* const attrs[][2] = {
 
-        { UNIT_ATTRIBUTE_REVISION, revision },
+        { UNIT_ATTRIBUTE_REVISION, !isoption(options, SRCML_OPTION_NO_REVISION) ? revision : 0 },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
@@ -1037,8 +1047,11 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         // timestamp attribute
         { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
 
-        // timestamp attribute
+        // hash attribute
         { UNIT_ATTRIBUTE_HASH, hash },
+
+        // source encoding attribute
+        { UNIT_ATTRIBUTE_SOURCE_ENCODING, isoption(options, SRCML_OPTION_STORE_ENCODING) ? encoding : 0 },
 
         { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && (isoption(options, SRCML_OPTION_NESTIF)
          || isoption(options, SRCML_OPTION_CPPIF_CHECK) || isoption(options, SRCML_OPTION_WRAP_TEMPLATE) || !isoption(options, SRCML_OPTION_TERNARY)) ? soptions.c_str() : 0 },
@@ -1104,7 +1117,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
-        startUnit(unit_language, unit_revision, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
+        startUnit(unit_language, unit_revision, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, unit_encoding, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
 
     } else {
 
