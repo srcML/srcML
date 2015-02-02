@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file srcml_error.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -18,10 +18,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-from bindings import *
-from exceptions import *
-from xslt_transform_classes import *
-from archive import archive
-from unit import *
-from memory_buffer import memory_buffer
+class srcml_error(BaseException):
+    def __init__(self, native_function_name, message):
+        super(srcml_error, self).__init__(native_function_name, message)
 
+    def __str__(self):
+        return "Encountered an error: {0}. {1}".format(*self.args)
