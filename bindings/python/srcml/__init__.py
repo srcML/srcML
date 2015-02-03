@@ -17,7 +17,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
+from exceptions import *
 from bindings import *
 from exceptions import *
 from xslt_transform_classes import *

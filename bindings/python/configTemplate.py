@@ -73,7 +73,7 @@ class GenPythonCode(BindingGenerator):
 
 from ctypes import cdll, c_int, c_char_p, pointer, c_ulonglong, CFUNCTYPE, c_void_p, byref, py_object
 from ctypes.util import find_library
-
+import exceptions
 # libsrcmlLocation = "libsrcml.so"
 
 libsrcml = cdll.LoadLibrary(find_library("srcml"))
@@ -92,11 +92,7 @@ def free(to_free):
         return ""
 
     def postStaticConstants(self):
-        return"""
-def check_result(rc):
-    if rc != STATUS_OK:
-        raise Exception("srcml has encountered an error. Error Code: {0}".format(rc))
-"""
+        return""" """
 
 
     def postFunctionPointers(self):
@@ -144,7 +140,7 @@ def check_result(rc):
 
         intResultTemplate = """
 def {pyName}({parameters}):
-    check_result(libsrcml.{nativeName}({invocationArguments}))
+    exceptions.get_srcml_exception(libsrcml.{nativeName}({invocationArguments}), "{nativeName}", "Native function failure")
 """
         voidReturnTemplate = """
 def {pyName}({parameters}):

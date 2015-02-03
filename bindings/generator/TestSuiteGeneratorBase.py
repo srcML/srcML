@@ -262,7 +262,7 @@ class TestSuiteGeneratorBase(object):
             self._buildCleanUpArchive("archive")
             self.gen_endTestFuncGen()
 
-        genArchiveGetterSetterTest("encoding", "char *", "banana", "")
+        genArchiveGetterSetterTest("xml_encoding", "char *", "banana", "")
         genArchiveGetterSetterTest("src_encoding", "char *", "banana", "")
         genArchiveGetterSetterTest("language", "char *", "C++", "")
         genArchiveGetterSetterTest("filename", "char *", "aardvark.cpp", "")
