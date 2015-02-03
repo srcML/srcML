@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file ReadableArchive.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,10 +17,22 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+class ReadableArchive:
+    def __init__(self, settings):
+        pass
 
-from test_exception_factory import *
-from test_bindings import *
-from test_memory_buffer import *
-
-#from test_archive import *
-#from test_unit import *
+# interface ReadableArchive
+#     String encoding()
+#     String srcEncoding()
+#     String language()
+#     String fileName()
+#     String directory()
+#     String version()
+#     long options()
+#     int tabStop()
+#     ReadableUnit read()
+#     ProcessingInstruction processingInstruction()
+#     XmlNamespaceProxy xmlNamespaces()
+#     MacroProxy macros()
+#     String srcmlRevision()
+#     XsltProxy xslt()

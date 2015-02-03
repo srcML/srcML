@@ -29,7 +29,7 @@ class TestMemoryBuffer(unittest.TestCase):
     def tearDown(self):
         pass
         
-    def test_createBuffer(self):
+    def test_defaultConstruction(self):
         buff = memory_buffer()
         self.assertIsNotNone(buff._buff, "Didn't find private member _buff")
         self.assertIsNotNone(buff._size, "Didn't find private member _size")
@@ -37,10 +37,26 @@ class TestMemoryBuffer(unittest.TestCase):
         self.assertEqual(buff._buff.value, None, "Incorrect buffer data.")
         buff = None
 
+    # def test_bufferConstruction(self):
+    #     buff = memory_buffer()
+    #     self.assertIsNotNone(buff._buff, "Didn't find private member _buff")
+    #     self.assertIsNotNone(buff._size, "Didn't find private member _size")
+    #     self.assertEqual(buff._size.value, 0, "Incorrect size")
+    #     self.assertEqual(buff._buff.value, None, "Incorrect buffer data.")
+    #     buff = None
+
+    # def test_stringConstruction(self):
+    #     buff = memory_buffer()
+    #     self.assertIsNotNone(buff._buff, "Didn't find private member _buff")
+    #     self.assertIsNotNone(buff._size, "Didn't find private member _size")
+    #     self.assertEqual(buff._size.value, 0, "Incorrect size")
+    #     self.assertEqual(buff._buff.value, None, "Incorrect buffer data.")
+    #     buff = None
 
     def test_len(self):
         buff = memory_buffer()
-        self.assertIsNotNone(buff._buff, "Didn't find private member _buff")
-        self.assertIsNotNone(buff._size, "Didn't find private member _size")
         self.assertEqual(len(buff), 0, "Incorrect size")
+        buff.allocate(5)
+        self.assertEqual(len(buff), 5, "Incorrect size")
+
         buff = None

@@ -71,7 +71,7 @@ class GenPythonCode(BindingGenerator):
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from ctypes import cdll, c_int, c_char_p, pointer, c_ulonglong, CFUNCTYPE, c_void_p, byref, py_object
+from ctypes import cdll, c_int, c_char_p, pointer, c_ulong, c_ulonglong, CFUNCTYPE, c_void_p, byref, py_object
 from ctypes.util import find_library
 import exceptions
 # libsrcmlLocation = "libsrcml.so"
@@ -84,6 +84,12 @@ libc.free.argtypes = [c_void_p]
 
 def free(to_free):
     libc.free(to_free)
+
+libc.malloc.restype = c_void_p
+libc.malloc.argtypes = [c_ulong]
+
+def malloc(allocation_size):
+    libc.malloc(allocation_size)
 """
 
 
