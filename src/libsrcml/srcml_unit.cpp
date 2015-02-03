@@ -362,6 +362,9 @@ const char* srcml_unit_get_formatted_xml(struct srcml_unit* unit, const char * x
         srcml_archive_close(formatting_archive);
         srcml_archive_free(formatting_archive);
 
+        while(size > 0 && buffer[size - 1] == '\n')
+            buffer[size - 1] = '\0';
+
     }
 
     return buffer;

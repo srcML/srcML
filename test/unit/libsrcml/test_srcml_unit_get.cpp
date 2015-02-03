@@ -290,6 +290,90 @@ int main() {
         dassert(srcml_unit_get_raw_xml(0), 0);
     }
 
+    /*
+      srcml_unit_get_formatted_xml
+    */
+
+    {
+
+        srcml_unit * unit = srcml_unit_new(archive);
+        unit->unit = boost::optional<std::string>();
+        const char * xml = srcml_unit_get_formatted_xml(unit, "UTF-8");
+        dassert(xml, 0);
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_new(archive);
+        unit->unit = "<unit/>";
+        const char * xml = srcml_unit_get_formatted_xml(unit, 0);
+        dassert(xml, std::string("<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_new(archive);
+        unit->unit = "<unit/>";
+        const char * xml = srcml_unit_get_formatted_xml(unit, "UTF-8");
+        dassert(xml, std::string("<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_new(archive);
+        unit->unit = "<unit>\xc3\xbf<unit/>";
+        const char * xml = srcml_unit_get_formatted_xml(unit, "ISO-8859-1");
+        dassert(xml, std::string("<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\xff</unit>"));
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+        const char * s = "<unit/>";
+
+        srcml_archive * iarchive = srcml_archive_new();
+        srcml_read_open_memory(iarchive, s, strlen(s));
+        srcml_unit * unit = srcml_read_unit_header(iarchive);
+        const char * xml = srcml_unit_get_formatted_xml(unit, "UTF-8");
+        dassert(xml, std::string("<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
+        free((void *)xml);
+        srcml_unit_free(unit);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    {
+        const char * s = "<unit/>";
+
+        srcml_archive * iarchive = srcml_archive_new();
+        srcml_read_open_memory(iarchive, s, strlen(s));
+        srcml_unit * unit = srcml_unit_new(iarchive);
+        const char * xml = srcml_unit_get_formatted_xml(unit, "UTF-8");
+        dassert(xml, 0);
+        free((void *)xml);
+        srcml_unit_free(unit);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    {
+        srcml_unit * unit = srcml_unit_new(archive);
+        const char * xml = srcml_unit_get_formatted_xml(unit, "UTF-8");
+        dassert(xml, 0);
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+        dassert(srcml_unit_get_formatted_xml(0, 0), 0);
+    }
+
     srcml_archive_free(archive);
 
     srcml_cleanup_globals();
