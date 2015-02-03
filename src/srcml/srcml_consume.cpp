@@ -159,9 +159,9 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         
         // parse the buffer/file (unless it is already form a srcml archive)
         if (request->disk_filename)
-            status = srcml_parse_unit_filename(unit, request->disk_filename->c_str());
+            status = srcml_unit_parse_filename(unit, request->disk_filename->c_str());
         else if (!request->unit)
-            status = srcml_parse_unit_memory(unit, &request->buffer.front(), request->buffer.size());
+            status = srcml_unit_parse_memory(unit, &request->buffer.front(), request->buffer.size());
 
         if (status != SRCML_STATUS_OK)
             // FIXME: Cannot throw exception from thread

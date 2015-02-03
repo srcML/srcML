@@ -223,7 +223,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         srcml_unit_set_timestamp(unit, srcml_unit_get_timestamp(&global_unit));
         srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
 
-        status = srcml_parse_unit_filename(unit, input_filename);
+        status = srcml_unit_parse_filename(unit, input_filename);
         if(status != SRCML_STATUS_OK) {
 
             srcml_unit_free(unit);
@@ -942,7 +942,7 @@ const char* srcml_error_string() { return srcml_error.c_str(); }
 /**
  * srcml_memory_free
  *
- * Free a buffer allocated by functions such as srcml_write_open_memory and srcml_unparse_unit_memory.
+ * Free a buffer allocated by functions such as srcml_write_open_memory and srcml_unit_unparse_memory.
  */
 void srcml_memory_free(char * buffer) {
 
