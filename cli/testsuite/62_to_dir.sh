@@ -31,7 +31,7 @@ define output <<- 'STDERR'
 createfile sub/a.cpp.xml "$srcml"
 rmfile sub/a.cpp
 
-srcml2src --verbose --to-directory=. sub/a.cpp.xml
+srcml2src --verbose --to-dir=. sub/a.cpp.xml
 
 check sub/a.cpp 3<<< "a;" 4<<< "    1 sub/a.cpp"
 
@@ -40,7 +40,7 @@ createfile sub/a.cpp.xml "$nestedfile"
 rmfile sub/a.cpp
 rmfile sub/b.cpp
 
-srcml2src --verbose --to-directory=. sub/a.cpp.xml
+srcml2src --verbose --to-dir=. sub/a.cpp.xml
 check sub/a.cpp 3<<< "a;" 4<<< "$output"
 check sub/b.cpp 3<<< "b;"
 
