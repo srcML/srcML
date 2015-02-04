@@ -20,15 +20,21 @@
 import unittest
 
 def expect_exception(exception_type):
+    """
+    This is used as a decorator of a test that check if a particular type of
+    exception was thrown. If no exception is throw the test is failed in by the
+    decorator but if the test raises an exception of the incorrect type 
+    that exception is raised again so that the error is visible.
+    """
     def exception_test(func):
         def instance_extraction(self):
             try:
                 func(self)
                 self.assertTrue(False, "Didn't catch expected exception")
             except Exception as e:
-                self.assertTrue(isinstance(e, exception_type), "Incorrect exception returned")
+                if not isinstance(e, exception_type):
+                    raise
+                    # print "Unexpected Exception Message: {0}".format(e)
+                self.assertTrue(isinstance(e, exception_type), "Incorrect exception returned. Expected type: {0}. Actual Type: {1}".format(exception_type.__name__, e.__class__.__name__))
         return instance_extraction
     return exception_test
-
-
-# def 

@@ -90,10 +90,80 @@ class TestMemoryBuffer(unittest.TestCase):
             buff.load_from_string(expected)
             self.assertEqual(expected, buff.to_string(), "Incorrect buffer content")
 
+    def test_load_from_string__UTF16(self):
+        with memory_buffer() as buff:
+            expected = "This Is My String"
+            buff.load_from_string(expected, "UTF-16")
+            actual = buff.to_string("UTF-16")
+            self.assertEqual(expected, actual, "Incorrect buffer content. Expected: {0}. Actual: {1}".format(expected, actual))
+
     @expect_exception(TypeError)
-    def test_load_from_string_NoneArgument(self):
-        pass
-        # with memory_buffer() as buff:
-        #     expected = "This Is My String"
-        #     buff.load_from_string(None)
-        #     self.assertEqual(expected, buff.to_string(), "Incorrect buffer content")
+    def test_load_from_string_TypeError(self):
+        with memory_buffer() as buff:
+            buff.load_from_string(None)
+
+    def test_to_list(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = i
+            self.assertListEqual([i for i in range(5)], buff.to_list(), "Incorrect list data returned")
+
+    def test_to_string(self):
+        with memory_buffer() as buff:
+            expected = "This Is My String"
+            buff.load_from_string(expected, "UTF-16")
+            actual = buff.to_string("UTF-16")
+            self.assertEqual(expected, actual, "Incorrect buffer content. Expected: {0}. Actual: {1}".format(expected, actual))
+            
+    def test___iter__(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = i
+            self.assertListEqual( [0, 1, 2, 3, 4], [x for x in buff], "Incorrect data returned")
+
+
+    def test_set(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = 0
+            
+            buff.set(0, [1])
+
+            self.assertListEqual(
+                [1, 0, 0, 0, 0],
+                [x for x in buff],
+                "Incorrect list data returned"
+            )
+
+    def test_set_full_copy(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = 0
+            
+            buff.set(0, [1, 2, 3, 4, 5])
+
+            self.assertListEqual(
+                [x for x in range(1, 6)],
+                [x for x in buff],
+                "Incorrect list data returned"
+            )
+
+    def test_set_index_testing(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = 0
+            
+            buff.set(1, [1, 2, 3, 4])
+
+            self.assertListEqual(
+                [x for x in range(5)],
+                [x for x in buff],
+                "Incorrect list data returned"
+            )
+
+    # IndexError
