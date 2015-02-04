@@ -25,26 +25,21 @@ class memory_buffer:
     """
     A memory buffer used to assist with memory allocation and 
     passing native memory between python and libsrcml.
-
-    This will leak memory if the owner of this object doesn't call free or
-    if this isn't used with a "with" statement.
     """
 
     def __init__(self):
-        self._buff = ctypes.c_char_p(0)
-        self._size = ctypes.c_int(0)
+        self.buff = ctypes.c_char_p(0)
+        self.size = ctypes.c_int(0)
 
 
     def __enter__(self):
-        return memory_buffer()
+        return self
 
     def __exit__(self, type, value, traceback):
         self.free()
 
     def __del__(self):
-        if self != None:
-            if self._buff != None:
-                self.free()
+        self.free()
 
     def allocate(self, allocation_size):
         if not isinstance(allocation_size, (int, long)):
@@ -54,29 +49,29 @@ class memory_buffer:
             raise ValueError("Invalid allocation size", "allocation_size", allocation_size)
 
         self.free()
-        self._buff = bindings.malloc(allocation_size)
-        self._size = ctypes.c_int(allocation_size)
+        self.buff = bindings.malloc(allocation_size)
+        self.size = ctypes.c_int(allocation_size)
 
     def free(self):
-        if self._buff.value != 0:
-            bindings.free(self._buff)
-            self._buff.value = 0
-            self._size.value = 0
+        if self.buff != 0:
+            bindings.free(self.buff)
+            self.buff = ctypes.c_char_p(0)
+            self.size.value = 0
 
     def __getitem__(self, key):
-        return self._buff.value[key]
+        return ((ctypes.c_byte * self.size.value).from_address(self.buff))[key]
 
     def __setitem__(self, key, value):
-        self._buff.value[key] = value
+        ((ctypes.c_byte * self.size.value).from_address(self.buff))[key] = value
 
     def __len__(self):
-        return self._size.value
+        return self.size.value
 
     def __str__(self):
-        return self._buff.value if self._buff != ctypes.c_char_p() else ""
+        return self.buff.value if self.buff != ctypes.c_char_p() else ""
 
     def __repr__(self):
-        return "Memory Buffer: {0}".format(self._buff.value)
+        return "Memory Buffer: {0}".format(self.buff.value)
     
     def __iter__(self):
         raise NotImplementedError()

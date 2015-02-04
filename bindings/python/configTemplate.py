@@ -89,7 +89,7 @@ libc.malloc.restype = c_void_p
 libc.malloc.argtypes = [c_ulong]
 
 def malloc(allocation_size):
-    libc.malloc(allocation_size)
+    return libc.malloc(allocation_size)
 """
 
 

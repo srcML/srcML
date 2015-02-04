@@ -20,6 +20,7 @@
 import os, unittest, ctypes
 
 from srcml import memory_buffer
+from testlib import expect_exception
 
 class TestMemoryBuffer(unittest.TestCase):
 
@@ -31,10 +32,10 @@ class TestMemoryBuffer(unittest.TestCase):
         
     def test_defaultConstruction(self):
         buff = memory_buffer()
-        self.assertIsNotNone(buff._buff, "Didn't find private member _buff")
-        self.assertIsNotNone(buff._size, "Didn't find private member _size")
-        self.assertEqual(buff._size.value, 0, "Incorrect size")
-        self.assertEqual(buff._buff.value, None, "Incorrect buffer data.")
+        self.assertIsNotNone(buff.buff, "Didn't find private member _buff")
+        self.assertIsNotNone(buff.size, "Didn't find private member _size")
+        self.assertEqual(buff.size.value, 0, "Incorrect size")
+        self.assertEqual(buff.buff.value, None, "Incorrect buffer data.")
         buff = None
 
     # def test_bufferConstruction(self):
@@ -53,10 +54,46 @@ class TestMemoryBuffer(unittest.TestCase):
     #     self.assertEqual(buff._buff.value, None, "Incorrect buffer data.")
     #     buff = None
 
+
+    def test_with_stmt(self):
+        with memory_buffer() as buff:
+            self.assertIsNotNone(buff.buff, "Didn't find private member _buff")
+            self.assertIsNotNone(buff.size, "Didn't find private member _size")
+            self.assertEqual(buff.size.value, 0, "Incorrect size")
+            self.assertEqual(buff.buff.value, None, "Incorrect buffer data.")
+
+    def test_allocate(self):
+        with memory_buffer() as buff:
+            self.assertEqual(len(buff), 0, "Incorrect size")
+            buff.allocate(5)
+            self.assertEqual(buff.size.value, 5, "Incorrect size")
+
     def test_len(self):
         buff = memory_buffer()
         self.assertEqual(len(buff), 0, "Incorrect size")
         buff.allocate(5)
         self.assertEqual(len(buff), 5, "Incorrect size")
-
         buff = None
+
+
+    def test_indexing(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = i
+            for i in range(5):
+                self.assertEqual(i, buff[i], "Incorrect byte value")
+
+    def test_load_from_string(self):
+        with memory_buffer() as buff:
+            expected = "This Is My String"
+            buff.load_from_string(expected)
+            self.assertEqual(expected, buff.to_string(), "Incorrect buffer content")
+
+    @expect_exception(TypeError)
+    def test_load_from_string_NoneArgument(self):
+        pass
+        # with memory_buffer() as buff:
+        #     expected = "This Is My String"
+        #     buff.load_from_string(None)
+        #     self.assertEqual(expected, buff.to_string(), "Incorrect buffer content")
