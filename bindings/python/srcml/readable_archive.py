@@ -1,5 +1,5 @@
 ##
-# @file WritableArchive.py
+# @file readable_archive.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,29 +17,22 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-class WritableArchive:
+class readable_archive:
     def __init__(self, settings):
         pass
 
-# interface WritableArchive
+# interface ReadableArchive
 #     String encoding()
 #     String srcEncoding()
 #     String language()
 #     String fileName()
 #     String directory()
 #     String version()
-#     String revision()
-#     int tabStop()
 #     long options()
-#     void setOptions(long newOptionSet)
-#     void enableOptions(long optionsToEnable)
-#     void disableOptions(long optionsToDisable)
+#     int tabStop()
+#     ReadableUnit read()
 #     ProcessingInstruction processingInstruction()
 #     XmlNamespaceProxy xmlNamespaces()
 #     MacroProxy macros()
-#     void registerFileExtension(String fileExtension, Language lang)
-#     void registerFileExtension(String fileExtension, String lang)
-#     String getLanguageForExtension(String fileName)
-#     WritableUnit createUnit()
-#     void write(ReadableUnit unit)
-#     void write(WritableUnit unit)
+#     String srcmlRevision()
+#     XsltProxy xslt()

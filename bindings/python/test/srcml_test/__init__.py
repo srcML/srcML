@@ -20,6 +20,6 @@
 from test_exception_factory import *
 from test_bindings import *
 from test_memory_buffer import *
-
+from test_writable_archive_xml_namespace_settings import *
 #from test_archive import *
 #from test_unit import *

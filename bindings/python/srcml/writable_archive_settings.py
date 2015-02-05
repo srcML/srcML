@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file writable_archive_settings.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -16,16 +16,3 @@
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-from exceptions import *
-from memory_buffer import memory_buffer
-from bindings import *
-from exceptions import *
-from writable_archive import writable_archive
-from readable_archive import readable_archive
-from writable_archive_xml_namespace_settings import writable_archive_xml_namespace_settings
-
-from xslt_transform_classes import *
-from archive import archive
-from unit import *
-
