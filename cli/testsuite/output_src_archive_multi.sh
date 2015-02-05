@@ -30,19 +30,19 @@ createfile sub/a.cpp.xml "$srcml"
 srcml2src --output-src sub/a.cpp.xml
 check 3<<< "$srca"
 
-srcml2src --S sub/a.cpp.xml
+srcml2src -S sub/a.cpp.xml
 check 3<<< "$srca"
 
 srcml2src -U 1 --output-src sub/a.cpp.xml
 check 3<<< "$srca"
 
-srcml2src -U 1 --S sub/a.cpp.xml
+srcml2src -U 1 -S sub/a.cpp.xml
 check 3<<< "$srca"
 
 srcml2src -U 2 --output-src sub/a.cpp.xml
 check 3<<< "$srcb"
 
-srcml2src -U 2 --S sub/a.cpp.xml
+srcml2src -U 2 -S sub/a.cpp.xml
 check 3<<< "$srcb"
 
 src2srcml -S < sub/a.cpp.xml
