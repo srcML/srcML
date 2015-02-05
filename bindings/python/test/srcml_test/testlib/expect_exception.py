@@ -34,7 +34,6 @@ def expect_exception(exception_type):
             except Exception as e:
                 if not isinstance(e, exception_type):
                     raise
-                    # print "Unexpected Exception Message: {0}".format(e)
                 self.assertTrue(isinstance(e, exception_type), "Incorrect exception returned. Expected type: {0}. Actual Type: {1}".format(exception_type.__name__, e.__class__.__name__))
         return instance_extraction
     return exception_test
