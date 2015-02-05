@@ -30,7 +30,7 @@ class TestMemoryBuffer(unittest.TestCase):
     def tearDown(self):
         pass
         
-    def test_defaultConstruction(self):
+    def test_default_construction(self):
         buff = memory_buffer()
         self.assertIsNotNone(buff.buff, "Didn't find private member _buff")
         self.assertIsNotNone(buff.size, "Didn't find private member _size")
@@ -38,21 +38,12 @@ class TestMemoryBuffer(unittest.TestCase):
         self.assertEqual(buff.buff.value, None, "Incorrect buffer data.")
         buff = None
 
-    # def test_bufferConstruction(self):
-    #     buff = memory_buffer()
-    #     self.assertIsNotNone(buff._buff, "Didn't find private member _buff")
-    #     self.assertIsNotNone(buff._size, "Didn't find private member _size")
-    #     self.assertEqual(buff._size.value, 0, "Incorrect size")
-    #     self.assertEqual(buff._buff.value, None, "Incorrect buffer data.")
-    #     buff = None
-
-    # def test_stringConstruction(self):
-    #     buff = memory_buffer()
-    #     self.assertIsNotNone(buff._buff, "Didn't find private member _buff")
-    #     self.assertIsNotNone(buff._size, "Didn't find private member _size")
-    #     self.assertEqual(buff._size.value, 0, "Incorrect size")
-    #     self.assertEqual(buff._buff.value, None, "Incorrect buffer data.")
-    #     buff = None
+    def test_string_construction(self):
+        expected = "string"
+        buff = memory_buffer("string")
+        self.assertEqual(len(expected), len(buff), "Incorrect size")
+        self.assertEqual(expected, str(buff), "Incorrect buffer data.")
+        buff = None
 
 
     def test_with_stmt(self):
@@ -67,6 +58,12 @@ class TestMemoryBuffer(unittest.TestCase):
             self.assertEqual(len(buff), 0, "Incorrect size")
             buff.allocate(5)
             self.assertEqual(buff.size.value, 5, "Incorrect size")
+
+    @expect_exception(ValueError)
+    def test_allocate_neg(self):
+        with memory_buffer() as buff:
+            self.assertEqual(len(buff), 0, "Incorrect size")
+            buff.allocate(-5)
 
     def test_len(self):
         buff = memory_buffer()
@@ -83,6 +80,31 @@ class TestMemoryBuffer(unittest.TestCase):
                 buff[i] = i
             for i in range(5):
                 self.assertEqual(i, buff[i], "Incorrect byte value")
+
+    @expect_exception(IndexError)
+    def test_get_index_neg_index(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            i = buff[-1]
+
+    @expect_exception(IndexError)
+    def test_get_index_past_end_index(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            i = buff[5]
+
+    @expect_exception(IndexError)
+    def test_set_index_neg_index(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff[-1] = 4
+
+    @expect_exception(IndexError)
+    def test_set_index_past_end_index(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff[5] = 6
+
 
     def test_load_from_string(self):
         with memory_buffer() as buff:
@@ -166,4 +188,165 @@ class TestMemoryBuffer(unittest.TestCase):
                 "Incorrect list data returned"
             )
 
-    # IndexError
+    def test_set_index_offset(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = 0
+            
+            buff.set(1, [1, 2, 3, 4], 1)
+
+            self.assertListEqual(
+                [0, 2, 3, 4, 0],
+                [x for x in buff],
+                "Incorrect list data returned. Expected: {0}, Actual: {1}".format([x for x in range(1,5)],[x for x in buff])
+            )
+
+    def test_set_index_count(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = 0
+            
+            buff.set(1, [1, 2, 3, 4], count = 3)
+
+            self.assertListEqual(
+                [0, 1, 2, 3, 0],
+                [x for x in buff],
+                "Incorrect list data returned. Expected: {0}, Actual: {1}".format([x for x in range(1,5)],[x for x in buff])
+            )
+
+    def test_set_index_offset_count(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = 0
+            
+            buff.set(1, [1, 2, 3, 4], 1, 3)
+
+            self.assertListEqual(
+                [0, 2, 3, 4, 0],
+                [x for x in buff],
+                "Incorrect list data returned. Expected: {0}, Actual: {1}".format([x for x in range(1,5)],[x for x in buff])
+            )
+
+    def test_set_index_offset_count(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = 0
+            
+            buff.set(0, [1, 2, 3, 4, 5], 0, 5)
+
+            self.assertListEqual(
+                [1, 2, 3, 4, 5],
+                [x for x in buff],
+                "Incorrect list data returned. Expected: {0}, Actual: {1}".format([x for x in range(1,5)],[x for x in buff])
+            )
+
+    @expect_exception(ValueError)
+    def test_set_index_offset_count_invalid_combo(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            for i in range(5):
+                buff[i] = 0
+            
+            buff.set(0, [1, 2, 3, 4, 5], 1, 5)
+
+            self.assertListEqual(
+                [1, 2, 3, 4, 5],
+                [x for x in buff],
+                "Incorrect list data returned. Expected: {0}, Actual: {1}".format([x for x in range(1,5)],[x for x in buff])
+            )
+    @expect_exception(IndexError)
+    def test_set_invalid_index_neg(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(-1, [1, 2, 3, 4], 1, 3)
+
+    @expect_exception(IndexError)
+    def test_set_invalid_index_past_end(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(5, [1, 2, 3, 4], 1, 3)
+
+    @expect_exception(IndexError)
+    def test_set_invalid_offset_neg(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [1, 2, 3, 4], -1, 3)
+
+    @expect_exception(IndexError)
+    def test_set_invalid_offset_past_end(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [1, 2, 3, 4], -1, 3)
+
+    @expect_exception(ValueError)
+    def test_set_invalid_count_neg(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [1, 2, 3, 4], 1, -1)
+
+    @expect_exception(ValueError)
+    def test_set_invalid_count_past_end(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [1, 2, 3, 4], 1, 5)
+
+
+    def test_zero_out(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [0, 1, 2, 3, 4])
+            buff.zero_out()
+            for i in range(5):
+                self.assertEqual(0, buff[i], "Incorrect buffer value at index: {0}. Value: {1}".format(i, buff[i]))
+
+
+    def test_zero_out_index(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [8, 1, 2, 3, 4])
+            buff.zero_out(1)
+            self.assertEqual(8, buff[0], "Incorrect buffer value at index: {0}. Value: {1}".format(0, buff[0]))
+            for i in range(1, 5):
+                self.assertEqual(0, buff[i], "Incorrect buffer value at index: {0}. Value: {1}".format(i, buff[i]))
+
+    @expect_exception(IndexError)
+    def test_zero_out_index_neg(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [8, 1, 2, 3, 4])
+            buff.zero_out(-1)
+
+    @expect_exception(IndexError)
+    def test_zero_out_index_past_end(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [8, 1, 2, 3, 4])
+            buff.zero_out(5)
+
+    def test_zero_out_count(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [8, 1, 2, 3, 4])
+            buff.zero_out(count = 3)
+            for i in range(3):
+                self.assertEqual(0, buff[i], "Incorrect buffer value at index: {0}. Value: {1}".format(i, buff[i]))
+            self.assertEqual(3, buff[3], "Incorrect buffer value at index: {0}. Value: {1}".format(3, buff[3]))
+            self.assertEqual(4, buff[4], "Incorrect buffer value at index: {0}. Value: {1}".format(4, buff[4]))
+
+    @expect_exception(ValueError)
+    def test_zero_out_count_neg(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [8, 1, 2, 3, 4])
+            buff.zero_out(count = -3)
+
+    @expect_exception(ValueError)
+    def test_zero_out_count_past_end(self):
+        with memory_buffer() as buff:
+            buff.allocate(5)
+            buff.set(0, [8, 1, 2, 3, 4])
+            buff.zero_out(count = 5)
