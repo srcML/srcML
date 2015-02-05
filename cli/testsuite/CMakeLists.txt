@@ -18,7 +18,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # add cli tests
-file(GLOB CLI_TESTS [0-9]*.sh)
+file(GLOB CLI_TESTS *.sh)
+file(GLOB IGNORE framework_test.sh)
+list(REMOVE_ITEM CLI_TESTS ${IGNORE})
+
 foreach(CLI_TEST ${CLI_TESTS})
   addBashTest(${CLI_TEST} framework_test.sh)
 endforeach()
