@@ -32,9 +32,9 @@
 
 void src_output_file(srcml_unit* unit, std::string filename) {
 
-    srcml_unparse_unit_filename(unit, filename.c_str());
+    srcml_unit_unparse_filename(unit, filename.c_str());
 
-    srcml_free_unit(unit);
+    srcml_unit_free(unit);
 }
 void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
 
@@ -64,11 +64,11 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
         // trace
         log << ++count << (const char *)out.c_str();
 
-        srcml_unparse_unit_filename(unit, (const char *)out.c_str());
+        srcml_unit_unparse_filename(unit, (const char *)out.c_str());
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
 
-        //        srcml_free_unit(unit);
+        //        srcml_unit_free(unit);
     }
 
     writers.join_all();

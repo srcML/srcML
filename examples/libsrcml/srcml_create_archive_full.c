@@ -1,5 +1,5 @@
 /**
- * @file srcml_create_archive_full.c
+ * @file srcml_archive_create_full.c
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     */
 
     /* create a new srcml archive structure */
-    archive = srcml_create_archive();
+    archive = srcml_archive_create();
 
     /* setup options and attributes */
     srcml_archive_enable_option(archive, SRCML_OPTION_LITERAL | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION);
@@ -60,24 +60,24 @@ int main(int argc, char* argv[]) {
     */
 
     /* open a srcML archive for output */
-    srcml_write_open_filename(archive, "project.xml");
+    srcml_archive_write_open_filename(archive, "project.xml");
 
     /* add all files on the command line to the archive */
     for (i = 1; i < argc; ++i) {
 
         /* Setup this entry */
-        struct srcml_unit* unit = srcml_create_unit(archive);
+        struct srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, SRCML_LANGUAGE_C);
         srcml_unit_set_filename(unit, argv[i]);
 
         /* Translate the entry to srcML */
-        srcml_parse_unit_filename(unit, argv[i]);
+        srcml_unit_parse_filename(unit, argv[i]);
 
         /* Append unit to the archive */
         srcml_write_unit(archive, unit);
 
         /* Done with the entry for now */
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     /*
@@ -85,10 +85,10 @@ int main(int argc, char* argv[]) {
     */
 
     /* close the srcML archive */
-    srcml_close_archive(archive);
+    srcml_archive_close(archive);
 
     /* free the srcML archive data */
-    srcml_free_archive(archive);
+    srcml_archive_free(archive);
 
     return 0;
 }

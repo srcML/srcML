@@ -239,7 +239,7 @@ public :
          collect_unit_attributes(false), collect_srcml(false), collect_src(false),
          terminate(false), is_empty(false), wait_root(true), skip(false) {
 
-        archive = srcml_create_archive();
+        archive = srcml_archive_create();
 
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
 
@@ -252,8 +252,8 @@ public :
      */
     ~srcml_reader_handler() {
 
-        srcml_free_archive(archive);
-        if(unit) srcml_free_unit(unit);
+        srcml_archive_free(archive);
+        if(unit) srcml_unit_free(unit);
 
     }
 
@@ -505,7 +505,7 @@ public :
         }
 
 
-        unit = srcml_create_unit(archive);
+        unit = srcml_unit_create(archive);
         unit->unit = "";
 
         is_empty = true;
@@ -740,7 +740,7 @@ public :
 
         is_empty = false;
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
         unit = 0;
 
         if(terminate) stop_parser();

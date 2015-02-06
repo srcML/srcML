@@ -282,19 +282,19 @@ __LIBSRCML_DECL const char* srcml_error_string();
 __LIBSRCML_DECL const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
 
 /* Create a new srcml archive
-   Client is responsible for freeing memory using srcml_free_archive() */
-__LIBSRCML_DECL struct srcml_archive* srcml_create_archive();
+   Client is responsible for freeing memory using srcml_archive_free() */
+__LIBSRCML_DECL struct srcml_archive* srcml_archive_create();
 
 /* Clone the setup of an existing archive
-   Client is responsible for freeing memory using srcml_free_archive() */
-__LIBSRCML_DECL struct srcml_archive* srcml_clone_archive(const struct srcml_archive*);
+   Client is responsible for freeing memory using srcml_archive_free() */
+__LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archive*);
 
 /* Open a srcML archive for output */
-__LIBSRCML_DECL int srcml_write_open_filename(struct srcml_archive*, const char* srcml_filename);
-__LIBSRCML_DECL int srcml_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
-__LIBSRCML_DECL int srcml_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
-__LIBSRCML_DECL int srcml_write_open_fd      (struct srcml_archive*, int srcml_fd);
-__LIBSRCML_DECL int srcml_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
+__LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive*, const char* srcml_filename);
+__LIBSRCML_DECL int srcml_archive_write_open_memory  (struct srcml_archive*, char** buffer, int * size);
+__LIBSRCML_DECL int srcml_archive_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+__LIBSRCML_DECL int srcml_archive_write_open_fd      (struct srcml_archive*, int srcml_fd);
+__LIBSRCML_DECL int srcml_archive_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
 
 /* Setup options for srcml archive */
 __LIBSRCML_DECL int srcml_archive_set_xml_encoding       (struct srcml_archive*, const char* encoding);
@@ -336,8 +336,8 @@ __LIBSRCML_DECL const char*        srcml_archive_get_macro_token_type           
 __LIBSRCML_DECL const char*        srcml_archive_get_macro_type                   (const struct srcml_archive*, int pos);
 
 /* Create a new srcml unit.
-   Client is responsible for freeing memory using srcml_free_unit() */
-__LIBSRCML_DECL struct srcml_unit* srcml_create_unit(struct srcml_archive* archive);
+   Client is responsible for freeing memory using srcml_unit_free() */
+__LIBSRCML_DECL struct srcml_unit* srcml_unit_create(struct srcml_archive* archive);
 
 /* Setup options for srcml unit */
 __LIBSRCML_DECL int srcml_unit_set_src_encoding (struct srcml_unit*, const char* language);
@@ -350,11 +350,11 @@ __LIBSRCML_DECL int srcml_unit_set_hash         (struct srcml_unit*, const char*
 
 /* Convert to srcml.  Files/buffer can be compressed, but not a
    source archive format (e.g., not .tar) */
-__LIBSRCML_DECL int srcml_parse_unit_filename(struct srcml_unit* unit, const char* src_filename);
-__LIBSRCML_DECL int srcml_parse_unit_memory  (struct srcml_unit*, const char* src_buffer, size_t buffer_size);
-__LIBSRCML_DECL int srcml_parse_unit_FILE    (struct srcml_unit*, FILE* src_file);
-__LIBSRCML_DECL int srcml_parse_unit_fd      (struct srcml_unit*, int src_fd);
-__LIBSRCML_DECL int srcml_parse_unit_io      (struct srcml_unit*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
+__LIBSRCML_DECL int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename);
+__LIBSRCML_DECL int srcml_unit_parse_memory  (struct srcml_unit*, const char* src_buffer, size_t buffer_size);
+__LIBSRCML_DECL int srcml_unit_parse_FILE    (struct srcml_unit*, FILE* src_file);
+__LIBSRCML_DECL int srcml_unit_parse_fd      (struct srcml_unit*, int src_fd);
+__LIBSRCML_DECL int srcml_unit_parse_io      (struct srcml_unit*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
 
 /* Append unit to an archive */
 __LIBSRCML_DECL int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
@@ -369,20 +369,20 @@ __LIBSRCML_DECL int srcml_write_attribute(struct srcml_unit*, const char * prefi
 __LIBSRCML_DECL int srcml_write_string(struct srcml_unit*, const char * content);
  
 /* Free allocated unit */
-__LIBSRCML_DECL void srcml_free_unit(struct srcml_unit*);
+__LIBSRCML_DECL void srcml_unit_free(struct srcml_unit*);
 
 /* Close the srcML archive */
-__LIBSRCML_DECL void srcml_close_archive(struct srcml_archive*);
+__LIBSRCML_DECL void srcml_archive_close(struct srcml_archive*);
 
 /* Free the srcML archive data */
-__LIBSRCML_DECL void srcml_free_archive(struct srcml_archive*);
+__LIBSRCML_DECL void srcml_archive_free(struct srcml_archive*);
 
 /* Open a srcML archive for reading */
-__LIBSRCML_DECL int srcml_read_open_filename(struct srcml_archive*, const char* srcml_filename);
-__LIBSRCML_DECL int srcml_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
-__LIBSRCML_DECL int srcml_read_open_FILE    (struct srcml_archive*, FILE* srcml_file);
-__LIBSRCML_DECL int srcml_read_open_fd      (struct srcml_archive*, int srcml_fd);
-__LIBSRCML_DECL int srcml_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
+__LIBSRCML_DECL int srcml_archive_read_open_filename(struct srcml_archive*, const char* srcml_filename);
+__LIBSRCML_DECL int srcml_archive_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
+__LIBSRCML_DECL int srcml_archive_read_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+__LIBSRCML_DECL int srcml_archive_read_open_fd      (struct srcml_archive*, int srcml_fd);
+__LIBSRCML_DECL int srcml_archive_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context));
 
 /* Read the next unit from the archive
    Returns 0 if there are no more units */
@@ -403,14 +403,14 @@ __LIBSRCML_DECL const char* srcml_unit_get_raw_xml      (struct srcml_unit*);
 __LIBSRCML_DECL const char* srcml_unit_get_formatted_xml(struct srcml_unit*, const char * xml_encoding);
 
 /* Convert from srcML to source code */
-__LIBSRCML_DECL int srcml_unparse_unit_filename(struct srcml_unit*, const char* src_filename);
-__LIBSRCML_DECL int srcml_unparse_unit_memory  (struct srcml_unit*, char** src_buffer, int * src_size);
-__LIBSRCML_DECL int srcml_unparse_unit_FILE    (struct srcml_unit*, FILE* srcml_file);
-__LIBSRCML_DECL int srcml_unparse_unit_fd      (struct srcml_unit*, int srcml_fd);
-__LIBSRCML_DECL int srcml_unparse_unit_io      (struct srcml_unit*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
+__LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit*, const char* src_filename);
+__LIBSRCML_DECL int srcml_unit_unparse_memory  (struct srcml_unit*, char** src_buffer, int * src_size);
+__LIBSRCML_DECL int srcml_unit_unparse_FILE    (struct srcml_unit*, FILE* srcml_file);
+__LIBSRCML_DECL int srcml_unit_unparse_fd      (struct srcml_unit*, int srcml_fd);
+__LIBSRCML_DECL int srcml_unit_unparse_io      (struct srcml_unit*, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
 
 /* Free memmory buffer */
-__LIBSRCML_DECL void srcml_free_memory(char * buffer);
+__LIBSRCML_DECL void srcml_memory_free(char * buffer);
 
 /* srcML XPath query and XSLT transform functions */
 __LIBSRCML_DECL int srcml_clear_transforms                 (struct srcml_archive*);

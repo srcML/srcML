@@ -31,11 +31,11 @@
 
 int main(int argc, char * argv[]) {
 
-    struct srcml_archive * iarchive = srcml_create_archive();
+    struct srcml_archive * iarchive = srcml_archive_create();
     struct srcml_archive * oarchive;
-    srcml_read_open_filename(iarchive, "project.xml");
-    oarchive = srcml_clone_archive(iarchive);
-    srcml_write_open_filename(oarchive, "transform.xml");
+    srcml_archive_read_open_filename(iarchive, "project.xml");
+    oarchive = srcml_archive_clone(iarchive);
+    srcml_archive_write_open_filename(oarchive, "transform.xml");
 
     srcml_append_transform_xpath(iarchive, "//src:unit");
     srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
@@ -43,11 +43,11 @@ int main(int argc, char * argv[]) {
 
     srcml_apply_transforms(iarchive, oarchive);
 
-    srcml_close_archive(iarchive);
-    srcml_close_archive(oarchive);
+    srcml_archive_close(iarchive);
+    srcml_archive_close(oarchive);
 
-    srcml_free_archive(iarchive);
-    srcml_free_archive(oarchive);
+    srcml_archive_free(iarchive);
+    srcml_archive_free(oarchive);
 
     return 0;
 }

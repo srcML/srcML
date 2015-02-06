@@ -52,7 +52,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     // current output archive
     srcml_archive* srcml_arch = request->srcml_arch;
     if (isseparatearchive) {
-        srcml_arch = srcml_clone_archive(request->srcml_arch);
+        srcml_arch = srcml_archive_clone(request->srcml_arch);
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
 
@@ -76,7 +76,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             *request->disk_dir += "/";
 
         std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";
-        srcml_write_open_filename(srcml_arch, xml_filename.c_str());
+        srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str());
         request->srcml_arch = srcml_arch;
     }
 
@@ -89,7 +89,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // create the unit start tag
         if (!unit)
-            if (!(unit = srcml_create_unit(srcml_arch)))
+            if (!(unit = srcml_unit_create(srcml_arch)))
                 throw SRCML_STATUS_ERROR;
 
         // language attribute, required if from memory
@@ -159,9 +159,9 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         
         // parse the buffer/file (unless it is already form a srcml archive)
         if (request->disk_filename)
-            status = srcml_parse_unit_filename(unit, request->disk_filename->c_str());
+            status = srcml_unit_parse_filename(unit, request->disk_filename->c_str());
         else if (!request->unit)
-            status = srcml_parse_unit_memory(unit, &request->buffer.front(), request->buffer.size());
+            status = srcml_unit_parse_memory(unit, &request->buffer.front(), request->buffer.size());
 
         if (status != SRCML_STATUS_OK)
             // FIXME: Cannot throw exception from thread
@@ -171,7 +171,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         fprintf(stderr, "srcml: Unable to open file %s\n", original_filename.c_str());
         if (unit)
-            srcml_free_unit(unit);
+            srcml_unit_free(unit);
         unit = 0;
         if (request)
             delete request;

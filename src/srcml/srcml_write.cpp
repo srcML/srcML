@@ -73,12 +73,12 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
     // free the unit
     if (request->unit) {
-        srcml_free_unit(request->unit);
+        srcml_unit_free(request->unit);
 
         // close the archive (if per-unit)
         if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
-            srcml_close_archive(request->srcml_arch);
-            srcml_free_archive(request->srcml_arch);
+            srcml_archive_close(request->srcml_arch);
+            srcml_archive_free(request->srcml_arch);
         }
     }
 
