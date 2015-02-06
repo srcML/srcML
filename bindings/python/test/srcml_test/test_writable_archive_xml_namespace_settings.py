@@ -56,6 +56,10 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         self.assertFalse(("aardvark", "somthing") in subject, "didn't correctly locate mapping")
         self.assertFalse(("something", "aardvark.com") in subject, "didn't correctly locate mapping")
         self.assertFalse(("something", "something") in subject, "didn't correctly locate mapping")
+
+    @expect_exception(TypeError)
+    def test___contains__mapping_None(self):
+        subject = writable_archive_xml_namespace_settings(x="google.com", aardvark="aardvark.com")
         self.assertFalse(None in subject, "didn't correctly locate value")
 
     def test_has_prefix(self):
@@ -63,6 +67,10 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         self.assertTrue(subject.has_prefix("x"), "didn't correctly locate value")
         self.assertTrue(subject.has_prefix("aardvark"), "didn't correctly locate value")
         self.assertFalse(subject.has_prefix("aardvark.com"), "didn't correctly locate value")
+
+    @expect_exception(TypeError)
+    def test_has_prefix_None(self):
+        subject = writable_archive_xml_namespace_settings(x="google.com", aardvark="aardvark.com")
         self.assertFalse(subject.has_prefix(None), "didn't correctly locate value")
 
     def test_has_uri(self):
@@ -70,6 +78,11 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         self.assertTrue(subject.has_uri("google.com"), "didn't correctly locate value")
         self.assertTrue(subject.has_uri("aardvark.com"), "didn't correctly locate value")
         self.assertFalse(subject.has_uri("aardvark"), "didn't correctly locate value")
+        
+
+    @expect_exception(TypeError)
+    def test_has_uri_None(self):
+        subject = writable_archive_xml_namespace_settings(x="google.com", aardvark="aardvark.com")
         self.assertFalse(subject.has_uri(None), "didn't correctly locate value")
 
     def test_contains_mapping(self):
@@ -133,7 +146,7 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         self.assertTrue(("x", expected_uri) in subject, "didn't correctly locate value")
         self.assertTrue(("aardvark", "aardvark.com") in subject, "didn't correctly locate mapping")
 
-    @expect_exception(ValueError)
+    @expect_exception(KeyError)
     def test_setitem_invalid_update_mapping(self):
         invalid_mapping_ns = "aardvark.com"
         subject = writable_archive_xml_namespace_settings(x="google.com", aardvark=invalid_mapping_ns)
@@ -142,7 +155,7 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
     @expect_exception(TypeError)
     def test_setitem_None_value(self):
         subject = writable_archive_xml_namespace_settings(x="google.com", aardvark="aardvark.com")
-        subject["src"] = object()
+        subject["src"] = None
 
     @expect_exception(TypeError)
     def test_setitem_None_prefix(self):
@@ -185,10 +198,6 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         self.assertFalse(("x", "google.com") in subject, "didn't correctly locate value")
         self.assertTrue(("aardvark", "aardvark.com") in subject, "didn't correctly locate value")
 
-    @expect_exception(KeyError)
-    def test___delitem__bad_prefix(self):
-        subject = writable_archive_xml_namespace_settings(x="google.com", aardvark="aardvark.com")
-        del subject["something"]
 
     @expect_exception(TypeError)
     def test___delitem__None(self):
@@ -204,10 +213,6 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         self.assertFalse(("x", "google.com") in subject, "didn't correctly locate value")
         self.assertTrue(("aardvark", "aardvark.com") in subject, "didn't correctly locate value")
 
-    @expect_exception(KeyError)
-    def test_remove_by_uri_bad_uri(self):
-        subject = writable_archive_xml_namespace_settings(x="google.com", aardvark="aardvark.com")
-        subject.remove_by_uri("something")
 
     @expect_exception(TypeError)
     def test_remove_by_uri_None(self):
@@ -222,11 +227,6 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         self.assertEqual(1, len(subject), "Incorrect # of mappings")
         self.assertFalse(("x", "google.com") in subject, "didn't correctly locate value")
         self.assertTrue(("aardvark", "aardvark.com") in subject, "didn't correctly locate value")
-
-    @expect_exception(KeyError)
-    def test_remove_by_prefix_bad_prefix(self):
-        subject = writable_archive_xml_namespace_settings(x="google.com", aardvark="aardvark.com")
-        subject.remove_by_prefix("something")
 
     @expect_exception(TypeError)
     def test_remove_by_prefix_None(self):
@@ -303,7 +303,7 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         remaining_namespaces = set(["x","aardvark"])
         for prefix in subject.iterprefixes():
             self.assertTrue(prefix in remaining_namespaces, "Didn't locate expected prefix: {0}".format(prefix))
-            del remaining_namespaces[prefix]
+            remaining_namespaces.remove(prefix)
             counter += 1
         self.assertTrue(len(remaining_namespaces)==0,"Didn't visit all namespace mapping: Remaining: {0}".format(remaining_namespaces))
         self.assertEqual(2, counter, "Incorrect # of namespaces iterated over.")
@@ -314,9 +314,8 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         counter = 0
         remaining_namespaces = set(["google.com", "aardvark.com"])
         for uri in subject.iteruris():
-            temp = remaining_namespaces[uri]
-            self.assertTrue(uri in remaining_namespaces, "Didn't locate expected prefix: {0}".format(prefix))
-            del remaining_namespaces[uri]
+            self.assertTrue(uri in remaining_namespaces, "Didn't locate expected prefix: {0}".format(uri))
+            remaining_namespaces.remove(uri)
             counter += 1
         self.assertTrue(len(remaining_namespaces)==0,"Didn't visit all namespace mapping: Remaining: {0}".format(remaining_namespaces))
         self.assertEqual(2, counter, "Incorrect # of namespaces iterated over.")
@@ -341,7 +340,7 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         prefixes = subject.prefixes()
         for prefix in prefixes:
             self.assertTrue(prefix in remaining_namespaces, "Didn't locate expected prefix: {0}".format(prefix))
-            del remaining_namespaces[prefix]
+            remaining_namespaces.remove(prefix)
             counter += 1
         self.assertTrue(len(remaining_namespaces)==0,"Didn't visit all namespace mapping: Remaining: {0}".format(remaining_namespaces))
         self.assertEqual(2, counter, "Incorrect # of namespaces iterated over.")
@@ -352,9 +351,8 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
         remaining_namespaces = set(["google.com", "aardvark.com"])
         uris = subject.uris()
         for uri in uris:
-            temp = remaining_namespaces[uri]
-            self.assertTrue(uri in remaining_namespaces, "Didn't locate expected prefix: {0}".format(prefix))
-            del remaining_namespaces[uri]
+            self.assertTrue(uri in remaining_namespaces, "Didn't locate expected uri: {0}".format(uri))
+            remaining_namespaces.remove(uri)
             counter += 1
         self.assertTrue(len(remaining_namespaces)==0,"Didn't visit all namespace mapping: Remaining: {0}".format(remaining_namespaces))
         self.assertEqual(2, counter, "Incorrect # of namespaces iterated over.")
@@ -469,4 +467,4 @@ class test_writable_archive_xml_namespace_settings(unittest.TestCase):
     def test_copy(self):
         subject = writable_archive_xml_namespace_settings(x="google.com", aardvark="aardvark.com")
         copy_of_subject = subject.copy()
-        self.assertEqual(copy_of_subject, subject, "Copy isn't equal to subject")
+        self.assertTrue(copy_of_subject == subject, "Copy isn't equal to subject")

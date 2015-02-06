@@ -30,7 +30,7 @@ def expect_exception(exception_type):
         def instance_extraction(self):
             try:
                 func(self)
-                self.assertTrue(False, "Didn't catch expected exception")
+                self.assertTrue(False, "Didn't catch expected exception from function: {0}".format(func.__name__))
             except Exception as e:
                 if not isinstance(e, exception_type):
                     raise

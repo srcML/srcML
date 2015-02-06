@@ -30,13 +30,24 @@ class writable_archive_xml_namespace_settings:
 
     """
     def __init__(self, *args, **kwargs):
+        """
+        Constructor takes a list of XML namespace prefix + URI tuples or kwargs using
+        the parameter name as the XML namespace prefix and the value as the URI.
+
+        For example,
+            x = writable_archive_xml_namespace_settings(("go","www.google.com"), ("ya", "yahoo.com"))
+
+        and 
+            x = writable_archive_xml_namespace_settings(go ="www.google.com", ya= "yahoo.com")
+
+        construct an object containing the same values.
+        """
         self.prefix_mappings = dict()
         self.uri_mappings = dict()
         self.update(*args)
         self.update(**kwargs)
-            
+        
 
-    # Inspection
     def __contains__(self, other):
         """
         If other is a tuple then it checks for both
@@ -45,16 +56,61 @@ class writable_archive_xml_namespace_settings:
         if other is not a tuple and it is assumed to be a string and
         this returns true if it exists as either a prefix or uri.
         """
-        raise NotImplementedError()
+        if other is None:
+            raise TypeError("Invalid other. other is None.")
+        if isinstance(other, str):
+            return self.has_prefix(other) or self.has_uri(other)
+        else:
+            return self.contains_mapping(other)
 
     def has_prefix(self, prefix):
-        raise NotImplementedError()
+        """
+        Checks if a prefix exists within an XML mapping.
+        Throws if the prefix is None.
+        """
+        if prefix is None:
+            raise TypeError("Invalid prefix. prefix is None")
+        return prefix in self.prefix_mappings
 
     def has_uri(self, uri):
-        raise NotImplementedError()
+        """
+        Cheks if a URI exists as part of an XML namespace mapping.
+        Throws if the URI is None
+        """
+        if uri is None:
+            raise TypeError("Invalid uri. uri is None")
+        return uri in self.uri_mappings
 
     def contains_mapping(self, prefix_or_mapping, uri = None):
-        raise NotImplementedError()
+        """
+        Checks to see if an XML namespace mapping, both prefix and URI, exists together
+        as a single entry within the XML namespace mappings.
+
+        prefix_or_mapping - Is either a tuple containing a prefix and uri pair or a prefix string.
+            If the mapping is a tuple uri must be None or a TypeError will be raised and if prefix_or_mapping
+            is a string then URI must not be None.
+            A TypeError is raised if prefix_or_mapping is None.
+
+        uri - A URI string or None depending on the type of value within prefix_or_mapping.
+        """
+        if prefix_or_mapping is None:
+            raise TypeError("Invalid prefix_or_mapping. prefix_or_mapping is None.")
+        if isinstance(prefix_or_mapping, str):
+            # prefix_or_mapping used as a string
+            if uri is None:
+                raise TypeError("Invalid URI for XML namespace mapping. If prefix_or_mapping is a string the URI parameter can not be None.")
+            if self.has_prefix(prefix_or_mapping):
+                temp_namespace_mapping = self[prefix_or_mapping]
+                return temp_namespace_mapping[1] == uri
+            else:
+                return False            
+        else:
+            # prefix_or_mapping uses as a tuple
+            if self.has_prefix(prefix_or_mapping[0]):
+                temp_namespace_mapping = self[prefix_or_mapping[0]]
+                return temp_namespace_mapping[1] == prefix_or_mapping[1]
+            else:
+                return False
 
     def __len__(self):
         """
@@ -63,15 +119,34 @@ class writable_archive_xml_namespace_settings:
         """
         return len(self.prefix_mappings)
 
-
-    # Item accessors/Mutators
     def __getitem__(self, prefix):
+        """
+        Retrieve an XML namespace mapping using the prefix to retrieve it.
+        Raises an exception of prefix is None.
+        """
         return self.get_by_prefix(prefix)
 
-    def __setitem__(self, prefix, value):
-        raise NotImplementedError()
+    def __setitem__(self, prefix, uri):
+        """
+        Set, update or add a prefix and URI XML namespace mapping within
+        the set of namespace. This is done relative to the prefix.
+
+        Raises an exception of prefix or uri is None or in the even that
+        the provided prefix is in conflict with a pre-existing XML namespace
+        mapping.
+        """
+        if prefix is None:
+            raise TypeError("Invalid prefix. prefix is None.")
+        if uri is None:
+            raise TypeError("Invalid prefix. value is None.")
+        self._update_single((prefix, uri))
 
     def get_by_uri(self, uri):
+        """
+        Retrieve an XML namespace prefix and URI tuple using the URI to locate it.
+
+        Raises an exception if the URI is None or the URI doesn't exist.
+        """
         if uri == None:
             raise TypeError("Invalid URI")
         if uri not in self.uri_mappings:
@@ -79,6 +154,11 @@ class writable_archive_xml_namespace_settings:
         return self.uri_mappings[uri]
 
     def get_by_prefix(self, prefix):
+        """
+        Retrieve an XML namespace prefix and URI tuple using the prefix to locate it.
+
+        Raises an exception if the prefix is None or the prefix doesn't exist.
+        """
         if prefix == None:
             raise TypeError("Invalid prefix")
         if prefix not in self.prefix_mappings:
@@ -88,49 +168,124 @@ class writable_archive_xml_namespace_settings:
 
     # Item removal
     def __delitem__(self, prefix):
-        raise NotImplementedError()
+        """
+        Remove a XML namespace mapping using the XML namespace prefix.
+        If the prefix doesn't exist then nothing is done.
+        Raises a TypeError if prefix is None.
+        """
+        self.remove_by_prefix(prefix)
+
 
     def remove_by_uri(self, uri):
-        raise NotImplementedError()
+        """
+        Remove an XML namespace pairing using the URI to locate it.
+        If the uri doesn't exist then nothing is done.
+        Returns True if an element was remove and false if not.
+        Raises a TypeError if uri is None.
+        """
+        if self.has_uri(uri):
+            ns_pair = self.uri_mappings[uri]
+            del self.uri_mappings[uri]
+            del self.prefix_mappings[ns_pair[0]]
+            return True
+        return False
 
     def remove_by_prefix(self, prefix):
-        raise NotImplementedError()
+        """
+        Remove a XML namespace mapping using the XML namespace prefix.
+        If the prefix doesn't exist then nothing is done.
 
-    def remove(self, mapping):
-        raise NotImplementedError()
+        Returns True if an element was remove and false if not.
+        Raises a TypeError if prefix is None.
+        """
+        if self.has_prefix(prefix):
+            ns_pair = self.prefix_mappings[prefix]
+            del self.prefix_mappings[prefix]
+            del self.uri_mappings[ns_pair[1]]
+            return True
+        return False
 
+    def remove(self, xml_namespace):
+        """
+        Remove a XML namespace mapping from the collection.
+        This mapping must exist as a single element or no XML namespace
+        pair will be removed.
+        Returns True if an element was remove and false if not.
+        Raises an exception if the mapping is invalid or None.
+        """
+        if xml_namespace is None:
+            raise TypeError("Invalid xml_namespace. xml_namespace is None.")
+        if xml_namespace[0] is None:
+            raise TypeError("Invalid xml_namespace. prefix is None.")
+        if xml_namespace[1] is None:
+            raise TypeError("Invalid xml_namespace. uri is None.")
+
+        if self.contains_mapping(xml_namespace):
+            del self.prefix_mappings[xml_namespace[0]]
+            del self.uri_mappings[xml_namespace[1]]
+            return True
+        return False
 
     # Equality comparison.
     def __eq__(self, other):
-        raise NotImplementedError()
+        """
+        Compare two XML namespace mapping collections to see if they are the same.
+        """
+        return self.prefix_mappings == other.prefix_mappings  and self.uri_mappings == other.uri_mappings
 
     def __ne__(self, other):
-        raise NotImplementedError()
+        """
+        Compare two XML namespace mapping collections to see if they are not the same.
+        """
+        return not (self == other)
 
-
-    # Iteration functions
     def __iter__(self):
-        raise NotImplementedError()
+        """
+        Provides iteration over all of the XML namespace mappings within the collection.
+        """
+        for ns in self.prefix_mappings.values():
+            yield ns
 
     def items(self):
-        raise NotImplementedError()
+        """
+        Returns a sequence of all of the XML namespace mappings within the collection.
+        """
+        return [ns for ns in self.prefix_mappings.values()]
 
     def iterprefixes(self):
-        raise NotImplementedError()
+        """
+        Iterates over all prefxes within the collection.
+        """
+        for prefix in self.prefix_mappings.keys():
+            yield prefix
 
     def iteruris(self):
-        raise NotImplementedError()
+        """
+        Provides iteration over all of the URIs within the collection.
+        """
+        for uri in self.uri_mappings.keys():
+            yield uri
 
     def prefixes(self):
-        raise NotImplementedError()
+        """
+        Returns a sequence of all prefixes within the collection.
+        """
+        return [p for p in self.prefix_mappings.keys()]
 
     def uris(self):
-        raise NotImplementedError()
+        """
+        Returns a sequence of all uris within the collection.
+        """
+        return [u for u in self.uri_mappings.keys()]
 
 
     # Other Container functionality.
     def clear(self):
-        raise NotImplementedError()
+        """
+        Clear the contents of the XML namespace mapping.
+        """
+        self.prefix_mappings.clear()
+        self.uri_mappings.clear()
 
 
     def _update_single(self, new_tuple):
@@ -184,7 +339,7 @@ class writable_archive_xml_namespace_settings:
             self._update_single(ns)
 
     def copy(self):
-        return writable_archive_xml_namespace_settings(self.items())
+        return writable_archive_xml_namespace_settings(*self.items())
 
 
 
