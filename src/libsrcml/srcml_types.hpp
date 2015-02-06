@@ -152,7 +152,7 @@ struct srcml_archive {
     OPTION_TYPE options;
 
     /** size of tabstop */
-    int tabstop;
+    size_t tabstop;
 
     /** an array of XML namespace prefixes */
     std::vector<std::string> prefixes;

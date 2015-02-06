@@ -351,7 +351,7 @@ const char* srcml_unit_get_formatted_xml(struct srcml_unit* unit, const char * x
         unit->archive->reader->read_srcml(unit->unit);
 
     char * buffer = 0;
-    int size = 0;
+    size_t size = 0;
     if(unit->unit) {
 
         struct srcml_archive * formatting_archive = srcml_archive_clone(unit->archive);
@@ -742,7 +742,7 @@ int srcml_unit_unparse_filename(srcml_unit* unit, const char* src_filename) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_memory(srcml_unit* unit, char** src_buffer, int * src_size) {
+int srcml_unit_unparse_memory(srcml_unit* unit, char** src_buffer, size_t * src_size) {
 
     if(unit == NULL || src_buffer == NULL || src_size == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 

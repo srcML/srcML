@@ -64,7 +64,7 @@ public:
                 OPTION_TYPE& option,
                 const std::vector<std::string> & attributes,
                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                int tabsize);
+                size_t tabsize);
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
     int initWriter();
@@ -178,7 +178,7 @@ public:
     int curcolumn;
 
     /** the tabstop size */
-    int tabsize;
+    size_t tabsize;
 
     /** number of units output or depth into archive */
     int depth;

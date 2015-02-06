@@ -352,7 +352,7 @@ int srcml_archive_disable_option(srcml_archive* archive, unsigned long long opti
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_archive_set_tabstop(srcml_archive* archive, int tabstop) {
+int srcml_archive_set_tabstop(srcml_archive* archive, size_t tabstop) {
 
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -575,7 +575,7 @@ unsigned long long srcml_archive_get_options(const struct srcml_archive* archive
  *
  * @returns Retrieve the currently set tabstop size.
  */
-int srcml_archive_get_tabstop(const struct srcml_archive* archive) {
+size_t srcml_archive_get_tabstop(const struct srcml_archive* archive) {
 
     return archive ? archive->tabstop : 0;
 
@@ -587,7 +587,7 @@ int srcml_archive_get_tabstop(const struct srcml_archive* archive) {
  *
  * @returns Get the number of currently defined namespaces or -1 if archive is NULL
  */
-int srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
+size_t srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
 
     return archive ? (int)archive->namespaces.size() : -1;
 
@@ -601,7 +601,7 @@ int srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
  * @returns Get prefix for the given position on success
  * and NULL on failure.
  */
-const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, size_t pos) {
 
     if(archive == NULL) return 0;
 
@@ -648,7 +648,7 @@ const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archiv
  * @returns Get the namespace at the given pos on succcess
  * and NULL on failure.
  */
-const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive, size_t pos) {
 
     if(archive == NULL) return 0;
 
@@ -718,7 +718,7 @@ const char* srcml_archive_get_processing_instruction_data(const struct srcml_arc
  *
  * @returns Get the number of currently defined macros or -1 if archive is NULL
  */
-int srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
+size_t srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
 
     return archive ? (int)(archive->user_macro_list.size() / 2) : -1;
 
@@ -732,7 +732,7 @@ int srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
  * @returns Get token for the given position on success
  * and NULL on failure.
  */
-const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, size_t pos) {
 
     if(archive == NULL) return 0;
 
@@ -780,7 +780,7 @@ const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archi
  * @returns Get the type at the given pos on succcess
  * and NULL on failure.
  */
-const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, int pos) {
+const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, size_t pos) {
 
     if(archive == NULL) return 0;
 
@@ -869,7 +869,7 @@ int srcml_archive_write_open_filename(srcml_archive* archive, const char* srcml_
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, int * size) {
+int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_t * size) {
 
     if(archive == NULL || buffer == NULL || size == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
