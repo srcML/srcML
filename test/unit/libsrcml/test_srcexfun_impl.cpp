@@ -69,19 +69,19 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
     int rc = 0;
 
     // Create an archive to handle the data being read from a file.
-    srcml_archive* processedArchive = srcml_archive_new();
+    srcml_archive* processedArchive = srcml_archive_create();
     if(!processedArchive) {
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed to create processed archive.");
     }
 
-    rc = srcml_write_open_memory(processedArchive, &archiveBuffer, &archiveBufferSize);
+    rc = srcml_archive_write_open_memory(processedArchive, &archiveBuffer, &archiveBufferSize);
     if(rc != SRCML_STATUS_OK) {
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed open memory for writing.");
     }
 
-    srcml_unit* unit = srcml_unit_new(processedArchive);
+    srcml_unit* unit = srcml_unit_create(processedArchive);
     if(!unit) {
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed create unit.");
@@ -117,13 +117,13 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
     srcml_archive_free(processedArchive);
 
     processedArchive = 0;
-    processedArchive = srcml_archive_new();
+    processedArchive = srcml_archive_create();
     if(!processedArchive) {
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed creating processed archive for 2nd time..");
     }
 
-    rc = srcml_read_open_memory(processedArchive, archiveBuffer, archiveBufferSize);
+    rc = srcml_archive_read_open_memory(processedArchive, archiveBuffer, archiveBufferSize);
     if(rc != SRCML_STATUS_OK) {
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed open memory for reading.");
@@ -133,14 +133,14 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
     char* xpathResultArchiveBuffer = 0;
     int xpathResultArchiveBufferSize = 0;
 
-    srcml_archive* xpathResultArchive = srcml_archive_new();
+    srcml_archive* xpathResultArchive = srcml_archive_create();
     if(!xpathResultArchive) {
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed to create xpathResultArchive.");
     }
 
     // Handling xpath archive.
-    rc = srcml_write_open_memory(xpathResultArchive, &xpathResultArchiveBuffer, &xpathResultArchiveBufferSize);
+    rc = srcml_archive_write_open_memory(xpathResultArchive, &xpathResultArchiveBuffer, &xpathResultArchiveBufferSize);
     if(rc != SRCML_STATUS_OK) {
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed open memory for writing to xpathResultArchive.");

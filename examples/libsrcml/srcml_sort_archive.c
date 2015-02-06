@@ -40,13 +40,13 @@ int main(int argc, char* argv[]) {
     outputfile = "project_tmp.xml";
 
     /* open up an existing archive */
-    iarchive = srcml_archive_new();
+    iarchive = srcml_archive_create();
 
     /* create a new srcml archive structure */
     /* options and attributes of cloned archive start the same as
        the original archive */
     oarchive = srcml_archive_clone(iarchive);
-    srcml_read_open_filename(iarchive, inputfile);
+    srcml_archive_read_open_filename(iarchive, inputfile);
     while (1) {
 
 
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
     }
 
     /* open a srcML archive for output */
-    srcml_write_open_filename(oarchive, outputfile);
+    srcml_archive_write_open_filename(oarchive, outputfile);
 
     for(i = 0; i < num_units; ++i) {
 

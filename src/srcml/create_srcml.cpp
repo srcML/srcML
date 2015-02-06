@@ -74,7 +74,7 @@ void create_srcml(const srcml_request_t& srcml_request,
                   const srcml_output_dest& destination) {
 
     // create the output srcml archive
-    srcml_archive* srcml_arch = srcml_archive_new();
+    srcml_archive* srcml_arch = srcml_archive_create();
 
     // set options for the output srcml archive
     if (srcml_request.att_xml_encoding)
@@ -163,10 +163,10 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     } else if (contains<int>(destination)) {
 
-        status = srcml_write_open_fd(srcml_arch, *destination.fd);
+        status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
     } else {
 
-        status = srcml_write_open_filename(srcml_arch, destination.c_str());
+        status = srcml_archive_write_open_filename(srcml_arch, destination.c_str());
     }
 
     // gzip compression available directly from libsrcml

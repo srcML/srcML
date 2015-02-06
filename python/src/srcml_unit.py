@@ -93,9 +93,9 @@ libsrcml.srcml_unit_unparse_fd.argtypes = [c_void_p, c_int]
 libsrcml.srcml_unit_unparse_io.restype = c_int
 libsrcml.srcml_unit_unparse_io.argtypes = [c_void_p, c_void_p, write_callback_t, close_callback_t]
 
-# struct srcml_unit* srcml_unit_new(struct srcml_archive* archive);
-libsrcml.srcml_unit_new.restype = c_void_p
-libsrcml.srcml_unit_new.argtypes = [c_void_p]
+# struct srcml_unit* srcml_unit_create(struct srcml_archive* archive);
+libsrcml.srcml_unit_create.restype = c_void_p
+libsrcml.srcml_unit_create.argtypes = [c_void_p]
 
 # void srcml_unit_free(struct srcml_unit*);
 libsrcml.srcml_unit_free.restype = None
@@ -171,7 +171,7 @@ class srcml_unit :
     def __init__(self, archive, unit = 0) :
         self.unit = unit
         if self.unit == 0 :
-            self.unit = libsrcml.srcml_unit_new(archive.archive)
+            self.unit = libsrcml.srcml_unit_create(archive.archive)
 
     def parse_filename(self, src_filename) :
         check_return(libsrcml.srcml_unit_parse_filename(self.unit, src_filename))

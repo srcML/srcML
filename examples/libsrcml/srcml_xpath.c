@@ -31,11 +31,11 @@
 
 int main(int argc, char * argv[]) {
 
-    struct srcml_archive * iarchive = srcml_archive_new();
+    struct srcml_archive * iarchive = srcml_archive_create();
     struct srcml_archive * oarchive;
-    srcml_read_open_filename(iarchive, "project.xml");
+    srcml_archive_read_open_filename(iarchive, "project.xml");
     oarchive = srcml_archive_clone(iarchive);
-    srcml_write_open_filename(oarchive, "xpath.xml");
+    srcml_archive_write_open_filename(oarchive, "xpath.xml");
 
     srcml_append_transform_xpath(iarchive, "//src:unit");
 

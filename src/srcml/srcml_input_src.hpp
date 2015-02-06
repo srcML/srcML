@@ -197,6 +197,6 @@ inline std::ostream& operator<<(std::ostream& out, const srcml_input_src& input)
     return out;
 }
 
-int srcml_read_open(srcml_archive* arch, const srcml_input_src& input_source);
+int srcml_archive_read_open(srcml_archive* arch, const srcml_input_src& input_source);
 
 #endif

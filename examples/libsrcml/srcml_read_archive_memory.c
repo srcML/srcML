@@ -50,9 +50,9 @@ int main(int argc, char* argv[]) {
         "</unit>";
 
     /* create a new srcml archive structure */
-    archive = srcml_archive_new();
+    archive = srcml_archive_create();
 
-    srcml_read_open_memory(archive, s, strlen(s));
+    srcml_archive_read_open_memory(archive, s, strlen(s));
 
     /* add all the files to the archive */
     while ((unit = srcml_read_unit(archive))) {
@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
         filename = srcml_unit_get_filename(unit);
 
         /* uparse and write to a file */
-        srcml_unparse_unit_memory(unit, &buffer, &size);
+        srcml_unit_unparse_memory(unit, &buffer, &size);
 
         printf("%s", buffer);
         free((void *)buffer);

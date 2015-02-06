@@ -33,11 +33,11 @@ class srcMLReadArchive {
 public:
     srcMLReadArchive(const srcml_input_src& input_source) {
 
-        arch = srcml_archive_new();
+        arch = srcml_archive_create();
         if (!arch)
             throw srcMLReadArchiveError(0, input_source);
 
-        int status = srcml_read_open(arch, input_source);
+        int status = srcml_archive_read_open(arch, input_source);
         if (status != SRCML_STATUS_OK)
             throw status;
     }
@@ -93,7 +93,7 @@ void create_src(const srcml_request_t& srcml_request,
             }
 
             // SETUP OUTPUT ARCHIVE
-            srcml_archive* oarch = srcml_archive_new();
+            srcml_archive* oarch = srcml_archive_create();
             
             // set options for the output srcml archive
             if (srcml_request.att_xml_encoding)
@@ -174,9 +174,9 @@ void create_src(const srcml_request_t& srcml_request,
             *****/
 
             if (contains<int>(destination))
-                srcml_write_open_fd(oarch, destination);
+                srcml_archive_write_open_fd(oarch, destination);
             else
-                srcml_write_open_filename(oarch, destination.c_str());
+                srcml_archive_write_open_filename(oarch, destination.c_str());
 
             if (!destination.compressions.empty() && destination.compressions.front() == ".gz")
                 srcml_archive_enable_option(oarch, SRCML_OPTION_COMPRESS);

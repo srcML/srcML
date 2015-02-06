@@ -357,7 +357,7 @@ const char* srcml_unit_get_formatted_xml(struct srcml_unit* unit, const char * x
         struct srcml_archive * formatting_archive = srcml_archive_clone(unit->archive);
         srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL);
         if(xml_encoding) srcml_archive_set_xml_encoding(formatting_archive, xml_encoding);
-        srcml_write_open_memory(formatting_archive, &buffer, &size);
+        srcml_archive_write_open_memory(formatting_archive, &buffer, &size);
         srcml_write_unit(formatting_archive, unit);
         srcml_archive_close(formatting_archive);
         srcml_archive_free(formatting_archive);
@@ -1155,14 +1155,14 @@ int srcml_write_string(struct srcml_unit * unit, const char * content) {
  ******************************************************************************/
 
 /**
- * srcml_unit_new
+ * srcml_unit_create
  * @param archive a srcml archvie
  *
  * Create a srcml_unit tied to the srcml_archive archive
  *
  * @returns unit on success and on failure returns NULL
  */
-srcml_unit * srcml_unit_new(srcml_archive * archive) {
+srcml_unit * srcml_unit_create(srcml_archive * archive) {
 
     if(archive == NULL) return 0;
 

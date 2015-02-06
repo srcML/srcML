@@ -527,9 +527,9 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     }
 
-    srcml_archive * tmp_archive = srcml_archive_new();
+    srcml_archive * tmp_archive = srcml_archive_create();
 
-    srcml_read_open_filename(tmp_archive, last_transform_filename);
+    srcml_archive_read_open_filename(tmp_archive, last_transform_filename);
     tmp_archive->prefixes.swap(oarchive->prefixes);
     tmp_archive->namespaces.swap(oarchive->namespaces);
  

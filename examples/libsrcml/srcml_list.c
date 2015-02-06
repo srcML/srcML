@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
     struct srcml_archive * archive;
     struct srcml_unit * unit;
 
-    archive = srcml_archive_new();
-    srcml_read_open_filename(archive, "project.xml");
+    archive = srcml_archive_create();
+    srcml_archive_read_open_filename(archive, "project.xml");
 
     while((unit = srcml_read_unit_header(archive))) {
 

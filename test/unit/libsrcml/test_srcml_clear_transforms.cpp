@@ -68,7 +68,7 @@ int main() {
     */
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         dassert(archive->transformations.size(), 0);
         dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
@@ -77,7 +77,7 @@ int main() {
     }
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         srcml_append_transform_xpath(archive, "//src:unit");
         dassert(!archive->transformations.size(), 0);
@@ -88,7 +88,7 @@ int main() {
 
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         srcml_append_transform_xslt_filename(archive, "copy.xsl");
         dassert(!archive->transformations.size(), 0);
@@ -98,7 +98,7 @@ int main() {
     }
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         srcml_append_transform_xslt_memory(archive, copy.c_str(), copy.size());
         dassert(!archive->transformations.size(), 0);
@@ -108,7 +108,7 @@ int main() {
     }
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         FILE * f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(archive, f);
@@ -120,7 +120,7 @@ int main() {
     }
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(archive, fd);
@@ -132,7 +132,7 @@ int main() {
     }
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         srcml_append_transform_relaxng_filename(archive, "schema.rng");
         dassert(!archive->transformations.size(), 0);
@@ -142,7 +142,7 @@ int main() {
     }
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         srcml_append_transform_relaxng_memory(archive, schema.c_str(), schema.size());
         dassert(!archive->transformations.size(), 0);
@@ -152,7 +152,7 @@ int main() {
     }
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         FILE * f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(archive, f);
@@ -164,7 +164,7 @@ int main() {
     }
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
         int fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(archive, fd);
@@ -176,7 +176,7 @@ int main() {
     }
 
     {
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_RW;
 
         srcml_append_transform_xpath(archive, "//src:unit");

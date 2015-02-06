@@ -39,17 +39,17 @@ int srcml_close_callback(void* context) {
     return 0;
 }
 
-int srcml_read_open(srcml_archive* arch, const srcml_input_src& input_source) {
+int srcml_archive_read_open(srcml_archive* arch, const srcml_input_src& input_source) {
 
     int status;
     if (input_source.arch)
-        status = srcml_read_open_io(arch, input_source.arch, srcml_read_callback, srcml_close_callback);
+        status = srcml_archive_read_open_io(arch, input_source.arch, srcml_read_callback, srcml_close_callback);
     else if (contains<int>(input_source))
-        status = srcml_read_open_fd(arch, input_source);
+        status = srcml_archive_read_open_fd(arch, input_source);
     else if (contains<FILE*>(input_source))
-        status = srcml_read_open_FILE(arch, input_source);
+        status = srcml_archive_read_open_FILE(arch, input_source);
     else
-        status = srcml_read_open_filename(arch, input_source.c_str());
+        status = srcml_archive_read_open_filename(arch, input_source.c_str());
 
     return status;
 }

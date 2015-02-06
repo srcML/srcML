@@ -111,24 +111,24 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
         // create the output srcml archive
-        srcml_archive* srcml_arch = srcml_archive_new();
+        srcml_archive* srcml_arch = srcml_archive_create();
 
 //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         if (contains<int>(input)) {
-            if (srcml_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
+            if (srcml_archive_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
                 std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }
         }
         else if (contains<FILE*>(input)){
-            if (srcml_read_open_FILE(srcml_arch, input) != SRCML_STATUS_OK) {
+            if (srcml_archive_read_open_FILE(srcml_arch, input) != SRCML_STATUS_OK) {
                 std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }   
         }
         else {
-            if (srcml_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str())) != SRCML_STATUS_OK) {
+            if (srcml_archive_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str())) != SRCML_STATUS_OK) {
                 std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }

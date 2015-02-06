@@ -34,7 +34,7 @@
 
 int main() {
 
-    srcml_archive * archive = srcml_archive_new();
+    srcml_archive * archive = srcml_archive_create();
 
     /*
       srcml_unit_set_src_encoding
@@ -42,7 +42,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, 0);
         dassert(unit->encoding, 0);
         srcml_unit_free(unit);
@@ -50,7 +50,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, "foo");
         dassert(*unit->encoding, "foo");
         srcml_unit_free(unit);
@@ -66,7 +66,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, 0);
         dassert(unit->language, 0);
         srcml_unit_free(unit);
@@ -74,7 +74,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "foo");
         dassert(*unit->language, "foo");
         srcml_unit_free(unit);
@@ -90,7 +90,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, 0);
         dassert(unit->filename, 0);
         srcml_unit_free(unit);
@@ -98,7 +98,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "foo");
         dassert(*unit->filename, "foo");
         srcml_unit_free(unit);
@@ -114,7 +114,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_directory(unit, 0);
         dassert(unit->directory, 0);
         srcml_unit_free(unit);
@@ -122,7 +122,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_directory(unit, "foo");
         dassert(*unit->directory, "foo");
         srcml_unit_free(unit);
@@ -138,7 +138,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_version(unit, 0);
         dassert(unit->version, 0);
         srcml_unit_free(unit);
@@ -146,7 +146,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_version(unit, "foo");
         dassert(*unit->version, "foo");
         srcml_unit_free(unit);
@@ -162,7 +162,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_timestamp(unit, 0);
         dassert(unit->timestamp, 0);
         srcml_unit_free(unit);
@@ -170,7 +170,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_timestamp(unit, "foo");
         dassert(*unit->timestamp, "foo");
         srcml_unit_free(unit);
@@ -186,7 +186,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_hash(unit, 0);
         dassert(unit->hash, 0);
         srcml_unit_free(unit);
@@ -194,7 +194,7 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_hash(unit, "foo");
         dassert(*unit->hash, "foo");
         srcml_unit_free(unit);

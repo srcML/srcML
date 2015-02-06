@@ -239,7 +239,7 @@ public :
          collect_unit_attributes(false), collect_srcml(false), collect_src(false),
          terminate(false), is_empty(false), wait_root(true), skip(false) {
 
-        archive = srcml_archive_new();
+        archive = srcml_archive_create();
 
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
 
@@ -505,7 +505,7 @@ public :
         }
 
 
-        unit = srcml_unit_new(archive);
+        unit = srcml_unit_create(archive);
         unit->unit = "";
 
         is_empty = true;

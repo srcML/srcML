@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_archive_new.
+  Test cases for srcml_archive_create.
 */
 #include <stdio.h>
 #include <string.h>
@@ -36,7 +36,7 @@ int main() {
 
     {
 
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_READ;
         archive->filename = "f";
         archive->encoding = "e";

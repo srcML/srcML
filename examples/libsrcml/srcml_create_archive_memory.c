@@ -1,5 +1,5 @@
 /**
- * @file srcml_archive_new_memory.c
+ * @file srcml_archive_create_memory.c
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -46,15 +46,15 @@ int main(int argc, char* argv[]) {
     int srcml_input;
 
     /* create a new srcml archive structure */
-    archive = srcml_archive_new();
+    archive = srcml_archive_create();
 
     /* open a srcML archive for output */
-    srcml_write_open_memory(archive, &s, &size);
+    srcml_archive_write_open_memory(archive, &s, &size);
 
     /* add all the files to the archive */
     for (i = 1; i < argc; ++i) {
 
-        unit = srcml_unit_new(archive);
+        unit = srcml_unit_create(archive);
 
         /* Translate to srcml and append to the archive */
         char buffer[256];
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
         CLOSE(srcml_input);
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
-        srcml_parse_unit_memory(unit, buffer, num_read);
+        srcml_unit_parse_memory(unit, buffer, num_read);
 
         /* Translate to srcml and append to the archive */
         srcml_write_unit(archive, unit);

@@ -147,8 +147,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -170,8 +170,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -199,8 +199,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_CPP;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -223,8 +223,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_CPP;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -247,8 +247,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_LITERAL;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -271,8 +271,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_LITERAL;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -295,8 +295,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_OPERATOR;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -319,8 +319,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_OPERATOR;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -343,8 +343,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_MODIFIER;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -367,8 +367,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_MODIFIER;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -391,8 +391,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -415,8 +415,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -439,9 +439,9 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_register_namespace(archive, "foo", "bar");
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, archive->prefixes, archive->namespaces, archive->processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, archive->attributes, 0, 0, 0);
@@ -464,9 +464,9 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_register_namespace(archive, "foo", "bar");
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, archive->prefixes, archive->namespaces, archive->processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, archive->attributes, 0, 0, 0);
@@ -489,9 +489,9 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_CPP | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_LITERAL | SRCML_OPTION_OPERATOR | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_register_namespace(archive, "foo", "bar");
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, archive->prefixes, archive->namespaces, archive->processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, archive->attributes, 0, 0, 0);
@@ -514,9 +514,9 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_CPP | SRCML_OPTION_OPTIONAL_MARKUP | SRCML_OPTION_LITERAL | SRCML_OPTION_OPERATOR | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_register_namespace(archive, "foo", "bar");
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, archive->prefixes, archive->namespaces, archive->processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, archive->attributes, 0, 0, 0);
@@ -544,8 +544,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
         srcml_unit_set_hash(unit, "0123456789abcdef");
 
@@ -569,8 +569,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
         srcml_unit_set_hash(unit, "0123456789abcdef");
 
@@ -594,8 +594,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
         srcml_unit_set_hash(unit, "0123456789abcdef");
 
@@ -619,8 +619,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
         srcml_unit_set_hash(unit, "0123456789abcdef");
 
@@ -644,8 +644,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
         srcml_unit_set_hash(unit, "0123456789abcdef");
 
@@ -670,8 +670,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, attributes, 0, 0, 0);
@@ -693,8 +693,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->attributes = attributes;
         srcml_unit_set_hash(unit, "0123456789abcdef");
 
@@ -723,9 +723,9 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->revision = "archive";
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->revision = "unit";
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, archive->revision->c_str(), 0, 0, 0, std::vector<std::string>(), 0, 0, 0);
@@ -748,9 +748,9 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         archive->revision = "archive";
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->revision = "unit";
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, archive->revision->c_str(), 0, 0, 0, std::vector<std::string>(), 0, 0, 0);
@@ -779,8 +779,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_STORE_ENCODING;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, "ISO-8859-1");
@@ -803,8 +803,8 @@ int main() {
         xmlBufferPtr buffer = xmlBufferCreate();
         xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(0));
         OPTION_TYPE op = SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY | SRCML_OPTION_STORE_ENCODING;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
  
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, "ISO-8859-1");

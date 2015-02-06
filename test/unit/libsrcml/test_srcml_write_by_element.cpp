@@ -52,10 +52,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_directory(unit, "directory");
@@ -76,9 +76,9 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_directory(unit, "directory");
@@ -99,9 +99,9 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_directory(unit, "directory");
@@ -125,8 +125,8 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
-        srcml_write_open_memory(archive, &s, &size);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_archive_write_open_memory(archive, &s, &size);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         dassert(srcml_write_start_unit(0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_archive_close(archive);
@@ -140,10 +140,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         dassert(srcml_write_end_unit(unit), SRCML_STATUS_INVALID_INPUT);
         srcml_write_unit(archive, unit);
         srcml_unit_free(unit);
@@ -162,10 +162,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
@@ -182,10 +182,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_unit(unit);
@@ -201,10 +201,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, "foo", "element", 0);
         srcml_write_end_element(unit);
@@ -221,10 +221,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", "bar");
         srcml_write_end_element(unit);
@@ -242,10 +242,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, "foo", "element", "bar");
         srcml_write_end_element(unit);
@@ -262,10 +262,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
@@ -284,10 +284,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
@@ -305,10 +305,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
@@ -327,10 +327,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
@@ -347,10 +347,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         dassert(srcml_write_start_element(unit, 0, 0, 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_unit_free(unit);
@@ -362,10 +362,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);      
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);      
+        srcml_unit * unit = srcml_unit_create(archive);
         dassert(srcml_write_start_element(unit, 0, "element", 0), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -383,10 +383,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         dassert(srcml_write_end_element(unit), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -404,10 +404,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_namespace(unit, "foo", "bar");
@@ -425,10 +425,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_namespace(unit, 0, "bar");
@@ -446,10 +446,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         dassert(srcml_write_namespace(unit, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
@@ -461,10 +461,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         dassert(srcml_write_namespace(unit, "foo", "bar"), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -482,10 +482,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, 0, "foo", 0, "bar");
@@ -503,10 +503,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, "f", "foo", 0, "bar");
@@ -524,10 +524,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, 0, "foo", "b", "bar");
@@ -545,10 +545,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, "f", "foo", "b", "bar");
@@ -566,10 +566,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, 0, "foo", 0, "bar");
@@ -587,10 +587,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         dassert(srcml_write_attribute(unit, "f", 0, "b", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
@@ -602,10 +602,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         dassert(srcml_write_attribute(unit, 0, "foo", 0, "bar"), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -623,10 +623,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_string(unit, "foo");
@@ -644,10 +644,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
@@ -667,10 +667,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         dassert(srcml_write_string(unit, "foo"), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -681,10 +681,10 @@ int main() {
     {
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_archive_new();
+        srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
-        srcml_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_new(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit * unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         dassert(srcml_write_string(unit, 0), SRCML_STATUS_INVALID_ARGUMENT);

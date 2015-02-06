@@ -76,7 +76,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             *request->disk_dir += "/";
 
         std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";
-        srcml_write_open_filename(srcml_arch, xml_filename.c_str());
+        srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str());
         request->srcml_arch = srcml_arch;
     }
 
@@ -89,7 +89,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // create the unit start tag
         if (!unit)
-            if (!(unit = srcml_unit_new(srcml_arch)))
+            if (!(unit = srcml_unit_create(srcml_arch)))
                 throw SRCML_STATUS_ERROR;
 
         // language attribute, required if from memory

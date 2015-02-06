@@ -32,13 +32,13 @@ void srcml_input_srcml(ParseQueue& queue,
                        const srcml_input_src& srcml_input) {
 
     // open the srcml input archive
-    srcml_archive* srcml_input_archive = srcml_archive_new();
+    srcml_archive* srcml_input_archive = srcml_archive_create();
     if (contains<int>(srcml_input))
-        srcml_read_open_fd(srcml_input_archive, srcml_input);
+        srcml_archive_read_open_fd(srcml_input_archive, srcml_input);
     else if (contains<FILE*>(srcml_input))
-        srcml_read_open_FILE(srcml_input_archive, srcml_input);
+        srcml_archive_read_open_FILE(srcml_input_archive, srcml_input);
     else
-        srcml_read_open_filename(srcml_input_archive, srcml_input.c_str());
+        srcml_archive_read_open_filename(srcml_input_archive, srcml_input.c_str());
 
     if (SRCML_COMMAND_XML & SRCMLOptions::get()) {
         // Undoes all setup of srcml output archive in create_srcml
