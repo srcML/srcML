@@ -27,16 +27,16 @@ define nested_unit_out <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit revision="0.8.0" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	<unit revision="0.8.0" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit revision="0.8.0" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	<unit revision="0.8.0" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
@@ -46,13 +46,13 @@ define nested_exprstmt_out <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" item="1" location="/src:expr_stmt[1]"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+	<unit revision="0.8.0" language="C++" item="1" location="/src:expr_stmt[1]"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" item="1" location="/src:expr_stmt[1]"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+	<unit revision="0.8.0" language="C++" item="1" location="/src:expr_stmt[1]"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" item="1" location="/src:expr_stmt[1]"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+	<unit revision="0.8.0" language="C++" item="1" location="/src:expr_stmt[1]"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" item="1" location="/src:expr_stmt[1]"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+	<unit revision="0.8.0" language="C++" item="1" location="/src:expr_stmt[1]"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
 	STDOUT
