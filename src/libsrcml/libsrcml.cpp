@@ -158,6 +158,8 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     }
 
+    xmlInitParser();
+
     if(register_languages) {
 
         register_languages = false;
