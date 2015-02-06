@@ -27,3 +27,8 @@ from srcml_language_not_set import srcml_language_not_set
 from srcml_no_transformation import srcml_no_transformation
 
 from exception_factory import *
+
+from invalid_srcml_language import invalid_srcml_language
+from invalid_srcml_encoding import invalid_srcml_encoding
+
+

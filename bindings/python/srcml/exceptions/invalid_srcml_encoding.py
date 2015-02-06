@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file invalid_srcml_encoding.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,10 +17,9 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from test_exception_factory import *
-from test_bindings import *
-from test_memory_buffer import *
-from test_writable_archive_xml_namespace_settings import *
-from test_writable_archive_settings import *
-#from test_archive import *
-#from test_unit import *
+class invalid_srcml_encoding(Exception):
+    def __init__(self, message, provided_encoding):
+        super(invalid_srcml_encoding, self).__init__(message, provided_encoding)
+
+    def __str__(self):
+        return "Invalid srcml encoding: {1}. {0}".format(*self.args)
