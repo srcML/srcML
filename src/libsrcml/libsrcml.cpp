@@ -63,7 +63,7 @@ std::string srcml_error;
 static
 #endif
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, std::vector<std::string>(),
-                                 SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_TERNARY,
+                                 SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY,
                                  8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
                                  language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
 
@@ -223,7 +223,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         srcml_unit_set_timestamp(unit, srcml_unit_get_timestamp(&global_unit));
         srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
 
-        status = srcml_parse_unit_filename(unit, input_filename);
+        status = srcml_unit_parse_filename(unit, input_filename);
         if(status != SRCML_STATUS_OK) {
 
             srcml_unit_free(unit);
@@ -942,7 +942,7 @@ const char* srcml_error_string() { return srcml_error.c_str(); }
 /**
  * srcml_memory_free
  *
- * Free a buffer allocated by functions such as srcml_write_open_memory and srcml_unparse_unit_memory.
+ * Free a buffer allocated by functions such as srcml_write_open_memory and srcml_unit_unparse_memory.
  */
 void srcml_memory_free(char * buffer) {
 

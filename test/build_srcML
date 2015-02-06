@@ -58,14 +58,14 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
     fi
 
     if [[ $OS = "fedora" || $OS = "" ]]; then
-        scp fedora19build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19
-        scp fedora19build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora19
         scp fedora20build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20
         scp fedora20build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora20
-        scp fedora19build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora19-64
-        scp fedora19build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora19-64
         scp fedora20build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora20-64
         scp fedora20build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora20-64
+        scp fedora21build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora21
+        scp fedora21build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora21
+        scp fedora21build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Fedora21-64
+        scp fedora21build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/Fedora21-64
     fi
 
     if [[ $OS = "suse" || $OS = "" ]]; then
@@ -73,19 +73,23 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
         scp suse13build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.1
         scp suse13build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.1-64
         scp suse13build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.1-64
+        scp suse132build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.2
+        scp suse132build:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.2
+        scp suse132build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/openSUSE13.2-64
+        scp suse132build64:/srcML/dist/srcML*.rpm ~/Dropbox/srcML/Unix/openSUSE13.2-64
     fi
 
     if [[ $OS = "ubuntu" || $OS = "" ]]; then
         scp ubuntu10build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04
         scp ubuntu10build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu10.04
-        scp ubuntu12build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04
-        scp ubuntu12build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04
-        scp ubuntu14build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu14.04
-        scp ubuntu14build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04
         scp ubuntu10build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu10.04-64
         scp ubuntu10build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu10.04-64
+        scp ubuntu12build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04
+        scp ubuntu12build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04
         scp ubuntu12build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu12.04-64
         scp ubuntu12build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu12.04-64
+        scp ubuntu14build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu14.04
+        scp ubuntu14build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04
         scp ubuntu14build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu14.04-64
         scp ubuntu14build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04-64
     fi
@@ -104,16 +108,10 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
         scp mint17build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint17
         scp mint17build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Mint17-64
         scp mint17build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint17-64
-    fi
-
-    if [[ $OS = "fedora" || $OS = "" ]]; then
-        ./sshall.py --fedora --build --20 --~64 "bash -c \"cd /srcML; git clean -fdx; cp -r ~/dlls .; mingw32-cmake $RELEASE .; make -j2; cpack\""
-        ./sshall.py --fedora --build --20 --~64 'bash -c "cd /srcML/; cpack -G NSIS"'
-        ./sshall.py --fedora --build --20 --~64 'bash -c "chown -R srcml:srcml /srcML"'
-        scp fedora20build:/srcML/dist/srcML*.zip ~/Dropbox/srcML/Windows
-        scp fedora20build:/srcML/dist/srcML*.exe ~/Dropbox/srcML/Windows
-
-        bash -c "cd ~/Dropbox/srcML/Windows; unzip -ouq srcML-Win.zip;"
+        scp mint171build:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Mint17.1
+        scp mint171build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint17.1
+        scp mint171build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Mint17.1-64
+        scp mint171build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Mint17.1-64
     fi
 
     shift 1

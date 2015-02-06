@@ -208,7 +208,7 @@ void create_src(const srcml_request_t& srcml_request,
                 exit(4);
             }
             
-            srcml_unparse_unit_fd(unit, destination);
+            srcml_unit_unparse_fd(unit, destination);
 
             srcml_unit_free(unit);
 
@@ -231,7 +231,7 @@ void create_src(const srcml_request_t& srcml_request,
                 exit(4);
             }
 
-            srcml_unparse_unit_filename(unit, destination.c_str());
+            srcml_unit_unparse_filename(unit, destination.c_str());
 
             srcml_unit_free(unit);
 
