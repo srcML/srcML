@@ -14,5 +14,7 @@ define output <<- 'STDOUT'
 
 createfile sub/a.cpp "$src"
 
+
+# TODO: issue #1071
 src2srcml --count -l C++ < sub/a.cpp
 check 3<<< "$output"

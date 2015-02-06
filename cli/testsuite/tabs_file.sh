@@ -17,6 +17,7 @@ define srcml <<- 'STDOUT'
 
 createfile sub/a.cpp ""
 
+# TODO: issue #1051
 srcml -l C++ --tabs 4 < sub/a.cpp
 check 3<<< "$srcml"
 

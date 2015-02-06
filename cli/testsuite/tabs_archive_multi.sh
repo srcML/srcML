@@ -19,6 +19,7 @@ define fsrcml <<- 'STDOUT'
 createfile sub/a.cpp ""
 createfile sub/b.cpp ""
 
+# TODO: issue #1051
 srcml --tabs 4 --archive sub/a.cpp sub/b.cpp --in-order
 check 3<<< "$fsrcml"
 

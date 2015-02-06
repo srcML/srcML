@@ -25,6 +25,7 @@ define attr_out <<- 'STDOUT'
 
 createfile sub/a.cpp.xml "$srcml_nested"
 
+# TODO: issue #1074
 srcml2src --xpath "string(//src:unit/@filename)" sub/a.cpp.xml
 check 3<<< "$attr_out"
 

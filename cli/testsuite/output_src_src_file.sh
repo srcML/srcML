@@ -16,6 +16,7 @@ define srcml <<- 'STDOUT'
 # src2srcml - input single source file
 createfile sub/a.cpp "$src"
 
+# TODO: issue #1073
 src2srcml --output-src sub/a.cpp
 check 3<<< "$src"
 

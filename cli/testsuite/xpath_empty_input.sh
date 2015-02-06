@@ -20,6 +20,7 @@ define output <<- 'STDOUT'
 
 createfile sub/a.cpp.xml ""
 
+# TODO: issue #973
 srcml2src --xpath=src:unit sub/a.cpp.xml
 check 3<<< "$xpath_empty" 4<<< "$xpath_error"
 

@@ -21,7 +21,7 @@ define xmlfile <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-# TODO: issue #972
+# TODO: issue #1057
 
 # src2srcml
 createfile sub/a.cpp "$sfile"

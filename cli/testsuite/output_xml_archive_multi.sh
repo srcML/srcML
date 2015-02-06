@@ -73,7 +73,7 @@ check sub/b.cpp.xml 3<<< "$outputb"
 srcml2src --unit 2 -X -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$outputb"
 
-# TODO: What should the output be here?
+# TODO: issue #1044
 srcml -X sub/a.cpp.xml
 check_null
 

@@ -20,6 +20,8 @@ define input <<- 'STDOUT'
 
 createfile sub/a.cpp.xml "$input"
 
+# TODO: issue #999
+
 # windows - clrf
 srcml2src sub/a.cpp.xml --line-ending "Windows" -o sub/a.cpp && file sub/a.cpp
 check 3<<< "$windows"

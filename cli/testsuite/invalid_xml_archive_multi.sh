@@ -45,6 +45,7 @@ define xml_archive_error <<- 'STDERR'
 	STDERR
 
 # bad
+# TODO: issue #1039
 srcml2src --units xml_error/illformedarchive.xml
 check 3<<< "$output" 4<<< "$xml_archive_error"
 

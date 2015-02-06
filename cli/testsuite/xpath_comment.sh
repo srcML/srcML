@@ -34,6 +34,7 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+# TODO: issue #1037
 srcml2src --xpath "//comment()" <<< "$input" 
 check 3<<<"Comment One Comment Two"
 
