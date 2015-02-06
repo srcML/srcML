@@ -33,24 +33,3 @@ check sub/b.cpp 3<<< "$src"
 
 src2srcml -l C++ -S -o sub/b.cpp < sub/a.cpp
 check sub/b.cpp 3<<< "$src"
-
-# srcml2src - input srcml single file
-createfile sub/a.cpp.xml "$srcml"
-
-srcml2src --output-src sub/a.cpp.xml
-check 3<<< "$src"
-
-srcml2src --S sub/a.cpp.xml
-check 3<<< "$src"
-
-src2srcml -S < sub/a.cpp.xml
-check 3<<< "$src"
-
-src2srcml -S sub/a.cpp.xml -o sub/b.cpp
-check sub/b.cpp 3<<< "$src"
-
-src2srcml -S -o sub/b.cpp sub/a.cpp.xml
-check sub/b.cpp 3<<< "$src"
-
-src2srcml -S -o sub/b.cpp < sub/a.cpp.xml
-check sub/b.cpp 3<<< "$src"
