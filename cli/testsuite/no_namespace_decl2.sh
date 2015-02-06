@@ -52,14 +52,14 @@ check sub/b.cpp.xml 3<<< "$nonamespacexml"
 srcml2src --no-namespace-decl -X sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$nonamespacexml"
 
-srcml2src -l C++ --no-namespace-decl < sub/a.cpp.xml
+srcml2src -X -l C++ --no-namespace-decl < sub/a.cpp.xml
 check 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl sub/a.cpp.xml
-check 3<<< "$output"
+srcml2src --no-namespace-decl -X sub/a.cpp.xml
+check 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl -o sub/b.cpp.xml sub/a.cpp.xml
+srcml2src --no-namespace-decl -o sub/b.cpp.xml -X sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml
+srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml -X
 check sub/b.cpp.xml 3<<< "$nonamespacexml"

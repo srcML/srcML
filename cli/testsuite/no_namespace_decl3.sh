@@ -12,7 +12,7 @@ define srcml <<- 'STDOUT'
 
 define srcmlout <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit language="C++">
+	<unit revision="0.8.0" language="C++">
 	</unit>
 	STDOUT
 
@@ -52,8 +52,8 @@ check sub/b.cpp.xml 3<<< "$srcmlout"
 
 # --no-namespace-decl
 srcml2src --no-namespace-decl sub/a.cpp.xml
-check_null
+check 3<<< ""
 
 srcml2src --no-namespace-decl < sub/a.cpp.xml
-check_null
+check 3<<< ""
 
