@@ -95,7 +95,16 @@ CAPTURE_STDOUT=true
 CAPTURE_STDERR=true
 
 # variable $1 is set to the contents of stdin
-define() { IFS= read -r -d '' ${1} || true; }
+define() {
+    IFS= read -r -d '' ${1} || true;
+
+    # temporarily store the contents of the variable named in $1
+    CONTENT=${!1}
+
+    # replace any mention of REVISION with the revision number,
+    # and put the revised contents of the variable named in $1
+    eval $1=\${CONTENT//REVISION/REVISION}
+}
 
 # variable $1 is set to the contents of file $2
 readfile() { ${1}="$(cat $2)"; }

@@ -8,7 +8,7 @@ source $(dirname "$0")/framework_test.sh
 # C++ 
 define srcmlcpp <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" directory="bar" filename="foo" version="1.2"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" directory="bar" filename="foo" version="1.2"/>
 	STDOUT
 
 createfile sub/a.cpp.xml "$srcmlcpp"
@@ -22,7 +22,7 @@ check 3<<< "C++"
 # Java
 define srcmljava <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="Java">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" language="Java">
 	</unit>
 	STDOUT
 
@@ -37,7 +37,7 @@ check 3<<< "Java"
 # C
 define srcmlc <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="C">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" language="C">
 	</unit>
 	STDOUT
 
@@ -52,7 +52,7 @@ check 3<<< "C"
 # Objective-C
 define srcmlobjc <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="Objective-C">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" language="Objective-C">
 	</unit>
 	STDOUT
 
@@ -67,7 +67,7 @@ check 3<<< "Objective-C"
 # Aspect J
 define srcmlaj <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" language="AspectJ">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" language="AspectJ">
 	</unit>
 	STDOUT
 
@@ -82,7 +82,7 @@ check 3<<< "AspectJ"
 # Empty
 define empty <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="" directory="" filename="" version=""/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="" directory="" filename="" version=""/>
 	STDIN
 
 createfile sub/a.cpp.xml "$empty"

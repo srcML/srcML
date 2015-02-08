@@ -13,7 +13,7 @@ define srcml <<- 'STDOUT'
 	<foo:a/>
 	</unit>
 
-	<unit xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="0.8.0" language="Java">
+	<unit xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="REVISION" language="Java">
 	<bar:b/>
 	</unit>
 
@@ -22,18 +22,18 @@ define srcml <<- 'STDOUT'
 
 define xpathempty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" revision="0.8.0"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" revision="REVISION"/>
 	STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" revision="0.8.0">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" revision="REVISION">
 
-	<unit revision="0.8.0" language="Java">
+	<unit revision="REVISION" language="Java">
 	<foo:a/>
 	</unit>
 
-	<unit revision="0.8.0" language="Java">
+	<unit revision="REVISION" language="Java">
 	<bar:b/>
 	</unit>
 

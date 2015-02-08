@@ -7,5 +7,5 @@ source $(dirname "$0")/framework_test.sh
 echo -n "" | src2srcml -l C++ --no-xml-declaration
 
 check 3<<- 'STDOUT'
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"/>
 	STDOUT

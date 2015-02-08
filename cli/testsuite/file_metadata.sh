@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test metadata options with files
 define sxmlfile1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" directory="sub" filename="a.cpp" version="1.2">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" directory="sub" filename="a.cpp" version="1.2">
 	</unit>
 	STDOUT
 
@@ -14,11 +14,11 @@ define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<src:unit xmlns:src="http://www.sdml.info/srcML/src">
 
-	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp">
+	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp">
 	<src:expr_stmt><src:expr><src:name>a</src:name></src:expr>;</src:expr_stmt>
 	</src:unit>
 
-	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp">
+	<src:unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/b.cpp">
 	<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt>
 	</src:unit>
 

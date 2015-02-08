@@ -7,7 +7,7 @@ source $(dirname "$0")/framework_test.sh
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit revision="0.8.0" language="C++"/>
+	<unit revision="REVISION" language="C++"/>
 	STDOUT
 
 echo -n "" | src2srcml -l C++ --no-namespace-decl
@@ -16,7 +16,7 @@ check 3<<< "$output"
 
 define output2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit revision="0.8.0" language="C++" filename="sub/a.cpp"/>
+	<unit revision="REVISION" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 
 
