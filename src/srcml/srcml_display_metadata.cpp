@@ -29,7 +29,6 @@
 #include <iomanip>
 #include <string.h>
 
-// display unit names and total count
 int srcml_unit_count(srcml_archive* srcml_arch) {
 
     //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
@@ -39,8 +38,7 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 
         //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
-        if (srcml_unit_get_filename(unit))
-            ++numUnits;
+        ++numUnits;
 
         //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
