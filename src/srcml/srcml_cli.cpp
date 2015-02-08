@@ -211,6 +211,7 @@ void option_field<&srcml_request_t::tabs>(int value) {
     }
     
     srcml_request.tabs = value;
+    *srcml_request.markup_options |= SRCML_OPTION_POSITION;
 }
 
 template <>
@@ -357,7 +358,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         line_col.add_options()
             ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
-            ("tabs", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::tabs>)->default_value(8), "set tabs arg characters apart.  Default is 8")
+            ("tabs", prog_opts::value<int>()->implicit_value(8)->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
             ;
 
         markup.add_options()
@@ -474,6 +475,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())
           positional_args(std::vector<std::string>(1, "stdin://-"));
+
+        // If position option is used without tabs...set default tab of 8
+        if (*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0)
+          srcml_request.tabs = 8;
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
         // automatic interactive use from stdin (not on redirect or pipe)
