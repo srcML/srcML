@@ -28,7 +28,7 @@ define foutput <<- 'STDOUT'
 
 createfile sub/a.cpp "$cpp_if0"
 
-
+# TODO: issue #1072
 src2srcml sub/a.cpp
 check 3<<< "$foutput"
 

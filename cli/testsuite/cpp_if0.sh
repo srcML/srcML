@@ -22,6 +22,7 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+# TODO: issue #1072
 src2srcml -l C++ <<< "$input"
 
 check 3<<< "$output"
