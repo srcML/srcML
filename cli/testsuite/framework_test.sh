@@ -35,6 +35,9 @@
 # generated files, list is kept to cleanup
 genfiles=""
 
+# current revision number, replaced in expected output strings
+export REVISION=0.8.0
+
 # restores environment, deletes files created with createfile command.
 # or registerd with registerfile command
 cleanup() {
@@ -103,7 +106,7 @@ define() {
 
     # replace any mention of REVISION with the revision number,
     # and put the revised contents of the variable named in $1
-    eval $1=\${CONTENT//REVISION/0.8.0}
+    eval $1=\${CONTENT//REVISION/${REVISION}}
 }
 
 # variable $1 is set to the contents of file $2
@@ -177,7 +180,7 @@ check() {
 
     elif [ -e /dev/fd/3 ]; then
         # redirection using immediate here document (<<) adds newline
-        diff $STDOUT <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/3)
+        diff $STDOUT <(perl -0 -pe 's/\n\n$/\n/m;' -pe "s/REVISION/${REVISION}/;" /dev/fd/3)
 
     else
         # check that the captured stdout is empty
