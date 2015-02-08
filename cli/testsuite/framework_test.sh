@@ -103,7 +103,7 @@ define() {
 
     # replace any mention of REVISION with the revision number,
     # and put the revised contents of the variable named in $1
-    eval $1=\${CONTENT//REVISION/REVISION}
+    eval $1=\${CONTENT//REVISION/0.8.0}
 }
 
 # variable $1 is set to the contents of file $2
