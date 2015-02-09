@@ -18,33 +18,21 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import ctypes
-"""
+
+__doc__ = """
 This file contains constants which are used by multiple different areas 
 but are all internal to the module.
 """
 
-ENCODING_ATTR = "encoding"
-SRC_ENCODING_ATTR = "src_encoding"
-LANGUAGE_ATTR = "language"
-FILENAME_ATTR = "filename"
-DIRECTORY_ATTR = "directory"
-VERSION_ATTR = "version"
-TABSTOP_ATTR = "tabstop"
-OPTIONS_ATTR = "options"
-PROCESSING_INSTRUCTION_ATTR = "processing_instruction"
-TIMESTAMP_ATTR = "timestamp"
-REVISION_ATTR = "revision"
-HASH_ATTR = "hash"
 STREAM_PARAM = "stream"
-
 FILENAME_PARAM = "filename"
 XML_PARAM = "xml"
 SIZE_PARAM = "size"
-BUFF_PARAM = "buff"
+BUFFER_PARAM = "buffer"
 CONTEXT_PARAM = "context"
-READ_CB_PARAM = "read_cb"
-WRITE_CB_PARAM = "write_cb"
-CLOSE_CB_PARAM = "close_cb"
+READ_CB_PARAM = "read"
+WRITE_CB_PARAM = "write"
+CLOSE_CB_PARAM = "close"
 FD_PARAM = "fd"
 CLOSE_STREAM_PARAM = "close_stream"
 XSLT_PARAM = "xslt"
