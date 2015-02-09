@@ -180,16 +180,16 @@ class TestSuiteGeneratorBase(object):
 
 
     def _buildCreateArchive(self, varName):
-        self.gen_genCall(varName, "srcml_create_archive", [])
+        self.gen_genCall(varName, "srcml_archive_create", [])
 
 
     def _buildCleanUpArchive(self, varName):
-        self.gen_genCall(None, "srcml_free_archive", [varName])
+        self.gen_genCall(None, "srcml_archive_free", [varName])
 
     def generateArchiveTests(self):
 
         # Test srcml_create_archve and srcml_free_archive functions.
-        self.gen_startTestFuncGen("srcml_create_archive")
+        self.gen_startTestFuncGen("srcml_archive_create")
         self.gen_genVariableDecl("srcml_archive *", "archive", None)
         self._buildCreateArchive("archive")
         self.gen_genUnaryTestStatement(TEST_IS_NOT_NULL, "archive", "Created archive was null.")
@@ -207,13 +207,13 @@ class TestSuiteGeneratorBase(object):
         self._buildCleanUpArchive("archive")
         self.gen_endTestFuncGen()
 
-        # # Testing srcml_write_open_filename and srcml_close_archive
+        # # Testing srcml_write_open_filename and srcml_archive_close
         self.gen_startTestFuncGen("srcml_write_open_filename")
         self.gen_genVariableDecl("srcml_archive *", "oarchive", None)
         self.gen_genVariableDecl("const char *", "testFileName", "srcml_write_open_filename_test_file.cpp")
         self._buildCreateArchive("oarchive")
-        self.gen_genCall(None, "srcml_write_open_filename", ["oarchive", "testFileName"])
-        self.gen_genCall(None, "srcml_close_archive", ["oarchive"])
+        self.gen_genCall(None, "srcml_archive_write_open_filename", ["oarchive", "testFileName"])
+        self.gen_genCall(None, "srcml_archive_close", ["oarchive"])
         self.gen_genUnaryTestStatement(TEST_FILE_EXISTS, "testFileName", "Didn't locate correct test file.")
         self._buildCleanUpArchive("oarchive")
         self.gen_genCall(None, DELETE_FILE_FUNC, ["testFileName"])
@@ -225,8 +225,8 @@ class TestSuiteGeneratorBase(object):
         self.gen_genVariableDecl(BUFFER_REF_TYPE, "buffer", None)
         self.gen_genVariableDecl(INT_REF_TYPE, "bufferSize", None)
         self._buildCreateArchive("oarchive")
-        self.gen_genCall(None, "srcml_write_open_memory", ["oarchive", "buffer", "bufferSize"])
-        self.gen_genCall(None, "srcml_close_archive", ["oarchive"])
+        self.gen_genCall(None, "srcml_archive_write_open_memory", ["oarchive", "buffer", "bufferSize"])
+        self.gen_genCall(None, "srcml_archive_close", ["oarchive"])
         self.gen_genUnaryTestStatement(TEST_BUFFER_HAS_CONTENT, "buffer", "Missing buffer content.")
         self.gen_genUnaryTestStatement(TEST_INT_HAS_CONTENT, "bufferSize", "Missing buffer size's content.")
         self._buildCleanUpArchive("oarchive")
@@ -240,8 +240,8 @@ class TestSuiteGeneratorBase(object):
         self.gen_genVariableDecl(CLOSE_CALLBACK_TYPE, "closeCB", None)
         self.gen_genVariableDecl(CALLBACK_CTXT_TYPE, "ctxt", None)
         self._buildCreateArchive("oarchive")
-        self.gen_genCall(None, "srcml_write_open_io", ["oarchive", "ctxt", "writeCB", "closeCB"])
-        self.gen_genCall(None, "srcml_close_archive", ["oarchive"])
+        self.gen_genCall(None, "srcml_archive_write_open_io", ["oarchive", "ctxt", "writeCB", "closeCB"])
+        self.gen_genCall(None, "srcml_archive_close", ["oarchive"])
         self.gen_genTestIOContext("ctxt", True, False, True, "Failed to write or close")
         self._buildCleanUpArchive("oarchive")
         self.gen_endTestFuncGen()

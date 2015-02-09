@@ -167,7 +167,7 @@ def {pyName}({parameters}):
         elif functionDeclInfo.returnType == "c_void_p" or functionDeclInfo.returnType == "c_char_p":
             selectedTemplate = factoryReturnTemplate
         elif functionDeclInfo.returnType == "c_int":
-            if functionDeclInfo.name.find("_get_") == -1:
+            if functionDeclInfo.name.find("_get_") == -1 and functionDeclInfo.name.find("check_") == -1:
                 selectedTemplate = intResultTemplate    
             else:
                 selectedTemplate = factoryReturnTemplate

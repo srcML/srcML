@@ -91,7 +91,7 @@ def extractNormalizedTypeName(element):
     if element.text != None and not all(c in string.whitespace for c in element.text):
         out.write(element.text)
     def extract(currentElement):
-        if currentElement.text != None and currentElement.text != "__LIBSRCML_DECL" and not all(c in string.whitespace for c in currentElement.text):
+        if currentElement.text != None and currentElement.text != "LIBSRCML_DECL" and not all(c in string.whitespace for c in currentElement.text):
             out.write(currentElement.text + " ")
         for chld in currentElement.iterchildren():
             extract(chld)
@@ -174,7 +174,7 @@ class BindingGenerator(object):
         bindingsFile.close()
 
     def gatherStaticConstantMacros(self):
-        macroList = self.srcmlAPI.xpath("//cpp:define[cpp:macro/src:name[.!='__LIBSRCML_DECL'] and cpp:value]", namespaces=XPathNamespaces)
+        macroList = self.srcmlAPI.xpath("//cpp:define[cpp:macro/src:name[.!='LIBSRCML_DECL'] and cpp:value]", namespaces=XPathNamespaces)
         self.constantMacros = [
             (
                 x.xpath("cpp:macro/src:name/text()", namespaces=XPathNamespaces)[0],
