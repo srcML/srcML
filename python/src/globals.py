@@ -230,6 +230,10 @@ libsrcml.srcml_check_exslt.argtypes = []
 libsrcml.srcml_error_string.restype = c_char_p
 libsrcml.srcml_error_string.argtypes = []
 
+# const char* srcml_memory_free();
+libsrcml.srcml_memory_free.restype = c_char_p
+libsrcml.srcml_memory_free.argtypes = []
+
 def srcml(input_filename, output_filename) :
     libsrcml.srcml(input_filename, output_filename)
 
@@ -357,4 +361,7 @@ def check_exslt() :
 
 def error_string() :
     return libsrcml.srcml_error_string()
+
+def memory_free() :
+    return libsrcml.srcml_memory_free()
 
