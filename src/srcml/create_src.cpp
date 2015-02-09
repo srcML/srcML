@@ -133,8 +133,7 @@ void create_src(const srcml_request_t& srcml_request,
             else
                 srcml_archive_set_language(oarch, SRCML_LANGUAGE_NONE);
 
-            if (srcml_request.tabs)
-                srcml_archive_set_tabstop(oarch, srcml_request.tabs);
+            srcml_archive_set_tabstop(oarch, srcml_request.tabs);
 
             // non-archive when:
             //   only one input

@@ -477,7 +477,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
           positional_args(std::vector<std::string>(1, "stdin://-"));
 
         // If position option is used without tabs...set default tab of 8
-        if (*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0)
+        if ((*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0) || srcml_request.tabs == 0)
           srcml_request.tabs = 8;
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
