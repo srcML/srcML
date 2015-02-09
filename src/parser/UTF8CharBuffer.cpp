@@ -149,8 +149,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 
     if(!ifilename) throw UTF8FileError();
 
-    xmlInitParser();
-
     void * file = xmlFileOpen(ifilename);
     if(!file) throw UTF8FileError();
 
@@ -199,8 +197,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
     : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false), hash(hash) {
 
     if(!c_buffer) throw UTF8FileError();
-
-    xmlInitParser();
 
     if(hash) {
 #ifdef _MSC_BUILD
@@ -268,8 +264,6 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 
     if(!file) throw UTF8FileError();
 
-    xmlInitParser();
-
     if(hash) {
 #ifdef _MSC_BUILD
         CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
@@ -311,8 +305,6 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
 
     if(fd < 0) throw UTF8FileError();
-
-    xmlInitParser();
 
     if(hash) {
 #ifdef _MSC_BUILD
