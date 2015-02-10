@@ -102,7 +102,7 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   www.sdml.info\n\
   Report bugs to collard@uakron.edu";
 
-srcml_request_t srcml_request = { /* 0 */ };
+srcml_request_t srcml_request;
 
 // Define Program Options
 prog_opts::options_description general("GENERAL OPTIONS");
@@ -209,7 +209,9 @@ void option_field<&srcml_request_t::tabs>(int value) {
         std::cerr << "srcml: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
         exit(1); //ERROR CODE TBD
     }
+    
     srcml_request.tabs = value;
+    *srcml_request.markup_options |= SRCML_OPTION_POSITION;
 }
 
 template <>
@@ -315,7 +317,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("max-threads", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
-            ("ordered", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
+            ("in-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
@@ -326,7 +328,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
             ("xml-encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->default_value("UTF-8"),"set the output XML encoding to ENC (default:  UTF-8)")
             ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
-            ("hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_HASH>), "add hash to srcml output")
+            ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_HASH>), "add hash to srcml output")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
             ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
@@ -356,7 +358,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         line_col.add_options()
             ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
-            ("tabs", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::tabs>)->default_value(8), "set tabs arg characters apart.  Default is 8")
+            ("tabs", prog_opts::value<int>()->implicit_value(8)->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
             ;
 
         markup.add_options()
@@ -473,6 +475,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())
           positional_args(std::vector<std::string>(1, "stdin://-"));
+
+        // If position option is used without tabs...set default tab of 8
+        if ((*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0) || srcml_request.tabs == 0)
+          srcml_request.tabs = 8;
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
         // automatic interactive use from stdin (not on redirect or pipe)
