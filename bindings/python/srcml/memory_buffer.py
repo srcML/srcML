@@ -20,14 +20,14 @@
 import ctypes, bindings, io
 
 
-class memory_buffer:
+class memory_buffer(object):
     """
     A memory buffer used to assist with memory allocation and 
     passing native memory between python and libsrcml.
     """
 
     def _make_array(self):
-        return ((ctypes.c_byte * self.size.value).from_address(self.buff))
+        return (ctypes.c_byte * self.size.value).from_address(ctypes.cast(self.buff, ctypes.c_void_p).value)
 
     def __init__(self, initial_string_value = None):
         """
@@ -70,7 +70,7 @@ class memory_buffer:
             raise ValueError("Invalid allocation size", "allocation_size", allocation_size)
 
         self.free()
-        self.buff = bindings.malloc(allocation_size)
+        self.buff = ctypes.c_char_p(bindings.malloc(allocation_size))
         self.size = ctypes.c_int(allocation_size)
 
     def free(self):

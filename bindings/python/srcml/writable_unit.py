@@ -1,5 +1,5 @@
 ##
-# @file testrunner.py
+# @file writable_unit.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,11 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import unittest
-import sys
 
-sys.path.append("../")
-from srcml_test import *
-
-if __name__ == "__main__":
-    unittest.main()
+class writable_unit(object):
+    pass

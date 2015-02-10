@@ -25,7 +25,7 @@ from writable_archive import writable_archive
 from readable_archive import readable_archive
 from writable_archive_settings import writable_archive_settings
 from writable_archive_xml_namespace_settings import writable_archive_xml_namespace_settings
-
+from writable_unit import writable_unit
 
 # from xslt_transform_classes import *
 # from archive import archive

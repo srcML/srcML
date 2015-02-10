@@ -1,5 +1,5 @@
 ##
-# @file testrunner.py
+# @file test_writable_unit.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,11 +17,15 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import unittest
-import sys
+from srcml import *
+from testlib import expect_exception, cleanup_files
+import unittest, os, StringIO
+import lxml.etree as et
 
-sys.path.append("../")
-from srcml_test import *
+class test_writable_unit(unittest.TestCase):
 
-if __name__ == "__main__":
-    unittest.main()
+    def setUp(self):
+        pass
+    
+    def tearDown(self):
+        pass

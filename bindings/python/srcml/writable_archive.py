@@ -21,7 +21,12 @@ from bindings import *
 from writable_archive_settings import writable_archive_settings
 from private_helpers import *
 
-class writable_archive:
+class writable_archive(object):
+    """
+    A writable_archive is an archive that data can be written into.
+
+    @TODO: Typical use cases/Examples    
+    """
 
 
     def __init__(self, settings, **kwargs):
@@ -85,20 +90,24 @@ class writable_archive:
             One of the provided means of opening an archive for writing must exist.
         """
         assert isinstance(settings,  writable_archive_settings), "Invalid settings object"
-
+        self.opened_using_with_stmt = False
         # Creating a new instance of an archive so that it can be handled
         # correctly when opened
         self.srcml_archive = archive_create()
         if self.srcml_archive == None:
             raise MemoryError("Failed to allocate native srcml archive.")
-
         # Loading the settings into the new archive.
+        # @TODO: Implement the loading of the archive settings.
+        self._open_write(**kwargs)
 
+
+
+    def _open_write(self, **kwargs):
         if STREAM_PARAM in kwargs:
             if len(kwargs) == 1:
-                self.open_write(context=write_stream_context(kwargs[STREAM_PARAM]))
+                self._open_write(context=write_stream_context(kwargs[STREAM_PARAM]))
             elif len(kwargs) == 2:
-                self.open_write(context=write_stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
+                self._open_write(context=write_stream_context(kwargs[STREAM_PARAM], kwargs[CLOSE_STREAM_PARAM]))
             else:
                 raise ValueError("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 
@@ -110,11 +119,11 @@ class writable_archive:
         elif BUFFER_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise ValueError("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            self._ctxt = kwargs[BUFF_PARAM]
-            write_open_memory(
+            self._ctxt = kwargs[BUFFER_PARAM]
+            archive_write_open_memory(
                 self.srcml_archive,
-                self._ctxt._buff,
-                self._ctxt._size
+                self._ctxt.buff,
+                self._ctxt.size
             )
 
         elif CONTEXT_PARAM in kwargs:
@@ -124,7 +133,7 @@ class writable_archive:
                 self._ctxt = kwargs[CONTEXT_PARAM]
                 self._write_cb_helper = write_callback(cb_write_helper)
                 self._close_write_cb_helper = close_callback(cb_close_helper)
-                write_open_io(
+                archive_write_open_io(
                     self.srcml_archive,
                     self._ctxt,
                     self._write_cb_helper,
@@ -134,42 +143,120 @@ class writable_archive:
                 self._ctxt = kwargs[CONTEXT_PARAM]
                 self._write_cb_helper = write_callback(kwargs[WRITE_CB_PARAM])
                 self._close_write_cb_helper = close_callback(kwargs[CLOSE_CB_PARAM])
-                write_open_io(
+                archive_write_open_io(
                     self.srcml_archive,
                     self._ctxt,
                     self._write_cb_helper,
                     self._close_write_cb_helper
                 )
-
-        elif FD_PARAM in kwargs:
-            if len(kwargs) > 1 :
-                raise ValueError("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            write_open_fd(self.srcml_archive, kwargs[FD_PARAM])
-
         else:
-            raise ValueError("No known parameter combination")
+            raise ValueError("Invalid parameter combination")
+
+    # Parts of pythonic interface
+    def __enter__(self):
+        self.opened_using_with_stmt = True
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.close()
+        archive_free(self.srcml_archive)
+        self.srcml_archive = None
 
     def __del__(self):
-        archive_free(self.srcml_archive)
-# interface WritableArchive
-#     String encoding()
-#     String srcEncoding()
-#     String language()
-#     String fileName()
-#     String directory()
-#     String version()
-#     String revision()
-#     int tabStop()
-#     long options()
-#     void setOptions(long newOptionSet)
-#     void enableOptions(long optionsToEnable)
-#     void disableOptions(long optionsToDisable)
-#     ProcessingInstruction processingInstruction()
-#     XmlNamespaceProxy xmlNamespaces()
-#     MacroProxy macros()
-#     void registerFileExtension(String fileExtension, Language lang)
-#     void registerFileExtension(String fileExtension, String lang)
-#     String getLanguageForExtension(String fileName)
-#     WritableUnit createUnit()
-#     void write(ReadableUnit unit)
-#     void write(WritableUnit unit)
+        if self.srcml_archive != None:
+            self.close()
+            archive_free(self.srcml_archive)
+
+    @property
+    def xml_encoding(self):
+        raise NotImplementedError()
+
+    @property
+    def src_encoding(self):
+        raise NotImplementedError()
+
+    @property
+    def default_language(self):
+        raise NotImplementedError()
+
+    @property
+    def filename(self):
+        raise NotImplementedError()
+
+    @property
+    def directory(self):
+        raise NotImplementedError()
+
+    @property
+    def version(self):
+        raise NotImplementedError()
+
+    @property
+    def revision(self):
+        raise NotImplementedError()
+
+    @property
+    def tab_stop(self):
+        raise NotImplementedError()
+
+    @property
+    def parser_options(self):
+        return self._parser_options
+
+    @parser_options.setter
+    def parser_options(self, value):
+        self._parser_options = value
+
+    @property
+    def processing_instruction(self):
+        raise NotImplementedError()
+
+    @property
+    def xml_namespaces(self):
+        raise NotImplementedError()
+
+    @property
+    def macros(self):
+        raise NotImplementedError()
+
+    def register_file_extension(self, file_extension, language):
+        raise NotImplementedError()
+
+    def check_file_extension(self, file_name_or_path):
+        raise NotImplementedError()
+
+    def create_unit(self, language=None, src_encoding=None, filename=None, directory=None, version=None, timestamp=None, hash=None):
+        """
+        writable_unit creation factory. This function creates a unit and sets the parameters provided corresponding to
+        the attributes of a writable_unit.
+        """
+        raise NotImplementedError()
+#     # Unit writing utilities.
+#     def create_unit(self, **kwargs):
+#         """
+
+
+#         A typical use case for a unit created in this manner is to use it to write source code into srcml
+#         then into a srcml archive.
+#             Valid Parameters:
+#             encoding
+#             language
+#             filename
+#             directory
+#             version
+#             timestamp
+#             hash
+#         This parameters correspond with the native attributes of a srcml_unit.
+#         """
+#         unit_ptr = create_unit(self.srcml_archive)
+#         return unit(unit_ptr, **kwargs)
+
+
+    def write(self, unit):
+        raise NotImplementedError()
+
+    def close(self):
+        """
+        Closes a writable archive.
+        """
+        archive_close(self.srcml_archive)
