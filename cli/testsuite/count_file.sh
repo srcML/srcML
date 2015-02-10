@@ -35,3 +35,21 @@ check 3<<< "$output"
 src2srcml --show-unit-count sub/a.cpp
 check 3<<< "$output"
 
+# test --count on empty file
+define empty <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION"/>
+	STDOUT
+
+define empty_output <<- 'STDOUT'
+	1
+	STDOUT
+
+createfile sub/empty.xml "$empty"
+
+srcml2src --count sub/empty.xml
+check 3<<< "$empty_output"
+
+srcml2src --count < sub/empty.xml
+check 3<<< "$empty_output"
+
