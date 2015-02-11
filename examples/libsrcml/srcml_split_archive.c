@@ -35,18 +35,18 @@ int main(int argc, char* argv[]) {
     struct srcml_unit* unit;
 
     /* open up an existing archive */
-    iarchive = srcml_create_archive();
-    srcml_read_open_filename(iarchive, "project.xml");
+    iarchive = srcml_archive_create();
+    srcml_archive_read_open_filename(iarchive, "project.xml");
 
     /* create a new srcml archive structure */
     /* options and attributes of cloned archive start the same as
        the original archive */
-    includearchive = srcml_clone_archive(iarchive);
-    otherarchive = srcml_clone_archive(iarchive);
+    includearchive = srcml_archive_clone(iarchive);
+    otherarchive = srcml_archive_clone(iarchive);
 
     /* open a srcML archive for output */
-    srcml_write_open_filename(includearchive, "project_include.xml");
-    srcml_write_open_filename(otherarchive, "project_other.xml");
+    srcml_archive_write_open_filename(includearchive, "project_include.xml");
+    srcml_archive_write_open_filename(otherarchive, "project_other.xml");
 
     /* copy the files from the input archive to the output archive */
     while ((unit = srcml_read_unit(iarchive))) {
@@ -58,18 +58,18 @@ int main(int argc, char* argv[]) {
         else
             srcml_write_unit(otherarchive, unit);
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     /* close the archives */
-    srcml_close_archive(includearchive);
-    srcml_close_archive(otherarchive);
-    srcml_close_archive(iarchive);
+    srcml_archive_close(includearchive);
+    srcml_archive_close(otherarchive);
+    srcml_archive_close(iarchive);
 
     /* free the srcML archive data */
-    srcml_free_archive(includearchive);
-    srcml_free_archive(otherarchive);
-    srcml_free_archive(iarchive);
+    srcml_archive_free(includearchive);
+    srcml_archive_free(otherarchive);
+    srcml_archive_free(iarchive);
 
     return 0;
 }

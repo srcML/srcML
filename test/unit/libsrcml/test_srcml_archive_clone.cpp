@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_create_archive.
+  Test cases for srcml_archive_create.
 */
 #include <stdio.h>
 #include <string.h>
@@ -36,7 +36,7 @@ int main() {
 
     {
 
-        srcml_archive * archive = srcml_create_archive();
+        srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_READ;
         archive->filename = "f";
         archive->encoding = "e";
@@ -61,7 +61,7 @@ int main() {
         trans.arguments.str = "//src:unit";
         archive->transformations.push_back(trans);
 
-        srcml_archive * new_archive = srcml_clone_archive(archive);
+        srcml_archive * new_archive = srcml_archive_clone(archive);
 
         dassert(new_archive->type, SRCML_ARCHIVE_INVALID);
         dassert(*new_archive->filename, "f");
@@ -98,13 +98,13 @@ int main() {
         archive->translator = 0;
         archive->reader = 0;
         archive->input = 0;
-        srcml_free_archive(archive);
-        srcml_free_archive(new_archive);
+        srcml_archive_free(archive);
+        srcml_archive_free(new_archive);
     }
 
     {
 
-        dassert(srcml_clone_archive(0), 0);
+        dassert(srcml_archive_clone(0), 0);
 
     }
 

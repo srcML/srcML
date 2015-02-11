@@ -1,5 +1,5 @@
 /**
- * @file srcml_create_archive_file.c
+ * @file srcml_archive_create_file.c
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -34,38 +34,38 @@ int main(int argc, char* argv[]) {
     FILE* srcml_input;
 
     /* create a new srcml archive structure */
-    archive = srcml_create_archive();
+    archive = srcml_archive_create();
 
     /* setup our output file using a FILE* */
     srcml_output = fopen("project.xml", "w");
 
     /* open a srcML archive for output */
-    srcml_write_open_FILE(archive, srcml_output);
+    srcml_archive_write_open_FILE(archive, srcml_output);
 
     /* add all the files to the archive */
     for (i = 1; i < argc; ++i) {
 
-        struct srcml_unit* unit = srcml_create_unit(archive);
+        struct srcml_unit* unit = srcml_unit_create(archive);
 
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
         srcml_input = fopen(argv[i], "r");
-        srcml_parse_unit_FILE(unit, srcml_input);
+        srcml_unit_parse_FILE(unit, srcml_input);
 
         srcml_write_unit(archive, unit);
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
         fclose(srcml_input);
     }
 
     /* close the srcML archive */
-    srcml_close_archive(archive);
+    srcml_archive_close(archive);
 
     /* file can now be closed also */
     fclose(srcml_output);
 
     /* free the srcML archive data */
-    srcml_free_archive(archive);
+    srcml_archive_free(archive);
 
     return 0;
 }

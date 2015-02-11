@@ -1,5 +1,5 @@
 /**
- * @file test_srcml_write_open.cpp
+ * @file test_srcml_archive_write_open.cpp
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -58,21 +58,21 @@ int close_callback(void * context) {
 int main() {
 
     /*
-      srcml_write_open_filename
+      srcml_archive_write_open_filename
     */
 
     {
 
-        srcml_archive * archive = srcml_create_archive();
-        srcml_write_open_filename(archive, "project.xml");
+        srcml_archive * archive = srcml_archive_create();
+        srcml_archive_write_open_filename(archive, "project.xml");
 
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
                                                      | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
-        srcml_close_archive(archive);
-        srcml_free_archive(archive);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
 
         // check file either does not exist or empty
         std::ifstream result_file("project.xml");
@@ -83,36 +83,36 @@ int main() {
 
     {
 
-        srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_write_open_filename(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive * archive = srcml_archive_create();
+        dassert(srcml_archive_write_open_filename(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
-        srcml_free_archive(archive);
+        srcml_archive_free(archive);
 
     }
 
     {
-        dassert(srcml_write_open_filename(0, "project.xml"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_write_open_filename(0, "project.xml"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
-      srcml_write_open_memory
+      srcml_archive_write_open_memory
     */
 
     {
 
         char * s = 0;
         int size;
-        srcml_archive * archive = srcml_create_archive();
-        srcml_write_open_memory(archive, &s, &size);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_archive_write_open_memory(archive, &s, &size);
 
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
                                                      | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
-        srcml_close_archive(archive);
-        srcml_free_archive(archive);
-        srcml_free_memory(s);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+        srcml_memory_free(s);
 
         //dassert(s, 0);
     }
@@ -120,46 +120,46 @@ int main() {
     {
 
         int size;
-        srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_write_open_memory(archive, 0, &size), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive * archive = srcml_archive_create();
+        dassert(srcml_archive_write_open_memory(archive, 0, &size), SRCML_STATUS_INVALID_ARGUMENT);
 
-        srcml_free_archive(archive);
+        srcml_archive_free(archive);
     }
 
     {
 
         char * s = 0;
-        srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_write_open_memory(archive, &s, 0), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive * archive = srcml_archive_create();
+        dassert(srcml_archive_write_open_memory(archive, &s, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
-        srcml_free_archive(archive);
-        srcml_free_memory(s);
+        srcml_archive_free(archive);
+        srcml_memory_free(s);
     }
 
     {
         char * s = 0;
         int size;
-        dassert(srcml_write_open_memory(0, &s, &size), SRCML_STATUS_INVALID_ARGUMENT);
-        srcml_free_memory(s);
+        dassert(srcml_archive_write_open_memory(0, &s, &size), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_memory_free(s);
     }
 
     /*
-      srcml_write_open_FILE
+      srcml_archive_write_open_FILE
     */
 
     {
         FILE * file = fopen("project.xml", "w");
 
-        srcml_archive * archive = srcml_create_archive();
-        srcml_write_open_FILE(archive, file);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_archive_write_open_FILE(archive, file);
 
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
                                                      | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
-        srcml_close_archive(archive);
-        srcml_free_archive(archive);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
         fclose(file);
 
         //char buf[1];
@@ -172,36 +172,36 @@ int main() {
 
     {
 
-        srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_write_open_FILE(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive * archive = srcml_archive_create();
+        dassert(srcml_archive_write_open_FILE(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
-        srcml_free_archive(archive);
+        srcml_archive_free(archive);
 
     }
 
     {
         FILE * file = fopen("project_ns.xml", "w");
-        dassert(srcml_write_open_FILE(0, file), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_write_open_FILE(0, file), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
     }
 
     /*
-      srcml_write_open_fd
+      srcml_archive_write_open_fd
     */
 
     {
         int fd = OPEN("project.xml", O_WRONLY, 0);
 
-        srcml_archive * archive = srcml_create_archive();
-        srcml_write_open_fd(archive, fd);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_archive_write_open_fd(archive, fd);
 
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
                                                      | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
-        srcml_close_archive(archive);
-        srcml_free_archive(archive);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
         CLOSE(fd);
 
         //char buf[1];
@@ -213,36 +213,36 @@ int main() {
 
     {
 
-        srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_write_open_fd(archive, -1), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive * archive = srcml_archive_create();
+        dassert(srcml_archive_write_open_fd(archive, -1), SRCML_STATUS_INVALID_ARGUMENT);
 
-        srcml_free_archive(archive);
+        srcml_archive_free(archive);
 
     }
 
     {
         int fd = OPEN("project_ns.xml", O_WRONLY, 0);
-        dassert(srcml_write_open_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_write_open_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
         CLOSE(fd);
     }
 
     /*
-      srcml_write_open_io
+      srcml_archive_write_open_io
     */
 
     {
         FILE * file = fopen("project.xml", "w");
 
-        srcml_archive * archive = srcml_create_archive();
-        srcml_write_open_io(archive, (void *)file, write_callback, close_callback);
+        srcml_archive * archive = srcml_archive_create();
+        srcml_archive_write_open_io(archive, (void *)file, write_callback, close_callback);
 
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL
                                                      | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
 
-        srcml_close_archive(archive);
-        srcml_free_archive(archive);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
         fclose(file);
 
         //char buf[1];
@@ -255,27 +255,27 @@ int main() {
 
     {
 
-        srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_write_open_io(archive, 0, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive * archive = srcml_archive_create();
+        dassert(srcml_archive_write_open_io(archive, 0, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
 
-        srcml_free_archive(archive);
+        srcml_archive_free(archive);
 
     }
 
     {
 
         FILE * file = fopen("project_ns.xml", "w");
-        srcml_archive * archive = srcml_create_archive();
-        dassert(srcml_write_open_io(archive, (void *)file, 0, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive * archive = srcml_archive_create();
+        dassert(srcml_archive_write_open_io(archive, (void *)file, 0, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
 
-        srcml_free_archive(archive);
+        srcml_archive_free(archive);
         fclose(file);
 
     }
 
     {
         FILE * file = fopen("project_ns.xml", "w");
-        dassert(srcml_write_open_io(0, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);         fclose(file);
+        dassert(srcml_archive_write_open_io(0, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);         fclose(file);
         fclose(file);
 
    }

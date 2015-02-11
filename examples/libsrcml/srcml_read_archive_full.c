@@ -34,10 +34,10 @@ int main(int argc, char* argv[]) {
     struct srcml_unit* unit;
 
     /* create a new srcml archive structure */
-    archive = srcml_create_archive();
+    archive = srcml_archive_create();
 
     /* open a srcML archive for input */
-    srcml_read_open_filename(archive, "project.xml");
+    srcml_archive_read_open_filename(archive, "project.xml");
 
     /* add all the files to the archive */
     while ((unit = srcml_read_unit(archive))) {
@@ -47,16 +47,16 @@ int main(int argc, char* argv[]) {
         filename = srcml_unit_get_filename(unit);
 
         /* uparse and write to a file */
-        srcml_unparse_unit_filename(unit, filename);
+        srcml_unit_unparse_filename(unit, filename);
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     /* close the srcML archive */
-    srcml_close_archive(archive);
+    srcml_archive_close(archive);
 
     /* free the srcML archive data */
-    srcml_free_archive(archive);
+    srcml_archive_free(archive);
 
     return 0;
 }

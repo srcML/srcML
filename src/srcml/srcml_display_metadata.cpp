@@ -42,7 +42,7 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 
         //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
 
         //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
@@ -60,7 +60,7 @@ void srcml_list_unit_files(srcml_archive* srcml_arch) {
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
         ++numUnits;
         std::cout << numUnits << '\t' << std::setw(5) << srcml_unit_get_filename(unit) << '\n';
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 }
 
@@ -93,7 +93,7 @@ void srcml_display_unit_count(srcml_archive* srcml_arch) {
     int num_units = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
         ++num_units;
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
     std::cout << "units=" << "\"" << num_units << "\"\n";
 }
@@ -109,24 +109,24 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
         // create the output srcml archive
-        srcml_archive* srcml_arch = srcml_create_archive();
+        srcml_archive* srcml_arch = srcml_archive_create();
 
 //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         if (contains<int>(input)) {
-            if (srcml_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
+            if (srcml_archive_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
                 std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }
         }
         else if (contains<FILE*>(input)){
-            if (srcml_read_open_FILE(srcml_arch, input) != SRCML_STATUS_OK) {
+            if (srcml_archive_read_open_FILE(srcml_arch, input) != SRCML_STATUS_OK) {
                 std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }   
         }
         else {
-            if (srcml_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str())) != SRCML_STATUS_OK) {
+            if (srcml_archive_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str())) != SRCML_STATUS_OK) {
                 std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }
@@ -233,7 +233,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             std::cout << srcml_unit_count(srcml_arch) << "\n";
         }
 
-        srcml_close_archive(srcml_arch);
-        srcml_free_archive(srcml_arch);
+        srcml_archive_close(srcml_arch);
+        srcml_archive_free(srcml_arch);
     }
 }
