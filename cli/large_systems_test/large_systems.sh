@@ -3,15 +3,15 @@
 mkdir logs
 
 # use CSV input to find big system download locations
-(cat large_systems_list.csv ; echo) | while IFS=',' read -r location name
+(cat large_systems_list.csv ; echo) | while IFS=',' read -r location
 do
     # ignore empty lines at EOF
     if [[ $location != "" ]] ; then
         echo "--------------------------------------"
 
         # timestamp all files
-        TSZNAME="logs/$(date +"%Y%m%d-%H%M%S")-${name}"
-        TSNAME="${TSZNAME%%.*}"   # without the .tar.gz or .tar.xz extensions
+        TSZNAME="logs/$(date +"%Y%m%d-%H%M%S")-${location##*/}"
+        TSNAME="${TSZNAME/.tar.*z/}"   # without the .tar.gz or .tar.xz extensions
         TLOG="${TSNAME}-timelog"
         DLOG="${TSNAME}-difflog"
         SLOG="${TSNAME}-sizelog"
