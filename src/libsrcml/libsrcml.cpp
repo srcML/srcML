@@ -185,12 +185,6 @@ int srcml(const char* input_filename, const char* output_filename) {
         }
 
         srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, SRCML_EXT_LITERAL_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
 
         for(std::vector<std::string>::size_type i = 0; i < save_prefix.size(); ++i) {
             try {

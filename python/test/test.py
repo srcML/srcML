@@ -568,6 +568,8 @@ file = open("a.cpp", "w")
 file.write("a;\n")
 file.close()
 
+srcml.disable_option(srcml.SRCML_OPTION_HASH)
+
 srcml.srcml("a.cpp", "project.xml")
 
 os.remove("a.cpp")
@@ -579,6 +581,7 @@ asrcml = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 """
+
 verify_test(asrcml, xml)
 
 srcml.set_language("C++")
@@ -620,14 +623,14 @@ srcml.set_language(None)
 srcml.set_filename(None)
 srcml.set_directory(None)
 srcml.set_version(None)
-srcml.set_options(srcml.SRCML_OPTION_XML_DECL | srcml.SRCML_OPTION_NAMESPACE_DECL)
+srcml.set_options(srcml.SRCML_OPTION_XML_DECL | srcml.SRCML_OPTION_NAMESPACE_DECL | srcml.SRCML_OPTION_HASH | srcml.SRCML_OPTION_PSEUDO_BLOCK | srcml.SRCML_OPTION_TERNARY)
 srcml.set_tabstop(8)
 
-verify_test(7, srcml.get_namespace_size());
-verify_test("cpp", srcml.get_namespace_prefix(1))
-verify_test("cpp", srcml.get_prefix_from_uri("http://www.sdml.info/srcML/cpp"))
-verify_test("http://www.sdml.info/srcML/cpp", srcml.get_namespace_uri(1))
-verify_test("http://www.sdml.info/srcML/cpp", srcml.get_uri_from_prefix("cpp"))
+verify_test(1, srcml.get_namespace_size());
+verify_test("", srcml.get_namespace_prefix(0))
+verify_test("", srcml.get_prefix_from_uri("http://www.sdml.info/srcML/src"))
+verify_test("http://www.sdml.info/srcML/src", srcml.get_namespace_uri(0))
+verify_test("http://www.sdml.info/srcML/src", srcml.get_uri_from_prefix(""))
 
 srcml.register_macro("MACRO", "src:macro")
 verify_test(1, srcml.get_macro_list_size());
