@@ -844,17 +844,20 @@ if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
  * srcml_archive_open_filename
  * @param archive a srcml_archive
  * @param srcml_filename name of an output file
+ * @param compression amount of compression 0 none to 9 max
  *
  * Open up a srcml_archive for writing.  Set the output
  * to go to the file srcml_filename.
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_archive_write_open_filename(srcml_archive* archive, const char* srcml_filename) {
+int srcml_archive_write_open_filename(srcml_archive* archive, const char* srcml_filename, unsigned short compression) {
 
     if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, archive->options & SRCML_OPTION_COMPRESS);
+    if(compression > 9) compression = 9;
+
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, compression);
 
     return srcml_archive_write_open_internal(archive, output_buffer);
     

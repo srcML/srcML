@@ -690,9 +690,11 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, int (*read_callback)(v
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_filename(srcml_unit* unit, const char* src_filename) {
+int srcml_unit_unparse_filename(srcml_unit* unit, const char* src_filename, unsigned short compression) {
 
     if(unit == NULL || src_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if(compression > 9) compression = 9;
 
     if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;
@@ -702,8 +704,7 @@ int srcml_unit_unparse_filename(srcml_unit* unit, const char* src_filename) {
     const char * encoding   = unit->encoding ? unit->encoding->c_str() :
         (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
 
-    xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename(src_filename, encoding ? xmlFindCharEncodingHandler(encoding) : 0,
-                                                                      unit->archive->options & SRCML_OPTION_COMPRESS);
+    xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename(src_filename, encoding ? xmlFindCharEncodingHandler(encoding) : 0, compression);
 
     try {
 

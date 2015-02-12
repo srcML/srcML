@@ -76,7 +76,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             *request->disk_dir += "/";
 
         std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";
-        srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str());
+        srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str(), 0);
         request->srcml_arch = srcml_arch;
     }
 

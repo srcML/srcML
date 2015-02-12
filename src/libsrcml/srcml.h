@@ -108,44 +108,42 @@ LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_CPP_MARKUP_IF0    1<<7
 /** Apply transformations to the entire srcML file (default: each unit */
 #define SRCML_OPTION_APPLY_ROOT        1<<8
-/** Compress the output file */
-#define SRCML_OPTION_COMPRESS          1<<9
 /** Nest if in else if intead of elseif tag */
-#define SRCML_OPTION_NESTIF            1<<10
+#define SRCML_OPTION_NESTIF            1<<9
 /** Output hash attribute on each unit (default: on) */
-#define SRCML_OPTION_HASH              1<<11
+#define SRCML_OPTION_HASH              1<<10
 /** Wrap function/classes/etc with templates (default: on) */
-#define SRCML_OPTION_WRAP_TEMPLATE     1<<12
+#define SRCML_OPTION_WRAP_TEMPLATE     1<<11
 /** output is interactive (good for editing applications) */
-#define SRCML_OPTION_INTERACTIVE       1<<13
+#define SRCML_OPTION_INTERACTIVE       1<<12
 /** Not sure what this used for */
-#define SRCML_OPTION_XPATH_TOTAL       1<<14
+#define SRCML_OPTION_XPATH_TOTAL       1<<13
 /** expression mode */
-#define SRCML_OPTION_EXPRESSION        1<<15
+#define SRCML_OPTION_EXPRESSION        1<<14
 /** Extra processing of @code#line@endcode for position information */
-#define SRCML_OPTION_LINE              1<<16
+#define SRCML_OPTION_LINE              1<<15
 /** additional cpp:if/cpp:endif checking */
-#define SRCML_OPTION_CPPIF_CHECK       1<<17
+#define SRCML_OPTION_CPPIF_CHECK       1<<16
 /** debug time attribute */
-#define SRCML_OPTION_DEBUG_TIMER       1<<18
+#define SRCML_OPTION_DEBUG_TIMER       1<<17
 /** turn on optional ternary operator markup */
-#define SRCML_OPTION_TERNARY           1<<19
+#define SRCML_OPTION_TERNARY           1<<18
 /** turn on optional ternary operator markup */
-#define SRCML_OPTION_PSEUDO_BLOCK      1<<20
+#define SRCML_OPTION_PSEUDO_BLOCK      1<<19
 /** Turn on old optional markup behaviour */
-#define SRCML_OPTION_OPTIONAL_MARKUP   1<<21
+#define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
 /** Markups literal in special namespace */
-#define SRCML_OPTION_LITERAL           1<<22
+#define SRCML_OPTION_LITERAL           1<<21
 /** Markups modifiers in special namespace */
-#define SRCML_OPTION_MODIFIER          1<<23
+#define SRCML_OPTION_MODIFIER          1<<22
 /** Markups operator in special namespace */
-#define SRCML_OPTION_OPERATOR          1<<24
+#define SRCML_OPTION_OPERATOR          1<<23
 /** Parser output special tokens for debugging the parser */
-#define SRCML_OPTION_DEBUG             1<<25
+#define SRCML_OPTION_DEBUG             1<<24
 /** Markups OpenMP in special namespace */
-#define SRCML_OPTION_OPENMP            1<<26
+#define SRCML_OPTION_OPENMP            1<<25
 /** Encode the original source encoding as an attribute */
-#define SRCML_OPTION_STORE_ENCODING    1<<27
+#define SRCML_OPTION_STORE_ENCODING    1<<26
 
 /* srcml status messages */
 /** Return status indicating no errors */
@@ -290,7 +288,7 @@ LIBSRCML_DECL struct srcml_archive* srcml_archive_create();
 LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archive*);
 
 /* Open a srcML archive for output */
-LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive*, const char* srcml_filename);
+LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive*, const char* srcml_filename, unsigned short compression);
 LIBSRCML_DECL int srcml_archive_write_open_memory  (struct srcml_archive*, char** buffer, size_t * size);
 LIBSRCML_DECL int srcml_archive_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
 LIBSRCML_DECL int srcml_archive_write_open_fd      (struct srcml_archive*, int srcml_fd);
@@ -403,7 +401,7 @@ LIBSRCML_DECL const char* srcml_unit_get_fragment_xml  (struct srcml_unit*);
 LIBSRCML_DECL const char* srcml_unit_get_standalone_xml(struct srcml_unit*, const char * xml_encoding);
 
 /* Convert from srcML to source code */
-LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit*, const char* src_filename);
+LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit*, const char* src_filename, unsigned short compression);
 LIBSRCML_DECL int srcml_unit_unparse_memory  (struct srcml_unit*, char** src_buffer, size_t * src_size);
 LIBSRCML_DECL int srcml_unit_unparse_FILE    (struct srcml_unit*, FILE* srcml_file);
 LIBSRCML_DECL int srcml_unit_unparse_fd      (struct srcml_unit*, int srcml_fd);

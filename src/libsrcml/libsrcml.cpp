@@ -204,7 +204,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     if(srcml_check_extension(input_filename)) {
 
-        srcml_archive_write_open_filename(&global_archive, output_filename);
+        srcml_archive_write_open_filename(&global_archive, output_filename, 0);
         srcml_unit * unit = srcml_unit_create(&global_archive);
 
         int status = srcml_unit_set_language(unit, srcml_archive_get_language(&global_archive));
@@ -262,10 +262,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         }
 
-        OPTION_TYPE & options = global_archive.options;
-
-        srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1",
-                                    options);
+        srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1", 0);
 
     }
 
