@@ -78,9 +78,9 @@ class archive_xml_namespaces(object):
         """
         Checks to see if a namespace tuple exists within the collection of mappings.
         """
-        if other == None:
+        if other_tuple == None:
             return False
-        return len([ns for ns in self if ns[0] == other[0] and ns[1] == other[1]]) > 0
+        return len([ns for ns in self if ns[0] == other_tuple[0] and ns[1] == other_tuple[1]]) > 0
 
     def __iter__(self):
         """

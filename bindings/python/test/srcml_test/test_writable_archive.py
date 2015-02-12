@@ -243,11 +243,11 @@ class TestWritableArchive(unittest.TestCase):
             }), buffer=mem_buffer) as archive_writer:
 
             self.assertIsNotNone(archive_writer.macros, "Incorrect value")
-            self.assertEqual(2, len(archive_writer.macros), "Incorrect value")
+            self.assertEqual(1, len(archive_writer.macros), "Incorrect value")
             count = 0
             for ns in archive_writer.macros:
                 count += 1
-            self.assertEqual(2, count, "Incorrect # of macros visited")
+            self.assertEqual(1, count, "Incorrect # of macros visited")
 
     def test_register_and_check_file_extension(self):
         mem_buffer = memory_buffer()

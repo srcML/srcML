@@ -24,6 +24,7 @@ from test_writable_archive_xml_namespace_settings import *
 from test_writable_archive_settings import *
 from test_writable_archive import *
 from test_archive_xml_namespaces import *
+from test_archive_macros import *
 from test_writable_unit import *
 
 
