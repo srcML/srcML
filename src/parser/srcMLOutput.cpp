@@ -208,8 +208,7 @@ namespace {
     ELEMENT_MAP(SFOREVER_STATEMENT,       "forever")
     ELEMENT_MAP(SEMIT_STATEMENT,          "emit")
 
-    ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_init_list")
-    ELEMENT_MAP(SMEMBER_INITIALIZATION,      "member_init")
+    ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_list")
     ELEMENT_MAP(SCONSTRUCTOR_DEFINITION,     "constructor")
     ELEMENT_MAP(SCONSTRUCTOR_DECLARATION,    "constructor_decl")
     ELEMENT_MAP(SDESTRUCTOR_DEFINITION,      "destructor")

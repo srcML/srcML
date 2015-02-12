@@ -442,7 +442,6 @@ tokens {
 	SPROTECTED_ACCESS;
     SPROTECTED_ACCESS_DEFAULT;
     SMEMBER_INITIALIZATION_LIST;
-    SMEMBER_INITIALIZATION;
 	SCONSTRUCTOR_DEFINITION;
 	SCONSTRUCTOR_DECLARATION;
 	SDESTRUCTOR_DEFINITION;
@@ -3617,7 +3616,7 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
 
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
-        member_init |
+        call |
 
         // call list in member initialization list
         { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
@@ -5648,21 +5647,6 @@ member_initialization_list[] { ENTRY_DEBUG } :
             startElement(SMEMBER_INITIALIZATION_LIST);
         }
         COLON
-;
-
-// call  function call, macro, etc.
-member_init[] { ENTRY_DEBUG } :
-        {
-
-            // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
-
-            // start the function call element
-            startElement(SMEMBER_INITIALIZATION);
-
-        }
-        function_identifier call_argument_list
-        
 ;
 
 // push name onto namestack
