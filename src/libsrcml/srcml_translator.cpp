@@ -89,13 +89,13 @@ char * strnstr(const char *s1, const char *s2, size_t n) {
  * Constructor for output to memory.
  */
 srcml_translator::srcml_translator(char ** str_buf,
-                                 int * size,
+                                 size_t * size,
                                  const char* xml_encoding,
                                  OPTION_TYPE & op,
                                  std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                                 int tabsize,
+                                 size_t tabsize,
                                  int language,
                                  const char* revision,
                                  const char* directory,
@@ -143,7 +143,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  std::vector<std::string> & prefix,
                                  std::vector<std::string> & uri,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                                 int tabsize,
+                                 size_t tabsize,
                                  int language,
                                  const char * revision,
                                  const char* directory,
@@ -230,7 +230,7 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
         // srcML lexical analyzer from standard input
         KeywordLexer lexer(parser_input, getLanguage(), options, user_macro_list);
         lexer.setSelector(&selector);
-        lexer.setTabsize(tabsize);
+        lexer.setTabsize((int)tabsize);
 
         // pure block comment lexer
         CommentTextLexer textlexer(lexer.getInputState());

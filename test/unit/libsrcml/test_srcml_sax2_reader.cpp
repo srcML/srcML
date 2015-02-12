@@ -159,7 +159,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
@@ -209,7 +209,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
@@ -261,7 +261,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
@@ -311,7 +311,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
@@ -361,7 +361,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
@@ -405,7 +405,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
 
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
@@ -426,7 +426,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
 
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
@@ -447,7 +447,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
 
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
@@ -468,7 +468,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
 
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
@@ -489,7 +489,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
 
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
@@ -695,7 +695,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
@@ -757,7 +757,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
@@ -821,7 +821,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
@@ -875,7 +875,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
@@ -927,7 +927,7 @@ int main() {
         std::vector<std::string> namespaces;
         boost::optional<std::pair<std::string, std::string> > processing_instruction;
         OPTION_TYPE options = 0;
-        int tabstop = 0;
+        size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);

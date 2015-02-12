@@ -43,7 +43,7 @@
 
 #include <unit_tests.hpp>
 
-int write_callback(void * context, const char * buffer, int len) {
+int write_callback(void * context, const char * buffer, size_t len) {
 
     return (int)fwrite(buffer, 1, len, (FILE *)context);
 
@@ -329,7 +329,7 @@ int main() {
     {
 
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_read_unit(archive);
@@ -345,7 +345,7 @@ int main() {
     {
 
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
@@ -362,7 +362,7 @@ int main() {
     {
 
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit * unit = srcml_read_unit(archive);
@@ -379,7 +379,7 @@ int main() {
     {
 
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
@@ -396,7 +396,7 @@ int main() {
     {
 
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit * unit = srcml_read_unit(archive);
@@ -413,7 +413,7 @@ int main() {
     {
 
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
         srcml_unit * unit = srcml_read_unit(archive);
@@ -429,7 +429,7 @@ int main() {
     {
 
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
         srcml_unit * unit = srcml_read_unit(archive);
@@ -444,7 +444,7 @@ int main() {
 
     {
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_read_unit_header(archive);
@@ -459,7 +459,7 @@ int main() {
 
     {
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_unit_create(archive);
@@ -473,7 +473,7 @@ int main() {
 
     {
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_unit * unit = srcml_unit_create(archive);
         unit->unit = "<unit/>";
@@ -486,7 +486,7 @@ int main() {
     }
 
     {
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_read_unit(archive);
@@ -513,7 +513,7 @@ int main() {
 
     {
         char * s;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit * unit = srcml_read_unit(archive);

@@ -288,7 +288,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_get_namespace_size(0), -1);
+        dassert(srcml_archive_get_namespace_size(0), 0);
     }
 
     /*
@@ -469,7 +469,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_get_macro_list_size(0), -1);
+        dassert(srcml_archive_get_macro_list_size(0), 0);
     }
 
     /*

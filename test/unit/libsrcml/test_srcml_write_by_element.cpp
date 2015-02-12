@@ -51,7 +51,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -75,7 +75,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
@@ -98,7 +98,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
@@ -124,7 +124,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
@@ -139,7 +139,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -161,7 +161,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -181,7 +181,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -200,7 +200,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -220,7 +220,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -241,7 +241,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -261,7 +261,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -283,7 +283,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -304,7 +304,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -326,7 +326,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -346,7 +346,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -361,7 +361,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);      
@@ -382,7 +382,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -403,7 +403,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -424,7 +424,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -445,7 +445,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -460,7 +460,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -481,7 +481,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -502,7 +502,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -523,7 +523,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -544,7 +544,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -565,7 +565,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -586,7 +586,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -601,7 +601,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -622,7 +622,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -643,7 +643,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -666,7 +666,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -680,7 +680,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
