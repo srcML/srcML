@@ -24,7 +24,6 @@ from exceptions import invalid_srcml_language
 from writable_unit import writable_unit
 from archive_xml_namespaces import archive_xml_namespaces
 from archive_macros import archive_macros
-# from archive_processing_instruction import archive_processing_instruction
 
 class writable_archive(object):
     """
@@ -229,59 +228,110 @@ class writable_archive(object):
 
     @property
     def xml_encoding(self):
+        """
+        Returns the encoding being used to output into XML. If this is None then
+        UTF-8 is being used.
+        """
         return archive_get_xml_encoding(self.srcml_archive)
 
     @property
     def src_encoding(self):
+        """
+        Returns the default encoding that a unit expects when parsing
+        source code. This can be overridden on an individual unit by
+        setting the src_encoding of that unit.
+        """
         return archive_get_src_encoding(self.srcml_archive)
 
     @property
     def default_language(self):
+        """
+        The default programming language used when parsing source code
+        within a unit.
+        """
         return archive_get_language(self.srcml_archive)
 
     @property
     def filename(self):
+        """
+        The filename attribute set on an archive.
+        """
         return archive_get_filename(self.srcml_archive)
 
     @property
     def directory(self):
+        """
+        The directory attribute set on an archive.
+        """
         return archive_get_directory(self.srcml_archive)
 
     @property
     def version(self):
+        """
+        The version attribute set on an archive.
+        """
         return archive_get_version(self.srcml_archive)
 
     @property
     def revision(self):
+        """
+        The current revision of srcml that's being used to parse
+        source code within a unit.
+        """
         return archive_get_revision(self.srcml_archive)
 
     @property
     def tab_stop(self):
+        """
+        The number of spaces a tab character is worth when calculating column 
+        position.
+        """
         return archive_get_tabstop(self.srcml_archive)
 
     @property
     def parser_options(self):
+        """
+        The options used for processing srcml.
+        """
         return archive_get_options(self.srcml_archive)
 
     @parser_options.setter
     def parser_options(self, value):
+        """
+        The options that can be used to configure the parser.
+        """
         if not isinstance(value, (int, ling)):
             raise TypeError("Invalid value provided to parser_options. Options must be a long or an int.")
         archive_set_options(self.srcml_archive, value)
 
     @property
     def processing_instruction(self):
+        """
+        Returns a processing instruction.
+        """
         return self._proc_instr
 
     @property
     def xml_namespaces(self):
+        """
+        Returns an immutable collection of XML namespaces
+        associated with the current archive.
+        """
         return self._xml_namespaces
 
     @property
     def macros(self):
+        """
+        Returns an immutable collection of macros associated with an archive.
+        """
         return self._macros
 
     def register_file_extension(self, file_extension, language):
+        """
+        Associate a language with a file extension. This effects how language is
+        determined when loading a file using the parse function that uses
+        a filename.
+        """
         if file_extension is None or not isinstance(file_extension, str):
             raise TypeError("Invalid file_extension. file_extension must be a string and can not be None.")
 
@@ -293,6 +343,9 @@ class writable_archive(object):
         archive_register_file_extension(self.srcml_archive, file_extension, language)
 
     def check_file_extension(self, file_name_or_path):
+        """
+        Get the programming language associated with a file name/path.
+        """
         if file_name_or_path is None or not isinstance(file_name_or_path, str):
             raise TypeError("Invalid file_name_or_path. file_name_or_path must be a string and can not be None.")
         ret = archive_check_extension(self.srcml_archive,file_name_or_path)
@@ -337,6 +390,9 @@ class writable_archive(object):
         return writable_unit(language, src_encoding, filename, directory, version, timestamp, hash_of_unit)
 
     def write(self, unit):
+        """
+        Write a unit into an archive. This accepts readable and writable units.
+        """
         raise NotImplementedError()
 
     def close(self):
