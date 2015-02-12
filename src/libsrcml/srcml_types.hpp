@@ -27,6 +27,7 @@
 #include <language_extension_registry.hpp>
 
 #include <boost/optional.hpp>
+#include <boost/any.hpp>
 
 #include <string>
 #include <vector>
@@ -181,6 +182,9 @@ struct srcml_archive {
     /** an array of transformations to apply */
     std::vector<transform> transformations;
 
+    /** libxml2 callback wrapper context.  Only needed for IO functions */
+    boost::any context;
+
 };
 
 /**
@@ -223,6 +227,10 @@ struct srcml_unit {
 
     /** a buffer to store srcml from read and after parsing */
     boost::optional<std::string> unit;
+
+    /** libxml2 callback wrapper context.  Only needed for IO functions */
+    boost::any context;
+
 };
 
 #endif

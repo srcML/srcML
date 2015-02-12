@@ -22,6 +22,7 @@
 #include <srcml_types.hpp>
 #include <srcml_sax2_reader.hpp>
 #include <srcml_translator.hpp>
+#include <libxml2_callback_wrappers.hpp>
 
 #include <srcmlns.hpp>
 
@@ -954,11 +955,18 @@ int srcml_archive_write_open_fd(srcml_archive* archive, int srcml_fd) {
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context)) {
+int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context)) {
 
     if(archive == NULL || context == NULL || write_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateIO(write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+    xmlOutputBufferPtr output_buffer = 0;
+    archive->context = libxml2_write_context{context, write_callback, close_callback};
+    try {
+
+        output_buffer = xmlOutputBufferCreateIO(write_callback_wrapper, write_close_callback_wrapper,
+                                                               boost::any_cast<void *>(&archive->context), xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+
+    } catch(boost::bad_any_cast cast) { return SRCML_STATUS_ERROR; }
 
     return srcml_archive_write_open_internal(archive, output_buffer);
 
@@ -1111,11 +1119,16 @@ int srcml_archive_read_open_fd(srcml_archive* archive, int srcml_fd) {
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_archive_read_open_io(srcml_archive* archive, void * context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context)) {
+int srcml_archive_read_open_io(srcml_archive* archive, void * context, int (*read_callback)(void * context, char * buffer, size_t len), int (*close_callback)(void * context)) {
 
     if(archive == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateIO(read_callback, close_callback, context, XML_CHAR_ENCODING_NONE);
+    archive->context = libxml2_read_context{context, read_callback, close_callback};
+    try {
+
+        archive->input = xmlParserInputBufferCreateIO(read_callback_wrapper, read_close_callback_wrapper, boost::any_cast<void *>(&archive->context), XML_CHAR_ENCODING_NONE);
+
+    } catch(boost::bad_any_cast cast) {}
 
     return srcml_archive_read_open_internal(archive);
 
