@@ -95,11 +95,11 @@ verify_test(2, archive.get_options())
 archive.set_tabstop(4)
 verify_test(4, archive.get_tabstop())
 
-verify_test(7, archive.get_namespace_size());
-verify_test("cpp", archive.get_namespace_prefix(1))
-verify_test("cpp", archive.get_prefix_from_uri("http://www.sdml.info/srcML/cpp"))
-verify_test("http://www.sdml.info/srcML/cpp", archive.get_namespace_uri(1))
-verify_test("http://www.sdml.info/srcML/cpp", archive.get_uri_from_prefix("cpp"))
+verify_test(1, archive.get_namespace_size());
+verify_test("", archive.get_namespace_prefix(0))
+verify_test("", archive.get_prefix_from_uri("http://www.sdml.info/srcML/src"))
+verify_test("http://www.sdml.info/srcML/src", archive.get_namespace_uri(0))
+verify_test("http://www.sdml.info/srcML/src", archive.get_uri_from_prefix(""))
 
 archive.register_macro("MACRO", "src:macro")
 verify_test(1, archive.get_macro_list_size());
