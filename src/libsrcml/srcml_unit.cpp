@@ -309,17 +309,18 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_raw_xml
+ * srcml_unit_get_fragment_xml
  * @param unit a srcml unit
  *
  * Get the parsed or collected srcml from an archive.
  * If only the attributes were collected from a read,
- * then read in the xml and return that value.  XML returned
- * is the raw UTF-8 encoded XML stored internally.  Do not free.
+ * then read in the xml and return that value.  XML fragment returned
+ * is the raw UTF-8 encoded XML stored internally and is not completely XML.
+ * Do not free.
  *
  * @returns the raw unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_raw_xml(struct srcml_unit* unit) {
+const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
 
     if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
 
@@ -331,7 +332,7 @@ const char* srcml_unit_get_raw_xml(struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_formatted_xml
+ * srcml_unit_get_standalone_xml
  * @param unit a srcml unit
  * @param xml_encoding the xml encoding to encode the unit
  *
@@ -339,12 +340,12 @@ const char* srcml_unit_get_raw_xml(struct srcml_unit* unit) {
  * If only the attributes were collected from a read,
  * then read in the xml and return that value.  XML returned
  * is formatted version of the internally stored xml after
- * applying encoding, and appending of namespaces.  Must
- * free when done using.
+ * applying encoding, and appending of namespaces.  It is a complete standalone XML.
+ * Must free when done using.
  *
  * @returns the formatted unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_formatted_xml(struct srcml_unit* unit, const char * xml_encoding) {
+const char* srcml_unit_get_standalone_xml(struct srcml_unit* unit, const char * xml_encoding) {
 
     if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
 
@@ -356,7 +357,7 @@ const char* srcml_unit_get_formatted_xml(struct srcml_unit* unit, const char * x
     if(unit->unit) {
 
         struct srcml_archive * formatting_archive = srcml_archive_clone(unit->archive);
-        srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL);
+        srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE);
         if(xml_encoding) srcml_archive_set_xml_encoding(formatting_archive, xml_encoding);
         srcml_archive_write_open_memory(formatting_archive, &buffer, &size);
         srcml_write_unit(formatting_archive, unit);
