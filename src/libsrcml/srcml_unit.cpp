@@ -662,7 +662,7 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, int (*read_callback)(v
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
-        input = new UTF8CharBuffer(boost::any_cast<void *>(&context), read_callback_wrapper, read_close_callback_wrapper, src_encoding, output_hash ? &unit->hash : 0);
+        input = new UTF8CharBuffer(boost::any_cast<libxml2_read_context>(&unit->context), read_callback_wrapper, read_close_callback_wrapper, src_encoding, output_hash ? &unit->hash : 0);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -789,7 +789,7 @@ int srcml_unit_unparse_memory(srcml_unit* unit, char** src_buffer, size_t * src_
     (*src_buffer) = (char *)buffer->content;
     buffer->content = 0;
     if(!buffer->content && !(*src_buffer)) return SRCML_STATUS_ERROR;
-    *src_size = (int)strlen(*src_buffer);
+    *src_size = strlen(*src_buffer);
 
 
     xmlBufferFree(buffer);
@@ -931,7 +931,7 @@ int srcml_unit_unparse_io(srcml_unit* unit, void * context, int (*write_callback
     unit->context = libxml2_write_context{context, write_callback, close_callback};
     try {
 
-        output_handler = xmlOutputBufferCreateIO(write_callback_wrapper, write_close_callback_wrapper, boost::any_cast<void *>(&unit->context), encoding ? xmlFindCharEncodingHandler(encoding) : 0);
+        output_handler = xmlOutputBufferCreateIO(write_callback_wrapper, write_close_callback_wrapper, boost::any_cast<libxml2_write_context>(&unit->context), encoding ? xmlFindCharEncodingHandler(encoding) : 0);
 
     } catch(boost::bad_any_cast cast) { return SRCML_STATUS_ERROR; }
 

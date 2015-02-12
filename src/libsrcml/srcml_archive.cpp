@@ -586,11 +586,12 @@ size_t srcml_archive_get_tabstop(const struct srcml_archive* archive) {
  * srcml_archive_get_namespace_size
  * @param archive a srcml_archive
  *
- * @returns Get the number of currently defined namespaces or -1 if archive is NULL
+ * @returns Get the number of currently defined namespaces or 0 if archive is NULL
  */
 size_t srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
 
-    return archive ? (int)archive->namespaces.size() : -1;
+    /** @todo may want to make ssize_t so can return -1 */
+    return archive ? archive->namespaces.size() : 0;
 
 }
 
@@ -717,11 +718,12 @@ const char* srcml_archive_get_processing_instruction_data(const struct srcml_arc
  * srcml_archive_get_macro_list_size
  * @param archive a srcml_archive
  *
- * @returns Get the number of currently defined macros or -1 if archive is NULL
+ * @returns Get the number of currently defined macros or 0 if archive is NULL
  */
 size_t srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
 
-    return archive ? (int)(archive->user_macro_list.size() / 2) : -1;
+    /** @todo may want to make ssize_t so can return -1 */
+    return archive ? (archive->user_macro_list.size() / 2) : 0;
 
 }
 
@@ -964,7 +966,7 @@ int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*wr
     try {
 
         output_buffer = xmlOutputBufferCreateIO(write_callback_wrapper, write_close_callback_wrapper,
-                                                               boost::any_cast<void *>(&archive->context), xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+                                                               boost::any_cast<libxml2_write_context>(&archive->context), xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
 
     } catch(boost::bad_any_cast cast) { return SRCML_STATUS_ERROR; }
 
@@ -1126,7 +1128,7 @@ int srcml_archive_read_open_io(srcml_archive* archive, void * context, int (*rea
     archive->context = libxml2_read_context{context, read_callback, close_callback};
     try {
 
-        archive->input = xmlParserInputBufferCreateIO(read_callback_wrapper, read_close_callback_wrapper, boost::any_cast<void *>(&archive->context), XML_CHAR_ENCODING_NONE);
+        archive->input = xmlParserInputBufferCreateIO(read_callback_wrapper, read_close_callback_wrapper, boost::any_cast<libxml2_read_context>(&archive->context), XML_CHAR_ENCODING_NONE);
 
     } catch(boost::bad_any_cast cast) {}
 
