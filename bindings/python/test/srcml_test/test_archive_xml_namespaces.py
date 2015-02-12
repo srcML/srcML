@@ -58,8 +58,114 @@ class TestArchiveXMLNamespaces(unittest.TestCase):
         with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
             self.assertIsNotNone(archive_writer.xml_namespaces, "Incorrect value")
             self.assertEqual(3, len(archive_writer.xml_namespaces), "Incorrect value")
-            # for ns_index in range(3):
             self.assertTupleEqual(("","http://www.sdml.info/srcML/src"), archive_writer.xml_namespaces[0], "Incorrect namespace: {0} {1}".format(*archive_writer.xml_namespaces[0]))
             self.assertTupleEqual(("Google","http://www.google.com"), archive_writer.xml_namespaces[1], "Incorrect namespace: {0} {1}".format(*archive_writer.xml_namespaces[1]))
             self.assertTupleEqual(("banana","www.banana.com"), archive_writer.xml_namespaces[2], "Incorrect namespace: {0} {1}".format(*archive_writer.xml_namespaces[2]))
 
+    @expect_exception(TypeError)
+    def test_writable_archive_xml_namespace___getitem__None(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces[None]
+
+    @expect_exception(TypeError)
+    def test_writable_archive_xml_namespace___getitem__non_number(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces[object()]
+
+    @expect_exception(IndexError)
+    def test_writable_archive_xml_namespace___getitem__neg_index(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces[-1]
+
+    @expect_exception(IndexError)
+    def test_writable_archive_xml_namespace___getitem__past_end(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces[3]
+
+    def test_writable_archive_xml_namespace___iter__(self):
+        mem_buffer = memory_buffer()
+        remaining_namespaces = dict({"":"http://www.sdml.info/srcML/src", "Google":"http://www.google.com", "banana":"www.banana.com"})
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            for ns in archive_writer.xml_namespaces:
+                if ns[0] in remaining_namespaces:
+                    self.assertEqual(remaining_namespaces[ns[0]], ns[1], "Didn't Get correct values: Actual: {0} Expected: {1}".format(ns[1], remaining_namespaces[ns[0]]))
+                    del remaining_namespaces[ns[0]]
+                else:
+                    self.fail("Namespace not registered: {0}".format(ns))
+
+            self.assertEqual(0, len(remaining_namespaces), "Incorrect namespaces specified. {0}".format(remaining_namespaces))
+
+    def test_writable_archive_xml_namespace_prefix_to_uri(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            self.assertEqual("http://www.google.com", archive_writer.xml_namespaces.prefix_to_uri("Google"), "Didn't correctly resolve prefix to URI")
+
+    @expect_exception(TypeError)
+    def test_writable_archive_xml_namespace_prefix_to_uri(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces.prefix_to_uri(None)
+
+    @expect_exception(TypeError)
+    def test_writable_archive_xml_namespace_prefix_to_uri(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces.prefix_to_uri(list())
+
+    @expect_exception(KeyError)
+    def test_writable_archive_xml_namespace_prefix_to_uri(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces.prefix_to_uri("aardvark")
+
+
+    def test_writable_archive_xml_namespace_uri_to_prefix(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            self.assertEqual("Google", archive_writer.xml_namespaces.uri_to_prefix("http://www.google.com"), "Didn't correctly resolve  URI to prefix")
+
+    @expect_exception(TypeError)
+    def test_writable_archive_xml_namespace_uri_to_prefix(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces.uri_to_prefix(None)
+
+    @expect_exception(TypeError)
+    def test_writable_archive_xml_namespace_uri_to_prefix(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces.uri_to_prefix(list())
+
+    @expect_exception(KeyError)
+    def test_writable_archive_xml_namespace_uri_to_prefix(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            x = archive_writer.xml_namespaces.uri_to_prefix("aardvark")
+
+
+    def test_writable_archive_xml_namespace___contains__(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            self.assertTrue(("Google", "http://www.google.com") in archive_writer.xml_namespaces, "Didn't correctly locate namespace")
+            self.assertFalse(("google", "http://www.google.com") in archive_writer.xml_namespaces,"Incorrectly located namespace")
+            self.assertFalse(None in archive_writer.xml_namespaces, "Incorrectly located None")
+
+
+    def test_writable_archive_xml_namespace_contains_prefix(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            self.assertTrue(archive_writer.xml_namespaces.contains_prefix("Google"), "Didn't correctly locate namespace")
+            self.assertFalse(archive_writer.xml_namespaces.contains_prefix("aardvark"), "Incorrectly located namespace")
+            self.assertFalse(archive_writer.xml_namespaces.contains_prefix(None), "Incorrectly located None")
+
+
+    def test_writable_archive_xml_namespace_contains_uri(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
+            self.assertTrue(archive_writer.xml_namespaces.contains_uri("www.banana.com"), "Didn't correctly locate namespace")
+            self.assertFalse(archive_writer.xml_namespaces.contains_uri("aardvark"), "Incorrectly located namespace")
+            self.assertFalse(archive_writer.xml_namespaces.contains_uri(None), "Incorrectly located None")
