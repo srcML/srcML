@@ -249,7 +249,7 @@ LIBSRCML_DECL const char*        srcml_get_uri_from_prefix(const char* prefix);
 
 LIBSRCML_DECL size_t             srcml_get_macro_list_size();
 LIBSRCML_DECL const char*        srcml_get_macro_token(size_t pos);
-LIBSRCML_DECL const char*        srcml_get_macro_token_type(const char* namespace_uri);
+LIBSRCML_DECL const char*        srcml_get_macro_token_type(const char* token);
 LIBSRCML_DECL const char*        srcml_get_macro_type(size_t pos);
 
 /* Source-code language is supported */
@@ -332,7 +332,7 @@ LIBSRCML_DECL const char*        srcml_archive_get_processing_instruction_target
 LIBSRCML_DECL const char*        srcml_archive_get_processing_instruction_data  (const struct srcml_archive*); 
 LIBSRCML_DECL size_t             srcml_archive_get_macro_list_size              (const struct srcml_archive*);
 LIBSRCML_DECL const char*        srcml_archive_get_macro_token                  (const struct srcml_archive*, size_t pos);
-LIBSRCML_DECL const char*        srcml_archive_get_macro_token_type             (const struct srcml_archive*, const char* namespace_uri);
+LIBSRCML_DECL const char*        srcml_archive_get_macro_token_type             (const struct srcml_archive*, const char* token);
 LIBSRCML_DECL const char*        srcml_archive_get_macro_type                   (const struct srcml_archive*, size_t pos);
 
 /* Create a new srcml unit.
