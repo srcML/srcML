@@ -170,7 +170,7 @@ class TestWritableArchive(unittest.TestCase):
         mem_buffer = memory_buffer()
         expected = "something"
         with writable_archive(writable_archive_settings(version=expected), buffer=mem_buffer) as archive_writer:
-            self.assertEqual(expected, archive_writer.directory, "Incorrect value")
+            self.assertEqual(expected, archive_writer.version, "Incorrect value")
 
     def test_version_default(self):
         mem_buffer = memory_buffer()

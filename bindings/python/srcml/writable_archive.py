@@ -20,6 +20,11 @@
 from bindings import *
 from writable_archive_settings import writable_archive_settings
 from private_helpers import *
+from exceptions import invalid_srcml_language
+from writable_unit import writable_unit
+from archive_xml_namespaces import archive_xml_namespaces
+from archive_macros import archive_macros
+# from archive_processing_instruction import archive_processing_instruction
 
 class writable_archive(object):
     """
@@ -97,7 +102,62 @@ class writable_archive(object):
         if self.srcml_archive == None:
             raise MemoryError("Failed to allocate native srcml archive.")
         # Loading the settings into the new archive.
-        # @TODO: Implement the loading of the archive settings.
+        
+        if settings.filename is not None:
+            archive_set_filename(self.srcml_archive, settings.filename)
+
+        if settings.directory is not None:
+            archive_set_directory(self.srcml_archive, settings.directory)
+
+        if settings.default_language is not None:
+            archive_set_language(self.srcml_archive, settings.default_language)
+
+        if settings.tab_stop != 8:
+            archive_set_tabstop(self.srcml_archive, settings.tab_stop)
+
+        if settings.version is not None:
+            archive_set_version(self.srcml_archive, settings.version)
+
+        if settings.parser_options != settings.default_parser_options:
+            archive_set_options(self.srcml_archive, settings.parser_options)
+
+        if settings.xml_encoding is not None:
+            archive_set_xml_encoding(self.srcml_archive, settings.xml_encoding)
+
+        if settings.src_encoding is not None:
+            archive_set_src_encoding(self.srcml_archive, settings.src_encoding)
+
+        if len(settings.macros) > 0:
+            for macro in settings.macros.iteritems():
+                if not isinstance(macro[0], str):
+                    raise TypeError("Invalid macro token. token must be a string.")
+
+                if not isinstance(macro[1], str):
+                    raise TypeError("Invalid macro type. Type must be a string.")
+                archive_register_macro(self.srcml_archive, *macro)
+
+        if len(settings.xml_namespaces) > 0:
+            for ns in settings.xml_namespaces:
+                if not isinstance(ns[0], str):
+                    raise TypeError("Invalid XML namespace Prefix. Prefix must be a string.")
+
+                if not isinstance(ns[1], str):
+                    raise TypeError("Invalid XML namespace URI. URI must be a string.") 
+                archive_register_namespace(self.srcml_archive, ns[0], ns[1])
+
+
+        self._proc_instr = None
+        if settings.processing_instruction is not None:
+            archive_set_processing_instruction(self.srcml_archive, *settings.processing_instruction)
+            self._proc_instr = (
+                archive_get_processing_instruction_target(self.srcml_archive),
+                archive_get_processing_instruction_data(self.srcml_archive)
+            )
+            # self._proc_instr = archive_processing_instruction(self.srcml_archive)
+        self._xml_namespaces = archive_xml_namespaces(self.srcml_archive)
+        self._macros = archive_macros(self.srcml_archive)
+
+        # Opening archive
         self._open_write(**kwargs)
 
 
@@ -169,88 +229,112 @@ class writable_archive(object):
 
     @property
     def xml_encoding(self):
-        raise NotImplementedError()
+        return archive_get_xml_encoding(self.srcml_archive)
 
     @property
     def src_encoding(self):
-        raise NotImplementedError()
+        return archive_get_src_encoding(self.srcml_archive)
 
     @property
     def default_language(self):
-        raise NotImplementedError()
+        return archive_get_language(self.srcml_archive)
 
     @property
     def filename(self):
-        raise NotImplementedError()
+        return archive_get_filename(self.srcml_archive)
 
     @property
     def directory(self):
-        raise NotImplementedError()
+        return archive_get_directory(self.srcml_archive)
 
     @property
     def version(self):
-        raise NotImplementedError()
+        return archive_get_version(self.srcml_archive)
 
     @property
     def revision(self):
-        raise NotImplementedError()
+        return archive_get_revision(self.srcml_archive)
 
     @property
     def tab_stop(self):
-        raise NotImplementedError()
+        return archive_get_tabstop(self.srcml_archive)
 
     @property
     def parser_options(self):
-        return self._parser_options
+        return archive_get_options(self.srcml_archive)
 
     @parser_options.setter
     def parser_options(self, value):
-        self._parser_options = value
+        if not isinstance(value, (int, ling)):
+            raise TypeError("Invalid value provided to parser_options. Options must be a long or an int.")
+        archive_set_options(self.srcml_archive, value)
 
     @property
     def processing_instruction(self):
-        raise NotImplementedError()
+        return self._proc_instr
 
     @property
     def xml_namespaces(self):
-        raise NotImplementedError()
+        return self._xml_namespaces
 
     @property
     def macros(self):
-        raise NotImplementedError()
+        return self._macros
 
     def register_file_extension(self, file_extension, language):
-        raise NotImplementedError()
+        if file_extension is None or not isinstance(file_extension, str):
+            raise TypeError("Invalid file_extension. file_extension must be a string and can not be None.")
+
+        if language is None or not isinstance(language, str):
+            raise TypeError("Invalid language. language must be a string and cannot be None.")
+
+        if check_language(language) == 0:
+            raise invalid_srcml_language("Invalid language provided.", language)
+        archive_register_file_extension(self.srcml_archive, file_extension, language)
 
     def check_file_extension(self, file_name_or_path):
-        raise NotImplementedError()
+        if file_name_or_path is None or not isinstance(file_name_or_path, str):
+            raise TypeError("Invalid file_name_or_path. file_name_or_path must be a string and can not be None.")
+        ret = archive_check_extension(self.srcml_archive,file_name_or_path)
+        if ret == None:
+            raise KeyError("Invalid language for file extension. The file name or path:\"{0}\" doesn't have a recognized extension within the current archive.".format(file_name_or_path))
+        return ret
 
-    def create_unit(self, language=None, src_encoding=None, filename=None, directory=None, version=None, timestamp=None, hash=None):
+    def create_unit(self, language=None, src_encoding=None, filename=None, directory=None, version=None, timestamp=None, hash_of_unit=None):
         """
         writable_unit creation factory. This function creates a unit and sets the parameters provided corresponding to
         the attributes of a writable_unit.
+
+        Parameter descriptions:
+
+        language - The programming language associated with the source code that's
+            going to be writing into the unit. The language can be inferred when using
+            reading from a filename or if the language is set on the archive that was
+            used to create the unit. The language, is written into the unit even if
+            it's set to None. Not setting the language prior to calling parse
+            on a unit, where the language cannot be inferred, results in a
+            language_not_set exception.
+
+        src_encoding - The encoding to expected when reading source code. If not
+            set the default encoding used is Latin-1.
+
+        filename - A filename attribute associated with then XML of the unit. If None 
+            it's not output onto the current unit.
+
+        directory - A directory attribute associated with the XML of the unit. If None 
+            it's not output onto the current unit.
+
+        version - A version attribute associated with the XML of the unit. If None 
+            it's not output onto the current unit.
+
+        timestamp - A timestamp attribute to associated with the unit. If None
+            it's not output into the archive.
+
+        hash_of_unit - The hash of a unit is set by default so typically there is no
+            need to set it manually. To disable the setting of the hash of a unit
+            the OPTION_HASH must be disabled within the archive.
         """
-        raise NotImplementedError()
-#     # Unit writing utilities.
-#     def create_unit(self, **kwargs):
-#         """
-
-
-#         A typical use case for a unit created in this manner is to use it to write source code into srcml
-#         then into a srcml archive.
-#             Valid Parameters:
-#             encoding
-#             language
-#             filename
-#             directory
-#             version
-#             timestamp
-#             hash
-#         This parameters correspond with the native attributes of a srcml_unit.
-#         """
-#         unit_ptr = create_unit(self.srcml_archive)
-#         return unit(unit_ptr, **kwargs)
-
+        return writable_unit(language, src_encoding, filename, directory, version, timestamp, hash_of_unit)
 
     def write(self, unit):
         raise NotImplementedError()

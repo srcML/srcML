@@ -44,7 +44,10 @@ class writable_archive_settings(object):
             self.macros.update(temp_macros)
         temp_xml_namespaces = kwargs.pop("xml_namespaces", None)
         if temp_xml_namespaces is not None:
-            self.xml_namespaces.update(*temp_xml_namespaces)
+            if isinstance(temp_xml_namespaces, dict):
+                self.xml_namespaces.update(**temp_xml_namespaces)
+            else:
+                self.xml_namespaces.update(*temp_xml_namespaces)
         temp_proc_instr = kwargs.pop("processing_instruction", None)
         if temp_proc_instr is not None:
             self.set_processing_instruction(*temp_proc_instr)

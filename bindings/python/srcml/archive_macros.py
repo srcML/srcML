@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file archive_macros.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,15 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from test_exception_factory import *
-from test_bindings import *
-from test_memory_buffer import *
-from test_writable_archive_xml_namespace_settings import *
-from test_writable_archive_settings import *
-from test_writable_archive import *
-from test_archive_xml_namespaces import *
-from test_writable_unit import *
-
-
-#from test_archive import *
-#from test_unit import *
+class archive_macros(object):
+    def __init__(self, srcml_archive_ptr):
+        self.srcml_archive = srcml_archive_ptr
