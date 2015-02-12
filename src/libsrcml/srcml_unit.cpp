@@ -345,7 +345,7 @@ const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
  *
  * @returns the formatted unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_standalone_xml(struct srcml_unit* unit, const char * xml_encoding) {
+const char* srcml_unit_get_standalone_xml(struct srcml_unit* unit, const char* xml_encoding) {
 
     if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
 
