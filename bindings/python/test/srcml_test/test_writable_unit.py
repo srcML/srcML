@@ -29,3 +29,119 @@ class test_writable_unit(unittest.TestCase):
     
     def tearDown(self):
         pass
+
+
+    def test_constructor_default(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            self.assertIsNotNone(u, "Invalid unit returned")
+            self.assertIsNone(u.src_encoding, "Incorrect value")
+            self.assertIsNone(u.language, "Incorrect value")
+            self.assertIsNone(u.filename, "Incorrect value")
+            self.assertIsNone(u.directory, "Incorrect value")
+            self.assertIsNone(u.version, "Incorrect value")
+            self.assertIsNone(u.timestamp, "Incorrect value")
+            self.assertIsNone(u.hash, "Incorrect value")
+            self.assertIsNotNone(u.revision, "Incorrect value")
+
+
+    def test_constructor_params_to_properties(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            expected_language = LANGUAGE_CXX
+            expected_filename = "filename"
+            expected_encoding = "UTF-8"
+            expected_directory = "directory"
+            expected_version = "version"
+            expected_timestamp = "timestamp"
+            expected_hash = "hash"
+
+            u = archive_writer.create_unit(language=expected_language, src_encoding=expected_encoding, filename=expected_filename, directory=expected_directory, version=expected_version, timestamp=expected_timestamp, hash_of_unit=expected_hash)
+
+            self.assertEqual(expected_encoding, u.src_encoding, "Incorrect value")
+            self.assertEqual(expected_language, u.language, "Incorrect value")
+            self.assertEqual(expected_filename, u.filename, "Incorrect value")
+            self.assertEqual(expected_directory, u.directory, "Incorrect value")
+            self.assertEqual(expected_version, u.version, "Incorrect value")
+            self.assertEqual(expected_timestamp, u.timestamp, "Incorrect value")
+            self.assertEqual(expected_hash, u.hash, "Incorrect value")
+
+    def test_filename(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            expected = "something"
+            self.assertIsNone(u.filename, "Incorrect default value")
+            u.filename = expected
+            self.assertEqual(expected, u.filename, "Incorrect value")
+
+    def test_directory(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            expected = "something"
+            self.assertIsNone(u.directory, "Incorrect default value")
+            u.directory = expected
+            self.assertEqual(expected, u.directory, "Incorrect value")
+
+    def test_version(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            expected = "something"
+            self.assertIsNone(u.version, "Incorrect default value")
+            u.version = expected
+            self.assertEqual(expected, u.version, "Incorrect value")
+
+    def test_timestamp(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            expected = "something"
+            self.assertIsNone(u.timestamp, "Incorrect default value")
+            u.timestamp = expected
+            self.assertEqual(expected, u.timestamp, "Incorrect value")
+
+    def test_hash(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            expected = "something"
+            self.assertIsNone(u.hash, "Incorrect default value")
+            u.hash = expected
+            self.assertEqual(expected, u.hash, "Incorrect value")
+
+
+    def test_language(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            expected = LANGUAGE_CXX
+            self.assertIsNone(u.language, "Incorrect default value")
+            u.language = expected
+            self.assertEqual(expected, u.language, "Incorrect value")
+
+    @expect_exception(invalid_srcml_language)
+    def test_language_invalid_language(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            u.language = "banana"
+
+
+    def test_src_encoding(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            expected = "UTF-16"
+            self.assertIsNone(u.src_encoding, "Incorrect default value")
+            u.src_encoding = expected
+            self.assertEqual(expected, u.src_encoding, "Incorrect value")
+
+    @expect_exception(invalid_srcml_encoding)
+    def test_src_encoding_invalid_srcml_encoding(self):
+        mem_buffer = memory_buffer()
+        with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            u.src_encoding = "aardvarkz"

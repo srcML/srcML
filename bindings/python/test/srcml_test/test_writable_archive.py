@@ -117,7 +117,6 @@ class TestWritableArchive(unittest.TestCase):
             self.assertIsNone(archive_writer.xml_encoding, "Incorrect default value")
 
 
-
     def test_src_encoding(self):
         mem_buffer = memory_buffer()
         expected = "UTF-8"
@@ -290,7 +289,7 @@ class TestWritableArchive(unittest.TestCase):
     def test_write__writable_unit(self):
         mem_buffer = memory_buffer()
         with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
-            u = archive_writer.create_unit()
+            u = archive_writer.create_unit(language=LANGUAGE_CXX)
             u.parse(source_code="""int main() {
     cout << "Hello World" << endl;
     return 0;
@@ -310,7 +309,7 @@ class TestWritableArchive(unittest.TestCase):
     def test_write__readable_unit(self):
         mem_buffer = memory_buffer()
         with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
-            u = archive_writer.create_unit()
+            u = archive_writer.create_unit(language=LANGUAGE_CXX)
             u.parse(source_code="""int main() {
     cout << "Hello World" << endl;
     return 0;

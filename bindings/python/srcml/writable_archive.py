@@ -392,7 +392,10 @@ class writable_archive(object):
             need to set it manually. To disable the setting of the hash of a unit
             the OPTION_HASH must be disabled within the archive.
         """
-        return writable_unit(language, src_encoding, filename, directory, version, timestamp, hash_of_unit)
+        unit_ptr = unit_create(self.srcml_archive)
+        if unit_ptr == None:
+            raise MemoryError("Failed to allocate native srcml_unit.")
+        return writable_unit(unit_ptr, language, src_encoding, filename, directory, version, timestamp, hash_of_unit)
 
     def write(self, unit):
         """
