@@ -74,10 +74,20 @@ class writable_unit(object):
 
     @property
     def src_encoding(self):
+        """
+        Get the encoding to read the source code in as. If None
+        the default encoding is Latin-1.
+        """
         return unit_get_src_encoding(self.srcml_unit)
     
     @src_encoding.setter
     def src_encoding(self, value):
+        """
+        Set the default encoding for source code being read in
+        and processed by srcML.
+
+        Preconditions - value must be a string or None.
+        """
         assert isinstance(value, (str)) or value is None, "src_encoding must be a string or None"
         if value == None:
             unit_set_src_encoding(self.srcml_unit, value)
@@ -90,10 +100,18 @@ class writable_unit(object):
 
     @property
     def language(self):
+        """
+        Get the language that the source code is expected to be.
+        """
         return unit_get_language(self.srcml_unit)
 
     @language.setter
     def language(self, value):
+        """
+        Set the programming language to process source code as.
+
+        Preconditions - value must be a string or None.
+        """
         assert isinstance(value, (str)) or value is None, "language must be a string or None"
         if value == None:
             unit_set_language(self.srcml_unit, value)
@@ -105,51 +123,100 @@ class writable_unit(object):
 
     @property
     def filename(self):
+        """
+        Set the file attribute of a unit. If None the filename
+        attribute isn't output.
+        """
         return unit_get_filename(self.srcml_unit)
+
     @filename.setter
     def filename(self, value):
+        """
+        Set the filename attribute on a unit.
+
+        Preconditions - value must be a string or None.
+        """
         assert value is None or isinstance(value, str), "Invalid filename type must be a string or None."
         unit_set_filename(self.srcml_unit, value)
 
         
     @property
     def directory(self):
+        """
+        Get the directory attribute associated with unit. If the unit
+        is None then nothing is output.
+        """
         return unit_get_directory(self.srcml_unit)
     @directory.setter
     def directory(self, value):
+        """
+        Set the directory attribute for a unit.
+
+        Preconditions - value must be a string or None.
+        """
         assert value is None or isinstance(value, str), "Invalid directory type must be a string or None."
         unit_set_directory(self.srcml_unit, value)
 
 
     @property
     def version(self):
+        """
+        Get the version attribute of a unit. If None nothing is
+        output.
+        """
         return unit_get_version(self.srcml_unit)
     @version.setter
     def version(self, value):
+        """
+        Set the version attribute of a unit.
+
+        Preconditions - value must be a string or None.
+        """
         assert value is None or isinstance(value, str), "Invalid version type must be a string or None."
         unit_set_version(self.srcml_unit, value)
 
             
     @property
     def timestamp(self):
+        """
+        Get the timestamp attribute associated with a unit. If None nothing
+        is output.
+        """
         return unit_get_timestamp(self.srcml_unit)
     @timestamp.setter
     def timestamp(self, value):
+        """
+        Set the timestamp attribute for the unit.
+
+        Preconditions - value must be a string or None.
+        """
         assert value is None or isinstance(value, str), "Invalid timestamp type must be a string or None."
         unit_set_timestamp(self.srcml_unit, value)
 
     
     @property
     def hash(self):
+        """
+        Get the hash value of a unit. This is set if the has option
+        is enabled for the archive. If None it's not output.
+        """
         return unit_get_hash(self.srcml_unit)
     @hash.setter
     def hash(self, value):
+        """
+        Set the hash of a unit.
+
+        Preconditions - value must be a string or None.
+        """
         assert value is None or isinstance(value, str), "Invalid hash type must be a string or None."
         unit_set_hash(self.srcml_unit, value)
 
     
     @property
     def revision(self):
+        """
+        Gets the version of srcML that was used to process the archive.
+        """
         return unit_get_revision(self.srcml_unit)
 
 
@@ -227,7 +294,7 @@ class writable_unit(object):
             unit_parse_memory(
                 self.srcml_unit,
                 self.buff.buff,
-                self.buff.size
+                ctypes.c_int(self.buff.size.value)
             )
 
         elif CONTEXT_PARAM in kwargs:
@@ -260,28 +327,74 @@ class writable_unit(object):
 
 
     def get_xml_fragment(self):
-        raise NotImplementedError()
+        """
+        Gets the XML of the current parsed unit in fragment form. 
+        The fragment is a fragment of the larger archive.
 
-    def get_standalone_xml(self, encoding=None):
-        raise NotImplementedError()
+        The main difference between the fragment XML and the standalone
+        XML is that the standalone XML has all of the archive's namespaces
+        associated with it.
+        """
+        return unit_get_fragment_xml(self.srcml_unit)
+
+    def get_standalone_xml(self, xml_encoding=None):
+        """
+        Gets standalone XML document from the unit. This copies the contents
+        of the unit into a single unit archive containing all of the
+        XML namespaces associated with the parent archive.
+        """
+        if xml_encoding is not None and not isinstance(xml_encoding, str):
+            raise TypeError("Encoding must be None or a string")
+            if check_encoding(xml_encoding) == 0:
+                raise invalid_srcml_encoding("Invalid XML encoding", xml_encoding)
+        ret = unit_get_standalone_xml(self.srcml_unit, xml_encoding)
+        if ret == None:
+            raise MemoryError("Failed to allocate memory for standalone xml.")
+        return ret
 
     def write_start_unit(self):
-        raise NotImplementedError()
+        """
+        Part of the XML writer-esque interface. Writes the beginning of a unit into the
+        current unit. 
+        """
+        write_start_unit(self.srcml_unit)
 
     def write_end_unit(self):
-        raise NotImplementedError()
+        """
+        Part of the XML writer-esque interface. Writes the ending of a unit into the
+        current unit. 
+        """
+        write_end_unit(self.srcml_unit)
 
     def write_start_element(self, element_name, ns_prefix=None, ns_uri=None):
-        raise NotImplementedError()
+        """
+        Part of the XML writer-esque interface. Writes an element into the unit.
+        """
+        write_start_element(self.srcml_unit, ns_prefix, element_name, ns_uri)
 
     def write_end_element(self):
-        raise NotImplementedError()
+        """
+        Part of the XML writer-esque interface. Writes the end of an element into
+        the unit.
+        """
+        write_end_element(self.srcml_unit)
 
-    def write_namespace(self, prefix,uri):
-        raise NotImplementedError()
+    def write_namespace(self, prefix, uri):
+        """
+        Part of the XML writer-esque interface. Write a namespace onto the most
+        recently started element.
+        """
+        write_namespace(self.srcml_unit, prefix, uri)
 
     def write_attribute(self, attribute_name, content, ns_prefix = None, ns_uri=None):
-        raise NotImplementedError()
+        """
+        Part of the XML writer-esque interface. Write an attribute on to the
+        most recently started element.
+        """
+        write_attribute(self.srcml_unit, ns_prefix, attribute_name, ns_uri, content)
 
     def write_string(self, content):
-        raise NotImplementedError()
+        """
+        Part of the XML writer-esque interface. Write text into the unit.
+        """
+        write_string(self.srcml_unit, content)
