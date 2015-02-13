@@ -36,7 +36,7 @@ class memory_buffer(object):
         initial_string_value - is used to load the buffer with an initial value.
         """
         self.buff = ctypes.c_char_p(0)
-        self.size = ctypes.c_int(0)
+        self.size = ctypes.c_size_t(0)
         if initial_string_value is not None:
             self.load_from_string(initial_string_value)
 
@@ -71,7 +71,7 @@ class memory_buffer(object):
 
         self.free()
         self.buff = ctypes.c_char_p(bindings.malloc(allocation_size))
-        self.size = ctypes.c_int(allocation_size)
+        self.size = ctypes.c_size_t(allocation_size)
 
     def free(self):
         """

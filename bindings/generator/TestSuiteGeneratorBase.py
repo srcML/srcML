@@ -30,6 +30,7 @@ DELETE_FILE_FUNC = "DELETE_FILE_FUNCTION"
 # Special types for use by the deriving class.
 BUFFER_REF_TYPE = "BUFFER_REF_TYPE"
 INT_REF_TYPE = "INT_REF_TYPE"
+SIZE_T_REF_TYPE = "SIZE_T_REF_TYPE"
 
 # Callback types
 WRITE_CALLBACK_TYPE = "WRITE_CALLBACK_TYPE"
@@ -212,7 +213,7 @@ class TestSuiteGeneratorBase(object):
         self.gen_genVariableDecl("srcml_archive *", "oarchive", None)
         self.gen_genVariableDecl("const char *", "testFileName", "srcml_write_open_filename_test_file.cpp")
         self._buildCreateArchive("oarchive")
-        self.gen_genCall(None, "srcml_archive_write_open_filename", ["oarchive", "testFileName"])
+        self.gen_genCall(None, "srcml_archive_write_open_filename", ["oarchive", "testFileName", "0"])
         self.gen_genCall(None, "srcml_archive_close", ["oarchive"])
         self.gen_genUnaryTestStatement(TEST_FILE_EXISTS, "testFileName", "Didn't locate correct test file.")
         self._buildCleanUpArchive("oarchive")
@@ -223,7 +224,7 @@ class TestSuiteGeneratorBase(object):
         self.gen_startTestFuncGen("srcml_write_open_memory")
         self.gen_genVariableDecl("srcml_archive *", "oarchive", None)
         self.gen_genVariableDecl(BUFFER_REF_TYPE, "buffer", None)
-        self.gen_genVariableDecl(INT_REF_TYPE, "bufferSize", None)
+        self.gen_genVariableDecl(SIZE_T_REF_TYPE, "bufferSize", None)
         self._buildCreateArchive("oarchive")
         self.gen_genCall(None, "srcml_archive_write_open_memory", ["oarchive", "buffer", "bufferSize"])
         self.gen_genCall(None, "srcml_archive_close", ["oarchive"])

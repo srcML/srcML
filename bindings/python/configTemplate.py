@@ -39,12 +39,14 @@ class GenPythonCode(BindingGenerator):
             "void" : "None",
             "unsigned long long" :"c_ulonglong",
             "srcml_archive *": "c_void_p",
+            "size_t *": "POINTER(c_size_t)",
             "const srcml_archive *": "c_void_p",
             "FILE *": "IMPOSSIBLE",
             "int *" : "c_void_p",
             "char *" : "c_char_p",
             "void *" : "py_object",
             "const char *": "c_char_p",
+            "unsigned short":"c_ushort",
             "size_t" : "c_int"
         })
         self.fpLookup = dict()
@@ -71,7 +73,7 @@ class GenPythonCode(BindingGenerator):
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from ctypes import cdll, c_int, c_char_p, pointer, c_ulong, c_ulonglong, CFUNCTYPE, c_void_p, byref, py_object
+from ctypes import cdll, c_int, c_char_p, pointer, c_ulong, c_ulonglong, CFUNCTYPE, c_void_p, byref, py_object, c_ushort, POINTER, c_size_t
 from ctypes.util import find_library
 import exceptions
 # libsrcmlLocation = "libsrcml.so"
@@ -397,6 +399,9 @@ class TestBindings(unittest.TestCase):
         
         elif variableNativeType == INT_REF_TYPE:
             return "{0} = ctypes.c_int()".format(variableName)
+
+        elif variableNativeType == SIZE_T_REF_TYPE:
+            return "{0} = ctypes.c_size_t()".format(variableName)
 
         elif variableNativeType == WRITE_CALLBACK_TYPE:
             return "{0} = srcml.write_callback(writeCallback)".format(variableName)

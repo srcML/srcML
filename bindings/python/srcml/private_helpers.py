@@ -36,6 +36,7 @@ CLOSE_CB_PARAM = "close"
 CLOSE_STREAM_PARAM = "close_stream"
 XSLT_PARAM = "xslt"
 RELAXNG_PARAM = "relaxng"
+COMPRESSION_FACTOR_PARAM = "compression_factor"
 
 # Contexts for reading and writing to/from python to the libsrcml
 # interface.

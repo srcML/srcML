@@ -171,9 +171,12 @@ class writable_archive(object):
                 raise ValueError("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 
         elif FILENAME_PARAM in kwargs:
-            if len(kwargs) > 1 :
+            if len(kwargs) > 2:
                 raise ValueError("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            archive_write_open_filename(self.srcml_archive, kwargs[FILENAME_PARAM])
+            if len(kwargs) == 2:
+                archive_write_open_filename(self.srcml_archive, kwargs[FILENAME_PARAM], kwargs[COMPRESSION_FACTOR_PARAM])
+            else:
+                archive_write_open_filename(self.srcml_archive, kwargs[FILENAME_PARAM], 0)
 
         elif BUFFER_PARAM in kwargs:
             if len(kwargs) > 1 :
