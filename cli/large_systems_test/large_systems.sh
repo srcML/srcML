@@ -9,9 +9,9 @@ TLOG="logs/timelog-${TIMESTAMP}.txt"
 DLOG="logs/difflog-${TIMESTAMP}.txt"
 SLOG="logs/sizelog-${TIMESTAMP}.txt"
 
-echo "Timed log for this session at: ${TLOG}"
-echo "Diff log for this session at: ${DLOG}"
-echo "Size log for this session at: ${SLOG}"
+echo "Time log for this session at: ${TLOG}" && echo > "${TLOG}"
+echo "Diff log for this session at: ${DLOG}" && echo > "${DLOG}"
+echo "Size log for this session at: ${SLOG}" && echo > "${SLOG}"
 
 # use CSV input to find big system download locations
 (cat large_systems_list.csv ; echo) | while IFS=',' read -r location
@@ -37,7 +37,7 @@ do
         TIME="$(time ( srcml ${ZNAME} -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
 
         # store timed output
-        echo "srcml ${ZNAME} -o ${XZOUTPUT}" > "${TLOG}"
+        echo "srcml ${ZNAME} -o ${XZOUTPUT}" >> "${TLOG}"
         echo "${TIME}" >> "${TLOG}"
 
         # uncompress, if the unzipped version doesn't already exist
@@ -61,7 +61,7 @@ do
         #echo "Diffing srcML output from compressed and uncompressed input..."
         #DIFF="$( diff ${XZOUTPUT} ${UNZOUTPUT} )"
 
-        #echo "diff ${XZOUTPUT} ${UNZOUTPUT}" > "${DLOG}"
+        #echo "diff ${XZOUTPUT} ${UNZOUTPUT}" >> "${DLOG}"
         #echo "${DIFF}" >> "${DLOG}"
 
         # keep the logs and the big system (test runs faster consecutively), but
