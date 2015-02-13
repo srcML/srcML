@@ -17,18 +17,18 @@ define srcmlb <<- 'STDOUT'
 createfile a.cpp "a;"
 createfile b.cpp "b;"
 
-srcml2src --no-archive --to-dir . a.cpp b.cpp
+srcml2src --to-dir . a.cpp b.cpp
 check a.cpp.xml 3<<< "$srcmla"
 check b.cpp.xml 3<<< "$srcmlb"
 
-srcml2src --to-dir . --no-archive a.cpp b.cpp
+srcml2src --to-dir . a.cpp b.cpp
 check a.cpp.xml 3<<< "$srcmla"
 
-srcml2src --no-archive a.cpp b.cpp --to-dir .
+srcml2src a.cpp b.cpp --to-dir .
 check a.cpp.xml 3<<< "$srcmla"
 
-srcml2src a.cpp b.cpp --no-archive --to-dir .
+srcml2src a.cpp b.cpp --to-dir .
 check a.cpp.xml 3<<< "$srcmla"
 
-srcml2src a.cpp b.cpp --to-dir . --no-archive
+srcml2src a.cpp b.cpp --to-dir . 
 check a.cpp.xml 3<<< "$srcmla"

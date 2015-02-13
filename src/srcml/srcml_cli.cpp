@@ -238,6 +238,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
 void option_to_dir(const std::string& value) {
     srcml_request.output_filename = value;
     srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
+    srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
 }
 
 void positional_args(const std::vector<std::string>& value) {
@@ -308,7 +309,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         general.add_options()
             ("compress,z", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_COMPRESS>), "output in gzip format")
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
-            ("no-archive", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_NOARCHIVE>), "output individual srcml units")
             ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
             ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write result ouput to arg which is a FILE or URI")
@@ -470,7 +470,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         conflicting_options(cli_map, "output-src", "output-xml");
 
         // Check dependent options
-        option_dependency(cli_map, "no-archive", "to-dir");
+        // Format: option_dependency(cli_map, [option], [option]);
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())
