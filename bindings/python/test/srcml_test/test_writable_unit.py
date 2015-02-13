@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from srcml import *
-from testlib import expect_exception, cleanup_files
+from testlib import *
 import unittest, os, StringIO
 import lxml.etree as et
 
@@ -145,3 +145,15 @@ class test_writable_unit(unittest.TestCase):
         with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
             u = archive_writer.create_unit()
             u.src_encoding = "aardvarkz"
+
+    @cleanup_files("writable_unit_test_parse_filename.cpp")
+    def test_parse_filename(self):
+        input_file = "writable_unit_test_parse_filename.cpp"
+        output = open(input_file, "w")
+        output.write(test_source_code_data)
+        output.close()
+
+        with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            u.parse(filename=input_file)
+            archive_writer.wrire(u)

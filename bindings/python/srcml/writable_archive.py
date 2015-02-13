@@ -401,7 +401,9 @@ class writable_archive(object):
         """
         Write a unit into an archive. This accepts readable and writable units.
         """
-        raise NotImplementedError()
+        if unit is None:
+            raise TypeError("Unable to write unit into archive. Unit is None")
+        write_unit(self.srcml_archive, unit.srcml_unit)
 
     def close(self):
         """
