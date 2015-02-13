@@ -19,4 +19,39 @@
 
 
 class readable_archive_settings(object):
-    pass
+    def __init__(self, xml_encoding=None, src_encoding=None, xslt_transformations=[]):
+        self._xslt_transforms = list()
+        raise NotImplementedError()
+
+    @property
+    def xml_encoding(self):
+        return self._xml_encoding
+
+    @xml_encoding.setter
+    def xml_encoding(self, value):
+        self._xml_encoding = value
+    
+    @property
+    def src_encoding(self):
+        return self._src_encoding
+
+    @src_encoding.setter
+    def src_encoding(self, value):
+        self._src_encoding = value
+    
+    @property
+    def xsltransforms(self):
+        return self._xslt_transforms
+
+    def copy(self):
+        raise NotImplementedError()
+
+    def clear(self):
+        raise NotImplementedError()
+# class ReadableArchiveSettings {
+#     String xmlEncoding()
+#     void setXmlEncoding(String encoding)
+#     String sourceCodeEncoding()
+#     void setSourceCodeEncoding(String encoding)
+#     ArrayList<XslTransformBase> xslTransformations()
+#     void clear()
