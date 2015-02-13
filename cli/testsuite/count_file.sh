@@ -17,21 +17,21 @@ define output <<- 'STDOUT'
 	1
 	STDOUT
 
-# test --count on xml files
+# test --show-unit-count on xml files
 createfile sub/a.cpp.xml "$srcml"
 
-srcml2src --count sub/a.cpp.xml
+srcml2src --show-unit-count sub/a.cpp.xml
 check 3<<< "$output"
 
-srcml2src --count < sub/a.cpp.xml
+srcml2src --show-unit-count < sub/a.cpp.xml
 check 3<<< "$output"
 
-# test --count on src files
+# test --show-unit-count on src files
 createfile sub/a.cpp "$src"
 
-src2srcml sub/a.cpp --count
+src2srcml sub/a.cpp --show-unit-count
 check 3<<< "$output"
 
-src2srcml --count sub/a.cpp
+src2srcml --show-unit-count sub/a.cpp
 check 3<<< "$output"
 

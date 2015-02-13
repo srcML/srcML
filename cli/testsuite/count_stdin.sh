@@ -3,7 +3,7 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# test --count on standard input file
+# test --show-unit-count on standard input file
 define src <<- 'STDOUT'
 	a;
 	STDOUT
@@ -16,5 +16,5 @@ createfile sub/a.cpp "$src"
 
 
 # TODO: issue #1071
-src2srcml --count -l C++ < sub/a.cpp
+src2srcml --show-unit-count -l C++ < sub/a.cpp
 check 3<<< "$output"
