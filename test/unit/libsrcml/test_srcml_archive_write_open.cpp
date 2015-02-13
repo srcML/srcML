@@ -43,7 +43,7 @@
 
 #include <unit_tests.hpp>
 
-int write_callback(void * context, const char * buffer, int len) {
+int write_callback(void * context, const char * buffer, size_t len) {
 
     return (int)fwrite(buffer, 1, len, (FILE *)context);
 
@@ -64,7 +64,7 @@ int main() {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        srcml_archive_write_open_filename(archive, "project.xml");
+        srcml_archive_write_open_filename(archive, "project.xml", 0);
 
         dassert(archive->type, SRCML_ARCHIVE_WRITE);
         dassert(!archive->translator, 0);
@@ -84,14 +84,14 @@ int main() {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        dassert(srcml_archive_write_open_filename(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_write_open_filename(archive, 0, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
 
     }
 
     {
-        dassert(srcml_archive_write_open_filename(0, "project.xml"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_write_open_filename(0, "project.xml", 0), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -101,7 +101,7 @@ int main() {
     {
 
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
 
@@ -119,7 +119,7 @@ int main() {
 
     {
 
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         dassert(srcml_archive_write_open_memory(archive, 0, &size), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -138,7 +138,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         dassert(srcml_archive_write_open_memory(0, &s, &size), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_memory_free(s);
     }

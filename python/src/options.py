@@ -53,40 +53,43 @@ SRCML_OPTION_CPP_TEXT_ELSE     = 1<<6
 SRCML_OPTION_CPP_MARKUP_IF0    = 1<<7
 # Apply transformations to the entire srcML file (default: each unit
 SRCML_OPTION_APPLY_ROOT        = 1<<8
-# Compress the output file
-SRCML_OPTION_COMPRESS          = 1<<9
 # Nest if in else if intead of elseif tag
-SRCML_OPTION_NESTIF            = 1<<10
+SRCML_OPTION_NESTIF            = 1<<9
 # Output hash attribute on each unit (default: on)
-SRCML_OPTION_HASH              = 1<<11
+SRCML_OPTION_HASH              = 1<<10
 # Wrap function/classes/etc with templates (default: on)
-SRCML_OPTION_WRAP_TEMPLATE     = 1<<12
+SRCML_OPTION_WRAP_TEMPLATE     = 1<<11
 # output is interactive (good for editing applications)
-SRCML_OPTION_INTERACTIVE       = 1<<13
+SRCML_OPTION_INTERACTIVE       = 1<<12
 # Not sure what this used for
-SRCML_OPTION_XPATH_TOTAL       = 1<<14
+SRCML_OPTION_XPATH_TOTAL       = 1<<13
 # expression mode
-SRCML_OPTION_EXPRESSION        = 1<<15
+SRCML_OPTION_EXPRESSION        = 1<<14
 # Extra processing of @code#line@endcode for position information
-SRCML_OPTION_LINE              = 1<<16
+SRCML_OPTION_LINE              = 1<<15
 # additional cpp:if/cpp:endif checking
-SRCML_OPTION_CPPIF_CHECK       = 1<<17
+SRCML_OPTION_CPPIF_CHECK       = 1<<16
 # debug time attribute
-SRCML_OPTION_DEBUG_TIMER       = 1<<18
+SRCML_OPTION_DEBUG_TIMER       = 1<<17
 # turn on optional ternary operator markup
-SRCML_OPTION_TERNARY           = 1<<19
+SRCML_OPTION_TERNARY           = 1<<18
 # turn on optional ternary operator markup
-SRCML_OPTION_PSEUDO_BLOCK      = 1<<20
+SRCML_OPTION_PSEUDO_BLOCK      = 1<<19
 # Turn on old optional markup behaviour
-SRCML_OPTION_OPTIONAL_MARKUP   = 1<<21
+SRCML_OPTION_OPTIONAL_MARKUP   = 1<<20
 # Markups literal in special namespace
-SRCML_OPTION_LITERAL           = 1<<22
+SRCML_OPTION_LITERAL           = 1<<21
 # Markups modifiers in special namespace
-SRCML_OPTION_MODIFIER          = 1<<23
+SRCML_OPTION_MODIFIER          = 1<<22
 # Markups operator in special namespace
-SRCML_OPTION_OPERATOR          = 1<<24
+SRCML_OPTION_OPERATOR          = 1<<23
 # Markups operator in special namespace
-SRCML_OPTION_DEBUG             = 1<<25
+SRCML_OPTION_DEBUG             = 1<<24
+# Markups OpenMP in special namespace
+SRCML_OPTION_OPENMP            = 1<<25
+# Encode the original source encoding as an attribute */
+SRCML_OPTION_STORE_ENCODING    = 1<<26
+
 # Return status indicating no errors
 SRCML_STATUS_OK                   = 0
 # Return status indicating errors occurred

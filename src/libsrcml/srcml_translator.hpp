@@ -57,13 +57,13 @@ public:
 
     // constructor
     srcml_translator(char ** str_buf,
-                     int * size,
+                     size_t * size,
                      const char* xml_encoding,
                      OPTION_TYPE & op,
                      std::vector<std::string> & prefix,
                      std::vector<std::string> & uri,
                      boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                     int tabsize,
+                     size_t tabsize,
                      int language,
                      const char* revision,
                      const char* directory,
@@ -81,7 +81,7 @@ public:
                      std::vector<std::string> & prefix,
                      std::vector<std::string> & uri,
                      boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                     int tabsize,
+                     size_t tabsize,
                      int language,
                      const char* revision,
                      const char* directory,
@@ -152,7 +152,7 @@ private:
     srcMLOutput out;
 
     /** size of tabstop */
-    int tabsize;
+    size_t tabsize;
 
     /** list of user defined macros */
     std::vector<std::string> user_macro_list;
@@ -161,7 +161,7 @@ private:
     char ** str_buffer;
     
     /** location to store size of output when output is to memory */
-    int * size;
+    size_t * size;
 
     /** mark if have outputted starting unit tag for by element writing */
     bool is_outputting_unit;

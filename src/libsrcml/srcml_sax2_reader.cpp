@@ -147,7 +147,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
                                                  std::vector<std::string> & namespaces,
                                                  boost::optional<std::pair<std::string, std::string> > & processing_instruction,
                                                  OPTION_TYPE & options,
-                                                 int & tabstop,
+                                                 size_t & tabstop,
                                                  std::vector<std::string> & user_macro_list) {
 
     if(read_root || handler.read_root) return 0;

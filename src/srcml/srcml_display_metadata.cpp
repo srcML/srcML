@@ -68,9 +68,9 @@ void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
 void srcml_display_info(srcml_archive* srcml_arch) {
 
-    int nsSize = srcml_archive_get_namespace_size(srcml_arch);
+    size_t nsSize = srcml_archive_get_namespace_size(srcml_arch);
 
-    for (int i = 0; i < nsSize; ++i) {
+    for (size_t i = 0; i < nsSize; ++i) {
         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
             if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
                 std::cout << "xmlns=\"" << srcml_archive_get_namespace_uri(srcml_arch, i) << "\"\n";

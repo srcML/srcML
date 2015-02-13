@@ -65,7 +65,7 @@ static
 srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY,
                                  8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
-                                 language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>() };
+                                 language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any() };
 
 /**
  * @var global_unit
@@ -75,7 +75,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VE
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_unit global_unit = { &global_archive, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, 0, 0 };
+srcml_unit global_unit = { &global_archive, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, 0, 0, boost::any() };
 
 /**
  * @var register_languages
@@ -185,12 +185,6 @@ int srcml(const char* input_filename, const char* output_filename) {
         }
 
         srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_CPP_NS_PREFIX_DEFAULT, SRCML_CPP_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_ERR_NS_PREFIX_DEFAULT, SRCML_ERR_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT, SRCML_EXT_LITERAL_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI);
-        srcml_archive_register_namespace(&global_archive, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI);
 
         for(std::vector<std::string>::size_type i = 0; i < save_prefix.size(); ++i) {
             try {
@@ -204,7 +198,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     if(srcml_check_extension(input_filename)) {
 
-        srcml_archive_write_open_filename(&global_archive, output_filename);
+        srcml_archive_write_open_filename(&global_archive, output_filename, 0);
         srcml_unit * unit = srcml_unit_create(&global_archive);
 
         int status = srcml_unit_set_language(unit, srcml_archive_get_language(&global_archive));
@@ -262,10 +256,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         }
 
-        OPTION_TYPE & options = global_archive.options;
-
-        srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1",
-                                    options);
+        srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1", 0);
 
     }
 
@@ -440,7 +431,7 @@ int srcml_disable_option(unsigned long long option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_set_tabstop(int tabstop) {
+int srcml_set_tabstop(size_t tabstop) {
 
     return srcml_archive_set_tabstop(&global_archive, tabstop);
 
@@ -629,7 +620,7 @@ unsigned long long srcml_get_options() {
  *
  * @returns Get the tabstop size on success and NULL On failure.
  */
-int srcml_get_tabstop() {
+size_t srcml_get_tabstop() {
 
     return srcml_archive_get_tabstop(&global_archive);
 
@@ -640,7 +631,7 @@ int srcml_get_tabstop() {
  *
  * @returns Get the number of currently defined namespaces.
  */
-int srcml_get_namespace_size() {
+size_t srcml_get_namespace_size() {
 
     return srcml_archive_get_namespace_size(&global_archive);
 
@@ -653,7 +644,7 @@ int srcml_get_namespace_size() {
  * @returns Get prefix for the given position on success
  * and NULL on failure.
  */
-const char* srcml_get_namespace_prefix(int pos) {
+const char* srcml_get_namespace_prefix(size_t pos) {
 
     return srcml_archive_get_namespace_prefix(&global_archive, pos);
 
@@ -679,7 +670,7 @@ const char* srcml_get_prefix_from_uri(const char* namespace_uri) {
  * @returns Get the namespace at the given pos on succcess
  * and NULL on failure.
  */
-const char* srcml_get_namespace_uri(int pos) {
+const char* srcml_get_namespace_uri(size_t pos) {
 
     return srcml_archive_get_namespace_uri(&global_archive, pos);
 
@@ -726,7 +717,7 @@ const char* srcml_get_processing_instruction_data() {
  *
  * @returns Get the number of currently defined macros.
  */
-int srcml_get_macro_list_size() {
+size_t srcml_get_macro_list_size() {
 
     return srcml_archive_get_macro_list_size(&global_archive);
 
@@ -739,7 +730,7 @@ int srcml_get_macro_list_size() {
  * @returns Get token for the given position on success
  * and NULL on failure.
  */
-const char* srcml_get_macro_token(int pos) {
+const char* srcml_get_macro_token(size_t pos) {
 
     return srcml_archive_get_macro_token(&global_archive, pos);
 
@@ -766,7 +757,7 @@ const char* srcml_get_macro_token_type(const char* token) {
  * @returns Get the type at the given pos on succcess
  * and NULL on failure.
  */
-const char* srcml_get_macro_type(int pos) {
+const char* srcml_get_macro_type(size_t pos) {
 
     return srcml_archive_get_macro_type(&global_archive, pos);
 
@@ -796,7 +787,7 @@ int srcml_check_language(const char* language) { return language == 0 ? 0 : Lang
  *
  * @returns number of languages supported.
  */
-int srcml_get_language_list_size() {
+size_t srcml_get_language_list_size() {
 
     return 5;
 }
@@ -810,7 +801,7 @@ int srcml_get_language_list_size() {
  * @returns Get the supported language name at pos
  * on success and NULL on failure.
  */
-const char * srcml_get_language_list(int pos) {
+const char * srcml_get_language_list(size_t pos) {
 
     if(pos >= srcml_get_language_list_size()) return NULL;
 

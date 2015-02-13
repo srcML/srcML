@@ -79,7 +79,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -97,7 +97,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
@@ -114,7 +114,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_language(archive, "C++");
         srcml_archive_set_filename(archive, "project");
@@ -141,7 +141,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
@@ -163,7 +163,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
@@ -184,7 +184,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_register_namespace(archive, "s", "http://www.sdml.info/srcML/src");
@@ -205,7 +205,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_language(archive, "C++");
         srcml_archive_set_filename(archive, "project");
@@ -227,7 +227,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_xml_encoding(archive, "UTF-8");
         srcml_archive_set_language(archive, "C++");
@@ -251,7 +251,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_archive_set_language(archive, "C++");
@@ -275,7 +275,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_xml_encoding(archive, "UTF-8");
         srcml_archive_set_language(archive, "C++");
@@ -299,7 +299,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_archive_set_language(archive, "C++");
@@ -323,7 +323,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_language(archive, "C++");
         srcml_archive_set_filename(archive, "project");
@@ -346,7 +346,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
         srcml_archive_set_language(archive, "C++");
@@ -372,7 +372,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_archive * iarchive = srcml_archive_create();
@@ -392,7 +392,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
@@ -414,7 +414,7 @@ int main() {
 
     {
         char * s = 0;
-        int size;
+        size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_language(archive, "C++");
         srcml_archive_set_filename(archive, "project");

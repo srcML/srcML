@@ -156,6 +156,11 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // create the srcML output file
+
+    unsigned short compression = 0;
+    if (destination.extension == ".gz")
+        compression = 9;
+
     int status = 0;
     if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
 
@@ -166,12 +171,10 @@ void create_srcml(const srcml_request_t& srcml_request,
         status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
     } else {
 
-        status = srcml_archive_write_open_filename(srcml_arch, destination.c_str());
+        status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), compression);
     }
 
     // gzip compression available directly from libsrcml
-    if (destination.extension == ".gz")
-        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_COMPRESS);
 
     // setup the parsing queue
     TraceLog log(SRCMLOptions::get());

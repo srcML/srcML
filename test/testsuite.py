@@ -116,34 +116,34 @@ def extract_all_executable(src):
 # extracts a particular unit from a srcML file
 def extract_all(src, encoding):
 
-        all = []
-        src_all = []
+    all = []
+    src_all = []
 
-        archive = srcml_archive()
-	if src.find("problem") != -1 :
-		archive.set_xml_encoding("ISO-8859-1")
+    archive = srcml_archive()
+    if src.find("problem") != -1 :
+        archive.set_xml_encoding("ISO-8859-1")
 
-	if src.find("unicode") != -1 :
-		archive.set_src_encoding("UTF-8")
+    if src.find("unicode") != -1 :
+        archive.set_src_encoding("UTF-8")
 
-        archive.read_open_memory(src)
+    archive.read_open_memory(src)
 
+    unit = archive.read_unit()
+    while unit != None :
+        unit.unparse_memory()
+        src_all.append(unit.src())
+        srcml = unit.get_fragment_xml()
+        if archive.get_directory() != None and (archive.get_directory().find(".all") != -1 or archive.get_directory().find("unicode") != -1):
+        	srcml = "<unit>" + srcml[srcml.find(">") + 1:]
+        all.append(srcml)
         unit = archive.read_unit()
-        while unit != None :
-                unit.unparse_memory()
-                src_all.append(unit.src())
-                srcml = unit.get_raw_xml()
-                if archive.get_directory() != None and (archive.get_directory().find(".all") != -1 or archive.get_directory().find("unicode") != -1):
-                	srcml = "<unit>" + srcml[srcml.find(">") + 1:]
-                all.append(srcml)
-		unit = archive.read_unit()
 
-        archive.close()
+    archive.close()
 
-        all.append(0)
-        src_all.append(0)
+    all.append(0)
+    src_all.append(0)
 
-	return all, src_all, archive
+    return all, src_all, archive
 
 def name2filestr(src_filename):
 	file = open(src_filename).read()
@@ -225,7 +225,7 @@ def src2srcML(text_file, encoding, language, directory, filename, read_archive):
                 unit.set_src_encoding("UTF-8")
 
         unit.parse_memory(text_file)
-        srcml = unit.get_raw_xml()
+        srcml = unit.get_fragment_xml()
         archive.close()
 
         srcml = "<unit>" + srcml[srcml.find(">") + 1:]
