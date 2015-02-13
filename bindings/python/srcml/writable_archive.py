@@ -54,6 +54,8 @@ class writable_archive(object):
 
             3) filename:
                 archive.open_write(filename = "somefile.xml")
+                When opening using a file name an optional compression parameter may be used
+                parameter compression_factor - Should be a value from 0 to 9. 0 means no compression, 9 means max compression.
 
             4) srcml.memory_buffer (a python string representation
                     of a srcml archive can be constructed using
