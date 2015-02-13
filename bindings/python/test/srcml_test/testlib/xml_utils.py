@@ -24,7 +24,8 @@
 #
 
 import lxml.etree as ET
-
+import StringIO
+import xml.sax as sax
 
 test_source_code_data = """
 #include <iostream>
@@ -34,8 +35,35 @@ int main() {
     std::cout << "Hello World" << std::endl;
     return 0;
 }
-"""
+""".strip()
+
+class write_tester:
+    def __init__(self):
+        self.buffer = StringIO.StringIO()
+
+    def write(self, input_buffer, size):
+        self.buffer.write(input_buffer)
+        return len(input_buffer)
+
+    def close(self):
+        return 0
+
+class read_tester(object):
+    def __init__(self, initial_data):
+        self.strm = StringIO.StringIO(initial_data)
+
+    def read(self, buff, size):
+        data = self.strm.read(size)
+        buff[:len(data)] = data[:len(data)]
+        return len(data)
+
+    def close(self):
+        return 0
 
 def extract_text_from_xml(input_data):
+    # class h
+    # sax.ParseString(input_data)
     tree = ET.fromstring(input_data)
-    return ET.strip_tags(tree, "*").text.strip()
+    ET.strip_tags(tree, "*")
+    # print tree
+    return tree.text.strip()

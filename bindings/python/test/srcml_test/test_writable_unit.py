@@ -152,8 +152,51 @@ class test_writable_unit(unittest.TestCase):
         output = open(input_file, "w")
         output.write(test_source_code_data)
         output.close()
-
+        mem_buffer = memory_buffer()
         with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX), buffer=mem_buffer) as archive_writer:
             u = archive_writer.create_unit()
             u.parse(filename=input_file)
-            archive_writer.wrire(u)
+            archive_writer.write(u)
+
+        self.assertEqual(test_source_code_data, extract_text_from_xml(str(mem_buffer)), "Didn't get expected results")
+
+
+    def test_parse_memory_buffer(self):
+        mem_buffer = memory_buffer()
+        temp_buffer = memory_buffer()
+        temp_buffer.load_from_string(test_source_code_data)
+        with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            u.parse(buffer=temp_buffer)
+            archive_writer.write(u)
+        self.assertEqual(test_source_code_data, extract_text_from_xml(str(mem_buffer)), "Didn't get expected results")
+
+
+    def test_parse_read_context(self):
+        mem_buffer = memory_buffer()
+        context = read_tester(test_source_code_data)
+        with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            u.parse(context=context)
+            archive_writer.write(u)
+        self.assertEqual(test_source_code_data, extract_text_from_xml(str(mem_buffer)), "Didn't get expected results")
+
+    def test_get_xml_fragment(self):
+        mem_buffer = memory_buffer()
+        context = read_tester(test_source_code_data)
+        with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            u.parse(context=context)
+            self.assertEqual(test_source_code_data, extract_text_from_xml(u.get_xml_fragment()), "Didn't get expected results")
+
+
+    def test_get_standalone_xml(self):
+        mem_buffer = memory_buffer()
+        context = read_tester(test_source_code_data)
+        with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX), buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            u.parse(context=context)
+            self.assertEqual(test_source_code_data, extract_text_from_xml(u.get_standalone_xml()), "Didn't get expected results")
+
+
+

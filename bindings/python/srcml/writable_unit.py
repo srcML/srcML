@@ -105,47 +105,52 @@ class writable_unit(object):
 
     @property
     def filename(self):
-        raise NotImplementedError()
+        return unit_get_filename(self.srcml_unit)
     @filename.setter
     def filename(self, value):
-        raise NotImplementedError()
+        assert value is None or isinstance(value, str), "Invalid filename type must be a string or None."
+        unit_set_filename(self.srcml_unit, value)
 
         
     @property
     def directory(self):
-        raise NotImplementedError()
+        return unit_get_directory(self.srcml_unit)
     @directory.setter
     def directory(self, value):
-        raise NotImplementedError()
+        assert value is None or isinstance(value, str), "Invalid directory type must be a string or None."
+        unit_set_directory(self.srcml_unit, value)
 
 
     @property
     def version(self):
-        raise NotImplementedError()
+        return unit_get_version(self.srcml_unit)
     @version.setter
     def version(self, value):
-        raise NotImplementedError()
+        assert value is None or isinstance(value, str), "Invalid version type must be a string or None."
+        unit_set_version(self.srcml_unit, value)
 
             
     @property
     def timestamp(self):
-        raise NotImplementedError()
+        return unit_get_timestamp(self.srcml_unit)
     @timestamp.setter
     def timestamp(self, value):
-        raise NotImplementedError()
+        assert value is None or isinstance(value, str), "Invalid timestamp type must be a string or None."
+        unit_set_timestamp(self.srcml_unit, value)
 
     
     @property
     def hash(self):
-        raise NotImplementedError()
+        return unit_get_hash(self.srcml_unit)
     @hash.setter
     def hash(self, value):
-        raise NotImplementedError()
+        assert value is None or isinstance(value, str), "Invalid hash type must be a string or None."
+        unit_set_hash(self.srcml_unit, value)
 
     
     @property
     def revision(self):
-        raise NotImplementedError()
+        return unit_get_revision(self.srcml_unit)
 
 
     def parse(self, **kwargs):
@@ -213,12 +218,12 @@ class writable_unit(object):
         elif FILENAME_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            parse_unit_filename(self.srcml_unit, kwargs[FILENAME_PARAM])
+            unit_parse_filename(self.srcml_unit, kwargs[FILENAME_PARAM])
 
         elif BUFFER_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            self.buff = kwargs[BUFF_PARAM]
+            self.buff = kwargs[BUFFER_PARAM]
             unit_parse_memory(
                 self.srcml_unit,
                 self.buff.buff,

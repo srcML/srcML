@@ -18,8 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class readable_archive:
-    def __init__(self, settings):
-        pass
+    def __init__(self, settings, **kwargs):
+        raise NotImplementedError()
 
 # interface ReadableArchive
 #     String encoding()
