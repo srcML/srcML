@@ -32,7 +32,7 @@
  */
 int write_callback_wrapper(void * context, const char * buffer, int len) {
 
-	libxml2_write_context & write_context = (libxml2_write_context &)*context;
+	libxml2_write_context & write_context = *(libxml2_write_context *)context;
 
 	return write_context.write_callback(write_context.context, buffer, (size_t)len);
 
@@ -48,7 +48,7 @@ int write_callback_wrapper(void * context, const char * buffer, int len) {
  */
 int write_close_callback_wrapper(void * context) {
 
-	libxml2_write_context & write_context = (libxml2_write_context &)*context;
+	libxml2_write_context & write_context = *(libxml2_write_context *)context;
 
 	return write_context.close_callback(write_context.context);
 
@@ -66,7 +66,7 @@ int write_close_callback_wrapper(void * context) {
  */
 int read_callback_wrapper(void * context, char * buffer, int len) {
 
-	libxml2_read_context & read_context = (libxml2_read_context &)*context;
+	libxml2_read_context & read_context = *(libxml2_read_context*)context;
 
 	return read_context.read_callback(read_context.context, buffer, (size_t)len);
 
@@ -82,7 +82,7 @@ int read_callback_wrapper(void * context, char * buffer, int len) {
  */
 int read_close_callback_wrapper(void * context) {
 
-	libxml2_read_context & read_context = (libxml2_read_context &)*context;
+	libxml2_read_context & read_context = *(libxml2_read_context*)context;
 
 	return read_context.close_callback(read_context.context);
 
