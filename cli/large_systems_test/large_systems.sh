@@ -1,20 +1,23 @@
 #!/bin/bash
 
-mkdir logs
+# use relative paths
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+mkdir -p "${DIR}/logs"
 
 # timestamp log files
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
 
-TLOG="logs/timelog-${TIMESTAMP}.txt"
-DLOG="logs/difflog-${TIMESTAMP}.txt"
-SLOG="logs/sizelog-${TIMESTAMP}.txt"
+TLOG="${DIR}/logs/timelog-${TIMESTAMP}.txt"
+DLOG="${DIR}/logs/difflog-${TIMESTAMP}.txt"
+SLOG="${DIR}/logs/sizelog-${TIMESTAMP}.txt"
 
 echo "Time log for this session at: ${TLOG}" && echo > "${TLOG}"
 echo "Diff log for this session at: ${DLOG}" && echo > "${DLOG}"
 echo "Size log for this session at: ${SLOG}" && echo > "${SLOG}"
 
 # use CSV input to find big system download locations
-(cat large_systems_list.csv ; echo) | while IFS=',' read -r location name language
+(cat "${DIR}/large_systems_list.csv" ; echo) | while IFS=',' read -r location name language
 do
     # determine if the test should even be run on this system
     TEST_SYSTEM=false
@@ -41,7 +44,7 @@ do
     if [[ $location != "" ]] && [[ "$TEST_SYSTEM" == true ]] ; then
         echo "--------------------------------------"
 
-        ZNAME="logs/${name}"
+        ZNAME="${DIR}/logs/${name}"
         NAME="${ZNAME/.tar.*z/}"   # without the .tar.gz or .tar.xz extensions
 
         # get the compressed file, if it doesn't already exist
