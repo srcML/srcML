@@ -33,7 +33,7 @@ do
 
         # redirect stderr to stdout to store the time, but keep the srcml output
         # for other tests.
-        XZOUTPUT="${ZNAME}-compressed-output.xml"
+        XZOUTPUT="${ZNAME}-output.xml"
         TIME="$(time ( srcml ${ZNAME} -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
 
         # store timed output
