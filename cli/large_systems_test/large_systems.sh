@@ -14,10 +14,31 @@ echo "Diff log for this session at: ${DLOG}" && echo > "${DLOG}"
 echo "Size log for this session at: ${SLOG}" && echo > "${SLOG}"
 
 # use CSV input to find big system download locations
-(cat large_systems_list.csv ; echo) | while IFS=',' read -r location name ignore
+(cat large_systems_list.csv ; echo) | while IFS=',' read -r location name language
 do
-    # ignore empty lines at EOF
-    if [[ $location != "" ]] ; then
+    # determine if the test should even be run on this system
+    TEST_SYSTEM=false
+
+    # if no arguments were given, always test (for all systems)
+    if [[ $# -eq 0 ]] ; then
+        TEST_SYSTEM=true
+    else
+        # check that the description (where to download from, name, or language)
+        # for current system from the CVS list matches one of the args given
+        lloc=$(echo "$location" | tr '[:upper:]' '[:lower:]')
+        lname=$(echo "$name" | tr '[:upper:]' '[:lower:]')
+        llang=$(echo "$language" | tr '[:upper:]' '[:lower:]')
+
+        for system in "$@"; do
+            lsys=$(echo "$system" | tr '[:upper:]' '[:lower:]')
+            if [[ "${lloc}" == *"${lsys}"*  || "${lname}" == *"${lsys}"* || "${llang}" == "${lsys}" ]] ; then
+                TEST_SYSTEM=true
+            fi
+        done
+    fi
+
+    # ignore empty lines at EOF.
+    if [[ $location != "" ]] && [[ "$TEST_SYSTEM" == true ]] ; then
         echo "--------------------------------------"
 
         ZNAME="logs/${name}"
