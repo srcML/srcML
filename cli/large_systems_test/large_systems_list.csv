@@ -1,5 +1,5 @@
-https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.18.6.tar.xz, linux (C)
-http://curl.haxx.se/download/curl-7.40.0.tar.gz, curl (C)
-https://github.com/AFNetworking/AFNetworking/archive/2.5.1.tar.gz, AFNetworking (Objective-C)
-https://github.com/gkossakowski/scalac-aspects, scalac-aspects (Aspect-J)
-https://github.com/elasticsearch/elasticsearch/archive/v1.3.8.tar.gz, elastic search (Java)
+https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.18.6.tar.xz,linux.tar.xz,C
+http://curl.haxx.se/download/curl-7.40.0.tar.gz,curl.tar.gz,C
+https://github.com/AFNetworking/AFNetworking/archive/2.5.1.tar.gz,AFNetworking.tar.gz,Objective-C
+https://github.com/srnsw/State-Records-Search/archive/1.3.4.tar.gz,scalac-aspects.tar.gz,Aspect-J
+https://github.com/elasticsearch/elasticsearch/archive/v1.3.8.tar.gz,elastic-search.tar.gz,Java
