@@ -34,10 +34,10 @@ do
         # redirect stderr to stdout to store the time, but keep the srcml output
         # for other tests.
         XZOUTPUT="${ZNAME}-output.xml"
-        TIME="$(time ( srcml ${ZNAME} -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
+        TIME="$(time ( srcml ${ZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
 
         # store timed output
-        echo "srcml ${ZNAME} -o ${XZOUTPUT}" >> "${TLOG}"
+        echo "srcml ${ZNAME} --in-order -o ${XZOUTPUT}" >> "${TLOG}"
         echo "${TIME}" >> "${TLOG}"
 
         # uncompress, if the unzipped version doesn't already exist
@@ -50,11 +50,11 @@ do
         # redirect stderr to stdout to store time
         echo "Testing srcML on uncompressed ${NAME} ..."
         UNZOUTPUT="${NAME}-output.xml" # output from
-        TIME="$(time ( srcml ${NAME} -o ${UNZOUTPUT} ) 2>&1 1>/dev/null )"
+        TIME="$(time ( srcml ${NAME} --in-order -o ${UNZOUTPUT} ) 2>&1 1>/dev/null )"
 
         # store timed output
         echo "" >> "${TLOG}"
-        echo "srcml ${NAME} -o ${UNZOUTPUT}" >> "${TLOG}"
+        echo "srcml ${NAME} --in-order -o ${UNZOUTPUT}" >> "${TLOG}"
         echo "${TIME}" >> "${TLOG}"
 
         # diff srcml output from the compressed and uncompressed input
