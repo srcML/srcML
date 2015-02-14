@@ -57,12 +57,12 @@ do
         echo "srcml ${NAME} --in-order -o ${UNZOUTPUT}" >> "${TLOG}"
         echo "${TIME}" >> "${TLOG}"
 
-        # diff srcml output from the compressed and uncompressed input
-        #echo "Diffing srcML output from compressed and uncompressed input..."
-        #DIFF="$( diff ${XZOUTPUT} ${UNZOUTPUT} )"
+        # cmp srcml output from the compressed and uncompressed input
+        #echo "Comparing srcML output from compressed and uncompressed input..."
+        DIFF="$( cmp ${XZOUTPUT} ${UNZOUTPUT} )"
 
-        #echo "diff ${XZOUTPUT} ${UNZOUTPUT}" >> "${DLOG}"
-        #echo "${DIFF}" >> "${DLOG}"
+        echo "cmp ${XZOUTPUT} ${UNZOUTPUT}" >> "${DLOG}"
+        echo "${DIFF}" >> "${DLOG}"
 
         # keep the logs and the big system (test runs faster consecutively), but
         # cleanup srcml outputs
