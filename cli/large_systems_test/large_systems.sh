@@ -14,7 +14,7 @@ echo "Diff log for this session at: ${DLOG}" && echo > "${DLOG}"
 echo "Size log for this session at: ${SLOG}" && echo > "${SLOG}"
 
 # use CSV input to find big system download locations
-(cat large_systems_list.csv ; echo) | while IFS=',' read -r location
+(cat large_systems_list.csv ; echo) | while IFS=',' read -r location ignore
 do
     # ignore empty lines at EOF
     if [[ $location != "" ]] ; then
