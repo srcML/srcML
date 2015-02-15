@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     struct srcml_unit* unit;
     int srcml_input;
     char * buffer;
-    int size = 0;
+    size_t size = 0;
     char* s =
         "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
         "<unit xmlns=\"http://www.sdml.info/srcML/src\">"

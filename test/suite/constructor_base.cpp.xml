@@ -15,11 +15,11 @@
 </unit>
 
 <unit>
-<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></member_init> </member_init_list><block>{}</block></constructor>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> </member_init_list><block>{}</block></constructor>
 </unit>
 
 <unit>
-<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></member_init>, <member_init><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></member_init> </member_init_list><block>{}</block></constructor>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call>, <call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call> </member_init_list><block>{}</block></constructor>
 </unit>
 
 <!-- internal constructor_decl declarations -->
@@ -61,14 +61,14 @@
 <unit>
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
-<constructor><name>A</name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></member_init> </member_init_list><block>{}</block></constructor>
+<constructor><name>A</name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> </member_init_list><block>{}</block></constructor>
 </public>}</block>;</class>
 </unit>
 
 <unit>
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
-<constructor><name>A</name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></member_init>, <member_init><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></member_init> </member_init_list><block>{}</block></constructor>
+<constructor><name>A</name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call>, <call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call> </member_init_list><block>{}</block></constructor>
 </public>}</block>;</class>
 </unit>
 

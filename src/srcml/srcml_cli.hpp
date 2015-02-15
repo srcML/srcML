@@ -66,6 +66,8 @@ const int SRCML_COMMAND_NOARCHIVE                 = 1<<24;
 
 const int SRCML_DEBUG_MODE                        = 1<<25;
 
+const int SRCML_COMPRESS                          = 1<<26;
+
 // commands that are simple queries on srcml
 const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_LONGINFO |
