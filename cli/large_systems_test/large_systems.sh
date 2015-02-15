@@ -2,12 +2,10 @@
 
 # use relative paths
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-
 mkdir -p "${DIR}/logs"
 
 # timestamp log files
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
-
 TLOG="${DIR}/logs/timelog-${TIMESTAMP}.txt"
 DLOG="${DIR}/logs/difflog-${TIMESTAMP}.txt"
 SLOG="${DIR}/logs/sizelog-${TIMESTAMP}.txt"
@@ -40,7 +38,7 @@ do
         done
     fi
 
-    # ignore empty lines at EOF.
+    # ignore empty lines at EOF of CSV, and only run systems that were specified
     if [[ $location != "" ]] && [[ "$TEST_SYSTEM" == true ]] ; then
         echo "--------------------------------------"
 
@@ -99,7 +97,7 @@ do
         echo "${SIZE_OUTPUT}" >> "${SLOG}"
 
         # cmp srcml output from the compressed and uncompressed input
-        #echo "Comparing srcML output from compressed and uncompressed input..."
+        echo "Comparing srcML output from compressed and uncompressed input..."
         DIFF="$( cmp ${XZOUTPUT} ${UNZOUTPUT} )"
 
         echo "cmp ${XZOUTPUT} ${UNZOUTPUT}" >> "${DLOG}"
@@ -107,6 +105,7 @@ do
 
         # keep the logs and the big system (test runs faster consecutively), but
         # cleanup srcml outputs
+        rm -r "${NAME}"    # uncompressed directory
         rm "${XZOUTPUT}"   # srcml output from running on compressed file
         rm "${UNZOUTPUT}"  # srcml output from running on directory
 
