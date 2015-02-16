@@ -250,12 +250,31 @@ class test_readable_archive(unittest.TestCase):
 
     def test_xml_namespaces(self):
         mem_buffer = memory_buffer()
-        expected_processing_instruction = ("target", "data")
-        writable_arch_settings = writable_archive_settings(default_language=LANGUAGE_CXX, processing_instruction=expected_processing_instruction)
+        expected_namespaces = [("google", "http://www.google.com")]
+        expected_result = writable_archive_xml_namespace_settings(("", "http://www.sdml.info/srcML/src"), *expected_namespaces)
+        writable_arch_settings = writable_archive_settings(default_language=LANGUAGE_CXX, xml_namespaces=expected_namespaces)
         with writable_archive(writable_arch_settings, buffer=mem_buffer) as archive_writer:
             u = archive_writer.create_unit()
             u.parse(source_code=test_source_code_data)
             archive_writer.write(u)
 
         with readable_archive(readable_archive_settings(), buffer=mem_buffer) as archive_reader:
-            self.assertEqual(expected_processing_instruction, archive_reader.processing_instruction, "Incorrect value.")
+            self.assertEqual(expected_result, archive_reader.xml_namespaces, "Incorrect value. Expected: {0} Actual: {1}".format(expected_result, archive_reader.xml_namespaces))
+            
+            
+
+    def test_macros(self):
+        mem_buffer = memory_buffer()
+        expected_macros = {"mac":"src:type"}
+        # expected_namespaces = [("google", "http://www.google.com")]
+        # expected_result = writable_archive_xml_namespace_settings(*expected_namespaces, ("", "http://www.sdml.info/srcML/src"))
+        writable_arch_settings = writable_archive_settings(default_language=LANGUAGE_CXX, macros=macros)
+        with writable_archive(writable_arch_settings, buffer=mem_buffer) as archive_writer:
+            u = archive_writer.create_unit()
+            u.parse(source_code=test_source_code_data)
+            archive_writer.write(u)
+
+        with readable_archive(readable_archive_settings(), buffer=mem_buffer) as archive_reader:
+            self.assertTrue(("mac", "src:type") in archive_reader.macros, "Didn't locate expected macros")
+            
+            
