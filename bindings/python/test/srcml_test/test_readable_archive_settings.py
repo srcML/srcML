@@ -21,7 +21,7 @@ from srcml import *
 from srcml.exceptions import *
 import os, unittest, ctypes
 from testlib import expect_exception
-from abc import *
+
 class temp_test_transform(xsltransform_base):
 
     def __init__(self):

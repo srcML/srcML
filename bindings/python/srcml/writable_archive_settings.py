@@ -51,6 +51,8 @@ class writable_archive_settings(object):
         temp_proc_instr = kwargs.pop("processing_instruction", None)
         if temp_proc_instr is not None:
             self.set_processing_instruction(*temp_proc_instr)
+        if len(kwargs) != 0:
+            raise AttributeError("Received unknown attributes as arguments.")
 
     @property
     def filename(self):

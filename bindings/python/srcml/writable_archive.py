@@ -28,8 +28,6 @@ from archive_macros import archive_macros
 class writable_archive(object):
     """
     A writable_archive is an archive that data can be written into.
-
-    @TODO: Typical use cases/Examples    
     """
 
 
@@ -96,7 +94,6 @@ class writable_archive(object):
             One of the provided means of opening an archive for writing must exist.
         """
         assert isinstance(settings,  writable_archive_settings), "Invalid settings object"
-        self.opened_using_with_stmt = False
         # Creating a new instance of an archive so that it can be handled
         # correctly when opened
         self.srcml_archive = archive_create()
@@ -218,7 +215,6 @@ class writable_archive(object):
 
     # Parts of pythonic interface
     def __enter__(self):
-        self.opened_using_with_stmt = True
         return self
 
     def __exit__(self, type, value, traceback):

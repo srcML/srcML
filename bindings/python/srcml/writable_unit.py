@@ -72,6 +72,10 @@ class writable_unit(object):
         self.timestamp = timestamp
         self.hash = hash_of_unit
 
+    def __del__(self):
+        unit_free(self.srcml_unit)
+
+
     @property
     def src_encoding(self):
         """
