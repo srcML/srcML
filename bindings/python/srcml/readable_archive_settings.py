@@ -101,19 +101,31 @@ class readable_archive_settings(object):
         """
         Create a copy of the current archive.
         """
-        raise NotImplementedError()
+        return readable_archive_settings(
+            self.xml_encoding,
+            self.src_encoding,
+            [x for x in self.xsltransformations]
+        )
 
     def clear(self):
         """
         Set the current object back to default values.
         """
-        raise NotImplementedError()
+        self.xml_encoding = None
+        self.src_encoding = None
+        self._xslt_transforms =[]
 
     def __eq__(self, other):
         """
         Compare two readable_archive_settings objects to see if they are the same.
         """
-        raise NotImplementedError()
+        return (
+            self.xml_encoding == other.xml_encoding
+            and self.src_encoding == other.src_encoding
+            and self.xsltransformations == other.xsltransformations
+        )
+
+        # raise NotImplementedError()
 
     def __ne__(self, other):
         """

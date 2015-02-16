@@ -32,8 +32,6 @@ class temp_test_transform(xsltransform_base):
     def apply(self, archive_ptr):
         pass
 
-xsltransform_base.register(temp_test_transform)
-
 class test_readable_archive_settings(unittest.TestCase):
 
     def setUp(self):
