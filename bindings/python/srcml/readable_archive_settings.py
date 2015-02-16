@@ -19,7 +19,10 @@
 
 
 class readable_archive_settings(object):
-    def __init__(self, xml_encoding=None, src_encoding=None, xslt_transformations=[]):
+    """
+    The settings used to configure a readable_archive.
+    """
+    def __init__(self, xml_encoding=None, src_encoding=None, xsltransformations=[]):
         self._xslt_transforms = list()
         raise NotImplementedError()
 
@@ -40,7 +43,7 @@ class readable_archive_settings(object):
         self._src_encoding = value
     
     @property
-    def xsltransforms(self):
+    def xsltransformations(self):
         return self._xslt_transforms
 
     def copy(self):
