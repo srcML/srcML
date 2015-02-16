@@ -21,13 +21,18 @@ from srcml import *
 from srcml.exceptions import *
 import os, unittest, ctypes
 from testlib import expect_exception
-
+from abc import *
 class temp_test_transform(xsltransform_base):
+
     def __init__(self):
+        super(temp_test_transform, self).__init__()
         pass
 
+
     def apply(self, archive_ptr):
-        raise NotImplementedError()
+        pass
+
+xsltransform_base.register(temp_test_transform)
 
 class test_readable_archive_settings(unittest.TestCase):
 
@@ -85,3 +90,85 @@ class test_readable_archive_settings(unittest.TestCase):
     def test_src_encoding_invalid_encoding(self):
         subject = readable_archive_settings()
         subject.src_encoding = "bananalkmadssldkmkakdfavqinrfq]"
+
+
+    def test_copy(self):
+        expected_xml_encoding="UTF-8"
+        expected_src_encoding ="UTF-8"
+        expected_transform = temp_test_transform()
+        subject = readable_archive_settings(
+            xml_encoding=expected_xml_encoding,
+            src_encoding=expected_src_encoding,
+            xsltransformations=[expected_transform]
+        )
+        subject2 = subject.copy()
+        self.assertEqual(subject2.xml_encoding, subject.xml_encoding, "Incorrect value")
+        self.assertEqual(subject2.src_encoding, subject.src_encoding, "Incorrect value")
+        self.assertEqual(subject2.xsltransformations, subject.xsltransformations, "Incorrect value")
+
+    def test_clear(self):
+        expected_xml_encoding="UTF-8"
+        expected_src_encoding ="UTF-8"
+        expected_transform = temp_test_transform()
+        subject = readable_archive_settings(
+            xml_encoding=expected_xml_encoding,
+            src_encoding=expected_src_encoding,
+            xsltransformations=[expected_transform]
+        )
+        self.assertEqual(expected_xml_encoding, subject.xml_encoding, "Incorrect value")
+        self.assertEqual(expected_src_encoding, subject.src_encoding, "Incorrect value")
+        self.assertEqual([expected_transform], subject.xsltransformations, "Incorrect value")        
+        subject.clear()
+        self.assertIsNone(subject.xml_encoding, "Incorrect default value")
+        self.assertIsNone(subject.src_encoding, "Incorrect default value")
+        self.assertEqual([], subject.xsltransformations, "Incorrect default value")
+
+
+
+    def test_copy(self):
+        expected_xml_encoding="UTF-8"
+        expected_src_encoding ="UTF-8"
+        expected_transform = temp_test_transform()
+        subject = readable_archive_settings(
+            xml_encoding=expected_xml_encoding,
+            src_encoding=expected_src_encoding,
+            xsltransformations=[expected_transform]
+        )
+        subject2 = subject.copy()
+        self.assertEqual(subject2.xml_encoding, subject.xml_encoding, "Incorrect value")
+        self.assertEqual(subject2.src_encoding, subject.src_encoding, "Incorrect value")
+        self.assertEqual(subject2.xsltransformations, subject.xsltransformations, "Incorrect value")
+
+    def test___eq__(self):
+        expected_xml_encoding="UTF-8"
+        expected_src_encoding ="UTF-8"
+        expected_transform = temp_test_transform()
+        subject = readable_archive_settings(
+            xml_encoding=expected_xml_encoding,
+            src_encoding=expected_src_encoding,
+            xsltransformations=[expected_transform]
+        )
+
+        subject2 = readable_archive_settings(
+            xml_encoding=expected_xml_encoding,
+            src_encoding=expected_src_encoding,
+            xsltransformations=[expected_transform]
+        )
+        self.assertEqual(subject2, subject, "Comparison Failure")
+
+
+    def test___ne__(self):
+        expected_xml_encoding="UTF-8"
+        expected_src_encoding ="UTF-8"
+        expected_transform = temp_test_transform()
+        subject = readable_archive_settings(
+            xml_encoding=expected_xml_encoding,
+            src_encoding=expected_src_encoding,
+            xsltransformations=[expected_transform]
+        )
+
+        subject2 = readable_archive_settings(
+            xml_encoding=expected_xml_encoding,
+            xsltransformations=[expected_transform]
+        )
+        self.assertNotEqual(subject2, subject, "Comparison Failure")

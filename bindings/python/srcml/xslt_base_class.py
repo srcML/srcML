@@ -17,13 +17,20 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import abc
+from abc import *
 
-class xsltransform_base:
-    __metaclass__ = abc.ABCMeta
+class xsltransform_base(object):
+    __metaclass__ = ABCMeta
 
+    @classmethod
+    def __subclasshook__(cls, other):
+        attr = getattr(other, "apply", None)
+        if attr is None: 
+            return False
+        else:
+            return callable(attr)
 
-    @abc.abstractmethod
+    @abstractmethod
     def apply(self, archive_pointer):
         raise NotImplementedError("This is an abstract method, that cannot and should never be called outside of the srcml library.")
         pass
