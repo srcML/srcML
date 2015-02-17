@@ -54,7 +54,8 @@ class read_tester(object):
 
     def read(self, buff, size):
         data = self.strm.read(size)
-        buff[:len(data)] = data[:len(data)]
+        buff[:len(data)] = [ord(x) for x in data[:len(data)]]
+
         return len(data)
 
     def close(self):

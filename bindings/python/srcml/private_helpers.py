@@ -51,7 +51,7 @@ class str_reader_context(object):
     def read(self, buff, size):
         outBufferIndex = 0
         amountToWrite = min(len(self.xml_str), size - 1)
-        buff[:amountToWrite] = self.xml_str[:amountToWrite]
+        buff[:amountToWrite] = [ord(x) for x in self.xml_str[:amountToWrite]]
         self.xml_str = self.xml_str[amountToWrite:]
         return amountToWrite
 
@@ -74,6 +74,7 @@ class write_stream_context(object):
         except:
             return -1
         return 0
+
 class stream_context(object):
     def __init__(self, stream, close_on_complete=True):
         self.strm = stream
@@ -81,7 +82,7 @@ class stream_context(object):
 
     def read(self, buff, size):
         data = self.strm.read(size)
-        buff[:len(data)] = data[:len(data)]
+        buff[:len(data)] = [ord(x) for x in data[:len(data)]]
         return len(data)
 
     def write(self, buff, size):
@@ -98,10 +99,7 @@ class stream_context(object):
 
 # Callback helper functions.
 def cb_read_helper(ctxt, buff, size):
-    mutableCBuffer = ctypes.cast(buff, ctypes.POINTER(ctypes.c_char))
-    addr = ctypes.addressof(mutableCBuffer.contents)
-    bufferArray = (ctypes.c_char * size).from_address(addr)
-    return ctxt.read(bufferArray, size)
+    return ctxt.read((ctypes.c_byte * size).from_address(buff), size)
 
 def cb_write_helper(ctxt, buff, size):
     return ctxt.write(buff, size)
@@ -109,3 +107,7 @@ def cb_write_helper(ctxt, buff, size):
 def cb_close_helper(ctxt):
     return ctxt.close()
 
+def cb_read_multifunc_hlpr(to_call):
+    def cb_read_impl(ctxt, buff, size):
+        return to_call(ctxt, (ctypes.c_byte * size).from_address(buff), size)
+    return cb_read_impl

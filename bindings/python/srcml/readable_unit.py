@@ -18,4 +18,26 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 class readable_unit(object):
-    pass
+    def __init__(self, unit_ptr):
+        self.srcml_unit = unit_ptr
+
+# class ReadableUnit
+#     ReadableUnit(long unitPtr)
+#     String encoding()
+#     void setEncoding(String newEncoding)
+#     String language()
+#     String fileName()
+#     String directory()
+#     String version()
+#     String timeStamp()
+#     String hash()
+#     String toXmlString()
+#     String revision()
+#     void unparse(String fileName)
+#     void unparse(MemoryBuffer buffer)
+#     void unparse(StringBuilder builder)
+#     void unparse(Writer writer)
+#     void unparse(Writer writer, boolean closeStream)
+#     void unparse(OutputStream strm)
+#     void unparse(OutputStream strm, boolean closeStream)
+#     void unparse(WritableContext context)

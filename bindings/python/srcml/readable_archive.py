@@ -20,8 +20,7 @@
 from bindings import *
 from readable_archive_settings import readable_archive_settings
 from private_helpers import *
-from exceptions import invalid_srcml_language
-from writable_unit import writable_unit
+from readable_unit import readable_unit
 from archive_xml_namespaces import archive_xml_namespaces
 from archive_macros import archive_macros
 
@@ -90,7 +89,29 @@ class readable_archive(object):
         self.srcml_archive = archive_create()
         if self.srcml_archive == None:
             raise MemoryError("Failed to allocate native srcml archive.")
-        raise NotImplementedError()
+        # Construct special members.
+        self._macros = archive_macros(self.srcml_archive)
+        self._xml_namespaces = archive_xml_namespaces(self.srcml_archive)
+
+        # Load settings here
+        if settings.xml_encoding != None:
+            archive_set_xml_encoding(self.srcml_archive, settings.xml_encoding)
+
+        if settings.src_encoding != None:
+            archive_set_src_encoding(self.srcml_archive, settings.src_encoding)
+
+        # Open archive
+        self._open_read(**kwargs)
+
+        class xslt(object):
+            def apply(self, output_archive):
+                # return self._foo
+                raise NotImplementedError()
+        self._xslt = xslt()
+        # Loading transformations,
+        if len(settings.xsltransformations) > 0:
+            for transform in settings.xlstransformations:
+                transform.apply(self.srcml_archive)
 
     def _open_read(self, **kwargs):
         if STREAM_PARAM in kwargs:
@@ -117,7 +138,7 @@ class readable_archive(object):
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             self._ctxt = kwargs[BUFFER_PARAM]
-            archive_read_open_memory(self.srcml_archive, self._ctxt._buff, self._ctxt._size)
+            archive_read_open_memory(self.srcml_archive, self._ctxt.buff, ctypes.c_int(self._ctxt.size.value))
 
         elif CONTEXT_PARAM in kwargs:
             if len(kwargs) > 3:
@@ -136,7 +157,7 @@ class readable_archive(object):
                 )
             else:
                 self._ctxt = kwargs[CONTEXT_PARAM]
-                self._read_cb_helper = read_callback(kwargs[READ_CB_PARAM])
+                self._read_cb_helper = read_callback(cb_read_multifunc_hlpr(kwargs[READ_CB_PARAM]))
                 self._read_close_helper = close_callback(kwargs[CLOSE_CB_PARAM])
                 archive_read_open_io(
                     self.srcml_archive,
@@ -172,55 +193,132 @@ class readable_archive(object):
     # Properties
     @property
     def xml_encoding(self):
-        raise NotImplementedError()
+        """
+        Returns the XML encoding that an archive was read in as.
+        """
+        return archive_get_xml_encoding(self.srcml_archive)
 
     @property
     def src_encoding(self):
-        raise NotImplementedError()
+        """
+        The default encoding used for extracting source code files.
+        This encoding can be overridden by setting the encoding on the unit 
+        itself before calling unparse.
+
+        If None is Latin-1 is used as the default encoding.
+        """
+        return archive_get_src_encoding(self.srcml_archive)
 
     @property
     def filename(self):
-        raise NotImplementedError()
+        """
+        Gets the filename attribute associated with the archive.
+
+        If None the filename attribute wasn't set.
+        """
+        return archive_get_filename(self.srcml_archive)
 
     @property
     def directory(self):
-        raise NotImplementedError()
+        """
+        Gets the directory attribute associated with the archive.
+
+        If None the directory attribute wasn't set.
+        """
+        return archive_get_directory(self.srcml_archive)
 
     @property
     def version(self):
-        raise NotImplementedError()
+        """
+        Gets the versions attribute associated with the archive.
+
+        If None the versions attribute wasn't set.
+        """
+        return archive_get_version(self.srcml_archive)
 
     @property
     def parser_options(self):
-        raise NotImplementedError()
+        """
+        Returns the current parser options. This doesn't effect anything accept how
+        transformations are handled within the XSLT object.
 
+        """
+        return archive_get_options(self.srcml_archive)
+
+    @parser_options.setter
+    def parser_options(self, value):
+        """
+        Set the current parser options for the archive.
+        """
+        assert value is None or isinstance(value, (long, int)), "Invalid type of value. Value must be a long or integer."
+        archive_set_options(self.srcml_archive, value)
+    
     @property
     def tab_stop(self):
-        raise NotImplementedError()
+        """
+        Returns the current tabstop 
+        """
+        return archive_get_tabstop(self.srcml_archive)
 
     @property
     def revision(self):
-        raise NotImplementedError()
+        """
+        Returns the srcML revision used to create the archive.
+        If this is None then the revision wasn't present on the 
+        archive and the current srcML was made with a version before
+        version 0.8.0.
+        """
+        return archive_get_revision(self.srcml_archive)
 
     @property
     def processing_instruction(self):
-        raise NotImplementedError()
+        """
+        If processing instruction was set when writing an archive it can be read
+        it can be read using this property. If the processing instruction wasn't
+        set then then the processing instruction wasn't set.
+        """
+        prefix = archive_get_processing_instruction_target(self.srcml_archive)
+        if prefix == None:
+            return None
+        else:
+            return (prefix, archive_get_processing_instruction_data(self.srcml_archive))
 
     @property
     def xml_namespaces(self):
-        raise NotImplementedError()
+        """
+        Returns all of the XML namespaces registered with the archive.
+        """
+        return self._xml_namespaces
 
     @property
     def macros(self):
-        raise NotImplementedError()
+        """
+        Returns all macros registered with the current archive.
+        """
+        return self._macros
 
     @property
     def xslt(self):
-        raise NotImplementedError()
+        """
+        Returns an XSLT object that can be used to apply transformations
+        to the current archive, which is then written into a writable_archive.
+
+        """
+        return self._xslt
 
     # Methods
     def read(self):
-        raise NotImplementedError()
+        """
+        Read the next unit from within the archive. If there are no more
+        units to read None is returned.
+        """
+        unit_ptr = read_unit(self.srcml_archive)
+        if unit_ptr == None:
+            return None
+        return readable_unit(unit_ptr)
 
     def close(self):
+        """
+        Close the current archive.
+        """
         archive_close(self.srcml_archive)
