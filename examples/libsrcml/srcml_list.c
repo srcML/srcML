@@ -32,19 +32,19 @@ int main(int argc, char* argv[]) {
     struct srcml_archive * archive;
     struct srcml_unit * unit;
 
-    archive = srcml_create_archive();
-    srcml_read_open_filename(archive, "project.xml");
+    archive = srcml_archive_create();
+    srcml_archive_read_open_filename(archive, "project.xml");
 
     while((unit = srcml_read_unit_header(archive))) {
 
         puts(srcml_unit_get_filename(unit));
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
 
     }
 
 
-    srcml_close_archive(archive);
-    srcml_free_archive(archive);
+    srcml_archive_close(archive);
+    srcml_archive_free(archive);
 
     return 0;
 }

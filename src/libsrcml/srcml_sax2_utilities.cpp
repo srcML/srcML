@@ -70,17 +70,18 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
  * @param ifilename name of srcML file to extract text
  * @param ofilename name of output file to put source
  * @param encoding output encoding
- * @param options srcml options
+ * @param compression amount of compression 0 none to 9 max
  * @param unit unit number to extract
  *
  * Extract a given unit from supplied srcML directly to file.
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, OPTION_TYPE options, int unit) {
+int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, int unit) {
 
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding),
-                                                                      options & SRCML_OPTION_COMPRESS);
+    if(compression > 9) compression = 9;
+
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding), compression);
 
     srcml_sax2_reader reader(ifilename);
     reader.read_src(output_buffer);

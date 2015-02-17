@@ -4,18 +4,22 @@ import os
 import sys
 
 machines = [
-      "fedora19build"
-    , "fedora19test"
-    , "fedora20build"
+      "fedora20build"
     , "fedora20test"
-    , "fedora19build64"
-    , "fedora19test64"
+    , "fedora21build"
+    , "fedora21test"
     , "fedora20build64"
     , "fedora20test64"
+    , "fedora21build64"
+    , "fedora21test64"
     , "suse13build"
     , "suse13test"
+    , "suse132build"
+    , "suse132test"
     , "suse13build64"
     , "suse13test64"
+    , "suse132build64"
+    , "suse132test64"
     , "ubuntu10build"
     , "ubuntu10test"
     , "ubuntu12build"
@@ -34,10 +38,14 @@ machines = [
     , "mint13test"
     , "mint17build"
     , "mint17test"
+    , "mint171build"
+    , "mint171test"
     , "mint13build64"
     , "mint13test64"
     , "mint17build64"
     , "mint17test64"
+    , "mint171build64"
+    , "mint171test64"
 ]
 
 options = []

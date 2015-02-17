@@ -49,7 +49,7 @@ if(BUILD_UNIT_TESTS)
     add_subdirectory(test)
 endif()
 
-if(BUILD_CLI_TESTS)
+if(BUILD_CLI_TESTS OR BUILD_LARGE_SYSTEMS_TESTS)
     add_subdirectory(cli)
 endif()
 

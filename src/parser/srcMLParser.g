@@ -4086,7 +4086,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_int[token, LA(1)]
                 set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
                 (options { generateAmbigWarnings = false; } : EXTERN (options { greedy = true; } : ALIAS set_int[specifier_count, specifier_count + 1])* |
-                    { LA(1) != NEW || (inLanguage(LANGUAGE_CSHARP) && inPrevMode(MODE_CLASS)) }? specifier | template_specifier set_bool[sawtemplate, true] |
+                    { LA(1) != NEW || (inLanguage(LANGUAGE_CSHARP) && (inPrevMode(MODE_CLASS) || specifier_count > 0)) }? specifier | template_specifier set_bool[sawtemplate, true] |
                     { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
                 set_int[specifier_count, specifier_count + 1]
                 set_type[type, ACCESS_REGION,

@@ -32,13 +32,13 @@ void srcml_input_srcml(ParseQueue& queue,
                        const srcml_input_src& srcml_input) {
 
     // open the srcml input archive
-    srcml_archive* srcml_input_archive = srcml_create_archive();
+    srcml_archive* srcml_input_archive = srcml_archive_create();
     if (contains<int>(srcml_input))
-        srcml_read_open_fd(srcml_input_archive, srcml_input);
+        srcml_archive_read_open_fd(srcml_input_archive, srcml_input);
     else if (contains<FILE*>(srcml_input))
-        srcml_read_open_FILE(srcml_input_archive, srcml_input);
+        srcml_archive_read_open_FILE(srcml_input_archive, srcml_input);
     else
-        srcml_read_open_filename(srcml_input_archive, srcml_input.c_str());
+        srcml_archive_read_open_filename(srcml_input_archive, srcml_input.c_str());
 
     if (SRCML_COMMAND_XML & SRCMLOptions::get()) {
         // Undoes all setup of srcml output archive in create_srcml
@@ -46,9 +46,9 @@ void srcml_input_srcml(ParseQueue& queue,
         //srcml_archive_set_options(srcml_output_archive, opts);
         //srcml_archive_disable_option(srcml_output_archive, SRCML_OPTION_ARCHIVE);
         
-        int nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
+        size_t nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
         
-        for (int i = 0; i < nsSize; ++i) {
+        for (size_t i = 0; i < nsSize; ++i) {
             srcml_archive_register_namespace(srcml_output_archive,
                 srcml_archive_get_namespace_prefix(srcml_input_archive, i),
                 srcml_archive_get_namespace_uri(srcml_input_archive, i));
@@ -58,7 +58,7 @@ void srcml_input_srcml(ParseQueue& queue,
     // move to the correct unit
     for (int i = 1; i < srcml_input.unit; ++i) {
         srcml_unit* unit = srcml_read_unit_header(srcml_input_archive);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     bool unitPresent = false;

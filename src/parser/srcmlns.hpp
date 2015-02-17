@@ -100,7 +100,7 @@ const char* const UNIT_ATTRIBUTE_REVISION = "revision";
 const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
 
 /** directory attribute */
-const char* const UNIT_ATTRIBUTE_DIRECTORY = "dir";
+const char* const UNIT_ATTRIBUTE_DIRECTORY = "directory";
 
 /** filename attribute */
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
@@ -116,6 +116,9 @@ const char* const UNIT_ATTRIBUTE_TIMESTAMP = "timestamp";
 
 /** hash checksum attribute */
 const char* const UNIT_ATTRIBUTE_HASH = "hash";
+
+/** hash checksum attribute */
+const char* const UNIT_ATTRIBUTE_SOURCE_ENCODING = "src-encoding";
 
 /** item (XPath) attribute */
 const char* const UNIT_ATTRIBUTE_ITEM = "item";

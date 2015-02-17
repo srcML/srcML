@@ -34,30 +34,30 @@
 
 int main() {
 
-    srcml_archive * archive = srcml_create_archive();
+    srcml_archive * archive = srcml_archive_create();
 
     /*
-      srcml_unit_get_encoding
+      srcml_unit_get_src_encoding
     */
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->encoding = boost::optional<std::string>();
-        dassert(srcml_unit_get_encoding(unit), 0);
-        srcml_free_unit(unit);
+        dassert(srcml_unit_get_src_encoding(unit), 0);
+        srcml_unit_free(unit);
     }
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->encoding = "foo";
-        dassert(srcml_unit_get_encoding(unit), std::string("foo"));
-        srcml_free_unit(unit);
+        dassert(srcml_unit_get_src_encoding(unit), std::string("foo"));
+        srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_get_encoding(0), 0);
+        dassert(srcml_unit_get_src_encoding(0), 0);
     }
 
     /*
@@ -66,17 +66,17 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         dassert(srcml_unit_get_revision(unit), std::string(SRCML_VERSION_STRING));
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->revision = boost::optional<std::string>();
         dassert(srcml_unit_get_revision(unit), 0);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
@@ -86,10 +86,10 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->revision = "foo";
         dassert(srcml_unit_get_revision(unit), std::string("foo"));
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     /*
@@ -98,18 +98,18 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->language = boost::optional<std::string>();
         dassert(srcml_unit_get_language(unit), 0);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->language = "foo";
         dassert(srcml_unit_get_language(unit), std::string("foo"));
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
@@ -122,18 +122,18 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->filename = boost::optional<std::string>();
         dassert(srcml_unit_get_filename(unit), 0);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->filename = "foo";
         dassert(srcml_unit_get_filename(unit), std::string("foo"));
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
@@ -146,18 +146,18 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->directory = boost::optional<std::string>();
         dassert(srcml_unit_get_directory(unit), 0);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->directory = "foo";
         dassert(srcml_unit_get_directory(unit), std::string("foo"));
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
@@ -170,18 +170,18 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->version = boost::optional<std::string>();
         dassert(srcml_unit_get_version(unit), 0);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->version = "foo";
         dassert(srcml_unit_get_version(unit), std::string("foo"));
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
@@ -194,18 +194,18 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->timestamp = boost::optional<std::string>();
         dassert(srcml_unit_get_timestamp(unit), 0);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->timestamp = "foo";
         dassert(srcml_unit_get_timestamp(unit), std::string("foo"));
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
@@ -218,18 +218,18 @@ int main() {
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->hash = boost::optional<std::string>();
         dassert(srcml_unit_get_hash(unit), 0);
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->hash = "foo";
         dassert(srcml_unit_get_hash(unit), std::string("foo"));
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 
     {
@@ -237,60 +237,144 @@ int main() {
     }
 
     /*
-      srcml_unit_get_xml
+      srcml_unit_get_fragment_xml
     */
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->unit = boost::optional<std::string>();
-        dassert(srcml_unit_get_xml(unit), 0);
-        srcml_free_unit(unit);
+        dassert(srcml_unit_get_fragment_xml(unit), 0);
+        srcml_unit_free(unit);
     }
 
     {
 
-        srcml_unit * unit = srcml_create_unit(archive);
+        srcml_unit * unit = srcml_unit_create(archive);
         unit->unit = "<unit/>";
-        dassert(srcml_unit_get_xml(unit), std::string("<unit/>"));
-        srcml_free_unit(unit);
+        dassert(srcml_unit_get_fragment_xml(unit), std::string("<unit/>"));
+        srcml_unit_free(unit);
     }
 
     {
         const char * s = "<unit/>";
 
-        srcml_archive * iarchive = srcml_create_archive();
-        srcml_read_open_memory(iarchive, s, strlen(s));
+        srcml_archive * iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit * unit = srcml_read_unit_header(iarchive);
-        dassert(srcml_unit_get_xml(unit), std::string("<unit/>"));
-        srcml_free_unit(unit);
-        srcml_close_archive(iarchive);
-        srcml_free_archive(iarchive);
+        dassert(srcml_unit_get_fragment_xml(unit), std::string("<unit/>"));
+        srcml_unit_free(unit);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
     }
 
     {
         const char * s = "<unit/>";
 
-        srcml_archive * iarchive = srcml_create_archive();
-        srcml_read_open_memory(iarchive, s, strlen(s));
-        srcml_unit * unit = srcml_create_unit(iarchive);
-        dassert(srcml_unit_get_xml(unit), 0);
-        srcml_free_unit(unit);
-        srcml_close_archive(iarchive);
-        srcml_free_archive(iarchive);
+        srcml_archive * iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, s, strlen(s));
+        srcml_unit * unit = srcml_unit_create(iarchive);
+        dassert(srcml_unit_get_fragment_xml(unit), 0);
+        srcml_unit_free(unit);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
     }
 
     {
-        srcml_unit * unit = srcml_create_unit(archive);
-        dassert(srcml_unit_get_xml(unit), 0);
-        srcml_free_unit(unit);
+        srcml_unit * unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_fragment_xml(unit), 0);
+        srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_get_xml(0), 0);
+        dassert(srcml_unit_get_fragment_xml(0), 0);
     }
 
-    srcml_free_archive(archive);
+    /*
+      srcml_unit_get_standalone_xml
+    */
+
+    {
+
+        srcml_unit * unit = srcml_unit_create(archive);
+        unit->unit = boost::optional<std::string>();
+        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
+        dassert(xml, 0);
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_create(archive);
+        unit->unit = "<unit/>";
+        const char * xml = srcml_unit_get_standalone_xml(unit, 0);
+        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_create(archive);
+        unit->unit = "<unit/>";
+        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
+        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_create(archive);
+        unit->unit = "<unit>\xc3\xbf<unit/>";
+        const char * xml = srcml_unit_get_standalone_xml(unit, "ISO-8859-1");
+        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\xff</unit>"));
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+        const char * s = "<unit/>";
+
+        srcml_archive * iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, s, strlen(s));
+        srcml_unit * unit = srcml_read_unit_header(iarchive);
+        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
+        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
+        free((void *)xml);
+        srcml_unit_free(unit);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    {
+        const char * s = "<unit/>";
+
+        srcml_archive * iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, s, strlen(s));
+        srcml_unit * unit = srcml_unit_create(iarchive);
+        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
+        dassert(xml, 0);
+        free((void *)xml);
+        srcml_unit_free(unit);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    {
+        srcml_unit * unit = srcml_unit_create(archive);
+        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
+        dassert(xml, 0);
+        free((void *)xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+        dassert(srcml_unit_get_standalone_xml(0, 0), 0);
+    }
+
+    srcml_archive_free(archive);
 
     srcml_cleanup_globals();
 

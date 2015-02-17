@@ -25,21 +25,21 @@ addUnitTest(test_srcml_archive_check_extension test_srcml_archive_check_extensio
 addUnitTest(test_srcml_archive_get test_srcml_archive_get.cpp)
 addUnitTest(test_srcml_archive_set test_srcml_archive_set.cpp)
 addUnitTest(test_srcml_clear_transforms test_srcml_clear_transforms.cpp)
-addUnitTest(test_srcml_clone_archive test_srcml_clone_archive.cpp)
-addUnitTest(test_srcml_create_archive test_srcml_create_archive.cpp)
-addUnitTest(test_srcml_create_unit test_srcml_create_unit.cpp)
+addUnitTest(test_srcml_archive_clone test_srcml_archive_clone.cpp)
+addUnitTest(test_srcml_archive_create test_srcml_archive_create.cpp)
+addUnitTest(test_srcml_unit_create test_srcml_unit_create.cpp)
 addUnitTest(test_srcml_convenience test_srcml_convenience.cpp)
 addUnitTest(test_srcml_extract_text test_srcml_extract_text.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_srcml_global test_srcml_global.cpp)
 addUnitTest(test_srcml_global_access test_srcml_global_access.cpp)
-addUnitTest(test_srcml_parse_unit test_srcml_parse_unit.cpp)
-addUnitTest(test_srcml_read_open test_srcml_read_open.cpp)
+addUnitTest(test_srcml_unit_parse test_srcml_unit_parse.cpp)
+addUnitTest(test_srcml_archive_read_open test_srcml_archive_read_open.cpp)
 addUnitTest(test_srcml_read_unit test_srcml_read_unit.cpp)
 addUnitTest(test_srcml_relaxng test_srcml_relaxng.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_srcml_unit_get test_srcml_unit_get.cpp)
 addUnitTest(test_srcml_unit_set test_srcml_unit_set.cpp)
-addUnitTest(test_srcml_unparse_unit test_srcml_unparse_unit.cpp)
-addUnitTest(test_srcml_write_open test_srcml_write_open.cpp)
+addUnitTest(test_srcml_unit_unparse test_srcml_unit_unparse.cpp)
+addUnitTest(test_srcml_archive_write_open test_srcml_archive_write_open.cpp)
 addUnitTest(test_srcml_write_unit test_srcml_write_unit.cpp)
 addUnitTest(test_srcml_write_by_element test_srcml_write_by_element.cpp)
 addUnitTest(test_srcml_xpath test_srcml_xpath.cpp ${LIBXML2_LIBRARIES})
@@ -47,25 +47,19 @@ addUnitTest(test_srcml_xslt test_srcml_xslt.cpp ${LIBXML2_LIBRARIES})
 addUnitTest(test_language_extension_registry test_language_extension_registry.cpp)
 addUnitTest(test_srcml_translator test_srcml_translator.cpp ${LIBXML2_LIBRARIES})
 
-
-
 add_definitions(-DSRCML_XPATH_EXFUN_TEST_DIR="${CMAKE_BINARY_DIR}/bin/xpath_test_data")
 addUnitTest(test_srcexfun_impl test_srcexfun_impl.cpp)
 
-
 add_custom_target(copy_test_data_target ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data" "${CMAKE_BINARY_DIR}/bin/xpath_test_data")
 add_dependencies(test_srcexfun_impl copy_test_data_target)
-file(GLOB_RECURSE xpath_test_files "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data/*")
-
-add_dependencies(test_srcexfun_impl ${xpath_test_files})
 
 # Copying xpath test data into correct loction.
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+
     copyDependentFile(copy.xsl)
     copyDependentFile(setlanguage.xsl)
     copyDependentFile(schema.rng)   
     copyDependentFile(test_srcml_xpath.cpp)
 
-#    file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/xpath_test_data" DESTINATION "${CMAKE_BINARY_DIR}/bin")
 endif()
 

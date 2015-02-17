@@ -63,4 +63,12 @@
 }</block></struct>
 </unit>
 
+<unit>
+<constructor><specifier>public</specifier> <specifier>new</specifier> <name>A</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+</unit>
+
+<unit>
+<function_decl><type><specifier>public</specifier> <specifier>new</specifier> <name>void</name></type> <name>A</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
 </unit>

@@ -37,8 +37,8 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
             break;
 
         char* buffer;
-        int buffer_size;
-        srcml_unparse_unit_memory(unit, &buffer, &buffer_size);
+        size_t buffer_size;
+        srcml_unit_unparse_memory(unit, &buffer, &buffer_size);
 
         archive_entry_set_pathname(entry, srcml_unit_get_filename(unit));
         archive_entry_set_size(entry, buffer_size);
@@ -63,6 +63,6 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
         archive_entry_free(entry);
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
     }
 }

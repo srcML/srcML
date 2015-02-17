@@ -239,7 +239,7 @@ public :
          collect_unit_attributes(false), collect_srcml(false), collect_src(false),
          terminate(false), is_empty(false), wait_root(true), skip(false) {
 
-        archive = srcml_create_archive();
+        archive = srcml_archive_create();
 
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
 
@@ -252,8 +252,8 @@ public :
      */
     ~srcml_reader_handler() {
 
-        srcml_free_archive(archive);
-        if(unit) srcml_free_unit(unit);
+        srcml_archive_free(archive);
+        if(unit) srcml_unit_free(unit);
 
     }
 
@@ -324,7 +324,7 @@ public :
      */
     virtual void startDocument() {
 
-        srcml_archive_set_encoding(archive, encoding ? encoding : "UTF-8");
+        srcml_archive_set_xml_encoding(archive, encoding ? encoding : "UTF-8");
 
     }
 
@@ -356,13 +356,17 @@ public :
             std::string attribute = attributes[pos].localname;
             std::string value = attributes[pos].value;
 
-            if(attribute == "language")
+            if(attribute == "timestamp")
+                ;
+            else if(attribute == "hash")
+                ;
+            else if(attribute == "language")
                 srcml_archive_set_language(archive, value.c_str());
             else if(attribute == "revision")
                 archive->revision = value;
             else if(attribute == "filename")
                 srcml_archive_set_filename(archive, value.c_str());
-            else if(attribute == "dir")
+            else if(attribute.size() >= 3 && attribute[0] == 'd' && attribute[1] == 'i' && attribute[2] == 'r' && (attribute.size() == 3 || attribute.compare(3, std::string::npos, "ectory") == 0))
                 srcml_archive_set_directory(archive, value.c_str());
             else if(attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
@@ -501,7 +505,7 @@ public :
         }
 
 
-        unit = srcml_create_unit(archive);
+        unit = srcml_unit_create(archive);
         unit->unit = "";
 
         is_empty = true;
@@ -511,6 +515,7 @@ public :
 
             std::string attribute = attributes[pos].localname;
             std::string value = attributes[pos].value;
+
             if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
             else if(attribute == "hash")
@@ -521,12 +526,14 @@ public :
                 unit->revision = value;
             else if(attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
-            else if(attribute == "dir")
+            else if(attribute.size() >= 3 && attribute[0] == 'd' && attribute[1] == 'i' && attribute[2] == 'r' && (attribute.size() == 3 || attribute.compare(3, std::string::npos, "ectory") == 0))
                 srcml_unit_set_directory(unit, value.c_str());
             else if(attribute == "version")
                 srcml_unit_set_version(unit, value.c_str());
             else if(attribute == "tabs" || attribute == "options" || attribute == "hash")
                 ;
+            else if(attribute == "src-encoding")
+                archive->options |= SRCML_OPTION_STORE_ENCODING, srcml_unit_set_src_encoding(unit, value.c_str());
             else {
 
                 unit->attributes.push_back(attribute);
@@ -733,7 +740,7 @@ public :
 
         is_empty = false;
 
-        srcml_free_unit(unit);
+        srcml_unit_free(unit);
         unit = 0;
 
         if(terminate) stop_parser();

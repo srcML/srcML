@@ -38,7 +38,7 @@ int main() {
       srcml_check_extension
     */
 
-    srcml_archive * archive = srcml_create_archive();
+    srcml_archive * archive = srcml_archive_create();
     srcml_archive_register_file_extension(archive, "cpp", "C++");
 
     {
@@ -61,7 +61,7 @@ int main() {
         dassert(srcml_archive_check_extension(0, "a.cpp"), 0);
     }
 
-    srcml_free_archive(archive);
+    srcml_archive_free(archive);
 
     return 0;
 

@@ -80,7 +80,7 @@ public :
                                   std::vector<std::string> & namespaces,
                                   boost::optional<std::pair<std::string, std::string> > & processing_instruction,
                                   OPTION_TYPE & options,
-                                  int & tabstop,
+                                  size_t & tabstop,
                                   std::vector<std::string> & user_macro_list);
 
 
@@ -89,7 +89,7 @@ public :
     */
     int read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                              boost::optional<std::string> & directory, boost::optional<std::string> & version,
-                             boost::optional<std::string> & hash, 
+                             boost::optional<std::string> & timestamp, boost::optional<std::string> & hash,
                              std::vector<std::string> & attributes);
 
     // reads the next unit and returns it in parameter as srcML

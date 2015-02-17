@@ -14,27 +14,27 @@
 </unit>
 
 <unit>
-<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>(<argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>)</argument_list></member_init> </member_init_list><block>{}</block></constructor>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>(<argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>)</argument_list></call> </member_init_list><block>{}</block></constructor>
 </unit>
 
 <unit>
-<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>{}</argument_list></member_init></member_init_list> <block>{}</block></constructor>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>{}</argument_list></call></member_init_list> <block>{}</block></constructor>
 </unit>
 
 <unit>
-<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>{<argument><expr><name>a</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>}</argument_list></member_init></member_init_list> <block>{}</block></constructor>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>{<argument><expr><name>a</name></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>}</argument_list></call></member_init_list> <block>{}</block></constructor>
 </unit>
 
 <unit>
-<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>{<argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>}</argument_list></member_init></member_init_list> <block>{}</block></constructor>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>{<argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>}</argument_list></call></member_init_list> <block>{}</block></constructor>
 </unit>
 
 <unit>
-<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>{<argument><expr><block>{<expr><name>a</name></expr>, <expr><block>{<expr><literal type="number">1</literal></expr>}</block></expr>}</block></expr></argument>}</argument_list></member_init></member_init_list> <block>{}</block></constructor>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>{<argument><expr><block>{<expr><name>a</name></expr>, <expr><block>{<expr><literal type="number">1</literal></expr>}</block></expr>}</block></expr></argument>}</argument_list></call></member_init_list> <block>{}</block></constructor>
 </unit>
 
 <unit>
-<macro><name>MACRO</name></macro> <constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <member_init><name>a</name><argument_list>()</argument_list></member_init> </member_init_list><block>{}</block></constructor>
+<macro><name>MACRO</name></macro> <constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list> <member_init_list>: <call><name>a</name><argument_list>()</argument_list></call> </member_init_list><block>{}</block></constructor>
 </unit>
 
 <unit>
@@ -50,7 +50,7 @@
 </unit>
 
 <unit>
-<constructor><name><name>S</name><operator>::</operator><name>S</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>arg</name></decl></parameter>)</parameter_list> <try>try <member_init_list>: <member_init><name>m</name><argument_list>(<argument><expr><name>arg</name></expr></argument>, <argument><expr><literal type="number">100</literal></expr></argument>)</argument_list></member_init> </member_init_list><block>{
+<constructor><name><name>S</name><operator>::</operator><name>S</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name><modifier>&amp;</modifier></type> <name>arg</name></decl></parameter>)</parameter_list> <try>try <member_init_list>: <call><name>m</name><argument_list>(<argument><expr><name>arg</name></expr></argument>, <argument><expr><literal type="number">100</literal></expr></argument>)</argument_list></call> </member_init_list><block>{
 }</block> <catch>catch<parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>exception</name></name><modifier>&amp;</modifier></type> <name>e</name></decl></parameter>)</parameter_list> <block>{}</block></catch></try></constructor>
 </unit>
 
