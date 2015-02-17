@@ -468,6 +468,9 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
 
     if(state->context->terminate) return;
 
+    srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
+    srcsax_attribute * srcsax_attributes = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(nb_attributes, attributes);
+
     int ns_length = state->root.nb_namespaces * 2;
     for (int i = 0; i < ns_length; i += 2)
         if(prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
@@ -487,7 +490,7 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
         state->libxml2_attributes = attributes;
  
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-            nb_namespaces, 0, nb_attributes, 0);
+            nb_namespaces, srcsax_namespaces, nb_attributes, srcsax_attributes);
 
         state->libxml2_namespaces = 0;
         state->libxml2_attributes = 0;
