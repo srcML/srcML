@@ -22,10 +22,10 @@
 
 #include <srcml_input_src.hpp>
 
-int srcml_read_callback(void* context, char * buffer, int len) {
+int srcml_read_callback(void* context, char * buffer, size_t len) {
     archive* libarchive_srcml = (archive*) context;
 
-    ssize_t status = archive_read_data(libarchive_srcml, (void*) buffer, (size_t) len);
+    ssize_t status = archive_read_data(libarchive_srcml, (void*) buffer, len);
 
     return (int) status;
 }

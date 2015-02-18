@@ -123,8 +123,8 @@ _srcml_unit_get_revision
 _srcml_unit_get_version
 _srcml_unit_get_timestamp
 _srcml_unit_get_hash
-_srcml_unit_get_raw_xml
-_srcml_unit_get_formatted_xml
+_srcml_unit_get_fragment_xml
+_srcml_unit_get_standalone_xml
 _srcml_unit_set_directory
 _srcml_unit_set_src_encoding
 _srcml_unit_set_filename

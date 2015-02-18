@@ -65,7 +65,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
     cout << "Testing: " << testFile << endl;
 
     char* archiveBuffer = 0;
-    int archiveBufferSize = 0;
+    size_t archiveBufferSize = 0;
     int rc = 0;
 
     // Create an archive to handle the data being read from a file.
@@ -131,7 +131,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
 
     // Processing xpath from archive.
     char* xpathResultArchiveBuffer = 0;
-    int xpathResultArchiveBufferSize = 0;
+    size_t xpathResultArchiveBufferSize = 0;
 
     srcml_archive* xpathResultArchive = srcml_archive_create();
     if(!xpathResultArchive) {
@@ -167,7 +167,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
     // free(archiveBuffer);
 
     // Turning XPath document into libxml2 xmlDoc.
-    xmlDocPtr ret = xmlParseMemory(xpathResultArchiveBuffer, xpathResultArchiveBufferSize);
+    xmlDocPtr ret = xmlParseMemory(xpathResultArchiveBuffer, (int)xpathResultArchiveBufferSize);
     srcml_archive_free(processedArchive);
     srcml_archive_free(xpathResultArchive);
     free(xpathResultArchiveBuffer);

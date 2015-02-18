@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
     }
 
     /* open a srcML archive for output */
-    srcml_archive_write_open_filename(oarchive, outputfile);
+    srcml_archive_write_open_filename(oarchive, outputfile, 0);
 
     for(i = 0; i < num_units; ++i) {
 

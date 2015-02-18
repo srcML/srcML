@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     struct srcml_archive* archive;
     struct srcml_unit* unit;
     char * s;
-    int size;
+    size_t size;
     int srcml_input;
 
     /* create a new srcml archive structure */

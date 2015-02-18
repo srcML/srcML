@@ -209,7 +209,6 @@ namespace {
     ELEMENT_MAP(SEMIT_STATEMENT,          "emit")
 
     ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_init_list")
-    ELEMENT_MAP(SMEMBER_INITIALIZATION,      "member_init")
     ELEMENT_MAP(SCONSTRUCTOR_DEFINITION,     "constructor")
     ELEMENT_MAP(SCONSTRUCTOR_DECLARATION,    "constructor_decl")
     ELEMENT_MAP(SDESTRUCTOR_DEFINITION,      "destructor")
@@ -470,7 +469,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          OPTION_TYPE& op,
                          const std::vector<std::string> & attributes,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                         int ts)
+                         size_t ts)
     : last_line(0), last_line2(0), last_column(0), end_position_output(false), input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
       unit_version(0), options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), 
@@ -1020,7 +1019,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     if(isoption(options, SRCML_OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
     if(isoption(options, SRCML_OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
     if(isoption(options, SRCML_OPTION_WRAP_TEMPLATE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "WRAP_TEMPLATE"; }
-    if(!isoption(options, SRCML_OPTION_TERNARY))       { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "OPERTOR_TERNARY"; }
+    if(!isoption(options, SRCML_OPTION_TERNARY))       { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "OPERATOR_TERNARY"; }
 
     std::string stab = stabs.str();
 

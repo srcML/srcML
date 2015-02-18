@@ -173,14 +173,16 @@ void create_src(const srcml_request_t& srcml_request,
             srcml_archive_disable_option(oarch, SRCML_OPTION_ARCHIVE);
             *****/
 
+            unsigned short compression = 0;
+            if (!destination.compressions.empty() && destination.compressions.front() == ".gz")
+                compression = 9;
+
             if (contains<int>(destination))
                 srcml_archive_write_open_fd(oarch, destination);
             else
-                srcml_archive_write_open_filename(oarch, destination.c_str());
+                srcml_archive_write_open_filename(oarch, destination.c_str(), compression);
 
-            if (!destination.compressions.empty() && destination.compressions.front() == ".gz")
-                srcml_archive_enable_option(oarch, SRCML_OPTION_COMPRESS);
-
+            
             srcml_write_unit(oarch, unit);
 
             srcml_unit_free(unit);
@@ -231,7 +233,7 @@ void create_src(const srcml_request_t& srcml_request,
                 exit(4);
             }
 
-            srcml_unit_unparse_filename(unit, destination.c_str());
+            srcml_unit_unparse_filename(unit, destination.c_str(), 0);
 
             srcml_unit_free(unit);
 

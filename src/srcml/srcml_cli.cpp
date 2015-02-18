@@ -307,7 +307,7 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
 srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
         general.add_options()
-            ("compress,z", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_COMPRESS>), "output in gzip format")
+            ("compress,z", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMPRESS>), "output in gzip format")
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
             ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
