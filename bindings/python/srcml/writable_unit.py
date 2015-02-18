@@ -95,7 +95,6 @@ class writable_unit(object):
         assert isinstance(value, (str)) or value is None, "src_encoding must be a string or None"
         if value == None:
             unit_set_src_encoding(self.srcml_unit, value)
-            # self._src_encoding = value
         else:
             if check_encoding(value) == 0:
                 raise invalid_srcml_encoding("Invalid source code encoding", value)
