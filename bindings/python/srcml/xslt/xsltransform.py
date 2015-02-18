@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file xsltransform.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -18,10 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from xslt_base_class import *
-from relaxng_validating_transform import *
-from xpath_attribute import *
-from xpath_element import *
-from xpath import *
-from xsltransform import *
-from xslt_param import *
-from xslt_stringparam import *
+
+class xsltransform(xsltransform_base):
+    pass
