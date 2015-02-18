@@ -297,7 +297,7 @@ class writable_unit(object):
             unit_parse_memory(
                 self.srcml_unit,
                 self.buff.buff,
-                ctypes.c_int(self.buff.size.value)
+                self.buff.size
             )
 
         elif CONTEXT_PARAM in kwargs:

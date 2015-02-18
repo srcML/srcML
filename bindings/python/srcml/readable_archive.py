@@ -138,7 +138,7 @@ class readable_archive(object):
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             self._ctxt = kwargs[BUFFER_PARAM]
-            archive_read_open_memory(self.srcml_archive, self._ctxt.buff, ctypes.c_int(self._ctxt.size.value))
+            archive_read_open_memory(self.srcml_archive, self._ctxt.buff, self._ctxt.size.value)
 
         elif CONTEXT_PARAM in kwargs:
             if len(kwargs) > 3:

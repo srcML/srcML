@@ -47,7 +47,7 @@ class GenPythonCode(BindingGenerator):
             "void *" : "py_object",
             "const char *": "c_char_p",
             "unsigned short":"c_ushort",
-            "size_t" : "c_int"
+            "size_t" : "c_size_t"
         })
         self.fpLookup = dict()
 
@@ -175,6 +175,11 @@ def {pyName}({parameters}):
                 selectedTemplate = factoryReturnTemplate
             # if srcml.get_language_list_size()
             # selectedTemplate = intResultTemplate
+        elif functionDeclInfo.returnType == "c_size_t":
+            if functionDeclInfo.name.find("_get_") == -1 and functionDeclInfo.name.find("check_") == -1:
+                selectedTemplate = intResultTemplate    
+            else:
+                selectedTemplate = factoryReturnTemplate
         elif functionDeclInfo.returnType == "c_ulonglong":
             selectedTemplate = simpleNoCheckReturnTemplate
         else:
