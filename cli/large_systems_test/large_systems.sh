@@ -42,7 +42,7 @@ do
     if [[ $location != "" ]] && [[ "$TEST_SYSTEM" == true ]] ; then
         echo "--------------------------------------"
 
-        ZNAME="/${DIR}/logs/${name}"
+        ZNAME="${DIR}/logs/${name}"
         NAME="${ZNAME/.tar.*z/}"   # without the .tar.gz or .tar.xz extensions
 
         # get the compressed file, if it doesn't already exist
@@ -53,7 +53,7 @@ do
 
         # store size of orginal compressed file
         ZSIZE_ORIGINAL="$(du -hs ${ZNAME})"
-        echo "${ZSIZE_ORIGINAL}" >> "${SLOG}"
+        echo "${ZSIZE_ORIGINAL}" | tee -a "${SLOG}"
 
         # ------------- compressed file --> srcml ------------------
         # redirect stderr to stdout to store the time, but keep the srcml output
@@ -63,8 +63,8 @@ do
         TIME="$(time ( srcml ${ZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
 
         # store timed output
-        echo "srcml ${ZNAME} --in-order -o ${XZOUTPUT}" >> "${TLOG}"
-        echo "${TIME}" >> "${TLOG}"
+        echo "srcml ${ZNAME} --in-order -o ${XZOUTPUT}" | tee -a "${TLOG}"
+        echo "${TIME}" | tee -a "${TLOG}"
 
         # store output size
         ZSIZE_OUTPUT="$(du -hs ${XZOUTPUT})"
@@ -88,9 +88,9 @@ do
         TIME="$(time ( srcml ${NAME} --in-order -o ${UNZOUTPUT} ) 2>&1 1>/dev/null )"
 
         # store timed output
-        echo "" >> "${TLOG}"
-        echo "srcml ${NAME} --in-order -o ${UNZOUTPUT}" >> "${TLOG}"
-        echo "${TIME}" >> "${TLOG}"
+        echo "" | tee -a "${TLOG}"
+        echo "srcml ${NAME} --in-order -o ${UNZOUTPUT}" | tee -a "${TLOG}"
+        echo "${TIME}" | tee -a "${TLOG}"
 
         # store srcml on uncompressed size
         SIZE_OUTPUT="$(du -hs ${UNZOUTPUT})"
@@ -100,8 +100,8 @@ do
         echo "Comparing srcML output from compressed and uncompressed input ..."
         DIFF="$( cmp ${XZOUTPUT} ${UNZOUTPUT} )"
 
-        echo "cmp ${XZOUTPUT} ${UNZOUTPUT}" >> "${DLOG}"
-        echo "${DIFF}" >> "${DLOG}"
+        echo "cmp ${XZOUTPUT} ${UNZOUTPUT}" | tee -a "${DLOG}"
+        echo "${DIFF}" | tee -a "${DLOG}"
 
         # ------------- srcml --> dir ------------------------
         echo "Testing from srcML archive to directory ..."
@@ -109,19 +109,19 @@ do
         TIME="$(time ( srcml ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR} ) 2>&1 1>/dev/null )"
 
         # store timed output
-        echo "srcml ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR}" >> "${TLOG}"
-        echo "${TIME}" >> "${TLOG}"
+        echo "srcml ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR}" | tee -a "${TLOG}"
+        echo "${TIME}" | tee -a "${TLOG}"
 
         # store output size
         SMLSIZE_OUTPUT="$(du -hs ${SMLOUTPUTDIR})"
-        echo "${SMLSIZE_OUTPUT}" >> "${SLOG}"
+        echo "${SMLSIZE_OUTPUT}" | tee -a "${SLOG}"
 
         # diff srcml output to original directory
         echo "Comparing srcML --to-dir output to original directory ..."
         DIFF="$( diff -r ${NAME} ${SMLOUTPUTDIR} )"
 
-        echo "diff -r ${NAME} ${SMLOUTPUTDIR}" >> "${DLOG}"
-        echo "${DIFF}" >> "${DLOG}"
+        echo "diff -r ${NAME} ${SMLOUTPUTDIR}" | tee -a "${DLOG}"
+        echo "${DIFF}" | tee -a "${DLOG}"
 
 
         # keep the logs and the big system (test runs faster consecutively), but
