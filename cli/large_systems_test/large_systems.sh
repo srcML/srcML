@@ -55,7 +55,7 @@ do
         ZSIZE_ORIGINAL="$(du -hs ${ZNAME})"
         echo "${ZSIZE_ORIGINAL}" >> "${SLOG}"
 
-        # ------------- srcml on compressed file ------------------
+        # ------------- compressed file --> srcml ------------------
         # redirect stderr to stdout to store the time, but keep the srcml output
         # for other tests.
         echo "Testing srcML on compressed ${ZNAME} ..."
@@ -70,7 +70,7 @@ do
         ZSIZE_OUTPUT="$(du -hs ${XZOUTPUT})"
         echo "${ZSIZE_OUTPUT}" >> "${SLOG}"
 
-        # ------------- srcml on uncompressed dir ------------------
+        # ------------- uncompressed dir --> srcml ------------------
         # uncompress, if the unzipped version doesn't already exist
         if [ ! -d "${NAME}" ] ; then
             mkdir "${NAME}"
@@ -97,17 +97,34 @@ do
         echo "${SIZE_OUTPUT}" >> "${SLOG}"
 
         # cmp srcml output from the compressed and uncompressed input
-        echo "Comparing srcML output from compressed and uncompressed input..."
+        echo "Comparing srcML output from compressed and uncompressed input ..."
         DIFF="$( cmp ${XZOUTPUT} ${UNZOUTPUT} )"
 
         echo "cmp ${XZOUTPUT} ${UNZOUTPUT}" >> "${DLOG}"
         echo "${DIFF}" >> "${DLOG}"
+
+        # ------------- srcml --> dir ------------------------
+        echo "Testing from srcML archive to directory ..."
+        SMLOUTPUTDIR="${NAME}-from-srcml"
+        TIME="$(time ( srcml ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR} ) 2>&1 1>/dev/null )"
+
+        # store timed output
+        echo "srcml ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR}" >> "${TLOG}"
+        echo "${TIME}" >> "${TLOG}"
+
+        # store output size
+        SMLSIZE_OUTPUT="$(du -hs ${SMLOUTPUTDIR})"
+        echo "${SMLSIZE_OUTPUT}" >> "${SLOG}"
+
+        # cmp srcml output to original directory
+        echo "Comparing srcML --to-dir output to original directory ..."
 
         # keep the logs and the big system (test runs faster consecutively), but
         # cleanup srcml outputs
         rm -r "${NAME}"    # uncompressed directory
         rm "${XZOUTPUT}"   # srcml output from running on compressed file
         rm "${UNZOUTPUT}"  # srcml output from running on directory
+        rm -r "${SMLOUTPUTDIR}" # created from srcml --to-dir
 
         echo "" >> "${TLOG}"
         echo "" >> "${DLOG}"
