@@ -14,6 +14,14 @@ echo "Time log for this session at: ${TLOG}" && echo > "${TLOG}"
 echo "Diff log for this session at: ${DLOG}" && echo > "${DLOG}"
 echo "Size log for this session at: ${SLOG}" && echo > "${SLOG}"
 
+# optionally use max-threads
+MAX_THREADS=""
+if [ $# -ge 2 ] && [[ "${1}" == *"max-threads" && $2 =~ ^-?[0-9]+$ ]] ; then
+    MAX_THREADS="--max-threads=${2}"
+    shift 2
+fi
+
+
 # use CSV input to find big system download locations
 (cat "${DIR}/large_systems_list.csv" ; echo) | while IFS=',' read -r location name language
 do
@@ -60,10 +68,10 @@ do
         # for other tests.
         echo "Testing srcML on compressed ${ZNAME} ..."
         XZOUTPUT="${ZNAME}-output.xml"
-        TIME="$(time ( srcml ${ZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
+        TIME="$(time ( srcml ${MAX_THREADS} ${ZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
 
         # store timed output
-        echo "srcml ${ZNAME} --in-order -o ${XZOUTPUT}" | tee -a "${TLOG}"
+        echo "srcml ${MAX_THREADS} ${ZNAME} --in-order -o ${XZOUTPUT}" | tee -a "${TLOG}"
         echo "${TIME}" | tee -a "${TLOG}"
 
         # store output size
@@ -85,11 +93,11 @@ do
         # redirect stderr to stdout to store time
         echo "Testing srcML on uncompressed ${NAME} ..."
         UNZOUTPUT="${NAME}-output.xml" # output from
-        TIME="$(time ( srcml ${NAME} --in-order -o ${UNZOUTPUT} ) 2>&1 1>/dev/null )"
+        TIME="$(time ( srcml ${MAX_THREADS} ${NAME} --in-order -o ${UNZOUTPUT} ) 2>&1 1>/dev/null )"
 
         # store timed output
         echo "" | tee -a "${TLOG}"
-        echo "srcml ${NAME} --in-order -o ${UNZOUTPUT}" | tee -a "${TLOG}"
+        echo "srcml ${MAX_THREADS} ${NAME} --in-order -o ${UNZOUTPUT}" | tee -a "${TLOG}"
         echo "${TIME}" | tee -a "${TLOG}"
 
         # store srcml on uncompressed size
@@ -106,10 +114,10 @@ do
         # ------------- srcml --> dir ------------------------
         echo "Testing from srcML archive to directory ..."
         SMLOUTPUTDIR="${NAME}-from-srcml"
-        TIME="$(time ( srcml ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR} ) 2>&1 1>/dev/null )"
+        TIME="$(time ( srcml ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR} ) 2>&1 1>/dev/null )"
 
         # store timed output
-        echo "srcml ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR}" | tee -a "${TLOG}"
+        echo "srcml ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR}" | tee -a "${TLOG}"
         echo "${TIME}" | tee -a "${TLOG}"
 
         # store output size
