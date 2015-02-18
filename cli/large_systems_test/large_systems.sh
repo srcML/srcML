@@ -2,7 +2,7 @@
 
 # use relative paths
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-mkdir -p "${DIR}/logs"
+mkdir -p "/${DIR}/logs"
 
 # timestamp log files
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
@@ -42,7 +42,7 @@ do
     if [[ $location != "" ]] && [[ "$TEST_SYSTEM" == true ]] ; then
         echo "--------------------------------------"
 
-        ZNAME="${DIR}/logs/${name}"
+        ZNAME="/${DIR}/logs/${name}"
         NAME="${ZNAME/.tar.*z/}"   # without the .tar.gz or .tar.xz extensions
 
         # get the compressed file, if it doesn't already exist
@@ -116,8 +116,13 @@ do
         SMLSIZE_OUTPUT="$(du -hs ${SMLOUTPUTDIR})"
         echo "${SMLSIZE_OUTPUT}" >> "${SLOG}"
 
-        # cmp srcml output to original directory
+        # diff srcml output to original directory
         echo "Comparing srcML --to-dir output to original directory ..."
+        DIFF="$( diff -r ${NAME} ${SMLOUTPUTDIR} )"
+
+        echo "diff -r ${NAME} ${SMLOUTPUTDIR}" >> "${DLOG}"
+        echo "${DIFF}" >> "${DLOG}"
+
 
         # keep the logs and the big system (test runs faster consecutively), but
         # cleanup srcml outputs
