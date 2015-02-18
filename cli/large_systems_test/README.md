@@ -25,7 +25,8 @@ to `ON`. After running CMake, build **and install** srcML.
 After building, run via `ctest`, `make test`, or from bash with
 `./large_systems.sh`. The benefit of running from bash is that arguments can
 be specified to pick which system(s) to execute the test on (see the next
-section). The list of all systems that are used are in a CSV file in
+section), and the --max-threads option can be specified. The list of all systems
+that are used are in a CSV file in
 `cli/large_systems_test/large_systems_list.csv`. Each line in the file
 contains information for a system on which srcML will execute. This
 information includes: 1) where to get the tar for that system, 2) the name of
@@ -75,6 +76,18 @@ language is Objective-C, use:
 $ ./large_systems.sh linux language=Objective-C
 ```
 
+### Max threads
+
+The `max-threads` option can optionally be specified when run via bash. For
+instance, the previous example can be run with max threads of 8 with the
+following command:
+
+```
+$ ./large_systems.sh max-threads 8 linux language=Objective-C
+```
+
+A number must be provided if the max-threads option is specified.
+
 
 ### Notes
 
@@ -83,3 +96,7 @@ The order of arguments doesn't matter and case is ignored.
 For specifying the language, it must be in the form `language=<language>`,
 without spaces before or after the `=` because it's stored in the CSV file in
 that way.
+
+For specifying `max-threads`, it must be in the form `max-threads <number>`,
+with a space between `max-threads` and `<number>` so the bash script can use it
+as a separate argument. `--max-threads <number>` is also supported.
