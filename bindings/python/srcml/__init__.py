@@ -21,7 +21,7 @@ from exceptions import *
 from memory_buffer import memory_buffer
 from bindings import *
 from exceptions import *
-from xslt_base_class import *
+from xslt import *
 from writable_archive import writable_archive
 from readable_archive import readable_archive
 from writable_archive_settings import writable_archive_settings
@@ -29,6 +29,5 @@ from writable_archive_xml_namespace_settings import writable_archive_xml_namespa
 from writable_unit import writable_unit
 from readable_unit import readable_unit
 from readable_archive_settings import readable_archive_settings
-from xslt import *
-# from xslt_transform_classes import *
+
 

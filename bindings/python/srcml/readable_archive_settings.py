@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from bindings import *
 from exceptions import *
-from xslt_base_class import *
+from xslt import *
 
 class readable_archive_settings(object):
     """
