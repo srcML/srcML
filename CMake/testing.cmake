@@ -91,6 +91,24 @@ endif()
 endmacro()
 
 #
+# addLargeSystemTest
+# - TEST_NAME the name of the test
+# - BASH_SCRIPT the name of the bash script that will be executed
+# - SCRIPT_ARGS any arguments that are passed on to the bash test script
+# Adds a large systems test which executes on the provided bash script, passing
+# in arguments for the script which determine what large system to use
+#
+#
+macro(addLargeSystemTest TEST_NAME BASH_SCRIPT SCRIPT_ARGS)
+    add_test(NAME ${TEST_NAME} COMMAND bash ${BASH_SCRIPT} ${SCRIPT_ARGS})
+
+    if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+        copyDependentFile(${BASH_SCRIPT})
+    endif()
+
+endmacro()
+
+#
 # addTimingTest
 # Creates a unit test from a given file with a given name.
 # - TEST_NAME the name of the test.
@@ -132,7 +150,7 @@ endmacro()
 
 # 
 # Removes the file extension from a current file, this is used while generating files
-# duing testing when we need to convert a file from for example .cpp.xml to .cpp.
+# during testing when we need to convert a file from for example .cpp.xml to .cpp.
 # 
 # NOTICE: This makes the assumption that there IS a file extension present it 
 # will fail if there isn't.

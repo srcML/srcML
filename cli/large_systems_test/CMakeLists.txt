@@ -20,8 +20,13 @@
 #    The CMake project file for srcML.
 #
 
-# add large systems test
-addBashTest(large_systems.sh large_systems_list.csv)
+file(STRINGS large_systems_list.csv FILE)
+foreach(LINE ${FILE})
 
-# disable timeout
-set_tests_properties(large_systems.sh PROPERTIES TIMEOUT 0)
+	# use the project name from "*,<project-name>,*" in the CSV file
+	# as the name for the test
+	string(REGEX MATCH ",.*," NAME "${LINE}")
+	string(REPLACE "," "" NAME "${NAME}")
+
+	addLargeSystemTest(${NAME} large_systems.sh ${LINE})
+endforeach()
