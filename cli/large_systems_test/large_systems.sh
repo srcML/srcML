@@ -15,7 +15,6 @@ echo "Diff log for this session at: ${DLOG}" && echo > "${DLOG}"
 echo "Size log for this session at: ${SLOG}" && echo > "${SLOG}"
 
 # optionally use max-threads
-MAX_THREADS=""
 if [ $# -ge 2 ] && [[ "${1}" == *"max-threads" && $2 =~ ^-?[0-9]+$ ]] ; then
     MAX_THREADS="--max-threads=${2}"
     shift 2
@@ -50,10 +49,8 @@ do
     if [[ $location != "" ]] && [[ "$TEST_SYSTEM" == true ]] ; then
         echo "--------------------------------------"
 
-        ZNAME="${DIR}/logs/${name}"
-        NAME="${ZNAME/.tar.*z/}"   # without the .tar.gz or .tar.xz extensions
-
         # get the compressed file, if it doesn't already exist
+        ZNAME="${DIR}/logs/${name}"
         if [ ! -f "${ZNAME}" ] ; then
             echo "Grabbing ${location} into ${ZNAME}"
             curl -L -k "${location}" -o "${ZNAME}"
@@ -65,10 +62,10 @@ do
 
         # --- all.tar.gz -> all/ -> source-only/ -> source-only.tar.gz ---
         # uncompress, if the unzipped version doesn't already exist
+        NAME="${ZNAME/.tar.*z/}-onlysrc" # without the .tar.gz or .tar.xz extensions
         if [ ! -d "${NAME}" ] ; then
-            mkdir "${NAME}"
             echo "Uncompressing ${ZNAME} to ${NAME} ..."
-            tar -xf "${ZNAME}" -C "${NAME}" --strip-components 1
+            mkdir "${NAME}" && tar -xf "${ZNAME}" -C "${NAME}" --strip-components 1
         fi
 
         # get rid of non-source code files; include files for C, C++, Objective-C, Aspect-J, and Java
@@ -82,54 +79,46 @@ do
         ZSIZE_SRCONLY="$(du -hs ${SRCZNAME})"
         echo "${ZSIZE_SRCONLY}" | tee -a "${SLOG}"
 
-        # ----------------- source-only/ --> srcml -----------------------
         # store uncompressed size
         SIZE_ORIGINAL="$(du -hs ${NAME})"
-        echo "${SIZE_ORIGINAL}" >> "${SLOG}"
+        echo "${SIZE_ORIGINAL}" | tee -a "${SLOG}"
 
-        # redirect stderr to stdout to store time
-        echo "Testing srcML on uncompressed ${NAME} ..."
+        # ----------------- source-only/ --> srcml -----------------------
         UNZOUTPUT="${NAME}-output.xml" # output from
-        TIME="$(time ( srcml ${MAX_THREADS} ${NAME} --in-order -o ${UNZOUTPUT} ) 2>&1 1>/dev/null )"
-
-        # store timed output
-        echo "" | tee -a "${TLOG}"
         echo "srcml ${MAX_THREADS} ${NAME} --in-order -o ${UNZOUTPUT}" | tee -a "${TLOG}"
+
+        # store timed output; redirect stderr to stdout to store time
+        TIME="$(time ( srcml ${MAX_THREADS} ${NAME} --in-order -o ${UNZOUTPUT} ) 2>&1 1>/dev/null )"
         echo "${TIME}" | tee -a "${TLOG}"
 
         # store srcml on uncompressed size
         SIZE_OUTPUT="$(du -hs ${UNZOUTPUT})"
-        echo "${SIZE_OUTPUT}" >> "${SLOG}"
+        echo "${SIZE_OUTPUT}" | tee -a "${SLOG}"
 
         # ---------------- source-only.tar.gz --> srcml ----------------
-        # redirect stderr to stdout to store the time, but keep the srcml output
-        # for other tests.
-        echo "Testing srcML on compressed ${SRCZNAME} ..."
+        echo | tee -a "${TLOG}"
         XZOUTPUT="${SRCZNAME}-output.xml"
-        TIME="$(time ( srcml ${MAX_THREADS} ${SRCZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
-
-        # store timed output
         echo "srcml ${MAX_THREADS} ${SRCZNAME} --in-order -o ${XZOUTPUT}" | tee -a "${TLOG}"
+
+        # store timed output; redirect stderr to stdout to store time
+        TIME="$(time ( srcml ${MAX_THREADS} ${SRCZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
         echo "${TIME}" | tee -a "${TLOG}"
 
         # store output size
         ZSIZE_OUTPUT="$(du -hs ${XZOUTPUT})"
-        echo "${ZSIZE_OUTPUT}" >> "${SLOG}"
+        echo "${ZSIZE_OUTPUT}" | tee -a "${SLOG}"
 
         # cmp srcml output from the compressed and uncompressed input
-        echo "Comparing srcML output from compressed and uncompressed input ..."
-        DIFF="$( cmp ${XZOUTPUT} ${UNZOUTPUT} )"
-
         echo "cmp ${XZOUTPUT} ${UNZOUTPUT}" | tee -a "${DLOG}"
+        DIFF="$( cmp ${XZOUTPUT} ${UNZOUTPUT} )"
         echo "${DIFF}" | tee -a "${DLOG}"
 
         # -------------- srcml --> source-only/ ------------------------
-        echo "Testing from srcML archive to directory ..."
         SMLOUTPUTDIR="${NAME}-from-srcml"
-        TIME="$(time ( srcml ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR} ) 2>&1 1>/dev/null )"
+        echo "srcml ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR}" | tee -a "${TLOG}"
 
         # store timed output
-        echo "srcml ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR}" | tee -a "${TLOG}"
+        TIME="$(time ( srcml ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR} ) 2>&1 1>/dev/null )"
         echo "${TIME}" | tee -a "${TLOG}"
 
         # store output size
@@ -137,23 +126,19 @@ do
         echo "${SMLSIZE_OUTPUT}" | tee -a "${SLOG}"
 
         # diff srcml output to original directory
-        echo "Comparing srcML --to-dir output to original source-only directory ..."
-        DIFF="$( diff -r ${NAME} ${SMLOUTPUTDIR} )"
-
         echo "diff -r ${NAME} ${SMLOUTPUTDIR}" | tee -a "${DLOG}"
+        DIFF="$( diff -r ${NAME} ${SMLOUTPUTDIR} )"
         echo "${DIFF}" | tee -a "${DLOG}"
 
 
-        # keep the logs and the big system (test runs faster consecutively), but
-        # cleanup srcml outputs
-        rm "${SRCZNAME}"   # soucrce-only-tar.gz
-        rm -r "${NAME}"    # uncompressed directory
-        rm "${XZOUTPUT}"   # srcml output from running on compressed file
-        rm "${UNZOUTPUT}"  # srcml output from running on directory
+        # keep the logs and the bigsystem.tar.gz (test runs faster consecutively),
+        # but cleanup srcml outputs and bigsystem/ dir
+        rm "${SRCZNAME}"   # compressed file soucrce-only-tar.gz
+        rm -r "${NAME}"    # uncompressed directory soucrce-only-tar/
+        rm "${XZOUTPUT}"   # srcml output from running on soucrce-only-tar.gz
+        rm "${UNZOUTPUT}"  # srcml output from running on soucrce-only-tar/
         rm -r "${SMLOUTPUTDIR}" # created from srcml --to-dir
 
-        echo "" >> "${TLOG}"
-        echo "" >> "${DLOG}"
-        echo "" >> "${SLOG}"
+        echo | tee -a "${TLOG}" "${DLOG}" "${SLOG}"
     fi
 done
