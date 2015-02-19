@@ -63,22 +63,7 @@ do
         ZSIZE_ORIGINAL="$(du -hs ${ZNAME})"
         echo "${ZSIZE_ORIGINAL}" | tee -a "${SLOG}"
 
-        # ------------- compressed file --> srcml ------------------
-        # redirect stderr to stdout to store the time, but keep the srcml output
-        # for other tests.
-        echo "Testing srcML on compressed ${ZNAME} ..."
-        XZOUTPUT="${ZNAME}-output.xml"
-        TIME="$(time ( srcml ${MAX_THREADS} ${ZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
-
-        # store timed output
-        echo "srcml ${MAX_THREADS} ${ZNAME} --in-order -o ${XZOUTPUT}" | tee -a "${TLOG}"
-        echo "${TIME}" | tee -a "${TLOG}"
-
-        # store output size
-        ZSIZE_OUTPUT="$(du -hs ${XZOUTPUT})"
-        echo "${ZSIZE_OUTPUT}" >> "${SLOG}"
-
-        # ------------- uncompressed dir --> srcml ------------------
+        # --- all.tar.gz -> all/ -> source-only/ -> source-only.tar.gz ---
         # uncompress, if the unzipped version doesn't already exist
         if [ ! -d "${NAME}" ] ; then
             mkdir "${NAME}"
@@ -86,6 +71,18 @@ do
             tar -xf "${ZNAME}" -C "${NAME}" --strip-components 1
         fi
 
+        # get rid of non-source code files; include files for C, C++, Objective-C, Aspect-J, and Java
+        find "${NAME}" -type f -not -name "*.[cChHmM]" -not -name "*.[cChH][pP][pP]" -not -name "*.aj" -not -name ".java" -exec rm "{}" \;
+
+        # re-compress project
+        SRCZNAME="${DIR}/logs/${name/.tar.*z/}-onlysrc.tar.gz"
+        tar czf "${SRCZNAME}" "${NAME}"
+
+        # store size of source-only compressed file
+        ZSIZE_SRCONLY="$(du -hs ${SRCZNAME})"
+        echo "${ZSIZE_SRCONLY}" | tee -a "${SLOG}"
+
+        # ----------------- source-only/ --> srcml -----------------------
         # store uncompressed size
         SIZE_ORIGINAL="$(du -hs ${NAME})"
         echo "${SIZE_ORIGINAL}" >> "${SLOG}"
@@ -104,6 +101,21 @@ do
         SIZE_OUTPUT="$(du -hs ${UNZOUTPUT})"
         echo "${SIZE_OUTPUT}" >> "${SLOG}"
 
+        # ---------------- source-only.tar.gz --> srcml ----------------
+        # redirect stderr to stdout to store the time, but keep the srcml output
+        # for other tests.
+        echo "Testing srcML on compressed ${SRCZNAME} ..."
+        XZOUTPUT="${SRCZNAME}-output.xml"
+        TIME="$(time ( srcml ${MAX_THREADS} ${SRCZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
+
+        # store timed output
+        echo "srcml ${MAX_THREADS} ${SRCZNAME} --in-order -o ${XZOUTPUT}" | tee -a "${TLOG}"
+        echo "${TIME}" | tee -a "${TLOG}"
+
+        # store output size
+        ZSIZE_OUTPUT="$(du -hs ${XZOUTPUT})"
+        echo "${ZSIZE_OUTPUT}" >> "${SLOG}"
+
         # cmp srcml output from the compressed and uncompressed input
         echo "Comparing srcML output from compressed and uncompressed input ..."
         DIFF="$( cmp ${XZOUTPUT} ${UNZOUTPUT} )"
@@ -111,7 +123,7 @@ do
         echo "cmp ${XZOUTPUT} ${UNZOUTPUT}" | tee -a "${DLOG}"
         echo "${DIFF}" | tee -a "${DLOG}"
 
-        # ------------- srcml --> dir ------------------------
+        # -------------- srcml --> source-only/ ------------------------
         echo "Testing from srcML archive to directory ..."
         SMLOUTPUTDIR="${NAME}-from-srcml"
         TIME="$(time ( srcml ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR} ) 2>&1 1>/dev/null )"
@@ -125,7 +137,7 @@ do
         echo "${SMLSIZE_OUTPUT}" | tee -a "${SLOG}"
 
         # diff srcml output to original directory
-        echo "Comparing srcML --to-dir output to original directory ..."
+        echo "Comparing srcML --to-dir output to original source-only directory ..."
         DIFF="$( diff -r ${NAME} ${SMLOUTPUTDIR} )"
 
         echo "diff -r ${NAME} ${SMLOUTPUTDIR}" | tee -a "${DLOG}"
@@ -134,6 +146,7 @@ do
 
         # keep the logs and the big system (test runs faster consecutively), but
         # cleanup srcml outputs
+        rm "${SRCZNAME}"   # soucrce-only-tar.gz
         rm -r "${NAME}"    # uncompressed directory
         rm "${XZOUTPUT}"   # srcml output from running on compressed file
         rm "${UNZOUTPUT}"  # srcml output from running on directory
