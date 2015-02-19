@@ -134,7 +134,7 @@ class readable_unit(object):
         myUnit.unparse(buff = mem_buff)
 
         3) using I/O callbacks
-        myUnit.unparse(context =ctxtObj, write_cb= writeFunc, close_cb= closeFunc)
+        myUnit.unparse(context =ctxtObj, write= writeFunc, close= closeFunc)
 
         4) Using I/O interface: this is the same type of interface that's used by other
         classes that provides a write and close functions just like the ones used with the context
@@ -171,7 +171,6 @@ class readable_unit(object):
                         return zero_for_sucess_not_zero_for_failure
 
         """
-
         if len(kwargs) == 0:
             temp_buffer = memory_buffer()
             self.unparse(buffer=temp_buffer)
