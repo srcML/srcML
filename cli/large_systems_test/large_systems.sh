@@ -5,10 +5,10 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 mkdir -p "/${DIR}/logs"
 
 # timestamp log files
-TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
-TLOG="${DIR}/logs/timelog-${TIMESTAMP}.txt"
-DLOG="${DIR}/logs/difflog-${TIMESTAMP}.txt"
-SLOG="${DIR}/logs/sizelog-${TIMESTAMP}.txt"
+TIMESTAMP=$(date +"%Y-%m-%dT%H-%M-%S")
+TLOG="${DIR}/logs/timelog_${TIMESTAMP}.txt"
+DLOG="${DIR}/logs/difflog_${TIMESTAMP}.txt"
+SLOG="${DIR}/logs/sizelog_${TIMESTAMP}.txt"
 
 echo "Time log for this session at: ${TLOG}" && echo > "${TLOG}"
 echo "Diff log for this session at: ${DLOG}" && echo > "${DLOG}"
