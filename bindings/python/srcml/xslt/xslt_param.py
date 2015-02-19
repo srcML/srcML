@@ -18,6 +18,35 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from xslt_base_class import *
+from .. bindings import *
+
 
 class xslt_param(xsltransform_base):
-    pass
+    """
+    Register a new parameter for an XSL Transformation.
+    """
+    def __init__(self, name, value):
+        """
+        Create a new xslt_param object
+        """
+        self.name = name
+        self.value = value
+
+
+    @property
+    def name(self):
+        return self._name
+    @name.setter
+    def name(self, value):
+        self._name = value
+    
+
+    @property
+    def value(self):
+        return self._value
+    @value.setter
+    def value(self, value):
+        self._value = value
+    
+    def apply(self, arch_ptr):
+        append_transform_param(arch_ptr, name, value)

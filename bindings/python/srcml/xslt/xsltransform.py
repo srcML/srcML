@@ -20,6 +20,7 @@
 from xslt_base_class import *
 from .. bindings import *
 from .. private_helpers import *
+from .. memory_buffer import *
 import cStringIO, ctypes
 
 class xsltransform(xsltransform_base):
@@ -85,7 +86,7 @@ class xsltransform(xsltransform_base):
                     self.buffer.load_from_string("".join(strm.readlines))
                 except:
                     self.buffer.load_from_string(strm.getvalue())
-                self._dispatch = _buffer_dispatch
+                self._dispatch = xsltransform._buffer_dispatch
             else:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
 
@@ -93,32 +94,66 @@ class xsltransform(xsltransform_base):
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             self.filename = kwargs[FILENAME_PARAM]
-            self._dispatch = _filename_dispatch
+            self._dispatch = xsltransform._filename_dispatch
 
         elif BUFFER_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             self.buffer = kwargs[BUFFER_PARAM]
-            self._dispatch = _buffer_dispatch
+            self._dispatch = xsltransform._buffer_dispatch
 
         elif CONTEXT_PARAM in kwargs:
             if len(kwargs) > 3 or len(kwargs) == 2:
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
             elif len(kwargs) == 1:
                 self._ctxt = kwargs[CONTEXT_PARAM]
-                # self._read_helper = cb_read_helper
-                # self._close_read_helper = cb_close_helper
-                # unit_parse_io(
-                #     self.srcml_unit,
-                #     self._ctxt,
-                #     self._read_helper,
-                #     self._close_read_helper
-                # )
-                raise NotImplementedError()
+                temp_buffer = memory_buffer()
+                buffer_size = 4096
+                temp_buffer.allocate(buffer_size)
+                faux_array_buffer = (ctypes.c_byte * buffer_size).from_address(ctypes.cast(temp_buffer.buff, ctypes.c_void_p).value)
+                output_stream = cStringIO.StringIO()
+                bytes_read = self._ctxt.read(faux_array_buffer, buffer_size)
+                if bytes_read == -1:
+                    raise Exception("Encountered an error while reading.")
+                while bytes_read > 0:
+                    output_stream.write(str(temp_buffer))
+                    temp_buffer.zero_out()
+                    bytes_read = self._ctxt.read(faux_array_buffer, buffer_size)
+                    if bytes_read == -1:
+                        raise Exception("Encountered an error while reading.")
+                
+                if self._ctxt.close():
+                    raise Exception("Encountered an error while reading.")
+                self.buffer = memory_buffer()
+                self.buffer.load_from_string(output_stream.getvalue())
+                output_stream.close()
+                self._dispatch = xsltransform._buffer_dispatch
             else:
-                # self._ctxt = kwargs[CONTEXT_PARAM]
-                # self._read_helper = read_callback(kwargs[READ_CB_PARAM])
-                # self._close_read_helper = close_callback(kwargs[CLOSE_CB_PARAM])
+                self._ctxt = kwargs[CONTEXT_PARAM]
+                read_func = kwargs[READ_CB_PARAM]
+                close_func = kwargs[CLOSE_CB_PARAM]
+
+                temp_buffer = memory_buffer()
+                buffer_size = 4096
+                temp_buffer.allocate(buffer_size)
+                faux_array_buffer = (ctypes.c_byte * buffer_size).from_address(ctypes.cast(temp_buffer.buff, ctypes.c_void_p).value)
+                bytes_read = read_func(self._ctxt, faux_array_buffer, buffer_size)
+                if bytes_read == -1:
+                    raise Exception("Encountered an error while reading.")
+                output_stream = cStringIO.StringIO()
+                while bytes_read > 0:
+                    output_stream.write(str(temp_buffer))
+                    temp_buffer.zero_out()
+                    bytes_read = read_func(self._ctxt, faux_array_buffer, buffer_size)
+                    if bytes_read == -1:
+                        raise Exception("Encountered an error while reading.")
+                if close_func(self._ctxt) == -1:
+                    raise Exception("Encountered an error while reading.")
+                self.buffer = memory_buffer()
+                self.buffer.load_from_string(output_stream.getvalue())
+                output_stream.close()
+                self._dispatch = xsltransform._buffer_dispatch
+
                 # unit_parse_io(
                 #     self.srcml_unit,
                 #     self._ctxt,
@@ -129,39 +164,13 @@ class xsltransform(xsltransform_base):
         elif XSLT_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            raise NotImplementedError()
+            # raise NotImplementedError()
             # self.parse(context=str_reader_context(kwargs[SOURCE_CODE_PARAM], len(kwargs[SOURCE_CODE_PARAM])))
+            self.buffer = memory_buffer()
+            self.buffer.load_from_string(kwargs[XSLT_PARAM])
+            self._dispatch = xsltransform._buffer_dispatch
         else:
             raise Exception("No known parameters")
-        # if FILENAME_PARAM in kwargs:
-        #     if len(kwargs) > 1:
-        #         raise Exception("Invalid filename argument combination.")
-        #     self.filename = kwargs[FILENAME_PARAM]
-        #     self._dispatch = self._filename_dispatch
-        # elif BUFFER_PARAM in kwargs:
-        #     if len(kwargs) > 1:
-        #         raise Exception("Invalid argument combination with srcml.memory_buffer")
-        #     self.buffer = kwargs[BUFFER_PARAM]
-        #     self._dispatch = _buffer_dispatch
-
-        # elif CONTEXT_PARAM in kwargs:
-        #     if len(kwargs) != 1 and len(kwargs) != 3:
-        #         raise Exception("Invalid argument combination with context parameter")
-        #     if len(kwargs) == 1:
-        #         raise NotImplementedError()
-        #     elif len(kwarg) ==3:
-        #         raise NotImplementedError()
-
-
-        # elif STREAM_PARAM in kwargs:
-        #     if len(kwargs) > 1:
-        #         raise Exception("Invalid argument combination with stream parameter")
-
-        # elif XSLT_PARAM in kwargs:
-        #     raise NotImplementedError()
-        # else:
-        #     raise Exception("Invalid argument combination. No known arguments.")
-
 
 
 

@@ -20,4 +20,8 @@
 from xslt_base_class import *
 
 class relaxng_validating_transform(xsltransform_base):
-    pass
+    def __init__(self, **kwargs):
+        raise NotImplementedError()
+
+    def apply(self, arch_ptr):
+        raise NotImplementedError()
