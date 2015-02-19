@@ -104,7 +104,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -126,7 +126,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -149,7 +149,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a_after);
+        dassert(std::string(s, size), srcml_a_after);
         free(s);
 
     }
@@ -172,7 +172,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b_after);
+        dassert(std::string(s, size), srcml_b_after);
         free(s);
 
     }
@@ -198,7 +198,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -220,7 +220,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -242,7 +242,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a);
+        dassert(std::string(s, size), srcml_a);
         free(s);
 
     }
@@ -264,7 +264,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b);
+        dassert(std::string(s, size), srcml_b);
         free(s);
 
     }
@@ -287,7 +287,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full_python);
+        dassert(std::string(s, size), srcml_full_python);
         free(s);
 
     }
@@ -313,7 +313,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -335,7 +335,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -357,7 +357,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a);
+        dassert(std::string(s, size), srcml_a);
         free(s);
 
     }
@@ -379,7 +379,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b);
+        dassert(std::string(s, size), srcml_b);
         free(s);
 
     }
@@ -402,7 +402,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full_python);
+        dassert(std::string(s, size), srcml_full_python);
         free(s);
 
     }
@@ -425,7 +425,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full_python);
+        dassert(std::string(s, size), srcml_full_python);
         free(s);
 
     }
@@ -453,7 +453,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -477,7 +477,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -501,7 +501,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a);
+        dassert(std::string(s, size), srcml_a);
         free(s);
 
     }
@@ -525,7 +525,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b);
+        dassert(std::string(s, size), srcml_b);
         free(s);
 
     }
@@ -550,7 +550,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full_python);
+        dassert(std::string(s, size), srcml_full_python);
         free(s);
 
     }
@@ -578,7 +578,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -603,7 +603,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -628,7 +628,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a);
+        dassert(std::string(s, size), srcml_a);
         free(s);
 
     }
@@ -653,7 +653,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b);
+        dassert(std::string(s, size), srcml_b);
         free(s);
 
     }
@@ -679,7 +679,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full_python);
+        dassert(std::string(s, size), srcml_full_python);
         free(s);
 
     }
@@ -705,7 +705,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -727,7 +727,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -749,7 +749,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a);
+        dassert(std::string(s, size), srcml_a);
         free(s);
 
     }
@@ -771,7 +771,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b);
+        dassert(std::string(s, size), srcml_b);
         free(s);
 
     }
@@ -797,7 +797,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -819,7 +819,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -841,7 +841,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a);
+        dassert(std::string(s, size), srcml_a);
         free(s);
 
     }
@@ -863,7 +863,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b);
+        dassert(std::string(s, size), srcml_b);
         free(s);
 
     }
@@ -892,7 +892,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -917,7 +917,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -942,7 +942,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a);
+        dassert(std::string(s, size), srcml_a);
         free(s);
 
     }
@@ -967,7 +967,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b);
+        dassert(std::string(s, size), srcml_b);
         free(s);
 
     }
@@ -996,7 +996,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -1021,7 +1021,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -1046,7 +1046,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a);
+        dassert(std::string(s, size), srcml_a);
         free(s);
 
     }
@@ -1071,7 +1071,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b);
+        dassert(std::string(s, size), srcml_b);
         free(s);
 
     }
@@ -1117,7 +1117,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
 
     }
@@ -1158,7 +1158,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_full);
+        dassert(std::string(s, size), srcml_full);
         free(s);
 
     }
@@ -1200,7 +1200,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_a_after);
+        dassert(std::string(s, size), srcml_a_after);
         free(s);
 
     }
@@ -1242,7 +1242,7 @@ int main() {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(s, srcml_b_after);
+        dassert(std::string(s, size), srcml_b_after);
         free(s);
 
     }
