@@ -2,7 +2,7 @@
 
 # use relative paths
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-mkdir -p "/${DIR}/logs"
+mkdir -p "/${DIR}/logs" "/${DIR}/cache" "/${DIR}/output"
 
 # timestamp log files
 TIMESTAMP=$(date +"%Y-%m-%dT%H-%M-%S")
@@ -50,7 +50,7 @@ do
         echo "--------------------------------------"
 
         # get the compressed file, if it doesn't already exist
-        ZNAME="${DIR}/logs/${name}"
+        ZNAME="${DIR}/cache/${name}"
         if [ ! -f "${ZNAME}" ] ; then
             echo "Grabbing ${location} into ${ZNAME}"
             curl -L -k "${location}" -o "${ZNAME}"
@@ -62,7 +62,7 @@ do
 
         # --- all.tar.gz -> all/ -> source-only/ -> source-only.tar.gz ---
         # uncompress, if the unzipped version doesn't already exist
-        NAME="${ZNAME/.tar.*z/}-onlysrc" # without the .tar.gz or .tar.xz extensions
+        NAME="${DIR}/output/${name/.tar.*z/}-onlysrc" # without the .tar.gz or .tar.xz extensions
         if [ ! -d "${NAME}" ] ; then
             echo "Uncompressing ${ZNAME} to ${NAME} ..."
             mkdir "${NAME}" && tar -xf "${ZNAME}" -C "${NAME}" --strip-components 1
@@ -72,7 +72,7 @@ do
         find "${NAME}" -type f -not -name "*.[cChHmM]" -not -name "*.[cChH][pP][pP]" -not -name "*.aj" -not -name ".java" -exec rm "{}" \;
 
         # re-compress project
-        SRCZNAME="${DIR}/logs/${name/.tar.*z/}-onlysrc.tar.gz"
+        SRCZNAME="${DIR}/output/${name/.tar.*z/}-onlysrc.tar.gz"
         tar czf "${SRCZNAME}" "${NAME}"
 
         # store size of source-only compressed file
@@ -131,8 +131,7 @@ do
         echo "${DIFF}" | tee -a "${DLOG}"
 
 
-        # keep the logs and the bigsystem.tar.gz (test runs faster consecutively),
-        # but cleanup srcml outputs and bigsystem/ dir
+        # keep logs/* and cache/*; remove output/*
         rm "${SRCZNAME}"   # compressed file soucrce-only-tar.gz
         rm -r "${NAME}"    # uncompressed directory soucrce-only-tar/
         rm "${XZOUTPUT}"   # srcml output from running on soucrce-only-tar.gz
