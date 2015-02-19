@@ -103,14 +103,18 @@ class readable_archive(object):
         # Open archive
         self._open_read(**kwargs)
 
-        class xslt(object):
+        class xslt_prop_obj:
+            def __init__(self, arch_ptr):
+                self.srcml_archive = arch_ptr
+
             def apply(self, output_archive):
-                # return self._foo
-                raise NotImplementedError()
-        self._xslt = xslt()
+                apply_transforms(self.srcml_archive, output_archive.srcml_archive)
+
+        self._xslt = xslt_prop_obj(self.srcml_archive)
+
         # Loading transformations,
         if len(settings.xsltransformations) > 0:
-            for transform in settings.xlstransformations:
+            for transform in settings.xsltransformations:
                 transform.apply(self.srcml_archive)
 
     def _open_read(self, **kwargs):
