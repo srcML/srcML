@@ -386,20 +386,20 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
  * srcml_archive_register_namespace
  * @param archive a srcml_archive
  * @param prefix a XML namespace prefix
- * @param ns a XML namespace
+ * @param uri a XML namespace uri
  *
  * Create a new namespace or change the prefix of an existing namespace.
  *
  * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* ns) {
+int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* uri) {
 
-    if(archive == NULL || prefix == NULL || ns == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive == NULL || prefix == NULL || uri == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     try {
 
         for(std::vector<std::string>::size_type i = 0; i < archive->prefixes.size(); ++i)
-            if(archive->namespaces.at(i) == ns) {
+            if(archive->namespaces.at(i) == uri) {
 
                 archive->prefixes.at(i) = prefix;
                 return SRCML_STATUS_OK;
@@ -408,7 +408,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
     } catch(...) { return SRCML_STATUS_ERROR; }
 
     archive->prefixes.push_back(prefix);
-    archive->namespaces.push_back(ns);
+    archive->namespaces.push_back(uri);
 
     return SRCML_STATUS_OK;
 
