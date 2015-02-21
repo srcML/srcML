@@ -94,13 +94,13 @@ endmacro()
 # addLargeSystemTest
 # - TEST_NAME the name of the test
 # - BASH_SCRIPT the name of the bash script that will be executed
-# - SCRIPT_ARGS any arguments that are passed on to the bash test script
+# - ARGN any arguments that are passed on to the bash test script
 # Adds a large systems test which executes on the provided bash script, passing
 # in arguments for the script which determine what large system to use
 #
 #
-macro(addLargeSystemTest TEST_NAME BASH_SCRIPT SCRIPT_ARGS)
-    add_test(NAME ${TEST_NAME} COMMAND bash ${BASH_SCRIPT} ${SCRIPT_ARGS})
+macro(addLargeSystemTest TEST_NAME BASH_SCRIPT)
+    add_test(NAME ${TEST_NAME} COMMAND bash ${BASH_SCRIPT} ${SCRIPT_ARGS} ${ARGN})
 
     if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
         copyDependentFile(${BASH_SCRIPT})

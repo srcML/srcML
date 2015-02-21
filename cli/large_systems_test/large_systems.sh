@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# optionally use max-threads, if set in CMakeLists.txt
+if [ $# -ge 2 ] && [[ "${1}" == *"max-threads"* ]] ; then
+    MAX_THREADS="${1}"
+    shift 1
+fi
+
 # use relative paths
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 mkdir -p "/${DIR}/logs" "/${DIR}/cache" "/${DIR}/output"
@@ -13,12 +19,6 @@ SLOG="${DIR}/logs/sizelog.txt"
 
 echo "$TIMESTAMP" | tee -a "${TLOG}" "${DLOG}" "${SLOG}"
 echo "--------------------------------------" | tee -a "${TLOG}" "${DLOG}" "${SLOG}"
-
-# optionally use max-threads
-#if [ $# -ge 2 ] && [[ "${1}" == *"max-threads" && $2 =~ ^-?[0-9]+$ ]] ; then
-#    MAX_THREADS="--max-threads=${2}"
-#    shift 2
-#fi
 
 # get arguments to script (a line from large_systems_list.csv)
 IFS=, read location name language <<<"$@"

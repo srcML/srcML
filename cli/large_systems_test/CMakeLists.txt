@@ -21,6 +21,11 @@
 #
 
 file(STRINGS large_systems_list.csv FILE)
+
+# sets the max threads option. can be modified to match desired thread number,
+# or commented out to disable
+set(MAX_THREADS "--max-threads=8")
+
 foreach(LINE ${FILE})
 
 	# use the project name from "*,<project-name>,*" in the CSV file
@@ -28,5 +33,5 @@ foreach(LINE ${FILE})
 	string(REGEX MATCH ",.*," NAME "${LINE}")
 	string(REPLACE "," "" NAME "${NAME}")
 
-	addLargeSystemTest(${NAME} large_systems.sh ${LINE})
+	addLargeSystemTest(${NAME} large_systems.sh ${MAX_THREADS} ${LINE})
 endforeach()

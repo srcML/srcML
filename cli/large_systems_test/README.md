@@ -56,16 +56,13 @@ tests based on name. For example, to only run the linux tests, use:
 $ ctest -R linux
 ```
 
-<!--
+
 ### Max threads
 
-The `max-threads` option can optionally be specified when run via bash. For
-instance, the previous example can be run with max threads of 8 with the
-following command:
+The `max-threads` option can optionally be specified via
+`cli/large_systems_test/CMakeLists.txt`. The `MAX_THREADS` variable matches
+the command that srcML receives. By default, it is set to 8. It can be commented
+out, or the number of threads changed, then re-run with CTest.
 
-```
-$ ./large_systems.sh max-threads 8 linux language=Objective-C
-```
-
-A number must be provided if the max-threads option is specified.
--->
+To see the changes as they were made in CMakeLists.txt, *re-run `make install`
+and `ctest`*. CMake itself doesn't need to be reconfigured.
