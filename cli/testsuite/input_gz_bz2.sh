@@ -11,7 +11,7 @@ define src <<- 'STDOUT'
 
 define foutput <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="archive/a.cpp.gz">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="archive/a.cpp.gz.bz2">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
@@ -25,15 +25,16 @@ define output <<- 'STDOUT'
 
 createfile archive/a.cpp "$src"
 gzip -c archive/a.cpp > archive/a.cpp.gz
+bzip2 -c archive/a.cpp.gz > archive/a.cpp.gz.bz2
 
-src2srcml archive/a.cpp.gz -o archive/a.cpp.xml
+src2srcml archive/a.cpp.gz.bz2 -o archive/a.cpp.xml
 check archive/a.cpp.xml 3<<< "$foutput"
 
-srcml archive/a.cpp.gz
+srcml archive/a.cpp.gz.bz2
 check 3<<< "$foutput"
 
-srcml -l C++ < archive/a.cpp.gz
+srcml -l C++ < archive/a.cpp.gz.bz2
 check 3<<< "$output"
 
-srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.gz
+srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.gz.bz2
 check archive/a.cpp.xml 3<<< "$output"
