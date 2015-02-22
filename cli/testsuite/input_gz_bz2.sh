@@ -3,7 +3,7 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# test on compressed files with .gz extension
+# test on compressed files with .gz.bz2 extension
 define src <<- 'STDOUT'
 
 	a;
