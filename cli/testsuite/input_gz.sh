@@ -26,17 +26,31 @@ define output <<- 'STDOUT'
 createfile archive/a.cpp "$src"
 gzip -c archive/a.cpp > archive/a.cpp.gz
 
+# src --> srcml
 src2srcml archive/a.cpp.gz -o archive/a.cpp.xml
 check archive/a.cpp.xml 3<<< "$foutput"
 
-srcml archive/a.cpp.gz
+src2srcml archive/a.cpp.gz
 check 3<<< "$foutput"
 
-srcml -l C++ < archive/a.cpp.gz
+src2srcml -l C++ < archive/a.cpp.gz
 check 3<<< "$output"
 
-srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.gz
+src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.gz
 check archive/a.cpp.xml 3<<< "$output"
 
 rmfile archive/a.cpp
 rmfile archive/a.cpp.gz
+
+# srcml --> src
+srcml2src archive/a.cpp.xml
+check 3<<< "$src"
+
+srcml2src archive/a.cpp.xml -o archive/a.cpp
+check archive/a.cpp 3<<< "$src"
+
+srcml2src < archive/a.cpp.xml
+check 3<<< "$src"
+
+srcml2src -o archive/a.cpp < archive/a.cpp.xml
+check archive/a.cpp 3<<< "$src"

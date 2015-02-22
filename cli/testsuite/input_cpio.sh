@@ -35,17 +35,31 @@ define output <<- 'STDOUT'
 createfile archive/a.cpp "$src"
 echo archive/a.cpp | tr " " "\n" | cpio -o > archive/a.cpp.cpio
 
+# src --> srcml
 src2srcml archive/a.cpp.cpio -o archive/a.cpp.xml
 check archive/a.cpp.xml 3<<< "$foutput" 4<<< "1 block"
 
-srcml archive/a.cpp.cpio
+src2srcml archive/a.cpp.cpio
 check 3<<< "$foutput"
 
-srcml -l C++ < archive/a.cpp.cpio
+src2srcml -l C++ < archive/a.cpp.cpio
 check 3<<< "$output"
 
-srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.cpio
+src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.cpio
 check archive/a.cpp.xml 3<<< "$output"
 
 rmfile archive/a.cpp
 rmfile archive/a.cpp.cpio
+
+# srcml --> src
+srcml2src archive/a.cpp.xml
+check 3<<< "$src"
+
+srcml2src archive/a.cpp.xml -o archive/a.cpp
+check archive/a.cpp 3<<< "$src"
+
+srcml2src < archive/a.cpp.xml
+check 3<<< "$src"
+
+srcml2src -o archive/a.cpp < archive/a.cpp.xml
+check archive/a.cpp 3<<< "$src"

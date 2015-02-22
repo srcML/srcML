@@ -35,17 +35,31 @@ define output <<- 'STDOUT'
 createfile archive/a.cpp "$src"
 tar -czf archive/a.cpp.tgz archive/a.cpp
 
+# src --> srcml
 src2srcml archive/a.cpp.tgz -o archive/a.cpp.xml
 check archive/a.cpp.xml 3<<< "$foutput"
 
-srcml archive/a.cpp.tgz
+src2srcml archive/a.cpp.tgz
 check 3<<< "$foutput"
 
-srcml -l C++ < archive/a.cpp.tgz
+src2srcml -l C++ < archive/a.cpp.tgz
 check 3<<< "$output"
 
-srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.tgz
+src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.tgz
 check archive/a.cpp.xml 3<<< "$output"
 
 rmfile archive/a.cpp
 rmfile archive/a.cpp.tgz
+
+# srcml --> src
+srcml2src archive/a.cpp.xml
+check 3<<< "$src"
+
+srcml2src archive/a.cpp.xml -o archive/a.cpp
+check archive/a.cpp 3<<< "$src"
+
+srcml2src < archive/a.cpp.xml
+check 3<<< "$src"
+
+srcml2src -o archive/a.cpp < archive/a.cpp.xml
+check archive/a.cpp 3<<< "$src"

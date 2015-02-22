@@ -36,18 +36,32 @@ createfile archive/a.cpp "$src"
 echo archive/a.cpp | tr " " "\n" | cpio -o > archive/a.cpp.cpio
 gzip -c archive/a.cpp.cpio > archive/a.cpp.cpio.gz
 
+# src --> srcml
 src2srcml archive/a.cpp.cpio.gz -o archive/a.cpp.xml
 check archive/a.cpp.xml 3<<< "$foutput" 4<<< "1 block"
 
-srcml archive/a.cpp.cpio.gz
+src2srcml archive/a.cpp.cpio.gz
 check 3<<< "$foutput"
 
-srcml -l C++ < archive/a.cpp.cpio.gz
+src2srcml -l C++ < archive/a.cpp.cpio.gz
 check 3<<< "$output"
 
-srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.cpio.gz
+src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.cpio.gz
 check archive/a.cpp.xml 3<<< "$output"
 
 rmfile archive/a.cpp
 rmfile archive/a.cpp.cpio
 rmfile archive/a.cpp.cpio.gz
+
+# srcml --> src
+srcml2src archive/a.cpp.xml
+check 3<<< "$src"
+
+srcml2src archive/a.cpp.xml -o archive/a.cpp
+check archive/a.cpp 3<<< "$src"
+
+srcml2src < archive/a.cpp.xml
+check 3<<< "$src"
+
+srcml2src -o archive/a.cpp < archive/a.cpp.xml
+check archive/a.cpp 3<<< "$src"
