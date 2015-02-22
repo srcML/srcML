@@ -47,3 +47,7 @@ check 3<<< "$output"
 
 srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.cpio.gz
 check archive/a.cpp.xml 3<<< "$output"
+
+rmfile archive/a.cpp
+rmfile archive/a.cpp.cpio
+rmfile archive/a.cpp.cpio.gz
