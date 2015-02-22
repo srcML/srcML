@@ -109,6 +109,8 @@ public:
 
     xmlOutputBufferPtr output_buffer() { return out.output_buffer; }
 
+    xmlTextWriterPtr output_textwriter() { return out.xout; }
+
     // destructor
     ~srcml_translator();
 

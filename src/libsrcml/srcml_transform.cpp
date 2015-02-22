@@ -442,6 +442,9 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     // use the output archive output buffer
     xmlOutputBufferPtr obuffer = oarchive->translator->output_buffer();
+
+    xmlTextWriterPtr xout = oarchive->translator->output_textwriter();
+
     if(obuffer == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     global_transformations = iarchive->transformations;
@@ -463,7 +466,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.element),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_prefix), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_uri),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_name), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_value),
-                                    oarchive->options, obuffer);
+                                    oarchive->options, obuffer, xout);
                 break;
             }
 
@@ -496,7 +499,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     }
 
-    srcml_clear_transforms(iarchive);
+    //srcml_clear_transforms(iarchive);
 
     return SRCML_STATUS_OK;
 
