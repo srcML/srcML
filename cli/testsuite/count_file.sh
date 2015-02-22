@@ -47,9 +47,9 @@ define empty_output <<- 'STDOUT'
 
 createfile sub/empty.xml "$empty"
 
-srcml2src --count sub/empty.xml
+srcml2src --show-unit-count  sub/empty.xml
 check 3<<< "$empty_output"
 
-srcml2src --count < sub/empty.xml
+srcml2src --show-unit-count  < sub/empty.xml
 check 3<<< "$empty_output"
 
