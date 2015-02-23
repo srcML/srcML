@@ -39,13 +39,15 @@ class GenPythonCode(BindingGenerator):
             "void" : "None",
             "unsigned long long" :"c_ulonglong",
             "srcml_archive *": "c_void_p",
+            "size_t *": "POINTER(c_size_t)",
             "const srcml_archive *": "c_void_p",
             "FILE *": "IMPOSSIBLE",
             "int *" : "c_void_p",
             "char *" : "c_char_p",
             "void *" : "py_object",
             "const char *": "c_char_p",
-            "size_t" : "c_int"
+            "unsigned short":"c_ushort",
+            "size_t" : "c_size_t"
         })
         self.fpLookup = dict()
 
@@ -71,9 +73,9 @@ class GenPythonCode(BindingGenerator):
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from ctypes import cdll, c_int, c_char_p, pointer, c_ulonglong, CFUNCTYPE, c_void_p, byref, py_object
+from ctypes import cdll, c_int, c_char_p, pointer, c_ulong, c_ulonglong, CFUNCTYPE, c_void_p, byref, py_object, c_ushort, POINTER, c_size_t
 from ctypes.util import find_library
-
+import exceptions
 # libsrcmlLocation = "libsrcml.so"
 
 libsrcml = cdll.LoadLibrary(find_library("srcml"))
@@ -84,6 +86,12 @@ libc.free.argtypes = [c_void_p]
 
 def free(to_free):
     libc.free(to_free)
+
+libc.malloc.restype = c_void_p
+libc.malloc.argtypes = [c_ulong]
+
+def malloc(allocation_size):
+    return libc.malloc(allocation_size)
 """
 
 
@@ -92,11 +100,7 @@ def free(to_free):
         return ""
 
     def postStaticConstants(self):
-        return"""
-def check_result(rc):
-    if rc != STATUS_OK:
-        raise Exception("srcml has encountered an error. Error Code: {0}".format(rc))
-"""
+        return""" """
 
 
     def postFunctionPointers(self):
@@ -137,6 +141,8 @@ def check_result(rc):
         # Outputting all info for function bindings.
         outputStrm = cStringIO.StringIO()
         # Building initial from library.
+        if functionDeclInfo.name == "srcml_unit_get_standalone_xml":
+            functionDeclInfo.returnType = "c_void_p"
 
         # Writing return type and Argument Types
         outputStrm.write("libsrcml.{0.name}.restype = {0.returnType}\n".format(functionDeclInfo))
@@ -144,7 +150,7 @@ def check_result(rc):
 
         intResultTemplate = """
 def {pyName}({parameters}):
-    check_result(libsrcml.{nativeName}({invocationArguments}))
+    exceptions.get_srcml_exception(libsrcml.{nativeName}({invocationArguments}), "{nativeName}", "Native function failure")
 """
         voidReturnTemplate = """
 def {pyName}({parameters}):
@@ -158,19 +164,40 @@ def {pyName}({parameters}):
 def {pyName}({parameters}):
     return libsrcml.{nativeName}({invocationArguments})
 """
+        specialStringCopyAndFreeConversion = """
+def {pyName}({parameters}):
+    temp = libsrcml.{nativeName}({invocationArguments})
+    if temp == None:
+        raise MemoryError("Failed to allocate native memory")
+    try:
+        ret = c_char_p(temp).value
+    except:
+        libsrcml.srcml_free(temp)
+        raise
+    free(temp)
+    return ret
+"""
+
 
         selectedTemplate = ""
         if functionDeclInfo.returnType == "None":
             selectedTemplate = voidReturnTemplate
+        elif functionDeclInfo.name == "srcml_unit_get_standalone_xml":
+            selectedTemplate = specialStringCopyAndFreeConversion
         elif functionDeclInfo.returnType == "c_void_p" or functionDeclInfo.returnType == "c_char_p":
             selectedTemplate = factoryReturnTemplate
         elif functionDeclInfo.returnType == "c_int":
-            if functionDeclInfo.name.find("_get_") == -1:
+            if functionDeclInfo.name.find("_get_") == -1 and functionDeclInfo.name.find("check_") == -1:
                 selectedTemplate = intResultTemplate    
             else:
                 selectedTemplate = factoryReturnTemplate
             # if srcml.get_language_list_size()
             # selectedTemplate = intResultTemplate
+        elif functionDeclInfo.returnType == "c_size_t":
+            if functionDeclInfo.name.find("_get_") == -1 and functionDeclInfo.name.find("check_") == -1:
+                selectedTemplate = intResultTemplate    
+            else:
+                selectedTemplate = factoryReturnTemplate
         elif functionDeclInfo.returnType == "c_ulonglong":
             selectedTemplate = simpleNoCheckReturnTemplate
         else:
@@ -395,6 +422,9 @@ class TestBindings(unittest.TestCase):
         
         elif variableNativeType == INT_REF_TYPE:
             return "{0} = ctypes.c_int()".format(variableName)
+
+        elif variableNativeType == SIZE_T_REF_TYPE:
+            return "{0} = ctypes.c_size_t()".format(variableName)
 
         elif variableNativeType == WRITE_CALLBACK_TYPE:
             return "{0} = srcml.write_callback(writeCallback)".format(variableName)

@@ -17,18 +17,18 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from test_exception_factory import *
-from test_bindings import *
-from test_memory_buffer import *
-from test_writable_archive_xml_namespace_settings import *
-from test_writable_archive_settings import *
-from test_writable_archive import *
-from test_archive_xml_namespaces import *
-from test_archive_macros import *
-from test_writable_unit import *
-from test_readable_archive_settings import *
-from test_readable_archive import *
-from test_readable_unit import *
-from test_xslt_transformations import *
+from srcml_error import srcml_error
+from srcml_invalid_argument import srcml_invalid_argument
+from srcml_invalid_input import srcml_invalid_input
+from srcml_invalid_io_operation import srcml_invalid_io_operation
+from srcml_io_error import srcml_io_error
+from srcml_uninitialized_unit import srcml_uninitialized_unit
+from srcml_language_not_set import srcml_language_not_set
+from srcml_no_transformation import srcml_no_transformation
+
+from exception_factory import *
+
+from invalid_srcml_language import invalid_srcml_language
+from invalid_srcml_encoding import invalid_srcml_encoding
 
 

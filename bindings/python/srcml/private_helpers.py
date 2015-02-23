@@ -18,37 +18,27 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import ctypes
-"""
+
+__doc__ = """
 This file contains constants which are used by multiple different areas 
 but are all internal to the module.
 """
 
-ENCODING_ATTR = "encoding"
-SRC_ENCODING_ATTR = "src_encoding"
-LANGUAGE_ATTR = "language"
-FILENAME_ATTR = "filename"
-DIRECTORY_ATTR = "directory"
-VERSION_ATTR = "version"
-TABSTOP_ATTR = "tabstop"
-OPTIONS_ATTR = "options"
-PROCESSING_INSTRUCTION_ATTR = "processing_instruction"
-TIMESTAMP_ATTR = "timestamp"
-REVISION_ATTR = "revision"
-HASH_ATTR = "hash"
 STREAM_PARAM = "stream"
-
 FILENAME_PARAM = "filename"
 XML_PARAM = "xml"
 SIZE_PARAM = "size"
-BUFF_PARAM = "buff"
+BUFFER_PARAM = "buffer"
 CONTEXT_PARAM = "context"
-READ_CB_PARAM = "read_cb"
-WRITE_CB_PARAM = "write_cb"
-CLOSE_CB_PARAM = "close_cb"
-FD_PARAM = "fd"
+READ_CB_PARAM = "read"
+WRITE_CB_PARAM = "write"
+CLOSE_CB_PARAM = "close"
 CLOSE_STREAM_PARAM = "close_stream"
 XSLT_PARAM = "xslt"
 RELAXNG_PARAM = "relaxng"
+COMPRESSION_FACTOR_PARAM = "compression_factor"
+SOURCE_CODE_PARAM = "source_code"
+
 
 # Contexts for reading and writing to/from python to the libsrcml
 # interface.
@@ -61,7 +51,7 @@ class str_reader_context(object):
     def read(self, buff, size):
         outBufferIndex = 0
         amountToWrite = min(len(self.xml_str), size - 1)
-        buff[:amountToWrite] = self.xml_str[:amountToWrite]
+        buff[:amountToWrite] = [ord(x) for x in self.xml_str[:amountToWrite]]
         self.xml_str = self.xml_str[amountToWrite:]
         return amountToWrite
 
@@ -84,6 +74,7 @@ class write_stream_context(object):
         except:
             return -1
         return 0
+
 class stream_context(object):
     def __init__(self, stream, close_on_complete=True):
         self.strm = stream
@@ -91,7 +82,7 @@ class stream_context(object):
 
     def read(self, buff, size):
         data = self.strm.read(size)
-        buff[:len(data)] = data[:len(data)]
+        buff[:len(data)] = [ord(x) for x in data[:len(data)]]
         return len(data)
 
     def write(self, buff, size):
@@ -108,10 +99,7 @@ class stream_context(object):
 
 # Callback helper functions.
 def cb_read_helper(ctxt, buff, size):
-    mutableCBuffer = ctypes.cast(buff, ctypes.POINTER(ctypes.c_char))
-    addr = ctypes.addressof(mutableCBuffer.contents)
-    bufferArray = (ctypes.c_char * size).from_address(addr)
-    return ctxt.read(bufferArray, size)
+    return ctxt.read((ctypes.c_byte * size).from_address(buff), size)
 
 def cb_write_helper(ctxt, buff, size):
     return ctxt.write(buff, size)
@@ -119,3 +107,7 @@ def cb_write_helper(ctxt, buff, size):
 def cb_close_helper(ctxt):
     return ctxt.close()
 
+def cb_read_multifunc_hlpr(to_call):
+    def cb_read_impl(ctxt, buff, size):
+        return to_call(ctxt, (ctypes.c_byte * size).from_address(buff), size)
+    return cb_read_impl
