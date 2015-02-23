@@ -125,7 +125,7 @@ class memory_buffer(object):
         for x in temp_array:
             yield x
 
-    def to_string(self, encoding = None):
+    def to_string(self, encoding = None, count = None):
         """
         Attempts to return a string with a specified encoding.
         If the encoding is None then then no encoding is used
@@ -134,8 +134,12 @@ class memory_buffer(object):
         if len(self) == 0:
             return ""
         if encoding == None:
+            if count != None:
+                return str(bytearray(self._make_array()[:count]))
             return str(bytearray(self._make_array()))
         else:
+            if count != None:
+                "\n".join(io.TextIOWrapper(io.BytesIO(self._make_array()[:count]), encoding).readlines())
             return "\n".join(io.TextIOWrapper(io.BytesIO(self._make_array()), encoding).readlines())
 
     def to_list(self):

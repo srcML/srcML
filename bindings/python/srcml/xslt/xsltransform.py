@@ -76,7 +76,6 @@ class xsltransform(xsltransform_base):
                     def close(self):
                         return zero_for_sucess_not_zero_for_failure
         """
-
         self._dispatch = None
         if STREAM_PARAM in kwargs:
             if len(kwargs) == 1:
@@ -111,38 +110,42 @@ class xsltransform(xsltransform_base):
                 buffer_size = 4096
                 temp_buffer.allocate(buffer_size)
                 faux_array_buffer = (ctypes.c_byte * buffer_size).from_address(ctypes.cast(temp_buffer.buff, ctypes.c_void_p).value)
+                temp_buffer.zero_out()
                 output_stream = cStringIO.StringIO()
                 bytes_read = self._ctxt.read(faux_array_buffer, buffer_size)
                 if bytes_read == -1:
                     raise Exception("Encountered an error while reading.")
                 while bytes_read > 0:
-                    output_stream.write(str(temp_buffer))
+
+                    output_stream.write(temp_buffer.to_string(count = bytes_read))
                     temp_buffer.zero_out()
                     bytes_read = self._ctxt.read(faux_array_buffer, buffer_size)
                     if bytes_read == -1:
                         raise Exception("Encountered an error while reading.")
-                
-                if self._ctxt.close():
+
+                if self._ctxt.close() == -1:
                     raise Exception("Encountered an error while reading.")
                 self.buffer = memory_buffer()
                 self.buffer.load_from_string(output_stream.getvalue())
                 output_stream.close()
                 self._dispatch = xsltransform._buffer_dispatch
+                
             else:
                 self._ctxt = kwargs[CONTEXT_PARAM]
                 read_func = kwargs[READ_CB_PARAM]
                 close_func = kwargs[CLOSE_CB_PARAM]
-
                 temp_buffer = memory_buffer()
+                temp_buffer.zero_out()
                 buffer_size = 4096
                 temp_buffer.allocate(buffer_size)
+                temp_buffer.zero_out()
                 faux_array_buffer = (ctypes.c_byte * buffer_size).from_address(ctypes.cast(temp_buffer.buff, ctypes.c_void_p).value)
                 bytes_read = read_func(self._ctxt, faux_array_buffer, buffer_size)
                 if bytes_read == -1:
                     raise Exception("Encountered an error while reading.")
                 output_stream = cStringIO.StringIO()
                 while bytes_read > 0:
-                    output_stream.write(str(temp_buffer))
+                    output_stream.write(temp_buffer.to_string(count = bytes_read))
                     temp_buffer.zero_out()
                     bytes_read = read_func(self._ctxt, faux_array_buffer, buffer_size)
                     if bytes_read == -1:
@@ -153,19 +156,9 @@ class xsltransform(xsltransform_base):
                 self.buffer.load_from_string(output_stream.getvalue())
                 output_stream.close()
                 self._dispatch = xsltransform._buffer_dispatch
-
-                # unit_parse_io(
-                #     self.srcml_unit,
-                #     self._ctxt,
-                #     self._read_helper,
-                #     self._close_read_helper
-                # )
-                raise NotImplementedError()
         elif XSLT_PARAM in kwargs:
             if len(kwargs) > 1 :
                 raise Exception("Unrecognized argument combination: {0}".format(", ".join(kwargs.keys())))
-            # raise NotImplementedError()
-            # self.parse(context=str_reader_context(kwargs[SOURCE_CODE_PARAM], len(kwargs[SOURCE_CODE_PARAM])))
             self.buffer = memory_buffer()
             self.buffer.load_from_string(kwargs[XSLT_PARAM])
             self._dispatch = xsltransform._buffer_dispatch

@@ -25,14 +25,8 @@ import os, unittest
 from testlib import *
 import lxml.etree as et
 
-# def write_test_func(ctxt, buffer, size):
-#     ctxt.write(buffer)
-#     return size
-
-# def close_test_func(ctxt):
-#     return 0
-
 xml_namespaces = {"src":"http://www.sdml.info/srcML/src"}
+
 xslt_ident = """
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:template match="@*|node()">
@@ -43,8 +37,7 @@ xslt_ident = """
 </xsl:stylesheet>
 """
 
-relaxng_match_all = """
-<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+relaxng_match_all = """<grammar xmlns="http://relaxng.org/ns/structure/1.0">
 
   <start>
     <ref name="anyElement"/>
@@ -223,7 +216,7 @@ class test_xslt_transformations(unittest.TestCase):
             self.assertEqual(expected_unit_count, counter, "Incorrect # of units within output archive. Expected: {0} Actual: {1}".format(expected_unit_count, counter))
 
     def test_relaxng_context(self):
-        test_reader = read_tester(xslt_ident)
+        test_reader = read_tester(relaxng_match_all)
         expected_unit_count = 3
         with run_transform_with_n_units(expected_unit_count,  relaxng_validating_transform(context=test_reader)) as transformed_archive:
             counter = 0
@@ -234,14 +227,13 @@ class test_xslt_transformations(unittest.TestCase):
             self.assertEqual(expected_unit_count, counter, "Incorrect # of units within output archive. Expected: {0} Actual: {1}".format(expected_unit_count, counter))
 
     def test_relaxng_context_with_functions(self):
-        test_reader = read_tester(xslt_ident)
 
         def read(ctxt, buff, size):
             return ctxt.read(buff, size)
 
         def close(ctxt):
             return ctxt.close()
-        test_reader = read_tester(xslt_ident)
+        test_reader = read_tester(relaxng_match_all)
         expected_unit_count = 3
         with run_transform_with_n_units(expected_unit_count,  relaxng_validating_transform(context=test_reader, read=read, close=close)) as transformed_archive:
             counter = 0

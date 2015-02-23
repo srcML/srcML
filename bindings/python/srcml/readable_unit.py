@@ -237,18 +237,6 @@ class readable_unit(object):
             if check_encoding(xml_encoding) == 0:
                 raise invalid_srcml_encoding("Invalid XML encoding", xml_encoding)
         return unit_get_standalone_xml(self.srcml_unit, xml_encoding)
-        # libsrcml.srcml_unit_get_standalone_xml.restype= ctypes.c_void_p
-        # ret = libsrcml.srcml_unit_get_standalone_xml(self.srcml_unit, xml_encoding)
-
-        # print ret.__class__.__name__
-        # if ret == None:
-        #     raise MemoryError("Failed to allocate memory for standalone xml.")  
-        # try:
-        #     result_string = ctypes.c_char_p(ret).value
-        # except:
-        #     free(ret)
-        # free(ret)
-        # return result_string
 
     def get_xml_fragment(self):
         """
