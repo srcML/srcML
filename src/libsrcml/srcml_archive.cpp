@@ -24,6 +24,8 @@
 #include <srcml_translator.hpp>
 #include <libxml2_callback_wrappers.hpp>
 
+#include <libxml/encoding.h>
+
 #include <srcmlns.hpp>
 
 /**
@@ -1016,7 +1018,7 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
                                                             archive->user_macro_list);
     if(!done) {
 
-        archive->encoding = encoding;
+        if(!encoding) archive->encoding = encoding;
         archive->language = language;
         archive->filename = filename;
         archive->directory = directory;
@@ -1042,7 +1044,7 @@ int srcml_archive_read_open_filename(srcml_archive* archive, const char* srcml_f
 
     if(archive == NULL || srcml_filename == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateFilename(srcml_filename, XML_CHAR_ENCODING_NONE);
+    archive->input = xmlParserInputBufferCreateFilename(srcml_filename, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
     return srcml_archive_read_open_internal(archive);
 
@@ -1063,7 +1065,7 @@ int srcml_archive_read_open_memory(srcml_archive* archive, const char* buffer, s
 
     if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, XML_CHAR_ENCODING_NONE);
+    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
     return srcml_archive_read_open_internal(archive);
 
@@ -1083,7 +1085,7 @@ int srcml_archive_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
     if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateFile(srcml_file, XML_CHAR_ENCODING_NONE);
+    archive->input = xmlParserInputBufferCreateFile(srcml_file, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
     
     return srcml_archive_read_open_internal(archive);
 
@@ -1105,7 +1107,7 @@ int srcml_archive_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
     if(archive == NULL || srcml_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateFd(srcml_fd, XML_CHAR_ENCODING_NONE);
+    archive->input = xmlParserInputBufferCreateFd(srcml_fd, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
     archive->input->closecallback = 0;
 
     return srcml_archive_read_open_internal(archive);
@@ -1131,7 +1133,7 @@ int srcml_archive_read_open_io(srcml_archive* archive, void * context, int (*rea
     archive->context = libxml2_read_context{context, read_callback, close_callback};
     try {
 
-        archive->input = xmlParserInputBufferCreateIO(read_callback_wrapper, read_close_callback_wrapper, boost::any_cast<libxml2_read_context>(&archive->context), XML_CHAR_ENCODING_NONE);
+        archive->input = xmlParserInputBufferCreateIO(read_callback_wrapper, read_close_callback_wrapper, boost::any_cast<libxml2_read_context>(&archive->context), archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
     } catch(boost::bad_any_cast cast) {}
 

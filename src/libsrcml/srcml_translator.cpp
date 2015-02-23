@@ -565,8 +565,9 @@ srcml_translator::~srcml_translator() {
 
     if(str_buffer && buffer->use) {
 
-        (*str_buffer) = strdup((const char *)buffer->content);
-        if(size && *str_buffer) *size = (int)buffer->use;
+      (*str_buffer) = (char *)malloc(buffer->use * sizeof(char));
+      memcpy(*str_buffer, buffer->content, (size_t)buffer->use);
+      if(size && *str_buffer) *size = (size_t)buffer->use;
 
     }
 

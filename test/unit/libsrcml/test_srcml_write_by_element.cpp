@@ -69,7 +69,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + empty_unit);
+        dassert(std::string(s, size), xml_decl + empty_unit);
         free(s);
     }
 
@@ -92,7 +92,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_root_unit_tag + empty_inner_unit + end_root_unit_tag);
+        dassert(std::string(s, size), xml_decl + start_root_unit_tag + empty_inner_unit + end_root_unit_tag);
         free(s);
     }
 
@@ -118,7 +118,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_root_unit_tag + empty_inner_unit + "\n" + empty_inner_unit + end_root_unit_tag);
+        dassert(std::string(s, size), xml_decl + start_root_unit_tag + empty_inner_unit + "\n" + empty_inner_unit + end_root_unit_tag);
         free(s);
     }
 
@@ -175,7 +175,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element/>" + end_unit);
         free(s);
     }
 
@@ -194,7 +194,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element/>" + end_unit);
         free(s);
     }
 
@@ -214,7 +214,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<foo:element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<foo:element/>" + end_unit);
         free(s);
     }
 
@@ -234,7 +234,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
         free(s);
     }
 
@@ -255,7 +255,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<foo:element xmlns:foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<foo:element xmlns:foo=\"bar\"/>" + end_unit);
         free(s);
     }
 
@@ -277,7 +277,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element/><element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element/><element/>" + end_unit);
         free(s);
     }
 
@@ -298,7 +298,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element/><element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element/><element/>" + end_unit);
         free(s);
     }
 
@@ -320,7 +320,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element><element/></element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element><element/></element>" + end_unit);
         free(s);
     }
 
@@ -340,7 +340,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element><element/></element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element><element/></element>" + end_unit);
         free(s);
     }
 
@@ -418,7 +418,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element xmlns:foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns:foo=\"bar\"/>" + end_unit);
         free(s);
     }
 
@@ -439,7 +439,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
         free(s);
     }
 
@@ -496,7 +496,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
         free(s);
     }
 
@@ -517,7 +517,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element f:foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element f:foo=\"bar\"/>" + end_unit);
         free(s);
     }
 
@@ -538,7 +538,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element foo=\"bar\" xmlns=\"b\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element foo=\"bar\" xmlns=\"b\"/>" + end_unit);
         free(s);
     }
 
@@ -559,7 +559,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element f:foo=\"bar\" xmlns:f=\"b\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element f:foo=\"bar\" xmlns:f=\"b\"/>" + end_unit);
         free(s);
     }
 
@@ -580,7 +580,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
         free(s);
     }
 
@@ -637,7 +637,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element>foo</element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element>foo</element>" + end_unit);
         free(s);
     }
 
@@ -660,7 +660,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, xml_decl + start_unit + "<element><element>foo</element></element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + "<element><element>foo</element></element>" + end_unit);
         free(s);
     }
 
