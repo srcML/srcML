@@ -1065,7 +1065,20 @@ int srcml_archive_read_open_memory(srcml_archive* archive, const char* buffer, s
 
     if(archive == NULL || buffer == NULL || buffer_size <= 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    xmlCharEncoding encoding = archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE;
+    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding);
+
+    if(encoding != XML_CHAR_ENCODING_NONE && archive->input && archive->input->encoder) {
+
+        xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(encoding);
+        xmlBufPtr save_buf = archive->input->raw;
+        archive->input->raw = archive->input->buffer;
+        archive->input->buffer = temp_parser->buffer;
+        temp_parser->buffer = save_buf;
+        xmlFreeParserInputBuffer(temp_parser);
+        xmlParserInputBufferGrow(archive->input, (int)buffer_size);
+
+    }
 
     return srcml_archive_read_open_internal(archive);
 
