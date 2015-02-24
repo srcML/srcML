@@ -115,14 +115,18 @@ srcml_translator::srcml_translator(char ** str_buf,
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
 
     // delete initialization as writer seems to init again causing double init.
-    if(encoding)
+    if(encoding) {
+
 #ifdef LIBXML2_NEW_BUFFER
       xmlBufShrink(obuffer->conv, xmlBufUse(obuffer->conv));
 #else
     for(size_t i = 0; i < (size_t)obuffer->conv->use; ++i)
       obuffer->conv->content[i] = 0;
+
     obuffer->conv->use = 0;
 #endif
+
+    }
 
     out.setOutputBuffer(obuffer);
 
