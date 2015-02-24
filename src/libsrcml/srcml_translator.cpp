@@ -119,8 +119,9 @@ srcml_translator::srcml_translator(char ** str_buf,
 #ifdef LIBXML2_NEW_BUFFER
       xmlBufShrink(obuffer->conv, xmlBufUse(obuffer->conv));
 #else
-      xmlBufferShrink(obuffer->conv, xmlBufferLength(obuffer->conv));
-      xmlBufferGrow(obuffer->conv, 4000 /* libxml2 internal used number */);
+    for(size_t i = 0; i < (size_t)obuffer->conv->use; ++i)
+      obuffer->conv->content[i] = 0;
+    obuffer->conv->use = 0;
 #endif
 
     out.setOutputBuffer(obuffer);
