@@ -1085,7 +1085,7 @@ int srcml_archive_read_open_memory(srcml_archive* archive, const char* buffer, s
         archive->input->buffer = xmlBufferCreate();
 #endif
 
-        xmlParserInputBufferGrow(archive->input, buffer_size > 4096 ? buffer_size : 4096);
+        xmlParserInputBufferGrow(archive->input, buffer_size > 4096 ? (int)buffer_size : 4096);
 
     }
 
