@@ -120,7 +120,7 @@ srcml_translator::srcml_translator(char ** str_buf,
       xmlBufShrink(obuffer->conv, xmlBufUse(obuffer->conv));
 #else
       xmlBufferShrink(obuffer->conv, xmlBufferLength(obuffer->conv));
-      xmlBufferGrow(obuffer->conv, 4000 /* libxml2 internal used number */)
+      xmlBufferGrow(obuffer->conv, 4000 /* libxml2 internal used number */);
 #endif
 
     out.setOutputBuffer(obuffer);
