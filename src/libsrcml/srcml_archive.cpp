@@ -1070,13 +1070,22 @@ int srcml_archive_read_open_memory(srcml_archive* archive, const char* buffer, s
 
     if(encoding != XML_CHAR_ENCODING_NONE && archive->input && archive->input->encoder) {
 
+#ifdef LIBXML2_NEW_BUFFER
         xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(encoding);
         xmlBufPtr save_buf = archive->input->raw;
         archive->input->raw = archive->input->buffer;
         archive->input->buffer = temp_parser->buffer;
         temp_parser->buffer = save_buf;
         xmlFreeParserInputBuffer(temp_parser);
-        xmlParserInputBufferGrow(archive->input, (int)buffer_size);
+#else
+        if(input->raw)
+            xmlBufferFree(input->raw);
+        input->raw = input->buffer;
+        input->rawconsumed = 0;
+        input->buffer = xmlBufferCreate();
+#endif
+
+        xmlParserInputBufferGrow(archive->input, buffer_size > 4096 ? buffer_size : 4096);
 
     }
 
