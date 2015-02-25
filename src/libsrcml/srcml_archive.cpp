@@ -1018,7 +1018,7 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
                                                             archive->user_macro_list);
     if(!done) {
 
-        if(!encoding) archive->encoding = encoding;
+        if(!archive->encoding) archive->encoding = encoding;
         archive->language = language;
         archive->filename = filename;
         archive->directory = directory;
