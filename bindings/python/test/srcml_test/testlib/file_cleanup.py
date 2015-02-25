@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file file_cleanup.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,18 +17,26 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from test_exception_factory import *
-from test_bindings import *
-from test_memory_buffer import *
-from test_writable_archive_xml_namespace_settings import *
-from test_writable_archive_settings import *
-from test_writable_archive import *
-from test_archive_xml_namespaces import *
-from test_archive_macros import *
-from test_writable_unit import *
-from test_readable_archive_settings import *
-from test_readable_archive import *
-from test_readable_unit import *
-from test_xslt_transformations import *
+import os
 
+def cleanup_files(*files_to_cleanup):
+    """
+    Deletes a file after a test completes. Failure or no failure.
+    """
+    def cleanup_func(func):
 
+        def delete_files():
+            for f in files_to_cleanup:
+                if os.path.exists(f):
+                    os.remove(f)
+
+        def make_call(*args):
+            delete_files()
+            try:
+                func(*args)
+            except:
+                delete_files()
+                raise
+            delete_files()
+        return make_call
+    return cleanup_func

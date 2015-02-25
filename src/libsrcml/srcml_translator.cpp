@@ -113,6 +113,18 @@ srcml_translator::srcml_translator(char ** str_buf,
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
+
+    // delete initialization as writer seems to init again causing double init.
+    if(xml_encoding) {
+
+#ifdef LIBXML2_NEW_BUFFER
+      xmlBufShrink(obuffer->conv, xmlBufUse(obuffer->conv));
+#else
+    obuffer->conv->use = 0;
+#endif
+
+    }
+
     out.setOutputBuffer(obuffer);
 
 }
@@ -565,8 +577,9 @@ srcml_translator::~srcml_translator() {
 
     if(str_buffer && buffer->use) {
 
-        (*str_buffer) = strdup((const char *)buffer->content);
-        if(size && *str_buffer) *size = (int)buffer->use;
+      (*str_buffer) = (char *)malloc(buffer->use * sizeof(char));
+      memcpy(*str_buffer, buffer->content, (size_t)buffer->use);
+      if(size && *str_buffer) *size = (size_t)buffer->use;
 
     }
 

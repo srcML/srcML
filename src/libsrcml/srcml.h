@@ -307,7 +307,7 @@ LIBSRCML_DECL int srcml_archive_enable_option             (struct srcml_archive*
 LIBSRCML_DECL int srcml_archive_disable_option            (struct srcml_archive*, unsigned long long option);
 LIBSRCML_DECL int srcml_archive_set_tabstop               (struct srcml_archive*, size_t tabstop);
 LIBSRCML_DECL int srcml_archive_register_file_extension   (struct srcml_archive*, const char* extension, const char* language);
-LIBSRCML_DECL int srcml_archive_register_namespace        (struct srcml_archive*, const char* prefix, const char* ns);
+LIBSRCML_DECL int srcml_archive_register_namespace        (struct srcml_archive*, const char* prefix, const char* uri);
 LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive*, const char* target, const char* data); 
 LIBSRCML_DECL int srcml_archive_register_macro            (struct srcml_archive*, const char* token, const char* type);  
 

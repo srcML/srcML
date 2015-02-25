@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file xslt_base_class.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,18 +17,20 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from test_exception_factory import *
-from test_bindings import *
-from test_memory_buffer import *
-from test_writable_archive_xml_namespace_settings import *
-from test_writable_archive_settings import *
-from test_writable_archive import *
-from test_archive_xml_namespaces import *
-from test_archive_macros import *
-from test_writable_unit import *
-from test_readable_archive_settings import *
-from test_readable_archive import *
-from test_readable_unit import *
-from test_xslt_transformations import *
+from abc import *
 
+class xsltransform_base(object):
+    __metaclass__ = ABCMeta
 
+    @classmethod
+    def __subclasshook__(cls, other):
+        attr = getattr(other, "apply", None)
+        if attr is None: 
+            return False
+        else:
+            return callable(attr)
+
+    @abstractmethod
+    def apply(self, archive_pointer):
+        raise NotImplementedError("This is an abstract method, that cannot and should never be called outside of the srcml library.")
+        pass

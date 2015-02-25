@@ -134,6 +134,7 @@ struct srcml_archive {
 
     /** an attribute for a name of a file */
     boost::optional<std::string> filename;
+    /** @todo rename to xml_encoding */
     /** an attribute for the xml encoding */
     boost::optional<std::string> encoding;
     /** source encoding */

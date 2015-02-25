@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file xslt_stringparam.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,18 +17,34 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from test_exception_factory import *
-from test_bindings import *
-from test_memory_buffer import *
-from test_writable_archive_xml_namespace_settings import *
-from test_writable_archive_settings import *
-from test_writable_archive import *
-from test_archive_xml_namespaces import *
-from test_archive_macros import *
-from test_writable_unit import *
-from test_readable_archive_settings import *
-from test_readable_archive import *
-from test_readable_unit import *
-from test_xslt_transformations import *
+from xslt_base_class import *
+from .. bindings import *
+class xslt_stringparam(xsltransform_base):
+    """
+    Register a new string parameter for an XSL Transformation.
+    """
+    def __init__(self, name, value):
+        """
+        Create a new xslt_stringparam object.
+        """
+        self.name = name
+        self.value = value
 
 
+    @property
+    def name(self):
+        return self._name
+    @name.setter
+    def name(self, value):
+        self._name = value
+    
+
+    @property
+    def value(self):
+        return self._value
+    @value.setter
+    def value(self, value):
+        self._value = value
+    
+    def apply(self, arch_ptr):
+        append_transform_stringparam(arch_ptr, name, value)

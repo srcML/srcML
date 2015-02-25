@@ -1,5 +1,5 @@
 ##
-# @file __init__.py
+# @file invalid_srcml_language.py
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 #
@@ -17,18 +17,9 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from test_exception_factory import *
-from test_bindings import *
-from test_memory_buffer import *
-from test_writable_archive_xml_namespace_settings import *
-from test_writable_archive_settings import *
-from test_writable_archive import *
-from test_archive_xml_namespaces import *
-from test_archive_macros import *
-from test_writable_unit import *
-from test_readable_archive_settings import *
-from test_readable_archive import *
-from test_readable_unit import *
-from test_xslt_transformations import *
+class invalid_srcml_language(Exception):
+    def __init__(self, message, language):
+        super(invalid_srcml_language, self).__init__(message, language)
 
-
+    def __str__(self):
+        return "Invalid srcml Language: {1}. {0}".format(*self.args)

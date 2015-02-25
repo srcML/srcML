@@ -44,14 +44,11 @@ option(BUILD_LARGE_SYSTEMS_TESTS "Build tests run on large systems" OFF)
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 option(BUILD_PYTHON_BINDINGS "Build Python language bindings/wrapper" OFF)
 
-
-
 if(${BUILD_PYTHON_BINDINGS})
     set(BUILD_LANGUAGE_BINDINGS true)
 else()
     set(BUILD_LANGUAGE_BINDINGS false)
 endif()
-
 
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
@@ -92,6 +89,7 @@ else()
 
     if(LIBXSLT_FOUND)
         include_directories(${LIBXSLT_INCLUDE_DIR})
+        add_definitions(-DWITH_LIBXSLT)
     endif()
 
     include_directories(${Boost_INCLUDE_DIR})
@@ -148,11 +146,6 @@ if(NOT ${PYTHON_VERSION_MAJOR} EQUAL "2")
     if(${PYTHON_VERSION_MINOR} LESS EQUAL 6)
         message(FATAL_ERROR "Version of python found is not 2.6.X")
     endif()
-endif()
-
-# Adding global configuration for the load DLL macro.
-if(NOT ${DYNAMIC_LOAD_ENABLED})
-    add_definitions(-DNO_DLLOAD)
 endif()
 
 if(EXISTS ${Boost_INCLUDE_DIR}/boost/mpl/vector/vector150_c.hpp)
