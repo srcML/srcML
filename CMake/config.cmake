@@ -151,9 +151,9 @@ if(EXISTS ${Boost_INCLUDE_DIR}/boost/mpl/vector/vector150_c.hpp)
     add_definitions(-DSRCML_BOOST_MPL_LARGE)
 endif()
 
-# Adding compiler configuration for GCC.
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
+set(CMAKE_BUILD_TYPE Debug)
 if(${CMAKE_COMPILER_IS_GNUCXX})
 
     string(FIND ${CMAKE_CXX_COMPILER} "mingw32" IS_MINGW32)
@@ -163,16 +163,16 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
 
     set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros")
     # Adding global compiler definitions.                                                                                      
-    set(CMAKE_CXX_FLAGS "${USE_FPIC} -O3 ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_RELEASE "${USE_FPIC} -O3 -DNDEBUG -DSTATIC_GLOBALS ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_DEBUG "${USE_FPIC} -O3 -g -DDEBUG --coverage -fprofile-arcs ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "${USE_FPIC} ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
+    set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG --coverage -fprofile-arcs")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
-    set(CMAKE_CXX_FLAGS "-fPIC -O3 --std=c++11 ${CLANG_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_RELEASE "-fPIC -O3 -DNDEBUG -DSTATIC_GLOBALS ${CLANG_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_DEBUG "-fPIC -O0 -g -DDEBUG ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC --std=c++11 ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS_RELEASE "-03 -DNDEBUG -DSTATIC_GLOBALS")
+    set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
