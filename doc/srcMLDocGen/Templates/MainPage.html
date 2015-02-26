@@ -1,0 +1,13 @@
+{% extends "Skeleton.html" %}
+
+{% block cssLinks %}<link rel="stylesheet" href="Style/MainStyle.css" />{% endblock %}
+{% block title %}srcML Language Documentation{% endblock %}
+{% block body %}
+<h2>srcML Language Documentation Index</h2>
+<hr/>
+<ul>
+    {% for page in pageLinks %}
+        <li><a href="{{page.link}}"/>{{page.title}}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
