@@ -1,2 +1,4 @@
 # ignore output files
 /logs
+/cache
+/output

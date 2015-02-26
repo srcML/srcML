@@ -14,7 +14,8 @@ define output <<- 'STDOUT'
 
 createfile sub/a.cpp "$src"
 
-
-# TODO: issue #1071
 src2srcml --show-unit-count -l C++ < sub/a.cpp
+check 3<<< "$output"
+
+src2srcml -l C++ --show-unit-count < sub/a.cpp
 check 3<<< "$output"

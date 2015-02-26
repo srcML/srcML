@@ -6,12 +6,11 @@ Executes srcML on a list of large systems, and for each system records:
 compressed and uncompressed format
 * the size of original compressed file, uncompressed directory, and output
 srcML files
-* the output of a  `cmp` comparison of the srcML output files when run on
+* the output of a `cmp` comparison of the srcML output files when run on
 compressed and uncompressed inputs
 
-The records for time, diff, and size are stored in timestamped logs under the
-build directory in `cli/large_systems_test/logs`. It can be run via
-CMake/CTest, but more options are available when executing straight from bash.
+The records for time, diff, and size are stored in logs under the
+build directory in `cli/large_systems_test/logs`. It can be run via `ctest`.
 
 
 ### Build
@@ -22,10 +21,8 @@ to `ON`. After running CMake, build **and install** srcML.
 
 ### Run
 
-After building, run via `ctest`, `make test`, or from bash with
-`./large_systems.sh`. The benefit of running from bash is that arguments can
-be specified to pick which system(s) to execute the test on (see the next
-section). The list of all systems that are used are in a CSV file in
+After building, run via `ctest` or `make test`. The list of all systems
+that are used are in a CSV file in
 `cli/large_systems_test/large_systems_list.csv`. Each line in the file
 contains information for a system on which srcML will execute. This
 information includes: 1) where to get the tar for that system, 2) the name of
@@ -37,49 +34,35 @@ order to make executing the test faster when run consecutively.
 
 ### Output
 
-The resulting output of the test is stored in three timestamped files: a time
+The resulting output of the test is stored in the log/ directory in three files: a time
 log, size log, and diff log. Each log contains the command & arguments that
 were executed, and the result of the command (`time`, `du -hs`, or `cmp`).
+Executing the test multiple times will only append to these files. The timestamp
+of when the test was executed is saved in the file before any output is
+generated.
+
+A local cache is kept in the cache/ directory of the original tar files for
+each system.
+
+A temporary directory, output/, keeps srcML output from the test. All contents
+of this directory are removed after each test.
 
 
 ### Filtering systems
 
-When executed through bash, tests can be filtered based on name or language by
-passing strings to match against any of the 3 parameters listed in the CSV
-file. The test will execute on a system if it matches any one of the given
-arguments. With no arguments, the test will exceute on all systems listed in
-the file. It takes ~30 minutes to run on 6 systems.
-
-For example, to run the test only on the Linux kernel source code, use:
+Only one or some systems can be tested by using the ctest command to filter
+tests based on name. For example, to only run the linux tests, use:
 ```
-$ ./large_systems.sh linux
-```
-
-To run the test only on systems whose main language is C:
-```
-$ ./large_systems.sh language=C
-```
-
-More than one argument can be used to match multiple strings. The following
-example will run the test on Linux, Curl, and AFNetworking:
-```
-$ ./large_systems.sh linux curl afnetwork
-```
-Notice that the argument string doesn't have to match the full name, so
-`afnetwork` matches `AFNetworking`.
-
-Filtering by project name can be combined with filtering by language. For
-example, if you want to run the test on Linux as well as any system whose main
-language is Objective-C, use:
-```
-$ ./large_systems.sh linux language=Objective-C
+$ ctest -R linux
 ```
 
 
-### Notes
+### Max threads
 
-The order of arguments doesn't matter and case is ignored.
+The `max-threads` option can optionally be specified via
+`cli/large_systems_test/CMakeLists.txt`. The `MAX_THREADS` variable matches
+the command that srcML receives. By default, it is set to 8. It can be commented
+out, or the number of threads changed, then re-run with CTest.
 
-For specifying the language, it must be in the form `language=<language>`,
-without spaces before or after the `=` because it's stored in the CSV file in
-that way.
+To see the changes as they were made in CMakeLists.txt, *re-run `make install`
+and `ctest`*. CMake itself doesn't need to be reconfigured.

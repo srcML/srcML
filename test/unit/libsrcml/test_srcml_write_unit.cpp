@@ -91,7 +91,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml_a_single);
+        dassert(std::string(s, size), srcml_a_single);
         free(s);
     }
 
@@ -108,7 +108,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml_a_archive);
+        dassert(std::string(s, size), srcml_a_archive);
         free(s);
     }
 
@@ -135,7 +135,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml_ns);
+        dassert(std::string(s, size), srcml_ns);
         free(s);
     }
 
@@ -157,7 +157,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml);
+        dassert(std::string(s, size), srcml);
         free(s);
     }
 
@@ -178,7 +178,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml_b_single);
+        dassert(std::string(s, size), srcml_b_single);
         free(s);
     }
 
@@ -199,7 +199,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml_b_single);
+        dassert(std::string(s, size), srcml_b_single);
         free(s);
     }
 
@@ -221,7 +221,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml_b_archive);
+        dassert(std::string(s, size), srcml_b_archive);
         free(s);
     }
 
@@ -245,7 +245,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, utf8_srcml);
+        dassert(std::string(s, size), utf8_srcml);
         free(s);
     }
 
@@ -269,7 +269,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, utf8_srcml_latin);
+        dassert(std::string(s, size), utf8_srcml_latin);
         free(s);
     }
 
@@ -293,7 +293,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, latin_srcml);
+        dassert(std::string(s, size), latin_srcml);
         free(s);
     }
 
@@ -317,7 +317,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, latin_srcml_latin);
+        dassert(std::string(s, size), latin_srcml_latin);
         free(s);
     }
 
@@ -340,7 +340,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml_macro);
+        dassert(std::string(s, size), srcml_macro);
         free(s);
     }
 
@@ -366,7 +366,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml_macro_single);
+        dassert(std::string(s, size), srcml_macro_single);
         free(s);
     }
 
@@ -386,7 +386,7 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(s, srcml_a_archive);
+        dassert(std::string(s, size), srcml_a_archive);
         free(s);
     }
 
