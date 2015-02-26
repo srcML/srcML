@@ -153,7 +153,10 @@ endif()
 
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
-set(CMAKE_BUILD_TYPE Debug)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
 if(${CMAKE_COMPILER_IS_GNUCXX})
 
     string(FIND ${CMAKE_CXX_COMPILER} "mingw32" IS_MINGW32)
@@ -171,7 +174,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
     set(CMAKE_CXX_FLAGS "-fPIC --std=c++11 ${CLANG_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_RELEASE "-03 -DNDEBUG -DSTATIC_GLOBALS")
+    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
