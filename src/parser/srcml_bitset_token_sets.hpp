@@ -137,4 +137,8 @@ create_token_set(class_tokens, srcMLParser::CLASS, srcMLParser::CXX_CLASS, srcML
 
 const antlr::BitSet srcMLParser::class_tokens_set(bitset_buckets<class_tokens>::data, bitset_buckets<class_tokens>::num_token_longs);
 
+create_token_set(decl_specifier_tokens, srcMLParser::VIRTUAL, srcMLParser::PUBLIC, srcMLParser::PRIVATE, srcMLParser::PROTECTED);
+
+const antlr::BitSet srcMLParser::decl_specifier_tokens_set(bitset_buckets<decl_specifier_tokens>::data, bitset_buckets<decl_specifier_tokens>::num_token_longs);
+
 #endif

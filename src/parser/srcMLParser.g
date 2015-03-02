@@ -680,6 +680,7 @@ public:
     static const antlr::BitSet modifier_tokens_set;
     static const antlr::BitSet skip_tokens_set;
     static const antlr::BitSet class_tokens_set;
+    static const antlr::BitSet decl_specifier_tokens_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -1166,6 +1167,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        ({ decl_specifier_tokens_set.member(LA(1)) }? specifier set_int[type_count, type_count - 1])*
         function_type[type_count]
 ;
 
