@@ -159,7 +159,7 @@ void start_document(void * ctx) {
     state->context->srcml_element_stack = 0;
 
     state->context->encoding = "UTF-8";
-    if(ctxt->encoding)
+    if(ctxt->encoding && ctxt->encoding[0] != '\0')
         state->context->encoding = (const char *)ctxt->encoding;
     else if(ctxt->input)
         state->context->encoding = (const char *)ctxt->input->encoding;
@@ -456,7 +456,10 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
                int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar ** attributes) {
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 12e8e0e21dad14a1d250ef5f38b0b40fc57ec91d
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -504,6 +507,12 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
 
     }
 
+<<<<<<< HEAD
+=======
+    free_srcsax_namespaces(nb_namespaces, srcsax_namespaces);
+    free_srcsax_attributes(nb_attributes, srcsax_attributes);
+
+>>>>>>> 12e8e0e21dad14a1d250ef5f38b0b40fc57ec91d
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -558,6 +567,9 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
         state->libxml2_namespaces = 0;
         state->libxml2_attributes = 0;
     }
+
+    //free_srcsax_namespaces(nb_namespaces, srcsax_namespaces);
+    //free_srcsax_attributes(nb_attributes, srcsax_attributes);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);

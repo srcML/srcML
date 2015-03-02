@@ -594,7 +594,7 @@ public :
 
         if(terminate) stop_parser();
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -616,7 +616,7 @@ public :
                                 int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                                 const struct srcsax_attribute * attributes) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -641,7 +641,7 @@ public :
 
         if(terminate) stop_parser();
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -657,7 +657,7 @@ public :
      */
     virtual void endRoot(const char * localname, const char * prefix, const char * URI) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
         if(!read_root) {
@@ -691,7 +691,7 @@ public :
 
         if(terminate) stop_parser();
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -707,7 +707,7 @@ public :
      */
     virtual void endUnit(const char * localname, const char * prefix, const char * URI) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -745,7 +745,7 @@ public :
 
         if(terminate) stop_parser();
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -761,7 +761,7 @@ public :
      */
     virtual void endElement(const char * localname, const char * prefix, const char * URI) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -774,7 +774,7 @@ public :
 
         if(terminate) stop_parser();
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -789,7 +789,7 @@ public :
      */
     virtual void charactersUnit(const char * ch, int len) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         std::string chars;
         chars.append((const char *)ch, len);
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
@@ -821,7 +821,7 @@ public :
 
         if(terminate) stop_parser();
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
