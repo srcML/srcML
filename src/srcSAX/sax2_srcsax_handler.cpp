@@ -146,7 +146,7 @@ static inline void free_srcsax_attributes(int number_attributes, srcsax_attribut
  */
 void start_document(void * ctx) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
@@ -169,7 +169,7 @@ void start_document(void * ctx) {
     if(state->context->handler->start_document)
         state->context->handler->start_document(state->context);
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
@@ -185,7 +185,7 @@ void start_document(void * ctx) {
  */
 void end_document(void * ctx) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
@@ -207,7 +207,7 @@ void end_document(void * ctx) {
     if(state->context->handler->end_document)
         state->context->handler->end_document(state->context);
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
@@ -232,7 +232,7 @@ void start_root(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
                int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar ** attributes) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -248,7 +248,7 @@ void start_root(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
     // handle nested units
     ctxt->sax->startElementNs = &start_element_ns_first;
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -273,7 +273,7 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
                          int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar ** attributes) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -431,7 +431,7 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
     free_srcsax_namespaces(nb_namespaces, srcsax_namespaces);
     free_srcsax_attributes(nb_attributes, srcsax_attributes);
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -457,7 +457,7 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
                const xmlChar ** attributes) {
 
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -504,7 +504,7 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
 
     }
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -529,7 +529,7 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
                     int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
                     const xmlChar ** attributes) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -559,7 +559,7 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
         state->libxml2_attributes = 0;
     }
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -578,7 +578,7 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
  */
 void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -696,7 +696,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
     }
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
@@ -714,7 +714,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
  */
 void characters_first(void * ctx, const xmlChar * ch, int len) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     std::string chars;
     chars.append((const char *)ch, len);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
@@ -727,7 +727,7 @@ void characters_first(void * ctx, const xmlChar * ch, int len) {
 
     state->characters.append((const char *)ch, len);
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
@@ -744,7 +744,7 @@ void characters_first(void * ctx, const xmlChar * ch, int len) {
  */
 void characters_root(void * ctx, const xmlChar * ch, int len) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     std::string chars;
     chars.append((const char *)ch, len);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
@@ -760,7 +760,7 @@ void characters_root(void * ctx, const xmlChar * ch, int len) {
     if(state->context->handler->characters_root)
         state->context->handler->characters_root(state->context, (const char *)ch, len);
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
@@ -777,7 +777,7 @@ void characters_root(void * ctx, const xmlChar * ch, int len) {
  */
 void characters_unit(void * ctx, const xmlChar * ch, int len) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     std::string chars;
     chars.append((const char *)ch, len);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
@@ -793,7 +793,7 @@ void characters_unit(void * ctx, const xmlChar * ch, int len) {
     if(state->context->handler->characters_unit)
         state->context->handler->characters_unit(state->context, (const char *)ch, len);
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
@@ -809,7 +809,7 @@ void characters_unit(void * ctx, const xmlChar * ch, int len) {
  */
 void comment(void * ctx, const xmlChar * value) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
@@ -823,7 +823,7 @@ void comment(void * ctx, const xmlChar * value) {
     if(state->context->handler->comment)
         state->context->handler->comment(state->context, (const char *)value);
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
@@ -840,7 +840,7 @@ void comment(void * ctx, const xmlChar * value) {
  */
 void cdata_block(void * ctx, const xmlChar * value, int len) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
@@ -854,7 +854,7 @@ void cdata_block(void * ctx, const xmlChar * value, int len) {
     if(state->context->handler->cdata_block)
         state->context->handler->cdata_block(state->context, (const char *)value, len);
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
@@ -871,7 +871,7 @@ void cdata_block(void * ctx, const xmlChar * value, int len) {
  */
 void processing_instruction(void * ctx, const xmlChar * target, const xmlChar * data) {
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
@@ -885,7 +885,7 @@ void processing_instruction(void * ctx, const xmlChar * target, const xmlChar * 
     if(state->context->handler->processing_instruction)
         state->context->handler->processing_instruction(state->context, (const char *)target, (const char *)data);
 
-#ifdef DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 

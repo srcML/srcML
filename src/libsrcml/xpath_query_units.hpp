@@ -698,7 +698,6 @@ public :
         switch (nodetype) {
 
         case XPATH_NODESET:
-fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
 //            xmlTextWriterEndElement(bufwriter);
 //            xmlTextWriterEndDocument(bufwriter);
