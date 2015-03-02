@@ -6,11 +6,11 @@
 </unit>
 
 <unit>
-<function><type><specifier>static</specifier> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><specifier>static</specifier> <type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>static</specifier> <name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><specifier>static</specifier> <type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>

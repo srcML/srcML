@@ -1160,6 +1160,17 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         (variable_identifier_array_grammar_sub[flag])*
 ;
 
+function_pre_type[int & type_count] { ENTRY_DEBUG } :
+
+    { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier) |
+
+    { inLanguage(LANGUAGE_JAVA) }? annotation |
+
+    { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+    { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
+;
+
 // header of a function
 function_header[int type_count] { ENTRY_DEBUG } :
 
@@ -1167,7 +1178,11 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
-        ({ decl_specifier_tokens_set.member(LA(1)) }? specifier set_int[type_count, type_count - 1])*
+
+        ({ decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET)
+        }? function_pre_type[type_count] set_int[type_count, type_count - 1])*
+
         function_type[type_count]
 ;
 

@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<function><type><specifier>virtual</specifier> <name>int</name><modifier>*</modifier></type> <name><name>f</name><argument_list type="template">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><specifier>virtual</specifier> <type><name>int</name><modifier>*</modifier></type> <name><name>f</name><argument_list type="template">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
@@ -148,7 +148,7 @@
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type> <name>Args</name></parameter>&gt;</parameter_list> <function><type><specifier>inline</specifier> <name>void</name></type> <name>expand</name><parameter_list>(<parameter><decl><type><name>Args</name><modifier>&amp;&amp;</modifier><modifier>...</modifier></type> <name>args</name></decl></parameter>)</parameter_list> <block>{
+<template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type> <name>Args</name></parameter>&gt;</parameter_list> <function><specifier>inline</specifier> <type><name>void</name></type> <name>expand</name><parameter_list>(<parameter><decl><type><name>Args</name><modifier>&amp;&amp;</modifier><modifier>...</modifier></type> <name>args</name></decl></parameter>)</parameter_list> <block>{
   <expr_stmt><expr><call><name>pass</name><argument_list>( <argument><expr><call><name>g</name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call><operator>...</operator></expr></argument> )</argument_list></call></expr>;</expr_stmt>
 }</block></function></template>
 </unit>

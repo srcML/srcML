@@ -22,7 +22,7 @@
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <argument_list type="template">&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><specifier>public</specifier> <type><argument_list type="template">&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>

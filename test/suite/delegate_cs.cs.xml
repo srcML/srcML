@@ -7,11 +7,11 @@
 </unit>
 
 <unit>
-<function_decl><type><specifier>delegate</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><specifier>delegate</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><specifier>public</specifier> <specifier>delegate</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><specifier>public</specifier> <specifier>delegate</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>

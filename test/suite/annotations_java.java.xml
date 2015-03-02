@@ -2,8 +2,8 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="annotation" filename="annotation_java">
 
 <unit>
-<function><type><annotation>@<name>Override</name></annotation>
-    <specifier>public</specifier> <name>void</name></type> <name>speak</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><annotation>@<name>Override</name></annotation>
+    <specifier>public</specifier> <type><name>void</name></type> <name>speak</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
@@ -46,9 +46,9 @@ class <name>Person</name> <super><implements>implements <name>Serializable</name
 </unit>
 
 <unit>
-<function><type><annotation>@<name>Id</name></annotation>
+<function><annotation>@<name>Id</name></annotation>
 <annotation>@<name>GeneratedValue</name><argument_list>(<argument><expr><name>strategy</name> <operator>=</operator> <name><name>GenerationType</name><operator>.</operator><name>AUTO</name></name></expr></argument>)</argument_list></annotation>
-<specifier>private</specifier> <name>Integer</name></type> <name>id</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<specifier>private</specifier> <type><name>Integer</name></type> <name>id</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
@@ -74,8 +74,8 @@ class <name>Person</name> <super><implements>implements <name>Serializable</name
 </unit>
 
 <unit>
-<function_decl><type><annotation>@<name>Results</name><argument_list>(<argument><expr><name>value</name> <operator>=</operator> <block>{ <annotation>@<name>Result</name><argument_list>(<argument><expr><name>javaType</name><operator>=</operator><name><name>List</name><operator>.</operator><name>class</name></name></expr></argument>, <argument><expr><name>many</name><operator>=</operator><annotation>@<name>Many</name><argument_list>(<argument><expr><name>select</name><operator>=</operator><literal type="string">"getTagsForPost"</literal></expr></argument>)</argument_list></annotation></expr></argument>)</argument_list></annotation> }</block></expr></argument>)</argument_list></annotation>
-<name><name>List</name><argument_list type="template">&lt;<argument><name>AnnoPost</name></argument>&gt;</argument_list></name></type> <name>getPosts</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>authorId</name></decl></parameter>)</parameter_list>;</function_decl>
+<function_decl><annotation>@<name>Results</name><argument_list>(<argument><expr><name>value</name> <operator>=</operator> <block>{ <annotation>@<name>Result</name><argument_list>(<argument><expr><name>javaType</name><operator>=</operator><name><name>List</name><operator>.</operator><name>class</name></name></expr></argument>, <argument><expr><name>many</name><operator>=</operator><annotation>@<name>Many</name><argument_list>(<argument><expr><name>select</name><operator>=</operator><literal type="string">"getTagsForPost"</literal></expr></argument>)</argument_list></annotation></expr></argument>)</argument_list></annotation> }</block></expr></argument>)</argument_list></annotation>
+<type><name><name>List</name><argument_list type="template">&lt;<argument><name>AnnoPost</name></argument>&gt;</argument_list></name></type> <name>getPosts</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>authorId</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>

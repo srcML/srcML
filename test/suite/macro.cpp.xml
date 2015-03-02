@@ -95,7 +95,7 @@
 </unit>
 
 <unit>
-<function><type><specifier>static</specifier> <name>void</name></type>
+<function><specifier>static</specifier> <type><name>void</name></type>
 <name>lto_read_decls</name> <parameter_list>(<parameter><decl><type><macro><name>VEC</name><argument_list>(<argument>ld_plugin_symbol_resolution_t</argument>,<argument>heap</argument>)</argument_list></macro> <modifier>*</modifier></type><name>resolutions</name></decl></parameter>)</parameter_list>
 <block>{}</block></function>
 </unit>

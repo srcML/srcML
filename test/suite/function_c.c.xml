@@ -2,7 +2,7 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="function" filename="function_c">
 
 <unit>
-<function><type><specifier>static</specifier> <specifier>inline</specifier> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><specifier>static</specifier> <specifier>inline</specifier> <type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
