@@ -137,9 +137,9 @@ create_token_set(class_tokens, srcMLParser::CLASS, srcMLParser::CXX_CLASS, srcML
 
 const antlr::BitSet srcMLParser::class_tokens_set(bitset_buckets<class_tokens>::data, bitset_buckets<class_tokens>::num_token_longs);
 
-create_token_set(decl_specifier_tokens, srcMLParser::VIRTUAL, srcMLParser::STATIC, srcMLParser::INLINE, srcMLParser::PUBLIC, srcMLParser::PRIVATE, srcMLParser::PROTECTED,
-                                        srcMLParser::DEFAULT, srcMLParser::SYNCHRONIZED, srcMLParser::STRICTFP, srcMLParser::NATIVE, srcMLParser::TRANSIENT,
-                                        srcMLParser::OVERRIDE, srcMLParser::NEW, srcMLParser::DELEGATE, srcMLParser::ASYNC, srcMLParser::ABSTRACT);
+create_token_set(decl_specifier_tokens, srcMLParser::VIRTUAL, srcMLParser::STATIC, srcMLParser::INLINE, srcMLParser::EXTERN, srcMLParser::TEMPLATE, srcMLParser::CONSTEXPR, srcMLParser::NORETURN, srcMLParser::PUBLIC, srcMLParser::PRIVATE, srcMLParser::PROTECTED,
+                                        srcMLParser::DEFAULT, srcMLParser::SYNCHRONIZED, srcMLParser::STRICTFP, srcMLParser::NATIVE,
+                                        srcMLParser::OVERRIDE, srcMLParser::NEW, srcMLParser::DELEGATE, srcMLParser::ASYNC, srcMLParser::ABSTRACT, srcMLParser::PARTIAL, srcMLParser::SEALED);
 
 const antlr::BitSet srcMLParser::decl_specifier_tokens_set(bitset_buckets<decl_specifier_tokens>::data, bitset_buckets<decl_specifier_tokens>::num_token_longs);
 

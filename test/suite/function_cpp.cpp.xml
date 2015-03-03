@@ -46,7 +46,7 @@
 </unit>
 
 <unit>
-<function><type><specifier>constexpr</specifier> <name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <block>{<return>return <expr><literal type="number">5</literal></expr>;</return>}</block></function>
+<function><specifier>constexpr</specifier> <type><name>int</name></type> <name>get_five</name><parameter_list>()</parameter_list> <block>{<return>return <expr><literal type="number">5</literal></expr>;</return>}</block></function>
 </unit>
 
 <unit>
