@@ -1292,6 +1292,14 @@ function_rest[int& fla] { ENTRY_DEBUG } :
 // function type, including specifiers
 function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         {
+
+            if(type_count == 0) {
+
+                setMode(MODE_FUNCTION_NAME);
+                return;
+
+            }
+
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_TYPE);
 
