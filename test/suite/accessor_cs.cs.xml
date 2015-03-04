@@ -2,13 +2,13 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="accessor" filename="accessor_cs">
 
 <unit>
-<event><type>event <name>E</name></type> <name>e</name> <block>{
+<event>event <type><name>E</name></type> <name>e</name> <block>{
     <function><name>add</name> <block>{}</block></function>
 }</block></event>
 </unit>
 
 <unit>
-<event><type>event <name>E</name></type> <name>e</name> <block>{
+<event>event <type><name>E</name></type> <name>e</name> <block>{
     <function><name>remove</name> <block>{}</block></function>
 }</block></event>
 </unit>

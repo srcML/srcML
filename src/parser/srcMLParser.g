@@ -7040,11 +7040,11 @@ variable_declaration_type[int type_count] {  bool is_compound = false; ENTRY_DEB
         (options { generateAmbigWarnings = false; } : 
             { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] |
             { is_class_type_identifier() }? (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }? (options { generateAmbigWarnings = false; } : specifier | macro_call) { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
-            lead_type_identifier | EVENT)
+            lead_type_identifier)
         { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
+        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -7215,6 +7215,15 @@ event_statement[int type_count] { ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
         }
+
+        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+
+        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
+                decl_pre_type[type_count])*
+
+        EVENT set_int[type_count, type_count - 1]
+
         variable_declaration_type[type_count]
 ;
 
