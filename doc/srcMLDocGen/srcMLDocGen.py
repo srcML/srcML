@@ -243,6 +243,8 @@ if __name__ == "__main__":
     if not settings.configured:
         django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", ), INSTALLED_APPS=("DocGen",))
 
+    django.setup()
+
     print "-"*80
     print "Language Support"
     pagesToGenerate.languageSupportInfo = loadLanguageSupport("DocData/" + languageSupportFileName)
