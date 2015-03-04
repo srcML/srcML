@@ -2,13 +2,13 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="indexers" filename="indexers_cs">
 
 <unit>
-<property><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
+<property><specifier>public</specifier> <type><name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
     <function><name>get</name> <block>{}</block></function>
 }</block></property>
 </unit>
 
 <unit>
-<property><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
+<property><specifier>public</specifier> <type><name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
     <function><name>set</name> <block>{}</block></function>
 }</block></property>
 </unit>

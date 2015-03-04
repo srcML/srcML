@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<class>class <name>Foo</name> <block>{ <decl_stmt><decl><type><specifier>new</specifier> <name>void</name></type> <name>a</name></decl>;</decl_stmt> }</block></class>
+<class>class <name>Foo</name> <block>{ <decl_stmt><decl><specifier>new</specifier> <type><name>void</name></type> <name>a</name></decl>;</decl_stmt> }</block></class>
 </unit>
 
 <unit>
@@ -18,9 +18,9 @@
 
     <class><specifier>new</specifier> <specifier>public</specifier> class <name>Bar</name> <block>{
 
-        <decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>x</name> <init>= <expr><literal type="number">100</literal></expr></init></decl>;</decl_stmt>
-        <decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>y</name></decl>;</decl_stmt> 
-        <decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>z</name></decl>;</decl_stmt>
+        <decl_stmt><decl><specifier>public</specifier> <type><name>int</name></type> <name>x</name> <init>= <expr><literal type="number">100</literal></expr></init></decl>;</decl_stmt>
+        <decl_stmt><decl><specifier>public</specifier> <type><name>int</name></type> <name>y</name></decl>;</decl_stmt> 
+        <decl_stmt><decl><specifier>public</specifier> <type><name>int</name></type> <name>z</name></decl>;</decl_stmt>
 
     }</block></class>
 
@@ -30,7 +30,7 @@
 <unit>
 <class>class <name>Foo</name> <block>{ 
 
-	<property><type><specifier>new</specifier> <specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
+	<property><specifier>new</specifier> <specifier>public</specifier> <type><name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
     	<function><name>get</name> <block>{}</block></function>
 	}</block></property>
 

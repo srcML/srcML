@@ -53,8 +53,8 @@
     <decl><name>URANUS</name>  <argument_list>(<argument><expr><literal type="number">8.686e+25</literal></expr></argument>, <argument><expr><literal type="number">2.5559e7</literal></expr></argument>)</argument_list></decl>,
     <decl><name>NEPTUNE</name> <argument_list>(<argument><expr><literal type="number">1.024e+26</literal></expr></argument>, <argument><expr><literal type="number">2.4746e7</literal></expr></argument>)</argument_list></decl>;
 
-    <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>mass</name></decl>;</decl_stmt>   <comment type="line">// in kilograms</comment>
-    <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>radius</name></decl>;</decl_stmt> <comment type="line">// in meters</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>double</name></type> <name>mass</name></decl>;</decl_stmt>   <comment type="line">// in kilograms</comment>
+    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>double</name></type> <name>radius</name></decl>;</decl_stmt> <comment type="line">// in meters</comment>
     <constructor><name>Planet</name><parameter_list>(<parameter><decl><type><name>double</name></type> <name>mass</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mass</name></name> <operator>=</operator> <name>mass</name></expr>;</expr_stmt>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>radius</name></name> <operator>=</operator> <name>radius</name></expr>;</expr_stmt>

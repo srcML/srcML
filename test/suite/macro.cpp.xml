@@ -113,7 +113,7 @@
 </unit>
 
 <unit>
-<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>static</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <decl_stmt><decl><specifier>static</specifier> <type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit>

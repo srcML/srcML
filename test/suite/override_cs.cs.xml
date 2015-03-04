@@ -7,7 +7,7 @@
 </unit>
 
 <unit>
-<property><type><specifier>public</specifier> <specifier>override</specifier> <name>int</name></type> <name>GetX</name> <block>{
+<property><specifier>public</specifier> <specifier>override</specifier> <type><name>int</name></type> <name>GetX</name> <block>{
       <function><name>get</name> <block>{
           <return>return <expr><name>x</name></expr>;</return>
       }</block></function>

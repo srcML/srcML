@@ -1160,7 +1160,7 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         (variable_identifier_array_grammar_sub[flag])*
 ;
 
-function_pre_type[int & type_count] { ENTRY_DEBUG } :
+decl_pre_type[int & type_count] { ENTRY_DEBUG } :
 
     (
 
@@ -1185,9 +1185,9 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        ({ type_count > 0 && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-                function_pre_type[type_count])*
+                decl_pre_type[type_count])*
 
         function_type[type_count]
 ;
@@ -3923,6 +3923,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     isdecl = true;
 
+    /** @todo may need to also pass and check other such as template and attribute/annotations */
+    int specifier_count;
+    int attribute_count;
+    int template_count;
     type = NONE;
 
     int start = mark();
@@ -3935,7 +3939,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     try {
 
-        pattern_check_core(token, fla, type_count, type, inparam, sawtemplate, sawcontextual, posin);
+        pattern_check_core(token, fla, type_count, specifier_count, attribute_count, template_count, type, inparam, sawtemplate, sawcontextual, posin);
 
     } catch (...) {
 
@@ -4010,10 +4014,17 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     inputState->guessing--;
     rewind(start);
 
+    if(type == VARIABLE && type_count == (specifier_count + attribute_count + template_count))
+        ++type_count;
+
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
        && (enum_preprocessing_token_set.member(LA(1)) || LA(1) == DECLTYPE) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
-       && save_la == TERMINATE)
+       && save_la == TERMINATE) {
+
         type = VARIABLE;
+        type_count = 1;
+
+    }
 
     if(type == NONE && LA(1) == TEMPLATE)
         type = GLOBAL_TEMPLATE;
@@ -4029,6 +4040,9 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 pattern_check_core[int& token,      /* second token, after name (always returned) */
               int& fla,             /* for a function, TERMINATE or LCURLY, 0 for a variable */
               int& type_count,      /* number of tokens in type (not including name) */
+              int& specifier_count, /* number of tokens that are specifiers */
+              int& attribute_count, /* number of tokens that are attributes */
+              int& template_count,  /* number of tokens that are templates */
               STMT_TYPE& type,      /* type discovered */
               bool inparam,         /* are we in a parameter */
               bool& sawtemplate,    /* have we seen a template */
@@ -4039,14 +4053,14 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             int parameter_pack_pos = -1;
             fla = 0;
             type_count = 0;
+            specifier_count = 0;
+            attribute_count = 0;
+            template_count = 0;
             type = NONE;
             sawtemplate = false;
             sawcontextual= false;
             posin = 0;
             isdestructor = false;           // global flag detected during name matching
-            int attribute_count = 0;
-            int specifier_count = 0;
-            int template_count = 0;
             bool foundpure = false;
             bool isoperator = false;
             bool ismain = false;
@@ -6983,12 +6997,28 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+
+        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
+                decl_pre_type[type_count])*
+
         variable_declaration_type[type_count]
 ;
 
 // declaration type
-variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
+variable_declaration_type[int type_count] {  bool is_compound = false; ENTRY_DEBUG } :
         {
+
+            if(type_count == 0) {
+
+                if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
+                    return;
+
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+                return;
+
+            }
+
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_TYPE);
 
@@ -7152,6 +7182,13 @@ property_statement[int type_count] { ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
         }
+
+        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+
+        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
+                decl_pre_type[type_count])*
+
         variable_declaration_type[type_count]
 ;
 

@@ -60,11 +60,11 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>template</specifier></type> <name><name>a</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>template</specifier> <type><name><name>a</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>extern</specifier> <specifier>template</specifier></type> <name><name>a</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>extern</specifier> <specifier>template</specifier> <type><name><name>a</name><argument_list type="template">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -172,7 +172,7 @@
 
 <unit>
 <template>template<parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list>
-<decl_stmt><decl><type><specifier>constexpr</specifier> <name>T</name></type> <name>pi</name> <init>= <expr><call><name>T</name><argument_list>(<argument><expr><literal type="number">3.1415926535897932385</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt></template>
+<decl_stmt><decl><specifier>constexpr</specifier> <type><name>T</name></type> <name>pi</name> <init>= <expr><call><name>T</name><argument_list>(<argument><expr><literal type="number">3.1415926535897932385</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt></template>
 </unit>
 
 <unit>

@@ -21,11 +21,11 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[<expr><name>System</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><attribute>[[<expr><name>System</name></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>const</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><attribute>[[<expr><name>System</name></expr>]]</attribute> <type><specifier>const</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -46,31 +46,31 @@
 
 
 <unit>
-<decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>()</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><attribute>[[<expr><call><name>System</name><argument_list>()</argument_list></call></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[<expr><name>System</name></expr>, <expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><attribute>[[<expr><name>System</name></expr>, <expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>, <expr><name>System</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>, <expr><name>System</name></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[<expr><call><name><name>System</name><operator>::</operator><name>system</name></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><attribute>[[<expr><call><name><name>System</name><operator>::</operator><name>system</name></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[]]</attribute> <name>int</name> <modifier>&amp;</modifier> <attribute>[[]]</attribute></type> <name>b</name> <init>= <expr><name>a</name></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><attribute>[[]]</attribute> <type><name>int</name> <modifier>&amp;</modifier> <attribute>[[]]</attribute></type> <name>b</name> <init>= <expr><name>a</name></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><attribute>[[]]</attribute> <name>int</name></type> <name><name>a</name><index>[]</index></name> <attribute>[[]]</attribute></decl>;</decl_stmt>
+<decl_stmt><decl><attribute>[[]]</attribute> <type><name>int</name></type> <name><name>a</name><index>[]</index></name> <attribute>[[]]</attribute></decl>;</decl_stmt>
 </unit>
 
 <unit>

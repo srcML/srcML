@@ -2,15 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="specifier" filename="specifier_oo">
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier></type></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>public</specifier></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>private</specifier></type></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>private</specifier></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>protected</specifier></type></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>protected</specifier></decl>;</decl_stmt>
 </unit>
 
 </unit>
