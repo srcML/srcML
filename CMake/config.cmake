@@ -34,7 +34,6 @@ endif()
 
 if(NOT DYNAMIC_LOAD_ENABLED)
     add_definitions(-DNO_DLLOAD)
-
 endif()
 
 option(RUN_TIMING_TESTS "Run timing tests with ctest" OFF)
@@ -71,27 +70,25 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     include_directories(${BOOST_DIR})
     link_directories(${BOOST_DIR}/stage/lib)
 else()
+
     set(WINDOWS_DEP_PATH "")
     # Locating packages.
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
-    if(NOT DYNAMIC_LOAD_ENABLED)
-        find_package(LibXslt REQUIRED)
-    endif()
     find_package(CURL REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
     find_package(Boost COMPONENTS program_options filesystem system thread regex date_time REQUIRED)
 
     # add include directories
-    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS})
+    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 
+    find_package(LibXslt)
     if(LIBXSLT_FOUND)
         include_directories(${LIBXSLT_INCLUDE_DIR})
         add_definitions(-DWITH_LIBXSLT)
     endif()
 
-    include_directories(${Boost_INCLUDE_DIR})
 
 endif()
 
