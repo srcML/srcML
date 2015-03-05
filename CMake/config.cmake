@@ -72,6 +72,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 else()
 
     set(WINDOWS_DEP_PATH "")
+    
     # Locating packages.
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
@@ -83,7 +84,12 @@ else()
     # add include directories
     include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
 
-    find_package(LibXslt)
+    if(DYNAMIC_LOAD_ENABLED)
+        find_package(LibXslt)
+    else()
+        find_package(LibXslt REQUIRED)
+    endif()
+
     if(LIBXSLT_FOUND)
         include_directories(${LIBXSLT_INCLUDE_DIR})
         add_definitions(-DWITH_LIBXSLT)

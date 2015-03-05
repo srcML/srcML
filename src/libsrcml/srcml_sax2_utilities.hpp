@@ -33,7 +33,9 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
 				const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
 				int fd, OPTION_TYPE options);
+#ifdef WITH_LIBXSLT
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, int fd, OPTION_TYPE options);
+#endif
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, int fd, OPTION_TYPE options);
 
 #endif
