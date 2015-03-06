@@ -414,6 +414,12 @@ public :
         xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
         xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
 
+        // hash doesn't make sense anymore because contents changed
+        // so remove hash attribute
+        if (xmlAttrPtr curattr = xmlHasProp(a_node, BAD_CAST "hash")) {
+            xmlRemoveProp(curattr);
+        }
+
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
