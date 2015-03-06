@@ -164,7 +164,7 @@ void src_input_libarchive(ParseQueue& queue,
         std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
 
         // stdin, single files require a explicit filename
-        if (filename == "data" && !srcml_request.att_language) {
+        if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
             std::cerr << "Language required for stdin single files" << '\n';
             exit(1);
         }
