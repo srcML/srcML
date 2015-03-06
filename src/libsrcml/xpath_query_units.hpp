@@ -49,7 +49,12 @@
 #define snprintf _snprintf
 #endif
 
+#include <srcml_translator.hpp>
+
 extern std::vector<transform> global_transformations;
+extern srcml_translator* ptranslator;
+extern srcml_archive* poutput_archive;
+
 
 /**
  * xpath_query_units
@@ -461,8 +466,16 @@ public :
         if (result_count == 0)
             xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
 
+        xmlBufferPtr lbuffer = xmlBufferCreate();
+        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+
         // output the result
-        xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
+        //xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
+
+        srcml_unit* punit = srcml_unit_create(poutput_archive);
+
+        ptranslator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
+        ptranslator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
 
         // space between result units
         xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
