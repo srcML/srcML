@@ -42,11 +42,11 @@ check archive/a.cpp.xml 3<<< "$foutput"
 src2srcml archive/a.cpp.tgz
 check 3<<< "$foutput"
 
-#src2srcml -l C++ < archive/a.cpp.tgz
-#check 3<<< "$output"
+src2srcml -l C++ < archive/a.cpp.tgz
+check 3<<< "$output"
 
-#src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.tgz
-#check archive/a.cpp.xml 3<<< "$output"
+src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.tgz
+check archive/a.cpp.xml 3<<< "$output"
 
 rmfile archive/a.cpp
 rmfile archive/a.cpp.tgz
@@ -58,8 +58,8 @@ check 3<<< "$src"
 srcml2src archive/a.cpp.xml -o archive/a.cpp
 check archive/a.cpp 3<<< "$src"
 
-#srcml2src < archive/a.cpp.xml
-#check 3<<< "$src"
+srcml2src < archive/a.cpp.xml
+check 3<<< "$src"
 
-#srcml2src -o archive/a.cpp < archive/a.cpp.xml
-#check archive/a.cpp 3<<< "$src"
+srcml2src -o archive/a.cpp < archive/a.cpp.xml
+check archive/a.cpp 3<<< "$src"
