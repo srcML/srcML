@@ -55,11 +55,12 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 
 void srcml_unit_hashes(srcml_archive* srcml_arch) {
 
+    int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
         const char* hash = srcml_unit_get_hash(unit);
         const char* filename = srcml_unit_get_filename(unit);
 
-        std::cout << (hash ? hash : "-") << '\t' << std::setw(5) << (filename ? filename : "-") << '\n';
+        std::cout << ++numUnits << '\t' << std::setw(5) << (hash ? hash : "-") << '\t' << std::setw(5) << (filename ? filename : "-") << '\n';
         srcml_unit_free(unit);
     }
 }
