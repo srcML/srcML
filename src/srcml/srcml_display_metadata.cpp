@@ -31,25 +31,14 @@
 
 int srcml_unit_count(srcml_archive* srcml_arch) {
 
-    //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
 
-        //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
-        ++numUnits;
-
-        //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
+        if (srcml_unit_get_language(unit))
+            ++numUnits;
 
         srcml_unit_free(unit);
-
-        //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
     }
-
-    //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
     return numUnits;   
 }
 

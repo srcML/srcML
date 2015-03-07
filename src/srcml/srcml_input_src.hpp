@@ -57,6 +57,7 @@
     srcml_input_src() : unit(0) {}
     srcml_input_src(const std::string& other) : arch(0), state(INDETERMINATE), isdirectory(false), unit(0) { 
 
+
         filename = src_prefix_add_uri(other);
 
         // since boost::filesystem does not support URIs, separate out the protocol
@@ -71,13 +72,17 @@
 
         if (!isdirectory) {
 
-            // collect compressions
-            for ( ; rpath.has_extension() && is_compressed(rpath.extension().string()); rpath = rpath.stem())
-                compressions.push_back(rpath.extension().string());
+            // gather compression and archive extensions together, as an
+            // extension could be both
+            for ( ; rpath.has_extension() && (is_compressed(rpath.extension().string()) || is_archive(rpath.extension().string())); rpath = rpath.stem()) {
+                // collect compressions
+                if (is_compressed(rpath.extension().string()))
+                    compressions.push_back(rpath.extension().string());
 
-            // collect archives
-            for ( ; rpath.has_extension() && is_archive(rpath.extension().string()); rpath = rpath.stem())
-                archives.push_back(rpath.extension().string());
+                // collect archives
+                if (is_archive(rpath.extension().string()))
+                    archives.push_back(rpath.extension().string());
+            }
 
             // collect real extension
             extension = rpath.has_extension() ? rpath.extension().string() : (!archives.empty() ? archives.back() : "");
