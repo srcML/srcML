@@ -357,9 +357,9 @@ public :
 
             // root element if first result
             // TODO: This should move to start_output(), but that will have to wait because it is shared.
-            if (result_count == 0) {
-                outputRoot(xmlDocGetRootElement(ctxt->myDoc));
-            }
+       //     if (result_count == 0) {
+//                outputRoot(xmlDocGetRootElement(ctxt->myDoc));
+//            }
 
             if (!element && !attr_name)
                 outputXPathResultsWrap(result_nodes);
@@ -462,23 +462,14 @@ public :
 
     virtual void outputResult(xmlNodePtr a_node) {
 
-        // if this is the first real result, then we need space for this internal unit
-        if (result_count == 0)
-            xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
-
-        xmlBufferPtr lbuffer = xmlBufferCreate();
+        static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
 
-        // output the result
-        //xmlNodeDumpOutput(buf, ctxt->myDoc, a_node, 0, 0, 0);
-
         srcml_unit* punit = srcml_unit_create(poutput_archive);
-
         ptranslator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
-        ptranslator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
+        srcml_unit_free(punit);
 
-        // space between result units
-        xmlTextWriterWriteString(bufwriter, BAD_CAST "\n\n");
+        xmlBufferEmpty(lbuffer);
 
         ++result_count;
     }
