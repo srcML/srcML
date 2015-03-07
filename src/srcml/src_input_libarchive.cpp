@@ -169,8 +169,10 @@ void src_input_libarchive(ParseQueue& queue,
             exit(1);
         }
 
-        if (count == 0 && filename != "data" && status != ARCHIVE_EOF)
+        if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+            srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
+        }
 
         // archive entry filename for non-archive input is "data"
         if (filename.empty() || filename == "data")
