@@ -413,17 +413,17 @@ public :
             return;
 
         // using the internal unit node to serve as the wrapper
-        xmlNodePtr a_node = xmlCopyNode(xmlDocGetRootElement(ctxt->myDoc), 2);
+        xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
         // remove src namespace
-        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
-        xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
+        //xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
+        //xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
 
         // hash doesn't make sense anymore because contents changed
         // so remove hash attribute
-        if (xmlAttrPtr curattr = xmlHasProp(a_node, BAD_CAST "hash")) {
-            xmlRemoveProp(curattr);
-        }
+        //if (xmlAttrPtr curattr = xmlHasProp(a_node, BAD_CAST "hash")) {
+        //    xmlRemoveProp(curattr);
+        //}
 
         srcml_unit* punit = srcml_unit_create(poutput_archive);
 
@@ -438,7 +438,9 @@ public :
             else if (std::string((const char*) pAttr->name) == std::string("timestamp"))
                 srcml_unit_set_timestamp(punit, (const char*) pAttr->children->content);
             else if (std::string((const char*) pAttr->name) == std::string("language"))
-                ;
+                srcml_unit_set_language(punit, (const char*) pAttr->children->content);
+            else if (std::string((const char*) pAttr->name) == std::string("hash"))
+                /* ignore hash */ ;
             else {
                 punit->attributes.push_back((const char*) pAttr->name);
                 punit->attributes.push_back((const char*) pAttr->children->content);
@@ -471,21 +473,21 @@ public :
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
             // unlink this result node and link to the master parent
-            xmlUnlinkNode(onode);
-            xmlAddChild(a_node, onode);
+            //xmlUnlinkNode(onode);
+            //xmlAddChild(a_node, onode);
 
             // output the result
-            outputResult(punit, a_node);
+            outputResult(punit, onode);
 
             // put the result node back into place
-            xmlUnlinkNode(onode);
+            //xmlUnlinkNode(onode);
             // xmlAddChild(onode_parent, onode);
         }
 
-        if (skip)
-            *skip = hrefptr;
+        //if (skip)
+            //*skip = hrefptr;
 
-        xmlFreeNode(a_node);
+        //xmlFreeNode(a_node);
 
         srcml_unit_free(punit);
     }
@@ -495,7 +497,7 @@ public :
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
 
-        ptranslator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
+        ptranslator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
 
         xmlBufferEmpty(lbuffer);
 

@@ -371,6 +371,61 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 }
 
 /**
+ * add_unit
+ * @param unit srcML to add to archive/non-archive with configuration options
+ * @param xml the xml to output
+ *
+ * Add a unit as string directly to the archive.  If not an archive
+ * and supplied unit does not have src namespace add it.  Also, write out
+ * a supplied hash as part of output unit if specified.
+ * Can not be in by element mode.
+ *
+ * @returns if succesfully added.
+ */
+bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xml, int size) {
+
+  if(is_outputting_unit) return false;
+
+  bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
+
+  if(first) {
+
+    // Open for write;
+    out.initWriter();
+    out.initNamespaces(prefix, uri);
+
+    if ((options & SRCML_OPTION_XML_DECL) > 0)
+      out.outputXMLDecl();
+  
+    out.outputPreRootProcessingInstruction();
+
+    // root unit for compound srcML documents
+
+    if(is_archive)
+        out.startUnit(0, revision, directory, filename, version, 0, 0, 0, attributes, true);
+
+    if (is_archive)
+        out.processText("\n\n", 2);
+
+  }
+
+  first = false;
+
+  out.startUnit(unit->language->c_str(), is_archive && unit->revision ? unit->revision->c_str() : revision, unit->directory ? unit->directory->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
+                       unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, 
+                       unit->encoding ? unit->encoding->c_str() : 0, unit->attributes, false);
+
+  xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
+
+  out.srcMLTextWriterEndElement(out.getWriter());
+
+  if ((options & SRCML_OPTION_ARCHIVE) > 0)
+      out.processText("\n\n", 2);
+
+  return true;
+
+}
+/**
  * add_start_unit
  * @param unit srcML to add to archive/non-archive with configuration options
  *
