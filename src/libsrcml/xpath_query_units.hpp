@@ -425,13 +425,41 @@ public :
             xmlRemoveProp(curattr);
         }
 
+        srcml_unit* punit = srcml_unit_create(poutput_archive);
+
+        // copy all the attributes from the current node
+        for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
+            if (std::string((const char*) pAttr->name) == std::string("filename"))
+                srcml_unit_set_filename(punit, (const char*) pAttr->children->content);
+            else if (std::string((const char*) pAttr->name) == std::string("directory"))
+                srcml_unit_set_directory(punit, (const char*) pAttr->children->content);
+            else if (std::string((const char*) pAttr->name) == std::string("version"))
+                srcml_unit_set_version(punit, (const char*) pAttr->children->content);
+            else if (std::string((const char*) pAttr->name) == std::string("timestamp"))
+                srcml_unit_set_timestamp(punit, (const char*) pAttr->children->content);
+            else if (std::string((const char*) pAttr->name) == std::string("language"))
+                ;
+            else {
+                punit->attributes.push_back((const char*) pAttr->name);
+                punit->attributes.push_back((const char*) pAttr->children->content);
+            }
+        }
+
+        punit->attributes.push_back("item");
+        punit->attributes.push_back("");
+
+        /*
+        for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
+            srcml_unit_
+            xmlTextWriterWriteAttribute(bufwriter, pAttr->name, pAttr->children->content);
+*/
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
             // item attribute on wrapping node
             static char s[100];
             sprintf(s, "%d", i + 1);
-            xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s);
+            punit->attributes.back() = s;
 
             // location attribute on wrapping node
             if (false) {
@@ -447,7 +475,7 @@ public :
             xmlAddChild(a_node, onode);
 
             // output the result
-            outputResult(a_node);
+            outputResult(punit, a_node);
 
             // put the result node back into place
             xmlUnlinkNode(onode);
@@ -458,6 +486,20 @@ public :
             *skip = hrefptr;
 
         xmlFreeNode(a_node);
+
+        srcml_unit_free(punit);
+    }
+
+    virtual void outputResult(srcml_unit* punit, xmlNodePtr a_node) {
+
+        static xmlBufferPtr lbuffer = xmlBufferCreate();
+        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+
+        ptranslator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
+
+        xmlBufferEmpty(lbuffer);
+
+        ++result_count;
     }
 
     virtual void outputResult(xmlNodePtr a_node) {
@@ -466,10 +508,11 @@ public :
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
 
         srcml_unit* punit = srcml_unit_create(poutput_archive);
+
         ptranslator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
+
         srcml_unit_free(punit);
 
-        xmlBufferEmpty(lbuffer);
 
         ++result_count;
     }
