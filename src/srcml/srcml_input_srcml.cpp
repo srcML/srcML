@@ -41,11 +41,10 @@ void srcml_input_srcml(ParseQueue& queue,
         srcml_archive_read_open_filename(srcml_input_archive, srcml_input.c_str());
 
     if (SRCML_COMMAND_XML & SRCMLOptions::get()) {
-        // Undoes all setup of srcml output archive in create_srcml
-        //unsigned long long opts  = srcml_archive_get_options(srcml_input_archive);
-        //srcml_archive_set_options(srcml_output_archive, opts);
-        //srcml_archive_disable_option(srcml_output_archive, SRCML_OPTION_ARCHIVE);
-        
+        if (SRCML_OPTION_ARCHIVE & srcml_archive_get_options(srcml_input_archive) && srcml_input.unit == 0) {
+            srcml_archive_enable_option(srcml_output_archive, SRCML_OPTION_ARCHIVE);
+        }
+
         size_t nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
         
         for (size_t i = 0; i < nsSize; ++i) {
