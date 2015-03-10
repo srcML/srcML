@@ -118,9 +118,12 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         if (request->version && ((status = srcml_unit_set_version(unit, request->version->c_str())) != SRCML_STATUS_OK))
             throw status;
 
+        if (request->time_stamp)
+            srcml_unit_set_timestamp(unit, request->time_stamp->c_str());
+
         // sha1 attribute, if hash is on
         // sha1 value based on the code as encoded (source text encoding) in the original file
-        if (!request->disk_filename && srcml_archive_get_options(srcml_arch) & SRCML_OPTION_HASH) {
+        if (!request->disk_filename && (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get())) {
         
 #ifdef _MSC_BUILD
             unsigned char md[20];
