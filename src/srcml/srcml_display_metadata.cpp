@@ -42,18 +42,6 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
     return numUnits;   
 }
 
-/*void srcml_unit_hashes(srcml_archive* srcml_arch) {
-
-    int numUnits = 0;
-    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
-        const char* hash = srcml_unit_get_hash(unit);
-        const char* filename = srcml_unit_get_filename(unit);
-
-        std::cout << ++numUnits << '\t' << std::setw(5) << (hash ? hash : "-") << '\t' << std::setw(5) << (filename ? filename : "-") << '\n';
-        srcml_unit_free(unit);
-    }
-}*/
-
 // display all files in srcml archive
 void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
