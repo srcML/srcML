@@ -123,13 +123,38 @@ void srcml_display_hash(srcml_archive* srcml_arch, int ignore_attribue_name) {
     srcml_unit_free(unit);
 }
 
+void srcml_display_timestamp(srcml_archive* srcml_arch, int ignore_attribue_name) {
+    srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+    
+    if (!unit) {
+        return;
+    }
+        
+    const char* timestamp = srcml_unit_get_timestamp(unit);
+    
+    if (!timestamp && !ignore_attribue_name) {
+        std::cout << "timestamp=\"\"\n";
+    }
+
+    if (timestamp && !ignore_attribue_name) {
+        std::cout << "timestamp=\"" << timestamp << "\"\n";
+    }
+
+    if (timestamp && ignore_attribue_name) {
+        std::cout << timestamp << "\n";
+    }
+
+    srcml_unit_free(unit);
+}
+
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
     int display_commands = SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
                             SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
                             SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
                             SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
                             SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
-                            SRCML_COMMAND_DISPLAY_SRCML_HASH;
+                            SRCML_COMMAND_DISPLAY_SRCML_HASH |
+                            SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP;
 
 //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
@@ -236,6 +261,10 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         // srcml->src hash
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH){
             srcml_display_hash(srcml_arch, ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_HASH));
+        }
+        // srcml->src timestamp
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP){
+            srcml_display_timestamp(srcml_arch, ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP));
         }
         // srcml->src prefix query
         if (srcml_request.xmlns_prefix_query) {
