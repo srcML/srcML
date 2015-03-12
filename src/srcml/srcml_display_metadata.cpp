@@ -87,49 +87,43 @@ void srcml_display_unit_count(srcml_archive* srcml_arch) {
     std::cout << "units=" << "\"" << num_units << "\"\n";
 }
 
-void srcml_display_hash(srcml_archive* srcml_arch, int ignore_attribue_name) {
+void display_unit_only_metadata(srcml_archive* srcml_arch, const srcml_request_t& srcml_request, int ignore_attribute_name) {
     srcml_unit* unit = srcml_read_unit_header(srcml_arch);
     
     if (!unit) {
         return;
     }
-        
-    const char* hash = srcml_unit_get_hash(unit);
+
+    if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH) {
+        const char* hash = srcml_unit_get_hash(unit);
+
+        if (!hash && (ignore_attribute_name == SRCML_COMMAND_DISPLAY_SRCML_HASH)) {
+            std::cout << "hash=\"\"\n";
+        }
+
+        if (hash && !(ignore_attribute_name == SRCML_COMMAND_DISPLAY_SRCML_HASH)) {
+            std::cout << "hash=\"" << hash << "\"\n";
+        }
+
+        if (hash && (ignore_attribute_name == SRCML_COMMAND_DISPLAY_SRCML_HASH)) {
+            std::cout << hash << "\n";
+        }
+    }
+
+    if(srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP) {
+        const char* timestamp = srcml_unit_get_timestamp(unit);
     
-    if (!hash && !ignore_attribue_name) {
-        std::cout << "hash=\"\"\n";
-    }
+        if (!timestamp && (ignore_attribute_name == SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP)) {
+            std::cout << "timestamp=\"\"\n";
+        }
 
-    if (hash && !ignore_attribue_name) {
-        std::cout << "hash=\"" << hash << "\"\n";
-    }
+        if (timestamp && !(ignore_attribute_name == SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP)) {
+            std::cout << "timestamp=\"" << timestamp << "\"\n";
+        }
 
-    if (hash && ignore_attribue_name) {
-        std::cout << hash << "\n";
-    }
-
-    srcml_unit_free(unit);
-}
-
-void srcml_display_timestamp(srcml_archive* srcml_arch, int ignore_attribue_name) {
-    srcml_unit* unit = srcml_read_unit_header(srcml_arch);
-    
-    if (!unit) {
-        return;
-    }
-        
-    const char* timestamp = srcml_unit_get_timestamp(unit);
-    
-    if (!timestamp && !ignore_attribue_name) {
-        std::cout << "timestamp=\"\"\n";
-    }
-
-    if (timestamp && !ignore_attribue_name) {
-        std::cout << "timestamp=\"" << timestamp << "\"\n";
-    }
-
-    if (timestamp && ignore_attribue_name) {
-        std::cout << timestamp << "\n";
+        if (timestamp && (ignore_attribute_name == SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP)) {
+            std::cout << timestamp << "\n";
+        }
     }
 
     srcml_unit_free(unit);
@@ -246,14 +240,11 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                     std::cout << "encoding=\"" << archive_info << "\"\n";
             }
         }
+
         // srcml->src hash
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH){
-            srcml_display_hash(srcml_arch, ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_HASH));
-        }
         // srcml->src timestamp
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP){
-            srcml_display_timestamp(srcml_arch, ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP));
-        }
+        display_unit_only_metadata(srcml_arch, srcml_request, (display_commands & srcml_request.command));
+
         // srcml->src prefix query
         if (srcml_request.xmlns_prefix_query) {
             const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch, srcml_request.xmlns_prefix_query->c_str());
