@@ -42,7 +42,7 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
     return numUnits;   
 }
 
-void srcml_unit_hashes(srcml_archive* srcml_arch) {
+/*void srcml_unit_hashes(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
@@ -52,7 +52,7 @@ void srcml_unit_hashes(srcml_archive* srcml_arch) {
         std::cout << ++numUnits << '\t' << std::setw(5) << (hash ? hash : "-") << '\t' << std::setw(5) << (filename ? filename : "-") << '\n';
         srcml_unit_free(unit);
     }
-}
+}*/
 
 // display all files in srcml archive
 void srcml_list_unit_files(srcml_archive* srcml_arch) {
@@ -99,12 +99,25 @@ void srcml_display_unit_count(srcml_archive* srcml_arch) {
     std::cout << "units=" << "\"" << num_units << "\"\n";
 }
 
+std::string srcml_display_hash(srcml_archive* srcml_arch) {
+    srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+    
+    if (unit && srcml_unit_get_hash(unit)) {
+        std::string hash(srcml_unit_get_hash(unit));
+        srcml_unit_free(unit);
+        return hash;
+    }
+    
+    return "";
+}
+
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
     int display_commands = SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
                             SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
                             SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
                             SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
-                            SRCML_COMMAND_DISPLAY_SRCML_ENCODING;
+                            SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
+                            SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
 //fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
@@ -208,6 +221,16 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                     std::cout << "encoding=\"" << archive_info << "\"\n";
             }
         }
+        // srcml->src hash
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH){
+            std::string archive_info = srcml_display_hash(srcml_arch);
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_HASH) {
+                std::cout << archive_info << "\n";
+            }
+            else {
+                std::cout << "hash=\"" << archive_info << "\"\n";
+            }
+        }
         // srcml->src prefix query
         if (srcml_request.xmlns_prefix_query) {
             const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch, srcml_request.xmlns_prefix_query->c_str());
@@ -232,10 +255,6 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
             std::cout << srcml_unit_count(srcml_arch) << "\n";
-        }
-        // hashes
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH) {
-            srcml_unit_hashes(srcml_arch);
         }
 
         srcml_archive_close(srcml_arch);
