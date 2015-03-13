@@ -23,3 +23,15 @@ check 3<<< "UTF-8"
 srcml --show-encoding < sub/archive.cpp.xml
 check 3<<< "UTF-8"
 
+define empty <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0"/>
+	STDOUT
+
+createfile sub/emptyarchive.xml "$empty"
+
+srcml --show-encoding sub/emptyarchive.xml
+check 3<<< "UTF-8"
+
+srcml --show-encoding < sub/emptyarchive.xml
+check 3<<< "UTF-8"

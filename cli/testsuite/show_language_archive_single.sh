@@ -24,3 +24,16 @@ check_null
 srcml --show-language < sub/archive.cpp.xml
 check_null
 
+# empty
+define empty <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0"/>
+	STDOUT
+
+createfile sub/archive.cpp.xml "$empty"
+
+srcml --show-language sub/archive.cpp.xml
+check_null
+
+srcml --show-language < sub/archive.cpp.xml
+check_null
