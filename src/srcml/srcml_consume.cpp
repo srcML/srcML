@@ -97,7 +97,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             throw status;
 
         // (optional) directory attribute
-        if (request->directory && ((status = srcml_unit_set_directory(unit, request->directory->c_str())) != SRCML_STATUS_OK))
+        if (!(srcml_archive_get_options(srcml_arch) & SRCML_OPTION_ARCHIVE) && request->directory && ((status = srcml_unit_set_directory(unit, request->directory->c_str())) != SRCML_STATUS_OK))
             throw status;
 
         // (optional) filename attribute
