@@ -61,28 +61,28 @@ class TokenParser {
 public:
 
     /** abstract method for starting an element */
-    virtual void startElement(int) = 0;
+    virtual void startElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
 
     /** abstract method for starting an element that starts before skipped tokens */
-    virtual void startNoSkipElement(int) = 0;
+    virtual void startNoSkipElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
 
     /** abstract method for ending an element */
-    virtual void endElement(int) = 0;
+    virtual void endElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
 
     /** abstract method for starting an empty element */
-    virtual void emptyElement(int) = 0;
+    virtual void emptyElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
 
     /** abstract method for starting adding an element */
-    virtual void addElement(int) = 0;
+    virtual void addElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
 
     /** abstract method for flushing skipped */
-    virtual void flushSkip() = 0;
+    virtual void flushSkip() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
 
     /** abstract method for SkipBufferSize */
-    virtual int SkipBufferSize() = 0;
+    virtual int SkipBufferSize() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; return 0; }
 
     /** abstract method for Current token */
-    virtual antlr::RefToken* CurrentToken() = 0;
+    virtual antlr::RefToken* CurrentToken() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; return 0; }
 
     /**
      * ~TokenParser

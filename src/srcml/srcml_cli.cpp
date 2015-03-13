@@ -211,6 +211,7 @@ void option_field<&srcml_request_t::tabs>(int value) {
     }
     
     srcml_request.tabs = value;
+    *srcml_request.markup_options |= SRCML_OPTION_POSITION;
 }
 
 template <>
@@ -237,6 +238,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
 void option_to_dir(const std::string& value) {
     srcml_request.output_filename = value;
     srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
+    srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
 }
 
 void positional_args(const std::vector<std::string>& value) {
@@ -307,7 +309,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         general.add_options()
             ("compress,z", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMPRESS>), "output in gzip format")
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
-            ("no-archive", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_NOARCHIVE>), "output individual srcml units")
             ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
             ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write result ouput to arg which is a FILE or URI")
@@ -357,7 +358,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         line_col.add_options()
             ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
-            ("tabs", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::tabs>)->default_value(8), "set tabs arg characters apart.  Default is 8")
+            ("tabs", prog_opts::value<int>()->implicit_value(8)->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
             ;
 
         markup.add_options()
@@ -378,7 +379,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("list", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LIST>), "list all the files in the srcML archive and exit")
             ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "display all metadata including file count (individual units) and exit")
             ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>), "display prefix of namespace given by URI arg and exit")
-            ("count", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
+            ("show-unit-count", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
             ;
 
         prefix.add_options()
@@ -469,11 +470,15 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         conflicting_options(cli_map, "output-src", "output-xml");
 
         // Check dependent options
-        option_dependency(cli_map, "no-archive", "to-dir");
+        // Format: option_dependency(cli_map, [option], [option]);
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())
           positional_args(std::vector<std::string>(1, "stdin://-"));
+
+        // If position option is used without tabs...set default tab of 8
+        if ((*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0) || srcml_request.tabs == 0)
+          srcml_request.tabs = 8;
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
         // automatic interactive use from stdin (not on redirect or pipe)

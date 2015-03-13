@@ -18,4 +18,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # add cli tests
-add_subdirectory(testsuite)
+if (BUILD_LARGE_SYSTEMS_TESTS)
+    add_subdirectory(large_systems_test)
+endif()
+
+if (BUILD_CLI_TESTS)
+    add_subdirectory(testsuite)
+endif()

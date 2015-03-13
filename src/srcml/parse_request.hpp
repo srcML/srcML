@@ -49,6 +49,7 @@ struct ParseRequest {
     int status;
     long loc;
     long runtime;
+    boost::optional<std::string> time_stamp; 
 };
 
 #endif

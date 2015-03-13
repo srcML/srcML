@@ -266,10 +266,10 @@ void srcml_translator::translate(UTF8CharBuffer * parser_input) {
         fprintf(stderr, "SRCML Exception: %s\n", e.what());
     }
     catch (UTF8FileError) {
-        throw FileError();
+        fprintf(stderr, "UTF8 file error\n");
     }
     catch (...) {
-        fprintf(stderr, "ERROR\n");
+        fprintf(stderr, "srcML translator error\n");
     }
 
     // set back to root
