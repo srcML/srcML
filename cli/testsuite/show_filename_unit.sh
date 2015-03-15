@@ -3,7 +3,13 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# test get directory
+# test on individual unit
+define input <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" directory="bar" filename="foo" version="1.2"/>
+	STDOUT
+
+# test on archive of one
 define archive <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" filename="a.cpp.tar">
@@ -16,21 +22,41 @@ define archive <<- 'STDOUT'
 	STDOUT
 
 createfile sub/archive.cpp.xml "$archive"
+createfile sub/a.cpp.xml "$input"
 
-# TODO: bug #1109
+srcml --show-filename sub/a.cpp.xml
+check 3<<< "foo"
+
+srcml --show-filename < sub/a.cpp.xml
+check 3<<< "foo"
+
 srcml --show-filename sub/archive.cpp.xml
 check 3<<< "a.cpp.tar"
 
 srcml --show-filename < sub/archive.cpp.xml
 check 3<<< "a.cpp.tar"
 
-# empty
-define empty <<- 'STDOUT'
+
+# test on unit with empty filename
+define emptyunit <<- 'STDIN'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="" directory="" filename="" version=""/>
+	STDIN
+
+# test on archive with empty filename
+define emptyarchive <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0" filename=""/>
 	STDOUT
 
-createfile sub/archive.cpp.xml "$empty"
+createfile sub/a.cpp.xml "$emptyunit"
+createfile sub/archive.cpp.xml "$emptyarchive"
+
+srcml --show-filename sub/a.cpp.xml
+check 3<<< ""
+
+srcml --show-filename < sub/a.cpp.xml
+check 3<<< ""
 
 srcml --show-filename sub/archive.cpp.xml
 check 3<<< ""
@@ -38,7 +64,7 @@ check 3<<< ""
 srcml --show-filename < sub/archive.cpp.xml
 check 3<<< ""
 
-# none
+# test on empty archive with no filename
 define none <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0"/>

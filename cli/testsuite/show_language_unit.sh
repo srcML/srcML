@@ -93,17 +93,3 @@ check 3<<< ""
 srcml --show-language < sub/a.cpp.xml
 check 3<<< ""
 
-# None
-define none <<- 'STDIN'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp"/>
-	STDIN
-
-createfile sub/a.cpp.xml "$none"
-
-srcml --show-language sub/a.cpp.xml
-check_null
-
-srcml --show-language < sub/a.cpp.xml
-check_null
-
