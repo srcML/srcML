@@ -15,6 +15,8 @@ define fsrcml <<- 'STDOUT'
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" directory="bar" filename="sub/a.cpp"/>
 	STDOUT
 
+createfile sub/a.cpp ""
+
 echo -n "" | src2srcml -l C++ -d bar
 check 3<<< "$output"
 
