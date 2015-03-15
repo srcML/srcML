@@ -31,6 +31,12 @@ check 3<<< "$foutput"
 src2srcml sub/a.cpp --debug
 check 3<<< "$foutput"
 
+src2srcml -l C++ -g -o sub/a.cpp.xml sub/a.cpp
+check sub/a.cpp.xml 3<<< "$foutput"
+
+src2srcml -g sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$foutput"
+
 # test with src, cpp, and err namespaces
 src2srcml --debug --xmlns="http://www.sdml.info/srcML/src" --xmlns:cpp="http://www.sdml.info/srcML/cpp" --xmlns:err="http://www.sdml.info/srcML/srcerr" sub/a.cpp
 check 3<<< "$foutput"
