@@ -31,11 +31,11 @@ check sub/a.cpp.xml 3<<< "$output"
 
 
 # standard input
-echo -n "" | src2srcml -l C++ -f foo
+echo -n "" | src2srcml -l C++ -f foo.cpp
 check 3<<< "$output"
 
-echo -n "" | src2srcml -l C++ --filename foo
+echo -n "" | src2srcml -l C++ --filename foo.cpp
 check 3<<< "$output"
 
-echo -n "" | src2srcml -l C++ --filename=foo
+echo -n "" | src2srcml -l C++ --filename=foo.cpp
 check 3<<< "$output"
