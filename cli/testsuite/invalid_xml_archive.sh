@@ -47,6 +47,10 @@ define output <<- 'STDOUT'
 	a;
 	STDOUT
 
+define units <<- 'STDOUT'
+	3
+	STDOUT
+
 define xml_archive_error <<- 'STDERR'
 	srcml: Extra content at the end of the document in 'xml_error/illformedarchive_multi.xml'
 	STDERR
@@ -77,19 +81,19 @@ check 3<<< "$info_archive"
 # bad
 # TODO: issue #1039
 srcml2src xml_error/illformedarchive_multi.xml --units
-check 3<<< "$output" 4<<< "$xml_archive_error"
+check 3<<< "$units" 4<<< "$xml_archive_error"
 
 srcml2src xml_error/illformedarchive_single.xml --units
-check 3<<< "$output" 4<<< "$xml_archive_error"
+check 3<<< "$units" 4<<< "$xml_archive_error"
 
 srcml2src --units xml_error/illformedarchive_multi.xml
-check 3<<< "$output" 4<<< "$xml_archive_error"
+check 3<<< "$units" 4<<< "$xml_archive_error"
 
 srcml2src --units xml_error/illformedarchive_single.xml
-check 3<<< "$output" 4<<< "$xml_archive_error"
+check 3<<< "$units" 4<<< "$xml_archive_error"
 
 srcml2src --units < xml_error/illformedarchive_multi.xml
-check 3<<< "$output" 4<<< "$xml_archive_error"
+check 3<<< "$units" 4<<< "$xml_archive_error"
 
 srcml2src --units < xml_error/illformedarchive_single.xml
-check 3<<< "$output" 4<<< "$xml_archive_error"
+check 3<<< "$units" 4<<< "$xml_archive_error"
