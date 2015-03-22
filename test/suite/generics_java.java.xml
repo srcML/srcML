@@ -22,11 +22,15 @@
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <argument_list type="template">&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><parameter_list>&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<constructor><specifier>public</specifier> <argument_list type="template">&lt;<argument><name>U</name></argument>&gt;</argument_list> <name>Class</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></constructor>
+<function><type><specifier>public</specifier> <parameter_list>&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<constructor><specifier>public</specifier> <parameter_list>&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>Class</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></constructor>
 </unit>
 
 <unit>

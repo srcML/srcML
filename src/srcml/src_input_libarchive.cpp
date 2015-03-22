@@ -215,6 +215,18 @@ void src_input_libarchive(ParseQueue& queue,
         prequest->language = language;
         prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
+        if (SRCML_COMMAND_TIMESTAMP & SRCMLOptions::get()) {
+
+            //Long time provided by libarchive needs to be time_t
+            time_t mod_time(archive_entry_mtime(entry));
+
+            //Standard ctime output and prune '/n' from string
+            char* c_time = ctime(&mod_time);
+            c_time[strlen(c_time) - 1] = 0;
+            
+            prequest->time_stamp = c_time;
+        }
+
         // fill up the parse request buffer
         if (!status && !prequest->status) {
             // if we know the size, create the right sized data_buffer

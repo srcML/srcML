@@ -1271,7 +1271,7 @@ function_rest[int& fla] { ENTRY_DEBUG } :
 function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         {
             // start a mode for the type that will end in this grammar rule
-            startNewMode(MODE_EAT_TYPE);
+            startNewMode(MODE_EAT_TYPE | MODE_FUNCTION_TYPE);
 
             setTypeCount(type_count);
 
@@ -1282,8 +1282,11 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
 
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
-            { is_class_type_identifier() }? (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }? (options { generateAmbigWarnings = false; } : specifier | macro_call) { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
-        (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
+            { is_class_type_identifier() }? (options { greedy = true; } :
+                { !class_tokens_set.member(LA(1)) }? 
+                    (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) { decTypeCount(); })*
+                    class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
+        (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* ({ inLanguage(LANGUAGE_JAVA) }? template_argument_list | lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
 
@@ -5630,7 +5633,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             specifier | { next_token() != TEMPOPS }? template_specifier | template_declaration_full |
 
-            { inLanguage(LANGUAGE_JAVA_FAMILY) }? template_argument_list
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }? { setMode(MODE_FUNCTION_TYPE); } template_argument_list { clearMode(MODE_FUNCTION_TYPE); }
         )*
         compound_name_inner[false]
         parameter_list
@@ -6994,7 +6997,10 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         // match auto keyword first as special case do no warn about ambiguity
         (options { generateAmbigWarnings = false; } : 
             { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] |
-            { is_class_type_identifier() }? (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }? (options { generateAmbigWarnings = false; } : specifier | macro_call) { decTypeCount(); })* class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
+            { is_class_type_identifier() }? (options { greedy = true; } : 
+                { !class_tokens_set.member(LA(1)) }? 
+                    (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) { decTypeCount(); })*
+                    class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
             lead_type_identifier | EVENT)
         { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
 
@@ -8018,7 +8024,11 @@ parameter_type_count[int & type_count, bool output_type = true] { CompleteElemen
 
         // match auto keyword first as special case do no warn about ambiguity
         ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] |
-         { is_class_type_identifier() }? (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }? (options { generateAmbigWarnings = false; } : specifier | macro_call) set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* | type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+         { is_class_type_identifier() }? (options { greedy = true; } :
+            { !class_tokens_set.member(LA(1)) }?
+                (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) set_int[type_count, type_count - 1])*
+                class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
+         type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |
@@ -8068,7 +8078,10 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
 
         // match auto keyword first as special case do no warn about ambiguity
         ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
-         { is_class_type_identifier() }? (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }? (options { generateAmbigWarnings = false; } : specifier | macro_call) set_int[type_count, type_count - 1])* class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
+         { is_class_type_identifier() }? (options { greedy = true; } :
+            { !class_tokens_set.member(LA(1)) }?
+                (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) set_int[type_count, type_count - 1])*
+                class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
          type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
 ;
 
@@ -8176,12 +8189,14 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
 ;
 
 // template argument list
-template_argument_list[] { CompleteElement element(this); std::string namestack_save[2]; ENTRY_DEBUG } :
+template_argument_list[] { CompleteElement element(this); std::string namestack_save[2];  bool in_function_type = false; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
 
-            if(!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_CLASS_NAME))
+            in_function_type = inPrevMode(MODE_FUNCTION_TYPE);
+
+            if(!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
                 startElement(STEMPLATE_ARGUMENT_LIST);
             else
                 startElement(STEMPLATE_PARAMETER_LIST);
@@ -8189,7 +8204,7 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
         }
         savenamestack[namestack_save]
 
-        tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument)* tempope
+        tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])* tempope
 
         restorenamestack[namestack_save]
 ;
@@ -8306,12 +8321,13 @@ savenamestack[std::string namestack_save[]] { namestack_save[0].swap(namestack[0
 restorenamestack[std::string namestack_save[]] { namestack[0].swap(namestack_save[0]); namestack[1].swap(namestack_save[1]); ENTRY_DEBUG } :;
 
 // template argument
-template_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
+template_argument[bool in_function_type = false] { CompleteElement element(this); ENTRY_DEBUG } :
         {
+
             // local mode
             startNewMode(MODE_LOCAL);
 
-            if(!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_CLASS_NAME))
+            if(!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
                startElement(STEMPLATE_ARGUMENT);
             else
                startElement(STEMPLATE_PARAMETER);
