@@ -415,7 +415,8 @@ bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xm
                        unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, 
                        unit->encoding ? unit->encoding->c_str() : 0, unit->attributes, false);
 
-  xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
+  if (size)
+    xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
 
   out.srcMLTextWriterEndElement(out.getWriter());
 
