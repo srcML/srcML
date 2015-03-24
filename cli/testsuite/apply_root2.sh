@@ -27,16 +27,16 @@ define nested_unit_out <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
 
-	<unit revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit revision="REVISION" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit revision="REVISION" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
@@ -46,13 +46,13 @@ define nested_exprstmt_out <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
 
-	<unit revision="REVISION" language="C++" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-	<unit revision="REVISION" language="C++" item="1"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" item="1"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
-	<unit revision="REVISION" language="C++" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-	<unit revision="REVISION" language="C++" item="1"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" item="1"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
 	STDOUT
