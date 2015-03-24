@@ -18,24 +18,30 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+#	<unit revision="REVISION" item="1" location="/src:expr_stmt[1]/src:expr[1]/src:name[1]"><name>a</name></unit>
+
+#	<unit revision="REVISION" language="Java" item="1" location="/cpp:expr_stmt[1]/cpp:expr[1]/cpp:name[1]"><cpp:name>b</cpp:name></unit>
 define xpath <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
 
-	<unit revision="REVISION" item="1" location="/src:expr_stmt[1]/src:expr[1]/src:name[1]"><name>a</name></unit>
+	<unit revision="REVISION" item="1"><name>a</name></unit>
 
-	<unit revision="REVISION" language="Java" item="1" location="/cpp:expr_stmt[1]/cpp:expr[1]/cpp:name[1]"><cpp:name>b</cpp:name></unit>
+	<unit revision="REVISION" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
 	</unit>
 	STDOUT
 
+#	<unit revision="REVISION" item="1" location="/src:expr_stmt[1]/src:expr[1]/src:name[1]"><name>a</name></unit>
+
+#	<unit revision="REVISION" language="Java" item="1" location="/cpp:expr_stmt[1]/cpp:expr[1]/cpp:name[1]"><cpp:name>b</cpp:name></unit>
 define output2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
 
-	<unit revision="REVISION" item="1" location="/src:expr_stmt[1]/src:expr[1]/src:name[1]"><name>a</name></unit>
+	<unit revision="REVISION" item="1"><name>a</name></unit>
 
-	<unit revision="REVISION" language="Java" item="1" location="/cpp:expr_stmt[1]/cpp:expr[1]/cpp:name[1]"><cpp:name>b</cpp:name></unit>
+	<unit revision="REVISION" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
 	</unit>
 	STDOUT
