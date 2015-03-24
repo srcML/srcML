@@ -412,6 +412,8 @@ public :
         if (xmlXPathNodeSetGetLength(result_nodes->nodesetval) == 0)
             return;
 
+        bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0;
+
         // using the internal unit node to serve as the wrapper
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
@@ -447,8 +449,10 @@ public :
             }
         }
 
-        punit->attributes.push_back("item");
-        punit->attributes.push_back("");
+        if (!isunit) {
+            punit->attributes.push_back("item");
+            punit->attributes.push_back("");
+        }
 
         /*
         for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
@@ -457,6 +461,12 @@ public :
 */
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+
+            if (isunit) {
+                xmlNodePtr onode = xmlFirstElementChild(result_nodes->nodesetval->nodeTab[i]);
+                outputResult(punit, onode);
+                continue;
+            }
 
             // item attribute on wrapping node
             static char s[100];
