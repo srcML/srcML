@@ -388,6 +388,11 @@ bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xm
 
   bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
+  int lang = unit->language ? srcml_check_language(unit->language->c_str())
+      : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
+  if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
+     options |= SRCML_OPTION_CPP;
+
   if(first) {
 
     // Open for write;

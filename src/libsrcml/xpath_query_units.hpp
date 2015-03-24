@@ -443,6 +443,8 @@ public :
                 srcml_unit_set_language(punit, (const char*) pAttr->children->content);
             else if (std::string((const char*) pAttr->name) == std::string("hash"))
                 /* ignore hash */ ;
+            else if (std::string((const char*) pAttr->name) == std::string("revision"))
+                /* ignore revision */ ;
             else {
                 punit->attributes.push_back((const char*) pAttr->name);
                 punit->attributes.push_back((const char*) pAttr->children->content);
