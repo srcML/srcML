@@ -8,7 +8,7 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
 
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
 	<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="REVISION" language="Java">
@@ -25,7 +25,7 @@ define xpath <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
 
-	<unit revision="REVISION" item="1"><name>a</name></unit>
+	<unit revision="REVISION"  language="C++" item="1"><name>a</name></unit>
 
 	<unit revision="REVISION" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
@@ -39,7 +39,7 @@ define output2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
 
-	<unit revision="REVISION" item="1"><name>a</name></unit>
+	<unit revision="REVISION"  language="C++" item="1"><name>a</name></unit>
 
 	<unit revision="REVISION" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
