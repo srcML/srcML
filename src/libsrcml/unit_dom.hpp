@@ -127,8 +127,8 @@ public :
      * Collect namespaces from root unit.  Start to build the tree if SRCML_OPTION_APPLY_ROOT.
      */
     virtual void startRoot(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                           const struct srcsax_attribute * /* attributes */) {
 
         sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
         root = &handler->root;
@@ -165,8 +165,8 @@ public :
      * Start to create an individual unit, merging namespace details from the root (if it exists).
      */
     virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                           const struct srcsax_attribute * /* attributes */) {
 
         sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
 
@@ -233,8 +233,8 @@ public :
      * Build start element nodes in unit tree.
      */
     virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                                int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                                const struct srcsax_attribute * attributes) {
+                                int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                                const struct srcsax_attribute * /* attributes */) {
 
         sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
 
