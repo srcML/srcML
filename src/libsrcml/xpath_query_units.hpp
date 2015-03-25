@@ -616,7 +616,7 @@ public :
         if (skip)
             *skip = hrefptr;
     }
-
+/*
     virtual void outputRoot(xmlNodePtr a_node) {
 
         // xml declaration
@@ -684,7 +684,7 @@ public :
             xmlTextWriterEndElement(bufwriter);
         }
     }
-
+*/
     virtual void outputXPathResultsNumber(xmlXPathObjectPtr result_nodes) {
 
         total += result_nodes->floatval;
