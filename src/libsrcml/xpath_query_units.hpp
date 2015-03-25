@@ -1,4 +1,4 @@
-/**
+ /**
  * @file xpath_query_units.hpp
  *
  * @copyright Copyright (C) 2008-2014 srcML, LLC. (www.srcML.org)
@@ -465,8 +465,19 @@ public :
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
             if (isunit) {
-                xmlNodePtr onode = xmlFirstElementChild(result_nodes->nodesetval->nodeTab[i]);
-                outputResult(punit, onode);
+
+                static xmlBufferPtr lbuffer = xmlBufferCreate();
+
+                for (xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i]->children; onode; onode = onode->next) {
+
+                    xmlNodeDump(lbuffer, ctxt->myDoc, onode, 0, 1);
+                }
+
+                ptranslator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
+
+                xmlBufferEmpty(lbuffer);
+
+                ++result_count;
                 continue;
             }
 
