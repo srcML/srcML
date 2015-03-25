@@ -692,10 +692,13 @@ public :
         if (isoption(options, SRCML_OPTION_XPATH_TOTAL))
             return;
 
-        if ((int)result_nodes->floatval == result_nodes->floatval)
-            xmlTextWriterWriteFormatString(bufwriter, "%d\n", (int)result_nodes->floatval);
-        else
-            xmlTextWriterWriteFormatString(bufwriter, "%lf\n", result_nodes->floatval);
+        char buffer[200];
+        if ((int)result_nodes->floatval == result_nodes->floatval) {
+            sprintf(buffer, "%d\n", (int)result_nodes->floatval);
+        } else {
+            sprintf(buffer, "%lf\n", result_nodes->floatval);
+        }
+        xmlOutputBufferWriteString(buf, buffer);
     }
 
     virtual void outputXPathResultsBoolean(xmlXPathObjectPtr result_nodes) {
