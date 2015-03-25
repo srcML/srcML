@@ -25,7 +25,7 @@ define xpath <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
 
-	<unit revision="REVISION"  language="C++" item="1"><name>a</name></unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/src" revision="REVISION" language="C++" item="1"><name>a</name></unit>
 
 	<unit revision="REVISION" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
@@ -39,7 +39,7 @@ define output2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
 
-	<unit revision="REVISION"  language="C++" item="1"><name>a</name></unit>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/src" revision="REVISION" language="C++" item="1"><name>a</name></unit>
 
 	<unit revision="REVISION" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
