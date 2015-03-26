@@ -370,14 +370,17 @@ public :
             break;
 
         case XPATH_NUMBER:
+            ptranslator->set_text_only();
             outputXPathResultsNumber(result_nodes);
             break;
 
         case XPATH_BOOLEAN:
+            ptranslator->set_text_only();
             outputXPathResultsBoolean(result_nodes);
             break;
 
         case XPATH_STRING:
+            ptranslator->set_text_only();
             outputXPathResultsString(result_nodes);
             break;
 
@@ -777,12 +780,6 @@ public :
 
         // finalize results
         switch (nodetype) {
-
-        case XPATH_NODESET:
-
-//            xmlTextWriterEndElement(bufwriter);
-//            xmlTextWriterEndDocument(bufwriter);
-            break;
 
         case XPATH_NUMBER:
             if (isoption(options, SRCML_OPTION_XPATH_TOTAL)) {

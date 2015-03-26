@@ -109,7 +109,7 @@ srcml_translator::srcml_translator(char ** str_buf,
        revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
        options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
-       str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0) {
+       str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0), text_only(false) {
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
@@ -169,7 +169,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       revision(revision), directory(directory), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
       options(op), buffer(0),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
-      str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0) {}
+      str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0), text_only(false) {}
 
 /**
  * set_macro_list
@@ -191,7 +191,7 @@ void srcml_translator::set_macro_list(std::vector<std::string> & list) {
  */
 void srcml_translator::close() {
 
-    if(first && (options & SRCML_OPTION_ARCHIVE) > 0) {
+    if(first && !text_only && (options & SRCML_OPTION_ARCHIVE) > 0) {
 
         // Open for write;
         out.initWriter();
@@ -202,7 +202,6 @@ void srcml_translator::close() {
 
         // root unit for compound srcML documents
         out.startUnit(0, revision, directory, filename, version, 0, 0, 0, attributes, true);
-
     }
 
     first = false;

@@ -112,6 +112,8 @@ public:
 
     xmlTextWriterPtr output_textwriter() { return out.xout; }
 
+    void set_text_only() { text_only = true; }
+
     // destructor
     ~srcml_translator();
 
@@ -173,6 +175,9 @@ private:
 
     /** track depth for by element writing */
     int output_unit_depth;
+
+    /** text-only mode (no XML) */
+    bool text_only;
 
 };
 
