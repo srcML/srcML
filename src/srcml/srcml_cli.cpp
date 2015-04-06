@@ -510,10 +510,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         exit(1);
     }
 
-    BOOST_FOREACH(const std::string& inputty, srcml_request.input) {
-      std::cerr << inputty << "\n";
-    }
-    
     return srcml_request;
 }
 
