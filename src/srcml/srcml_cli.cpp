@@ -478,6 +478,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // Check dependent options
         // Format: option_dependency(cli_map, [option], [option]);
+        option_dependency(cli_map, "text", "language");
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input.empty())
