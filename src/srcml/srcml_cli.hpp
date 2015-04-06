@@ -135,6 +135,9 @@ struct srcml_request_t {
     std::vector<std::string> transformations;
     std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;
 
+    // raw text input
+    std::vector<std::string> raw_text;
+
     int unit;
     int max_threads;
 };
