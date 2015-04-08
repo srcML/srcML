@@ -1,5 +1,6 @@
 srcml(1) -- srcML format conversion, query, and manipulation
 
+
 ## SYNOPSIS
 
 `srcml` [opts] [input]
@@ -7,6 +8,7 @@ srcml(1) -- srcML format conversion, query, and manipulation
 `srcml` [opts] [input] [opts] [out]
 
 `srcml` [opts] [input] [command]
+
 
 ## DESCRIPTION
 
@@ -32,9 +34,9 @@ file or by not providing an output srcML file.
 
 A source-code language was be specified when input is from standard input.
 
+
 ## OPTIONS
 
-Describe options.
 Describe options.
 
 `-HELP_FLAG_SHORT`, `--HELP_FLAG_LONG`
@@ -51,7 +53,8 @@ Describe options.
 automatically, read as input to `srcml`.
 
 `-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG`=[output-srcML-file]
-: Describe output
+: Write to output srcML file or URI. By default, it is [stdout://-]
+and writes to standard output.
 
 `-OUTPUT_XML_FLAG_SHORT`,`--OUTPUT_XML_FLAG_LONG`
 : Outputs XML in srcML format. This is the default when the input is source
@@ -60,6 +63,9 @@ code or files containing source code.
 `-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
 : Outputs text in source code format. This is the default when the input
 is in srcML format.
+
+`--TO_DIR_FLAG_LONG` = [directory]
+: Extract all files from srcML and create them in the file system.
 
 `-EXPRESSION_MODE_FLAG_SHORT`, `--EXPRESSION_MODE_FLAG_LONG`
 : Translates a single, standalone expression.
@@ -108,7 +114,8 @@ output.
 
 `-INTERACTIVE_FLAG_SHORT`, `--INTERACTIVE_FLAG_LONG`
 : Default is to use buffered output for speed. For interactive applications
-output is issued as soon as parsed. For input from terminal, interactive is default.
+output is issued as soon as parsed. For input from terminal, interactive
+is default.
 
 `-DEBUG_FLAG_SHORT`, `--DEBUG_FLAG_LONG`
 : When translation errors occur, `srcml` preserves all text, but may
@@ -203,6 +210,10 @@ archive, then exit.
 `--SHOW_UNIT_COUNT_FLAG_LONG`
 : Display the number of srcML files (units) in an archive and exit.
 
+`-UNIT_OPTION_SHORT`, `--UNIT_OPTION_LONG` [num]
+: Extract individual unit number from srcML.
+
+
 ## SRCML -> SRC OPTIONS
 
 `--SHOW_LANGUAGE_FLAG_LONG`
@@ -241,6 +252,9 @@ prefix "SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT" in the namespace
 Can also be specified by declaring a prefix for literal namespace using
 the `TODO` option, e.g.,
 `XMLNS_FLAG:SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT="SRCML_EXT_LITERAL_NS_URI"`
+
+`--XML_PROCESSING_FLAG_LONG`=[arg]
+: Add [arg] as an XML processing instruction. `TODO - Example`
 
 
 ## LINE/COLUMN POSITION
@@ -289,28 +303,52 @@ This set of options allows control over how preprocessing regions are
 handled, i.e., whether parsing and markup occur. In all cases the text
 is preserved.
 
-`TODO`
+`--CPP_FLAG_LONG`
 : Turns on parsing and markup of preprocessor statements in non-C/C++
 languages such as Java. Can also be enabled by defining a prefix for
 this cpp namespace URL, e.g.,
 `XMLNS_FLAG:SRCML_CPP_NS_PREFIX_DEFAULT="SRCML_CPP_NS_URI"`.
 
-`TODO`
+`--CPP_MARKUP_ELSE_FLAG_LONG`
 : Place markup in \#else and \#elif regions. Default.
 
-`TODO`
+`--CPP_TEXT_ELSE_FLAG_LONG`
 : Only place text in \#else and \#elif regions leaving out markup.
 
-`TODO`
+`--CPP_MARKUP_IF0_FLAG_LONG`
 : Place markup in \#if 0 regions.
 
-`TODO`
+`--CPP_TEXT_IF0_FLAG_LONG`
 : Only place text in \#if 0 regions leaving out markup. Default.
+
+
+## QUERY AND TRANSFORM
+
+`--APPLY_ROOT_FLAG_LONG`
+: Apply an XSLT program or Xpath query to the root element.
+
+`--RELAXNG_OPTION_LONG`=[file | URI]
+: Output individual units that match the RELAXNG file or URI.
+
+`--XPATH_OPTION_LONG`=[expression]
+: Apply Xpath [expression] query to each individual unit.
+
+`--XPATH_PARAM_LONG` [NAME]=[VAL]
+: Pass a parameter NAME and VAL to the XSLT program.
+
+`--XSLT_LONG`=[file | URI]
+: Apply a transformation from an XSLT file to each individual unit.
+
+`--ATTRIBUTE_LONG`=[arg]
+: Add attribute [arg] to the Xpath query.
+
+`--ELEMENT_LONG`=[arg]
+: Add element [arg] to the Xpath query.
 
 
 ## SIGNAL PROCESSING
 
-The following signals may be used to control src2srcml:
+The following signals may be used to control srcml:
 
 SIGUSR1
 : Toggles verbose option. Useful with multiple input files as in the
@@ -331,29 +369,29 @@ SIGINT
 To translate the C++ source-code file main.cpp into the srcML file
 main.cpp.xml:
 
-`src2srcml` main.cpp OUTPUT\_FLAG\_SHORT main.cpp.xml
+`srcml` main.cpp -OUTPUT_FLAG_SHORT main.cpp.xml
 
 To translate a C source-code file main.c into the srcML file main.c.xml:
 
-`src2srcml` LANGUAGE\_FLAG=C main.c OUTPUT\_FLAG\_SHORT main.c.xml
+`srcml` -LANGUAGE_FLAG_SHORT=C main.c -OUTPUT_FLAG_SHORT main.c.xml
 
 To translate a Java source-code file main.java into the srcML file
 main.java.xml:
 
-`src2srcml` LANGUAGE\_FLAG=Java main.java OUTPUT\_FLAG\_SHORT
+`srcml` -LANGUAGE_FLAG_SHORT=Java main.java -OUTPUT_FLAG_SHORT
 main.java.xml
 
 To specify the directory, filename, and version for an input file from
 standard input:
 
-`src2srcml` DIRECTORY\_FLAG=src FILENAME\_FLAG=main.cpp
-VERSION\_FLAG=1 - OUTPUT\_FLAG\_SHORT main.cpp.xml
+`srcml` -DIRECTORY_FLAG_SHORT=src -FILENAME_FLAG_SHORT=main.cpp
+-VERSION_FLAG_SHORT=1 -OUTPUT_FLAG_SHORT main.cpp.xml
 
 To translate a source-code file in ISO-8859-1 encoding into a srcML file
 with UTF-8 encoding:
 
-`src2srcml` SRC\_ENCODING\_FLAG=ISO-8859-1 ENCODING\_FLAG=UTF-8 main.cpp
-OUTPUT\_FLAG\_SHORT main.cpp.xml
+`srcml` -SRC_ENCODING_FLAG_SHORT=ISO-8859-1 -XML_ENCODING_FLAG_SHORT=UTF-8 main.cpp
+-OUTPUT_FLAG_SHORT main.cpp.xml
 
 
 ## RETURN STATUS
@@ -397,7 +435,7 @@ version of the encoding, e.g., UTF-32BE, UTF-32LE, instead.
 
 ## SEE ALSO
 
-`srcml2src`(1)
+`srcml`(1)
 
 
 ## AUTHORS
