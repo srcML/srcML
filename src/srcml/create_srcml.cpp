@@ -32,6 +32,7 @@
 #include <src_input_filesystem.hpp>
 #include <src_input_filelist.hpp>
 #include <src_input_stdin.hpp>
+#include <src_input_text.hpp>
 #include <srcml_input_srcml.hpp>
 #include <trace_log.hpp>
 #include <srcml_options.hpp>
@@ -49,6 +50,10 @@ void srcml_handler_dispatch(ParseQueue& queue,
         srcml_input_src uninput = input;
         input_file(uninput);
         srcml_input_srcml(queue, srcml_arch, uninput);
+
+    } else if (input.protocol == "text") {
+
+        src_input_text(queue, srcml_arch, srcml_request, input.filename);
 
     } else if (input.protocol == "filelist") {
 
