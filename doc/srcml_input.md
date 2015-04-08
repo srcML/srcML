@@ -1,7 +1,34 @@
-srcml(1) -- srcML format conversion, query, and manipulation
+srcML format conversion, query, and manipulation
 
 
 ## SYNOPSIS
+
+### EXITING OPTIONS
+
+`srcml -HELP_FLAG_SHORT | -VERSION_FLAG_SHORT`
+
+
+--LIST_FLAG_LONG
+
+`srcml input [-INFO_FLAG_SHORTLONG_INFO_FLAG_SHORT | 
+-PREFIX_FLAG_SHORT uri | 
+--SHOW_UNIT_COUNT_FLAG_LONG | 
+--SHOW_LANGUAGE_FLAG_LONG | 
+--SHOW_DIRECTORY_FLAG_LONG | 
+--SHOW_FILENAME_FLAG_LONG | 
+--SHOW_SRC_VERSION_FLAG_LONG | 
+--SHOW_TIMESTAMP_FLAG_LONG | 
+--SHOW_HASH_FLAG_LONG | 
+--SHOW_XML_ENCODING_FLAG_LONG
+
+`srcml` 
+
+--EXTERNAL_LONG arg
+
+`srcml` [-HELP_FLAG_SHORT | -VERSION_FLAG_SHORT]
+
+`srcml`
+[--MAX_THREADS_FLAG_LONG number] [-SRC_ENCODING_FLAG_SHORT encoding] [-XML_ENCODING_FLAG_SHORT encoding] [--NO_XML_DECL_LONG] [--NO_NAMESPACE_DECL_LONG] [-COMPRESS_FLAG_SHORTARCHIVE_FLAG_SHORT] [-OUTPUT_XML_FLAG_SHORT | -OUTPUT_SRC_FLAG_SHORT] [-OUTPUT_FLAG_SHORT out | TO_DIR_FLAG_LONG dir] [--IN_ORDER_FLAG_LONG] (input1 [input2 ...] | --FILES_FROM_LONG dir | -INTERACTIVE_FLAG_SHORT)
 
 `srcml` [opts] [input]
 
@@ -84,18 +111,6 @@ begin with the character '\#' are ignored. As with input and output
 files, using the character - in place of a file name takes the input
 list from standard input.
 
-`-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG`=[<encoding>]
-: Sets the input encoding of the source-code file to encoding. The
-default is to try to automatically determine this when possible.
-Used for any necessary source-code text translation to the encoding used
-in the srcML file. Possible encodings can be obtained by using the command
-`iconv -l`.
-
-`-XML_ENCODING_FLAG_SHORT`, `--XML_ENCODING_FLAG_LONG`=[encoding]
-: Sets the xml encoding of the output srcML file to encoding. The
-default is UTF-8. Possible encodings can be obtained by using the
-command `iconv -l`.
-
 `--NO_XML_DECL_LONG`
 : No output of the default XML declaration. Useful when the output is
 to be placed inside another XML document.
@@ -162,17 +177,22 @@ the input path
 filename. This option allows you to specify a different filename for
 standard input or where the filename is not contained in the input path.
 
+`-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG`=[<encoding>]
+: Sets the input encoding of the source-code file to encoding. The
+default is to try to automatically determine this when possible.
+Used for any necessary source-code text translation to the encoding used
+in the srcML file. Possible encodings can be obtained by using the command
+`iconv -l`.
+
+`-XML_ENCODING_FLAG_SHORT`, `--XML_ENCODING_FLAG_LONG`=[encoding]
+: Sets the xml encoding of the output srcML file to encoding. The
+default is UTF-8. Possible encodings can be obtained by using the
+command `iconv -l`.
+
 `-SRCVERSION_FLAG_SHORT`, `--SRCVERSION_FLAG_LONG`=[<version>]
 : Sets the value of the attribute version to version. This is a
 purely-descriptive attribute, where the value has no interpretation by
 `srcml`.
-
-`-XML_ENCODING_FLAG_SHORT`, `--XML_ENCODING_FLAG_LONG`=[<encoding>]
-: Sets the output xml encoding to <encoding>. If no <encoding> is specified,
-UTF-8 is used.
-
-`-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG`=[<encoding>]
-: Describe src encoding
 
 `--HASH_FLAG_LONG`
 : Describe adding hash to srcML output.
@@ -265,7 +285,7 @@ column start at 1. The column position is based on the tab settings with
 a default tab size of 8. Other tab sizes can be set using the
 TABS_FLAG.
 
-`TODO`
+`--POSITION_FLAG`
 : Insert line and column attributes into each start element. These
 attributes have a default prefix of
 "SRCML_EXT_POSITION_NS_PREFIX_DEFAULT" in the namespace
