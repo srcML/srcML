@@ -211,6 +211,14 @@ void srcml_translator::close() {
     /* FIXME: Crashes when deleted */
     out.close();
 
+    if(str_buffer && buffer->use) {
+
+      (*str_buffer) = (char *)malloc(buffer->use * sizeof(char));
+      memcpy(*str_buffer, buffer->content, (size_t)buffer->use);
+      if(size && *str_buffer) *size = (size_t)buffer->use;
+
+    }
+
 }
 
 /**
@@ -632,18 +640,9 @@ bool srcml_translator::add_string(const char * content) {
 /**
  * ~srcml_translator
  *
- * Destructor.  If output to memory, free xml buffer and assign output to
- * locations.
+ * Destructor.
  */
 srcml_translator::~srcml_translator() {
-
-    if(str_buffer && buffer->use) {
-
-      (*str_buffer) = (char *)malloc(buffer->use * sizeof(char));
-      memcpy(*str_buffer, buffer->content, (size_t)buffer->use);
-      if(size && *str_buffer) *size = (size_t)buffer->use;
-
-    }
 
     if(buffer)
         xmlBufferFree(buffer);
