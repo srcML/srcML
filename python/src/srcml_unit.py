@@ -166,8 +166,8 @@ libsrcml.srcml_unit_get_fragment_xml.restype = c_char_p
 libsrcml.srcml_unit_get_fragment_xml.argtypes = [c_void_p]
 
 # const char* srcml_unit_get_standalone_xml      (const struct srcml_unit*, char*);
-libsrcml.srcml_unit_get_standalone_xml.restype = c_char_p
-libsrcml.srcml_unit_get_standalone_xml.argtypes = [c_void_p, c_char_p]
+libsrcml.srcml_unit_get_standalone_xml.restype = c_int
+libsrcml.srcml_unit_get_standalone_xml.argtypes = [c_void_p, c_char_p, c_void_p, c_void_p]
 
 # srcml_unit wrapper
 class srcml_unit :
@@ -279,7 +279,10 @@ class srcml_unit :
         return libsrcml.srcml_unit_get_fragment_xml(self.unit)
 
     def get_standalone_xml(self, encoding) :
-        return libsrcml.srcml_unit_get_standalone_xml(self.unit, encoding)
+        buffer = c_char_p()
+        size = c_size_t()
+        libsrcml.srcml_unit_get_standalone_xml(self.unit, encoding, pointer(buffer), pointer(size))
+        return (buffer, size)
 
     def src(self) :
         return self.src_buffer.value
