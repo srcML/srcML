@@ -1210,6 +1210,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        ({ inLanguage(LANGUAGE_JAVA) }? template_argument_list set_int[type_count, type_count - 1])*
         function_type[type_count]
 ;
 
@@ -1329,7 +1330,7 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
                 { !class_tokens_set.member(LA(1)) }? 
                     (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) { decTypeCount(); })*
                     class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
-        (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* ({ inLanguage(LANGUAGE_JAVA) }? template_argument_list | lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
+        (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
 

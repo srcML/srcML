@@ -1606,7 +1606,7 @@ void srcMLOutput::processComplex(const antlr::RefToken& token) {
  */
 void srcMLOutput::processTemplateArgumentList(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "template");
+    processOptional(token, "type", "generic");
 
 }
 
