@@ -388,6 +388,9 @@ LIBSRCML_DECL struct srcml_unit* srcml_read_unit_header(struct srcml_archive*);
 LIBSRCML_DECL struct srcml_unit* srcml_read_unit_xml(struct srcml_archive*);
 LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
 
+/* srcDiff processing */
+LIBSRCML_DECL struct srcml_unit* srcml_read_unit_revision(struct srcml_archive*, size_t revision_number);
+
 /* Query options of srcml unit */
 LIBSRCML_DECL const char* srcml_unit_get_src_encoding  (const struct srcml_unit*);
 LIBSRCML_DECL const char* srcml_unit_get_revision      (const struct srcml_unit*);
