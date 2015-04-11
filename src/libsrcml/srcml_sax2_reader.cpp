@@ -186,7 +186,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
 int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                                             boost::optional<std::string> & directory, boost::optional<std::string> & version,
                                             boost::optional<std::string> & timestamp, boost::optional<std::string> & hash,
-                                            std::vector<std::string> & attributes) {
+                                            std::vector<std::string> & attributes, boost::optional<size_t> revision_number) {
 
     if(handler.is_done) return 0;
     handler.skip = true;
