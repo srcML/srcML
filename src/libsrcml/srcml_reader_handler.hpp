@@ -650,7 +650,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(std::string(URI) == SRCML_DIFF_NS_URI) {
+        if(URI && std::string(URI) == SRCML_DIFF_NS_URI) {
 
             std::string local_name(localname);
 
@@ -818,7 +818,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(std::string(URI) == SRCML_DIFF_NS_URI)
+        if(URI && std::string(URI) == SRCML_DIFF_NS_URI)
             srcdiff_stack.pop();
 
         if(revision) {
