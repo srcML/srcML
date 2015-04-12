@@ -357,10 +357,11 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         cpp_markup.add_options()
             ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "preprocessor parsing and markup for Java and non-C/C++ languages")
-            ("cpp-markup-else", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_CPP_MARKUP_ELSE>), "markup cpp #else regions (default)")
             ("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_MARKUP_IF0>), "markup cpp #if 0 regions")
-            ("cpp-text-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
-            ("cpp-text-if0", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_CPP_TEXT_IF0>), "leave cpp #if 0 regions as text (default)")
+            ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
+            //("cpp-text-if0", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_CPP_TEXT_IF0>), "leave cpp #if 0 regions as text (default)")
+            //("cpp-markup-else", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_CPP_MARKUP_ELSE>), "markup cpp #else regions (default)")
+            //("cpp-text-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
             ;
 
         line_col.add_options()
