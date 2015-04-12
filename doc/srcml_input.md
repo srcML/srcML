@@ -3,41 +3,7 @@ srcML format conversion, query, and manipulation
 
 ## SYNOPSIS
 
-### EXITING OPTIONS
-
-`srcml -HELP_FLAG_SHORT | -VERSION_FLAG_SHORT`
-
-
---LIST_FLAG_LONG
-
-`srcml input [-INFO_FLAG_SHORTLONG_INFO_FLAG_SHORT] [--SHOW_UNIT_COUNT_FLAG_LONG]
-
-<!--
--PREFIX_FLAG_SHORT uri | 
- | 
---SHOW_LANGUAGE_FLAG_LONG | 
---SHOW_DIRECTORY_FLAG_LONG | 
---SHOW_FILENAME_FLAG_LONG | 
---SHOW_SRC_VERSION_FLAG_LONG | 
---SHOW_TIMESTAMP_FLAG_LONG | 
---SHOW_HASH_FLAG_LONG | 
---SHOW_XML_ENCODING_FLAG_LONG
--->
-
-`srcml` 
-
---EXTERNAL_LONG arg
-
-`srcml` [-HELP_FLAG_SHORT | -VERSION_FLAG_SHORT]
-
-`srcml`
-[--MAX_THREADS_FLAG_LONG number] [-SRC_ENCODING_FLAG_SHORT encoding] [-XML_ENCODING_FLAG_SHORT encoding] [--NO_XML_DECL_LONG] [--NO_NAMESPACE_DECL_LONG] [-COMPRESS_FLAG_SHORTARCHIVE_FLAG_SHORT] [-OUTPUT_XML_FLAG_SHORT | -OUTPUT_SRC_FLAG_SHORT] [-OUTPUT_FLAG_SHORT out | TO_DIR_FLAG_LONG dir] [--IN_ORDER_FLAG_LONG] (input1 [input2 ...] | --FILES_FROM_LONG dir | -INTERACTIVE_FLAG_SHORT)
-
-`srcml` [opts] [input]
-
-`srcml` [opts] [input] [opts] [out]
-
-`srcml` [opts] [input] [command]
+`srcml` [input-options] [metadata-options] [metadata-accessors | [xml-form] [transformations] [output-options]] [general-options] [input] [output]
 
 
 ## DESCRIPTION
