@@ -31,9 +31,9 @@
 #include <stdio.h>
 #include <srcmlns.hpp>
 
-
 #include <string>
 #include <vector>
+#include <stack>
 
 #include <cstring>
 
@@ -224,6 +224,22 @@ private :
 
     /** save meta tags to use when non-archive write unit */
     std::vector<meta_tag> meta_tags;
+
+    /** srcDiff enum */
+    enum srcdiff_operation { COMMON, DELETE, INSERT };
+
+    /** srcDiff enum stack */
+    std::stack<srcdiff_operation> srcdiff_stack;
+
+    /** original constant */
+    static const size_t ORIGINAL = 0;
+
+    /** modified constant */
+    static const size_t MODIFIED = 1;
+
+    /** the revision to extract */
+    boost::optional<size_t> revision;
+
 
 public :
 
@@ -620,6 +636,27 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+        if(std::string(URI) == SRCML_DIFF_NS_URI) {
+
+            std::string local_name(localname);
+
+            if(local_name == "common")
+                srcdiff_stack.push(COMMON);
+            else if(local_name == "delete")
+                srcdiff_stack.push(DELETE);
+            else
+                srcdiff_stack.push(INSERT);
+
+        }
+
+        if(revision) {
+
+            if(std::string(URI) == SRCML_DIFF_NS_URI) return;
+            if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
+            if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+
+        }
+
         if(collect_src && localname[0] == 'e' && localname[1] == 's'
            && strcmp((const char *)localname, "escape") == 0) {
 
@@ -765,6 +802,17 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+        if(std::string(URI) == SRCML_DIFF_NS_URI)
+            srcdiff_stack.pop();
+
+        if(revision) {
+
+            if(std::string(URI) == SRCML_DIFF_NS_URI) return;
+            if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
+            if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+
+        }
+
         if(collect_srcml) {
 
             write_endTag(localname, prefix, is_empty);
@@ -794,6 +842,13 @@ public :
         chars.append((const char *)ch, len);
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
+
+        if(revision) {
+
+            if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
+            if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+
+        }        
 
         if(is_empty && collect_srcml) *unit->unit += ">";
         is_empty = false;

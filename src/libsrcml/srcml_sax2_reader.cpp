@@ -191,7 +191,9 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
     if(handler.is_done) return 0;
     handler.skip = true;
     handler.collect_unit_attributes = true;
+    handler.revision = revision_number;
     handler.resume_and_wait();
+    handler.revision = boost::optional<size_t>();
     handler.collect_unit_attributes = false;
     handler.skip = false;
     if(handler.is_done) return 0;
