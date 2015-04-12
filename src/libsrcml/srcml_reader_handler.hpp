@@ -240,6 +240,19 @@ private :
     /** the revision to extract */
     boost::optional<size_t> revision;
 
+    std::string attribute_revision(const std::string & attribute) {
+
+        if(!revision) return attribute;
+
+        std::string::size_type pos = attribute.find('|');
+        if(pos == std::string::npos) return attribute;
+
+        if(*revision == ORIGINAL) return attribute.substr(0, pos);
+
+        return attribute.substr(pos + 1, std::string::npos);
+
+    }
+
 
 public :
 
@@ -531,7 +544,7 @@ public :
         for(int pos = 0; pos < num_attributes; ++pos) {
 
             std::string attribute = attributes[pos].localname;
-            std::string value = attributes[pos].value;
+            std::string value = attribute_revision(attributes[pos].value);
 
             if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
@@ -1005,7 +1018,7 @@ private :
             *unit->unit += attributes[pos].localname;
 
             *unit->unit += "=\"";
-            *unit->unit += attributes[pos].value;
+            *unit->unit += attribute_revision(attributes[pos].value);
             *unit->unit += "\"";
 
 
