@@ -23,12 +23,12 @@ source-code files, or code fragments.
 The conversion to the srcML format uses a custom parser that is fast and
 tolerant to incomplete source code and uncompilable code.
 
-Standard input may be specified by using the character - in the place of
+Standard input may be specified by using the character '-' in the place of
 an input source-code file or providing no input source-code file. Similarly,
-standard output may be specified with the - character for the output srcML
+standard output may be specified with the '-' character for the output srcML
 file or by not providing an output srcML file.
 
-A source-code language was be specified when input is from standard input.
+A source-code language must be specified when input is from standard input.
 
 
 ## INPUT OPTIONS
@@ -39,7 +39,7 @@ Each file is separately translated and collectively stored into a
 single srcML archive. The list has a single filename on each line
 starting at the beginning of the line. Blank lines and lines that
 begin with the character '\#' are ignored. As with input and output
-files, using the character - in place of a file name takes the input
+files, using the character '-' in place of a file name takes the input
 list from standard input.
 
 `-DEBUG_FLAG_SHORT`, `--DEBUG_FLAG_LONG`
@@ -47,29 +47,34 @@ list from standard input.
 issue incorrect markup. In debug mode the text with the translation
 error is marked with a special set of tags with the prefix
 SRCML_ERR_NS_PREFIX_DEFAULT from the namespace
-SRCML_ERR_NS_URI. Debug mode can also be indicated by defining a
-prefix for this namespace URL, e.g.,
-`--XMLNS_FLAG:="SRCML_ERR_NS_URI"`.
+"SRCML_ERR_NS_URI". Debug mode can also be indicated by defining a
+prefix for this namespace URL, which is accomplished via the command:
+	`--XMLNS_FLAG:SRCML_ERR_NS_PREFIX_DEFAULT="SRCML_ERR_NS_URI"`.
+See [XML FORM][] for more details.
 
-`-LANGUAGE_FLAG_SHORT`, `--LANGUAGE_FLAG_LONG`=[<language>]
+`-LANGUAGE_FLAG_SHORT`, `--LANGUAGE_FLAG_LONG`=<language>
 : The programming language of the source-code file. Allowable values are
 C, C++, C\#, Java, or AspectJ. The language affects parsing, the allowed
 markup, and what is considered a keyword. The value is also stored
 individually as an attribute in each unit element.
 
-`-UPDATE_FLAG_LONG`
-: Describe update.
+	If not specified, the programming language is based on the file
+extension. Language must be specified if using standard input. If the
+file extension is not available or not in the standard list, then the
+program will skip that file. This allows you to run `srcml` on a
+project directory with many source-code files and config files, and
+only the files with supported extensions will be parsed by `srcml`.
 
-`--REGISTER_EXTENSION_FLAG_LONG`=[extention=language]
-: Sets the extensions to associate with a given language. Note: the
+`--UPDATE_FLAG_LONG`
+: Updates the input srcML files based on whether their original
+source-code files have been modified, reparsing only when the srcML
+file is out-dated.
+
+`--REGISTER_EXTENSION_FLAG_LONG`="<extension>=<language>"
+: Sets the <extension> to associate with a given <language>. Note: the
 extensions do not contain the '.'.
 
-The programming language of the source-code file. Allowable values are
-C, C++, C\#, Java, or AspectJ. The language affects parsing, the allowed
-markup, and what is considered a keyword. The value is also stored
-individually as an attribute in each unit element.
-
-A common use of this is C++ files that use the .h extension for header
+	A common use of this is C++ files that use the .h extension for header
 files. By default these will be translated as C source-code files. This
 option can be used to override this behaviour.
 
@@ -83,15 +88,16 @@ column start at 1. The column position is based on the tab settings with
 a default tab size of 8. Other tab sizes can be set using the
 TABS_FLAG.
 
-`--POSITION_FLAG`
+`--POSITION_FLAG_LONG`
 : Insert line and column attributes into each start element. These
 attributes have a default prefix of
 "SRCML_EXT_POSITION_NS_PREFIX_DEFAULT" in the namespace
 "SRCML_EXT_POSITION_NS_URI".
 
-`--TABS_FLAG`=[tab-size]
+`--TABS_FLAG`=<tab-size>
 : Set the tab size. Default is 8. Use of this option automatically
 turns on the position attributes.
+
 
 ### CPP
 
@@ -102,8 +108,8 @@ is preserved.
 `--CPP_FLAG_LONG`
 : Turns on parsing and markup of preprocessor statements in non-C/C++
 languages such as Java. Can also be enabled by defining a prefix for
-this cpp namespace URL, e.g.,
-`XMLNS_FLAG:SRCML_CPP_NS_PREFIX_DEFAULT="SRCML_CPP_NS_URI"`.
+this cpp namespace URL, for example,
+`--XMLNS_FLAG:SRCML_CPP_NS_PREFIX_DEFAULT="SRCML_CPP_NS_URI"`.
 
 `--CPP_NO_MARKUP_ELSE_FLAG_LONG`
 : Only place text in \#else and \#elif regions, leaving out markup.
@@ -125,29 +131,28 @@ to be placed inside another XML document.
 : No output of namespace declarations. Useful when the output is to be
 placed inside another XML document.
 
-`--XML_PROCESSING_FLAG_LONG`=[arg]
-: Add [arg] as an XML processing instruction. `TODO - Example`
+`--XML_PROCESSING_FLAG_LONG`=<arg>
+: Add <arg> as an XML processing instruction.
+
 
 The following options can be used to change the prefixes.
 Each extensions to the srcML markup has its own namespace. These are
 indicated in the srcML document by the declaration of the specific
-extension namespace. These flags make it easier to declare.
+extension namespace. These flags make it easier to declare, and are
+an alternative way to turn on options by declaring the URI for an option.
 
-`XMLNS_FLAG=URI`
+`XMLNS_FLAG=<uri>`
 : Sets the URI for the default namespace.
 
-`XMLNS_FLAG:PREFIX=URI`
+`XMLNS_FLAG:<prefix>=<uri>`
 : Sets the namespace prefix PREFIX for the namespace URI.
 There is a set of standard URIs for the elements in srcML, each with a
 predefined prefix. The predefined URIs and prefixes for them include
 (given in xmlns notation):
 
-  * SRCML_CPP_NS_PREFIX_DEFAULT=SRCML_CPP_NS_URI
-  * SRCML_ERR_NS_PREFIX_DEFAULT=SRCML_ERR_NS_URI
-  * SRCML_EXT_POSITION_NS_PREFIX_DEFAULT=SRCML_EXT_POSITION_NS_URI
-
-These options are an alternative way to turn on options by declaring the
-URI for an option. See the MARKUP EXTENSIONS for examples.
+	* SRCML_CPP_NS_PREFIX_DEFAULT=SRCML_CPP_NS_URI
+	* SRCML_ERR_NS_PREFIX_DEFAULT=SRCML_ERR_NS_URI
+	* SRCML_EXT_POSITION_NS_PREFIX_DEFAULT=SRCML_EXT_POSITION_NS_URI
 
 
 
@@ -156,53 +161,100 @@ URI for an option. See the MARKUP EXTENSIONS for examples.
 This set of options allows control over various metadata stored in the
 srcML document.
 
-If not specified, the programming language is based on the file
-extension. If the file extension is not available or not in the standard
-list, then the program will terminate.
-
-`-DIRECTORY_FLAG_SHORT`, `--DIRECTORY_FLAG_LONG`=[<directory>]
+`-DIRECTORY_FLAG_SHORT`, `--DIRECTORY_FLAG_LONG`=<directory>
 : The value of the directory attribute is typically obtained from the path
 of the input filename. This option allows you to specify a different
 directory for standard input or where the directory is not contained in
 the input path
 
-`-FILENAME_FLAG_SHORT`, `--FILENAME_FLAG_LONG`=[<filename>]
+`-FILENAME_FLAG_SHORT`, `--FILENAME_FLAG_LONG`=<filename>
 : The value of the filename attribute is typically obtained from the input
 filename. This option allows you to specify a different filename for
 standard input or where the filename is not contained in the input path.
 
-`-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG`=[<encoding>]
+`-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG`=<encoding>
 : Sets the input encoding of the source-code file to encoding. The
 default is to try to automatically determine this when possible.
 Used for any necessary source-code text translation to the encoding used
 in the srcML file. Possible encodings can be obtained by using the command
 `iconv -l`.
 
-`-XML_ENCODING_FLAG_SHORT`, `--XML_ENCODING_FLAG_LONG`=[encoding]
+`-XML_ENCODING_FLAG_SHORT`, `--XML_ENCODING_FLAG_LONG`=<encoding>
 : Sets the xml encoding of the output srcML file to encoding. The
 default is UTF-8. Possible encodings can be obtained by using the
-command `iconv -l`.
+command `iconv -l`. The attribute is stored only on the root element.
 
-`-SRCVERSION_FLAG_SHORT`, `--SRCVERSION_FLAG_LONG`=[<version>]
+`-SRCVERSION_FLAG_SHORT`, `--SRCVERSION_FLAG_LONG`=<version>
 : Sets the value of the attribute version to version. This is a
 purely-descriptive attribute, where the value has no interpretation by
-`srcml`.
+`srcml`. The attribute is applied to the root element, and in the case
+of a srcML archive, it is also applied to each unit in the archive.
 
 `--HASH_FLAG_LONG`
-: Describe adding hash to srcML output.
+: The value of the hash attribute is a SHA-1 hash generated based on
+the contents of the source-code file. This is enabled by default when
+working with srcML archives.
 
 `--TIMESTAMP_FLAG_LONG`
-: Describe timestamp.
+: Sets the timestamp of the output srcML file to the last modified
+time of the input source-code file. For a source archive, this is the
+last modified time based on the archive files. For source files from
+a file system, it is the modified timestamp from the file system. For
+inputs from a URL, it is the current time (i.e., last access time).
+For inputs from version control, it is the last modified time based
+on the metadata from the last commit.
 
-The rest of the metadata options are for optional attributes. For a
-srcML archive this option sets the attribute on the root element.
-
-`-INFO_FLAG_SHORT`, `--INFO_FLAG_LONG`
-: Display most metadata, except the unit count (file count) in a srcML
-archive, then exit.
-
-`-PREFIX_FLAG_SHORT`, `--PREFIX_FLAG_LONG`=[URI]
+`-PREFIX_FLAG_SHORT`, `--PREFIX_FLAG_LONG`=<URI>
 : Display a prefix given by a [URI] and exit. See XML FORM.
+
+`-INFO_FLAG_SHORT`, `--INFO_FLAG_LONG`=[<format>]
+: Display most metadata, except the unit count (file count) in a srcML
+archive, then exit. A format may be specified that allows you to
+specify which information to show. It works similar to printf, with
+the exception of optional header and footer information declared
+before and after curly-brackets, respectively.
+
+	Three types of placeholders exist: (1) those that hold metadata
+on a per archive basis, (2) those that hold metadata on a per unit
+basis, and (3) information left within the header or footer of the
+output which is thus displayed only once.
+
+	- %h: hash attribute on the unit
+	- %d: directory attribute on the unit
+	- %f: file name attribute on the unit
+	- %v: version attribute on the unit
+	- %x: XML encoding attribute on the unit
+	- %s: source encoding attribute on the unit
+	- %i: index of the unit within the archive
+	- %D: directory attribute on the archive
+	- %F: file attribute on the archive
+	- %V: version attribute on the archive
+	- %X: XML encoding on the archive
+	- %S: source encoding attribute on the archive
+	- %C: total number of units
+
+	If the format string contains any placeholders for an attribute
+on the unit, then all information in the string is provided on a per
+unit basis, thus duplicating information in each unit for the per archive
+attributes. If the lowest granularity of the placeholders is for an 
+attribute on the archive, then all information in the string is provided
+on a per archive basis.
+	
+	If you wish to display information in either a header or footer, or both,
+a delimiter (curly-brackets) is used to separate the first header section
+from the main per unit/archive section, and from the last footer section.
+For example, provided an archive with two units, the format string "The
+directory was %d with a filename of %f" would show something like this:
+
+	The directory was sub with a filename of a.cpp
+	The directory was sub with a filename of b.cpp
+
+	In another example, the format string "%C { %d %f }" would show:
+	<code>
+	2
+	sub a.cpp
+	sub b.cpp
+	<code>
 
 
 
@@ -211,28 +263,28 @@ archive, then exit.
 `--APPLY_ROOT_FLAG_LONG`
 : Apply an XSLT program or Xpath query to the root element.
 
-`--RELAXNG_OPTION_LONG`=[file | URI]
-: Output individual units that match the RELAXNG file or URI.
+`--RELAXNG_OPTION_LONG`=<file | uri>
+: Output individual units that match the RELAXNG <file> or <uri>.
 
-`--XPATH_OPTION_LONG`=[expression]
-: Apply Xpath [expression] query to each individual unit.
+`--XPATH_OPTION_LONG`=<expression>
+: Apply Xpath <expression> query to each individual unit.
 
-`--XPATH_PARAM_LONG` [NAME]=[VAL]
-: Pass a parameter NAME and VAL to the XSLT program.
+`--XPATH_PARAM_LONG` <parameter>=<value>
+: Pass a <parameter> name and its <value> to the XSLT program.
 
-`--XSLT_LONG`=[file | URI]
+`--XSLT_LONG`=<file | uri>
 : Apply a transformation from an XSLT file to each individual unit.
 
-`--ATTRIBUTE_LONG`=[arg]
-: Add attribute [arg] to the Xpath query.
+`--ATTRIBUTE_LONG`=<arg>
+: Add attribute <arg> to the Xpath query.
 
-`--ELEMENT_LONG`=[arg]
-: Add element [arg] to the Xpath query.
+`--ELEMENT_LONG`=<arg>
+: Add element <arg> to the Xpath query.
 
-`-UNIT_OPTION_SHORT`, `--UNIT_OPTION_LONG` [num]
-: Extract individual unit number from srcML.
+`-UNIT_OPTION_SHORT`, `--UNIT_OPTION_LONG` <n>
+: Extract individual <n>th unit from srcML archive.
 
-`--EXTERNAL_LONG`=[arg]
+`--EXTERNAL_LONG`=<arg>
 : Runs a user defined external script or application on `srcml` client
 output.
 
@@ -240,7 +292,7 @@ output.
 
 ## OUTPUT OPTIONS
 
-`-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG`=[output-srcML-file]
+`-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG`=<output-srcML-file>
 : Write to output srcML file or URI. By default, it is [stdout://-]
 and writes to standard output.
 
@@ -261,8 +313,9 @@ is in srcML format.
 : Output is in compressed gzip format. This format can be directly, and
 automatically, read as input to `srcml`.
 
-`--TO_DIR_FLAG_LONG` = [directory]
-: Extract all files from srcML and create them in the file system.
+`--TO_DIR_FLAG_LONG`=<directory>
+: Extract all files from srcML and create them in the file system at
+<directory>.
 
 `--IN_ORDER_FLAG_LONG`
 : Enables strict output ordering. Useful for comparison when the output
@@ -286,14 +339,22 @@ is default.
 `-VERSION_FLAG_SHORT`, `--VERSION_FLAG_LONG`
 : Output the version of `srcml` then exit.
 
-`--MAX_THREADS_FLAG_LONG`=[threads]
+`--MAX_THREADS_FLAG_LONG`=<num>
 : Sets the maximum number of threads `srcml` can spawn.
 
-`-VERBOSE_FLAG_SHORT`, `--VERBOSE_FLAG_LONG`
+`-VERBOSE_FLAG_SHORT`, `--VERBOSE_FLAG_LONG`=[<format>]
 : Conversion and status information to stderr, including encodings
 used. Especially useful with for monitoring progress of the the `TODO`
 option, a directory, or source-code archive (e.g. tar.gz). The
 signal SIGUSR1 can be used to toggle this option.
+
+	A format may be specified for the verbose output. See `-INFO_FLAG_SHORT`
+from [METADATA OPTIONS][] for formatting placeholders. In addition, the
+following placeholders may be used:
+
+	- %T: files translated
+	- %S: files skipped
+	- %E: files with errors
 
 `-QUIET_FLAG_SHORT`, `--QUIET_FLAG_LONG`
 : Supresses status messages. `TODO Better description`.
@@ -351,21 +412,14 @@ with UTF-8 encoding:
 
 ## RETURN STATUS
 
-STATUS_SUCCESS: Normal
-
-STATUS_ERROR: Error
-
-STATUS_INPUTFILE_PROBLEM: Problem with input file
-
-STATUS_UNKNOWN_OPTION: Unknown option
-
-STATUS_UNKNOWN_ENCODING: Unknown encoding
-
-STATUS_INVALID_LANGUAGE: Invalid language
-
-STATUS_INVALID_OPTION_COMBINATION: Invalid combination of options
-
-STATUS_TERMINATED: Incomplete output due to termination
+* STATUS_SUCCESS: Normal
+* STATUS_ERROR: Error
+* STATUS_INPUTFILE_PROBLEM: Problem with input file
+* STATUS_UNKNOWN_OPTION: Unknown option
+* STATUS_UNKNOWN_ENCODING: Unknown encoding
+* STATUS_INVALID_LANGUAGE: Invalid language
+* STATUS_INVALID_OPTION_COMBINATION: Invalid combination of options
+* STATUS_TERMINATED: Incomplete output due to termination
 
 
 
