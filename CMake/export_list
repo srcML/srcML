@@ -101,6 +101,7 @@ _srcml_archive_read_open_FILE
 _srcml_read_unit
 _srcml_read_unit_header
 _srcml_read_unit_xml
+_srcml_read_unit_revision
 _srcml_register_file_extension
 _srcml_register_macro
 _srcml_register_namespace

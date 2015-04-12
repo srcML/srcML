@@ -258,3 +258,15 @@ int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
 
     return 1;
 }
+
+/**
+ * revision_umber
+ * @param revision_number number of revision to retrieve
+ *
+ * Set the reader handler to process only the given revision.
+ */
+void srcml_sax2_reader::revision_number(boost::optional<size_t> revision_number) {
+
+    handler.revision = revision_number;
+
+}

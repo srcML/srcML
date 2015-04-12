@@ -98,6 +98,10 @@ public :
     // reads the next unit and returns it in parameter as src
     int read_src(xmlOutputBufferPtr output_buffer);
 
+    // set the revision number to retrieve
+    void revision_number(boost::optional<size_t> revision_number);
+
+
 };
 
 #endif
