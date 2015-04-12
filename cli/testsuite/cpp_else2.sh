@@ -43,14 +43,14 @@ check sub/a.cpp.xml 3<<< "$output"
 src2srcml sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$output2"
 
-src2srcml --cpp-markup-else sub/a.cpp
-check 3<<< "$output2"
+#src2srcml --cpp-markup-else sub/a.cpp
+#check 3<<< "$output2"
 
-src2srcml -l C++ --cpp-markup-else -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$output"
+#src2srcml -l C++ --cpp-markup-else -o sub/a.cpp.xml < sub/a.cpp
+#check sub/a.cpp.xml 3<<< "$output"
 
-src2srcml --cpp-markup-else sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$output2"
+#src2srcml --cpp-markup-else sub/a.cpp -o sub/a.cpp.xml
+#check sub/a.cpp.xml 3<<< "$output2"
 
 # test cpp text else
 define output <<- 'STDOUT'
@@ -73,12 +73,12 @@ define foutput <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-src2srcml --cpp-text-else sub/a.cpp
+src2srcml --cpp-nomarkup-else sub/a.cpp
 check 3<<< "$foutput"
 
-src2srcml -l C++ --cpp-text-else -o sub/a.cpp.xml < sub/a.cpp
+src2srcml -l C++ --cpp-nomarkup-else -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml 3<<< "$output"
 
-src2srcml --cpp-text-else sub/a.cpp -o sub/a.cpp.xml
+src2srcml --cpp-nomarkup-else sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$foutput"
 
