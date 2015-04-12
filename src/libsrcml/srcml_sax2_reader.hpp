@@ -90,13 +90,17 @@ public :
     int read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                              boost::optional<std::string> & directory, boost::optional<std::string> & version,
                              boost::optional<std::string> & timestamp, boost::optional<std::string> & hash,
-                             std::vector<std::string> & attributes, boost::optional<size_t> revision_number = boost::optional<size_t>());
+                             std::vector<std::string> & attributes);
 
     // reads the next unit and returns it in parameter as srcML
     int read_srcml(boost::optional<std::string> & unit);
 
     // reads the next unit and returns it in parameter as src
     int read_src(xmlOutputBufferPtr output_buffer);
+
+    // set the revision number to retrieve
+    void revision_number(boost::optional<size_t> revision_number);
+
 
 };
 

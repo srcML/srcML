@@ -1307,17 +1307,20 @@ srcml_unit* srcml_read_unit_revision(struct srcml_archive* archive, size_t revis
 
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
+    archive->reader->revision_number(revision_number);
+
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
     if(!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version,
-            unit->timestamp, unit->hash, unit->attributes, revision_number);
+        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version, unit->timestamp, unit->hash, unit->attributes);
     archive->reader->read_srcml(unit->unit);
 
     if(!not_done || !unit->unit) {
         srcml_unit_free(unit);
         unit = 0;
     }
+
+    archive->reader->revision_number(boost::optional<size_t>());
 
     return unit;
 

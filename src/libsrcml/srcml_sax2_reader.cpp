@@ -186,14 +186,12 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
 int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
                                             boost::optional<std::string> & directory, boost::optional<std::string> & version,
                                             boost::optional<std::string> & timestamp, boost::optional<std::string> & hash,
-                                            std::vector<std::string> & attributes, boost::optional<size_t> revision_number) {
+                                            std::vector<std::string> & attributes) {
 
     if(handler.is_done) return 0;
     handler.skip = true;
     handler.collect_unit_attributes = true;
-    handler.revision = revision_number;
     handler.resume_and_wait();
-    handler.revision = boost::optional<size_t>();
     handler.collect_unit_attributes = false;
     handler.skip = false;
     if(handler.is_done) return 0;
@@ -259,4 +257,16 @@ int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
     if(handler.is_done) return 0;
 
     return 1;
+}
+
+/**
+ * revision_umber
+ * @param revision_number number of revision to retrieve
+ *
+ * Set the reader handler to process only the given revision.
+ */
+void srcml_sax2_reader::revision_number(boost::optional<size_t> revision_number) {
+
+    handler.revision = revision_number;
+
 }

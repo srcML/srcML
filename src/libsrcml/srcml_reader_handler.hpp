@@ -496,6 +496,8 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+        srcdiff_stack.push(COMMON);
+
         // pause
         // @todo this may need to change because, meta tags have separate call now
         if(!read_root) {
@@ -519,7 +521,6 @@ public :
             }
 
         }
-
 
         unit = srcml_unit_create(archive);
         unit->unit = "";
@@ -747,6 +748,8 @@ public :
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+
+        srcdiff_stack.pop();
 
         if(skip) {
 
