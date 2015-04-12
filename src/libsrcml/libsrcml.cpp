@@ -939,6 +939,8 @@ const char* srcml_error_string() { return srcml_error.c_str(); }
  */
 void srcml_memory_free(char * buffer) {
 
+    if(buffer == 0) return;
+
     free((void*)buffer);
 
 }

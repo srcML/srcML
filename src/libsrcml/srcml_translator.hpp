@@ -99,6 +99,7 @@ public:
     void translate(UTF8CharBuffer* parser_input);
 
     bool add_unit(const srcml_unit * unit, const char * xml);
+    bool add_unit_content(const srcml_unit * unit, const char * xml, int size);
     bool add_start_unit(const srcml_unit * unit);
     bool add_end_unit();
     bool add_start_element(const char * prefix, const char * name, const char * uri);
@@ -106,6 +107,12 @@ public:
     bool add_namespace(const char * prefix, const char * uri);
     bool add_attribute(const char * prefix, const char * name, const char * uri, const char * content);
     bool add_string(const char * content);
+
+    xmlOutputBufferPtr output_buffer() { return out.output_buffer; }
+
+    xmlTextWriterPtr output_textwriter() { return out.xout; }
+
+    void set_text_only() { text_only = true; }
 
     // destructor
     ~srcml_translator();
@@ -168,6 +175,9 @@ private:
 
     /** track depth for by element writing */
     int output_unit_depth;
+
+    /** text-only mode (no XML) */
+    bool text_only;
 
 };
 

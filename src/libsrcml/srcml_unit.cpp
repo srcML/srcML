@@ -335,6 +335,8 @@ const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
  * srcml_unit_get_standalone_xml
  * @param unit a srcml unit
  * @param xml_encoding the xml encoding to encode the unit
+ * @param xml_buffer buffer to return the standalone xml
+ * @param buffer_size the size of the returned buffer
  *
  * Get the parsed or collected srcml from an archive.
  * If only the attributes were collected from a read,
@@ -345,31 +347,35 @@ const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
  *
  * @returns the formatted unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_standalone_xml(struct srcml_unit* unit, const char* xml_encoding) {
+int srcml_unit_get_standalone_xml(struct srcml_unit * unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size) {
 
-    if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
+    if(unit == NULL || xml_buffer == NULL || buffer_size == NULL || (!unit->unit && !unit->read_header)) return SRCML_STATUS_INVALID_ARGUMENT;
 
     if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_srcml(unit->unit);
 
-    char * buffer = 0;
-    size_t size = 0;
+    *xml_buffer = 0;
+    *buffer_size = 0;
     if(unit->unit) {
 
         struct srcml_archive * formatting_archive = srcml_archive_clone(unit->archive);
         srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE);
         if(xml_encoding) srcml_archive_set_xml_encoding(formatting_archive, xml_encoding);
-        srcml_archive_write_open_memory(formatting_archive, &buffer, &size);
+        srcml_archive_write_open_memory(formatting_archive, xml_buffer, buffer_size);
         srcml_write_unit(formatting_archive, unit);
         srcml_archive_close(formatting_archive);
         srcml_archive_free(formatting_archive);
 
-        while(size > 0 && buffer[size - 1] == '\n')
-            buffer[size - 1] = '\0';
+        while(*buffer_size > 0 && (*xml_buffer)[*buffer_size - 1] == '\n')
+            (*xml_buffer)[--(*buffer_size)] = '\0';
+
+    } else {
+
+        return SRCML_STATUS_ERROR;
 
     }
 
-    return buffer;
+    return SRCML_STATUS_OK;
 
 }
 
