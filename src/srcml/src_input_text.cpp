@@ -23,6 +23,7 @@
 #include <src_input_text.hpp>
 #include <srcml_options.hpp>
 #include <src_input_libarchive.hpp>
+#include <src_prefix.hpp>
 
 // Convert input to a ParseRequest and assign request to the processing queue
 void src_input_text(ParseQueue& queue,
@@ -40,17 +41,19 @@ void src_input_text(ParseQueue& queue,
     prequest->version = srcml_request.att_version;
     prequest->srcml_arch = srcml_arch;
     prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
-    
+
     prequest->status = 0; //!language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+
+    std::string raw_text = src_prefix_resource(input_file);
 
     // fill up the parse request buffer
     if (!prequest->status) {
         // if we know the size, create the right sized data_buffer
-        prequest->buffer.insert(prequest->buffer.begin(), input_file.begin(), input_file.end());
+        prequest->buffer.insert(prequest->buffer.begin(), raw_text.begin(), raw_text.end());
         ++prequest->loc;
     }
 
-        // schedule for parsing
+    // schedule for parsing
     queue.schedule(prequest);
 
 }
