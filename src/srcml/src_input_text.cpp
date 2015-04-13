@@ -52,6 +52,7 @@
     	// perform newline and tab expansion
     	// TODO: Do this more efficiently
     	// TODO: Make test cases for each part
+    	// TODO: Support \nnn, \xnnn, \unnn, \Unnnnnnnn
     	bool startescape = false;
     	for (std::string::const_iterator p = raw_text.begin(); p != raw_text.end(); ++p) {
 
@@ -65,6 +66,8 @@
     				prequest->buffer.push_back('\n');
     			} else if (*p == 't') {
     				prequest->buffer.push_back('\t');
+    			} else if (*p == 'f') {
+    				prequest->buffer.push_back('\f');
     			} else if (*p == 'a') {
     				prequest->buffer.push_back('\a');
     			} else if (*p == 'b') {
