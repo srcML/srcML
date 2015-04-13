@@ -26,21 +26,21 @@
 #include <src_prefix.hpp>
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_text(ParseQueue& queue,
-                    srcml_archive* srcml_arch,
-                    const srcml_request_t& srcml_request,
-                    const std::string& input_file) {
+ void src_input_text(ParseQueue& queue,
+ 	srcml_archive* srcml_arch,
+ 	const srcml_request_t& srcml_request,
+ 	const std::string& input_file) {
 
     // form the parsing request
-    ParseRequest* prequest = new ParseRequest;
+ 	ParseRequest* prequest = new ParseRequest;
 
-    if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
-        prequest->disk_dir = srcml_request.output_filename;
+ 	if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
+ 		prequest->disk_dir = srcml_request.output_filename;
 
-    prequest->directory = srcml_request.att_directory;
-    prequest->version = srcml_request.att_version;
-    prequest->srcml_arch = srcml_arch;
-    prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
+ 	prequest->directory = srcml_request.att_directory;
+ 	prequest->version = srcml_request.att_version;
+ 	prequest->srcml_arch = srcml_arch;
+ 	prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
 
     prequest->status = 0; //!language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
@@ -51,29 +51,42 @@ void src_input_text(ParseQueue& queue,
     	// copy from the text directly into a buffer
     	// perform newline and tab expansion
     	// TODO: Do this more efficiently
+    	// TODO: Make test cases for each part
     	bool startescape = false;
     	for (std::string::const_iterator p = raw_text.begin(); p != raw_text.end(); ++p) {
-    		if (startescape && *p == 'n') {
 
-	    		prequest->buffer.push_back('\n');
-	    		startescape = false;
-
-    		} else if (startescape) {
-
-	    		prequest->buffer.push_back('\\');
-	    		prequest->buffer.push_back(*p);
-	    		startescape = false;
-
-    		} else if (!startescape && *p == '\\') {
+    		if (!startescape && *p == '\\') {
 
     			startescape = true;
 
+    		} else if (startescape) {
+
+    			if (*p == 'n') {
+    				prequest->buffer.push_back('\n');
+    			} else if (*p == 't') {
+    				prequest->buffer.push_back('\t');
+    			} else if (*p == 'a') {
+    				prequest->buffer.push_back('\a');
+    			} else if (*p == 'b') {
+    				prequest->buffer.push_back('\b');
+    			} else if (*p == 'e') {
+    				prequest->buffer.push_back('\e');
+    			} else if (*p == 'r') {
+    				prequest->buffer.push_back('\r');
+    			} else if (*p == 'v') {
+    				prequest->buffer.push_back('\v');
+    			} else {
+    				prequest->buffer.push_back('\\');
+    				prequest->buffer.push_back(*p);
+    			}
+
+   				startescape = false;
     		} else {
 
-	    		prequest->buffer.push_back(*p);
-	    	}
+    			prequest->buffer.push_back(*p);
+    		}
     	}
-        ++prequest->loc;
+    	++prequest->loc;
     }
 
     // schedule for parsing
