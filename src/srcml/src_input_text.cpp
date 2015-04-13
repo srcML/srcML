@@ -48,8 +48,12 @@ void src_input_text(ParseQueue& queue,
 
     // fill up the parse request buffer
     if (!prequest->status) {
-        // if we know the size, create the right sized data_buffer
-        prequest->buffer.insert(prequest->buffer.begin(), raw_text.begin(), raw_text.end());
+    	// copy from the text directly into a buffer
+    	// perform newline and tab expansion
+    	// TODO: Do this more efficiently
+    	for (std::string::const_iterator p = raw_text.begin(); p != raw_text.end(); ++p) {
+    		prequest->buffer.push_back(*p);
+    	}
         ++prequest->loc;
     }
 
