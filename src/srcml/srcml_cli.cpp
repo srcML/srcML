@@ -121,6 +121,7 @@ prog_opts::options_description srcml2src("SRCML2SRC");
 prog_opts::options_description positional_options("positional");
 prog_opts::options_description deprecated_options("Deprecated Options");
 prog_opts::options_description debug_options("Debug Options");
+prog_opts::options_description experimental_options("Experimental Options");
 prog_opts::options_description all("All Options");
 
 // Positional Args
@@ -324,7 +325,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
             ("in-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
-            ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
             ("text,t", prog_opts::value<std::vector<std::string> >()->notifier(&raw_text_args), "raw string text to be processed")
@@ -359,9 +359,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "preprocessor parsing and markup for Java and non-C/C++ languages")
             ("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_MARKUP_IF0>), "markup cpp #if 0 regions")
             ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
-            //("cpp-text-if0", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_CPP_TEXT_IF0>), "leave cpp #if 0 regions as text (default)")
-            //("cpp-markup-else", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_CPP_MARKUP_ELSE>), "markup cpp #else regions (default)")
-            //("cpp-text-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
             ;
 
         line_col.add_options()
@@ -420,6 +417,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         debug_options.add_options()
             ("dev", prog_opts::bool_switch()->notifier(&option_command<SRCML_DEBUG_MODE>), "Enable developer debug mode.")
+            ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
+            ;
+        experimental_options.add_options()
+            ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")
             ;
 
         // Group src2srcml Options
@@ -432,7 +433,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         all.add(general).add(src2srcml_options).add(srcml2src_options).
             add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).
             add(srcml2src_metadata).add(prefix).add(query_transform).add(srcml_archive_options).
-            add(positional_options).add(deprecated_options).add(debug_options);
+            add(positional_options).add(deprecated_options).add(debug_options).add(experimental_options);
 
         // Positional Args
         input_file.add("input-files", -1);
