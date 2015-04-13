@@ -3,7 +3,7 @@ srcML format conversion, query, and manipulation
 
 ## SYNOPSIS
 
-`srcml`\[[input-options\]][INPUT OPTIONS] \[[metadata-options\]][METADATA OPTIONS] \[[metadata-accessors\]][METADATA OPTIONS] | \[[xml-form\]][XML FORM] \[[transformations\]][TRANSFORMATIONS] \[[output-options\]][OUTPUT OPTIONS] \[[general-options\]][GENERAL OPTIONS] \[input\] \[output\]
+`srcml` \[[input-options\]][INPUT OPTIONS] \[[metadata-options\]][METADATA OPTIONS] \[[metadata-accessors\]][METADATA OPTIONS] | \[[xml-form\]][XML FORM] \[[transformations\]][TRANSFORMATIONS] \[[output-options\]][OUTPUT OPTIONS] \[[general-options\]][GENERAL OPTIONS] \[input\] \[output\]
 
 
 ## DESCRIPTION
@@ -33,6 +33,12 @@ A source-code language must be specified when input is from standard input.
 
 ## INPUT OPTIONS
 
+The following describe options on the input file or URI. The format of the
+input affects the format of the output, unless otherwise specified in the
+[output options][OUTPUT OPTIONS]. If the input is
+source-code files, then the output is expected to be in srcML format. If
+the input is in srcML format, then the output is in source-code format.
+
 `--FILES_FROM_LONG`
 : Treats the input (either a file or URI) as a list of source files.
 Each file is separately translated and collectively stored into a
@@ -42,6 +48,7 @@ begin with the character '\#' are ignored. As with input and output
 files, using the character '-' in place of a file name takes the input
 list from standard input.
 
+<!--
 `-DEBUG_FLAG_SHORT`, `--DEBUG_FLAG_LONG`
 : When translation errors occur, `srcml` preserves all text, but may
 issue incorrect markup. In debug mode the text with the translation
@@ -51,10 +58,11 @@ SRCML_ERR_NS_PREFIX_DEFAULT from the namespace
 prefix for this namespace URL, which is accomplished via the command:
 	`--XMLNS_FLAG:SRCML_ERR_NS_PREFIX_DEFAULT="SRCML_ERR_NS_URI"`.
 See [XML FORM][] for more details.
+-->
 
 `-LANGUAGE_FLAG_SHORT`, `--LANGUAGE_FLAG_LONG=<language>`
 : The programming language of the source-code file. Allowable values are
-C, C++, C\#, Java, or AspectJ. The language affects parsing, the allowed
+C, C++, C\#, or Java. The language affects parsing, the allowed
 markup, and what is considered a keyword. The value is also stored
 individually as an attribute in each unit element.
 
@@ -65,22 +73,75 @@ program will skip that file. This allows you to run `srcml` on a
 project directory with many source-code files and config files, and
 only the files with supported extensions will be parsed by `srcml`.
 
+<!--
 `--UPDATE_FLAG_LONG`
 : Updates the input srcML files based on whether their original
 source-code files have been modified, reparsing only when the srcML
 file is out-dated.
+-->
 
 `--REGISTER_EXTENSION_FLAG_LONG="<extension>=<language>"`
-: Sets the <extension> to associate with a given <language>. Note: the
-extensions do not contain the '.'.
+: Sets the <extension> to associate with a given <language>. Note
+that the extensions do not contain the period character '.'.
 
 	A common use of this is C++ files that use the .h extension for header
 files. By default these will be translated as C source-code files. This
 option can be used to override this behaviour.
 
+`-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG=<encoding>`
+: Sets the input encoding of the source-code file to encoding. The
+default is to try to automatically determine this when possible.
+Used for any necessary source-code text translation to the encoding used
+in the srcML file. Possible encodings can be obtained by using the command
+`iconv -l`.
+
+
+
+## OUTPUT OPTIONS
+
+`-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG=<output-srcML-file>`
+: Write to output srcML file, URI, or source code file.
+By default, it is [stdout://-] and writes to standard output.
+
+`-ARCHIVE_FLAG_SHORT`, `--ARCHIVE_FLAG_LONG`
+: Creates a srcML archive, which can contain multiple files in the srcML
+format. Default with when provided more than one file or a directory as
+input.
+
+`-OUTPUT_XML_FLAG_SHORT`,`--OUTPUT_XML_FLAG_LONG`
+: Outputs XML in srcML format. This is the default when the input is source
+code or files containing source code.
+
+`-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
+: Outputs text in source code format. This is the default when the input
+is in srcML format.
+
+`-COMPRESS_FLAG_SHORT`, `--COMPRESS_FLAG_LONG`
+: Output is in compressed gzip format. This format can be directly, and
+automatically, read as input to `srcml`.
+
+`--TO_DIR_FLAG_LONG=<directory>`
+: Extract all files from srcML and create them in the file system at
+<directory>.
+
+`--IN_ORDER_FLAG_LONG`
+: Enables strict output ordering. Useful for comparison when the output
+is an archive of multiple srcML documents.
+
+`--LINE_ENDING_FLAG_LONG="<environment>"`
+: Set line endings for a specific <environment>. Acceptable environments
+are "Unix" or "Windows".
+
+`-INTERACTIVE_FLAG_SHORT`, `--INTERACTIVE_FLAG_LONG`
+: Default is to use buffered output for speed. For interactive applications
+output is issued as soon as parsed. For input from terminal, interactive
+is default.
+
 
 
 ## MARKUP OPTIONS
+
+### POSITION
 
 Optional line and column attributes are used to indicate the position of
 an element in the original source code document. Both the line and
@@ -123,6 +184,13 @@ in these regions, leaving out markup.
 
 ## XML FORM
 
+The following options control the format of the XML.
+
+`-XML_ENCODING_FLAG_SHORT`, `--XML_ENCODING_FLAG_LONG=<encoding>`
+: Sets the xml encoding of the output srcML file to encoding. The
+default is UTF-8. Possible encodings can be obtained by using the
+command `iconv -l`. The attribute is stored only on the root element.
+
 `--NO_XML_DECL_LONG`
 : No output of the default XML declaration. Useful when the output is
 to be placed inside another XML document.
@@ -161,28 +229,22 @@ predefined prefix. The predefined URIs and prefixes for them include
 This set of options allows control over various metadata stored in the
 srcML document.
 
+<!---
 `-DIRECTORY_FLAG_SHORT`, `--DIRECTORY_FLAG_LONG=<directory>`
 : The value of the directory attribute is typically obtained from the path
 of the input filename. This option allows you to specify a different
 directory for standard input or where the directory is not contained in
 the input path
+vs.
+`-URL_FLAG_SHORT`, `--URL_FLAG_LONG=<uri>`
+: Describe.
+-->
+
 
 `-FILENAME_FLAG_SHORT`, `--FILENAME_FLAG_LONG=<filename>`
 : The value of the filename attribute is typically obtained from the input
 filename. This option allows you to specify a different filename for
 standard input or where the filename is not contained in the input path.
-
-`-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG=<encoding>`
-: Sets the input encoding of the source-code file to encoding. The
-default is to try to automatically determine this when possible.
-Used for any necessary source-code text translation to the encoding used
-in the srcML file. Possible encodings can be obtained by using the command
-`iconv -l`.
-
-`-XML_ENCODING_FLAG_SHORT`, `--XML_ENCODING_FLAG_LONG=<encoding>`
-: Sets the xml encoding of the output srcML file to encoding. The
-default is UTF-8. Possible encodings can be obtained by using the
-command `iconv -l`. The attribute is stored only on the root element.
 
 `-SRCVERSION_FLAG_SHORT`, `--SRCVERSION_FLAG_LONG=<version>`
 : Sets the value of the attribute version to version. This is a
@@ -250,12 +312,9 @@ directory was %d with a filename of %f" would show something like this:
 	The directory was sub with a filename of b.cpp
 
 	In another example, the format string "%C { %d %f }" would show:
-	<code>
 	2
 	sub a.cpp
 	sub b.cpp
-	<code>
-
 
 
 ## TRANSFORMATIONS
@@ -287,47 +346,6 @@ directory was %d with a filename of %f" would show something like this:
 `--EXTERNAL_LONG=<arg>`
 : Runs a user defined external script or application on `srcml` client
 output.
-
-
-
-## OUTPUT OPTIONS
-
-`-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG`=<output-srcML-file>
-: Write to output srcML file or URI. By default, it is [stdout://-]
-and writes to standard output.
-
-`-ARCHIVE_FLAG_SHORT`, `--ARCHIVE_FLAG_LONG`
-: Creates a srcML archive, which can contain multiple files in the srcML
-format. Default with when provided more than one file or a directory as
-input.
-
-`-OUTPUT_XML_FLAG_SHORT`,`--OUTPUT_XML_FLAG_LONG`
-: Outputs XML in srcML format. This is the default when the input is source
-code or files containing source code.
-
-`-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
-: Outputs text in source code format. This is the default when the input
-is in srcML format.
-
-`-COMPRESS_FLAG_SHORT`, `--COMPRESS_FLAG_LONG`
-: Output is in compressed gzip format. This format can be directly, and
-automatically, read as input to `srcml`.
-
-`--TO_DIR_FLAG_LONG=<directory>`
-: Extract all files from srcML and create them in the file system at
-<directory>.
-
-`--IN_ORDER_FLAG_LONG`
-: Enables strict output ordering. Useful for comparison when the output
-is an archive of multiple srcML documents.
-
-`--LINE_ENDING_FLAG_LONG`
-: Describe line ending.
-
-`-INTERACTIVE_FLAG_SHORT`, `--INTERACTIVE_FLAG_LONG`
-: Default is to use buffered output for speed. For interactive applications
-output is issued as soon as parsed. For input from terminal, interactive
-is default.
 
 
 
@@ -385,29 +403,29 @@ SIGINT
 To translate the C++ source-code file main.cpp into the srcML file
 main.cpp.xml:
 
-`srcml` main.cpp -OUTPUT_FLAG_SHORT main.cpp.xml
+`srcml main.cpp -OUTPUT_FLAG_SHORT main.cpp.xml`
 
 To translate a C source-code file main.c into the srcML file main.c.xml:
 
-`srcml` -LANGUAGE_FLAG_SHORT=C main.c -OUTPUT_FLAG_SHORT main.c.xml
+`srcml -LANGUAGE_FLAG_SHORT=C main.c -OUTPUT_FLAG_SHORT main.c.xml`
 
 To translate a Java source-code file main.java into the srcML file
 main.java.xml:
 
-`srcml` -LANGUAGE_FLAG_SHORT=Java main.java -OUTPUT_FLAG_SHORT
-main.java.xml
+`srcml -LANGUAGE_FLAG_SHORT=Java main.java -OUTPUT_FLAG_SHORT
+main.java.xml`
 
 To specify the directory, filename, and version for an input file from
 standard input:
 
-`srcml` -DIRECTORY_FLAG_SHORT=src -FILENAME_FLAG_SHORT=main.cpp
--VERSION_FLAG_SHORT=1 -OUTPUT_FLAG_SHORT main.cpp.xml
+`srcml -DIRECTORY_FLAG_SHORT=src -FILENAME_FLAG_SHORT=main.cpp
+-VERSION_FLAG_SHORT=1 -OUTPUT_FLAG_SHORT main.cpp.xml`
 
 To translate a source-code file in ISO-8859-1 encoding into a srcML file
 with UTF-8 encoding:
 
-`srcml` -SRC_ENCODING_FLAG_SHORT=ISO-8859-1 -XML_ENCODING_FLAG_SHORT=UTF-8 main.cpp
--OUTPUT_FLAG_SHORT main.cpp.xml
+`srcml -SRC_ENCODING_FLAG_SHORT=ISO-8859-1 -XML_ENCODING_FLAG_SHORT=UTF-8 main.cpp
+-OUTPUT_FLAG_SHORT main.cpp.xml`
 
 
 ## RETURN STATUS
