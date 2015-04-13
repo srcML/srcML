@@ -48,18 +48,6 @@ begin with the character '\#' are ignored. As with input and output
 files, using the character '-' in place of a file name takes the input
 list from standard input.
 
-<!--
-`-DEBUG_FLAG_SHORT`, `--DEBUG_FLAG_LONG`
-: When translation errors occur, `srcml` preserves all text, but may
-issue incorrect markup. In debug mode the text with the translation
-error is marked with a special set of tags with the prefix
-SRCML_ERR_NS_PREFIX_DEFAULT from the namespace
-"SRCML_ERR_NS_URI". Debug mode can also be indicated by defining a
-prefix for this namespace URL, which is accomplished via the command:
-	`--XMLNS_FLAG:SRCML_ERR_NS_PREFIX_DEFAULT="SRCML_ERR_NS_URI"`.
-See [XML FORM][] for more details.
--->
-
 `-LANGUAGE_FLAG_SHORT`, `--LANGUAGE_FLAG_LONG=<language>`
 : The programming language of the source-code file. Allowable values are
 C, C++, C\#, or Java. The language affects parsing, the allowed
@@ -72,13 +60,6 @@ file extension is not available or not in the standard list, then the
 program will skip that file. This allows you to run `srcml` on a
 project directory with many source-code files and config files, and
 only the files with supported extensions will be parsed by `srcml`.
-
-<!--
-`--UPDATE_FLAG_LONG`
-: Updates the input srcML files based on whether their original
-source-code files have been modified, reparsing only when the srcML
-file is out-dated.
--->
 
 `--REGISTER_EXTENSION_FLAG_LONG="<extension>=<language>"`
 : Sets the <extension> to associate with a given <language>. Note
@@ -228,18 +209,6 @@ predefined prefix. The predefined URIs and prefixes for them include
 
 This set of options allows control over various metadata stored in the
 srcML document.
-
-<!---
-`-DIRECTORY_FLAG_SHORT`, `--DIRECTORY_FLAG_LONG=<directory>`
-: The value of the directory attribute is typically obtained from the path
-of the input filename. This option allows you to specify a different
-directory for standard input or where the directory is not contained in
-the input path
-vs.
-`-URL_FLAG_SHORT`, `--URL_FLAG_LONG=<uri>`
-: Describe.
--->
-
 
 `-FILENAME_FLAG_SHORT`, `--FILENAME_FLAG_LONG=<filename>`
 : The value of the filename attribute is typically obtained from the input
