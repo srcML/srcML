@@ -51,8 +51,27 @@ void src_input_text(ParseQueue& queue,
     	// copy from the text directly into a buffer
     	// perform newline and tab expansion
     	// TODO: Do this more efficiently
+    	bool startescape = false;
     	for (std::string::const_iterator p = raw_text.begin(); p != raw_text.end(); ++p) {
-    		prequest->buffer.push_back(*p);
+    		if (startescape && *p == 'n') {
+
+	    		prequest->buffer.push_back('\n');
+	    		startescape = false;
+
+    		} else if (startescape) {
+
+	    		prequest->buffer.push_back('\\');
+	    		prequest->buffer.push_back(*p);
+	    		startescape = false;
+
+    		} else if (!startescape && *p == '\\') {
+
+    			startescape = true;
+
+    		} else {
+
+	    		prequest->buffer.push_back(*p);
+	    	}
     	}
         ++prequest->loc;
     }
