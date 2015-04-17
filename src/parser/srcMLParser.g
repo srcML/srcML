@@ -1869,7 +1869,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
             || postcalltoken == 1 /* EOF ? */
-            || postcalltoken == TEMPLATE
+            || postcalltoken == TEMPLATE || postcalltoken == INLINE
             || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED || postcalltoken == SIGNAL
             || postcalltoken == ATREQUIRED || postcalltoken == ATOPTIONAL
             || postcalltoken == STATIC || postcalltoken == CONST)
