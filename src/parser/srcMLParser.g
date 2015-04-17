@@ -5906,7 +5906,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         (lambda_expression_full_csharp) => lambda_expression_csharp |
 
         { inLanguage(LANGUAGE_CXX) }?
-        (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
+        (bracket_pair (paren_pair)* function_tail LCURLY) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
@@ -7544,7 +7544,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (lambda_expression_full_csharp) => lambda_expression_csharp |
 
         { inLanguage(LANGUAGE_CXX) }?
-        (bracket_pair (LPAREN | LCURLY)) => lambda_expression_cpp |
+        (bracket_pair (paren_pair)* function_tail LCURLY) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
