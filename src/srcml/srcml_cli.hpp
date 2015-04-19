@@ -71,7 +71,7 @@ const int SRCML_COMPRESS                          = 1<<26;
 // commands that are simple queries on srcml
 const int SRCML_COMMAND_INSRCML =
     //SRCML_COMMAND_LONGINFO |
-    SRCML_COMMAND_INFO    |
+    //SRCML_COMMAND_INFO    |
     SRCML_COMMAND_VERSION |
     //SRCML_COMMAND_LIST |
     //SRCML_COMMAND_UNITS |
@@ -138,6 +138,8 @@ struct srcml_request_t {
 
     int unit;
     int max_threads;
+
+    boost::optional<std::string> info_format;
 };
 
 // parse the CLI options into a srcml client request
