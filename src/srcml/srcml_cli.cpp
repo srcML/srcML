@@ -379,7 +379,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         srcml2src_metadata.add_options()
-            ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "display most metadata except file count (individual units) and exit")
+            ("info,i", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_field<&srcml_request_t::info_format>), "display most metadata except file count (individual units) and exit")
             ("list", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LIST>), "list all the files in the srcML archive and exit")
             ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "display all metadata including file count (individual units) and exit")
             ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>), "display prefix of namespace given by URI arg and exit")
