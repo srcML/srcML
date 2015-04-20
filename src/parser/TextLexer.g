@@ -116,14 +116,9 @@ CONSTANTS :
         }
 ;
 
-DSIGN :
-        '$' { $setType(OPERATOR); }
-        ({ inLanguage(LANGUAGE_JAVA) }? { $setType(NAME); } NAME)?
-;
-
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         { startline = false; }
-        ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
+        ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
         (
 
             { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
@@ -141,7 +136,7 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
             { inLanguage(LANGUAGE_CXX) && (lastchar == 'L' || lastchar == 'U' || lastchar == 'u')}? ('R' '"')=> 'R'
             { $setType(STRING_START); rawstring = true; } STRING_START |
 
-            ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | { inLanguage(LANGUAGE_JAVA) }? '$')*)
+            ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')*)
 
 /*
             if(false) {
