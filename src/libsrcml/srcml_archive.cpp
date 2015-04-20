@@ -443,7 +443,15 @@ int srcml_archive_set_processing_instruction(srcml_archive* archive, const char*
  * @param token name of macro
  * @param type macro type
  *
- * Register a macro (token) to be processed as a special type
+ * Register a macro (token) to be processed as a special type.
+ *
+ * Here is a list of the currently supported special types:
+ * src:macro     -> Treat the token as a standalone macro (will be marked with a macro tag)
+ * src:type      -> Treat the token as an identifier (will still be marked as macro tag)
+ * src:name      -> Treat the token as an identifier (will still be marked as macro tag)
+ * src:specifier -> Treat the token as a specifier (will be marked with a specifier tag around macro tag)
+ * src:label     -> Treat the token as a label (a goto label, will be marked with a label tag around macro tag)
+ * src:case      -> Treat as a case label (mark with case tag) either case keyword or case keyword and label
  *
  * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
