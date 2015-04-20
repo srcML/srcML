@@ -1240,7 +1240,7 @@ annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 ;
 
 // Ref qualifiers in function tail
-ref_qualifier []  { LightweightElement element(this); ENTRY_DEBUG } :
+ref_qualifier[]  { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
             startElement(SREF_QUALIFIER);
@@ -1251,7 +1251,7 @@ ref_qualifier []  { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // trailing return in function tail
-trailing_return [] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+trailing_return[] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
 
         TRETURN
         ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
@@ -8468,17 +8468,17 @@ typedef_statement[] { ENTRY_DEBUG } :
 ;
 
 // matching set of parenthesis
-paren_pair[] :
+paren_pair[] { ENTRY_DEBUG } :
         LPAREN (paren_pair | qmark | ~(QMARK | LPAREN | RPAREN))* RPAREN
 ;
 
 // matching set of curly braces
-curly_pair[] :
+curly_pair[] { ENTRY_DEBUG } :
         LCURLY (curly_pair | qmark | ~(QMARK | LCURLY | RCURLY))* RCURLY
 ;
 
-// matching set of curly braces
-bracket_pair[] :
+// matching set of brackets
+bracket_pair[] { ENTRY_DEBUG } :
         LBRACKET (bracket_pair | qmark | ~(QMARK | LBRACKET | RBRACKET))* RBRACKET
 ;
 
