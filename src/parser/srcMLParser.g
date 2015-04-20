@@ -1255,7 +1255,7 @@ trailing_return[] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_ty
 
         TRETURN
         ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
-        {startNewMode(MODE_TRAILING_RETURN);} function_declaration[type_count] function_identifier parameter_list | function_type[type_count + 1]
+        { startNewMode(MODE_TRAILING_RETURN); } function_declaration[type_count] function_identifier parameter_list | set_int[type_count, type_count + 1] parameter_type_count[type_count]
         )
 ;
 

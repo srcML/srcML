@@ -97,4 +97,8 @@
 <expr_stmt><expr><ternary><condition><expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</return> }</block></lambda></expr> ?</condition><then> <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</return> }</block></lambda></expr> </then><else>: <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</return> }</block></lambda></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><call><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>thingy</name><modifier>*</modifier></type></decl></parameter>)</parameter_list> -&gt;<type><specifier>const</specifier> <name>int</name></type> <block>{ }</block></lambda><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
