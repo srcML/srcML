@@ -541,6 +541,7 @@ public :
 
         srcml_unit_free(punit);
 
+        xmlBufferEmpty(lbuffer);
 
         ++result_count;
     }
