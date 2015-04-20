@@ -147,6 +147,7 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_archive_disable_option(oarch, SRCML_OPTION_ARCHIVE);
                 srcml_archive_disable_option(oarch, SRCML_OPTION_HASH);
             } else {
+                
                 srcml_archive_enable_option(oarch, SRCML_OPTION_ARCHIVE);
                 srcml_archive_enable_option(oarch, SRCML_OPTION_HASH);
             }
