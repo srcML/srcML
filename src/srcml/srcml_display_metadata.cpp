@@ -141,9 +141,10 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
     return numUnits;   
 }
 
-void srcml_pretty_format(srcml_archive* srcml_arch) {
-     BOOST_FOREACH(const char& output_char, *srcml_request.pretty_format) {
-                
+void srcml_pretty_format(srcml_archive* srcml_arch, const std::string& pretty_format) {
+     bool field_active = false;
+
+     BOOST_FOREACH(const char& output_char, pretty_format) {     
         // Find either special fields or escape characters
         if (!field_active && (output_char == '%' || output_char == '\\')) {
             field_active = true;
@@ -153,14 +154,16 @@ void srcml_pretty_format(srcml_archive* srcml_arch) {
         }
     }
 
+    /*
     while (true) {
-        std::size_t found = str.find("%");
+        std::size_t found = pretty_format.find("%");
         
         if (found != std::string::npos) {
             break;
         }
     }
-
+    */
+    
     std::string helloString = "Hello %s and %s";
     std::vector<std::string> args;
     args.push_back("Alice");
@@ -199,10 +202,8 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             }
         }
 
-        bool field_active = false;
-
         if (srcml_request.pretty_format) {
-            srcml_pretty_format(srcml_arch);
+            srcml_pretty_format(srcml_arch, *srcml_request.pretty_format);
         }
 
         // DEBUG TEST
