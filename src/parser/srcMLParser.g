@@ -5922,6 +5922,8 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
 
         { notdestructor }? sole_destop { notdestructor = false; } |
 
+        { next_token() != LPAREN && next_token() != DOTDOTDOT }? sizeof_unary_expression |
+
         // call
         // distinguish between a call and a macro
         { type == CALL || (perform_call_check(type, isempty, call_count, -1) && type == CALL) }?
@@ -6028,6 +6030,18 @@ keyword_call_tokens[] { ENTRY_DEBUG } :
     // C#
     TYPEOF | DEFAULT | CHECKED | UNCHECKED
 
+;
+
+// sizeof unary_expression
+sizeof_unary_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
+    {
+        startNewMode(MODE_LOCAL);
+
+        startElement(SSIZEOF_CALL);
+
+    }
+    SIZEOF
+    variable_identifier
 ;
 
 // sizeof(...)
@@ -7559,6 +7573,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
         { notdestructor }? sole_destop { notdestructor = false; } |
+
+        { next_token() != LPAREN && next_token() != DOTDOTDOT }? sizeof_unary_expression |
 
         // call
         // distinguish between a call and a macro

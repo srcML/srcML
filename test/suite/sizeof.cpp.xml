@@ -94,4 +94,12 @@
 <expr_stmt><expr><sizeof>sizeof<argument_list>(<argument><expr>struct <name>x</name></expr></argument>)</argument_list></sizeof></expr>;</expr_stmt>
 </unit>
 
+<unit>
+<expr_stmt><expr><sizeof>sizeof <name>host_name</name></sizeof></expr>;</expr_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>ACE_TCHAR</name></type> <name><name>name</name><index>[<expr><operator>(</operator><sizeof>sizeof <name>host_name</name></sizeof> <operator>/</operator> <sizeof>sizeof <argument_list>(<argument><expr><name>ACE_TCHAR</name></expr></argument>)</argument_list></sizeof><operator>)</operator> <operator>+</operator> <literal type="number">256</literal></expr>]</index></name></decl>;</decl_stmt>
+</unit>
+
 </unit>
