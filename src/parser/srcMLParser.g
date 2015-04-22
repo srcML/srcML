@@ -5150,7 +5150,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 // the list of identifiers that are also marked up as tokens for other things.
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            SUPER | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
+            WARNING | SUPER | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
             SIGNAL | FINAL | OVERRIDE | VOID | ASM |
 
             // C# linq
