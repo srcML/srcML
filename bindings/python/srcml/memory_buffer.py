@@ -77,7 +77,7 @@ class memory_buffer(object):
         """
         Free the currently allocated native memory.
         """
-        if self.buff != 0:
+        if self.buff != ctypes.c_char_p():
             bindings.free(self.buff)
             self.buff = ctypes.c_char_p(0)
             self.size.value = 0
