@@ -157,7 +157,6 @@ void srcml_pretty_format(srcml_archive* srcml_arch, const std::string& pretty_fo
     /*
     while (true) {
         std::size_t found = pretty_format.find("%");
-        
         if (found != std::string::npos) {
             break;
         }
