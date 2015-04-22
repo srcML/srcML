@@ -28,6 +28,8 @@
 #include <boost/foreach.hpp>
 #include <iomanip>
 #include <string.h>
+#include <boost/algorithm/string/replace.hpp>
+#include <boost/format.hpp>
 
 // display all files in srcml archive
 /*
@@ -117,6 +119,15 @@ void srcml_display_timestamp(srcml_unit* unit, int ignore_attribue_name) {
 }
 */
 
+std::string format_range(const std::string& format_string, const std::vector<std::string>& args)
+{
+    boost::format f(format_string);
+    for (std::vector<std::string>::const_iterator it = args.begin(); it != args.end(); ++it) {
+        f % *it;
+    }
+    return f.str();
+}
+
 int srcml_unit_count(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
@@ -128,6 +139,39 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
         srcml_unit_free(unit);
     }
     return numUnits;   
+}
+
+void srcml_pretty_format(srcml_archive* srcml_arch) {
+     BOOST_FOREACH(const char& output_char, *srcml_request.pretty_format) {
+                
+        // Find either special fields or escape characters
+        if (!field_active && (output_char == '%' || output_char == '\\')) {
+            field_active = true;
+        }
+        else {
+            field_active = false;
+        }
+    }
+
+    while (true) {
+        std::size_t found = str.find("%");
+        
+        if (found != std::string::npos) {
+            break;
+        }
+    }
+
+    std::string helloString = "Hello %s and %s";
+    std::vector<std::string> args;
+    args.push_back("Alice");
+    args.push_back("Bob");
+    std::cout << format_range(helloString, args) << '\n';
+
+    // in place
+    std::string in_place = "blah#blah";
+    boost::replace_all(in_place, "#", "@");
+
+    std::cerr << in_place << "\n";
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
@@ -153,6 +197,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                 std::cerr << "Srcml input cannot not be opened.\n";
                 return;
             }
+        }
+
+        bool field_active = false;
+
+        if (srcml_request.pretty_format) {
+            srcml_pretty_format(srcml_arch);
         }
 
         // DEBUG TEST
