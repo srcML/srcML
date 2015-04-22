@@ -39,15 +39,6 @@ input affects the format of the output, unless otherwise specified in the
 source-code files, then the output is expected to be in srcML format. If
 the input is in srcML format, then the output is in source-code format.
 
-`--FILES_FROM_LONG`
-: Treats the input (either a file or URI) as a list of source files.
-Each file is separately translated and collectively stored into a
-single srcML archive. The list has a single filename on each line
-starting at the beginning of the line. Blank lines and lines that
-begin with the character '\#' are ignored. As with input and output
-files, using the character '-' in place of a file name takes the input
-list from standard input.
-
 `-LANGUAGE_FLAG_SHORT`, `--LANGUAGE_FLAG_LONG=<language>`
 : The programming language of the source-code file. Allowable values are
 C, C++, C\#, or Java. The language affects parsing, the allowed
@@ -67,56 +58,80 @@ that the extensions do not contain the period character '.'.
 
 	A common use of this is C++ files that use the .h extension for header
 files. By default these will be translated as C source-code files. This
-option can be used to override this behaviour.
+option can be used to override this behavior.
 
 `-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG=<encoding>`
-: Sets the input encoding of the source-code file to encoding. The
+: Sets the input encoding of the source-code file to <encoding>. The
 default is to try to automatically determine this when possible.
 Used for any necessary source-code text translation to the encoding used
 in the srcML file. Possible encodings can be obtained by using the command
-`iconv -l`.
+`iconv -l` on UNIX platforms.
+
+`--FILES_FROM_LONG=<file|uri>`
+: Treats the input (either a <file> or <URI>) as a list of source files.
+Each file is separately translated and collectively stored into a
+single srcML archive. The list has a single filename on each line
+starting at the beginning of the line. Blank lines and lines that
+begin with the character '\#' are ignored. As with input and output
+files, using the character '-' in place of a file name takes the input
+list from standard input.
 
 
 
 ## OUTPUT OPTIONS
 
-`-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG=<output-srcML-file>`
+The following describe options on the output file.
+
+`-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG=<output-file>`
 : Write to output srcML file, URI, or source code file.
-By default, it is [stdout://-] and writes to standard output.
+By default, it writes to standard output.
+
+`-COMPRESS_FLAG_SHORT`, `--COMPRESS_FLAG_LONG`
+: Output is in compressed gzip format. This format can be directly, and
+automatically, read as input to `srcml`.
+
+`--OUTPUT_FORMAT_FLAG_LONG=<format>`
+: Specifies the output format, such as "tar.gz". As the output file's
+extension determines the output format, this is useful when writing to
+standard output.
+
+
+
+### SOURCE OUTPUT
+
+The following describe options that are only applicable for when
+the output is desired in source-code format.
+
+`--LINE_ENDING_FLAG_LONG="<environment|ending>"`
+: Set line endings for a specific <environment>. Acceptable <environment>s
+are "Unix" or "Windows". Acceptable <ending>s are "\r\n" or "\n".
+
+`-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
+: Outputs text in source code format. This is the default when the input
+is in srcML format.
+
+`--TO_DIR_FLAG_LONG=<directory>`
+: Extract all files from srcML and create them in the file system at
+<directory>.
+
+
+### SRCML OUTPUT
+
+The following describe options that are only applicable for when
+the output is desired in srcML format.
+
+`-OUTPUT_XML_FLAG_SHORT`,`--OUTPUT_XML_FLAG_LONG`
+: Outputs XML in srcML format. This is the default when the input is source
+code or files containing source code.
 
 `-ARCHIVE_FLAG_SHORT`, `--ARCHIVE_FLAG_LONG`
 : Creates a srcML archive, which can contain multiple files in the srcML
 format. Default with when provided more than one file or a directory as
 input.
 
-`-OUTPUT_XML_FLAG_SHORT`,`--OUTPUT_XML_FLAG_LONG`
-: Outputs XML in srcML format. This is the default when the input is source
-code or files containing source code.
-
-`-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
-: Outputs text in source code format. This is the default when the input
-is in srcML format.
-
-`-COMPRESS_FLAG_SHORT`, `--COMPRESS_FLAG_LONG`
-: Output is in compressed gzip format. This format can be directly, and
-automatically, read as input to `srcml`.
-
-`--TO_DIR_FLAG_LONG=<directory>`
-: Extract all files from srcML and create them in the file system at
-<directory>.
-
 `--IN_ORDER_FLAG_LONG`
 : Enables strict output ordering. Useful for comparison when the output
 is an archive of multiple srcML documents.
-
-`--LINE_ENDING_FLAG_LONG="<environment>"`
-: Set line endings for a specific <environment>. Acceptable environments
-are "Unix" or "Windows".
-
-`-INTERACTIVE_FLAG_SHORT`, `--INTERACTIVE_FLAG_LONG`
-: Default is to use buffered output for speed. For interactive applications
-output is issued as soon as parsed. For input from terminal, interactive
-is default.
 
 
 
@@ -170,7 +185,8 @@ The following options control the format of the XML.
 `-XML_ENCODING_FLAG_SHORT`, `--XML_ENCODING_FLAG_LONG=<encoding>`
 : Sets the xml encoding of the output srcML file to encoding. The
 default is UTF-8. Possible encodings can be obtained by using the
-command `iconv -l`. The attribute is stored only on the root element.
+command `iconv -l` on UNIX platforms. The attribute is stored only
+on the root element.
 
 `--NO_XML_DECL_LONG`
 : No output of the default XML declaration. Useful when the output is
