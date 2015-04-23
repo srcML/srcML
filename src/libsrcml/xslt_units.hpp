@@ -292,8 +292,8 @@ public :
             xmlOutputBufferWriteString(buf, "\n");
         }
 
-        // all done with the buffer
-        xmlOutputBufferClose(buf);
+        // all done with the buffer, should be freed with srcml_translator
+        //xmlOutputBufferClose(buf);
     }
 
     /**
