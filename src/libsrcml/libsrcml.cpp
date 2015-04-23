@@ -62,7 +62,9 @@ std::string srcml_error;
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, std::vector<std::string>(),
+srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+                                 std::string(SRCML_VERSION_STRING), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+                                 std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY,
                                  8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
                                  language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any() };
@@ -75,7 +77,9 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VE
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_unit global_unit = { &global_archive, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, 0, 0, boost::any() };
+srcml_unit global_unit = { &global_archive, boost::optional<std::string>(), std::string(SRCML_VERSION_STRING), boost::optional<std::string>(),
+                           boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+                           boost::optional<std::string>(), std::vector<std::string>(), 0, 0, 0, 0, boost::any() };
 
 /**
  * @var register_languages
