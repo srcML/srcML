@@ -19,16 +19,8 @@ define nestedfile <<- 'STDOUT'
 
 createfile sub/a.cpp "
 a;"
-
 createfile sub/b.cpp "
 b;"
 
-createfile sub/filelistab "sub/a.cpp
-sub/b.cpp
-"
-
-src2srcml --files-from "sub/filelistab" --in-order -o sub/both.xml
+src2srcml --files-from "https://raw.githubusercontent.com/hmm34/massive-lana/master/file-list.txt" --in-order -o sub/both.xml
 check sub/both.xml 3<<< "$nestedfile"
-
-src2srcml --files-from "sub/filelistab" --in-order
-check 3<<< "$nestedfile"

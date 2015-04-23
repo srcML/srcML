@@ -254,4 +254,16 @@
 <decl_stmt><decl><type><name>foo</name></type> <name><name>bar</name><index>[]</index></name></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<decl_stmt><decl><type><name>$descriptor</name></type> <name>nameDsc</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>dsc$descriptor</name></type> <name>nameDsc</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>warning</name></type> <name>warning</name></decl>;</decl_stmt>
+</unit>
+
 </unit>

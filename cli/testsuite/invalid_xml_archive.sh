@@ -80,20 +80,20 @@ check 3<<< "$info_archive"
 
 # bad
 # TODO: issue #1039
-srcml2src xml_error/illformedarchive_multi.xml --units
+srcml2src xml_error/illformedarchive_multi.xml --show-unit-count
 check 3<<< "$units" 4<<< "$xml_archive_error"
 
-srcml2src xml_error/illformedarchive_single.xml --units
+srcml2src xml_error/illformedarchive_single.xml --show-unit-count
 check 3<<< "$units" 4<<< "$xml_archive_error"
 
-srcml2src --units xml_error/illformedarchive_multi.xml
+srcml2src --show-unit-count xml_error/illformedarchive_multi.xml
 check 3<<< "$units" 4<<< "$xml_archive_error"
 
-srcml2src --units xml_error/illformedarchive_single.xml
+srcml2src --show-unit-count xml_error/illformedarchive_single.xml
 check 3<<< "$units" 4<<< "$xml_archive_error"
 
-srcml2src --units < xml_error/illformedarchive_multi.xml
+srcml2src --show-unit-count < xml_error/illformedarchive_multi.xml
 check 3<<< "$units" 4<<< "$xml_archive_error"
 
-srcml2src --units < xml_error/illformedarchive_single.xml
+srcml2src --show-unit-count < xml_error/illformedarchive_single.xml
 check 3<<< "$units" 4<<< "$xml_archive_error"

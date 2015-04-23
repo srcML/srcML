@@ -3,7 +3,7 @@ srcML format conversion, query, and manipulation
 
 ## SYNOPSIS
 
-`srcml` \[[input-options\]][INPUT OPTIONS] \[[metadata-options\]][METADATA OPTIONS] \[[metadata-accessors\]][METADATA OPTIONS] | \[[xml-form\]][XML FORM] \[[transformations\]][TRANSFORMATIONS] \[[output-options\]][OUTPUT OPTIONS] \[[general-options\]][GENERAL OPTIONS] \[input\] \[output\]
+`srcml` \[[srcML-options\]][CREATING SRCML] \[[transformations\]][TRANSFORMATIONS] \[[output-src-options\]][EXTRACTING SOURCE CODE] \[[general-options\]][GENERAL OPTIONS] \[input\] \[output\]
 
 
 ## DESCRIPTION
@@ -31,22 +31,88 @@ file or by not providing an output srcML file.
 A source-code language must be specified when input is from standard input.
 
 
-## INPUT OPTIONS
+## GENERAL OPTIONS
 
-The following describe options on the input file or URI. The format of the
-input affects the format of the output, unless otherwise specified in the
-[output options][OUTPUT OPTIONS]. If the input is
-source-code files, then the output is expected to be in srcML format. If
-the input is in srcML format, then the output is in source-code format.
+`-HELP_FLAG_SHORT`, `--HELP_FLAG_LONG`
+: Output the help and exit.
 
-`--FILES_FROM_LONG`
-: Treats the input (either a file or URI) as a list of source files.
-Each file is separately translated and collectively stored into a
-single srcML archive. The list has a single filename on each line
-starting at the beginning of the line. Blank lines and lines that
-begin with the character '\#' are ignored. As with input and output
-files, using the character '-' in place of a file name takes the input
-list from standard input.
+`-VERSION_FLAG_SHORT`, `--VERSION_FLAG_LONG`
+: Output the version of `srcml` then exit.
+
+`-VERBOSE_FLAG_SHORT`, `--VERBOSE_FLAG_LONG=[<format>]`
+: Conversion and status information to stderr, including encodings
+used. Especially useful with for monitoring progress of the the `TODO`
+option, a directory, or source-code archive (e.g. tar.gz). The
+signal SIGUSR1 can be used to toggle this option.
+
+`-QUIET_FLAG_SHORT`, `--QUIET_FLAG_LONG`
+: Supresses status messages. `TODO Better description`.
+
+`-INFO_FLAG_SHORT`, `--INFO_FLAG_LONG=[<format>]`
+: Display most metadata, except the unit count (file count) in a srcML
+archive, then exit.
+
+`-PRETTY_FLAG_LONG=<format>`
+: The <format> allows you to specify which information to show. It
+works similar to printf, with the exception of optional header and
+footer information declared before and after curly-brackets,
+respectively.
+
+	Three types of placeholders exist: (1) those that hold metadata
+on a per archive basis, (2) those that hold metadata on a per unit
+basis, and (3) information left within the header or footer of the
+output which is thus displayed only once.
+
+	- %h: hash attribute on the unit
+	- %d: directory attribute on the unit
+	- %f: file name attribute on the unit
+	- %v: version attribute on the unit
+	- %x: XML encoding attribute on the unit
+	- %s: source encoding attribute on the unit
+	- %i: index of the unit within the archive
+	- %D: directory attribute on the archive
+	- %F: file attribute on the archive
+	- %V: version attribute on the archive
+	- %X: XML encoding on the archive
+	- %S: source encoding attribute on the archive
+	- %C: total number of units
+	- %T: files translated
+	- %S: files skipped
+	- %E: files with errors
+	
+	If the format string contains any placeholders for an attribute
+on the unit, then all information in the string is provided on a per
+unit basis, thus duplicating information in each unit for the per archive
+attributes. If the lowest granularity of the placeholders is for an 
+attribute on the archive, then all information in the string is provided
+on a per archive basis.
+	
+	If you wish to display information in either a header or footer, or both,
+a delimiter (curly-brackets) is used to separate the first header section
+from the main per unit/archive section, and from the last footer section.
+For example, provided an archive with two units, the format string "The
+directory was %d with a filename of %f" would show something like this:
+
+	The directory was sub with a filename of a.cpp
+	The directory was sub with a filename of b.cpp
+
+	In another example, the format string "%C { %d %f }" would show:
+	2
+	sub a.cpp
+	sub b.cpp
+
+`--MAX_THREADS_FLAG_LONG=<num>`
+: Sets the maximum number of threads `srcml` can spawn.
+
+
+
+## CREATING SRCML
+
+The following describe options for creating srcML. The format of the
+input affects the format of the output, unless otherwise specified.
+If the input is source-code files, then the output is expected to be
+in srcML format. If the input is in srcML format, then the output is
+in source-code format.
 
 `-LANGUAGE_FLAG_SHORT`, `--LANGUAGE_FLAG_LONG=<language>`
 : The programming language of the source-code file. Allowable values are
@@ -67,62 +133,48 @@ that the extensions do not contain the period character '.'.
 
 	A common use of this is C++ files that use the .h extension for header
 files. By default these will be translated as C source-code files. This
-option can be used to override this behaviour.
+option can be used to override this behavior.
 
 `-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG=<encoding>`
-: Sets the input encoding of the source-code file to encoding. The
+: Sets the input encoding of the source-code file to <encoding>. The
 default is to try to automatically determine this when possible.
 Used for any necessary source-code text translation to the encoding used
 in the srcML file. Possible encodings can be obtained by using the command
-`iconv -l`.
+`iconv -l` on UNIX platforms.
 
+`--FILES_FROM_LONG=<file|uri>`
+: Treats the input (either a <file> or <URI>) as a list of source files.
+Each file is separately translated and collectively stored into a
+single srcML archive. The list has a single filename on each line
+starting at the beginning of the line. Blank lines and lines that
+begin with the character '\#' are ignored. As with input and output
+files, using the character '-' in place of a file name takes the input
+list from standard input.
 
-
-## OUTPUT OPTIONS
-
-`-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG=<output-srcML-file>`
+`-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG=<output-file>`
 : Write to output srcML file, URI, or source code file.
-By default, it is [stdout://-] and writes to standard output.
+By default, it writes to standard output.
+
+`--OUTPUT_FORMAT_FLAG_LONG=<format>`
+: Specifies the output format, such as "tar.gz". As the output file's
+extension determines the output format, this is useful when writing to
+standard output.
+
+`-OUTPUT_XML_FLAG_SHORT`,`--OUTPUT_XML_FLAG_LONG`
+: Outputs XML in srcML format. This is the default when the input is source
+code or files containing source code.
 
 `-ARCHIVE_FLAG_SHORT`, `--ARCHIVE_FLAG_LONG`
 : Creates a srcML archive, which can contain multiple files in the srcML
 format. Default with when provided more than one file or a directory as
 input.
 
-`-OUTPUT_XML_FLAG_SHORT`,`--OUTPUT_XML_FLAG_LONG`
-: Outputs XML in srcML format. This is the default when the input is source
-code or files containing source code.
-
-`-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
-: Outputs text in source code format. This is the default when the input
-is in srcML format.
-
-`-COMPRESS_FLAG_SHORT`, `--COMPRESS_FLAG_LONG`
-: Output is in compressed gzip format. This format can be directly, and
-automatically, read as input to `srcml`.
-
-`--TO_DIR_FLAG_LONG=<directory>`
-: Extract all files from srcML and create them in the file system at
-<directory>.
-
 `--IN_ORDER_FLAG_LONG`
 : Enables strict output ordering. Useful for comparison when the output
 is an archive of multiple srcML documents.
 
-`--LINE_ENDING_FLAG_LONG="<environment>"`
-: Set line endings for a specific <environment>. Acceptable environments
-are "Unix" or "Windows".
 
-`-INTERACTIVE_FLAG_SHORT`, `--INTERACTIVE_FLAG_LONG`
-: Default is to use buffered output for speed. For interactive applications
-output is issued as soon as parsed. For input from terminal, interactive
-is default.
-
-
-
-## MARKUP OPTIONS
-
-### POSITION
+### MARKUP OPTIONS
 
 Optional line and column attributes are used to indicate the position of
 an element in the original source code document. Both the line and
@@ -140,8 +192,6 @@ attributes have a default prefix of
 : Set the tab size. Default is 8. Use of this option automatically
 turns on the position attributes.
 
-
-### CPP
 
 This set of options allows control over how preprocessing regions are
 handled, i.e., whether parsing and markup occur. In all cases the text
@@ -162,15 +212,15 @@ The default is to markup these regions.
 in these regions, leaving out markup.
 
 
-
-## XML FORM
+### XML FORM
 
 The following options control the format of the XML.
 
 `-XML_ENCODING_FLAG_SHORT`, `--XML_ENCODING_FLAG_LONG=<encoding>`
 : Sets the xml encoding of the output srcML file to encoding. The
 default is UTF-8. Possible encodings can be obtained by using the
-command `iconv -l`. The attribute is stored only on the root element.
+command `iconv -l` on UNIX platforms. The attribute is stored only
+on the root element.
 
 `--NO_XML_DECL_LONG`
 : No output of the default XML declaration. Useful when the output is
@@ -204,8 +254,7 @@ predefined prefix. The predefined URIs and prefixes for them include
 	* SRCML_EXT_POSITION_NS_PREFIX_DEFAULT=SRCML_EXT_POSITION_NS_URI
 
 
-
-## METADATA OPTIONS
+### METADATA OPTIONS
 
 This set of options allows control over various metadata stored in the
 srcML document.
@@ -238,52 +287,44 @@ on the metadata from the last commit.
 `-PREFIX_FLAG_SHORT`, `--PREFIX_FLAG_LONG=<uri>`
 : Display a prefix given by a <URI> and exit. See [XML FORM][].
 
-`-INFO_FLAG_SHORT`, `--INFO_FLAG_LONG=[<format>]`
-: Display most metadata, except the unit count (file count) in a srcML
-archive, then exit. A format may be specified that allows you to
-specify which information to show. It works similar to printf, with
-the exception of optional header and footer information declared
-before and after curly-brackets, respectively.
 
-	Three types of placeholders exist: (1) those that hold metadata
-on a per archive basis, (2) those that hold metadata on a per unit
-basis, and (3) information left within the header or footer of the
-output which is thus displayed only once.
+### EXAMPLES
 
-	- %h: hash attribute on the unit
-	- %d: directory attribute on the unit
-	- %f: file name attribute on the unit
-	- %v: version attribute on the unit
-	- %x: XML encoding attribute on the unit
-	- %s: source encoding attribute on the unit
-	- %i: index of the unit within the archive
-	- %D: directory attribute on the archive
-	- %F: file attribute on the archive
-	- %V: version attribute on the archive
-	- %X: XML encoding on the archive
-	- %S: source encoding attribute on the archive
-	- %C: total number of units
-	
-	If the format string contains any placeholders for an attribute
-on the unit, then all information in the string is provided on a per
-unit basis, thus duplicating information in each unit for the per archive
-attributes. If the lowest granularity of the placeholders is for an 
-attribute on the archive, then all information in the string is provided
-on a per archive basis.
-	
-	If you wish to display information in either a header or footer, or both,
-a delimiter (curly-brackets) is used to separate the first header section
-from the main per unit/archive section, and from the last footer section.
-For example, provided an archive with two units, the format string "The
-directory was %d with a filename of %f" would show something like this:
+`TODO`
 
-	The directory was sub with a filename of a.cpp
-	The directory was sub with a filename of b.cpp
 
-	In another example, the format string "%C { %d %f }" would show:
-	2
-	sub a.cpp
-	sub b.cpp
+
+## EXTRACTING SOURCE CODE
+
+The following describe options that are only applicable for when
+the output is desired in source-code format.
+
+`-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG=<output-file>`
+: Write to output srcML file, URI, or source code file.
+By default, it writes to standard output.
+
+`--LINE_ENDING_FLAG_LONG="<environment|ending>"`
+: Set line endings for a specific <environment>. Acceptable <environment>s
+are "Unix" or "Windows". Acceptable <ending>s are "\r\n" or "\n".
+
+`--OUTPUT_FORMAT_FLAG_LONG=<format>`
+: Specifies the output format, such as "tar.gz". As the output file's
+extension determines the output format, this is useful when writing to
+standard output.
+
+`-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
+: Outputs text in source code format. This is the default when the input
+is in srcML format.
+
+`--TO_DIR_FLAG_LONG=<directory>`
+: Extract all files from srcML and create them in the file system at
+<directory>.
+
+
+### EXAMPLES
+
+`TODO`
+
 
 
 ## TRANSFORMATIONS
@@ -295,7 +336,18 @@ directory was %d with a filename of %f" would show something like this:
 : Output individual units that match the RELAXNG <file> or <uri>.
 
 `--XPATH_OPTION_LONG=<expression>`
-: Apply Xpath <expression> query to each individual unit.
+: Apply Xpath <expression> query to each individual unit. A format
+can be optionally specified to format the output of non-XML query results. For
+example, queries that return a number, string, or boolean value can be
+formatted on a per-unit basis to associate it with any of the metadata
+available of the unit. See `-INFO_FLAG_SHORT` from [METADATA OPTIONS][] for 
+formatting placeholders. In addition, the following placeholders may be used:
+
+	- %q: result of the query.
+
+	Formatting is only applicable to non-XML query results, such a string,
+number, or boolean value. The format cannot be specified in combination
+with `--APPLY_ROOT_FLAG_LONG`, as the format is performed on a per unit basis.
 
 `--XPATH_PARAM_LONG <parameter>=<value>`
 : Pass a <parameter> name and its <value> to the XSLT program.
@@ -317,34 +369,9 @@ directory was %d with a filename of %f" would show something like this:
 output.
 
 
+### EXAMPLES
 
-## GENERAL OPTIONS
-
-`-HELP_FLAG_SHORT`, `--HELP_FLAG_LONG`
-: Output the help and exit.
-
-`-VERSION_FLAG_SHORT`, `--VERSION_FLAG_LONG`
-: Output the version of `srcml` then exit.
-
-`--MAX_THREADS_FLAG_LONG=<num>`
-: Sets the maximum number of threads `srcml` can spawn.
-
-`-VERBOSE_FLAG_SHORT`, `--VERBOSE_FLAG_LONG=[<format>]`
-: Conversion and status information to stderr, including encodings
-used. Especially useful with for monitoring progress of the the `TODO`
-option, a directory, or source-code archive (e.g. tar.gz). The
-signal SIGUSR1 can be used to toggle this option.
-
-	A format may be specified for the verbose output. See `-INFO_FLAG_SHORT`
-from [METADATA OPTIONS][] for formatting placeholders. In addition, the
-following placeholders may be used:
-
-	- %T: files translated
-	- %S: files skipped
-	- %E: files with errors
-
-`-QUIET_FLAG_SHORT`, `--QUIET_FLAG_LONG`
-: Supresses status messages. `TODO Better description`.
+`TODO`
 
 
 
@@ -365,36 +392,6 @@ SIGINT
   This special SIGINT handling only occurs with multiple input files
   in srcML archives.
 
-
-
-## EXAMPLES
-
-To translate the C++ source-code file main.cpp into the srcML file
-main.cpp.xml:
-
-`srcml main.cpp -OUTPUT_FLAG_SHORT main.cpp.xml`
-
-To translate a C source-code file main.c into the srcML file main.c.xml:
-
-`srcml -LANGUAGE_FLAG_SHORT=C main.c -OUTPUT_FLAG_SHORT main.c.xml`
-
-To translate a Java source-code file main.java into the srcML file
-main.java.xml:
-
-`srcml -LANGUAGE_FLAG_SHORT=Java main.java -OUTPUT_FLAG_SHORT
-main.java.xml`
-
-To specify the directory, filename, and version for an input file from
-standard input:
-
-`srcml -DIRECTORY_FLAG_SHORT=src -FILENAME_FLAG_SHORT=main.cpp
--VERSION_FLAG_SHORT=1 -OUTPUT_FLAG_SHORT main.cpp.xml`
-
-To translate a source-code file in ISO-8859-1 encoding into a srcML file
-with UTF-8 encoding:
-
-`srcml -SRC_ENCODING_FLAG_SHORT=ISO-8859-1 -XML_ENCODING_FLAG_SHORT=UTF-8 main.cpp
--OUTPUT_FLAG_SHORT main.cpp.xml`
 
 
 ## RETURN STATUS
