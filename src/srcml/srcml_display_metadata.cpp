@@ -142,38 +142,40 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 }
 
 void srcml_pretty_format(srcml_archive* srcml_arch, const std::string& pretty_format) {
-     bool field_active = false;
 
-     BOOST_FOREACH(const char& output_char, pretty_format) {     
-        // Find either special fields or escape characters
-        if (!field_active && (output_char == '%' || output_char == '\\')) {
-            field_active = true;
-        }
-        else {
-            field_active = false;
-        }
-    }
+    std::string pretty_args = "";
+    std::string template_string = pretty_format;
 
-    /*
+    size_t found = -1;
+
     while (true) {
-        std::size_t found = pretty_format.find("%");
-        if (found != std::string::npos) {
+        found = template_string.find("%", found + 1);
+        
+        if (found == std::string::npos) {
+            std::cerr << "Leaving the loop\n";
             break;
         }
+
+        // For \% case
+        if (((int(found) - 1) < 0) && template_string[found - 1] == '\\') {
+            std::cerr << "Escape found\n";
+            continue;
+        }
+
+        if ((found + 1) < template_string.length()) {
+            pretty_args += template_string[found + 1];
+            template_string[found + 1] = 's';
+        }
     }
-    */
+
+    std::cerr << template_string << "\n";
+    std::cerr << pretty_args << "\n";
     
-    std::string helloString = "Hello %s and %s";
-    std::vector<std::string> args;
-    args.push_back("Alice");
-    args.push_back("Bob");
-    std::cout << format_range(helloString, args) << '\n';
-
-    // in place
-    std::string in_place = "blah#blah";
-    boost::replace_all(in_place, "#", "@");
-
-    std::cerr << in_place << "\n";
+    //std::string helloString = "Hello %s and %s \nFun time!";
+    //std::vector<std::string> args;
+    //args.push_back("Alice");
+    //args.push_back("Bob");
+    //std::cout << format_range(helloString, args) << '\n';
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
