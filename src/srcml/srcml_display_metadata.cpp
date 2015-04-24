@@ -152,13 +152,11 @@ void srcml_pretty_format(srcml_archive* srcml_arch, const std::string& pretty_fo
         found = template_string.find("%", found + 1);
         
         if (found == std::string::npos) {
-            std::cerr << "Leaving the loop\n";
             break;
         }
 
         // For \% case
-        if (((int(found) - 1) < 0) && template_string[found - 1] == '\\') {
-            std::cerr << "Escape found\n";
+        if ((found != 0) && template_string[found - 1] == '\\') {
             continue;
         }
 
