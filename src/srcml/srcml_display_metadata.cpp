@@ -28,7 +28,6 @@
 #include <boost/foreach.hpp>
 #include <iomanip>
 #include <string.h>
-#include <boost/algorithm/string/replace.hpp>
 #include <boost/format.hpp>
 
 // display all files in srcml archive
@@ -144,6 +143,7 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 void srcml_pretty_format(srcml_archive* srcml_arch, const std::string& pretty_format) {
 
     std::string pretty_args = "";
+    boost::optional<std::string> template_header = "";
     std::string template_string = pretty_format;
 
     size_t found = -1;
