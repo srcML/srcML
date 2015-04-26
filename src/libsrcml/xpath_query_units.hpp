@@ -83,7 +83,7 @@ public :
                       const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0)
         : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), context(0), output(output), bufwriter(xout), result_count(0) {
+          total(0), context(0), output(output), result_count(0) {
     }
 
     /**
@@ -826,7 +826,6 @@ private :
     xmlOutputBufferPtr buf;
     xmlXPathContextPtr context;
     xmlOutputBufferPtr output;
-    xmlTextWriterPtr bufwriter;
     int result_count;
 
     static const char * const simple_xpath_attribute_name;
