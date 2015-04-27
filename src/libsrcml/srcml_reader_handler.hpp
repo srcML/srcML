@@ -385,12 +385,13 @@ public :
             std::string attribute = attributes[pos].localname;
             std::string value = attributes[pos].value;
 
+            // Note: these are ignore instead of placing in attributes.
             if(attribute == "timestamp")
                 ;
             else if(attribute == "hash")
                 ;
             else if(attribute == "language")
-                srcml_archive_set_language(archive, value.c_str());
+                ;
             else if(attribute == "revision")
                 archive->revision = value;
             else if(attribute == "filename")
