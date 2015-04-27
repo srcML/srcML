@@ -232,11 +232,16 @@ class readable_unit(object):
         The XML is extracted into the provided encoding or the same encoding
         used by the archive if not specified.
         """
+        
         if xml_encoding is not None and not isinstance(xml_encoding, str):
             raise TypeError("Encoding must be None or a string")
             if check_encoding(xml_encoding) == 0:
                 raise invalid_srcml_encoding("Invalid XML encoding", xml_encoding)
-        return unit_get_standalone_xml(self.srcml_unit, xml_encoding)
+        ret = memory_buffer()
+        unit_get_standalone_xml(self.srcml_unit, xml_encoding, ret.buff, ret.size)
+        strResult = ret.to_string(xml_encoding)
+        del ret
+        return strResult
 
     def get_xml_fragment(self):
         """
