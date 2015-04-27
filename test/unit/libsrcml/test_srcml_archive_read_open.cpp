@@ -695,7 +695,6 @@ int main() {
         fclose(file);
     }
 
-
     UNLINK("project.xml");
     UNLINK("project_single.xml");
     UNLINK("project_ns.xml");
