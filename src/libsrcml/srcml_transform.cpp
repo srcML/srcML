@@ -23,6 +23,7 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
+#include <srcml_translator.hpp>
 
 #include <stdio.h>
 
@@ -56,9 +57,11 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
     if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { optional_string_create(xpath_string), 0, 0, 0, 0, 0, 0, 0 };
+    struct xpath_arguments arguments = { optional_string_create(xpath_string), boost::optional<std::string>(),
+        boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+        boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>() };
 
-    transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
+    transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0, 0 };
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -88,9 +91,10 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
     if(archive == NULL || xpath_string == 0 || attr_name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { optional_string_create(xpath_string), 0, 0, 0, optional_string_create(prefix),optional_string_create(namespace_uri), optional_string_create(attr_name), optional_string_create(attr_value) };
+    struct xpath_arguments arguments = { optional_string_create(xpath_string), boost::optional<std::string>(), boost::optional<std::string>(),
+        boost::optional<std::string>(), optional_string_create(prefix),optional_string_create(namespace_uri), optional_string_create(attr_name), optional_string_create(attr_value) };
 
-    transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
+    transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0, 0 };
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -123,7 +127,7 @@ int srcml_append_transform_xpath_element (struct srcml_archive* archive, const c
     struct xpath_arguments arguments = { optional_string_create(xpath_string), optional_string_create(prefix), optional_string_create(namespace_uri), optional_string_create(element), optional_string_create(attr_prefix),
      optional_string_create(attr_namespace_uri), optional_string_create(attr_name), optional_string_create(attr_value) };
 
-    transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0 };
+    transform tran = { SRCML_XPATH, std::vector<const char *>(1, (const char *)0), arguments, 0, 0 };
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
@@ -147,7 +151,7 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
 
     xmlDocPtr doc = xmlReadFile(xslt_filename, 0, 0);
 
-    transform tran = { SRCML_XSLT, std::vector<const char *>(1, (const char *)0), null_arguments, doc };
+    transform tran = { SRCML_XSLT, std::vector<const char *>(1, (const char *)0), null_arguments, doc, 0 };
 
     archive->transformations.push_back(tran);
 
@@ -173,7 +177,7 @@ int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_
 
     xmlDocPtr doc = xmlReadMemory(xslt_buffer, (int)size, 0, 0, 0);
 
-    transform tran = { SRCML_XSLT, std::vector<const char *>(1, (const char *)0), null_arguments, doc };
+    transform tran = { SRCML_XSLT, std::vector<const char *>(1, (const char *)0), null_arguments, doc, 0 };
 
     archive->transformations.push_back(tran);
 
@@ -199,7 +203,7 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, xslt_file, 0, 0, 0);
 
-    transform tran = { SRCML_XSLT, std::vector<const char *>(1, (const char *)0), null_arguments, doc };
+    transform tran = { SRCML_XSLT, std::vector<const char *>(1, (const char *)0), null_arguments, doc, 0 };
 
     archive->transformations.push_back(tran);
 
@@ -224,7 +228,7 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
 
     xmlDocPtr doc = xmlReadFd(xslt_fd, 0, 0, 0);
 
-    transform tran = { SRCML_XSLT, std::vector<const char *>(1, (const char *)0), null_arguments, doc };
+    transform tran = { SRCML_XSLT, std::vector<const char *>(1, (const char *)0), null_arguments, doc, 0 };
 
     archive->transformations.push_back(tran);
 
@@ -250,7 +254,7 @@ int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* 
 
     xmlDocPtr doc = xmlReadFile(relaxng_filename, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, std::vector<const char *>(1, (const char *)0), null_arguments, doc };
+    transform tran = { SRCML_RELAXNG, std::vector<const char *>(1, (const char *)0), null_arguments, doc, 0 };
 
     archive->transformations.push_back(tran);
 
@@ -276,7 +280,7 @@ int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* re
 
     xmlDocPtr doc = xmlReadMemory(relaxng_buffer, (int)size, 0, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, std::vector<const char *>(1, (const char *)0), null_arguments, doc };
+    transform tran = { SRCML_RELAXNG, std::vector<const char *>(1, (const char *)0), null_arguments, doc, 0 };
 
     archive->transformations.push_back(tran);
 
@@ -302,7 +306,7 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, relaxng_file, 0, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, std::vector<const char *>(1, (const char *)0), null_arguments, doc };
+    transform tran = { SRCML_RELAXNG, std::vector<const char *>(1, (const char *)0), null_arguments, doc, 0 };
 
     archive->transformations.push_back(tran);
 
@@ -327,7 +331,7 @@ int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
 
     xmlDocPtr doc = xmlReadFd(relaxng_fd, 0, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, std::vector<const char *>(1, (const char *)0), null_arguments, doc };
+    transform tran = { SRCML_RELAXNG, std::vector<const char *>(1, (const char *)0), null_arguments, doc, 0 };
 
     archive->transformations.push_back(tran);
 
@@ -432,44 +436,36 @@ int srcml_clear_transforms(srcml_archive * archive) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
+
+std::vector<transform> global_transformations;
+
+srcml_translator* ptranslator = 0;
+
+srcml_archive* poutput_archive = 0;
+
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
     if((iarchive->type != SRCML_ARCHIVE_READ && iarchive->type != SRCML_ARCHIVE_RW)
         || (oarchive->type != SRCML_ARCHIVE_WRITE && oarchive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    static const char * transform_filename_template = "srcml_transform_XXXXXXXX";
+    ptranslator = oarchive->translator;
 
-    const char * last_transform_filename = 0;
+    // use the output archive output buffer
+    xmlOutputBufferPtr obuffer = oarchive->translator->output_buffer();
+
+    xmlTextWriterPtr xout = oarchive->translator->output_textwriter();
+
+    poutput_archive = oarchive;
+
+    if(obuffer == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    global_transformations = iarchive->transformations;
+
     for(std::vector<transform>::size_type i = 0; i < iarchive->transformations.size(); ++i) {
 
-        char * transform_filename = STRDUP(transform_filename_template);
-        if(!transform_filename) {
+        xmlParserInputBufferPtr pinput = iarchive->input;
 
-            if(last_transform_filename) UNLINK(last_transform_filename);
-            free((void *)last_transform_filename);
-            return SRCML_STATUS_ERROR;
-
-        }
-
-#if defined(__GNUG__) && !defined(__MINGW32__)
-        int transform_fd = mkstemp(transform_filename);
-#else
-        MKTEMP(transform_filename);
-        int transform_fd = OPEN(transform_filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-#endif
-
-        xmlParserInputBufferPtr pinput = 0;
-        if(i == 0) pinput = iarchive->input;
-        else pinput = xmlParserInputBufferCreateFilename(last_transform_filename, xmlParseCharEncoding(0));
-
-        if(pinput == NULL) {
-
-            CLOSE(transform_fd);
-            free((void *)transform_filename);
-            return SRCML_STATUS_INVALID_INPUT;
-
-        }
         int error = 0;
         try {
 
@@ -483,7 +479,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.element),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_prefix), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_uri),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_name), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_value),
-                                    transform_fd, oarchive->options);
+                                    oarchive->options, obuffer, xout);
                 break;
             }
 
@@ -492,7 +488,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_xslt(pinput, "src:unit",
                                    iarchive->transformations.at(i).doc,
-                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, transform_fd, oarchive->options);
+                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, oarchive->options, obuffer);
                 break;
             }
 #endif
@@ -501,7 +497,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_relaxng(pinput,
                                       iarchive->transformations.at(i).doc,
-                                      transform_fd, oarchive->options);
+                                      obuffer, oarchive->options);
                 break;
             }
 
@@ -511,47 +507,14 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
         } catch(...) {
 
-            CLOSE(transform_fd);
-            if(i != 0) xmlFreeParserInputBuffer(pinput);
-            if(last_transform_filename)  UNLINK(last_transform_filename);
-            free((void *)last_transform_filename);
-
             return SRCML_STATUS_INVALID_INPUT;
         }
 
-        if(i != 0) xmlFreeParserInputBuffer(pinput);
-        if(last_transform_filename) UNLINK(last_transform_filename);
-        free((void *)last_transform_filename);
-        last_transform_filename = transform_filename;
-        if(error != SRCML_STATUS_OK) {
-            if(last_transform_filename) UNLINK(last_transform_filename);
-            free((void *)last_transform_filename);
-            return error;
-        }
+        break;
 
     }
 
-    srcml_archive * tmp_archive = srcml_archive_create();
-
-    srcml_archive_read_open_filename(tmp_archive, last_transform_filename);
-    tmp_archive->prefixes.swap(oarchive->prefixes);
-    tmp_archive->namespaces.swap(oarchive->namespaces);
- 
-    /** @todo ask if should rely on user to have correct to bit-or these */
-    srcml_archive_set_options(oarchive, srcml_archive_get_options(tmp_archive));
-
-    srcml_unit * unit;
-    while((unit = srcml_read_unit(tmp_archive))) {
-
-        srcml_write_unit(oarchive, unit);
-        srcml_unit_free(unit);
-
-    }
-
-    srcml_archive_close(tmp_archive);
-    srcml_archive_free(tmp_archive);
-    if(last_transform_filename) UNLINK(last_transform_filename);
-    free((void *)last_transform_filename);
+    //srcml_clear_transforms(iarchive);
 
     return SRCML_STATUS_OK;
 

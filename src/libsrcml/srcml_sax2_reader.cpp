@@ -60,8 +60,10 @@ void * start_routine(void * arguments) {
         args->control->parse(args->handler);
     } catch(SAXError error) {
 
-        if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END))
+        if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END)) {
             fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+            args->handler->stop();
+        }
 
         // might have to release a lock here or set is_done;
     }
@@ -255,4 +257,16 @@ int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
     if(handler.is_done) return 0;
 
     return 1;
+}
+
+/**
+ * revision_umber
+ * @param revision_number number of revision to retrieve
+ *
+ * Set the reader handler to process only the given revision.
+ */
+void srcml_sax2_reader::revision_number(boost::optional<size_t> revision_number) {
+
+    handler.revision = revision_number;
+
 }

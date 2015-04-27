@@ -185,4 +185,8 @@
 <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <try>try <block>{}</block> <catch>catch<parameter_list>(<parameter><decl><type><modifier>...</modifier></type></decl></parameter>)</parameter_list> <block>{}</block></catch></try></function>
 </unit>
 
+<unit>
+<function><type><name>auto</name></type> <name>f</name><parameter_list>()</parameter_list> -&gt;<type><name>char</name><modifier>*</modifier></type> <block>{}</block></function>
+</unit>
+
 </unit>

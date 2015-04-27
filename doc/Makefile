@@ -1,55 +1,15 @@
-MAN_PAGES= src2srcml.1 srcml2src.1
-HTML_PAGES = src2srcml.html srcml2src.html
-MAN_GZIP= src2srcml.1.gz srcml2src.1.gz
-SRCML=../bin/srcml
-
-DOCBOOK2XMAN=${firstword ${wildcard /usr/bin/db2x_docbook2man /usr/bin/docbook2x-man /opt/local/bin/docbook2man /usr/local/bin/docbook2man /usr/bin/docbook-to-man}}
-MAN2HTML=${firstword ${wildcard /usr/bin/man2html /opt/local/bin/man2html} /usr/local/bin/man2html}
 MAN=${firstword ${wildcard /opt/local/bin/man /usr/bin/man}}
 
-ECHO=/bin/echo
+all : srcml.html srcml
 
-all : man gzip
+srcml.md :  srcml_input.md
+	./replace_variables.sh srcml_input.md srcml.md
 
-man : ${MAN_PAGES} src2srcml.html srcml2src.html
+srcml.html : srcml.md
+	ronn srcml.md --manual=srcml
 
-src2srcml.1 : src2srcml.xml option.dtd option.dtd
-	#${DOCBOOK2XMAN} src2srcml.xml
-
-srcml2src.1 : srcml2src.xml option.dtd option.dtd
-	#${DOCBOOK2XMAN} --string-param quotes-on-literals=1 srcml2src.xml
-
-view : man
-	man ./src2srcml.1
-	man ./srcml2src.1
-
-src2srcml.1.gz : src2srcml.1
-	#gzip -f src2srcml.1
-
-srcml2src.1.gz : srcml2src.1
-	#gzip -f srcml2src.1
-
-src2srcml.html : src2srcml.1
-	#man ./$< | ${MAN2HTML} | tail -n +3 > $@
-
-srcml2src.html : srcml2src.1
-	#man ./$< | ${MAN2HTML} | tail -n +3 > $@
-
-OPTION_SRC= #../src/oldclient/src2srcml.cpp ../src/oldclient/srcml2src.cpp ../src/oldclient/srcmlapps.hpp ../src/oldclient/srcmlns.hpp
-option.dtd : ${OPTION_SRC}
-	${ECHO} -n "<!ENTITY DATE \"" > option.dtd
-	date | perl -p -e "s|\n||" >> option.dtd
-	${ECHO} "\" >" >> option.dtd
-	#${SRCML} ${OPTION_SRC} | ${SRCML} --xslt=extract_options.xsl >> option.dtd
-	#${SRCML} --literal ${OPTION_SRC} | ${SRCML} --xslt=extract_return_status.xsl - >> option.dtd
-
-gzip : src2srcml.1.gz srcml2src.1.gz
-
-install : ${MAN_GZIP}
-	cp src2srcml.1.gz srcml2src.1.gz /usr/share/man/man1/.
-
-doxygen:
-	doxygen config
+view : srcml.html
+	${MAN} ./srcml
 
 clean :
-	rm -rf ${MAN_PAGES} ${MAN_GZIP} option.dtd ${HTML_PAGES} html latex
+	rm -rf srcml srcml.html srcml.md-e

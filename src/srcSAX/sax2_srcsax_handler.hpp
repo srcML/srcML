@@ -135,6 +135,10 @@ struct sax2_srcsax_handler {
     /** store data for special function parsing */
     function_prototype current_function;
 
+    // current libxml2 namespaces and attributes to get around conversion
+const xmlChar ** libxml2_namespaces;
+const xmlChar ** libxml2_attributes;
+
 };
 
 /**

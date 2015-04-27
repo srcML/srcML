@@ -306,7 +306,6 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
 
     if(fd < 0) throw UTF8FileError();
 
-
     if(hash) {
 #ifdef _MSC_BUILD
         CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);

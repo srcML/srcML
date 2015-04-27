@@ -32,6 +32,7 @@
 #include <src_input_filesystem.hpp>
 #include <src_input_filelist.hpp>
 #include <src_input_stdin.hpp>
+#include <src_input_text.hpp>
 #include <srcml_input_srcml.hpp>
 #include <trace_log.hpp>
 #include <srcml_options.hpp>
@@ -49,6 +50,10 @@ void srcml_handler_dispatch(ParseQueue& queue,
         srcml_input_src uninput = input;
         input_file(uninput);
         srcml_input_srcml(queue, srcml_arch, uninput);
+
+    } else if (input.protocol == "text") {
+
+        src_input_text(queue, srcml_arch, srcml_request, input.filename);
 
     } else if (input.protocol == "filelist") {
 
@@ -126,7 +131,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
     if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) &&
-        !input_sources[0].isdirectory) {
+        !input_sources[0].isdirectory && input_sources[0].archives.size() < 1) {
 
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         
@@ -139,6 +144,13 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
 
     } else {
+
+        // if this is an archive, then no filename attribute is allowed
+        if (srcml_request.att_filename) {
+            fprintf(stderr, "Attribute filename cannot be set for a srcML archive\n");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
+
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
     }

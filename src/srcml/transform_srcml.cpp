@@ -150,6 +150,20 @@ void transform_srcml(const srcml_request_t& srcml_request,
             exit(-1);
         }
 
+        // copy input xml namespaces
+        // TODO: This assumes namespaces on first input. Need to open all, figure out
+        // output namespaces, then process
+        if (srcml_archive_get_options(in_arch) & SRCML_OPTION_ARCHIVE) {
+            for (int i = 0; i < (int)srcml_archive_get_namespace_size(in_arch); ++i) {
+
+                // do not register the srcML namespace, unless the prefix is different
+                if (std::string(srcml_archive_get_namespace_uri(in_arch, i)) == "http://www.sdml.info/srcML/src")
+                    continue;
+
+                srcml_archive_register_namespace(out_arch, srcml_archive_get_namespace_prefix(in_arch, i), srcml_archive_get_namespace_uri(in_arch, i));
+            }
+        }
+
 		// iterate through all transformations added during cli parsing
 		int xpath_index = -1;
 		BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {

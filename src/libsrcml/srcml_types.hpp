@@ -26,6 +26,9 @@
 #include <Language.hpp>
 #include <language_extension_registry.hpp>
 
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
+
 #include <boost/optional.hpp>
 #include <boost/any.hpp>
 
@@ -113,6 +116,8 @@ struct transform {
 
     /** the transformation to perform for XSLT and relaxng */
     xmlDocPtr doc;
+
+    xmlXPathCompExprPtr compiled_xpath;
 };
 
 /**

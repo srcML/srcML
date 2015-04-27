@@ -72,43 +72,6 @@ public:
 
     }
 
-    /**
-     * srcml_element_stack_push
-     * @param prefix the element to push prefix
-     * @param localname the elements name
-     *
-     * Push the element to the stack.
-     */
-    void srcml_element_stack_push(const char * prefix, const char * localname) {
-
-        std::string srcml_element_string = "";
-        if(prefix) {
-
-            srcml_element_string += prefix;
-            srcml_element_string += ':';
-
-        }
-
-        srcml_element_string += localname;
-
-        handler->get_stack().push_back(srcml_element_string);
-
-
-    }
-
-    /**
-     * srcml_element_stack_pop
-     *
-     * Pop an element from the stack.  Testing
-     * may try to pop with 0 items so simply return.
-     */
-    void srcml_element_stack_pop() {
-
-        if(handler->get_stack().size() == 0) return;
-
-        handler->get_stack().pop_back();
-
-    }
 
     /**
      * start_document
@@ -164,9 +127,6 @@ public:
 
         cpp_adapter->handler->set_is_archive(context->is_archive);
 
-        if(context->is_archive)
-            cpp_adapter->srcml_element_stack_push((const char *)prefix, (const char *)localname);
-
         cpp_adapter->handler->startRoot(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
 
     }
@@ -191,10 +151,7 @@ public:
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->srcml_element_stack_push((const char *)prefix, (const char *)localname);
-
         cpp_adapter->handler->startUnit(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
-
 
     }
 #if 0
@@ -236,10 +193,7 @@ public:
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->srcml_element_stack_push((const char *)prefix, (const char *)localname);
-
         cpp_adapter->handler->startElement(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
-
 
     }
 
@@ -255,8 +209,6 @@ public:
     static void end_root(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI) {
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->srcml_element_stack_pop();
 
         cpp_adapter->handler->endRoot(localname, prefix, URI);
 
@@ -274,8 +226,6 @@ public:
     static void end_unit(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI) {
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->srcml_element_stack_pop();
 
         cpp_adapter->handler->endUnit(localname, prefix, URI);
 
@@ -306,8 +256,6 @@ public:
     static void end_element(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI) {
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->srcml_element_stack_pop();
 
         cpp_adapter->handler->endElement(localname, prefix, URI);
 
@@ -365,11 +313,7 @@ public:
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->srcml_element_stack_push((const char *)prefix, (const char *)localname);
-
         cpp_adapter->handler->metaTag(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
-
-        cpp_adapter->srcml_element_stack_pop();
 
     }
 
