@@ -165,6 +165,17 @@ LIBSRCML_DECL const char* srcml_version_string();
 /** Return status inidicating their are no transformations */
 #define SRCML_STATUS_NO_TRANSFORMATION    8
 
+/** Source-code end of line done automatically */
+#define SRCML_UNPARSE_OPTION_AUTO   0
+/** Source-code end of line done accoring to operating system */
+#define SRCML_UNPARSE_OPTION_NATIVE 0
+/** Source-code end of line is new line only */
+#define SRCML_UNPARSE_OPTION_LF     1
+/** Source-code end of line is carriage return only */
+#define SRCML_UNPARSE_OPTION_CR     2
+/** Source-code end of line is carriage return and new line */
+#define SRCML_UNPARSE_OPTION_CRLF   3
+
 /* libsrcml data structures */
 struct srcml_archive;
 struct srcml_unit;
@@ -211,6 +222,7 @@ LIBSRCML_DECL int srcml_register_file_extension   (const char* extension, const 
 LIBSRCML_DECL int srcml_register_namespace        (const char* prefix, const char* ns);
 LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const char* data); 
 LIBSRCML_DECL int srcml_register_macro            (const char* token, const char* type);
+LIBSRCML_DECL int srcml_unparse_set_eol           (size_t eol);
 
 LIBSRCML_DECL const char*        srcml_get_src_encoding ();
 LIBSRCML_DECL const char*        srcml_get_xml_encoding ();
@@ -345,6 +357,7 @@ LIBSRCML_DECL int srcml_unit_set_directory    (struct srcml_unit*, const char* d
 LIBSRCML_DECL int srcml_unit_set_version      (struct srcml_unit*, const char* version);
 LIBSRCML_DECL int srcml_unit_set_timestamp    (struct srcml_unit*, const char* timestamp);
 LIBSRCML_DECL int srcml_unit_set_hash         (struct srcml_unit*, const char* hash);
+LIBSRCML_DECL int srcml_unit_unparse_set_eol  (struct srcml_unit*, size_t eol);
 
 /* Convert to srcml.  Files/buffer can be compressed, but not a
    source archive format (e.g., not .tar) */
