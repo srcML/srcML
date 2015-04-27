@@ -21,6 +21,7 @@
  */
 
 #include <srcml_display_metadata.hpp>
+#include <srcml_pretty.hpp>
 #include <src_prefix.hpp>
 #include <srcml.h>
 #include <iostream>
@@ -118,15 +119,6 @@ void srcml_display_timestamp(srcml_unit* unit, int ignore_attribue_name) {
 }
 */
 
-std::string format_range(const std::string& format_string, const std::vector<std::string>& args)
-{
-    boost::format f(format_string);
-    for (std::vector<std::string>::const_iterator it = args.begin(); it != args.end(); ++it) {
-        f % *it;
-    }
-    return f.str();
-}
-
 int srcml_unit_count(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
@@ -140,7 +132,7 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
     return numUnits;   
 }
 
-void srcml_pretty_format(srcml_archive* srcml_arch, const std::string& pretty_format) {
+/*int srcml_pretty_format(srcml_archive* srcml_arch, const std::string& pretty_format) {
 
     std::string pretty_args = "";
     boost::optional<std::string> template_header = "";
@@ -174,7 +166,10 @@ void srcml_pretty_format(srcml_archive* srcml_arch, const std::string& pretty_fo
     //args.push_back("Alice");
     //args.push_back("Bob");
     //std::cout << format_range(helloString, args) << '\n';
+
+    return 0;
 }
+*/
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
 
@@ -202,13 +197,8 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         if (srcml_request.pretty_format) {
-            srcml_pretty_format(srcml_arch, *srcml_request.pretty_format);
+            srcml_pretty(srcml_arch, *srcml_request.pretty_format);
         }
-
-        // DEBUG TEST
-        /*if (srcml_request.info_format) {
-            std::cerr << *srcml_request.info_format << "\n";
-        }*/
 
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {

@@ -150,7 +150,6 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     if (output_template.header) {
 
     }
-
 }
 
 // TODO: RETURN REAL ERRORS
@@ -164,7 +163,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
 		//std::cerr << *output_template.header << "\n";
         output_template.error_location = parse_templates(*output_template.header, output_template.header_args, valid_header_args);
         if (output_template.error_location) {
-            std::cerr << "srcml: header format error at position " << *output_template.error_location << "\n";
+            std::cerr << "srcml: header format error:\n";
             std::cerr << *output_template.header << "\n";
             show_carret_error(*output_template.error_location);
             return -1;
@@ -175,7 +174,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
         //std::cerr << *output_template.body << "\n";
         output_template.error_location = parse_templates(*output_template.body, output_template.body_args, valid_body_args);
         if (output_template.error_location) {
-            std::cerr << "srcml: body format error at position " << *output_template.error_location << "\n";
+            std::cerr << "srcml: body format error:\n";
             std::cerr << *output_template.body << "\n";
             show_carret_error(*output_template.error_location);
             return -1;
@@ -186,7 +185,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
 		//std::cerr << *output_template.footer << "\n";
         output_template.error_location = parse_templates(*output_template.footer, output_template.footer_args, valid_footer_args);
         if (output_template.error_location) {
-            std::cerr << "srcml: footer format error at position " << *output_template.error_location << "\n";
+            std::cerr << "srcml: footer format error:\n";
             std::cerr << *output_template.footer << "\n";
             show_carret_error(*output_template.error_location);
             return -1;
