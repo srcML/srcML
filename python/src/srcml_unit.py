@@ -129,6 +129,10 @@ libsrcml.srcml_unit_set_timestamp.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_unit_set_hash.restype = c_int
 libsrcml.srcml_unit_set_hash.argtypes = [c_void_p, c_char_p]
 
+# int srcml_unit_unparse_set_eol  (struct srcml_unit*, size_t eol);
+libsrcml.srcml_unit_unparse_set_eol.restype = c_int
+libsrcml.srcml_unit_unparse_set_eol.argtypes = [c_void_p, c_size_t]
+
 # const char* srcml_unit_get_src_encoding (const struct srcml_unit*);
 libsrcml.srcml_unit_get_src_encoding.restype = c_char_p
 libsrcml.srcml_unit_get_src_encoding.argtypes = [c_void_p]
@@ -250,6 +254,9 @@ class srcml_unit :
 
     def set_hash(self, hash) :
         check_return(libsrcml.srcml_unit_set_hash(self.unit, hash))
+
+    def set_eol(self, eol) :
+        check_return(libsrcml.srcml_unit_unparse_set_eol(self.unit, eol))
 
     def get_src_encoding(self) :
         return libsrcml.srcml_unit_get_src_encoding(self.unit)

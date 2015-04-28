@@ -250,4 +250,49 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
+<unit>
+<if>if<condition>(<expr><name>a</name></expr>)</condition><then>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>a</name></expr></cpp:if>
+    <block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt><block type="pseudo"/><then/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></then></if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<while>while<condition>(<expr><name>a</name></expr>)</condition>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>a</name></expr></cpp:if>
+    <block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt><block type="pseudo"/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></while>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<for>for<control>(<init>;</init><condition>;</condition><incr/>)</control>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>a</name></expr></cpp:if>
+    <block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt><block type="pseudo"/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></for>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<switch>switch<condition>(<expr><name>a</name></expr>)</condition>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>a</name></expr></cpp:if>
+    <block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt><block type="pseudo"/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></switch>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
+<unit>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr><name>b</name></expr></range></decl></init>)</control>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>a</name></expr></cpp:if>
+    <block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt><block type="pseudo"/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+    <expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></for>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+
 </unit>

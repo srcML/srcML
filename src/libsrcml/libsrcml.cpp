@@ -62,7 +62,9 @@ std::string srcml_error;
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, std::vector<std::string>(),
+srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+                                 std::string(SRCML_VERSION_STRING), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+                                 std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY,
                                  8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
                                  language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any() };
@@ -75,7 +77,9 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VE
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_unit global_unit = { &global_archive, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, 0, 0, boost::any() };
+srcml_unit global_unit = { &global_archive, boost::optional<std::string>(), std::string(SRCML_VERSION_STRING), boost::optional<std::string>(),
+                           boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+                           boost::optional<std::string>(), std::vector<std::string>(), 0, 0, 0, 0, boost::optional<std::string>(), boost::any() };
 
 /**
  * @var register_languages
@@ -494,6 +498,21 @@ int srcml_set_processing_instruction(const char* target, const char* data) {
 int srcml_register_macro(const char* token, const char* type) {
 
     return srcml_archive_register_macro(&global_archive, token, type);
+
+}
+
+/**
+ * srcml_unparse_set_eol
+ * @param eol the kind of eol to use for unparse
+ *
+ * Set the eol to be used for unparse.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
+ * on failure.
+ */
+int srcml_unparse_set_eol(size_t eol) {
+
+    return srcml_unit_unparse_set_eol(&global_unit, eol);
 
 }
 
