@@ -174,6 +174,26 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
 
 }
 
+/**
+ * srcml_unit_unparse_set_eol
+ * @param unit a srcml unit
+ * @param eol the kind of eol to use for unparse
+ *
+ * Set the eol to be used for unparse.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
+ * on failure.
+ */
+int srcml_unit_unparse_set_eol(srcml_unit* unit, size_t eol) {
+
+    if(unit == NULL || eol > SRCML_UNPARSE_OPTION_CRLF) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    unit->eol = eol;
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Accessor functions                               *
@@ -1190,6 +1210,7 @@ srcml_unit * srcml_unit_create(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->revision = srcml_version_string();
     unit->archive = archive;
+    unit->eol = SRCML_UNPARSE_OPTION_AUTO;
     unit->read_header = false;
     unit->unit_translator = 0;
 

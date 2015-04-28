@@ -495,6 +495,22 @@ protected:
     }
 
     /**
+     * dupMode
+     *
+     * Duplicate mode on top of stack for cppif.
+     */
+    void dupMode(const std::stack<int> & open_elements) {
+
+        srcMLState dup = st.back();
+        st.back().setMode(MODE_TOP | MODE_END_AT_ENDIF);
+
+        dup.openelements = open_elements;
+        dup.setMode(MODE_ISSUE_EMPTY_AT_POP);
+        st.push_back(dup);
+
+    }
+
+    /**
      * dupDownOverMode
      * @param m mode to stop on
      *
@@ -512,7 +528,6 @@ protected:
 
         alist.push_front(st.back());
         st.pop_back();
-
 
         alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
         for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {

@@ -298,6 +298,27 @@ int main() {
     }
 
     /*
+      srcml_unparse_set_eol
+    */
+
+    {
+        srcml_unparse_set_eol(SRCML_UNPARSE_OPTION_CRLF);
+
+        dassert(global_unit.eol, SRCML_UNPARSE_OPTION_CRLF);
+    }
+
+    {
+        srcml_unparse_set_eol(SRCML_UNPARSE_OPTION_CRLF);
+        srcml_unparse_set_eol(SRCML_UNPARSE_OPTION_AUTO);
+
+        dassert(global_unit.eol, SRCML_UNPARSE_OPTION_AUTO);
+    }
+
+    {
+        dassert(srcml_unparse_set_eol(SRCML_UNPARSE_OPTION_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    /*
       srcml_get_src_encoding
     */
 
