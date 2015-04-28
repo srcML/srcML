@@ -97,150 +97,90 @@ def run_transform_with_n_units(number_of_units_to_add,*transformations):
 
 class test_xslt_transformations(unittest.TestCase):
 
-    @cleanup_files("test_binding_level_transformation.xslt")
-    def test_binding_level_transformation(self):
-        number_of_units_to_add = 1
-        temp_buffer = memory_buffer()
-        with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX), buffer=temp_buffer) as archive_writer:
-            for i in range(number_of_units_to_add):
-                u = archive_writer.create_unit()
-                u.parse(source_code=test_source_code_data)
-                archive_writer.write(u)
 
-        # Writing XSLT into a single file.
-        test_file = "test_binding_level_transformation.xslt"
+            
+    def test_xsltransform_filename(self):
+        test_file = "test_xsltransform_filename.xslt"
+        
         out_strm = open(test_file, "w")
         out_strm.write(xslt_ident)
         out_strm.close()
 
-        # Using native functionality to emulate the larger
-        # functionality so that I can be sure
-        # what's actually broken my stuff or libsrcml
-        # input_bufferc_char_p()
+        with run_transform(xsltransform(filename=test_file)) as transformed_archive:
+            u = transformed_archive.read()
+            self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
 
-#         xml_data_str ="""<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-# <unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
+    def test_xpath_transformation(self):
+        with run_transform(xpath("//src:expr")) as transformed_archive:
+            counter = 0
+            for u in transformed_archive:
+                counter += 1
+            self.assertEqual(2, counter, "Incorrect # of expressions located.")
 
-# <unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" hash="5cacee2b3e574a10dbb50ac408fd772c0e49f920"><cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;iostream&gt;</cpp:file></cpp:include>
+    def test_xpath_attribute_transformation(self):
+        expected_attr = "test_attr"
+        with run_transform(xpath_attribute("//src:expr", expected_attr, "content")) as transformed_archive:
+            u = transformed_archive.read()
+            xml_unit = et.XML(u.get_standalone_xml())
+            located_expressions = xml_unit.xpath("//src:expr[@test_attr]", namespaces=xml_namespaces)
+            self.assertEqual(2, len(located_expressions), "Incorrect # of expressions located.")
 
-# <using>using <namespace>namespace <name>std</name>;</namespace></using>
-# <function><type><name>int</name></type> <name>main</name><parameter_list>()</parameter_list> <block>{
-#     <expr_stmt><expr><name><name>std</name><operator>::</operator><name>cout</name></name> <operator>&lt;&lt;</operator> <literal type="string">"Hello World"</literal> <operator>&lt;&lt;</operator> <name><name>std</name><operator>::</operator><name>endl</name></name></expr>;</expr_stmt>
-#     <return>return <expr><literal type="number">0</literal></expr>;</return>
-# }</block></function></unit>
+    def test_xpath_element_transformation(self):
+        expected_elem = "my_element"
+        with run_transform(xpath_element("//src:expr", expected_elem)) as transformed_archive:
+            u = transformed_archive.read()
+            xml_unit = et.XML(u.get_standalone_xml())
+            located_expressions = xml_unit.xpath("//src:my_element", namespaces=xml_namespaces)
+            self.assertEqual(2, len(located_expressions), "Incorrect # of expressions located.")
 
-# </unit>"""
 
-        output_buffer = memory_buffer()
-        reading_archive = archive_create()
-        archive_read_open_memory(reading_archive, temp_buffer.buff, temp_buffer.size)
-        append_transform_xslt_filename(reading_archive, test_file)
-        writing_archive = archive_create()
-        archive_write_open_memory(writing_archive, output_buffer.buff, output_buffer.size)
-        apply_transforms(reading_archive, writing_archive)
-
+    @cleanup_files("test_xsltransform_filename.xslt")
+    def test_xsltransform_filename(self):
+        test_file = "test_xsltransform_filename.xslt"
         
-        archive_close(writing_archive)
-        archive_close(reading_archive)
+        out_strm = open(test_file, "w")
+        out_strm.write(xslt_ident)
+        out_strm.close()
 
+        with run_transform(xsltransform(filename=test_file)) as transformed_archive:
+            u = transformed_archive.read()
+            self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
 
-        archive_free(reading_archive)
-        archive_free(writing_archive)
+    def test_xsltransform_xslt_string(self):
+        with run_transform(xsltransform(xslt=xslt_ident)) as transformed_archive:
+            u = transformed_archive.read()
+            self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
 
-        receiving_archive = archive_create()
-        print format(id(output_buffer), '02x')
-        archive_read_open_memory(receiving_archive, output_buffer.buff, output_buffer.size)
-        extracted_unit = read_unit(receiving_archive)
-        while extracted_unit != None:
-            print "Read Unit."
-            extracted_unit = read_unit(receiving_archive)
-            # 
-    # def test_xsltransform_filename(self):
-    #     test_file = "test_xsltransform_filename.xslt"
-        
-    #     out_strm = open(test_file, "w")
-    #     out_strm.write(xslt_ident)
-    #     out_strm.close()
+    def test_xsltransform_stream(self):
+        with run_transform(xsltransform(stream=StringIO.StringIO(xslt_ident))) as transformed_archive:
+            u = transformed_archive.read()
+            self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
 
-    #     with run_transform(xsltransform(filename=test_file)) as transformed_archive:
-    #         print "Reached Post Run Transform!"
-    #         sys.stdout.flush()
-    #         u = transformed_archive.read()
-    #         self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
+    def test_xsltransform_memory_buffer(self):
+        temp_buffer = memory_buffer()
+        temp_buffer.load_from_string(xslt_ident)
+        with run_transform(xsltransform(buffer=temp_buffer)) as transformed_archive:
+            u = transformed_archive.read()
+            self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
 
-    # def test_xpath_transformation(self):
-    #     with run_transform(xpath("//src:expr")) as transformed_archive:
-    #         counter = 0
-    #         for u in transformed_archive:
-    #             counter += 1
-    #         self.assertEqual(2, counter, "Incorrect # of expressions located.")
+    def test_xsltransform_context(self):
+        test_reader = read_tester(xslt_ident)
+        with run_transform(xsltransform(context=test_reader)) as transformed_archive:
+            u = transformed_archive.read()
+            self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
 
-    # def test_xpath_attribute_transformation(self):
-    #     expected_attr = "test_attr"
-    #     with run_transform(xpath_attribute("//src:expr", expected_attr, "content")) as transformed_archive:
-    #         u = transformed_archive.read()
-    #         xml_unit = et.XML(u.get_standalone_xml())
-    #         located_expressions = xml_unit.xpath("//src:expr[@test_attr]", namespaces=xml_namespaces)
-    #         self.assertEqual(2, len(located_expressions), "Incorrect # of expressions located.")
+    def test_xsltransform_context_with_functions(self):
+        test_reader = read_tester(xslt_ident)
 
-    # def test_xpath_element_transformation(self):
-    #     expected_elem = "my_element"
-    #     with run_transform(xpath_element("//src:expr", expected_elem)) as transformed_archive:
-    #         u = transformed_archive.read()
-    #         xml_unit = et.XML(u.get_standalone_xml())
-    #         located_expressions = xml_unit.xpath("//src:my_element", namespaces=xml_namespaces)
-    #         self.assertEqual(2, len(located_expressions), "Incorrect # of expressions located.")
+        def read(ctxt, buff, size):
+            return ctxt.read(buff, size)
 
+        def close(ctxt):
+            return ctxt.close()
 
-    # @cleanup_files("test_xsltransform_filename.xslt")
-    # def test_xsltransform_filename(self):
-    #     test_file = "test_xsltransform_filename.xslt"
-        
-    #     out_strm = open(test_file, "w")
-    #     out_strm.write(xslt_ident)
-    #     out_strm.close()
-
-    #     with run_transform(xsltransform(filename=test_file)) as transformed_archive:
-    #         print "Reached Post Run Transform!"
-    #         sys.stdout.flush()
-    #         u = transformed_archive.read()
-    #         self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
-
-    # def test_xsltransform_xslt_string(self):
-    #     with run_transform(xsltransform(xslt=xslt_ident)) as transformed_archive:
-    #         u = transformed_archive.read()
-    #         self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
-
-    # def test_xsltransform_stream(self):
-    #     with run_transform(xsltransform(stream=StringIO.StringIO(xslt_ident))) as transformed_archive:
-    #         u = transformed_archive.read()
-    #         self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
-
-    # def test_xsltransform_memory_buffer(self):
-    #     temp_buffer = memory_buffer()
-    #     temp_buffer.load_from_string(xslt_ident)
-    #     with run_transform(xsltransform(buffer=temp_buffer)) as transformed_archive:
-    #         u = transformed_archive.read()
-    #         self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
-
-    # def test_xsltransform_context(self):
-    #     test_reader = read_tester(xslt_ident)
-    #     with run_transform(xsltransform(context=test_reader)) as transformed_archive:
-    #         u = transformed_archive.read()
-    #         self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
-
-    # def test_xsltransform_context_with_functions(self):
-    #     test_reader = read_tester(xslt_ident)
-
-    #     def read(ctxt, buff, size):
-    #         return ctxt.read(buff, size)
-
-    #     def close(ctxt):
-    #         return ctxt.close()
-
-    #     with run_transform(xsltransform(context=test_reader, read=read, close=close)) as transformed_archive:
-    #         u = transformed_archive.read()
-    #         self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
+        with run_transform(xsltransform(context=test_reader, read=read, close=close)) as transformed_archive:
+            u = transformed_archive.read()
+            self.assertEqual(test_source_code_data, u.unparse(), "Didn't get correct data from unit")
 
 
     # @cleanup_files("test_relaxng_filename.xml")
