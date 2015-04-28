@@ -7336,7 +7336,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
             if(inMode(MODE_ASSOCIATION_LIST))
                 endMode(MODE_ASSOCIATION_LIST);
 
-            if(end_for_incr)
+            if(end_for_incr || inMode(MODE_LIST | MODE_FOR_CONDITION))
                 setMode(MODE_END_FOR_CONTROL);
 
         }
@@ -7365,7 +7365,8 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 
                         std::stack<int> open_elements;
                         open_elements.push(STHEN);
-                        open_elements.push(SPSEUDO_BLOCK);
+                        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                            open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
 
@@ -7385,7 +7386,8 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     if(cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        open_elements.push(SPSEUDO_BLOCK);
+                        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                            open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
 
@@ -7406,7 +7408,8 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     if(cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        open_elements.push(SPSEUDO_BLOCK);
+                        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                            open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
 
@@ -7419,6 +7422,18 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     endMode(MODE_FOR_CONDITION);
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startElement(SPSEUDO_BLOCK);
+
+                    if(cppif_duplicate) {
+
+                        std::stack<int> open_elements;
+                        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)                        
+                            open_elements.push(SPSEUDO_BLOCK);
+
+                        dupMode(open_elements);
+
+                    }
+
+                    cppif_duplicate = false;
 
                 } else
 
@@ -9096,7 +9111,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                                 cppif_duplicate = true;
 
-                            } else if(inMode(MODE_END_FOR_CONTROL)) {
+                            } else if(inMode(MODE_END_FOR_CONTROL) || inMode(MODE_LIST | MODE_FOR_CONDITION)) {
 
                                 cppif_duplicate = true;
 
