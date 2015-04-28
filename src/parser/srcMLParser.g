@@ -276,7 +276,7 @@ private:
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parser_options(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
-    current_column(-1), current_line(-1), nxt_token(-1), last_consumed(-1), wait_terminate_post(false)
+    current_column(-1), current_line(-1), nxt_token(-1), last_consumed(-1), wait_terminate_post(false), cppif_duplicate(false)
 {
 
     // root, single mode
@@ -663,6 +663,7 @@ public:
     int nxt_token;
     int last_consumed;
     bool wait_terminate_post;
+    bool cppif_duplicate;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -7335,6 +7336,9 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
             if(inMode(MODE_ASSOCIATION_LIST))
                 endMode(MODE_ASSOCIATION_LIST);
 
+            if(end_for_incr)
+                setMode(MODE_END_FOR_CONTROL);
+
         }
         rparen_operator[markup]
         {
@@ -7356,6 +7360,19 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startElement(SPSEUDO_BLOCK);
 
+
+                    if(cppif_duplicate) {
+
+                        std::stack<int> open_elements;
+                        open_elements.push(STHEN);
+                        open_elements.push(SPSEUDO_BLOCK);
+
+                        dupMode(open_elements);
+
+                    }
+
+                    cppif_duplicate = false;
+
                 }
 
                 // end while condition, etc. and output pseudo block  @todo may need to have a MODE_WHILE
@@ -7364,6 +7381,17 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     endMode(MODE_LIST);
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startElement(SPSEUDO_BLOCK);
+
+                    if(cppif_duplicate) {
+
+                        std::stack<int> open_elements;
+                        open_elements.push(SPSEUDO_BLOCK);
+
+                        dupMode(open_elements);
+
+                    }
+
+                    cppif_duplicate = false;
 
 
                 // end for group and output pseudo block @todo make sure does not hid other things that use for grammar
@@ -7374,6 +7402,17 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
     
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startElement(SPSEUDO_BLOCK);
+
+                    if(cppif_duplicate) {
+
+                        std::stack<int> open_elements;
+                        open_elements.push(SPSEUDO_BLOCK);
+
+                        dupMode(open_elements);
+
+                    }
+
+                    cppif_duplicate = false;
 
                 } else if(inMode(MODE_LIST | MODE_FOR_CONDITION)) {
 
@@ -8982,7 +9021,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
-        if(LA(1) == TERMINATE && !wait_terminate_post && inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)) {
+        if(LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_FOR_CONTROL))) {
             end_order.push_back(TERMINATE);
 
         }
@@ -9049,7 +9088,23 @@ eol_post[int directive_token, bool markblockzero] {
 
                         if(*pos == TERMINATE) {
 
-                            dupDownOverMode(MODE_STATEMENT);
+                            if(inMode(MODE_CONDITION) && inPrevMode(MODE_IF)) {
+
+                                cppif_duplicate = true;
+
+                            } else if(inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
+
+                                cppif_duplicate = true;
+
+                            } else if(inMode(MODE_END_FOR_CONTROL)) {
+
+                                cppif_duplicate = true;
+
+                            } else {
+
+                                dupDownOverMode(MODE_STATEMENT);
+
+                            }
 
                         }
 
