@@ -30,11 +30,11 @@
 
 struct pretty_template_t {
     boost::optional<std::string> header;
-    boost::optional<std::string> header_args;
+    std::string header_args;
     boost::optional<std::string> body;
-    boost::optional<std::string> body_args;
+    std::string body_args;
     boost::optional<std::string> footer;
-    boost::optional<std::string> footer_args;
+    std::string footer_args;
     boost::optional<size_t> error_location;
 };
 

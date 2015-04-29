@@ -25,6 +25,7 @@
 #include <vector>
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/foreach.hpp>
 
 void show_carret_error(size_t pos) {
     for (size_t i = 0; i < pos; ++i) {
@@ -91,7 +92,7 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
 	return output_template;
 }
 
-boost::optional<size_t> parse_templates(std::string& template_string, boost::optional<std::string>& section_args, const std::string& allowed_args) {
+boost::optional<size_t> parse_templates(std::string& template_string, std::string& section_args, const std::string& allowed_args) {
     size_t found = -1;
 
     while (true) {
@@ -106,9 +107,6 @@ boost::optional<size_t> parse_templates(std::string& template_string, boost::opt
             continue;
         }
 
-        if (!(section_args))
-            section_args = "";
-
         if ((found + 1) < template_string.length()) {
             size_t loc = allowed_args.find(template_string[found + 1]);
             
@@ -118,7 +116,7 @@ boost::optional<size_t> parse_templates(std::string& template_string, boost::opt
                 return found + 1;
             }
 
-            *section_args += template_string[found + 1];
+            section_args += template_string[found + 1];
             template_string[found + 1] = 's';
         }
     }
@@ -143,12 +141,80 @@ boost::optional<size_t> parse_templates(std::string& template_string, boost::opt
     return boost::none;
 }
 
-void display_template(srcml_archive* srcml_arch, pretty_template_t& output_template, bool unit_args) {
+const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, const char arg) {
+
+    /*
+    PRETTY Args
+    - %C: total number of units (only for footer)
+    - %c: unit number *** ADDED ***
+    */
+
+    std::cerr <<  "ARG: " << arg << "\n";
+    switch (arg){
+        case 'D':           // %D: directory attribute on the archive
+            break;
+        case 'd':           // %d: directory attribute on the unit
+            break;
+        case 'F':           // %F: file attribute on the archive
+            break;
+        case 'f':           // %f: file name attribute on the unit
+            break;
+        case 'h':           // %h: hash attribute on the unit
+            break;
+        case 'i':           // %i: index of the unit within the archive
+            break;
+        case 'S':           // %S: source encoding attribute on the archive
+            break;
+        case 's':           // %s: source encoding attribute on the unit
+            break;
+        case 'V':           // %V: version attribute on the archive
+            break;
+        case 'v':           // %v: version attribute on the unit
+            break;
+        case 'X':           // %X: XML encoding on the archive
+            break;
+        case 'x':           // %x: XML encoding attribute on the unit
+            break;
+        default:
+            break;
+    }
+
+}
+
+void display_template(srcml_archive* srcml_arch, pretty_template_t& output_template) {
+    
+    // C and c are available here as they are not metadata marked up in the file.
     int unit_number = 0;
     int unit_count = 0;
 
+    std::vector<std::string> header_params;
+    std::vector<std::string> body_params;
+    std::vector<std::string> footer_params;
+
     if (output_template.header) {
-        
+        std::cerr << "HEADER\n";
+        BOOST_FOREACH(const char arg, output_template.header_args) {
+            const char* param = acquire_metadata(srcml_arch, NULL, arg);
+        }
+    }
+
+    srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+
+    if (output_template.body) {
+        std::cerr << "BODY\n";
+        while (unit) {
+            BOOST_FOREACH(const char arg, output_template.body_args) {
+                const char* param = acquire_metadata(srcml_arch, unit, arg);
+            }
+            unit = srcml_read_unit_header(srcml_arch);
+        }
+    }
+
+    if (output_template.footer) {
+        std::cerr << "FOOTER\n";
+        BOOST_FOREACH(const char arg, output_template.footer_args) {
+            const char* param = acquire_metadata(srcml_arch, NULL, arg);
+        }
     }
 }
 
@@ -192,7 +258,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
         }
 	}
 
-    //display_template(output_template);
+    display_template(srcml_arch, output_template);
     
     //std::string helloString = "Hello %s and %s \nFun time!";
     //std::vector<std::string> args;
