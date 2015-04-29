@@ -3263,7 +3263,7 @@ lcurly_base[] { ENTRY_DEBUG } :
 ;
 
 // end of a block.  Also indicates the end of some open elements.
-block_end[] { ENTRY_DEBUG } :
+block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         // handling of if with then block followed by else
         // handle the block, however scope of then completion stops at if
 
@@ -3304,6 +3304,9 @@ block_end[] { ENTRY_DEBUG } :
             // then we needed to markup the (abbreviated) variable declaration
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
+
+            if(!in_issue_empty && inMode(MODE_END_AT_ENDIF | MODE_TOP | MODE_STATEMENT))
+                endMode();
 
         }
 ;
@@ -3384,10 +3387,8 @@ terminate_pre[] { ENTRY_DEBUG } :
 ;
 
 // do the post terminate processing
-terminate_post[] { ENTRY_DEBUG  bool in_issue_empty = false;} :
+terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         {
-
-            in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP);
 
             // end all statements this statement is nested in
             // special case when ending then of if statement
@@ -3457,13 +3458,6 @@ else_handling[] { ENTRY_DEBUG } :
                 if (LA(1) != ELSE) {
 
                     endDownToMode(MODE_TOP);
-
-                    // end the artifical cppif which normally would not normally have top
-                    // would thing another endDownToMode(MODE_TOP) would be needed, but seems to work without
-                    // must always be top or something.
-                    if(inMode(MODE_END_AT_ENDIF | MODE_TOP | MODE_STATEMENT))
-                        endMode();
-                    // endDownToMode(MODE_TOP);
 
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (LA(1) == ELSE && inMode(MODE_ELSE)) {
