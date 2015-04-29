@@ -221,6 +221,8 @@ struct srcml_unit {
     boost::optional<std::string> hash;
     /** an array of name-value attribute pairs */
     std::vector<std::string> attributes;
+    /** the type of eol to output with source code */
+    size_t eol;
 
     /** output buffer to hold streaming creation of unit */
     xmlBuffer * output_buffer;

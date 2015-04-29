@@ -164,7 +164,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -183,7 +183,7 @@ int main() {
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -214,7 +214,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "ISO-8859-1");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -235,7 +235,7 @@ int main() {
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "ISO-8859-1");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -266,7 +266,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -279,13 +279,12 @@ int main() {
         dassert(namespaces.size(), 2);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
-                          | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO ));
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -298,8 +297,7 @@ int main() {
         dassert(namespaces.size(), 2);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
-                          | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
     }
 
@@ -316,7 +314,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -329,13 +327,12 @@ int main() {
         dassert(namespaces.size(), 2);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
-                          | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -348,8 +345,7 @@ int main() {
         dassert(namespaces.size(), 2);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
-                          | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
     }
 
@@ -366,7 +362,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -382,7 +378,7 @@ int main() {
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -700,7 +696,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -762,7 +758,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "ISO-8859-1");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -826,7 +822,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -841,8 +837,7 @@ int main() {
         dassert(namespaces.size(), 2);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
-                          | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
@@ -880,7 +875,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
@@ -895,8 +890,7 @@ int main() {
         dassert(namespaces.size(), 2);
         dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
         dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
-        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY
-                          | SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO));
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
@@ -932,7 +926,7 @@ int main() {
         reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
-        dassert(*language, "C++");
+        dassert(language, boost::optional<std::string>());
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");

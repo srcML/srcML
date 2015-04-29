@@ -338,7 +338,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_HASH>), "add hash to srcml output")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
             ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
-            ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
             ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>), "set the language to C, C++, or Java")
             ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
             ;
@@ -421,6 +420,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
         experimental_options.add_options()
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")
+            ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
             ;
 
         // Group src2srcml Options

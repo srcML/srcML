@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import os
-from ctypes import cdll, c_int, c_char_p, POINTER, c_ulonglong
+from ctypes import cdll, c_int, c_size_t, c_char_p, POINTER, c_ulonglong
 from exception import *
 
 LIBSRCML_PATH=""
@@ -121,6 +121,10 @@ libsrcml.srcml_register_file_extension.argtypes = [c_char_p, c_char_p]
 # int srcml_register_namespace(const char* prefix, const char* ns);
 libsrcml.srcml_register_namespace.restype = c_int
 libsrcml.srcml_register_namespace.argtypes = [c_char_p, c_char_p]
+
+# int srcml_unparse_set_eol(size_t eol);
+libsrcml.srcml_unparse_set_eol.restype = c_int
+libsrcml.srcml_unparse_set_eol.argtypes = [c_size_t]
 
 # const char* srcml_get_xml_encoding ();
 libsrcml.srcml_get_xml_encoding.restype = c_char_p
@@ -275,6 +279,9 @@ def register_file_extension(extension, language) :
 
 def register_namespace(prefix, ns) :
     check_return(libsrcml.srcml_register_namespace(prefix, ns))
+
+def unparse_set_eol(eol) :
+    check_return(libsrcml.srcml_unparse_set_eol(eol))
 
 def register_macro(token, type) :
     check_return(libsrcml.srcml_register_macro(token, type))
