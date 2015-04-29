@@ -133,6 +133,7 @@ int srcml_append_transform_xpath_element (struct srcml_archive* archive, const c
     return SRCML_STATUS_OK;
 }
 
+#ifdef WITH_LIBXSLT
 /**
  * srcml_append_transform_xslt_filename
  * @param archive a srcml_archive
@@ -234,6 +235,7 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
     return SRCML_STATUS_OK;
 
 }
+#endif
 
 /**
  * srcml_append_transform_relaxng_filename
@@ -481,6 +483,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
                 break;
             }
 
+#ifdef WITH_LIBXSLT
             case SRCML_XSLT: {
 
                 error = srcml_xslt(pinput, "src:unit",
@@ -488,6 +491,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
                                    &iarchive->transformations.at(i).xsl_parameters.front(), 0, oarchive->options, obuffer);
                 break;
             }
+#endif
 
             case SRCML_RELAXNG: {
 

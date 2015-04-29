@@ -29,7 +29,9 @@
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 
+#ifdef WITH_LIBXSLT
 #include <libexslt/exslt.h>
+#endif
 
 /** size of string then the literal */
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, s

@@ -23,13 +23,16 @@
 
 #include <sstream>
 #include <xpath_query_units.hpp>
+#ifdef WITH_LIBXSLT
 #include <xslt_units.hpp>
+#endif
 #include <relaxng_units.hpp>
-
 
 #include <srcexfun.hpp>
 
+#ifdef WITH_LIBXSLT
 #include <libexslt/exslt.h>
+#endif
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
@@ -149,6 +152,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
 
 }
 
+
 /**
  * dlexsltRegisterAll
  *
@@ -176,6 +180,7 @@ void dlexsltRegisterAll(void * handle) {
 
 }
 
+#ifdef WITH_LIBXSLT
 /**
  * srcml_xslt
  * @param input_buffer a parser input buffer
@@ -277,6 +282,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     return 0;//status;
 
 }
+#endif
 
 /**
  * srcml_relaxng

@@ -223,7 +223,7 @@ class BindingGenerator(object):
                         paramInfo.name = extractNormalizedTypeName(nameNode[0]).strip()
                     paramInfo.actualType = extractNormalizedTypeName(param[0][0]).strip()
                     paramInfo.userType = self.resolveType(paramInfo.actualType)
-                    if paramInfo.actualType == "int *" or paramInfo.actualType == "char * *":
+                    if paramInfo.actualType == "int *" or paramInfo.actualType == "char * *" or paramInfo.actualType == "size_t *":
                         paramInfo.callingConvention = PARAM_IN_OUT
                     
                 elif param[0].tag == "{http://www.sdml.info/srcML/src}function_decl":
