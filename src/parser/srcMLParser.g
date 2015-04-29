@@ -3458,6 +3458,13 @@ else_handling[] { ENTRY_DEBUG } :
 
                     endDownToMode(MODE_TOP);
 
+                    // end the artifical cppif which normally would not normally have top
+                    // would thing another endDownToMode(MODE_TOP) would be needed, but seems to work without
+                    // must always be top or something.
+                    if(inMode(MODE_END_AT_ENDIF | MODE_TOP | MODE_STATEMENT))
+                        endMode();
+                    // endDownToMode(MODE_TOP);
+
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (LA(1) == ELSE && inMode(MODE_ELSE)) {
 
