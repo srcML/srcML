@@ -148,7 +148,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     int unit_count = 0;
 
     if (output_template.header) {
-
+        
     }
 }
 
