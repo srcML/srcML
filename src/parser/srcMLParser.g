@@ -3369,6 +3369,7 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
 // do the pre terminate processing
 terminate_pre[] { ENTRY_DEBUG } :
         {
+
             // end any elements inside of the statement
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
                 endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
@@ -3383,8 +3384,10 @@ terminate_pre[] { ENTRY_DEBUG } :
 ;
 
 // do the post terminate processing
-terminate_post[] { ENTRY_DEBUG } :
+terminate_post[] { ENTRY_DEBUG  bool in_issue_empty = false;} :
         {
+
+            in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP);
 
             // end all statements this statement is nested in
             // special case when ending then of if statement
@@ -3408,11 +3411,11 @@ terminate_post[] { ENTRY_DEBUG } :
             if(inMode(MODE_SWITCH))
                 endMode();
 
-            if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
-
+            if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP))
                 endMode();
 
-            }
+            if(!in_issue_empty && inMode(MODE_END_AT_ENDIF))
+                endMode();
 
             wait_terminate_post = false;
 
