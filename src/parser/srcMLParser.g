@@ -9159,11 +9159,11 @@ eol_post[int directive_token, bool markblockzero] {
                 if (cpp_zeromode && cpp_ifcount == 1)
                     cpp_zeromode = false;
 
-                // not in skipped #if, so skip #else until #endif of #if is reached
-                else if (!cpp_zeromode) {
-                    cpp_skipelse = true;
-                    cpp_ifcount = 1;
-                }
+                // // not in skipped #if, so skip #else until #endif of #if is reached
+                // else if (!cpp_zeromode) {
+                //     cpp_skipelse = true;
+                //     cpp_ifcount = 1;
+                // }
 
                 if (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing) {
 
