@@ -99,7 +99,7 @@ void srcml_display_unit_count(srcml_archive* srcml_arch) {
     std::cout << "units=" << "\"" << num_units << "\"\n";
 }
 
-void srcml_display_hash(srcml_unit* unit, int ignore_attribue_name) {
+void srcml_display_hash(srcml_unit* unit, int ignore_attribute_name) {
 
     if (!unit) {
         return;
@@ -107,37 +107,52 @@ void srcml_display_hash(srcml_unit* unit, int ignore_attribue_name) {
         
     const char* hash = srcml_unit_get_hash(unit);
     
-    if (!hash && !ignore_attribue_name) {
+    if (!hash && !ignore_attribute_name) {
         std::cout << "hash=\"\"\n";
     }
 
-    if (hash && !ignore_attribue_name) {
+    if (hash && !ignore_attribute_name) {
         std::cout << "hash=\"" << hash << "\"\n";
     }
 
-    if (hash && ignore_attribue_name) {
+    if (hash && ignore_attribute_name) {
         std::cout << hash << "\n";
     }
 }
 
-void srcml_display_timestamp(srcml_unit* unit, int ignore_attribue_name) {
+void srcml_display_timestamp(srcml_unit* unit, int ignore_attribute_name) {
     if (!unit) {
         return;
     }
         
     const char* timestamp = srcml_unit_get_timestamp(unit);
     
-    if (!timestamp && !ignore_attribue_name) {
+    if (!timestamp && !ignore_attribute_name) {
         std::cout << "timestamp=\"\"\n";
     }
 
-    if (timestamp && !ignore_attribue_name) {
+    if (timestamp && !ignore_attribute_name) {
         std::cout << "timestamp=\"" << timestamp << "\"\n";
     }
 
-    if (timestamp && ignore_attribue_name) {
+    if (timestamp && ignore_attribute_name) {
         std::cout << timestamp << "\n";
     }
+}
+
+void srcml_display_language(srcml_unit* unit, int ignore_attribute_name) {
+    if (!unit)
+        return;
+
+    const char* language = srcml_unit_get_language(unit);
+    if (!language && !ignore_attribute_name)
+        std::cout << "language=\"\"\n";
+
+    if (language && !ignore_attribute_name)
+        std::cout << "language=\"" << language << "\"\n";
+
+    if (language && ignore_attribute_name)
+        std::cout << language << "\n";
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
@@ -176,21 +191,15 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             }
         }
 
-        // srcml->src language
+        srcml_unit* unit = 0;
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH || srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP
+            || srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
+            unit = srcml_read_unit_header(srcml_arch);
+        }
+
+        // srcml->language
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
-            const char* archive_info = srcml_archive_get_language(srcml_arch);
-            if (archive_info) {
-                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
-                    std::cout << archive_info << "\n";
-                else
-                    std::cout << "language=\"" << archive_info << "\"\n";
-            }
-            else {
-                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
-                    std::cout << "";
-                else
-                    std::cout << "language=\"\"\n";
-            }
+            srcml_display_language(unit, ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE));
         }
         // srcml->src filename
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
@@ -251,12 +260,6 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                     std::cout << "encoding=\"" << archive_info << "\"\n";
             }
         }
-        
-        srcml_unit* unit = 0;
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH || srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP) {
-            unit = srcml_read_unit_header(srcml_arch);
-        }
-
         // srcml->src hash
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH){
             srcml_display_hash(unit, ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_HASH));

@@ -21,6 +21,9 @@ define illformed <<- 'INPUT'
 createfile xml_error/illformed.xml "$illformed"
 
 # ok
+srcml2src xml_error/illformed.xml --info
+check 3<<< "$info_single"
+
 srcml2src --info xml_error/illformed.xml
 check 3<<< "$info_single"
 
