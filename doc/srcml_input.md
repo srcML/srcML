@@ -65,7 +65,7 @@ output which is thus displayed only once.
 
 	- %h: hash attribute on the unit
 	- %d: directory attribute on the unit
-	- %f: file name attribute on the unit
+	- %f: filename attribute on the unit
 	- %v: version attribute on the unit
 	- %x: XML encoding attribute on the unit
 	- %s: source encoding attribute on the unit

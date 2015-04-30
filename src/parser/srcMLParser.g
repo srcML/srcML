@@ -3263,7 +3263,7 @@ lcurly_base[] { ENTRY_DEBUG } :
 ;
 
 // end of a block.  Also indicates the end of some open elements.
-block_end[] { ENTRY_DEBUG } :
+block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         // handling of if with then block followed by else
         // handle the block, however scope of then completion stops at if
 
@@ -3304,6 +3304,9 @@ block_end[] { ENTRY_DEBUG } :
             // then we needed to markup the (abbreviated) variable declaration
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
+
+            if(!in_issue_empty && inMode(MODE_END_AT_ENDIF | MODE_TOP | MODE_STATEMENT))
+                endMode();
 
         }
 ;
@@ -3369,6 +3372,7 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
 // do the pre terminate processing
 terminate_pre[] { ENTRY_DEBUG } :
         {
+
             // end any elements inside of the statement
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
                 endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
@@ -3383,7 +3387,7 @@ terminate_pre[] { ENTRY_DEBUG } :
 ;
 
 // do the post terminate processing
-terminate_post[] { ENTRY_DEBUG } :
+terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         {
 
             // end all statements this statement is nested in
@@ -3408,11 +3412,11 @@ terminate_post[] { ENTRY_DEBUG } :
             if(inMode(MODE_SWITCH))
                 endMode();
 
-            if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)) {
-
+            if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP))
                 endMode();
 
-            }
+            if(!in_issue_empty && inMode(MODE_END_AT_ENDIF))
+                endMode();
 
             wait_terminate_post = false;
 
