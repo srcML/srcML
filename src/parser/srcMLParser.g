@@ -4924,7 +4924,7 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
             // argument with nested expression
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
-        (options {warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
+        (options {warnWhenFollowAmbig = false; } : { (LA(1) != RPAREN && LA(1) != COMMA) || count_paren > 0 }?
 
         ({ LA(1) == LPAREN }? expression set_int[count_paren, count_paren + 1] |
 
@@ -4935,9 +4935,9 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
         { perform_call_check(type, isempty, call_count, -1) && type == CALL }? 
         set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
 
-         expression |
+        expression |
 
-         comma
+        comma
 
         ))*
 

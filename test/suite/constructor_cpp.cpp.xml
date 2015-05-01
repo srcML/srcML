@@ -54,4 +54,8 @@
 }</block> <catch>catch<parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>exception</name></name><modifier>&amp;</modifier></type> <name>e</name></decl></parameter>)</parameter_list> <block>{}</block></catch></try></constructor>
 </unit>
 
+<unit>
+<constructor><name><name>HTTP</name><operator>::</operator><name>HTTP</name></name> <parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>ACE</name> <modifier>&amp;</modifier></type><name>request</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>number</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>website</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list> <block>{}</block></constructor>
+</unit>
+
 </unit>
