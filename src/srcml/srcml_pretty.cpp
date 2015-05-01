@@ -76,14 +76,17 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
 
 	// Split up the header, body, and footer template strings
 	if (header_pos != std::string::npos && footer_pos != std::string::npos) {
-		if (header_pos > 0)
+		if (header_pos > 0) {
 			output_template.header = input_template.substr(0, header_pos - 1);
+        }
 		
-		if (header_pos + 2 <= footer_pos)
-			output_template.body = input_template.substr(header_pos + 2, footer_pos - header_pos - 2);
+		if (header_pos + 2 <= footer_pos) {
+			output_template.body = input_template.substr(header_pos + 2, footer_pos - header_pos - 3);
+        }
 
-		if (!(footer_pos + 2 > input_template.length()))
+		if (!(footer_pos + 2 > input_template.length())) {
 			output_template.footer = input_template.substr(footer_pos + 2);
+        }
 	}
 	else {
 		output_template.body = input_template;
@@ -93,6 +96,7 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
 }
 
 boost::optional<size_t> parse_templates(std::string& template_string, std::string& section_args, const std::string& allowed_args) {
+
     size_t found = -1;
 
     while (true) {
@@ -143,90 +147,120 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::strin
 
 const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, const char arg) {
 
-    /*
-    PRETTY Args
-    - %C: total number of units (only for footer)
-    - %c: unit number *** ADDED ***
-    */
-
-    std::cerr <<  "ARG: " << arg << "\n";
     switch (arg){
         case 'D':           // %D: directory attribute on the archive
+            return srcml_archive_get_directory(srcml_arch);
             break;
         case 'd':           // %d: directory attribute on the unit
+            return srcml_unit_get_directory(srcml_unit);
             break;
         case 'F':           // %F: file attribute on the archive
+            return srcml_archive_get_filename(srcml_arch);
             break;
         case 'f':           // %f: file name attribute on the unit
+            return srcml_unit_get_filename(srcml_unit);
             break;
         case 'h':           // %h: hash attribute on the unit
-            break;
-        case 'i':           // %i: index of the unit within the archive
+            return srcml_unit_get_hash(srcml_unit);
             break;
         case 'S':           // %S: source encoding attribute on the archive
+            return srcml_archive_get_src_encoding(srcml_arch);
             break;
         case 's':           // %s: source encoding attribute on the unit
+            return srcml_unit_get_src_encoding(srcml_unit);
             break;
         case 'V':           // %V: version attribute on the archive
+            return srcml_archive_get_version(srcml_arch);
             break;
         case 'v':           // %v: version attribute on the unit
+            return srcml_unit_get_version(srcml_unit);
             break;
         case 'X':           // %X: XML encoding on the archive
+            return srcml_archive_get_xml_encoding(srcml_arch);
             break;
         case 'x':           // %x: XML encoding attribute on the unit
+            return "XML";
             break;
         default:
             break;
     }
-
+    return "???";
 }
 
 void display_template(srcml_archive* srcml_arch, pretty_template_t& output_template) {
-    
+
     // C and c are available here as they are not metadata marked up in the file.
     int unit_number = 0;
-    int unit_count = 0;
 
     std::vector<std::string> header_params;
     std::vector<std::string> body_params;
     std::vector<std::string> footer_params;
 
     if (output_template.header) {
-        std::cerr << "HEADER\n";
         BOOST_FOREACH(const char arg, output_template.header_args) {
             const char* param = acquire_metadata(srcml_arch, NULL, arg);
+            if (param) {
+                header_params.push_back(std::string(param));
+            }
+            else {
+                header_params.push_back("");   
+            }
         }
+        pretty_print(*output_template.header, header_params);
     }
 
     srcml_unit* unit = srcml_read_unit_header(srcml_arch);
-
+        
     if (output_template.body) {
-        std::cerr << "BODY\n";
         while (unit) {
             BOOST_FOREACH(const char arg, output_template.body_args) {
-                const char* param = acquire_metadata(srcml_arch, unit, arg);
+                if (arg == 'i') {
+                    body_params.push_back(std::to_string(unit_number));
+                }
+                else {
+                    const char* param = acquire_metadata(srcml_arch, unit, arg);
+                    if (param) {
+                        body_params.push_back(std::string(param));
+                    }
+                    else {
+                        body_params.push_back("");
+                    }
+                }
             }
+            pretty_print(*output_template.body, body_params);
+            body_params.clear();
             unit = srcml_read_unit_header(srcml_arch);
+            
+            if (unit)
+                ++unit_number;
         }
     }
 
     if (output_template.footer) {
-        std::cerr << "FOOTER\n";
         BOOST_FOREACH(const char arg, output_template.footer_args) {
-            const char* param = acquire_metadata(srcml_arch, NULL, arg);
+            if (arg == 'C') {
+                footer_params.push_back(std::to_string(unit_number + 1));
+            }
+            else {
+                const char* param = acquire_metadata(srcml_arch, NULL, arg);
+                if (param) {
+                    footer_params.push_back(std::string(param));
+                }
+                else {
+                    footer_params.push_back("");   
+                }
+            }
         }
+        pretty_print(*output_template.footer, footer_params);
     }
 }
 
 // TODO: RETURN REAL ERRORS
 int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
 
-    bool unit_args = false;
-
 	pretty_template_t output_template = split_template_sections(pretty_input);
 
 	if (output_template.header) {
-		//std::cerr << *output_template.header << "\n";
         output_template.error_location = parse_templates(*output_template.header, output_template.header_args, valid_header_args);
         if (output_template.error_location) {
             std::cerr << "srcml: header format error:\n";
@@ -237,7 +271,6 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
 	}
 
     if (output_template.body) {
-        //std::cerr << *output_template.body << "\n";
         output_template.error_location = parse_templates(*output_template.body, output_template.body_args, valid_body_args);
         if (output_template.error_location) {
             std::cerr << "srcml: body format error:\n";
@@ -248,7 +281,6 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
     }
 
 	if (output_template.footer) {
-		//std::cerr << *output_template.footer << "\n";
         output_template.error_location = parse_templates(*output_template.footer, output_template.footer_args, valid_footer_args);
         if (output_template.error_location) {
             std::cerr << "srcml: footer format error:\n";
@@ -265,4 +297,5 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
     //args.push_back("Alice");
     //args.push_back("Bob");
     //std::cout << format_range(helloString, args) << '\n';
+    return 0;
 }

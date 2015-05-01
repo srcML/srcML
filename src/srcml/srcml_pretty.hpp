@@ -41,7 +41,6 @@ struct pretty_template_t {
 /*
 PRETTY Args
 - %C: total number of units (only for footer)
-- %c: unit number *** ADDED ***
 - %D: directory attribute on the archive
 - %d: directory attribute on the unit
 - %F: file attribute on the archive
@@ -57,7 +56,7 @@ PRETTY Args
 */
 
 const std::string valid_header_args = "DFSVX";
-const std::string valid_body_args = "cDdFfhiSsVvXx";
+const std::string valid_body_args = "DdFfhiSsVvXx";
 const std::string valid_footer_args = "CDFSVX";
 
 int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input);
