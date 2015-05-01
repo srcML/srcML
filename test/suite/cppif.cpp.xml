@@ -323,4 +323,26 @@
 }</block>
 </unit>
 
+<unit>
+<function><type><name>int</name></type> <name>create</name><parameter_list>()</parameter_list> <block>{
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
+<cpp:elif>#<cpp:directive>elif</cpp:directive> <expr><literal type="number">2</literal></expr></cpp:elif>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">3</literal></expr></cpp:if>
+  <if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+
+  }</block></then> <else>else
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+    <block>{
+
+    }</block></else></if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+
+  <if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
+    <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if>
+
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+}</block></function>
+</unit>
+
 </unit>
