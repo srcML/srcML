@@ -211,6 +211,11 @@ void create_src(const srcml_request_t& srcml_request,
                 exit(4);
             }
             
+            // set encoding for source output
+            // NOTE: How this is done may change in the future
+            if (srcml_request.src_encoding)
+                srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
+
             srcml_unit_unparse_fd(unit, destination);
 
             srcml_unit_free(unit);
@@ -233,6 +238,11 @@ void create_src(const srcml_request_t& srcml_request,
                 std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
                 exit(4);
             }
+
+            // set encoding for source output
+            // NOTE: How this is done may change in the future
+            if (srcml_request.src_encoding)
+                srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
 
             srcml_unit_unparse_filename(unit, destination.c_str(), 0);
 
