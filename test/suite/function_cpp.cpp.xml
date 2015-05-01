@@ -189,4 +189,8 @@
 <function><type><name>auto</name></type> <name>f</name><parameter_list>()</parameter_list> -&gt;<type><name>char</name><modifier>*</modifier></type> <block>{}</block></function>
 </unit>
 
+<unit>
+<function_decl><type><name>void</name></type> <name>HTTP</name> <parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>ACE</name> <modifier>&amp;</modifier></type><name>request</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>number</name> <init>= <expr><operator>-</operator><literal type="number">1</literal></expr></init></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>website</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
 </unit>
