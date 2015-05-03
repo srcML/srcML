@@ -77,7 +77,7 @@ void srcml_display_unit_count(srcml_archive* srcml_arch) {
     std::cout << "units=" << "\"" << num_units << "\"\n";
 }
 
-void srcml_display_hash(srcml_unit* unit, int ignore_attribue_name) {
+void srcml_display_hash(srcml_unit* unit, int ignore_attribute_name) {
 
     if (!unit) {
         return;
@@ -85,35 +85,35 @@ void srcml_display_hash(srcml_unit* unit, int ignore_attribue_name) {
         
     const char* hash = srcml_unit_get_hash(unit);
     
-    if (!hash && !ignore_attribue_name) {
+    if (!hash && !ignore_attribute_name) {
         std::cout << "hash=\"\"\n";
     }
 
-    if (hash && !ignore_attribue_name) {
+    if (hash && !ignore_attribute_name) {
         std::cout << "hash=\"" << hash << "\"\n";
     }
 
-    if (hash && ignore_attribue_name) {
+    if (hash && ignore_attribute_name) {
         std::cout << hash << "\n";
     }
 }
 
-void srcml_display_timestamp(srcml_unit* unit, int ignore_attribue_name) {
+void srcml_display_timestamp(srcml_unit* unit, int ignore_attribute_name) {
     if (!unit) {
         return;
     }
         
     const char* timestamp = srcml_unit_get_timestamp(unit);
     
-    if (!timestamp && !ignore_attribue_name) {
+    if (!timestamp && !ignore_attribute_name) {
         std::cout << "timestamp=\"\"\n";
     }
 
-    if (timestamp && !ignore_attribue_name) {
+    if (timestamp && !ignore_attribute_name) {
         std::cout << "timestamp=\"" << timestamp << "\"\n";
     }
 
-    if (timestamp && ignore_attribue_name) {
+    if (timestamp && ignore_attribute_name) {
         std::cout << timestamp << "\n";
     }
 }
@@ -131,45 +131,6 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
     }
     return numUnits;   
 }
-
-/*int srcml_pretty_format(srcml_archive* srcml_arch, const std::string& pretty_format) {
-
-    std::string pretty_args = "";
-    boost::optional<std::string> template_header = "";
-    std::string template_string = pretty_format;
-
-    size_t found = -1;
-
-    while (true) {
-        found = template_string.find("%", found + 1);
-        
-        if (found == std::string::npos) {
-            break;
-        }
-
-        // For \% case
-        if ((found != 0) && template_string[found - 1] == '\\') {
-            continue;
-        }
-
-        if ((found + 1) < template_string.length()) {
-            pretty_args += template_string[found + 1];
-            template_string[found + 1] = 's';
-        }
-    }
-
-    std::cerr << template_string << "\n";
-    std::cerr << pretty_args << "\n";
-    
-    //std::string helloString = "Hello %s and %s \nFun time!";
-    //std::vector<std::string> args;
-    //args.push_back("Alice");
-    //args.push_back("Bob");
-    //std::cout << format_range(helloString, args) << '\n';
-
-    return 0;
-}
-*/
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
 

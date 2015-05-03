@@ -3263,7 +3263,7 @@ lcurly_base[] { ENTRY_DEBUG } :
 ;
 
 // end of a block.  Also indicates the end of some open elements.
-block_end[] { ENTRY_DEBUG } :
+block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         // handling of if with then block followed by else
         // handle the block, however scope of then completion stops at if
 
@@ -3304,6 +3304,9 @@ block_end[] { ENTRY_DEBUG } :
             // then we needed to markup the (abbreviated) variable declaration
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
+
+            if(!in_issue_empty && inMode(MODE_END_AT_ENDIF | MODE_TOP | MODE_STATEMENT))
+                endMode();
 
         }
 ;
@@ -3384,10 +3387,8 @@ terminate_pre[] { ENTRY_DEBUG } :
 ;
 
 // do the post terminate processing
-terminate_post[] { ENTRY_DEBUG  bool in_issue_empty = false;} :
+terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         {
-
-            in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP);
 
             // end all statements this statement is nested in
             // special case when ending then of if statement
@@ -4923,7 +4924,7 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
             // argument with nested expression
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
-        (options {warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
+        (options {warnWhenFollowAmbig = false; } : { (LA(1) != RPAREN && LA(1) != COMMA) || count_paren > 0 }?
 
         ({ LA(1) == LPAREN }? expression set_int[count_paren, count_paren + 1] |
 
@@ -4934,9 +4935,9 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
         { perform_call_check(type, isempty, call_count, -1) && type == CALL }? 
         set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
 
-         expression |
+        expression |
 
-         comma
+        comma
 
         ))*
 
@@ -9217,7 +9218,7 @@ eol_post[int directive_token, bool markblockzero] {
         */
         if ((!isoption(parser_options, SRCML_OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
             (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && cpp_skipelse) ||
-            (inputState->guessing && cpp_skipelse) ||
+            (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && inputState->guessing && cpp_skipelse) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
         ) {
             while (LA(1) != PREPROC && LA(1) != 1 /* EOF */)
