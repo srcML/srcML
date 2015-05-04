@@ -50,6 +50,7 @@ PRETTY Args
 - %l: unit language 
 - %S: source encoding attribute on the archive
 - %s: source encoding attribute on the unit
+- %t: timestamp on unit
 - %V: version attribute on the archive
 - %v: version attribute on the unit
 - %X: XML encoding on the archive
@@ -57,7 +58,7 @@ PRETTY Args
 */
 
 const std::string valid_header_args = "DFSVX";
-const std::string valid_body_args = "DdFfhilSsVvXx";
+const std::string valid_body_args = "DdFfhilSstVvXx";
 const std::string valid_footer_args = "CDFSVX";
 
 int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input);

@@ -172,6 +172,9 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
         case 's':           // %s: source encoding attribute on the unit
             return srcml_unit_get_src_encoding(srcml_unit);
             break;
+        case 't':           // %t: timestamp on the unit
+            return srcml_unit_get_timestamp(srcml_unit);
+            break;
         case 'V':           // %V: version attribute on the archive
             return srcml_archive_get_version(srcml_arch);
             break;
