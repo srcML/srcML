@@ -37,6 +37,35 @@ define output <<- 'STDOUT'
 
 createfile sub/a.cpp.xml "$srcml"
 
+# file before options
+srcml2src sub/a.cpp.xml -X --unit 1 -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$outputa"
+
+srcml2src sub/a.cpp.xml --unit 1 -X -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$outputa"
+
+srcml2src sub/a.cpp.xml -X --unit 1
+check 3<<< "$outputa"
+
+srcml2src sub/a.cpp.xml --unit 1 -X
+check 3<<< "$outputa"
+
+srcml2src sub/a.cpp.xml -X --unit 2 -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$outputb"
+
+srcml2src sub/a.cpp.xml --unit 2 -X -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$outputb"
+
+srcml2src sub/a.cpp.xml -X --unit 2
+check 3<<< "$outputb"
+
+srcml2src sub/a.cpp.xml --unit 2 -X
+check 3<<< "$outputb"
+
+srcml sub/a.cpp.xml -X
+check 3<<< "$srcml"
+
+# options before file
 srcml2src -X --unit 1 sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$outputa"
 
@@ -78,3 +107,32 @@ check 3<<< "$srcml"
 
 srcml -X < sub/a.cpp.xml
 check 3<<< "$srcml"
+
+# XML from standard in
+echo "$srcml" | srcml2src -X --unit 1 -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$outputa"
+
+echo "$srcml" | srcml2src --unit 1 -X -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$outputa"
+
+echo "$srcml" | srcml2src -X --unit 1
+check 3<<< "$outputa"
+
+echo "$srcml" | srcml2src --unit 1 -X
+check 3<<< "$outputa"
+
+echo "$srcml" | srcml2src -X --unit 2 -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$outputb"
+
+echo "$srcml" | srcml2src --unit 2 -X -o sub/b.cpp.xml
+check sub/b.cpp.xml 3<<< "$outputb"
+
+echo "$srcml" | srcml2src -X --unit 2
+check 3<<< "$outputb"
+
+echo "$srcml" | srcml2src --unit 2 -X
+check 3<<< "$outputb"
+
+echo "$srcml" | srcml -X
+check 3<<< "$srcml"
+
