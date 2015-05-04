@@ -19,10 +19,10 @@ define none <<- 'STDIN'
 createfile sub/archive.cpp.xml "$none"
 
 srcml --show-language sub/archive.cpp.xml
-check_null
+check 3<<< "C++"
 
 srcml --show-language < sub/archive.cpp.xml
-check_null
+check 3<<< "C++"
 
 # empty
 define empty <<- 'STDOUT'
