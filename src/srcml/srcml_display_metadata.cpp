@@ -173,6 +173,25 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             return;
         }
 
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY) {
+            srcml_pretty(srcml_arch, "%D\n");
+            return;
+        }
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
+            srcml_pretty(srcml_arch, "%F\n");
+            return;
+        }
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
+            srcml_pretty(srcml_arch, "%F\n");
+            return;
+        }
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING) {
+            srcml_pretty(srcml_arch, "%X\n");
+            return;
+        }
 
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
