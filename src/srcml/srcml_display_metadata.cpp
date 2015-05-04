@@ -193,6 +193,11 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             return;
         }
 
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH) {
+            srcml_pretty(srcml_arch, "%h\n");
+            return;
+        }
+
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
             std::cout << srcml_unit_count(srcml_arch) << "\n";
