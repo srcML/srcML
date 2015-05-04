@@ -133,7 +133,7 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
-
+    
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_archive_create();
@@ -157,9 +157,17 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             }
         }
 
+        // Overrides all others Perform a pretty output
         if (srcml_request.pretty_format) {
             srcml_pretty(srcml_arch, *srcml_request.pretty_format);
+            return;
         }
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
+            srcml_pretty(srcml_arch, "%l\n");
+            return;
+        }
+
 
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {

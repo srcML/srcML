@@ -41,7 +41,7 @@ void pretty_print(const std::string& format_string, const std::vector<std::strin
         output_string % *it;
     }
 
-    std::cerr << output_string.str();
+    std::cout << output_string.str();
 }
 
 pretty_template_t split_template_sections(const std::string& pretty_input) {
@@ -162,6 +162,9 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
             break;
         case 'h':           // %h: hash attribute on the unit
             return srcml_unit_get_hash(srcml_unit);
+            break;
+        case 'l':           // %l: unit language
+            return srcml_unit_get_language(srcml_unit);
             break;
         case 'S':           // %S: source encoding attribute on the archive
             return srcml_archive_get_src_encoding(srcml_arch);
