@@ -47,6 +47,7 @@ PRETTY Args
 - %f: file name attribute on the unit
 - %h: hash attribute on the unit
 - %i: index of the unit within the archive
+- %l: unit language 
 - %S: source encoding attribute on the archive
 - %s: source encoding attribute on the unit
 - %V: version attribute on the archive
