@@ -168,6 +168,11 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             return;
         }
 
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION) {
+            srcml_pretty(srcml_arch, "%v\n");
+            return;
+        }
+
 
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {

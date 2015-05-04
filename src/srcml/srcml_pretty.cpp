@@ -226,11 +226,15 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                         body_params.push_back(std::string(param));
                     }
                     else {
-                        body_params.push_back("");
+                        if (output_template.body_args.length() > 1)
+                            body_params.push_back("");
                     }
                 }
             }
-            pretty_print(*output_template.body, body_params);
+
+            if (body_params.size() != 0)
+                pretty_print(*output_template.body, body_params);
+
             body_params.clear();
             unit = srcml_read_unit_header(srcml_arch);
             
