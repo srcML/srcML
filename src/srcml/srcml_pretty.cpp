@@ -206,10 +206,13 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 header_params.push_back(std::string(param));
             }
             else {
-                header_params.push_back("");   
+                if (output_template.header_args.length() > 1)
+                    header_params.push_back("");   
             }
         }
-        pretty_print(*output_template.header, header_params);
+
+        if (header_params.size() != 0)
+            pretty_print(*output_template.header, header_params);
     }
 
     srcml_unit* unit = srcml_read_unit_header(srcml_arch);
@@ -254,11 +257,14 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                     footer_params.push_back(std::string(param));
                 }
                 else {
-                    footer_params.push_back("");   
+                    if (output_template.footer_args.length() > 1)
+                        footer_params.push_back("");   
                 }
             }
         }
-        pretty_print(*output_template.footer, footer_params);
+
+        if (footer_params.size() != 0)
+            pretty_print(*output_template.footer, footer_params);
     }
 }
 
