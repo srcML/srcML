@@ -95,11 +95,12 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
 	return output_template;
 }
 
-boost::optional<size_t> parse_templates(std::string& template_string, std::string& section_args, const std::string& allowed_args) {
+boost::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, const std::string& allowed_args) {
 
     size_t found = -1;
 
     while (true) {
+        std::string template_arg = "";
         found = template_string.find("%", found + 1);
         
         if (found == std::string::npos) {
@@ -119,8 +120,12 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::strin
                 //std::cerr << "Invalid arg: " << template_string[found + 1] << "\n";
                 return found + 1;
             }
+ 
+            template_arg += template_string[found + 1];
 
-            section_args += template_string[found + 1];
+            //if (template_arg = "N")
+
+            section_args.push_back(template_arg);
             template_string[found + 1] = 's';
         }
     }
@@ -145,51 +150,47 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::strin
     return boost::none;
 }
 
-const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, const char arg) {
+const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, const std::string& arg) {
 
-    switch (arg){
-        case 'D':           // %D: directory attribute on the archive
+        if (arg == "D")           // %D: directory attribute on the archive
             return srcml_archive_get_directory(srcml_arch);
-            break;
-        case 'd':           // %d: directory attribute on the unit
+        
+        if (arg == "d")           // %d: directory attribute on the unit
             return srcml_unit_get_directory(srcml_unit);
-            break;
-        case 'F':           // %F: file attribute on the archive
+        
+        if (arg == "F")           // %F: file attribute on the archive
             return srcml_archive_get_filename(srcml_arch);
-            break;
-        case 'f':           // %f: file name attribute on the unit
+        
+        if (arg == "f")           // %f: file name attribute on the unit
             return srcml_unit_get_filename(srcml_unit);
-            break;
-        case 'h':           // %h: hash attribute on the unit
+        
+        if (arg == "h")           // %h: hash attribute on the unit
             return srcml_unit_get_hash(srcml_unit);
-            break;
-        case 'l':           // %l: unit language
+
+        if (arg == "l")           // %l: unit language
             return srcml_unit_get_language(srcml_unit);
-            break;
-        case 'S':           // %S: source encoding attribute on the archive
+
+        if (arg == "S")           // %S: source encoding attribute on the archive
             return srcml_archive_get_src_encoding(srcml_arch);
-            break;
-        case 's':           // %s: source encoding attribute on the unit
+    
+        if (arg == "s")           // %s: source encoding attribute on the unit
             return srcml_unit_get_src_encoding(srcml_unit);
-            break;
-        case 't':           // %t: timestamp on the unit
+
+        if (arg == "t")           // %t: timestamp on the unit
             return srcml_unit_get_timestamp(srcml_unit);
-            break;
-        case 'V':           // %V: version attribute on the archive
+    
+        if (arg == "V")           // %V: version attribute on the archive
             return srcml_archive_get_version(srcml_arch);
-            break;
-        case 'v':           // %v: version attribute on the unit
+
+        if (arg == "v")           // %v: version attribute on the unit
             return srcml_unit_get_version(srcml_unit);
-            break;
-        case 'X':           // %X: XML encoding on the archive
+
+        if (arg == "X")           // %X: XML encoding on the archive
             return srcml_archive_get_xml_encoding(srcml_arch);
-            break;
-        case 'x':           // %x: XML encoding attribute on the unit
+
+        if (arg == "x")           // %x: XML encoding attribute on the unit
             return "XML";
-            break;
-        default:
-            break;
-    }
+
     return "???";
 }
 
@@ -203,13 +204,13 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     std::vector<std::string> footer_params;
 
     if (output_template.header) {
-        BOOST_FOREACH(const char arg, output_template.header_args) {
+        BOOST_FOREACH(const std::string arg, output_template.header_args) {
             const char* param = acquire_metadata(srcml_arch, NULL, arg);
             if (param) {
                 header_params.push_back(std::string(param));
             }
             else {
-                if (output_template.header_args.length() > 1)
+                if (output_template.header_args.size() > 1)
                     header_params.push_back("");   
             }
         }
@@ -222,8 +223,8 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
         
     if (output_template.body) {
         while (unit) {
-            BOOST_FOREACH(const char arg, output_template.body_args) {
-                if (arg == 'i') {
+            BOOST_FOREACH(const std::string arg, output_template.body_args) {
+                if (arg == "i") {
                     body_params.push_back(std::to_string(unit_number));
                 }
                 else {
@@ -232,7 +233,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                         body_params.push_back(std::string(param));
                     }
                     else {
-                        if (output_template.body_args.length() > 1)
+                        if (output_template.body_args.size() > 1)
                             body_params.push_back("");
                     }
                 }
@@ -250,8 +251,8 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     }
 
     if (output_template.footer) {
-        BOOST_FOREACH(const char arg, output_template.footer_args) {
-            if (arg == 'C') {
+        BOOST_FOREACH(const std::string arg, output_template.footer_args) {
+            if (arg == "C") {
                 footer_params.push_back(std::to_string(unit_number + 1));
             }
             else {
@@ -260,7 +261,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                     footer_params.push_back(std::string(param));
                 }
                 else {
-                    if (output_template.footer_args.length() > 1)
+                    if (output_template.footer_args.size() > 1)
                         footer_params.push_back("");   
                 }
             }

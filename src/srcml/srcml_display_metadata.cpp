@@ -203,6 +203,10 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             return;
         }
 
+        if (srcml_request.xmlns_prefix_query) {
+            //srcml_pretty(srcml_arch, )
+        }
+
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
             std::cout << srcml_unit_count(srcml_arch) << "\n";
