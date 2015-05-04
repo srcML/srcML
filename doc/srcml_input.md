@@ -65,7 +65,7 @@ output which is thus displayed only once.
 
 	- %h: hash attribute on the unit
 	- %d: directory attribute on the unit
-	- %f: file name attribute on the unit
+	- %f: filename attribute on the unit
 	- %v: version attribute on the unit
 	- %x: XML encoding attribute on the unit
 	- %s: source encoding attribute on the unit
@@ -135,11 +135,12 @@ that the extensions do not contain the period character '.'.
 files. By default these will be translated as C source-code files. This
 option can be used to override this behavior.
 
-`-SRC_ENCODING_FLAG_SHORT`, `--SRC_ENCODING_FLAG_LONG=<encoding>`
+`--SRC_ENCODING_FLAG_LONG=<encoding>`
 : Sets the input encoding of the source-code file to <encoding>. The
 default is to try to automatically determine this when possible.
 Used for any necessary source-code text translation to the encoding used
-in the srcML file. Possible encodings can be obtained by using the command
+in the srcML file. Possible encodings, such as "UTF-16", "ISO-10646-UCS-2",
+or "ISO-8859-1" can be obtained by using the command
 `iconv -l` on UNIX platforms.
 
 `--FILES_FROM_LONG=<file|uri>`
@@ -172,6 +173,11 @@ input.
 `--IN_ORDER_FLAG_LONG`
 : Enables strict output ordering. Useful for comparison when the output
 is an archive of multiple srcML documents.
+
+`-TEXT_FLAG_SHORT`, `--TEXT_FLAG_LONG=<text>`
+: Processes the raw <text> string as input, respecting the escaped newline
+charater. Useful for short text inputs. Equivalent to `echo <text> | srcml`
+with the relevant language specification.
 
 
 ### MARKUP OPTIONS
