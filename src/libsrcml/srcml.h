@@ -145,6 +145,9 @@ LIBSRCML_DECL const char* srcml_version_string();
 /** Encode the original source encoding as an attribute */
 #define SRCML_OPTION_STORE_ENCODING    1<<26
 
+/** All default enabled options */
+#define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY)
+
 /* srcml status messages */
 /** Return status indicating no errors */
 #define SRCML_STATUS_OK                   0
