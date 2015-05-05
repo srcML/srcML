@@ -186,8 +186,6 @@ public :
             xmlOutputBufferWriteString(buf, found || meta_tags.size() ? end_unit.c_str() : "/>\n");
         }
 
-        // all done with the buffer
-        xmlOutputBufferClose(buf);
     }
 
     /**

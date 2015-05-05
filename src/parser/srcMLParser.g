@@ -1904,7 +1904,8 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | keyword_call_tokens (DOTDOTDOT | template_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
+        (function_identifier | (typename_specifier_name)=>typename_specifier_name
+            | keyword_call_tokens (DOTDOTDOT | template_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -4935,9 +4936,7 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
         { perform_call_check(type, isempty, call_count, -1) && type == CALL }? 
         set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
 
-        expression |
-
-        comma
+        expression | comma
 
         ))*
 
@@ -5767,9 +5766,17 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             } while(--call_count > 0);
 
         }
-        ({inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list)
+        ({inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list
+            | (typename_specifier_name)=>typename_specifier_name call_argument_list)
         
 ;
+
+typename_specifier_name[] { ENTRY_DEBUG } :
+
+    typename_keyword function_identifier
+
+;
+
 
 // argument list to a call
 call_argument_list[] { ENTRY_DEBUG } :

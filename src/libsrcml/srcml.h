@@ -145,6 +145,9 @@ LIBSRCML_DECL const char* srcml_version_string();
 /** Encode the original source encoding as an attribute */
 #define SRCML_OPTION_STORE_ENCODING    1<<26
 
+/** All default enabled options */
+#define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY)
+
 /* srcml status messages */
 /** Return status indicating no errors */
 #define SRCML_STATUS_OK                   0
@@ -413,8 +416,8 @@ LIBSRCML_DECL const char* srcml_unit_get_directory     (const struct srcml_unit*
 LIBSRCML_DECL const char* srcml_unit_get_version       (const struct srcml_unit*);
 LIBSRCML_DECL const char* srcml_unit_get_timestamp     (const struct srcml_unit*);
 LIBSRCML_DECL const char* srcml_unit_get_hash          (const struct srcml_unit*);
-LIBSRCML_DECL const char* srcml_unit_get_fragment_xml  (struct srcml_unit*);
-LIBSRCML_DECL int srcml_unit_get_standalone_xml(struct srcml_unit*, const char* xml_encoding, char** xml_buffer, size_t* buffer_size);
+LIBSRCML_DECL const char* srcml_unit_get_xml_fragment  (struct srcml_unit*);
+LIBSRCML_DECL int srcml_unit_get_xml_standalone(struct srcml_unit*, const char* xml_encoding, char** xml_buffer, size_t* buffer_size);
 
 /* Convert from srcML to source code */
 LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit*, const char* src_filename, unsigned short compression);
