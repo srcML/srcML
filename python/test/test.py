@@ -124,7 +124,7 @@ unit.parse_filename("a.foo")
 archive.write_unit(unit)
 archive.close()
 os.remove("a.foo")
-verify_test("""<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++"><macro-list token="MACRO" type="src:macro"/></s:unit>""", unit.get_fragment_xml())
+verify_test("""<s:unit xmlns:s="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=\"""" + srcml.SRCML_VERSION_STRING + """\" language="C++"><macro-list token="MACRO" type="src:macro"/></s:unit>""", unit.get_xml_fragment())
 
 # write/parse tests
 src = "a;\n"
