@@ -238,7 +238,7 @@ class readable_unit(object):
             if check_encoding(xml_encoding) == 0:
                 raise invalid_srcml_encoding("Invalid XML encoding", xml_encoding)
         ret = memory_buffer()
-        unit_get_standalone_xml(self.srcml_unit, xml_encoding, ret.buff, ret.size)
+        unit_get_xml_standalone(self.srcml_unit, xml_encoding, ret.buff, ret.size)
         strResult = ret.to_string(xml_encoding)
         del ret
         return strResult
@@ -247,7 +247,7 @@ class readable_unit(object):
         """
         Returns a unit fragment of XML from within an archive.
         """
-        ret =  unit_get_fragment_xml(self.srcml_unit)
+        ret =  unit_get_xml_fragment(self.srcml_unit)
         if ret is None:
             raise MemoryError("Failed to allocate native memory for XML unit fragment.")
         return ret

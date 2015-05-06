@@ -339,7 +339,7 @@ class writable_unit(object):
         XML is that the standalone XML has all of the archive's namespaces
         associated with it.
         """
-        return unit_get_fragment_xml(self.srcml_unit)
+        return unit_get_xml_fragment(self.srcml_unit)
 
     def get_standalone_xml(self, xml_encoding=None):
         """
@@ -352,7 +352,7 @@ class writable_unit(object):
             if check_encoding(xml_encoding) == 0:
                 raise invalid_srcml_encoding("Invalid XML encoding", xml_encoding)
         ret = memory_buffer()
-        unit_get_standalone_xml(self.srcml_unit, xml_encoding, ret.buff, ret.size)
+        unit_get_xml_standalone(self.srcml_unit, xml_encoding, ret.buff, ret.size)
         strResult = ret.to_string(xml_encoding)
         del ret
         return strResult
