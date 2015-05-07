@@ -6052,7 +6052,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         // variable or literal
         variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
 
-        variable_identifier_array_grammar_sub[flag]
+        variable_identifier_array_grammar_sub[flag] |
+
+        single_keyword_specifier
 ;
 
 // Keyword based calls with special markup
@@ -7765,7 +7767,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         // variable or literal
         variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
 
-        variable_identifier_array_grammar_sub[flag]
+        variable_identifier_array_grammar_sub[flag] |
+
+        single_keyword_specifier
 ;
 
 // rule for literals
