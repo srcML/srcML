@@ -99,8 +99,8 @@ const char* const UNIT_ATTRIBUTE_REVISION = "revision";
 /** language attribute */
 const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
 
-/** directory attribute */
-const char* const UNIT_ATTRIBUTE_DIRECTORY = "directory";
+/**url attribute */
+const char* const UNIT_ATTRIBUTE_URL = "url";
 
 /** filename attribute */
 const char* const UNIT_ATTRIBUTE_FILENAME = "filename";

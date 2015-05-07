@@ -32,7 +32,7 @@
 #include <libxml/xmlreader.h>
 
 /*
-  static xmlChar* unit_directory = 0;
+  static xmlChar* unit_url = 0;
   static xmlChar* unit_filename = 0;
 */
 

@@ -41,7 +41,7 @@ int main() {
         archive->filename = "f";
         archive->encoding = "e";
         archive->language = "l";
-        archive->directory = "d";
+        archive->url = "u";
         archive->version = "v";
         archive->attributes.push_back("a");
         archive->attributes.push_back("a");
@@ -68,7 +68,7 @@ int main() {
         dassert(*new_archive->encoding, "e");
         dassert(new_archive->src_encoding, 0);
         dassert(*new_archive->language, "l");
-        dassert(*new_archive->directory, "d");
+        dassert(*new_archive->url, "u");
         dassert(*new_archive->version, "v");
         dassert(new_archive->attributes.size(), 2);
         dassert(new_archive->attributes.at(0), "a");

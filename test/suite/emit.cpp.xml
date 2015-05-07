@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="emit" filename="emit">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" url="emit" filename="emit">
 
 <unit>
 <emit>emit <expr><call><name>valueChanged</name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</emit>

@@ -109,8 +109,8 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_archive_set_filename(oarch, input_sources[0].filename.c_str());
             }
 
-            if (srcml_request.att_directory)
-                srcml_archive_set_directory(oarch, srcml_request.att_directory->c_str());
+            if (srcml_request.att_url)
+                srcml_archive_set_url(oarch, srcml_request.att_url->c_str());
 
             if (srcml_request.att_version)
                 srcml_archive_set_version(oarch, srcml_request.att_version->c_str());

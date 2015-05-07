@@ -42,7 +42,7 @@ int main() {
         dassert(archive->encoding, 0);
         dassert(archive->src_encoding, 0);
         dassert(archive->language, 0);
-        dassert(archive->directory, 0);
+        dassert(archive->url, 0);
         dassert(archive->version, 0);
         dassert(archive->attributes.size(), 0);
 

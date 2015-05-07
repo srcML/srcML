@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="synchronized" filename="synchronized_m">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" url="synchronized" filename="synchronized_m">
 
 <unit>
 <synchronized>@synchronized<init>(<expr><name>foo</name></expr>)</init> <block>{}</block></synchronized>

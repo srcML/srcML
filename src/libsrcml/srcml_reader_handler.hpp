@@ -396,8 +396,8 @@ public :
                 archive->revision = value;
             else if(attribute == "filename")
                 srcml_archive_set_filename(archive, value.c_str());
-            else if(attribute.size() >= 3 && attribute[0] == 'd' && attribute[1] == 'i' && attribute[2] == 'r' && (attribute.size() == 3 || attribute.compare(3, std::string::npos, "ectory") == 0))
-                srcml_archive_set_directory(archive, value.c_str());
+            else if(attribute == "url")
+                srcml_archive_set_url(archive, value.c_str());
             else if(attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
             else if(attribute == "tabs")
@@ -557,8 +557,8 @@ public :
                 unit->revision = value;
             else if(attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
-            else if(attribute.size() >= 3 && attribute[0] == 'd' && attribute[1] == 'i' && attribute[2] == 'r' && (attribute.size() == 3 || attribute.compare(3, std::string::npos, "ectory") == 0))
-                srcml_unit_set_directory(unit, value.c_str());
+            else if(attribute == "url")
+                srcml_unit_set_url(unit, value.c_str());
             else if(attribute == "version")
                 srcml_unit_set_version(unit, value.c_str());
             else if(attribute == "tabs" || attribute == "options" || attribute == "hash")

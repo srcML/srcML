@@ -63,10 +63,10 @@ int main() {
     const std::string latin_src = "/* \xfe\xff */\n";
     const std::string src_macro = "MACRO1;\nMACRO2;\n";
     const std::string srcml = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
-    const std::string srcml_full = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"test\" filename=\"project\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
-    const std::string utf8_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u2713 */</comment>\n</unit>";
-    const std::string latin_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u00fe\u00ff */</comment>\n</unit>";
-    const std::string srcml_macro = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>";
+    const std::string srcml_full = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string utf8_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u2713 */</comment>\n</unit>";
+    const std::string latin_srcml = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u00fe\u00ff */</comment>\n</unit>";
+    const std::string srcml_macro = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>";
     const std::string srcml_timestamp = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" timestamp=\"today\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
     const std::string srcml_hash = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" hash=\"0123456789abcdef\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
     const std::string srcml_hash_generated = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" hash=\"\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
@@ -154,7 +154,7 @@ int main() {
         srcml_archive_write_open_filename(archive, "project.xml", 0);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_filename(unit, "project.foo");
         dassert(*unit->unit, srcml_full);
@@ -190,7 +190,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_filename(unit, "project.c");
         dassert(*unit->unit, srcml_full);
@@ -211,7 +211,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_filename(unit, "project_utf8.cpp");
         dassert(*unit->unit, utf8_srcml);
@@ -233,7 +233,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_filename(unit, "project_utf8.cpp");
         dassert(*unit->unit, utf8_srcml);
@@ -254,7 +254,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_filename(unit, "project_latin.cpp");
         dassert(*unit->unit, latin_srcml);
@@ -276,7 +276,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_filename(unit, "project_latin.cpp");
         dassert(*unit->unit, latin_srcml);
@@ -299,7 +299,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_filename(unit, "project_macro.cpp");
         dassert(*unit->unit, srcml_macro);
@@ -513,7 +513,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_memory(unit, src.c_str(), src.size());
         dassert(*unit->unit, srcml_full);
@@ -532,7 +532,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_memory(unit, src.c_str(), src.size());
         dassert(*unit->unit, srcml_full);
@@ -553,7 +553,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_memory(unit, utf8_src.c_str(), utf8_src.size());
         dassert(*unit->unit, utf8_srcml);
@@ -575,7 +575,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_memory(unit, utf8_src.c_str(), utf8_src.size());
         dassert(*unit->unit, utf8_srcml);
@@ -596,7 +596,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_memory(unit, latin_src.c_str(), latin_src.size());
         dassert(*unit->unit, latin_srcml);
@@ -618,7 +618,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_memory(unit, latin_src.c_str(), latin_src.size());
         dassert(*unit->unit, latin_srcml);
@@ -640,7 +640,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_memory(unit, src_macro.c_str(), src_macro.size());
         dassert(*unit->unit, srcml_macro);
@@ -885,7 +885,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project.c", "r");
         srcml_unit_parse_FILE(unit, file);
@@ -906,7 +906,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project.c", "r");
         srcml_unit_parse_FILE(unit, file);
@@ -929,7 +929,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_utf8.cpp", "r");
         srcml_unit_parse_FILE(unit, file);
@@ -953,7 +953,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_utf8.cpp", "r");
         srcml_unit_parse_FILE(unit, file);
@@ -976,7 +976,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_latin.cpp", "r");
         srcml_unit_parse_FILE(unit, file);
@@ -1000,7 +1000,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_latin.cpp", "r");
         srcml_unit_parse_FILE(unit, file);
@@ -1024,7 +1024,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_macro.cpp", "r");
         srcml_unit_parse_FILE(unit, file);
@@ -1273,7 +1273,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         int fd = OPEN("project.c", O_RDONLY, 0);
         srcml_unit_parse_fd(unit, fd);
@@ -1294,7 +1294,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         int fd = OPEN("project.c", O_RDONLY, 0);
         srcml_unit_parse_fd(unit, fd);
@@ -1317,7 +1317,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         int fd = OPEN("project_utf8.cpp", O_RDONLY, 0);
         srcml_unit_parse_fd(unit, fd);
@@ -1341,7 +1341,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         int fd = OPEN("project_utf8.cpp", O_RDONLY, 0);
         srcml_unit_parse_fd(unit, fd);
@@ -1364,7 +1364,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         int fd = OPEN("project_latin.cpp", O_RDONLY, 0);
         srcml_unit_parse_fd(unit, fd);
@@ -1388,7 +1388,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         int fd = OPEN("project_latin.cpp", O_RDONLY, 0);
         srcml_unit_parse_fd(unit, fd);
@@ -1412,7 +1412,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         int fd = OPEN("project_macro.cpp", O_RDONLY, 0);
         srcml_unit_parse_fd(unit, fd);
@@ -1643,7 +1643,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project.c", "r");
         srcml_unit_parse_io(unit, (void *)file, read_callback, close_callback);
@@ -1664,7 +1664,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project.c", "r");
         srcml_unit_parse_io(unit, (void *)file, read_callback, close_callback);
@@ -1687,7 +1687,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_utf8.cpp", "r");
         srcml_unit_parse_io(unit, (void *)file, read_callback, close_callback);
@@ -1711,7 +1711,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_utf8.cpp", "r");
         srcml_unit_parse_io(unit, (void *)file, read_callback, close_callback);
@@ -1734,7 +1734,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_latin.cpp", "r");
         srcml_unit_parse_io(unit, (void *)file, read_callback, close_callback);
@@ -1758,7 +1758,7 @@ int main() {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_latin.cpp", "r");
         srcml_unit_parse_io(unit, (void *)file, read_callback, close_callback);
@@ -1782,7 +1782,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_directory(unit, "test");
+        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit , "1");
         FILE * file = fopen("project_macro.cpp", "r");
         srcml_unit_parse_io(unit, (void *)file, read_callback, close_callback);

@@ -38,7 +38,7 @@ struct ParseRequest {
     // Fields required by thread to process a unit
     std::string language;
     boost::optional<std::string> filename;
-    boost::optional<std::string> directory;
+    boost::optional<std::string> url;
     boost::optional<std::string> version;
     std::vector<char> buffer;
     srcml_archive* srcml_arch;

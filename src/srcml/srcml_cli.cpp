@@ -372,7 +372,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         src2srcml_metadata.add_options()
-            ("directory,d", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_directory>), "set the arg directory attribute")
+            ("url,d", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the arg url attribute")
             ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the arg filename attribute")
             ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the arg version attribute")
             ;

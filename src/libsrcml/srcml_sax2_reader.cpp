@@ -126,7 +126,7 @@ srcml_sax2_reader::~srcml_sax2_reader() {
  * read_root_unit_attributes
  * @param language a location to store the language attribute
  * @param filename a location to store the filename attribute
- * @param directory a location to store the directory attribute
+ * @param url a location to store the url attribute
  * @param version a location to store the version attribute
  * @param attributes array to store other attributes gathered
  * @param prefixes an array to store gathered XML namespace prefixes
@@ -143,7 +143,7 @@ srcml_sax2_reader::~srcml_sax2_reader() {
  */
 int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & encoding,
                                                  boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                                                 boost::optional<std::string> & directory, boost::optional<std::string> & version,
+                                                 boost::optional<std::string> & url, boost::optional<std::string> & version,
                                                  std::vector<std::string> & attributes,
                                                  std::vector<std::string> & prefixes,
                                                  std::vector<std::string> & namespaces,
@@ -157,7 +157,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
     encoding.swap(handler.archive->encoding);
     language.swap(handler.archive->language);
     filename.swap(handler.archive->filename);
-    directory.swap(handler.archive->directory);
+    url.swap(handler.archive->url);
     version.swap(handler.archive->version);
     attributes.swap(handler.archive->attributes);
     prefixes.swap(handler.archive->prefixes);
@@ -176,7 +176,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
  * read_unit_attributes
  * @param language a location to store the language attribute
  * @param filename a location to store the filename attribute
- * @param directory a location to store the directory attribute
+ * @param url a location to store the url attribute
  * @param version a location to store the version attribute
  *
  * Read attributes from next unit.
@@ -184,7 +184,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
  * @returns 1 on success and 0 on failure.
  */
 int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                                            boost::optional<std::string> & directory, boost::optional<std::string> & version,
+                                            boost::optional<std::string> & url, boost::optional<std::string> & version,
                                             boost::optional<std::string> & timestamp, boost::optional<std::string> & hash,
                                             std::vector<std::string> & attributes) {
 
@@ -198,7 +198,7 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
 
     language.swap(handler.unit->language);
     filename.swap(handler.unit->filename);
-    directory.swap(handler.unit->directory);
+    url.swap(handler.unit->url);
     version.swap(handler.unit->version);
     hash.swap(handler.unit->hash);
     timestamp.swap(handler.unit->timestamp);

@@ -213,7 +213,7 @@ LIBSRCML_DECL int srcml_set_src_encoding          (const char* encoding);
 LIBSRCML_DECL int srcml_set_xml_encoding          (const char* encoding);
 LIBSRCML_DECL int srcml_set_language              (const char* language);
 LIBSRCML_DECL int srcml_set_filename              (const char* filename);
-LIBSRCML_DECL int srcml_set_directory             (const char* directory);
+LIBSRCML_DECL int srcml_set_url                   (const char* url);
 LIBSRCML_DECL int srcml_set_version               (const char* version);
 LIBSRCML_DECL int srcml_set_timestamp             (const char* timestamp);
 LIBSRCML_DECL int srcml_set_hash                  (const char* hash);
@@ -232,7 +232,7 @@ LIBSRCML_DECL const char*        srcml_get_xml_encoding ();
 LIBSRCML_DECL const char*        srcml_get_revision ();
 LIBSRCML_DECL const char*        srcml_get_language ();
 LIBSRCML_DECL const char*        srcml_get_filename ();
-LIBSRCML_DECL const char*        srcml_get_directory();
+LIBSRCML_DECL const char*        srcml_get_url();
 LIBSRCML_DECL const char*        srcml_get_version  ();
 LIBSRCML_DECL const char*        srcml_get_timestamp();
 LIBSRCML_DECL const char*        srcml_get_hash();
@@ -314,7 +314,7 @@ LIBSRCML_DECL int srcml_archive_set_xml_encoding       (struct srcml_archive*, c
 LIBSRCML_DECL int srcml_archive_set_src_encoding       (struct srcml_archive*, const char* encoding);
 LIBSRCML_DECL int srcml_archive_set_language           (struct srcml_archive*, const char* language);
 LIBSRCML_DECL int srcml_archive_set_filename           (struct srcml_archive*, const char* filename);
-LIBSRCML_DECL int srcml_archive_set_directory          (struct srcml_archive*, const char* directory);
+LIBSRCML_DECL int srcml_archive_set_url                (struct srcml_archive*, const char* url);
 LIBSRCML_DECL int srcml_archive_set_version            (struct srcml_archive*, const char* version);
 
 LIBSRCML_DECL int srcml_archive_set_options               (struct srcml_archive*, unsigned long long option);
@@ -332,7 +332,7 @@ LIBSRCML_DECL const char*        srcml_archive_get_src_encoding                 
 LIBSRCML_DECL const char*        srcml_archive_get_revision                     (const struct srcml_archive*);
 LIBSRCML_DECL const char*        srcml_archive_get_language                     (const struct srcml_archive*);
 LIBSRCML_DECL const char*        srcml_archive_get_filename                     (const struct srcml_archive*);
-LIBSRCML_DECL const char*        srcml_archive_get_directory                    (const struct srcml_archive*);
+LIBSRCML_DECL const char*        srcml_archive_get_url                          (const struct srcml_archive*);
 LIBSRCML_DECL const char*        srcml_archive_get_version                      (const struct srcml_archive*);
 LIBSRCML_DECL unsigned long long srcml_archive_get_options                      (const struct srcml_archive*);
 LIBSRCML_DECL size_t             srcml_archive_get_tabstop                      (const struct srcml_archive*);
@@ -356,7 +356,7 @@ LIBSRCML_DECL struct srcml_unit* srcml_unit_create(struct srcml_archive* archive
 LIBSRCML_DECL int srcml_unit_set_src_encoding (struct srcml_unit*, const char* language);
 LIBSRCML_DECL int srcml_unit_set_language     (struct srcml_unit*, const char* language);
 LIBSRCML_DECL int srcml_unit_set_filename     (struct srcml_unit*, const char* filename);
-LIBSRCML_DECL int srcml_unit_set_directory    (struct srcml_unit*, const char* directory);
+LIBSRCML_DECL int srcml_unit_set_url          (struct srcml_unit*, const char* url);
 LIBSRCML_DECL int srcml_unit_set_version      (struct srcml_unit*, const char* version);
 LIBSRCML_DECL int srcml_unit_set_timestamp    (struct srcml_unit*, const char* timestamp);
 LIBSRCML_DECL int srcml_unit_set_hash         (struct srcml_unit*, const char* hash);
@@ -412,7 +412,7 @@ LIBSRCML_DECL const char* srcml_unit_get_src_encoding  (const struct srcml_unit*
 LIBSRCML_DECL const char* srcml_unit_get_revision      (const struct srcml_unit*);
 LIBSRCML_DECL const char* srcml_unit_get_language      (const struct srcml_unit*);
 LIBSRCML_DECL const char* srcml_unit_get_filename      (const struct srcml_unit*);
-LIBSRCML_DECL const char* srcml_unit_get_directory     (const struct srcml_unit*);
+LIBSRCML_DECL const char* srcml_unit_get_url           (const struct srcml_unit*);
 LIBSRCML_DECL const char* srcml_unit_get_version       (const struct srcml_unit*);
 LIBSRCML_DECL const char* srcml_unit_get_timestamp     (const struct srcml_unit*);
 LIBSRCML_DECL const char* srcml_unit_get_hash          (const struct srcml_unit*);

@@ -131,27 +131,27 @@ int main() {
     }
 
     /*
-      srcml_archive_set_directory
+      srcml_archive_set_url
     */
 
     {
 
         srcml_archive * archive = srcml_archive_create();
-        srcml_archive_set_directory(archive, 0);
-        dassert(archive->directory, 0);
+        srcml_archive_set_url(archive, 0);
+        dassert(archive->url, 0);
         srcml_archive_free(archive);
     }
 
     {
 
         srcml_archive * archive = srcml_archive_create();
-        srcml_archive_set_directory(archive, "foo");
-        dassert(*archive->directory, "foo");
+        srcml_archive_set_url(archive, "foo");
+        dassert(*archive->url, "foo");
         srcml_archive_free(archive);
     }
 
     {
-        dassert(srcml_archive_set_directory(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_set_url(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
