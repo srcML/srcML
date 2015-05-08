@@ -151,12 +151,6 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
 }
 
 const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, const std::string& arg) {
-
-        if (arg == "D")           // %D: directory attribute on the archive
-            return srcml_archive_get_directory(srcml_arch);
-        
-        if (arg == "d")           // %d: directory attribute on the unit
-            return srcml_unit_get_directory(srcml_unit);
         
         if (arg == "F")           // %F: file attribute on the archive
             return srcml_archive_get_filename(srcml_arch);
@@ -178,6 +172,12 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
 
         if (arg == "t")           // %t: timestamp on the unit
             return srcml_unit_get_timestamp(srcml_unit);
+
+        if (arg == "U")           // %U: url attribute on the archive
+            return srcml_archive_get_url(srcml_arch);
+        
+        if (arg == "u")           // %u: url attribute on the unit
+            return srcml_unit_get_url(srcml_unit);
     
         if (arg == "V")           // %V: version attribute on the archive
             return srcml_archive_get_version(srcml_arch);

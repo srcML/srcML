@@ -173,8 +173,8 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             return;
         }
 
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY) {
-            srcml_pretty(srcml_arch, "%D\n");
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_URL) {
+            srcml_pretty(srcml_arch, "%U\n");
             return;
         }
 
