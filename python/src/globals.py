@@ -86,9 +86,9 @@ libsrcml.srcml_set_language.argtypes = [c_char_p]
 libsrcml.srcml_set_filename.restype = c_int
 libsrcml.srcml_set_filename.argtypes = [c_char_p]
 
-# int srcml_set_directory (const char* directory);
-libsrcml.srcml_set_directory.restype = c_int
-libsrcml.srcml_set_directory.argtypes = [c_char_p]
+# int srcml_set_url (const char* url);
+libsrcml.srcml_set_url.restype = c_int
+libsrcml.srcml_set_url.argtypes = [c_char_p]
 
 # int srcml_set_version   (const char* version);
 libsrcml.srcml_set_version.restype = c_int
@@ -142,9 +142,9 @@ libsrcml.srcml_get_language.argtypes = []
 libsrcml.srcml_get_filename.restype = c_char_p
 libsrcml.srcml_get_filename.argtypes = []
 
-# const char* srcml_get_directory();
-libsrcml.srcml_get_directory.restype = c_char_p
-libsrcml.srcml_get_directory.argtypes = []
+# const char* srcml_get_url();
+libsrcml.srcml_get_url.restype = c_char_p
+libsrcml.srcml_get_url.argtypes = []
 
 # const char* srcml_get_version  ();
 libsrcml.srcml_get_version.restype = c_char_p
@@ -250,8 +250,8 @@ def set_language(language) :
 def set_filename(filename) :
     check_return(libsrcml.srcml_set_filename(filename))
 
-def set_directory(directory) :
-    check_return(libsrcml.srcml_set_directory(directory))
+def set_url(url) :
+    check_return(libsrcml.srcml_set_url(url))
 
 def set_version(version) :
     check_return(libsrcml.srcml_set_version(version))
@@ -298,8 +298,8 @@ def get_language() :
 def get_filename() :
     return libsrcml.srcml_get_filename()
 
-def get_directory() :
-    return libsrcml.srcml_get_directory()
+def get_url() :
+    return libsrcml.srcml_get_url()
 
 def get_version() :
     return libsrcml.srcml_get_version()

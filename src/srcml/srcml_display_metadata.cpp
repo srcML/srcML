@@ -62,8 +62,8 @@ void srcml_display_info(srcml_archive* srcml_arch) {
         std::cout << "encoding=" << "\"" << srcml_archive_get_xml_encoding(srcml_arch) << "\"\n";
     if (srcml_archive_get_language(srcml_arch))
         std::cout << "language=" << "\"" << srcml_archive_get_language(srcml_arch) << "\"\n"; 
-    if (srcml_archive_get_directory(srcml_arch))
-        std::cout << "directory=" << "\"" << srcml_archive_get_directory(srcml_arch) << "\"\n";
+    if (srcml_archive_get_url(srcml_arch))
+        std::cout << "url=" << "\"" << srcml_archive_get_url(srcml_arch) << "\"\n";
     if (srcml_archive_get_filename(srcml_arch))
         std::cout << "filename=" << "\"" << srcml_archive_get_filename(srcml_arch) << "\"\n";
 }

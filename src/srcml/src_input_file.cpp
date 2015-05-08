@@ -46,7 +46,7 @@ void src_input_file(ParseQueue& queue,
     else if (input_file != "_")
         prequest->filename = input_file;
 
-    prequest->directory = srcml_request.att_directory;
+    prequest->url = srcml_request.att_url;
     prequest->version = srcml_request.att_version;
     prequest->srcml_arch = srcml_arch;
     prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";

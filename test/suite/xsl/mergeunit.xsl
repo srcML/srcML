@@ -26,9 +26,9 @@
 	<xsl:apply-templates/>
 </xsl:template>
 
-<!-- change dir name -->
-<xsl:template match="src:unit/@dir">
-	<xsl:attribute name="dir">
+<!-- change url name -->
+<xsl:template match="src:unit/@url">
+	<xsl:attribute name="url">
 		<xsl:value-of select="."/><xsl:text>.all</xsl:text>
 	</xsl:attribute>
 </xsl:template>

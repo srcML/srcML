@@ -66,7 +66,7 @@ public:
                      size_t tabsize,
                      int language,
                      const char* revision,
-                     const char* directory,
+                     const char* url,
                      const char* filename,
                      const char* version,
                      const std::vector<std::string> & attributes,
@@ -84,7 +84,7 @@ public:
                      size_t tabsize,
                      int language,
                      const char* revision,
-                     const char* directory,
+                     const char* url,
                      const char* filename,
                      const char* version,
                      const std::vector<std::string> & attributes,
@@ -125,8 +125,8 @@ private:
     /** the unit revision attribute */
     const char* revision;
 
-    /** the unit directory attribute */
-    const char* directory;
+    /** the unit url attribute */
+    const char* url;
 
     /** the unit filename attribute */
     const char* filename;

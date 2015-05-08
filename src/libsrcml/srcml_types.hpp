@@ -148,8 +148,8 @@ struct srcml_archive {
     boost::optional<std::string> revision;
     /** an attribute for a language */
     boost::optional<std::string> language;
-    /** an attribute for a directory path */
-    boost::optional<std::string> directory;
+    /** an attribute for a url path */
+    boost::optional<std::string> url;
     /** an attribute for a version string */
     boost::optional<std::string> version;
     /** an array of name-value attribute pairs */
@@ -211,8 +211,8 @@ struct srcml_unit {
     boost::optional<std::string> language;
     /** an attribute name for a file */
     boost::optional<std::string> filename;
-    /** an attribute for a directory path */
-    boost::optional<std::string> directory;
+    /** an attribute for a url path */
+    boost::optional<std::string> url;
     /** an attribute for a version string */
     boost::optional<std::string> version;
     /** an attribute for a timestamp string */

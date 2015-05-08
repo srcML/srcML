@@ -95,17 +95,17 @@ int main() {
     }
 
     /*
-      srcml_set_directory
+      srcml_set_url
     */
 
     {
-        srcml_set_directory(0);
-        dassert(global_archive.directory, 0);
+        srcml_set_url(0);
+        dassert(global_archive.url, 0);
     }
 
     {
-        srcml_set_directory("foo");
-        dassert(*global_archive.directory, "foo");
+        srcml_set_url("foo");
+        dassert(*global_archive.url, "foo");
     }
 
     /*
@@ -400,18 +400,18 @@ int main() {
     }
 
     /*
-      srcml_get_directory
+      srcml_get_url
     */
 
     {
-        global_archive.directory = boost::optional<std::string>();
-        dassert(srcml_get_directory(), 0);
+        global_archive.url = boost::optional<std::string>();
+        dassert(srcml_get_url(), 0);
     }
 
     {
-        global_archive.directory = "foo";
-        dassert(srcml_get_directory(), std::string("foo"));
-        global_archive.directory = boost::optional<std::string>();
+        global_archive.url = "foo";
+        dassert(srcml_get_url(), std::string("foo"));
+        global_archive.url = boost::optional<std::string>();
     }
 
     /*

@@ -172,7 +172,7 @@ template <>
 void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-        std::cerr << "srcml: invalid src encoding.\n";
+        std::cerr << "srcml: invalid src encoding \"" << value.c_str() << "\"\n";
         exit(4);
     }
     srcml_request.src_encoding = value;
@@ -183,7 +183,7 @@ template <>
 void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) {
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-        std::cerr << "srcml: invalid xml encoding.\n";
+        std::cerr << "srcml: invalid xml encoding \"" << value.c_str() << "\"\n";
         exit(4);
     }
     srcml_request.att_xml_encoding = value;
@@ -195,7 +195,7 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
 
     // check language
     if (value.empty() || srcml_check_language(value.c_str()) == 0) {
-        std::cerr << "srcml: invalid language.\n";
+        std::cerr << "srcml: invalid language \"" << value.c_str() << "\"\n";
         exit(6); //ERROR CODE TBD
     }
     srcml_request.att_language = value;
@@ -373,7 +373,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         src2srcml_metadata.add_options()
-            ("directory,d", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_directory>), "set the arg directory attribute")
+            ("url,d", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the arg url attribute")
             ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the arg filename attribute")
             ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the arg version attribute")
             ;

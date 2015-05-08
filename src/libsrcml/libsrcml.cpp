@@ -218,7 +218,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         else
             srcml_unit_set_filename(unit, input_filename);
 
-        srcml_unit_set_directory(unit, srcml_archive_get_directory(&global_archive));
+        srcml_unit_set_url(unit, srcml_archive_get_url(&global_archive));
         srcml_unit_set_version(unit, srcml_archive_get_version(&global_archive));
         srcml_unit_set_timestamp(unit, srcml_unit_get_timestamp(&global_unit));
         srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
@@ -330,16 +330,16 @@ int srcml_set_filename(const char* filename) {
 }
 
 /**
- * srcml_set_directory
- * @param directory a directory path
+ * srcml_set_url
+ * @param url a url path
  *
- * Set the directory attribute for the root unit.
+ * Set the url attribute for the root unit.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_set_directory(const char* directory) {
+int srcml_set_url(const char* url) {
 
-    return srcml_archive_set_directory(&global_archive, directory);
+    return srcml_archive_set_url(&global_archive, url);
 
 }
 
@@ -579,14 +579,14 @@ const char* srcml_get_filename() {
 }
 
 /**
- * srcml_get_directory
+ * srcml_get_url
  *
- * @returns Get the directory attribute for the root unit on success
+ * @returns Get the url attribute for the root unit on success
  * and NULL on failure
  */
-const char* srcml_get_directory() {
+const char* srcml_get_url() {
 
-    return srcml_archive_get_directory(&global_archive);
+    return srcml_archive_get_url(&global_archive);
 
 }
 

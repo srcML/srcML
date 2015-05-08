@@ -193,6 +193,8 @@ public:
         // only run if not guessing
         if (parent->inputState->guessing) return;
 
+        ++parent->number_finishing_elements;
+
         start_size = parent->size();
     }
 
@@ -206,6 +208,22 @@ public:
         for (int i = 0; i < n; ++i) {
             parent->endMode();
         }
+
+        --parent->number_finishing_elements;
+        if(parent->number_finishing_elements == 0) {
+
+            for(const std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > & pair : parent->finish_elements_add) {
+
+                parent->startNewMode(pair.first);
+                parent->currentState().openelements = pair.second;
+
+
+            }
+
+            parent->finish_elements_add.clear();
+
+        }
+
     }
 
 private:
@@ -223,6 +241,9 @@ public:
         if (parent->inputState->guessing) return;
 
         start_size = parent->currentState().size();
+
+        ++parent->number_finishing_elements;
+
     }
 
     ~LightweightElement() {
@@ -233,6 +254,22 @@ public:
         // Close all elements opened by the rule in this mode.
         while (start_size < parent->currentState().size())
             parent->endElement(parent->currentState().openelements.top());
+
+        --parent->number_finishing_elements;
+        if(parent->number_finishing_elements == 0) {
+
+            for(const std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > & pair : parent->finish_elements_add) {
+
+                parent->startNewMode(pair.first);
+                parent->currentState().openelements = pair.second;
+
+
+            }
+
+            parent->finish_elements_add.clear();
+
+        }
+
     }
 
 private:
@@ -276,7 +313,8 @@ private:
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & parser_options)
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parser_options(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
-    current_column(-1), current_line(-1), nxt_token(-1), last_consumed(-1), wait_terminate_post(false), cppif_duplicate(false)
+    current_column(-1), current_line(-1), nxt_token(-1), last_consumed(-1), wait_terminate_post(false), cppif_duplicate(false),
+    number_finishing_elements(0)
 {
 
     // root, single mode
@@ -664,6 +702,8 @@ public:
     int last_consumed;
     bool wait_terminate_post;
     bool cppif_duplicate;
+    size_t number_finishing_elements;
+    std::vector<std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > > finish_elements_add;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -1904,7 +1944,8 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | keyword_call_tokens (DOTDOTDOT | template_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
+        (function_identifier | (typename_specifier_name)=>typename_specifier_name
+            | keyword_call_tokens (DOTDOTDOT | template_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -4935,9 +4976,7 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
         { perform_call_check(type, isempty, call_count, -1) && type == CALL }? 
         set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
 
-        expression |
-
-        comma
+        expression | comma
 
         ))*
 
@@ -5767,9 +5806,17 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             } while(--call_count > 0);
 
         }
-        ({inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list)
+        ({inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list
+            | (typename_specifier_name)=>typename_specifier_name call_argument_list)
         
 ;
+
+typename_specifier_name[] { ENTRY_DEBUG } :
+
+    typename_keyword function_identifier
+
+;
+
 
 // argument list to a call
 call_argument_list[] { ENTRY_DEBUG } :
@@ -6005,7 +6052,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         // variable or literal
         variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
 
-        variable_identifier_array_grammar_sub[flag]
+        variable_identifier_array_grammar_sub[flag] |
+
+        single_keyword_specifier
 ;
 
 // Keyword based calls with special markup
@@ -7718,7 +7767,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         // variable or literal
         variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
 
-        variable_identifier_array_grammar_sub[flag]
+        variable_identifier_array_grammar_sub[flag] |
+
+        single_keyword_specifier
 ;
 
 // rule for literals
@@ -9089,6 +9140,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                     std::list<int> end_order = cppif_end_count_check();
                     srcMLState::MODE_TYPE current_mode = getMode();
+
                     // @todo When C++11 is default, switch to ranged for or at least auto keyword.
                     for(std::list<int>::iterator pos = end_order.begin(); pos != end_order.end(); ++pos) {
 
@@ -9100,8 +9152,18 @@ eol_post[int directive_token, bool markblockzero] {
                         }
 
                         if(inTransparentMode(MODE_CONDITION) && *pos == RPAREN) {
-                            startNewMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP);
-                            addElement(SCONDITION);
+
+                            std::stack<int> open_elements;
+                            open_elements.push(SCONDITION);
+
+                            /** @todo Could have multipl endings of a name as well.  However, just correct double ending of condition. */
+                            if(number_finishing_elements)
+                                finish_elements_add.push_back(std::pair<const srcMLState::MODE_TYPE, std::stack<int> >(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP, open_elements));
+                            else
+                                insertModeAfter(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT,
+                                                MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP,
+                                                open_elements);
+
 
                         }
 

@@ -107,7 +107,7 @@ struct srcml_request_t {
     // unit attributes
     boost::optional<std::string> att_language;
     boost::optional<std::string> att_filename;
-    boost::optional<std::string> att_directory;
+    boost::optional<std::string> att_url;
     boost::optional<std::string> att_xml_encoding;
     boost::optional<std::string> att_version;
 

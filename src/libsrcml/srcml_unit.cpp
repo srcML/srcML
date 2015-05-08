@@ -94,21 +94,21 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 }
 
 /**
- * srcml_unit_set_directory
+ * srcml_unit_set_url
  * @param unit a srcml unit
- * @param directory a directory path
+ * @param url a url path
  *
- * Set the directory attribute for the srcml unit.
+ * Set the url attribute for the srcml unit.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
+int srcml_unit_set_url(srcml_unit* unit, const char* url) {
 
     if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
 
-    unit->directory = directory ? std::string(directory) : boost::optional<std::string>();
+    unit->url = url ? std::string(url) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 
@@ -265,18 +265,18 @@ const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_directory
+ * srcml_unit_get_url
  * @param unit a srcml unit
  *
- * Get the directory attribute for the srcml unit.
+ * Get the url attribute for the srcml unit.
  *
- * @returns directory attribute on successand NULL on failure.
+ * @returns url attribute on successand NULL on failure.
  */
-const char* srcml_unit_get_directory(const struct srcml_unit* unit) {
+const char* srcml_unit_get_url(const struct srcml_unit* unit) {
 
     if(unit == NULL) return 0;
 
-    return unit->directory ? unit->directory->c_str() : 0;
+    return unit->url ? unit->url->c_str() : 0;
 
 }
 
@@ -329,7 +329,7 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_fragment_xml
+ * srcml_unit_get_xml_fragment
  * @param unit a srcml unit
  *
  * Get the parsed or collected srcml from an archive.
@@ -340,7 +340,7 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
  *
  * @returns the raw unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
+const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit) {
 
     if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
 
@@ -352,7 +352,7 @@ const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_standalone_xml
+ * srcml_unit_get_xml_standalone
  * @param unit a srcml unit
  * @param xml_encoding the xml encoding to encode the unit
  * @param xml_buffer buffer to return the standalone xml
@@ -367,7 +367,7 @@ const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
  *
  * @returns the formatted unit srcML on success and NULL on failure.
  */
-int srcml_unit_get_standalone_xml(struct srcml_unit * unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size) {
+int srcml_unit_get_xml_standalone(struct srcml_unit * unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size) {
 
     if(unit == NULL || xml_buffer == NULL || buffer_size == NULL || (!unit->unit && !unit->read_header)) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -436,7 +436,7 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
             unit->archive->tabstop,
             lang,
             unit->revision ? unit->revision->c_str() : 0,
-            unit->directory ? unit->directory->c_str() : 0,
+            unit->url ? unit->url->c_str() : 0,
             unit->filename ? unit->filename->c_str() : 0,
             unit->version ? unit->version->c_str() : 0,
             unit->attributes,
@@ -1021,7 +1021,7 @@ int srcml_write_start_unit(struct srcml_unit * unit) {
             unit->archive->tabstop,
             SRCML_LANGUAGE_NONE,
             unit->revision ? unit->revision->c_str() : 0,
-            unit->directory ? unit->directory->c_str() : 0,
+            unit->url ? unit->url->c_str() : 0,
             unit->filename ? unit->filename->c_str() : 0,
             unit->version ? unit->version->c_str() : 0,
             unit->attributes,
