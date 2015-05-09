@@ -113,20 +113,35 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
         }
 
         if ((found + 1) < template_string.length()) {
-            size_t loc = allowed_args.find(template_string[found + 1]);
+            size_t valid_arg = allowed_args.find(template_string[found + 1]);
             
             // Error
-            if (loc == std::string::npos) {
+            if (valid_arg == std::string::npos) {
                 //std::cerr << "Invalid arg: " << template_string[found + 1] << "\n";
                 return found + 1;
             }
  
             template_arg += template_string[found + 1];
 
-            //if (template_arg = "N")
+            if (template_arg == "N") {
+                if ((found + 3) < template_string.length()) {
+                    if (template_string[found + 2] == ':' && template_string[found + 3] == 'u'){
+                        template_arg += ":u";
+                        template_string.erase(found + 2, 2);
+                    }
+
+                    if (template_string[found + 2] == ':' && template_string[found + 3] == 'p'){
+                        template_arg += ":p";
+                        template_string.erase(found + 2, 2);
+                    }
+                }
+
+                std::cerr << template_arg << "\n";
+            }
 
             section_args.push_back(template_arg);
             template_string[found + 1] = 's';
+            std::cerr << template_string << "\n";
         }
     }
 
@@ -163,6 +178,15 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
 
         if (arg == "l")           // %l: unit language
             return srcml_unit_get_language(srcml_unit);
+
+        if (arg == "N")
+            return "NS";
+
+        if (arg == "N:u")
+            return "NS:u";
+
+        if (arg == "N:p")
+            return "NS:p";
 
         if (arg == "S")           // %S: source encoding attribute on the archive
             return srcml_archive_get_src_encoding(srcml_arch);

@@ -46,6 +46,7 @@ PRETTY Args
 - %h: hash attribute on the unit
 - %i: index of the unit within the archive
 - %l: unit language 
+- %N: print xmlns namespace %N = full namespace, %N:u = namespace uri, %N:p = namespace prefix
 - %S: source encoding attribute on the archive
 - %s: source encoding attribute on the unit
 - %t: timestamp on unit
@@ -57,9 +58,9 @@ PRETTY Args
 - %x: XML encoding attribute on the unit
 */
 
-const std::string valid_header_args = "FSUVX";
-const std::string valid_body_args = "FfhilSstUuVvXx";
-const std::string valid_footer_args = "CFSUVX";
+const std::string valid_header_args = "FNSUVX";
+const std::string valid_body_args = "FfhilNSstUuVvXx";
+const std::string valid_footer_args = "CFNSUVX";
 
 int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input);
 
