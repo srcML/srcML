@@ -19,10 +19,10 @@ createfile sub/archive.cpp.xml "$archive"
 
 # TODO: issue #1042
 srcml --show-timestamp sub/archive.cpp.xml
-check 3<<< ""
+check_null
 
 srcml --show-timestamp < sub/archive.cpp.xml
-check 3<<< ""
+check_null
 
 # empty
 define empty <<- 'STDOUT'
@@ -39,10 +39,10 @@ define empty <<- 'STDOUT'
 createfile sub/archive.cpp.xml "$empty"
 
 srcml --show-timestamp sub/archive.cpp.xml
-check 3<<< ""
+check_null
 
 srcml --show-timestamp < sub/archive.cpp.xml
-check 3<<< ""
+check_null
 
 # none
 define none <<- 'STDIN'

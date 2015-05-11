@@ -59,10 +59,10 @@ srcml --show-hash < sub/a.cpp.xml
 check_null
 
 srcml --show-hash sub/archive.cpp.xml
-check_null
+check 3<<< "1a2c5d67e6f651ae10b7673c53e8c502c97316d6"
 
 srcml --show-hash < sub/archive.cpp.xml
-check_null
+check 3<<< "1a2c5d67e6f651ae10b7673c53e8c502c97316d6"
 
 srcml --show-hash sub/emptyarchive.cpp.xml
 check_null
