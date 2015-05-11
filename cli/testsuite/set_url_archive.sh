@@ -7,7 +7,7 @@ source $(dirname "$0")/framework_test.sh
 # test on standard in
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" directory="bar">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" url="bar">
 
 	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
@@ -17,7 +17,7 @@ define output <<- 'STDOUT'
 # test on file
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" directory="bar">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" url="bar">
 
 	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
@@ -29,28 +29,28 @@ createfile sub/a.cpp "a;"
 echo -n "a;" | src2srcml -l C++ -d bar --archive
 check 3<<< "$output"
 
-echo -n "a;" | src2srcml -l C++ --directory bar --archive
+echo -n "a;" | src2srcml -l C++ --url bar --archive
 check 3<<< "$output"
 
-echo -n "a;" | src2srcml -l C++ --directory=bar --archive
+echo -n "a;" | src2srcml -l C++ --url=bar --archive
 check 3<<< "$output"
 
 src2srcml sub/a.cpp -d "bar" --archive
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp --directory "bar" --archive
+src2srcml sub/a.cpp --url "bar" --archive
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp --directory="bar" --archive
+src2srcml sub/a.cpp --url="bar" --archive
 check 3<<< "$fsrcml"
 
 src2srcml -d "bar" sub/a.cpp --archive
 check 3<<< "$fsrcml"
 
-src2srcml --directory "bar" sub/a.cpp --archive
+src2srcml --url "bar" sub/a.cpp --archive
 check 3<<< "$fsrcml"
 
-src2srcml --directory="bar" sub/a.cpp --archive
+src2srcml --url="bar" sub/a.cpp --archive
 check 3<<< "$fsrcml"
 
 src2srcml -l C++ -d 'bar' -o sub/a.cpp.xml sub/a.cpp --archive
@@ -64,7 +64,7 @@ check sub/a.cpp.xml 3<<< "$fsrcml"
 # test on file
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" directory="bar">
+	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" url="bar">
 
 	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
@@ -78,19 +78,19 @@ createfile sub/b.cpp "b;"
 src2srcml sub/a.cpp sub/b.cpp -d "bar"
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp --directory "bar"
+src2srcml sub/a.cpp sub/b.cpp --url "bar"
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp --directory="bar"
+src2srcml sub/a.cpp sub/b.cpp --url="bar"
 check 3<<< "$fsrcml"
 
 src2srcml -d "bar" sub/a.cpp sub/b.cpp
 check 3<<< "$fsrcml"
 
-src2srcml --directory "bar" sub/a.cpp sub/b.cpp
+src2srcml --url "bar" sub/a.cpp sub/b.cpp
 check 3<<< "$fsrcml"
 
-src2srcml --directory="bar" sub/a.cpp sub/b.cpp
+src2srcml --url="bar" sub/a.cpp sub/b.cpp
 check 3<<< "$fsrcml"
 
 src2srcml -l C++ -d 'bar' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
