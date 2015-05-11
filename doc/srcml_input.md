@@ -52,55 +52,6 @@ signal SIGUSR1 can be used to toggle this option.
 : Display most metadata, except the unit count (file count) in a srcML
 archive, then exit.
 
-`-PRETTY_FLAG_LONG=<format>`
-: The <format> allows you to specify which information to show. It
-works similar to printf, with the exception of optional header and
-footer information declared before and after curly-brackets,
-respectively.
-
-	Three types of placeholders exist: (1) those that hold metadata
-on a per archive basis, (2) those that hold metadata on a per unit
-basis, and (3) information left within the header or footer of the
-output which is thus displayed only once.
-
-	- %h: hash attribute on the unit
-	- %d: directory attribute on the unit
-	- %f: filename attribute on the unit
-	- %v: version attribute on the unit
-	- %x: XML encoding attribute on the unit
-	- %s: source encoding attribute on the unit
-	- %i: index of the unit within the archive
-	- %D: directory attribute on the archive
-	- %F: file attribute on the archive
-	- %V: version attribute on the archive
-	- %X: XML encoding on the archive
-	- %S: source encoding attribute on the archive
-	- %C: total number of units
-	- %T: files translated
-	- %S: files skipped
-	- %E: files with errors
-	
-	If the format string contains any placeholders for an attribute
-on the unit, then all information in the string is provided on a per
-unit basis, thus duplicating information in each unit for the per archive
-attributes. If the lowest granularity of the placeholders is for an 
-attribute on the archive, then all information in the string is provided
-on a per archive basis.
-	
-	If you wish to display information in either a header or footer, or both,
-a delimiter (curly-brackets) is used to separate the first header section
-from the main per unit/archive section, and from the last footer section.
-For example, provided an archive with two units, the format string "The
-directory was %d with a filename of %f" would show something like this:
-
-	The directory was sub with a filename of a.cpp
-	The directory was sub with a filename of b.cpp
-
-	In another example, the format string "%C { %d %f }" would show:
-	2
-	sub a.cpp
-	sub b.cpp
-
 `--MAX_THREADS_FLAG_LONG=<num>`
 : Sets the maximum number of threads `srcml` can spawn.
 
