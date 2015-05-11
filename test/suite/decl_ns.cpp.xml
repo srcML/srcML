@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="decl_ns">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" url="decl_ns">
 
 <unit>
 <decl_stmt><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name></type> <name>s</name></decl>;</decl_stmt>

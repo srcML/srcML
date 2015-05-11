@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="cppif" options="NESTIF,CPPIF_CHECK">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" url="cppif" options="NESTIF,CPPIF_CHECK">
 
 <unit>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
@@ -122,9 +122,9 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr><literal type="number">1
+<if>if<condition>(<expr><literal type="number">1</literal>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
-)<condition/></literal></expr>
+)<condition/></expr>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 )</condition><then>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -343,6 +343,16 @@
 
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 }</block></function>
+</unit>
+
+<unit>
+<if>if<condition>(<expr><name>a</name>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
+    <expr><operator>&amp;&amp;</operator> <name>b</name></expr>)<condition/>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+    <operator>&amp;&amp;</operator> <name>c</name></expr>)</condition><then>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+    <block type="pseudo"><expr_stmt><expr><name>d</name></expr>;</expr_stmt></block></then></if>
 </unit>
 
 </unit>

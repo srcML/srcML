@@ -94,21 +94,21 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 }
 
 /**
- * srcml_unit_set_directory
+ * srcml_unit_set_url
  * @param unit a srcml unit
- * @param directory a directory path
+ * @param url a url path
  *
- * Set the directory attribute for the srcml unit.
+ * Set the url attribute for the srcml unit.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
+int srcml_unit_set_url(srcml_unit* unit, const char* url) {
 
     if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
 
-    unit->directory = directory ? std::string(directory) : boost::optional<std::string>();
+    unit->url = url ? std::string(url) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 
@@ -265,18 +265,18 @@ const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_directory
+ * srcml_unit_get_url
  * @param unit a srcml unit
  *
- * Get the directory attribute for the srcml unit.
+ * Get the url attribute for the srcml unit.
  *
- * @returns directory attribute on successand NULL on failure.
+ * @returns url attribute on successand NULL on failure.
  */
-const char* srcml_unit_get_directory(const struct srcml_unit* unit) {
+const char* srcml_unit_get_url(const struct srcml_unit* unit) {
 
     if(unit == NULL) return 0;
 
-    return unit->directory ? unit->directory->c_str() : 0;
+    return unit->url ? unit->url->c_str() : 0;
 
 }
 
@@ -436,7 +436,7 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
             unit->archive->tabstop,
             lang,
             unit->revision ? unit->revision->c_str() : 0,
-            unit->directory ? unit->directory->c_str() : 0,
+            unit->url ? unit->url->c_str() : 0,
             unit->filename ? unit->filename->c_str() : 0,
             unit->version ? unit->version->c_str() : 0,
             unit->attributes,
@@ -1021,7 +1021,7 @@ int srcml_write_start_unit(struct srcml_unit * unit) {
             unit->archive->tabstop,
             SRCML_LANGUAGE_NONE,
             unit->revision ? unit->revision->c_str() : 0,
-            unit->directory ? unit->directory->c_str() : 0,
+            unit->url ? unit->url->c_str() : 0,
             unit->filename ? unit->filename->c_str() : 0,
             unit->version ? unit->version->c_str() : 0,
             unit->attributes,

@@ -30,9 +30,9 @@
 
 </xsl:template>
 
-<!-- change the directory attribute on any unit from "class" to "struct" -->
-<xsl:template match="src:unit/@dir">
-	<xsl:attribute name="dir">
+<!-- change the url attribute on any unit from "class" to "struct" -->
+<xsl:template match="src:unit/@url">
+	<xsl:attribute name="url">
 		<xsl:value-of select="str:replace(., 'class', 'struct')"/>
 	</xsl:attribute>
 </xsl:template>

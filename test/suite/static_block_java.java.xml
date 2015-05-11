@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="static_block" filename="static_block_java">
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" url="static_block" filename="static_block_java">
 
 <unit>
 <static>static <block>{}</block></static>

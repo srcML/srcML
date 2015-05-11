@@ -23,8 +23,8 @@
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
-<xsl:template match="src:unit/@dir">
-    <xsl:attribute name="dir"><xsl:value-of select="str:replace(., 'synthesize', 'dynamic')"/></xsl:attribute>
+<xsl:template match="src:unit/@url">
+    <xsl:attribute name="url"><xsl:value-of select="str:replace(., 'synthesize', 'dynamic')"/></xsl:attribute>
 </xsl:template>
 
 <xsl:template match="src:unit/@filename">

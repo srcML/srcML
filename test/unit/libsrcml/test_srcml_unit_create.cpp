@@ -42,7 +42,7 @@ int main() {
         dassert(unit->archive, archive);
         dassert(unit->language, 0);
         dassert(unit->filename, 0);
-        dassert(unit->directory, 0);
+        dassert(unit->url, 0);
         dassert(unit->version, 0);
         dassert(unit->timestamp, 0);
         dassert(unit->hash, 0);

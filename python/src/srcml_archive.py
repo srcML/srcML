@@ -99,9 +99,9 @@ libsrcml.srcml_archive_set_language.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_archive_set_filename.restype = c_int
 libsrcml.srcml_archive_set_filename.argtypes = [c_void_p, c_char_p]
 
-# int srcml_archive_set_directory (struct srcml_archive*, const char* directory)
-libsrcml.srcml_archive_set_directory.restype = c_int
-libsrcml.srcml_archive_set_directory.argtypes = [c_void_p, c_char_p]
+# int srcml_archive_set_url (struct srcml_archive*, const char* url)
+libsrcml.srcml_archive_set_url.restype = c_int
+libsrcml.srcml_archive_set_url.argtypes = [c_void_p, c_char_p]
 
 # int srcml_archive_set_version   (struct srcml_archive*, const char* version)
 libsrcml.srcml_archive_set_version.restype = c_int
@@ -155,9 +155,9 @@ libsrcml.srcml_archive_get_language.argtypes = [c_void_p]
 libsrcml.srcml_archive_get_filename.restype = c_char_p
 libsrcml.srcml_archive_get_filename.argtypes = [c_void_p]
 
-# const char* srcml_archive_get_directory(const struct srcml_archive*);
-libsrcml.srcml_archive_get_directory.restype = c_char_p
-libsrcml.srcml_archive_get_directory.argtypes = [c_void_p]
+# const char* srcml_archive_get_url(const struct srcml_archive*);
+libsrcml.srcml_archive_get_url.restype = c_char_p
+libsrcml.srcml_archive_get_url.argtypes = [c_void_p]
 
 # const char* srcml_archive_get_version  (const struct srcml_archive*);
 libsrcml.srcml_archive_get_version.restype = c_char_p
@@ -326,8 +326,8 @@ class srcml_archive :
     def set_filename(self, filename) :
         check_return(libsrcml.srcml_archive_set_filename(self.archive, filename))
 
-    def set_directory(self, directory) :
-        check_return(libsrcml.srcml_archive_set_directory(self.archive, directory))
+    def set_url(self, url) :
+        check_return(libsrcml.srcml_archive_set_url(self.archive, url))
 
     def set_version(self, version) :
         check_return(libsrcml.srcml_archive_set_version(self.archive, version))
@@ -368,8 +368,8 @@ class srcml_archive :
     def get_filename(self) :
         return libsrcml.srcml_archive_get_filename(self.archive)
 
-    def get_directory(self) :
-        return libsrcml.srcml_archive_get_directory(self.archive)
+    def get_url(self) :
+        return libsrcml.srcml_archive_get_url(self.archive)
 
     def get_version(self) :
         return libsrcml.srcml_archive_get_version(self.archive)

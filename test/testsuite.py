@@ -32,7 +32,7 @@ error_filename = "srcMLTestReport"
 error_filename_extension = ".txt"
 
 FIELD_WIDTH_LANGUAGE = 15
-FIELD_WIDTH_DIRECTORY = 30
+FIELD_WIDTH_URL = 30
 MAX_COUNT = 29
 sperrorlist = []
 xml_filename = ""
@@ -133,7 +133,7 @@ def extract_all(src, encoding):
         unit.unparse_memory()
         src_all.append(unit.src())
         srcml = unit.get_xml_fragment()
-        if archive.get_directory() != None and (archive.get_directory().find(".all") != -1 or archive.get_directory().find("unicode") != -1):
+        if archive.get_url() != None and (archive.get_url().find(".all") != -1 or archive.get_url().find("unicode") != -1):
         	srcml = "<unit>" + srcml[srcml.find(">") + 1:]
         all.append(srcml)
         unit = archive.read_unit()
@@ -186,12 +186,12 @@ def xmldiff(xml_filename1, xml_filename2):
 		return ""
 
 # find differences of two files
-def src2srcML_executable(text_file, encoding, language, directory, filename, prefixlist):
+def src2srcML_executable(text_file, encoding, language, url, filename, prefixlist):
 
         command = [srcmltranslator, "-l", language, "--encoding=" + encoding]
 
-        if directory != "":
-                command.extend(["--directory", directory])
+        if url != "":
+                command.extend(["--url", url])
 
         if filename != "":
                 command.extend(["--filename", filename])
@@ -208,20 +208,20 @@ def src2srcML_executable(text_file, encoding, language, directory, filename, pre
         return safe_communicate(command, text_file)
 
 # find differences of two files
-def src2srcML(text_file, encoding, language, directory, filename, read_archive):
+def src2srcML(text_file, encoding, language, url, filename, read_archive):
 
         if filename == "" :
                 filename = None;
 
         archive = read_archive.clone()
-	if directory.find("problem") != -1 :
+	if url.find("problem") != -1 :
 		archive.set_xml_encoding("ISO-8859-1")
 
         archive.write_open_memory()
 
         unit = srcml_unit(archive)
         unit.set_language(language)
-        if directory.find("unicode") != -1 :
+        if url.find("unicode") != -1 :
                 unit.set_src_encoding("UTF-8")
 
         unit.parse_memory(text_file)
@@ -253,8 +253,8 @@ def getsrcmlattributeraw(srctext, command):
 
 	return safe_communicate(command, srctext)
 
-# directory attribute
-def getdirectory(xml_file):
+# url attribute
+def geturl(xml_file):
 
 	return getsrcmlattribute(xml_file, "-d")
 
@@ -409,7 +409,7 @@ elif len(sys.argv) > 2:
 	if len(sys.argv) > 3:
 		speclang = sys.argv[3]
 
-# base directory
+# base url
 base_dir = "suite"
 
 errorlist = []
@@ -420,7 +420,7 @@ errorlist = []
 
 m = re.compile(specname + "$")
 
-# source directory
+# source url
 source_dir = base_dir
 
 # total number of errors
@@ -454,14 +454,14 @@ try:
 
                                 language = s.split("language=\"")[1].split('"')[0]
 
-                                part = s.split("dir=\"")
-                                directory = part[1].split('"')[0] if len(part) > 1 else None
+                                part = s.split("url=\"")
+                                url = part[1].split('"')[0] if len(part) > 1 else None
 
                                 part = s.split("filename=\"")
                                 filename = part[1].split('"')[0] if len(part) > 1 else None
 
-				# only process if directory name matches or is not given
-				if specname != "" and m.match(directory) == None and (filename == None or m.match(filename) == None):
+				# only process if url name matches or is not given
+				if specname != "" and m.match(url) == None and (filename == None or m.match(filename) == None):
                                         f.close()
 					continue
 
@@ -473,9 +473,9 @@ try:
                                 filexml += f.read()
                                 f.close()
                                         
-				# output language and directory
+				# output language and url
 				print
-				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", directory.ljust(FIELD_WIDTH_DIRECTORY), " ",
+				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", url.ljust(FIELD_WIDTH_URL), " ",
 
 				# encoding of the outer unit
                                 part = line1.split("encoding=\"")
@@ -536,9 +536,9 @@ try:
 
 						# convert the text to srcML
                                                 if use_exec :
-                                                        unitsrcmlraw = src2srcML_executable(unittext, encoding, language, directory, getfilename(unitxml), xmlns)
+                                                        unitsrcmlraw = src2srcML_executable(unittext, encoding, language, url, getfilename(unitxml), xmlns)
                                                 else :
-                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, directory, filename, read_archive)
+                                                        unitsrcmlraw = src2srcML(unittext, encoding, language, url, filename, read_archive)
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw
@@ -547,7 +547,7 @@ try:
 						result = xmldiff(unitxml, unitsrcml)
 
 						if count > 0 and line_count >= 75:
-							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_DIRECTORY), " ",
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
 							line_count = 0
 
 						if count > 99 :
@@ -562,7 +562,7 @@ try:
 						if result != "":
 							error_count += 1
 							
-							errorlist.append((directory + " " + language, count, result, name))
+							errorlist.append((url + " " + language, count, result, name))
 
 							# part of list of nested unit number in output
 							print "\033[0;31m" + str(count) + "\033[0m",

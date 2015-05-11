@@ -25,9 +25,9 @@
 
 <xsl:variable name="cmt" xml:space="preserve"> <escape char="0xc"/></xsl:variable> 
 
-<!-- change dir name -->
-<xsl:template match="src:unit/@dir">
-	<xsl:attribute name="dir">
+<!-- change url name -->
+<xsl:template match="src:unit/@url">
+	<xsl:attribute name="url">
 		<xsl:value-of select="."/><xsl:text>.formfeed</xsl:text>
 	</xsl:attribute>
 </xsl:template>

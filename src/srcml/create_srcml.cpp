@@ -95,8 +95,8 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_set_filename(srcml_arch, input_sources[0].filename.c_str());
     }
 
-    if (srcml_request.att_directory)
-        srcml_archive_set_directory(srcml_arch, srcml_request.att_directory->c_str());
+    if (srcml_request.att_url)
+        srcml_archive_set_url(srcml_arch, srcml_request.att_url->c_str());
 
     if (srcml_request.att_version)
         srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str());

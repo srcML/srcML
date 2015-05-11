@@ -438,8 +438,8 @@ public :
         for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
             if (std::string((const char*) pAttr->name) == std::string("filename"))
                 srcml_unit_set_filename(punit, (const char*) pAttr->children->content);
-            else if (std::string((const char*) pAttr->name) == std::string("directory"))
-                srcml_unit_set_directory(punit, (const char*) pAttr->children->content);
+            else if (std::string((const char*) pAttr->name) == std::string("url"))
+                srcml_unit_set_url(punit, (const char*) pAttr->children->content);
             else if (std::string((const char*) pAttr->name) == std::string("version"))
                 srcml_unit_set_version(punit, (const char*) pAttr->children->content);
             else if (std::string((const char*) pAttr->name) == std::string("timestamp"))

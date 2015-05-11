@@ -81,7 +81,7 @@ public:
 
     // start a unit element with the passed metadata
     void startUnit(const char* unit_language, const char * revision,
-                   const char* unit_directory, const char* unit_filename,
+                   const char* unit_url, const char* unit_filename,
                    const char* unit_version, const char* unit_timestamp,
                    const char* unit_hash,
                    const char* encoding,
@@ -89,7 +89,7 @@ public:
                    bool output_macrolist);
 
     // consume the entire tokenstream with output of srcml
-    void consume(const char* language, const char * unit_revision, const char* unit_directory, const char* unit_filename,
+    void consume(const char* language, const char * unit_revision, const char* unit_url, const char* unit_filename,
                  const char* unit_version, const char* unit_timestamp, const char* unit_hash, const char* encoding);
 
     // close the output
@@ -132,8 +132,8 @@ public:
     /** unit attribute revision */
     const char* unit_revision;
 
-    /** unit attribute directory */
-    const char* unit_dir;
+    /** unit attribute url */
+    const char* unit_url;
 
     /** unit attribute filename */
     const char* unit_filename;

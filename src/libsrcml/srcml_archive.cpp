@@ -128,7 +128,7 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
     new_archive->encoding = archive->encoding;
     new_archive->revision = archive->revision;
     new_archive->language = archive->language;
-    new_archive->directory = archive->directory;
+    new_archive->url = archive->url;
     new_archive->version = archive->version;
 
     try {
@@ -253,19 +253,19 @@ int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
 }
 
 /**
- * srcml_archive_set_directory
+ * srcml_archive_set_url
  * @param archive a srcml_archive
- * @param directory a directory path
+ * @param url a url path
  *
- * Set the root directory attribute of the srcML Archive.
+ * Set the root url attribute of the srcML Archive.
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_archive_set_directory (srcml_archive* archive, const char* directory) {
+int srcml_archive_set_url (srcml_archive* archive, const char* url) {
 
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->directory = directory ? std::string(directory) : boost::optional<std::string>();
+    archive->url = url ? std::string(url) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 
@@ -545,14 +545,14 @@ const char* srcml_archive_get_filename(const struct srcml_archive* archive) {
 }
 
 /**
- * srcml_archive_get_directory
+ * srcml_archive_get_url
  * @param archive a srcml_archive
  *
- * @returns Retrieve the currently set root directory attribute or NULL.
+ * @returns Retrieve the currently set root url attribute or NULL.
  */
-const char* srcml_archive_get_directory(const struct srcml_archive* archive) {
+const char* srcml_archive_get_url(const struct srcml_archive* archive) {
 
-    return archive && archive->directory ? archive->directory->c_str() : 0;
+    return archive && archive->url ? archive->url->c_str() : 0;
 
 }
 
@@ -833,7 +833,7 @@ if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                                 archive->revision ? archive->revision->c_str() : 0,
-                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->url ? archive->url->c_str() : 0,
                                                 archive->filename ? archive->filename->c_str() : 0,
                                                 archive->version ? archive->version->c_str() : 0,
                                                 archive->attributes, 0, 0, 0);
@@ -904,7 +904,7 @@ int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                                 archive->revision ? archive->revision->c_str() : 0,
-                                                archive->directory ? archive->directory->c_str() : 0,
+                                                archive->url ? archive->url->c_str() : 0,
                                                 archive->filename ? archive->filename->c_str() : 0,
                                                 archive->version ? archive->version->c_str() : 0,
                                                 archive->attributes, 0, 0, 0);
@@ -1016,8 +1016,8 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
 
     archive->type = SRCML_ARCHIVE_READ;
 
-    boost::optional<std::string> encoding, language, filename, directory, version;
-    bool done = !archive->reader->read_root_unit_attributes(encoding, language, filename, directory, version,
+    boost::optional<std::string> encoding, language, filename, url, version;
+    bool done = !archive->reader->read_root_unit_attributes(encoding, language, filename, url, version,
                                                             archive->attributes, archive->prefixes,
                                                             archive->namespaces,
                                                             archive->processing_instruction,
@@ -1029,7 +1029,7 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
         if(!archive->encoding) archive->encoding = encoding;
         archive->language = language;
         archive->filename = filename;
-        archive->directory = directory;
+        archive->url = url;
         archive->version = version;
 
     }
@@ -1226,7 +1226,7 @@ srcml_unit* srcml_read_unit_header(srcml_archive* archive) {
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
 
     srcml_unit * unit = srcml_unit_create(archive);
-    int not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version, unit->timestamp, unit->hash, unit->attributes);
+    int not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
 
     if(!not_done) {
         srcml_unit_free(unit);
@@ -1257,7 +1257,7 @@ srcml_unit* srcml_read_unit_xml(srcml_archive* archive) {
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
     if(!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version, unit->timestamp, unit->hash, unit->attributes);
+        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
     archive->reader->read_srcml(unit->unit);
 
     if(!not_done || !unit->unit) {
@@ -1288,7 +1288,7 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
     if(!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version, unit->timestamp, unit->hash, unit->attributes);
+        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
     archive->reader->read_srcml(unit->unit);
 
     if(!not_done || !unit->unit) {
@@ -1320,7 +1320,7 @@ srcml_unit* srcml_read_unit_revision(struct srcml_archive* archive, size_t revis
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
     if(!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->directory, unit->version, unit->timestamp, unit->hash, unit->attributes);
+        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
     archive->reader->read_srcml(unit->unit);
 
     if(!not_done || !unit->unit) {

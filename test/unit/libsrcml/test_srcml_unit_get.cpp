@@ -141,27 +141,27 @@ int main() {
     }
 
     /*
-      srcml_unit_get_directory
+      srcml_unit_get_url
     */
 
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->directory = boost::optional<std::string>();
-        dassert(srcml_unit_get_directory(unit), 0);
+        unit->url = boost::optional<std::string>();
+        dassert(srcml_unit_get_url(unit), 0);
         srcml_unit_free(unit);
     }
 
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->directory = "foo";
-        dassert(srcml_unit_get_directory(unit), std::string("foo"));
+        unit->url = "foo";
+        dassert(srcml_unit_get_url(unit), std::string("foo"));
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_get_directory(0), 0);
+        dassert(srcml_unit_get_url(0), 0);
     }
 
     /*

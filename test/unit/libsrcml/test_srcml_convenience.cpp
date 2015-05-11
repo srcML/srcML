@@ -52,7 +52,7 @@ std::string srcml_c = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes
     "</unit>\n";
 
 std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"directory\" filename=\"file\" version=\"1\" hash=\"0123456789abcdef\"><s:decl_stmt><s:decl><s:type><s:name>int</s:name></s:type> <s:name>a</s:name></s:decl>;</s:decl_stmt>\n"
+    "<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" url=\"url\" filename=\"file\" version=\"1\" hash=\"0123456789abcdef\"><s:decl_stmt><s:decl><s:type><s:name>int</s:name></s:type> <s:name>a</s:name></s:decl>;</s:decl_stmt>\n"
     "</s:unit>\n";
 
 int main() {
@@ -121,7 +121,7 @@ int main() {
     {
 
         srcml_set_filename("file");
-        srcml_set_directory("directory");
+        srcml_set_url("url");
         srcml_set_version("1");
         srcml_register_namespace("s", "http://www.sdml.info/srcML/src");
         srcml("a.cpp", "project_full.cpp.xml");
