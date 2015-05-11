@@ -3,10 +3,35 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-# test
-##
-# no namespace declaration
+# test no namespace decl
+## input C++ to unit
+define output <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit revision="REVISION" language="C++"/>
+	STDOUT
 
+echo -n "" | src2srcml -l C++ --no-namespace-decl
+check 3<<< "$output"
+
+define output2 <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit revision="REVISION" language="C++" filename="sub/a.cpp"/>
+	STDOUT
+
+
+createfile sub/a.cpp ""
+
+src2srcml sub/a.cpp --no-namespace-decl -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$output2"
+
+src2srcml --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$output2"
+
+src2srcml --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$output2"
+
+
+## input xml to unit
 define defaultxml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"/>
@@ -18,14 +43,11 @@ define nonamespacexml <<- 'STDOUT'
 	STDOUT
 
 echo -n "" | srcml2src -l C++
-
 check 3<<< "$defaultxml"
 
 echo -n "" | srcml2src -l C++ --no-namespace-decl
-
 check 3<<< "$nonamespacexml"
 
-# TODO: Split and put rest in xml_namespace test (they are testing removing namespace from xml)
 createfile sub/a.cpp.xml "$defaultxml"
 
 srcml2src -l C++ -X --no-namespace-decl < sub/a.cpp.xml
