@@ -236,10 +236,6 @@ to be placed inside another XML document.
 : No output of namespace declarations. Useful when the output is to be
 placed inside another XML document.
 
-`--XML_PROCESSING_FLAG_LONG=<arg>`
-: Add <arg> as an XML processing instruction.
-
-
 The following options can be used to change the prefixes.
 Each extensions to the srcML markup has its own namespace. These are
 indicated in the srcML document by the declaration of the specific
