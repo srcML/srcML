@@ -212,7 +212,7 @@ public:
         --parent->number_finishing_elements;
         if(parent->number_finishing_elements == 0) {
 
-            for(std::vector<const std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > >::const_iterator citr = parent->finish_elements_add.begin(); 
+            for(std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > >::const_iterator citr = parent->finish_elements_add.begin(); 
                 citr != parent->finish_elements_add.end(); ++citr) {
 
                 parent->startNewMode(citr->first);
@@ -259,7 +259,7 @@ public:
         --parent->number_finishing_elements;
         if(parent->number_finishing_elements == 0) {
 
-            for(std::vector<const std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > >::const_iterator citr = parent->finish_elements_add.begin(); 
+            for(std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > >::const_iterator citr = parent->finish_elements_add.begin(); 
                 citr != parent->finish_elements_add.end(); ++citr) {
 
                 parent->startNewMode(citr->first);
@@ -705,7 +705,7 @@ public:
     bool wait_terminate_post;
     bool cppif_duplicate;
     size_t number_finishing_elements;
-    std::vector<std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > > finish_elements_add;
+    std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > > finish_elements_add;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
