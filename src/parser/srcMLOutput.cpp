@@ -236,8 +236,8 @@ namespace {
 
     // template
     ELEMENT_MAP(STEMPLATE, "template")
-    ELEMENT_MAP(STEMPLATE_ARGUMENT,       ELEMENT_MAP_CALL(SARGUMENT))
-    ELEMENT_MAP(STEMPLATE_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
+    ELEMENT_MAP(SGENERIC_ARGUMENT,       ELEMENT_MAP_CALL(SARGUMENT))
+    ELEMENT_MAP(SGENERIC_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
     ELEMENT_MAP(STEMPLATE_PARAMETER,      ELEMENT_MAP_CALL(SPARAMETER))
     ELEMENT_MAP(STEMPLATE_PARAMETER_LIST, ELEMENT_MAP_CALL(SPARAMETER_LIST))
 
@@ -1599,12 +1599,12 @@ void srcMLOutput::processComplex(const antlr::RefToken& token) {
 }
 
 /**
- * processTemplateArgumentList
+ * processGenericArgumentList
  * @param token token to output as template argument list
  *
  * Callback to process/output token as template argument list.
  */
-void srcMLOutput::processTemplateArgumentList(const antlr::RefToken& token) {
+void srcMLOutput::processGenericArgumentList(const antlr::RefToken& token) {
 
     processOptional(token, "type", "generic");
 
