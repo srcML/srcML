@@ -55,8 +55,6 @@
 
 extern std::vector<transform> global_transformations;
 extern srcml_translator* ptranslator;
-extern srcml_archive* poutput_archive;
-
 
 /**
  * xpath_query_units
@@ -81,11 +79,11 @@ public :
      *
      * Constructor.
      */
-    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, xmlOutputBufferPtr output, 
+    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, srcml_archive* out_archive, xmlOutputBufferPtr output, 
                       const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0)
         : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), context(0), output(output), result_count(0) {
+          total(0), context(0), output(output), result_count(0), output_archive(out_archive) {
     }
 
     /**
@@ -432,7 +430,7 @@ public :
         //    xmlRemoveProp(curattr);
         //}
 
-        srcml_unit* punit = srcml_unit_create(poutput_archive);
+        srcml_unit* punit = srcml_unit_create(output_archive);
 
         // copy all the attributes from the current node
         for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
@@ -537,7 +535,7 @@ public :
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
 
-        srcml_unit* punit = srcml_unit_create(poutput_archive);
+        srcml_unit* punit = srcml_unit_create(output_archive);
 
         ptranslator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
 
@@ -829,6 +827,7 @@ private :
     xmlXPathContextPtr context;
     xmlOutputBufferPtr output;
     int result_count;
+    srcml_archive* output_archive;
 
     static const char * const simple_xpath_attribute_name;
 
