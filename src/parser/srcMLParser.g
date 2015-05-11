@@ -503,6 +503,8 @@ tokens {
     SGENERIC_ARGUMENT_LIST;
     STEMPLATE_PARAMETER;
     STEMPLATE_PARAMETER_LIST;
+    SGENERIC_PARAMETER;
+    SGENERIC_PARAMETER_LIST;
 
     // C Family elements
 	STYPEDEF;
@@ -1210,7 +1212,9 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
-        ({ inLanguage(LANGUAGE_JAVA) }? generic_argument_list set_int[type_count, type_count - 1])*
+
+        ({ inLanguage(LANGUAGE_JAVA) }? (generic_parameter_list | specifier)  set_int[type_count, type_count - 1])*
+
         function_type[type_count]
 ;
 
@@ -5680,7 +5684,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             specifier | { next_token() != TEMPOPS }? template_specifier | template_declaration_full |
 
-            { inLanguage(LANGUAGE_JAVA_FAMILY) }? { setMode(MODE_FUNCTION_TYPE); } generic_argument_list { clearMode(MODE_FUNCTION_TYPE); }
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }? generic_parameter_list
         )*
         compound_name_inner[false]
         parameter_list
@@ -8335,6 +8339,49 @@ generic_argument_list[] { CompleteElement element(this); std::string namestack_s
         tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])* tempope
 
         restorenamestack[namestack_save]
+;
+
+// generic parameter list
+generic_parameter_list[] { CompleteElement element(this); std::string namestack_save[2];  ENTRY_DEBUG } :
+        {
+            // local mode
+            startNewMode(MODE_LOCAL);
+
+            startElement(SGENERIC_PARAMETER_LIST);
+   
+        }
+        savenamestack[namestack_save]
+
+        tempops (options { generateAmbigWarnings = false; } : COMMA | generic_parameter)* tempope
+
+        restorenamestack[namestack_save]
+;
+
+// generic parameter
+generic_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+
+            // local mode
+            startNewMode(MODE_LOCAL);
+
+            startElement(STEMPLATE_PARAMETER);
+
+        }
+        (options { greedy = true; } :
+        { LA(1) != SUPER && LA(1) != QMARK }?
+
+        (options { generateAmbigWarnings = false; } : generic_specifiers_csharp)*
+        ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
+
+        (type_identifier | literals)
+            (options { generateAmbigWarnings = false; } : template_operators)*
+            ) |
+
+            template_extends_java |
+
+            template_super_java | qmark_name |
+            template_argument_expression
+        )+ 
 ;
 
 // CUDA argument list

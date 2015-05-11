@@ -64,7 +64,8 @@ enum {
     PROCESSPSEUDOPARAMETERLIST,
     PROCESSINDEXERPARAMETERLIST,
     PROCESSSIZEOFPACK,
-    PROCESSCUDAARGUMENTLIST
+    PROCESSCUDAARGUMENTLIST,
+    PROCESSGENERICPARAMETERLIST
 };
 
 /** for conversion of process numbers to callbacks */
@@ -103,7 +104,8 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processPseudoParameterList,
     &srcMLOutput::processIndexerParameterList,
     &srcMLOutput::processSizeofPack,
-    &srcMLOutput::processCudaArgumentList
+    &srcMLOutput::processCudaArgumentList,
+    &srcMLOutput::processGenericParameterList
 };
 
 /** element map call name */
@@ -369,6 +371,8 @@ namespace {
     ELEMENT_MAP(SOMP_ARGUMENT_LIST, PROCESSTOKEN)
     ELEMENT_MAP(SOMP_ARGUMENT, PROCESSTOKEN)
     ELEMENT_MAP(SOMP_EXPRESSION, PROCESSTOKEN)
+    ELEMENT_MAP(SGENERIC_PARAMETER, PROCESSTOKEN)
+    ELEMENT_MAP(SGENERIC_PARAMETER_LIST, PROCESSGENERICPARAMETERLIST)
 
 }
 

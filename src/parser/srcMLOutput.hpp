@@ -248,6 +248,7 @@ public:
     void processIndexerParameterList(const antlr::RefToken& token);
     void processSizeofPack(const antlr::RefToken& token);
     void processCudaArgumentList(const antlr::RefToken& token);
+    void processGenericParameterList(const antlr::RefToken& token);
 
     /** method pointer for token processing dispatch */
     typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
