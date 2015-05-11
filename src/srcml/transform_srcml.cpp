@@ -43,8 +43,10 @@
  		if (xpath_support.second) {
             const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
             
-            if (!attribute_uri)
+            if (!attribute_uri) {
+                std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.second->prefix->c_str() << "\"\n";
                 return -1;
+            }
 
  			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
@@ -69,7 +71,7 @@
         const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
         
         if (!attribute_uri) {
-            std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.first->prefix->c_str() << "\"\n";
+            std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.second->prefix->c_str() << "\"\n";
             return -1;
         }
  		
