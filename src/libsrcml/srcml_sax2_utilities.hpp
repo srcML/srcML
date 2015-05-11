@@ -32,7 +32,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, int unit = 0);
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
 				const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
-				OPTION_TYPE options, xmlOutputBufferPtr obuffer, srcml_archive* out_archive);
+				OPTION_TYPE options, srcml_archive* out_archive);
 #ifdef WITH_LIBXSLT
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, OPTION_TYPE options, xmlOutputBufferPtr obuffer = 0);
 #endif
