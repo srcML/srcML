@@ -129,7 +129,7 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 
         srcml_unit_free(unit);
     }
-    return numUnits;   
+    return numUnits;
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
