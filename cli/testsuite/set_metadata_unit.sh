@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test metadata options with files
 define sxmlfile1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" directory="sub" filename="a.cpp" version="1.2">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" url="sub" filename="a.cpp" version="1.2">
 	</unit>
 	STDOUT
 
@@ -30,7 +30,7 @@ createfile sub/a.cpp.xml "$sxmlfile1"
 srcml sub/a.cpp.xml --show-language
 check 3<<< "C++"
 
-srcml sub/a.cpp.xml --show-directory
+srcml sub/a.cpp.xml --show-url
 check 3<<< "sub"
 
 srcml sub/a.cpp.xml --show-filename

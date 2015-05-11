@@ -9,20 +9,20 @@ source $(dirname "$0")/framework_test.sh
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" directory="sub" filename="a.cpp" version="1.0"/>
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" url="sub" filename="a.cpp" version="1.0"/>
 	STDOUT
 
 createfile sub/a.cpp.xml "$srcml"
 
 # TODO: Add get-hash and get-timestamp
-options=( --show-language --show-directory --show-filename --show-src-version --show-encoding )
+options=( --show-language --show-url --show-filename --show-src-version --show-encoding )
 
 size="${#options[@]}"
 
 define values <<- 'STDOUT'
 	language="C++"
 	filename="a.cpp"
-	directory="sub"
+	url="sub"
 	version="1.0"
 	encoding="UTF-8"
 	STDOUT
