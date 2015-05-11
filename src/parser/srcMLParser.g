@@ -212,10 +212,11 @@ public:
         --parent->number_finishing_elements;
         if(parent->number_finishing_elements == 0) {
 
-            for(const std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > & pair : parent->finish_elements_add) {
+            for(std::vector<const std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > >::const_iterator citr = parent->finish_elements_add.begin(); 
+                citr != parent->finish_elements_add.end(); ++citr) {
 
-                parent->startNewMode(pair.first);
-                parent->currentState().openelements = pair.second;
+                parent->startNewMode(citr->first);
+                parent->currentState().openelements = citr->second;
 
 
             }
@@ -258,10 +259,11 @@ public:
         --parent->number_finishing_elements;
         if(parent->number_finishing_elements == 0) {
 
-            for(const std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > & pair : parent->finish_elements_add) {
+            for(std::vector<const std::pair<const srcMLState::MODE_TYPE, const std::stack<int> > >::const_iterator citr = parent->finish_elements_add.begin(); 
+                citr != parent->finish_elements_add.end(); ++citr) {
 
-                parent->startNewMode(pair.first);
-                parent->currentState().openelements = pair.second;
+                parent->startNewMode(citr->first);
+                parent->currentState().openelements = citr->second;
 
 
             }
