@@ -228,8 +228,10 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
     BOOST_FOREACH( std::string value, values )
     {
       std::size_t delim = value.find("=");
-      if (delim == std::string::npos)
+      if (delim == std::string::npos) {
+        std::cerr << "srcml: xmlns format missing \"=\"\n";
         exit(1); //ERROR CODE TBD
+      }
 
       srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
     }
