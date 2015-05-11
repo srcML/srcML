@@ -27,6 +27,17 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/foreach.hpp>
 
+std::string expand_namespace(const std::string& separator, size_t ns_size) {
+    std::string ns = "";
+    for (size_t i = 0; i < ns_size; ++i) {
+        ns += "%s";
+        if ((i + 1) < ns_size) {
+            ns += separator;
+        }
+    }
+    return ns;
+}
+
 void show_carret_error(size_t pos) {
     for (size_t i = 0; i < pos; ++i) {
         std::cerr << " ";
@@ -95,20 +106,22 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
 	return output_template;
 }
 
-boost::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, const std::string& allowed_args) {
+boost::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, const std::string& allowed_args, size_t ns_size) {
 
     size_t found = -1;
 
     while (true) {
         std::string template_arg = "";
+        std::string replace_arg = "%s";
+        
         found = template_string.find("%", found + 1);
         
         if (found == std::string::npos) {
             break;
         }
 
-        // For %% case - jsut ignore it
-        if (((found + 1) < template_string.length()) && template_string[found + 1] == '%') {
+        // For %% case - just ignore it
+        if (((found + 1) < template_string.length()) && (template_string[found + 1] == '%' || template_string[found + 1] == 's')) {
             continue;
         }
 
@@ -124,6 +137,7 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
             template_arg += template_string[found + 1];
 
             if (template_arg == "N") {
+                replace_arg = expand_namespace(" ", ns_size);
                 if ((found + 3) < template_string.length()) {
                     if (template_string[found + 2] == ':' && template_string[found + 3] == 'u'){
                         template_arg += ":u";
@@ -135,13 +149,11 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
                         template_string.erase(found + 2, 2);
                     }
                 }
-
-                std::cerr << template_arg << "\n";
             }
 
+            template_string.erase(found, 2);
             section_args.push_back(template_arg);
-            template_string[found + 1] = 's';
-            std::cerr << template_string << "\n";
+            template_string.insert(found, replace_arg);
         }
     }
 
@@ -179,15 +191,6 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
         if (arg == "l")           // %l: unit language
             return srcml_unit_get_language(srcml_unit);
 
-        if (arg == "N")
-            return "NS";
-
-        if (arg == "N:u")
-            return "NS:u";
-
-        if (arg == "N:p")
-            return "NS:p";
-
         if (arg == "S")           // %S: source encoding attribute on the archive
             return srcml_archive_get_src_encoding(srcml_arch);
     
@@ -218,7 +221,7 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
     return "???";
 }
 
-void display_template(srcml_archive* srcml_arch, pretty_template_t& output_template) {
+void display_template(srcml_archive* srcml_arch, pretty_template_t& output_template, size_t ns_size) {
 
     // C and c are available here as they are not metadata marked up in the file.
     int unit_number = 0;
@@ -250,6 +253,37 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
             BOOST_FOREACH(const std::string arg, output_template.body_args) {
                 if (arg == "i") {
                     body_params.push_back(std::to_string(unit_number));
+                }
+                else if (arg == "N") {
+                    for (size_t i = 0; i < ns_size; ++i) {
+                        if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
+                            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
+                                body_params.push_back("xmlns=" + std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
+                            }  
+                            else{
+                                body_params.push_back("xmlns:" + std::string(srcml_archive_get_namespace_prefix(srcml_arch, i)) + "=" + std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
+                            }
+                        }
+                    }
+                }
+                else if (arg == "N:u") {
+                    for (size_t i = 0; i < ns_size; ++i) {
+                        if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
+                            body_params.push_back(std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
+                        }
+                    }
+                }
+                else if (arg == "N:p") {
+                    for (size_t i = 0; i < ns_size; ++i) {
+                        if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
+                            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
+                                body_params.push_back("");
+                            }  
+                            else{
+                                body_params.push_back(std::string(srcml_archive_get_namespace_prefix(srcml_arch, i)));
+                            }
+                        }
+                    }
                 }
                 else {
                     const char* param = acquire_metadata(srcml_arch, unit, arg);
@@ -300,9 +334,10 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
 
 	pretty_template_t output_template = split_template_sections(pretty_input);
+    size_t ns_size = srcml_archive_get_namespace_size(srcml_arch);
 
 	if (output_template.header) {
-        output_template.error_location = parse_templates(*output_template.header, output_template.header_args, valid_header_args);
+        output_template.error_location = parse_templates(*output_template.header, output_template.header_args, valid_header_args, ns_size);
         if (output_template.error_location) {
             std::cerr << "srcml: header format error:\n";
             std::cerr << *output_template.header << "\n";
@@ -312,7 +347,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
 	}
 
     if (output_template.body) {
-        output_template.error_location = parse_templates(*output_template.body, output_template.body_args, valid_body_args);
+        output_template.error_location = parse_templates(*output_template.body, output_template.body_args, valid_body_args, ns_size);
         if (output_template.error_location) {
             std::cerr << "srcml: body format error:\n";
             std::cerr << *output_template.body << "\n";
@@ -322,7 +357,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
     }
 
 	if (output_template.footer) {
-        output_template.error_location = parse_templates(*output_template.footer, output_template.footer_args, valid_footer_args);
+        output_template.error_location = parse_templates(*output_template.footer, output_template.footer_args, valid_footer_args, ns_size);
         if (output_template.error_location) {
             std::cerr << "srcml: footer format error:\n";
             std::cerr << *output_template.footer << "\n";
@@ -331,12 +366,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
         }
 	}
 
-    display_template(srcml_arch, output_template);
+    display_template(srcml_arch, output_template, ns_size);
     
-    //std::string helloString = "Hello %s and %s \nFun time!";
-    //std::vector<std::string> args;
-    //args.push_back("Alice");
-    //args.push_back("Bob");
-    //std::cout << format_range(helloString, args) << '\n';
     return 0;
 }
