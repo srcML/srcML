@@ -115,7 +115,7 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  */
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
                 const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
-                OPTION_TYPE options, xmlOutputBufferPtr obuffer, xmlTextWriterPtr xout) {
+                OPTION_TYPE options, xmlOutputBufferPtr obuffer) {
 
     if(input_buffer == NULL || context_element == NULL ||
        xpath == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
