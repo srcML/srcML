@@ -1213,7 +1213,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        ({ inLanguage(LANGUAGE_JAVA) }? (generic_parameter_list | specifier)  set_int[type_count, type_count - 1])*
+        ({ inLanguage(LANGUAGE_JAVA) }? (generic_parameter_list | specifier | default_specifier)  set_int[type_count, type_count - 1])*
 
         function_type[type_count]
 ;

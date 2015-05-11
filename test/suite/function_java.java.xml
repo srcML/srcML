@@ -2,27 +2,27 @@
 <unit xmlns="http://www.sdml.info/srcML/src" language="Java" url="function" filename="function_java">
 
 <unit>
-<function><type><specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><specifier>public</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>private</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><specifier>private</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>protected</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><specifier>protected</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>default</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><specifier>default</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>default</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><specifier>public</specifier> <specifier>default</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function><type><specifier>default</specifier> <specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><specifier>default</specifier> <specifier>public</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>
