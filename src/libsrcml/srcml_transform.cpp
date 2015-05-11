@@ -439,24 +439,14 @@ int srcml_clear_transforms(srcml_archive * archive) {
 
 std::vector<transform> global_transformations;
 
-srcml_translator* ptranslator = 0;
-
-srcml_archive* poutput_archive = 0;
-
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
     if((iarchive->type != SRCML_ARCHIVE_READ && iarchive->type != SRCML_ARCHIVE_RW)
         || (oarchive->type != SRCML_ARCHIVE_WRITE && oarchive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    ptranslator = oarchive->translator;
-
     // use the output archive output buffer
     xmlOutputBufferPtr obuffer = oarchive->translator->output_buffer();
-
-    xmlTextWriterPtr xout = oarchive->translator->output_textwriter();
-
-    poutput_archive = oarchive;
 
     if(obuffer == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -479,7 +469,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.element),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_prefix), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_uri),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_name), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_value),
-                                    oarchive->options, obuffer, xout);
+                                    oarchive->options, oarchive);
                 break;
             }
 
