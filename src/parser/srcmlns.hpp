@@ -30,6 +30,8 @@
 #include <vector>
 #include <string>
 
+#include <boost/optional.hpp>
+
 /** xml declaration standalone attribute */
 const char* const XML_DECLARATION_STANDALONE = "yes";
 
@@ -125,5 +127,9 @@ const char* const UNIT_ATTRIBUTE_ITEM = "item";
 
 /** item (XPath) attribute */
 const char* const UNIT_ATTRIBUTE_PATH = "item";
+
+const std::string SRCML_URI_PREFIX[] = { "http://www.srcML.org/", "http://www.sdml.info/", "" };
+
+bool is_srcml_namespace(const std::string & uri, const std::string & srcml_uri);
 
 #endif
