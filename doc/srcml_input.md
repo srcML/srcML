@@ -39,16 +39,16 @@ A source-code language must be specified when input is from standard input.
 `-VERSION_FLAG_SHORT`, `--VERSION_FLAG_LONG`
 : Output the version of `srcml` then exit.
 
-`-VERBOSE_FLAG_SHORT`, `--VERBOSE_FLAG_LONG=[<format>]`
+`-VERBOSE_FLAG_SHORT`, `--VERBOSE_FLAG_LONG`
 : Conversion and status information to stderr, including encodings
 used. Especially useful with for monitoring progress of the the `TODO`
 option, a directory, or source-code archive (e.g. tar.gz). The
 signal SIGUSR1 can be used to toggle this option.
 
 `-QUIET_FLAG_SHORT`, `--QUIET_FLAG_LONG`
-: Supresses status messages. `TODO Better description`.
+: Supresses status messages.
 
-`-INFO_FLAG_SHORT`, `--INFO_FLAG_LONG=[<format>]`
+`-INFO_FLAG_SHORT`, `--INFO_FLAG_LONG`
 : Display most metadata, except the unit count (file count) in a srcML
 archive, then exit.
 
@@ -216,6 +216,11 @@ srcML document.
 : The value of the filename attribute is typically obtained from the input
 filename. This option allows you to specify a different filename for
 standard input or where the filename is not contained in the input path.
+
+`--URL_FLAG_LONG=<url>`
+: The url attribute on the root element can be defined. This is purely
+descriptive and has no interpretation by `srcml`. It is useful for specifying
+a directory or defining the source protocol.
 
 `-SRCVERSION_FLAG_SHORT`, `--SRCVERSION_FLAG_LONG=<version>`
 : Sets the value of the attribute version to version. This is a
