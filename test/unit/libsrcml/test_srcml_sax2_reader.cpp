@@ -49,29 +49,29 @@
 
 int main() {
 
-    const std::string srcml_a = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"abc\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
-    const std::string srcml_b = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_a = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"abc\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_b = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>";
 
-    const std::string srcml_ns_a = "<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>\n</s:unit>";
-    const std::string srcml_ns_b = "<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>";
+    const std::string srcml_ns_a = "<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>\n</s:unit>";
+    const std::string srcml_ns_b = "<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>";
 
-    const std::string srcml_single_a = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" timestamp=\"today\" hash=\"abc\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_single_a = "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" timestamp=\"today\" hash=\"abc\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
 
-    const std::string srcml_empty_single_as_unit = "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"/>";
+    const std::string srcml_empty_single_as_unit = "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"/>";
 
-    const std::string srcml_empty_nested_a = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>";
+    const std::string srcml_empty_nested_a = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>";
 
-    const std::string srcml_empty_nested_b = "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"/>";
+    const std::string srcml_empty_nested_b = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"/>";
 
-    const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" pos:tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"abc\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
+    const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:pos=\"http://www.srcML.org/srcML/position\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" pos:tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"abc\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
 
-    const std::string srcml_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" timestamp=\"today\" hash=\"abc\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
+    const std::string srcml_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" timestamp=\"today\" hash=\"abc\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
 
-    const std::string srcml_ns = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:pos=\"http://www.sdml.info/srcML/position\" xmlns:foo=\"bar\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" pos:tabs=\"4\" foo=\"bar\">\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n<s:unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
+    const std::string srcml_ns = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" xmlns:pos=\"http://www.srcML.org/srcML/position\" xmlns:foo=\"bar\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" pos:tabs=\"4\" foo=\"bar\">\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
 
-    const std::string srcml_empty_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"/>";
+    const std::string srcml_empty_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\"/>";
 
-    const std::string srcml_empty_nested = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>\n\n<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"/>\n\n</unit>";
+    const std::string srcml_empty_nested = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\" tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"/>\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"/>\n\n</unit>";
 
     std::ofstream srcml_file("project.xml");
     srcml_file << srcml;
@@ -175,8 +175,8 @@ int main() {
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "pos");
         dassert(namespaces.size(), 2);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -194,8 +194,8 @@ int main() {
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "pos");
         dassert(namespaces.size(), 2);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -226,8 +226,8 @@ int main() {
         dassert(prefixes.at(1), "pos");
         dassert(prefixes.at(2), "foo");
         dassert(namespaces.size(), 3);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
         dassert(namespaces.at(2), "bar");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
@@ -245,8 +245,8 @@ int main() {
         dassert(prefixes.at(1), "pos");
         dassert(prefixes.at(2), "foo");
         dassert(namespaces.size(), 3);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
         dassert(namespaces.at(2), "bar");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
@@ -277,8 +277,8 @@ int main() {
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(namespaces.size(), 2);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -295,8 +295,8 @@ int main() {
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(namespaces.size(), 2);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
     }
@@ -325,8 +325,8 @@ int main() {
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(namespaces.size(), 2);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -343,8 +343,8 @@ int main() {
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(namespaces.size(), 2);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
     }
@@ -372,7 +372,7 @@ int main() {
         dassert(prefixes.size(), 1);
         dassert(prefixes.at(0), "");
         dassert(namespaces.size(), 1);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
@@ -388,7 +388,7 @@ int main() {
         dassert(prefixes.size(), 1);
         dassert(prefixes.at(0), "");
         dassert(namespaces.size(), 1);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
     }
@@ -707,8 +707,8 @@ int main() {
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "pos");
         dassert(namespaces.size(), 2);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -770,8 +770,8 @@ int main() {
         dassert(prefixes.at(1), "pos");
         dassert(prefixes.at(2), "foo");
         dassert(namespaces.size(), 3);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/position");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
         dassert(namespaces.at(2), "bar");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
@@ -835,8 +835,8 @@ int main() {
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(namespaces.size(), 2);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
@@ -888,8 +888,8 @@ int main() {
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "cpp");
         dassert(namespaces.size(), 2);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
-        dassert(namespaces.at(1), "http://www.sdml.info/srcML/cpp");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
@@ -938,7 +938,7 @@ int main() {
         dassert(prefixes.size(), 1);
         dassert(prefixes.at(0), "");
         dassert(namespaces.size(), 1);
-        dassert(namespaces.at(0), "http://www.sdml.info/srcML/src");
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),

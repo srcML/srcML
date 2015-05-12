@@ -38,16 +38,16 @@ const char* const XML_VERSION = "1.0";
 
 // srcML namespace URIs
 /** Default srcML namespace uri */
-const char* const SRCML_SRC_NS_URI = "http://www.sdml.info/srcML/src";
+const char* const SRCML_SRC_NS_URI = "http://www.srcML.org/srcML/src";
 
 /** srcML preprocessor namespace uri */
-const char* const SRCML_CPP_NS_URI = "http://www.sdml.info/srcML/cpp";
+const char* const SRCML_CPP_NS_URI = "http://www.srcML.org/srcML/cpp";
 
 /** srcML error namespace uri */
-const char* const SRCML_ERR_NS_URI = "http://www.sdml.info/srcML/srcerr";
+const char* const SRCML_ERR_NS_URI = "http://www.srcML.org/srcML/srcerr";
 
 /** srcDiff namespace uri */
-const char* const SRCML_DIFF_NS_URI = "http://www.sdml.info/srcDiff";
+const char* const SRCML_DIFF_NS_URI = "http://www.srcML.org/srcDiff";
 
 /** Default srcML namespace prefix */
 const char* const SRCML_SRC_NS_PREFIX_DEFAULT = "";
@@ -63,19 +63,19 @@ const char* const SRCML_DIFF_NS_PREFIX_DEFAULT = "diff";
 
 // srcML extension namespace URI's
 /** srcML literal namespace uri */
-const char* const SRCML_EXT_LITERAL_NS_URI = "http://www.sdml.info/srcML/literal";
+const char* const SRCML_EXT_LITERAL_NS_URI = "http://www.srcML.org/srcML/literal";
 
 /** srcML operator namespace uri */
-const char* const SRCML_EXT_OPERATOR_NS_URI = "http://www.sdml.info/srcML/operator";
+const char* const SRCML_EXT_OPERATOR_NS_URI = "http://www.srcML.org/srcML/operator";
 
 /** srcML modifier namespace uri */
-const char* const SRCML_EXT_MODIFIER_NS_URI = "http://www.sdml.info/srcML/modifier";
+const char* const SRCML_EXT_MODIFIER_NS_URI = "http://www.srcML.org/srcML/modifier";
 
 /** srcML position namespace uri */
-const char* const SRCML_EXT_POSITION_NS_URI = "http://www.sdml.info/srcML/position";
+const char* const SRCML_EXT_POSITION_NS_URI = "http://www.srcML.org/srcML/position";
 
 /** srcML OpenMP namespace uri */
-const char* const SRCML_EXT_OPENMP_NS_URI = "http://www.sdml.info/srcML/OpenMP";
+const char* const SRCML_EXT_OPENMP_NS_URI = "http://www.srcML.org/srcML/OpenMP";
 
 /** srcML literal namespace prefix */
 const char* const SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT = "lit";

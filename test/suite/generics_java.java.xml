@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" url="generics" filename="generics_java">
+<unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="generics" filename="generics_java">
 
 <unit>
 <class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>

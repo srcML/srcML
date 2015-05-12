@@ -44,15 +44,15 @@ extern srcml_unit global_unit;
 std::string src = "int a;\n";
 
 std::string asrcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\" hash=\"0123456789abcdef\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
+    "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\" hash=\"0123456789abcdef\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
     "</unit>\n";
 
 std::string srcml_c = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" filename=\"a.cpp\" hash=\"0123456789abcdef\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
+    "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" filename=\"a.cpp\" hash=\"0123456789abcdef\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
     "</unit>\n";
 
 std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<s:unit xmlns:s=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" url=\"url\" filename=\"file\" version=\"1\" hash=\"0123456789abcdef\"><s:decl_stmt><s:decl><s:type><s:name>int</s:name></s:type> <s:name>a</s:name></s:decl>;</s:decl_stmt>\n"
+    "<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" url=\"url\" filename=\"file\" version=\"1\" hash=\"0123456789abcdef\"><s:decl_stmt><s:decl><s:type><s:name>int</s:name></s:type> <s:name>a</s:name></s:decl>;</s:decl_stmt>\n"
     "</s:unit>\n";
 
 int main() {
@@ -123,7 +123,7 @@ int main() {
         srcml_set_filename("file");
         srcml_set_url("url");
         srcml_set_version("1");
-        srcml_register_namespace("s", "http://www.sdml.info/srcML/src");
+        srcml_register_namespace("s", "http://www.srcML.org/srcML/src");
         srcml("a.cpp", "project_full.cpp.xml");
         std::string res_srcml;
         std::ifstream project("project_full.cpp.xml");

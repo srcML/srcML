@@ -1,7 +1,7 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:src="http://www.sdml.info/srcML/src"
-	xmlns="http://www.sdml.info/srcML/src"
+	xmlns:src="http://www.srcML.org/srcML/src"
+	xmlns="http://www.srcML.org/srcML/src"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
 	xmlns:exsl="http://exslt.org/common"

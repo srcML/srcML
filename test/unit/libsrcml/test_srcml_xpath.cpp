@@ -118,7 +118,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -139,10 +139,10 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[1]\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"2\" location=\"/src:function_decl[2]\"><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></unit>\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"3\" location=\"/src:function_decl[3]\"><function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[1]\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"2\" location=\"/src:function_decl[2]\"><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></unit>\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"3\" location=\"/src:function_decl[3]\"><function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
                         "</unit>\n");
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
@@ -151,7 +151,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -172,7 +172,7 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
                         "<unit language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[1]\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
                         "<unit language=\"C++\" filename=\"a.cpp\" item=\"2\" location=\"/src:function_decl[2]\"><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></unit>\n\n"
                         "<unit language=\"C++\" filename=\"a.cpp\" item=\"3\" location=\"/src:function_decl[3]\"><function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></unit>\n\n"
@@ -184,7 +184,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -205,8 +205,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[2]\"><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></unit>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[2]\"><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></unit>\n\n"
                         "</unit>\n");
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
@@ -215,7 +215,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -236,8 +236,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[2]/src:parameter_list[1]/src:param[2]\"><param><decl><type><name>double</name></type> <name>b</name></decl></param></unit>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" item=\"1\" location=\"/src:function_decl[2]/src:parameter_list[1]/src:param[2]\"><param><decl><type><name>double</name></type> <name>b</name></decl></param></unit>\n\n"
                         "</unit>\n");
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
@@ -250,7 +250,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -271,8 +271,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -287,9 +287,9 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
 
-        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -311,8 +311,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\" foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -327,7 +327,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -348,8 +348,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl foo:name=\"value\"><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl foo:name=\"value\"><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl foo:name=\"value\"><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -364,7 +364,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -377,7 +377,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", 0, 0, 0, 0, "http://www.sdml.info/srcML/src", "name", "value", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", 0, 0, 0, 0, "http://www.srcML.org/srcML/src", "name", "value", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         char temp;
@@ -385,8 +385,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl name=\"value\"><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl name=\"value\"><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl name=\"value\"><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -401,7 +401,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -414,7 +414,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", 0, 0, 0, "cpp", "http://www.sdml.info/srcML/cpp", "name", "value", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", 0, 0, 0, "cpp", "http://www.srcML.org/srcML/cpp", "name", "value", fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         char temp;
@@ -422,8 +422,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl cpp:name=\"value\"><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl cpp:name=\"value\"><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl cpp:name=\"value\"><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -442,7 +442,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -463,8 +463,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -479,9 +479,9 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
 
-        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -503,8 +503,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -519,7 +519,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -540,8 +540,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></foo:result>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></foo:result>\n\n"
 
                         "<foo:result><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></foo:result>\n\n"
 
@@ -556,7 +556,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -569,7 +569,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", 0, "http://www.sdml.info/srcML/src", "result", 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", 0, "http://www.srcML.org/srcML/src", "result", 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         char temp;
@@ -577,8 +577,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></result>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></result>\n\n"
 
                         "<result><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></result>\n\n"
 
@@ -593,7 +593,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -606,7 +606,7 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", "cpp", "http://www.sdml.info/srcML/src", "result", 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        dassert(srcml_xpath(buffer_input, "src:unit", "//src:function_decl", "cpp", "http://www.srcML.org/srcML/src", "result", 0, 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
         std::ifstream in("project.xml");
         std::string output;
         char temp;
@@ -614,8 +614,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><cpp:result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></cpp:result>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><cpp:result><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl></cpp:result>\n\n"
 
                         "<cpp:result><function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl></cpp:result>\n\n"
 
@@ -636,7 +636,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -657,8 +657,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -673,7 +673,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -694,8 +694,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\" xmlns:foobar=\"foobar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result foobar:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\" xmlns:foobar=\"foobar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result foobar:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -710,7 +710,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -731,8 +731,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><result foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><result foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -747,7 +747,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -768,8 +768,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><result name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><result name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -784,7 +784,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -805,8 +805,8 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:foo=\"bar\">\n\n"
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><foo:result foo:name=\"value\"><function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>\n\n"
 
                         "<function_decl><type><name>void</name></type> <name>g</name><parameter_list>(<param><decl><type><name>int</name></type> <name>a</name></decl></param>, <param><decl><type><name>double</name></type> <name>b</name></decl></param>)</parameter_list>;</function_decl>\n\n"
 
@@ -822,7 +822,7 @@ int main() {
 
     {
         const char * s = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                         "<unit xmlns=\"http://www.sdml.info/srcML/src\" xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\"> <empty_stmt>;</empty_stmt>\n"
+                         "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\"> <empty_stmt>;</empty_stmt>\n"
                           "</unit>\n";
         
         std::ofstream file("input.xml");
@@ -838,9 +838,9 @@ int main() {
             output += temp;
 
         dassert(output, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-                        "<unit xmlns=\"http://www.sdml.info/srcML/src\">\n\n"
+                        "<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n"
 
-                        "<unit xmlns:cpp=\"http://www.sdml.info/srcML/cpp\" language=\"C++\"> <empty_stmt>;</empty_stmt>\n"
+                        "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\"> <empty_stmt>;</empty_stmt>\n"
                         "</unit>\n\n"
 
                         "</unit>\n");
