@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import os
-from ctypes import cdll, c_int, c_char_p, POINTER, c_ulonglong
+from ctypes import cdll, c_int, c_size_t, c_char_p, POINTER, c_ulonglong
 from exception import *
 
 LIBSRCML_PATH=""
@@ -86,9 +86,9 @@ libsrcml.srcml_set_language.argtypes = [c_char_p]
 libsrcml.srcml_set_filename.restype = c_int
 libsrcml.srcml_set_filename.argtypes = [c_char_p]
 
-# int srcml_set_directory (const char* directory);
-libsrcml.srcml_set_directory.restype = c_int
-libsrcml.srcml_set_directory.argtypes = [c_char_p]
+# int srcml_set_url (const char* url);
+libsrcml.srcml_set_url.restype = c_int
+libsrcml.srcml_set_url.argtypes = [c_char_p]
 
 # int srcml_set_version   (const char* version);
 libsrcml.srcml_set_version.restype = c_int
@@ -122,6 +122,10 @@ libsrcml.srcml_register_file_extension.argtypes = [c_char_p, c_char_p]
 libsrcml.srcml_register_namespace.restype = c_int
 libsrcml.srcml_register_namespace.argtypes = [c_char_p, c_char_p]
 
+# int srcml_unparse_set_eol(size_t eol);
+libsrcml.srcml_unparse_set_eol.restype = c_int
+libsrcml.srcml_unparse_set_eol.argtypes = [c_size_t]
+
 # const char* srcml_get_xml_encoding ();
 libsrcml.srcml_get_xml_encoding.restype = c_char_p
 libsrcml.srcml_get_xml_encoding.argtypes = []
@@ -138,9 +142,9 @@ libsrcml.srcml_get_language.argtypes = []
 libsrcml.srcml_get_filename.restype = c_char_p
 libsrcml.srcml_get_filename.argtypes = []
 
-# const char* srcml_get_directory();
-libsrcml.srcml_get_directory.restype = c_char_p
-libsrcml.srcml_get_directory.argtypes = []
+# const char* srcml_get_url();
+libsrcml.srcml_get_url.restype = c_char_p
+libsrcml.srcml_get_url.argtypes = []
 
 # const char* srcml_get_version  ();
 libsrcml.srcml_get_version.restype = c_char_p
@@ -246,8 +250,8 @@ def set_language(language) :
 def set_filename(filename) :
     check_return(libsrcml.srcml_set_filename(filename))
 
-def set_directory(directory) :
-    check_return(libsrcml.srcml_set_directory(directory))
+def set_url(url) :
+    check_return(libsrcml.srcml_set_url(url))
 
 def set_version(version) :
     check_return(libsrcml.srcml_set_version(version))
@@ -276,6 +280,9 @@ def register_file_extension(extension, language) :
 def register_namespace(prefix, ns) :
     check_return(libsrcml.srcml_register_namespace(prefix, ns))
 
+def unparse_set_eol(eol) :
+    check_return(libsrcml.srcml_unparse_set_eol(eol))
+
 def register_macro(token, type) :
     check_return(libsrcml.srcml_register_macro(token, type))
 
@@ -291,8 +298,8 @@ def get_language() :
 def get_filename() :
     return libsrcml.srcml_get_filename()
 
-def get_directory() :
-    return libsrcml.srcml_get_directory()
+def get_url() :
+    return libsrcml.srcml_get_url()
 
 def get_version() :
     return libsrcml.srcml_get_version()

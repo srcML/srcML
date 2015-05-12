@@ -81,7 +81,7 @@ void src_input_libarchive(ParseQueue& queue,
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
         prequest->filename = input_file.resource;
-        prequest->directory = srcml_request.att_directory;
+        prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
         prequest->language = "";
@@ -163,8 +163,16 @@ void src_input_libarchive(ParseQueue& queue,
         // default is filename from archive entry (if not empty)
         std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
 
-        if (count == 0 && filename != "data" && status != ARCHIVE_EOF)
+        // stdin, single files require a explicit filename
+        if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
+            std::cerr << "Language required for stdin single files" << '\n';
+            exit(1);
+        }
+
+        if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+            srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
+        }
 
         // archive entry filename for non-archive input is "data"
         if (filename.empty() || filename == "data")
@@ -201,11 +209,23 @@ void src_input_libarchive(ParseQueue& queue,
             prequest->filename = filename;
 
 
-        prequest->directory = srcml_request.att_directory;
+        prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
         prequest->language = language;
         prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+
+        if (SRCML_COMMAND_TIMESTAMP & SRCMLOptions::get()) {
+
+            //Long time provided by libarchive needs to be time_t
+            time_t mod_time(archive_entry_mtime(entry));
+
+            //Standard ctime output and prune '/n' from string
+            char* c_time = ctime(&mod_time);
+            c_time[strlen(c_time) - 1] = 0;
+            
+            prequest->time_stamp = c_time;
+        }
 
         // fill up the parse request buffer
         if (!status && !prequest->status) {

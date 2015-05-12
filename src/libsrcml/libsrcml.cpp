@@ -62,7 +62,9 @@ std::string srcml_error;
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, std::vector<std::string>(),
+srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+                                 std::string(SRCML_VERSION_STRING), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+                                 std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY,
                                  8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
                                  language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any() };
@@ -75,7 +77,9 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, 0, 0, 0, std::string(SRCML_VE
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_unit global_unit = { &global_archive, 0, std::string(SRCML_VERSION_STRING), 0, 0, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, 0, 0, boost::any() };
+srcml_unit global_unit = { &global_archive, boost::optional<std::string>(), std::string(SRCML_VERSION_STRING), boost::optional<std::string>(),
+                           boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+                           boost::optional<std::string>(), std::vector<std::string>(), 0, 0, 0, 0, boost::optional<std::string>(), boost::any() };
 
 /**
  * @var register_languages
@@ -214,7 +218,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         else
             srcml_unit_set_filename(unit, input_filename);
 
-        srcml_unit_set_directory(unit, srcml_archive_get_directory(&global_archive));
+        srcml_unit_set_url(unit, srcml_archive_get_url(&global_archive));
         srcml_unit_set_version(unit, srcml_archive_get_version(&global_archive));
         srcml_unit_set_timestamp(unit, srcml_unit_get_timestamp(&global_unit));
         srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
@@ -326,16 +330,16 @@ int srcml_set_filename(const char* filename) {
 }
 
 /**
- * srcml_set_directory
- * @param directory a directory path
+ * srcml_set_url
+ * @param url a url path
  *
- * Set the directory attribute for the root unit.
+ * Set the url attribute for the root unit.
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_set_directory(const char* directory) {
+int srcml_set_url(const char* url) {
 
-    return srcml_archive_set_directory(&global_archive, directory);
+    return srcml_archive_set_url(&global_archive, url);
 
 }
 
@@ -497,6 +501,21 @@ int srcml_register_macro(const char* token, const char* type) {
 
 }
 
+/**
+ * srcml_unparse_set_eol
+ * @param eol the kind of eol to use for unparse
+ *
+ * Set the eol to be used for unparse.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
+ * on failure.
+ */
+int srcml_unparse_set_eol(size_t eol) {
+
+    return srcml_unit_unparse_set_eol(&global_unit, eol);
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Global get functions                             *
@@ -560,14 +579,14 @@ const char* srcml_get_filename() {
 }
 
 /**
- * srcml_get_directory
+ * srcml_get_url
  *
- * @returns Get the directory attribute for the root unit on success
+ * @returns Get the url attribute for the root unit on success
  * and NULL on failure
  */
-const char* srcml_get_directory() {
+const char* srcml_get_url() {
 
-    return srcml_archive_get_directory(&global_archive);
+    return srcml_archive_get_url(&global_archive);
 
 }
 
@@ -938,6 +957,8 @@ const char* srcml_error_string() { return srcml_error.c_str(); }
  * Free a buffer allocated by functions such as srcml_archive_write_open_memory and srcml_unit_unparse_memory.
  */
 void srcml_memory_free(char * buffer) {
+
+    if(buffer == 0) return;
 
     free((void*)buffer);
 

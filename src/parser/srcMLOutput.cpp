@@ -209,6 +209,7 @@ namespace {
     ELEMENT_MAP(SEMIT_STATEMENT,          "emit")
 
     ELEMENT_MAP(SMEMBER_INITIALIZATION_LIST, "member_init_list")
+    ELEMENT_MAP(SMEMBER_INITIALIZATION,      "call")
     ELEMENT_MAP(SCONSTRUCTOR_DEFINITION,     "constructor")
     ELEMENT_MAP(SCONSTRUCTOR_DECLARATION,    "constructor_decl")
     ELEMENT_MAP(SDESTRUCTOR_DEFINITION,      "destructor")
@@ -235,10 +236,12 @@ namespace {
 
     // template
     ELEMENT_MAP(STEMPLATE, "template")
-    ELEMENT_MAP(STEMPLATE_ARGUMENT,       ELEMENT_MAP_CALL(SARGUMENT))
-    ELEMENT_MAP(STEMPLATE_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
+    ELEMENT_MAP(SGENERIC_ARGUMENT,        ELEMENT_MAP_CALL(SARGUMENT))
+    ELEMENT_MAP(SGENERIC_ARGUMENT_LIST,   ELEMENT_MAP_CALL(SARGUMENT_LIST))
     ELEMENT_MAP(STEMPLATE_PARAMETER,      ELEMENT_MAP_CALL(SPARAMETER))
     ELEMENT_MAP(STEMPLATE_PARAMETER_LIST, ELEMENT_MAP_CALL(SPARAMETER_LIST))
+    ELEMENT_MAP(SGENERIC_PARAMETER,       ELEMENT_MAP_CALL(SPARAMETER))
+    ELEMENT_MAP(SGENERIC_PARAMETER_LIST,  ELEMENT_MAP_CALL(SPARAMETER_LIST))
 
     // cpp
     ELEMENT_MAP(SCPP_DIRECTIVE,   "directive")
@@ -470,7 +473,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const std::vector<std::string> & attributes,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          size_t ts)
-    : last_line(0), last_line2(0), last_column(0), end_position_output(false), input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_dir(0), unit_filename(0),
+    : last_line(0), last_line2(0), last_column(0), end_position_output(false), input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_url(0), unit_filename(0),
       unit_version(0), options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), 
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
@@ -742,7 +745,7 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
  * consume
  * @param language unit language attribute
  * @param revision unit revision attribute
- * @param directory unit directory attribute
+ * @param url unit url attribute
  * @param filename unit filename attribute
  * @param version unit version attribute
  * @param timestamp unit timestamp attribute
@@ -750,12 +753,12 @@ void srcMLOutput::setTokenStream(TokenStream& ints) {
  *
  * Start consumption of tokens/parsing of source code with unit attributes.
  */
-void srcMLOutput::consume(const char* language, const char* revision, const char* directory, const char* filename,
+void srcMLOutput::consume(const char* language, const char* revision, const char* url, const char* filename,
                           const char* version, const char* timestamp, const char* hash, const char* encoding) {
 
     // store attributes so that first occurrence of unit element will be correct
     unit_revision = revision;
-    unit_dir = directory;
+    unit_url = url;
     unit_filename = filename;
     unit_version = version;
     unit_timestamp = timestamp;
@@ -967,7 +970,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
  * startUnit
  * @param language the language attribute
  * @param revision what version of srcML
- * @param dir the directory attribute
+ * @param url the url attribute
  * @param filename the filename attribute
  * @param version the version attribute
  * @param timestamp the timestamp attribute
@@ -978,7 +981,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
  * Output the start of a unit tag.
  */
 void srcMLOutput::startUnit(const char* language, const char* revision,
-                            const char* dir, const char* filename,
+                            const char* url, const char* filename,
                             const char* version, const char* timestamp,
                             const char* hash,
                             const char* encoding,
@@ -1031,8 +1034,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },
 
-        // directory attribute
-        { UNIT_ATTRIBUTE_DIRECTORY, dir },
+        // url attribute
+        { UNIT_ATTRIBUTE_URL, url },
 
         // filename attribute
         { UNIT_ATTRIBUTE_FILENAME, filename },
@@ -1116,7 +1119,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
-        startUnit(unit_language, unit_revision, unit_dir, unit_filename, unit_version, unit_timestamp, unit_hash, unit_encoding, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
+        startUnit(unit_language, unit_revision, unit_url, unit_filename, unit_version, unit_timestamp, unit_hash, unit_encoding, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
 
     } else {
 
@@ -1598,22 +1601,34 @@ void srcMLOutput::processComplex(const antlr::RefToken& token) {
 }
 
 /**
- * processTemplateArgumentList
- * @param token token to output as template argument list
+ * processGenericArgumentList
+ * @param token token to output as generic argument list
  *
- * Callback to process/output token as template argument list.
+ * Callback to process/output token as generic argument list.
  */
-void srcMLOutput::processTemplateArgumentList(const antlr::RefToken& token) {
+void srcMLOutput::processGenericArgumentList(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "template");
+    processOptional(token, "type", "generic");
+
+}
+
+/**
+ * processGenericParameterList
+ * @param token token to output as generic parameter list
+ *
+ * Callback to process/output token as generic parameter list.
+ */
+void srcMLOutput::processGenericParameterList(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "generic");
 
 }
 
 /**
  * processCast
- * @param token token to output as template argument list
+ * @param token token to output as cast
  *
- * Callback to process/output token as template argument list.
+ * Callback to process/output token as cast.
  */
 void srcMLOutput::processCast(const antlr::RefToken& token) {
 

@@ -82,10 +82,11 @@ int main(int argc, char * argv[]) {
         pstdin->state = isxml(*(pstdin->fileptr)) ? SRCML : SRC;
 
         // language is required when standard input is used for source
+        /*
         if ((pstdin->state == SRC) && !srcml_request.att_language) {
             std::cerr << "Using stdin requires a declared language\n";
             exit(1);
-        }
+        }*/
     }
 
     // output destination
@@ -165,7 +166,7 @@ bool request_display_metadata(const srcml_request_t& srcml_request,
                               const srcml_input_t& /* input_sources */,
                               const srcml_output_dest& /* destination */) {
 
-    return (srcml_request.command & SRCML_COMMAND_INSRCML || srcml_request.xmlns_prefix_query);
+    return (srcml_request.command & SRCML_COMMAND_INSRCML || srcml_request.xmlns_prefix_query || srcml_request.pretty_format);
 }
 
 bool request_additional_compression(const srcml_request_t& /* srcml_request */,

@@ -7,11 +7,11 @@ source $(dirname "$0")/framework_test.sh
 
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:pos="http://www.sdml.info/srcML/position" revision="REVISION" pos:tabs="4">
+	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:pos="http://www.sdml.info/srcML/position" revision="REVISION" pos:tabs="8">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp" pos:tabs="4" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp" pos:tabs="8" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/b.cpp" pos:tabs="4" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
+	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/b.cpp" pos:tabs="8" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
 
 	</unit>
 	STDOUT
@@ -19,39 +19,62 @@ define fsrcml <<- 'STDOUT'
 createfile sub/a.cpp ""
 createfile sub/b.cpp ""
 
-# TODO: issue #1051
-srcml --tabs 4 --archive sub/a.cpp sub/b.cpp --in-order
+# specify tab size of 8
+srcml --tabs 8 --archive sub/a.cpp sub/b.cpp --in-order
 check 3<<< "$fsrcml"
 
-srcml --archive --tabs 4 sub/a.cpp sub/b.cpp --in-order
+srcml --archive --tabs 8 sub/a.cpp sub/b.cpp --in-order
 check 3<<< "$fsrcml"
 
-srcml --tabs 4 sub/a.cpp sub/b.cpp --archive --in-order
+srcml --tabs 8 sub/a.cpp sub/b.cpp --archive --in-order
 check 3<<< "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --archive --tabs 4 --in-order
+srcml sub/a.cpp sub/b.cpp --archive --tabs 8 --in-order
 check 3<<< "$fsrcml"
 
-srcml --tabs 4 sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --in-order
+srcml --tabs 8 sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 sub/a.cpp sub/b.cpp --archive -o sub/a.cpp.xml --in-order
+srcml --tabs 8 sub/a.cpp sub/b.cpp --archive -o sub/a.cpp.xml --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --archive --tabs 4 sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
+srcml --archive --tabs 8 sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 --archive sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
+srcml --tabs 8 --archive sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --archive --in-order
+srcml --tabs 8 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --archive --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 -o sub/a.cpp.xml --archive sub/a.cpp sub/b.cpp --in-order
+srcml --tabs 8 -o sub/a.cpp.xml --archive sub/a.cpp sub/b.cpp --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --tabs 4 --archive -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
+srcml --tabs 8 --archive -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-srcml --archive --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
+srcml --archive --tabs 8 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
+check sub/a.cpp.xml 3<<< "$fsrcml"
+
+
+# use default tab size of 8
+srcml --tabs --archive sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$fsrcml"
+
+srcml sub/a.cpp sub/b.cpp --archive --tabs --in-order
+check 3<<< "$fsrcml"
+
+srcml --tabs --archive sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
+check sub/a.cpp.xml 3<<< "$fsrcml"
+
+srcml --tabs -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --archive --in-order
+check sub/a.cpp.xml 3<<< "$fsrcml"
+
+srcml --tabs -o sub/a.cpp.xml --archive sub/a.cpp sub/b.cpp --in-order
+check sub/a.cpp.xml 3<<< "$fsrcml"
+
+srcml --tabs --archive -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
+check sub/a.cpp.xml 3<<< "$fsrcml"
+
+srcml --archive --tabs -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro"><macro-list token="VEC" type="src:name"/>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" url="macro"><macro-list token="VEC" type="src:name"/>
 
 <unit>
 <macro><name>D</name><argument_list>( <argument>if (a) b;</argument>)</argument_list></macro>
@@ -145,15 +145,15 @@
 </unit>
 
 <unit>
-<function_decl><type><macro><name>MACRO</name></macro> <name><name>struct</name> <name>s</name></name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><type><name>MACRO</name> <name><name>struct</name> <name>s</name></name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function><type><macro><name>MACRO</name></macro> <name><name>struct</name> <name>s</name></name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><name>MACRO</name> <name><name>struct</name> <name>s</name></name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><macro><name>MACRO</name></macro> <name><name>struct</name> <name>s</name></name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>MACRO</name> <name><name>struct</name> <name>s</name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 </unit>

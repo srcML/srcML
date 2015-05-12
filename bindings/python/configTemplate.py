@@ -141,8 +141,8 @@ def malloc(allocation_size):
         # Outputting all info for function bindings.
         outputStrm = cStringIO.StringIO()
         # Building initial from library.
-        if functionDeclInfo.name == "srcml_unit_get_standalone_xml":
-            functionDeclInfo.returnType = "c_void_p"
+        # if functionDeclInfo.name == "srcml_unit_get_standalone_xml":
+        #     functionDeclInfo.returnType = "c_void_p"
 
         # Writing return type and Argument Types
         outputStrm.write("libsrcml.{0.name}.restype = {0.returnType}\n".format(functionDeclInfo))
@@ -164,7 +164,7 @@ def {pyName}({parameters}):
 def {pyName}({parameters}):
     return libsrcml.{nativeName}({invocationArguments})
 """
-        specialStringCopyAndFreeConversion = """
+        allocateIntoTempBufferAndReturnResult = """
 def {pyName}({parameters}):
     temp = libsrcml.{nativeName}({invocationArguments})
     if temp == None:
@@ -183,7 +183,7 @@ def {pyName}({parameters}):
         if functionDeclInfo.returnType == "None":
             selectedTemplate = voidReturnTemplate
         elif functionDeclInfo.name == "srcml_unit_get_standalone_xml":
-            selectedTemplate = specialStringCopyAndFreeConversion
+            selectedTemplate = intResultTemplate
         elif functionDeclInfo.returnType == "c_void_p" or functionDeclInfo.returnType == "c_char_p":
             selectedTemplate = factoryReturnTemplate
         elif functionDeclInfo.returnType == "c_int":

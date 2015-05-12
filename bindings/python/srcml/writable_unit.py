@@ -18,6 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from bindings import *
 from exceptions import invalid_srcml_language, invalid_srcml_encoding
+from memory_buffer import memory_buffer
 from private_helpers import *
 
 class writable_unit(object):
@@ -350,11 +351,11 @@ class writable_unit(object):
             raise TypeError("Encoding must be None or a string")
             if check_encoding(xml_encoding) == 0:
                 raise invalid_srcml_encoding("Invalid XML encoding", xml_encoding)
-        ret = unit_get_standalone_xml(self.srcml_unit, xml_encoding)
-        if ret == None:
-            raise MemoryError("Failed to allocate memory for standalone xml.")
-        return ret
-
+        ret = memory_buffer()
+        unit_get_standalone_xml(self.srcml_unit, xml_encoding, ret.buff, ret.size)
+        strResult = ret.to_string(xml_encoding)
+        del ret
+        return strResult
     def write_start_unit(self):
         """
         Part of the XML writer-esque interface. Writes the beginning of a unit into the

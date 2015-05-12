@@ -249,4 +249,10 @@ const static srcMLState::MODE_TYPE MODE_CLASS_NAME;
 /** mode for function body */
 const static srcMLState::MODE_TYPE MODE_FUNCTION_BODY;
 
+/** mode for function type */
+const static srcMLState::MODE_TYPE MODE_FUNCTION_TYPE;
+
+/** mode to mark end of for control for cppif duplication */
+const static srcMLState::MODE_TYPE MODE_END_FOR_CONTROL;
+
 #endif

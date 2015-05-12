@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" dir="foreach" filename="foreach_m">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="Objective-C" url="foreach" filename="foreach_m">
 
 <unit>
 <for>for <control>(<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)</control>

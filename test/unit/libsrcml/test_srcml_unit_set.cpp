@@ -109,27 +109,27 @@ int main() {
     }
 
     /*
-      srcml_unit_set_directory
+      srcml_unit_set_url
     */
 
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        srcml_unit_set_directory(unit, 0);
-        dassert(unit->directory, 0);
+        srcml_unit_set_url(unit, 0);
+        dassert(unit->url, 0);
         srcml_unit_free(unit);
     }
 
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        srcml_unit_set_directory(unit, "foo");
-        dassert(*unit->directory, "foo");
+        srcml_unit_set_url(unit, "foo");
+        dassert(*unit->url, "foo");
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_set_directory(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unit_set_url(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -202,6 +202,37 @@ int main() {
 
     {
         dassert(srcml_unit_set_hash(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    /*
+      srcml_unit_unparse_set_eol
+    */
+
+    {
+
+        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit_unparse_set_eol(unit, SRCML_UNPARSE_OPTION_AUTO);
+        dassert(unit->eol, SRCML_UNPARSE_OPTION_AUTO);
+        srcml_unit_free(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit_unparse_set_eol(unit, SRCML_UNPARSE_OPTION_CRLF);
+        dassert(unit->eol, SRCML_UNPARSE_OPTION_CRLF);
+        srcml_unit_free(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_create(archive);
+        dassert(srcml_unit_unparse_set_eol(unit, SRCML_UNPARSE_OPTION_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_unit_free(unit);
+    }
+
+    {
+        dassert(srcml_unit_unparse_set_eol(0, SRCML_UNPARSE_OPTION_AUTO), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     srcml_archive_free(archive);

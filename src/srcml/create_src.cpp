@@ -109,8 +109,8 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_archive_set_filename(oarch, input_sources[0].filename.c_str());
             }
 
-            if (srcml_request.att_directory)
-                srcml_archive_set_directory(oarch, srcml_request.att_directory->c_str());
+            if (srcml_request.att_url)
+                srcml_archive_set_url(oarch, srcml_request.att_url->c_str());
 
             if (srcml_request.att_version)
                 srcml_archive_set_version(oarch, srcml_request.att_version->c_str());
@@ -147,6 +147,7 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_archive_disable_option(oarch, SRCML_OPTION_ARCHIVE);
                 srcml_archive_disable_option(oarch, SRCML_OPTION_HASH);
             } else {
+                
                 srcml_archive_enable_option(oarch, SRCML_OPTION_ARCHIVE);
                 srcml_archive_enable_option(oarch, SRCML_OPTION_HASH);
             }
@@ -210,6 +211,11 @@ void create_src(const srcml_request_t& srcml_request,
                 exit(4);
             }
             
+            // set encoding for source output
+            // NOTE: How this is done may change in the future
+            if (srcml_request.src_encoding)
+                srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
+
             srcml_unit_unparse_fd(unit, destination);
 
             srcml_unit_free(unit);
@@ -232,6 +238,11 @@ void create_src(const srcml_request_t& srcml_request,
                 std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
                 exit(4);
             }
+
+            // set encoding for source output
+            // NOTE: How this is done may change in the future
+            if (srcml_request.src_encoding)
+                srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
 
             srcml_unit_unparse_filename(unit, destination.c_str(), 0);
 

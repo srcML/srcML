@@ -26,6 +26,9 @@
 #include <Language.hpp>
 #include <language_extension_registry.hpp>
 
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
+
 #include <boost/optional.hpp>
 #include <boost/any.hpp>
 
@@ -113,6 +116,8 @@ struct transform {
 
     /** the transformation to perform for XSLT and relaxng */
     xmlDocPtr doc;
+
+    xmlXPathCompExprPtr compiled_xpath;
 };
 
 /**
@@ -143,8 +148,8 @@ struct srcml_archive {
     boost::optional<std::string> revision;
     /** an attribute for a language */
     boost::optional<std::string> language;
-    /** an attribute for a directory path */
-    boost::optional<std::string> directory;
+    /** an attribute for a url path */
+    boost::optional<std::string> url;
     /** an attribute for a version string */
     boost::optional<std::string> version;
     /** an array of name-value attribute pairs */
@@ -206,8 +211,8 @@ struct srcml_unit {
     boost::optional<std::string> language;
     /** an attribute name for a file */
     boost::optional<std::string> filename;
-    /** an attribute for a directory path */
-    boost::optional<std::string> directory;
+    /** an attribute for a url path */
+    boost::optional<std::string> url;
     /** an attribute for a version string */
     boost::optional<std::string> version;
     /** an attribute for a timestamp string */
@@ -216,6 +221,8 @@ struct srcml_unit {
     boost::optional<std::string> hash;
     /** an array of name-value attribute pairs */
     std::vector<std::string> attributes;
+    /** the type of eol to output with source code */
+    size_t eol;
 
     /** output buffer to hold streaming creation of unit */
     xmlBuffer * output_buffer;

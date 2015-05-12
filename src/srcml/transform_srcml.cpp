@@ -34,15 +34,19 @@
  	if (xpath_support.first){
         const char* element_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str());
         
-        if (!element_uri)
+        if (!element_uri) {
+            std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.first->prefix->c_str() << "\"\n";
             return -1;
+        }
 
  		// See if an attribute is present as well
  		if (xpath_support.second) {
             const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
             
-            if (!attribute_uri)
+            if (!attribute_uri) {
+                std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.second->prefix->c_str() << "\"\n";
                 return -1;
+            }
 
  			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
@@ -66,8 +70,10 @@
  	if (xpath_support.second) {
         const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
         
-        if (!attribute_uri)
+        if (!attribute_uri) {
+            std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.second->prefix->c_str() << "\"\n";
             return -1;
+        }
  		
         return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
                                                             xpath_support.second->prefix->c_str(),
@@ -148,6 +154,20 @@ void transform_srcml(const srcml_request_t& srcml_request,
         if (status != SRCML_STATUS_OK) {
             std::cerr << "srcml: error with input archive for transformation\n";
             exit(-1);
+        }
+
+        // copy input xml namespaces
+        // TODO: This assumes namespaces on first input. Need to open all, figure out
+        // output namespaces, then process
+        if (srcml_archive_get_options(in_arch) & SRCML_OPTION_ARCHIVE) {
+            for (int i = 0; i < (int)srcml_archive_get_namespace_size(in_arch); ++i) {
+
+                // do not register the srcML namespace, unless the prefix is different
+                if (std::string(srcml_archive_get_namespace_uri(in_arch, i)) == "http://www.sdml.info/srcML/src")
+                    continue;
+
+                srcml_archive_register_namespace(out_arch, srcml_archive_get_namespace_prefix(in_arch, i), srcml_archive_get_namespace_uri(in_arch, i));
+            }
         }
 
 		// iterate through all transformations added during cli parsing

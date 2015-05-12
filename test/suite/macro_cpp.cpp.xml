@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="macro">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" url="macro">
 
 <unit>
 <macro><name>M</name><argument_list>(<argument><literal type="boolean">true</literal></argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
@@ -8,5 +8,16 @@
 <unit>
 <macro><name>M</name><argument_list>(<argument><literal type="null">nullptr</literal></argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
+
+<unit>
+<macro><name>ACE_RCSID</name><argument_list>(<argument>asnmp</argument>, <argument>transaction</argument>, <argument><literal type="string">"$Id: transaction.cpp 78673 2007-06-30 04:51:04Z sowayaa $"</literal></argument>)</argument_list></macro>
+
+<comment type="line">// pre: pdu, target report  valid() == 1</comment>
+<comment type="line">// post: pdu sent out over the wire</comment>
+<function><type><specifier>inline</specifier> <name>void</name></type> <name>reset_receive_buffer</name><parameter_list>(<parameter><decl><type><name>iovec</name><modifier>&amp;</modifier></type> <name>io</name></decl></parameter>)</parameter_list>
+<block>{
+  <expr_stmt><expr><name><name>io</name><operator>.</operator><name>iov_base</name></name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+  <expr_stmt><expr><name><name>io</name><operator>.</operator><name>iov_len</name></name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+}</block></function></unit>
 
 </unit>

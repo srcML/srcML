@@ -48,7 +48,7 @@ endif()
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 
 # description
-set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/doc/src2srcml.xml)
+#set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/doc/src2srcml.xml)
 
 # vendor
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
