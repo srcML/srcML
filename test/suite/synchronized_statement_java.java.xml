@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" dir="synchronized_statement" filename="synchronzied_statement_java">
+<unit xmlns="http://www.sdml.info/srcML/src" language="Java" url="synchronized_statement" filename="synchronzied_statement_java">
 
 <unit>
 <synchronized>synchronized<init>(<expr><name>foo</name></expr>)</init> <block>{}</block></synchronized>

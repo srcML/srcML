@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" dir="modifier" filename="modifier_c">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C" url="modifier" filename="modifier_c">
 
 <unit>
 <decl_stmt><decl><type><name>type</name><modifier>^</modifier></type> <name>i</name></decl>;</decl_stmt>

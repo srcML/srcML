@@ -90,8 +90,11 @@
 
         plainfile = rpath.string();
 
-        if (resource != "-")
+        if (resource != "-" && protocol != "text")
             state = extension == ".xml" ? SRCML : SRC;
+
+        if (protocol == "text")
+            state = SRC;
 
         if (protocol == "stdin")
             fd = STDIN_FILENO;

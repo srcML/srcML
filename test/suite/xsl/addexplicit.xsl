@@ -23,9 +23,9 @@
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
-<!-- change the directory attribute on any unit from "if" to "while" -->
-<xsl:template match="src:unit/@dir">
-	<xsl:attribute name="dir">
+<!-- change the url attribute on any unit from "if" to "while" -->
+<xsl:template match="src:unit/@url">
+	<xsl:attribute name="url">
 		<xsl:value-of select="str:replace(., 'constructor', 'constructor_explicit')"/>
 	</xsl:attribute>
 </xsl:template>

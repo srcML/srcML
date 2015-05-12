@@ -94,21 +94,21 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 }
 
 /**
- * srcml_unit_set_directory
+ * srcml_unit_set_url
  * @param unit a srcml unit
- * @param directory a directory path
+ * @param url a url path
  *
- * Set the directory attribute for the srcml unit.
+ * Set the url attribute for the srcml unit.
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_directory(srcml_unit* unit, const char* directory) {
+int srcml_unit_set_url(srcml_unit* unit, const char* url) {
 
     if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
 
-    unit->directory = directory ? std::string(directory) : boost::optional<std::string>();
+    unit->url = url ? std::string(url) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 
@@ -169,6 +169,26 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
     if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     unit->hash = hash ? std::string(hash) : boost::optional<std::string>();
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_unit_unparse_set_eol
+ * @param unit a srcml unit
+ * @param eol the kind of eol to use for unparse
+ *
+ * Set the eol to be used for unparse.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
+ * on failure.
+ */
+int srcml_unit_unparse_set_eol(srcml_unit* unit, size_t eol) {
+
+    if(unit == NULL || eol > SRCML_UNPARSE_OPTION_CRLF) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    unit->eol = eol;
 
     return SRCML_STATUS_OK;
 
@@ -245,18 +265,18 @@ const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_directory
+ * srcml_unit_get_url
  * @param unit a srcml unit
  *
- * Get the directory attribute for the srcml unit.
+ * Get the url attribute for the srcml unit.
  *
- * @returns directory attribute on successand NULL on failure.
+ * @returns url attribute on successand NULL on failure.
  */
-const char* srcml_unit_get_directory(const struct srcml_unit* unit) {
+const char* srcml_unit_get_url(const struct srcml_unit* unit) {
 
     if(unit == NULL) return 0;
 
-    return unit->directory ? unit->directory->c_str() : 0;
+    return unit->url ? unit->url->c_str() : 0;
 
 }
 
@@ -309,7 +329,7 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_fragment_xml
+ * srcml_unit_get_xml_fragment
  * @param unit a srcml unit
  *
  * Get the parsed or collected srcml from an archive.
@@ -320,7 +340,7 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
  *
  * @returns the raw unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
+const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit) {
 
     if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
 
@@ -332,9 +352,11 @@ const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_standalone_xml
+ * srcml_unit_get_xml_standalone
  * @param unit a srcml unit
  * @param xml_encoding the xml encoding to encode the unit
+ * @param xml_buffer buffer to return the standalone xml
+ * @param buffer_size the size of the returned buffer
  *
  * Get the parsed or collected srcml from an archive.
  * If only the attributes were collected from a read,
@@ -345,31 +367,35 @@ const char* srcml_unit_get_fragment_xml(struct srcml_unit* unit) {
  *
  * @returns the formatted unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_standalone_xml(struct srcml_unit* unit, const char* xml_encoding) {
+int srcml_unit_get_xml_standalone(struct srcml_unit * unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size) {
 
-    if(unit == NULL || (!unit->unit && !unit->read_header)) return 0;
+    if(unit == NULL || xml_buffer == NULL || buffer_size == NULL || (!unit->unit && !unit->read_header)) return SRCML_STATUS_INVALID_ARGUMENT;
 
     if(!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_srcml(unit->unit);
 
-    char * buffer = 0;
-    size_t size = 0;
+    *xml_buffer = 0;
+    *buffer_size = 0;
     if(unit->unit) {
 
         struct srcml_archive * formatting_archive = srcml_archive_clone(unit->archive);
         srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE);
         if(xml_encoding) srcml_archive_set_xml_encoding(formatting_archive, xml_encoding);
-        srcml_archive_write_open_memory(formatting_archive, &buffer, &size);
+        srcml_archive_write_open_memory(formatting_archive, xml_buffer, buffer_size);
         srcml_write_unit(formatting_archive, unit);
         srcml_archive_close(formatting_archive);
         srcml_archive_free(formatting_archive);
 
-        while(size > 0 && buffer[size - 1] == '\n')
-            buffer[size - 1] = '\0';
+        while(*buffer_size > 0 && (*xml_buffer)[*buffer_size - 1] == '\n')
+            (*xml_buffer)[--(*buffer_size)] = '\0';
+
+    } else {
+
+        return SRCML_STATUS_ERROR;
 
     }
 
-    return buffer;
+    return SRCML_STATUS_OK;
 
 }
 
@@ -410,7 +436,7 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
             unit->archive->tabstop,
             lang,
             unit->revision ? unit->revision->c_str() : 0,
-            unit->directory ? unit->directory->c_str() : 0,
+            unit->url ? unit->url->c_str() : 0,
             unit->filename ? unit->filename->c_str() : 0,
             unit->version ? unit->version->c_str() : 0,
             unit->attributes,
@@ -995,7 +1021,7 @@ int srcml_write_start_unit(struct srcml_unit * unit) {
             unit->archive->tabstop,
             SRCML_LANGUAGE_NONE,
             unit->revision ? unit->revision->c_str() : 0,
-            unit->directory ? unit->directory->c_str() : 0,
+            unit->url ? unit->url->c_str() : 0,
             unit->filename ? unit->filename->c_str() : 0,
             unit->version ? unit->version->c_str() : 0,
             unit->attributes,
@@ -1184,6 +1210,7 @@ srcml_unit * srcml_unit_create(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->revision = srcml_version_string();
     unit->archive = archive;
+    unit->eol = SRCML_UNPARSE_OPTION_AUTO;
     unit->read_header = false;
     unit->unit_translator = 0;
 

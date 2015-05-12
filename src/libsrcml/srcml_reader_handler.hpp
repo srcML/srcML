@@ -31,9 +31,9 @@
 #include <stdio.h>
 #include <srcmlns.hpp>
 
-
 #include <string>
 #include <vector>
+#include <stack>
 
 #include <cstring>
 
@@ -225,6 +225,35 @@ private :
     /** save meta tags to use when non-archive write unit */
     std::vector<meta_tag> meta_tags;
 
+    /** srcDiff enum */
+    enum srcdiff_operation { COMMON, DELETE, INSERT };
+
+    /** srcDiff enum stack */
+    std::stack<srcdiff_operation> srcdiff_stack;
+
+    /** original constant */
+    static const size_t ORIGINAL = 0;
+
+    /** modified constant */
+    static const size_t MODIFIED = 1;
+
+    /** the revision to extract */
+    boost::optional<size_t> revision;
+
+    std::string attribute_revision(const std::string & attribute) {
+
+        if(!revision) return attribute;
+
+        std::string::size_type pos = attribute.find('|');
+        if(pos == std::string::npos) return attribute;
+
+        if(*revision == ORIGINAL) return attribute.substr(0, pos);
+
+        return attribute.substr(pos + 1, std::string::npos);
+
+    }
+
+
 public :
 
     /** Give access to membeers for srcml_sax2_reader class */
@@ -356,18 +385,19 @@ public :
             std::string attribute = attributes[pos].localname;
             std::string value = attributes[pos].value;
 
+            // Note: these are ignore instead of placing in attributes.
             if(attribute == "timestamp")
                 ;
             else if(attribute == "hash")
                 ;
             else if(attribute == "language")
-                srcml_archive_set_language(archive, value.c_str());
+                ;
             else if(attribute == "revision")
                 archive->revision = value;
             else if(attribute == "filename")
                 srcml_archive_set_filename(archive, value.c_str());
-            else if(attribute.size() >= 3 && attribute[0] == 'd' && attribute[1] == 'i' && attribute[2] == 'r' && (attribute.size() == 3 || attribute.compare(3, std::string::npos, "ectory") == 0))
-                srcml_archive_set_directory(archive, value.c_str());
+            else if(attribute == "url")
+                srcml_archive_set_url(archive, value.c_str());
             else if(attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
             else if(attribute == "tabs")
@@ -480,6 +510,8 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+        srcdiff_stack.push(COMMON);
+
         // pause
         // @todo this may need to change because, meta tags have separate call now
         if(!read_root) {
@@ -504,7 +536,6 @@ public :
 
         }
 
-
         unit = srcml_unit_create(archive);
         unit->unit = "";
 
@@ -514,7 +545,7 @@ public :
         for(int pos = 0; pos < num_attributes; ++pos) {
 
             std::string attribute = attributes[pos].localname;
-            std::string value = attributes[pos].value;
+            std::string value = attribute_revision(attributes[pos].value);
 
             if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
@@ -526,8 +557,8 @@ public :
                 unit->revision = value;
             else if(attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
-            else if(attribute.size() >= 3 && attribute[0] == 'd' && attribute[1] == 'i' && attribute[2] == 'r' && (attribute.size() == 3 || attribute.compare(3, std::string::npos, "ectory") == 0))
-                srcml_unit_set_directory(unit, value.c_str());
+            else if(attribute == "url")
+                srcml_unit_set_url(unit, value.c_str());
             else if(attribute == "version")
                 srcml_unit_set_version(unit, value.c_str());
             else if(attribute == "tabs" || attribute == "options" || attribute == "hash")
@@ -620,6 +651,27 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+        if(URI && std::string(URI) == SRCML_DIFF_NS_URI) {
+
+            std::string local_name(localname);
+
+            if(local_name == "common")
+                srcdiff_stack.push(COMMON);
+            else if(local_name == "delete")
+                srcdiff_stack.push(DELETE);
+            else
+                srcdiff_stack.push(INSERT);
+
+        }
+
+        if(revision) {
+
+            if(std::string(URI) == SRCML_DIFF_NS_URI) return;
+            if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
+            if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+
+        }
+
         if(collect_src && localname[0] == 'e' && localname[1] == 's'
            && strcmp((const char *)localname, "escape") == 0) {
 
@@ -711,6 +763,8 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+        srcdiff_stack.pop();
+
         if(skip) {
 
             get_controller().enable_startElement(true);
@@ -765,6 +819,17 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+        if(!skip && URI && std::string(URI) == SRCML_DIFF_NS_URI)
+            srcdiff_stack.pop();
+
+        if(revision) {
+
+            if(std::string(URI) == SRCML_DIFF_NS_URI) return;
+            if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
+            if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+
+        }
+
         if(collect_srcml) {
 
             write_endTag(localname, prefix, is_empty);
@@ -794,6 +859,13 @@ public :
         chars.append((const char *)ch, len);
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
+
+        if(revision) {
+
+            if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
+            if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+
+        }        
 
         if(is_empty && collect_srcml) *unit->unit += ">";
         is_empty = false;
@@ -947,7 +1019,7 @@ private :
             *unit->unit += attributes[pos].localname;
 
             *unit->unit += "=\"";
-            *unit->unit += attributes[pos].value;
+            *unit->unit += attribute_revision(attributes[pos].value);
             *unit->unit += "\"";
 
 

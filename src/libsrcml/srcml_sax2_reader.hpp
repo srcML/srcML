@@ -74,7 +74,7 @@ public :
     // read attribute and namespace information from root unit.  Does not advance read.
     int read_root_unit_attributes(boost::optional<std::string> & encoding, 
                                   boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                                  boost::optional<std::string> & directory, boost::optional<std::string> & version,
+                                  boost::optional<std::string> & url, boost::optional<std::string> & version,
                                   std::vector<std::string> & attributes,
                                   std::vector<std::string> & prefixes,
                                   std::vector<std::string> & namespaces,
@@ -88,7 +88,7 @@ public :
        Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
     */
     int read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                             boost::optional<std::string> & directory, boost::optional<std::string> & version,
+                             boost::optional<std::string> & url, boost::optional<std::string> & version,
                              boost::optional<std::string> & timestamp, boost::optional<std::string> & hash,
                              std::vector<std::string> & attributes);
 
@@ -97,6 +97,10 @@ public :
 
     // reads the next unit and returns it in parameter as src
     int read_src(xmlOutputBufferPtr output_buffer);
+
+    // set the revision number to retrieve
+    void revision_number(boost::optional<size_t> revision_number);
+
 
 };
 

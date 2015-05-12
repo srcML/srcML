@@ -66,54 +66,6 @@ public :
     virtual OPTION_TYPE get_options() const { return options; }
 
     /**
-     * srcsax_namespace2libxml2namespace
-     * @param num_namespaces number of namespaces
-     * @param namespaces the srcsax namespaces
-     *
-     * Convert the srcsax namespaces to libxml2 namespaces.
-     * @returns the libxml2 namespaces.
-     */
-     const xmlChar ** srcsax_namespace2libxml2namespace(int num_namespaces, const struct srcsax_namespace * namespaces) {
-
-        const xmlChar ** libxml2_namespaces = (const xmlChar **)malloc((num_namespaces * 2) * sizeof(const xmlChar *));
-        for(int pos = 0; pos < num_namespaces; ++pos) {
-
-            libxml2_namespaces[pos] = (const xmlChar *)namespaces[pos].prefix;
-            libxml2_namespaces[pos + 1] = (const xmlChar *)namespaces[pos].uri;
-
-        }
-
-        return libxml2_namespaces;
-
-     }
-
-    /**
-     * srcsax_attribute2libxml2attribute
-     * @param num_attributes number of attributes
-     * @param attributes the srcsax attributes
-     *
-     * Convert the srcsax attributes to libxml2 attributes.
-     * @returns the libxml2 attributes.
-     */
-     const xmlChar ** srcsax_attribute2libxml2attribute(int num_attributes, const struct srcsax_attribute * attributes) {
-
-        const xmlChar ** libxml2_attributes = (const xmlChar **)malloc((num_attributes * 5) * sizeof(const xmlChar *));
-        for(int pos = 0; pos < num_attributes; ++pos) {
-
-            libxml2_attributes[pos * 5] = (const xmlChar *)attributes[pos].localname;
-            libxml2_attributes[pos * 5 + 1] = (const xmlChar *)attributes[pos].prefix;
-            libxml2_attributes[pos * 5 + 2] = (const xmlChar *)attributes[pos].uri;
-            libxml2_attributes[pos * 5 + 3] = (const xmlChar *)strdup(attributes[pos].value);
-            libxml2_attributes[pos * 5 + 4] = libxml2_attributes[pos * 5 + 3] + strlen(attributes[pos].value);
-            attribute_value_pool.push_back(libxml2_attributes[pos * 5 + 3]);
-
-        }
-
-        return libxml2_attributes;
-
-     }
-
-    /**
      * start_output
      *
      * Pure virtual that is called exactly once at beginnning of document  Override for intended behavior.
@@ -175,17 +127,17 @@ public :
      * Collect namespaces from root unit.  Start to build the tree if SRCML_OPTION_APPLY_ROOT.
      */
     virtual void startRoot(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                           const struct srcsax_attribute * /* attributes */) {
 
         sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
         root = &handler->root;
 
         // record namespaces in an extensible list so we can add the per unit
-        for (int i = 0; i < num_namespaces; ++i) {
+        for (int i = 0; i < num_namespaces; i += 2) {
 
-            data.push_back((const xmlChar *)namespaces[i].prefix);
-            data.push_back((const xmlChar *)namespaces[i].uri);
+            data.push_back((const xmlChar *)handler->libxml2_namespaces[i]);
+            data.push_back((const xmlChar *)handler->libxml2_namespaces[i + 1]);
 
         }
         rootsize = data.size();
@@ -193,14 +145,8 @@ public :
         // if we are building the entire tree, start now
         if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
-            const xmlChar ** libxml2_namespaces = srcsax_namespace2libxml2namespace(num_namespaces, namespaces);
-            const xmlChar ** libxml2_attributes = srcsax_attribute2libxml2attribute(num_attributes, attributes);
-            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, libxml2_namespaces, num_attributes,
-                                  0, libxml2_attributes);
-
-            free(libxml2_namespaces);
-            free(libxml2_attributes);
-
+            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes,
+                                  0, handler->libxml2_attributes);
         }
 
     }
@@ -219,8 +165,10 @@ public :
      * Start to create an individual unit, merging namespace details from the root (if it exists).
      */
     virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                           const struct srcsax_attribute * /* attributes */) {
+
+        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
 
         // remove per-unit namespaces
         data.resize(rootsize);
@@ -229,6 +177,7 @@ public :
         for (int i = 0; i < num_namespaces; ++i) {
 
             // make sure not already in
+            /*
             bool found = false;
             for (std::vector<const xmlChar*>::size_type j = 0; j < data.size() / 2; ++j)
                 if (xmlStrEqual(data[j * 2], (const xmlChar *)namespaces[i].prefix) &&
@@ -239,9 +188,9 @@ public :
 
             if (found)
                 continue;
-
-            data.push_back((const xmlChar *)namespaces[i].prefix);
-            data.push_back((const xmlChar *)namespaces[i].uri);
+*/
+            data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2]);
+            data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2 + 1]);
         }
 
         /*
@@ -265,11 +214,8 @@ public :
         //xmlSAX2StartDocument(ctxt);
 
         // start the unit (element) at the root using the merged namespaces
-        const xmlChar ** libxml2_attributes = srcsax_attribute2libxml2attribute(num_attributes, attributes);
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, (int)(data.size() / 2),
-                              &data[0], num_attributes, 0, libxml2_attributes);
-
-        free(libxml2_attributes);
+                              &data[0], num_attributes, 0, handler->libxml2_attributes);
 
     }
 
@@ -287,14 +233,12 @@ public :
      * Build start element nodes in unit tree.
      */
     virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                                int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                                const struct srcsax_attribute * attributes) {
-        const xmlChar ** libxml2_namespaces = srcsax_namespace2libxml2namespace(num_namespaces, namespaces);
-        const xmlChar ** libxml2_attributes = srcsax_attribute2libxml2attribute(num_attributes, attributes);
-        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, libxml2_namespaces, num_attributes, 0, libxml2_attributes);
+                                int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                                const struct srcsax_attribute * /* attributes */) {
 
-        free(libxml2_namespaces);
-        free(libxml2_attributes);
+        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+
+        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes, 0, handler->libxml2_attributes);
 
     }
 
@@ -402,10 +346,6 @@ public :
             if ((error = !apply()))
                 stop_parser();
 
-            for(std::vector<const xmlChar *>::const_iterator citr = attribute_value_pool.begin(); citr != attribute_value_pool.end(); ++citr)
-                free((void *)*citr);
-            attribute_value_pool.clear();
-
             // free up the document that has this particular unit
             xmlNodePtr aroot = ctxt->myDoc->children;
             xmlUnlinkNode(ctxt->myDoc->children);
@@ -438,9 +378,6 @@ public :
             // apply the necessary processing
             if ((error = !apply()))
                 stop_parser();
-
-            for(std::vector<const xmlChar *>::const_iterator citr = attribute_value_pool.begin(); citr != attribute_value_pool.end(); ++citr)
-                free((void *)*citr);
 
             // free up the document that has this particular unit
             xmlNodePtr aroot = ctxt->myDoc->children;
@@ -512,9 +449,6 @@ protected:
 
     /** The pre-root processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
-
-    /** libxml2 attribute values */
-    std::vector<const xmlChar *> attribute_value_pool;
 
 };
 

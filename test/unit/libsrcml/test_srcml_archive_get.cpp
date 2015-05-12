@@ -168,27 +168,27 @@ int main() {
     }
 
     /*
-      srcml_archive_get_directory
+      srcml_archive_get_url
     */
 
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->directory = boost::optional<std::string>();
-        dassert(srcml_archive_get_directory(archive), 0);
+        archive->url = boost::optional<std::string>();
+        dassert(srcml_archive_get_url(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->directory = "foo";
-        dassert(srcml_archive_get_directory(archive), std::string("foo"));
+        archive->url = "foo";
+        dassert(srcml_archive_get_url(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
 
     {
-        dassert(srcml_archive_get_directory(0), 0);
+        dassert(srcml_archive_get_url(0), 0);
     }
 
     /*

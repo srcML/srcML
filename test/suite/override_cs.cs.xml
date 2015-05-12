@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="override" filename="override_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" url="override" filename="override_cs">
 
 <unit>
-  <function><type><specifier>public</specifier> <specifier>override</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
+  <function><specifier>public</specifier> <specifier>override</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
 <block>{}</block></function>
 </unit>
 
 <unit>
-<property><type><specifier>public</specifier> <specifier>override</specifier> <name>int</name></type> <name>GetX</name> <block>{
+<property><specifier>public</specifier> <specifier>override</specifier> <type><name>int</name></type> <name>GetX</name> <block>{
       <function><name>get</name> <block>{
           <return>return <expr><name>x</name></expr>;</return>
       }</block></function>

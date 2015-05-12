@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" dir="function_pointer" filename="function_pointer">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" url="function_pointer" filename="function_pointer">
 
 <unit>
 <function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><function_decl><type><name>double</name></type> (<modifier>*</modifier><name>g</name>)<parameter_list>()</parameter_list></function_decl></parameter>)</parameter_list>;</function_decl>
@@ -52,7 +52,7 @@
 -->
 
 <unit>
-<function><type><specifier>static</specifier> <name>void</name></type>
+<function><specifier>static</specifier> <type><name>void</name></type>
 <name>pass_state_graph</name> <parameter_list>(<parameter><decl><type><name>state_t</name></type> <name>start_state</name></decl></parameter>, <parameter><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>applied_func</name>) <parameter_list>(<parameter><decl><type><name>state_t</name></type> <name>state</name></decl></parameter>)</parameter_list></function_decl></parameter>)</parameter_list>
 <block>{
 

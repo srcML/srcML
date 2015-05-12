@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="delegate" filename="delegate_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" url="delegate" filename="delegate_cs">
 
 <unit>
 <expr_stmt><expr><name><name>button1</name><operator>.</operator><name>Click</name></name> <operator>+=</operator> <delegate><name>delegate</name><parameter_list>(<parameter><decl><type><name><name>System</name><operator>.</operator><name>Object</name></name></type> <name>o</name></decl></parameter>, <parameter><decl><type><name><name>System</name><operator>.</operator><name>EventArgs</name></name></type> <name>e</name></decl></parameter>)</parameter_list>
@@ -7,11 +7,11 @@
 </unit>
 
 <unit>
-<function_decl><type><specifier>delegate</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><specifier>delegate</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<function_decl><type><specifier>public</specifier> <specifier>delegate</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><specifier>public</specifier> <specifier>delegate</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>

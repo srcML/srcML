@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="decl" filename="decl_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" url="decl" filename="decl_cs">
 
 <unit>
-<decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>protected</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>protected</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>public</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <specifier>readonly</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>public</specifier>  <type><specifier>readonly</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><specifier>public</specifier> <specifier>volatile</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><specifier>public</specifier> <type><specifier>volatile</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
@@ -72,8 +72,6 @@
 <unit>
 <decl_stmt><decl><type><name>restrict</name></type> <name>restrict</name></decl>;</decl_stmt>
 </unit>
-
-
 
 <unit>
 <decl_stmt><decl><type><name>alias</name></type> <name>alias</name></decl>;</decl_stmt>

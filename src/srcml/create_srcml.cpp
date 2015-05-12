@@ -32,6 +32,7 @@
 #include <src_input_filesystem.hpp>
 #include <src_input_filelist.hpp>
 #include <src_input_stdin.hpp>
+#include <src_input_text.hpp>
 #include <srcml_input_srcml.hpp>
 #include <trace_log.hpp>
 #include <srcml_options.hpp>
@@ -49,6 +50,10 @@ void srcml_handler_dispatch(ParseQueue& queue,
         srcml_input_src uninput = input;
         input_file(uninput);
         srcml_input_srcml(queue, srcml_arch, uninput);
+
+    } else if (input.protocol == "text") {
+
+        src_input_text(queue, srcml_arch, srcml_request, input.filename);
 
     } else if (input.protocol == "filelist") {
 
@@ -80,11 +85,8 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (srcml_request.att_xml_encoding)
         srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str());
 
-    if (srcml_request.src_encoding) {
-
-        // TODO: Fix so that default encoding is NULL
-        //srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
-    }
+    if (srcml_request.src_encoding)
+        srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
 
     // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
     if (srcml_request.att_filename) {
@@ -93,8 +95,8 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_set_filename(srcml_arch, input_sources[0].filename.c_str());
     }
 
-    if (srcml_request.att_directory)
-        srcml_archive_set_directory(srcml_arch, srcml_request.att_directory->c_str());
+    if (srcml_request.att_url)
+        srcml_archive_set_url(srcml_arch, srcml_request.att_url->c_str());
 
     if (srcml_request.att_version)
         srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str());
@@ -139,6 +141,13 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
 
     } else {
+
+        // if this is an archive, then no filename attribute is allowed
+        if (srcml_request.att_filename) {
+            fprintf(stderr, "Attribute filename cannot be set for a srcML archive\n");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
+
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
     }

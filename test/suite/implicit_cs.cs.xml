@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="implicit" filename="implicit_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" url="implicit" filename="implicit_cs">
 
 <unit>
-<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <specifier>implicit</specifier></type> <name>operator <name>M</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <specifier>implicit</specifier> <name>operator <name>M</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>

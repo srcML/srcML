@@ -495,6 +495,48 @@ protected:
     }
 
     /**
+     * dupMode
+     *
+     * Duplicate mode on top of stack for cppif.
+     */
+    void dupMode(const std::stack<int> & open_elements) {
+
+        srcMLState dup = st.back();
+        st.back().setMode(MODE_TOP | MODE_END_AT_ENDIF);
+
+        dup.openelements = open_elements;
+        dup.setMode(MODE_ISSUE_EMPTY_AT_POP);
+        st.push_back(dup);
+
+    }
+
+    /**
+     * insertModeAfter
+     * @param m mode to stop on
+     * @param new_m mode to insert
+     * @param open_elements open elements for new_m
+     *
+     * Insert a new mode (new_m) with open_elements after first occurence of m
+     */
+    void insertModeAfter(const srcMLState::MODE_TYPE& m, const srcMLState::MODE_TYPE& new_m, const std::stack<int> & open_elements) {
+
+        std::list<srcMLState> alist;
+        while((st.back().getMode() & m) != m) {
+
+            alist.push_front(st.back());
+            st.pop_back();
+
+        }
+
+        st.push_back(new_m);
+        st.back().openelements = open_elements;
+
+       for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i)
+            st.push_back(*i);
+
+    }
+
+    /**
      * dupDownOverMode
      * @param m mode to stop on
      *
@@ -512,7 +554,6 @@ protected:
 
         alist.push_front(st.back());
         st.pop_back();
-
 
         alist.front().setMode(MODE_TOP | MODE_END_AT_ENDIF);
         for(std::list<srcMLState>::iterator i = alist.begin(); i != alist.end(); ++i) {

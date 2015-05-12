@@ -81,7 +81,7 @@ void src_input_libarchive(ParseQueue& queue,
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
         prequest->filename = input_file.resource;
-        prequest->directory = srcml_request.att_directory;
+        prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
         prequest->language = "";
@@ -209,7 +209,7 @@ void src_input_libarchive(ParseQueue& queue,
             prequest->filename = filename;
 
 
-        prequest->directory = srcml_request.att_directory;
+        prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
         prequest->language = language;

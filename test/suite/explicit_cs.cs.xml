@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="explicit" filename="explicit_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" url="explicit" filename="explicit_cs">
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>static</specifier> <specifier>explicit</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><specifier>public</specifier> <specifier>static</specifier> <specifier>explicit</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit>
-<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <specifier>explicit</specifier></type> <name>operator <name>M</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <specifier>explicit</specifier> <name>operator <name>M</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>

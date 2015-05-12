@@ -141,27 +141,27 @@ int main() {
     }
 
     /*
-      srcml_unit_get_directory
+      srcml_unit_get_url
     */
 
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->directory = boost::optional<std::string>();
-        dassert(srcml_unit_get_directory(unit), 0);
+        unit->url = boost::optional<std::string>();
+        dassert(srcml_unit_get_url(unit), 0);
         srcml_unit_free(unit);
     }
 
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->directory = "foo";
-        dassert(srcml_unit_get_directory(unit), std::string("foo"));
+        unit->url = "foo";
+        dassert(srcml_unit_get_url(unit), std::string("foo"));
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_get_directory(0), 0);
+        dassert(srcml_unit_get_url(0), 0);
     }
 
     /*
@@ -237,14 +237,14 @@ int main() {
     }
 
     /*
-      srcml_unit_get_fragment_xml
+      srcml_unit_get_xml_fragment
     */
 
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
         unit->unit = boost::optional<std::string>();
-        dassert(srcml_unit_get_fragment_xml(unit), 0);
+        dassert(srcml_unit_get_xml_fragment(unit), 0);
         srcml_unit_free(unit);
     }
 
@@ -252,7 +252,7 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         unit->unit = "<unit/>";
-        dassert(srcml_unit_get_fragment_xml(unit), std::string("<unit/>"));
+        dassert(srcml_unit_get_xml_fragment(unit), std::string("<unit/>"));
         srcml_unit_free(unit);
     }
 
@@ -262,7 +262,7 @@ int main() {
         srcml_archive * iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit * unit = srcml_read_unit_header(iarchive);
-        dassert(srcml_unit_get_fragment_xml(unit), std::string("<unit/>"));
+        dassert(srcml_unit_get_xml_fragment(unit), std::string("<unit/>"));
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
@@ -274,7 +274,7 @@ int main() {
         srcml_archive * iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit * unit = srcml_unit_create(iarchive);
-        dassert(srcml_unit_get_fragment_xml(unit), 0);
+        dassert(srcml_unit_get_xml_fragment(unit), 0);
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
@@ -282,25 +282,26 @@ int main() {
 
     {
         srcml_unit * unit = srcml_unit_create(archive);
-        dassert(srcml_unit_get_fragment_xml(unit), 0);
+        dassert(srcml_unit_get_xml_fragment(unit), 0);
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_get_fragment_xml(0), 0);
+        dassert(srcml_unit_get_xml_fragment(0), 0);
     }
 
     /*
-      srcml_unit_get_standalone_xml
+      srcml_unit_get_xml_standalone
     */
 
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
         unit->unit = boost::optional<std::string>();
-        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
-        dassert(xml, 0);
-        free((void *)xml);
+        char * xml = 0;
+        size_t size = 0;
+        dassert(srcml_unit_get_xml_standalone(unit, "UTF-8", &xml, &size), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_memory_free(xml);
         srcml_unit_free(unit);
     }
 
@@ -308,9 +309,11 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         unit->unit = "<unit/>";
-        const char * xml = srcml_unit_get_standalone_xml(unit, 0);
+        char * xml = 0;
+        size_t size = 0;
+        srcml_unit_get_xml_standalone(unit, 0, &xml, &size);
         dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
-        free((void *)xml);
+        srcml_memory_free(xml);
         srcml_unit_free(unit);
     }
 
@@ -318,9 +321,11 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         unit->unit = "<unit/>";
-        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
+        char * xml = 0;
+        size_t size = 0;
+        srcml_unit_get_xml_standalone(unit, "UTF-8", &xml, &size);
         dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
-        free((void *)xml);
+        srcml_memory_free(xml);
         srcml_unit_free(unit);
     }
 
@@ -328,9 +333,11 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         unit->unit = "<unit>\xc3\xbf<unit/>";
-        const char * xml = srcml_unit_get_standalone_xml(unit, "ISO-8859-1");
+        char * xml = 0;
+        size_t size = 0;
+        srcml_unit_get_xml_standalone(unit, "ISO-8859-1", &xml, &size);
         dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\xff</unit>"));
-        free((void *)xml);
+        srcml_memory_free(xml);
         srcml_unit_free(unit);
     }
 
@@ -340,9 +347,11 @@ int main() {
         srcml_archive * iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit * unit = srcml_read_unit_header(iarchive);
-        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
+        char * xml = 0;
+        size_t size = 0;
+        srcml_unit_get_xml_standalone(unit, "UTF-8", &xml, &size);
         dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
-        free((void *)xml);
+        srcml_memory_free(xml);
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
@@ -354,9 +363,10 @@ int main() {
         srcml_archive * iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit * unit = srcml_unit_create(iarchive);
-        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
-        dassert(xml, 0);
-        free((void *)xml);
+        char * xml = 0;
+        size_t size = 0;
+        dassert(srcml_unit_get_xml_standalone(unit, "UTF-8", &xml, &size), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_memory_free(xml);
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
@@ -364,14 +374,39 @@ int main() {
 
     {
         srcml_unit * unit = srcml_unit_create(archive);
-        const char * xml = srcml_unit_get_standalone_xml(unit, "UTF-8");
-        dassert(xml, 0);
-        free((void *)xml);
+        char * xml = 0;
+        size_t size = 0;       
+        dassert(srcml_unit_get_xml_standalone(unit, "UTF-8", &xml, &size), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_memory_free(xml);
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_get_standalone_xml(0, 0), 0);
+        char * xml = 0;
+        size_t size = 0; 
+        dassert(srcml_unit_get_xml_standalone(0, 0, &xml, &size), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_create(archive);
+        unit->unit = "<unit/>";
+        char * xml = 0;
+        size_t size = 0;
+        dassert(srcml_unit_get_xml_standalone(unit, 0, 0, &size), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_memory_free(xml);
+        srcml_unit_free(unit);
+    }
+
+    {
+
+        srcml_unit * unit = srcml_unit_create(archive);
+        unit->unit = "<unit/>";
+        char * xml = 0;
+        size_t size = 0;
+        dassert(srcml_unit_get_xml_standalone(unit, 0, &xml, 0), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_memory_free(xml);
+        srcml_unit_free(unit);
     }
 
     srcml_archive_free(archive);

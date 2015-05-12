@@ -24,8 +24,8 @@
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
 <!-- change the filename attribute on the unit from "if" to "while" -->
-<xsl:template match="src:unit/@dir">
-	<xsl:attribute name="dir">if</xsl:attribute>
+<xsl:template match="src:unit/@url">
+	<xsl:attribute name="url">if</xsl:attribute>
 </xsl:template>
 
 

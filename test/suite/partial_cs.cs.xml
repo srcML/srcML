@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" dir="partial" filename="partial_cs">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" url="partial" filename="partial_cs">
 
 <unit>
-<function_decl><type><specifier>partial</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
+<function_decl><specifier>partial</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -11,12 +11,12 @@
 
 <unit>
 <class><specifier>partial</specifier> class <name>C</name> <block>{
-    <function_decl><type><specifier>partial</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><specifier>partial</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
 }</block></class>
 </unit>
 
 <unit>
-<function><type><specifier>partial</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list><block>{}</block></function>
+<function><specifier>partial</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list><block>{}</block></function>
 </unit>
 
 </unit>

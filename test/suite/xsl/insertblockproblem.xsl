@@ -20,9 +20,9 @@
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="ISO-8859-1" standalone="yes"/>
 
-<!-- change the directory attribute on any unit from "*" to "*.block"-->
-<xsl:template match="src:unit/@dir">
-	<xsl:attribute name="dir">
+<!-- change the url attribute on any unit from "*" to "*.block"-->
+<xsl:template match="src:unit/@url">
+	<xsl:attribute name="url">
 		<xsl:value-of select="."/><xsl:text>.block</xsl:text>
 	</xsl:attribute>
 </xsl:template>
