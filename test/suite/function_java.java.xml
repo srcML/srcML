@@ -29,4 +29,8 @@
 <function><specifier>final</specifier> <type><name>a</name></type> <name>b</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<function><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <specifier>static</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
 </unit>
