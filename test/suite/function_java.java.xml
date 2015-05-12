@@ -25,4 +25,8 @@
 <function><specifier>default</specifier> <specifier>public</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<function><specifier>final</specifier> <type><name>a</name></type> <name>b</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
 </unit>

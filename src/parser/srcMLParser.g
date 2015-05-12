@@ -1212,6 +1212,9 @@ decl_pre_type[int & type_count] { ENTRY_DEBUG } :
 
     { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) |
 
+    // special case only for functions.  Should only reach here for funciton in Java
+    { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
+
     { inLanguage(LANGUAGE_JAVA) }? annotation |
 
     { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
@@ -1231,7 +1234,8 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1))
+            || (inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN || LA(1) == FINAL))
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
                 decl_pre_type[type_count])*
 
