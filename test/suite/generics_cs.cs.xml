@@ -2,15 +2,15 @@
 <unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" url="generics" filename="generics_cs">
 
 <unit>
-<interface>interface <name><name>I</name><argument_list type="template">&lt;<argument><specifier>in</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
+<interface>interface <name><name>I</name><argument_list type="generic">&lt;<argument><specifier>in</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface>interface <name><name>I</name><argument_list type="template">&lt;<argument><specifier>out</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
+<interface>interface <name><name>I</name><argument_list type="generic">&lt;<argument><specifier>out</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
 </unit>
 
 <unit>
-<class>class <name><name>C</name><argument_list type="template">&lt;<argument><name>A</name></argument>&gt;</argument_list> <where>where <name>A</name> : <constraint>class</constraint></where></name> <block>{}</block></class>
+<class>class <name><name>C</name><argument_list type="generic">&lt;<argument><name>A</name></argument>&gt;</argument_list> <where>where <name>A</name> : <constraint>class</constraint></where></name> <block>{}</block></class>
 </unit>
 
 <unit>
@@ -18,7 +18,7 @@
 </unit>
 
 <unit>
-<class>class <name><name>Foo</name><argument_list type="template">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> : <constraint><name>new</name>()</constraint></where></name> <block>{}</block></class>
+<class>class <name><name>Foo</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> : <constraint><name>new</name>()</constraint></where></name> <block>{}</block></class>
 </unit>
 
 </unit>

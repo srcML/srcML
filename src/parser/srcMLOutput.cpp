@@ -236,10 +236,12 @@ namespace {
 
     // template
     ELEMENT_MAP(STEMPLATE, "template")
-    ELEMENT_MAP(STEMPLATE_ARGUMENT,       ELEMENT_MAP_CALL(SARGUMENT))
-    ELEMENT_MAP(STEMPLATE_ARGUMENT_LIST,  ELEMENT_MAP_CALL(SARGUMENT_LIST))
+    ELEMENT_MAP(SGENERIC_ARGUMENT,        ELEMENT_MAP_CALL(SARGUMENT))
+    ELEMENT_MAP(SGENERIC_ARGUMENT_LIST,   ELEMENT_MAP_CALL(SARGUMENT_LIST))
     ELEMENT_MAP(STEMPLATE_PARAMETER,      ELEMENT_MAP_CALL(SPARAMETER))
     ELEMENT_MAP(STEMPLATE_PARAMETER_LIST, ELEMENT_MAP_CALL(SPARAMETER_LIST))
+    ELEMENT_MAP(SGENERIC_PARAMETER,       ELEMENT_MAP_CALL(SPARAMETER))
+    ELEMENT_MAP(SGENERIC_PARAMETER_LIST,  ELEMENT_MAP_CALL(SPARAMETER_LIST))
 
     // cpp
     ELEMENT_MAP(SCPP_DIRECTIVE,   "directive")
@@ -1599,22 +1601,34 @@ void srcMLOutput::processComplex(const antlr::RefToken& token) {
 }
 
 /**
- * processTemplateArgumentList
- * @param token token to output as template argument list
+ * processGenericArgumentList
+ * @param token token to output as generic argument list
  *
- * Callback to process/output token as template argument list.
+ * Callback to process/output token as generic argument list.
  */
-void srcMLOutput::processTemplateArgumentList(const antlr::RefToken& token) {
+void srcMLOutput::processGenericArgumentList(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "template");
+    processOptional(token, "type", "generic");
+
+}
+
+/**
+ * processGenericParameterList
+ * @param token token to output as generic parameter list
+ *
+ * Callback to process/output token as generic parameter list.
+ */
+void srcMLOutput::processGenericParameterList(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "generic");
 
 }
 
 /**
  * processCast
- * @param token token to output as template argument list
+ * @param token token to output as cast
  *
- * Callback to process/output token as template argument list.
+ * Callback to process/output token as cast.
  */
 void srcMLOutput::processCast(const antlr::RefToken& token) {
 

@@ -75,7 +75,7 @@ class <name>Person</name> <super><implements>implements <name>Serializable</name
 
 <unit>
 <function_decl><type><annotation>@<name>Results</name><argument_list>(<argument><expr><name>value</name> <operator>=</operator> <block>{ <annotation>@<name>Result</name><argument_list>(<argument><expr><name>javaType</name><operator>=</operator><name><name>List</name><operator>.</operator><name>class</name></name></expr></argument>, <argument><expr><name>many</name><operator>=</operator><annotation>@<name>Many</name><argument_list>(<argument><expr><name>select</name><operator>=</operator><literal type="string">"getTagsForPost"</literal></expr></argument>)</argument_list></annotation></expr></argument>)</argument_list></annotation> }</block></expr></argument>)</argument_list></annotation>
-<name><name>List</name><argument_list type="template">&lt;<argument><name>AnnoPost</name></argument>&gt;</argument_list></name></type> <name>getPosts</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>authorId</name></decl></parameter>)</parameter_list>;</function_decl>
+<name><name>List</name><argument_list type="generic">&lt;<argument><name>AnnoPost</name></argument>&gt;</argument_list></name></type> <name>getPosts</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>authorId</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
