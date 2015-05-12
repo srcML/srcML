@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" url="class_cpp" options="WRAP_TEMPLATE">
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" url="union_cpp" options="WRAP_TEMPLATE">
 
 <unit>
 <union>union <name>A</name> <block>{<public type="default">
