@@ -173,6 +173,11 @@ void transform_srcml(const srcml_request_t& srcml_request,
             exit(-1);
         }
 
+        // for non-archive input, then we want non-archive output, fool
+        if (!(srcml_archive_get_options(in_arch) & SRCML_OPTION_ARCHIVE)) {
+            srcml_archive_disable_option(out_arch, SRCML_OPTION_ARCHIVE);
+        }
+
         // copy input xml namespaces
         // TODO: This assumes namespaces on first input. Need to open all, figure out
         // output namespaces, then process
