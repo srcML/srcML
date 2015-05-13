@@ -260,11 +260,6 @@ By default, it writes to standard output.
 : Set line endings for a specific <environment>. Acceptable <environment>s
 are "Unix" or "Windows". Acceptable <ending>s are "\r\n" or "\n".
 
-`--OUTPUT_FORMAT_FLAG_LONG=<format>`
-: Specifies the output format, such as "tar.gz". As the output file's
-extension determines the output format, this is useful when writing to
-standard output.
-
 `-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
 : Outputs text in source code format. This is the default when the input
 is in srcML format.
@@ -305,7 +300,7 @@ with `--APPLY_ROOT_FLAG_LONG`, as the format is performed on a per unit basis.
 `--XPATH_PARAM_LONG <parameter>=<value>`
 : Pass a <parameter> name and its <value> to the XSLT program.
 
-`--XSLT_LONG=<file|uri>`
+`--XSLT_LONG=<file>`
 : Apply a transformation from an XSLT file to each individual unit.
 
 `--ATTRIBUTE_LONG=<arg>`
@@ -349,14 +344,16 @@ SIGINT
 
 ## RETURN STATUS
 
+
 * STATUS_SUCCESS: Normal
 * STATUS_ERROR: Error
-* STATUS_INPUTFILE_PROBLEM: Problem with input file
-* STATUS_UNKNOWN_OPTION: Unknown option
-* STATUS_UNKNOWN_ENCODING: Unknown encoding
-* STATUS_INVALID_LANGUAGE: Invalid language
-* STATUS_INVALID_OPTION_COMBINATION: Invalid combination of options
-* STATUS_TERMINATED: Incomplete output due to termination
+* STATUS_INVALID_ARGUMENT: Invalid argument
+* STATUS_INPUTFILE_PROBLEM: Invalid input
+* SRCML_STATUS_INVALID_IO_OPERATION: Invalid read I/O operation (such as write on read only archive)
+* SRCML_STATUS_IO_ERROR: Error with input
+* SRCML_STATUS_UNINITIALIZED_UNIT: Uninitialized unit
+* SRCML_STATUS_UNSET_LANGUAGE: Unset language
+* SRCML_STATUS_NO_TRANSFORMATION: There are no transformations
 
 
 
