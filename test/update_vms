@@ -33,11 +33,11 @@
 ./prlctlall.py --mint --test --~13 suspend
 
 ./prlctlall.py --suse --build resume; sleep 15
-./sshall.py --suse --build 'bash -c "zypper --non-interactive update"'
+./sshall.py --suse --build 'bash -c "zypper --non-interactive update --auto-agree-with-licenses"'
 ./prlctlall.py --suse --build suspend
 
 ./prlctlall.py --suse --test resume; sleep 15
-./sshall.py --suse --test 'bash -c "zypper --non-interactive update"'
+./sshall.py --suse --test 'bash -c "zypper --non-interactive update --auto-agree-with-licenses"'
 ./prlctlall.py --suse --test suspend
 
 ./prlctlall.py --~mac snapshot "--name \"Update: $(date '+%B%e, %Y')\""
