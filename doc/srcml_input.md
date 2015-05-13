@@ -94,8 +94,8 @@ in the srcML file. Possible encodings, such as "UTF-16", "ISO-10646-UCS-2",
 or "ISO-8859-1" can be obtained by using the command
 `iconv -l` on UNIX platforms.
 
-`--FILES_FROM_LONG=<file|uri>`
-: Treats the input (either a <file> or <URI>) as a list of source files.
+`--FILES_FROM_LONG=<file>`
+: Treats the input file as a list of source files.
 Each file is separately translated and collectively stored into a
 single srcML archive. The list has a single filename on each line
 starting at the beginning of the line. Blank lines and lines that
@@ -106,11 +106,6 @@ list from standard input.
 `-OUTPUT_FLAG_SHORT`, `--OUTPUT_FLAG_LONG=<output-file>`
 : Write to output srcML file, URI, or source code file.
 By default, it writes to standard output.
-
-`--OUTPUT_FORMAT_FLAG_LONG=<format>`
-: Specifies the output format, such as "tar.gz". As the output file's
-extension determines the output format, this is useful when writing to
-standard output.
 
 `-OUTPUT_XML_FLAG_SHORT`,`--OUTPUT_XML_FLAG_LONG`
 : Outputs XML in srcML format. This is the default when the input is source
@@ -235,15 +230,38 @@ working with srcML archives.
 
 `--TIMESTAMP_FLAG_LONG`
 : Sets the timestamp of the output srcML file to the last modified
-time of the input source-code file. For a source archive, this is the
-last modified time based on the archive files. For source files from
-a file system, it is the modified timestamp from the file system. For
-inputs from a URL, it is the current time (i.e., last access time).
-For inputs from version control, it is the last modified time based
-on the metadata from the last commit.
+time of the input source-code archive. This is the
+last modified time based on the archive files.
+
+The following options allow viewing various metadata stored in the
+srcML document.
 
 `-PREFIX_FLAG_SHORT`, `--PREFIX_FLAG_LONG=<uri>`
 : Display a prefix given by a <URI> and exit. See [XML FORM][].
+
+`--SHOW_FILENAME_FLAG_LONG`
+: Display the filename and exit.
+
+`--SHOW_LANGUAGE_FLAG_LONG`
+: Display language and exit.
+
+`--SHOW_URL_FLAG_LONG`
+: Display URL of the root element and exit.
+
+`--SHOW_SRC_VERSION_FLAG_LONG`
+: Display the source-code version attribute and exit.
+
+`--SHOW_TIMESTAMP_FLAG_LONG`
+: Display the timestamp attribute and exit.
+
+`--SHOW_HASH_FLAG_LONG`
+: Display the hash value and exit.
+
+`--SHOW_ENCODING_FLAG_LONG`
+: Display the XML encoding and exit.
+
+`--SHOW_UNIT_COUNT_FLAG_LONG`
+: Display the unit count and exit.
 
 
 ### EXAMPLES
@@ -264,11 +282,6 @@ By default, it writes to standard output.
 `--LINE_ENDING_FLAG_LONG="<environment|ending>"`
 : Set line endings for a specific <environment>. Acceptable <environment>s
 are "Unix" or "Windows". Acceptable <ending>s are "\r\n" or "\n".
-
-`--OUTPUT_FORMAT_FLAG_LONG=<format>`
-: Specifies the output format, such as "tar.gz". As the output file's
-extension determines the output format, this is useful when writing to
-standard output.
 
 `-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
 : Outputs text in source code format. This is the default when the input
@@ -294,24 +307,13 @@ is in srcML format.
 : Output individual units that match the RELAXNG <file> or <uri>.
 
 `--XPATH_OPTION_LONG=<expression>`
-: Apply Xpath <expression> query to each individual unit. A format
-can be optionally specified to format the output of non-XML query results. For
-example, queries that return a number, string, or boolean value can be
-formatted on a per-unit basis to associate it with any of the metadata
-available of the unit. See `-INFO_FLAG_SHORT` from [METADATA OPTIONS][] for 
-formatting placeholders. In addition, the following placeholders may be used:
-
-	- %q: result of the query.
-
-	Formatting is only applicable to non-XML query results, such a string,
-number, or boolean value. The format cannot be specified in combination
-with `--APPLY_ROOT_FLAG_LONG`, as the format is performed on a per unit basis.
+: Apply Xpath <expression> query to each individual unit.
 
 `--XPATH_PARAM_LONG <parameter>=<value>`
 : Pass a <parameter> name and its <value> to the XSLT program.
 
 `--XSLT_LONG=<file|uri>`
-: Apply a transformation from an XSLT file to each individual unit.
+: Apply a transformation from an XSLT <file> or <uri> to each individual unit.
 
 `--ATTRIBUTE_LONG=<arg>`
 : Add attribute <arg> to the Xpath query.
@@ -354,14 +356,16 @@ SIGINT
 
 ## RETURN STATUS
 
+
 * STATUS_SUCCESS: Normal
 * STATUS_ERROR: Error
-* STATUS_INPUTFILE_PROBLEM: Problem with input file
-* STATUS_UNKNOWN_OPTION: Unknown option
-* STATUS_UNKNOWN_ENCODING: Unknown encoding
-* STATUS_INVALID_LANGUAGE: Invalid language
-* STATUS_INVALID_OPTION_COMBINATION: Invalid combination of options
-* STATUS_TERMINATED: Incomplete output due to termination
+* STATUS_INVALID_ARGUMENT: Invalid argument
+* STATUS_INPUTFILE_PROBLEM: Invalid input
+* SRCML_STATUS_INVALID_IO_OPERATION: Invalid read I/O operation (such as write on read only archive)
+* SRCML_STATUS_IO_ERROR: Error with input
+* SRCML_STATUS_UNINITIALIZED_UNIT: Uninitialized unit
+* SRCML_STATUS_UNSET_LANGUAGE: Unset language
+* SRCML_STATUS_NO_TRANSFORMATION: There are no transformations
 
 
 
