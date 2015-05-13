@@ -6,17 +6,17 @@ source $(dirname "$0")/framework_test.sh
 # xml error on invalid input archive test
 define illformed_archive_mulit <<- 'INPUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src">
+	<unit xmlns="http://www.srcML.org/srcML/src">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	</unit>
@@ -26,9 +26,9 @@ define illformed_archive_mulit <<- 'INPUT'
 
 define illformed_archive_single <<- 'INPUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src">
+	<unit xmlns="http://www.srcML.org/srcML/src">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	</unit>
@@ -38,7 +38,7 @@ define illformed_archive_single <<- 'INPUT'
 
 # expected output
 define info_archive <<- 'STDOUT'
-	xmlns="http://www.sdml.info/srcML/src"
+	xmlns="http://www.srcML.org/srcML/src"
 	encoding="UTF-8"
 	STDOUT
 

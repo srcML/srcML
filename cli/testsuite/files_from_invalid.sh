@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # files from
 define empty_srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDOUT
 
 # empty file input

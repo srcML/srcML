@@ -15,7 +15,7 @@ define input <<- 'INPUT'
 
 define markup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -26,7 +26,7 @@ define markup_else <<- 'STDOUT'
 
 define fmarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -38,7 +38,7 @@ define fmarkup_else <<- 'STDOUT'
 
 define nomarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -49,7 +49,7 @@ define nomarkup_else <<- 'STDOUT'
 
 define fnomarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>

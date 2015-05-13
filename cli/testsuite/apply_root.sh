@@ -6,19 +6,19 @@ source $(dirname "$0")/framework_test.sh
 # xpath apply root test
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
 	STDOUT
 
 define xpath_empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"/>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
 
 	</unit>
 	STDOUT

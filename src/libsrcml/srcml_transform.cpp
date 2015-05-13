@@ -478,7 +478,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_xslt(pinput, "src:unit",
                                    iarchive->transformations.at(i).doc,
-                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, oarchive->options, obuffer);
+                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, oarchive->options, oarchive);
                 break;
             }
 #endif

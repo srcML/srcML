@@ -7,7 +7,7 @@ source $(dirname "$0")/framework_test.sh
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
 	
 	<unit language="Java">
 	<foo:a/>
@@ -22,12 +22,12 @@ define srcml <<- 'STDOUT'
 
 define xpathempty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" revision="REVISION"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" revision="REVISION"/>
 	STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" revision="REVISION">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" revision="REVISION">
 
 	<unit revision="REVISION" language="Java">
 	<foo:a/>

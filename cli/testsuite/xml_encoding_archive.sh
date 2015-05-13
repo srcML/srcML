@@ -6,9 +6,9 @@ source $(dirname "$0")/framework_test.sh
 # test encoding flag on an archive of one
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
@@ -16,9 +16,9 @@ define srcml <<- 'STDOUT'
 
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
@@ -53,12 +53,12 @@ check sub/a.cpp.xml 3<<< "$fsrcml"
 # test encoding flag on an archive of more than one
 define srcmlb <<- 'STDOUT'
 	<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp" hash="520b48acbdb61e411641fd94359a82686d5591eb"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp" hash="520b48acbdb61e411641fd94359a82686d5591eb"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
@@ -66,12 +66,12 @@ define srcmlb <<- 'STDOUT'
 
 define fsrcmlb <<- 'STDOUT'
 	<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="0.8.0">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="sub/a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp" hash="520b48acbdb61e411641fd94359a82686d5591eb"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="sub/b.cpp" hash="520b48acbdb61e411641fd94359a82686d5591eb"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
