@@ -307,18 +307,7 @@ is in srcML format.
 : Output individual units that match the RELAXNG <file> or <uri>.
 
 `--XPATH_OPTION_LONG=<expression>`
-: Apply Xpath <expression> query to each individual unit. A format
-can be optionally specified to format the output of non-XML query results. For
-example, queries that return a number, string, or boolean value can be
-formatted on a per-unit basis to associate it with any of the metadata
-available of the unit. See `-INFO_FLAG_SHORT` from [METADATA OPTIONS][] for 
-formatting placeholders. In addition, the following placeholders may be used:
-
-	- %q: result of the query.
-
-	Formatting is only applicable to non-XML query results, such a string,
-number, or boolean value. The format cannot be specified in combination
-with `--APPLY_ROOT_FLAG_LONG`, as the format is performed on a per unit basis.
+: Apply Xpath <expression> query to each individual unit.
 
 `--XPATH_PARAM_LONG <parameter>=<value>`
 : Pass a <parameter> name and its <value> to the XSLT program.
