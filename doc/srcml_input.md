@@ -323,8 +323,8 @@ with `--APPLY_ROOT_FLAG_LONG`, as the format is performed on a per unit basis.
 `--XPATH_PARAM_LONG <parameter>=<value>`
 : Pass a <parameter> name and its <value> to the XSLT program.
 
-`--XSLT_LONG=<file>`
-: Apply a transformation from an XSLT file to each individual unit.
+`--XSLT_LONG=<file|uri>`
+: Apply a transformation from an XSLT <file> or <uri> to each individual unit.
 
 `--ATTRIBUTE_LONG=<arg>`
 : Add attribute <arg> to the Xpath query.
