@@ -34,7 +34,7 @@ class test_writable_archive_settings(unittest.TestCase):
     def test_constructor_default(self):
         subject = writable_archive_settings()
         self.assertIsNone(subject.filename, "Incorrect default value")
-        self.assertIsNone(subject.directory, "Incorrect default value")
+        self.assertIsNone(subject.url, "Incorrect default value")
         self.assertIsNone(subject.default_language, "Incorrect default value")
         self.assertEqual(8, subject.tab_stop, "Incorrect default value")
         self.assertIsNone(subject.version, "Incorrect default value")
@@ -50,7 +50,7 @@ class test_writable_archive_settings(unittest.TestCase):
 
     def test_constructor_kwargs(self):
         filename_data = "filename"
-        directory_data = "directory"
+        url_data = "url"
         language_data = "C++"
         tab_stop_data = 50
         version_data = "version"
@@ -62,7 +62,7 @@ class test_writable_archive_settings(unittest.TestCase):
         pi_data = ("target", "data")
         subject = writable_archive_settings(
             filename=filename_data,
-            directory=directory_data,
+            url=url_data,
             default_language=language_data,
             tab_stop=tab_stop_data,
             version=version_data,
@@ -75,7 +75,7 @@ class test_writable_archive_settings(unittest.TestCase):
         )
 
         self.assertEqual(filename_data, subject.filename, "Incorrect value")
-        self.assertEqual(directory_data, subject.directory, "Incorrect value")
+        self.assertEqual(url_data, subject.url, "Incorrect value")
         self.assertEqual(language_data, subject.default_language, "Incorrect value")
         self.assertEqual(tab_stop_data, subject.tab_stop, "Incorrect value")
         self.assertEqual(version_data, subject.version, "Incorrect value")
@@ -102,12 +102,12 @@ class test_writable_archive_settings(unittest.TestCase):
         self.assertEqual(expected, subject.filename, "Incorrect value")
 
 
-    def test_directory(self):
+    def test_url(self):
         subject = writable_archive_settings()
-        self.assertIsNone(subject.directory, "Incorrect default value")
+        self.assertIsNone(subject.url, "Incorrect default value")
         expected = "foo/bar/"
-        subject.directory = expected
-        self.assertEqual(expected, subject.directory, "Incorrect value")
+        subject.url = expected
+        self.assertEqual(expected, subject.url, "Incorrect value")
 
     def test_default_language(self):
         subject = writable_archive_settings()
@@ -198,7 +198,7 @@ class test_writable_archive_settings(unittest.TestCase):
 
     def test_clear(self):
         filename_data = "filename"
-        directory_data = "directory"
+        url_data = "url"
         language_data = "C++"
         tab_stop_data = 50
         version_data = "version"
@@ -210,7 +210,7 @@ class test_writable_archive_settings(unittest.TestCase):
         pi_data = ("target", "data")
         subject = writable_archive_settings(
             filename=filename_data,
-            directory=directory_data,
+            url=url_data,
             default_language=language_data,
             tab_stop=tab_stop_data,
             version=version_data,
@@ -223,7 +223,7 @@ class test_writable_archive_settings(unittest.TestCase):
         )
 
         self.assertEqual(filename_data, subject.filename, "Incorrect value")
-        self.assertEqual(directory_data, subject.directory, "Incorrect value")
+        self.assertEqual(url_data, subject.url, "Incorrect value")
         self.assertEqual(language_data, subject.default_language, "Incorrect value")
         self.assertEqual(tab_stop_data, subject.tab_stop, "Incorrect value")
         self.assertEqual(version_data, subject.version, "Incorrect value")
@@ -245,7 +245,7 @@ class test_writable_archive_settings(unittest.TestCase):
         subject.clear()
         # post clear test
         self.assertIsNone(subject.filename, "Incorrect default value")
-        self.assertIsNone(subject.directory, "Incorrect default value")
+        self.assertIsNone(subject.url, "Incorrect default value")
         self.assertIsNone(subject.default_language, "Incorrect default value")
         self.assertEqual(8, subject.tab_stop, "Incorrect default value")
         self.assertIsNone(subject.version, "Incorrect default value")
@@ -261,7 +261,7 @@ class test_writable_archive_settings(unittest.TestCase):
 
     def test_copy(self):
         filename_data = "filename"
-        directory_data = "directory"
+        url_data = "url"
         language_data = "C++"
         tab_stop_data = 50
         version_data = "version"
@@ -273,7 +273,7 @@ class test_writable_archive_settings(unittest.TestCase):
         pi_data = ("target", "data")
         subject = writable_archive_settings(
             filename=filename_data,
-            directory=directory_data,
+            url=url_data,
             default_language=language_data,
             tab_stop=tab_stop_data,
             version=version_data,
@@ -286,7 +286,7 @@ class test_writable_archive_settings(unittest.TestCase):
         )
 
         self.assertEqual(filename_data, subject.filename, "Incorrect value")
-        self.assertEqual(directory_data, subject.directory, "Incorrect value")
+        self.assertEqual(url_data, subject.url, "Incorrect value")
         self.assertEqual(language_data, subject.default_language, "Incorrect value")
         self.assertEqual(tab_stop_data, subject.tab_stop, "Incorrect value")
         self.assertEqual(version_data, subject.version, "Incorrect value")
@@ -308,7 +308,7 @@ class test_writable_archive_settings(unittest.TestCase):
         subject2 = subject.copy()
         # post clear test
         self.assertEqual(subject2.filename, subject.filename, "Incorrect value")
-        self.assertEqual(subject2.directory, subject.directory, "Incorrect value")
+        self.assertEqual(subject2.url, subject.url, "Incorrect value")
         self.assertEqual(subject2.default_language, subject.default_language, "Incorrect value")
         self.assertEqual(subject2.tab_stop, subject.tab_stop, "Incorrect value")
         self.assertEqual(subject2.version, subject.version, "Incorrect value")
@@ -321,7 +321,7 @@ class test_writable_archive_settings(unittest.TestCase):
 
     def test___eq__(self):
         filename_data = "filename"
-        directory_data = "directory"
+        url_data = "url"
         language_data = "C++"
         tab_stop_data = 50
         version_data = "version"
@@ -333,7 +333,7 @@ class test_writable_archive_settings(unittest.TestCase):
         pi_data = ("target", "data")
         subject = writable_archive_settings(
             filename=filename_data,
-            directory=directory_data,
+            url=url_data,
             default_language=language_data,
             tab_stop=tab_stop_data,
             version=version_data,
@@ -347,7 +347,7 @@ class test_writable_archive_settings(unittest.TestCase):
 
         subject2 = writable_archive_settings(
             filename=filename_data,
-            directory=directory_data,
+            url=url_data,
             default_language=language_data,
             tab_stop=tab_stop_data,
             version=version_data,
@@ -364,7 +364,7 @@ class test_writable_archive_settings(unittest.TestCase):
 
     def test___ne__(self):
         filename_data = "filename"
-        directory_data = "directory"
+        url_data = "url"
         language_data = "C++"
         tab_stop_data = 50
         version_data = "version"
@@ -376,7 +376,7 @@ class test_writable_archive_settings(unittest.TestCase):
         pi_data = ("target", "data")
         subject = writable_archive_settings(
             filename=filename_data,
-            directory=directory_data,
+            url=url_data,
             default_language=language_data,
             tab_stop=tab_stop_data,
             version=version_data,
@@ -390,7 +390,7 @@ class test_writable_archive_settings(unittest.TestCase):
 
         subject2 = writable_archive_settings(
             filename=filename_data,
-            directory=directory_data,
+            url=url_data,
             default_language=language_data,
             tab_stop=tab_stop_data,
             version=version_data,

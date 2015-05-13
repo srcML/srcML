@@ -183,16 +183,16 @@ class test_readable_archive(unittest.TestCase):
             self.assertEqual(expected_filename, archive_reader.filename, "Incorrect value.")
 
 
-    def test_directory(self):
+    def test_url(self):
         mem_buffer = memory_buffer()
-        expected_directory = "value"
-        with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX, directory=expected_directory), buffer=mem_buffer) as archive_writer:
+        expected_url = "value"
+        with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX, url=expected_url), buffer=mem_buffer) as archive_writer:
             u = archive_writer.create_unit()
             u.parse(source_code=test_source_code_data)
             archive_writer.write(u)
 
         with readable_archive(readable_archive_settings(), buffer=mem_buffer) as archive_reader:
-            self.assertEqual(expected_directory, archive_reader.directory, "Incorrect value.")
+            self.assertEqual(expected_url, archive_reader.url, "Incorrect value.")
 
 
     def test_revision(self):

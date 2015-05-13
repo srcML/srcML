@@ -75,12 +75,12 @@ class readable_unit(object):
         return unit_get_filename(self.srcml_unit)
         
     @property
-    def directory(self):
+    def url(self):
         """
-        Returns the value of the directory attribute or None if not
+        Returns the value of the url attribute or None if not
         set.
         """
-        return unit_get_directory(self.srcml_unit)
+        return unit_get_url(self.srcml_unit)
 
     @property
     def version(self):

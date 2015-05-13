@@ -104,8 +104,8 @@ class writable_archive(object):
         if settings.filename is not None:
             archive_set_filename(self.srcml_archive, settings.filename)
 
-        if settings.directory is not None:
-            archive_set_directory(self.srcml_archive, settings.directory)
+        if settings.url is not None:
+            archive_set_url(self.srcml_archive, settings.url)
 
         if settings.default_language is not None:
             archive_set_language(self.srcml_archive, settings.default_language)
@@ -260,11 +260,11 @@ class writable_archive(object):
         return archive_get_filename(self.srcml_archive)
 
     @property
-    def directory(self):
+    def url(self):
         """
-        The directory attribute set on an archive.
+        The url attribute set on an archive.
         """
-        return archive_get_directory(self.srcml_archive)
+        return archive_get_url(self.srcml_archive)
 
     @property
     def version(self):
@@ -354,7 +354,7 @@ class writable_archive(object):
             raise KeyError("Invalid language for file extension. The file name or path:\"{0}\" doesn't have a recognized extension within the current archive.".format(file_name_or_path))
         return ret
 
-    def create_unit(self, language=None, src_encoding=None, filename=None, directory=None, version=None, timestamp=None, hash_of_unit=None):
+    def create_unit(self, language=None, src_encoding=None, filename=None, url=None, version=None, timestamp=None, hash_of_unit=None):
         """
         writable_unit creation factory. This function creates a unit and sets the parameters provided corresponding to
         the attributes of a writable_unit.
@@ -375,7 +375,7 @@ class writable_archive(object):
         filename - A filename attribute associated with then XML of the unit. If None 
             it's not output onto the current unit.
 
-        directory - A directory attribute associated with the XML of the unit. If None 
+        url - A url attribute associated with the XML of the unit. If None 
             it's not output onto the current unit.
 
         version - A version attribute associated with the XML of the unit. If None 
@@ -391,7 +391,7 @@ class writable_archive(object):
         unit_ptr = unit_create(self.srcml_archive)
         if unit_ptr == None:
             raise MemoryError("Failed to allocate native srcml_unit.")
-        return writable_unit(unit_ptr, language, src_encoding, filename, directory, version, timestamp, hash_of_unit)
+        return writable_unit(unit_ptr, language, src_encoding, filename, url, version, timestamp, hash_of_unit)
 
     def write(self, unit):
         """

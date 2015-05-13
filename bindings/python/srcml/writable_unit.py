@@ -27,7 +27,7 @@ class writable_unit(object):
     has been processed using srcml.
     """
 
-    def __init__(self, unit_ptr, language=None, src_encoding=None, filename=None, directory=None, version=None, timestamp=None, hash_of_unit=None):
+    def __init__(self, unit_ptr, language=None, src_encoding=None, filename=None, url=None, version=None, timestamp=None, hash_of_unit=None):
         """
         Parameter descriptions:
 
@@ -45,7 +45,7 @@ class writable_unit(object):
         filename - A filename attribute associated with then XML of the unit. If None 
             it's not output onto the current unit.
 
-        directory - A directory attribute associated with the XML of the unit. If None 
+        url - A url attribute associated with the XML of the unit. If None 
             it's not output onto the current unit.
 
         version - A version attribute associated with the XML of the unit. If None 
@@ -68,7 +68,7 @@ class writable_unit(object):
         self.language = language
         self.src_encoding = src_encoding
         self.filename = filename
-        self.directory = directory
+        self.url = url
         self.version = version
         self.timestamp = timestamp
         self.hash = hash_of_unit
@@ -145,21 +145,21 @@ class writable_unit(object):
 
         
     @property
-    def directory(self):
+    def url(self):
         """
-        Get the directory attribute associated with unit. If the unit
+        Get the url attribute associated with unit. If the unit
         is None then nothing is output.
         """
-        return unit_get_directory(self.srcml_unit)
-    @directory.setter
-    def directory(self, value):
+        return unit_get_url(self.srcml_unit)
+    @url.setter
+    def url(self, value):
         """
-        Set the directory attribute for a unit.
+        Set the url attribute for a unit.
 
         Preconditions - value must be a string or None.
         """
-        assert value is None or isinstance(value, str), "Invalid directory type must be a string or None."
-        unit_set_directory(self.srcml_unit, value)
+        assert value is None or isinstance(value, str), "Invalid url type must be a string or None."
+        unit_set_url(self.srcml_unit, value)
 
 
     @property
