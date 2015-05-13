@@ -336,7 +336,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
 
-        dassert(srcml_archive_get_prefix_from_uri(archive, "http://www.sdml.info/srcML/src"), std::string(""));
+        dassert(srcml_archive_get_prefix_from_uri(archive, "http://www.srcML.org/srcML/src"), std::string(""));
 
         srcml_archive_free(archive);
 
@@ -363,7 +363,7 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_get_prefix_from_uri(0, "http://www.sdml.info/srcML/cpp"), 0);
+        dassert(srcml_archive_get_prefix_from_uri(0, "http://www.srcML.org/srcML/cpp"), 0);
     }
 
     /*
@@ -374,7 +374,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
 
-        dassert(srcml_archive_get_namespace_uri(archive, 0), std::string("http://www.sdml.info/srcML/src"));
+        dassert(srcml_archive_get_namespace_uri(archive, 0), std::string("http://www.srcML.org/srcML/src"));
 
         srcml_archive_free(archive);
 
@@ -412,7 +412,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
 
-        dassert(srcml_archive_get_uri_from_prefix(archive, ""), std::string("http://www.sdml.info/srcML/src"));
+        dassert(srcml_archive_get_uri_from_prefix(archive, ""), std::string("http://www.srcML.org/srcML/src"));
 
         srcml_archive_free(archive);
 

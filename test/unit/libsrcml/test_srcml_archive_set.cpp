@@ -421,10 +421,10 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
 
-        srcml_archive_register_namespace(archive, "foo", "http://www.sdml.info/srcML/src");
+        srcml_archive_register_namespace(archive, "foo", "http://www.srcML.org/srcML/src");
 
         dassert(archive->prefixes.at(0), "foo");
-        dassert(archive->namespaces.at(0) , "http://www.sdml.info/srcML/src");
+        dassert(archive->namespaces.at(0) , "http://www.srcML.org/srcML/src");
         srcml_archive_free(archive);
 
     }

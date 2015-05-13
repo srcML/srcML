@@ -1,8 +1,8 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:src="http://www.sdml.info/srcML/src"
-	xmlns="http://www.sdml.info/srcML/src"
-	xmlns:cpp="http://www.sdml.info/srcML/cpp"
+	xmlns:src="http://www.srcML.org/srcML/src"
+	xmlns="http://www.srcML.org/srcML/src"
+	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
 	xmlns:exsl="http://exslt.org/common"
@@ -13,7 +13,7 @@
 <!--
 	removecpp.xsl
 
-	Remove http://www.sdml.info/srcML/cpp namespace
+	Remove http://www.srcML.org/srcML/cpp namespace
 
 	Michael L. Collard
 	collard@cs.kent.edu

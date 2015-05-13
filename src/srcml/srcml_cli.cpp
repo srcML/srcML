@@ -53,13 +53,13 @@ const char* SRC2SRCML_FOOTER = "Examples:\
   src2srcml m.cpp          (read from file m.cpp, write to standard output)\n\
   src2srcml m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n\
   \n\
-  src2srcml http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n\
+  src2srcml http://www.srcML.org/projects/srcml/ex/main.cpp (read from URI)\n\
   \n\
   src2srcml --directory=src --filename=m.cpp m.cpp -o m.cpp.xml (element unit attributes dir \"src\", filename \"m.cpp\")\n\
   src2srcml --src-encoding=UTF-8 m.cpp m.cpp.xml         (encoding of input text file is UTF-8)\n\
   src2srcml --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    (set encoding of srcML file to ISO-8859-1)\n\
   \n\
-  www.sdml.info\n\
+  www.srcML.org\n\
   Report bugs to collard@uakron.edu";
 
 const char* SRCML2SRC_HEADER = "Usage: srcml2src [options] <srcML_infile>... [-o <src_outfile>]\
@@ -93,13 +93,13 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   \n\n\
   Read from URI, write to file main.cpp:\
   \n\
-  srcml http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\
+  srcml http://www.srcML.org/projects/srcml/ex/main.cpp.xml main.cpp\
   \n\n\
   Read from file main.cpp.xml, output language attribute to stdout:\
   \n\
   srcml main.cpp.xml --language\n\
   \n\
-  www.sdml.info\n\
+  www.srcML.org\n\
   Report bugs to collard@uakron.edu";
 
 srcml_request_t srcml_request;
@@ -363,14 +363,14 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         line_col.add_options()
-            ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
+            ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.srcML.org/srcML/position'")
             ("tabs", prog_opts::value<int>()->implicit_value(8)->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
             ;
 
         markup.add_options()
-            ("literal", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_LITERAL>), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
-            ("modifier", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
-            ("operator", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
+            ("literal", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_LITERAL>), "markup literal values, namespace 'http://www.srcML.org/srcML/literal'")
+            ("modifier", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.srcML.org/srcML/modifier'")
+            ("operator", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_OPERATOR>), "markup operators, namespace 'http://www.srcML.org/srcML/operator'")
             ;
 
         src2srcml_metadata.add_options()
@@ -417,7 +417,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         debug_options.add_options()
             ("dev", prog_opts::bool_switch()->notifier(&option_command<SRCML_DEBUG_MODE>), "Enable developer debug mode.")
-            ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
+            ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.srcML.org/srcML/srcerr")
             ;
         experimental_options.add_options()
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")

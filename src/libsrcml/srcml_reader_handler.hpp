@@ -453,7 +453,7 @@ public :
             std::string prefix = namespaces[pos].prefix ? namespaces[pos].prefix : "";
             std::string uri = namespaces[pos].uri ? namespaces[pos].uri  : "";
 
-            if(uri == SRCML_CPP_NS_URI) {
+            if(is_srcml_namespace(uri, SRCML_CPP_NS_URI)) {
 
                 if(archive->language != 0) {
 
@@ -464,17 +464,17 @@ public :
 
                 }
 
-            } else if(uri == SRCML_ERR_NS_URI)
+            } else if(is_srcml_namespace(uri, SRCML_ERR_NS_URI))
                 archive->options |= SRCML_OPTION_DEBUG;
-            else if(uri == SRCML_EXT_LITERAL_NS_URI)
+            else if(is_srcml_namespace(uri, SRCML_EXT_LITERAL_NS_URI))
                 archive->options |= SRCML_OPTION_LITERAL;
-            else if(uri == SRCML_EXT_OPERATOR_NS_URI)
+            else if(is_srcml_namespace(uri, SRCML_EXT_OPERATOR_NS_URI))
                 archive->options |= SRCML_OPTION_OPERATOR;
-            else if(uri == SRCML_EXT_MODIFIER_NS_URI)
+            else if(is_srcml_namespace(uri, SRCML_EXT_MODIFIER_NS_URI))
                 archive->options |= SRCML_OPTION_MODIFIER;
-            else if(uri == SRCML_EXT_POSITION_NS_URI)
+            else if(is_srcml_namespace(uri, SRCML_EXT_POSITION_NS_URI))
                 archive->options |= SRCML_OPTION_POSITION;
-            else if(uri == SRCML_EXT_OPENMP_NS_URI)
+            else if(is_srcml_namespace(uri, SRCML_EXT_OPENMP_NS_URI))
                 archive->options |= SRCML_OPTION_OPENMP;
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
@@ -990,7 +990,7 @@ private :
 
         for(int pos = 0; pos < num_namespaces; ++pos) {
 
-            if(is_archive && strcmp(localname, "unit") == 0 && strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
+            if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace(namespaces[pos].uri, SRCML_CPP_NS_URI))
                 continue;
 
             *unit->unit += " xmlns";

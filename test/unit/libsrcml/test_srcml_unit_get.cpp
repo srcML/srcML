@@ -312,7 +312,7 @@ int main() {
         char * xml = 0;
         size_t size = 0;
         srcml_unit_get_xml_standalone(unit, 0, &xml, &size);
-        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
+        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
         srcml_memory_free(xml);
         srcml_unit_free(unit);
     }
@@ -324,7 +324,7 @@ int main() {
         char * xml = 0;
         size_t size = 0;
         srcml_unit_get_xml_standalone(unit, "UTF-8", &xml, &size);
-        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
+        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
         srcml_memory_free(xml);
         srcml_unit_free(unit);
     }
@@ -336,7 +336,7 @@ int main() {
         char * xml = 0;
         size_t size = 0;
         srcml_unit_get_xml_standalone(unit, "ISO-8859-1", &xml, &size);
-        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\xff</unit>"));
+        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\xff</unit>"));
         srcml_memory_free(xml);
         srcml_unit_free(unit);
     }
@@ -350,7 +350,7 @@ int main() {
         char * xml = 0;
         size_t size = 0;
         srcml_unit_get_xml_standalone(unit, "UTF-8", &xml, &size);
-        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.sdml.info/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
+        dassert(xml, std::string("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\"/>"));
         srcml_memory_free(xml);
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);
