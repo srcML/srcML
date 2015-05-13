@@ -13,7 +13,7 @@ define input <<- 'INPUT'
 	#else
 	return;
 	#endif
-	INPUT
+    INPUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -22,7 +22,7 @@ define output <<- 'STDOUT'
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 	<return>return;</return>
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-	</unit>
+    </unit>
 	STDOUT
 
 define foutput <<- 'STDOUT'
