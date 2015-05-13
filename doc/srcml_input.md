@@ -230,15 +230,38 @@ working with srcML archives.
 
 `--TIMESTAMP_FLAG_LONG`
 : Sets the timestamp of the output srcML file to the last modified
-time of the input source-code file. For a source archive, this is the
-last modified time based on the archive files. For source files from
-a file system, it is the modified timestamp from the file system. For
-inputs from a URL, it is the current time (i.e., last access time).
-For inputs from version control, it is the last modified time based
-on the metadata from the last commit.
+time of the input source-code archive. This is the
+last modified time based on the archive files.
+
+The following options allow viewing various metadata stored in the
+srcML document.
 
 `-PREFIX_FLAG_SHORT`, `--PREFIX_FLAG_LONG=<uri>`
 : Display a prefix given by a <URI> and exit. See [XML FORM][].
+
+`--SHOW_FILENAME_FLAG_LONG`
+: Display the filename and exit.
+
+`--SHOW_LANGUAGE_FLAG_LONG`
+: Display language and exit.
+
+`--SHOW_URL_FLAG_LONG`
+: Display URL of the root element and exit.
+
+`--SHOW_SRC_VERSION_FLAG_LONG`
+: Display the source-code version attribute and exit.
+
+`--SHOW_TIMESTAMP_FLAG_LONG`
+: Display the timestamp attribute and exit.
+
+`--SHOW_HASH_FLAG_LONG`
+: Display the hash value and exit.
+
+`--SHOW_ENCODING_FLAG_LONG`
+: Display the XML encoding and exit.
+
+`--SHOW_UNIT_COUNT_FLAG_LONG`
+: Display the unit count and exit.
 
 
 ### EXAMPLES

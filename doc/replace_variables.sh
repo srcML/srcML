@@ -1,7 +1,15 @@
 #!/bin/bash
 
 # list of all global variables and what they should be replaced with
-REPLACEMENTS="LANGUAGE_FLAG_SHORT,l
+REPLACEMENTS="SHOW_FILENAME_FLAG_LONG,show-filename
+SHOW_LANGUAGE_FLAG_LONG,show-language
+SHOW_URL_FLAG_LONG,show-url
+SHOW_SRC_VERSION_FLAG_LONG,show-src-version
+SHOW_TIMESTAMP_FLAG_LONG,show-timestamp
+SHOW_HASH_FLAG_LONG,show-hash
+SHOW_ENCODING_FLAG_LONG,show-encoding
+SHOW_UNIT_COUNT_FLAG_LONG,show-unit-count
+LANGUAGE_FLAG_SHORT,l
 LANGUAGE_FLAG_LONG,language
 URL_FLAG_LONG,url
 FILENAME_FLAG_SHORT,f
