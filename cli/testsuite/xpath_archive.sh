@@ -6,12 +6,12 @@ source $(dirname "$0")/framework_test.sh
 # test
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="REVISION" language="Java">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/src" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="REVISION" language="Java">
 	<cpp:expr_stmt><cpp:expr><cpp:name>b</cpp:name></cpp:expr>;</cpp:expr_stmt>
 	</unit>
 
@@ -23,9 +23,9 @@ define srcml <<- 'STDOUT'
 #	<unit revision="REVISION" language="Java" item="1" location="/cpp:expr_stmt[1]/cpp:expr[1]/cpp:name[1]"><cpp:name>b</cpp:name></unit>
 define xpath <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/src" revision="REVISION" language="C++" item="1"><name>a</name></unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" item="1"><name>a</name></unit>
 
 	<unit revision="REVISION" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
@@ -37,9 +37,9 @@ define xpath <<- 'STDOUT'
 #	<unit revision="REVISION" language="Java" item="1" location="/cpp:expr_stmt[1]/cpp:expr[1]/cpp:name[1]"><cpp:name>b</cpp:name></unit>
 define output2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/src" revision="REVISION" language="C++" item="1"><name>a</name></unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" item="1"><name>a</name></unit>
 
 	<unit revision="REVISION" language="Java" item="1"><cpp:name>b</cpp:name></unit>
 
@@ -48,7 +48,7 @@ define output2 <<- 'STDOUT'
 
 define output_empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDOUT
 
 createfile sub/a.cpp.xml "$srcml"

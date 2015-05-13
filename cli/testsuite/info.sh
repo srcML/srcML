@@ -9,8 +9,8 @@ source $(dirname "$0")/framework_test.sh
 # srcml2src info and longinfo
 
 define info <<- 'STDOUT'
-	xmlns="http://www.sdml.info/srcML/src"
-	xmlns:cpp="http://www.sdml.info/srcML/cpp"
+	xmlns="http://www.srcML.org/srcML/src"
+	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
 	directory="sub"
@@ -18,8 +18,8 @@ define info <<- 'STDOUT'
 	STDOUT
 
 define longinfo <<- 'STDOUT'
-	xmlns="http://www.sdml.info/srcML/src"
-	xmlns:cpp="http://www.sdml.info/srcML/cpp"
+	xmlns="http://www.srcML.org/srcML/src"
+	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
 	directory="sub"
@@ -28,31 +28,31 @@ define longinfo <<- 'STDOUT'
 	STDOUT
 
 define infonested <<- 'STDOUT'
-	xmlns="http://www.sdml.info/srcML/src"
+	xmlns="http://www.srcML.org/srcML/src"
 	encoding="UTF-8"
 	STDOUT
 
 define longinfonested <<- 'STDOUT'
-	xmlns="http://www.sdml.info/srcML/src"
+	xmlns="http://www.srcML.org/srcML/src"
 	encoding="UTF-8"
 	units="2"
 	STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" directory="sub" filename="a.cpp">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" directory="sub" filename="a.cpp">
 	</unit>
 	STDOUT
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" revision="REVISION" language="C++" filename="sub/a.cpp">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" revision="REVISION" language="C++" filename="sub/a.cpp">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" directory="sub" filename="b.cpp">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" directory="sub" filename="b.cpp">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
