@@ -16,13 +16,21 @@
 ./sshall.py --ubuntu --test 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
 ./prlctlall.py --ubuntu --test suspend
 
-./prlctlall.py --mint --build resume; sleep 15
-./sshall.py --mint --build 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
-./prlctlall.py --mint --build suspend
+./prlctlall.py --mint --build --13 resume; sleep 15
+./sshall.py --mint --build --13 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --mint --build --13 suspend
 
-./prlctlall.py --mint --test resume; sleep 15
-./sshall.py --mint --test 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
-./prlctlall.py --mint --test suspend
+./prlctlall.py --mint --build --~13 resume; sleep 15
+./sshall.py --mint --build --~13 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --mint --build --~13 suspend
+
+./prlctlall.py --mint --test --13 resume; sleep 15
+./sshall.py --mint --test --13 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --mint --test --13 suspend
+
+./prlctlall.py --mint --test --~13 resume; sleep 15
+./sshall.py --mint --test --~13 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --mint --test --~13 suspend
 
 ./prlctlall.py --suse --build resume; sleep 15
 ./sshall.py --suse --build 'bash -c "zypper --non-interactive update"'
