@@ -76,8 +76,7 @@ public :
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
                const char** params, srcml_archive* oarchive)
         : unit_dom(options),
-          stylesheet(stylesheet), found(false),
-          result_type(0), params(params), oarchive(oarchive) {
+          stylesheet(stylesheet), params(params), oarchive(oarchive) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         handle = dlopen("libxslt.so", RTLD_LAZY);
@@ -153,12 +152,12 @@ public :
      */
     virtual bool apply() {
 
+        // position passed to XSLT program
         setPosition((int)unit_count);
 
         // apply the style sheet to the document, which is the individual unit
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, ctxt->myDoc, params, 0, 0, 0);
-        //      xmlDocPtr res = xsltApplyStylesheetDynamic(stylesheet, ctxt->myDoc, 0);
 #else
         xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, ctxt->myDoc, params, 0, 0, 0);
 #endif
@@ -170,13 +169,7 @@ public :
         }
 
         // only interestd in non-empty results
-        if (res && res->children) {
-
-            // determine the type of data that is going to be output
-            if (!found)
-                result_type = res->children->type;
-
-            found = true;
+        if (res->children) {
 
             // output the transformed result
             for (xmlNodePtr child = res->children; child != NULL; child = child->next) {
@@ -187,10 +180,10 @@ public :
                     outputResult(child);
             }
 
-            // finished with the result of the transformation
-            // TODO:  Get rid of this memory leak.
-            xmlFreeDoc(res);
         }
+
+        // finished with the result of the transformation
+        xmlFreeDoc(res);
 
         return true;
 
@@ -219,9 +212,7 @@ public :
 private :
 
     xsltStylesheetPtr stylesheet;
-    bool found;
     xmlOutputBufferPtr buf;
-    int result_type;
     const char** params;
 #ifndef WIN32
     xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
