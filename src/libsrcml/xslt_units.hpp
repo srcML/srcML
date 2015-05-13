@@ -79,8 +79,6 @@ public :
           stylesheet(stylesheet), found(false),
           result_type(0), params(params), oarchive(oarchive) {
 
-            output = oarchive->translator->output_buffer();
-
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         handle = dlopen("libxslt.so", RTLD_LAZY);
         if (!handle) {
@@ -137,7 +135,7 @@ public :
     virtual void start_output() {
 
         // setup output
-        buf = output;
+        buf = oarchive->translator->output_buffer();
         // TODO:  Detect error
 
 #ifdef _MSC_BUILD
@@ -230,7 +228,6 @@ private :
     xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 #endif
     void * handle;
-    xmlOutputBufferPtr output;
     srcml_archive* oarchive;
 };
 
