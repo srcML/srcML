@@ -454,7 +454,7 @@ public :
             std::string uri = namespaces[pos].uri ? namespaces[pos].uri  : "";
             srcml_uri_normalize(uri);
 
-            if(is_srcml_namespace(uri, SRCML_CPP_NS_URI)) {
+            if(uri == SRCML_CPP_NS_URI) {
 
                 if(archive->language != 0) {
 
