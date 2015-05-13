@@ -107,11 +107,6 @@ list from standard input.
 : Write to output srcML file, URI, or source code file.
 By default, it writes to standard output.
 
-`--OUTPUT_FORMAT_FLAG_LONG=<format>`
-: Specifies the output format, such as "tar.gz". As the output file's
-extension determines the output format, this is useful when writing to
-standard output.
-
 `-OUTPUT_XML_FLAG_SHORT`,`--OUTPUT_XML_FLAG_LONG`
 : Outputs XML in srcML format. This is the default when the input is source
 code or files containing source code.
