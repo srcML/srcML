@@ -177,7 +177,7 @@ public :
     virtual void outputResult(xmlNodePtr a_node) {
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
         if (size == 0)
             return;
 

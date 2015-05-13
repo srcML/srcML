@@ -472,7 +472,7 @@ public :
 
                 for (xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i]->children; onode; onode = onode->next) {
 
-                    xmlNodeDump(lbuffer, ctxt->myDoc, onode, 0, 1);
+                    xmlNodeDump(lbuffer, ctxt->myDoc, onode, 0, 0);
                 }
 
                 output_archive->translator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
@@ -520,7 +520,7 @@ public :
     virtual void outputResult(srcml_unit* punit, xmlNodePtr a_node) {
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
         if (size == 0)
             return;
 
@@ -534,7 +534,7 @@ public :
     virtual void outputResult(xmlNodePtr a_node) {
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
         if (size == 0)
             return;
 
