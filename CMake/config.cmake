@@ -52,6 +52,7 @@ endif()
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    add_definitions(-DWITH_LIBXSLT)
     # Adding suspected windows include directory for ANTRL
     include_directories("C:/antlr/277/include/antlr")
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/dep)

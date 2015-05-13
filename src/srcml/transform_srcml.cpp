@@ -27,13 +27,23 @@
 #include <string>
 #include <boost/foreach.hpp>
 
- int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support) {
+ int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
  	// FIRST IS ELEMENT / SECOND IS ATTRIBUTE
 
  	// Check for element
  	if (xpath_support.first){
+
+        // check first if namespace is already declared
         const char* element_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str());
         
+        // if not declared, check for xmlns from cli
+        if (!element_uri) {
+            std::map<std::string,std::string>::const_iterator it = xmlns_namespaces.find(*(xpath_support.first->prefix));
+            if (it != xmlns_namespaces.end())            
+                element_uri = it->second.c_str();
+        }
+
+        // make sure we found it somewhere
         if (!element_uri) {
             std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.first->prefix->c_str() << "\"\n";
             return -1;
@@ -43,6 +53,13 @@
  		if (xpath_support.second) {
             const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
             
+            // if not declared, check for xmlns from cli
+            if (!attribute_uri) {
+                std::map<std::string,std::string>::const_iterator it = xmlns_namespaces.find(*(xpath_support.second->prefix));
+                if (it != xmlns_namespaces.end())            
+                    element_uri = it->second.c_str();
+            }
+
             if (!attribute_uri) {
                 std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.second->prefix->c_str() << "\"\n";
                 return -1;
@@ -179,7 +196,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
 			if (protocol == "xpath") {
                 // TODO: FIX BUG
-				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index)) != SRCML_STATUS_OK) {
+				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index), srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
 					std::cerr << "srcml: error with xpath transformation\n";
                     exit(-1);
                 }
