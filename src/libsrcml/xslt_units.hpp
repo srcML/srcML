@@ -77,7 +77,9 @@ public :
                const char** params, xmlOutputBufferPtr output, srcml_archive* oarchive)
         : unit_dom(options), options(options),
           stylesheet(stylesheet), found(false),
-          result_type(0), params(params), output(output), oarchive(oarchive) {
+          result_type(0), params(params), oarchive(oarchive) {
+
+            output = oarchive->translator->output_buffer();
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         handle = dlopen("libxslt.so", RTLD_LAZY);
@@ -178,48 +180,13 @@ public :
 
             found = true;
 
-            // save the result, but temporarily hide the namespaces since we only want them on the root element
-            xmlNodePtr resroot = xmlDocGetRootElement(res);
-            xmlNsPtr savens = resroot ? resroot->nsDef : 0;
-            bool turnoff_namespaces = savens && is_archive && !isoption(options, SRCML_OPTION_APPLY_ROOT);
-            if (turnoff_namespaces) {
-                xmlNsPtr cur = savens;
-                xmlNsPtr ret = NULL;
-                xmlNsPtr p = NULL;
-
-                while (cur != NULL) {
-                    if (cur->href && strcmp((const char*) cur->href, SRCML_CPP_NS_URI) == 0) {
-                        xmlNsPtr q = xmlCopyNamespace(cur);
-                        if (p == NULL) {
-                            ret = p = q;
-                        } else {
-                            p->next = q;
-                            p = q;
-                        }
-                    }
-                    cur = cur->next;
-                }
-                resroot->nsDef = ret;
-            }
-            /*
-              #if defined(__GNUG__) && !defined(__MINGW32__)
-              xsltSaveResultToDynamic(buf, res, stylesheet);
-              #else
-              xsltSaveResultTo(buf, res, stylesheet);
-              #endif
-            */
             // output the transformed result
-            for (xmlNodePtr child = res->children; child != NULL; child = child->next)
+            for (xmlNodePtr child = res->children; child != NULL; child = child->next) {
+
                 if (child->type == XML_TEXT_NODE)
                     xmlOutputBufferWriteString(buf, (const char *) child->content);
                 else
                     outputResult(child);
-                    //xmlNodeDumpOutput(buf, res, child, 0, 0, 0);
-
-            if (turnoff_namespaces) {
-                xmlFreeNsList(resroot->nsDef);
-
-                resroot->nsDef = savens;
             }
 
             // finished with the result of the transformation
