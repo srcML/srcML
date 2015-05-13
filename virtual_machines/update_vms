@@ -40,4 +40,4 @@
 ./sshall.py --suse --test 'bash -c "zypper --non-interactive update --auto-agree-with-licenses"'
 ./prlctlall.py --suse --test suspend
 
-./prlctlall.py --~mac snapshot "--name \"Update: $(date '+%B%e, %Y')\""
+./prlctlall.py --~mac snapshot "--name \"Update: $(date '+%B %e, %Y')\""

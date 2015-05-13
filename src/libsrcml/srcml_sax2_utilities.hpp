@@ -36,6 +36,6 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
 #ifdef WITH_LIBXSLT
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, OPTION_TYPE options, srcml_archive* out_archive);
 #endif
-int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, xmlOutputBufferPtr obuffer, OPTION_TYPE options);
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* out_archive);
 
 #endif

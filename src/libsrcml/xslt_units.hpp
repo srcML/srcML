@@ -75,11 +75,8 @@ public :
      */
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
                const char** params, srcml_archive* oarchive)
-        : unit_dom(options), options(options),
-          stylesheet(stylesheet), found(false),
-          result_type(0), params(params), oarchive(oarchive) {
-
-            output = oarchive->translator->output_buffer();
+        : unit_dom(options),
+          stylesheet(stylesheet), params(params), oarchive(oarchive) {
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         handle = dlopen("libxslt.so", RTLD_LAZY);
@@ -134,17 +131,7 @@ public :
      *
      * Create output buffer.
      */
-    virtual void start_output() {
-
-        // setup output
-        buf = output;
-        // TODO:  Detect error
-
-#ifdef _MSC_BUILD
-        buf->writecallback = (xmlOutputWriteCallback)_write;
-#endif
-
-    }
+    virtual void start_output() {}
 
     /**
      * apply
@@ -155,12 +142,12 @@ public :
      */
     virtual bool apply() {
 
+        // position passed to XSLT program
         setPosition((int)unit_count);
 
         // apply the style sheet to the document, which is the individual unit
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, ctxt->myDoc, params, 0, 0, 0);
-        //      xmlDocPtr res = xsltApplyStylesheetDynamic(stylesheet, ctxt->myDoc, 0);
 #else
         xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, ctxt->myDoc, params, 0, 0, 0);
 #endif
@@ -171,28 +158,17 @@ public :
 
         }
 
-        // only interestd in non-empty results
-        if (res && res->children) {
+        // output the transformed result
+        for (xmlNodePtr child = res->children; child != NULL; child = child->next) {
 
-            // determine the type of data that is going to be output
-            if (!found)
-                result_type = res->children->type;
-
-            found = true;
-
-            // output the transformed result
-            for (xmlNodePtr child = res->children; child != NULL; child = child->next) {
-
-                if (child->type == XML_TEXT_NODE)
-                    xmlOutputBufferWriteString(buf, (const char *) child->content);
-                else
-                    outputResult(child);
-            }
-
-            // finished with the result of the transformation
-            // TODO:  Get rid of this memory leak.
-            xmlFreeDoc(res);
+            if (child->type == XML_TEXT_NODE)
+                xmlOutputBufferWriteString(oarchive->translator->output_buffer(), (const char *) child->content);
+            else
+                outputResult(child);
         }
+
+        // finished with the result of the transformation
+        xmlFreeDoc(res);
 
         return true;
 
@@ -201,7 +177,9 @@ public :
     virtual void outputResult(xmlNodePtr a_node) {
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
+        if (size == 0)
+            return;
 
         srcml_unit* punit = srcml_unit_create(oarchive);
 
@@ -220,18 +198,13 @@ public :
 
 private :
 
-    OPTION_TYPE & options;
     xsltStylesheetPtr stylesheet;
-    bool found;
-    xmlOutputBufferPtr buf;
-    int result_type;
     const char** params;
 #ifndef WIN32
     xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
     xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 #endif
     void * handle;
-    xmlOutputBufferPtr output;
     srcml_archive* oarchive;
 };
 
