@@ -131,17 +131,7 @@ public :
      *
      * Create output buffer.
      */
-    virtual void start_output() {
-
-        // setup output
-        buf = oarchive->translator->output_buffer();
-        // TODO:  Detect error
-
-#ifdef _MSC_BUILD
-        buf->writecallback = (xmlOutputWriteCallback)_write;
-#endif
-
-    }
+    virtual void start_output() {}
 
     /**
      * apply
@@ -168,18 +158,13 @@ public :
 
         }
 
-        // only interestd in non-empty results
-        if (res->children) {
+        // output the transformed result
+        for (xmlNodePtr child = res->children; child != NULL; child = child->next) {
 
-            // output the transformed result
-            for (xmlNodePtr child = res->children; child != NULL; child = child->next) {
-
-                if (child->type == XML_TEXT_NODE)
-                    xmlOutputBufferWriteString(buf, (const char *) child->content);
-                else
-                    outputResult(child);
-            }
-
+            if (child->type == XML_TEXT_NODE)
+                xmlOutputBufferWriteString(oarchive->translator->output_buffer(), (const char *) child->content);
+            else
+                outputResult(child);
         }
 
         // finished with the result of the transformation
@@ -212,7 +197,6 @@ public :
 private :
 
     xsltStylesheetPtr stylesheet;
-    xmlOutputBufferPtr buf;
     const char** params;
 #ifndef WIN32
     xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
