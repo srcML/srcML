@@ -222,6 +222,7 @@ void option_field<&srcml_request_t::output_filename>(const std::string& value) {
 
 void option_xmlns_uri(const std::string& value) {
     srcml_request.xmlns_namespaces[""] = value;
+    srcml_request.xmlns_namespace_uris[value] = "";
 }
 
 void option_xmlns_prefix(const std::vector<std::string>& values) {
@@ -234,6 +235,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
       }
 
       srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
+      srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
     }
 }
 
@@ -497,6 +499,31 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         if (isatty(STDIN_FILENO))
             option_command<SRCML_COMMAND_INTERACTIVE>(true);
 #endif
+
+        // Ideally get this from libsrcml
+        const std::vector<std::string> reserved_namespaces = {
+        "=http://www.srcML.org/srcML/src",
+        "cpp=http://www.srcML.org/srcML/cpp",
+        "java=http://www.srcML.org/srcML/java",};
+
+        BOOST_FOREACH(const std::string& ns, reserved_namespaces) {
+          size_t delim = ns.find('=');
+          std::string prefix = ns.substr(0, delim);
+          std::string uri = ns.substr(delim + 1);
+
+          // A reserved prefix wasn't used or it was set to the same uri
+          if (srcml_request.xmlns_namespaces.find(prefix) == srcml_request.xmlns_namespaces.end() || srcml_request.xmlns_namespaces[prefix] == uri) {
+            continue;
+          }
+
+          // A reserved uri is set to a different prefix
+          if (srcml_request.xmlns_namespace_uris.find(uri) != srcml_request.xmlns_namespaces.end() && srcml_request.xmlns_namespace_uris[uri] != prefix) {
+            continue;
+          }
+
+          std::cerr << "srcml: prefix " << "\"" << prefix << "\" assigned multiple URIs \"" << uri << "\", \"" << srcml_request.xmlns_namespaces[prefix] << "\"\n";
+          exit(1); // TODO Need a real error code
+        }
 
     }
     // Unknown Option
