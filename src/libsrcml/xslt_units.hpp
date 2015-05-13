@@ -75,7 +75,7 @@ public :
      */
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
                const char** params, srcml_archive* oarchive)
-        : unit_dom(options), options(options),
+        : unit_dom(options),
           stylesheet(stylesheet), found(false),
           result_type(0), params(params), oarchive(oarchive) {
 
@@ -220,7 +220,6 @@ public :
 
 private :
 
-    OPTION_TYPE & options;
     xsltStylesheetPtr stylesheet;
     bool found;
     xmlOutputBufferPtr buf;
