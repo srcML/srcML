@@ -74,7 +74,7 @@ public :
      * Constructor.  Dynamically loads XSLT functions.
      */
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
-               const char** params, xmlOutputBufferPtr output, srcml_archive* oarchive)
+               const char** params, srcml_archive* oarchive)
         : unit_dom(options), options(options),
           stylesheet(stylesheet), found(false),
           result_type(0), params(params), oarchive(oarchive) {

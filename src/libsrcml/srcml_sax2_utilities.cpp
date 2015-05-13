@@ -195,7 +195,7 @@ void dlexsltRegisterAll(void * handle) {
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, OPTION_TYPE options,
-                xmlOutputBufferPtr output, srcml_archive* out_archive) {
+                srcml_archive* out_archive) {
 
     if(input_buffer == NULL || context_element == NULL ||
        xslt == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
@@ -259,7 +259,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     xsltsrcMLRegister();
 
     // setup process handling
-    xslt_units process(context_element, options, stylesheet, params, output, out_archive);
+    xslt_units process(context_element, options, stylesheet, params, out_archive);
     srcSAXController control(input_buffer);
 
     try {
