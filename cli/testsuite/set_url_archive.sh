@@ -26,17 +26,12 @@ define fsrcml <<- 'STDOUT'
 
 createfile sub/a.cpp "a;"
 
-echo -n "a;" | src2srcml -l C++ -d bar --archive
-check 3<<< "$output"
-
 echo -n "a;" | src2srcml -l C++ --url bar --archive
 check 3<<< "$output"
 
 echo -n "a;" | src2srcml -l C++ --url=bar --archive
 check 3<<< "$output"
 
-src2srcml sub/a.cpp -d "bar" --archive
-check 3<<< "$fsrcml"
 
 src2srcml sub/a.cpp --url "bar" --archive
 check 3<<< "$fsrcml"
@@ -44,19 +39,17 @@ check 3<<< "$fsrcml"
 src2srcml sub/a.cpp --url="bar" --archive
 check 3<<< "$fsrcml"
 
-src2srcml -d "bar" sub/a.cpp --archive
-check 3<<< "$fsrcml"
-
 src2srcml --url "bar" sub/a.cpp --archive
 check 3<<< "$fsrcml"
+
 
 src2srcml --url="bar" sub/a.cpp --archive
 check 3<<< "$fsrcml"
 
-src2srcml -l C++ -d 'bar' -o sub/a.cpp.xml sub/a.cpp --archive
+src2srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp --archive
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-src2srcml -d 'bar' sub/a.cpp -o sub/a.cpp.xml --archive
+src2srcml --url 'bar' sub/a.cpp -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
 
@@ -75,27 +68,24 @@ define fsrcml <<- 'STDOUT'
 
 createfile sub/b.cpp "b;"
 
-src2srcml sub/a.cpp sub/b.cpp -d "bar"
+src2srcml sub/a.cpp sub/b.cpp --url "bar" --in-order
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp --url "bar"
+src2srcml sub/a.cpp sub/b.cpp --url="bar" --in-order
 check 3<<< "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp --url="bar"
+src2srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
 check 3<<< "$fsrcml"
 
-src2srcml -d "bar" sub/a.cpp sub/b.cpp
+src2srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
 check 3<<< "$fsrcml"
 
-src2srcml --url "bar" sub/a.cpp sub/b.cpp
+src2srcml --url="bar" sub/a.cpp sub/b.cpp --in-order
 check 3<<< "$fsrcml"
 
-src2srcml --url="bar" sub/a.cpp sub/b.cpp
-check 3<<< "$fsrcml"
-
-src2srcml -l C++ -d 'bar' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
+src2srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 
-src2srcml -d 'bar' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+src2srcml --url 'bar' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
 check sub/a.cpp.xml 3<<< "$fsrcml"
 

@@ -3,8 +3,7 @@
 # list of all global variables and what they should be replaced with
 REPLACEMENTS="LANGUAGE_FLAG_SHORT,l
 LANGUAGE_FLAG_LONG,language
-DIRECTORY_FLAG_SHORT,d
-DIRECTORY_FLAG_LONG,directory
+URL_FLAG_LONG,url
 FILENAME_FLAG_SHORT,f
 FILENAME_FLAG_LONG,filename
 SRCVERSION_FLAG_SHORT,s

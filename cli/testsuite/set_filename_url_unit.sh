@@ -9,11 +9,11 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="bar" filename="foo"/>
 	STDOUT
 
-echo -n "" | src2srcml -l C++ -f foo -d bar
+echo -n "" | src2srcml -l C++ -f foo --url bar
 
 check 3<<< "$output"
 
-echo -n "" | src2srcml -l C++ -d bar -f foo
+echo -n "" | src2srcml -l C++ --url bar -f foo
 
 check 3<<< "$output"
 
