@@ -94,8 +94,8 @@ in the srcML file. Possible encodings, such as "UTF-16", "ISO-10646-UCS-2",
 or "ISO-8859-1" can be obtained by using the command
 `iconv -l` on UNIX platforms.
 
-`--FILES_FROM_LONG=<file|uri>`
-: Treats the input (either a <file> or <URI>) as a list of source files.
+`--FILES_FROM_LONG=<file>`
+: Treats the input file as a list of source files.
 Each file is separately translated and collectively stored into a
 single srcML archive. The list has a single filename on each line
 starting at the beginning of the line. Blank lines and lines that
