@@ -7,28 +7,28 @@ source $(dirname "$0")/framework_test.sh
 # test prefix extraction
 define sxmlfile1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" xmnls:lit="http://www.sdml.info/srcML/literal" revision="REVISION" language="C++" directory="sub" filename="a.cpp">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmnls:lit="http://www.srcML.org/srcML/literal" revision="REVISION" language="C++" directory="sub" filename="a.cpp">
 	</unit>
 	STDOUT
 
 createfile sub/a.cpp.xml "$sxmlfile1"
 
-srcml2src sub/a.cpp.xml -p "http://www.sdml.info/srcML/src"
+srcml2src sub/a.cpp.xml -p "http://www.srcML.org/srcML/src"
 check 3<<< ""
 
-srcml2src sub/a.cpp.xml --prefix "http://www.sdml.info/srcML/src"
+srcml2src sub/a.cpp.xml --prefix "http://www.srcML.org/srcML/src"
 check 3<<< ""
 
-srcml2src sub/a.cpp.xml --prefix="http://www.sdml.info/srcML/src"
+srcml2src sub/a.cpp.xml --prefix="http://www.srcML.org/srcML/src"
 check 3<<< ""
 
-srcml2src sub/a.cpp.xml -p "http://www.sdml.info/srcML/cpp"
+srcml2src sub/a.cpp.xml -p "http://www.srcML.org/srcML/cpp"
 check 3<<< "cpp"
 
-srcml2src sub/a.cpp.xml --prefix "http://www.sdml.info/srcML/cpp"
+srcml2src sub/a.cpp.xml --prefix "http://www.srcML.org/srcML/cpp"
 check 3<<< "cpp"
 
-srcml2src sub/a.cpp.xml --prefix="http://www.sdml.info/srcML/cpp"
+srcml2src sub/a.cpp.xml --prefix="http://www.srcML.org/srcML/cpp"
 check 3<<< "cpp"
 
 srcml2src sub/a.cpp.xml -p "http://www.cs.uakron.edu/~collard/foo"

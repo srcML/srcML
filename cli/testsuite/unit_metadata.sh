@@ -8,13 +8,13 @@ source $(dirname "$0")/framework_test.sh
 
 define nestedfileextra <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" url="sub">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="sub">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="Java" filename="empty.java">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="Java" filename="empty.java">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 

@@ -5,15 +5,15 @@ source $(dirname "$0")/framework_test.sh
 
 # xml error on invalid input (single file) test
 define info_single <<- 'STDOUT'
-	xmlns="http://www.sdml.info/srcML/src"
-	xmlns:cpp="http://www.sdml.info/srcML/cpp"
+	xmlns="http://www.srcML.org/srcML/src"
+	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
 	STDOUT
 
 define illformed <<- 'INPUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit
 	INPUT

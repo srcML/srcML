@@ -6,14 +6,14 @@ source $(dirname "$0")/framework_test.sh
 # test xslt empty input
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
 	STDOUT
 
 define copyxslt <<- 'STDOUT'
 	<xsl:stylesheet
-	xmlns="http://www.sdml.info/srcML/src"
+	xmlns="http://www.srcML.org/srcML/src"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:cpp="http://www.sdml.info/srcML/cpp"
+	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	version="1.0">
 
 	<!--

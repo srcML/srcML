@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test language_attribute_cpp
 define output <<- 'OUTPUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
 	OUTPUT
 
 echo -n "" | src2srcml -l "C++"

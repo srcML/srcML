@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test register language
 define fxmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION" language="Java" filename="sub/a.cpp"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java" filename="sub/a.cpp"/>
 	STDOUT
 
 createfile sub/a.cpp ""
@@ -23,7 +23,7 @@ check sub/a.cpp.xml 3<<< "$fxmlfile"
 
 define fsxmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp"/>
 	STDOUT
 
 createfile sub/a.xml "$fsxmlfile"

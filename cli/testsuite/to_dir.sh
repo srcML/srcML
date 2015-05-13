@@ -6,18 +6,18 @@ source $(dirname "$0")/framework_test.sh
 # test
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision="REVISION" language="C++" directory="sub" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" directory="sub" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.sdml.info/srcML/src" revision="REVISION">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" hash="520b48acbdb61e411641fd94359a82686d5591eb" revision="REVISION" language="C++" directory="sub" filename="b.cpp"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" hash="520b48acbdb61e411641fd94359a82686d5591eb" revision="REVISION" language="C++" directory="sub" filename="b.cpp"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
