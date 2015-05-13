@@ -521,6 +521,8 @@ public :
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+        if (size == 0)
+            return;
 
         output_archive->translator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
 
@@ -533,6 +535,8 @@ public :
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+        if (size == 0)
+            return;
 
         srcml_unit* punit = srcml_unit_create(output_archive);
 

@@ -178,6 +178,8 @@ public :
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+        if (size == 0)
+            return;
 
         srcml_unit* punit = srcml_unit_create(oarchive);
 
