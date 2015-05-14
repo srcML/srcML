@@ -452,7 +452,7 @@ int main() {
         "has_init/has_init.cpp",
         "//src:decl[src:has_init()]"
         "| //src:decl_stmt[src:has_init()]"
-        "| //src:param[src:has_init()]"
+        "| //src:parameter[src:has_init()]"
         "| //src:using_stmt[src:has_init()]"
         "| //src:using[src:has_init()]"
         "| //src:try[src:has_init()]"
@@ -466,7 +466,7 @@ int main() {
         "has_init/has_init.cs",
         "//src:decl[src:has_init()]"
         "| //src:decl_stmt[src:has_init()]"
-        "| //src:param[src:has_init()]"
+        "| //src:parameter[src:has_init()]"
         "| //src:using_stmt[src:has_init()]"
         "| //src:using[src:has_init()]"
         "| //src:try[src:has_init()]"
@@ -480,7 +480,7 @@ int main() {
         "has_init/has_init.java",
         "//src:decl[src:has_init()]"
         "| //src:decl_stmt[src:has_init()]"
-        "| //src:param[src:has_init()]"
+        "| //src:parameter[src:has_init()]"
         "| //src:using_stmt[src:has_init()]"
         "| //src:using[src:has_init()]"
         "| //src:try[src:has_init()]"
@@ -1019,7 +1019,7 @@ int main() {
         "| //src:decl_stmt[src:is_pointer()]"
         "| //src:decl[src:is_pointer()]"
         "| //src:type[src:is_pointer()]"
-        "| //src:param[src:is_pointer()]"
+        "| //src:parameter[src:is_pointer()]"
         "| //src:argument[src:is_pointer()]"
     ;
     run_xpath_test("is_pointer/is_pointer.cpp", tempXPath, 18);
@@ -1029,7 +1029,7 @@ int main() {
     tempXPath =
         "//src:type[src:is_parameter_pack()]"
         "| //src:decl[src:is_parameter_pack()]"
-        "| //src:param[src:is_parameter_pack()]"
+        "| //src:parameter[src:is_parameter_pack()]"
         "| //src:argument[src:is_parameter_pack()]"
     ;
     run_xpath_test("is_parameter_pack/is_parameter_pack.cpp", tempXPath, 12);
@@ -1066,7 +1066,7 @@ int main() {
     // is_reference
     tempXPath = 
         "//src:argument[src:is_reference()]"
-        "| //src:param[src:is_reference()]"
+        "| //src:parameter[src:is_reference()]"
         "| //src:decl[src:is_reference()]"
         "| //src:decl_stmt[src:is_reference()]"
         "| //src:type[src:is_reference()]"
@@ -1077,7 +1077,7 @@ int main() {
     // is_rvalue_reference
     tempXPath = 
         "//src:argument[src:is_rvalue_reference()]"
-        "| //src:param[src:is_rvalue_reference()]"
+        "| //src:parameter[src:is_rvalue_reference()]"
         "| //src:decl[src:is_rvalue_reference()]"
         "| //src:decl_stmt[src:is_rvalue_reference()]"
         "| //src:type[src:is_rvalue_reference()]"
@@ -1121,7 +1121,7 @@ int main() {
 
     // is_out_param
     tempXPath = 
-        "//src:param[src:is_out_param()]"
+        "//src:parameter[src:is_out_param()]"
         "| //src:decl[src:is_out_param()]"
         "| //src:type[src:is_out_param()]"
         "| //src:argument[src:is_out_param()]"
@@ -1287,7 +1287,7 @@ int main() {
         "| //src:destructor_decl[src:has_attributes()]"
         "| //src:property[src:has_attributes()]"
         "| //src:event[src:has_attributes()]"
-        "| //src:param[src:has_attributes()]"
+        "| //src:parameter[src:has_attributes()]"
         "| //src:decl_stmt[src:has_attributes()]"
         "| //src:decl[src:has_attributes()]"
     ;
@@ -1311,7 +1311,7 @@ int main() {
 
     // is_template_parameter
     tempXPath = 
-        "//src:param[src:is_template_parameter()]"
+        "//src:parameter[src:is_template_parameter()]"
         "| //src:argument[src:is_template_parameter()]"
     ;
     run_xpath_test("is_template_parameter/is_template_parameter.cpp", tempXPath, 7);
@@ -1320,13 +1320,13 @@ int main() {
 
     // is_template_parameter_pack
     tempXPath = 
-        "//src:param[src:is_template_parameter_pack()]"
+        "//src:parameter[src:is_template_parameter_pack()]"
     ;
     run_xpath_test("is_template_parameter_pack/is_template_parameter_pack.cpp", tempXPath, 3);
 
     // is_template_template_parameter
     tempXPath = 
-        "//src:param[src:is_template_template_parameter()]"
+        "//src:parameter[src:is_template_template_parameter()]"
     ;
     run_xpath_test("is_template_template_parameter/is_template_template_parameter.cpp", tempXPath, 1);
 
@@ -1349,7 +1349,7 @@ int main() {
         "| //src:call[src:is_template()]"
         "| //src:name[src:is_template()]"
         "| //src:type[src:is_template()]"
-        "| //src:param[src:is_template()]"
+        "| //src:parameter[src:is_template()]"
         "| //src:argument[src:is_template()]"
     ;
     run_xpath_test("is_template/is_template.cpp", tempXPath, 11);
@@ -1380,7 +1380,7 @@ int main() {
         "| //src:struct_decl[src:is_constrained()]"
         "| //src:decl[src:is_constrained()]"
         "| //src:type[src:is_constrained()]"
-        "| //src:param[src:is_constrained()]"
+        "| //src:parameter[src:is_constrained()]"
         "| //src:argument_list[src:is_constrained()]"
         "| //src:argument[src:is_constrained()]"
     ;
@@ -1427,7 +1427,7 @@ int main() {
         "| //src:union[src:is_anonymous()]"
         "| //src:enum[src:is_anonymous()]"
         "| //src:decl[src:is_anonymous()]"
-        "| //src:param[src:is_anonymous()]"
+        "| //src:parameter[src:is_anonymous()]"
         "| //src:argument[src:is_anonymous()]"
     ;
     run_xpath_test("is_anonymous/is_anonymous.c", tempXPath, 7);
@@ -1504,7 +1504,7 @@ int main() {
         "//src:decl_stmt[src:has_local_storage()]"
         "| //src:decl[src:has_local_storage()]"
         "| //src:type[src:has_local_storage()]"
-        "| //src:param[src:has_local_storage()]"
+        "| //src:parameter[src:has_local_storage()]"
     ;
     run_xpath_test("has_local_storage/has_local_storage.c", tempXPath, 9);
     run_xpath_test("has_local_storage/has_local_storage.cpp", tempXPath, 9);
@@ -1546,7 +1546,7 @@ int main() {
     // is_array
     tempXPath = 
         "//src:argument[src:is_array()]"
-        "| //src:param[src:is_array()]"
+        "| //src:parameter[src:is_array()]"
         "| //src:type[src:is_array()]"
         "| //src:decl_stmt[src:is_array()]"
         "| //src:decl[src:is_array()]"
@@ -1665,7 +1665,7 @@ int main() {
         "| //src:decl[src:has_indexing_expr()]"
         "| //src:decl_stmt[src:has_indexing_expr()]"
         "| //src:argument[src:has_indexing_expr()]"
-        "| //src:param[src:has_indexing_expr()]"
+        "| //src:parameter[src:has_indexing_expr()]"
         "| //src:condition[src:has_indexing_expr()]"
         "| //src:incr[src:has_indexing_expr()]"
     ;
@@ -1679,7 +1679,7 @@ int main() {
         "//src:expr[src:has_call()]"
         "| //src:expr_stmt[src:has_call()]"
         "| //src:argument[src:has_call()]"
-        "| //src:param[src:has_call()]"
+        "| //src:parameter[src:has_call()]"
         "| //src:decl[src:has_call()]"
         "| //src:decl_stmt[src:has_call()]"
         "| //src:init[src:has_call()]"
@@ -1886,7 +1886,7 @@ int main() {
     // is_nullable
     tempXPath = 
         "//src:decl[src:is_nullable()]"
-        "| //src:param[src:is_nullable()]"
+        "| //src:parameter[src:is_nullable()]"
         "| //src:type[src:is_nullable()]"
         "| //src:decl_stmt[src:is_nullable()]"
     ;

@@ -332,6 +332,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
         "is_static",
         "src:decl/src:type[src:specifier[.= 'static']] or src:type[src:specifier[.= 'static']] or src:specifier[.='static']"
     );
+    
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI,
         "block_is_static",
@@ -1130,9 +1131,9 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_default", "src:specifier[.='default'] | src:type/src:specifier[.='default']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_pointer", "(self::src:decl and src:type/src:modifier[.='*']) or ((self::src:decl_stmt or self::src:param) and src:decl/src:type/src:modifier[.='*']) or (self::src:argument and src:expr/src:modifier[.='*']) or ((self::src:type or self::src:name)and src:modifier[.='*']) or (self::src:function_decl and src:modifier[.='*'])");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_pointer", "(self::src:decl and src:type/src:modifier[.='*']) or ((self::src:decl_stmt or self::src:parameter) and src:decl/src:type/src:modifier[.='*']) or (self::src:argument and src:expr/src:modifier[.='*']) or ((self::src:type or self::src:name)and src:modifier[.='*']) or (self::src:function_decl and src:modifier[.='*'])");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_parameter_pack", "(self::src:decl and src:type/src:modifier[.='...']) or (self::src:param and ( src:decl/src:type/src:modifier[.='...'] or src:type/src:modifier[.='...'] ) ) or (self::src:argument and src:expr/src:modifier[.='...']) or (self::src:type and src:modifier[.='...'])");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_parameter_pack", "(self::src:decl and src:type/src:modifier[.='...']) or (self::src:parameter and ( src:decl/src:type/src:modifier[.='...'] or src:type/src:modifier[.='...'] ) ) or (self::src:argument and src:expr/src:modifier[.='...']) or (self::src:type and src:modifier[.='...'])");
 
 /*    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_generic",
         "("
@@ -1206,7 +1207,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_out_param", "src:modifier[.='out'] or src:specifier[.='out'] or src:type/src:modifier[.='out'] or src:decl/src:type/src:modifier[.='out']");
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_out_argument", "src:modifier[.='out'] or src:specifier[.='out'] or src:type/src:modifier[.='out'] or src:decl/src:type/src:modifier[.='out']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_variadic", "( ancestor::src:unit[@language='C#'] and ( src:parameter_list/src:param/src:decl/src:type/src:specifier[.='params'] or self::src:parameter_list/src:param/src:decl/src:type/src:specifier[.='params'] ) ) or ( ancestor::src:unit[@language='C++' or @language='C' or @language='Java'] and ( ( ( src:parameter_list/src:param[ src:type/src:modifier[.='...'] or src:decl/src:type/src:modifier[.='...'] ] or self::src:parameter_list/src:param[ src:type/src:modifier[.='...'] or src:decl/src:type/src:modifier[.='...'] ] ) ) or self::src:template[ not( parent::function or parent::function_decl or parent::constructor or parent::constructor_decl or parent::destructor or parent::destructor_decl ) ]/src:parameter_list/src:param[ src:type/src:modifier[.='...'] or src:decl/src:type/src:modifier[.='...'] ] or ( ( self::src:using or self::src:class or self::src:class_decl or self::src:struct or self::src:struct_decl or self::src:union or self::src:union_decl ) and ( ( count(src:template) = 1 and src:template/src:parameter_list/src:param[ src:type/src:modifier[.='...'] or src:decl/src:type/src:modifier[.='...'] ] ) ) ) ) )");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_variadic", "( ancestor::src:unit[@language='C#'] and ( src:parameter_list/src:parameter/src:decl/src:type/src:specifier[.='params'] or self::src:parameter_list/src:parameter/src:decl/src:type/src:specifier[.='params'] ) ) or ( ancestor::src:unit[@language='C++' or @language='C' or @language='Java'] and ( ( ( src:parameter_list/src:parameter[ src:type/src:modifier[.='...'] or src:decl/src:type/src:modifier[.='...'] ] or self::src:parameter_list/src:parameter[ src:type/src:modifier[.='...'] or src:decl/src:type/src:modifier[.='...'] ] ) ) or self::src:template[ not( parent::function or parent::function_decl or parent::constructor or parent::constructor_decl or parent::destructor or parent::destructor_decl ) ]/src:parameter_list/src:parameter[ src:type/src:modifier[.='...'] or src:decl/src:type/src:modifier[.='...'] ] or ( ( self::src:using or self::src:class or self::src:class_decl or self::src:struct or self::src:struct_decl or self::src:union or self::src:union_decl ) and ( ( count(src:template) = 1 and src:template/src:parameter_list/src:parameter[ src:type/src:modifier[.='...'] or src:decl/src:type/src:modifier[.='...'] ] ) ) ) ) )");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_new_override", "src:type/src:specifier[.='new']");
 
@@ -1231,7 +1232,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_yield", "src:specifier[.='yield']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_extension_method", "src:parameter_list/src:param[1]/src:decl/src:type/src:specifier[.='this']");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_extension_method", "src:parameter_list/src:parameter[1]/src:decl/src:type/src:specifier[.='this']");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_main", "( ancestor::src:unit[@language='C#' or @language='Java'] and src:type/src:specifier[.='static'] and ( src:name[.='main'] or src:name[.='Main'] ) ) or ( ancestor::src:unit[@language='C++' or @language='C'] and parent::src:unit and ( src:name[.='main'] or src:name[.='_tmain'] or src:name[.='_Tmain'] ) )");
 
@@ -1279,7 +1280,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
     ")"
     " or "
     "("
-        "(self::src:decl_stmt or self::src:param)"
+        "(self::src:decl_stmt or self::src:parameter)"
         " and "
         "src:decl/src:type/src:name["
             " src:argument_list[@type='template'] or src:name/src:argument_list[@type='template'] or src:name/src:name/src:argument_list[@type='template'] "
@@ -1405,7 +1406,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                 ")"
                 " or  "
                 "("
-                    "(self::src:param)"
+                    "(self::src:parameter)"
                     "  and "
                     "("
                         "src:decl/src:type/src:name/src:argument_list[@type='template']/src:argument[src:extends or src:super]"
@@ -1445,7 +1446,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_lower_bound", "self::src:argument/ancestor::src:argument_list[@type='template'] and src:super");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_anonymous", "( self::src:param[ src:decl[not(src:name)] or src:type[not(following-sibling::src:name)] ] or self::src:decl[not(src:name)] or self::src:argument/src:name[.='?'] or ( (self::src:enum or self::src:struct or self::src:union or self::src:namespace or self::src:class) and not(src:name) ) )");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_anonymous", "( self::src:parameter[ src:decl[not(src:name)] or src:type[not(following-sibling::src:name)] ] or self::src:decl[not(src:name)] or self::src:argument/src:name[.='?'] or ( (self::src:enum or self::src:struct or self::src:union or self::src:namespace or self::src:class) and not(src:name) ) )");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "enum_specifies_integer_type", "self::src:enum[src:super or src:type]");
 
@@ -1461,9 +1462,9 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_initializers", "self::src:constructor/src:member_list");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_converting_constructor", "self::src:constructor [ not(src:specifier[.='explicit']) and src:parameter_list[ ( count(src:param) = 1 ) or ( count(src:param) = count(src:param[src:decl/src:init]) ) or ( ( count(src:param) - 1) = count(src:param[src:decl/src:init]) ) ] ]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_converting_constructor", "self::src:constructor [ not(src:specifier[.='explicit']) and src:parameter_list[ ( count(src:parameter) = 1 ) or ( count(src:parameter) = count(src:parameter[src:decl/src:init]) ) or ( ( count(src:parameter) - 1) = count(src:parameter[src:decl/src:init]) ) ] ]");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_local_storage", "( self::src:param ) or ( self::src:decl_stmt/src:decl/src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ] ) or ( self::src:decl/src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ]/parent::node()[parent::src:param or parent::src:decl_stmt] ) or ( self::src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ]/parent::node()[ self::src:decl[parent::src:param or parent::src:decl_stmt] ] )");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_local_storage", "( self::src:parameter ) or ( self::src:decl_stmt/src:decl/src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ] ) or ( self::src:decl/src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ]/parent::node()[parent::src:parameter or parent::src:decl_stmt] ) or ( self::src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ]/parent::node()[ self::src:decl[parent::src:parameter or parent::src:decl_stmt] ] )");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_scoped_to_file", "(src:decl/src:type/src:specifier[.='static'] and not(ancestor::src:class or ancestor::src:struct or ancestor::src:union or ancestor::src:enum)) or (src:type/src:specifier[.='static'] and not(ancestor::src:class or ancestor::src:struct or ancestor::src:union or ancestor::src:enum)) or ancestor::src:namespace[not(src:name)]");
 
