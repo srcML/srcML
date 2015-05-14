@@ -27,7 +27,7 @@ import lxml.etree as et
 from ctypes import *
 import sys
 
-xml_namespaces = {"src":"http://www.sdml.info/srcML/src"}
+xml_namespaces = {"src":"http://www.srcML.org/srcML/src"}
 
 xslt_ident = """
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">

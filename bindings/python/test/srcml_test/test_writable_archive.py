@@ -44,7 +44,7 @@ class TestWritableArchive(unittest.TestCase):
             pass
         self.assertTrue(os.path.exists(outputFileName))
         tree = et.parse(outputFileName)
-        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.sdml.info/srcML/src"))
+        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.srcML.org/srcML/src"))
         self.assertEqual(1, len(ret), "Incorrect # of units returned")
 
     def test_constructor_stream(self):
@@ -52,7 +52,7 @@ class TestWritableArchive(unittest.TestCase):
         with writable_archive(writable_archive_settings(), stream=output_strm, close_stream=False) as archive_writer:
             pass
         tree = et.XML(output_strm.getvalue())
-        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.sdml.info/srcML/src"))
+        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.srcML.org/srcML/src"))
         self.assertEqual(1, len(ret), "Incorrect # of units returned")
 
 
@@ -61,7 +61,7 @@ class TestWritableArchive(unittest.TestCase):
         with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
             pass
         tree = et.XML(mem_buffer.to_string())
-        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.sdml.info/srcML/src"))
+        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.srcML.org/srcML/src"))
         self.assertEqual(1, len(ret), "Incorrect # of units returned")
 
     @expect_exception(ValueError)
@@ -87,7 +87,7 @@ class TestWritableArchive(unittest.TestCase):
         with writable_archive(writable_archive_settings(), context=ctxt) as archive_writer:
             pass
         tree = et.XML(ctxt.buffer.getvalue())
-        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.sdml.info/srcML/src"))
+        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.srcML.org/srcML/src"))
         self.assertEqual(1, len(ret), "Incorrect # of units returned")
 
 
@@ -100,7 +100,7 @@ class TestWritableArchive(unittest.TestCase):
             close=close_test_func) as archive_writer:
             pass
         tree = et.XML(temp_buffer.getvalue())
-        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.sdml.info/srcML/src"))
+        ret = tree.xpath("//src:unit", namespaces=dict(src="http://www.srcML.org/srcML/src"))
         self.assertEqual(1, len(ret), "Incorrect # of units returned")
 
 
@@ -297,7 +297,7 @@ class TestWritableArchive(unittest.TestCase):
             archive_writer.write(u)
 
         tree = et.XML(str(mem_buffer))
-        ret = tree.xpath("/src:unit/src:unit", namespaces=dict(src="http://www.sdml.info/srcML/src"))
+        ret = tree.xpath("/src:unit/src:unit", namespaces=dict(src="http://www.srcML.org/srcML/src"))
         self.assertEqual(1, len(ret), "Incorrect # of units returned")
 
     @expect_exception(TypeError)
@@ -322,7 +322,7 @@ class TestWritableArchive(unittest.TestCase):
                 u = archive_reader.read()
                 archive_writer.write(u)
         tree = et.XML(str(secondary_buffer))
-        ret = tree.xpath("/src:unit/src:unit", namespaces=dict(src="http://www.sdml.info/srcML/src"))
+        ret = tree.xpath("/src:unit/src:unit", namespaces=dict(src="http://www.srcML.org/srcML/src"))
         self.assertEqual(1, len(ret), "Incorrect # of units returned")
 
     # def create_unit(self):

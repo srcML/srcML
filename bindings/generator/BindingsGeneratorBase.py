@@ -21,8 +21,8 @@ import lxml.etree as ET
 import cStringIO, string
 
 XPathNamespaces = {
-    "src": "http://www.sdml.info/srcML/src",
-    "cpp": "http://www.sdml.info/srcML/cpp"
+    "src": "http://www.srcML.org/srcML/src",
+    "cpp": "http://www.srcML.org/srcML/cpp"
 }
 
 class ParamTypeInfo:
@@ -110,7 +110,7 @@ class BindingGenerator(object):
         self.functionDecls = []
 
     def getTypeInfo(self, xmlType):
-        if xmlType.tag == "{http://www.sdml.info/srcML/src}function_decl":
+        if xmlType.tag == "{http://www.srcML.org/srcML/src}function_decl":
             self.processingFunctionPointers = True
             # Function Pointer Type handled first
             currentFuncPtrInfo = FunctionPtrInfo()
@@ -216,7 +216,7 @@ class BindingGenerator(object):
             parameters = func.xpath("src:parameter_list/src:parameter", namespaces=XPathNamespaces)
             for param in parameters:
                 paramInfo = ParamInfo()
-                if param[0].tag == "{http://www.sdml.info/srcML/src}decl":
+                if param[0].tag == "{http://www.srcML.org/srcML/src}decl":
                     # Extracting typical parameter info.
                     nameNode = param[0].xpath("src:name", namespaces=XPathNamespaces)
                     if nameNode != None and len(nameNode) > 0:
@@ -226,7 +226,7 @@ class BindingGenerator(object):
                     if paramInfo.actualType == "int *" or paramInfo.actualType == "char * *" or paramInfo.actualType == "size_t *":
                         paramInfo.callingConvention = PARAM_IN_OUT
                     
-                elif param[0].tag == "{http://www.sdml.info/srcML/src}function_decl":
+                elif param[0].tag == "{http://www.srcML.org/srcML/src}function_decl":
                     paramInfo.actualType = extractNormalizedTypeName(param[0]).strip()
                     paramInfo.fpType = self.getTypeInfo(param[0])
                     nameNode = param[0].xpath("src:name", namespaces=XPathNamespaces)
