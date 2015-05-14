@@ -197,4 +197,11 @@
 <function><type><name>void</name></type> <name>A</name><parameter_list>(<parameter><decl><type><typename>typename</typename> <name>foo</name></type> <name>bar</name> <init>= <expr><call><typename>typename</typename> <name>foo</name><argument_list>()</argument_list></call></expr></init></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
+<unit>
+<function><type><specifier>const</specifier> <name><name>struct</name> <name>group</name></name> <modifier>*</modifier> <specifier>__weak</specifier></type> <name>cache_get_priv_group</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>cacheinfo</name></name> <modifier>*</modifier></type><name>this_leaf</name></decl></parameter>)</parameter_list>
+<block>{
+	<return>return <expr><name>NULL</name></expr>;</return>
+}</block></function>
+</unit>
+
 </unit>

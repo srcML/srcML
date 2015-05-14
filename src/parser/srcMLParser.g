@@ -3217,7 +3217,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
     }
 
-        (options { greedy = true; } : specifier)*
+        (options { greedy = true; } : { LA(1) == FINAL }? specifier)*
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
 
