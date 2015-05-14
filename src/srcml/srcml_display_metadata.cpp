@@ -21,6 +21,7 @@
  */
 
 #include <srcml_display_metadata.hpp>
+#include <srcml_pretty.hpp>
 #include <src_prefix.hpp>
 #include <srcml.h>
 #include <iostream>
@@ -28,33 +29,10 @@
 #include <boost/foreach.hpp>
 #include <iomanip>
 #include <string.h>
-
-int srcml_unit_count(srcml_archive* srcml_arch) {
-
-    int numUnits = 0;
-    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
-
-        if (srcml_unit_get_language(unit))
-            ++numUnits;
-
-        srcml_unit_free(unit);
-    }
-    return numUnits;   
-}
-
-/*void srcml_unit_hashes(srcml_archive* srcml_arch) {
-
-    int numUnits = 0;
-    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
-        const char* hash = srcml_unit_get_hash(unit);
-        const char* filename = srcml_unit_get_filename(unit);
-
-        std::cout << ++numUnits << '\t' << std::setw(5) << (hash ? hash : "-") << '\t' << std::setw(5) << (filename ? filename : "-") << '\n';
-        srcml_unit_free(unit);
-    }
-}*/
+#include <boost/format.hpp>
 
 // display all files in srcml archive
+/*
 void srcml_list_unit_files(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
@@ -139,38 +117,26 @@ void srcml_display_timestamp(srcml_unit* unit, int ignore_attribute_name) {
         std::cout << timestamp << "\n";
     }
 }
+*/
 
-void srcml_display_language(srcml_unit* unit, int ignore_attribute_name) {
-    if (!unit)
-        return;
+int srcml_unit_count(srcml_archive* srcml_arch) {
 
-    const char* language = srcml_unit_get_language(unit);
-    if (!language && !ignore_attribute_name)
-        std::cout << "language=\"\"\n";
+    int numUnits = 0;
+    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
 
-    if (language && !ignore_attribute_name)
-        std::cout << "language=\"" << language << "\"\n";
+        if (srcml_unit_get_language(unit))
+            ++numUnits;
 
-    if (language && ignore_attribute_name)
-        std::cout << language << "\n";
+        srcml_unit_free(unit);
+    }
+    return numUnits;
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
-    int display_commands = SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
-                            SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
-                            SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
-                            SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
-                            SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
-                            SRCML_COMMAND_DISPLAY_SRCML_HASH |
-                            SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP;
-
-//fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
+    
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_archive_create();
-
-//fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         if (contains<int>(input)) {
             if (srcml_archive_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
@@ -191,111 +157,64 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             }
         }
 
-        srcml_unit* unit = 0;
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH || srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP
-            || srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
-            unit = srcml_read_unit_header(srcml_arch);
+        // Overrides all others Perform a pretty output
+        if (srcml_request.pretty_format) {
+            srcml_pretty(srcml_arch, *srcml_request.pretty_format);
+            return;
         }
 
-        // srcml->language
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
-            srcml_display_language(unit, ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE));
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
+            srcml_pretty(srcml_arch, "%l\n");
+            return;
         }
-        // srcml->src filename
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME){
-            const char* archive_info = srcml_archive_get_filename(srcml_arch);
-            if (archive_info) {
-                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
-                    std::cout << archive_info << "\n";
-                else
-                    std::cout << "filename=\"" << archive_info << "\"\n";
-            }
-            else {
-                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
-                    std::cout << "";
-                else
-                    std::cout << "filename=\"\"\n";
-            }
-        }
-        // srcml->src url
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY){
-            const char* archive_info = srcml_archive_get_url(srcml_arch);
-            if (archive_info) {
-                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY)
-                    std::cout << archive_info << "\n";
-                else
-                    std::cout << "url=\"" << archive_info << "\"\n";
-            }
-            else {
-                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY)
-                    std::cout << "";
-                else
-                    std::cout << "url=\"\"\n";
-            }
-        }
-        // srcml->src src version
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION){
-            const char* archive_info = srcml_archive_get_version(srcml_arch);
-            if (archive_info) {
-                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
-                    std::cout << archive_info << "\n";
-                else
-                    std::cout << "version=\"" << archive_info << "\"\n";
-            }
-            else {
-                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
-                    std::cout << "";
-                else
-                    std::cout << "version=\"\"\n";
-            }
-        }
-        // srcml->src encoding
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING){
-            const char* archive_info = srcml_archive_get_xml_encoding(srcml_arch);
 
-            if (archive_info) {
-                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_ENCODING)
-                    std::cout << archive_info << "\n";
-                else
-                    std::cout << "encoding=\"" << archive_info << "\"\n";
-            }
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION) {
+            srcml_pretty(srcml_arch, "%v\n");
+            return;
         }
-        // srcml->src hash
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH){
-            srcml_display_hash(unit, ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_HASH));
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_URL) {
+            srcml_pretty(srcml_arch, "%U\n");
+            return;
         }
-        // srcml->src timestamp
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP){
-            srcml_display_timestamp(unit, ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP));
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
+            srcml_pretty(srcml_arch, "%F\n");
+            return;
         }
-        // srcml->src prefix query
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
+            srcml_pretty(srcml_arch, "%F\n");
+            return;
+        }
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING) {
+            srcml_pretty(srcml_arch, "%X\n");
+            return;
+        }
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH) {
+            srcml_pretty(srcml_arch, "%h\n");
+            return;
+        }
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP) {
+            srcml_pretty(srcml_arch, "%t\n");
+            return;
+        }
+
         if (srcml_request.xmlns_prefix_query) {
             const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch, srcml_request.xmlns_prefix_query->c_str());
             if (prefix) {
                 std::cout << prefix << '\n';
             }
+            return;
         }
 
-        // srcml long info
-        if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-            srcml_display_info(srcml_arch);
-            srcml_display_unit_count(srcml_arch);
-        }
-        // srcml info
-        if (srcml_request.command & SRCML_COMMAND_INFO) {
-            srcml_display_info(srcml_arch);
-        }
-        // list filenames in srcml archive
-        if (srcml_request.command & SRCML_COMMAND_LIST) {
-            srcml_list_unit_files(srcml_arch);
-        }
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
             std::cout << srcml_unit_count(srcml_arch) << "\n";
         }
-
-        if (unit)
-            srcml_unit_free(unit);
 
         srcml_archive_close(srcml_arch);
         srcml_archive_free(srcml_arch);

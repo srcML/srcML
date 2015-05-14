@@ -53,13 +53,13 @@ const char* SRC2SRCML_FOOTER = "Examples:\
   src2srcml m.cpp          (read from file m.cpp, write to standard output)\n\
   src2srcml m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n\
   \n\
-  src2srcml http://www.sdml.info/projects/srcml/ex/main.cpp (read from URI)\n\
+  src2srcml http://www.srcML.org/projects/srcml/ex/main.cpp (read from URI)\n\
   \n\
   src2srcml --directory=src --filename=m.cpp m.cpp -o m.cpp.xml (element unit attributes dir \"src\", filename \"m.cpp\")\n\
   src2srcml --src-encoding=UTF-8 m.cpp m.cpp.xml         (encoding of input text file is UTF-8)\n\
   src2srcml --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    (set encoding of srcML file to ISO-8859-1)\n\
   \n\
-  www.sdml.info\n\
+  www.srcML.org\n\
   Report bugs to collard@uakron.edu";
 
 const char* SRCML2SRC_HEADER = "Usage: srcml2src [options] <srcML_infile>... [-o <src_outfile>]\
@@ -93,13 +93,13 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   \n\n\
   Read from URI, write to file main.cpp:\
   \n\
-  srcml http://www.sdml.info/projects/srcml/ex/main.cpp.xml main.cpp\
+  srcml http://www.srcML.org/projects/srcml/ex/main.cpp.xml main.cpp\
   \n\n\
   Read from file main.cpp.xml, output language attribute to stdout:\
   \n\
   srcml main.cpp.xml --language\n\
   \n\
-  www.sdml.info\n\
+  www.srcML.org\n\
   Report bugs to collard@uakron.edu";
 
 srcml_request_t srcml_request;
@@ -222,16 +222,20 @@ void option_field<&srcml_request_t::output_filename>(const std::string& value) {
 
 void option_xmlns_uri(const std::string& value) {
     srcml_request.xmlns_namespaces[""] = value;
+    srcml_request.xmlns_namespace_uris[value] = "";
 }
 
 void option_xmlns_prefix(const std::vector<std::string>& values) {
     BOOST_FOREACH( std::string value, values )
     {
       std::size_t delim = value.find("=");
-      if (delim == std::string::npos)
+      if (delim == std::string::npos) {
+        std::cerr << "srcml: xmlns format missing \"=\"\n";
         exit(1); //ERROR CODE TBD
+      }
 
       srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
+      srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
     }
 }
 
@@ -328,6 +332,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
             ("text,t", prog_opts::value<std::vector<std::string> >()->notifier(&raw_text_args), "raw string text to be processed")
+            ("pretty", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_field<&srcml_request_t::pretty_format>), "custom formatting for output")
             ;
 
         src2srcml_options.add_options()
@@ -343,7 +348,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         srcml2src_options.add_options()
             ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "display source language and exit")
-            ("show-directory", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY>), "display source directory name and exit")
+            ("show-url", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_URL>), "display source url name and exit")
             ("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "display source filename and exit")
             ("show-src-version", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION>), "display source version and exit")
             ("show-timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP>), "display timestamp and exit")
@@ -360,20 +365,18 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         line_col.add_options()
-            ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.sdml.info/srcML/position'")
+            ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.srcML.org/srcML/position'")
             ("tabs", prog_opts::value<int>()->implicit_value(8)->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
             ;
 
         markup.add_options()
-            ("literal", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_LITERAL>), "markup literal values, namespace 'http://www.sdml.info/srcML/literal'")
-            ("modifier", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.sdml.info/srcML/modifier'")
-            ("operator", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_OPERATOR>), "markup operators, namespace 'http://www.sdml.info/srcML/operator'")
-            ("xml-processing", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xml_processing>), "add XML processing instruction")
+            ("literal", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_LITERAL>), "markup literal values, namespace 'http://www.srcML.org/srcML/literal'")
+            ("modifier", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_MODIFIER>), "markup type modifiers, namespace 'http://www.srcML.org/srcML/modifier'")
+            ("operator", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_OPERATOR>), "markup operators, namespace 'http://www.srcML.org/srcML/operator'")
             ;
 
         src2srcml_metadata.add_options()
-            ("url,d", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the arg url attribute")
-            ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the arg filename attribute")
+            ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the arg url attribute")
             ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the arg version attribute")
             ;
 
@@ -415,11 +418,12 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         debug_options.add_options()
             ("dev", prog_opts::bool_switch()->notifier(&option_command<SRCML_DEBUG_MODE>), "Enable developer debug mode.")
-            ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.sdml.info/srcML/srcerr")
+            ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.srcML.org/srcML/srcerr")
             ;
         experimental_options.add_options()
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
+            ("xml-processing", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xml_processing>), "add XML processing instruction")
             ;
 
         // Group src2srcml Options
@@ -494,6 +498,31 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         if (isatty(STDIN_FILENO))
             option_command<SRCML_COMMAND_INTERACTIVE>(true);
 #endif
+
+        // Ideally get this from libsrcml
+        const std::vector<std::string> reserved_namespaces = {
+        "=http://www.srcML.org/srcML/src",
+        "cpp=http://www.srcML.org/srcML/cpp",
+        "java=http://www.srcML.org/srcML/java",};
+
+        BOOST_FOREACH(const std::string& ns, reserved_namespaces) {
+          size_t delim = ns.find('=');
+          std::string prefix = ns.substr(0, delim);
+          std::string uri = ns.substr(delim + 1);
+
+          // A reserved prefix wasn't used or it was set to the same uri
+          if (srcml_request.xmlns_namespaces.find(prefix) == srcml_request.xmlns_namespaces.end() || srcml_request.xmlns_namespaces[prefix] == uri) {
+            continue;
+          }
+
+          // A reserved uri is set to a different prefix
+          if (srcml_request.xmlns_namespace_uris.find(uri) != srcml_request.xmlns_namespaces.end() && srcml_request.xmlns_namespace_uris[uri] != prefix) {
+            continue;
+          }
+
+          std::cerr << "srcml: prefix " << "\"" << prefix << "\" assigned multiple URIs \"" << uri << "\", \"" << srcml_request.xmlns_namespaces[prefix] << "\"\n";
+          exit(1); // TODO Need a real error code
+        }
 
     }
     // Unknown Option

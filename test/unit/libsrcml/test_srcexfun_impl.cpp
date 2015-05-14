@@ -20,6 +20,13 @@
 
 
 #include <srcml.h>
+#include <srcmlns.hpp>
+
+#include <libxml/tree.h>
+#include <libxml/parser.h>
+#include <boost/shared_ptr.hpp>
+#include <libxml/xpathInternals.h>
+
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -27,12 +34,8 @@
 #include <cstdlib>
 #include <cassert>
 #include <vector>
+#include <fstream>
 
-#include <libxml/tree.h>
-#include <libxml/parser.h>
-#include <boost/shared_ptr.hpp>
-#include <libxml/xpathInternals.h>
-#include <srcmlns.hpp>
 
 typedef boost::shared_ptr<xmlDoc> xml_doc_shared_ptr_t; 
 
@@ -62,7 +65,15 @@ typedef vector<TestResult> TestResultsContainer;
 TestResultsContainer testResults;
 
 void run_xpath_test(std::string const& testFile, std::string const& xpathToTest, int expectedResultCount) {
+
     cout << "Testing: " << testFile << endl;
+
+    {
+
+        std::ifstream in_file(SRCML_XPATH_EXFUN_TEST_DIR + string("/") + testFile);
+        assert(in_file.good());
+
+    }
 
     char* archiveBuffer = 0;
     size_t archiveBufferSize = 0;

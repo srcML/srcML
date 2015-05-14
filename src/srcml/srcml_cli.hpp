@@ -52,7 +52,7 @@ const int SRCML_COMMAND_TO_DIRECTORY              = 1<<13;
 const int SRCML_COMMAND_TIMESTAMP                 = 1<<14;
 
 const int SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE    = 1<<15;
-const int SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY   = 1<<16;
+const int SRCML_COMMAND_DISPLAY_SRCML_URL   = 1<<16;
 const int SRCML_COMMAND_DISPLAY_SRCML_FILENAME    = 1<<17;
 const int SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION = 1<<18;
 const int SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP   = 1<<19;
@@ -75,8 +75,9 @@ const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_VERSION |
     SRCML_COMMAND_LIST |
     SRCML_COMMAND_UNITS |
+    SRCML_COMMAND_UNITS |
     SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
-    SRCML_COMMAND_DISPLAY_SRCML_DIRECTORY |
+    SRCML_COMMAND_DISPLAY_SRCML_URL |
     SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
     SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
     SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
@@ -105,7 +106,6 @@ struct srcml_request_t {
 
     // unit attributes
     boost::optional<std::string> att_language;
-    boost::optional<std::string> att_filename;
     boost::optional<std::string> att_url;
     boost::optional<std::string> att_xml_encoding;
     boost::optional<std::string> att_version;
@@ -131,12 +131,17 @@ struct srcml_request_t {
 
     std::map<std::string,std::string> xmlns_namespaces;
 
+    // Use for checking for overwriting standard namespaces ("", cpp)
+    std::map<std::string,std::string> xmlns_namespace_uris;
+
     // srcml transformation
     std::vector<std::string> transformations;
     std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;
 
     int unit;
     int max_threads;
+
+    boost::optional<std::string> pretty_format;
 };
 
 // parse the CLI options into a srcml client request

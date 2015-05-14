@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.sdml.info/srcML/src" language="Java" url="throws" filename="throws_java">
+<unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="throws" filename="throws_java">
 
 <unit>
 <throws>throws <argument><expr><name>foo</name></expr></argument></throws>

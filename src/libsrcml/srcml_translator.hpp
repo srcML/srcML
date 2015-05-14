@@ -100,6 +100,7 @@ public:
 
     bool add_unit(const srcml_unit * unit, const char * xml);
     bool add_unit_content(const srcml_unit * unit, const char * xml, int size);
+    bool add_unit_raw(const srcml_unit * unit, const char * xml, int size);
     bool add_start_unit(const srcml_unit * unit);
     bool add_end_unit();
     bool add_start_element(const char * prefix, const char * name, const char * uri);

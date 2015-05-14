@@ -452,6 +452,7 @@ public :
 
             std::string prefix = namespaces[pos].prefix ? namespaces[pos].prefix : "";
             std::string uri = namespaces[pos].uri ? namespaces[pos].uri  : "";
+            srcml_uri_normalize(uri);
 
             if(uri == SRCML_CPP_NS_URI) {
 
@@ -990,7 +991,7 @@ private :
 
         for(int pos = 0; pos < num_namespaces; ++pos) {
 
-            if(is_archive && strcmp(localname, "unit") == 0 && strcmp(namespaces[pos].uri, SRCML_CPP_NS_URI) != 0)
+            if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace(namespaces[pos].uri, SRCML_CPP_NS_URI))
                 continue;
 
             *unit->unit += " xmlns";

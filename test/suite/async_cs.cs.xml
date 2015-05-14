@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C#" url="async" filename="async_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="async" filename="async_cs">
 
 <unit>
-<function><type><specifier>public</specifier> <specifier>async</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
+<function><specifier>public</specifier> <specifier>async</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
 <block>{
     <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><operator>await</operator> <call><name>M</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 

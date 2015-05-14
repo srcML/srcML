@@ -54,9 +54,6 @@
 #include <srcml_translator.hpp>
 
 extern std::vector<transform> global_transformations;
-extern srcml_translator* ptranslator;
-extern srcml_archive* poutput_archive;
-
 
 /**
  * xpath_query_units
@@ -81,11 +78,11 @@ public :
      *
      * Constructor.
      */
-    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, xmlOutputBufferPtr output, 
+    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, srcml_archive* out_archive, 
                       const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0)
         : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), context(0), output(output), result_count(0) {
+          total(0), context(0), result_count(0), output_archive(out_archive) {
     }
 
     /**
@@ -169,7 +166,7 @@ public :
      // TODO: start_output needs an error return value
     virtual void start_output() {
 
-        buf = output;
+        buf = output_archive->translator->output_buffer();
 
       //  bufwriter = xmlNewTextWriter(buf);
 
@@ -372,17 +369,17 @@ public :
             break;
 
         case XPATH_NUMBER:
-            ptranslator->set_text_only();
+            output_archive->translator->set_text_only();
             outputXPathResultsNumber(result_nodes);
             break;
 
         case XPATH_BOOLEAN:
-            ptranslator->set_text_only();
+            output_archive->translator->set_text_only();
             outputXPathResultsBoolean(result_nodes);
             break;
 
         case XPATH_STRING:
-            ptranslator->set_text_only();
+            output_archive->translator->set_text_only();
             outputXPathResultsString(result_nodes);
             break;
 
@@ -432,7 +429,7 @@ public :
         //    xmlRemoveProp(curattr);
         //}
 
-        srcml_unit* punit = srcml_unit_create(poutput_archive);
+        srcml_unit* punit = srcml_unit_create(output_archive);
 
         // copy all the attributes from the current node
         for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
@@ -475,10 +472,10 @@ public :
 
                 for (xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i]->children; onode; onode = onode->next) {
 
-                    xmlNodeDump(lbuffer, ctxt->myDoc, onode, 0, 1);
+                    xmlNodeDump(lbuffer, ctxt->myDoc, onode, 0, 0);
                 }
 
-                ptranslator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
+                output_archive->translator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
 
                 xmlBufferEmpty(lbuffer);
 
@@ -523,9 +520,11 @@ public :
     virtual void outputResult(srcml_unit* punit, xmlNodePtr a_node) {
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
+        if (size == 0)
+            return;
 
-        ptranslator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
+        output_archive->translator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
 
         xmlBufferEmpty(lbuffer);
 
@@ -535,11 +534,13 @@ public :
     virtual void outputResult(xmlNodePtr a_node) {
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 1);
+        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
+        if (size == 0)
+            return;
 
-        srcml_unit* punit = srcml_unit_create(poutput_archive);
+        srcml_unit* punit = srcml_unit_create(output_archive);
 
-        ptranslator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
+        output_archive->translator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
 
         srcml_unit_free(punit);
 
@@ -827,8 +828,8 @@ private :
     int nodetype;
     xmlOutputBufferPtr buf;
     xmlXPathContextPtr context;
-    xmlOutputBufferPtr output;
     int result_count;
+    srcml_archive* output_archive;
 
     static const char * const simple_xpath_attribute_name;
 

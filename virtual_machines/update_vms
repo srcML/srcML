@@ -1,0 +1,43 @@
+#!/bin/bash
+
+./prlctlall.py --fedora --build resume; sleep 15
+./sshall.py --fedora --build 'bash -c "yes | yum update; yes | yum upgrade"'
+./prlctlall.py --fedora --build suspend
+
+./prlctlall.py --fedora --test resume; sleep 15
+./sshall.py --fedora --test 'bash -c "yes | yum update; yes | yum upgrade"'
+./prlctlall.py --fedora --test suspend
+
+./prlctlall.py --ubuntu --build resume; sleep 15
+./sshall.py --ubuntu --build 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --ubuntu --build suspend
+
+./prlctlall.py --ubuntu --test resume; sleep 15
+./sshall.py --ubuntu --test 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --ubuntu --test suspend
+
+./prlctlall.py --mint --build --13 resume; sleep 15
+./sshall.py --mint --build --13 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --mint --build --13 suspend
+
+./prlctlall.py --mint --build --~13 resume; sleep 15
+./sshall.py --mint --build --~13 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --mint --build --~13 suspend
+
+./prlctlall.py --mint --test --13 resume; sleep 15
+./sshall.py --mint --test --13 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --mint --test --13 suspend
+
+./prlctlall.py --mint --test --~13 resume; sleep 15
+./sshall.py --mint --test --~13 'bash -c "yes | apt-get update; yes | apt-get upgrade"'
+./prlctlall.py --mint --test --~13 suspend
+
+./prlctlall.py --suse --build resume; sleep 15
+./sshall.py --suse --build 'bash -c "zypper --non-interactive update --auto-agree-with-licenses"'
+./prlctlall.py --suse --build suspend
+
+./prlctlall.py --suse --test resume; sleep 15
+./sshall.py --suse --test 'bash -c "zypper --non-interactive update --auto-agree-with-licenses"'
+./prlctlall.py --suse --test suspend
+
+./prlctlall.py --~mac snapshot "--name \"Update: $(date '+%B %e, %Y')\""

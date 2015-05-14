@@ -499,10 +499,12 @@ tokens {
 	STHROW_SPECIFIER_JAVA;
 
 	STEMPLATE;
-    STEMPLATE_ARGUMENT;
-    STEMPLATE_ARGUMENT_LIST;
+    SGENERIC_ARGUMENT;
+    SGENERIC_ARGUMENT_LIST;
     STEMPLATE_PARAMETER;
     STEMPLATE_PARAMETER_LIST;
+    SGENERIC_PARAMETER;
+    SGENERIC_PARAMETER_LIST;
 
     // C Family elements
 	STYPEDEF;
@@ -724,6 +726,7 @@ public:
     static const antlr::BitSet modifier_tokens_set;
     static const antlr::BitSet skip_tokens_set;
     static const antlr::BitSet class_tokens_set;
+    static const antlr::BitSet decl_specifier_tokens_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -1194,13 +1197,33 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
-        identifier (template_argument_list)* DCOLON function_pointer_name_base |
+        identifier (generic_argument_list)* DCOLON function_pointer_name_base |
 
         // typical function pointer name
         multops (multops)* (compound_name_inner[false])*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
+;
+
+decl_pre_type[int & type_count] { ENTRY_DEBUG } :
+
+    (
+
+    { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) |
+
+    // special case only for functions.  Should only reach here for funciton in Java
+    { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
+
+    { inLanguage(LANGUAGE_JAVA) }? annotation |
+
+    { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+    { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
+
+    )
+
+    set_int[type_count, type_count - 1]
 ;
 
 // header of a function
@@ -1210,6 +1233,14 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+
+        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1))
+            || (inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN || LA(1) == FINAL))
+            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
+                decl_pre_type[type_count] |
+
+        { inLanguage(LANGUAGE_JAVA) }? generic_parameter_list set_int[type_count, type_count - 1])*
+
         function_type[type_count]
 ;
 
@@ -1313,6 +1344,14 @@ function_rest[int& fla] { ENTRY_DEBUG } :
 // function type, including specifiers
 function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         {
+
+            if(type_count == 0) {
+
+                setMode(MODE_FUNCTION_NAME);
+                return;
+
+            }
+
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_TYPE | MODE_FUNCTION_TYPE);
 
@@ -1329,7 +1368,7 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
                 { !class_tokens_set.member(LA(1)) }? 
                     (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) { decTypeCount(); })*
                     class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
-        (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* ({ inLanguage(LANGUAGE_JAVA) }? template_argument_list | lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
+        (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
 
         { 
 
@@ -1947,7 +1986,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & is
 
         // detect name, which may be name of macro or even an expression
         (function_identifier | (typename_specifier_name)=>typename_specifier_name
-            | keyword_call_tokens (DOTDOTDOT | template_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
+            | keyword_call_tokens (DOTDOTDOT | generic_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -1980,7 +2019,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             { !name || (depth > 0) }?
             (identifier | generic_selection) set_bool[name, true] |
 
-            keyword_call_tokens (options { greedy = true; } : DOTDOTDOT | template_argument_list | cuda_argument_list)* |
+            keyword_call_tokens (options { greedy = true; } : DOTDOTDOT | generic_argument_list | cuda_argument_list)* |
 
             // special case for something that looks like a declaration
             { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous |
@@ -3952,6 +3991,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     isdecl = true;
 
+    /** @todo may need to also pass and check other such as template and attribute/annotations */
+    int specifier_count;
+    int attribute_count;
+    int template_count;
     type = NONE;
 
     int start = mark();
@@ -3964,7 +4007,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     try {
 
-        pattern_check_core(token, fla, type_count, type, inparam, sawtemplate, sawcontextual, posin);
+        pattern_check_core(token, fla, type_count, specifier_count, attribute_count, template_count, type, inparam, sawtemplate, sawcontextual, posin);
 
     } catch (...) {
 
@@ -4039,10 +4082,17 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     inputState->guessing--;
     rewind(start);
 
+    if(type == VARIABLE && type_count == (specifier_count + attribute_count + template_count))
+        ++type_count;
+
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
        && (enum_preprocessing_token_set.member(LA(1)) || LA(1) == DECLTYPE) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
-       && save_la == TERMINATE)
+       && save_la == TERMINATE) {
+
         type = VARIABLE;
+        type_count = 1;
+
+    }
 
     if(type == NONE && LA(1) == TEMPLATE)
         type = GLOBAL_TEMPLATE;
@@ -4058,6 +4108,9 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 pattern_check_core[int& token,      /* second token, after name (always returned) */
               int& fla,             /* for a function, TERMINATE or LCURLY, 0 for a variable */
               int& type_count,      /* number of tokens in type (not including name) */
+              int& specifier_count, /* number of tokens that are specifiers */
+              int& attribute_count, /* number of tokens that are attributes */
+              int& template_count,  /* number of tokens that are templates */
               STMT_TYPE& type,      /* type discovered */
               bool inparam,         /* are we in a parameter */
               bool& sawtemplate,    /* have we seen a template */
@@ -4068,14 +4121,14 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             int parameter_pack_pos = -1;
             fla = 0;
             type_count = 0;
+            specifier_count = 0;
+            attribute_count = 0;
+            template_count = 0;
             type = NONE;
             sawtemplate = false;
             sawcontextual= false;
             posin = 0;
             isdestructor = false;           // global flag detected during name matching
-            int attribute_count = 0;
-            int specifier_count = 0;
-            int template_count = 0;
             bool foundpure = false;
             bool isoperator = false;
             bool ismain = false;
@@ -4221,7 +4274,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 ) |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-                template_argument_list set_int[specifier_count, specifier_count + 1] |
+                generic_argument_list set_int[specifier_count, specifier_count + 1] |
 
                 { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                 annotation
@@ -5146,8 +5199,8 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
         }
         push_namestack identifier (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
-            (template_argument_list)=>
-                template_argument_list (options { greedy = true; } : generic_type_constraint)* |
+            (generic_argument_list)=>
+                generic_argument_list (options { greedy = true; } : generic_type_constraint)* |
 
             (cuda_argument_list) => cuda_argument_list |
 
@@ -5172,7 +5225,7 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
         }
         push_namestack (template_specifier { is_nop = false; })* identifier
     (
-        (template_argument_list)=> template_argument_list (options { greedy = true; } : generic_type_constraint)*  |
+        (generic_argument_list)=> generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
 
         (cuda_argument_list) => cuda_argument_list |
 
@@ -5285,7 +5338,7 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
         (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
-        identifier (template_argument_list (generic_type_constraint)*)* DCOLON pointer_dereference |
+        identifier (generic_argument_list (generic_type_constraint)*)* DCOLON pointer_dereference |
 
         // typical function pointer name
         // need greedy for general operators and possibly end
@@ -5449,7 +5502,7 @@ compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
 // compound name for Java
 compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
 
-        template_argument_list |
+        generic_argument_list |
         simple_name_optional_template
         (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template | { next_token() == TERMINATE }? multop_name)))*
 
@@ -5679,7 +5732,7 @@ constructor_header[] { ENTRY_DEBUG } :
 
             specifier | { next_token() != TEMPOPS }? template_specifier | template_declaration_full |
 
-            { inLanguage(LANGUAGE_JAVA_FAMILY) }? { setMode(MODE_FUNCTION_TYPE); } template_argument_list { clearMode(MODE_FUNCTION_TYPE); }
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }? generic_parameter_list
         )*
         compound_name_inner[false]
         parameter_list
@@ -5969,7 +6022,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (NEW template_argument_list)=> sole_new template_argument_list |
+        (NEW generic_argument_list)=> sole_new generic_argument_list |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
@@ -6153,7 +6206,7 @@ const_cast_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SCONST_CAST);
         }
-        CONST_CAST (template_argument_list)*
+        CONST_CAST (generic_argument_list)*
         call_argument_list
 ;
 
@@ -6166,7 +6219,7 @@ dynamic_cast_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SDYNAMIC_CAST);
         }
-        DYNAMIC_CAST (template_argument_list)*
+        DYNAMIC_CAST (generic_argument_list)*
         call_argument_list
 ;
 
@@ -6179,7 +6232,7 @@ reinterpret_cast_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SREINTERPRET_CAST);
         }
-        REINTERPRET_CAST (template_argument_list)*
+        REINTERPRET_CAST (generic_argument_list)*
         call_argument_list
 ;
 
@@ -6192,7 +6245,7 @@ static_cast_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SSTATIC_CAST);
         }
-        STATIC_CAST (template_argument_list)*
+        STATIC_CAST (generic_argument_list)*
         call_argument_list
 ;
 
@@ -7049,12 +7102,28 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+
+        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
+                decl_pre_type[type_count])*
+
         variable_declaration_type[type_count]
 ;
 
 // declaration type
-variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
+variable_declaration_type[int type_count] {  bool is_compound = false; ENTRY_DEBUG } :
         {
+
+            if(type_count == 0) {
+
+                if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
+                    return;
+
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+                return;
+
+            }
+
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_TYPE);
 
@@ -7075,7 +7144,7 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
 
         (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | EVENT) { decTypeCount(); })* 
+        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -7221,6 +7290,13 @@ property_statement[int type_count] { ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
         }
+
+        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+
+        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
+                decl_pre_type[type_count])*
+
         variable_declaration_type[type_count]
 ;
 
@@ -7239,6 +7315,15 @@ event_statement[int type_count] { ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
         }
+
+        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+
+        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
+                decl_pre_type[type_count])*
+
+        EVENT set_int[type_count, type_count - 1]
+
         variable_declaration_type[type_count]
 ;
 
@@ -7676,7 +7761,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (NEW template_argument_list)=> sole_new template_argument_list |
+        (NEW generic_argument_list)=> sole_new generic_argument_list |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
@@ -7877,7 +7962,7 @@ derived[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
             ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? identifier | variable_identifier)
             ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
-            (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? template_argument_list)*
+            (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? generic_argument_list)*
 
             set_bool[first, false]
             )
@@ -8315,8 +8400,8 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
         EQUAL expression
 ;
 
-// template argument list
-template_argument_list[] { CompleteElement element(this); std::string namestack_save[2];  bool in_function_type = false; ENTRY_DEBUG } :
+// generic argument list
+generic_argument_list[] { CompleteElement element(this); std::string namestack_save[2];  bool in_function_type = false; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -8324,7 +8409,7 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
             in_function_type = inPrevMode(MODE_FUNCTION_TYPE);
 
             if(!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
-                startElement(STEMPLATE_ARGUMENT_LIST);
+                startElement(SGENERIC_ARGUMENT_LIST);
             else
                 startElement(STEMPLATE_PARAMETER_LIST);
    
@@ -8334,6 +8419,49 @@ template_argument_list[] { CompleteElement element(this); std::string namestack_
         tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])* tempope
 
         restorenamestack[namestack_save]
+;
+
+// generic parameter list
+generic_parameter_list[] { CompleteElement element(this); std::string namestack_save[2];  ENTRY_DEBUG } :
+        {
+            // local mode
+            startNewMode(MODE_LOCAL);
+
+            startElement(SGENERIC_PARAMETER_LIST);
+   
+        }
+        savenamestack[namestack_save]
+
+        tempops (options { generateAmbigWarnings = false; } : COMMA | generic_parameter)* tempope
+
+        restorenamestack[namestack_save]
+;
+
+// generic parameter
+generic_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+
+            // local mode
+            startNewMode(MODE_LOCAL);
+
+            startElement(STEMPLATE_PARAMETER);
+
+        }
+        (options { greedy = true; } :
+        { LA(1) != SUPER && LA(1) != QMARK }?
+
+        (options { generateAmbigWarnings = false; } : generic_specifiers_csharp)*
+        ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
+
+        (type_identifier | literals)
+            (options { generateAmbigWarnings = false; } : template_operators)*
+            ) |
+
+            template_extends_java |
+
+            template_super_java | qmark_name |
+            template_argument_expression
+        )+ 
 ;
 
 // CUDA argument list
@@ -8455,7 +8583,7 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
             startNewMode(MODE_LOCAL);
 
             if(!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
-               startElement(STEMPLATE_ARGUMENT);
+               startElement(SGENERIC_ARGUMENT);
             else
                startElement(STEMPLATE_PARAMETER);
 

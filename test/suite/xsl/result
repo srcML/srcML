@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" url="while">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" url="while">
 
 <unit filename="while1.cpp">
 <while>while <condition>(<expr><name>a</name></expr>)</condition> <block>{}</block></while>

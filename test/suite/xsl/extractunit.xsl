@@ -1,8 +1,8 @@
 <xsl:stylesheet
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:src="http://www.sdml.info/srcML/src"
-	xmlns="http://www.sdml.info/srcML/src"
-	xmlns:cpp="http://www.sdml.info/srcML/cpp"
+	xmlns:src="http://www.srcML.org/srcML/src"
+	xmlns="http://www.srcML.org/srcML/src"
+	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
 	xmlns:func="http://exslt.org/functions"
 	xmlns:exsl="http://exslt.org/common"
@@ -34,7 +34,7 @@
 <!-- filter out second-level units of the wrong position -->
 <xsl:template match="/src:unit/src:unit">
   <xsl:if test="position()=$number">
-<unit xmlns="http://www.sdml.info/srcML/src">
+<unit xmlns="http://www.srcML.org/srcML/src">
 	<xsl:apply-templates/>
 </unit>
   </xsl:if>
