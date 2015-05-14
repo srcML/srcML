@@ -181,11 +181,11 @@ public :
         if (size == 0)
             return;
 
-        srcml_unit* punit = srcml_unit_create(oarchive);
+//        srcml_unit* punit = srcml_unit_create(oarchive);
 
-        oarchive->translator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
+        oarchive->translator->add_unit_raw(0, (const char*) xmlBufferContent(lbuffer), size);
 
-        srcml_unit_free(punit);
+//        srcml_unit_free(punit);
 
         xmlBufferEmpty(lbuffer);
     }
