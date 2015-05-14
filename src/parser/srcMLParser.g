@@ -1234,7 +1234,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1))
+        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1))
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN || LA(1) == FINAL))
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
                 decl_pre_type[type_count] |
@@ -6105,11 +6105,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         rcurly_argument |
 
         // variable or literal
-        variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
+        variable_identifier | keyword_name | auto_keyword[false] | single_keyword_specifier) | literals | noexcept_list | 
 
-        variable_identifier_array_grammar_sub[flag] |
-
-        single_keyword_specifier
+        variable_identifier_array_grammar_sub[flag]
 ;
 
 // Keyword based calls with special markup
@@ -7103,7 +7101,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
                 decl_pre_type[type_count])*
 
@@ -7293,7 +7291,7 @@ property_statement[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
                 decl_pre_type[type_count])*
 
@@ -7318,7 +7316,7 @@ event_statement[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        ({ type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
                 decl_pre_type[type_count])*
 
@@ -7852,11 +7850,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         rcurly_argument |
 
         // variable or literal
-        variable_identifier | keyword_name | auto_keyword[false]) | literals | noexcept_list | 
+        variable_identifier | keyword_name | auto_keyword[false] | single_keyword_specifier) | literals | noexcept_list | 
 
-        variable_identifier_array_grammar_sub[flag] |
-
-        single_keyword_specifier
+        variable_identifier_array_grammar_sub[flag]
 ;
 
 // rule for literals
