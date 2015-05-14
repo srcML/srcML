@@ -437,6 +437,9 @@ private:
         if (tb.empty())
             fillTokenBuffer();
 
+        if(tb.empty())
+            consume();
+
         // pop and send back the top token
         const antlr::RefToken& tok = tb.front();
 
