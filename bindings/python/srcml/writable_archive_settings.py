@@ -32,7 +32,7 @@ class writable_archive_settings(object):
         self._xml_namespaces = writable_archive_xml_namespace_settings()
         self._processing_instruction = None
         self.filename = kwargs.pop("filename", None)
-        self.directory = kwargs.pop("directory", None)
+        self.url = kwargs.pop("url", None)
         self.default_language = kwargs.pop("default_language", None)
         self.tab_stop = kwargs.pop("tab_stop", 8)
         self.version = kwargs.pop("version", None)
@@ -74,23 +74,23 @@ class writable_archive_settings(object):
         self._filename = value
     
     @property
-    def directory(self):
+    def url(self):
         """
-        Returns the value of the directory attribute of an archive.
-        If None the directory attribute isn't output as part of an archive.
+        Returns the value of the url attribute of an archive.
+        If None the url attribute isn't output as part of an archive.
         """
-        return self._directory
+        return self._url
 
-    @directory.setter
-    def directory(self, value):
+    @url.setter
+    def url(self, value):
         """
-        Set the directory attribute of an archive. If None the directory attribute
+        Set the url attribute of an archive. If None the url attribute
         isn't output as part of an archive.
 
         Precondition - Value must be a string or None.
         """
-        assert isinstance(value, (str)) or value is None, "directory must be a string or None"
-        self._directory = value
+        assert isinstance(value, (str)) or value is None, "url must be a string or None"
+        self._url = value
     
     @property
     def default_language(self):
@@ -298,7 +298,7 @@ class writable_archive_settings(object):
         values.
         """
         self.filename = None
-        self.directory = None
+        self.url = None
         self.default_language = None
         self.tab_stop = 8
         self.version = None
@@ -315,7 +315,7 @@ class writable_archive_settings(object):
         """
         cpy = writable_archive_settings()
         cpy.filename = self.filename
-        cpy.directory = self.directory
+        cpy.url = self.url
         cpy.default_language = self.default_language
         cpy.tab_stop = self.tab_stop
         cpy.version = self.version
@@ -334,7 +334,7 @@ class writable_archive_settings(object):
         """
         return (
             self.filename == other.filename
-            and self.directory == other.directory
+            and self.url == other.url
             and self.default_language == other.default_language
             and self.tab_stop == other.tab_stop
             and self.version == other.version

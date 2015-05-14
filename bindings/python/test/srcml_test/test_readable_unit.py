@@ -82,14 +82,14 @@ class test_readable_unit(unittest.TestCase):
         expected_directory = "value"
         with writable_archive(writable_archive_settings(default_language=LANGUAGE_CXX), buffer=mem_buffer) as archive_writer:
             u = archive_writer.create_unit()
-            u.directory = expected_directory
+            u.url = expected_directory
             u.parse(source_code=test_source_code_data)
             archive_writer.write(u)
 
         with readable_archive(readable_archive_settings(), buffer=mem_buffer) as archive_reader:
             u = archive_reader.read()
             self.assertIsNotNone(u, "Didn't correctly read unit")
-            self.assertEqual(expected_directory, u.directory, "didn't get correct value.")
+            self.assertEqual(expected_directory, u.url, "didn't get correct value.")
 
     def test_version(self):
         mem_buffer = memory_buffer()
