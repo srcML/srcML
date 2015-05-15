@@ -445,11 +445,6 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     if((iarchive->type != SRCML_ARCHIVE_READ && iarchive->type != SRCML_ARCHIVE_RW)
         || (oarchive->type != SRCML_ARCHIVE_WRITE && oarchive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    // use the output archive output buffer
-    xmlOutputBufferPtr obuffer = oarchive->translator->output_buffer();
-
-    if(obuffer == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
-
     global_transformations = iarchive->transformations;
 
     for(std::vector<transform>::size_type i = 0; i < iarchive->transformations.size(); ++i) {
@@ -478,7 +473,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_xslt(pinput, "src:unit",
                                    iarchive->transformations.at(i).doc,
-                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, oarchive->options, obuffer);
+                                   &iarchive->transformations.at(i).xsl_parameters.front(), 0, oarchive->options, oarchive);
                 break;
             }
 #endif
@@ -487,7 +482,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
                 error = srcml_relaxng(pinput,
                                       iarchive->transformations.at(i).doc,
-                                      obuffer, oarchive->options);
+                                      oarchive->options, oarchive);
                 break;
             }
 

@@ -223,13 +223,13 @@ class readable_archive(object):
         return archive_get_filename(self.srcml_archive)
 
     @property
-    def directory(self):
+    def url(self):
         """
-        Gets the directory attribute associated with the archive.
+        Gets the url attribute associated with the archive.
 
-        If None the directory attribute wasn't set.
+        If None the url attribute wasn't set.
         """
-        return archive_get_directory(self.srcml_archive)
+        return archive_get_url(self.srcml_archive)
 
     @property
     def version(self):

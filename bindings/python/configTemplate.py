@@ -107,7 +107,7 @@ def malloc(allocation_size):
         return ""
 
     def defineConstantFromMacro(self, name, valueString):
-        return "{0} = {1}".format(name[6:], valueString)
+        return "{0} = {1}".format(name[6:], valueString.replace("SRCML_", ""))
 
     def resolveType(self, typeInfo):
         if isinstance(typeInfo, str):

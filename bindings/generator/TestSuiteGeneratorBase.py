@@ -267,7 +267,7 @@ class TestSuiteGeneratorBase(object):
         genArchiveGetterSetterTest("src_encoding", "char *", "banana", "")
         genArchiveGetterSetterTest("language", "char *", "C++", "")
         genArchiveGetterSetterTest("filename", "char *", "aardvark.cpp", "")
-        genArchiveGetterSetterTest("directory", "char *", "Zooooo/", "")
+        genArchiveGetterSetterTest("url", "char *", "Zooooo/", "")
         genArchiveGetterSetterTest("version", "char *", "11111111111111", "")
         genArchiveGetterSetterTest("tabstop", "int", 7, 0)
 

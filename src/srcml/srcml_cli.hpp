@@ -132,6 +132,9 @@ struct srcml_request_t {
 
     std::map<std::string,std::string> xmlns_namespaces;
 
+    // Use for checking for overwriting standard namespaces ("", cpp)
+    std::map<std::string,std::string> xmlns_namespace_uris;
+
     // srcml transformation
     std::vector<std::string> transformations;
     std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;

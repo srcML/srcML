@@ -39,7 +39,7 @@ class test_writable_unit(unittest.TestCase):
             self.assertIsNone(u.src_encoding, "Incorrect value")
             self.assertIsNone(u.language, "Incorrect value")
             self.assertIsNone(u.filename, "Incorrect value")
-            self.assertIsNone(u.directory, "Incorrect value")
+            self.assertIsNone(u.url, "Incorrect value")
             self.assertIsNone(u.version, "Incorrect value")
             self.assertIsNone(u.timestamp, "Incorrect value")
             self.assertIsNone(u.hash, "Incorrect value")
@@ -52,17 +52,17 @@ class test_writable_unit(unittest.TestCase):
             expected_language = LANGUAGE_CXX
             expected_filename = "filename"
             expected_encoding = "UTF-8"
-            expected_directory = "directory"
+            expected_url = "url"
             expected_version = "version"
             expected_timestamp = "timestamp"
             expected_hash = "hash"
 
-            u = archive_writer.create_unit(language=expected_language, src_encoding=expected_encoding, filename=expected_filename, directory=expected_directory, version=expected_version, timestamp=expected_timestamp, hash_of_unit=expected_hash)
+            u = archive_writer.create_unit(language=expected_language, src_encoding=expected_encoding, filename=expected_filename, url=expected_url, version=expected_version, timestamp=expected_timestamp, hash_of_unit=expected_hash)
 
             self.assertEqual(expected_encoding, u.src_encoding, "Incorrect value")
             self.assertEqual(expected_language, u.language, "Incorrect value")
             self.assertEqual(expected_filename, u.filename, "Incorrect value")
-            self.assertEqual(expected_directory, u.directory, "Incorrect value")
+            self.assertEqual(expected_url, u.url, "Incorrect value")
             self.assertEqual(expected_version, u.version, "Incorrect value")
             self.assertEqual(expected_timestamp, u.timestamp, "Incorrect value")
             self.assertEqual(expected_hash, u.hash, "Incorrect value")
@@ -76,14 +76,14 @@ class test_writable_unit(unittest.TestCase):
             u.filename = expected
             self.assertEqual(expected, u.filename, "Incorrect value")
 
-    def test_directory(self):
+    def test_url(self):
         mem_buffer = memory_buffer()
         with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
             u = archive_writer.create_unit()
             expected = "something"
-            self.assertIsNone(u.directory, "Incorrect default value")
-            u.directory = expected
-            self.assertEqual(expected, u.directory, "Incorrect value")
+            self.assertIsNone(u.url, "Incorrect default value")
+            u.url = expected
+            self.assertEqual(expected, u.url, "Incorrect value")
 
     def test_version(self):
         mem_buffer = memory_buffer()

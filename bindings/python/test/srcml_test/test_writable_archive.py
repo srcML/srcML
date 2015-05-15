@@ -153,16 +153,16 @@ class TestWritableArchive(unittest.TestCase):
             self.assertIsNone(archive_writer.filename, "Incorrect default value")
 
 
-    def test_directory(self):
+    def test_url(self):
         mem_buffer = memory_buffer()
         expected = "something"
-        with writable_archive(writable_archive_settings(directory=expected), buffer=mem_buffer) as archive_writer:
-            self.assertEqual(expected, archive_writer.directory, "Incorrect value")
+        with writable_archive(writable_archive_settings(url=expected), buffer=mem_buffer) as archive_writer:
+            self.assertEqual(expected, archive_writer.url, "Incorrect value")
 
-    def test_directory_default(self):
+    def test_url_default(self):
         mem_buffer = memory_buffer()
         with writable_archive(writable_archive_settings(), buffer=mem_buffer) as archive_writer:
-            self.assertIsNone(archive_writer.directory, "Incorrect default value")
+            self.assertIsNone(archive_writer.url, "Incorrect default value")
 
 
     def test_version(self):
