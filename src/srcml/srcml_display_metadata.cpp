@@ -32,24 +32,47 @@
 #include <boost/format.hpp>
 
 // display all files in srcml archive
-/*
-void srcml_list_unit_files(srcml_archive* srcml_arch) {
+void srcml_list(srcml_archive* srcml_arch) {
+
+    std::cout << "Source encoding: ";
+
+    const char* src_encoding = srcml_archive_get_src_encoding(srcml_arch);
+
+    if (src_encoding) {
+        std::cout << src_encoding;
+    }
+    else {
+        std::cout << "(null)";
+    }
+
+    std::cout << "\n";
+
+    std::cout << "XML encoding: ";
+
+    const char* xml_encoding = srcml_archive_get_xml_encoding(srcml_arch);
+
+    if (xml_encoding) {
+        std::cout << xml_encoding;
+    }
+    else {
+        std::cout << "(null)";
+    }
+
+    std::cout << "\n";
 
     int numUnits = 0;
     while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
         ++numUnits;
-        std::cout << numUnits << '\t' << std::setw(5) << srcml_unit_get_filename(unit) << '\n';
+        std::cout << std::setw(5) << numUnits << " " << srcml_unit_get_filename(unit) 
+                  << '\t' << srcml_unit_get_language(unit)
+                  << '\t' << srcml_unit_get_hash(unit) << "\n";
         srcml_unit_free(unit);
     }
-}*/
+    std::cout << "Total: " << numUnits << "\n";
+}
 
 void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
 
-    /*xmlns=http://www.srcML.org/srcML/src xmlns:cpp=http://www.srcML.org/srcML/cpp
-    encoding="UTF-8"
-    language="C++"
-    url="test"
-    filename="sub/a.cpp"*/
 
     size_t nsSize = srcml_archive_get_namespace_size(srcml_arch);
     bool isarchive = (srcml_archive_get_options(srcml_arch) & SRCML_OPTION_ARCHIVE) != 0;    
@@ -102,16 +125,6 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
         std::cout << "units=\"" << unit_count << "\"\n";
     }
 }
-
-/*
-void srcml_display_unit_count(srcml_archive* srcml_arch) {
-    int num_units = 0;
-    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
-        ++num_units;
-        srcml_unit_free(unit);
-    }
-    std::cout << "units=" << "\"" << num_units << "\"\n";
-}*/
 
 int srcml_unit_count(srcml_archive* srcml_arch) {
 
@@ -244,7 +257,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         if (srcml_request.command & SRCML_COMMAND_LIST) {
-
+            srcml_list(srcml_arch);
         }
 
         srcml_archive_close(srcml_arch);
