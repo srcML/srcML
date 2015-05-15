@@ -226,11 +226,17 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH) {
-            pretty_meta += "%h\n";
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_HASH)
+                pretty_meta += "%h\n";
+            else
+                pretty_meta += "hash=\"%h\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP) {
-            pretty_meta += "%t\n";
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP)
+                pretty_meta += "%t\n";
+            else
+                pretty_meta += "timestamp=\"%t\"\n";
         }
 
         if (srcml_request.xmlns_prefix_query) {
