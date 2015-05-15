@@ -217,7 +217,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
             //srcml_display_unit_count(srcml_arch);
             std::string info = "";
-            info += "{ %N\n";
+            info += "{ TEST\n";
             info += "encoding=\"%X\"\n";
             info += "language=\"%l\"\n";
             info += "url=\"%U\"\n";

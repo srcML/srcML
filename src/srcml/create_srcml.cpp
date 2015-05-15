@@ -93,7 +93,14 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (srcml_request.att_url) {
         srcml_archive_set_url(srcml_arch, src_prefix_resource(*srcml_request.att_url).c_str());
     } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
-        srcml_archive_set_url(srcml_arch, src_prefix_resource(input_sources[0].filename).c_str());
+
+        // Cleanup filename
+        std::string url_name = src_prefix_resource(input_sources[0].filename);
+        while (url_name.at(0) == '.' || url_name.at(0) == '/') {
+            url_name.erase(0,1);
+        }
+        
+        srcml_archive_set_url(srcml_arch, url_name.c_str());
     }
 
     if (srcml_request.att_version)
