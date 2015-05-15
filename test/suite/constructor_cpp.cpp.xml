@@ -59,7 +59,7 @@
 </unit>
 
 <unit>
-<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>(<parameter><decl><type><typename>typename</typename> <name>foo</name></type> <name>bar</name> <init>= <expr><call><typename>typename</typename> <name>foo</name><argument_list>()</argument_list></call></expr></init></decl></parameter>)</parameter_list> <block>{}</block></constructor>
+<constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>(<parameter><decl><type><name><typename>typename</typename> <name>foo</name></name></type> <name>bar</name> <init>= <expr><call><name><typename>typename</typename> <name>foo</name></name><argument_list>()</argument_list></call></expr></init></decl></parameter>)</parameter_list> <block>{}</block></constructor>
 </unit>
 
 </unit>

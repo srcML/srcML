@@ -316,7 +316,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parser_options(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
     current_column(-1), current_line(-1), nxt_token(-1), last_consumed(-1), wait_terminate_post(false), cppif_duplicate(false),
-    number_finishing_elements(0)
+    number_finishing_elements(0), in_template_param(false)
 {
 
     // root, single mode
@@ -708,6 +708,7 @@ public:
     bool cppif_duplicate;
     size_t number_finishing_elements;
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > > finish_elements_add;
+    bool in_template_param;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -1985,8 +1986,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & isempty, int & call_count] { ENTRY_DEBUG } :
 
         // detect name, which may be name of macro or even an expression
-        (function_identifier | (typename_specifier_name)=>typename_specifier_name
-            | keyword_call_tokens (DOTDOTDOT | generic_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
+        (function_identifier | keyword_call_tokens (DOTDOTDOT | generic_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
@@ -5427,9 +5427,10 @@ multops_star[] { ENTRY_DEBUG } :
 // C++ compound name handling
 compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
+        ({ !in_template_param }? typename_keyword { iscompound = true; })*
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
-        (simple_name_optional_template | push_namestack overloaded_operator)
+        (typename_keyword | simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
@@ -5861,17 +5862,9 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             } while(--call_count > 0);
 
         }
-        ({inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list
-            | (typename_specifier_name)=>typename_specifier_name call_argument_list)
+        ({inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list)
         
 ;
-
-typename_specifier_name[] { ENTRY_DEBUG } :
-
-    typename_keyword function_identifier
-
-;
-
 
 // argument list to a call
 call_argument_list[] { ENTRY_DEBUG } :
@@ -8324,7 +8317,7 @@ template_param_list[] { ENTRY_DEBUG } :
 ;
 
 // parameter in template
-template_param[] { ENTRY_DEBUG } :
+template_param[] { in_template_param = true; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_LOCAL);
@@ -8345,7 +8338,15 @@ template_param[] { ENTRY_DEBUG } :
 
         template_inner_full
     )
+    set_bool[in_template_param, false]
 ;
+exception
+catch[antlr::RecognitionException] {
+
+    in_template_param = false;
+    throw antlr::RecognitionException();
+
+}
 
 // complete inner full for template
 template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; } :
