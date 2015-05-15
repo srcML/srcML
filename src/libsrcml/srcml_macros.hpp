@@ -62,6 +62,8 @@
 
 #define MKTEMP _mktemp
 
+#define UNUSED
+
 #endif
 
 #endif
