@@ -33,6 +33,7 @@
 #include <src_input_filelist.hpp>
 #include <src_input_stdin.hpp>
 #include <src_input_text.hpp>
+#include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
 #include <trace_log.hpp>
 #include <srcml_options.hpp>
@@ -90,9 +91,9 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
     if (srcml_request.att_url) {
-        srcml_archive_set_url(srcml_arch, srcml_request.att_url->c_str());
+        srcml_archive_set_url(srcml_arch, src_prefix_resource(*srcml_request.att_url).c_str());
     } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
-        srcml_archive_set_url(srcml_arch, input_sources[0].filename.c_str());
+        srcml_archive_set_url(srcml_arch, src_prefix_resource(input_sources[0].filename).c_str());
     }
 
     if (srcml_request.att_version)
