@@ -57,7 +57,7 @@
             if (!attribute_uri) {
                 std::map<std::string,std::string>::const_iterator it = xmlns_namespaces.find(*(xpath_support.second->prefix));
                 if (it != xmlns_namespaces.end())            
-                    element_uri = it->second.c_str();
+                    attribute_uri = it->second.c_str();
             }
 
             if (!attribute_uri) {
@@ -87,6 +87,13 @@
  	if (xpath_support.second) {
         const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
         
+        // if not declared, check for xmlns from cli
+        if (!attribute_uri) {
+            std::map<std::string,std::string>::const_iterator it = xmlns_namespaces.find(*(xpath_support.second->prefix));
+            if (it != xmlns_namespaces.end())            
+                attribute_uri = it->second.c_str();
+        }
+
         if (!attribute_uri) {
             std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.second->prefix->c_str() << "\"\n";
             return -1;
