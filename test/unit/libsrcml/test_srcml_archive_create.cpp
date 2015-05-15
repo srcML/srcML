@@ -38,7 +38,6 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         dassert(archive->type, SRCML_ARCHIVE_INVALID);
-        dassert(archive->filename, 0);
         dassert(archive->encoding, 0);
         dassert(archive->src_encoding, 0);
         dassert(archive->language, 0);

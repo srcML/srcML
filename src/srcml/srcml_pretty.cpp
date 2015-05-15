@@ -178,10 +178,7 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
 }
 
 const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, const std::string& arg) {
-        
-        if (arg == "F")           // %F: file attribute on the archive
-            return srcml_archive_get_filename(srcml_arch);
-        
+                
         if (arg == "f")           // %f: file name attribute on the unit
             return srcml_unit_get_filename(srcml_unit);
         

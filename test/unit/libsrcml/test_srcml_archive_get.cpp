@@ -144,30 +144,6 @@ int main() {
     }
 
     /*
-      srcml_archive_get_filename
-    */
-
-    {
-
-        srcml_archive * archive = srcml_archive_create();
-        archive->filename = boost::optional<std::string>();
-        dassert(srcml_archive_get_filename(archive), 0);
-        srcml_archive_free(archive);
-    }
-
-    {
-
-        srcml_archive * archive = srcml_archive_create();
-        archive->filename = "foo";
-        dassert(srcml_archive_get_filename(archive), std::string("foo"));
-        srcml_archive_free(archive);
-    }
-
-    {
-        dassert(srcml_archive_get_filename(0), 0);
-    }
-
-    /*
       srcml_archive_get_url
     */
 

@@ -107,30 +107,6 @@ int main() {
     }
 
     /*
-      srcml_archive_set_filename
-    */
-
-    {
-
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_set_filename(archive, 0);
-        dassert(archive->filename, 0);
-        srcml_archive_free(archive);
-    }
-
-    {
-
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_set_filename(archive, "foo");
-        dassert(*archive->filename, "foo");
-        srcml_archive_free(archive);
-    }
-
-    {
-        dassert(srcml_archive_set_filename(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    /*
       srcml_archive_set_url
     */
 

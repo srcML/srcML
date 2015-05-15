@@ -275,7 +275,7 @@ int main() {
 
     {
         FILE * file = fopen("project_ns.xml", "w");
-        dassert(srcml_archive_write_open_io(0, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);         fclose(file);
+        dassert(srcml_archive_write_open_io(0, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
 
    }

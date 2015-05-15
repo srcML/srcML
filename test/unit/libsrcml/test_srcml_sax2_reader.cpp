@@ -162,7 +162,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -170,11 +170,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -189,11 +188,10 @@ int main() {
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -212,7 +210,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project_ns.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -220,11 +218,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "ISO-8859-1");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -241,11 +238,10 @@ int main() {
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "ISO-8859-1");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -264,7 +260,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project_single.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -272,11 +268,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -290,11 +285,10 @@ int main() {
         dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -312,7 +306,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project_empty_single.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -320,11 +314,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -338,11 +331,10 @@ int main() {
         dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
         dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -360,7 +352,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project_empty_nested.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -368,11 +360,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -384,11 +375,10 @@ int main() {
         dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
         dassert(tabstop, 4);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -404,7 +394,7 @@ int main() {
 
     {
         srcml_sax2_reader reader("project_old_uri.xml");
-        boost::optional<std::string> encoding, language, filename, directory, version;
+        boost::optional<std::string> encoding, language, directory, version;
         std::vector<std::string> attributes;
         std::vector<std::string> prefixes;
         std::vector<std::string> namespaces;
@@ -412,11 +402,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -431,11 +420,10 @@ int main() {
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -467,9 +455,9 @@ int main() {
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
     }
 
@@ -488,9 +476,9 @@ int main() {
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
     }
 
@@ -509,9 +497,9 @@ int main() {
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
     }
 
@@ -530,9 +518,9 @@ int main() {
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
     }
 
@@ -551,9 +539,9 @@ int main() {
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory,
                                                  version, attributes, prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
     }
 
@@ -791,11 +779,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -837,7 +824,7 @@ int main() {
         dassert(*unit, srcml_b);
         reader.read_srcml(unit);
         dassert(unit, 0);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
@@ -853,11 +840,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "ISO-8859-1");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(timestamp, 0);
@@ -901,7 +887,7 @@ int main() {
         dassert(*unit, srcml_ns_b);
         reader.read_srcml(unit);
         dassert(unit, 0);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
@@ -917,11 +903,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(timestamp, 0);
@@ -954,7 +939,7 @@ int main() {
         boost::optional<std::string> unit;
         reader.read_srcml(unit);
         dassert(*unit, srcml_single_a);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
@@ -970,11 +955,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(timestamp, 0);
@@ -1005,7 +989,7 @@ int main() {
         boost::optional<std::string> unit;
         reader.read_srcml(unit);
         dassert(*unit, srcml_empty_single_as_unit);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
@@ -1021,11 +1005,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(timestamp, 0);
@@ -1056,7 +1039,7 @@ int main() {
         dassert(*unit, srcml_empty_nested_a);
         reader.read_srcml(unit);
         dassert(*unit, srcml_empty_nested_b);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
@@ -1072,11 +1055,10 @@ int main() {
         OPTION_TYPE options = 0;
         size_t tabstop = 0;
         std::vector<std::string> user_macro_list;
-        reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                          prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
         dassert(*encoding, "UTF-8");
         dassert(language, boost::optional<std::string>());
-        dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
         dassert(attributes.size(), 2);
@@ -1118,7 +1100,7 @@ int main() {
         dassert(*unit, srcml_old_uri_b);
         reader.read_srcml(unit);
         dassert(unit, 0);
-        dassert(reader.read_root_unit_attributes(encoding, language, filename, directory, version, attributes,
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_srcml(unit), 0);
