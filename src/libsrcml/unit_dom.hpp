@@ -173,22 +173,20 @@ public :
         // remove per-unit namespaces
         data.resize(rootsize);
 
-        // combine namespaces from root and local to this unit
+        // combine namespaces from root and local to this unit (if an archive)
         for (int i = 0; i < num_namespaces; ++i) {
 
             // make sure not already in
-            /*
             bool found = false;
-            for (std::vector<const xmlChar*>::size_type j = 0; j < data.size() / 2; ++j)
-                if (xmlStrEqual(data[j * 2], (const xmlChar *)namespaces[i].prefix) &&
-                    xmlStrEqual(data[j * 2 + 1], (const xmlChar *)namespaces[i].uri)) {
+            for (unsigned int i = 0; i < data.size() / 2; ++i) {
+                if (xmlStrEqual(data[i * 2], (const xmlChar *)handler->libxml2_namespaces[i * 2])) {
                     found = true;
                     break;
                 }
-
+            }
             if (found)
                 continue;
-*/
+
             data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2]);
             data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2 + 1]);
         }
