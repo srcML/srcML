@@ -715,6 +715,7 @@ int main() {
         "| //src:struct[src:is_private()]"
         "| //src:struct_decl[src:is_private()]"
         "| //src:enum[src:is_private()]"
+        "| //src:enum_decl[src:is_private()]"
         "| //src:property[src:is_private()]"
         "| //src:event[src:is_private()]"
         "| //src:using[src:is_private()]"
@@ -740,6 +741,7 @@ int main() {
         "| //src:struct[src:is_protected()]"
         "| //src:struct_decl[src:is_protected()]"
         "| //src:enum[src:is_protected()]"
+        "| //src:enum_decl[src:is_protected()]"
         "| //src:property[src:is_protected()]"
         "| //src:event[src:is_protected()]"
         "| //src:using[src:is_protected()]"
@@ -764,6 +766,7 @@ int main() {
         "| //src:struct[src:is_public()]"
         "| //src:struct_decl[src:is_public()]"
         "| //src:enum[src:is_public()]"
+        "| //src:enum_decl[src:is_public()]"
         "| //src:property[src:is_public()]"
         "| //src:event[src:is_public()]"
         "| //src:using[src:is_public()]"
@@ -979,6 +982,7 @@ int main() {
         "| //src:class[src:is_member()]"
         "| //src:struct[src:is_member()]"
         "| //src:enum[src:is_member()]"
+        "| //src:enum_decl[src:is_member()]"
         "| //src:friend[src:is_member()]"
         "| //src:class_decl[src:is_member()]"
         "| //src:struct_decl[src:is_member()]"
@@ -1239,6 +1243,7 @@ int main() {
         "| //src:using[src:is_global()]"
         "| //src:typedef[src:is_global()]"
         "| //src:enum[src:is_global()]"
+        "| //src:enum_decl[src:is_global()]"
     ;
     run_xpath_test("is_global/is_global.cpp", tempXPath, 25);
 
@@ -1354,11 +1359,11 @@ int main() {
     ;
     run_xpath_test("is_template/is_template.cpp", tempXPath, 11);
     run_xpath_test("is_template/is_template.cs", tempXPath, 12);
-    run_xpath_test("is_template/is_template.java", tempXPath, 7);
+    run_xpath_test("is_template/is_template.java", tempXPath, 6);
 
     // is_default_parameter
     tempXPath = 
-        "//src:param[src:is_default_parameter()]"
+        "//src:parameter[src:is_default_parameter()]"
     ;
     run_xpath_test("is_default_parameter/is_default_parameter.c", tempXPath, 2);
     run_xpath_test("is_default_parameter/is_default_parameter.cpp", tempXPath, 1);
