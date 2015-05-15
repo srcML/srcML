@@ -54,8 +54,15 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
             s += str;
             s += "\t";
             s += "10";
-            //s += "\t";
-            //s += std::string(srcml_unit_get_hash(request->unit));
+            s += "\t";
+
+            const char* hash = srcml_unit_get_hash(request->unit);
+            if (hash) {    
+                s += std::string(hash);
+            }
+            else {
+                s += "";
+            }
 
             log << 'a' << s;
         }
