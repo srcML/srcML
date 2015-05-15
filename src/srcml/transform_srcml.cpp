@@ -173,8 +173,21 @@ void transform_srcml(const srcml_request_t& srcml_request,
             exit(-1);
         }
 
+        // see if we have any XPath output
+        bool isxpath = false;
+        BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
+            std::string protocol;
+            std::string resource;
+            src_prefix_split_uri(trans, protocol, resource);
+
+            if (protocol == "xpath") {
+                isxpath = true;
+                break;
+            }
+        }
+
         // for non-archive input, then we want non-archive output, fool
-        if (!(srcml_archive_get_options(in_arch) & SRCML_OPTION_ARCHIVE)) {
+        if (!isxpath && !(srcml_archive_get_options(in_arch) & SRCML_OPTION_ARCHIVE)) {
             srcml_archive_disable_option(out_arch, SRCML_OPTION_ARCHIVE);
         }
 
@@ -194,12 +207,12 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
 		// iterate through all transformations added during cli parsing
 		int xpath_index = -1;
-		BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
-			std::string protocol;
-			std::string resource;
-			src_prefix_split_uri(trans, protocol, resource);
+        BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
+            std::string protocol;
+            std::string resource;
+            src_prefix_split_uri(trans, protocol, resource);
 
-			if (protocol == "xpath") {
+            if (protocol == "xpath") {
                 // TODO: FIX BUG
 				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index), srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
 					std::cerr << "srcml: error with xpath transformation\n";
