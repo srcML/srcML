@@ -5426,10 +5426,10 @@ multops_star[] { ENTRY_DEBUG } :
 // C++ compound name handling
 compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
+        ({ !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? typename_keyword { iscompound = true; })*
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
-        (({ !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? typename_keyword { iscompound = true; })*
-            (typename_keyword | simple_name_optional_template | push_namestack overloaded_operator))
+        (typename_keyword | simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
