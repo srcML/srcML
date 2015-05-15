@@ -49,9 +49,9 @@ int read_callback(void * context, char * buffer, size_t len) {
 
 }
 
-int close_callback(void * context) {
+int close_callback(void * context UNUSED) {
 
-    return fclose((FILE *)context);
+    return 0;
 
 }
 
