@@ -45,6 +45,8 @@
 
 #define MKTEMP mktemp
 
+#define UNUSED __attribute__ ((unused))
+
 #else
 
 #define S_IRUSR _S_IREAD
