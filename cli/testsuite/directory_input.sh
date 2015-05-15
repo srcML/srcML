@@ -28,6 +28,14 @@ createfile dir/file.c  "\na;"
 createfile dir/file.cpp "\na;"
 createfile dir/file.java "\na;"
 
-src2srcml dir --quiet -o dir/dir.xml
-
+src2srcml dir --quiet -o dir/dir.xml --in-order
 check dir/dir.xml 3<<< "$output"
+
+src2srcml dir --quiet --in-order -o dir/dir.xml
+check dir/dir.xml 3<<< "$output"
+
+src2srcml --in-order dir --quiet -o dir/dir.xml
+check dir/dir.xml 3<<< "$output"
+
+src2srcml dir --quiet --in-order
+check 3<<< "$output"
