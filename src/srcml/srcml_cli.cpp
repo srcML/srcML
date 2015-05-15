@@ -462,10 +462,19 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
               srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
 
             BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
-             if (option.string_key == "element" && srcml_request.xpath_query_support.size() > 0) {
+              if (option.string_key == "element" && srcml_request.xpath_query_support.size() < 1) {
+                std::cerr << "srcml: element option must follow an --xpath option\n";
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+              }
+              if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() < 1) {
+                std::cerr << "srcml: attribute option must follow an --xpath option\n";
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+              }
+
+              if (option.string_key == "element") {
                 srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first = clean_element_input(vals);
               }
-              else if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() > 0) {
+              else if (option.string_key == "attribute") {
                 srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).second = clean_attribute_input(vals);
               }
               else {
