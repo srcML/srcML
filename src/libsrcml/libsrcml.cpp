@@ -62,7 +62,7 @@ std::string srcml_error;
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
+srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(), boost::optional<std::string>(),
                                  std::string(SRCML_VERSION_STRING), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
                                  std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY,
@@ -212,9 +212,9 @@ int srcml(const char* input_filename, const char* output_filename) {
             return status;
 
         }
-
-        if(srcml_archive_get_filename(&global_archive))
-            srcml_unit_set_filename(unit, srcml_archive_get_filename(&global_archive));
+        
+        if(srcml_unit_get_filename(&global_unit) != 0)
+            srcml_unit_set_filename(unit, srcml_unit_get_filename(&global_unit));
         else
             srcml_unit_set_filename(unit, input_filename);
 
@@ -325,7 +325,7 @@ int srcml_set_language(const char* language) {
  */
 int srcml_set_filename(const char* filename) {
 
-    return srcml_archive_set_filename(&global_archive, filename);
+    return srcml_unit_set_filename(&global_unit, filename);
 
 }
 
@@ -574,7 +574,7 @@ const char* srcml_get_language() {
  */
 const char* srcml_get_filename() {
 
-    return srcml_archive_get_filename(&global_archive);
+    return srcml_unit_get_filename(&global_unit);
 
 }
 

@@ -86,12 +86,12 @@ int main() {
 
     {
         srcml_set_filename(0);
-        dassert(global_archive.filename, 0);
+        dassert(global_unit.filename, 0);
     }
 
     {
         srcml_set_filename("foo");
-        dassert(*global_archive.filename, "foo");
+        dassert(*global_unit.filename, "foo");
     }
 
     /*
@@ -389,14 +389,14 @@ int main() {
     */
 
     {
-        global_archive.filename = boost::optional<std::string>();
+        global_unit.filename = boost::optional<std::string>();
         dassert(srcml_get_filename(), 0);
     }
 
     {
-        global_archive.filename = "foo";
+        global_unit.filename = "foo";
         dassert(srcml_get_filename(), std::string("foo"));
-        global_archive.filename = boost::optional<std::string>();
+        global_unit.filename = boost::optional<std::string>();
     }
 
     /*

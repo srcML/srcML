@@ -18,7 +18,6 @@ _srcml_archive_disable_option
 _srcml_archive_enable_option
 _srcml_archive_get_url
 _srcml_archive_get_xml_encoding
-_srcml_archive_get_filename
 _srcml_archive_get_language
 _srcml_archive_get_macro_list_size
 _srcml_archive_get_macro_token
@@ -41,7 +40,6 @@ _srcml_archive_register_macro
 _srcml_archive_register_namespace
 _srcml_archive_set_url
 _srcml_archive_set_xml_encoding
-_srcml_archive_set_filename
 _srcml_archive_set_language
 _srcml_archive_set_options
 _srcml_archive_set_processing_instruction

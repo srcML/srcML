@@ -73,7 +73,7 @@ public :
 
     // read attribute and namespace information from root unit.  Does not advance read.
     int read_root_unit_attributes(boost::optional<std::string> & encoding, 
-                                  boost::optional<std::string> & language, boost::optional<std::string> & filename,
+                                  boost::optional<std::string> & language,
                                   boost::optional<std::string> & url, boost::optional<std::string> & version,
                                   std::vector<std::string> & attributes,
                                   std::vector<std::string> & prefixes,
