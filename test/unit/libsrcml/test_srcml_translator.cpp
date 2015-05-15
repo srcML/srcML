@@ -161,6 +161,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -185,6 +187,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -214,6 +218,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -238,6 +244,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -262,6 +270,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -286,6 +296,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:lit=\"http://www.srcML.org/srcML/literal\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -310,6 +322,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -334,6 +348,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:op=\"http://www.srcML.org/srcML/operator\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -358,6 +374,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -383,6 +401,8 @@ int main() {
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:type=\"http://www.srcML.org/srcML/modifier\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
         xmlBufferFree(buffer);
+                srcml_archive_free(archive);
+        srcml_unit_free(unit);
 
     }
 
@@ -406,6 +426,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -430,6 +452,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:pos=\"http://www.srcML.org/srcML/position\" pos:tabs=\"4\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -455,6 +479,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -480,6 +506,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -505,6 +533,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -530,6 +560,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:lit=\"http://www.srcML.org/srcML/literal\" xmlns:op=\"http://www.srcML.org/srcML/operator\" xmlns:type=\"http://www.srcML.org/srcML/modifier\" xmlns:pos=\"http://www.srcML.org/srcML/position\" xmlns:foo=\"bar\" pos:tabs=\"4\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -560,6 +592,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -585,6 +619,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -610,6 +646,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -635,6 +673,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -661,6 +701,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" foo=\"bar\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -684,6 +726,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -709,6 +753,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" foo=\"bar\">\n\n" + "</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -728,7 +774,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         unit->revision = "unit";
 
-        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, archive->revision->c_str(), 0, 0, 0, std::vector<std::string>(), 0, 0, 0);
+        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, archive->revision->c_str(), 0, 0, 0, unit->attributes, 0, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s_before = "<unit xmlns=\"http://www.srcML.org/srcML/src\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
@@ -739,6 +785,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -753,7 +801,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         unit->revision = "unit";
 
-        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, archive->revision->c_str(), 0, 0, 0, std::vector<std::string>(), 0, 0, 0);
+        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, archive->revision->c_str(), 0, 0, 0, unit->attributes, 0, 0, 0);
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s_before = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
@@ -765,6 +813,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"archive\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -783,7 +833,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
 
-        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, "ISO-8859-1");
+        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, unit->attributes, 0, 0, "ISO-8859-1");
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s_before = "<unit xmlns=\"http://www.srcML.org/srcML/src\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
@@ -794,6 +844,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n" + s + "\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
@@ -807,7 +859,7 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
  
-        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, std::vector<std::string>(), 0, 0, "ISO-8859-1");
+        srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, 0, 0, 0, 0, unit->attributes, 0, 0, "ISO-8859-1");
 
         std::string decl = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>";
         std::string s_before = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>";
@@ -819,6 +871,8 @@ int main() {
         std::string result = (const char *)buffer->content;
         dassert(result, decl + "\n<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n" + s + "\n\n" + s + "\n\n</unit>\n");
 
+        srcml_archive_free(archive);
+        srcml_unit_free(unit);
         xmlBufferFree(buffer);
 
     }
