@@ -134,6 +134,14 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
     
+    int display_commands =  SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
+                            SRCML_COMMAND_DISPLAY_SRCML_URL |
+                            SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
+                            SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
+                            SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
+                            SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP | 
+                            SRCML_COMMAND_DISPLAY_SRCML_HASH;
+
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_archive_create();
@@ -163,44 +171,66 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             return;
         }
 
+        /*
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE){
+            const char* archive_info = srcml_archive_get_language(srcml_arch);
+            if (archive_info) {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
+                    std::cout << archive_info << "\n";
+                else
+                    std::cout << "language=\"" << archive_info << "\"\n";
+            }
+            else {
+                if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
+                    std::cout << "";
+                else
+                    std::cout << "language=\"\"\n";
+            }
+        }*/
+
+        std::string pretty_meta = "";
+
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
-            srcml_pretty(srcml_arch, "%l\n");
-            return;
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
+                pretty_meta += "%l\n";
+            else
+                pretty_meta += "language=\"%l\"\n";
         }
 
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION) {
-            srcml_pretty(srcml_arch, "%v\n");
-            return;
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
+                pretty_meta += "%f\n";
+            else
+                pretty_meta += "filename=\"%f\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_URL) {
-            srcml_pretty(srcml_arch, "%U\n");
-            return;
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_URL)
+                pretty_meta += "%U\n";
+            else
+                pretty_meta += "url=\"%U\"\n";
         }
 
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
-            srcml_pretty(srcml_arch, "%F\n");
-            return;
-        }
-
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
-            srcml_pretty(srcml_arch, "%F\n");
-            return;
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION) {
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
+                pretty_meta += "%v\n";
+            else
+                pretty_meta += "version=\"%v\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING) {
-            srcml_pretty(srcml_arch, "%X\n");
-            return;
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_ENCODING)
+                pretty_meta += "%X\n";
+            else
+                pretty_meta += "encoding=\"%X\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH) {
-            srcml_pretty(srcml_arch, "%h\n");
-            return;
+            pretty_meta += "%h\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP) {
-            srcml_pretty(srcml_arch, "%t\n");
-            return;
+            pretty_meta += "%t\n";
         }
 
         if (srcml_request.xmlns_prefix_query) {
@@ -208,8 +238,10 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             if (prefix) {
                 std::cout << prefix << '\n';
             }
-            return;
         }
+
+        if (pretty_meta != "")
+            srcml_pretty(srcml_arch, pretty_meta);
 
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
