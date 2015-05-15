@@ -8,7 +8,7 @@ define result <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:foo="foo.com" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><foo:foo><name>a</name></foo:foo></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><foo:foo><name>a</name></foo:foo></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
