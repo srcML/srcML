@@ -12,4 +12,4 @@ view : srcml.html
 	${MAN} ./srcml
 
 clean :
-	rm -rf srcml srcml.html srcml.md-e
+	rm -rf srcml srcml.html srcml.md-e srcml.md
