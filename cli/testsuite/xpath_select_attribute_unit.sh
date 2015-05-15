@@ -6,9 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test xpath query for attribute info
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
-
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="c671c9b9a1bc97b6902a611a98700718006bd736"><comment type="block" format="doxygen">/**
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="c671c9b9a1bc97b6902a611a98700718006bd736"><comment type="block" format="doxygen">/**
 	 * @returns Return 1 on success and 0 on failure.
 	 */</comment>
 	<function><type><name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list> <block>{
@@ -28,11 +26,9 @@ define srcml <<- 'STDOUT'
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 	}</block></function>
 	</unit>
-
-	</unit>
 	STDOUT
 
-createfile sub/archive_single.cpp.xml "$srcml"
+createfile sub/unit.cpp.xml "$srcml"
 
 
 # select filename
@@ -45,28 +41,28 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
+srcml sub/unit.cpp.xml --xpath "//src:unit/@filename"
 check 3<<< "$output"
 
-srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
+srcml --xpath "//src:unit/@filename" sub/unit.cpp.xml
 check 3<<< "$output"
 
-srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename" -o sub/a.xml
+srcml sub/unit.cpp.xml --xpath "//src:unit/@filename" -o sub/a.xml
 check sub/a.xml 3<<< "$output"
 
-srcml sub/archive_single.cpp.xml -o sub/a.xml --xpath "//src:unit/@filename"
+srcml sub/unit.cpp.xml -o sub/a.xml --xpath "//src:unit/@filename"
 check sub/a.xml 3<<< "$output"
 
-srcml -o sub/a.xml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
+srcml -o sub/a.xml sub/unit.cpp.xml --xpath "//src:unit/@filename"
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml -o sub/a.xml
+srcml --xpath "//src:unit/@filename" sub/unit.cpp.xml -o sub/a.xml
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
+srcml --xpath "//src:unit/@filename" sub/unit.cpp.xml
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
+srcml --xpath "//src:unit/@filename" sub/unit.cpp.xml
 check sub/a.xml 3<<< "$output"
 
 
@@ -80,28 +76,28 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
+srcml sub/unit.cpp.xml --xpath "//src:comment/@format"
 check 3<<< "$output"
 
-srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
+srcml --xpath "//src:comment/@format" sub/unit.cpp.xml
 check 3<<< "$output"
 
-srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format" -o sub/a.xml
+srcml sub/unit.cpp.xml --xpath "//src:comment/@format" -o sub/a.xml
 check sub/a.xml 3<<< "$output"
 
-srcml sub/archive_single.cpp.xml -o sub/a.xml --xpath "//src:comment/@format"
+srcml sub/unit.cpp.xml -o sub/a.xml --xpath "//src:comment/@format"
 check sub/a.xml 3<<< "$output"
 
-srcml -o sub/a.xml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
+srcml -o sub/a.xml sub/unit.cpp.xml --xpath "//src:comment/@format"
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml -o sub/a.xml
+srcml --xpath "//src:comment/@format" sub/unit.cpp.xml -o sub/a.xml
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
+srcml --xpath "//src:comment/@format" sub/unit.cpp.xml
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
+srcml --xpath "//src:comment/@format" sub/unit.cpp.xml
 check sub/a.xml 3<<< "$output"
 
 

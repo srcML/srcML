@@ -8,6 +8,9 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" hash="17239ee1ffe4b0abc790a338f52d2ac2f2565c4e"><function_decl><type><name>LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list>;</function_decl>
+	</unit>
+
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="c671c9b9a1bc97b6902a611a98700718006bd736"><comment type="block" format="doxygen">/**
 	 * @returns Return 1 on success and 0 on failure.
 	 */</comment>
@@ -32,7 +35,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-createfile sub/archive_single.cpp.xml "$srcml"
+createfile sub/archive_multi.xml "$srcml"
 
 
 # select filename
@@ -40,68 +43,70 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" item="1">filename="a.cpp"</unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" item="1">filename="b.cpp"</unit>
+
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1">filename="a.cpp"</unit>
 
 	</unit>
 	STDOUT
 
-srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
+srcml sub/archive_multi.xml --xpath "//src:unit/@filename"
 check 3<<< "$output"
 
-srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
+srcml --xpath "//src:unit/@filename" sub/archive_multi.xml
 check 3<<< "$output"
 
-srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename" -o sub/a.xml
+srcml sub/archive_multi.xml --xpath "//src:unit/@filename" -o sub/a.xml
 check sub/a.xml 3<<< "$output"
 
-srcml sub/archive_single.cpp.xml -o sub/a.xml --xpath "//src:unit/@filename"
+srcml sub/archive_multi.xml -o sub/a.xml --xpath "//src:unit/@filename"
 check sub/a.xml 3<<< "$output"
 
-srcml -o sub/a.xml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
+srcml -o sub/a.xml sub/archive_multi.xml --xpath "//src:unit/@filename"
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml -o sub/a.xml
+srcml --xpath "//src:unit/@filename" sub/archive_multi.xml -o sub/a.xml
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
+srcml --xpath "//src:unit/@filename" sub/archive_multi.xml
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
+srcml --xpath "//src:unit/@filename" sub/archive_multi.xml
 check sub/a.xml 3<<< "$output"
 
 
 # select comment format (doxygen)
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" item="1">format="doxygen"</unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1">format="doxygen"</unit>
 
 	</unit>
 	STDOUT
 
-srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
+srcml sub/archive_multi.xml --xpath "//src:comment/@format"
 check 3<<< "$output"
 
-srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
+srcml --xpath "//src:comment/@format" sub/archive_multi.xml
 check 3<<< "$output"
 
-srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format" -o sub/a.xml
+srcml sub/archive_multi.xml --xpath "//src:comment/@format" -o sub/a.xml
 check sub/a.xml 3<<< "$output"
 
-srcml sub/archive_single.cpp.xml -o sub/a.xml --xpath "//src:comment/@format"
+srcml sub/archive_multi.xml -o sub/a.xml --xpath "//src:comment/@format"
 check sub/a.xml 3<<< "$output"
 
-srcml -o sub/a.xml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
+srcml -o sub/a.xml sub/archive_multi.xml --xpath "//src:comment/@format"
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml -o sub/a.xml
+srcml --xpath "//src:comment/@format" sub/archive_multi.xml -o sub/a.xml
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
+srcml --xpath "//src:comment/@format" sub/archive_multi.xml
 check sub/a.xml 3<<< "$output"
 
-srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
+srcml --xpath "//src:comment/@format" sub/archive_multi.xml
 check sub/a.xml 3<<< "$output"
 
 
