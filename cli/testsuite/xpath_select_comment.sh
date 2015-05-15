@@ -19,21 +19,6 @@ define input <<- 'INPUT'
 	</unit>
 	INPUT
 
-define output <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
-	</unit>
-	STDOUT
-
-define output <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
-	
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" item="1"><!-- Comment Two --></unit>
-
-	</unit>
-	STDOUT
-
 # TODO: issue #1037
 srcml2src --xpath "//comment()" <<< "$input" 
 check 3<<<"Comment One Comment Two"

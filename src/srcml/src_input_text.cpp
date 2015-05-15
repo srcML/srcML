@@ -37,6 +37,7 @@
  	if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
  		prequest->disk_dir = srcml_request.output_filename;
 
+    prequest->filename = srcml_request.att_filename;
  	prequest->url = srcml_request.att_url;
  	prequest->version = srcml_request.att_version;
  	prequest->srcml_arch = srcml_arch;

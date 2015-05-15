@@ -259,10 +259,13 @@ void positional_args(const std::vector<std::string>& value) {
     }
 }
 
-void raw_text_args(const std::vector<std::string>& value) {
+/*void raw_text_args(const std::vector<std::string>& value) {
     BOOST_FOREACH(const std::string& iname, value) {
         srcml_request.input.push_back(src_prefix_add_uri("text",iname));
-    }
+    }*/
+
+void raw_text_args(const std::string& value) {
+  srcml_request.input.push_back(src_prefix_add_uri("text",value));
 }
 
 void option_help(const std::string& help_opt) {
@@ -331,7 +334,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("in-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
-            ("text,t", prog_opts::value<std::vector<std::string> >()->notifier(&raw_text_args), "raw string text to be processed")
+            ("text,t", prog_opts::value<std::string>()->notifier(&raw_text_args), "raw string text to be processed")
             ("pretty", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_field<&srcml_request_t::pretty_format>), "custom formatting for output")
             ;
 
@@ -377,6 +380,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         src2srcml_metadata.add_options()
             ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the arg url attribute")
+            ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the arg filename attribute")
             ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the arg version attribute")
             ;
 
@@ -458,10 +462,19 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
               srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
 
             BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
-             if (option.string_key == "element" && srcml_request.xpath_query_support.size() > 0) {
+              if (option.string_key == "element" && srcml_request.xpath_query_support.size() < 1) {
+                std::cerr << "srcml: element option must follow an --xpath option\n";
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+              }
+              if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() < 1) {
+                std::cerr << "srcml: attribute option must follow an --xpath option\n";
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+              }
+
+              if (option.string_key == "element") {
                 srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first = clean_element_input(vals);
               }
-              else if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() > 0) {
+              else if (option.string_key == "attribute") {
                 srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).second = clean_attribute_input(vals);
               }
               else {
