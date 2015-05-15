@@ -61,7 +61,12 @@ void srcml_list(srcml_archive* srcml_arch) {
     std::cout << "\n";
 
     int numUnits = 0;
-    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+    while (true) {
+        srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+
+        if (!unit)
+            break;
+
         ++numUnits;
         std::cout << std::setw(5) << numUnits << " " << srcml_unit_get_filename(unit) 
                   << '\t' << srcml_unit_get_language(unit)
@@ -117,7 +122,12 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
             srcml_unit_free(unit);    
         }
 
-        while (unit = srcml_read_unit_header(srcml_arch)) {
+        while (true) {
+            srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+
+            if (!unit)
+                break;
+
             ++unit_count;
             srcml_unit_free(unit);
         }
@@ -129,7 +139,11 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
 int srcml_unit_count(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
-    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+    while (true) {
+        srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+
+        if (!unit)
+            break;
 
         if (srcml_unit_get_language(unit))
             ++numUnits;
