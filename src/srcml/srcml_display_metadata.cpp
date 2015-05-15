@@ -99,7 +99,7 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
             srcml_unit_free(unit);
         }
 
-        std::cout << unit_count << "\n";
+        std::cout << "units=\"" << unit_count << "\"\n";
     }
 }
 
