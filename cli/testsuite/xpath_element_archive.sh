@@ -19,36 +19,22 @@ define result <<- 'STDOUT'
 
 createfile a.cpp "a;
 "
-
 createfile b.cpp "b;
 "
 
-
-src2srcml a.cpp b.cpp --xmlns:foo=foo.com -o archive.xml
+srcml a.cpp b.cpp --xmlns:foo=foo.com -o archive.xml
 
 # from a file
-src2srcml archive.xml --xpath="//src:name" --element="foo:foo"
+srcml archive.xml --xpath="//src:name" --element="foo:foo"
 check 3<<< "$result"
 
-src2srcml archive.xml --element="foo:foo" --xpath="//src:name"
-check 3<<< "$result"
-
-src2srcml --element="foo:foo" --xpath="//src:name" archive.xml
-check 3<<< "$result"
-
-src2srcml --xpath="//src:name" archive.xml --element="foo:foo"
+srcml --xpath="//src:name" archive.xml --element="foo:foo"
 check 3<<< "$result"
 
 # output to a file
-src2srcml archive.xml --xpath="//src:name" --element="foo:foo" -o result.xml
+srcml archive.xml --xpath="//src:name" --element="foo:foo" -o result.xml
 check result.xml <<< "$result"
 
-src2srcml archive.xml --element="foo:foo" --xpath="//src:name" -o result.xml
-check result.xml <<< "$result"
-
-src2srcml --element="foo:foo" --xpath="//src:name" archive.xml -o result.xml
-check result.xml <<< "$result"
-
-src2srcml --xpath="//src:name" archive.xml --element="foo:foo" -o result.xml
+srcml --xpath="//src:name" archive.xml --element="foo:foo" -o result.xml
 check result.xml <<< "$result"
 
