@@ -31,57 +31,53 @@ define identity <<- 'STDOUT'
 	</xsl:stylesheet>
 	STDOUT
 
-define output <<- 'STDOUT'
-	xslt : identity.xsl
-	STDOUT
-
 createfile sub/unit.cpp.xml "$srcml"
 createfile identity.xsl "$identity"
 
 # simple copy
 srcml sub/unit.cpp.xml --xslt=identity.xsl
-check 3<<< "$srcml" 4<<< "$output"
+check 3<<< "$srcml"
 
 srcml --xslt=identity.xsl sub/unit.cpp.xml
-check 3<<< "$srcml" 4<<< "$output"
+check 3<<< "$srcml"
 
 srcml --xslt=identity.xsl < sub/unit.cpp.xml
-check 3<<< "$srcml" 4<<< "$output"
+check 3<<< "$srcml"
 
 srcml sub/unit.cpp.xml --xslt=identity.xsl -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$output"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml sub/unit.cpp.xml -o sub/b.cpp.xml --xslt=identity.xsl
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$output"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml --xslt=identity.xsl sub/unit.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$output"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml --xslt=identity.xsl -o sub/b.cpp.xml sub/unit.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$output"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml --xslt=identity.xsl -o sub/b.cpp.xml < sub/unit.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$output"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 # xslt apply root copy
 srcml sub/unit.cpp.xml --apply-root --xslt=identity.xsl
-check 3<<< "$srcml" 4<<< "$output"
+check 3<<< "$srcml"
 
 srcml sub/unit.cpp.xml --xslt=identity.xsl --apply-root
-check 3<<< "$srcml" 4<<< "$output"
+check 3<<< "$srcml"
 
 srcml --apply-root --xslt=identity.xsl sub/unit.cpp.xml
-check 3<<< "$srcml" 4<<< "$output"
+check 3<<< "$srcml"
 
 srcml --apply-root --xslt=identity.xsl < sub/unit.cpp.xml
-check 3<<< "$srcml" 4<<< "$output"
+check 3<<< "$srcml"
 
 srcml --apply-root --xslt=identity.xsl sub/unit.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$output"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml --apply-root --xslt=identity.xsl -o sub/b.cpp.xml sub/unit.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$output"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml --apply-root --xslt=identity.xsl -o sub/b.cpp.xml < sub/unit.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$output"
+check sub/b.cpp.xml 3<<< "$srcml"
 

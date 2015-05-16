@@ -32,86 +32,40 @@ define copyxslt <<- 'STDOUT'
 	</xsl:stylesheet>
 	STDOUT
 
-define xpath_err1 <<- 'STDERR'
-	xslt : copy.xsl
-	STDERR
-
-define xpath_err2 <<- 'STDERR'
-	xslt : copy.xsl
-	xpathparam : NAME=VALUE
-	STDERR
-
-define xpath_err3 <<- 'STDERR'
-	xslt : copy.xsl
-	xpathparam : name="a"
-	STDERR
-
 createfile sub/a.cpp.xml "$srcml"
 createfile copy.xsl "$copyxslt"
-
-# simple copy
-srcml --xslt=copy.xsl sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "$xpath_err1"
-
-srcml --xslt=copy.xsl < sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "$xpath_err1"
-
-srcml --xslt=copy.xsl sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err1"
-
-srcml --xslt=copy.xsl -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err1"
-
-srcml --xslt=copy.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err1"
-
-# xslt apply root copy
-srcml --apply-root --xslt=copy.xsl sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "$xpath_err1"
-
-srcml --apply-root --xslt=copy.xsl < sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "$xpath_err1"
-
-srcml --apply-root --xslt=copy.xsl sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err1"
-
-srcml --apply-root --xslt=copy.xsl -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err1"
-
-srcml --apply-root --xslt=copy.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err1"
 
 
 # xslt copy xpathparam NAME=VALUE
 srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "$xpath_err2"
+check 3<<< "$srcml"
 
 srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' < sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "$xpath_err2"
+check 3<<< "$srcml"
 
 srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err2"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err2"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err2"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 
 # xslt copy xpathparam name="a"
 srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "$xpath_err3"
+check 3<<< "$srcml"
 
 srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' < sub/a.cpp.xml
-check 3<<< "$srcml" 4<<< "$xpath_err3"
+check 3<<< "$srcml"
 
 srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err3"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err3"
+check sub/b.cpp.xml 3<<< "$srcml"
 
 srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml" 4<<< "$xpath_err3"
+check sub/b.cpp.xml 3<<< "$srcml"
 
