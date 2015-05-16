@@ -176,6 +176,10 @@ public :
 
     virtual void outputResult(xmlNodePtr a_node) {
 
+        // remove src namespace
+        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
+        xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
+
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
         if (size == 0)
@@ -184,6 +188,27 @@ public :
         oarchive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
 
         xmlBufferEmpty(lbuffer);
+
+        if (skip)
+            *skip = hrefptr;
+    }
+
+        // removes the namespace from the element
+    xmlNsPtr* xmlRemoveNs(xmlNodePtr a_node, xmlNsPtr hrefptr) {
+
+        if (!hrefptr)
+            return 0;
+
+        xmlNsPtr* skip = 0;
+        for (xmlNsPtr* pns = &a_node->nsDef; pns; pns = &((*pns)->next)) {
+            if ((*pns) == hrefptr) {
+                skip = pns;
+                *skip = (*skip)->next;
+                break;
+            }
+        }
+
+        return skip;
     }
     /**
      * end_output
