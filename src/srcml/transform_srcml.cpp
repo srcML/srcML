@@ -232,10 +232,10 @@ void transform_srcml(const srcml_request_t& srcml_request,
                     exit(-1);
                 }
 				
-				std::cerr << protocol << " : " << resource << "\n"; // Debug Printout
+				//std::cerr << protocol << " : " << resource << "\n"; // Debug Printout
 			}
 			else if (protocol == "xpathparam") {
-				std::cerr << protocol << " : " << resource << "\n"; // Stub
+				//std::cerr << protocol << " : " << resource << "\n"; // Stub
 			}
 			else if (protocol == "relaxng") {
 		        if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
@@ -243,7 +243,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
                     exit(-1);
                 }
 
-				std::cerr << protocol << " : " << resource << "\n"; //Debug Printout
+				//std::cerr << protocol << " : " << resource << "\n"; //Debug Printout
 			}
 		}
 		srcml_apply_transforms(in_arch, out_arch);
