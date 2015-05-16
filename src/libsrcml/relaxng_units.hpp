@@ -91,12 +91,10 @@ public :
 
         // get the root node of current unit
         xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
-        if (!(node && node->children))
+        if (!node)
             return true;
 
-        // output any children
-        for(xmlNodePtr child = node->children; child; child = child->next)
-            outputResult(child);
+        outputResult(node);
 
         return true;
     }
@@ -108,11 +106,7 @@ public :
         if (size == 0)
             return;
 
-        srcml_unit* punit = srcml_unit_create(oarchive);
-
-        oarchive->translator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
-
-        srcml_unit_free(punit);
+        oarchive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
 
         xmlBufferEmpty(lbuffer);
     }
