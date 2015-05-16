@@ -176,9 +176,11 @@ public :
 
     virtual void outputResult(xmlNodePtr a_node) {
 
+        bool is_archive = (oarchive->options & SRCML_OPTION_ARCHIVE) > 0;
+
         // remove src namespace
         xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
-        xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
+        xmlNsPtr* skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
