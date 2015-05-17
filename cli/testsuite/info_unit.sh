@@ -13,8 +13,8 @@ define info <<- 'STDOUT'
 	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
-	filename="sub/unit.cpp"
 	url="test"
+	filename="sub/unit.cpp"
 	STDOUT
 
 define longinfo <<- 'STDOUT'
@@ -22,8 +22,8 @@ define longinfo <<- 'STDOUT'
 	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
-	filename="sub/unit.cpp"
 	url="test"
+	filename="sub/unit.cpp"
 	units="1"
 	STDOUT
 
