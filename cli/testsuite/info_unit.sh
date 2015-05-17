@@ -9,49 +9,51 @@ source $(dirname "$0")/framework_test.sh
 # srcML info and longinfo
 
 define info <<- 'STDOUT'
-	xmlns=http://www.srcML.org/srcML/src xmlns:cpp=http://www.srcML.org/srcML/cpp
+	xmlns="http://www.srcML.org/srcML/src"
+	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
+	filename="sub/unit.cpp"
 	url="test"
-	filename="sub/a.cpp"
 	STDOUT
 
 define longinfo <<- 'STDOUT'
-	xmlns=http://www.srcML.org/srcML/src xmlns:cpp=http://www.srcML.org/srcML/cpp
+	xmlns="http://www.srcML.org/srcML/src"
+	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
+	filename="sub/unit.cpp"
 	url="test"
-	filename="sub/a.cpp"
-	1
+	units="1"
 	STDOUT
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="test" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="test" filename="sub/unit.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 	STDOUT
 
-createfile sub/a.cpp.xml "$srcml"
+createfile sub/unit.cpp.xml "$srcml"
 
-srcml sub/a.cpp.xml -i
+srcml sub/unit.cpp.xml -i
 check 3<<< "$info"
 
-srcml sub/a.cpp.xml --info
+srcml sub/unit.cpp.xml --info
 check 3<<< "$info"
 
-srcml --info < sub/a.cpp.xml
+srcml --info < sub/unit.cpp.xml
 check 3<<< "$info"
 
-srcml -i sub/a.cpp.xml
+srcml -i sub/unit.cpp.xml
 check 3<<< "$info"
 
-srcml --info sub/a.cpp.xml
+srcml --info sub/unit.cpp.xml
 check 3<<< "$info"
 
-srcml --longinfo sub/a.cpp.xml
+srcml --longinfo sub/unit.cpp.xml
 check 3<<< "$longinfo"
 
-srcml sub/a.cpp.xml --longinfo
+srcml sub/unit.cpp.xml --longinfo
 check 3<<< "$longinfo"
 
-srcml --longinfo < sub/a.cpp.xml
+srcml --longinfo < sub/unit.cpp.xml
 check 3<<< "$longinfo"
