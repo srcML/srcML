@@ -279,10 +279,6 @@ the output is desired in source-code format.
 : Write to output srcML file, URI, or source code file.
 By default, it writes to standard output.
 
-`--LINE_ENDING_FLAG_LONG="<environment|ending>"`
-: Set line endings for a specific <environment>. Acceptable <environment>s
-are "Unix" or "Windows". Acceptable <ending>s are "\r\n" or "\n".
-
 `-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
 : Outputs text in source code format. This is the default when the input
 is in srcML format.
@@ -323,10 +319,6 @@ is in srcML format.
 
 `-UNIT_OPTION_SHORT`, `--UNIT_OPTION_LONG <n>`
 : Extract individual <n>th unit from srcML archive.
-
-`--EXTERNAL_LONG=<arg>`
-: Runs a user defined external script or application on `srcml` client
-output.
 
 
 ### EXAMPLES
