@@ -14,7 +14,10 @@ define srcml <<- 'STDOUT'
 	STDOUT
 
 define output <<- 'STDOUT'
-	1	a.cpp
+	Source encoding: (null)
+	XML encoding: UTF-8
+	    1 a.cpp	C++	aa2a72b26cf958d8718a2e9bc6b84679a81d54cb
+	Total: 1
 	STDOUT
 
 createfile sub/a.cpp.xml "$srcml"
