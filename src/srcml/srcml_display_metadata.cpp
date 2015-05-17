@@ -68,9 +68,9 @@ void srcml_list(srcml_archive* srcml_arch) {
             break;
 
         ++numUnits;
-        std::cout << std::setw(5) << numUnits << " " << srcml_unit_get_filename(unit) 
-                  << '\t' << srcml_unit_get_language(unit)
-                  << '\t' << srcml_unit_get_hash(unit) << "\n";
+        std::cout << std::setw(5) << numUnits << " " << (srcml_unit_get_filename(unit) ?  srcml_unit_get_filename(unit) : "")
+                  << '\t' << (srcml_unit_get_language(unit) ? srcml_unit_get_language(unit) : "")
+                  << '\t' << (srcml_unit_get_hash(unit) ? srcml_unit_get_hash(unit) : "") << "\n";
         srcml_unit_free(unit);
     }
     std::cout << "Total: " << numUnits << "\n";
