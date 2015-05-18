@@ -33,35 +33,43 @@ const char* SRCML_FOOTER = "";
 
 const char* SRC2SRCML_HEADER = "Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]\
   \n\n\
-  Translates C, C++, and Java source code into the XML source-code representation srcML.\n\
-  Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n\
-  Multiple files are stored in a srcML archive.\
+  Translates C, C++, and Java source code into the XML\
+  source-code representation srcML.   Input can be from standard input, a file,\
+  a directory, or an archive file, i.e., tar, cpio, and zip.   Multiple files\
+  are stored in a srcML archive.\
   \n\n\
-  The source-code language is based on the file extension.  Additional extensions for a language\n\
-  can be registered, and can be directly set using the --language option.\
+  The source-code language is based on the file extension.Additional extensions\
+  for a language can be registered, and can be directly set using the --language\
+  option.\
   \n\n\
-  By default, output is to stdout.  You can specify a file for output using the --output or -o option.\n\
-  When no filenames are given, input is from stdin and output is to stdout.\n\
-  An input filename of '-' also reads from stdin.\
+  By default, output is to stdout.You can specify a file for output using the\
+  --output or -o option. When no filenames are given, input is from stdin and\
+  output is to stdout. An input filename of '-' also reads from stdin.\
   \n\n\
-  Any input file can be a local filename or a URI with the protocols http:, ftp:, or file:\
-  \n\n";
+  Any input file can be a local filename or a URI with the protocols http:,\
+  ftp:, or file: \n\n";
 
 const char* SRC2SRCML_FOOTER = "Examples:\
   \n\n\
-  Read from standard input, write to standard output\n\
+  Read from standard input, write to standard output:\n\
   srcml\n\
-  Read from file m.cpp, write to standard output\n\
+  \n\
+  Read from file m.cpp, write to standard output:\n\
   srcml m.cpp\n\
-  Read from file m.cpp, write to file m.cpp.xml\n\
+  \n\
+  Read from file m.cpp, write to file m.cpp.xml:\n\
   srcml m.cpp -o m.cpp.xml\n\
-  Read from URI\n\
+  \n\
+  Read from URI, write to standard output:\n\
   srcml http://www.srcML.org/projects/srcml/ex/main.cpp\n\
-  Element unit attribute filename \"m.cpp\"\n\
+  \n\
+  Element unit attribute filename \"m.cpp\":\n\
   srcml --filename=m.cpp m.cpp -o m.cpp.xml\n\
-  Encoding of input text file is UTF-8\n\         
+  \n\
+  Set encoding of input text file to UTF-8:\n\         
   srcml --src-encoding=UTF-8 m.cpp m.cpp.xml\n\
-  Set encoding of srcML file to ISO-8859-1\n\
+  \n\
+  Set encoding of srcML file to ISO-8859-1:\n\
   srcml --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml\n\
   \n\
   www.srcML.org\n\
@@ -69,33 +77,35 @@ const char* SRC2SRCML_FOOTER = "Examples:\
 
 const char* SRCML2SRC_HEADER = "Usage: srcml [options] <srcML_infile>... [-o <src_outfile>]\
   \n\n\
-  Translates from the the XML source-code representation srcML back to source-code.\
+  Translates from the the XML source-code representation srcML back to source-\
+  code.\
   \n\n\
-  Extracts back to standard output or disk.\n\
-  Provides access to metadata about the srcML document. For srcML archives\n\
-  provides extraction of specific files, and efficient querying/transformation\n\
-  using XPath, XSLT, and RelaxNG.\
+  Extracts back to standard output or disk.\n Provides access to metadata about\
+  the srcML document. For srcML archives\n provides extraction of specific\
+  files, and efficient querying/transformation\n using XPath, XSLT, and RelaxNG.\
   \n\n\
-  srcML archives contain multiple individual source code files,\n\
-  e.g., an entire project or directory tree.\
+  srcML archives contain multiple individual source code files,\n e.g., an\
+  entire project or directory tree.\
   \n\n\
-  By default, output is to stdout.  You can specify a file for output using the --output or -o option.\n\
-  When no filenames are given, input is from stdin and output is to stdout.\n\
-  An input filename of '-' also reads from stdin.\
+  By default, output is to stdout.You can specify a file for output using the\
+  --output or -o option.\n When no filenames are given, input is from stdin and\
+  output is to stdout.\n An input filename of '-' also reads from stdin.\
   \n\n\
-  Any input file, including XSLT and RelaxNG files, can be a local\n\
-  filename (FILE) or a URI with the protocols http:, ftp:, or file:\
+  Any input file, including XSLT and RelaxNG files, can be a local\n filename\
+  (FILE) or a URI with the protocols http:, ftp:, or file:\
   \n\n\
-  The srcML files can be in xml, or compressed with gzip or bzip2 (detected automatically).\
-  \n\n";
+  The srcML files can be in xml, or compressed with gzip or bzip2 (detected\
+  automatically). \n\n";
 
 const char* SRCML2SRC_FOOTER = "Examples:\
   \n\n\
-  Read from file m.cpp.xml, write to file m.cpp\n\
+  Read from file m.cpp.xml, write to file m.cpp:\n\
   srcml m.cpp.xml -o m.cpp\n\
-  Read from URI, write to file m.cpp\n\
+  \n\
+  Read from URI, write to file m.cpp:\n\
   srcml http://www.example.org/m.cpp.xml m.cpp\n\
-  Read from file m.cpp.xml, output language attribute to stdout\n\
+  \n\
+  Read from file m.cpp.xml, output language attribute to stdout:\n\
   srcml m.cpp.xml --show-language\n\
   \n\
   www.srcML.org\n\
