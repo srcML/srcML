@@ -365,12 +365,12 @@ SIGUSR1
 
 SIGINT
 : Completes current file translation (and output) with multiple input
-  files. The input file currently being translated is allowed to
-  complete, the complex document is closed, and then the program
-  stops. More than one SIGINT causes default behavior.
+files. The input file currently being translated is allowed to
+complete, the complex document is closed, and then the program
+stops. More than one SIGINT causes default behavior.
 
-  This special SIGINT handling only occurs with multiple input files
-  in srcML archives.
+	This special SIGINT handling only occurs with multiple input files
+in srcML archives.
 
 
 
@@ -408,6 +408,8 @@ ISO-8859-1 through iconv. However, the BOM (Byte Order Mark) immediately
 before the XML declaration may not be processed correctly by `srcml`
 and by other libxml2-based tools (e.g., xmllint). Use the LE or BE
 version of the encoding, e.g., UTF-32BE, UTF-32LE, instead.
+
+Report bugs to collard@uakron.edu
 
 
 
