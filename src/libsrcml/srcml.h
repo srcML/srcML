@@ -61,9 +61,9 @@ extern "C" {
 
 /* Header file version macros */
 /** number representing libsrcml version */
-#define SRCML_VERSION_NUMBER 8000
+#define SRCML_VERSION_NUMBER 9005
 /** string containing libsrcml version */
-#define SRCML_VERSION_STRING "0.8.0"
+#define SRCML_VERSION_STRING "0.9.5"
 
 /* Cleanup the globally allocated items */
 LIBSRCML_DECL void srcml_cleanup_globals();
