@@ -52,6 +52,10 @@ signal SIGUSR1 can be used to toggle this option.
 : Display most metadata, except the unit count (file count) in a srcML
 archive, then exit.
 
+`--LONG_INFO_FLAG_LONG`
+: Display most metadata including the unit (file) count in a srcML archive,
+then exit.
+
 `--MAX_THREADS_FLAG_LONG=<num>`
 : Sets the maximum number of threads `srcml` can spawn.
 
