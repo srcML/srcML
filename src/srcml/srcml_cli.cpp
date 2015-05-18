@@ -33,71 +33,80 @@ const char* SRCML_FOOTER = "";
 
 const char* SRC2SRCML_HEADER = "Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]\
   \n\n\
-  Translates C, C++, and Java source code into the XML source-code representation srcML.\n\
-  Input can be from standard input, a file, a directory, or an archive file, i.e., tar, cpio, and zip.\n\
-  Multiple files are stored in a srcML archive.\
+  Translates C, C++, and Java source code into the XML\
+  source-code representation srcML.   Input can be from standard input, a file,\
+  a directory, or an archive file, i.e., tar, cpio, and zip.   Multiple files\
+  are stored in a srcML archive.\
   \n\n\
-  The source-code language is based on the file extension.  Additional extensions for a language\n\
-  can be registered, and can be directly set using the --language option.\
+  The source-code language is based on the file extension.Additional extensions\
+  for a language can be registered, and can be directly set using the --language\
+  option.\
   \n\n\
-  By default, output is to stdout.  You can specify a file for output using the --output or -o option.\n\
-  When no filenames are given, input is from stdin and output is to stdout.\n\
-  An input filename of '-' also reads from stdin.\
+  By default, output is to stdout.You can specify a file for output using the\
+  --output or -o option. When no filenames are given, input is from stdin and\
+  output is to stdout. An input filename of '-' also reads from stdin.\
   \n\n\
-  Any input file can be a local filename (FILE) or a URI with the protocols http:, ftp:, or file:\
-  \n\n";
+  Any input file can be a local filename or a URI with the protocols http:,\
+  ftp:, or file: \n\n";
 
 const char* SRC2SRCML_FOOTER = "Examples:\
   \n\n\
-  src2srcml (read from standard input, write to standard output)\n\
-  src2srcml m.cpp          (read from file m.cpp, write to standard output)\n\
-  src2srcml m.cpp -o m.cpp.xml (read from file m.cpp, write to file m.cpp.xml)\n\
+  Read from standard input, write to standard output:\n\
+  srcml\n\
   \n\
-  src2srcml http://www.srcML.org/projects/srcml/ex/main.cpp (read from URI)\n\
+  Read from file m.cpp, write to standard output:\n\
+  srcml m.cpp\n\
   \n\
-  src2srcml --directory=src --filename=m.cpp m.cpp -o m.cpp.xml (element unit attributes dir \"src\", filename \"m.cpp\")\n\
-  src2srcml --src-encoding=UTF-8 m.cpp m.cpp.xml         (encoding of input text file is UTF-8)\n\
-  src2srcml --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml    (set encoding of srcML file to ISO-8859-1)\n\
+  Read from file m.cpp, write to file m.cpp.xml:\n\
+  srcml m.cpp -o m.cpp.xml\n\
+  \n\
+  Read from URI, write to standard output:\n\
+  srcml http://www.srcML.org/projects/srcml/ex/main.cpp\n\
+  \n\
+  Element unit attribute filename \"m.cpp\":\n\
+  srcml --filename=m.cpp m.cpp -o m.cpp.xml\n\
+  \n\
+  Set encoding of input text file to UTF-8:\n\         
+  srcml --src-encoding=UTF-8 m.cpp m.cpp.xml\n\
+  \n\
+  Set encoding of srcML file to ISO-8859-1:\n\
+  srcml --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml\n\
   \n\
   www.srcML.org\n\
   Report bugs to collard@uakron.edu";
 
-const char* SRCML2SRC_HEADER = "Usage: srcml2src [options] <srcML_infile>... [-o <src_outfile>]\
+const char* SRCML2SRC_HEADER = "Usage: srcml [options] <srcML_infile>... [-o <src_outfile>]\
   \n\n\
-  Translates from the the XML source-code representation srcML back to source-code.\
+  Translates from the the XML source-code representation srcML back to source-\
+  code.\
   \n\n\
-  Extracts back to standard output, the disk, or to traditional archive formats,\n\
-  e.g., tar, cpio, zip, and with optional gzip, bzip2 compression.\n\
-  Provides access to metadata about the srcML document. For srcML archives\n\
-  provides extraction of specific files, and efficient querying/transformation\n\
-  using XPath, XSLT, and RelaxNG.\
+  Extracts back to standard output or disk.\n Provides access to metadata about\
+  the srcML document. For srcML archives\n provides extraction of specific\
+  files, and efficient querying/transformation\n using XPath, XSLT, and RelaxNG.\
   \n\n\
-  srcML archives contain multiple individual source code files,\n\
-  e.g., an entire project or directory tree.\
+  srcML archives contain multiple individual source code files,\n e.g., an\
+  entire project or directory tree.\
   \n\n\
-  By default, output is to stdout.  You can specify a file for output using the --output or -o option.\n\
-  When no filenames are given, input is from stdin and output is to stdout.\n\
-  An input filename of '-' also reads from stdin.\
+  By default, output is to stdout.You can specify a file for output using the\
+  --output or -o option.\n When no filenames are given, input is from stdin and\
+  output is to stdout.\n An input filename of '-' also reads from stdin.\
   \n\n\
-  Any input file, including XSLT and RelaxNG files, can be a local\n\
-  filename (FILE) or a URI with the protocols http:, ftp:, or file:\
+  Any input file, including XSLT and RelaxNG files, can be a local\n filename\
+  (FILE) or a URI with the protocols http:, ftp:, or file:\
   \n\n\
-  The srcML files can be in xml, or compressed with gzip or bzip2 (detected automatically).\
-  \n\n";
+  The srcML files can be in xml, or compressed with gzip or bzip2 (detected\
+  automatically). \n\n";
 
 const char* SRCML2SRC_FOOTER = "Examples:\
   \n\n\
-  Read from file main.cpp.xml, write to file main.cpp:\
+  Read from file m.cpp.xml, write to file m.cpp:\n\
+  srcml m.cpp.xml -o m.cpp\n\
   \n\
-  srcml main.cpp.xml -o main.cpp\
-  \n\n\
-  Read from URI, write to file main.cpp:\
+  Read from URI, write to file m.cpp:\n\
+  srcml http://www.example.org/m.cpp.xml m.cpp\n\
   \n\
-  srcml http://www.srcML.org/projects/srcml/ex/main.cpp.xml main.cpp\
-  \n\n\
-  Read from file main.cpp.xml, output language attribute to stdout:\
-  \n\
-  srcml main.cpp.xml --language\n\
+  Read from file m.cpp.xml, output language attribute to stdout:\n\
+  srcml m.cpp.xml --show-language\n\
   \n\
   www.srcML.org\n\
   Report bugs to collard@uakron.edu";
@@ -106,23 +115,22 @@ srcml_request_t srcml_request;
 
 // Define Program Options
 prog_opts::options_description general("GENERAL OPTIONS");
-prog_opts::options_description src2srcml_options("SRC2SRCML OPTIONS");
-prog_opts::options_description srcml2src_options("SRCML2SRC OPTIONS");
-prog_opts::options_description cpp_markup("CPP Markup Options");
-prog_opts::options_description line_col("Line/Column Position");
-prog_opts::options_description markup("Markup Extensions");
-prog_opts::options_description src2srcml_metadata("src2srcml Metadata Options");
-prog_opts::options_description srcml2src_metadata("srcml2src Metadata Options");
-prog_opts::options_description prefix("Prefix Options");
-prog_opts::options_description query_transform("Query and Transform Options");
-prog_opts::options_description srcml_archive_options("srcML Archive Options");
-prog_opts::options_description src2srcml("SRC2SRCML");
-prog_opts::options_description srcml2src("SRCML2SRC");
+prog_opts::options_description src2srcml_options("CREATING SRCML");
+prog_opts::options_description srcml2src_options("EXTRACTING SOURCE CODE");
+prog_opts::options_description query_transform("TRANSFORMATIONS");
 prog_opts::options_description positional_options("positional");
 prog_opts::options_description deprecated_options("Deprecated Options");
 prog_opts::options_description debug_options("Debug Options");
 prog_opts::options_description experimental_options("Experimental Options");
 prog_opts::options_description all("All Options");
+
+prog_opts::options_description markup_options("MARKUP OPTIONS");
+prog_opts::options_description xml_form("XML FORM");
+prog_opts::options_description metadata_options("METADATA OPTIONS");
+
+prog_opts::options_description src2srcml("");
+prog_opts::options_description srcml2src("");
+
 
 // Positional Args
 prog_opts::positional_options_description input_file;
@@ -322,29 +330,50 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
         general.add_options()
             ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
-            ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
-            ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
-            ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write result ouput to arg which is a FILE or URI")
-            ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppresses status messages")
-            ("src-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>), "set the input source encoding to arg")
-            ("max-threads", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
-            ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
+            ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
+            ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppress status messages")
+            ("list", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LIST>), "list all files in the srcML archive and exit")
+            ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "display most metadata except srcML file count and exit")
+            ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "display all metadata including srcML file count and exit")
+            ("max-threads", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
+            ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write ouput to a file")
+            ;
+
+        src2srcml_options.add_options()
+            ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>), "set the language to C, C++, or Java")
+            ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
+            ("src-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>), "set the input source encoding")
+            ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>), "read list of source file names to form a srcML archive")
+            ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
+            ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_ARCHIVE>), "store output in a srcML archive, default for multiple input files")
             ("in-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
             ("text,t", prog_opts::value<std::string>()->notifier(&raw_text_args), "raw string text to be processed")
             ;
 
-        src2srcml_options.add_options()
-            ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_ARCHIVE>), "store output in a srcML archive, default for multiple input files")
-            ("xml-encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->default_value("UTF-8"),"set the output XML encoding to ENC (default:  UTF-8)")
-            ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
-            ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_HASH>), "add hash to srcml output")
-            ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>), "read list of source file names, either FILE or URI, from arg to form a srcML archive")
-            ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>), "set the language to C, C++, or Java")
-            ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
+        markup_options.add_options()
+            ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.srcML.org/srcML/position'")
+            ("tabs", prog_opts::value<int>()->implicit_value(8)->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
+            ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "enable preprocessor parsing and markup for Java and non-C/C++ languages")
+            ("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_MARKUP_IF0>), "markup cpp #if 0 regions")
+            ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
             ;
 
-        srcml2src_options.add_options()
+        xml_form.add_options()
+            ("xml-encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->default_value("UTF-8"),"set output XML encoding. Default is UTF-8")
+            ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
+            ("no-namespace-decl", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_NAMESPACE_DECL>), "do not output any namespace declarations")
+            ("xmlns", prog_opts::value<std::string>()->notifier(&option_xmlns_uri), "set the default namespace to arg")
+            ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix), "set the namespace. arg format PREFIX=URI")
+            ;
+
+        metadata_options.add_options()
+            ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the filename attribute")
+            ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the url attribute")
+            ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the version attribute")
+            ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_HASH>), "add hash to srcml output")
+            ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
+            ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>), "display prefix of namespace given by URI arg and exit")
             ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "display source language and exit")
             ("show-url", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_URL>), "display source url name and exit")
             ("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "display source filename and exit")
@@ -352,55 +381,22 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("show-timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP>), "display timestamp and exit")
             ("show-hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_HASH>), "display hash and exit")
             ("show-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_ENCODING>), "display xml encoding and exit")
-            ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
-            ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "output in text instead of XML")
-            ;
-
-        cpp_markup.add_options()
-            ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "preprocessor parsing and markup for Java and non-C/C++ languages")
-            ("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_MARKUP_IF0>), "markup cpp #if 0 regions")
-            ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
-            ;
-
-        line_col.add_options()
-            ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.srcML.org/srcML/position'")
-            ("tabs", prog_opts::value<int>()->implicit_value(8)->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
-            ;
-
-        markup.add_options()
-            ;
-
-        src2srcml_metadata.add_options()
-            ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the arg url attribute")
-            ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the arg filename attribute")
-            ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the arg version attribute")
-            ;
-
-        srcml2src_metadata.add_options()
-            ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "display most metadata except file count (individual units) and exit")
-            ("list", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LIST>), "list all the files in the srcML archive and exit")
-            ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "display all metadata including file count (individual units) and exit")
-            ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>), "display prefix of namespace given by URI arg and exit")
             ("show-unit-count", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
             ;
 
-        prefix.add_options()
-            ("xmlns", prog_opts::value<std::string>()->notifier(&option_xmlns_uri), "set the default namespace to arg")
-            ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix), "set the namespace arg format PREFIX=URI")
+        srcml2src_options.add_options()
+            ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "output in text instead of XML")
+            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir), "extract all files from srcML and create them in the filesystem")
             ;
 
         query_transform.add_options()
             ("apply-root", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_APPLY_ROOT>), "apply an xslt program or xpath query to the root element")
-            ("relaxng", prog_opts::value< std::vector<std::string> >(), "output individual units that match RELAXNG_FILE (FILE or URI) arg")
-            ("xpath", prog_opts::value< std::vector<std::string> >(), "apply XPATH expression arg to each individual unit")
-            ("xslt", prog_opts::value< std::vector<std::string> >(), "apply XSLT_FILE (FILE or URI) arg transformation to each individual unit")
+            ("relaxng", prog_opts::value< std::vector<std::string> >(), "output individual units that match RELAXNG file or URI")
+            ("xpath", prog_opts::value< std::vector<std::string> >(), "apply XPATH expression to each individual unit")
+            ("xslt", prog_opts::value< std::vector<std::string> >(), "apply XSLT file or URI transformation to each individual unit")
             ("attribute", prog_opts::value< std::vector<std::string> >(), "add attribute to xpath query")
             ("element", prog_opts::value< std::vector<std::string> >(), "add element to xpath query")
-            ;
-
-        srcml_archive_options.add_options()
-            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir), "extract all files from srcML and create them in the filesystem")
-            ("unit,U", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::unit>), "extract individual unit number arg from srcML")
+            ("unit,U", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::unit>), "extract individual unit number from srcML")
             ;
 
         positional_options.add_options()
@@ -431,16 +427,16 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         // Group src2srcml Options
-        src2srcml.add(src2srcml_options).add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).add(prefix);
+        //src2srcml.add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options);
+        src2srcml.add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options);
 
         // Group srcml2src Options
-        srcml2src.add(srcml2src_options).add(srcml2src_metadata).add(query_transform).add(srcml_archive_options);
+        //srcml2src.add(srcml2src_options).add(query_transform);
+        srcml2src.add(srcml2src_options).add(query_transform);
 
         // Group all Options
-        all.add(general).add(src2srcml_options).add(srcml2src_options).
-            add(cpp_markup).add(line_col).add(markup).add(src2srcml_metadata).
-            add(srcml2src_metadata).add(prefix).add(query_transform).add(srcml_archive_options).
-            add(positional_options).add(deprecated_options).add(debug_options).add(experimental_options);
+        all.add(general).add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options).add(srcml2src_options).
+            add(query_transform).add(positional_options).add(deprecated_options).add(debug_options).add(experimental_options);
 
         // Positional Args
         input_file.add("input-files", -1);
