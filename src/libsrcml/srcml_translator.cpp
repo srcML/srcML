@@ -460,8 +460,7 @@ bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xm
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_unit_raw(const srcml_unit * unit, const char * xml, int size) {
-
+bool srcml_translator::add_unit_raw(const char * xml, int size) {
 
   if(is_outputting_unit) return false;
 

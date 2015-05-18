@@ -395,7 +395,7 @@ public :
             else if(attribute == "revision")
                 archive->revision = value;
             else if(attribute == "filename")
-                srcml_archive_set_filename(archive, value.c_str());
+                ;
             else if(attribute == "url")
                 srcml_archive_set_url(archive, value.c_str());
             else if(attribute == "version")

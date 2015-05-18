@@ -41,7 +41,7 @@ A source-code language must be specified when input is from standard input.
 
 `-VERBOSE_FLAG_SHORT`, `--VERBOSE_FLAG_LONG`
 : Conversion and status information to stderr, including encodings
-used. Especially useful with for monitoring progress of the the `TODO`
+used. Especially useful with for monitoring progress of the from file list
 option, a directory, or source-code archive (e.g. tar.gz). The
 signal SIGUSR1 can be used to toggle this option.
 
@@ -51,6 +51,10 @@ signal SIGUSR1 can be used to toggle this option.
 `-INFO_FLAG_SHORT`, `--INFO_FLAG_LONG`
 : Display most metadata, except the unit count (file count) in a srcML
 archive, then exit.
+
+`--LONG_INFO_FLAG_LONG`
+: Display most metadata including the unit (file) count in a srcML archive,
+then exit.
 
 `--MAX_THREADS_FLAG_LONG=<num>`
 : Sets the maximum number of threads `srcml` can spawn.
@@ -266,7 +270,22 @@ srcML document.
 
 ### EXAMPLES
 
-`TODO`
+srcml input.cpp
+: Create a srcML unit from input.cpp, using C++ parsing rules,
+and output to standard out.
+
+echo "int a;" | srcml -LANGUAGE_FLAG_SHORT C++
+: Create a srcML unit from standard in, using C++ parsing rules,
+and output to standard out.
+
+srcml dir.xml --SHOW_UNIT_COUNT_FLAG_LONG
+: Create a srcML archive from all files contained in the dir directory, using
+their extensions to determine the markup parsing rules, and
+output the number of units contained in the archive to standard out.
+
+srcml input.java --CPP_FLAG_LONG
+: Create a srcML unit from input.java, using Java parsing
+rules as well as C++ parsing rules for preprocessor directives.
 
 
 
@@ -279,10 +298,6 @@ the output is desired in source-code format.
 : Write to output srcML file, URI, or source code file.
 By default, it writes to standard output.
 
-`--LINE_ENDING_FLAG_LONG="<environment|ending>"`
-: Set line endings for a specific <environment>. Acceptable <environment>s
-are "Unix" or "Windows". Acceptable <ending>s are "\r\n" or "\n".
-
 `-OUTPUT_SRC_FLAG_SHORT`, `--OUTPUT_SRC_FLAG_LONG`
 : Outputs text in source code format. This is the default when the input
 is in srcML format.
@@ -294,7 +309,14 @@ is in srcML format.
 
 ### EXAMPLES
 
-`TODO`
+srcml dir/ -OUTPUT_FLAG_SHORT dir.xml
+: Create a srcML archive from all files contained in the dir directory, using
+their extensions to determine the markup parsing rules, and
+write the resulting srcML archive to dir.xml.
+
+srcml archive.xml --TO_DIR_FLAG_LONG=.
+: Re-create all files based on the srcML units in archive.xml, using the current
+directory as the root directory.
 
 
 
@@ -309,9 +331,6 @@ is in srcML format.
 `--XPATH_OPTION_LONG=<expression>`
 : Apply Xpath <expression> query to each individual unit.
 
-`--XPATH_PARAM_LONG <parameter>=<value>`
-: Pass a <parameter> name and its <value> to the XSLT program.
-
 `--XSLT_LONG=<file|uri>`
 : Apply a transformation from an XSLT <file> or <uri> to each individual unit.
 
@@ -324,14 +343,16 @@ is in srcML format.
 `-UNIT_OPTION_SHORT`, `--UNIT_OPTION_LONG <n>`
 : Extract individual <n>th unit from srcML archive.
 
-`--EXTERNAL_LONG=<arg>`
-: Runs a user defined external script or application on `srcml` client
-output.
-
 
 ### EXAMPLES
 
-`TODO`
+srcml a.cpp --XPATH_OPTION_LONG="//src:name" --ATTRIBUTE_LONG="cpp:foo=test"
+: Convert a.cpp to srcML and add the attribute cpp:foo=test to all src:name
+elements as found by the XPath query. Output the results to standard out.
+
+srcml archive.xml --xpath "//src:unit/@filename"
+: Execute the XPath query on archive.xml, outputting the filename attribute
+of each unit in the archive to standard out.
 
 
 
@@ -340,17 +361,16 @@ output.
 The following signals may be used to control srcml:
 
 SIGUSR1
-: Toggles verbose option. Useful with multiple input files as in the
-`TODO` option.
+: Toggles verbose option. Useful with multiple input files.
 
 SIGINT
 : Completes current file translation (and output) with multiple input
-  files. The input file currently being translated is allowed to
-  complete, the complex document is closed, and then the program
-  stops. More than one SIGINT causes default behavior.
+files. The input file currently being translated is allowed to
+complete, the complex document is closed, and then the program
+stops. More than one SIGINT causes default behavior.
 
-  This special SIGINT handling only occurs with multiple input files
-  in srcML archives.
+	This special SIGINT handling only occurs with multiple input files
+in srcML archives.
 
 
 
@@ -388,6 +408,8 @@ ISO-8859-1 through iconv. However, the BOM (Byte Order Mark) immediately
 before the XML declaration may not be processed correctly by `srcml`
 and by other libxml2-based tools (e.g., xmllint). Use the LE or BE
 version of the encoding, e.g., UTF-32BE, UTF-32LE, instead.
+
+Report bugs to collard@uakron.edu
 
 
 

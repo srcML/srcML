@@ -74,12 +74,10 @@ verify_test(srcml.SRCML_VERSION_STRING, srcml.version_string())
 # test set/get archive
 archive = srcml.srcml_archive()
 archive.set_language("C++")
-archive.set_filename("project")
 archive.set_url("url")
 archive.set_version("1.0")
 verify_test("C++", archive.get_language())
 verify_test(srcml.SRCML_VERSION_STRING, archive.get_revision())
-verify_test("project", archive.get_filename())
 verify_test("url", archive.get_url())
 verify_test("1.0", archive.get_version())
 

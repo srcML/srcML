@@ -14,26 +14,20 @@ define srcml_nested <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-#define attr_out <<- 'STDOUT'
-#	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-#	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
-#
-#	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" item="1" location="/src:filename[1]">b.cpp</unit>
-#
-#	</unit>
-#	STDOUT
-
-define attr_out <<- 'STDOUT'
+define output <<- 'STDOUT'
 	b.cpp
 	STDOUT
 
 createfile sub/a.cpp.xml "$srcml_nested"
 
 # TODO: issue #1074
+srcml2src sub/a.cpp.xml --xpath "string(//src:unit/@filename)"
+check 3<<< "$output"
+
 srcml2src --xpath "string(//src:unit/@filename)" sub/a.cpp.xml
-check 3<<< "$attr_out"
+check 3<<< "$output"
 
 srcml2src --xpath "string(//src:unit/@filename)" <<< "$srcml_nested"
-check 3<<< "$attr_out"
+check 3<<< "$output"
 
 	

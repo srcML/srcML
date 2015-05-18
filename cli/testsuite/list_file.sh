@@ -10,12 +10,18 @@ define srcml <<- 'STDOUT'
 	STDOUT
 
 define output <<- 'STDOUT'
-	1	a.cpp
+	Source encoding: (null)
+	XML encoding: UTF-8
+	    1 a.cpp	C++	
+	Total: 1
 	STDOUT
 
 createfile sub/a.cpp.xml "$srcml"
 
 # test --list on input archives
+srcml sub/a.cpp.xml --list
+check 3<<< "$output"
+
 srcml --list sub/a.cpp.xml
 check 3<<< "$output"
 

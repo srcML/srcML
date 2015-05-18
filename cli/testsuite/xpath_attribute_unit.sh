@@ -18,40 +18,22 @@ createfile a.cpp "a;
 "
 
 # from a file
-src2srcml a.cpp --xpath="//src:name" --attribute="cpp:foo=test"
+srcml a.cpp --xpath="//src:name" --attribute="cpp:foo=test"
 check 3<<< "$result"
 
-src2srcml a.cpp --attribute="cpp:foo=test" --xpath="//src:name"
-check 3<<< "$result"
-
-src2srcml --attribute="cpp:foo=test" --xpath="//src:name" a.cpp
-check 3<<< "$result"
-
-src2srcml --xpath="//src:name" a.cpp --attribute="cpp:foo=test"
+srcml --xpath="//src:name" a.cpp --attribute="cpp:foo=test"
 check 3<<< "$result"
 
 # from standard input
-echo "a;" | src2srcml -l C++ --xpath="//src:name" --attribute="cpp:foo=test"
-check 3<<< "$result"
-
-echo "a;" | src2srcml -l C++ --attribute="cpp:foo=test" --xpath="//src:name"
+echo "a;" | srcml -l C++ --xpath="//src:name" --attribute="cpp:foo=test"
 check 3<<< "$result"
 
 # output to a file
-src2srcml a.cpp --xpath="//src:name" --attribute="cpp:foo=test" -o result.xml
-check result.xml <<< "$result"
+srcml a.cpp --xpath="//src:name" --attribute="cpp:foo=test" -o result.xml
+check result.xml 3<<< "$result"
 
-src2srcml a.cpp --attribute="cpp:foo=test" --xpath="//src:name" -o result.xml
-check result.xml <<< "$result"
+srcml --xpath="//src:name" a.cpp --attribute="cpp:foo=test" -o result.xml
+check result.xml 3<<< "$result"
 
-src2srcml --attribute="cpp:foo=test" --xpath="//src:name" a.cpp -o result.xml
-check result.xml <<< "$result"
-
-src2srcml --xpath="//src:name" a.cpp --attribute="cpp:foo=test" -o result.xml
-check result.xml <<< "$result"
-
-echo "a;" | src2srcml -l C++ --xpath="//src:name" --attribute="cpp:foo=test" -o result.xml
-check result.xml <<< "$result"
-
-echo "a;" | src2srcml -l C++ --attribute="cpp:foo=test" --xpath="//src:name" -o result.xml
-check result.xml <<< "$result"
+echo "a;" | srcml -l C++ --xpath="//src:name" --attribute="cpp:foo=test" -o result.xml
+check result.xml 3<<< "$result"

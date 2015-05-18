@@ -33,6 +33,7 @@
 #include <src_input_filelist.hpp>
 #include <src_input_stdin.hpp>
 #include <src_input_text.hpp>
+#include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
 #include <trace_log.hpp>
 #include <srcml_options.hpp>
@@ -88,10 +89,18 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (srcml_request.src_encoding)
         srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
 
+    // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
     if (srcml_request.att_url) {
-        srcml_archive_set_url(srcml_arch, srcml_request.att_url->c_str());
+        srcml_archive_set_url(srcml_arch, src_prefix_resource(*srcml_request.att_url).c_str());
     } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
-        srcml_archive_set_url(srcml_arch, input_sources[0].filename.c_str());
+
+        // Cleanup filename
+        std::string url_name = src_prefix_resource(input_sources[0].filename);
+        while (url_name.at(0) == '.' || url_name.at(0) == '/') {
+            url_name.erase(0,1);
+        }
+        
+        srcml_archive_set_url(srcml_arch, url_name.c_str());
     }
 
     if (srcml_request.att_version)
@@ -137,6 +146,12 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
 
     } else {
+
+        // if this is an archive, then no filename attribute is allowed
+        if (srcml_request.att_filename) {
+            fprintf(stderr, "Attribute filename cannot be set for a srcML archive\n");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
 
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);

@@ -178,6 +178,9 @@ void src_input_libarchive(ParseQueue& queue,
         if (filename.empty() || filename == "data")
             filename = input_file.resource;
 
+        if (srcml_request.att_filename && !(srcml_archive_get_options(srcml_arch) & SRCML_OPTION_ARCHIVE))
+            filename = *srcml_request.att_filename;
+
         // language may have been explicitly set
         std::string language;
 
@@ -202,14 +205,11 @@ void src_input_libarchive(ParseQueue& queue,
         if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
             prequest->disk_dir = srcml_request.output_filename;
 
-        if (filename != "-")
+        if (srcml_request.att_filename || (filename != "-"))
             prequest->filename = filename;
 
-        if (srcml_request.att_url)
-            prequest->url = srcml_request.att_url;
-        else
-            prequest->url = prequest->filename;
 
+        prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
         prequest->language = language;

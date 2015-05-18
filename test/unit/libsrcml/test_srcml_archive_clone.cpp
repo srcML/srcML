@@ -38,7 +38,6 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_READ;
-        archive->filename = "f";
         archive->encoding = "e";
         archive->language = "l";
         archive->url = "u";
@@ -64,7 +63,6 @@ int main() {
         srcml_archive * new_archive = srcml_archive_clone(archive);
 
         dassert(new_archive->type, SRCML_ARCHIVE_INVALID);
-        dassert(*new_archive->filename, "f");
         dassert(*new_archive->encoding, "e");
         dassert(new_archive->src_encoding, 0);
         dassert(*new_archive->language, "l");

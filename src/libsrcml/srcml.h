@@ -313,7 +313,6 @@ LIBSRCML_DECL int srcml_archive_write_open_io      (struct srcml_archive*, void 
 LIBSRCML_DECL int srcml_archive_set_xml_encoding       (struct srcml_archive*, const char* encoding);
 LIBSRCML_DECL int srcml_archive_set_src_encoding       (struct srcml_archive*, const char* encoding);
 LIBSRCML_DECL int srcml_archive_set_language           (struct srcml_archive*, const char* language);
-LIBSRCML_DECL int srcml_archive_set_filename           (struct srcml_archive*, const char* filename);
 LIBSRCML_DECL int srcml_archive_set_url                (struct srcml_archive*, const char* url);
 LIBSRCML_DECL int srcml_archive_set_version            (struct srcml_archive*, const char* version);
 
@@ -331,7 +330,6 @@ LIBSRCML_DECL const char*        srcml_archive_get_xml_encoding                 
 LIBSRCML_DECL const char*        srcml_archive_get_src_encoding                 (const struct srcml_archive*);
 LIBSRCML_DECL const char*        srcml_archive_get_revision                     (const struct srcml_archive*);
 LIBSRCML_DECL const char*        srcml_archive_get_language                     (const struct srcml_archive*);
-LIBSRCML_DECL const char*        srcml_archive_get_filename                     (const struct srcml_archive*);
 LIBSRCML_DECL const char*        srcml_archive_get_url                          (const struct srcml_archive*);
 LIBSRCML_DECL const char*        srcml_archive_get_version                      (const struct srcml_archive*);
 LIBSRCML_DECL unsigned long long srcml_archive_get_options                      (const struct srcml_archive*);

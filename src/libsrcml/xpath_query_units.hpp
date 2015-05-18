@@ -538,11 +538,7 @@ public :
         if (size == 0)
             return;
 
-        srcml_unit* punit = srcml_unit_create(output_archive);
-
-        output_archive->translator->add_unit(punit, (const char*) xmlBufferContent(lbuffer));
-
-        srcml_unit_free(punit);
+        output_archive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
 
         xmlBufferEmpty(lbuffer);
 

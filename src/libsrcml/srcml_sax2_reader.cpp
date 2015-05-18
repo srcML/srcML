@@ -125,7 +125,6 @@ srcml_sax2_reader::~srcml_sax2_reader() {
 /**
  * read_root_unit_attributes
  * @param language a location to store the language attribute
- * @param filename a location to store the filename attribute
  * @param url a location to store the url attribute
  * @param version a location to store the version attribute
  * @param attributes array to store other attributes gathered
@@ -142,7 +141,7 @@ srcml_sax2_reader::~srcml_sax2_reader() {
  * @returns 1 on success and 0 on failure.
  */
 int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & encoding,
-                                                 boost::optional<std::string> & language, boost::optional<std::string> & filename,
+                                                 boost::optional<std::string> & language,
                                                  boost::optional<std::string> & url, boost::optional<std::string> & version,
                                                  std::vector<std::string> & attributes,
                                                  std::vector<std::string> & prefixes,
@@ -156,7 +155,6 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
 
     encoding.swap(handler.archive->encoding);
     language.swap(handler.archive->language);
-    filename.swap(handler.archive->filename);
     url.swap(handler.archive->url);
     version.swap(handler.archive->version);
     attributes.swap(handler.archive->attributes);

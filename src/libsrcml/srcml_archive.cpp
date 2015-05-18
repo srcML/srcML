@@ -124,7 +124,6 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
 
     if(!new_archive) return 0;
 
-    new_archive->filename = archive->filename;
     new_archive->encoding = archive->encoding;
     new_archive->revision = archive->revision;
     new_archive->language = archive->language;
@@ -228,25 +227,6 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->language = language ? std::string(language) : boost::optional<std::string>();
-
-    return SRCML_STATUS_OK;
-
-}
-
-/**
- * srcml_archive_set_filename
- * @param archive a srcml_archive
- * @param filename the name of a file
- *
- * Set the root filename attribute of the srcML Archive.
- *
- * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
- */
-int srcml_archive_set_filename(srcml_archive* archive, const char* filename) {
-
-    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
-
-    archive->filename = filename ? std::string(filename) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 
@@ -529,18 +509,6 @@ const char* srcml_archive_get_revision(const struct srcml_archive* archive) {
 const char* srcml_archive_get_language(const struct srcml_archive* archive) {
 
     return archive && archive->language ? archive->language->c_str() : 0;
-
-}
-
-/**
- * srcml_archive_get_filename
- * @param archive a srcml_archive
- *
- * @returns Retrieve the currently set root filename attribute or NULL.
- */
-const char* srcml_archive_get_filename(const struct srcml_archive* archive) {
-
-    return archive && archive->filename ? archive->filename->c_str() : 0;
 
 }
 
@@ -834,7 +802,7 @@ if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                                 archive->revision ? archive->revision->c_str() : 0,
                                                 archive->url ? archive->url->c_str() : 0,
-                                                archive->filename ? archive->filename->c_str() : 0,
+                                                0,
                                                 archive->version ? archive->version->c_str() : 0,
                                                 archive->attributes, 0, 0, 0);
         archive->translator->set_macro_list(archive->user_macro_list);
@@ -905,7 +873,7 @@ int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
                                                 archive->revision ? archive->revision->c_str() : 0,
                                                 archive->url ? archive->url->c_str() : 0,
-                                                archive->filename ? archive->filename->c_str() : 0,
+                                                0,
                                                 archive->version ? archive->version->c_str() : 0,
                                                 archive->attributes, 0, 0, 0);
 
@@ -1016,8 +984,8 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
 
     archive->type = SRCML_ARCHIVE_READ;
 
-    boost::optional<std::string> encoding, language, filename, url, version;
-    bool done = !archive->reader->read_root_unit_attributes(encoding, language, filename, url, version,
+    boost::optional<std::string> encoding, language, url, version;
+    bool done = !archive->reader->read_root_unit_attributes(encoding, language, url, version,
                                                             archive->attributes, archive->prefixes,
                                                             archive->namespaces,
                                                             archive->processing_instruction,
@@ -1028,7 +996,6 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
 
         if(!archive->encoding) archive->encoding = encoding;
         archive->language = language;
-        archive->filename = filename;
         archive->url = url;
         archive->version = version;
 

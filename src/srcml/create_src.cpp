@@ -26,6 +26,7 @@
 #include <srcml.h>
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
+#include <src_prefix.hpp>
 #include <srcml_options.hpp>
 
 
@@ -102,10 +103,11 @@ void create_src(const srcml_request_t& srcml_request,
             if (srcml_request.src_encoding)
                 srcml_archive_set_src_encoding(oarch, srcml_request.src_encoding->c_str());
 
+            // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
             if (srcml_request.att_url) {
-                srcml_archive_set_url(oarch, srcml_request.att_url->c_str());
+                srcml_archive_set_url(oarch, src_prefix_resource(*srcml_request.att_url).c_str());
             } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
-                srcml_archive_set_url(oarch, input_sources[0].filename.c_str());
+                srcml_archive_set_url(oarch, src_prefix_resource(input_sources[0].filename).c_str());
             }
 
             if (srcml_request.att_version)

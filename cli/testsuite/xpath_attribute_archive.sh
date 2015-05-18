@@ -22,30 +22,18 @@ createfile a.cpp "a;
 createfile b.cpp "b;
 "
 
-src2srcml a.cpp b.cpp --xmlns:foo=foo.com -o archive.xml
+srcml a.cpp b.cpp --xmlns:foo=foo.com -o archive.xml
 
 # from the files
-src2srcml archive.xml --xpath="//src:name" --attribute="foo:foo=test"
+srcml archive.xml --xpath="//src:name" --attribute="foo:foo=test"
 check 3<<< "$result"
 
-src2srcml archive.xml --attribute="foo:foo=test" --xpath="//src:name"
-check 3<<< "$result"
-
-src2srcml --attribute="foo:foo=test" --xpath="//src:name" archive.xml
-check 3<<< "$result"
-
-src2srcml --xpath="//src:name" archive.xml --attribute="foo:foo=test"
+srcml --xpath="//src:name" archive.xml --attribute="foo:foo=test"
 check 3<<< "$result"
 
 # output to a file
-src2srcml archive.xml --xpath="//src:name" --attribute="foo:foo=test" -o result.xml
-check result.xml <<< "$result"
+srcml archive.xml --xpath="//src:name" --attribute="foo:foo=test" -o result.xml
+check result.xml 3<<< "$result"
 
-src2srcml archive.xml --attribute="foo:foo=test" --xpath="//src:name" -o result.xml
-check result.xml <<< "$result"
-
-src2srcml --attribute="foo:foo=test" --xpath="//src:name" archive.xml -o result.xml
-check result.xml <<< "$result"
-
-src2srcml --xpath="//src:name" archive.xml --attribute="foo:foo=test" -o result.xml
-check result.xml <<< "$result"
+srcml --xpath="//src:name" archive.xml --attribute="foo:foo=test" -o result.xml
+check result.xml 3<<< "$result"

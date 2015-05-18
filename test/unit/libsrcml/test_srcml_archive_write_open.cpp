@@ -49,9 +49,9 @@ int write_callback(void * context, const char * buffer, size_t len) {
 
 }
 
-int close_callback(void * context) {
+int close_callback(void * context UNUSED) {
 
-    return fclose((FILE *)context);
+    return 0;
 
 }
 
@@ -275,7 +275,7 @@ int main() {
 
     {
         FILE * file = fopen("project_ns.xml", "w");
-        dassert(srcml_archive_write_open_io(0, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);         fclose(file);
+        dassert(srcml_archive_write_open_io(0, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
 
    }
