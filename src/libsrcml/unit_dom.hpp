@@ -134,7 +134,8 @@ public :
         root = &handler->root;
 
         // record namespaces in an extensible list so we can add the per unit
-        for (int i = 0; i < num_namespaces; i += 2) {
+        int ns_length = num_namespaces * 2;
+        for (int i = 0; i < ns_length; i += 2) {
 
             data.push_back((const xmlChar *)handler->libxml2_namespaces[i]);
             data.push_back((const xmlChar *)handler->libxml2_namespaces[i + 1]);
