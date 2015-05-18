@@ -1339,7 +1339,9 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                     "  and "
                     "("
                         "src:name/src:argument_list[@type='generic']/src:argument[src:extends or src:super]"
-                        "  or "
+                        " or "
+                        "src:name/src:parameter_list/src:parameter[src:extends or src:super]"
+                        " or "
                         "src:name/src:name/src:argument_list[@type='generic']/src:argument[src:extends or src:super]"
                     ")"
                 ")"
@@ -1373,7 +1375,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
                 ")"
                 " or "
                 "("
-                    "self::src:parameter_list[@type='generic']"
+                    "self::src:parameter_list"
                     "  and "
                     "src:parameter[src:extends or src:super]"
                 ")"
@@ -1384,18 +1386,29 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
             "ancestor::src:unit[@language='C#']"
             "  and "
             "src:where"
+            " or "
+            "src:name/src:where"
         ")"
     );
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_bound", "self::src:argument/ancestor::src:argument_list[@type='generic'] and (src:extends or src:super)");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_bound", "(self::src:argument/ancestor::src:argument_list[@type='generic'] and (src:extends or src:super))"
+        " or "
+        "(self::src:parameter and (src:extends or src:super))");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_unbound", "self::src:argument/ancestor::src:argument_list[@type='generic'] and not(src:extends or src:super)");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_upper_bound", "self::src:argument/ancestor::src:argument_list[@type='generic'] and src:extends");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_upper_bound",
+        "(self::src:argument/ancestor::src:argument_list[@type='generic'] and src:extends)"
+        " or "
+        "(self::src:parameter and src:extends)"
+    );
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_wildcard", "self::src:argument/ancestor::src:argument_list[@type='generic'] and src:name[.='?']");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_wildcard",
+        "(self::src:argument/ancestor::src:argument_list[@type='generic'] and src:name[.='?']) or (self::src:parameter and src:name[.='?'])"
+    );
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_lower_bound", "self::src:argument/ancestor::src:argument_list[@type='generic'] and src:super");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_lower_bound",
+        "(self::src:argument/ancestor::src:argument_list[@type='generic'] and src:super) or (self::src:parameter and src:super)");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_anonymous", "( self::src:parameter[ src:decl[not(src:name)] or src:type[not(following-sibling::src:name)] ] or self::src:decl[not(src:name)] or self::src:argument/src:name[.='?'] or ( (self::src:enum or self::src:struct or self::src:union or self::src:namespace or self::src:class) and not(src:name) ) )");
 
@@ -1403,7 +1416,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_complete", "( ( ( self::src:struct or self::src:union or self::src:class or self::src:function or self::src:constructor or self::src:destructor or self::src:property or self::src:event ) and not(src:specifier[.='partial']) ) or ( self::src:enum and src:block ) )");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "enum_is_scoped", "( self::src:enum[ @type='class' or parent::src:public or parent::src:private or parent::src:protected ] )");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "enum_is_scoped", "( self::src:enum[ @type='class' or parent::src:public or parent::src:private or parent::src:protected ] ) or ( self::src:enum_decl[ @type='class' or parent::src:public or parent::src:private or parent::src:protected ] )");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_using_access_decl", "self::src:using/src:name/src:name");
 
@@ -1411,13 +1424,21 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_using_namespace", "self::src:using/src:namespace");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_initializers", "self::src:constructor/src:member_list");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_initializers", "self::src:constructor/src:member_init_list");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_converting_constructor", "self::src:constructor [ not(src:specifier[.='explicit']) and src:parameter_list[ ( count(src:parameter) = 1 ) or ( count(src:parameter) = count(src:parameter[src:decl/src:init]) ) or ( ( count(src:parameter) - 1) = count(src:parameter[src:decl/src:init]) ) ] ]");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_local_storage", "( self::src:parameter ) or ( self::src:decl_stmt/src:decl/src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ] ) or ( self::src:decl/src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ]/parent::node()[parent::src:parameter or parent::src:decl_stmt] ) or ( self::src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ]/parent::node()[ self::src:decl[parent::src:parameter or parent::src:decl_stmt] ] )");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "has_local_storage",
+    "( self::src:parameter ) or ( self::src:decl_stmt/src:decl[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ] )"
+    " or "
+    "( self::src:decl[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ]/parent::node()[self::src:parameter or self::src:decl_stmt] )"
+//    " or "
+//    "( self::src:type[ not(src:specifier[.='static']) and not(src:specifier[.='extern']) ]/parent::node()[ self::src:decl[parent::src:parameter or parent::src:decl_stmt] ] )"
+    );
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_scoped_to_file", "(src:decl/src:type/src:specifier[.='static'] and not(ancestor::src:class or ancestor::src:struct or ancestor::src:union or ancestor::src:enum)) or (src:type/src:specifier[.='static'] and not(ancestor::src:class or ancestor::src:struct or ancestor::src:union or ancestor::src:enum)) or ancestor::src:namespace[not(src:name)]");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_scoped_to_file", "(src:decl/src:specifier[.='static'] and not(ancestor::src:class or ancestor::src:struct or ancestor::src:union or ancestor::src:enum))"
+    " or "
+    "(src:specifier[.='static'] and not(ancestor::src:class or ancestor::src:struct or ancestor::src:union or ancestor::src:enum)) or ancestor::src:namespace[not(src:name)]");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_single_decl", "count(src:decl) = 1");
 
@@ -1513,9 +1534,9 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_class", "self::src:class[not(@type)] or self::src:class_decl[not(@type)]");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_enum", "self::src:enum");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_enum", "self::src:enum or self::src:enum_decl");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_enum_class", "self::src:enum[@type='class']");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_enum_class", "self::src:enum[@type='class'] or self::src:enum_decl[@type='class']");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_struct", "self::src:struct or self::src:struct_decl");
 
@@ -1523,7 +1544,7 @@ void xpathsrcMLRegister(xmlXPathContextPtr context) {
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_partial", "src:specifier[.='partial']");
 
-    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_delegate_type", "self::src:function_decl/src:type/src:specifier[.='delegate']");
+    xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_delegate_type", "self::src:function_decl/src:specifier[.='delegate']");
 
     xpathRegisterExtensionFunction(SRCML_SRC_NS_URI, "is_interface", "self::src:interface");
 

@@ -1385,22 +1385,23 @@ int main() {
         "| //src:struct_decl[src:is_constrained()]"
         "| //src:decl[src:is_constrained()]"
         "| //src:type[src:is_constrained()]"
+        "| //src:parameter_list[src:is_constrained()]"
         "| //src:parameter[src:is_constrained()]"
         "| //src:argument_list[src:is_constrained()]"
         "| //src:argument[src:is_constrained()]"
     ;
-    // TODO: AWaiting fix!
-    run_xpath_test("is_constrained/is_constrained.cs", tempXPath, 4);
+    run_xpath_test("is_constrained/is_constrained.cs", tempXPath, 2);
     run_xpath_test("is_constrained/is_constrained.java", tempXPath, 16);
-    run_xpath_test("is_constrained/is_constrained_01.java", tempXPath, 16);
-    run_xpath_test("is_constrained/is_constrained_02.java", tempXPath, 16);
-    run_xpath_test("is_constrained/is_constrained_03.java", tempXPath, 16);
-    run_xpath_test("is_constrained/is_constrained_04.java", tempXPath, 16);
-    run_xpath_test("is_constrained/is_constrained_05.java", tempXPath, 16);
+    run_xpath_test("is_constrained/is_constrained_01.java", tempXPath, 3);
+    run_xpath_test("is_constrained/is_constrained_02.java", tempXPath, 0);
+    run_xpath_test("is_constrained/is_constrained_03.java", tempXPath, 5);
+    run_xpath_test("is_constrained/is_constrained_04.java", tempXPath, 5);
+    run_xpath_test("is_constrained/is_constrained_05.java", tempXPath, 3);
 
     // is_bound
     tempXPath = 
         "//src:argument[src:is_bound()]"
+        "| //src:parameter[src:is_bound()]"
     ;
     run_xpath_test("is_bound/is_bound.java", tempXPath, 4);
 
@@ -1413,18 +1414,21 @@ int main() {
     // is_upper_bound
     tempXPath = 
         "//src:argument[src:is_upper_bound()]"
+        "| //src:parameter[src:is_upper_bound()]"
     ;
     run_xpath_test("is_upper_bound/is_upper_bound.java", tempXPath, 3);
 
     // is_wildcard
     tempXPath = 
         "//src:argument[src:is_wildcard()]"
+        "| //src:parameter[src:is_wildcard()]"
     ;
     run_xpath_test("is_wildcard/is_wildcard.java", tempXPath, 3);
 
     // is_lower_bound
     tempXPath = 
         "//src:argument[src:is_lower_bound()]"
+        "| //src:parameter[src:is_lower_bound()]"
     ;
     run_xpath_test("is_lower_bound/is_lower_bound.java", tempXPath, 1);
 
@@ -1474,6 +1478,7 @@ int main() {
     // enum_is_scoped
     tempXPath = 
         "//src:enum[src:enum_is_scoped()]"
+        "| //src:enum_decl[src:enum_is_scoped()]"
     ;
     run_xpath_test("enum_is_scoped/enum_is_scoped.cpp", tempXPath, 8);
 
@@ -1516,8 +1521,8 @@ int main() {
         "| //src:type[src:has_local_storage()]"
         "| //src:parameter[src:has_local_storage()]"
     ;
-    run_xpath_test("has_local_storage/has_local_storage.c", tempXPath, 9);
-    run_xpath_test("has_local_storage/has_local_storage.cpp", tempXPath, 9);
+    run_xpath_test("has_local_storage/has_local_storage.c", tempXPath, 6);
+    run_xpath_test("has_local_storage/has_local_storage.cpp", tempXPath, 6);
 
     // is_scoped_to_file
     tempXPath = 
