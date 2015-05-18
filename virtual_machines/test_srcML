@@ -44,8 +44,6 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
     fi
 
     if [[ $OS = "mac" || $OS = "" ]]; then
-        scp ~/Dropbox/srcML/Unix/MacLion/srcML.tar.gz macliontest:/srcML
-        scp ~/Dropbox/srcML/Unix/MacMountainLion/srcML.tar.gz macmountainliontest:/srcML
         scp ~/Dropbox/srcML/Unix/MacMavericks/srcML.tar.gz macmaverickstest:/srcML
     fi
 

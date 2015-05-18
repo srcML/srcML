@@ -1,21 +1,21 @@
 #!/bin/bash
 
 ./prlctlall.py --fedora --build resume; sleep 15
-./build_srcML fedora
+./build_srcML --release fedora
 ./prlctlall.py --fedora --build suspend
 
 ./prlctlall.py --ubuntu --build resume; sleep 15
-./build_srcML ubuntu
+./build_srcML --release ubuntu
 ./prlctlall.py --ubuntu --build suspend
 
 ./prlctlall.py --mint --build resume; sleep 15
-./build_srcML mint
+./build_srcML --release mint
 ./prlctlall.py --mint --build suspend
 
 ./prlctlall.py --suse --build resume; sleep 15
-./build_srcML suse
+./build_srcML --release suse
 ./prlctlall.py --suse --build suspend
 
 ./prlctlall.py --mac --build resume; sleep 15
-./build_srcML mac
+./build_srcML --release mac
 ./prlctlall.py --mac --build suspend
