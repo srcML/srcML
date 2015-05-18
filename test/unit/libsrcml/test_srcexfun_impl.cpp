@@ -1390,8 +1390,13 @@ int main() {
         "| //src:argument[src:is_constrained()]"
     ;
     // TODO: AWaiting fix!
-    // run_xpath_test("is_constrained/is_constrained.cs", tempXPath, 4);
+    run_xpath_test("is_constrained/is_constrained.cs", tempXPath, 4);
     run_xpath_test("is_constrained/is_constrained.java", tempXPath, 16);
+    run_xpath_test("is_constrained/is_constrained_01.java", tempXPath, 16);
+    run_xpath_test("is_constrained/is_constrained_02.java", tempXPath, 16);
+    run_xpath_test("is_constrained/is_constrained_03.java", tempXPath, 16);
+    run_xpath_test("is_constrained/is_constrained_04.java", tempXPath, 16);
+    run_xpath_test("is_constrained/is_constrained_05.java", tempXPath, 16);
 
     // is_bound
     tempXPath = 
