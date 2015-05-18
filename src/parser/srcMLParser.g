@@ -5427,7 +5427,7 @@ multops_star[] { ENTRY_DEBUG } :
 // C++ compound name handling
 compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
 
-        ({ !in_template_param }? typename_keyword { iscompound = true; })*
+        (options { greedy = true; } : { !in_template_param }? typename_keyword { iscompound = true; })*
         (dcolon { iscompound = true; })*
         (DESTOP set_bool[isdestructor] { iscompound = true; })*
         (typename_keyword | simple_name_optional_template | push_namestack overloaded_operator)
