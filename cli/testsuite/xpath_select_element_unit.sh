@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test executing an xpath search on an archive with more than one unit in it
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp"><comment type="block" format="doxygen">/**
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp"><comment type="block" format="doxygen">/**
 	 * @returns Return 1 on success and 0 on failure.
 	 */</comment>
 	<function><type><name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list> <block>{
@@ -108,11 +108,11 @@ check sub/a.xml 3<<< "$output"
 # select the text from *<type><name>
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" item="1">int</unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1">int</unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" item="2">void</unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="2">void</unit>
 
 	</unit>
 	STDOUT
@@ -146,9 +146,9 @@ check sub/a.xml 3<<< "$output"
 # select all comment elements that contain block comments
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" item="1"><comment type="block" format="doxygen">/**
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1"><comment type="block" format="doxygen">/**
 	 * @returns Return 1 on success and 0 on failure.
 	 */</comment></unit>
 
