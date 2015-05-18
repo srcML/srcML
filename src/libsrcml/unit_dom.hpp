@@ -179,8 +179,8 @@ public :
 
             // make sure not already in
             bool found = false;
-            for (unsigned int i = 0; i < data.size() / 2; ++i) {
-                if (xmlStrEqual(data[i * 2], (const xmlChar *)handler->libxml2_namespaces[i * 2])) {
+            for (unsigned int j = 0; j < data.size() / 2; ++j) {
+                if (xmlStrEqual(data[j * 2], (const xmlChar *)handler->libxml2_namespaces[i * 2])) {
                     found = true;
                     break;
                 }
