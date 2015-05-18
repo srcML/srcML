@@ -548,6 +548,9 @@ public :
     // process the resulting nodes
     virtual void outputXPathResultsElement(xmlXPathObjectPtr result_nodes) {
 
+    	if (!result_nodes || !(result_nodes->type == 1) || !(result_nodes->nodesetval))
+    		return;
+
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
         // remove src namespace
