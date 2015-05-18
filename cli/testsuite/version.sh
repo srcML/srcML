@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test
 define output <<- 'STDOUT'
 	libsrcml Version Number REVISION
-	srcml Version Number 8000
+	srcml Version Number 9005
 	libarchive Version 2008005
 	STDOUT
 

@@ -73,9 +73,9 @@ check sub/a.xml 3<<< "$output"
 # select comment format (doxygen)
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" item="1">format="doxygen"</unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1">format="doxygen"</unit>
 
 	</unit>
 	STDOUT

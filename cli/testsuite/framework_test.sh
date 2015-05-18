@@ -36,7 +36,7 @@
 genfiles=""
 
 # current revision number, replaced in expected output strings
-export REVISION=0.8.0
+export REVISION=0.9.5
 
 # restores environment, deletes files created with createfile command.
 # or registerd with registerfile command

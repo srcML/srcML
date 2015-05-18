@@ -12,9 +12,9 @@ define input <<- 'STDOUT'
 # test on archive
 define archive <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0" url="bar">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="bar">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
@@ -46,9 +46,9 @@ define input <<- 'STDOUT'
 # empty on the archive
 define empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0" url="">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
@@ -74,7 +74,7 @@ check 3<<< ""
 # none
 define none <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDIN
 
 createfile sub/a.cpp.xml "$none"

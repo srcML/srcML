@@ -12,9 +12,9 @@ define input <<- 'STDOUT'
 # test on archive of one unit
 define archive <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.8.0" language="C++" filename="a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
@@ -40,7 +40,7 @@ check 3<<< "UTF-8"
 # test on empty archive
 define empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.8.0"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDOUT
 
 createfile sub/emptyarchive.xml "$empty"
