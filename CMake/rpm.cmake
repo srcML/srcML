@@ -26,8 +26,8 @@ set(CPACK_RPM_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 # package release number
 set(CPACK_RPM_PACKAGE_RELEASE 1)
 
-# set what it requires
-set(CPACK_RPM_PACKAGE_REQUIRES "libxml2 >= 2.7.8, libxslt >= 1.1.26, libarchive >= 3.0.3")
+# set what it requires  These need to be updated or set for different operating systems
+#set(CPACK_RPM_PACKAGE_REQUIRES "libxml2 >= 2.7.8, libxslt >= 1.1.26, libarchive >= 3.0.3")
 
 # set what package provides
 #set(CPACK_RPM_PACKAGE_PROVIDES "")
