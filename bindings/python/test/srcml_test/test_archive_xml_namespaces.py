@@ -58,7 +58,7 @@ class TestArchiveXMLNamespaces(unittest.TestCase):
         with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
             self.assertIsNotNone(archive_writer.xml_namespaces, "Incorrect value")
             self.assertEqual(3, len(archive_writer.xml_namespaces), "Incorrect value")
-            self.assertTupleEqual(("","http://www.sdml.info/srcML/src"), archive_writer.xml_namespaces[0], "Incorrect namespace: {0} {1}".format(*archive_writer.xml_namespaces[0]))
+            self.assertTupleEqual(("","http://www.srcML.org/srcML/src"), archive_writer.xml_namespaces[0], "Incorrect namespace: {0} {1}".format(*archive_writer.xml_namespaces[0]))
             self.assertTupleEqual(("Google","http://www.google.com"), archive_writer.xml_namespaces[1], "Incorrect namespace: {0} {1}".format(*archive_writer.xml_namespaces[1]))
             self.assertTupleEqual(("banana","www.banana.com"), archive_writer.xml_namespaces[2], "Incorrect namespace: {0} {1}".format(*archive_writer.xml_namespaces[2]))
 
@@ -88,7 +88,7 @@ class TestArchiveXMLNamespaces(unittest.TestCase):
 
     def test_writable_archive_xml_namespace___iter__(self):
         mem_buffer = memory_buffer()
-        remaining_namespaces = dict({"":"http://www.sdml.info/srcML/src", "Google":"http://www.google.com", "banana":"www.banana.com"})
+        remaining_namespaces = dict({"":"http://www.srcML.org/srcML/src", "Google":"http://www.google.com", "banana":"www.banana.com"})
         with writable_archive(writable_archive_settings(xml_namespaces={"banana":"www.banana.com", "Google": "http://www.google.com"}), buffer=mem_buffer) as archive_writer:
             for ns in archive_writer.xml_namespaces:
                 if ns[0] in remaining_namespaces:

@@ -221,7 +221,7 @@ class test_readable_archive(unittest.TestCase):
     def test_xml_namespaces(self):
         mem_buffer = memory_buffer()
         expected_namespaces = [("google", "http://www.google.com")]
-        expected_result = writable_archive_xml_namespace_settings(("", "http://www.sdml.info/srcML/src"), *expected_namespaces)
+        expected_result = writable_archive_xml_namespace_settings(("", "http://www.srcML.org/srcML/src"), *expected_namespaces)
         writable_arch_settings = writable_archive_settings(default_language=LANGUAGE_CXX, xml_namespaces=expected_namespaces)
         with writable_archive(writable_arch_settings, buffer=mem_buffer) as archive_writer:
             u = archive_writer.create_unit()
