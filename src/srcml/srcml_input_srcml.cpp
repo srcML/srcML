@@ -29,7 +29,8 @@
 
 void srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
-                       const srcml_input_src& srcml_input) {
+                       const srcml_input_src& srcml_input,
+                       const boost::optional<size_t> & revision) {
 
     // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_archive_create();
@@ -63,7 +64,7 @@ void srcml_input_srcml(ParseQueue& queue,
     bool unitPresent = false;
 
     // process each entry in the input srcml archive
-    while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
+    while (srcml_unit* unit = (revision ? srcml_read_unit_revision(srcml_input_archive, *revision) : srcml_read_unit(srcml_input_archive))) {
         unitPresent = true;
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;

@@ -50,7 +50,7 @@ void srcml_handler_dispatch(ParseQueue& queue,
         // all other srcml compressions require a per-input decompression stage
         srcml_input_src uninput = input;
         input_file(uninput);
-        srcml_input_srcml(queue, srcml_arch, uninput);
+        srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol == "text") {
 
