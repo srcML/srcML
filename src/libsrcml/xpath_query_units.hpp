@@ -414,6 +414,8 @@ public :
         if (xmlXPathNodeSetGetLength(result_nodes->nodesetval) == 0)
             return;
 
+        // determine if the xpath result is already a unit by checking the first result
+        // TODO: Verify that if there is more then one result, unit -> all units, !unit -> !all units
         bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0;
 
         // using the internal unit node to serve as the wrapper
