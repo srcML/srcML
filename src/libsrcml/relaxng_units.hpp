@@ -33,7 +33,7 @@
 
 #include <srcexfun.hpp>
 
-#include <unit_dom.hpp>
+#include <transform_units.hpp>
 
 #ifdef _MSC_BUILD
 #include <io.h>
@@ -44,7 +44,7 @@
  *
  * Extends unit_dom to execute RelaxNG grammar and write results.
  */
-class relaxng_units : public unit_dom {
+class relaxng_units : public transform_units {
 public :
 
     /**
@@ -56,7 +56,7 @@ public :
      * Constructor.
      */
     relaxng_units(OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, srcml_archive* oarchive)
-        : unit_dom(options), rngctx(rngctx), oarchive(oarchive) {
+        : transform_units(options, oarchive), rngctx(rngctx) {
     }
 
     /**
@@ -99,44 +99,6 @@ public :
         return true;
     }
 
-    virtual void outputResult(xmlNodePtr a_node) {
-
-        bool is_archive = (oarchive->options & SRCML_OPTION_ARCHIVE) > 0;
-
-        // remove src namespace
-        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
-        xmlNsPtr* skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
-
-        static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
-        if (size == 0)
-            return;
-
-        oarchive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
-
-        xmlBufferEmpty(lbuffer);
-
-        if (skip)
-            *skip = hrefptr;
-    }
-
-        // removes the namespace from the element
-    xmlNsPtr* xmlRemoveNs(xmlNodePtr a_node, xmlNsPtr hrefptr) {
-
-        if (!hrefptr)
-            return 0;
-
-        xmlNsPtr* skip = 0;
-        for (xmlNsPtr* pns = &a_node->nsDef; pns; pns = &((*pns)->next)) {
-            if ((*pns) == hrefptr) {
-                skip = pns;
-                *skip = (*skip)->next;
-                break;
-            }
-        }
-
-        return skip;
-    }
     /**
      * end_output
      *
@@ -147,7 +109,6 @@ public :
 private :
 
     xmlRelaxNGValidCtxtPtr rngctx;
-    srcml_archive* oarchive;
 
 };
 
