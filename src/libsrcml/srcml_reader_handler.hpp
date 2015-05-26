@@ -477,6 +477,8 @@ public :
                 archive->options |= SRCML_OPTION_POSITION;
             else if(uri == SRCML_EXT_OPENMP_NS_URI)
                 archive->options |= SRCML_OPTION_OPENMP;
+            else if(revision && uri == SRCML_DIFF_NS_URI)
+                continue;
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
 
@@ -992,6 +994,9 @@ private :
         for(int pos = 0; pos < num_namespaces; ++pos) {
 
             if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace(namespaces[pos].uri, SRCML_CPP_NS_URI))
+                continue;
+
+            if(revision && is_srcml_namespace(namespaces[pos].uri, SRCML_DIFF_NS_URI))
                 continue;
 
             *unit->unit += " xmlns";

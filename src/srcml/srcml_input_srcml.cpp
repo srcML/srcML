@@ -26,6 +26,7 @@
 #include <srcml.h>
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
+#include <srcmlns.hpp>
 
 void srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
@@ -49,6 +50,10 @@ void srcml_input_srcml(ParseQueue& queue,
         size_t nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
         
         for (size_t i = 0; i < nsSize; ++i) {
+
+            if(revision && srcml_archive_get_namespace_uri(srcml_input_archive, i) == std::string(SRCML_DIFF_NS_URI))
+                continue;
+
             srcml_archive_register_namespace(srcml_output_archive,
                 srcml_archive_get_namespace_prefix(srcml_input_archive, i),
                 srcml_archive_get_namespace_uri(srcml_input_archive, i));
