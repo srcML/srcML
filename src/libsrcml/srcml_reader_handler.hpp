@@ -654,7 +654,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(URI && std::string(URI) == SRCML_DIFF_NS_URI) {
+        if(URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
 
             std::string local_name(localname);
 
@@ -669,7 +669,7 @@ public :
 
         if(revision) {
 
-            if(std::string(URI) == SRCML_DIFF_NS_URI) return;
+            if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
             if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
             if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
 
@@ -822,12 +822,12 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(!skip && URI && std::string(URI) == SRCML_DIFF_NS_URI)
+        if(!skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI))
             srcdiff_stack.pop();
 
         if(revision) {
 
-            if(std::string(URI) == SRCML_DIFF_NS_URI) return;
+            if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
             if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
             if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
 
