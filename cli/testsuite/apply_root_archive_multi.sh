@@ -22,6 +22,7 @@ define nested <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+xmlcheck "$nested"
 
 define nested_unit_out <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -41,6 +42,7 @@ define nested_unit_out <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+xmlcheck "$nested_unit_out"
 
 define nested_exprstmt_out <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -56,6 +58,7 @@ define nested_exprstmt_out <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+xmlcheck "$nested_exprstmt_out"
 
 createfile sub/a.cpp.xml "$nested"
 xmlcheck sub/a.cpp.xml
