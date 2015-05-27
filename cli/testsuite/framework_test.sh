@@ -272,6 +272,10 @@ xmlcheck() {
 
     if [ "${1:0:4}" != "<?xm" ]; then
         xmllint --noout ${1}
+
+    elif [ "${1:0:4}" != "<uni" ]; then
+        xmllint --noout ${1}
+
     else
         echo "${1}" | xmllint --noout /dev/stdin
     fi;
