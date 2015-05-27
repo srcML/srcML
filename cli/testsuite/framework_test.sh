@@ -265,3 +265,13 @@ check_exit() {
 
     true
 }
+
+# Check the validity of the xml
+# Currently only checks for well-formed xml, not DTD validity
+xmlcheck() {
+
+    xmllint --noout ${1}
+
+    true
+}
+
