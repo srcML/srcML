@@ -50,7 +50,7 @@ void srcml_handler_dispatch(ParseQueue& queue,
         // all other srcml compressions require a per-input decompression stage
         srcml_input_src uninput = input;
         input_file(uninput);
-        srcml_input_srcml(queue, srcml_arch, uninput);
+        srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol == "text") {
 
@@ -165,8 +165,8 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // register xml namespaces
     std::map<std::string, std::string>::const_iterator itr;
-    for(itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
-        srcml_archive_register_namespace(srcml_arch, (*itr).first.c_str(), (*itr).second.c_str());
+    for(itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr) {
+        srcml_archive_register_namespace(srcml_arch, itr->first.c_str(), itr->second.c_str());
     }
 
     // create the srcML output file

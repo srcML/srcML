@@ -26,10 +26,12 @@
 #include <srcml.h>
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
+#include <srcmlns.hpp>
 
 void srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
-                       const srcml_input_src& srcml_input) {
+                       const srcml_input_src& srcml_input,
+                       const boost::optional<size_t> & revision) {
 
     // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_archive_create();
@@ -48,6 +50,10 @@ void srcml_input_srcml(ParseQueue& queue,
         size_t nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
         
         for (size_t i = 0; i < nsSize; ++i) {
+
+            if(revision && srcml_archive_get_namespace_uri(srcml_input_archive, i) == std::string(SRCML_DIFF_NS_URI))
+                continue;
+
             srcml_archive_register_namespace(srcml_output_archive,
                 srcml_archive_get_namespace_prefix(srcml_input_archive, i),
                 srcml_archive_get_namespace_uri(srcml_input_archive, i));
@@ -63,7 +69,7 @@ void srcml_input_srcml(ParseQueue& queue,
     bool unitPresent = false;
 
     // process each entry in the input srcml archive
-    while (srcml_unit* unit = srcml_read_unit(srcml_input_archive)) {
+    while (srcml_unit* unit = (revision ? srcml_read_unit_revision(srcml_input_archive, *revision) : srcml_read_unit(srcml_input_archive))) {
         unitPresent = true;
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
