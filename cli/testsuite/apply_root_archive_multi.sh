@@ -58,6 +58,7 @@ define nested_exprstmt_out <<- 'STDOUT'
 	STDOUT
 
 createfile sub/a.cpp.xml "$nested"
+xmlcheck sub/a.cpp.xml
 
 # /src:unit
 srcml2src --apply-root --xpath=/src:unit sub/a.cpp.xml
