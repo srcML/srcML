@@ -70,8 +70,18 @@ public :
         bool is_archive = (oarchive->options & SRCML_OPTION_ARCHIVE) > 0;
 
         // remove src namespace
-        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
-        xmlNsPtr* skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
+        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_CPP_NS_URI);
+
+        xmlNsPtr save = a_node->nsDef; //skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
+        xmlNsPtr nextsave = hrefptr ? hrefptr->next : 0;
+        if (is_archive) {
+        	if (!hrefptr)
+		        a_node->nsDef = 0;
+		    else {
+		    	a_node->nsDef = hrefptr;
+		    	hrefptr->next = 0;
+		    }
+        }
 
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
@@ -82,8 +92,11 @@ public :
 
         xmlBufferEmpty(lbuffer);
 
-        if (skip)
-            *skip = hrefptr;
+        if (save)
+	        a_node->nsDef = save;
+
+	    if (nextsave)
+	    	hrefptr->next = nextsave;
     }
 
     // removes the namespace from the element

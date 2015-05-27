@@ -535,6 +535,22 @@ public :
 
     virtual void outputResult(xmlNodePtr a_node) {
 
+        bool is_archive = (output_archive->options & SRCML_OPTION_ARCHIVE) > 0;
+
+        // remove src namespace
+        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_CPP_NS_URI);
+
+        xmlNsPtr save = a_node->nsDef; //skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
+        xmlNsPtr nextsave = hrefptr ? hrefptr->next : 0;
+        if (is_archive) {
+            if (!hrefptr)
+                a_node->nsDef = 0;
+            else {
+                a_node->nsDef = hrefptr;
+                hrefptr->next = 0;
+            }
+        }
+
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
         if (size == 0)
@@ -544,7 +560,11 @@ public :
 
         xmlBufferEmpty(lbuffer);
 
-        ++result_count;
+        if (save)
+            a_node->nsDef = save;
+
+        if (nextsave)
+            hrefptr->next = nextsave;
     }
 
     // process the resulting nodes
