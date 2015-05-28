@@ -9,6 +9,8 @@ define empty_srcml <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDOUT
 
+xmlcheck "$empty_srcml"
+
 # empty file input
 createfile empty.txt ""
 

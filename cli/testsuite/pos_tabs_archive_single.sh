@@ -23,6 +23,8 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$fsrcml"
+xmlcheck "$srcml"
 createfile sub/a.cpp ""
 
 srcml -l C++ --tabs 4 --position --archive < sub/a.cpp

@@ -9,6 +9,8 @@ define srcml <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
 	STDOUT
 
+xmlcheck "$srcml"
+
 src2srcml -t "" -l "C++"
 check 3<<< "$srcml"
 
@@ -26,6 +28,8 @@ define asrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 	STDOUT
+
+xmlcheck "$asrcml"
 
 src2srcml -t "a;" -l "C++"
 check 3<<< "$asrcml"
@@ -45,6 +49,8 @@ define ansrcml <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
+
+xmlcheck "$ansrcml"
 
 src2srcml -t "a;\n" -l "C++"
 check 3<<< "$ansrcml"

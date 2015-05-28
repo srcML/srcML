@@ -12,6 +12,7 @@ define srcml <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="sub" filename="a.cpp" version="1.0"/>
 	STDOUT
 
+xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
 # TODO: Add get-hash and get-timestamp

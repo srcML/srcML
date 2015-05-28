@@ -31,6 +31,8 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$foutput"
+xmlcheck "$output"
 
 createfile archive/a.cpp "$src"
 echo archive/a.cpp | tr " " "\n" | cpio -o > archive/a.cpp.cpio

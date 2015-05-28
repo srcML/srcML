@@ -17,6 +17,8 @@ define nestedfile <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$nestedfile"
+
 createfile sub/a.cpp "
 a;"
 createfile sub/b.cpp "

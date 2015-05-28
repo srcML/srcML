@@ -16,7 +16,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-
+xmlcheck "$srcml"
 createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
 
@@ -82,6 +82,7 @@ define defaultxml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$defaultxml"
 createfile sub/a.cpp.xml "$defaultxml"
 
 srcml2src -l C++ -X --no-namespace-decl < sub/a.cpp.xml

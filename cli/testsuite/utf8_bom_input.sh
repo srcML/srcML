@@ -18,18 +18,18 @@ define foutput <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$output"
+xmlcheck "$foutput"
+
 src2srcml --language 'C' <<< "a;"
 
 check 3<<< "$output"
-
 createfile bomfile.c "\xef\xbb\xbfa;
 "
 
 src2srcml bomfile.c
-
 check 3<<< "$foutput"
 
 # NOTE: This is broken in libsrcml
 src2srcml --language 'C' < bomfile.c
-
 check 3<<< "$output"

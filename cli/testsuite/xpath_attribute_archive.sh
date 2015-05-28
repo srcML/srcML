@@ -17,6 +17,7 @@ define result <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$result"
 createfile a.cpp "a;
 "
 createfile b.cpp "b;

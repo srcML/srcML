@@ -15,6 +15,7 @@ define srcml <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+xmlcheck "$srcml"
 
 define output <<- 'STDOUT'
 	Source encoding: (null)

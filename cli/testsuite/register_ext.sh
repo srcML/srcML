@@ -9,6 +9,7 @@ define fxmlfile <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java" filename="sub/a.cpp"/>
 	STDOUT
 
+xmlcheck "$fxmlfile"
 createfile sub/a.cpp ""
 
 # src to srcml
@@ -26,6 +27,7 @@ define fsxmlfile <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp"/>
 	STDOUT
 
+xmlcheck "$fsxmlfile"
 createfile sub/a.xml "$fsxmlfile"
 
 src2srcml --register-ext xml=Java sub/a.xml

@@ -34,6 +34,8 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$srcml"
+
 createfile sub/archive_multi.xml "$srcml"
 
 srcml sub/archive_multi.xml -i
@@ -77,6 +79,8 @@ define srcml <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+xmlcheck "$srcml"
 
 createfile sub/archive_single.xml "$srcml"
 

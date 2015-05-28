@@ -18,6 +18,7 @@ define input <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$input"
 createfile sub/a.cpp.xml "$input"
 
 # TODO: issue #999

@@ -28,6 +28,9 @@ define archive_multi <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$archive_single"
+xmlcheck "$archive_multi"
+
 define archive_single_output <<- 'STDOUT'
 	1
 	STDOUT
@@ -72,6 +75,7 @@ define empty_output <<- 'STDOUT'
 	0
 	STDOUT
 
+xmlcheck "$empty"
 createfile sub/emptyarchive.xml "$empty"
 
 srcml2src --show-unit-count sub/emptyarchive.xml

@@ -9,15 +9,14 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="Objective-C"/>
 	STDOUT
 
-echo -n "" | src2srcml -l Objective-C
+xmlcheck "$output"
 
+echo -n "" | src2srcml -l Objective-C
 check 3<<< "$output"
 
 echo -n "" | src2srcml --language Objective-C
-
 check 3<<< "$output"
 
 echo -n "" | src2srcml --language=Objective-C
-
 check 3<<< "$output"
 

@@ -15,6 +15,8 @@ define foosrcml <<- 'STDOUT'
 	</bar:unit>
 	STDOUT
 
+# this and the other xmlcheck are failing, causing the test to fail.
+xmlcheck "$foosrcml"
 createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
 
@@ -92,6 +94,8 @@ define fooprefixsrcml <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+xmlcheck "$fooprefixsrcml"
 
 srcml --xmlns:foo=foo.com sub/a.cpp sub/b.cpp --in-order
 check 3<<< "$fooprefixsrcml"

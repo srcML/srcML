@@ -31,6 +31,8 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$foutput"
+xmlcheck "$output"
 
 createfile archive/a.cpp "$src"
 tar -cf archive/a.cpp.tar archive/a.cpp

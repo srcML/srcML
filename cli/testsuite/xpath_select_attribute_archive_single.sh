@@ -32,6 +32,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$srcml"
 createfile sub/archive_single.cpp.xml "$srcml"
 
 
@@ -44,6 +45,8 @@ define output <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+xmlcheck "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
 check 3<<< "$output"
@@ -79,6 +82,8 @@ define output <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+xmlcheck "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
 check 3<<< "$output"

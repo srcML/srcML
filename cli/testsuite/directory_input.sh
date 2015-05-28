@@ -23,6 +23,8 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$output"
+
 createfile dir/file.aj "\na;"
 createfile dir/file.c  "\na;"
 createfile dir/file.cpp "\na;"

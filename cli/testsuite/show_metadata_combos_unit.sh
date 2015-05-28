@@ -16,6 +16,7 @@ define output <<- 'STDOUT'
 	url="sub"
 	STDOUT
 
+xmlcheck "$input"
 createfile sub/a.cpp.xml "$input"
 
 # language, url, filename

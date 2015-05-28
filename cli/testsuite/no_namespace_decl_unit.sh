@@ -10,6 +10,8 @@ define output <<- 'STDOUT'
 	<unit revision="REVISION" language="C++"/>
 	STDOUT
 
+xmlcheck "$output"
+
 echo -n "" | src2srcml -l C++ --no-namespace-decl
 check 3<<< "$output"
 
@@ -18,7 +20,7 @@ define output2 <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 
-
+xmlcheck "$output2"
 createfile sub/a.cpp ""
 
 src2srcml sub/a.cpp --no-namespace-decl -o sub/a.cpp.xml
@@ -41,6 +43,9 @@ define nonamespacexml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit revision="REVISION" language="C++"/>
 	STDOUT
+
+xmlcheck "$defaultxml"
+xmlcheck "$nonamespacexml"
 
 echo -n "" | srcml2src -l C++
 check 3<<< "$defaultxml"

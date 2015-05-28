@@ -15,6 +15,7 @@ define archive <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$archive"
 createfile sub/archive.cpp.xml "$archive"
 
 # TODO: issue #1042
@@ -36,6 +37,7 @@ define empty <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$empty"
 createfile sub/archive.cpp.xml "$empty"
 
 srcml --show-timestamp sub/archive.cpp.xml
@@ -56,6 +58,7 @@ define none <<- 'STDIN'
 	</unit>
 	STDIN
 
+xmlcheck "$none"
 createfile sub/archive.cpp.xml "$none"
 
 srcml --show-timestamp sub/archive.cpp.xml

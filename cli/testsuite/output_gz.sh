@@ -21,6 +21,9 @@ define xmlfile <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$sxmlfile"
+xmlcheck "$xmlfile"
+
 # TODO: issue #1057
 
 # src2srcml
