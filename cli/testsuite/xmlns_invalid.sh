@@ -16,71 +16,73 @@ define foosrcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$foosrcml"
+
 createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
 
 srcml --xmlns=foo.com sub/a.cpp sub/b.cpp --in-order
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp --xmlns=foo.com --in-order
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp --in-order --xmlns=foo.com
-check_exit 3
+check_exit 4
 
 srcml --in-order --xmlns=foo.com sub/a.cpp sub/b.cpp
-check_exit 3
+check_exit 4
 
 srcml --in-order sub/a.cpp sub/b.cpp --xmlns=foo.com
-check_exit 3
+check_exit 4
 
 srcml --xmlns=foo.com sub/a.cpp sub/b.cpp --in-order -o sub/a.xml
-check_exit 3
+check_exit 4
 
 srcml --xmlns=foo.com sub/a.cpp sub/b.cpp -o sub/a.xml --in-order
-check_exit 3
+check_exit 4
 
 srcml --xmlns=foo.com -o sub/a.xml sub/a.cpp sub/b.cpp --in-order
-check_exit 3
+check_exit 4
 
 srcml -o sub/a.xml --xmlns=foo.com sub/a.cpp sub/b.cpp --in-order
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp --xmlns=foo.com --in-order -o sub/a.xml
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp --in-order -o sub/a.xml --xmlns=foo.com
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp -o sub/a.xml --in-order --xmlns=foo.com
-check_exit 3
+check_exit 4
 
 srcml -o sub/a.xml sub/a.cpp sub/b.cpp --in-order --xmlns=foo.com
-check_exit 3
+check_exit 4
 
 srcml --in-order --xmlns=foo.com sub/a.cpp sub/b.cpp -o sub/a.xml
-check_exit 3
+check_exit 4
 
 srcml --in-order --xmlns=foo.com -o sub/a.xml sub/a.cpp sub/b.cpp
-check_exit 3
+check_exit 4
 
 srcml --in-order -o sub/a.xml --xmlns=foo.com sub/a.cpp sub/b.cpp
-check_exit 3
+check_exit 4
 
 srcml -o sub/a.xml --in-order --xmlns=foo.com sub/a.cpp sub/b.cpp
-check_exit 3
+check_exit 4
 
 srcml --in-order sub/a.cpp sub/b.cpp --xmlns=foo.com -o sub/a.xml
-check_exit 3
+check_exit 4
 
 srcml --in-order sub/a.cpp sub/b.cpp -o sub/a.xml --xmlns=foo.com
-check_exit 3
+check_exit 4
 
 srcml --in-order -o sub/a.xml sub/a.cpp sub/b.cpp --xmlns=foo.com
-check_exit 3
+check_exit 4
 
 srcml -o sub/a.xml --in-order sub/a.cpp sub/b.cpp --xmlns=foo.com
-check_exit 3
+check_exit 4
 
 # with prefix
 define fooprefixsrcml <<- 'STDOUT'
@@ -94,66 +96,68 @@ define fooprefixsrcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$fooprefixsrcml"
+
 srcml --xmlns:foo=foo.com sub/a.cpp sub/b.cpp --in-order
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp --xmlns:foo=foo.com --in-order
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp --in-order --xmlns:foo=foo.com
-check_exit 3
+check_exit 4
 
 srcml --in-order --xmlns:foo=foo.com sub/a.cpp sub/b.cpp
-check_exit 3
+check_exit 4
 
 srcml --in-order sub/a.cpp sub/b.cpp --xmlns:foo=foo.com
-check_exit 3
+check_exit 4
 
 srcml --xmlns:foo=foo.com sub/a.cpp sub/b.cpp --in-order -o sub/a.xml
-check_exit 3
+check_exit 4
 
 srcml --xmlns:foo=foo.com sub/a.cpp sub/b.cpp -o sub/a.xml --in-order
-check_exit 3
+check_exit 4
 
 srcml --xmlns:foo=foo.com -o sub/a.xml sub/a.cpp sub/b.cpp --in-order
-check_exit 3
+check_exit 4
 
 srcml -o sub/a.xml --xmlns:foo=foo.com sub/a.cpp sub/b.cpp --in-order
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp --xmlns:foo=foo.com --in-order -o sub/a.xml
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp --in-order -o sub/a.xml --xmlns:foo=foo.com
-check_exit 3
+check_exit 4
 
 srcml sub/a.cpp sub/b.cpp -o sub/a.xml --in-order --xmlns:foo=foo.com
-check_exit 3
+check_exit 4
 
 srcml -o sub/a.xml sub/a.cpp sub/b.cpp --in-order --xmlns:foo=foo.com
-check_exit 3
+check_exit 4
 
 srcml --in-order --xmlns:foo=foo.com sub/a.cpp sub/b.cpp -o sub/a.xml
-check_exit 3
+check_exit 4
 
 srcml --in-order --xmlns:foo=foo.com -o sub/a.xml sub/a.cpp sub/b.cpp
-check_exit 3
+check_exit 4
 
 srcml --in-order -o sub/a.xml --xmlns:foo=foo.com sub/a.cpp sub/b.cpp
-check_exit 3
+check_exit 4
 
 srcml -o sub/a.xml --in-order --xmlns:foo=foo.com sub/a.cpp sub/b.cpp
-check_exit 3
+check_exit 4
 
 srcml --in-order sub/a.cpp sub/b.cpp --xmlns:foo=foo.com -o sub/a.xml
-check_exit 3
+check_exit 4
 
 srcml --in-order sub/a.cpp sub/b.cpp -o sub/a.xml --xmlns:foo=foo.com
-check_exit 3
+check_exit 4
 
 srcml --in-order -o sub/a.xml sub/a.cpp sub/b.cpp --xmlns:foo=foo.com
-check_exit 3
+check_exit 4
 
 srcml -o sub/a.xml --in-order sub/a.cpp sub/b.cpp --xmlns:foo=foo.com
-check_exit 3
+check_exit 4
 
