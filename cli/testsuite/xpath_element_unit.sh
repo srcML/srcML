@@ -38,7 +38,7 @@ srcml --xpath="//src:name" sub/a.xml --element="foo:foo"
 check 3<<< "$result"
 
 # from standard input
-echo "a;" | srcml -l C++ --xpath="//src:name" --element="foo:foo"
+echo "a;" | srcml -l C++ --xmlns:foo=foo.com --xpath="//src:name" --element="foo:foo"
 check 3<<< "$resultstdin"
 
 # output to a file
@@ -48,5 +48,5 @@ check result.xml <<< "$result"
 srcml --xpath="//src:name" sub/a.xml --element="foo:foo" -o result.xml
 check result.xml <<< "$result"
 
-echo "a;" | srcml -l C++ --xpath="//src:name" --element="foo:foo" -o result.xml
+echo "a;" | srcml -l C++  --xmlns:foo=foo.com --xpath="//src:name" --element="foo:foo" -o result.xml
 check result.xml <<< "$resultstdin"
