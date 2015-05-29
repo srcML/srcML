@@ -212,9 +212,6 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
         if (arg == "X")           // %X: XML encoding on the archive
             return srcml_archive_get_xml_encoding(srcml_arch);
 
-        if (arg == "x")           // %x: XML encoding attribute on the unit
-            return "XML";
-
     return "???";
 }
 

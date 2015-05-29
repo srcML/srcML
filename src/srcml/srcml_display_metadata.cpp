@@ -209,9 +209,9 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_URL) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_URL)
-                pretty_meta += "%U\n";
+                pretty_meta += "%U\n { } ";
             else
-                pretty_meta += "url=\"%U\"\n";
+                pretty_meta += "url=\"%U\"\n { } ";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION) {
