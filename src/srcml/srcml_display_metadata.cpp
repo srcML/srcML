@@ -254,7 +254,6 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
-            std::cerr << "I'm here!\n";
             std::cout << srcml_unit_count(srcml_arch) << "\n";
         }
 
