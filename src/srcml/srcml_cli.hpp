@@ -84,6 +84,10 @@ const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP | 
     SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
+// Error Codes
+// TODO: PUT THE REST HERE
+const int CLI_ERROR_INVALID_ARGUMENT = 4;
+
 struct attribute {
     boost::optional<std::string> prefix;
     boost::optional<std::string> name;

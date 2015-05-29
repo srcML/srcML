@@ -184,7 +184,7 @@ void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
         std::cerr << "srcml: invalid src encoding \"" << value.c_str() << "\"\n";
-        exit(4);
+        exit(CLI_ERROR_INVALID_ARGUMENT);
     }
     srcml_request.src_encoding = value;
 }
@@ -195,7 +195,7 @@ void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) 
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
         std::cerr << "srcml: invalid xml encoding \"" << value.c_str() << "\"\n";
-        exit(4);
+        exit(CLI_ERROR_INVALID_ARGUMENT);
     }
     srcml_request.att_xml_encoding = value;
 }
