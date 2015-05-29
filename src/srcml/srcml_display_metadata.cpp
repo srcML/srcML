@@ -137,7 +137,6 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
     while (true) {
-        std::cerr << "BEFORE UNIT READ - LOOP\n";
         srcml_unit* unit = srcml_read_unit_header(srcml_arch);
 
         if (!unit)
@@ -255,6 +254,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         // units
         if (srcml_request.command & SRCML_COMMAND_UNITS) {
+            std::cerr << "I'm here!\n";
             std::cout << srcml_unit_count(srcml_arch) << "\n";
         }
 
