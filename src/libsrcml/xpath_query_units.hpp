@@ -526,6 +526,10 @@ public :
         if (size == 0)
             return;
 
+        // remove extra space that libxml puts in before pure attribute dumping
+        if (a_node->type == XML_ATTRIBUTE_NODE)
+            xmlBufferShrink(lbuffer, 1);
+
         output_archive->translator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
 
         xmlBufferEmpty(lbuffer);
