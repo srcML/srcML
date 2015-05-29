@@ -24,5 +24,7 @@ a;"
 createfile sub/b.cpp "
 b;"
 
+
+# todo: issue #1120
 src2srcml --files-from "https://raw.githubusercontent.com/hmm34/massive-lana/master/file-list.txt" --in-order -o sub/both.xml
 check sub/both.xml 3<<< "$nestedfile"

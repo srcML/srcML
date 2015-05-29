@@ -40,19 +40,6 @@ new_arg() {
 
 }
 
-# TODO: This would be cleaner, if only bash didn't output the new_arg history instead
-# of the srcml input
-
-#for (( i = 0; i < $size; i++ )); do
-#	new_arg
-#
-#	srcml2src $val sub/a.cpp.xml
-#	check 3<<< "$values"
-#
-#	srcml2src $val < sub/a.cpp.xml
-#	check 3<<< "$values"
-#done
-
 new_arg
 
 srcml2src $val sub/a.cpp.xml

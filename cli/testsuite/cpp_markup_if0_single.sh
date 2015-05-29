@@ -25,7 +25,6 @@ define output <<- 'STDOUT'
 
 xmlcheck "$output"
 
-# TODO: issue #1072
 src2srcml -l C++ <<< "$input"
 check 3<<< "$output"
 
