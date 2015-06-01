@@ -22,6 +22,8 @@
 #define INCLUDED_SRCML_READER_HANDLER_HPP
 
 #include <srcSAXHandler.hpp>
+#include <sax2_srcsax_handler.hpp>
+
 #include <srcml_element.hpp>
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
@@ -370,8 +372,11 @@ public :
      * Overidden startRoot to handle collection of root attributes. Stop before continue
      */
     virtual void startRoot(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                           const struct srcsax_attribute * /* attributes */) {
+
+        xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
+        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -382,8 +387,9 @@ public :
         // collect attributes
         for(int pos = 0; pos < num_attributes; ++pos) {
 
-            std::string attribute = attributes[pos].localname;
-            std::string value = attributes[pos].value;
+            std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
+            std::string value;
+            value.append((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
 
             // Note: these are ignore instead of placing in attributes.
             if(attribute == "timestamp")
@@ -450,8 +456,9 @@ public :
         // collect namespaces
         for(int pos = 0; pos < num_namespaces; ++pos) {
 
-            std::string prefix = namespaces[pos].prefix ? namespaces[pos].prefix : "";
-            std::string uri = namespaces[pos].uri ? namespaces[pos].uri  : "";
+            std::string prefix = (const char*) handler->libxml2_namespaces[pos * 2] ? (const char*) handler->libxml2_namespaces[pos * 2] : "";
+            std::string uri = (const char*) handler->libxml2_namespaces[pos * 2 + 1] ? (const char*) handler->libxml2_namespaces[pos * 2 + 1] : "";
+
             srcml_uri_normalize(uri);
 
             if(uri == SRCML_CPP_NS_URI) {
@@ -509,6 +516,9 @@ public :
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                            const struct srcsax_attribute * attributes) {
 
+        xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
+        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -547,8 +557,9 @@ public :
         // collect attributes
         for(int pos = 0; pos < num_attributes; ++pos) {
 
-            std::string attribute = attributes[pos].localname;
-            std::string value = attribute_revision(attributes[pos].value);
+            std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
+            std::string value;
+            value.append((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
 
             if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
