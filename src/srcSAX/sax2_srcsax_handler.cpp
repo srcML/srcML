@@ -467,7 +467,7 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
 
     if(state->context->terminate) return;
 
-    srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
+    srcsax_namespace * srcsax_namespaces = 0; //(srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
     srcsax_attribute * srcsax_attributes = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(nb_attributes, attributes);
 
     int ns_length = state->root.nb_namespaces * 2;
@@ -543,7 +543,7 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
     
     if(state->context->terminate) return;
 
-    srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
+    srcsax_namespace * srcsax_namespaces = 0; //(srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
     srcsax_attribute * srcsax_attributes = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(nb_attributes, attributes);
 
     int ns_length = state->root.nb_namespaces * 2;
@@ -611,7 +611,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
             if(state->context->terminate) return;
 
-            srcsax_namespace * srcsax_namespaces_root = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(state->root.nb_namespaces, state->root.namespaces);
+            srcsax_namespace * srcsax_namespaces_root = 0; //(srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(state->root.nb_namespaces, state->root.namespaces);
             srcsax_attribute * srcsax_attributes_root = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(state->root.nb_attributes, state->root.attributes);            
 
             if(state->context->handler->start_root) {

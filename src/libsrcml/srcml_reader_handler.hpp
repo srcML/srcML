@@ -513,8 +513,8 @@ public :
      * if collecting attributes.
      */
     virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                           const struct srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
@@ -609,7 +609,7 @@ public :
 
         if(collect_srcml) {
 
-            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
+            write_startTag(localname, prefix, num_namespaces, handler->libxml2_namespaces, num_attributes, handler->libxml2_attributes);
 
             if(!is_archive) {
 
@@ -658,8 +658,11 @@ public :
      * Overidden startElementNs to handle collection of srcML elements.
      */
     virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                                int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                                const struct srcsax_attribute * attributes) {
+                                int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                                const struct srcsax_attribute * /* attributes */) {
+
+        xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
+        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -689,7 +692,10 @@ public :
         if(collect_src && localname[0] == 'e' && localname[1] == 's'
            && strcmp((const char *)localname, "escape") == 0) {
 
-            char value = (int)strtol((const char*) attributes[0].value, NULL, 0);
+            std::string svalue;
+            svalue.append((const char *)handler->libxml2_attributes[0 * 5 + 3], handler->libxml2_attributes[0 * 5 + 4] - handler->libxml2_attributes[0 * 5 + 3]);
+
+            char value = (int)strtol(svalue.c_str(), NULL, 0);
 
             charactersUnit(&value, 1);
 
@@ -701,7 +707,7 @@ public :
 
         if(collect_srcml) {
 
-            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
+            write_startTag(localname, prefix, num_namespaces, handler->libxml2_namespaces, num_attributes, handler->libxml2_attributes);
 
         }
 
