@@ -1039,7 +1039,80 @@ private :
             *unit->unit += attribute_revision(attributes[pos].value);
             *unit->unit += "\"";
 
+        }
+        //*unit->unit += ">";
 
+    }
+
+#define NS_URI(pos) (pos * 2 + 1)
+#define NS_PREFIX(pos) (pos * 2)
+
+#define ATTR_LOCALNAME(pos) (pos * 5)
+#define ATTR_PREFIX(pos) (pos * 5 + 1)
+#define ATTR_URI(pos) (pos * 5 + 2)
+
+
+   /**
+     * write_startTag
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     * @param num_namespaces number of namespaces definitions
+     * @param namespaces the defined namespaces
+     * @param num_attributes the number of attributes on the tag
+     * @param attributes list of attributes
+     *
+     * Write out the start tag to the unit string.
+     */
+    void write_startTag(const char * localname, const char * prefix,
+                           int num_namespaces, const xmlChar ** namespaces, int num_attributes,
+                           const xmlChar ** attributes) {
+
+        *unit->unit += "<";
+        if(prefix) {
+            *unit->unit += prefix;
+            *unit->unit += ":";
+        }
+        *unit->unit += localname;
+
+        for(int pos = 0; pos < num_namespaces; ++pos) {
+
+            if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_CPP_NS_URI))
+                continue;
+
+            if(revision && is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_DIFF_NS_URI))
+                continue;
+
+            *unit->unit += " xmlns";
+            if(namespaces[NS_PREFIX(pos)]) {
+
+                *unit->unit += ":";
+                *unit->unit += (const char*) namespaces[NS_PREFIX(pos)];
+
+            }
+
+            *unit->unit += "=\"";
+            *unit->unit += (const char*) namespaces[NS_URI(pos)];
+            *unit->unit += "\"";
+
+        }
+
+        for(int pos = 0; pos < num_attributes; ++pos) {
+
+            *unit->unit += " ";
+            if(attributes[ATTR_PREFIX(pos)]) {
+
+                *unit->unit += (const char*) attributes[ATTR_PREFIX(pos)];
+                *unit->unit += ":";
+
+            }
+            *unit->unit += (const char*) attributes[ATTR_LOCALNAME(pos)];
+
+            *unit->unit += "=\"";
+            std::string revision;
+            revision.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
+            *unit->unit += attribute_revision(revision);
+            *unit->unit += "\"";
         }
         //*unit->unit += ">";
 
