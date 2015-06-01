@@ -258,7 +258,7 @@ private :
 
 public :
 
-    /** Give access to membeers for srcml_sax2_reader class */
+    /** Give access to members for srcml_sax2_reader class */
     friend class srcml_sax2_reader;
 
     /**
