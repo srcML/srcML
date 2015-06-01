@@ -354,12 +354,6 @@ public :
 
         case XPATH_NODESET:
 
-            // root element if first result
-            // TODO: This should move to start_output(), but that will have to wait because it is shared.
-       //     if (result_count == 0) {
-//                outputRoot(xmlDocGetRootElement(ctxt->myDoc));
-//            }
-
             if (!element && !attr_name)
                 outputXPathResultsWrap(result_nodes);
             else if (element)
