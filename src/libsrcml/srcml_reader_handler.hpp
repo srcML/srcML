@@ -96,6 +96,9 @@ private :
     /** skip internal unit elements */
     bool skip;
 
+    /** srcDiff namespace */
+    bool issrcdiff;
+
     /**
      * meta_tag
      *
@@ -268,7 +271,7 @@ public :
      */
     srcml_reader_handler() : unit(0), output_buffer(0), is_done(false), read_root(false),
          collect_unit_attributes(false), collect_srcml(false), collect_src(false),
-         terminate(false), is_empty(false), wait_root(true), skip(false) {
+         terminate(false), is_empty(false), wait_root(true), skip(false), issrcdiff(false) {
 
         archive = srcml_archive_create();
 
@@ -484,8 +487,10 @@ public :
                 archive->options |= SRCML_OPTION_POSITION;
             else if(uri == SRCML_EXT_OPENMP_NS_URI)
                 archive->options |= SRCML_OPTION_OPENMP;
-            else if(revision && uri == SRCML_DIFF_NS_URI)
+            else if(revision && uri == SRCML_DIFF_NS_URI) {
+                issrcdiff = true;
                 continue;
+            }
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
 
@@ -523,7 +528,8 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        srcdiff_stack.push(COMMON);
+        if (issrcdiff)
+            srcdiff_stack.push(COMMON);
 
         // pause
         // @todo this may need to change because, meta tags have separate call now
@@ -668,7 +674,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
+        if(issrcdiff && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
 
             std::string local_name(localname);
 
@@ -681,7 +687,7 @@ public :
 
         }
 
-        if(revision) {
+        if(issrcdiff && revision) {
 
             if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
             if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
@@ -783,7 +789,8 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        srcdiff_stack.pop();
+        if (issrcdiff)
+            srcdiff_stack.pop();
 
         if(skip) {
 
