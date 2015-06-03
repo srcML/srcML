@@ -302,9 +302,6 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
 
     }
 
-    srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(nb_namespaces, namespaces);
-    srcsax_attribute * srcsax_attributes = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(nb_attributes, attributes);
-
     state->is_archive = strcmp((const char *)localname, "unit") == 0;
     state->context->is_archive = state->is_archive;
 
@@ -380,7 +377,7 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
             state->libxml2_namespaces = namespaces;
             state->libxml2_attributes = attributes;
             state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                nb_namespaces, srcsax_namespaces, nb_attributes, srcsax_attributes);
+                nb_namespaces, 0, nb_attributes, 0);
             state->libxml2_namespaces = 0;
             state->libxml2_attributes = 0;
         }
@@ -401,7 +398,7 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
         state->libxml2_namespaces = namespaces;
         if(state->context->handler->start_unit)
             state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                                                nb_namespaces, srcsax_namespaces, nb_attributes, srcsax_attributes);
+                                                nb_namespaces, 0, nb_attributes, 0);
 
 
     }
@@ -415,9 +412,6 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
         ctxt->sax->ignorableWhitespace = &characters_unit;
 
     }
-
-    free_srcsax_namespaces(nb_namespaces, srcsax_namespaces);
-    free_srcsax_attributes(nb_attributes, srcsax_attributes);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
