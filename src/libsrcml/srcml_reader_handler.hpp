@@ -674,25 +674,27 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(issrcdiff && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
+        if (issrcdiff) {
+            if(issrcdiff && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
 
-            std::string local_name(localname);
+                std::string local_name(localname);
 
-            if(local_name == "common")
-                srcdiff_stack.push(COMMON);
-            else if(local_name == "delete")
-                srcdiff_stack.push(DELETE);
-            else
-                srcdiff_stack.push(INSERT);
+                if(local_name == "common")
+                    srcdiff_stack.push(COMMON);
+                else if(local_name == "delete")
+                    srcdiff_stack.push(DELETE);
+                else
+                    srcdiff_stack.push(INSERT);
 
-        }
+            }
 
-        if(issrcdiff && revision) {
+            if(issrcdiff && revision) {
 
-            if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-            if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
-            if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+                if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
+                if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
+                if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
 
+            }
         }
 
         if(collect_src && localname[0] == 'e' && localname[1] == 's'
@@ -803,13 +805,13 @@ public :
 
 
         //if(is_empty) *unit->unit += ">";
-        if(collect_srcml) {
-
-            write_endTag(localname, prefix, is_empty);
-
-        }
-
         if(collect_srcml || collect_src) {
+
+            if(collect_srcml) {
+
+                write_endTag(localname, prefix, is_empty);
+
+            }
 
             // pause
             boost::unique_lock<boost::mutex> lock(mutex);
@@ -846,15 +848,17 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(issrcdiff && !skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI))
-            srcdiff_stack.pop();
+        if (issrcdiff) {
+            if(!skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI))
+                srcdiff_stack.pop();
 
-        if(issrcdiff && revision) {
+            if(revision) {
 
-            if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-            if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
-            if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+                if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
+                if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
+                if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
 
+            }
         }
 
         if(collect_srcml) {
