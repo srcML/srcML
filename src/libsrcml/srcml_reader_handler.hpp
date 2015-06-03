@@ -846,10 +846,10 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(!skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI))
+        if(issrcdiff && !skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI))
             srcdiff_stack.pop();
 
-        if(revision) {
+        if(issrcdiff && revision) {
 
             if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
             if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
@@ -887,7 +887,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
-        if(revision) {
+        if(issrcdiff && revision) {
 
             if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
             if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
