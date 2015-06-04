@@ -335,7 +335,6 @@ public :
 
             xmlXPathObjectPtr result_nodes2 = xmlXPathCompiledEval(tr->compiled_xpath, context);
 
-
             applyxpath(++tr, end, result_nodes2);
 
             //xmlXPathFreeObject(result_nodes2);
@@ -354,12 +353,12 @@ public :
 
         case XPATH_NODESET:
 
-            if (!element && !attr_name)
-                outputXPathResultsWrap(result_nodes);
-            else if (element)
+            if (element)
                 outputXPathResultsElement(result_nodes);
             else if (attr_name)
                 outputXPathResultsAttribute(result_nodes);
+            else
+                outputXPathResultsWrap(result_nodes);
             break;
 
         case XPATH_NUMBER:
@@ -415,6 +414,7 @@ public :
         // using the internal unit node to serve as the wrapper
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
+        // if the query result is the unit, then just output directly
         if (isunit) {
 
             outputResult(a_node);
@@ -425,7 +425,9 @@ public :
         xmlNodePtr a_node_children = a_node->children;
         a_node->children = 0;
 
-        xmlAttrPtr itemprop = xmlNewProp(a_node, BAD_CAST "item", BAD_CAST "0");
+        // create the item property
+        if (xmlNewProp(a_node, BAD_CAST "item", BAD_CAST "0") == 0)
+            return;
 
         // save the hash attribute
         xmlAttrPtr hashprop = xmlHasProp(a_node, BAD_CAST "hash");
@@ -439,7 +441,9 @@ public :
             static char s[100];
             sprintf(s, "%d", i + 1);
 
-            xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s);
+            // set the item propery
+            if (xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s) == 0)
+                return;
 
             // location attribute on wrapping node
             if (false) {
@@ -462,6 +466,7 @@ public :
             // output the result
             outputResult(a_node);
 
+            // unlink from the master parent back to where it came from
             onode->parent = onode_parent;
             onode->next = onode_next;
             onode->prev = onode_prev;
@@ -469,8 +474,6 @@ public :
         }
 
         a_node->children = a_node_children;
-
-        xmlRemoveProp(itemprop);
 
         if (hashprop)
             ;
@@ -499,11 +502,12 @@ public :
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
         if (size == 0)
             return;
-
+ 
         output_archive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
-
+ 
         xmlBufferEmpty(lbuffer);
 
+        // restore manipulated namespaces
         if (save)
             a_node->nsDef = save;
 
