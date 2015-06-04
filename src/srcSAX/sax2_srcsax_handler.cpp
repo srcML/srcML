@@ -412,12 +412,6 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
         ctxt->sax->characters = &characters_unit;
         ctxt->sax->ignorableWhitespace = &characters_unit;
 
-    } else {
-
-
-        ctxt->sax->characters = 0;
-        ctxt->sax->ignorableWhitespace = 0;
-
     }
 
 #ifdef SRCSAX_DEBUG
@@ -487,11 +481,6 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
 
         ctxt->sax->characters = &characters_unit;
         ctxt->sax->ignorableWhitespace = &characters_unit;
-
-    }  else {
-
-        ctxt->sax->characters = 0;
-        ctxt->sax->ignorableWhitespace = 0;
 
     }
 
@@ -675,10 +664,6 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
                 ctxt->sax->characters = &characters_root;
                 ctxt->sax->ignorableWhitespace = &characters_root;
 
-            } else {
-
-                ctxt->sax->characters = 0;
-                ctxt->sax->ignorableWhitespace = 0;
             }
         }
 
