@@ -515,7 +515,10 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;
-    
+
+    if(!(state->context->handler->start_element))
+        return;
+
     if(state->context->terminate) return;
 
     int ns_length = state->root.nb_namespaces * 2;
@@ -562,7 +565,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
     if(ctx == NULL) return;
 
-    if(strcmp((const char *)localname, "macro-list") == 0) {
+    if(localname[0] == 'm' && localname[1] == 'a' && strcmp((const char *)localname, "macro-list") == 0) {
 
         return;
 
