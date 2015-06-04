@@ -198,77 +198,50 @@ to download and install the lastest version of cmake.
 
 ---
 
-## Windows Visual Studio
+## Windows Using MSVC
  
-Installing for Windows Visual Studio, requires a large amount of
-preparation.
+Building under MSVC requires that you have MSVC installed. Visual studio 12.0 or newer is known to work, other versions have not been tested. 
 	
-## Packages Required
+## Packages
 
 * cmake from `http://www.cmake.org`  
-
-*# some GNU command line utilities (from cygwin or other sources)*  
-* grep  
-* sed  
-
-*# required libraries (most are available from http://xmlsoft.org/sources/win32/)*
-* iconv  
-* libxml2  
-* libxslt  
-* zlib  
-* libcurl http://curl.haxx.se/download.html  
-* antlr 2 http://www.antlr2.org/download/antlr-2.7.7.msi and http://www.antlr2.org/download/antlr-2.7.7.tar.gz  
-* boost  
+* Visual Studio 12 Express (Optional. If you already have Visual studio installed you don't need this) `http://www.microsoft.com/en-us/download/details.aspx?id=34673`
+* Dependencies (win-dep.zip): **LINK PENDING**
 
 ##### Notes
 
-* For the required libraries, you will need to create a folder dep
-in the top level directory of srcML project with the following structure:
+##### How to build srcML on windows using Visual Studio
+* Install visual studio 12.0 or newer
+* Locate the source code for srcML
+* Extract the win-dep.zip dependencies folder into srcML folder.
+    * The extracted folder must be named dep (it should already be named dep).
+    * The folder structure will look like the following:
+        dep/
+            bin/
+            include/
+            lib/
+    * When copied into the srcML source code directory the result should look like the following:
+        srcML/
+                bindings/
+                cli/
+                CMake/
+                dep/
+                    bin/
+                    include/
+                    lib/
+                doc/
+                ...etc...
+* Run cmake on the project using the cmake GUI program.
+    * When opening CMake select Visual Studio 12 as your target system, at this time 64-bit compilation under windows is not supported.
+    * It's best practice to have CMake output into a separate directory, as this can cause problems if you decide to rebuild later on.
 
-	dep/
- 		include/
-		bin/
-		lib/
+* Uncheck the `ENABLE_UNIT_TESTS` option as this will cause the build to fail.
+* Configure and generate cmake.
+    * cmake may complain about not being able to locate xsltproc, but that's only used for executing the test suite so it can be ignored.
 
-* Copy the contents of the required libraries into the correct
-location.  If the include files are in a directory, copy the entire directory, e.g., copy the entire libxml
-subdirectory.  Note: There may be some runtime problems with these
-libraries and the ones installed on your Windows machine. In which
-case, a Windows Visual Studio build of each may be required.
-
-* For libcurl make sure to git one of the MVSC builds.  Version 7.19.3
-devel with CSS seems to support compilation.
-
-* For antlr 2 you will need the installer and the source code.  The .lib
-file provided with antlr 2 does not seem to work.  So, a Windows
-Visual Studio build will need to be done to generate a correct copy of
-the .lib.  When cmake is configuring the project, it will ask for the
-correct location of antlr and the library.  Note: Create a empty
-project in Visual Studio, set it to generate a static library and turn
-of clr, and add all the source from (lib/antlr/cpp/src) to "Source
-Files".  Then, set lib/antlr/cpp/antlr as an include directory.
-
-* boost will need to be compiled.  The zip file is large, and can take a
-large amount of time on Windows.  Then, run:
-
-	./bootstrap.bat
-
-This will create a project-config.jam file copy the following contents
-replacing everything (Using boostrap.sh to configure does not seem to
-work correctly on Windows):
-
-	import option;
-
-	using msvc
-
-	libraries =  --without-atomic --without-chrono --without-context --without-coroutine --without-exception --without-graph --without-graph_parallel --without-iostreams --without-locale --without-log --without-math --without-mpi --without-python --without-random --without-serialization --without-signals --without-test --without-timer --without-wave ;
-
-	option.set keep-going : false ; 
-
-Then, run:
-
- 	./b2.exe link=static threading=multi
-
-Currently, cmake uses an environment variable for the location of
-boost.  Create/set an envionment variable `BOOST_ROOT` to have the
-path to the boost source.
+* Once this is done locate the CMake build output directory and open the solution `srcML.sln`.
+* Once the solution is loaded change the Solution Configuration from `Debug` to `Release`.
+    * Currently, a debug version of srcML cannot be built under windows due to an issue with a dependency.
+    
+* Build solution.
+* Once built locate the build folder, within the build folder there is a now a folder named `bin/` containing the srcML executable and libraries.
