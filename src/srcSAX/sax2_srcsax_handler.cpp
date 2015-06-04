@@ -358,7 +358,7 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
             state->libxml2_namespaces = state->root.namespaces;
             state->libxml2_attributes = state->root.attributes;
             state->context->handler->start_unit(state->context, (const char *)state->root.localname, (const char *)state->root.prefix, (const char *)state->root.URI,
-                                                state->root.nb_namespaces, 0, state->root.nb_attributes,
+                                                state->root.nb_namespaces, (const struct srcsax_namespace *) state->root.namespaces, state->root.nb_attributes,
                                                 0);
             state->libxml2_namespaces = 0;
             state->libxml2_attributes = 0;
@@ -398,7 +398,7 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
         state->libxml2_namespaces = namespaces;
         if(state->context->handler->start_unit)
             state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                                                nb_namespaces, 0, nb_attributes, 0);
+                                                nb_namespaces, (const struct srcsax_namespace *) state->root.namespaces, nb_attributes, 0);
 
 
     }
@@ -470,7 +470,7 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
         state->libxml2_attributes = attributes;
  
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-            nb_namespaces, 0, nb_attributes, 0);
+            nb_namespaces, (const struct srcsax_namespace *) state->root.namespaces, nb_attributes, 0);
 
         state->libxml2_namespaces = 0;
         state->libxml2_attributes = 0;
@@ -632,7 +632,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
                 state->libxml2_namespaces = state->root.namespaces;
                 state->libxml2_attributes = state->root.attributes;
                 state->context->handler->start_unit(state->context, (const char *)state->root.localname, (const char *)state->root.prefix, (const char *)state->root.URI,
-                                                    state->root.nb_namespaces, 0, state->root.nb_attributes,
+                                                    state->root.nb_namespaces, (const struct srcsax_namespace *) state->root.namespaces, state->root.nb_attributes,
                                                     0);
                 state->libxml2_namespaces = 0;
                 state->libxml2_attributes = 0;    
