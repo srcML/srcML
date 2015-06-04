@@ -574,7 +574,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;  
 
-    if(strcmp((const char *)localname, "unit") == 0) {
+    if(localname[0] == 'u' && localname[1] == 'n' && strcmp((const char *)localname, "unit") == 0) {
 
         if(state->mode == ROOT) {
 
