@@ -216,11 +216,14 @@ Building under MSVC requires that you have MSVC installed. Visual studio 12.0 or
 * Extract the win-dep.zip dependencies folder into srcML folder.
     * The extracted folder must be named dep (it should already be named dep).
     * The folder structure will look like the following:
+    ```
         dep/
             bin/
             include/
             lib/
+    ```        
     * When copied into the srcML source code directory the result should look like the following:
+    ```
         srcML/
                 bindings/
                 cli/
@@ -231,6 +234,7 @@ Building under MSVC requires that you have MSVC installed. Visual studio 12.0 or
                     lib/
                 doc/
                 ...etc...
+    ```
 * Run cmake on the project using the cmake GUI program.
     * When opening CMake select Visual Studio 12 as your target system, at this time 64-bit compilation under windows is not supported.
     * It's best practice to have CMake output into a separate directory, as this can cause problems if you decide to rebuild later on.
