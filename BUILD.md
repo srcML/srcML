@@ -200,18 +200,18 @@ to download and install the lastest version of cmake.
 
 ## Windows Using MSVC
  
-Building under MSVC requires that you have MSVC installed. Visual studio 12.0 or newer is known to work, other versions have not been tested. 
+Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Express or newer is known to work, while older versions have not been tested. 
 	
 ## Packages
 
+* [Python 2.7.XX](https://www.python.org/downloads/release/python-2710/)
 * [CMake](http://www.cmake.org)
 * [Visual Studio 12](http://www.microsoft.com/en-us/download/details.aspx?id=34673)
 * Dependencies (win-dep.zip): **LINK PENDING**
 
-##### Notes
-
-##### How to build srcML on windows using Visual Studio
-* Install visual studio 12.0 or newer
+##### Instructions
+* Install Visual Studio 12.0 or newer
+* Install CMake
 * Locate the source code for srcML
 * Extract the win-dep.zip dependencies folder into srcML folder.
     * The extracted folder must be named dep (it should already be named dep).
@@ -236,10 +236,9 @@ Building under MSVC requires that you have MSVC installed. Visual studio 12.0 or
                 ...etc...
     ```
 * Run cmake on the project using the cmake GUI program.
-    * When opening CMake select Visual Studio 12 as your target system, at this time 64-bit compilation under windows is not supported.
+    * When opening CMake select Visual Studio 11 2012 as the target system. At this time, 64-bit compilation under windows is not supported.
     * It's best practice to have CMake output into a separate directory, as this can cause problems if you decide to rebuild later on.
 
-* Uncheck the `ENABLE_UNIT_TESTS` option as this will cause the build to fail.
 * Configure and generate cmake.
     * cmake may complain about not being able to locate xsltproc, but that's only used for executing the test suite so it can be ignored.
 
