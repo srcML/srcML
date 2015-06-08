@@ -204,8 +204,8 @@ Building under MSVC requires that you have MSVC installed. Visual studio 12.0 or
 	
 ## Packages
 
-* cmake from `http://www.cmake.org`  
-* Visual Studio 12 Express (Optional. If you already have Visual studio installed you don't need this) `http://www.microsoft.com/en-us/download/details.aspx?id=34673`
+* [CMake](http://www.cmake.org)
+* [Visual Studio 12](http://www.microsoft.com/en-us/download/details.aspx?id=34673)
 * Dependencies (win-dep.zip): **LINK PENDING**
 
 ##### Notes
