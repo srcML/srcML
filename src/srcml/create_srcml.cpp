@@ -172,8 +172,20 @@ void create_srcml(const srcml_request_t& srcml_request,
     // create the srcML output file
 
     unsigned short compression = 0;
-    if (destination.extension == ".gz")
+    // If you enabled compression
+    if (srcml_request.command & SRCML_COMPRESS) {
         compression = 9;
+    }
+
+    // If you didn't enable compression, but the output extension is gz
+    if (compression == 0) {
+        BOOST_FOREACH( std::string extension, destination.compressions) {
+            if (extension == ".gz") {
+                compression = 9;
+                break;
+            }
+        }
+    }
 
     int status = 0;
     if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
@@ -184,7 +196,6 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
     } else {
-
         status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), compression);
     }
 
