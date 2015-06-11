@@ -118,9 +118,20 @@ srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input)
  */
 srcml_sax2_reader::~srcml_sax2_reader() {
 
-    handler.stop();
-    thread->join();
-    delete thread;
+    stop();
+
+}
+
+void srcml_sax2_reader::stop() {
+
+    if(thread != nullptr) {
+
+        handler.stop();
+        thread->join();
+        delete thread;
+        thread = nullptr;
+
+    }
 
 }
 

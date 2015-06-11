@@ -70,6 +70,8 @@ public :
     // destructors
     ~srcml_sax2_reader();
 
+    void stop();
+
     // read attribute and namespace information from root unit.  Does not advance read.
     int read_root_unit_attributes(boost::optional<std::string> & encoding, 
                                   boost::optional<std::string> & language,
