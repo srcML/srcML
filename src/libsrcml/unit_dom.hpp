@@ -56,6 +56,8 @@ public :
      */
     virtual ~unit_dom() {}
 
+protected:
+
     /**
      * get_options
      *
@@ -63,7 +65,7 @@ public :
      *
      * @returns the srcML options
      */
-    virtual OPTION_TYPE get_options() const { return options; }
+ //   virtual OPTION_TYPE get_options() const { return options; }
 
     /**
      * start_output
@@ -91,6 +93,8 @@ public :
      */
     virtual void end_output() = 0;
 
+private:
+
     /**
      * startDocument
      *
@@ -111,7 +115,6 @@ public :
         xmlSAX2StartDocument(ctxt);
 
     }
-
  
     /**
      * startRoot
