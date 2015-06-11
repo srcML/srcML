@@ -164,6 +164,8 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
                                                  size_t & tabstop,
                                                  std::vector<std::string> & user_macro_list) {
 
+    if(thread == nullptr) return 0;
+
     if(read_root || handler.read_root) return 0;
 
     encoding.swap(handler.archive->encoding);
@@ -199,6 +201,7 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
                                             boost::optional<std::string> & timestamp, boost::optional<std::string> & hash,
                                             std::vector<std::string> & attributes) {
 
+    if(thread == nullptr) return 0;
     if(handler.is_done) return 0;
     handler.skip = true;
     handler.collect_unit_attributes = true;
@@ -231,6 +234,8 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
  */
 int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
 
+    if(thread == nullptr) return 0;
+
     if(unit) unit = boost::optional<std::string>();
 
     if(handler.is_done) return 0;
@@ -255,6 +260,7 @@ int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
  */
 int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
 
+    if(thread == nullptr) return 0;
     if(handler.is_done) return 0;
     control.enable_comment(false);
     control.enable_cdataBlock(false);
