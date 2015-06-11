@@ -40,11 +40,11 @@ navTitleAttr = "navTitle"
 navSubTitleAttr = "navSubTitle"
 
 namespaceDict={
-    "src":"http://www.sdml.info/srcML/src",
-    "op":"http://www.sdml.info/srcML/operator",
-    "cpp":"http://www.sdml.info/srcML/cpp",
-    "lit":"http://www.sdml.info/srcML/literal",
-    "type":"http://www.sdml.info/srcML/modifier",
+    "src":"http://www.srcML.org/srcML/src",
+    # "op":"http://www.sdml.info/srcML/operator",
+    "cpp":"http://www.srcML.org/srcML/cpp",
+    # "lit":"http://www.sdml.info/srcML/literal",
+    # "type":"http://www.sdml.info/srcML/modifier",
 }
 
 
@@ -275,7 +275,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         srcCodeAndTree = srcMLFile(fileName, doc.srcMLLanguage)
         operatorEntry.sourceCode = srcCodeAndTree[0]
         tempTree = ET.ElementTree(ET.fromstringlist(srcCodeAndTree[1]))
-        locatedElements = tempTree.xpath("//src:operator", namespaces={"src": "http://www.sdml.info/srcML/src"})
+        locatedElements = tempTree.xpath("//src:operator", namespaces={"src": "http://www.srcML.org/srcML/src"})
         if len(locatedElements) != 1:
             if len(locatedElements) > 1:
                 matchingLocatedElements = [x for x in locatedElements if x.text == operatorEntry.op]
