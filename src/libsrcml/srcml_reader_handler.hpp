@@ -292,6 +292,18 @@ public :
     }
 
     /**
+     * stop_parser
+     *
+     * Stop the parser for threading
+     */
+    void stop_parser() {
+
+        is_done = true;
+        srcSAXHandler::stop_parser();
+
+    }
+
+    /**
      * wait
      *
      * Allows calling thread to wait until reached

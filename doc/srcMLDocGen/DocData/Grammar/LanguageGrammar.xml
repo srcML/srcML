@@ -1889,6 +1889,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             parameter list are only used for K &amp; R C.
         </Desc>
         <Def>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
+            </ZeroOrMore>
             <Ref name="type"/>
             <Ref name="name"/>
             <Ref name="parameterList"/>
@@ -1960,6 +1963,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             <ZeroOrMore>
                 <Ref name="annotation"/>
             </ZeroOrMore>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
+            </ZeroOrMore>
             <Ref name="type"/>
             <Ref name="name"/>
             <Ref name="parameterList"/>                
@@ -1982,6 +1988,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Def>
             <ZeroOrMore>
                 <Ref name="template" />
+            </ZeroOrMore>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
             </ZeroOrMore>
             <Ref name="type"/>
             <Tag elem="name">
@@ -2014,6 +2023,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             </Attrs>
         </Tag>
         <Def>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
+            </ZeroOrMore>
             <Ref name="type"/>
             <Tag elem="name">
                 <Literal value="operator"/>
@@ -2030,6 +2042,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
     <TagRule name="CFunctionDecl" lang="C">
         <Tag elem="function_decl"/>
         <Def>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
+            </ZeroOrMore>
             <Ref name="type"/>
             <Ref name="name"/>
             <Ref name="parameterList"/>
@@ -2044,6 +2059,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Def>
             <ZeroOrMore>
                 <Ref name="template" />
+            </ZeroOrMore>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
             </ZeroOrMore>
             <Ref name="type"/>
             <Ref name="name"/>
@@ -2083,6 +2101,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
     <TagRule name="CSharpFunctionDecl" lang="C#">
         <Tag elem="function_decl"/>
         <Def>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
+            </ZeroOrMore>
             <Ref name="type"/>
             <Ref name="name"/>
             <Ref name="parameterList"/>
@@ -2097,6 +2118,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Def>
             <ZeroOrMore>
                 <Ref name="annotation"/>
+            </ZeroOrMore>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
             </ZeroOrMore>
             <Ref name="type"/>
             <Ref name="name"/>
@@ -2120,6 +2144,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
         <Def>
             <ZeroOrMore>
                 <Ref name="template" />
+            </ZeroOrMore>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
             </ZeroOrMore>
             <Ref name="type"/>
             <Tag elem="name">
@@ -2167,6 +2194,9 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
             </Attrs>
         </Tag>
         <Def>
+            <ZeroOrMore>
+                <Ref name="specifier"/>
+            </ZeroOrMore>
             <Ref name="type"/>
             <Tag elem="name">
                 <Literal value="operator"/>
@@ -2934,6 +2964,7 @@ two forms depending on input: 1) an archive (multiple files) and 2) compilation 
                     <Ref name="annotation"/>
                     <Ref name="CSharpAttribute"/>
                     <Ref name="CPlusPlusAttribute"/>
+                    <Ref name="specifier"/>
                 </Choice>
             </ZeroOrMore>
             <Ref name="name"/>

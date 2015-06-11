@@ -67,9 +67,10 @@ public :
     srcml_sax2_reader(const char * filename, const char * encoding = 0);
     srcml_sax2_reader(xmlParserInputBufferPtr input);
 
-
     // destructors
     ~srcml_sax2_reader();
+
+    void stop();
 
     // read attribute and namespace information from root unit.  Does not advance read.
     int read_root_unit_attributes(boost::optional<std::string> & encoding, 

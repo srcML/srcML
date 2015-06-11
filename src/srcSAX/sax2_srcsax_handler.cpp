@@ -400,7 +400,6 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
             state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                                 nb_namespaces, (const struct srcsax_namespace *) state->root.namespaces, nb_attributes, 0);
 
-
     }
 
     if(state->context->terminate) return;
