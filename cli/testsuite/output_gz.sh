@@ -31,8 +31,6 @@ define xmlfile <<- 'STDOUT'
 xmlcheck "$sxmlfile"
 xmlcheck "$xmlfile"
 
-# TODO: issue #1057
-
 # src2srcml
 createfile sub/a.cpp "$sfile"
 
@@ -40,16 +38,29 @@ src2srcml -z sub/a.cpp -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
 check 3<<< "$xmlfile"
 
-src2srcml --archive sub/a.cpp -o sub/a.cpp.xml.gz
+src2srcml sub/a.cpp -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
-check 3<<< "$sxmlfile"
+check 3<<< "$xmlfile"
 
 srcml -l C++ -z sub/a.cpp -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
 check 3<<< "$xmlfile"
 
+srcml -l C++ sub/a.cpp -o sub/a.cpp.xml.gz
+gunzip -c sub/a.cpp.xml.gz
+check 3<<< "$xmlfile"
+
+src2srcml -z --archive sub/a.cpp -o sub/a.cpp.xml.gz
+gunzip -c sub/a.cpp.xml.gz
+check 3<<< "$sxmlfile"
+
+src2srcml --archive sub/a.cpp -o sub/a.cpp.xml.gz
+gunzip -c sub/a.cpp.xml.gz
+check 3<<< "$sxmlfile"
+
+# TODO: issue #1057 - cannot gz a raw source output file
 # srcml2src
-createfile sub/a.cpp.xml "$xmlfile"
+# createfile sub/a.cpp.xml "$xmlfile"
 
 #srcml2src -z sub/a.cpp.xml -o sub/a.cpp.gz
 #gunzip -c sub/a.cpp.gz
