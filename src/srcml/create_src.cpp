@@ -250,6 +250,11 @@ void create_src(const srcml_request_t& srcml_request,
 
             // srcml->src extract to libarchive file
 
+            if (destination.archives.size() == 0) {
+                std::cerr << "srcml: source output requires an archive format (tar, zip, etc.)\n";
+                exit(1); //TODO: Need an error code
+            }
+
             archive* ar = archive_write_new();
 
             // setup format
