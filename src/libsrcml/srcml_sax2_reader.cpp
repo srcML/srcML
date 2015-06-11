@@ -62,7 +62,9 @@ void * start_routine(void * arguments) {
 
         if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END)) {
             fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
-            args->handler->stop();
+
+            // I do not think this is needed as it needs to be stopped to even get here
+            //args->handler->stop();
         }
 
         // might have to release a lock here or set is_done;
