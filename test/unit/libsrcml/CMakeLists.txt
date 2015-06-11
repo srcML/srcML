@@ -19,7 +19,7 @@
 
 # Build and add tests
 addUnitTest(test_srcml_sax2_reader test_srcml_sax2_reader.cpp ${LIBXML2_LIBRARIES})
-#addUnitTest(test_srcml_append_transform test_srcml_append_transform.cpp)
+addUnitTest(test_srcml_append_transform test_srcml_append_transform.cpp)
 addUnitTest(test_srcml_apply_transforms test_srcml_apply_transforms.cpp)
 addUnitTest(test_srcml_archive_check_extension test_srcml_archive_check_extension.cpp)
 addUnitTest(test_srcml_archive_get test_srcml_archive_get.cpp)
