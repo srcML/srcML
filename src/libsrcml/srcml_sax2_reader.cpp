@@ -57,6 +57,7 @@ void * start_routine(void * arguments) {
     thread_args * args = (thread_args *)arguments;
 
     try {
+
         args->control->parse(args->handler);
     } catch(SAXError error) {
 
@@ -64,7 +65,7 @@ void * start_routine(void * arguments) {
             fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
             // I do not think this is needed as it needs to be stopped to even get here
-            //args->handler->stop();
+            args->handler->done();
         }
 
         // might have to release a lock here or set is_done;

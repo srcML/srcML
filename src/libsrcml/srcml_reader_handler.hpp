@@ -347,6 +347,18 @@ public :
     }
 
     /**
+     * done
+     *
+     * Mark is done
+     */
+    void done() {
+
+        is_done = true;
+        cond.notify_all();
+
+    }
+
+    /**
      * stop
      *
      * Stops SAX2 parsing Completely.  Parsing
