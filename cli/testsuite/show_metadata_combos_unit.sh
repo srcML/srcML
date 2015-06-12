@@ -12,8 +12,8 @@ define input <<- 'STDOUT'
 
 define output <<- 'STDOUT'
 	url="sub"
-	language="C++"
 	filename="a.cpp"
+	language="C++"
 	STDOUT
 
 xmlcheck "$input"
@@ -44,8 +44,8 @@ check 3<<< "$output"
 define output <<- 'STDOUT'
 	encoding="UTF-8"
 	url="sub"
-	language="C++"
 	filename="a.cpp"
+	language="C++"
 	STDOUT
 
 # language, url, filename, encoding
@@ -66,8 +66,8 @@ check 3<<< "$output"
 define output <<- 'STDOUT'
 	encoding="UTF-8"
 	url="sub"
-	language="C++"
 	filename="a.cpp"
+	language="C++"
 	version="1.2"
 	STDOUT
 
