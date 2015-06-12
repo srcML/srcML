@@ -529,12 +529,14 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 2);
+        dassert(prefixes.size(), 3);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "pos");
-        dassert(namespaces.size(), 2);
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
         dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
         dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -547,12 +549,14 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 2);
+        dassert(prefixes.size(), 3);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "pos");
-        dassert(namespaces.size(), 2);
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
         dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
         dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -578,12 +582,14 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 2);
+        dassert(prefixes.size(), 3);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "pos");
-        dassert(namespaces.size(), 2);
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
         dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
         dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -596,12 +602,14 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 2);
+        dassert(prefixes.size(), 3);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "pos");
-        dassert(namespaces.size(), 2);
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
         dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
         dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);
@@ -1523,12 +1531,14 @@ int main() {
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
-        dassert(prefixes.size(), 2);
+        dassert(prefixes.size(), 3);
         dassert(prefixes.at(0), "");
         dassert(prefixes.at(1), "pos");
-        dassert(namespaces.size(), 2);
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
         dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
         dassert(namespaces.at(1), "http://www.srcML.org/srcML/position");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
         dassert(options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_ARCHIVE
             | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_POSITION));
         dassert(tabstop, 4);

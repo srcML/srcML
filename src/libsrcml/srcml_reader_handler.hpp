@@ -506,12 +506,8 @@ public :
                 archive->options |= SRCML_OPTION_POSITION;
             else if(uri == SRCML_EXT_OPENMP_NS_URI)
                 archive->options |= SRCML_OPTION_OPENMP;
-            else if(uri == SRCML_DIFF_NS_URI) {
+            else if(uri == SRCML_DIFF_NS_URI)
                 issrcdiff = true;
-
-                if(revision_number) continue;
-    
-            }
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
 
