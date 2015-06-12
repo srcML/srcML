@@ -319,6 +319,27 @@ int main() {
     }
 
     /*
+      srcml_set_srcdiff_revision
+    */
+
+    {
+        srcml_set_srcdiff_revision(SRCDIFF_REVISION_ORIGINAL);
+
+        dassert(*global_archive.revision_number, SRCDIFF_REVISION_ORIGINAL);
+    }
+
+    {
+        srcml_set_srcdiff_revision(SRCDIFF_REVISION_ORIGINAL);
+        srcml_set_srcdiff_revision(SRCDIFF_REVISION_MODIFIED);
+
+        dassert(*global_archive.revision_number, SRCDIFF_REVISION_MODIFIED);
+    }
+
+    {
+        dassert(srcml_set_srcdiff_revision(SRCDIFF_REVISION_INVALID), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    /*
       srcml_get_src_encoding
     */
 
@@ -620,6 +641,21 @@ int main() {
 
     {
         dassert(srcml_get_macro_type(3), 0);
+    }
+
+    /*
+      srcml_get_srcdiff_revision
+    */
+
+    {
+        global_archive.revision_number = boost::optional<size_t>();
+        dassert(srcml_get_srcdiff_revision(), SRCDIFF_REVISION_INVALID);
+    }
+
+    {
+        global_archive.revision_number = SRCDIFF_REVISION_ORIGINAL;
+        dassert(srcml_get_srcdiff_revision(), SRCDIFF_REVISION_ORIGINAL);
+        global_archive.revision_number = boost::optional<size_t>();
     }
 
 
