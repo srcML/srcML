@@ -30,6 +30,7 @@
 #include <iostream>
 #include <utility>
 #include <map>
+#include <srcml_input_src.hpp>
 
 // Internal srcml command options
 const int SRCML_COMMAND_LONGINFO                  = 1<<0;
@@ -102,7 +103,9 @@ struct element {
 // request for srcml client processing
 struct srcml_request_t {
 
-    std::vector<std::string> input;
+    //std::vector<std::string> input;
+    srcml_input_t input_sources;
+
     boost::optional<int> stdindex;
 
     int command;

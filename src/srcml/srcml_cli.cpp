@@ -174,7 +174,8 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
 
     srcml_request.files_from = value;
     BOOST_FOREACH(const std::string& inputFile, value) {
-        srcml_request.input.push_back(src_prefix_add_uri("filelist", inputFile));
+        //srcml_request.input.push_back(src_prefix_add_uri("filelist", inputFile));
+        srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", inputFile));
     }
 }
 
@@ -258,15 +259,18 @@ void option_to_dir(const std::string& value) {
 }
 
 void positional_args(const std::vector<std::string>& value) {
-    srcml_request.input.reserve(srcml_request.input.size() + value.size());
+    //srcml_request.input.reserve(srcml_request.input.size() + value.size());
+    srcml_request.input_sources.reserve(srcml_request.input_sources.size() + value.size());
 
     BOOST_FOREACH(const std::string& iname, value) {
 
         // record the position of stdin
         if (iname == "-" || iname == "stdin://-")
-            srcml_request.stdindex = (int) srcml_request.input.size();
+            srcml_request.stdindex = (int) srcml_request.input_sources.size();
+            //srcml_request.stdindex = (int) srcml_request.input.size();
 
-        srcml_request.input.push_back(src_prefix_add_uri(iname));
+        //srcml_request.input.push_back(src_prefix_add_uri(iname));
+        srcml_request.input_sources.push_back(src_prefix_add_uri(iname));
     }
 }
 
@@ -276,7 +280,8 @@ void positional_args(const std::vector<std::string>& value) {
     }*/
 
 void raw_text_args(const std::string& value) {
-  srcml_request.input.push_back(src_prefix_add_uri("text",value));
+  //srcml_request.input.push_back(src_prefix_add_uri("text",value));
+  srcml_request.input_sources.push_back(src_prefix_add_uri("text",value));
 }
 
 void option_help(const std::string& help_opt) {
@@ -499,7 +504,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         option_dependency(cli_map, "text", "language");
 
         // If input was from stdin, then artificially put a "-" into the list of input files
-        if (srcml_request.input.empty())
+        if (srcml_request.input_sources.empty())
           positional_args(std::vector<std::string>(1, "stdin://-"));
 
         // If position option is used without tabs...set default tab of 8
