@@ -87,6 +87,11 @@ int main() {
 
     const std::string srcdiff = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:pos=\"http://www.srcML.org/srcML/position\" xmlns:diff=\"http://www.srcML.org/srcDiff\" language=\"C++\" url=\"test\" version=\"1|2\" pos:tabs=\"4\" foo=\"bar\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"a.cpp|b.cpp\" version=\"1|2\" timestamp=\"today\" hash=\"abc\"><diff:delete type=\"change\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type=\"change\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>\n</unit>\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"c.cpp|d.cpp\"><diff:delete type=\"change\"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:delete><diff:insert type=\"change\"><expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:insert>\n</unit>\n\n</unit>\n";
 
+    const std::string srcdiff_single_a = "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" xmlns:diff=\"http://www.srcML.org/srcDiff\" language=\"C++\" url=\"test\" filename=\"a.cpp|b.cpp\" version=\"1|2\" tabs=\"4\" timestamp=\"today\" hash=\"abc\" foo=\"bar\"><diff:delete type=\"change\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type=\"change\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>\n</unit>";
+    const std::string srcdiff_single_a_original = "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"a.cpp\" version=\"1\" tabs=\"4\" timestamp=\"today\" hash=\"abc\" foo=\"bar\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcdiff_single_a_modified = "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"b.cpp\" version=\"2\" tabs=\"4\" timestamp=\"today\" hash=\"abc\" foo=\"bar\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcdiff_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" xmlns:diff=\"http://www.srcML.org/srcDiff\" language=\"C++\" url=\"test\" filename=\"a.cpp|b.cpp\" version=\"1|2\" tabs=\"4\" timestamp=\"today\" hash=\"abc\" foo=\"bar\"><diff:delete type=\"change\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type=\"change\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>\n</unit>\n";
+
     std::ofstream srcml_file("project.xml");
     srcml_file << srcml;
     srcml_file.close();
@@ -114,6 +119,10 @@ int main() {
     std::ofstream srcml_file_srcdiff("project_srcdiff.xml");
     srcml_file_srcdiff << srcdiff;
     srcml_file_srcdiff.close();
+
+    std::ofstream srcml_file_srcdiff_single("project_srcdiff_single.xml");
+    srcml_file_srcdiff_single << srcdiff_single;
+    srcml_file_srcdiff_single.close();
 
     /*
       srcml_sax2_reader(const char * filename)
@@ -616,6 +625,159 @@ int main() {
     }
 
     {
+        srcml_sax2_reader reader("project_srcdiff_single.xml");
+        boost::optional<std::string> encoding, language, directory, version;
+        std::vector<std::string> attributes;
+        std::vector<std::string> prefixes;
+        std::vector<std::string> namespaces;
+        boost::optional<std::pair<std::string, std::string> > processing_instruction;
+        OPTION_TYPE options = 0;
+        size_t tabstop = 0;
+        std::vector<std::string> user_macro_list;
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                         prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
+        dassert(language, boost::optional<std::string>());
+
+        dassert(*directory, "test");
+        dassert(*version, "1|2");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(prefixes.size(), 3);
+        dassert(prefixes.at(0), "");
+        dassert(prefixes.at(1), "cpp");
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        dassert(tabstop, 4);
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                                 prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
+        dassert(*encoding, "UTF-8");
+        dassert(language, boost::optional<std::string>());
+        dassert(*directory, "test");
+        dassert(*version, "1|2");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(prefixes.size(), 3);
+        dassert(prefixes.at(0), "");
+        dassert(prefixes.at(1), "cpp");
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        dassert(tabstop, 4);
+    }
+
+    {
+        boost::optional<size_t> revision_number(SRCDIFF_REVISION_ORIGINAL);
+        srcml_sax2_reader reader("project_srcdiff_single.xml", 0, revision_number);
+        boost::optional<std::string> encoding, language, directory, version;
+        std::vector<std::string> attributes;
+        std::vector<std::string> prefixes;
+        std::vector<std::string> namespaces;
+        boost::optional<std::pair<std::string, std::string> > processing_instruction;
+        OPTION_TYPE options = 0;
+        size_t tabstop = 0;
+        std::vector<std::string> user_macro_list;
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                         prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
+        dassert(language, boost::optional<std::string>());
+        dassert(*directory, "test");
+        dassert(*version, "1");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(prefixes.size(), 3);
+        dassert(prefixes.at(0), "");
+        dassert(prefixes.at(1), "cpp");
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        dassert(tabstop, 4);
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                                 prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
+        dassert(*encoding, "UTF-8");
+        dassert(language, boost::optional<std::string>());
+        dassert(*directory, "test");
+        dassert(*version, "1");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(prefixes.size(), 3);
+        dassert(prefixes.at(0), "");
+        dassert(prefixes.at(1), "cpp");
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        dassert(tabstop, 4);
+    }
+
+    {
+        boost::optional<size_t> revision_number(SRCDIFF_REVISION_MODIFIED);
+        srcml_sax2_reader reader("project_srcdiff_single.xml", 0, revision_number);
+        boost::optional<std::string> encoding, language, directory, version;
+        std::vector<std::string> attributes;
+        std::vector<std::string> prefixes;
+        std::vector<std::string> namespaces;
+        boost::optional<std::pair<std::string, std::string> > processing_instruction;
+        OPTION_TYPE options = 0;
+        size_t tabstop = 0;
+        std::vector<std::string> user_macro_list;
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                         prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
+        dassert(language, boost::optional<std::string>());
+        dassert(*directory, "test");
+        dassert(*version, "2");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(prefixes.size(), 3);
+        dassert(prefixes.at(0), "");
+        dassert(prefixes.at(1), "cpp");
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        dassert(tabstop, 4);
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                                 prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
+        dassert(*encoding, "UTF-8");
+        dassert(language, boost::optional<std::string>());
+        dassert(*directory, "test");
+        dassert(*version, "2");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(prefixes.size(), 3);
+        dassert(prefixes.at(0), "");
+        dassert(prefixes.at(1), "cpp");
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        dassert(tabstop, 4);
+    }
+
+    {
         srcml_sax2_reader reader("project.xml");
         boost::optional<std::string> encoding, language, filename, directory, version, timestamp, hash;
         std::vector<std::string> attributes;
@@ -970,6 +1132,62 @@ int main() {
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
     }
 
+    {
+        srcml_sax2_reader reader("project_srcdiff_single.xml");
+        boost::optional<std::string> encoding, language, filename, directory, version, timestamp, hash;
+        std::vector<std::string> attributes;
+        reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
+        dassert(*language, "C++");
+        dassert(*filename, "a.cpp|b.cpp");
+        dassert(*directory, "test");
+        dassert(*version, "1|2");
+        dassert(*timestamp, "today");
+        dassert(*hash, "abc");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
+    }
+
+    {
+        boost::optional<size_t> revision_number(SRCDIFF_REVISION_ORIGINAL);
+        srcml_sax2_reader reader("project_srcdiff_single.xml", 0, revision_number);
+        boost::optional<std::string> encoding, language, filename, directory, version, timestamp, hash;
+        std::vector<std::string> attributes;
+        reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
+        dassert(*language, "C++");
+        dassert(*filename, "a.cpp");
+        dassert(*directory, "test");
+        dassert(*version, "1");
+        dassert(*timestamp, "today");
+        dassert(*hash, "abc");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
+    }
+
+    {
+        boost::optional<size_t> revision_number(SRCDIFF_REVISION_MODIFIED);
+        srcml_sax2_reader reader("project_srcdiff_single.xml", 0, revision_number);
+        boost::optional<std::string> encoding, language, filename, directory, version, timestamp, hash;
+        std::vector<std::string> attributes;
+        reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
+        dassert(*language, "C++");
+        dassert(*filename, "b.cpp");
+        dassert(*directory, "test");
+        dassert(*version, "2");
+        dassert(*timestamp, "today");
+        dassert(*hash, "abc");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
+    }
+
     /*
       read_srcml
     */
@@ -1098,6 +1316,41 @@ int main() {
         revision_number = SRCDIFF_REVISION_MODIFIED;
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_b_modified);
+        reader.read_srcml(unit);
+        dassert(unit, 0);
+        reader.read_srcml(unit);
+        dassert(unit, 0);
+    }
+
+    {
+        srcml_sax2_reader reader("project_srcdiff_single.xml");
+        boost::optional<std::string> unit;
+        reader.read_srcml(unit);
+        dassert(*unit, srcdiff_single_a);
+        reader.read_srcml(unit);
+        dassert(unit, 0);
+        reader.read_srcml(unit);
+        dassert(unit, 0);
+    }
+
+    {
+        boost::optional<size_t> revision_number(SRCDIFF_REVISION_ORIGINAL);
+        srcml_sax2_reader reader("project_srcdiff_single.xml", 0, revision_number);
+        boost::optional<std::string> unit;
+        reader.read_srcml(unit);
+        dassert(*unit, srcdiff_single_a_original);
+        reader.read_srcml(unit);
+        dassert(unit, 0);
+        reader.read_srcml(unit);
+        dassert(unit, 0);
+    }
+
+    {
+        boost::optional<size_t> revision_number(SRCDIFF_REVISION_MODIFIED);
+        srcml_sax2_reader reader("project_srcdiff_single.xml", 0, revision_number);
+        boost::optional<std::string> unit;
+        reader.read_srcml(unit);
+        dassert(*unit, srcdiff_single_a_modified);
         reader.read_srcml(unit);
         dassert(unit, 0);
         reader.read_srcml(unit);
@@ -1571,6 +1824,167 @@ int main() {
         dassert(*unit, srcdiff_b_modified);
         reader.read_srcml(unit);
         dassert(unit, 0);
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                                 prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
+        dassert(reader.read_srcml(unit), 0);
+    }
+
+    {
+        boost::optional<size_t> revision_number;
+        srcml_sax2_reader reader("project_srcdiff_single.xml", 0, revision_number);
+        boost::optional<std::string> encoding, language, filename, directory, version, timestamp, hash;
+        std::vector<std::string> attributes;
+        std::vector<std::string> prefixes;
+        std::vector<std::string> namespaces;
+        boost::optional<std::pair<std::string, std::string> > processing_instruction;
+        OPTION_TYPE options = 0;
+        size_t tabstop = 0;
+        std::vector<std::string> user_macro_list;
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                         prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
+        dassert(language, boost::optional<std::string>());
+        dassert(*directory, "test");
+        dassert(*version, "1|2");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(prefixes.size(), 3);
+        dassert(prefixes.at(0), "");
+        dassert(prefixes.at(1), "cpp");
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        dassert(tabstop, 4);
+        revision_number = SRCDIFF_REVISION_ORIGINAL;
+        language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+            version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
+        reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
+        dassert(*language, "C++");
+        dassert(*filename, "a.cpp");
+        dassert(*directory, "test");
+        dassert(*version, "1");
+        dassert(*timestamp, "today");
+        dassert(*hash, "abc");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+            version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
+        boost::optional<std::string> unit;
+        reader.read_srcml(unit);
+        dassert(*unit, srcdiff_single_a_original);
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                                 prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
+        dassert(reader.read_srcml(unit), 0);
+    }
+
+    {
+        boost::optional<size_t> revision_number(SRCDIFF_REVISION_MODIFIED);
+        srcml_sax2_reader reader("project_srcdiff_single.xml", 0, revision_number);
+        boost::optional<std::string> encoding, language, filename, directory, version, timestamp, hash;
+        std::vector<std::string> attributes;
+        std::vector<std::string> prefixes;
+        std::vector<std::string> namespaces;
+        boost::optional<std::pair<std::string, std::string> > processing_instruction;
+        OPTION_TYPE options = 0;
+        size_t tabstop = 0;
+        std::vector<std::string> user_macro_list;
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                         prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
+        dassert(language, boost::optional<std::string>());
+        dassert(*directory, "test");
+        dassert(*version, "2");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(prefixes.size(), 3);
+        dassert(prefixes.at(0), "");
+        dassert(prefixes.at(1), "cpp");
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        dassert(tabstop, 4);
+        revision_number = boost::optional<size_t>();
+        language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+            version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
+        reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
+        dassert(*language, "C++");
+        dassert(*filename, "a.cpp|b.cpp");
+        dassert(*directory, "test");
+        dassert(*version, "1|2");
+        dassert(*timestamp, "today");
+        dassert(*hash, "abc");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+            version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
+        boost::optional<std::string> unit;
+        reader.read_srcml(unit);
+        dassert(*unit, srcdiff_single_a);
+        dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                                 prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
+        dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
+        dassert(reader.read_srcml(unit), 0);
+    }
+
+    {
+        boost::optional<size_t> revision_number(SRCDIFF_REVISION_ORIGINAL);
+        srcml_sax2_reader reader("project_srcdiff_single.xml", 0, revision_number);
+        boost::optional<std::string> encoding, language, filename, directory, version, timestamp, hash;
+        std::vector<std::string> attributes;
+        std::vector<std::string> prefixes;
+        std::vector<std::string> namespaces;
+        boost::optional<std::pair<std::string, std::string> > processing_instruction;
+        OPTION_TYPE options = 0;
+        size_t tabstop = 0;
+        std::vector<std::string> user_macro_list;
+        reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
+                                         prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list);
+        dassert(*encoding, "UTF-8");
+        dassert(language, boost::optional<std::string>());
+        dassert(*directory, "test");
+        dassert(*version, "1");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        dassert(prefixes.size(), 3);
+        dassert(prefixes.at(0), "");
+        dassert(prefixes.at(1), "cpp");
+        dassert(prefixes.at(2), "diff");
+        dassert(namespaces.size(), 3);
+        dassert(namespaces.at(0), "http://www.srcML.org/srcML/src");
+        dassert(namespaces.at(1), "http://www.srcML.org/srcML/cpp");
+        dassert(namespaces.at(2), "http://www.srcML.org/srcDiff");
+        dassert(options, (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        dassert(tabstop, 4);
+        language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+            version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
+        reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
+        dassert(*language, "C++");
+        dassert(*filename, "a.cpp");
+        dassert(*directory, "test");
+        dassert(*version, "1");
+        dassert(*timestamp, "today");
+        dassert(*hash, "abc");
+        dassert(attributes.size(), 2);
+        dassert(attributes.at(0), "foo");
+        dassert(attributes.at(1), "bar");
+        language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
+            version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
+        boost::optional<std::string> unit;
+        reader.read_srcml(unit);
+        dassert(*unit, srcdiff_single_a_original);
         dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
