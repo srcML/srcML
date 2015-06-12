@@ -21,11 +21,11 @@ options=( --show-language --show-url --show-filename --show-src-version --show-e
 size="${#options[@]}"
 
 define values <<- 'STDOUT'
-	language="C++"
-	filename="a.cpp"
-	url="sub"
-	version="1.0"
 	encoding="UTF-8"
+	url="sub"
+	filename="a.cpp"
+	language="C++"
+	version="1.0"
 	STDOUT
 
 index=-1

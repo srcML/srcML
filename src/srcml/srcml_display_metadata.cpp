@@ -189,56 +189,58 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             return;
         }
 
+        std::string pretty_meta_header = "";
+        std::string pretty_meta_body = "";
 
-        std::string pretty_meta = "";
-
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
-            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
-                pretty_meta += "%l\n";
+        // HEADER ONLY METADATA
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING) {
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_ENCODING)
+                pretty_meta_header += "%X\n";
             else
-                pretty_meta += "language=\"%l\"\n";
-        }
-
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
-            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
-                pretty_meta += "%f\n";
-            else
-                pretty_meta += "filename=\"%f\"\n";
+                pretty_meta_header += "encoding=\"%X\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_URL) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_URL)
-                pretty_meta += "%U\n { } ";
+                pretty_meta_header += "%U\n";
             else
-                pretty_meta += "url=\"%U\"\n { } ";
+                pretty_meta_header += "url=\"%U\"\n";
+        }
+
+        // BODY METADATA
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
+                pretty_meta_body += "%f\n";
+            else
+                pretty_meta_body += "filename=\"%f\"\n";
+        }
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
+                pretty_meta_body += "%l\n";
+            else
+                pretty_meta_body += "language=\"%l\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
-                pretty_meta += "%v\n";
+                pretty_meta_body += "%v\n";
             else
-                pretty_meta += "version=\"%v\"\n";
-        }
-
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING) {
-            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_ENCODING)
-                pretty_meta += "%X\n";
-            else
-                pretty_meta += "encoding=\"%X\"\n";
+                pretty_meta_body += "version=\"%v\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_HASH)
-                pretty_meta += "%h\n";
+                pretty_meta_body += "%h\n";
             else
-                pretty_meta += "hash=\"%h\"\n";
+                pretty_meta_body += "hash=\"%h\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP)
-                pretty_meta += "%t\n";
+                pretty_meta_body += "%t\n";
             else
-                pretty_meta += "timestamp=\"%t\"\n";
+                pretty_meta_body += "timestamp=\"%t\"\n";
         }
 
         if (srcml_request.xmlns_prefix_query) {
@@ -248,8 +250,8 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             }
         }
 
-        if (pretty_meta != "") {
-            srcml_pretty(srcml_arch, pretty_meta);
+        if (pretty_meta_header != "" || pretty_meta_body != "") {
+            srcml_pretty(srcml_arch, pretty_meta_header + " { " + pretty_meta_body + " } ");
         }
 
         // units
