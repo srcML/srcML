@@ -74,43 +74,43 @@ def version_string() :
 libsrcml.srcml.restype = c_int
 libsrcml.srcml.argtypes = [c_char_p, c_char_p]
 
-# int srcml_set_xml_encoding  (const char* encoding);
+# int srcml_set_xml_encoding(const char* encoding);
 libsrcml.srcml_set_xml_encoding.restype = c_int
 libsrcml.srcml_set_xml_encoding.argtypes = [c_char_p]
 
-# int srcml_set_language  (const char* language);
+# int srcml_set_language(const char* language);
 libsrcml.srcml_set_language.restype = c_int
 libsrcml.srcml_set_language.argtypes = [c_char_p]
 
-# int srcml_set_filename  (const char* filename);
+# int srcml_set_filename(const char* filename);
 libsrcml.srcml_set_filename.restype = c_int
 libsrcml.srcml_set_filename.argtypes = [c_char_p]
 
-# int srcml_set_url (const char* url);
+# int srcml_set_url(const char* url);
 libsrcml.srcml_set_url.restype = c_int
 libsrcml.srcml_set_url.argtypes = [c_char_p]
 
-# int srcml_set_version   (const char* version);
+# int srcml_set_version(const char* version);
 libsrcml.srcml_set_version.restype = c_int
 libsrcml.srcml_set_version.argtypes = [c_char_p]
 
-# int srcml_set_hash   (const char* hash);
+# int srcml_set_hash(const char* hash);
 libsrcml.srcml_set_hash.restype = c_int
 libsrcml.srcml_set_hash.argtypes = [c_char_p]
 
-# int srcml_set_options   (int option);
+# int srcml_set_options(int option);
 libsrcml.srcml_set_options.restype = c_int
 libsrcml.srcml_set_options.argtypes = [c_ulonglong]
 
-# int srcml_enable_option    (int option);
+# int srcml_enable_option(int option);
 libsrcml.srcml_enable_option.restype = c_int
 libsrcml.srcml_enable_option.argtypes = [c_ulonglong]
 
-# int srcml_disable_option  (int option);
+# int srcml_disable_option(int option);
 libsrcml.srcml_disable_option.restype = c_int
 libsrcml.srcml_disable_option.argtypes = [c_ulonglong]
 
-# int srcml_set_tabstop   (int tabstop);
+# int srcml_set_tabstop(int tabstop);
 libsrcml.srcml_set_tabstop.restype = c_int
 libsrcml.srcml_set_tabstop.argtypes = [c_int]
 
@@ -126,19 +126,23 @@ libsrcml.srcml_register_namespace.argtypes = [c_char_p, c_char_p]
 libsrcml.srcml_unparse_set_eol.restype = c_int
 libsrcml.srcml_unparse_set_eol.argtypes = [c_size_t]
 
-# const char* srcml_get_xml_encoding ();
+# int srcml_set_srcdiff_revision(size_t revision_number);
+libsrcml.srcml_set_srcdiff_revision.restype = c_int
+libsrcml.srcml_set_srcdiff_revision.argtypes = [c_size_t]
+
+# const char* srcml_get_xml_encoding();
 libsrcml.srcml_get_xml_encoding.restype = c_char_p
 libsrcml.srcml_get_xml_encoding.argtypes = []
 
-# const char* srcml_get_revision ();
+# const char* srcml_get_revision();
 libsrcml.srcml_get_revision.restype = c_char_p
 libsrcml.srcml_get_revision.argtypes = []
 
-# const char* srcml_get_language ();
+# const char* srcml_get_language();
 libsrcml.srcml_get_language.restype = c_char_p
 libsrcml.srcml_get_language.argtypes = []
 
-# const char* srcml_get_filename ();
+# const char* srcml_get_filename();
 libsrcml.srcml_get_filename.restype = c_char_p
 libsrcml.srcml_get_filename.argtypes = []
 
@@ -146,23 +150,23 @@ libsrcml.srcml_get_filename.argtypes = []
 libsrcml.srcml_get_url.restype = c_char_p
 libsrcml.srcml_get_url.argtypes = []
 
-# const char* srcml_get_version  ();
+# const char* srcml_get_version();
 libsrcml.srcml_get_version.restype = c_char_p
 libsrcml.srcml_get_version.argtypes = []
 
-# const char* srcml_get_timestamp  ();
+# const char* srcml_get_timestamp();
 libsrcml.srcml_get_timestamp.restype = c_char_p
 libsrcml.srcml_get_timestamp.argtypes = []
 
-# const char* srcml_get_hash  ();
+# const char* srcml_get_hash();
 libsrcml.srcml_get_hash.restype = c_char_p
 libsrcml.srcml_get_hash.argtypes = []
 
-# int         srcml_get_options  ();
+# int         srcml_get_options();
 libsrcml.srcml_get_options.restype = c_ulonglong
 libsrcml.srcml_get_options.argtypes = []
 
-# int         srcml_get_tabstop  ();
+# int         srcml_get_tabstop();
 libsrcml.srcml_get_tabstop.restype = c_int
 libsrcml.srcml_get_tabstop.argtypes = []
 
@@ -201,6 +205,10 @@ libsrcml.srcml_get_macro_token_type.argtypes = [c_char_p]
 # const char* srcml_get_macro_type(int pos);
 libsrcml.srcml_get_macro_type.restype = c_char_p
 libsrcml.srcml_get_macro_type.argtypes = [c_int]
+
+# size_t srcml_get_srcdiff_revision();
+libsrcml.srcml_get_srcdiff_revision.restype = c_size_t
+libsrcml.srcml_get_srcdiff_revision.argtypes = []
 
 # int srcml_check_language(const char* language);
 libsrcml.srcml_check_language.restype = c_int
@@ -283,6 +291,9 @@ def register_namespace(prefix, ns) :
 def unparse_set_eol(eol) :
     check_return(libsrcml.srcml_unparse_set_eol(eol))
 
+def set_srcdiff_revision(revision_number) :
+    check_return(libsrcml.srcml_set_srcdiff_revision(revision_number))
+
 def register_macro(token, type) :
     check_return(libsrcml.srcml_register_macro(token, type))
 
@@ -342,6 +353,9 @@ def get_macro_token_type(token) :
 
 def get_macro_type(pos) :
     return libsrcml.srcml_get_macro_type(pos)
+
+def get_srcdiff_revision() :
+    return libsrcml.srcml_get_srcdiff_revision()
 
 def check_language(language) :
     return libsrcml.srcml_check_language(language)

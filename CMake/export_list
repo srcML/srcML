@@ -88,6 +88,7 @@ _srcml_get_hash
 _srcml_get_language_list
 _srcml_get_language_list_size
 _srcml_get_revision
+_srcml_get_srcdiff_revision
 _srcml_unit_parse_fd
 _srcml_unit_parse_filename
 _srcml_unit_parse_io
@@ -115,6 +116,7 @@ _srcml_set_tabstop
 _srcml_set_version
 _srcml_set_timestamp
 _srcml_set_hash
+_srcml_set_srcdiff_revision
 _srcml_unparse_set_eol
 _srcml_unit_get_url
 _srcml_unit_get_src_encoding

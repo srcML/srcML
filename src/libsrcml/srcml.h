@@ -234,6 +234,7 @@ LIBSRCML_DECL int srcml_register_namespace        (const char* prefix, const cha
 LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const char* data); 
 LIBSRCML_DECL int srcml_register_macro            (const char* token, const char* type);
 LIBSRCML_DECL int srcml_unparse_set_eol           (size_t eol);
+LIBSRCML_DECL int srcml_set_srcdiff_revision      (size_t revision_number);
 
 LIBSRCML_DECL const char*        srcml_get_src_encoding ();
 LIBSRCML_DECL const char*        srcml_get_xml_encoding ();
@@ -272,6 +273,7 @@ LIBSRCML_DECL size_t             srcml_get_macro_list_size();
 LIBSRCML_DECL const char*        srcml_get_macro_token(size_t pos);
 LIBSRCML_DECL const char*        srcml_get_macro_token_type(const char* token);
 LIBSRCML_DECL const char*        srcml_get_macro_type(size_t pos);
+LIBSRCML_DECL size_t             srcml_get_srcdiff_revision();
 
 /* Source-code language is supported */
 LIBSRCML_DECL int srcml_check_language(const char* language);

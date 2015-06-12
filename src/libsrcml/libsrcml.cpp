@@ -516,6 +516,20 @@ int srcml_unparse_set_eol(size_t eol) {
 
 }
 
+/**
+ * srcml_set_srcdiff_revision
+ * @param revision_number
+ *
+ * Set what revision (0 = original, 1 = modified) in a srcDiff docuement to operate with.
+ *
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_set_srcdiff_revision(size_t revision_number) {
+
+    return srcml_archive_set_srcdiff_revision(&global_archive, revision_number);
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Global get functions                             *
@@ -779,6 +793,19 @@ const char* srcml_get_macro_token_type(const char* token) {
 const char* srcml_get_macro_type(size_t pos) {
 
     return srcml_archive_get_macro_type(&global_archive, pos);
+
+}
+
+/**
+ * srcml_get_srcdiff_revision
+ *
+ * Gets the srcdiff revision number that is being using for processing.
+ *
+ * @returns the srcdiff revision number is being using.
+ */
+size_t srcml_get_srcdiff_revision() {
+
+    return srcml_archive_get_srcdiff_revision(&global_archive);
 
 }
 
