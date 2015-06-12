@@ -166,4 +166,8 @@
 <if>if<condition>(<expr><name>a</name><operator>&amp;</operator><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></block></then></if>
 </unit>
 
+<unit>
+<if>if <condition>(<expr><name>emit</name></expr>)</condition><then> <block>{}</block></then></if>
+</unit>
+
 </unit>

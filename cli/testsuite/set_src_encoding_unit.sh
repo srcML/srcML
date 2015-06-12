@@ -12,6 +12,7 @@ define foutput <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$foutput"
 createfile sub/a.cpp "$sfile1"
 createfile sub/a.cpp.xml "$foutput"
 
@@ -148,8 +149,8 @@ createfile sub/special_characters_utf8.cpp "$special_characters_utf8_actual"
 createfile sub/chinese_characters_utf8.cpp "$chinese_characters_utf8_actual"
 
 # create utf16 versions of the files
-iconv -f UTF-8 -t UTF-16 sub/special_characters_utf8.cpp > sub/special_characters_utf16.cpp
-iconv -f UTF-8 -t UTF-16 sub/chinese_characters_utf8.cpp > sub/chinese_characters_utf16.cpp
+iconv -f UTF-8 -t UTF-16LE sub/special_characters_utf8.cpp > sub/special_characters_utf16.cpp
+iconv -f UTF-8 -t UTF-16LE sub/chinese_characters_utf8.cpp > sub/chinese_characters_utf16.cpp
 
 special_characters_utf16_actual=$(cat sub/special_characters_utf16.cpp)
 chinese_characters_utf16_actual=$(cat sub/chinese_characters_utf16.cpp)

@@ -12,11 +12,11 @@ import DocGen.TagTracker
 register = template.Library()
 
 uriToPrefix = {
-    "http://www.sdml.info/srcML/operator": "op",
-    "http://www.sdml.info/srcML/src": "src",
-    "http://www.sdml.info/srcML/cpp": "cpp",
-    "http://www.sdml.info/srcML/literal": "lit",
-    "http://www.sdml.info/srcML/modifier": "type",
+    # "http://www.sdml.info/srcML/operator": "op",
+    "http://www.srcML.org/srcML/src": "src",
+    "http://www.srcML.org/srcML/cpp": "cpp",
+    # "http://www.sdml.info/srcML/literal": "lit",
+    # "http://www.sdml.info/srcML/modifier": "type",
 }
 
 

@@ -28,6 +28,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
 
@@ -52,6 +53,8 @@ define output <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+xmlcheck "$output"
 
 srcml sub/a.cpp.xml --xpath "//src:argument/src:expr/src:name"
 check 3<<< "$output"
@@ -81,6 +84,8 @@ define output <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+xmlcheck "$output"
 
 srcml sub/a.cpp.xml --xpath "(//src:name)[1]"
 check 3<<< "$output"
@@ -116,6 +121,8 @@ define output <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+xmlcheck "$output"
 
 srcml sub/a.cpp.xml --xpath "//src:type/src:name/text()"
 check 3<<< "$output"
@@ -154,6 +161,8 @@ define output <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+xmlcheck "$output"
 
 srcml sub/a.cpp.xml --xpath='//src:comment[@type="block"]'
 check 3<<< "$output"

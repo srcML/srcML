@@ -335,7 +335,6 @@ public :
 
             xmlXPathObjectPtr result_nodes2 = xmlXPathCompiledEval(tr->compiled_xpath, context);
 
-
             applyxpath(++tr, end, result_nodes2);
 
             //xmlXPathFreeObject(result_nodes2);
@@ -354,18 +353,12 @@ public :
 
         case XPATH_NODESET:
 
-            // root element if first result
-            // TODO: This should move to start_output(), but that will have to wait because it is shared.
-       //     if (result_count == 0) {
-//                outputRoot(xmlDocGetRootElement(ctxt->myDoc));
-//            }
-
-            if (!element && !attr_name)
-                outputXPathResultsWrap(result_nodes);
-            else if (element)
+            if (element)
                 outputXPathResultsElement(result_nodes);
             else if (attr_name)
                 outputXPathResultsAttribute(result_nodes);
+            else
+                outputXPathResultsWrap(result_nodes);
             break;
 
         case XPATH_NUMBER:
@@ -414,79 +407,43 @@ public :
         if (xmlXPathNodeSetGetLength(result_nodes->nodesetval) == 0)
             return;
 
+        // determine if the xpath result is already a unit by checking the first result
+        // TODO: Verify that if there is more then one result, unit -> all units, !unit -> !all units
         bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0;
 
         // using the internal unit node to serve as the wrapper
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
-        // remove src namespace
-        //xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
-        //xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
+        // if the query result is the unit, then just output directly
+        if (isunit) {
 
-        // hash doesn't make sense anymore because contents changed
-        // so remove hash attribute
-        //if (xmlAttrPtr curattr = xmlHasProp(a_node, BAD_CAST "hash")) {
-        //    xmlRemoveProp(curattr);
-        //}
-
-        srcml_unit* punit = srcml_unit_create(output_archive);
-
-        // copy all the attributes from the current node
-        for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next) {
-            if (std::string((const char*) pAttr->name) == std::string("filename"))
-                srcml_unit_set_filename(punit, (const char*) pAttr->children->content);
-            else if (std::string((const char*) pAttr->name) == std::string("url"))
-                srcml_unit_set_url(punit, (const char*) pAttr->children->content);
-            else if (std::string((const char*) pAttr->name) == std::string("version"))
-                srcml_unit_set_version(punit, (const char*) pAttr->children->content);
-            else if (std::string((const char*) pAttr->name) == std::string("timestamp"))
-                srcml_unit_set_timestamp(punit, (const char*) pAttr->children->content);
-            else if (std::string((const char*) pAttr->name) == std::string("language"))
-                srcml_unit_set_language(punit, (const char*) pAttr->children->content);
-            else if (std::string((const char*) pAttr->name) == std::string("hash"))
-                /* ignore hash */ ;
-            else if (std::string((const char*) pAttr->name) == std::string("revision"))
-                /* ignore revision */ ;
-            else {
-                punit->attributes.push_back((const char*) pAttr->name);
-                punit->attributes.push_back((const char*) pAttr->children->content);
-            }
+            outputResult(a_node);
+            return;
         }
 
-        if (!isunit) {
-            punit->attributes.push_back("item");
-            punit->attributes.push_back("");
-        }
+        // save the children
+        xmlNodePtr a_node_children = a_node->children;
+        a_node->children = 0;
 
-        /*
-        for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
-            srcml_unit_
-            xmlTextWriterWriteAttribute(bufwriter, pAttr->name, pAttr->children->content);
-*/
+        // create the item property
+        if (xmlNewProp(a_node, BAD_CAST "item", BAD_CAST "0") == 0)
+            return;
+
+        // save the hash attribute
+        xmlAttrPtr hashprop = xmlHasProp(a_node, BAD_CAST "hash");
+        if (hashprop)
+            xmlRemoveProp(hashprop);
+
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
-
-            if (isunit) {
-
-                static xmlBufferPtr lbuffer = xmlBufferCreate();
-
-                for (xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i]->children; onode; onode = onode->next) {
-
-                    xmlNodeDump(lbuffer, ctxt->myDoc, onode, 0, 0);
-                }
-
-                output_archive->translator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
-
-                xmlBufferEmpty(lbuffer);
-
-                ++result_count;
-                continue;
-            }
 
             // item attribute on wrapping node
             static char s[100];
             sprintf(s, "%d", i + 1);
-            punit->attributes.back() = s;
+
+            // set the item propery
+            if (xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s) == 0)
+                return;
 
             // location attribute on wrapping node
             if (false) {
@@ -498,51 +455,64 @@ public :
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
             // unlink this result node and link to the master parent
-            //xmlUnlinkNode(onode);
-            //xmlAddChild(a_node, onode);
+            xmlNodePtr onode_parent = onode->parent;
+            xmlNodePtr onode_next = onode->next;
+            xmlNodePtr onode_prev = onode->prev;
+            onode->parent = a_node;
+            onode->next = 0;
+            onode->prev = 0;
+            a_node->children = onode;
 
             // output the result
-            outputResult(punit, onode);
+            outputResult(a_node);
 
-            // put the result node back into place
-            //xmlUnlinkNode(onode);
-            // xmlAddChild(onode_parent, onode);
+            // unlink from the master parent back to where it came from
+            onode->parent = onode_parent;
+            onode->next = onode_next;
+            onode->prev = onode_prev;
+            a_node->children = 0;
         }
 
-        //if (skip)
-            //*skip = hrefptr;
+        a_node->children = a_node_children;
 
-        //xmlFreeNode(a_node);
-
-        srcml_unit_free(punit);
-    }
-
-    virtual void outputResult(srcml_unit* punit, xmlNodePtr a_node) {
-
-        static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
-        if (size == 0)
-            return;
-
-        output_archive->translator->add_unit_content(punit, (const char*) xmlBufferContent(lbuffer), xmlBufferLength(lbuffer));
-
-        xmlBufferEmpty(lbuffer);
-
-        ++result_count;
+        if (hashprop)
+            ;
+        //xmlFreeProp(itemprop);
     }
 
     virtual void outputResult(xmlNodePtr a_node) {
 
+        bool is_archive = (output_archive->options & SRCML_OPTION_ARCHIVE) > 0;
+
+        // remove src namespace
+        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_CPP_NS_URI);
+
+        xmlNsPtr save = a_node->nsDef; //skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
+        xmlNsPtr nextsave = hrefptr ? hrefptr->next : 0;
+        if (is_archive) {
+            if (!hrefptr)
+                a_node->nsDef = 0;
+            else {
+                a_node->nsDef = hrefptr;
+                hrefptr->next = 0;
+            }
+        }
+
         static xmlBufferPtr lbuffer = xmlBufferCreate();
         int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
         if (size == 0)
             return;
-
+ 
         output_archive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
-
+ 
         xmlBufferEmpty(lbuffer);
 
-        ++result_count;
+        // restore manipulated namespaces
+        if (save)
+            a_node->nsDef = save;
+
+        if (nextsave)
+            hrefptr->next = nextsave;
     }
 
     // process the resulting nodes

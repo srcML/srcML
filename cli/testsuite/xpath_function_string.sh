@@ -18,9 +18,9 @@ define output <<- 'STDOUT'
 	b.cpp
 	STDOUT
 
+xmlcheck "$srcml_nested"
 createfile sub/a.cpp.xml "$srcml_nested"
 
-# TODO: issue #1074
 srcml2src sub/a.cpp.xml --xpath "string(//src:unit/@filename)"
 check 3<<< "$output"
 

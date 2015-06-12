@@ -26,6 +26,7 @@ define srcml <<- 'STDOUT'
 	STDOUT
 
 # srcml2src - input srcml single file
+xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
 srcml2src --output-src sub/a.cpp.xml
@@ -97,6 +98,7 @@ define srcml <<- 'STDOUT'
 	STDOUT
 
 # srcml2src - input srcml single file
+xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
 srcml2src --output-src sub/a.cpp.xml

@@ -50,7 +50,7 @@ void srcml_handler_dispatch(ParseQueue& queue,
         // all other srcml compressions require a per-input decompression stage
         srcml_input_src uninput = input;
         input_file(uninput);
-        srcml_input_srcml(queue, srcml_arch, uninput);
+        srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol == "text") {
 
@@ -165,15 +165,27 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // register xml namespaces
     std::map<std::string, std::string>::const_iterator itr;
-    for(itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
-        srcml_archive_register_namespace(srcml_arch, (*itr).first.c_str(), (*itr).second.c_str());
+    for(itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr) {
+        srcml_archive_register_namespace(srcml_arch, itr->first.c_str(), itr->second.c_str());
     }
 
     // create the srcML output file
 
     unsigned short compression = 0;
-    if (destination.extension == ".gz")
+    // If you enabled compression
+    if (srcml_request.command & SRCML_COMPRESS) {
         compression = 9;
+    }
+
+    // If you didn't enable compression, but the output extension is gz
+    if (compression == 0) {
+        BOOST_FOREACH( std::string extension, destination.compressions) {
+            if (extension == ".gz") {
+                compression = 9;
+                break;
+            }
+        }
+    }
 
     int status = 0;
     if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
@@ -184,7 +196,6 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
     } else {
-
         status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), compression);
     }
 

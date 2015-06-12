@@ -18,6 +18,7 @@ define result <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$result"
 createfile a.cpp "a;
 "
 createfile b.cpp "b;
@@ -51,6 +52,7 @@ define result <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$result"
 createfile sub/a.cpp "a;
 "
 srcml sub/a.cpp --xmlns:foo=foo.com -o sub/a.xml

@@ -13,6 +13,9 @@ define srcmlb <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 	STDOUT
 
+xmlcheck "$srcmla"
+xmlcheck "$srcmlb"
+
 # test --no-archive
 createfile a.cpp "a;"
 createfile b.cpp "b;"

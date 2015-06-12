@@ -165,6 +165,9 @@ void option_field(const std::vector<std::string>& value) { srcml_request.*pfield
 template <int srcml_request_t::*pfield>
 void option_field(int value) { srcml_request.*pfield = value; }
 
+template <boost::optional<size_t> srcml_request_t::*pfield>
+void option_field(size_t value) { srcml_request.*pfield = value; }
+
 // option files_from
 template <>
 void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& value) {
@@ -181,7 +184,7 @@ void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
         std::cerr << "srcml: invalid src encoding \"" << value.c_str() << "\"\n";
-        exit(4);
+        exit(CLI_ERROR_INVALID_ARGUMENT);
     }
     srcml_request.src_encoding = value;
 }
@@ -192,7 +195,7 @@ void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) 
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
         std::cerr << "srcml: invalid xml encoding \"" << value.c_str() << "\"\n";
-        exit(4);
+        exit(CLI_ERROR_INVALID_ARGUMENT);
     }
     srcml_request.att_xml_encoding = value;
 }
@@ -397,6 +400,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("attribute", prog_opts::value< std::vector<std::string> >(), "add attribute to xpath query")
             ("element", prog_opts::value< std::vector<std::string> >(), "add element to xpath query")
             ("unit,U", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::unit>), "extract individual unit number from srcML")
+            ("revision", prog_opts::value<size_t>()->notifier(&option_field<&srcml_request_t::revision>), "extract the given revision (0 = original, 1 = modified)")
             ;
 
         positional_options.add_options()

@@ -836,7 +836,8 @@ start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
          && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
-         && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }? keyword_statements |
+         && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN)
+         && (LA(1) != EMIT || emit_statement_check()) }? keyword_statements |
 
         { next_token() == LPAREN }? synchronized_statement |
 
@@ -2816,6 +2817,28 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
 ;
 
+emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG 
+
+    if(LA(1) != EMIT) return false;
+
+    is_emit_stmt = false;
+
+    int state = mark();
+    ++inputState->guessing;
+
+    consume();
+
+    CALL_TYPE type = NOCALL;  bool isempty = false; int call_count = 0;
+    if(perform_call_check(type, isempty, call_count, -1) && type == CALL)
+        is_emit_stmt = true;
+
+    --inputState->guessing;
+    rewind(state);
+
+} :
+
+;
+
 // Qt emit statement
 emit_statement[] { ENTRY_DEBUG } :
         {
@@ -3697,7 +3720,8 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
          && (LA(1) != INLINE || next_token() == NAMESPACE)
          && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
          && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
-         && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) }?
+         && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) 
+         && (LA(1) != EMIT || emit_statement_check()) }?
         terminate_pre
         terminate_post
         keyword_statements |
@@ -5260,10 +5284,13 @@ identifier_list[] { ENTRY_DEBUG } :
             IMPORT | ATPROTOCOL |
 
             // C
-            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH/*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |/*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
             SIGNAL | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
             DELETE | FALSE | TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
             DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF*/
+
+            //Qt
+            EMIT
 
 ;
 

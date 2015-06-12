@@ -14,6 +14,8 @@ define foutput <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 
+xmlcheck "$output"
+xmlcheck "$foutput"
 createfile sub/a.cpp ""
 
 # separate

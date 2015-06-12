@@ -23,13 +23,12 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-# TODO: issue #1072
-src2srcml -l C++ <<< "$input"
+xmlcheck "$output"
 
+src2srcml -l C++ <<< "$input"
 check 3<<< "$output"
 
 #src2srcml -l C++ --cpp-text-if0 <<< "$input"
-
 #check 3<<< "$output"
 
 define output2 <<- 'STDOUT'
@@ -42,6 +41,7 @@ define output2 <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-src2srcml -l C++ --cpp-markup-if0 <<< "$input"
+xmlcheck "$output"
 
+src2srcml -l C++ --cpp-markup-if0 <<< "$input"
 check 3<<< "$output2"

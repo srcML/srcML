@@ -52,7 +52,7 @@ const int SRCML_COMMAND_TO_DIRECTORY              = 1<<13;
 const int SRCML_COMMAND_TIMESTAMP                 = 1<<14;
 
 const int SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE    = 1<<15;
-const int SRCML_COMMAND_DISPLAY_SRCML_URL   = 1<<16;
+const int SRCML_COMMAND_DISPLAY_SRCML_URL         = 1<<16;
 const int SRCML_COMMAND_DISPLAY_SRCML_FILENAME    = 1<<17;
 const int SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION = 1<<18;
 const int SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP   = 1<<19;
@@ -83,6 +83,10 @@ const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
     SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP | 
     SRCML_COMMAND_DISPLAY_SRCML_HASH;
+
+// Error Codes
+// TODO: PUT THE REST HERE
+const int CLI_ERROR_INVALID_ARGUMENT = 4;
 
 struct attribute {
     boost::optional<std::string> prefix;
@@ -143,6 +147,9 @@ struct srcml_request_t {
     int max_threads;
 
     boost::optional<std::string> pretty_format;
+
+    boost::optional<size_t> revision;
+
 };
 
 // parse the CLI options into a srcml client request

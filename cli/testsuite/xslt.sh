@@ -32,6 +32,7 @@ define copyxslt <<- 'STDOUT'
 	</xsl:stylesheet>
 	STDOUT
 
+xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 createfile copy.xsl "$copyxslt"
 

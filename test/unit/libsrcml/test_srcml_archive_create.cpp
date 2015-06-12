@@ -63,6 +63,8 @@ int main() {
         dassert(archive->input, 0);
 
         dassert(archive->transformations.size(), 0);
+        assert(archive->context.empty());
+        assert(!archive->revision_number.is_initialized());
 
         srcml_archive_free(archive);
     }

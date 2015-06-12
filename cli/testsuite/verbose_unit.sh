@@ -17,6 +17,7 @@ define output <<- 'STDERR'
 	Translated: 1	Skipped: 0	Error: 0	Total: 1
 	STDERR
 
+xmlcheck "$fsrcml"
 createfile sub/a.cpp "a;"
 createfile sub/a.cpp.xml "$fsrcml"
  
@@ -46,6 +47,8 @@ define output <<- 'STDERR'
 
 	Translated: 1	Skipped: 0	Error: 0	Total: 1
 	STDERR
+
+xmlcheck "$srcml"
 
 srcml --verbose -l C++ < sub/a.cpp
 check 3<<< "$srcml" 4<<< "$output"

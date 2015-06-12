@@ -12,6 +12,7 @@ define fileasrcml <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+xmlcheck "$fileasrcml"
 
 define asrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -21,6 +22,7 @@ define asrcml <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+xmlcheck "$asrcml"
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -32,6 +34,7 @@ define nestedfile <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+xmlcheck "$nestedfile"
 
 
 createfile sub/a.cpp "a;"

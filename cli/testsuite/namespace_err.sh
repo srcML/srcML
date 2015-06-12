@@ -9,6 +9,8 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:err="http://www.srcML.org/srcML/srcerr" revision="REVISION" language="C++"/>
 	STDOUT
 
+xmlcheck "$output"
+
 # separate
 echo -n "" | src2srcml -l C++ --debug --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" --xmlns:err="http://www.srcML.org/srcML/srcerr"
 check 3<<< "$output"

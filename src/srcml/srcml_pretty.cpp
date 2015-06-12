@@ -199,9 +199,6 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
 
         if (arg == "U")           // %U: url attribute on the archive
             return srcml_archive_get_url(srcml_arch);
-        
-        if (arg == "u")           // %u: url attribute on the unit
-            return srcml_unit_get_url(srcml_unit);
     
         if (arg == "V")           // %V: version attribute on the archive
             return srcml_archive_get_version(srcml_arch);
@@ -211,9 +208,6 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
 
         if (arg == "X")           // %X: XML encoding on the archive
             return srcml_archive_get_xml_encoding(srcml_arch);
-
-        if (arg == "x")           // %x: XML encoding attribute on the unit
-            return "XML";
 
     return "???";
 }
