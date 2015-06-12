@@ -469,9 +469,11 @@ int srcml_archive_register_macro(srcml_archive* archive, const char* token, cons
  */
 int srcml_archive_set_srcdiff_revision(srcml_archive* archive, size_t revision_number) {
 
-    if(archive == NULL || revision_number > 1) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(archive == NULL
+        || (revision_number != SRCDIFF_REVISION_ORIGINAL && revision_number != SRCDIFF_REVISION_MODIFIED))
+            return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->reader->revision_number(revision_number);
+    archive->revision_number = revision_number;
 
     return SRCML_STATUS_OK;
 
@@ -808,8 +810,7 @@ size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive) {
 
     if(archive == NULL) return SRCDIFF_REVISION_INVALID;
 
-    boost::optional<size_t> revision_number = archive->reader->revision_number();
-    return revision_number ? *revision_number : SRCDIFF_REVISION_INVALID;    
+    return archive->revision_number ? *archive->revision_number : SRCDIFF_REVISION_INVALID;    
 
 }
 
@@ -1009,7 +1010,7 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
 
     try {
 
-        archive->reader = new srcml_sax2_reader(archive->input);
+        archive->reader = new srcml_sax2_reader(archive->input, archive->revision_number);
 
     } catch(...) {
 

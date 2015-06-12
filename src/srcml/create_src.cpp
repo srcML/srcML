@@ -32,13 +32,14 @@
 
 class srcMLReadArchive {
 public:
-    srcMLReadArchive(const srcml_input_src& input_source, boost::optional<size_t> revision) {
+    srcMLReadArchive(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
 
         arch = srcml_archive_create();
         if (!arch)
             throw srcMLReadArchiveError(0, input_source);
 
         int status = SRCML_STATUS_OK;
+
         if(revision)
             status = srcml_archive_set_srcdiff_revision(arch, *revision);
 

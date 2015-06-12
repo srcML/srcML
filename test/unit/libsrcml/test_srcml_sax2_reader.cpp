@@ -108,7 +108,8 @@ int main() {
 
     {
         try {
-            srcml_sax2_reader reader("project.xml");
+            boost::optional<size_t> revision_number;
+            srcml_sax2_reader reader("project.xml",  0, revision_number);
 
         } catch(...) {
             assert(false);
@@ -128,7 +129,8 @@ int main() {
 
     {
         try {
-            srcml_sax2_reader reader((const char *)NULL);
+            boost::optional<size_t> revision_number;
+            srcml_sax2_reader reader((const char *)NULL, 0, revision_number);
             assert(false);
         } catch(...) {}
 
@@ -141,7 +143,8 @@ int main() {
     {
         xmlParserInputBufferPtr input = xmlParserInputBufferCreateFilename("project.xml", xmlParseCharEncoding(0));
         try {
-            srcml_sax2_reader reader(input);
+            boost::optional<size_t> revision_number;
+            srcml_sax2_reader reader(input, revision_number);
         } catch(...) {
             assert(false);
         }
@@ -150,7 +153,8 @@ int main() {
 
     {
         try {
-            srcml_sax2_reader reader((xmlParserInputBufferPtr)NULL);
+            boost::optional<size_t> revision_number;
+            srcml_sax2_reader reader((xmlParserInputBufferPtr)NULL, revision_number);
             assert(false);
         } catch(...) {}
 

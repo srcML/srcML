@@ -50,7 +50,7 @@
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
+int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, const boost::optional<size_t> & revision_number, int unit) {
 
     if(input_buffer == NULL || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -58,7 +58,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
 
     if(input == NULL) return SRCML_STATUS_IO_ERROR;
 
-    srcml_sax2_reader reader(input);
+    srcml_sax2_reader reader(input, revision_number);
     reader.read_src(output_buffer);
 
     
@@ -80,13 +80,13 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, int unit) {
+int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, const boost::optional<size_t> & revision_number, int unit) {
 
     if(compression > 9) compression = 9;
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding), compression);
 
-    srcml_sax2_reader reader(ifilename);
+    srcml_sax2_reader reader(ifilename, 0, revision_number);
     reader.read_src(output_buffer);
 
     xmlOutputBufferClose(output_buffer);

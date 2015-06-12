@@ -67,7 +67,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(
                                  std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY,
                                  8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
-                                 language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any() };
+                                 language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any(), boost::optional<size_t>() };
 
 /**
  * @var global_unit
@@ -260,7 +260,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         }
 
-        srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1", 0);
+        srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1", 0, global_archive.revision_number);
 
     }
 

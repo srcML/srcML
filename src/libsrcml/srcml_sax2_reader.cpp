@@ -92,8 +92,8 @@ void srcml_sax2_reader::init_constructor() {
  *
  * Construct a srcml_sax2_reader using a filename
  */
-srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encoding)
-    : control(filename, encoding), read_root(false) {
+srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encoding, const boost::optional<size_t> & revision_number)
+    : control(filename, encoding), read_root(false), handler(revision_number) {
 
     init_constructor();
 
@@ -105,8 +105,8 @@ srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encodin
  *
  * Construct a srcml_sax2_reader using a parser input buffer
  */
-srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input)
-    : control(input), read_root(false) {
+srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input, const boost::optional<size_t> & revision_number)
+    : control(input), read_root(false), handler(revision_number) {
 
     init_constructor();
 
@@ -275,28 +275,4 @@ int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
     if(handler.is_done) return 0;
 
     return 1;
-}
-
-/**
- * revision_umber
- * @param revision_number number of revision to retrieve
- *
- * Set the reader handler to process only the given revision.
- */
-void srcml_sax2_reader::revision_number(boost::optional<size_t> revision_number) {
-
-    handler.revision = revision_number;
-
-}
-
-/**
- * revision_umber
- * @param revision_number number of revision to retrieve
- *
- * Set the reader handler to process only the given revision.
- */
-boost::optional<size_t> srcml_sax2_reader::revision_number() {
-
-    return handler.revision;
-
 }

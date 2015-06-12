@@ -189,6 +189,9 @@ struct srcml_archive {
     /** libxml2 callback wrapper context.  Only needed for IO functions */
     boost::any context;
 
+    /** srcDiff revision number */
+    boost::optional<size_t> revision_number;
+
 };
 
 /**
