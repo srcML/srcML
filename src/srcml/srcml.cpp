@@ -61,7 +61,6 @@ int main(int argc, char * argv[]) {
     SRCMLOptions::set(srcml_request.command);
 
     // create input sources from the list of input filenames
-    //srcml_input_t input_sources(srcml_request.input.begin(), srcml_request.input.end());
     srcml_input_t input_sources = srcml_request.input_sources;
     
     if (input_sources.size() == 1 && srcml_request.unit != 0)

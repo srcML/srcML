@@ -102,8 +102,6 @@ struct element {
 
 // request for srcml client processing
 struct srcml_request_t {
-
-    //std::vector<std::string> input;
     srcml_input_t input_sources;
 
     boost::optional<int> stdindex;

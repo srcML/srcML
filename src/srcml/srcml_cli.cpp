@@ -174,7 +174,6 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
 
     srcml_request.files_from = value;
     BOOST_FOREACH(const std::string& inputFile, value) {
-        //srcml_request.input.push_back(src_prefix_add_uri("filelist", inputFile));
         srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", inputFile));
     }
 }
@@ -259,7 +258,6 @@ void option_to_dir(const std::string& value) {
 }
 
 void positional_args(const std::vector<std::string>& value) {
-    //srcml_request.input.reserve(srcml_request.input.size() + value.size());
     srcml_request.input_sources.reserve(srcml_request.input_sources.size() + value.size());
 
     BOOST_FOREACH(const std::string& iname, value) {
@@ -267,20 +265,12 @@ void positional_args(const std::vector<std::string>& value) {
         // record the position of stdin
         if (iname == "-" || iname == "stdin://-")
             srcml_request.stdindex = (int) srcml_request.input_sources.size();
-            //srcml_request.stdindex = (int) srcml_request.input.size();
 
-        //srcml_request.input.push_back(src_prefix_add_uri(iname));
         srcml_request.input_sources.push_back(src_prefix_add_uri(iname));
     }
 }
 
-/*void raw_text_args(const std::vector<std::string>& value) {
-    BOOST_FOREACH(const std::string& iname, value) {
-        srcml_request.input.push_back(src_prefix_add_uri("text",iname));
-    }*/
-
 void raw_text_args(const std::string& value) {
-  //srcml_request.input.push_back(src_prefix_add_uri("text",value));
   srcml_request.input_sources.push_back(src_prefix_add_uri("text",value));
 }
 
