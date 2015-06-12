@@ -192,18 +192,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         std::string pretty_meta_header = "";
         std::string pretty_meta_body = "";
 
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
-            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
-                pretty_meta_body += "%l\n";
+        // HEADER ONLY METADATA
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING) {
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_ENCODING)
+                pretty_meta_header += "%X\n";
             else
-                pretty_meta_body += "language=\"%l\"\n";
-        }
-
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
-            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
-                pretty_meta_body += "%f\n";
-            else
-                pretty_meta_body += "filename=\"%f\"\n";
+                pretty_meta_header += "encoding=\"%X\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_URL) {
@@ -213,18 +207,26 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                 pretty_meta_header += "url=\"%U\"\n";
         }
 
+        // BODY METADATA
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
+                pretty_meta_body += "%f\n";
+            else
+                pretty_meta_body += "filename=\"%f\"\n";
+        }
+
+        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
+                pretty_meta_body += "%l\n";
+            else
+                pretty_meta_body += "language=\"%l\"\n";
+        }
+
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
                 pretty_meta_body += "%v\n";
             else
                 pretty_meta_body += "version=\"%v\"\n";
-        }
-
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING) {
-            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_ENCODING)
-                pretty_meta_header += "%X\n";
-            else
-                pretty_meta_header += "encoding=\"%X\"\n";
         }
 
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH) {
