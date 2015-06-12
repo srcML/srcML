@@ -417,6 +417,7 @@ public :
             std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
             std::string value;
             value.append((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
+            value = attribute_revision(value);
 
             // Note: these are ignore instead of placing in attributes.
             if(attribute == "timestamp")
@@ -590,7 +591,8 @@ public :
             std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
             std::string value;
             value.append((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
-
+            value = attribute_revision(value);
+            
             if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
             else if(attribute == "hash")
