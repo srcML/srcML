@@ -165,6 +165,8 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
 
     } catch(...) {}
 
+    new_archive->revision_number = archive->revision_number;
+
     return new_archive;
 
 }

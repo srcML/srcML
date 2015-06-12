@@ -236,12 +236,6 @@ private :
     /** srcDiff enum stack */
     std::stack<srcdiff_operation> srcdiff_stack;
 
-    /** original constant */
-    static const size_t ORIGINAL = 0;
-
-    /** modified constant */
-    static const size_t MODIFIED = 1;
-
     /** the srcdiff revision to extract */
     const boost::optional<size_t> & revision_number;
 
@@ -252,7 +246,7 @@ private :
         std::string::size_type pos = attribute.find('|');
         if(pos == std::string::npos) return attribute;
 
-        if(*revision_number == ORIGINAL) return attribute.substr(0, pos);
+        if(*revision_number == SRCDIFF_REVISION_ORIGINAL) return attribute.substr(0, pos);
 
         return attribute.substr(pos + 1, std::string::npos);
 
@@ -512,9 +506,11 @@ public :
                 archive->options |= SRCML_OPTION_POSITION;
             else if(uri == SRCML_EXT_OPENMP_NS_URI)
                 archive->options |= SRCML_OPTION_OPENMP;
-            else if(revision_number && uri == SRCML_DIFF_NS_URI) {
+            else if(uri == SRCML_DIFF_NS_URI) {
                 issrcdiff = true;
-                continue;
+
+                if(revision_number) continue;
+    
             }
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
@@ -717,8 +713,8 @@ public :
             if(issrcdiff && revision_number) {
 
                 if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-                if(*revision_number == ORIGINAL && srcdiff_stack.top() == INSERT) return;
-                if(*revision_number == MODIFIED && srcdiff_stack.top() == DELETE) return;
+                if(*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
+                if(*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
 
             }
         }
@@ -881,8 +877,8 @@ public :
             if(revision_number) {
 
                 if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-                if(*revision_number == ORIGINAL && srcdiff_stack.top() == INSERT) return;
-                if(*revision_number == MODIFIED && srcdiff_stack.top() == DELETE) return;
+                if(*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
+                if(*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
 
             }
         }
@@ -919,8 +915,8 @@ public :
 
         if(issrcdiff && revision_number) {
 
-            if(*revision_number == ORIGINAL && srcdiff_stack.top() == INSERT) return;
-            if(*revision_number == MODIFIED && srcdiff_stack.top() == DELETE) return;
+            if(*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
+            if(*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
 
         }        
 
