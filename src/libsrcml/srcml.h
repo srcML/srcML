@@ -179,6 +179,14 @@ LIBSRCML_DECL const char* srcml_version_string();
 /** Source-code end of line is carriage return and new line */
 #define SRCML_UNPARSE_OPTION_CRLF   3
 
+
+/** Constant for original srcDiff revision number */
+#define SRCDIFF_REVISION_ORIGINAL 0
+/** Constant for modified srcDiff revision number */
+#define SRCDIFF_REVISION_MODIFIED 1
+/** Constant for an invalid srcDiff revision number */
+#define SRCDIFF_REVISION_INVALID  2
+
 /* libsrcml data structures */
 struct srcml_archive;
 struct srcml_unit;
@@ -226,6 +234,7 @@ LIBSRCML_DECL int srcml_register_namespace        (const char* prefix, const cha
 LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const char* data); 
 LIBSRCML_DECL int srcml_register_macro            (const char* token, const char* type);
 LIBSRCML_DECL int srcml_unparse_set_eol           (size_t eol);
+LIBSRCML_DECL int srcml_set_srcdiff_revision      (size_t revision_number);
 
 LIBSRCML_DECL const char*        srcml_get_src_encoding ();
 LIBSRCML_DECL const char*        srcml_get_xml_encoding ();
@@ -264,6 +273,7 @@ LIBSRCML_DECL size_t             srcml_get_macro_list_size();
 LIBSRCML_DECL const char*        srcml_get_macro_token(size_t pos);
 LIBSRCML_DECL const char*        srcml_get_macro_token_type(const char* token);
 LIBSRCML_DECL const char*        srcml_get_macro_type(size_t pos);
+LIBSRCML_DECL size_t             srcml_get_srcdiff_revision();
 
 /* Source-code language is supported */
 LIBSRCML_DECL int srcml_check_language(const char* language);
@@ -323,7 +333,8 @@ LIBSRCML_DECL int srcml_archive_set_tabstop               (struct srcml_archive*
 LIBSRCML_DECL int srcml_archive_register_file_extension   (struct srcml_archive*, const char* extension, const char* language);
 LIBSRCML_DECL int srcml_archive_register_namespace        (struct srcml_archive*, const char* prefix, const char* uri);
 LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive*, const char* target, const char* data); 
-LIBSRCML_DECL int srcml_archive_register_macro            (struct srcml_archive*, const char* token, const char* type);  
+LIBSRCML_DECL int srcml_archive_register_macro            (struct srcml_archive*, const char* token, const char* type);
+LIBSRCML_DECL int srcml_archive_set_srcdiff_revision      (struct srcml_archive*, size_t revision_number);
 
 /* Query of the options for srcml archive */
 LIBSRCML_DECL const char*        srcml_archive_get_xml_encoding                 (const struct srcml_archive*);
@@ -345,6 +356,7 @@ LIBSRCML_DECL size_t             srcml_archive_get_macro_list_size              
 LIBSRCML_DECL const char*        srcml_archive_get_macro_token                  (const struct srcml_archive*, size_t pos);
 LIBSRCML_DECL const char*        srcml_archive_get_macro_token_type             (const struct srcml_archive*, const char* token);
 LIBSRCML_DECL const char*        srcml_archive_get_macro_type                   (const struct srcml_archive*, size_t pos);
+LIBSRCML_DECL size_t             srcml_archive_get_srcdiff_revision             (const struct srcml_archive*);
 
 /* Create a new srcml unit.
    Client is responsible for freeing memory using srcml_unit_free() */
@@ -401,9 +413,6 @@ LIBSRCML_DECL int srcml_archive_read_open_io      (struct srcml_archive*, void *
 LIBSRCML_DECL struct srcml_unit* srcml_read_unit_header(struct srcml_archive*);
 LIBSRCML_DECL struct srcml_unit* srcml_read_unit_xml(struct srcml_archive*);
 LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
-
-/* srcDiff processing */
-LIBSRCML_DECL struct srcml_unit* srcml_read_unit_revision(struct srcml_archive*, size_t revision_number);
 
 /* Query options of srcml unit */
 LIBSRCML_DECL const char* srcml_unit_get_src_encoding  (const struct srcml_unit*);

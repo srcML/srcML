@@ -32,13 +32,21 @@
 
 class srcMLReadArchive {
 public:
-    srcMLReadArchive(const srcml_input_src& input_source) {
+    srcMLReadArchive(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
 
         arch = srcml_archive_create();
         if (!arch)
             throw srcMLReadArchiveError(0, input_source);
 
-        int status = srcml_archive_read_open(arch, input_source);
+        int status = SRCML_STATUS_OK;
+
+        if(revision)
+            status = srcml_archive_set_srcdiff_revision(arch, *revision);
+
+        if (status != SRCML_STATUS_OK)
+            throw status;
+
+        status = srcml_archive_read_open(arch, input_source);
         if (status != SRCML_STATUS_OK)
             throw status;
     }
@@ -69,7 +77,7 @@ void create_src(const srcml_request_t& srcml_request,
             TraceLog log(SRCMLOptions::get());
 
             BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
-                srcMLReadArchive arch(input_source);
+                srcMLReadArchive arch(input_source, srcml_request.revision);
 
                 src_output_filesystem(arch, destination, log);
             }
@@ -78,7 +86,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // srcml->src extract individual unit in XML
 
-            srcMLReadArchive arch(input_sources[0]);
+            srcMLReadArchive arch(input_sources[0], srcml_request.revision);
 
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
@@ -194,7 +202,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // srcml->src extract to stdout
 
-            srcMLReadArchive arch(input_sources[0]);
+            srcMLReadArchive arch(input_sources[0], srcml_request.revision);
 
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
@@ -202,7 +210,7 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_unit_free(unit);
             }
 
-            srcml_unit* unit = srcml_request.revision ? srcml_read_unit_revision(arch, *srcml_request.revision) : srcml_read_unit(arch);
+            srcml_unit* unit = srcml_read_unit(arch);
 
             if (!unit) {
                 std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
@@ -222,7 +230,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // srcml->src extract to plain code file
 
-            srcMLReadArchive arch(input_sources[0]);
+            srcMLReadArchive arch(input_sources[0], srcml_request.revision);
 
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
@@ -230,7 +238,7 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_unit_free(unit);
             }
 
-            srcml_unit* unit = srcml_request.revision ? srcml_read_unit_revision(arch, *srcml_request.revision) : srcml_read_unit(arch);
+            srcml_unit* unit = srcml_read_unit(arch);
 
             if (!unit) {
                 std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
@@ -279,7 +287,7 @@ void create_src(const srcml_request_t& srcml_request,
             // extract all the srcml archives to this libarchive
             BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
 
-                srcMLReadArchive arch(input_source);
+                srcMLReadArchive arch(input_source, srcml_request.revision);
 
                 // extract this srcml archive to the source archive
                 src_output_libarchive(arch, ar);

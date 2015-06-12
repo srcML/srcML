@@ -478,5 +478,35 @@ int main() {
         dassert(srcml_archive_register_macro(0, "foo", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
+    /*
+      srcml_archive_set_srcdiff_revision
+    */
+
+    {
+
+        srcml_archive * archive = srcml_archive_create();
+
+        srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL);
+
+        dassert(srcml_archive_set_srcdiff_revision(0, SRCDIFF_REVISION_INVALID), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive_free(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_archive_create();
+
+        srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL);
+
+        dassert(*archive->revision_number, SRCDIFF_REVISION_ORIGINAL);
+        srcml_archive_free(archive);
+
+    }
+
+    {
+        dassert(srcml_archive_set_srcdiff_revision(0, SRCDIFF_REVISION_ORIGINAL), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
     return 0;
 }

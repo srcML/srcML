@@ -64,8 +64,8 @@ private :
 public :
 
     // constructors
-    srcml_sax2_reader(const char * filename, const char * encoding = 0);
-    srcml_sax2_reader(xmlParserInputBufferPtr input);
+    srcml_sax2_reader(const char * filename, const char * encoding = 0, const boost::optional<size_t> & revision_number = boost::optional<size_t>());
+    srcml_sax2_reader(xmlParserInputBufferPtr input, const boost::optional<size_t> & revision_number);
 
     // destructors
     ~srcml_sax2_reader();
@@ -98,10 +98,6 @@ public :
 
     // reads the next unit and returns it in parameter as src
     int read_src(xmlOutputBufferPtr output_buffer);
-
-    // set the revision number to retrieve
-    void revision_number(boost::optional<size_t> revision_number);
-
 
 };
 

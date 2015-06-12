@@ -39,19 +39,19 @@ libsrcml.srcml_archive_clone.argtypes = [c_void_p]
 libsrcml.srcml_archive_write_open_filename.restype = c_int
 libsrcml.srcml_archive_write_open_filename.argtypes = [c_void_p, c_char_p, c_ushort]
 
-# int srcml_archive_write_open_memory  (struct srcml_archive*, char** buffer, size_t * size);
+# int srcml_archive_write_open_memory(struct srcml_archive*, char** buffer, size_t * size);
 libsrcml.srcml_archive_write_open_memory.restype = c_int
 libsrcml.srcml_archive_write_open_memory.argtypes = [c_void_p, c_void_p, c_void_p]
 
-# int srcml_archive_write_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+# int srcml_archive_write_open_FILE(struct srcml_archive*, FILE* srcml_file);
 libsrcml.srcml_archive_write_open_FILE.restype = c_int
 libsrcml.srcml_archive_write_open_FILE.argtypes = [c_void_p, c_void_p]
 
-# int srcml_archive_write_open_fd      (struct srcml_archive*, int srcml_fd);
+# int srcml_archive_write_open_fd(struct srcml_archive*, int srcml_fd);
 libsrcml.srcml_archive_write_open_fd.restype = c_int
 libsrcml.srcml_archive_write_open_fd.argtypes = [c_void_p, c_int]
 
-# int srcml_archive_write_open_io      (struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context));
+# int srcml_archive_write_open_io(struct srcml_archive*, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context));
 libsrcml.srcml_archive_write_open_io.restype = c_int
 libsrcml.srcml_archive_write_open_io.argtypes = [c_void_p, c_void_p, write_callback_t, close_callback_t]
 
@@ -59,19 +59,19 @@ libsrcml.srcml_archive_write_open_io.argtypes = [c_void_p, c_void_p, write_callb
 libsrcml.srcml_archive_read_open_filename.restype = c_int
 libsrcml.srcml_archive_read_open_filename.argtypes = [c_void_p, c_char_p]
 
-# int srcml_archive_read_open_memory  (struct srcml_archive*, const char* buffer, size_t buffer_size);
+# int srcml_archive_read_open_memory(struct srcml_archive*, const char* buffer, size_t buffer_size);
 libsrcml.srcml_archive_read_open_memory.restype = c_int
 libsrcml.srcml_archive_read_open_memory.argtypes = [c_void_p, c_char_p, c_size_t]
 
-# int srcml_archive_read_open_FILE    (struct srcml_archive*, FILE* srcml_file);
+# int srcml_archive_read_open_FILE(struct srcml_archive*, FILE* srcml_file);
 libsrcml.srcml_archive_read_open_FILE.restype = c_int
 libsrcml.srcml_archive_read_open_FILE.argtypes = [c_void_p, c_void_p]
 
-# int srcml_archive_read_open_fd      (struct srcml_archive*, int srcml_fd);
+# int srcml_archive_read_open_fd(struct srcml_archive*, int srcml_fd);
 libsrcml.srcml_archive_read_open_fd.restype = c_int
 libsrcml.srcml_archive_read_open_fd.argtypes = [c_void_p, c_int]
 
-# int srcml_archive_read_open_io      (struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, size_t len), int (*close_callback)(void * context));
+# int srcml_archive_read_open_io(struct srcml_archive*, void * context, int (*read_callback)(void * context, char * buffer, size_t len), int (*close_callback)(void * context));
 libsrcml.srcml_archive_read_open_io.restype = c_int
 libsrcml.srcml_archive_read_open_io.argtypes = [c_void_p, c_void_p, read_callback_t, close_callback_t]
 
@@ -83,39 +83,39 @@ libsrcml.srcml_archive_free.argtypes = [c_void_p]
 libsrcml.srcml_archive_close.restype = None
 libsrcml.srcml_archive_close.argtypes = [c_void_p]
 
-# int srcml_archive_set_src_encoding  (struct srcml_archive*, const char* src_encoding);
+# int srcml_archive_set_src_encoding(struct srcml_archive*, const char* src_encoding);
 libsrcml.srcml_archive_set_src_encoding.restype = c_int
 libsrcml.srcml_archive_set_src_encoding.argtypes = [c_void_p, c_char_p]
 
-# int srcml_archive_set_xml_encoding  (struct srcml_archive*, const char* encoding);
+# int srcml_archive_set_xml_encoding(struct srcml_archive*, const char* encoding);
 libsrcml.srcml_archive_set_xml_encoding.restype = c_int
 libsrcml.srcml_archive_set_xml_encoding.argtypes = [c_void_p, c_char_p]
 
-# int srcml_archive_set_language  (struct srcml_archive*, const char* language);
+# int srcml_archive_set_language(struct srcml_archive*, const char* language);
 libsrcml.srcml_archive_set_language.restype = c_int
 libsrcml.srcml_archive_set_language.argtypes = [c_void_p, c_char_p]
 
-# int srcml_archive_set_url (struct srcml_archive*, const char* url)
+# int srcml_archive_set_url(struct srcml_archive*, const char* url)
 libsrcml.srcml_archive_set_url.restype = c_int
 libsrcml.srcml_archive_set_url.argtypes = [c_void_p, c_char_p]
 
-# int srcml_archive_set_version   (struct srcml_archive*, const char* version)
+# int srcml_archive_set_version(struct srcml_archive*, const char* version)
 libsrcml.srcml_archive_set_version.restype = c_int
 libsrcml.srcml_archive_set_version.argtypes = [c_void_p, c_char_p]
 
-# int srcml_archive_set_options   (struct srcml_archive*, int option);
+# int srcml_archive_set_options(struct srcml_archive*, int option);
 libsrcml.srcml_archive_set_options.restype = c_int
 libsrcml.srcml_archive_set_options.argtypes = [c_void_p, c_ulonglong]
 
-# int srcml_archive_enable_option    (struct srcml_archive*, int option);
+# int srcml_archive_enable_option(struct srcml_archive*, int option);
 libsrcml.srcml_archive_enable_option.restype = c_int
 libsrcml.srcml_archive_enable_option.argtypes = [c_void_p, c_ulonglong]
 
-# int srcml_archive_disable_option  (struct srcml_archive*, int option);
+# int srcml_archive_disable_option(struct srcml_archive*, int option);
 libsrcml.srcml_archive_disable_option.restype = c_int
 libsrcml.srcml_archive_disable_option.argtypes = [c_void_p, c_ulonglong]
 
-# int srcml_archive_set_tabstop   (struct srcml_archive*, size_t tabstop);
+# int srcml_archive_set_tabstop(struct srcml_archive*, size_t tabstop);
 libsrcml.srcml_archive_set_tabstop.restype = c_int
 libsrcml.srcml_archive_set_tabstop.argtypes = [c_void_p, c_size_t]
 
@@ -131,19 +131,23 @@ libsrcml.srcml_archive_register_namespace.argtypes = [c_void_p, c_char_p, c_char
 libsrcml.srcml_archive_register_macro.restype = c_int
 libsrcml.srcml_archive_register_macro.argtypes = [c_void_p, c_char_p, c_char_p]
 
-# const char* srcml_archive_get_src_encoding (const struct srcml_archive*);
+# int srcml_archive_set_srcdiff_revision(struct srcml_archive*, size_t revision_number);
+libsrcml.srcml_archive_set_srcdiff_revision.restype = c_int
+libsrcml.srcml_archive_set_srcdiff_revision.argtypes = [c_void_p, c_size_t]
+
+# const char* srcml_archive_get_src_encoding(const struct srcml_archive*);
 libsrcml.srcml_archive_get_src_encoding.restype = c_char_p
 libsrcml.srcml_archive_get_src_encoding.argtypes = [c_void_p]
 
-# const char* srcml_archive_get_xml_encoding (const struct srcml_archive*);
+# const char* srcml_archive_get_xml_encoding(const struct srcml_archive*);
 libsrcml.srcml_archive_get_xml_encoding.restype = c_char_p
 libsrcml.srcml_archive_get_xml_encoding.argtypes = [c_void_p]
 
-# const char* srcml_archive_get_revision (const struct srcml_archive*);
+# const char* srcml_archive_get_revision(const struct srcml_archive*);
 libsrcml.srcml_archive_get_revision.restype = c_char_p
 libsrcml.srcml_archive_get_revision.argtypes = [c_void_p]
 
-# const char* srcml_archive_get_language (const struct srcml_archive*);
+# const char* srcml_archive_get_language(const struct srcml_archive*);
 libsrcml.srcml_archive_get_language.restype = c_char_p
 libsrcml.srcml_archive_get_language.argtypes = [c_void_p]
 
@@ -151,19 +155,19 @@ libsrcml.srcml_archive_get_language.argtypes = [c_void_p]
 libsrcml.srcml_archive_get_url.restype = c_char_p
 libsrcml.srcml_archive_get_url.argtypes = [c_void_p]
 
-# const char* srcml_archive_get_version  (const struct srcml_archive*);
+# const char* srcml_archive_get_version(const struct srcml_archive*);
 libsrcml.srcml_archive_get_version.restype = c_char_p
 libsrcml.srcml_archive_get_version.argtypes = [c_void_p]
 
-# int         srcml_archive_get_options  (const struct srcml_archive*);
+# int srcml_archive_get_options(const struct srcml_archive*);
 libsrcml.srcml_archive_get_options.restype = c_ulonglong
 libsrcml.srcml_archive_get_options.argtypes = [c_void_p]
 
-# size_t         srcml_archive_get_tabstop  (const struct srcml_archive*);
+# size_t srcml_archive_get_tabstop(const struct srcml_archive*);
 libsrcml.srcml_archive_get_tabstop.restype = c_size_t
 libsrcml.srcml_archive_get_tabstop.argtypes = [c_void_p]
 
-# size_t         srcml_archive_get_namespace_size(const struct srcml_archive* archive);
+# size_t srcml_archive_get_namespace_size(const struct srcml_archive* archive);
 libsrcml.srcml_archive_get_namespace_size.restype = c_size_t
 libsrcml.srcml_archive_get_namespace_size.argtypes = [c_void_p]
 
@@ -199,6 +203,10 @@ libsrcml.srcml_archive_get_macro_token_type.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_archive_get_macro_type.restype = c_char_p
 libsrcml.srcml_archive_get_macro_type.argtypes = [c_void_p, c_int]
 
+#size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive*);
+libsrcml.srcml_archive_get_srcdiff_revision.restype = c_size_t
+libsrcml.srcml_archive_get_srcdiff_revision.argtypes = [c_void_p]
+
 # const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
 libsrcml.srcml_archive_check_extension.restype = c_char_p
 libsrcml.srcml_archive_check_extension.argtypes = [c_void_p, c_char_p]
@@ -223,15 +231,15 @@ libsrcml.srcml_append_transform_xpath.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_append_transform_xslt_filename.restype = c_int
 libsrcml.srcml_append_transform_xslt_filename.argtypes = [c_void_p, c_char_p]
 
-# int srcml_append_transform_xslt_memory     (struct srcml_archive*, const char* xslt_buffer, size_t size);
+# int srcml_append_transform_xslt_memory(struct srcml_archive*, const char* xslt_buffer, size_t size);
 libsrcml.srcml_append_transform_xslt_memory.restype = c_int
 libsrcml.srcml_append_transform_xslt_memory.argtypes = [c_void_p, c_char_p, c_int]
 
-# int srcml_append_transform_xslt_FILE       (struct srcml_archive*, FILE* xslt_file);
+# int srcml_append_transform_xslt_FILE(struct srcml_archive*, FILE* xslt_file);
 libsrcml.srcml_append_transform_xslt_FILE.restype = c_int
 libsrcml.srcml_append_transform_xslt_FILE.argtypes = [c_void_p, c_void_p]
 
-# int srcml_append_transform_xslt_fd         (struct srcml_archive*, int xslt_fd);
+# int srcml_append_transform_xslt_fd(struct srcml_archive*, int xslt_fd);
 libsrcml.srcml_append_transform_xslt_fd.restype = c_int
 libsrcml.srcml_append_transform_xslt_fd.argtypes = [c_void_p, c_int]
 
@@ -239,23 +247,23 @@ libsrcml.srcml_append_transform_xslt_fd.argtypes = [c_void_p, c_int]
 libsrcml.srcml_append_transform_relaxng_filename.restype = c_int
 libsrcml.srcml_append_transform_relaxng_filename.argtypes = [c_void_p, c_char_p]
 
-# int srcml_append_transform_relaxng_memory  (struct srcml_archive*, const char* relaxng_buffer, size_t size);
+# int srcml_append_transform_relaxng_memory(struct srcml_archive*, const char* relaxng_buffer, size_t size);
 libsrcml.srcml_append_transform_relaxng_memory.restype = c_int
 libsrcml.srcml_append_transform_relaxng_memory.argtypes = [c_void_p, c_char_p, c_int]
 
-# int srcml_append_transform_relaxng_FILE    (struct srcml_archive*, FILE* relaxng_file);
+# int srcml_append_transform_relaxng_FILE(struct srcml_archive*, FILE* relaxng_file);
 libsrcml.srcml_append_transform_relaxng_FILE.restype = c_int
 libsrcml.srcml_append_transform_relaxng_FILE.argtypes = [c_void_p, c_void_p]
 
-# int srcml_append_transform_relaxng_fd      (struct srcml_archive*, int relaxng_fd);
+# int srcml_append_transform_relaxng_fd(struct srcml_archive*, int relaxng_fd);
 libsrcml.srcml_append_transform_relaxng_fd.restype = c_int
 libsrcml.srcml_append_transform_relaxng_fd.argtypes = [c_void_p, c_int]
 
-# int srcml_append_transform_param           (struct srcml_archive*, const char* xpath_param_name, const char* xpath_param_value);
+# int srcml_append_transform_param(struct srcml_archive*, const char* xpath_param_name, const char* xpath_param_value);
 libsrcml.srcml_append_transform_param.restype = c_int
 libsrcml.srcml_append_transform_param.argtypes = [c_void_p, c_char_p, c_char_p]
 
-# int srcml_append_transform_stringparam     (struct srcml_archive*, const char* xpath_param_name, const char* xpath_param_value);
+# int srcml_append_transform_stringparam(struct srcml_archive*, const char* xpath_param_name, const char* xpath_param_value);
 libsrcml.srcml_append_transform_stringparam.restype = c_int
 libsrcml.srcml_append_transform_stringparam.argtypes = [c_void_p, c_char_p, c_char_p]
 
@@ -342,6 +350,9 @@ class srcml_archive :
     def register_macro(self, token, type) :
         check_return(libsrcml.srcml_archive_register_macro(self.archive, token, type))
 
+    def set_srcdiff_revision(self, revision) :
+        check_return(libsrcml.srcml_archive_set_srcdiff_revision(self.archive, revision))
+
     def get_src_encoding(self) :
         return libsrcml.srcml_archive_get_src_encoding(self.archive)
 
@@ -392,6 +403,9 @@ class srcml_archive :
 
     def get_macro_type(self, pos) :
         return libsrcml.srcml_archive_get_macro_type(self.archive, pos)
+
+    def get_srcdiff_revision(self) :
+        return libsrcml.srcml_archive_get_srcdiff_revision(self.archive)
 
     def check_extension(self, filename) :
         return libsrcml.srcml_archive_check_extension(self.archive, filename)

@@ -743,7 +743,7 @@ int srcml_unit_unparse_filename(srcml_unit* unit, const char* src_filename, unsi
 
         }
 
-        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number);
 
         xmlOutputBufferClose(output_handler);
 
@@ -794,7 +794,7 @@ int srcml_unit_unparse_memory(srcml_unit* unit, char** src_buffer, size_t * src_
 
             unit->archive->reader->read_src(output_handler);
 
-        } else if(int error = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options)) {
+        } else if(int error = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number)) {
 
             xmlOutputBufferClose(output_handler);
             xmlBufferFree(buffer);
@@ -863,7 +863,7 @@ int srcml_unit_unparse_FILE(srcml_unit* unit, FILE* srcml_file) {
 
         }
 
-        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number);
         xmlOutputBufferClose(output_handler);
 
         return status;
@@ -915,7 +915,7 @@ int srcml_unit_unparse_fd(srcml_unit* unit, int srcml_fd) {
 
         }
 
-        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number);
         xmlOutputBufferClose(output_handler);
 
         return status;
@@ -975,7 +975,7 @@ int srcml_unit_unparse_io(srcml_unit* unit, void * context, int (*write_callback
 
         }
 
-        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number);
         xmlOutputBufferClose(output_handler);
 
         return status;

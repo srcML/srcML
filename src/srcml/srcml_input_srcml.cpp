@@ -35,6 +35,10 @@ void srcml_input_srcml(ParseQueue& queue,
 
     // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_archive_create();
+
+    if(revision)
+        srcml_archive_set_srcdiff_revision(srcml_input_archive, *revision);
+
     if (contains<int>(srcml_input))
         srcml_archive_read_open_fd(srcml_input_archive, srcml_input);
     else if (contains<FILE*>(srcml_input))
@@ -69,7 +73,7 @@ void srcml_input_srcml(ParseQueue& queue,
     bool unitPresent = false;
 
     // process each entry in the input srcml archive
-    while (srcml_unit* unit = (revision ? srcml_read_unit_revision(srcml_input_archive, *revision) : srcml_read_unit(srcml_input_archive))) {
+    while (srcml_unit* unit =  srcml_read_unit(srcml_input_archive)) {
         unitPresent = true;
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;

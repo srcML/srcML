@@ -236,23 +236,17 @@ private :
     /** srcDiff enum stack */
     std::stack<srcdiff_operation> srcdiff_stack;
 
-    /** original constant */
-    static const size_t ORIGINAL = 0;
-
-    /** modified constant */
-    static const size_t MODIFIED = 1;
-
-    /** the revision to extract */
-    boost::optional<size_t> revision;
+    /** the srcdiff revision to extract */
+    const boost::optional<size_t> & revision_number;
 
     std::string attribute_revision(const std::string & attribute) {
 
-        if(!revision) return attribute;
+        if(!revision_number) return attribute;
 
         std::string::size_type pos = attribute.find('|');
         if(pos == std::string::npos) return attribute;
 
-        if(*revision == ORIGINAL) return attribute.substr(0, pos);
+        if(*revision_number == SRCDIFF_REVISION_ORIGINAL) return attribute.substr(0, pos);
 
         return attribute.substr(pos + 1, std::string::npos);
 
@@ -269,9 +263,9 @@ public :
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-    srcml_reader_handler() : unit(0), output_buffer(0), is_done(false), read_root(false),
+    srcml_reader_handler(const boost::optional<size_t> & revision_number) : unit(0), output_buffer(0), is_done(false), read_root(false),
          collect_unit_attributes(false), collect_srcml(false), collect_src(false),
-         terminate(false), is_empty(false), wait_root(true), skip(false), issrcdiff(false) {
+         terminate(false), is_empty(false), wait_root(true), skip(false), issrcdiff(false), revision_number(revision_number) {
 
         archive = srcml_archive_create();
 
@@ -417,6 +411,7 @@ public :
             std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
             std::string value;
             value.append((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
+            value = attribute_revision(value);
 
             // Note: these are ignore instead of placing in attributes.
             if(attribute == "timestamp")
@@ -511,10 +506,8 @@ public :
                 archive->options |= SRCML_OPTION_POSITION;
             else if(uri == SRCML_EXT_OPENMP_NS_URI)
                 archive->options |= SRCML_OPTION_OPENMP;
-            else if(revision && uri == SRCML_DIFF_NS_URI) {
+            else if(uri == SRCML_DIFF_NS_URI)
                 issrcdiff = true;
-                continue;
-            }
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
 
@@ -590,7 +583,8 @@ public :
             std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
             std::string value;
             value.append((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
-
+            value = attribute_revision(value);
+            
             if(attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
             else if(attribute == "hash")
@@ -712,11 +706,11 @@ public :
 
             }
 
-            if(issrcdiff && revision) {
+            if(issrcdiff && revision_number) {
 
                 if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-                if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
-                if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+                if(*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
+                if(*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
 
             }
         }
@@ -876,11 +870,11 @@ public :
             if(!skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI))
                 srcdiff_stack.pop();
 
-            if(revision) {
+            if(revision_number) {
 
                 if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-                if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
-                if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+                if(*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
+                if(*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
 
             }
         }
@@ -915,10 +909,10 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
-        if(issrcdiff && revision) {
+        if(issrcdiff && revision_number) {
 
-            if(*revision == ORIGINAL && srcdiff_stack.top() == INSERT) return;
-            if(*revision == MODIFIED && srcdiff_stack.top() == DELETE) return;
+            if(*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
+            if(*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
 
         }        
 
@@ -1048,7 +1042,7 @@ private :
             if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace(namespaces[pos].uri, SRCML_CPP_NS_URI))
                 continue;
 
-            if(revision && is_srcml_namespace(namespaces[pos].uri, SRCML_DIFF_NS_URI))
+            if(revision_number && is_srcml_namespace(namespaces[pos].uri, SRCML_DIFF_NS_URI))
                 continue;
 
             *unit->unit += " xmlns";
@@ -1121,7 +1115,7 @@ private :
             if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_CPP_NS_URI))
                 continue;
 
-            if(revision && is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_DIFF_NS_URI))
+            if(revision_number && is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_DIFF_NS_URI))
                 continue;
 
             *unit->unit += " xmlns";
