@@ -102,6 +102,9 @@ public :
     // set the revision number to retrieve
     void revision_number(boost::optional<size_t> revision_number);
 
+    // get the revision number
+    boost::optional<size_t> revision_number();
+
 
 };
 

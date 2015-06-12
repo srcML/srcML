@@ -288,3 +288,15 @@ void srcml_sax2_reader::revision_number(boost::optional<size_t> revision_number)
     handler.revision = revision_number;
 
 }
+
+/**
+ * revision_umber
+ * @param revision_number number of revision to retrieve
+ *
+ * Set the reader handler to process only the given revision.
+ */
+boost::optional<size_t> srcml_sax2_reader::revision_number() {
+
+    return handler.revision;
+
+}

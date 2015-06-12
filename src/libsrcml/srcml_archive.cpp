@@ -458,6 +458,25 @@ int srcml_archive_register_macro(srcml_archive* archive, const char* token, cons
 
 }
 
+/**
+ * srcml_archive_set_srcdiff_revision
+ * @param archive a srcml_archive
+ * @param revision_number
+ *
+ * Set what revision (0 = original, 1 = modified) in a srcDiff archive to operate with.
+ *
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_archive_set_srcdiff_revision(srcml_archive* archive, size_t revision_number) {
+
+    if(archive == NULL || revision_number > 1) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    archive->reader->revision_number(revision_number);
+
+    return SRCML_STATUS_OK;
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Accessor Functions                               *
@@ -774,6 +793,23 @@ const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, si
         return 0;
 
     }
+
+}
+
+/**
+ * srcml_archive_get_srcdiff_revision
+ * @param archive a srcml_archive
+ *
+ * Gets the srcdiff revision number that the archive is using for processing.
+ *
+ * @returns the srcdiff revision number the archive is using.
+ */
+size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive) {
+
+    if(archive == NULL) return SRCDIFF_REVISION_INVALID;
+
+    boost::optional<size_t> revision_number = archive->reader->revision_number();
+    return revision_number ? *revision_number : SRCDIFF_REVISION_INVALID;    
 
 }
 
@@ -1264,41 +1300,6 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
     }
 
     return unit;
-}
-
-/**
- * srcml_read_unit_revision
- * @param archive a srcml archive open for reading
- *
- * Read the next unit as the given srcDiff revision (0=original, 1=modified) from the archive.
- * unit contains read attributes and complete srcml.
- *
- * @returns Return the read srcml_unit on success.
- * On failure returns NULL.
- */
-srcml_unit* srcml_read_unit_revision(struct srcml_archive* archive, size_t revision_number) {
-
-    if(archive == NULL) return 0;
-
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
-
-    archive->reader->revision_number(revision_number);
-
-    srcml_unit * unit = srcml_unit_create(archive);
-    int not_done = 0;
-    if(!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
-    archive->reader->read_srcml(unit->unit);
-
-    if(!not_done || !unit->unit) {
-        srcml_unit_free(unit);
-        unit = 0;
-    }
-
-    archive->reader->revision_number(boost::optional<size_t>());
-
-    return unit;
-
 }
 
 /******************************************************************************
