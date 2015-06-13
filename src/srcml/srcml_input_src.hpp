@@ -150,6 +150,9 @@
         std::swap(compressions, other.compressions);
         std::swap(archives, other.archives);
         std::swap(isdirectory, other.isdirectory);
+        std::swap(exists, other.exists);
+        std::swap(isdirectoryform, other.isdirectoryform);
+        std::swap(unit, other.unit);
     }
 
     std::string filename;
