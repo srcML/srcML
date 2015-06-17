@@ -34,37 +34,7 @@
 
 #include <curl_input_file.hpp>
 
-// Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue,
-                          srcml_archive* srcml_arch,
-                          const srcml_request_t& srcml_request,
-                          const srcml_input_src& input_file) {
-
-    // don't process if non-archive, non-compressed, and we don't handle the extension
-    // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
-    // which then hangs
-    // Note: may need to fix in libsrcml
-    if (!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) {
-
-        // if we are not verbose, then just end this attemp
-        if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
-            return;
-        }
-
-        // form the parsing request
-        ParseRequest* prequest = new ParseRequest;
-        prequest->filename = input_file.resource;
-        prequest->url = srcml_request.att_url;
-        prequest->version = srcml_request.att_version;
-        prequest->srcml_arch = srcml_arch;
-        prequest->language = "";
-        prequest->status = SRCML_STATUS_UNSET_LANGUAGE;
-
-        // schedule for parsing
-        queue.schedule(prequest);
-
-        return;
-    }
+archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     archive* arch = archive_read_new();
 
@@ -121,10 +91,48 @@ void src_input_libarchive(ParseQueue& queue,
         exit(1);
     }
 
+    return arch;
+}
+
+// Convert input to a ParseRequest and assign request to the processing queue
+void src_input_libarchive(ParseQueue& queue,
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const srcml_input_src& input_file) {
+
+    // don't process if non-archive, non-compressed, and we don't handle the extension
+    // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
+    // which then hangs
+    // Note: may need to fix in libsrcml
+    if (!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) {
+
+        // if we are not verbose, then just end this attemp
+        if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
+            return;
+        }
+
+        // form the parsing request
+        ParseRequest* prequest = new ParseRequest;
+        prequest->filename = input_file.resource;
+        prequest->url = srcml_request.att_url;
+        prequest->version = srcml_request.att_version;
+        prequest->srcml_arch = srcml_arch;
+        prequest->language = "";
+        prequest->status = SRCML_STATUS_UNSET_LANGUAGE;
+
+        // schedule for parsing
+        queue.schedule(prequest);
+
+        return;
+    }
+
+    archive* arch = libarchive_input_file(input_file);
+
     /* In general, go through this once for each time the header can be read
        Exception: if empty, go through the loop exactly once */
     int count = 0;
     archive_entry *entry;
+    int status = ARCHIVE_OK;
     while (status == ARCHIVE_OK &&
            (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
             (status == ARCHIVE_EOF && !count))) {

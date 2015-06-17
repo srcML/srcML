@@ -32,6 +32,8 @@
 #include <srcml_input_src.hpp>
 #include <src_archive.hpp>
 
+archive* libarchive_input_file(const srcml_input_src& input_file);
+
 void src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
 						  const srcml_request_t& srcml_request,
