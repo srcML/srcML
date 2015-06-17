@@ -29,25 +29,75 @@
 #include <iostream>
 #include <fstream>
 #include <boost/algorithm/string.hpp>
+#include <archive.h>
+#include <archive_entry.h>
 
 void src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
                         const srcml_request_t& srcml_request,
-                        const std::string& input) {
+                        const std::string& input_file) {
 
-    std::ifstream filelist(input.c_str());
-    std::string line;
-    while (getline(filelist, line)) {
+    archive* arch = libarchive_input_file(input_file);
 
-		boost::algorithm::trim(line);
+    archive_entry *entry = 0;
+    int status = archive_read_next_header(arch, &entry);
+    if (status != ARCHIVE_OK) {
+    	std::cerr << "ERROR\n";
+    	return;
+    }
 
-		if (line[0] == '#')
+    // skip any directories
+    if (archive_entry_filetype(entry) == AE_IFDIR) {
+    	std::cerr << "ERROR\n";
+    	return;
+    }
+
+    if (strcmp(archive_entry_pathname(entry), "data") != 0) {
+    	std::cerr << "ERROR\n";
+    	return;
+    }
+
+    // if we know the size, create the right sized data_buffer
+    std::vector<char> vbuffer;
+    if (archive_entry_size_is_set(entry))
+        vbuffer.reserve(archive_entry_size(entry));
+
+    const char* buffer;
+    size_t size;
+#if ARCHIVE_VERSION_NUMBER < 3000000
+    off_t offset;
+#else
+    int64_t offset;
+#endif
+
+    // read the file into a buffer
+    while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+           vbuffer.insert(vbuffer.end(), buffer, buffer + size);
+
+    char* line = &vbuffer[0];
+    while (line < &vbuffer[vbuffer.size() - 1]) {
+
+    	// find the line
+    	char* startline = line;
+    	while (*line != '\n' && line != &vbuffer[vbuffer.size() - 1])
+    		++line;
+    	*line = 0;
+    	++line;
+
+    	std::string sline = startline;
+
+		// skip comment lines
+		if (sline[0] == '#')
 			continue;
 
-        // TODO: Trim leading and trailing whitespace
-        if (line[0] == '\n')
+		// trim from both ends
+		boost::algorithm::trim(sline);
+
+		// skip empty lines
+        if (sline[0] == 0)
             continue;
 
-        srcml_handler_dispatch(queue, srcml_arch, srcml_request, line);
+        // process this file
+        srcml_handler_dispatch(queue, srcml_arch, srcml_request, sline);
     }
 }
