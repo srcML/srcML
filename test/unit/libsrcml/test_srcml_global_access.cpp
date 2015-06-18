@@ -44,7 +44,7 @@ int main() {
 
     {
         srcml_set_src_encoding(0);
-        dassert(global_archive.src_encoding, 0);
+        dassert(global_archive.src_encoding, boost::none);
     }
 
     {
@@ -58,7 +58,7 @@ int main() {
 
     {
         srcml_set_xml_encoding(0);
-        dassert(global_archive.encoding, 0);
+        dassert(global_archive.encoding, boost::none);
     }
 
     {
@@ -72,7 +72,7 @@ int main() {
 
     {
         srcml_set_language(0);
-        dassert(global_archive.language, 0);
+        dassert(global_archive.language, boost::none);
     }
 
     {
@@ -86,7 +86,7 @@ int main() {
 
     {
         srcml_set_filename(0);
-        dassert(global_unit.filename, 0);
+        dassert(global_unit.filename, boost::none);
     }
 
     {
@@ -100,7 +100,7 @@ int main() {
 
     {
         srcml_set_url(0);
-        dassert(global_archive.url, 0);
+        dassert(global_archive.url, boost::none);
     }
 
     {
@@ -114,7 +114,7 @@ int main() {
 
     {
         srcml_set_version(0);
-        dassert(global_archive.version, 0);
+        dassert(global_archive.version, boost::none);
     }
 
     {
@@ -128,7 +128,7 @@ int main() {
 
     {
         srcml_set_timestamp(0);
-        dassert(global_unit.timestamp, 0);
+        dassert(global_unit.timestamp, boost::none);
     }
 
     {
@@ -142,7 +142,7 @@ int main() {
 
     {
         srcml_set_hash(0);
-        dassert(global_unit.hash, 0);
+        dassert(global_unit.hash, boost::none);
     }
 
     {

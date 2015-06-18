@@ -212,7 +212,7 @@ int main() {
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_unit_get_url(unit), 0);
         dassert(srcml_unit_get_version(unit), 0);
-        dassert(unit->unit, 0);
+        dassertopt(unit->unit);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -228,7 +228,7 @@ int main() {
         dassert(srcml_unit_get_filename(unit), std::string("project"));
         dassert(srcml_unit_get_url(unit), std::string("test"));
         dassert(srcml_unit_get_version(unit), std::string("1"));
-        dassert(unit->unit, 0);
+        dassertopt(unit->unit);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -244,7 +244,7 @@ int main() {
         dassert(srcml_unit_get_filename(unit), std::string("project"));
         dassert(srcml_unit_get_url(unit), std::string("test"));
         dassert(srcml_unit_get_version(unit), std::string("1"));
-        dassert(unit->unit, 0);
+        dassertopt(unit->unit);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -260,17 +260,17 @@ int main() {
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_unit_get_url(unit), 0);
         dassert(srcml_unit_get_version(unit), 0);
-        dassert(unit->unit, 0);
+        dassertopt(unit->unit);
         srcml_unit_free(unit);
         unit = srcml_read_unit_header(archive);
         dassert(srcml_unit_get_language(unit), std::string("C"));
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_unit_get_url(unit), 0);
         dassert(srcml_unit_get_version(unit), 0);
-        dassert(unit->unit, 0);
+        dassertopt(unit->unit);
         srcml_unit_free(unit);
         unit = srcml_read_unit_header(archive);
-        dassert(unit, 0);
+        dassertopt(unit);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);

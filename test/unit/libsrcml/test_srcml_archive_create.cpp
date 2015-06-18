@@ -38,11 +38,11 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         dassert(archive->type, SRCML_ARCHIVE_INVALID);
-        dassert(archive->encoding, 0);
-        dassert(archive->src_encoding, 0);
-        dassert(archive->language, 0);
-        dassert(archive->url, 0);
-        dassert(archive->version, 0);
+        dassert(archive->encoding, boost::none);
+        dassert(archive->src_encoding, boost::none);
+        dassert(archive->language, boost::none);
+        dassert(archive->url, boost::none);
+        dassert(archive->version, boost::none);
         dassert(archive->attributes.size(), 0);
 
         dassert(archive->options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL 

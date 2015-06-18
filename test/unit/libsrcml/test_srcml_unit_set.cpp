@@ -44,7 +44,7 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, 0);
-        dassert(unit->encoding, 0);
+        dassert(unit->encoding, boost::none);
         srcml_unit_free(unit);
     }
 
@@ -68,7 +68,7 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, 0);
-        dassert(unit->language, 0);
+        dassert(unit->language, boost::none);
         srcml_unit_free(unit);
     }
 
@@ -92,7 +92,7 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, 0);
-        dassert(unit->filename, 0);
+        dassert(unit->filename, boost::none);
         srcml_unit_free(unit);
     }
 
@@ -116,7 +116,7 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_url(unit, 0);
-        dassert(unit->url, 0);
+        dassert(unit->url, boost::none);
         srcml_unit_free(unit);
     }
 
@@ -140,7 +140,7 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_version(unit, 0);
-        dassert(unit->version, 0);
+        dassert(unit->version, boost::none);
         srcml_unit_free(unit);
     }
 
@@ -164,7 +164,7 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_timestamp(unit, 0);
-        dassert(unit->timestamp, 0);
+        dassert(unit->timestamp, boost::none);
         srcml_unit_free(unit);
     }
 
@@ -188,7 +188,7 @@ int main() {
 
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_hash(unit, 0);
-        dassert(unit->hash, 0);
+        dassert(unit->hash, boost::none);
         srcml_unit_free(unit);
     }
 

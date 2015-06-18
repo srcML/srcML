@@ -903,10 +903,10 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -919,18 +919,18 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
         dassert(attributes.size(), 0);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0)
-        dassert(hash, 0)
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none)
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -963,8 +963,8 @@ int main() {
         dassert(*filename, "project");
         dassert(*directory, "test");
         dassert(*version, "1");
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
@@ -979,20 +979,20 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1015,10 +1015,10 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1041,10 +1041,10 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "c.cpp|d.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1068,10 +1068,10 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "c.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1095,10 +1095,10 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "d.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1123,10 +1123,10 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "d.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1200,9 +1200,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcml_b);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1213,9 +1213,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcml_ns_b);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1224,9 +1224,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcml_single_a);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1235,9 +1235,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcml_empty_single_as_unit);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1248,9 +1248,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcml_empty_nested_b);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1261,9 +1261,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcml_old_uri_b);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1274,9 +1274,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_b);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1288,9 +1288,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_b_original);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1302,9 +1302,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_b_modified);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1317,9 +1317,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_b_modified);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1328,9 +1328,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_single_a);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1340,9 +1340,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_single_a_original);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     {
@@ -1352,9 +1352,9 @@ int main() {
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_single_a_modified);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
     }
 
     /*
@@ -1407,15 +1407,15 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         reader.read_srcml(unit);
         dassert(*unit, srcml_b);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1438,8 +1438,8 @@ int main() {
         dassert(language, boost::optional<std::string>());
         dassert(*directory, "test");
         dassert(*version, "1");
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 2);
         dassert(prefixes.size(), 3);
         dassert(prefixes.at(0), "s");
@@ -1457,10 +1457,10 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
@@ -1470,15 +1470,15 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         reader.read_srcml(unit);
         dassert(*unit, srcml_ns_b);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1501,8 +1501,8 @@ int main() {
         dassert(language, boost::optional<std::string>());
         dassert(*directory, "test");
         dassert(*version, "1");
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
@@ -1553,8 +1553,8 @@ int main() {
         dassert(language, boost::optional<std::string>());
         dassert(*directory, "test");
         dassert(*version, "1");
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
@@ -1603,8 +1603,8 @@ int main() {
         dassert(language, boost::optional<std::string>());
         dassert(*directory, "test");
         dassert(*version, "1");
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 2);
         dassert(attributes.at(0), "foo");
         dassert(attributes.at(1), "bar");
@@ -1619,10 +1619,10 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "a.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         language = boost::optional<std::string>(), filename = boost::optional<std::string>(), directory = boost::optional<std::string>(),
             version = boost::optional<std::string>(), timestamp = boost::optional<std::string>(), hash = boost::optional<std::string>(), attributes = std::vector<std::string>();
@@ -1683,15 +1683,15 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "b.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         reader.read_srcml(unit);
         dassert(*unit, srcml_old_uri_b);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1749,15 +1749,15 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "d.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_b_modified);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);
@@ -1815,15 +1815,15 @@ int main() {
         reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes);
         dassert(*language, "C++");
         dassert(*filename, "d.cpp");
-        dassert(directory, 0);
-        dassert(version, 0);
-        dassert(timestamp, 0);
-        dassert(hash, 0);
+        dassert(directory, boost::none);
+        dassert(version, boost::none);
+        dassert(timestamp, boost::none);
+        dassert(hash, boost::none);
         dassert(attributes.size(), 0);
         reader.read_srcml(unit);
         dassert(*unit, srcdiff_b_modified);
         reader.read_srcml(unit);
-        dassert(unit, 0);
+        dassert(unit, boost::none);
         dassert(reader.read_root_unit_attributes(encoding, language, directory, version, attributes,
                                                  prefixes, namespaces, processing_instruction, options, tabstop, user_macro_list), 0);
         dassert(reader.read_unit_attributes(language, filename, directory, version, timestamp, hash, attributes), 0);

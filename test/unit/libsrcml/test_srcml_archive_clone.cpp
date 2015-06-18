@@ -65,7 +65,7 @@ int main() {
 
         dassert(new_archive->type, SRCML_ARCHIVE_INVALID);
         dassert(*new_archive->encoding, "e");
-        dassert(new_archive->src_encoding, 0);
+        dassert(new_archive->src_encoding, boost::none);
         dassert(*new_archive->language, "l");
         dassert(*new_archive->url, "u");
         dassert(*new_archive->version, "v");
