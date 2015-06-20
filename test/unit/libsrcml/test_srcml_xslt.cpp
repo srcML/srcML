@@ -56,9 +56,12 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
-        dassert(srcml_xslt(buffer_input, "src:unit", doc, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_OK);
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_filename(oarchive, "project.xml", 0);
+        dassert(srcml_xslt(buffer_input, "src:unit", doc, 0, 0, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL, oarchive), SRCML_STATUS_OK);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
         std::ifstream in("project.xml");
         std::string output;
         std::string temp;
@@ -72,9 +75,12 @@ int main() {
     }
 
     {
-        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
-        dassert(srcml_xslt(0, "src:unit", doc, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_filename(oarchive, "project.xml", 0);
+        dassert(srcml_xslt(0, "src:unit", doc, 0, 0, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL, oarchive), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
         xmlFreeDoc(doc);
         UNLINK("project.xml");
     }
@@ -85,9 +91,12 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
         xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
-        dassert(srcml_xslt(buffer_input, 0, doc, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_filename(oarchive, "project.xml", 0);
+        dassert(srcml_xslt(buffer_input, 0, doc, 0, 0, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL, oarchive), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
         xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
@@ -100,8 +109,11 @@ int main() {
         file << s;
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
-        int fd = OPEN("project.xml", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
-        dassert(srcml_xslt(buffer_input, "src:unit", 0, 0, 0, fd, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_filename(oarchive, "project.xml", 0);
+        dassert(srcml_xslt(buffer_input, "src:unit", 0, 0, 0, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL, oarchive), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
         UNLINK("project.xml");
@@ -114,7 +126,11 @@ int main() {
         file.close();
         xmlParserInputBufferPtr buffer_input = xmlParserInputBufferCreateFilename("input.xml", xmlParseCharEncoding(0));
         xmlDocPtr doc = xmlReadFile("copy.xsl", 0, 0);
-        dassert(srcml_xslt(buffer_input, "src:unit", doc, 0, 0, -1, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_filename(oarchive, "project.xml", 0);
+        dassert(srcml_xslt(buffer_input, "src:unit", doc, 0, 0, SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL, oarchive), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
         xmlFreeDoc(doc);
         xmlFreeParserInputBuffer(buffer_input);
         UNLINK("input.xml");
