@@ -72,7 +72,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         }
         
         //Ensure that the directory path has a final "/" when appended to filename
-        if (request->disk_dir->at(request->disk_dir->length() -1) != '/')
+        if (request->disk_dir->back() != '/')
             *request->disk_dir += "/";
 
         std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";
