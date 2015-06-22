@@ -27,7 +27,6 @@
 #include <boost/foreach.hpp>
 #include <create_srcml.hpp>
 #include <iostream>
-#include <fstream>
 #include <boost/algorithm/string.hpp>
 #include <archive.h>
 #include <archive_entry.h>
