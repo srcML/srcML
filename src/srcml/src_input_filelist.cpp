@@ -80,10 +80,9 @@ void src_input_filelist(ParseQueue& queue,
     	char* startline = line;
     	while (*line != '\n' && line != &vbuffer[vbuffer.size() - 1])
     		++line;
-    	*line = 0;
     	++line;
 
-    	std::string sline = startline;
+    	std::string sline(startline, line - startline);
 
 		// skip comment lines
 		if (sline[0] == '#')
