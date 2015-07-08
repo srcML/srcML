@@ -1,7 +1,7 @@
 /**
- * @file src_input_libarchive.hpp
+ * @file curl_input_file.hpp
  *
- * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2015 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -18,25 +18,32 @@
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Source input from local files, stdin, and source archives for srcml parsing queue
  */
 
-#ifndef SRC_INPUT_LIBARCHIVE_HPP
-#define SRC_INPUT_LIBARCHIVE_HPP
-
-#include <srcml.h>
-#include <srcml_cli.hpp>
-#include <string>
-#include <parse_queue.hpp>
-#include <srcml_input_src.hpp>
-#include <src_archive.hpp>
-
-archive* libarchive_input_file(const srcml_input_src& input_file);
-
-void src_input_libarchive(ParseQueue& queue,
-                          srcml_archive* srcml_arch,
-						  const srcml_request_t& srcml_request,
-                          const srcml_input_src& input);
-
+#ifdef _MSC_BUILD 
+#define ssize_t __int64
 #endif
+
+#include <curl/curl.h>
+#include <archive.h>
+#include <timer.hpp>
+
+ struct curl {
+    CURL* handle;
+    CURLM* multi_handle;
+    CURLMsg* msg;
+    int msgs_left;
+    int still_running;
+    size_t data_len;
+    char* data_buffer;
+    std::string source;
+    Timer stopwatch;
+};
+
+size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data);
+
+int     archive_curl_open(archive *, void *client_data);
+ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
+int     archive_curl_close(archive *, void *client_data);
+
+bool curl_supported(const std::string& input_protocol);

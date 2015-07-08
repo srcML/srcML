@@ -113,9 +113,9 @@ int main() {
 
         dassert(archive->transformations.back().type, SRCML_XPATH);
         dassert(archive->transformations.back().arguments.str, std::string("//src:unit"));
-        dassert(archive->transformations.back().arguments.prefix, 0);
-        dassert(archive->transformations.back().arguments.uri, 0);
-        dassert(archive->transformations.back().arguments.element, 0);
+        dassert(archive->transformations.back().arguments.prefix, boost::none);
+        dassert(archive->transformations.back().arguments.uri, boost::none);
+        dassert(archive->transformations.back().arguments.element, boost::none);
         dassert(archive->transformations.back().arguments.attr_prefix, std::string("foo"));
         dassert(archive->transformations.back().arguments.attr_uri, std::string("bar"));
         dassert(archive->transformations.back().arguments.attr_name, std::string("name"));
@@ -168,10 +168,10 @@ int main() {
         dassert(archive->transformations.back().arguments.prefix, std::string("foo"));
         dassert(archive->transformations.back().arguments.uri, std::string("bar"));
         dassert(archive->transformations.back().arguments.element, std::string("element"));
-        dassert(archive->transformations.back().arguments.attr_prefix, 0);
-        dassert(archive->transformations.back().arguments.attr_uri, 0);
-        dassert(archive->transformations.back().arguments.attr_name, 0);
-        dassert(archive->transformations.back().arguments.attr_value, 0);
+        dassert(archive->transformations.back().arguments.attr_prefix, boost::none);
+        dassert(archive->transformations.back().arguments.attr_uri, boost::none);
+        dassert(archive->transformations.back().arguments.attr_name, boost::none);
+        dassert(archive->transformations.back().arguments.attr_value, boost::none);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);

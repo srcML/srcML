@@ -55,7 +55,7 @@
  public:
 
     srcml_input_src() : unit(0) {}
-    srcml_input_src(const std::string& other) : arch(0), state(INDETERMINATE), isdirectory(false), unit(0) { 
+    srcml_input_src(const std::string& other) : arch(0), state(INDETERMINATE), isdirectory(false), exists(false), isdirectoryform(false), unit(0) { 
 
 
         filename = src_prefix_add_uri(other);
@@ -69,6 +69,11 @@
 
         if (protocol == "file")
             isdirectory = boost::filesystem::is_directory(rpath);
+
+        exists = boost::filesystem::exists(rpath);
+
+        // TODO: Fix for Windows paths
+        isdirectoryform = resource.back() == '/';
 
         if (!isdirectory) {
 
@@ -145,6 +150,9 @@
         std::swap(compressions, other.compressions);
         std::swap(archives, other.archives);
         std::swap(isdirectory, other.isdirectory);
+        std::swap(exists, other.exists);
+        std::swap(isdirectoryform, other.isdirectoryform);
+        std::swap(unit, other.unit);
     }
 
     std::string filename;
@@ -159,6 +167,8 @@
     std::list<std::string> compressions;
     std::list<std::string> archives;
     bool isdirectory;
+    bool exists;
+    bool isdirectoryform;
     int unit;
 };
 
