@@ -498,7 +498,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
           positional_args(std::vector<std::string>(1, "stdin://-"));
 
         if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {
-          std::string url = src_prefix_resource(srcml_request.input_sources[0].filename);
+          std::string url = srcml_request.input_sources[0].resource;
           
           while (url.at(0) == '.' || url.at(0) == '/') {
             url.erase(0,1);
