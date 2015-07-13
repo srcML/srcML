@@ -497,6 +497,16 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         if (srcml_request.input_sources.empty())
           positional_args(std::vector<std::string>(1, "stdin://-"));
 
+        if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {
+          std::string url = src_prefix_resource(srcml_request.input_sources[0].filename);
+          
+          while (url.at(0) == '.' || url.at(0) == '/') {
+            url.erase(0,1);
+          }
+          
+          srcml_request.att_url = url;
+        }
+
         // If position option is used without tabs...set default tab of 8
         if ((*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0) || srcml_request.tabs == 0)
           srcml_request.tabs = 8;
