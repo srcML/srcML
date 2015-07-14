@@ -982,7 +982,8 @@ int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*wr
     if(archive == NULL || context == NULL || write_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlOutputBufferPtr output_buffer = 0;
-    archive->context = libxml2_write_context{context, write_callback, close_callback};
+    libxml2_write_context libxml2_context = {context, write_callback, close_callback};
+    archive->context = libxml2_context;
     try {
 
         output_buffer = xmlOutputBufferCreateIO(write_callback_wrapper, write_close_callback_wrapper,
@@ -1166,7 +1167,8 @@ int srcml_archive_read_open_io(srcml_archive* archive, void * context, int (*rea
 
     if(archive == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->context = libxml2_read_context{context, read_callback, close_callback};
+    libxml2_read_context libxml2_context = {context, read_callback, close_callback};
+    archive->context = libxml2_context;
     try {
 
         archive->input = xmlParserInputBufferCreateIO(read_callback_wrapper, read_close_callback_wrapper, boost::any_cast<libxml2_read_context>(&archive->context), archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
