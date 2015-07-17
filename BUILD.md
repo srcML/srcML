@@ -2,27 +2,25 @@
 
 srcML is built using cmake, www.cmake.org, (version 2.8.12 or above) and currently supports builds for OS X, Fedora, Ubuntu, Linux Mint, and Windows Visual Studio.
 
-In source (builds within the source directory) and out of source builds (builds outside the source directory) are supported.However, the use of out of source build is recommended.
+In source (builds within the source directory) are recommended, however and out of source builds (builds outside the source directory) are supported.
 
 ---
 
 ## Unix
 
-* To generate a simple make file in the current directory run:
+* To generate a makefile in the current directory run, for out of source builds:
 
-	* For in source builds:
+    `cmake <path_to_srcml>`
 
-		`cmake .`
+* For in source builds, use:
 
-	* For out of source builds:
-
-		`cmake path_to_srcml`
+    `cmake .`
 
 * The following make commands are supported with their usual meaning
 
-	`make`
-	`make clean`
- 	`make tests`
+	`make`  
+	`make clean`  
+ 	`make tests`  
 
 ### Unix Distribution Specifics
 
@@ -34,28 +32,29 @@ In source (builds within the source directory) and out of source builds (builds 
 * boost
 * cmake
 
-*# For srcML documentation generation:
+For srcML documentation generation:
 
 * man2html
 * ronn
 
-*# additional packages that may not needed, but are recommended (for timing etc.)
+Additional packages that may not needed, but are recommended (for timing etc.):
 
-*	coreutils
-*	gnu-sed
-*	gnu-time
+* coreutils
+* gnu-sed
+* gnu-time
 
-*# for dmg/pkg distribution
+Distribution of dmg/pkg:
 
 * PackageMaker
 
 ##### Notes
 
-* OSX does not provide headers for libarchive. Visit http://www.libarchive.org` and download 2.8.5 for headers that are close to the versions distributed on OSX.The files needed are:
- * archive.h
- * archive_entry.h
+* OS X does not install header files for libarchive. You can download these from Apple's:
 
-* PackageMaker is part of the auxiliary tools (late July 2012 for Mountain Lion or February 2012 for Lion) that are not distributed by default and need to be obtained from https://developer.apple.com/downloads/index.action
+    * [archive.h](http://www.opensource.apple.com/source/libarchive/libarchive-30/libarchive/libarchive/archive.h?txt)
+    * [archive_entry.h](http://www.opensource.apple.com/source/libarchive/libarchive-30/libarchive/libarchive/archive_entry.h?txt)
+
+* PackageMaker is currently being used. However, it is deprecated and no longer available. A conversion to pkgbuild is in progress
 
 #### Fedora
 
@@ -74,17 +73,17 @@ In source (builds within the source directory) and out of source builds (builds 
 * openssl-devel
 * antlr-C++
 
-*# srcML documentation generation*
+srcML documentation generation
 
 * man2html
-* 	docbook2X
+* ronn
 
-*# rpm generation*
+rpm generation
 
 * @development-tools
 * fedora-packager
 
-*# for mingw cross compilation for Windows*
+for mingw cross compilation for Windows
 
 * dos2unix
 * mingw32-gcc-c++
@@ -102,13 +101,12 @@ In source (builds within the source directory) and out of source builds (builds 
 ##### Notes
 
 * Fedora and Windows cross compiling require:
-needed:
 
-* First fnmatch.h needs copied over into mingw includes (something like):
+First fnmatch.h needs copied over into mingw includes (something like):
 
-`cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/`
+    `cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/`
 
-* To actually run the compiled srcML, the dlls provided by mingw will
+To actually run the compiled srcML, the dlls provided by mingw will
 need to be copied along with the source to the intended Windows
 machine.
 
@@ -127,16 +125,16 @@ machine.
 * libcurl-devel
 * libopenssl-devel
 
-*# srcML documentation generation*
+srcML documentation generation*
 
-* docbook2X
+* ronn
 
 ##### Notes
 
 * See 64-bit Linux for installing boost.
 
 * Building srcML requires a version of cmake greater that what is
-typically supported.Visit http://www.cmake.org to download and
+typically supported. Visit http://www.cmake.org to download and
 install the lastest version of cmake.
 
 * There is no man2html package on OpenSUSE for srcML documentation
@@ -170,15 +168,15 @@ Instead, copy lib/cpp/src/libantlr.a to /usr/local/lib64/.
 * libcurl4-openssl-dev
 * libssl-dev
 
-*# for srcML documentation generation*
+For srcML documentation generation:
 
 * man2html
-* docbook2X
+* ronn
 
 ##### Notes
 
 * Ubuntu versions before 14.04 (possibly before 13) do not
-provide a recent enough version of cmake.Visit http://www.cmake.org
+provide a recent enough version of cmake. Visit http://www.cmake.org
 to download and install the lastest version of cmake.
 
 * boost also needs to be installed separately, see 64-bit Linux.
@@ -188,7 +186,7 @@ to download and install the lastest version of cmake.
 
 ##### Notes
 
-* The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC).Download boost at http://www.boost.org.The commands to build boost (written for boost 1.55.0) are:
+* The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC). Download boost at http://www.boost.org. The commands to build boost (written for boost 1.55.0) are:
 
 	`./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave`
 	
@@ -199,18 +197,20 @@ to download and install the lastest version of cmake.
 
 ## Windows Visual Studio
  
-Installing for Windows Visual Studio, requires a large amount of
+Installing for Windows Visual Studio requires a large amount of
 preparation.
 	
 ## Packages Required
 
 * cmake from `http://www.cmake.org`
 
-*# some GNU command line utilities (from cygwin or other sources)*
+GNU command line utilities (from cygwin or other sources):
+
 * grep
 * sed
 
-*# required libraries (most are available from http://xmlsoft.org/sources/win32/)*
+Required libraries (most are available from http://xmlsoft.org/sources/win32/):
+
 * iconv
 * libxml2
 * libxslt
