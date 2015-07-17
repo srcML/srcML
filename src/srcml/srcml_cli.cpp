@@ -135,6 +135,9 @@ prog_opts::options_description srcml2src("");
 // Positional Args
 prog_opts::positional_options_description input_file;
 
+// tranformation check on input
+bool is_transformation(const srcml_input_src& input);
+
 /* DREW:  Most of the no parameter options could be recorded this way */
 template <int option>
 void option_markup(bool opt) {
@@ -266,7 +269,11 @@ void positional_args(const std::vector<std::string>& value) {
         if (iname == "-" || iname == "stdin://-")
             srcml_request.stdindex = (int) srcml_request.input_sources.size();
 
-        srcml_request.input_sources.push_back(src_prefix_add_uri(iname));
+        srcml_input_src input(src_prefix_add_uri(iname));
+
+        if (!(is_transformation(input))) {
+          srcml_request.input_sources.push_back(input);
+        }
     }
 }
 
@@ -306,7 +313,6 @@ void option_help(const std::string& help_opt) {
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
-
 
 // Determine dependent options
 void option_dependency(const prog_opts::variables_map& vm, const char* option, const char* dependent_option);
@@ -588,6 +594,22 @@ void option_dependency(const prog_opts::variables_map& vm,
                                     + "' requires option '" + dependent_option + "'.");
         }
     }
+}
+
+bool is_transformation(const srcml_input_src& input) {
+  std::string ext = input.extension;
+
+  if (ext == ".rng") {
+    srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", input.filename));
+    return true;
+  }
+
+  if (ext == ".xslt" || ext == ".xsl") {
+    srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));    
+    return true;
+  }
+
+  return false;
 }
 
 element clean_element_input(const std::basic_string< char >& element_input) {
