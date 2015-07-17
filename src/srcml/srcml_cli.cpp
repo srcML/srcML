@@ -604,7 +604,7 @@ bool is_transformation(const srcml_input_src& input) {
     return true;
   }
 
-  if (ext == ".xslt" || ext == ".xsl") {
+  if (ext == ".xsl") {
     srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));    
     return true;
   }
