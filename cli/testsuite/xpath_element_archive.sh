@@ -26,16 +26,16 @@ createfile b.cpp "b;
 srcml a.cpp b.cpp --xmlns:foo=foo.com --in-order -o archive.xml
 
 # from a file
-#srcml archive.xml --xpath="//src:name" --element="foo:foo"
-#check 3<<< "$result"
+srcml archive.xml --xpath="//src:name" --element="foo:foo"
+check 3<<< "$result"
 
-#srcml --xpath="//src:name" archive.xml --element="foo:foo"
-#check 3<<< "$result"
+srcml --xpath="//src:name" archive.xml --element="foo:foo"
+check 3<<< "$result"
 
 # output to a file
-#srcml archive.xml --xpath="//src:name" --element="foo:foo" -o result.xml
-#check result.xml 3<<< "$result"
+srcml archive.xml --xpath="//src:name" --element="foo:foo" -o result.xml
+check result.xml 3<<< "$result"
 
-#srcml --xpath="//src:name" archive.xml --element="foo:foo" -o result.xml
-#check result.xml 3<<< "$result"
+srcml --xpath="//src:name" archive.xml --element="foo:foo" -o result.xml
+check result.xml 3<<< "$result"
 
