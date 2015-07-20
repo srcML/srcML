@@ -67,7 +67,6 @@ private:
 void create_src(const srcml_request_t& srcml_request,
                 const srcml_input_t& input_sources,
                 const srcml_output_dest& destination) {
-
     try {
 
         if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
@@ -229,30 +228,40 @@ void create_src(const srcml_request_t& srcml_request,
         } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
 
             // srcml->src extract to plain code file
+            if (destination.isdirectory || destination.extension == "") {
+                TraceLog log(SRCMLOptions::get());
 
-            srcMLReadArchive arch(input_sources[0], srcml_request.revision);
+                BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
+                    srcMLReadArchive arch(input_source, srcml_request.revision);
 
-            // move to the correct unit
-            for (int i = 1; i < srcml_request.unit; ++i) {
-                srcml_unit* unit = srcml_read_unit_header(arch);
+                    src_output_filesystem(arch, destination, log);
+                }
+            }
+            else {
+                srcMLReadArchive arch(input_sources[0], srcml_request.revision);
+
+                // move to the correct unit
+                for (int i = 1; i < srcml_request.unit; ++i) {
+                    srcml_unit* unit = srcml_read_unit_header(arch);
+                    srcml_unit_free(unit);
+                }
+
+                srcml_unit* unit = srcml_read_unit(arch);
+
+                if (!unit) {
+                    std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
+                    exit(4);
+                }
+
+                // set encoding for source output
+                // NOTE: How this is done may change in the future
+                if (srcml_request.src_encoding)
+                    srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
+
+                srcml_unit_unparse_filename(unit, destination.c_str(), 0);
+
                 srcml_unit_free(unit);
             }
-
-            srcml_unit* unit = srcml_read_unit(arch);
-
-            if (!unit) {
-                std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
-                exit(4);
-            }
-
-            // set encoding for source output
-            // NOTE: How this is done may change in the future
-            if (srcml_request.src_encoding)
-                srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
-
-            srcml_unit_unparse_filename(unit, destination.c_str(), 0);
-
-            srcml_unit_free(unit);
 
         } else {
 

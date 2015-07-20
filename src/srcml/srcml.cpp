@@ -98,7 +98,7 @@ int main(int argc, char * argv[]) {
 
     // src->srcml
     if (request_create_srcml(srcml_request, input_sources, destination)) {
-        
+
         pipeline.push_back(create_srcml);
     }
 
