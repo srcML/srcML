@@ -122,7 +122,7 @@ struct srcml_request_t {
 
     boost::optional<std::string> external;
 
-    boost::optional<std::string> output_filename;
+    srcml_output_dest output_filename;
 
     //filelist:// prefix
     std::vector<std::string> files_from;

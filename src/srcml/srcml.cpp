@@ -59,17 +59,14 @@ int main(int argc, char * argv[]) {
 
     // global access to options
     SRCMLOptions::set(srcml_request.command);
-
-    // create input sources from the list of input filenames
-    srcml_input_t input_sources = srcml_request.input_sources;
     
-    if (input_sources.size() == 1 && srcml_request.unit != 0)
-        input_sources[0].unit = srcml_request.unit;
+    if (srcml_request.input_sources.size() == 1 && srcml_request.unit != 0)
+        srcml_request.input_sources[0].unit = srcml_request.unit;
 
     // standard input handled as FILE* to determine if srcML or src
     if (srcml_request.stdindex) {
 
-        srcml_input_src* pstdin = &input_sources[*srcml_request.stdindex];
+        srcml_input_src* pstdin = &srcml_request.input_sources[*srcml_request.stdindex];
 
         // stdin accessed as FILE*
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
@@ -90,38 +87,35 @@ int main(int argc, char * argv[]) {
         }*/
     }
 
-    // output destination
-    srcml_output_dest destination(srcml_request.output_filename ? *srcml_request.output_filename : "");
-
     // steps in the internal pipeline
     processing_steps_t pipeline;
 
     // src->srcml
-    if (request_create_srcml(srcml_request, input_sources, destination)) {
+    if (request_create_srcml(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
 
         pipeline.push_back(create_srcml);
     }
 
     // srcml->srcml
-    if (request_transform_srcml(srcml_request, input_sources, destination)) {
+    if (request_transform_srcml(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
         
         pipeline.push_back(transform_srcml);
     }
 
     // srcml->metadata
-    if (request_display_metadata(srcml_request, input_sources, destination)) {
+    if (request_display_metadata(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
         
         pipeline.push_back(srcml_display_metadata);
     }
     
     // srcml->src
-    if (request_create_src(srcml_request, input_sources, destination)) {
+    if (request_create_src(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
         
         pipeline.push_back(create_src);
     }
 
     // (srcml|src)->compressed
-    if (request_additional_compression(srcml_request, input_sources, destination)) {
+    if (request_additional_compression(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
         
 #if ARCHIVE_VERSION_NUMBER > 3001002
         pipeline.push_back(compress_srcml);
@@ -135,7 +129,7 @@ int main(int argc, char * argv[]) {
     assert(!pipeline.empty());
 
     // execute the pipeline
-    srcml_execute(srcml_request, pipeline, input_sources, destination);
+    srcml_execute(srcml_request, pipeline, srcml_request.input_sources, srcml_request.output_filename);
 
     srcml_cleanup_globals();
 

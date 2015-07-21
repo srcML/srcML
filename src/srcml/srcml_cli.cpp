@@ -229,9 +229,8 @@ void option_field<&srcml_request_t::tabs>(int value) {
     *srcml_request.markup_options |= SRCML_OPTION_POSITION;
 }
 
-template <>
-void option_field<&srcml_request_t::output_filename>(const std::string& value) {
-    srcml_request.output_filename = value == "-" ? "stdout://-" : value;
+void option_output_filename(const std::string& value) {
+    srcml_request.output_filename = srcml_output_dest(value == "-" ? "stdout://-" : value);
 }
 
 void option_xmlns_uri(const std::string& value) {
@@ -255,7 +254,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
 
 // option output to directory
 void option_to_dir(const std::string& value) {
-    srcml_request.output_filename = value;
+    srcml_request.output_filename = srcml_output_dest(value);
     srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
     srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
 }
@@ -269,7 +268,7 @@ void positional_args(const std::vector<std::string>& value) {
         if (iname == "-" || iname == "stdin://-")
             srcml_request.stdindex = (int) srcml_request.input_sources.size();
 
-        srcml_input_src input(src_prefix_add_uri(iname));
+        srcml_input_src input(iname);
 
         if (!(is_transformation(input))) {
           srcml_request.input_sources.push_back(input);
@@ -341,7 +340,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "display most metadata except srcML file count and exit")
             ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "display all metadata including srcML file count and exit")
             ("max-threads", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
-            ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write ouput to a file")
+            ("output,o", prog_opts::value<std::string>()->notifier(&option_output_filename)->default_value("stdout://-"), "write ouput to a file")
             ;
 
         src2srcml_options.add_options()
