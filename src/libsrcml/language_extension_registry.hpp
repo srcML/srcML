@@ -58,7 +58,7 @@ public:
     bool register_user_ext(const char* ext, int language);
     bool register_user_ext(const char* ext, const char* language);
 
-    int get_language_from_filename(const char* const path);
+    int get_language_from_filename(const char* const path) const;
 
     void register_standard_file_extensions();
 

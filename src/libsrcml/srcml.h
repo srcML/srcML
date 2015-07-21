@@ -302,7 +302,7 @@ LIBSRCML_DECL const char* srcml_error_string();
 
 /* Currently registered language for a file extension
    When full filename is given, the extension is extracted */
-LIBSRCML_DECL const char* srcml_archive_check_extension(struct srcml_archive* archive, const char* filename);
+LIBSRCML_DECL const char* srcml_archive_check_extension(const struct srcml_archive* archive, const char* filename);
 
 /* Create a new srcml archive
    Client is responsible for freeing memory using srcml_archive_free() */
