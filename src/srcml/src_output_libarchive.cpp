@@ -50,13 +50,12 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         archive_entry_set_ctime(entry, now, 0);
         archive_entry_set_mtime(entry, now, 0);
 
-        if ((arch_status = archive_write_header(src_archive, entry)) != ARCHIVE_OK) {
+        if ((arch_status = archive_write_header(src_archive, entry)) != ARCHIVE_OK)
             break;
-        }
 
-        // write the data into the archive
+        // write the data into the archive (-1 is error)
         arch_status = archive_write_data(src_archive, buffer, (size_t) buffer_size);
-        if (arch_status != ARCHIVE_OK /* || arch_status != buffer_size */)
+        if (arch_status == -1 /* || arch_status != buffer_size */)
             break;
 
         free(buffer);
