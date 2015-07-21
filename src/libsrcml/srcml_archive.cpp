@@ -38,7 +38,7 @@
  *
  * @returns the language for extension or if 0 if no language.
  */
-const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
+const char * srcml_archive_check_extension(const srcml_archive * archive, const char* filename) {
 
     if(archive == NULL || filename == NULL) return 0;
 
