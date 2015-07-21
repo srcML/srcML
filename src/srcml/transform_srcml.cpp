@@ -254,4 +254,8 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
 	srcml_archive_close(out_arch);
 	srcml_archive_free(out_arch);
+
+    if (contains<int>(output)) {
+        close(*(output.fd));
+    }
 }
