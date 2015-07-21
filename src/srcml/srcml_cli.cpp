@@ -231,6 +231,15 @@ void option_field<&srcml_request_t::tabs>(int value) {
 
 void option_output_filename(const std::string& value) {
     srcml_request.output_filename = srcml_output_dest(value == "-" ? "stdout://-" : value);
+    
+    if (srcml_request.output_filename.protocol == "file")  {
+      if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension == "" 
+          && srcml_request.output_filename.filename[srcml_request.output_filename.filename.length()] == '/')) {
+        
+        srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
+        srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
+      }  
+    }
 }
 
 void option_xmlns_uri(const std::string& value) {
