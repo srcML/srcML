@@ -692,7 +692,8 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if (issrcdiff) {
+        if(issrcdiff) {
+
             if(issrcdiff && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
 
                 std::string local_name(localname);
@@ -701,7 +702,7 @@ public :
                     srcdiff_stack.push(COMMON);
                 else if(local_name == "delete")
                     srcdiff_stack.push(DELETE);
-                else
+                else if(local_name == "insert")
                     srcdiff_stack.push(INSERT);
 
             }
@@ -867,8 +868,14 @@ public :
 #endif
 
         if (issrcdiff) {
-            if(!skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI))
-                srcdiff_stack.pop();
+            
+            if(!skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
+
+                std::string local_name(localname);
+                if(local_name != "ws")
+                    srcdiff_stack.pop();
+
+            }
 
             if(revision_number) {
 
