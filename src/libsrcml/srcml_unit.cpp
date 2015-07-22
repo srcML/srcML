@@ -684,7 +684,8 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, int (*read_callback)(v
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->context = libxml2_read_context{context, read_callback, close_callback};
+    libxml2_read_context libxml2_context = {context, read_callback, close_callback};
+    unit->context = libxml2_context;
     const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
@@ -956,7 +957,8 @@ int srcml_unit_unparse_io(srcml_unit* unit, void * context, int (*write_callback
         (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
 
     xmlOutputBufferPtr output_handler = 0;
-    unit->context = libxml2_write_context{context, write_callback, close_callback};
+    libxml2_write_context libxml2_context = {context, write_callback, close_callback};
+    unit->context = libxml2_context;
     try {
 
         output_handler = xmlOutputBufferCreateIO(write_callback_wrapper, write_close_callback_wrapper, boost::any_cast<libxml2_write_context>(&unit->context), encoding ? xmlFindCharEncodingHandler(encoding) : 0);
