@@ -135,6 +135,9 @@ prog_opts::options_description srcml2src("");
 // Positional Args
 prog_opts::positional_options_description input_file;
 
+// tranformation check on input
+bool is_transformation(const srcml_input_src& input);
+
 /* DREW:  Most of the no parameter options could be recorded this way */
 template <int option>
 void option_markup(bool opt) {
@@ -226,9 +229,17 @@ void option_field<&srcml_request_t::tabs>(int value) {
     *srcml_request.markup_options |= SRCML_OPTION_POSITION;
 }
 
-template <>
-void option_field<&srcml_request_t::output_filename>(const std::string& value) {
-    srcml_request.output_filename = value == "-" ? "stdout://-" : value;
+void option_output_filename(const std::string& value) {
+    srcml_request.output_filename = srcml_output_dest(value == "-" ? "stdout://-" : value);
+    
+    if (srcml_request.output_filename.protocol == "file")  {
+      if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension == "" 
+          && srcml_request.output_filename.filename[srcml_request.output_filename.filename.length()] == '/')) {
+        
+        srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
+        srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
+      }  
+    }
 }
 
 void option_xmlns_uri(const std::string& value) {
@@ -252,7 +263,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
 
 // option output to directory
 void option_to_dir(const std::string& value) {
-    srcml_request.output_filename = value;
+    srcml_request.output_filename = srcml_output_dest(value);
     srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
     srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
 }
@@ -266,7 +277,11 @@ void positional_args(const std::vector<std::string>& value) {
         if (iname == "-" || iname == "stdin://-")
             srcml_request.stdindex = (int) srcml_request.input_sources.size();
 
-        srcml_request.input_sources.push_back(src_prefix_add_uri(iname));
+        srcml_input_src input(iname);
+
+        if (!(is_transformation(input))) {
+          srcml_request.input_sources.push_back(input);
+        }
     }
 }
 
@@ -307,7 +322,6 @@ void option_help(const std::string& help_opt) {
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
 
-
 // Determine dependent options
 void option_dependency(const prog_opts::variables_map& vm, const char* option, const char* dependent_option);
 
@@ -335,7 +349,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "display most metadata except srcML file count and exit")
             ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "display all metadata including srcML file count and exit")
             ("max-threads", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
-            ("output,o", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::output_filename>)->default_value("stdout://-"), "write ouput to a file")
+            ("output,o", prog_opts::value<std::string>()->notifier(&option_output_filename)->default_value("stdout://-"), "write ouput to a file")
             ;
 
         src2srcml_options.add_options()
@@ -588,6 +602,22 @@ void option_dependency(const prog_opts::variables_map& vm,
                                     + "' requires option '" + dependent_option + "'.");
         }
     }
+}
+
+bool is_transformation(const srcml_input_src& input) {
+  std::string ext = input.extension;
+
+  if (ext == ".rng") {
+    srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", input.filename));
+    return true;
+  }
+
+  if (ext == ".xsl") {
+    srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));    
+    return true;
+  }
+
+  return false;
 }
 
 element clean_element_input(const std::basic_string< char >& element_input) {

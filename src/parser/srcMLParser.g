@@ -5224,7 +5224,7 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
         push_namestack identifier (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
             (generic_argument_list)=>
-                generic_argument_list (options { greedy = true; } : generic_type_constraint)* |
+                generic_argument_list /* (options { greedy = true; } : generic_type_constraint)*  */ |
 
             (cuda_argument_list) => cuda_argument_list |
 
