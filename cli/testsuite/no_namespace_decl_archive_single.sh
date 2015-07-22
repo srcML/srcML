@@ -17,52 +17,52 @@ define srcml <<- 'STDOUT'
 xmlcheck "$srcml"
 createfile sub/a.cpp "a;"
 
-src2srcml sub/a.cpp --no-namespace-decl --archive
+src2srcml sub/a.cpp --no-ns-decl --archive
 check 3<<< "$srcml"
 
-src2srcml sub/a.cpp --archive --no-namespace-decl
+src2srcml sub/a.cpp --archive --no-ns-decl
 check 3<<< "$srcml"
 
-src2srcml --archive sub/a.cpp --no-namespace-decl
+src2srcml --archive sub/a.cpp --no-ns-decl
 check 3<<< "$srcml"
 
-src2srcml --archive --no-namespace-decl sub/a.cpp
+src2srcml --archive --no-ns-decl sub/a.cpp
 check 3<<< "$srcml"
 
-src2srcml sub/a.cpp --no-namespace-decl -o sub/a.cpp.xml --archive
+src2srcml sub/a.cpp --no-ns-decl -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml sub/a.cpp --no-namespace-decl --archive -o sub/a.cpp.xml
+src2srcml sub/a.cpp --no-ns-decl --archive -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml sub/a.cpp --archive --no-namespace-decl -o sub/a.cpp.xml
+src2srcml sub/a.cpp --archive --no-ns-decl -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml --archive sub/a.cpp --no-namespace-decl -o sub/a.cpp.xml
+src2srcml --archive sub/a.cpp --no-ns-decl -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml --archive
+src2srcml --no-ns-decl sub/a.cpp -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml --no-namespace-decl sub/a.cpp --archive -o sub/a.cpp.xml
+src2srcml --no-ns-decl sub/a.cpp --archive -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml --no-namespace-decl --archive sub/a.cpp -o sub/a.cpp.xml
+src2srcml --no-ns-decl --archive sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml --archive --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml
+src2srcml --archive --no-ns-decl sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml --archive
+src2srcml --no-ns-decl sub/a.cpp -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml --no-namespace-decl sub/a.cpp --archive -o sub/a.cpp.xml
+src2srcml --no-ns-decl sub/a.cpp --archive -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml --no-namespace-decl --archive sub/a.cpp -o sub/a.cpp.xml
+src2srcml --no-ns-decl --archive sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
-src2srcml --archive --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml
+src2srcml --archive --no-ns-decl sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
 
@@ -79,38 +79,38 @@ define defaultxml <<- 'STDOUT'
 xmlcheck "$defaultxml"
 createfile sub/a.cpp.xml "$defaultxml"
 
-srcml2src -l C++ -X --no-namespace-decl < sub/a.cpp.xml
+srcml2src -l C++ -X --no-ns-decl < sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml2src -X --no-namespace-decl sub/a.cpp.xml
+srcml2src -X --no-ns-decl sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml2src -X --no-namespace-decl -o sub/b.cpp.xml sub/a.cpp.xml
+srcml2src -X --no-ns-decl -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml2src -X --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml 
+srcml2src -X --no-ns-decl sub/a.cpp.xml -o sub/b.cpp.xml 
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml2src -l C++ --no-namespace-decl -X < sub/a.cpp.xml
+srcml2src -l C++ --no-ns-decl -X < sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml2src --no-namespace-decl -X sub/a.cpp.xml
+srcml2src --no-ns-decl -X sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml2src --no-namespace-decl -X -o sub/b.cpp.xml sub/a.cpp.xml
+srcml2src --no-ns-decl -X -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml2src --no-namespace-decl -X sub/a.cpp.xml -o sub/b.cpp.xml
+srcml2src --no-ns-decl -X sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml2src -X -l C++ --no-namespace-decl < sub/a.cpp.xml
+srcml2src -X -l C++ --no-ns-decl < sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml2src --no-namespace-decl -X sub/a.cpp.xml
+srcml2src --no-ns-decl -X sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml2src --no-namespace-decl -o sub/b.cpp.xml -X sub/a.cpp.xml
+srcml2src --no-ns-decl -o sub/b.cpp.xml -X sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml -X
+srcml2src --no-ns-decl sub/a.cpp.xml -o sub/b.cpp.xml -X
 check sub/b.cpp.xml 3<<< "$srcml"
