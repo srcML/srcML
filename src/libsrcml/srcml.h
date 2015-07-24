@@ -399,8 +399,10 @@ LIBSRCML_DECL int srcml_archive_read_open_io      (struct srcml_archive*, void *
 /* Read the next unit from the archive
    Returns 0 if there are no more units */
 LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive*);
-LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_xml(struct srcml_archive*);
-LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit(struct srcml_archive*);
+
+/* Read the body of the unit from the archive (if not done already)
+   Note: This is rarely needed */
+LIBSRCML_DECL int srcml_unit_read_body(struct srcml_unit*);
 
 /* Query options of srcml unit */
 LIBSRCML_DECL const char* srcml_unit_get_src_encoding  (const struct srcml_unit*);

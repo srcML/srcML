@@ -1247,6 +1247,27 @@ srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
 }
 
 /**
+ * srcml_archive_read_unit_body
+ * @param archive a srcml archive open for reading
+ *
+ * Read the body (the non-header) from the archive.
+ *
+ * @returns Return the read srcml_unit on success.
+ * On failure returns NULL.
+ */
+int srcml_unit_read_body(srcml_unit* unit) {
+
+    if(unit == NULL) return 0;
+
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return 0;
+
+    if (!unit->unit)
+        unit->archive->reader->read_srcml(unit->unit);
+
+    return !unit->unit;
+}
+
+/**
  * srcml_archive_read_unit_xml
  * @param archive a srcml archive open for reading
  *
