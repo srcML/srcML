@@ -168,7 +168,7 @@ void language_extension_registry::register_standard_file_extensions()
 
     register_user_ext("java", Language::LANGUAGE_JAVA);
 
-    register_user_ext("aj",   Language::LANGUAGE_ASPECTJ);
+    register_user_ext("aj",   Language::LANGUAGE_JAVA);
 
     register_user_ext("cs",   Language::LANGUAGE_CSHARP);
 
