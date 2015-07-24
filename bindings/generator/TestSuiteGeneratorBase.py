@@ -351,7 +351,7 @@ class TestSuiteGeneratorBase(object):
 #    Returns 0 if there are no more units */
 # __LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive*);
 # __LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_xml(struct srcml_archive*);
-# __LIBSRCML_DECL struct srcml_unit* srcml_read_unit(struct srcml_archive*);
+# __LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit(struct srcml_archive*);
 
 
 # /* srcML XPath query and XSLT transform functions */

@@ -73,7 +73,7 @@ void srcml_input_srcml(ParseQueue& queue,
     bool unitPresent = false;
 
     // process each entry in the input srcml archive
-    while (srcml_unit* unit =  srcml_read_unit(srcml_input_archive)) {
+    while (srcml_unit* unit =  srcml_archive_read_unit(srcml_input_archive)) {
         unitPresent = true;
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
