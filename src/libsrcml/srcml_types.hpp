@@ -23,6 +23,8 @@
 
 /** Private options */
 
+/** Wrap function/classes/etc with templates (default: on) */
+#define SRCML_OPTION_WRAP_TEMPLATE     1<<11
 /** Markups literal in special namespace */
 #define SRCML_OPTION_LITERAL           1<<21
 /** Markups modifiers in special namespace */
