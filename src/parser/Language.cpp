@@ -25,7 +25,7 @@
 #include <boost/regex.hpp>
 
 /** static size of lang2int */
-int Language::lang2intcount = 7;
+int Language::lang2intcount = 6;
 
 /** static array holding string/numeric language pairs */
 language_pair Language::lang2int[] = {
