@@ -110,8 +110,6 @@ LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_NESTIF            1<<9
 /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<10
-/** Wrap function/classes/etc with templates (default: on) */
-#define SRCML_OPTION_WRAP_TEMPLATE     1<<11
 /** output is interactive (good for editing applications) */
 #define SRCML_OPTION_INTERACTIVE       1<<12
 /** Not sure what this used for */
