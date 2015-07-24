@@ -815,6 +815,8 @@ size_t srcml_get_srcdiff_revision() {
  *                                                                            *
  ******************************************************************************/
 
+static const char* langs[] = { "C", "C++", "C#", "Java" };
+
 /**
  * srcml_check_language
  * @param language a language
@@ -824,7 +826,18 @@ size_t srcml_get_srcdiff_revision() {
  * @returns Return the numeric representation for that language if supported.
  * Not supported returns 0.
  */
-int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
+int srcml_check_language(const char* language) {
+
+    if (!language)
+        return 0;
+
+    // first find in public languages (ones in langs[], then get the number)
+    for (size_t i = 0; i < srcml_get_language_list_size(); ++i)
+        if (strcmp(language, langs[i]) == 0)
+            return Language::getLanguage(language);
+
+    return 0;
+}
 
 /**
  * srcml_get_language_list_size
@@ -835,7 +848,7 @@ int srcml_check_language(const char* language) { return language == 0 ? 0 : Lang
  */
 size_t srcml_get_language_list_size() {
 
-    return 5;
+    return sizeof(langs) / sizeof(langs[0]);
 }
 
 /**
@@ -851,7 +864,6 @@ const char * srcml_get_language_list(size_t pos) {
 
     if(pos >= srcml_get_language_list_size()) return NULL;
 
-    static const char* langs[] = { "C", "C++", "C#", "Objective-C", "Java", 0 };
     return langs[pos];
 }
 
