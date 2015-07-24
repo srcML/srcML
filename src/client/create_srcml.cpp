@@ -188,13 +188,9 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     if (destination.protocol == "file") {
-        if (!(destination.resource == ".") || (destination.resource == "..")) {
-            boost::filesystem::path dir(destination.resource); 
-            if (dir.parent_path() != "" && !(boost::filesystem::exists(dir.parent_path()))) {
-                std::cerr << "srcml: output directory " << dir.parent_path() << " not found\n";
-                exit(1); //TODO: Real error code
-            }
-        }
+        boost::filesystem::path dir(destination.resource);
+        if (dir.has_parent_path() && !is_directory(dir.parent_path()))
+            boost::filesystem::create_directories(dir.parent_path());
     }
 
     int status = 0;
