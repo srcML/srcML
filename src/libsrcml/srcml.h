@@ -110,8 +110,6 @@ LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_NESTIF            1<<9
 /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<10
-/** output is interactive (good for editing applications) */
-#define SRCML_OPTION_INTERACTIVE       1<<12
 /** Not sure what this used for */
 #define SRCML_OPTION_XPATH_TOTAL       1<<13
 /** expression mode */

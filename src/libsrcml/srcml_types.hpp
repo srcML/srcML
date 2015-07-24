@@ -35,6 +35,9 @@
 /** Markups operator in special namespace */
 #define SRCML_OPTION_OPERATOR          1<<23
 
+/** output is interactive (good for editing applications) */
+#define SRCML_OPTION_INTERACTIVE       1<<12
+
 #include <libxml/xmlwriter.h>
 
 #include <Language.hpp>
