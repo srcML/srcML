@@ -132,12 +132,6 @@ LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_OPTION_PSEUDO_BLOCK      1<<19
 /** Turn on old optional markup behaviour */
 #define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
-/** Markups literal in special namespace */
-#define SRCML_OPTION_LITERAL           1<<21
-/** Markups modifiers in special namespace */
-#define SRCML_OPTION_MODIFIER          1<<22
-/** Markups operator in special namespace */
-#define SRCML_OPTION_OPERATOR          1<<23
 /** Parser output special tokens for debugging the parser */
 #define SRCML_OPTION_DEBUG             1<<24
 /** Markups OpenMP in special namespace */

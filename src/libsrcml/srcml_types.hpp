@@ -21,6 +21,15 @@
 #ifndef INCLUDED_SRCML_TYPES_HPP
 #define INCLUDED_SRCML_TYPES_HPP
 
+/** Private options */
+
+/** Markups literal in special namespace */
+#define SRCML_OPTION_LITERAL           1<<21
+/** Markups modifiers in special namespace */
+#define SRCML_OPTION_MODIFIER          1<<22
+/** Markups operator in special namespace */
+#define SRCML_OPTION_OPERATOR          1<<23
+
 #include <libxml/xmlwriter.h>
 
 #include <Language.hpp>
