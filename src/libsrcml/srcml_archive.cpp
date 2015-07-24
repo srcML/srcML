@@ -1247,7 +1247,7 @@ srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
 }
 
 /**
- * srcml_read_unit_xml
+ * srcml_archive_read_unit_xml
  * @param archive a srcml archive open for reading
  *
  * Read the next unit from the archive.
@@ -1256,7 +1256,7 @@ srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_read_unit_xml(srcml_archive* archive) {
+srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
 
     if(archive == NULL) return 0;
 

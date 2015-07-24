@@ -384,7 +384,7 @@
 <comment type="block">/* Read the next unit from the archive
    Returns 0 if there are no more units */</comment>
 <function_decl><type><name>__LIBSRCML_DECL</name>  <name>srcml_unit</name><modifier>*</modifier></type> <name>srcml_read_unit_header</name><parameter_list>( <param><decl><type><name>srcml_archive</name><modifier>*</modifier></type></decl></param>)</parameter_list>;</function_decl>
-<function_decl><type><name>__LIBSRCML_DECL</name>  <name>srcml_unit</name><modifier>*</modifier></type> <name>srcml_read_unit_xml</name><parameter_list>( <param><decl><type><name>srcml_archive</name><modifier>*</modifier></type></decl></param>)</parameter_list>;</function_decl>
+<function_decl><type><name>__LIBSRCML_DECL</name>  <name>srcml_unit</name><modifier>*</modifier></type> <name>srcml_archive_read_unit_xml</name><parameter_list>( <param><decl><type><name>srcml_archive</name><modifier>*</modifier></type></decl></param>)</parameter_list>;</function_decl>
 <function_decl><type><name>__LIBSRCML_DECL</name>  <name>srcml_unit</name><modifier>*</modifier></type> <name>srcml_read_unit</name><parameter_list>( <param><decl><type><name>srcml_archive</name><modifier>*</modifier></type></decl></param>)</parameter_list>;</function_decl>
 
 <comment type="block">/* Query options of srcml unit */</comment>
