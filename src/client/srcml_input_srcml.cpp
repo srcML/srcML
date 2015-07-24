@@ -66,7 +66,7 @@ void srcml_input_srcml(ParseQueue& queue,
 
     // move to the correct unit
     for (int i = 1; i < srcml_input.unit; ++i) {
-        srcml_unit* unit = srcml_read_unit_header(srcml_input_archive);
+        srcml_unit* unit = srcml_archive_read_unit_header(srcml_input_archive);
         srcml_unit_free(unit);
     }
 

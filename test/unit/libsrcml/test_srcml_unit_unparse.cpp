@@ -256,7 +256,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_read_unit_header(archive);
+        srcml_unit * unit = srcml_archive_read_unit_header(archive);
         srcml_unit_unparse_filename(unit, "project.c", 0);
         std::ifstream src_file("project.c");
         std::string aunit;
@@ -447,7 +447,7 @@ int main() {
         size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_read_unit_header(archive);
+        srcml_unit * unit = srcml_archive_read_unit_header(archive);
         srcml_unit_unparse_memory(unit, &s, &size);
         dassert(s, src);
 
@@ -691,7 +691,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_read_unit_header(archive);
+        srcml_unit * unit = srcml_archive_read_unit_header(archive);
         FILE * file = fopen("project.c", "w");
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
@@ -947,7 +947,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_read_unit_header(archive);
+        srcml_unit * unit = srcml_archive_read_unit_header(archive);
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
@@ -1191,7 +1191,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_read_unit_header(archive);
+        srcml_unit * unit = srcml_archive_read_unit_header(archive);
         FILE * file = fopen("project.c", "w");
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);

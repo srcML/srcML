@@ -29,7 +29,7 @@
 void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
     long arch_status = ARCHIVE_OK;
-    while (srcml_unit* unit = srcml_read_unit_header(srcml_arch)) {
+    while (srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch)) {
 
         // setup the entry header
         archive_entry* entry = archive_entry_new();

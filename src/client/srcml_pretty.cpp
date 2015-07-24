@@ -237,7 +237,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
             pretty_print(*output_template.header, header_params);
     }
 
-    srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+    srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
         
     if (output_template.body) {
         while (unit) {
@@ -292,7 +292,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 pretty_print(*output_template.body, body_params);
 
             body_params.clear();
-            unit = srcml_read_unit_header(srcml_arch);
+            unit = srcml_archive_read_unit_header(srcml_arch);
             
             if (unit)
                 ++unit_number;

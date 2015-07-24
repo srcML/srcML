@@ -62,7 +62,7 @@ void srcml_list(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
     while (true) {
-        srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+        srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
 
         if (!unit)
             break;
@@ -96,7 +96,7 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
     if (srcml_archive_get_xml_encoding(srcml_arch))
         std::cout << "encoding=" << "\"" << srcml_archive_get_xml_encoding(srcml_arch) << "\"\n";
 
-    srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+    srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
     int unit_count = 0;
 
     if (!isarchive && unit) {
@@ -122,7 +122,7 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
             ++unit_count;
 
             srcml_unit_free(unit);
-            unit = srcml_read_unit_header(srcml_arch);
+            unit = srcml_archive_read_unit_header(srcml_arch);
         }
 
         std::cout << "units=\"" << unit_count << "\"\n";
@@ -137,7 +137,7 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 
     int numUnits = 0;
     while (true) {
-        srcml_unit* unit = srcml_read_unit_header(srcml_arch);
+        srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
 
         if (!unit)
             break;

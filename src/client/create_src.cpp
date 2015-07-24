@@ -89,11 +89,11 @@ void create_src(const srcml_request_t& srcml_request,
 
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
-                srcml_unit* unit = srcml_read_unit_header(arch);
+                srcml_unit* unit = srcml_archive_read_unit_header(arch);
                 srcml_unit_free(unit);
             }
 
-            srcml_unit* unit = srcml_read_unit_header(arch);
+            srcml_unit* unit = srcml_archive_read_unit_header(arch);
 
             if (!unit) {
                 std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
@@ -205,7 +205,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
-                srcml_unit* unit = srcml_read_unit_header(arch);
+                srcml_unit* unit = srcml_archive_read_unit_header(arch);
                 srcml_unit_free(unit);
             }
 
@@ -242,7 +242,7 @@ void create_src(const srcml_request_t& srcml_request,
 
                 // move to the correct unit
                 for (int i = 1; i < srcml_request.unit; ++i) {
-                    srcml_unit* unit = srcml_read_unit_header(arch);
+                    srcml_unit* unit = srcml_archive_read_unit_header(arch);
                     srcml_unit_free(unit);
                 }
 
