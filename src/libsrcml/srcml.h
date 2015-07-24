@@ -84,8 +84,6 @@ LIBSRCML_DECL const char* srcml_version_string();
 #define SRCML_LANGUAGE_JAVA   "Java"
 /** string for language C# */
 #define SRCML_LANGUAGE_CSHARP "C#"
-/** string for language C# */
-#define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
 /** string for language XML */
 #define SRCML_LANGUAGE_XML    "xml"
 

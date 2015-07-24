@@ -21,6 +21,9 @@
 #ifndef INCLUDED_SRCML_TYPES_HPP
 #define INCLUDED_SRCML_TYPES_HPP
 
+/** string for language Objective-C */
+#define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
+
 /** Private options */
 
 /** Wrap function/classes/etc with templates (default: on) */
