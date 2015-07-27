@@ -1266,15 +1266,6 @@ LIBSRCML_DECL int srcml_unit_set_language     (struct srcml_unit*, const char* l
 LIBSRCML_DECL int srcml_unit_set_filename     (struct srcml_unit*, const char* filename);
 
 /**
- * @brief Set the url attribute for the srcml unit
- * @param unit A srcml_unit
- * @param url A url path
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
- */
-LIBSRCML_DECL int srcml_unit_set_url          (struct srcml_unit*, const char* url);
-
-/**
  * @brief Set the version attribute for the srcml unit
  * @param unit A srcml_unit
  * @param version A version string
@@ -1333,12 +1324,6 @@ LIBSRCML_DECL const char* srcml_unit_get_language      (const struct srcml_unit*
  * @return The filename attribute on the unit on success, or NULL
  */
 LIBSRCML_DECL const char* srcml_unit_get_filename      (const struct srcml_unit*);
-
-/**
- * @param unit A srcml unit
- * @return The url attribute on the unit on success, or NULL
- */
-LIBSRCML_DECL const char* srcml_unit_get_url           (const struct srcml_unit*);
 
 /**
  * @param unit A srcml_unit

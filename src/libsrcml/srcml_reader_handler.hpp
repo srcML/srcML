@@ -595,8 +595,6 @@ public :
                 unit->revision = value;
             else if(attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
-            else if(attribute == "url")
-                srcml_unit_set_url(unit, value.c_str());
             else if(attribute == "version")
                 srcml_unit_set_version(unit, value.c_str());
             else if(attribute == "tabs" || attribute == "options" || attribute == "hash")

@@ -104,12 +104,7 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
             std::cout << "language=" << "\"" << srcml_unit_get_language(unit) << "\"\n";
     }
 
-    if (!isarchive && unit) {
-        if (srcml_unit_get_url(unit))
-            std::cout << "url=" << "\"" << srcml_archive_get_url(srcml_arch) << "\"\n";    
-    }
-
-    if (isarchive && srcml_archive_get_url(srcml_arch))
+    if (srcml_archive_get_url(srcml_arch))
         std::cout << "url=" << "\"" << srcml_archive_get_url(srcml_arch) << "\"\n";
 
     if (!isarchive && unit) {

@@ -177,7 +177,6 @@ int main() {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit, "1");
         unit->unit = srcml_b_single_no_xmldecl;
         srcml_write_unit(archive, unit);
@@ -198,7 +197,6 @@ int main() {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit, "1");
         unit->unit = srcml_b_single_no_xmldecl;
         srcml_write_unit(archive, unit);
@@ -242,7 +240,6 @@ int main() {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit, "1");
         unit->unit = utf8_srcml_no_xmldecl;
         srcml_write_unit(archive, unit);
@@ -265,7 +262,6 @@ int main() {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit, "1");
         unit->unit = utf8_srcml_no_xmldecl;
         srcml_write_unit(archive, unit);
@@ -288,7 +284,6 @@ int main() {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit, "1");
         unit->unit = latin_srcml_no_xmldecl;
         srcml_write_unit(archive, unit);
@@ -311,7 +306,6 @@ int main() {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit, "1");
         unit->unit = latin_srcml_no_xmldecl;
         srcml_write_unit(archive, unit);
@@ -358,7 +352,6 @@ int main() {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_url(unit, "test");
         srcml_unit_set_version(unit, "1");
         unit->unit = srcml_macro_single_no_xmldecl;
         srcml_write_unit(archive, unit);

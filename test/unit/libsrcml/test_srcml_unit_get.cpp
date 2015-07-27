@@ -141,30 +141,6 @@ int main() {
     }
 
     /*
-      srcml_unit_get_url
-    */
-
-    {
-
-        srcml_unit * unit = srcml_unit_create(archive);
-        unit->url = boost::optional<std::string>();
-        dassert(srcml_unit_get_url(unit), 0);
-        srcml_unit_free(unit);
-    }
-
-    {
-
-        srcml_unit * unit = srcml_unit_create(archive);
-        unit->url = "foo";
-        dassert(srcml_unit_get_url(unit), std::string("foo"));
-        srcml_unit_free(unit);
-    }
-
-    {
-        dassert(srcml_unit_get_url(0), 0);
-    }
-
-    /*
       srcml_unit_get_version
     */
 

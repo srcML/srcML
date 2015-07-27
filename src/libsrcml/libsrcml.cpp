@@ -218,7 +218,6 @@ int srcml(const char* input_filename, const char* output_filename) {
         else
             srcml_unit_set_filename(unit, input_filename);
 
-        srcml_unit_set_url(unit, srcml_archive_get_url(&global_archive));
         srcml_unit_set_version(unit, srcml_archive_get_version(&global_archive));
         srcml_unit_set_timestamp(unit, srcml_unit_get_timestamp(&global_unit));
         srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));

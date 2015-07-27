@@ -109,30 +109,6 @@ int main() {
     }
 
     /*
-      srcml_unit_set_url
-    */
-
-    {
-
-        srcml_unit * unit = srcml_unit_create(archive);
-        srcml_unit_set_url(unit, 0);
-        dassert(unit->url, boost::none);
-        srcml_unit_free(unit);
-    }
-
-    {
-
-        srcml_unit * unit = srcml_unit_create(archive);
-        srcml_unit_set_url(unit, "foo");
-        dassert(*unit->url, "foo");
-        srcml_unit_free(unit);
-    }
-
-    {
-        dassert(srcml_unit_set_url(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    /*
       srcml_unit_set_version
     */
 

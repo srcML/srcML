@@ -94,27 +94,6 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 }
 
 /**
- * srcml_unit_set_url
- * @param unit a srcml unit
- * @param url a url path
- *
- * Set the url attribute for the srcml unit.
- *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
- * on failure.
- */
-int srcml_unit_set_url(srcml_unit* unit, const char* url) {
-
-    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
-
-
-    unit->url = url ? std::string(url) : boost::optional<std::string>();
-
-    return SRCML_STATUS_OK;
-
-}
-
-/**
  * srcml_unit_set_version
  * @param unit a srcml unit
  * @param version a version string
@@ -261,22 +240,6 @@ const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
     if(unit == NULL) return 0;
 
     return unit->filename ? unit->filename->c_str() : 0;
-
-}
-
-/**
- * srcml_unit_get_url
- * @param unit a srcml unit
- *
- * Get the url attribute for the srcml unit.
- *
- * @returns url attribute on successand NULL on failure.
- */
-const char* srcml_unit_get_url(const struct srcml_unit* unit) {
-
-    if(unit == NULL) return 0;
-
-    return unit->url ? unit->url->c_str() : 0;
 
 }
 
