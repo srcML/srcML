@@ -96,7 +96,7 @@
         plainfile = rpath.string();
 
         if (resource != "-" && protocol != "text")
-            state = extension == ".xml" ? SRCML : SRC;
+            state = (extension == ".xml" || extension == ".srcml") ? SRCML : SRC;
 
         if (protocol == "text")
             state = SRC;
