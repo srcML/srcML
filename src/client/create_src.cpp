@@ -82,7 +82,6 @@ void create_src(const srcml_request_t& srcml_request,
             }
 
         } else if (input_sources.size() == 1 && (srcml_request.command & SRCML_COMMAND_XML)) {
-
             // srcml->src extract individual unit in XML
 
             srcMLReadArchive arch(input_sources[0], srcml_request.revision);
@@ -200,7 +199,6 @@ void create_src(const srcml_request_t& srcml_request,
                    destination.compressions.empty() && destination.archives.empty()) {
 
             // srcml->src extract to stdout
-
             srcMLReadArchive arch(input_sources[0], srcml_request.revision);
 
             // move to the correct unit
@@ -228,6 +226,12 @@ void create_src(const srcml_request_t& srcml_request,
         } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
             srcMLReadArchive arch(input_sources[0], srcml_request.revision);
 
+            if (destination.protocol == "file") {
+                boost::filesystem::path dir(destination.resource);
+                if (dir.has_parent_path() && !is_directory(dir.parent_path()))
+                    boost::filesystem::create_directories(dir.parent_path());
+            }
+            
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_archive_read_unit_header(arch);
@@ -251,7 +255,6 @@ void create_src(const srcml_request_t& srcml_request,
             srcml_unit_free(unit);
 
         } else {
-
             // srcml->src extract to libarchive file
             if (destination.archives.size() == 0) {
                 std::cerr << "srcml: source output requires an archive format (tar, zip, etc.)\n";
