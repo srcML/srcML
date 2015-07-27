@@ -207,21 +207,34 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_unit_free(unit);
             }
 
-            srcml_unit* unit = srcml_archive_read_unit_header(arch);
+            int count = 0;
+            while (srcml_unit* unit = srcml_archive_read_unit_header(arch)) {
 
-            if (!unit) {
-                std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
-                exit(4);
-            }
+                if (srcml_request.unit && !unit) {
+                    std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
+                    exit(4);
+                }
             
-            // set encoding for source output
-            // NOTE: How this is done may change in the future
-            if (srcml_request.src_encoding)
-                srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
+                // set encoding for source output
+                // NOTE: How this is done may change in the future
+                if (srcml_request.src_encoding)
+                    srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
 
-            srcml_unit_unparse_fd(unit, destination);
+                if (count) {
+                    char c = 0;
+                    write(1, &c, 1);
+                }
+                
+                srcml_unit_unparse_fd(unit, destination);
 
-            srcml_unit_free(unit);
+                srcml_unit_free(unit);
+
+                // get out if only one unit
+                if (srcml_request.unit)
+                    break;
+
+                ++count;
+        }
 
         } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
             srcMLReadArchive arch(input_sources[0], srcml_request.revision);
