@@ -56,12 +56,16 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
 
-        //Build the output filename
 
-        //Filenames from directories come in as full paths
-        //Setup the directory on the filesystem
-        boost::filesystem::create_directories(*request->disk_dir);
+        //Ensure that the directory path has a final "/" when appended to filename
+        if (request->disk_dir->back() != '/')
+            *request->disk_dir += "/";
+        
+        //Build the output filename        
+        //Mirror input filesystem
+        std::string xml_filename = *request->disk_dir + *request->filename + ".xml";
 
+        /*Flat filesystem
         size_t pos = request->filename->find_last_of("/\\");
 
         if (pos != std::string::npos) {
@@ -70,12 +74,12 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         else {
             pos = 0;
         }
-        
-        //Ensure that the directory path has a final "/" when appended to filename
-        if (request->disk_dir->back() != '/')
-            *request->disk_dir += "/";
+        std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";*/
 
-        std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";
+        boost::filesystem::path dir(xml_filename);
+        if (dir.has_parent_path() && !is_directory(dir.parent_path()))
+            boost::filesystem::create_directories(dir.parent_path());
+
         srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str(), 0);
         request->srcml_arch = srcml_arch;
     }
