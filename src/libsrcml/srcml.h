@@ -1074,6 +1074,22 @@ LIBSRCML_DECL int srcml_append_transform_xpath_attribute (struct srcml_archive*,
  * @param prefix Element prefix
  * @param namespace_uri Element namespace
  * @param element Element name
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
+ */
+LIBSRCML_DECL int srcml_append_transform_xpath_element   (struct srcml_archive*, const char* xpath_string,
+                                                            const char* prefix, const char* namespace_uri,
+                                                            const char* element);
+
+/**
+ * @brief Append the XPath expression to the list of transformations/queries.
+ * Instead of outputting the results in a separate unit tag, output the complete
+ * archive marking the XPath results with a user provided element and attribute
+ * @param archive A srcml_archive
+ * @param xpath_string An XPath expression
+ * @param prefix Element prefix
+ * @param namespace_uri Element namespace
+ * @param element Element name
  * @param attr_prefix An optional attribute prefix for the element
  * @param attr_namespace_uri An optional attribute namespace for the element
  * @param attr_name An optional attribute name for the element
@@ -1081,7 +1097,7 @@ LIBSRCML_DECL int srcml_append_transform_xpath_attribute (struct srcml_archive*,
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_append_transform_xpath_element   (struct srcml_archive*, const char* xpath_string,
+LIBSRCML_DECL int srcml_append_transform_xpath_element_attribute  (struct srcml_archive*, const char* xpath_string,
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element,
                                                             const char* attr_prefix, const char* attr_namespace_uri,

@@ -65,7 +65,7 @@
                 return -1;
             }
 
- 			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
+ 			return srcml_append_transform_xpath_element_attribute (in_arch, transform_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
                                                             element_uri,
                                                             xpath_support.first->name->c_str(),
@@ -78,8 +78,7 @@
  			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
                                                             element_uri,
-                                                            xpath_support.first->name->c_str(),
-                                                            NULL, NULL, NULL, NULL);
+                                                            xpath_support.first->name->c_str());
  		}
  	}
 
