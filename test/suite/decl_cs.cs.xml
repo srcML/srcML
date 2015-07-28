@@ -38,15 +38,15 @@
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>int</name><index>[,]</index></name></type> <name>multiDimensionalArray1</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>int</name><index>[<expr/>,<expr/>]</index></name></type> <name>multiDimensionalArray1</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>int</name><index>[,]</index></name></type> <name>multiDimensionalArray2</name> <init>= <expr><block>{ <expr><block>{ <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr> }</block></expr>, <expr><block>{ <expr><literal type="number">4</literal></expr>, <expr><literal type="number">5</literal></expr>, <expr><literal type="number">6</literal></expr> }</block></expr> }</block></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>int</name><index>[<expr/>,<expr/>]</index></name></type> <name>multiDimensionalArray2</name> <init>= <expr><block>{ <expr><block>{ <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr> }</block></expr>, <expr><block>{ <expr><literal type="number">4</literal></expr>, <expr><literal type="number">5</literal></expr>, <expr><literal type="number">6</literal></expr> }</block></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<decl_stmt><decl><type><name><name>int</name><index>[, ,]</index></name></type> <name>array1</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">4</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>int</name><index>[<expr/>, <expr/>,<expr/>]</index></name></type> <name>array1</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">4</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>

@@ -4940,7 +4940,7 @@ variable_identifier_array_grammar_sub_contents{ ENTRY_DEBUG } :
         { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }? complete_expression |
 
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? (options { greedy = true; } : { LA(1) != RBRACKET }?
-            ({ /* stop warning */ LA(1) == COMMA }? COMMA | complete_expression)
+            ({ /* stop warning */ LA(1) == COMMA }? empty_element[SEXPRESSION, true] COMMA | complete_expression) empty_element[SEXPRESSION, true]
         )*
 ;
 
