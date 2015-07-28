@@ -128,15 +128,15 @@ def extract_all(src, encoding):
 
     archive.read_open_memory(src)
 
-    unit = archive.read_unit()
+    unit = archive.read_unit_header()
     while unit != None :
-        unit.unparse_memory()
-        src_all.append(unit.src())
         srcml = unit.get_xml_fragment()
         if archive.get_url() != None and (archive.get_url().find(".all") != -1 or archive.get_url().find("unicode") != -1):
             srcml = "<unit>" + srcml[srcml.find(">") + 1:]
         all.append(srcml)
-        unit = archive.read_unit()
+        unit.unparse_memory()
+        src_all.append(unit.src())
+        unit = archive.read_unit_header()
 
     archive.close()
 
