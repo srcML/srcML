@@ -209,5 +209,5 @@ src2srcml emptysrc/empty.aj.gz
 
 check 3<<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="AspectJ" filename="emptysrc/empty.aj.gz"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java" filename="emptysrc/empty.aj.gz"/>
 	STDOUT

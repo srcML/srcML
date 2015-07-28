@@ -71,7 +71,7 @@ check 3<<< "Objective-C"
 # Aspect J
 define srcmlaj <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="AspectJ">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java">
 	</unit>
 	STDOUT
 
@@ -79,10 +79,10 @@ xmlcheck "$srcmlaj"
 createfile sub/a.aj.xml "$srcmlaj"
 
 srcml --show-language sub/a.aj.xml
-check 3<<< "AspectJ"
+check 3<<< "Java"
 
 srcml --show-language < sub/a.aj.xml
-check 3<<< "AspectJ"
+check 3<<< "Java"
 
 # Empty
 define empty <<- 'STDIN'
