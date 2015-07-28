@@ -113,10 +113,6 @@ libsrcml.srcml_unit_set_language.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_unit_set_filename.restype = c_int
 libsrcml.srcml_unit_set_filename.argtypes = [c_void_p, c_char_p]
 
-# int srcml_unit_set_url(struct srcml_unit*, const char* url);
-libsrcml.srcml_unit_set_url.restype = c_int
-libsrcml.srcml_unit_set_url.argtypes = [c_void_p, c_char_p]
-
 # int srcml_unit_set_version(struct srcml_unit*, const char* version);
 libsrcml.srcml_unit_set_version.restype = c_int
 libsrcml.srcml_unit_set_version.argtypes = [c_void_p, c_char_p]
@@ -148,10 +144,6 @@ libsrcml.srcml_unit_get_language.argtypes = [c_void_p]
 # const char* srcml_unit_get_filename(const struct srcml_unit*);
 libsrcml.srcml_unit_get_filename.restype = c_char_p
 libsrcml.srcml_unit_get_filename.argtypes = [c_void_p]
-
-# const char* srcml_unit_get_url(const struct srcml_unit*);
-libsrcml.srcml_unit_get_url.restype = c_char_p
-libsrcml.srcml_unit_get_url.argtypes = [c_void_p]
 
 # const char* srcml_unit_get_version(const struct srcml_unit*);
 libsrcml.srcml_unit_get_version.restype = c_char_p
@@ -243,9 +235,6 @@ class srcml_unit :
     def set_filename(self, filename) :
         check_return(libsrcml.srcml_unit_set_filename(self.unit, filename))
 
-    def set_url(self, url) :
-        check_return(libsrcml.srcml_unit_set_url(self.unit, url))
-
     def set_version(self, version) :
         check_return(libsrcml.srcml_unit_set_version(self.unit, version))
 
@@ -269,9 +258,6 @@ class srcml_unit :
 
     def get_filename(self) :
         return libsrcml.srcml_unit_get_filename(self.unit)
-
-    def get_url(self) :
-        return libsrcml.srcml_unit_get_url(self.unit)
 
     def get_version(self) :
         return libsrcml.srcml_unit_get_version(self.unit)
