@@ -271,6 +271,9 @@ class srcml_unit :
     def get_xml_fragment(self) :
         return libsrcml.srcml_unit_get_xml_fragment(self.unit)
 
+    def read_body(self):
+        return libsrcml.srcml_unit_read_body(self.unit)
+
     def get_xml_standalone(self, encoding) :
         buffer = c_char_p()
         size = c_size_t()
