@@ -119,6 +119,7 @@ void src_input_libarchive(ParseQueue& queue,
         prequest->srcml_arch = srcml_arch;
         prequest->language = "";
         prequest->status = SRCML_STATUS_UNSET_LANGUAGE;
+        prequest->total_num_inputs = srcml_request.input_sources.size();
 
         // schedule for parsing
         queue.schedule(prequest);
@@ -195,6 +196,7 @@ void src_input_libarchive(ParseQueue& queue,
         prequest->srcml_arch = srcml_arch;
         prequest->language = language;
         prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+        prequest->total_num_inputs = srcml_request.input_sources.size();
 
         if (SRCML_COMMAND_TIMESTAMP & SRCMLOptions::get()) {
 

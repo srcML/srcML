@@ -58,12 +58,21 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
 
         //Ensure that the directory path has a final "/" when appended to filename
-        if (request->disk_dir->back() != '/')
-            *request->disk_dir += "/";
-        
         //Build the output filename        
         //Mirror input filesystem
-        std::string xml_filename = *request->disk_dir + *request->filename + ".xml";
+        std::string xml_filename = "";
+        
+        if (request->disk_dir->back() != '/') {
+            if (request->total_num_inputs == 1) {
+                xml_filename = *request->filename + ".xml";
+            }
+            else {
+                xml_filename = *request->disk_dir + '/' + *request->filename + ".xml";    
+            }
+        }
+        else {
+            xml_filename = *request->disk_dir + *request->filename + ".xml";
+        }
 
         /*Flat filesystem
         size_t pos = request->filename->find_last_of("/\\");

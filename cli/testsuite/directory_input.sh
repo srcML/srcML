@@ -8,7 +8,7 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="dir">
 
-	<unit revision="REVISION" language="AspectJ" filename="dir/file.aj" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<unit revision="REVISION" language="Java" filename="dir/file.aj" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C" filename="dir/file.c" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">

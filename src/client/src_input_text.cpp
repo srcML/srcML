@@ -42,6 +42,7 @@
  	prequest->version = srcml_request.att_version;
  	prequest->srcml_arch = srcml_arch;
  	prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
+    prequest->total_num_inputs = srcml_request.input_sources.size();
 
     prequest->status = 0; //!language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
