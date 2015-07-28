@@ -61,8 +61,14 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         //Build the output filename        
         //Mirror input filesystem
         std::string xml_filename = "";
+        
         if (request->disk_dir->back() != '/') {
-            xml_filename = *request->filename + ".xml";
+            if (request->total_num_inputs == 1) {
+                xml_filename = *request->filename + ".xml";
+            }
+            else {
+                xml_filename = *request->disk_dir + '/' + *request->filename + ".xml";    
+            }
         }
         else {
             xml_filename = *request->disk_dir + *request->filename + ".xml";
