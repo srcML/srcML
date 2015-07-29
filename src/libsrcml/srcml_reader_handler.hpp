@@ -1066,6 +1066,9 @@ private :
 
         for(int pos = 0; pos < num_attributes; ++pos) {
 
+            std::string value = attribute_revision(attributes[pos].value);
+            if(std::string(localname) == "block" && std::string(attributes[pos].value) != "" && value == "") continue;
+
             *unit->unit += " ";
             if(attributes[pos].prefix) {
 
@@ -1076,7 +1079,7 @@ private :
             *unit->unit += attributes[pos].localname;
 
             *unit->unit += "=\"";
-            *unit->unit += attribute_revision(attributes[pos].value);
+            *unit->unit += value;
             *unit->unit += "\"";
 
         }
@@ -1139,6 +1142,11 @@ private :
 
         for(int pos = 0; pos < num_attributes; ++pos) {
 
+            std::string revision;
+            revision.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
+            std::string value = attribute_revision(revision);
+            if(std::string(localname) == "block" && revision != "" && value == "") continue;
+
             *unit->unit += " ";
             if(attributes[ATTR_PREFIX(pos)]) {
 
@@ -1149,9 +1157,7 @@ private :
             *unit->unit += (const char*) attributes[ATTR_LOCALNAME(pos)];
 
             *unit->unit += "=\"";
-            std::string revision;
-            revision.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
-            *unit->unit += attribute_revision(revision);
+            *unit->unit += value;
             *unit->unit += "\"";
         }
         //*unit->unit += ">";
