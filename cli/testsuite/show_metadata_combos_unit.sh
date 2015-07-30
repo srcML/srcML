@@ -11,11 +11,12 @@ define input <<- 'STDOUT'
 
 
 define output <<- 'STDOUT'
-	language="C++"
-	filename="a.cpp"
 	url="sub"
+	filename="a.cpp"
+	language="C++"
 	STDOUT
 
+xmlcheck "$input"
 createfile sub/a.cpp.xml "$input"
 
 # language, url, filename
@@ -41,10 +42,10 @@ check 3<<< "$output"
 
 
 define output <<- 'STDOUT'
-	language="C++"
-	filename="a.cpp"
-	url="sub"
 	encoding="UTF-8"
+	url="sub"
+	filename="a.cpp"
+	language="C++"
 	STDOUT
 
 # language, url, filename, encoding
@@ -63,11 +64,11 @@ check 3<<< "$output"
 
 
 define output <<- 'STDOUT'
-	language="C++"
-	filename="a.cpp"
-	url="sub"
-	version="1.2"
 	encoding="UTF-8"
+	url="sub"
+	filename="a.cpp"
+	language="C++"
+	version="1.2"
 	STDOUT
 
 # filename, url, language, encoding, src version

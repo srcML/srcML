@@ -8,11 +8,14 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
 	STDOUT
+xmlcheck "$srcml"
+
 
 define xpath_empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDOUT
+xmlcheck "$xpath_empty"
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -22,6 +25,7 @@ define output <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+xmlcheck "$output"
 
 createfile sub/a.cpp.xml "$srcml"
 

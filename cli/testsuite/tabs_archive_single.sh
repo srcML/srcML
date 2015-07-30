@@ -23,6 +23,8 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$fsrcml"
+xmlcheck "$srcml"
 createfile sub/a.cpp ""
 
 # specify tab size of 8

@@ -32,6 +32,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$srcml"
 createfile sub/archive_single.cpp.xml "$srcml"
 
 
@@ -40,10 +41,12 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" item="1">filename="a.cpp"</unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1">filename="a.cpp"</unit>
 
 	</unit>
 	STDOUT
+
+xmlcheck "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
 check 3<<< "$output"
@@ -79,6 +82,8 @@ define output <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+xmlcheck "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
 check 3<<< "$output"

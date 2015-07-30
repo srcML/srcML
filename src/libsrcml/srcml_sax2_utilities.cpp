@@ -50,7 +50,7 @@
  *
  * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, int unit) {
+int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, const boost::optional<size_t> & revision_number, int unit) {
 
     if(input_buffer == NULL || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -58,7 +58,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
 
     if(input == NULL) return SRCML_STATUS_IO_ERROR;
 
-    srcml_sax2_reader reader(input);
+    srcml_sax2_reader reader(input, revision_number);
     reader.read_src(output_buffer);
 
     
@@ -80,13 +80,13 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, int unit) {
+int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, const boost::optional<size_t> & revision_number, int unit) {
 
     if(compression > 9) compression = 9;
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding), compression);
 
-    srcml_sax2_reader reader(ifilename);
+    srcml_sax2_reader reader(ifilename, 0, revision_number);
     reader.read_src(output_buffer);
 
     xmlOutputBufferClose(output_buffer);
@@ -108,6 +108,7 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  * @param attr_name the attribute name
  * @param attr_value the attribute value
  * @param options srcml options
+ * @param oarchive output srcML archive
  *
  * XPath evaluation of the nested units.
  *
@@ -115,7 +116,7 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
  */
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
                 const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
-                OPTION_TYPE options, srcml_archive* out_archive) {
+                OPTION_TYPE options, srcml_archive* oarchive) {
 
     if(input_buffer == NULL || context_element == NULL ||
        xpath == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
@@ -133,7 +134,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
     }
 
     // setup process handling
-    xpath_query_units process(options, compiled_xpath, out_archive, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value);
+    xpath_query_units process(options, compiled_xpath, oarchive, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value);
     srcSAXController control(input_buffer);
 
     try {

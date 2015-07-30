@@ -54,11 +54,11 @@ int main() {
         size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive_set_url(archive, "url");
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
-        srcml_unit_set_url(unit, "url");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
         srcml_unit_set_hash(unit, "0123456789abcdef");
@@ -77,11 +77,11 @@ int main() {
         char * s = 0;
         size_t size;
         srcml_archive * archive = srcml_archive_create();
+        srcml_archive_set_url(archive, "url");
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
-        srcml_unit_set_url(unit, "url");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
         srcml_unit_set_hash(unit, "0123456789abcdef");
@@ -100,11 +100,11 @@ int main() {
         char * s = 0;
         size_t size;
         srcml_archive * archive = srcml_archive_create();
+        srcml_archive_set_url(archive, "url");
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
-        srcml_unit_set_url(unit, "url");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
         srcml_unit_set_hash(unit, "0123456789abcdef");

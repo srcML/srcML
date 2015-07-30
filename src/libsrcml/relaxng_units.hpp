@@ -33,7 +33,7 @@
 
 #include <srcexfun.hpp>
 
-#include <unit_dom.hpp>
+#include <transform_units.hpp>
 
 #ifdef _MSC_BUILD
 #include <io.h>
@@ -44,7 +44,7 @@
  *
  * Extends unit_dom to execute RelaxNG grammar and write results.
  */
-class relaxng_units : public unit_dom {
+class relaxng_units : public transform_units {
 public :
 
     /**
@@ -56,7 +56,7 @@ public :
      * Constructor.
      */
     relaxng_units(OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, srcml_archive* oarchive)
-        : unit_dom(options), rngctx(rngctx), oarchive(oarchive) {
+        : transform_units(options, oarchive), rngctx(rngctx) {
     }
 
     /**
@@ -99,18 +99,6 @@ public :
         return true;
     }
 
-    virtual void outputResult(xmlNodePtr a_node) {
-
-        static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
-        if (size == 0)
-            return;
-
-        oarchive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
-
-        xmlBufferEmpty(lbuffer);
-    }
-
     /**
      * end_output
      *
@@ -121,7 +109,6 @@ public :
 private :
 
     xmlRelaxNGValidCtxtPtr rngctx;
-    srcml_archive* oarchive;
 
 };
 

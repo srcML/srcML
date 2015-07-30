@@ -29,19 +29,19 @@ close_callback_t = CFUNCTYPE(c_int, c_void_p)
 libsrcml.srcml_unit_parse_filename.restype = c_int
 libsrcml.srcml_unit_parse_filename.argtypes = [c_void_p, c_char_p]
 
-# int srcml_unit_parse_memory  (struct srcml_unit*, const char* src_buffer, size_t buffer_size);
+# int srcml_unit_parse_memory(struct srcml_unit*, const char* src_buffer, size_t buffer_size);
 libsrcml.srcml_unit_parse_memory.restype = c_int
 libsrcml.srcml_unit_parse_memory.argtypes = [c_void_p, c_char_p, c_int]
 
-# int srcml_unit_parse_FILE    (struct srcml_unit*, FILE* src_file);
+# int srcml_unit_parse_FILE(struct srcml_unit*, FILE* src_file);
 libsrcml.srcml_unit_parse_FILE.restype = c_int
 libsrcml.srcml_unit_parse_FILE.argtypes = [c_void_p, c_void_p]
 
-# int srcml_unit_parse_fd      (struct srcml_unit*, int src_fd);
+# int srcml_unit_parse_fd(struct srcml_unit*, int src_fd);
 libsrcml.srcml_unit_parse_fd.restype = c_int
 libsrcml.srcml_unit_parse_fd.argtypes = [c_void_p, c_int]
 
-# int srcml_unit_parse_io      (struct srcml_unit*, void * context, int (*read_callback)(void * context, char * buffer, size_t len), int (*close_callback)(void * context));
+# int srcml_unit_parse_io(struct srcml_unit*, void * context, int(*read_callback)(void * context, char * buffer, size_t len), int(*close_callback)(void * context));
 libsrcml.srcml_unit_parse_io.restype = c_int
 libsrcml.srcml_unit_parse_io.argtypes = [c_void_p, c_void_p, read_callback_t, close_callback_t]
 
@@ -77,19 +77,19 @@ libsrcml.srcml_write_string.argtypes = [c_void_p, c_char_p]
 libsrcml.srcml_unit_unparse_filename.restype = c_int
 libsrcml.srcml_unit_unparse_filename.argtypes = [c_void_p, c_char_p, c_ushort]
 
-# int srcml_unit_unparse_memory  (struct srcml_unit*, char** src_buffer, size_t * src_size);
+# int srcml_unit_unparse_memory(struct srcml_unit*, char** src_buffer, size_t * src_size);
 libsrcml.srcml_unit_unparse_memory.restype = c_int
 libsrcml.srcml_unit_unparse_memory.argtypes = [c_void_p, c_void_p, c_void_p]
 
-# int srcml_unit_unparse_FILE    (struct srcml_unit*, FILE* srcml_file);
+# int srcml_unit_unparse_FILE(struct srcml_unit*, FILE* srcml_file);
 libsrcml.srcml_unit_unparse_FILE.restype = c_int
 libsrcml.srcml_unit_unparse_FILE.argtypes = [c_void_p, c_void_p]
 
-# int srcml_unit_unparse_fd      (struct srcml_unit*, int srcml_fd);
+# int srcml_unit_unparse_fd(struct srcml_unit*, int srcml_fd);
 libsrcml.srcml_unit_unparse_fd.restype = c_int
 libsrcml.srcml_unit_unparse_fd.argtypes = [c_void_p, c_int]
 
-# int srcml_unit_unparse_io      (struct srcml_unit*, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context));
+# int srcml_unit_unparse_io(struct srcml_unit*, void * context, int(*write_callback)(void * context, const char * buffer, size_t len), int(*close_callback)(void * context));
 libsrcml.srcml_unit_unparse_io.restype = c_int
 libsrcml.srcml_unit_unparse_io.argtypes = [c_void_p, c_void_p, write_callback_t, close_callback_t]
 
@@ -101,75 +101,67 @@ libsrcml.srcml_unit_create.argtypes = [c_void_p]
 libsrcml.srcml_unit_free.restype = None
 libsrcml.srcml_unit_free.argtypes = [c_void_p]
 
-# int srcml_unit_set_src_encoding (struct srcml_unit*, const char* encoding);
+# int srcml_unit_set_src_encoding(struct srcml_unit*, const char* encoding);
 libsrcml.srcml_unit_set_src_encoding.restype = c_int
 libsrcml.srcml_unit_set_src_encoding.argtypes = [c_void_p, c_char_p]
 
-# int srcml_unit_set_language (struct srcml_unit*, const char* language);
+# int srcml_unit_set_language(struct srcml_unit*, const char* language);
 libsrcml.srcml_unit_set_language.restype = c_int
 libsrcml.srcml_unit_set_language.argtypes = [c_void_p, c_char_p]
 
-# int srcml_unit_set_filename (struct srcml_unit*, const char* filename);
+# int srcml_unit_set_filename(struct srcml_unit*, const char* filename);
 libsrcml.srcml_unit_set_filename.restype = c_int
 libsrcml.srcml_unit_set_filename.argtypes = [c_void_p, c_char_p]
 
-# int srcml_unit_set_url(struct srcml_unit*, const char* url);
-libsrcml.srcml_unit_set_url.restype = c_int
-libsrcml.srcml_unit_set_url.argtypes = [c_void_p, c_char_p]
-
-# int srcml_unit_set_version  (struct srcml_unit*, const char* version);
+# int srcml_unit_set_version(struct srcml_unit*, const char* version);
 libsrcml.srcml_unit_set_version.restype = c_int
 libsrcml.srcml_unit_set_version.argtypes = [c_void_p, c_char_p]
 
-# int srcml_unit_set_timestamp  (struct srcml_unit*, const char* timestamp);
+# int srcml_unit_set_timestamp(struct srcml_unit*, const char* timestamp);
 libsrcml.srcml_unit_set_timestamp.restype = c_int
 libsrcml.srcml_unit_set_timestamp.argtypes = [c_void_p, c_char_p]
 
-# int srcml_unit_set_hash  (struct srcml_unit*, const char* hash);
+# int srcml_unit_set_hash(struct srcml_unit*, const char* hash);
 libsrcml.srcml_unit_set_hash.restype = c_int
 libsrcml.srcml_unit_set_hash.argtypes = [c_void_p, c_char_p]
 
-# int srcml_unit_unparse_set_eol  (struct srcml_unit*, size_t eol);
+# int srcml_unit_unparse_set_eol(struct srcml_unit*, size_t eol);
 libsrcml.srcml_unit_unparse_set_eol.restype = c_int
 libsrcml.srcml_unit_unparse_set_eol.argtypes = [c_void_p, c_size_t]
 
-# const char* srcml_unit_get_src_encoding (const struct srcml_unit*);
+# const char* srcml_unit_get_src_encoding(const struct srcml_unit*);
 libsrcml.srcml_unit_get_src_encoding.restype = c_char_p
 libsrcml.srcml_unit_get_src_encoding.argtypes = [c_void_p]
 
-# const char* srcml_unit_get_revision (const struct srcml_unit*);
+# const char* srcml_unit_get_revision(const struct srcml_unit*);
 libsrcml.srcml_unit_get_revision.restype = c_char_p
 libsrcml.srcml_unit_get_revision.argtypes = [c_void_p]
 
-# const char* srcml_unit_get_language (const struct srcml_unit*);
+# const char* srcml_unit_get_language(const struct srcml_unit*);
 libsrcml.srcml_unit_get_language.restype = c_char_p
 libsrcml.srcml_unit_get_language.argtypes = [c_void_p]
 
-# const char* srcml_unit_get_filename (const struct srcml_unit*);
+# const char* srcml_unit_get_filename(const struct srcml_unit*);
 libsrcml.srcml_unit_get_filename.restype = c_char_p
 libsrcml.srcml_unit_get_filename.argtypes = [c_void_p]
 
-# const char* srcml_unit_get_url(const struct srcml_unit*);
-libsrcml.srcml_unit_get_url.restype = c_char_p
-libsrcml.srcml_unit_get_url.argtypes = [c_void_p]
-
-# const char* srcml_unit_get_version  (const struct srcml_unit*);
+# const char* srcml_unit_get_version(const struct srcml_unit*);
 libsrcml.srcml_unit_get_version.restype = c_char_p
 libsrcml.srcml_unit_get_version.argtypes = [c_void_p]
 
-# const char* srcml_unit_get_timestamp  (const struct srcml_unit*);
+# const char* srcml_unit_get_timestamp(const struct srcml_unit*);
 libsrcml.srcml_unit_get_timestamp.restype = c_char_p
 libsrcml.srcml_unit_get_timestamp.argtypes = [c_void_p]
 
-# const char* srcml_unit_get_hash  (const struct srcml_unit*);
+# const char* srcml_unit_get_hash(const struct srcml_unit*);
 libsrcml.srcml_unit_get_hash.restype = c_char_p
 libsrcml.srcml_unit_get_hash.argtypes = [c_void_p]
 
-# const char* srcml_unit_get_xml_fragment      (const struct srcml_unit*);
+# const char* srcml_unit_get_xml_fragment(const struct srcml_unit*);
 libsrcml.srcml_unit_get_xml_fragment.restype = c_char_p
 libsrcml.srcml_unit_get_xml_fragment.argtypes = [c_void_p]
 
-# const char* srcml_unit_get_xml_standalone      (const struct srcml_unit*, char*);
+# const char* srcml_unit_get_xml_standalone(const struct srcml_unit*, char*);
 libsrcml.srcml_unit_get_xml_standalone.restype = c_int
 libsrcml.srcml_unit_get_xml_standalone.argtypes = [c_void_p, c_char_p, c_void_p, c_void_p]
 
@@ -243,9 +235,6 @@ class srcml_unit :
     def set_filename(self, filename) :
         check_return(libsrcml.srcml_unit_set_filename(self.unit, filename))
 
-    def set_url(self, url) :
-        check_return(libsrcml.srcml_unit_set_url(self.unit, url))
-
     def set_version(self, version) :
         check_return(libsrcml.srcml_unit_set_version(self.unit, version))
 
@@ -270,9 +259,6 @@ class srcml_unit :
     def get_filename(self) :
         return libsrcml.srcml_unit_get_filename(self.unit)
 
-    def get_url(self) :
-        return libsrcml.srcml_unit_get_url(self.unit)
-
     def get_version(self) :
         return libsrcml.srcml_unit_get_version(self.unit)
 
@@ -285,11 +271,14 @@ class srcml_unit :
     def get_xml_fragment(self) :
         return libsrcml.srcml_unit_get_xml_fragment(self.unit)
 
+    def read_body(self):
+        return libsrcml.srcml_unit_read_body(self.unit)
+
     def get_xml_standalone(self, encoding) :
         buffer = c_char_p()
         size = c_size_t()
         libsrcml.srcml_unit_get_xml_standalone(self.unit, encoding, pointer(buffer), pointer(size))
-        return (buffer, size)
+        return(buffer, size)
 
     def src(self) :
         return self.src_buffer.value

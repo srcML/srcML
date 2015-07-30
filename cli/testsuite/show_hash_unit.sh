@@ -10,6 +10,7 @@ define input <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$input"
 createfile sub/a.cpp.xml "$input"
 
 message "hash provided"
@@ -45,6 +46,10 @@ define empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDOUT
+
+xmlcheck "$none"
+xmlcheck "$archive"
+xmlcheck "$empty"
 
 createfile sub/a.cpp.xml "$none"
 createfile sub/archive.cpp.xml "$archive"

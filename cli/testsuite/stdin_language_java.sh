@@ -9,15 +9,14 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java"/>
 	STDOUT
 
-echo -n "" | src2srcml -l Java
+xmlcheck "$output"
 
+echo -n "" | src2srcml -l Java
 check 3<<< "$output"
 
 echo -n "" | src2srcml --language Java
-
 check 3<<< "$output"
 
 echo -n "" | src2srcml --language=Java
-
 check 3<<< "$output"
 

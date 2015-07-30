@@ -26,6 +26,8 @@ define foutput <<- 'STDERR'
 	Translated: 2	Skipped: 0	Error: 0	Total: 2
 	STDERR
 
+xmlcheck "$fsrcml"
+
 createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
 createfile sub/a.cpp.xml "$fsrcml"

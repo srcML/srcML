@@ -57,12 +57,15 @@ void * start_routine(void * arguments) {
     thread_args * args = (thread_args *)arguments;
 
     try {
+
         args->control->parse(args->handler);
     } catch(SAXError error) {
 
         if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END)) {
             fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
-            args->handler->stop();
+
+            // I do not think this is needed as it needs to be stopped to even get here
+            args->handler->done();
         }
 
         // might have to release a lock here or set is_done;
@@ -89,8 +92,8 @@ void srcml_sax2_reader::init_constructor() {
  *
  * Construct a srcml_sax2_reader using a filename
  */
-srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encoding)
-    : control(filename, encoding), read_root(false) {
+srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encoding, const boost::optional<size_t> & revision_number)
+    : control(filename, encoding), read_root(false), handler(revision_number) {
 
     init_constructor();
 
@@ -102,8 +105,8 @@ srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encodin
  *
  * Construct a srcml_sax2_reader using a parser input buffer
  */
-srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input)
-    : control(input), read_root(false) {
+srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input, const boost::optional<size_t> & revision_number)
+    : control(input), read_root(false), handler(revision_number) {
 
     init_constructor();
 
@@ -116,9 +119,20 @@ srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input)
  */
 srcml_sax2_reader::~srcml_sax2_reader() {
 
-    handler.stop();
-    thread->join();
-    delete thread;
+    stop();
+
+}
+
+void srcml_sax2_reader::stop() {
+
+    if(thread != nullptr) {
+
+        handler.stop();
+        thread->join();
+        delete thread;
+        thread = nullptr;
+
+    }
 
 }
 
@@ -150,6 +164,8 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
                                                  OPTION_TYPE & options,
                                                  size_t & tabstop,
                                                  std::vector<std::string> & user_macro_list) {
+
+    if(thread == nullptr) return 0;
 
     if(read_root || handler.read_root) return 0;
 
@@ -186,6 +202,7 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
                                             boost::optional<std::string> & timestamp, boost::optional<std::string> & hash,
                                             std::vector<std::string> & attributes) {
 
+    if(thread == nullptr) return 0;
     if(handler.is_done) return 0;
     handler.skip = true;
     handler.collect_unit_attributes = true;
@@ -218,6 +235,8 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
  */
 int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
 
+    if(thread == nullptr) return 0;
+
     if(unit) unit = boost::optional<std::string>();
 
     if(handler.is_done) return 0;
@@ -242,6 +261,7 @@ int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
  */
 int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
 
+    if(thread == nullptr) return 0;
     if(handler.is_done) return 0;
     control.enable_comment(false);
     control.enable_cdataBlock(false);
@@ -255,16 +275,4 @@ int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
     if(handler.is_done) return 0;
 
     return 1;
-}
-
-/**
- * revision_umber
- * @param revision_number number of revision to retrieve
- *
- * Set the reader handler to process only the given revision.
- */
-void srcml_sax2_reader::revision_number(boost::optional<size_t> revision_number) {
-
-    handler.revision = revision_number;
-
 }

@@ -122,7 +122,7 @@ bool language_extension_registry::register_user_ext(const char* ext, const char*
  *
  * @returns the numeric representation of the currently registered language from the given filename.
  */
-int language_extension_registry::get_language_from_filename(const char* const path) { 
+int language_extension_registry::get_language_from_filename(const char* const path) const { 
 
     // extract the (pure) extension
     std::string extension;
@@ -168,7 +168,7 @@ void language_extension_registry::register_standard_file_extensions()
 
     register_user_ext("java", Language::LANGUAGE_JAVA);
 
-    register_user_ext("aj",   Language::LANGUAGE_ASPECTJ);
+    register_user_ext("aj",   Language::LANGUAGE_JAVA);
 
     register_user_ext("cs",   Language::LANGUAGE_CSHARP);
 

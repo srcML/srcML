@@ -6,8 +6,8 @@ import xml.sax.saxutils as saxutils
 
 
 XPathNamespaces = {
-    "src": "http://www.sdml.info/srcML/src",
-    "cpp": "http://www.sdml.info/srcML/cpp"
+    "src": "http://www.srcML.org/srcML/src",
+    "cpp": "http://www.srcML.org/srcML/cpp"
 }
 
 # Tag name constants

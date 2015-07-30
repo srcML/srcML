@@ -28,6 +28,8 @@ define output <<- 'STDERR'
 	    2 sub/b.cpp
 	STDERR
 
+xmlcheck "$srcml"
+xmlcheck "$nestedfile"
 createfile a.cpp.xml "$srcml"
 rmfile sub/a.cpp
 

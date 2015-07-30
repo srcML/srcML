@@ -10,7 +10,9 @@ define output <<- 'STDOUT'
 	<unit revision="REVISION" language="C++"/>
 	STDOUT
 
-echo -n "" | src2srcml -l C++ --no-namespace-decl
+xmlcheck "$output"
+
+echo -n "" | src2srcml -l C++ --no-ns-decl
 check 3<<< "$output"
 
 define output2 <<- 'STDOUT'
@@ -18,16 +20,16 @@ define output2 <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 
-
+xmlcheck "$output2"
 createfile sub/a.cpp ""
 
-src2srcml sub/a.cpp --no-namespace-decl -o sub/a.cpp.xml
+src2srcml sub/a.cpp --no-ns-decl -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$output2"
 
-src2srcml --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml
+src2srcml --no-ns-decl sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$output2"
 
-src2srcml --no-namespace-decl sub/a.cpp -o sub/a.cpp.xml
+src2srcml --no-ns-decl sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$output2"
 
 
@@ -42,46 +44,49 @@ define nonamespacexml <<- 'STDOUT'
 	<unit revision="REVISION" language="C++"/>
 	STDOUT
 
+xmlcheck "$defaultxml"
+xmlcheck "$nonamespacexml"
+
 echo -n "" | srcml2src -l C++
 check 3<<< "$defaultxml"
 
-echo -n "" | srcml2src -l C++ --no-namespace-decl
+echo -n "" | srcml2src -l C++ --no-ns-decl
 check 3<<< "$nonamespacexml"
 
 createfile sub/a.cpp.xml "$defaultxml"
 
-srcml2src -l C++ -X --no-namespace-decl < sub/a.cpp.xml
+srcml2src -l C++ -X --no-ns-decl < sub/a.cpp.xml
 check 3<<< "$nonamespacexml"
 
-srcml2src -X --no-namespace-decl sub/a.cpp.xml
+srcml2src -X --no-ns-decl sub/a.cpp.xml
 check 3<<< "$nonamespacexml"
 
-srcml2src -X --no-namespace-decl -o sub/b.cpp.xml sub/a.cpp.xml
+srcml2src -X --no-ns-decl -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$nonamespacexml"
 
-srcml2src -X --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml 
+srcml2src -X --no-ns-decl sub/a.cpp.xml -o sub/b.cpp.xml 
 check sub/b.cpp.xml 3<<< "$nonamespacexml"
 
-srcml2src -l C++ --no-namespace-decl -X < sub/a.cpp.xml
+srcml2src -l C++ --no-ns-decl -X < sub/a.cpp.xml
 check 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl -X sub/a.cpp.xml
+srcml2src --no-ns-decl -X sub/a.cpp.xml
 check 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl -X -o sub/b.cpp.xml sub/a.cpp.xml
+srcml2src --no-ns-decl -X -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl -X sub/a.cpp.xml -o sub/b.cpp.xml
+srcml2src --no-ns-decl -X sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$nonamespacexml"
 
-srcml2src -X -l C++ --no-namespace-decl < sub/a.cpp.xml
+srcml2src -X -l C++ --no-ns-decl < sub/a.cpp.xml
 check 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl -X sub/a.cpp.xml
+srcml2src --no-ns-decl -X sub/a.cpp.xml
 check 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl -o sub/b.cpp.xml -X sub/a.cpp.xml
+srcml2src --no-ns-decl -o sub/b.cpp.xml -X sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$nonamespacexml"
 
-srcml2src --no-namespace-decl sub/a.cpp.xml -o sub/b.cpp.xml -X
+srcml2src --no-ns-decl sub/a.cpp.xml -o sub/b.cpp.xml -X
 check sub/b.cpp.xml 3<<< "$nonamespacexml"

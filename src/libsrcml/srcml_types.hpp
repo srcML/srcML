@@ -21,6 +21,23 @@
 #ifndef INCLUDED_SRCML_TYPES_HPP
 #define INCLUDED_SRCML_TYPES_HPP
 
+/** string for language Objective-C */
+#define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
+
+/** Private options */
+
+/** Wrap function/classes/etc with templates (default: on) */
+#define SRCML_OPTION_WRAP_TEMPLATE     1<<11
+/** Markups literal in special namespace */
+#define SRCML_OPTION_LITERAL           1<<21
+/** Markups modifiers in special namespace */
+#define SRCML_OPTION_MODIFIER          1<<22
+/** Markups operator in special namespace */
+#define SRCML_OPTION_OPERATOR          1<<23
+
+/** output is interactive (good for editing applications) */
+#define SRCML_OPTION_INTERACTIVE       1<<12
+
 #include <libxml/xmlwriter.h>
 
 #include <Language.hpp>
@@ -188,6 +205,9 @@ struct srcml_archive {
 
     /** libxml2 callback wrapper context.  Only needed for IO functions */
     boost::any context;
+
+    /** srcDiff revision number */
+    boost::optional<size_t> revision_number;
 
 };
 

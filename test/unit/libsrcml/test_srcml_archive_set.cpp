@@ -42,7 +42,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_src_encoding(archive, 0);
-        dassert(archive->src_encoding, 0);
+        dassert(archive->src_encoding, boost::none);
         srcml_archive_free(archive);
     }
 
@@ -66,7 +66,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_xml_encoding(archive, 0);
-        dassert(archive->encoding, 0);
+        dassert(archive->encoding, boost::none);
         srcml_archive_free(archive);
     }
 
@@ -90,7 +90,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_language(archive, 0);
-        dassert(archive->language, 0);
+        dassert(archive->language, boost::none);
         srcml_archive_free(archive);
     }
 
@@ -114,7 +114,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_url(archive, 0);
-        dassert(archive->url, 0);
+        dassert(archive->url, boost::none);
         srcml_archive_free(archive);
     }
 
@@ -138,7 +138,7 @@ int main() {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_version(archive, 0);
-        dassert(archive->version, 0);
+        dassert(archive->version, boost::none);
         srcml_archive_free(archive);
     }
 
@@ -476,6 +476,36 @@ int main() {
 
     {
         dassert(srcml_archive_register_macro(0, "foo", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    /*
+      srcml_archive_set_srcdiff_revision
+    */
+
+    {
+
+        srcml_archive * archive = srcml_archive_create();
+
+        srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL);
+
+        dassert(srcml_archive_set_srcdiff_revision(0, SRCDIFF_REVISION_INVALID), SRCML_STATUS_INVALID_ARGUMENT);
+        srcml_archive_free(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_archive_create();
+
+        srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL);
+
+        dassert(*archive->revision_number, SRCDIFF_REVISION_ORIGINAL);
+        srcml_archive_free(archive);
+
+    }
+
+    {
+        dassert(srcml_archive_set_srcdiff_revision(0, SRCDIFF_REVISION_ORIGINAL), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     return 0;

@@ -9,15 +9,14 @@ define output <<- 'OUTPUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
 	OUTPUT
 
-echo -n "" | src2srcml -l "C++"
+xmlcheck "$output"
 
+echo -n "" | src2srcml -l "C++"
 check 3<<< "$output"
 
 echo -n "" | src2srcml --language "C++"
-
 check 3<<< "$output"
 
 echo -n "" | src2srcml --language="C++"
-
 check 3<<< "$output"
 

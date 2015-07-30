@@ -22,6 +22,8 @@ define fsrcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$srcml"
+xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 
 src2srcml -l C++ --position --archive < sub/a.cpp

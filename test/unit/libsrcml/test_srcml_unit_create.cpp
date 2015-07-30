@@ -40,13 +40,13 @@ int main() {
         srcml_unit * unit = srcml_unit_create(archive);
 
         dassert(unit->archive, archive);
-        dassert(unit->language, 0);
-        dassert(unit->filename, 0);
-        dassert(unit->url, 0);
-        dassert(unit->version, 0);
-        dassert(unit->timestamp, 0);
-        dassert(unit->hash, 0);
-        dassert(unit->unit, 0);
+        dassert(unit->language, boost::none);
+        dassert(unit->filename, boost::none);
+        dassert(unit->url, boost::none);
+        dassert(unit->version, boost::none);
+        dassert(unit->timestamp, boost::none);
+        dassert(unit->hash, boost::none);
+        dassert(unit->unit, boost::none);
 
         srcml_unit_free(unit);
         srcml_archive_free(archive);

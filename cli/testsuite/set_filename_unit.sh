@@ -12,6 +12,7 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="foo.cpp"/>
 	STDOUT
 
+xmlcheck "$output"
 createfile sub/a.cpp ""
 
 src2srcml sub/a.cpp -f "foo.cpp"

@@ -49,6 +49,9 @@ define fmarkupif0 <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$fnomarkupif0"
+xmlcheck "$fmarkupif0"
+
 createfile sub/a.cpp "$input"
 createfile sub/b.cpp "$input"
 

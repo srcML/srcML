@@ -38,7 +38,7 @@
  *
  * @returns the language for extension or if 0 if no language.
  */
-const char * srcml_archive_check_extension(srcml_archive * archive, const char* filename) {
+const char * srcml_archive_check_extension(const srcml_archive * archive, const char* filename) {
 
     if(archive == NULL || filename == NULL) return 0;
 
@@ -164,6 +164,8 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
             new_archive->user_macro_list.push_back(archive->user_macro_list.at(i));
 
     } catch(...) {}
+
+    new_archive->revision_number = archive->revision_number;
 
     return new_archive;
 
@@ -453,6 +455,27 @@ int srcml_archive_register_macro(srcml_archive* archive, const char* token, cons
 
     archive->user_macro_list.push_back(token);
     archive->user_macro_list.push_back(type);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_archive_set_srcdiff_revision
+ * @param archive a srcml_archive
+ * @param revision_number
+ *
+ * Set what revision (0 = original, 1 = modified) in a srcDiff archive to operate with.
+ *
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_archive_set_srcdiff_revision(srcml_archive* archive, size_t revision_number) {
+
+    if(archive == NULL
+        || (revision_number != SRCDIFF_REVISION_ORIGINAL && revision_number != SRCDIFF_REVISION_MODIFIED))
+            return SRCML_STATUS_INVALID_ARGUMENT;
+
+    archive->revision_number = revision_number;
 
     return SRCML_STATUS_OK;
 
@@ -777,6 +800,22 @@ const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, si
 
 }
 
+/**
+ * srcml_archive_get_srcdiff_revision
+ * @param archive a srcml_archive
+ *
+ * Gets the srcdiff revision number that the archive is using for processing.
+ *
+ * @returns the srcdiff revision number the archive is using.
+ */
+size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive) {
+
+    if(archive == NULL) return SRCDIFF_REVISION_INVALID;
+
+    return archive->revision_number ? *archive->revision_number : SRCDIFF_REVISION_INVALID;    
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                       Archive write open functions                         *
@@ -943,7 +982,8 @@ int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*wr
     if(archive == NULL || context == NULL || write_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlOutputBufferPtr output_buffer = 0;
-    archive->context = libxml2_write_context{context, write_callback, close_callback};
+    libxml2_write_context libxml2_context = {context, write_callback, close_callback};
+    archive->context = libxml2_context;
     try {
 
         output_buffer = xmlOutputBufferCreateIO(write_callback_wrapper, write_close_callback_wrapper,
@@ -973,7 +1013,7 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
 
     try {
 
-        archive->reader = new srcml_sax2_reader(archive->input);
+        archive->reader = new srcml_sax2_reader(archive->input, archive->revision_number);
 
     } catch(...) {
 
@@ -1127,7 +1167,8 @@ int srcml_archive_read_open_io(srcml_archive* archive, void * context, int (*rea
 
     if(archive == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->context = libxml2_read_context{context, read_callback, close_callback};
+    libxml2_read_context libxml2_context = {context, read_callback, close_callback};
+    archive->context = libxml2_context;
     try {
 
         archive->input = xmlParserInputBufferCreateIO(read_callback_wrapper, read_close_callback_wrapper, boost::any_cast<libxml2_read_context>(&archive->context), archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
@@ -1176,7 +1217,7 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 }
 
 /**
- * srcml_read_unit_header
+ * srcml_archive_read_unit_header
  * @param archive a srcml archive open for reading
  *
  * Read the next unit from the archive.
@@ -1186,7 +1227,7 @@ int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_read_unit_header(srcml_archive* archive) {
+srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
 
     if(archive == NULL) return 0;
 
@@ -1206,7 +1247,28 @@ srcml_unit* srcml_read_unit_header(srcml_archive* archive) {
 }
 
 /**
- * srcml_read_unit_xml
+ * srcml_archive_read_unit_body
+ * @param archive a srcml archive open for reading
+ *
+ * Read the body (the non-header) from the archive.
+ *
+ * @returns Return the read srcml_unit on success.
+ * On failure returns NULL.
+ */
+int srcml_unit_read_body(srcml_unit* unit) {
+
+    if(unit == NULL) return 0;
+
+    if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return 0;
+
+    if (!unit->unit)
+        unit->archive->reader->read_srcml(unit->unit);
+
+    return !unit->unit;
+}
+
+/**
+ * srcml_archive_read_unit_xml
  * @param archive a srcml archive open for reading
  *
  * Read the next unit from the archive.
@@ -1215,7 +1277,7 @@ srcml_unit* srcml_read_unit_header(srcml_archive* archive) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_read_unit_xml(srcml_archive* archive) {
+srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
 
     if(archive == NULL) return 0;
 
@@ -1237,7 +1299,7 @@ srcml_unit* srcml_read_unit_xml(srcml_archive* archive) {
 
 
 /**
- * srcml_read_unit
+ * srcml_archive_read_unit
  * @param archive a srcml archive open for reading
  *
  * Read the next unit from the archive.
@@ -1246,7 +1308,7 @@ srcml_unit* srcml_read_unit_xml(srcml_archive* archive) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_read_unit(srcml_archive* archive) {
+srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
 
     if(archive == NULL) return 0;
 
@@ -1264,41 +1326,6 @@ srcml_unit* srcml_read_unit(srcml_archive* archive) {
     }
 
     return unit;
-}
-
-/**
- * srcml_read_unit_revision
- * @param archive a srcml archive open for reading
- *
- * Read the next unit as the given srcDiff revision (0=original, 1=modified) from the archive.
- * unit contains read attributes and complete srcml.
- *
- * @returns Return the read srcml_unit on success.
- * On failure returns NULL.
- */
-srcml_unit* srcml_read_unit_revision(struct srcml_archive* archive, size_t revision_number) {
-
-    if(archive == NULL) return 0;
-
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return 0;
-
-    archive->reader->revision_number(revision_number);
-
-    srcml_unit * unit = srcml_unit_create(archive);
-    int not_done = 0;
-    if(!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
-    archive->reader->read_srcml(unit->unit);
-
-    if(!not_done || !unit->unit) {
-        srcml_unit_free(unit);
-        unit = 0;
-    }
-
-    archive->reader->revision_number(boost::optional<size_t>());
-
-    return unit;
-
 }
 
 /******************************************************************************

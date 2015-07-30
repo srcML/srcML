@@ -19,7 +19,7 @@
 
 add_subdirectory(parser)
 add_subdirectory(libsrcml)
-add_subdirectory(srcml)
+add_subdirectory(client)
 
 file(GLOB SRCSAX_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} srcSAX/*.hpp)
 file(GLOB SRCSAX_SOURCE  RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} srcSAX/*.cpp)
