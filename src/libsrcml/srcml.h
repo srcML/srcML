@@ -125,8 +125,6 @@ extern "C" {
 #define SRCML_OPTION_NESTIF            1<<9
 /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<10
-/** Not sure what this used for */
-#define SRCML_OPTION_XPATH_TOTAL       1<<13
 /** Expression mode */
 #define SRCML_OPTION_EXPRESSION        1<<14
 /** Extra processing of @code#line@endcode for position information */

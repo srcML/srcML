@@ -42,6 +42,8 @@
 #define SRCML_OPTION_TERNARY           1<<18
 /** Marks up one-line implicit blocks as psuedoblocks (default: on) */
 #define SRCML_OPTION_PSEUDO_BLOCK      1<<19
+/** Not sure what this used for */
+#define SRCML_OPTION_XPATH_TOTAL       1<<13
 
 /** All default enabled options */
 #define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT  | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY)
