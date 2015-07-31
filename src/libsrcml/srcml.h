@@ -122,8 +122,6 @@ extern "C" {
 #define SRCML_OPTION_APPLY_ROOT        1<<8
 /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<10
-/** Expression mode */
-#define SRCML_OPTION_EXPRESSION        1<<14
 
 
 /** Debug time attribute */
