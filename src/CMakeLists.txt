@@ -38,7 +38,7 @@ macro(buildLib LIB_NAME LIB_TYPE)
 
     add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:srcsax> build_hack.cpp)
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
 elseif(APPLE)
     set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list" MACOSX_RPATH OFF)
@@ -59,7 +59,7 @@ set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_B
 
 if(APPLE)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")
-elseif(NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") AND NOT WIN32)
+elseif(NOT ("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC") AND NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.so\")")
 endif()
 

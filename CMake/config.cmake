@@ -66,7 +66,7 @@ endif()
 
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     add_definitions(-DWITH_LIBXSLT)
     # Adding suspected windows include directory for ANTRL
     include_directories("C:/antlr/277/include/antlr")
@@ -121,10 +121,10 @@ find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr
 if(DYNAMIC_LOAD_ENABLED)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl crypto pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
-elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC" AND NOT WIN32)
+elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC" AND NOT WIN32)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} crypto pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
-elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} crypto pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
 else()
@@ -139,7 +139,7 @@ endif()
 
 if(NOT WIN32)
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} crypto pthread CACHE INTERNAL "Libraries needed to build srcml")
-elseif(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 crypto CACHE INTERNAL "Libraries needed to build srcml")
 else()
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 ${LIBSRCML_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
@@ -190,17 +190,17 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG --coverage -fprofile-arcs")
 
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xClang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
     set(CMAKE_CXX_FLAGS "-fPIC --std=c++11 ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
     
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xIntel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
     
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     # message(STATUS "MSVC Compiler not completely configured yet")
     set(MSVC_WARNINGS "/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${MSVC_WARNINGS} /DSTATIC_GLOBALS  /Od /ZI /MDd")

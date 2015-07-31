@@ -30,7 +30,7 @@
 macro(srcMLExec EXEC_NAME EXEC_FILE)
     add_executable(${EXEC_NAME} ${EXEC_FILE})
     target_link_libraries(${EXEC_NAME} ${ARGN})
-    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
         set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     elseif(APPLE)
         set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/srcml_export_list")
