@@ -135,9 +135,6 @@ extern "C" {
 #define SRCML_OPTION_CPPIF_CHECK       1<<16
 /** Debug time attribute */
 #define SRCML_OPTION_DEBUG_TIMER       1<<17
-/** Turn on optional ternary operator markup */
-#define SRCML_OPTION_TERNARY           1<<18
-
 /** Turn on old optional markup behaviour */
 #define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
 /** Parser output special tokens for debugging the parser */

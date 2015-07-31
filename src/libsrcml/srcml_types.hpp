@@ -38,6 +38,8 @@
 #define SRCML_OPTION_OPERATOR          1<<23
 /** output is interactive (good for editing applications) */
 #define SRCML_OPTION_INTERACTIVE       1<<12
+/** Turn on optional ternary operator markup */
+#define SRCML_OPTION_TERNARY           1<<18
 /** Marks up one-line implicit blocks as psuedoblocks (default: on) */
 #define SRCML_OPTION_PSEUDO_BLOCK      1<<19
 
