@@ -56,6 +56,8 @@
 #define SRCML_OPTION_OPENMP            1<<25
 /** Expression mode */
 #define SRCML_OPTION_EXPRESSION        1<<14
+/** Apply transformations to the entire srcML file (default: each unit */
+#define SRCML_OPTION_APPLY_ROOT        1<<8
 
 
 /** All default enabled options */

@@ -118,8 +118,6 @@ extern "C" {
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<6
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
 #define SRCML_OPTION_CPP_MARKUP_IF0    1<<7
-/** Apply transformations to the entire srcML file (default: each unit */
-#define SRCML_OPTION_APPLY_ROOT        1<<8
 /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<10
 
