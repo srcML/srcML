@@ -124,8 +124,7 @@ extern "C" {
 #define SRCML_OPTION_HASH              1<<10
 /** Expression mode */
 #define SRCML_OPTION_EXPRESSION        1<<14
-/** Extra processing of @code#line@endcode for position information */
-#define SRCML_OPTION_LINE              1<<15
+
 
 /** Debug time attribute */
 #define SRCML_OPTION_DEBUG_TIMER       1<<17

@@ -50,6 +50,8 @@
 #define SRCML_OPTION_NESTIF            1<<9
 /** Additional cpp:if/cpp:endif checking */
 #define SRCML_OPTION_CPPIF_CHECK       1<<16
+/** Extra processing of @code#line@endcode for position information */
+#define SRCML_OPTION_LINE              1<<15
 
 /** All default enabled options */
 #define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY)
