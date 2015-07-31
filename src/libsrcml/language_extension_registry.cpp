@@ -22,11 +22,6 @@
 
 #include <language_extension_registry.hpp>
 #include <algorithm>
-#include <boost/regex.hpp>
-
-/**  @todo since now in libsrcml change from camel case to underscore. */
-/** regular expression to match extension even if in an archive */
-static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 
 /**
 * language_extension_registry
@@ -53,25 +48,21 @@ language_extension_registry::~language_extension_registry() {}
  */
 bool get_language_extension(const char * const inpath, std::string & extension)
 {
+    std::string path2(inpath);
 
-    // reversed copy of the path
-    std::string path(inpath);
-    std::reverse(path.begin(), path.end());
+    // remove any .gz extension
+    std::string cpath(path2.substr(path2.size() - 3));
+    if (cpath == ".gz")
+        path2 = path2.substr(0, path2.size() - 3);
 
-    std::string::const_iterator start = path.begin();
-    std::string::const_iterator end = path.end();
-    boost::match_results<std::string::const_iterator> what;
-    boost::match_flag_type flags = boost::match_default;
-
-    if(boost::regex_search(start, end, what, extRegEx, flags)) {
-
-        std::string temp = what[2].str();
-        extension.assign(temp.rbegin(), temp.rend());
+    // now get it if you can
+    size_t pos = path2.find_last_of(".");
+    if (pos != std::string::npos) {
+        extension = path2.substr(pos);
         return true;
-
-    } else
+    } else {
         return false;
-
+    }
 }
 
 /** 
