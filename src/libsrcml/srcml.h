@@ -137,8 +137,7 @@ extern "C" {
 #define SRCML_OPTION_DEBUG_TIMER       1<<17
 /** Turn on optional ternary operator markup */
 #define SRCML_OPTION_TERNARY           1<<18
-/** Marks up one-line implicit blocks as psuedoblocks (default: on) */
-#define SRCML_OPTION_PSEUDO_BLOCK      1<<19
+
 /** Turn on old optional markup behaviour */
 #define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
 /** Parser output special tokens for debugging the parser */

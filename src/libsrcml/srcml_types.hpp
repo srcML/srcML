@@ -36,9 +36,10 @@
 #define SRCML_OPTION_MODIFIER          1<<22
 /** Markups operator in special namespace */
 #define SRCML_OPTION_OPERATOR          1<<23
-
 /** output is interactive (good for editing applications) */
 #define SRCML_OPTION_INTERACTIVE       1<<12
+/** Marks up one-line implicit blocks as psuedoblocks (default: on) */
+#define SRCML_OPTION_PSEUDO_BLOCK      1<<19
 
 #include <libxml/xmlwriter.h>
 
