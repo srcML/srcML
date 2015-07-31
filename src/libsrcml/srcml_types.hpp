@@ -26,6 +26,8 @@
 
 /** Private options */
 
+/** Include any XML namespace declarations */
+#define SRCML_OPTION_NAMESPACE_DECL    1<<5
 /** Markup preprocessor elements (default for C, C++, C#) */
 #define SRCML_OPTION_CPP_NOMACRO       1<<2
 /** Wrap function/classes/etc with templates (default: on) */
@@ -48,9 +50,9 @@
 #define SRCML_OPTION_NESTIF            1<<9
 /** Additional cpp:if/cpp:endif checking */
 #define SRCML_OPTION_CPPIF_CHECK       1<<16
- 
+
 /** All default enabled options */
-#define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT  | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY)
+#define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY)
 
 
 #include <libxml/xmlwriter.h>
