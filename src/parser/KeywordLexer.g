@@ -22,7 +22,6 @@
 
 header "pre_include_hpp" {
     #include <cstring>
-    #include <boost/regex.hpp>
     #pragma GCC diagnostic ignored "-Wunused-parameter"
 }
 
