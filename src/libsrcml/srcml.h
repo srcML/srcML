@@ -127,8 +127,7 @@ extern "C" {
 #define SRCML_OPTION_EXPRESSION        1<<14
 /** Extra processing of @code#line@endcode for position information */
 #define SRCML_OPTION_LINE              1<<15
-/** Additional cpp:if/cpp:endif checking */
-#define SRCML_OPTION_CPPIF_CHECK       1<<16
+
 /** Debug time attribute */
 #define SRCML_OPTION_DEBUG_TIMER       1<<17
 /** Turn on old optional markup behaviour */

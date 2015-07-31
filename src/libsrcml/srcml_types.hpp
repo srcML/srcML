@@ -46,7 +46,9 @@
 #define SRCML_OPTION_XPATH_TOTAL       1<<13
 /** Nest if in else if intead of elseif tag */
 #define SRCML_OPTION_NESTIF            1<<9
-
+/** Additional cpp:if/cpp:endif checking */
+#define SRCML_OPTION_CPPIF_CHECK       1<<16
+ 
 /** All default enabled options */
 #define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT  | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY)
 
