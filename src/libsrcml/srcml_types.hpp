@@ -43,6 +43,10 @@
 /** Marks up one-line implicit blocks as psuedoblocks (default: on) */
 #define SRCML_OPTION_PSEUDO_BLOCK      1<<19
 
+/** All default enabled options */
+#define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT)
+
+
 #include <libxml/xmlwriter.h>
 
 #include <Language.hpp>

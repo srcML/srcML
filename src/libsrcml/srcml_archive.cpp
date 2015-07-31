@@ -75,7 +75,7 @@ srcml_archive* srcml_archive_create()
     xmlInitParser();
 
     archive->type = SRCML_ARCHIVE_INVALID;
-    archive->options = SRCML_OPTION_DEFAULT;
+    archive->options = SRCML_OPTION_DEFAULT_INTERNAL;
     archive->revision = srcml_version_string();
     archive->tabstop = 8;
     archive->translator = 0;
