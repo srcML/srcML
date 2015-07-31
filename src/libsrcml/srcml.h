@@ -109,8 +109,6 @@ extern "C" {
 #define SRCML_OPTION_ARCHIVE           1<<0
 /** Include line/column position attributes */
 #define SRCML_OPTION_POSITION          1<<1
-/** Markup preprocessor elements (default for C, C++, C#) */
-#define SRCML_OPTION_CPP_NOMACRO       1<<2
 /** Markup preprocessor elements (default for C, C++) */
 #define SRCML_OPTION_CPP               1<<2 | 1<<3 
 /** Issue an XML declaration */

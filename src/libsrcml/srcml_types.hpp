@@ -26,6 +26,8 @@
 
 /** Private options */
 
+/** Markup preprocessor elements (default for C, C++, C#) */
+#define SRCML_OPTION_CPP_NOMACRO       1<<2
 /** Wrap function/classes/etc with templates (default: on) */
 #define SRCML_OPTION_WRAP_TEMPLATE     1<<11
 /** Markups literal in special namespace */
