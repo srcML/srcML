@@ -121,8 +121,6 @@ extern "C" {
 #define SRCML_OPTION_CPP_MARKUP_IF0    1<<7
 /** Apply transformations to the entire srcML file (default: each unit */
 #define SRCML_OPTION_APPLY_ROOT        1<<8
-/** Nest if in else if intead of elseif tag */
-#define SRCML_OPTION_NESTIF            1<<9
 /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<10
 /** Expression mode */
