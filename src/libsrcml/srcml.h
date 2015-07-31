@@ -132,8 +132,6 @@ extern "C" {
 #define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
 /** Parser output special tokens for debugging the parser */
 #define SRCML_OPTION_DEBUG             1<<24
-/** Markups OpenMP in special namespace */
-#define SRCML_OPTION_OPENMP            1<<25
 /** Encode the original source encoding as an attribute */
 #define SRCML_OPTION_STORE_ENCODING    1<<26
 /** All default enabled options */

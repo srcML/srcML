@@ -52,9 +52,11 @@
 #define SRCML_OPTION_CPPIF_CHECK       1<<16
 /** Extra processing of @code#line@endcode for position information */
 #define SRCML_OPTION_LINE              1<<15
+/** Markups OpenMP in special namespace */
+#define SRCML_OPTION_OPENMP            1<<25
 
 /** All default enabled options */
-#define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY)
+#define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_OPENMP)
 
 
 #include <libxml/xmlwriter.h>
