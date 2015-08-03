@@ -90,7 +90,7 @@ int archive_curl_open(archive*, void* client_data) {
         return ARCHIVE_OK;
     }
 
-    ssize_t archive_curl_read(archive*, void* client_data, const void** buff) {
+__LA_SSIZE_T archive_curl_read(archive*, void* client_data, const void** buff) {
 
         curl* curldata = (curl*) client_data;
 

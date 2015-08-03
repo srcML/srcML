@@ -43,7 +43,7 @@
 size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data);
 
 int     archive_curl_open(archive *, void *client_data);
-ssize_t archive_curl_read(archive *, void *client_data, const void **buff);
+__LA_SSIZE_T archive_curl_read(archive *, void *client_data, const void **buff);
 int     archive_curl_close(archive *, void *client_data);
 
 bool curl_supported(const std::string& input_protocol);
