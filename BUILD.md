@@ -236,7 +236,7 @@ Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Ex
 
 * Locate the CMake build output directory and open the solution `srcML.sln`. When the solution loads, change the Solution Configuration from `Debug` to `Release`. A debug version of srcML under windows is not supported.
     
-* Build solution. Once built, locate the build folder. Within that folder there is now a folder named `bin/Release` containing the srcML executable and libraries. Copy the dlls from <LINK> to `bin/Release` for dynamic linking.
+* Build solution. Once built, locate the build folder. Within that folder there is now a folder named `bin/Release` containing the srcML executable and libraries. Copy the dlls from **LINK PENDING** to `bin/Release` for dynamic linking.
 
 
 ##### Notes
