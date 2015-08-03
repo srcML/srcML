@@ -401,7 +401,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         query_transform.add_options()
-            ("apply-root", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_APPLY_ROOT>), "apply an xslt program or xpath query to the root element")
             ("relaxng", prog_opts::value< std::vector<std::string> >(), "output individual units that match RELAXNG file or URI")
             ("xpath", prog_opts::value< std::vector<std::string> >(), "apply XPATH expression to each individual unit")
             ("xslt", prog_opts::value< std::vector<std::string> >(), "apply XSLT file or URI transformation to each individual unit")
