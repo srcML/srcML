@@ -1185,7 +1185,7 @@ LIBSRCML_DECL int srcml_append_transform_param           (struct srcml_archive*,
 LIBSRCML_DECL int srcml_append_transform_stringparam     (struct srcml_archive*, const char* param_name, const char* param_value);
 
 /**
- * @brief Apply all appended transformations/queries in the order that they were added, consecutaviely
+ * @brief Apply all appended transformations/queries in the order that they were added, consecutively
  * Intermediate results are stored in a temporary file and transformations are cleared.
  * @param iarchive An input srcml_archive
  * @param oarchive An output srcml archive with the applied transformations/queries
