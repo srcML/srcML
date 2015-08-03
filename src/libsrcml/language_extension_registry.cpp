@@ -48,17 +48,16 @@ language_extension_registry::~language_extension_registry() {}
  */
 bool get_language_extension(const char * const inpath, std::string & extension)
 {
-    std::string path2(inpath);
+    std::string path(inpath);
 
     // remove any .gz extension
-    std::string cpath(path2.substr(path2.size() - 3));
-    if (cpath == ".gz")
-        path2 = path2.substr(0, path2.size() - 3);
+    if (path.substr(path.size() - 3) == ".gz")
+        path.resize(path.size() - 3);
 
-    // now get it if you can
-    size_t pos = path2.find_last_of(".");
+    // get the proper extension, not including the '.'
+    size_t pos = path.find_last_of(".");
     if (pos != std::string::npos) {
-        extension = path2.substr(pos);
+        extension = path.substr(pos + 1);
         return true;
     } else {
         return false;
