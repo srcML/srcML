@@ -134,7 +134,7 @@ extern "C" {
 /**@}*/
 
 
-/**@{ @name Source EOL Options */
+/**@{ @name Source Output EOL Options */
 /** Source-code end of line determined automatically */
 #define SOURCE_OUTPUT_EOL_AUTO      0
 /** Source-code end of line determined according to operating system */
