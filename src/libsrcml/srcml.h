@@ -1185,7 +1185,7 @@ LIBSRCML_DECL int srcml_append_transform_param           (struct srcml_archive*,
 LIBSRCML_DECL int srcml_append_transform_stringparam     (struct srcml_archive*, const char* param_name, const char* param_value);
 
 /**
- * @brief Apply all appended transformations/queries in the order that they were added, consecutively
+ * @brief Apply all appended transformations/queries in the order that they were added
  * Intermediate results are stored in a temporary file and transformations are cleared.
  * @param iarchive An input srcml_archive
  * @param oarchive An output srcml archive with the applied transformations/queries
@@ -1193,6 +1193,30 @@ LIBSRCML_DECL int srcml_append_transform_stringparam     (struct srcml_archive*,
  * @return Status error code on failure
  */
 LIBSRCML_DECL int srcml_apply_transforms                 (struct srcml_archive* iarchive, struct srcml_archive* oarchive);
+
+/**
+ * @brief callback function for apply transform for metadata on the input and output xml
+ * Called after each transform is applied.
+ * @param filename The filename of the unit currently being transformed
+ * @param language The language of the unit currently being transformed
+ * @param oldLOC The LOC (Lines of Code) of the original unit
+ * @param newLOC The LOC (Lines of Code) of the unit after transformation. This is automatically put on the output unit.
+ * @param oldHASH The HASH of the source of the original unit
+ * @param newHASH The HASH of the source of the unit after transformation. This is automatically put on the output unit.
+ * @return Whether to continue transformations
+ */
+typedef int (*apply_transforms_callback)(const char* filename, const char* language, const char* oldLOC, const char* newLOC, const char* oldHASH, const char* newHASH);
+
+/**
+ * @brief Apply all appended transformations/queries in the order that they were added with a verbose callback
+ * Intermediate results are stored in a temporary file and transformations are cleared.
+ * @param iarchive An input srcml_archive
+ * @param oarchive An output srcml archive with the applied transformations/queries
+ * @param verbose  A callback after each result with the filename, language, loc, and hash values
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
+ */
+LIBSRCML_DECL int srcml_apply_transforms_verbose         (struct srcml_archive* iarchive, struct srcml_archive* oarchive, apply_transforms_callback*);
 /**@}*/
 /**@}*/
 

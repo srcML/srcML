@@ -472,6 +472,13 @@ std::vector<transform> global_transformations;
 
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
+
+    return srcml_apply_transforms_verbose(iarchive, oarchive, 0);
+
+}
+
+int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarchive, apply_transforms_callback* ) {
+
     if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
     if((iarchive->type != SRCML_ARCHIVE_READ && iarchive->type != SRCML_ARCHIVE_RW)
         || (oarchive->type != SRCML_ARCHIVE_WRITE && oarchive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_INVALID_IO_OPERATION;
@@ -535,3 +542,4 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     return SRCML_STATUS_OK;
 
 }
+
