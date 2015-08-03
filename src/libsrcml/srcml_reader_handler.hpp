@@ -99,6 +99,12 @@ private :
     /** srcDiff namespace */
     bool issrcdiff;
 
+    /** number of newlines in unit */
+    int loc;
+
+    /** last character read in */
+    char lastchar;
+
     /**
      * meta_tag
      *
@@ -265,7 +271,7 @@ public :
      */
     srcml_reader_handler(const boost::optional<size_t> & revision_number) : unit(0), output_buffer(0), is_done(false), read_root(false),
          collect_unit_attributes(false), collect_srcml(false), collect_src(false),
-         terminate(false), is_empty(false), wait_root(true), skip(false), issrcdiff(false), revision_number(revision_number) {
+         terminate(false), is_empty(false), wait_root(true), skip(false), issrcdiff(false), loc(0), lastchar(0), revision_number(revision_number) {
 
         archive = srcml_archive_create();
 
@@ -659,6 +665,10 @@ public :
 
         }
 
+        // number of newlines reset
+        loc = 0;
+        lastchar = 0;
+
         if(terminate) stop_parser();
 
 #ifdef SRCSAX_DEBUG
@@ -808,6 +818,10 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
+        // if the last character read in did not have a newline, add one to the loc
+        if (lastchar && lastchar != '\n')
+            ++loc;
+
         if (issrcdiff)
             srcdiff_stack.pop();
 
@@ -923,6 +937,13 @@ public :
 
         if(is_empty && collect_srcml) *unit->unit += ">";
         is_empty = false;
+
+        // update LOC
+        loc += std::count(ch, ch + len, '\n');
+
+        // record the last character so we can determine final line
+        if (len)
+            lastchar = ch[len - 1];
 
         if(collect_src) {
 
