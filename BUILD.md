@@ -2,7 +2,7 @@
 
 srcML is built using cmake, www.cmake.org, (version 2.8.12 or above) and currently supports builds for OS X, Fedora, Ubuntu, Linux Mint, and Windows Visual Studio.
 
-In source (builds within the source directory) are recommended, however and out of source builds (builds outside the source directory) are supported.
+Out of source builds (builds outside the source directory) are recommended, however in source builds (builds within the source directory) are supported.
 
 ---
 
@@ -36,6 +36,7 @@ For srcML documentation generation:
 
 * man2html
 * ronn
+* doxygen
 
 Additional packages that may not needed, but are recommended (for timing etc.):
 
@@ -104,7 +105,7 @@ for mingw cross compilation for Windows
 
 First fnmatch.h needs copied over into mingw includes (something like):
 
-    `cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/`
+    cp /usr/include/fnmatch.h /usr/i686-w64-mingw32/sys-root/mingw/include/
 
 To actually run the compiled srcML, the dlls provided by mingw will
 need to be copied along with the source to the intended Windows
@@ -125,7 +126,7 @@ machine.
 * libcurl-devel
 * libopenssl-devel
 
-srcML documentation generation*
+srcML documentation generation:
 
 * ronn
 
@@ -207,8 +208,7 @@ Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Ex
 * Dependencies (win-dep.zip): **LINK PENDING**
 
 ##### Instructions
-* Install Visual Studio 12.0 or newer
-* Install CMake
+* Install Visual Studio 12.0 or newer, CMake, and Python
 * Locate the source code for srcML
 * Extract the win-dep.zip dependencies folder into srcML folder.
     * The extracted folder must be named dep (it should already be named dep).
@@ -232,16 +232,8 @@ Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Ex
                 doc/
                 ...etc...
     ```
-* Run cmake on the project using the cmake GUI program.
-    * When opening CMake select Visual Studio 11 2012 as the target system. At this time, 64-bit compilation under windows is not supported.
-    * It's best practice to have CMake output into a separate directory, as this can cause problems if you decide to rebuild later on.
+* Run CMake on the project using the CMake GUI program. Select the appropriate Visual Studio as the target system. At this tyme, 64-it compilation under Windows is not supported. Note that it's best practice to have CMake output into a separate directory, as this can cause problems if you decide to rebuild later on. Configure and generate CMake.
 
-* Configure and generate cmake.
-    * cmake may complain about not being able to locate xsltproc, but that's only used for executing the test suite so it can be ignored.
-
-* Once this is done locate the CMake build output directory and open the solution `srcML.sln`.
-* Once the solution is loaded change the Solution Configuration from `Debug` to `Release`.
-    * Currently, a debug version of srcML cannot be built under windows due to an issue with a dependency.
+* Locate the CMake build output directory and open the solution `srcML.sln`. When the solution loads, change the Solution Configuration from `Debug` to `Release`. A debug version of srcML under windows is not supported.
     
-* Build solution.
-* Once built locate the build folder, within the build folder there is a now a folder named `bin/` containing the srcML executable and libraries.
+* Build solution. Once built, locate the build folder. Within that folder there is now a folder named `bin/Release` containing the srcML executable and libraries. Copy the dlls from <LINK> to `bin/Release` for dynamic linking.
