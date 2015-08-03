@@ -134,17 +134,17 @@ extern "C" {
 /**@}*/
 
 
-/**@{ @name Unparse Options */
-/** Source-code end of line done automatically */
-#define SRCML_UNPARSE_OPTION_AUTO   0
-/** Source-code end of line done accoring to operating system */
-#define SRCML_UNPARSE_OPTION_NATIVE 0
+/**@{ @name Source EOL Options */
+/** Source-code end of line determined automatically */
+#define SOURCE_OUTPUT_EOL_AUTO      0
+/** Source-code end of line determined according to operating system */
+#define SOURCE_OUTPUT_EOL_NATIVE    0
 /** Source-code end of line is new line only */
-#define SRCML_UNPARSE_OPTION_LF     1
+#define SOURCE_OUTPUT_EOL_LF        1
 /** Source-code end of line is carriage return only */
-#define SRCML_UNPARSE_OPTION_CR     2
+#define SOURCE_OUTPUT_EOL_CR        2
 /** Source-code end of line is carriage return and new line */
-#define SRCML_UNPARSE_OPTION_CRLF   3
+#define SOURCE_OUTPUT_EOL_CRLF      3
 /**@}*/ 
 /**@}*/
 /**@}*/
@@ -1195,7 +1195,7 @@ LIBSRCML_DECL int srcml_append_transform_stringparam     (struct srcml_archive*,
 LIBSRCML_DECL int srcml_apply_transforms                 (struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 
 /**
- * @brief callback function for apply transform for metadata on the input and output xml
+ * @brief Calledallback function for apply transform for metadata on the input and output xml
  * Called after each transform is applied.
  * @param filename The filename of the unit currently being transformed
  * @param language The language of the unit currently being transformed

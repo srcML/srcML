@@ -165,7 +165,7 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
  */
 int srcml_unit_unparse_set_eol(srcml_unit* unit, size_t eol) {
 
-    if(unit == NULL || eol > SRCML_UNPARSE_OPTION_CRLF) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL || eol > SOURCE_OUTPUT_EOL_CRLF) return SRCML_STATUS_INVALID_ARGUMENT;
 
     unit->eol = eol;
 
@@ -1175,7 +1175,7 @@ srcml_unit * srcml_unit_create(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->revision = srcml_version_string();
     unit->archive = archive;
-    unit->eol = SRCML_UNPARSE_OPTION_AUTO;
+    unit->eol = SOURCE_OUTPUT_EOL_AUTO;
     unit->read_header = false;
     unit->unit_translator = 0;
 
