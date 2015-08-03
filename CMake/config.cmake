@@ -69,9 +69,10 @@ endif()
 if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     add_definitions(-DWITH_LIBXSLT)
     # Adding suspected windows include directory for ANTRL
-    include_directories("C:/antlr/277/include/antlr")
+    # include_directories("C:/antlr/277/include/antlr")
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/dep)
     include_directories(${WINDOWS_DEP_PATH}/include)
+    include_directories(${WINDOWS_DEP_PATH}/include/antlr)
     link_directories(${WINDOWS_DEP_PATH}/lib)
     if(ENABLE_SVN_INTEGRATION)
         message(FATAL_ERROR "SVN integration not tested on windows.")
@@ -82,10 +83,11 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(LibArchive_LIBRARIES archive.lib)
     set(LIBXML2_LIBRARIES libxml2.lib iconv.lib)
     set(CURL_LIBRARIES libcurl.lib)
-    include_directories(C:/antlr/277/include)
-    set(BOOST_DIR $ENV{BOOST_ROOT})
-    include_directories(${BOOST_DIR})
-    link_directories(${BOOST_DIR}/stage/lib)
+    # include_directories(C:/antlr/277/include)
+    # include_directories()
+    set(BOOST_DIR ${WINDOWS_DEP_PATH})
+    include_directories(${BOOST_DIR}/include)
+    link_directories(${BOOST_DIR}/lib/stage/lib)
 else()
 
     set(WINDOWS_DEP_PATH "")
@@ -147,7 +149,7 @@ endif()
 
 
 # Finding antlr library.
-find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
+find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/bin)
 
 # Finding SED
 find_program(SED_EXE NAMES gsed sed PATHS /opt/local/bin /usr/local /bin ${WINDOWS_DEP_PATH}/bin)
