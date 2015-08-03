@@ -129,8 +129,6 @@ extern "C" {
 #define SRCML_OPTION_DEBUG             1<<24
 /** Encode the original source encoding as an attribute */
 #define SRCML_OPTION_STORE_ENCODING    1<<26
-/** All default enabled options */
-#define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH)
 /**@}*/
 
 
