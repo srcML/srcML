@@ -107,12 +107,12 @@ extern "C" {
 /**@{ @name Options */
 /** Create an archive */
 #define SRCML_OPTION_ARCHIVE           1<<0
+/** Issue an XML declaration */
+#define SRCML_OPTION_XML_DECL          1<<4
 /** Include line/column position attributes */
 #define SRCML_OPTION_POSITION          1<<1
 /** Markup preprocessor elements (default for C, C++) */
 #define SRCML_OPTION_CPP               1<<2 | 1<<3 
-/** Issue an XML declaration */
-#define SRCML_OPTION_XML_DECL          1<<4
 
 /** Leave as text preprocessor else parts (default: markup) */
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<6
@@ -120,7 +120,6 @@ extern "C" {
 #define SRCML_OPTION_CPP_MARKUP_IF0    1<<7
 /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<10
-
 
 /** Debug time attribute */
 #define SRCML_OPTION_DEBUG_TIMER       1<<17
@@ -131,7 +130,7 @@ extern "C" {
 /** Encode the original source encoding as an attribute */
 #define SRCML_OPTION_STORE_ENCODING    1<<26
 /** All default enabled options */
-#define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY)
+#define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH)
 /**@}*/
 
 
