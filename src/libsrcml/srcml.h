@@ -380,8 +380,8 @@ LIBSRCML_DECL int srcml_register_file_extension   (const char* extension, const 
  * @brief Add a new namespace or change the prefix of an existing namespace.
  * @param prefix An XML namespace prefix
  * @param ns An XML namespace
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_*  Status error code on failure
  */
 LIBSRCML_DECL int srcml_register_namespace        (const char* prefix, const char* ns);
 
@@ -1256,7 +1256,7 @@ LIBSRCML_DECL int srcml_unit_set_src_encoding (struct srcml_unit*, const char* l
  * @return SRCML_STATUS_OK on success
  * @return SRCML_STATUS_INVALID_ARGUMENT on failure
  */
-LIBSRCML_DECL int srcml_unit_set_language     (struct srcml_unit*, const char* language);
+LIBSRCML_DECL int srcml_unit_set_language     (struct srcml_unit* unit, const char* language);
 
 /**
  * @brief Set the filename attribute for the srcml unit
