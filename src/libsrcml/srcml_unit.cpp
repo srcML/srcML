@@ -387,6 +387,9 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
     unit->encoding = input->getEncoding();
 
+    if (!srcml_archive_is_full_archive(unit->archive))
+        unit->url = unit->archive->url;
+
     try {
 
         srcml_translator translator(
