@@ -65,6 +65,9 @@
 /** Turn on old optional markup behaviour */
 #define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
 
+ /** Create an archive */
+#define SRCML_OPTION_ARCHIVE           1<<0
+
 /** All default enabled options */
 #define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH)
  

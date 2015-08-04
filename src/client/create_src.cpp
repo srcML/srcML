@@ -140,7 +140,7 @@ void create_src(const srcml_request_t& srcml_request,
             //   not a directory (if local file)
             // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
             if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
-                !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_OPTION_ARCHIVE)) &&
+                !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_ARCHIVE)) &&
                 !input_sources[0].isdirectory) {
 
                 srcml_archive_disable_full_archive(oarch);
@@ -170,7 +170,7 @@ void create_src(const srcml_request_t& srcml_request,
             if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
                     srcml_archive_disable_option(oarch, SRCML_OPTION_XML_DECL);
 
-            srcml_archive_disable_option(oarch, SRCML_OPTION_ARCHIVE);
+            srcml_archive_disable_full_archive(oarch);
             *****/
 
             unsigned short compression = 0;

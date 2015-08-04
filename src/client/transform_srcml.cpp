@@ -200,7 +200,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
         // copy input xml namespaces
         // TODO: This assumes namespaces on first input. Need to open all, figure out
         // output namespaces, then process
-        //if (srcml_archive_get_options(in_arch) & SRCML_OPTION_ARCHIVE) {
+        //if (srcml_archive_is_full_archive(in_arch)) {
             for (int i = 0; i < (int)srcml_archive_get_namespace_size(in_arch); ++i) {
 
                 // do not register the srcML namespace, unless the prefix is different

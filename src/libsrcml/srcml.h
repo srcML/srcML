@@ -103,8 +103,6 @@ extern "C" {
 
 
 /**@{ @name Options */
-/** Create an archive */
-#define SRCML_OPTION_ARCHIVE           1<<0
 /** Issue an XML declaration */
 #define SRCML_OPTION_XML_DECL          1<<4
 /** Include line/column position attributes */
