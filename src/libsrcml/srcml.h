@@ -230,6 +230,7 @@ LIBSRCML_DECL const char* srcml_error_string();
 LIBSRCML_DECL void srcml_memory_free(char * buffer);
 /**@}*/
 /**@}*/
+/**@}*/
 
 
 
