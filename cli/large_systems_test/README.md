@@ -59,7 +59,7 @@ $ ctest -R linux
 
 ### Max threads
 
-The `max-threads` option can optionally be specified via
+The `jobs` option can optionally be specified via
 `cli/large_systems_test/CMakeLists.txt`. The `MAX_THREADS` variable matches
 the command that srcML receives. By default, it is set to 8. It can be commented
 out, or the number of threads changed, then re-run with CTest.
