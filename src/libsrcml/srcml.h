@@ -1440,7 +1440,6 @@ LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const cha
 
 /**
  * @brief Convert the srcML in a unit into source code and place it into a buffer
- * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed.
  * The buffer is allocated in the function and needs to be freed after using.
  * @param unit A srcml_unit
  * @param src_buffer An output buffer address
@@ -1452,28 +1451,25 @@ LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const cha
 LIBSRCML_DECL int srcml_unit_unparse_memory  (struct srcml_unit* unit, char** src_buffer, size_t * src_size);
 
 /**
- * @brief Convert the srcML in a unit into source code and place it into a FILE
- * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed.
+ * @brief Convert the srcML in a unit into source code and output to the FILE*
  * @param unit A srcml_unit
- * @param srcml_file FILE opened for writing
+ * @param file FILE* opened for writing to output the source file
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_unit_unparse_FILE    (struct srcml_unit* unit, FILE* srcml_file);
+LIBSRCML_DECL int srcml_unit_unparse_FILE    (struct srcml_unit* unit, FILE* file);
 
 /**
- * @brief Convert the srcML in a unit into source code and place it into a file descriptor
- * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed.
+ * @brief Convert the srcML in a unit into source code and output to the file descriptor
  * @param unit A srcml_unit
- * @param srcml_fd File descriptor opened for writing
+ * @param fd File descriptor opened for writing to output the source file
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_unit_unparse_fd      (struct srcml_unit* unit, int srcml_fd);
+LIBSRCML_DECL int srcml_unit_unparse_fd      (struct srcml_unit* unit, int fd);
 
 /**
- * @brief Convert the srcML in a unit into source code and place it into an opened io context using read/write callbacks.
- * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed.
+ * @brief Convert the srcML in a unit into source code and output using write callbacks.
  * @param unit A srcml_unit
  * @param write_callback a write callback function
  * @param close_callback a close callback function
