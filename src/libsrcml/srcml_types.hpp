@@ -62,6 +62,8 @@
 #define SRCML_OPTION_DEBUG_TIMER       1<<17
 /** Parser output special tokens for debugging the parser */
 #define SRCML_OPTION_DEBUG             1<<24
+/** Turn on old optional markup behaviour */
+#define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
 
 /** All default enabled options */
 #define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH)

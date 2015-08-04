@@ -119,8 +119,6 @@ extern "C" {
 /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<10
 
-/** Turn on old optional markup behaviour */
-#define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
 /** Encode the original source encoding as an attribute */
 #define SRCML_OPTION_STORE_ENCODING    1<<26
 /**@}*/
@@ -241,12 +239,33 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
 
   Convenience functions for translating to and from the srcML format
 
+  A complete program to convert from a source-code file to srcML:
+
+  @code 
+  #include <srcml.h>
+  int main() {
+    srcml("main.cpp", "main.cpp.xml");
+    return 0;
+  }
+  @endcode
+
+  A complete program to convert from srcML to a source-code file:
+
+  @code 
+  #include <srcml.h>
+  int main() {
+    srcml("main.cpp.xml", "main.cpp");
+    return 0;
+  }
+  @endcode
+
   * Options can be specified with the global srcml_set_*(),
   srcml_clear_*(), and srcml_register_*()
 
   * Options can be queried with the global srcml_get_*() and
   srcml_check_*()
 
+  * Only applies to non-archive srcML files
   @{
  */
 /** Translate to and from the srcML format
