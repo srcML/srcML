@@ -9,7 +9,7 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
 
-	<unit language="Java">
+	<unit revision="REVISION" language="Java">
 	<foo:a/>
 	</unit>
 
