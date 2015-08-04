@@ -728,8 +728,8 @@ LIBSRCML_DECL int srcml_archive_read_open_io      (struct srcml_archive* archive
  * @brief Set the XML encoding of the srcML archive
  * @param archive The srcml_archive to set the encoding
  * @param encoding The encoding of the archive
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_archive_set_xml_encoding       (struct srcml_archive* archive, const char* encoding);
 
@@ -737,8 +737,8 @@ LIBSRCML_DECL int srcml_archive_set_xml_encoding       (struct srcml_archive* ar
  * @brief Set the default source encoding for the srcML archive 
  * @param archive The srcml_archive to set the source encoding for
  * @param encoding A source-code encoding
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_archive_set_src_encoding       (struct srcml_archive* archive, const char* encoding);
 
@@ -746,8 +746,8 @@ LIBSRCML_DECL int srcml_archive_set_src_encoding       (struct srcml_archive* ar
  * @brief Set the language of the srcML archive
  * @param archive A srcml_archive to set the source-code language on
  * @param language A source-code language
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_archive_set_language           (struct srcml_archive* archive, const char* language);
 
@@ -755,8 +755,8 @@ LIBSRCML_DECL int srcml_archive_set_language           (struct srcml_archive* ar
  * @brief Set the root URL attribute of the srcML archive
  * @param archive A srcml_archive to set the root URL attribute on
  * @param url A url path
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_archive_set_url                (struct srcml_archive* archive, const char* url);
 
@@ -764,8 +764,8 @@ LIBSRCML_DECL int srcml_archive_set_url                (struct srcml_archive* ar
  * @brief Set the root version attribute of the srcML archive
  * @param archive A srcml_archive to set the root version attribute on
  * @param version A version string
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_archive_set_version            (struct srcml_archive* archive, const char* version);
 
@@ -774,8 +774,8 @@ LIBSRCML_DECL int srcml_archive_set_version            (struct srcml_archive* ar
  * @param archive The srcml_archive to set the options for
  * @param option A set of srcml options
  * @note Erases all previously set options
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_archive_set_options               (struct srcml_archive* archive, unsigned long long option);
 
@@ -783,8 +783,8 @@ LIBSRCML_DECL int srcml_archive_set_options               (struct srcml_archive*
  * @brief Enable/set an option or options on an archive
  * @param archive A srcml_archive to enable options on
  * @param option An option, or multiple options by |ing each, to set on the archive
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_archive_enable_option             (struct srcml_archive* archive, unsigned long long option);
 
@@ -792,8 +792,8 @@ LIBSRCML_DECL int srcml_archive_enable_option             (struct srcml_archive*
  * @brief Remove an option or options from an archive
  * @param archive A srcml_archive to remove options from
  * @param option The option, or multiple options by |ing each, to clear from the archive
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_archive_disable_option            (struct srcml_archive* archive, unsigned long long option);
 
@@ -801,8 +801,8 @@ LIBSRCML_DECL int srcml_archive_disable_option            (struct srcml_archive*
  * @brief Set the tabstop size for position and column calculation
  * @param archive A srcml_archive
  * @param tabstop Size of a tabstop
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_archive_set_tabstop               (struct srcml_archive* archive, size_t tabstop);
 
@@ -1011,8 +1011,8 @@ LIBSRCML_DECL int srcml_unit_read_body(struct srcml_unit* unit);
 /**
  * @brief Remove all appended transformations from the archive which have not been applied yet
  * @param archive A srcml_archive
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_clear_transforms                 (struct srcml_archive* archive);
 
@@ -1244,8 +1244,8 @@ LIBSRCML_DECL void srcml_unit_free(struct srcml_unit* unit);
  * @brief Set the source-code encoding for the srcml unit
  * @param unit A srcml_unit
  * @param encoding A source-code encoding
- * @returns SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_unit_set_src_encoding (struct srcml_unit* unit, const char* language);
 
@@ -1253,8 +1253,8 @@ LIBSRCML_DECL int srcml_unit_set_src_encoding (struct srcml_unit* unit, const ch
  * @brief Set the source-code language for the srcml unit
  * @param unit A srcml_unit
  * @param language A supported source-code language
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_unit_set_language     (struct srcml_unit* unit, const char* language);
 
@@ -1262,8 +1262,8 @@ LIBSRCML_DECL int srcml_unit_set_language     (struct srcml_unit* unit, const ch
  * @brief Set the filename attribute for the srcml unit
  * @param unit A srcml_unit
  * @param filename The name of a file
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_unit_set_filename     (struct srcml_unit* unit, const char* filename);
 
@@ -1271,8 +1271,8 @@ LIBSRCML_DECL int srcml_unit_set_filename     (struct srcml_unit* unit, const ch
  * @brief Set the version attribute for the srcml unit
  * @param unit A srcml_unit
  * @param version A version string
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_unit_set_version      (struct srcml_unit* unit, const char* version);
 
@@ -1280,8 +1280,8 @@ LIBSRCML_DECL int srcml_unit_set_version      (struct srcml_unit* unit, const ch
  * @brief Set the timestamp attribute for the srcml unit
  * @param unit A srcml_unit
  * @param timestamp A timestamp string
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_unit_set_timestamp    (struct srcml_unit* unit, const char* timestamp);
 
@@ -1289,8 +1289,8 @@ LIBSRCML_DECL int srcml_unit_set_timestamp    (struct srcml_unit* unit, const ch
  * @brief Set the hash attribute for the srcml unit
  * @param unit A srcml_unit
  * @param hash A hash string
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_unit_set_hash         (struct srcml_unit* unit, const char* hash);
 
@@ -1298,8 +1298,8 @@ LIBSRCML_DECL int srcml_unit_set_hash         (struct srcml_unit* unit, const ch
  * @brief Set the type of end of line to be used for unparse
  * @param unit A srcml_unit
  * @param eol The kind of eol to use for unparse
- * @return SRCML_STATUS_OK on success
- * @return SRCML_STATUS_INVALID_ARGUMENT on failure
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT on failure
  */
 LIBSRCML_DECL int srcml_unit_unparse_set_eol  (struct srcml_unit* unit, size_t eol);
 
