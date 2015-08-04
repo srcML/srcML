@@ -84,19 +84,19 @@ srcml schema.rng -o sub/b.cpp.xml < sub/archive_multi.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 # apply root and apply schema
-srcml --apply-root schema.rng sub/archive_multi.xml
+srcml schema.rng sub/archive_multi.xml
 check 3<<< "$srcml"
 
-srcml --apply-root schema.rng < sub/archive_multi.xml
+srcml schema.rng < sub/archive_multi.xml
 check 3<<< "$srcml"
 
-srcml --apply-root schema.rng sub/archive_multi.xml -o sub/b.cpp.xml
+srcml schema.rng sub/archive_multi.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root schema.rng -o sub/b.cpp.xml sub/archive_multi.xml
+srcml schema.rng -o sub/b.cpp.xml sub/archive_multi.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root schema.rng -o sub/b.cpp.xml < sub/archive_multi.xml
+srcml schema.rng -o sub/b.cpp.xml < sub/archive_multi.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 
@@ -130,18 +130,18 @@ srcml schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 # apply root and apply schema
-srcml --apply-root schema.rng sub/archive_single.xml
+srcml schema.rng sub/archive_single.xml
 check 3<<< "$srcml"
 
-srcml --apply-root schema.rng < sub/archive_single.xml
+srcml schema.rng < sub/archive_single.xml
 check 3<<< "$srcml"
 
-srcml --apply-root schema.rng sub/archive_single.xml -o sub/b.cpp.xml
+srcml schema.rng sub/archive_single.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root schema.rng -o sub/b.cpp.xml sub/archive_single.xml
+srcml schema.rng -o sub/b.cpp.xml sub/archive_single.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
+srcml schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 

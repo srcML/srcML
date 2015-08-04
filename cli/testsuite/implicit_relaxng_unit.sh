@@ -76,17 +76,17 @@ srcml schema.rng -o sub/b.cpp.xml < sub/unit.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 # apply root and apply schema
-srcml --apply-root schema.rng sub/unit.cpp.xml
+srcml schema.rng sub/unit.cpp.xml
 check 3<<< "$srcml"
 
-srcml --apply-root schema.rng < sub/unit.cpp.xml
+srcml schema.rng < sub/unit.cpp.xml
 check 3<<< "$srcml"
 
-srcml --apply-root schema.rng sub/unit.cpp.xml -o sub/b.cpp.xml
+srcml schema.rng sub/unit.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root schema.rng -o sub/b.cpp.xml sub/unit.cpp.xml
+srcml schema.rng -o sub/b.cpp.xml sub/unit.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root schema.rng -o sub/b.cpp.xml < sub/unit.cpp.xml
+srcml schema.rng -o sub/b.cpp.xml < sub/unit.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"

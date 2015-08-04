@@ -84,19 +84,19 @@ srcml2src --relaxng=schema.rng -o sub/b.cpp.xml < sub/archive_multi.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 # apply root and apply schema
-srcml2src --apply-root --relaxng=schema.rng sub/archive_multi.xml
+srcml2src --relaxng=schema.rng sub/archive_multi.xml
 check 3<<< "$srcml"
 
-srcml2src --apply-root --relaxng=schema.rng < sub/archive_multi.xml
+srcml2src --relaxng=schema.rng < sub/archive_multi.xml
 check 3<<< "$srcml"
 
-srcml2src --apply-root --relaxng=schema.rng sub/archive_multi.xml -o sub/b.cpp.xml
+srcml2src --relaxng=schema.rng sub/archive_multi.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml2src --apply-root --relaxng=schema.rng -o sub/b.cpp.xml sub/archive_multi.xml
+srcml2src --relaxng=schema.rng -o sub/b.cpp.xml sub/archive_multi.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml2src --apply-root --relaxng=schema.rng -o sub/b.cpp.xml < sub/archive_multi.xml
+srcml2src --relaxng=schema.rng -o sub/b.cpp.xml < sub/archive_multi.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 
@@ -131,19 +131,19 @@ srcml2src --relaxng=schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 # apply root and apply schema
-srcml2src --apply-root --relaxng=schema.rng sub/archive_single.xml
+srcml2src --relaxng=schema.rng sub/archive_single.xml
 check 3<<< "$srcml"
 
-srcml2src --apply-root --relaxng=schema.rng < sub/archive_single.xml
+srcml2src --relaxng=schema.rng < sub/archive_single.xml
 check 3<<< "$srcml"
 
-srcml2src --apply-root --relaxng=schema.rng sub/archive_single.xml -o sub/b.cpp.xml
+srcml2src --relaxng=schema.rng sub/archive_single.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml2src --apply-root --relaxng=schema.rng -o sub/b.cpp.xml sub/archive_single.xml
+srcml2src --relaxng=schema.rng -o sub/b.cpp.xml sub/archive_single.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml2src --apply-root --relaxng=schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
+srcml2src --relaxng=schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 
@@ -158,10 +158,10 @@ check sub/b.cpp.xml 3<<< "$srcml"
 #
 
 ## TODO really make sure this is ok to return ok when no schema supplied.
-#srcml2src --apply-root --relaxng srcml
+#srcml2src --relaxng srcml
 #
 #check 4<<< "0"
 #if sys.platform != 'cygwin' :
-#	srcml2src --apply-root --relaxng + '=' srcml
+#	srcml2src --relaxng + '=' srcml
 #
 #	check 4<<< "0"

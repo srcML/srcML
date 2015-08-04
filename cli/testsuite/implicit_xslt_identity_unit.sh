@@ -55,24 +55,24 @@ srcml identity.xsl -o sub/b.cpp.xml < sub/unit.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 # xslt apply root copy
-srcml sub/unit.cpp.xml --apply-root identity.xsl
+srcml sub/unit.cpp.xml identity.xsl
 check 3<<< "$srcml"
 
-srcml sub/unit.cpp.xml identity.xsl --apply-root
+srcml sub/unit.cpp.xml identity.xsl
 check 3<<< "$srcml"
 
-srcml --apply-root identity.xsl sub/unit.cpp.xml
+srcml identity.xsl sub/unit.cpp.xml
 check 3<<< "$srcml"
 
-srcml --apply-root identity.xsl < sub/unit.cpp.xml
+srcml identity.xsl < sub/unit.cpp.xml
 check 3<<< "$srcml"
 
-srcml --apply-root identity.xsl sub/unit.cpp.xml -o sub/b.cpp.xml
+srcml identity.xsl sub/unit.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root identity.xsl -o sub/b.cpp.xml sub/unit.cpp.xml
+srcml identity.xsl -o sub/b.cpp.xml sub/unit.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root identity.xsl -o sub/b.cpp.xml < sub/unit.cpp.xml
+srcml identity.xsl -o sub/b.cpp.xml < sub/unit.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 

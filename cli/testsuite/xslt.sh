@@ -38,35 +38,35 @@ createfile copy.xsl "$copyxslt"
 
 
 # xslt copy xpathparam NAME=VALUE
-srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' sub/a.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' < sub/a.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' < sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' sub/a.cpp.xml -o sub/b.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' -o sub/b.cpp.xml sub/a.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root --xslt=copy.xsl --xpathparam 'NAME=VALUE' -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
 
 # xslt copy xpathparam name="a"
-srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' sub/a.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'name="a"' sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' < sub/a.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'name="a"' < sub/a.cpp.xml
 check 3<<< "$srcml"
 
-srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' sub/a.cpp.xml -o sub/b.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'name="a"' sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' -o sub/b.cpp.xml sub/a.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'name="a"' -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
-srcml --apply-root --xslt=copy.xsl --xpathparam 'name="a"' -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml --xslt=copy.xsl --xpathparam 'name="a"' -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml 3<<< "$srcml"
 
