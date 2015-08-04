@@ -1375,19 +1375,20 @@ LIBSRCML_DECL int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const c
 
 
 /**@{ @name Convert source code to srcML
-      @brief Files/buffer can be compressed, but not a source archive format (e.g., not .tar)
+      @brief Source code from a variety of input sources is converted into srcML, and stored in a unit
+      @note Files/buffer can be compressed with gzip (i.e., .gz extension)
       */
 /**
- * @brief Convert to srcML the contents of a file and place it into a unit
+ * @brief Convert the contents of the file with the name src_filename to srcML and stored in the unit
  * @param unit A srcml_unit to parse the results to
- * @param src_fiename Name of a file to parse into srcML
+ * @param src_filename Name of a file to parse into srcML
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure.
  */
 LIBSRCML_DECL int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename);
 
 /**
- * @brief Convert to srcML the contents of a buffer and place it into a unit
+ * @brief Convert the contents of the src_buffer to srcML and stored in the unit
  * @param unit A srcml_unit to parse the results to
  * @param src_buffer Buffer containing source code to parse into srcML
  * @param buffer_size Size of the buffer to parse
@@ -1397,7 +1398,7 @@ LIBSRCML_DECL int srcml_unit_parse_filename(struct srcml_unit* unit, const char*
 LIBSRCML_DECL int srcml_unit_parse_memory  (struct srcml_unit* unit, const char* src_buffer, size_t buffer_size);
 
 /**
- * @brief Convert to srcML the contents of a FILE and place it into a unit
+ * @brief Convert the contents of the FILE* and stored in the unit
  * @param unit A srcml_unit to parse the results to
  * @param src_file A FILE opened for reading
  * @return SRCML_STATUS_OK on success
@@ -1406,7 +1407,7 @@ LIBSRCML_DECL int srcml_unit_parse_memory  (struct srcml_unit* unit, const char*
 LIBSRCML_DECL int srcml_unit_parse_FILE    (struct srcml_unit* unit, FILE* src_file);
 
 /**
- * @brief Convert to srcML the contents of a file descriptor and place it into a unit
+ * @brief Convert the contents of a file descriptor and stored in the unit
  * @param unit A srcml_unit to parse the results to
  * @param src_fd A file descriptor open for reading
  * @return SRCML_STATUS_OK on success
@@ -1431,7 +1432,7 @@ LIBSRCML_DECL int srcml_unit_parse_io      (struct srcml_unit* unit, void * cont
 /**
  * @brief Convert the srcML in a unit into source code and place it into a filename
  * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed
- * @param unit A srcml_unit
+ * @param unit A srcml unit opened for reading
  * @param src_filename Name of a file to output contents of unit as source
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
@@ -1441,7 +1442,7 @@ LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const cha
 /**
  * @brief Convert the srcML in a unit into source code and place it into a buffer
  * The buffer is allocated in the function and needs to be freed after using.
- * @param unit A srcml_unit
+ * @param unit A srcml unit opened for reading
  * @param src_buffer An output buffer address
  * @param src_size The size of the resulting buffer
  * @note The output buffer must be freed after using
@@ -1452,7 +1453,7 @@ LIBSRCML_DECL int srcml_unit_unparse_memory  (struct srcml_unit* unit, char** sr
 
 /**
  * @brief Convert the srcML in a unit into source code and output to the FILE*
- * @param unit A srcml_unit
+ * @param unit A srcml unit opened for reading
  * @param file FILE* opened for writing to output the source file
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
@@ -1461,7 +1462,7 @@ LIBSRCML_DECL int srcml_unit_unparse_FILE    (struct srcml_unit* unit, FILE* fil
 
 /**
  * @brief Convert the srcML in a unit into source code and output to the file descriptor
- * @param unit A srcml_unit
+ * @param unit A srcml unit opened for reading
  * @param fd File descriptor opened for writing to output the source file
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
@@ -1469,8 +1470,8 @@ LIBSRCML_DECL int srcml_unit_unparse_FILE    (struct srcml_unit* unit, FILE* fil
 LIBSRCML_DECL int srcml_unit_unparse_fd      (struct srcml_unit* unit, int fd);
 
 /**
- * @brief Convert the srcML in a unit into source code and output using write callbacks.
- * @param unit A srcml_unit
+ * @brief Convert the srcML in a unit into source code and output using write callbacks
+ * @param unit A srcml unit opened for reading
  * @param write_callback a write callback function
  * @param close_callback a close callback function
  * @return SRCML_STATUS_OK on success
@@ -1531,13 +1532,13 @@ LIBSRCML_DECL int srcml_write_string(struct srcml_unit* unit, const char * conte
 #define SRCDIFF_REVISION_INVALID  2
 
 /**
- * @return The current srcdiff revision number used for processing
+ * @return The current srcDiff revision number used for processing
  */
 LIBSRCML_DECL size_t             srcml_get_srcdiff_revision();
 
 /**
  * @param archive A srcml_archive
- * @return The srcdiff revision number the achive is using for processing
+ * @return The srcdiff revision number the archive is using for processing
  */
 LIBSRCML_DECL size_t             srcml_archive_get_srcdiff_revision             (const struct srcml_archive* archive);
 
