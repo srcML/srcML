@@ -93,10 +93,10 @@ extern "C" {
 #define SRCML_LANGUAGE_C      "C"
 /** Language C++ */
 #define SRCML_LANGUAGE_CXX    "C++"
-/** Language Java */
-#define SRCML_LANGUAGE_JAVA   "Java"
 /** Language C# */
 #define SRCML_LANGUAGE_CSHARP "C#"
+/** Language Java */
+#define SRCML_LANGUAGE_JAVA   "Java"
 /** Language XML */
 #define SRCML_LANGUAGE_XML    "xml"
 /**@}*/ 
