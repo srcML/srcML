@@ -119,8 +119,6 @@ extern "C" {
 /** Output hash attribute on each unit (default: on) */
 #define SRCML_OPTION_HASH              1<<10
 
-/** Turn on old optional markup behaviour */
-#define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
 /** Encode the original source encoding as an attribute */
 #define SRCML_OPTION_STORE_ENCODING    1<<26
 /**@}*/
