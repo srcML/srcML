@@ -567,8 +567,6 @@ LIBSRCML_DECL struct srcml_archive* srcml_archive_create();
 LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archive* archive);
 
 /** Append the srcml_unit unit to the srcml_archive archive
- * If copying from a read and only the attributes have been read
- * read in the xml and output.
  * @param archive A srcml_archive opened for writing
  * @param unit A srcml_unit to output
  * @note Can not mix with by element mode.
@@ -584,12 +582,12 @@ LIBSRCML_DECL int srcml_write_unit(struct srcml_archive* archive, const struct s
 LIBSRCML_DECL void srcml_archive_close(struct srcml_archive* archive);
 
 /** Free a srcml archive that was previously allocated
- * by using srcml_archive_create(). The archive must be reallocated/re-created to use again.
+ * by using srcml_archive_create() or srcml_archive_clone(). The archive must be reallocated/re-created to use again.
  * @param archive A srcml_archive
  */
 LIBSRCML_DECL void srcml_archive_free(struct srcml_archive* archive);
 
-/**@{ @name Write
+/**@{ @name Open for Write
       @brief Open a srcML archive for output */
 
 /** Open up a srcml_archive for writing to a given output file
@@ -640,7 +638,7 @@ LIBSRCML_DECL int srcml_archive_write_open_io (struct srcml_archive* archive, vo
 /**@}*/
 
 
-/**@{ @name Read
+/**@{ @name Open for Read
       @brief Open a srcML archive for reading */
 /** Open a srcML archive for reading from a filename
  * @param archive A srcml_archive
@@ -687,7 +685,7 @@ LIBSRCML_DECL int srcml_archive_read_open_io (struct srcml_archive* archive, voi
 /**@}*/
 
 
-/**@{ @name Setup options */
+/**@{ @name Set Configuration */
 
 /** Set the XML encoding of the srcML archive
  * @param archive The srcml_archive to set the encoding
@@ -803,7 +801,9 @@ LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive*
  * @return Status error code on failure.
  */
 LIBSRCML_DECL int srcml_archive_register_macro(struct srcml_archive* archive, const char* token, const char* type);
+/**@}*/
 
+/**@{ @name Get Configuration */
 /**
  * @param archive A srcml_archive
  * @return The currently set XML encoding, or NULL
@@ -936,17 +936,17 @@ LIBSRCML_DECL const char* srcml_archive_check_extension(const struct srcml_archi
 /**@}*/
 
 
-/**@{ @name Read archive's next unit
+/**@{ @name Read Unit
 */
-/** Read the start unit tag header from the next archive 
+/** Read the next unit header from the archive
  * @param archive A srcml_archive open for reading
  * @return The read srcml_unit, with header information only, on success
  * @return NULL on failure
  */
 LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive);
 
-/** Read the body of the unit from the archive (if not done already)
- * @note This is rarely needed as most functionality can be obtained by srcml_archive_read_unit_header()
+/** Read the body of the current unit in the archive
+ * @note This is only needed in special cases as the general archive access will perform this automatically
  * @param unit The srcml_unit to read
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
