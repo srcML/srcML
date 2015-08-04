@@ -420,7 +420,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         debug_options.add_options()
             ("dev", prog_opts::bool_switch()->notifier(&option_command<SRCML_DEBUG_MODE>), "Enable developer debug mode.")
-            ("debug,g", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_DEBUG>), "markup translation errors, namespace http://www.srcML.org/srcML/srcerr")
             ;
         experimental_options.add_options()
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")

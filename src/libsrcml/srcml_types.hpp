@@ -58,14 +58,16 @@
 #define SRCML_OPTION_EXPRESSION        1<<14
 /** Apply transformations to the entire srcML file (default: each unit */
 #define SRCML_OPTION_APPLY_ROOT        1<<8
-
+/** Debug time attribute */
+#define SRCML_OPTION_DEBUG_TIMER       1<<17
+/** Parser output special tokens for debugging the parser */
+#define SRCML_OPTION_DEBUG             1<<24
 
 /** All default enabled options */
 #define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH)
  
 /** All default enabled options */
 #define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY /* | SRCML_OPTION_OPENMP*/)
-
 
 #include <libxml/xmlwriter.h>
 
