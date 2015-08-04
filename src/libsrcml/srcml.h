@@ -1346,29 +1346,25 @@ LIBSRCML_DECL const char* srcml_unit_get_timestamp     (const struct srcml_unit*
 LIBSRCML_DECL const char* srcml_unit_get_hash          (const struct srcml_unit* unit);
 
 /**
- * @brief Get a raw versio of the parsed or collected srcml from an archive.
- * If only the attributes were collected from a read,
- * then the XML is read in and that value is returned. The XML fragment returned
- * is the raw UTF-8 encoded XML stored internally and is not completely XML, so do not free.
+ * @brief Get a fragment of the srcML from this unit
+ * The XML fragment returned is the raw UTF-8 encoded XML stored internally. It is not well-formed XML, e.g., it is missing 
+ * the archive namespace declarations
  * @note Do not free
- * @param unit A srcml_unit
- * @return The raw unit srcML on success and NULL on failure.
+ * @param unit A srcml unit opened for reading
+ * @return The fragment unit srcML on success and NULL on failure.
  */
 LIBSRCML_DECL const char* srcml_unit_get_xml_fragment  (struct srcml_unit* unit);
 
 /**
- * @brief Get a formatted version of the the parsed or collected srcml from an archive.
- * If only the attributes were collected from a read,
- * then the XML is read in and that value is returned. The XML returned
- * is formatted version of the internally stored xml after
- * applying encoding, and appending of namespaces.  It is a complete standalone XML.
- * Must free when done using.
+ * @brief Get a complete, valid XML of the srcML from this unit
+ * The XML returned is a complete standalone XML
+ * @note This may take more time then srcml_unit_get_xml_fragment()
  * @note Must free when done using
- * @param unit A srcml_unit
+ * @param unit A srcml unit opened for reading
  * @param xml_encoding The xml encoding to encode the unit
  * @param xml_buffer Buffer to return the standalone xml
  * @param buffer_size The size of the returned buffer
- * @return The formatted unit srcML on success and NULL on failure.
+ * @return The standalone unit srcML on success and NULL on failure.
  */
 LIBSRCML_DECL int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size);
 /**@}*/
@@ -1428,7 +1424,10 @@ LIBSRCML_DECL int srcml_unit_parse_io      (struct srcml_unit* unit, void * cont
 /**@}*/
 
 
-/**@{ @name Convert srcML to source code */
+/**@{ @name Convert srcML to source code 
+      @brief srcML in a srcml unit is converted back to source code, and stored in a variety of output destinations
+      */
+
 /**
  * @brief Convert the srcML in a unit into source code and place it into a filename
  * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed
