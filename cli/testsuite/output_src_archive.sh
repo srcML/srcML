@@ -11,6 +11,11 @@ define srcb <<- 'STDOUT'
 	b;
 	STDOUT
 
+define srcab <<- 'STDOUT'
+	a;
+	b;
+	STDOUT
+
 # multi archive
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -29,11 +34,17 @@ define srcml <<- 'STDOUT'
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
-srcml2src --output-src sub/a.cpp.xml
-check 3<<< "$srca"
+echo "a;" > expected_output
+echo -en '\0' >> expected_output
+echo "b;" >> expected_output
 
-srcml2src -S sub/a.cpp.xml
-check 3<<< "$srca"
+srcml2src --output-src sub/a.cpp.xml > ab
+cmp --verbose ab expected_output
+rm ab
+
+srcml2src -S sub/a.cpp.xml > ab
+cmp --verbose ab expected_output
+rm ab
 
 srcml2src -U 1 --output-src sub/a.cpp.xml
 check 3<<< "$srca"
@@ -47,8 +58,9 @@ check 3<<< "$srcb"
 srcml2src -U 2 -S sub/a.cpp.xml
 check 3<<< "$srcb"
 
-src2srcml -S < sub/a.cpp.xml
-check 3<<< "$srca"
+cat sub/a.cpp.xml | src2srcml -S > ab
+cmp --verbose ab expected_output
+rm ab
 
 src2srcml -U 1 -S < sub/a.cpp.xml
 check 3<<< "$srca"
