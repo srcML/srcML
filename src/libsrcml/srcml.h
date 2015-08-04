@@ -335,13 +335,6 @@ LIBSRCML_DECL int srcml_set_version(const char* version);
  */
 LIBSRCML_DECL int srcml_set_timestamp(const char* timestamp);
 
-/** Set the hash attribute for the root unit
- * @param hash A unique hash value
- * @retval SRCML_STATUS_OK on success
- * @retval SRCML_STATUS_INVALID_ARGUMENT
- */
-LIBSRCML_DECL int srcml_set_hash(const char* hash);
-
 /** Set options on the unit, clearing all previously set options
  * @param option A srcML option
  * @retval SRCML_STATUS_OK on success
@@ -1223,13 +1216,6 @@ LIBSRCML_DECL int srcml_unit_set_version (struct srcml_unit* unit, const char* v
  */
 LIBSRCML_DECL int srcml_unit_set_timestamp (struct srcml_unit* unit, const char* timestamp);
 
-/** Set the hash attribute for the srcml unit
- * @param unit A srcml_unit
- * @param hash A hash string
- * @retval SRCML_STATUS_OK on success
- * @retval SRCML_STATUS_INVALID_ARGUMENT
- */
-LIBSRCML_DECL int srcml_unit_set_hash (struct srcml_unit* unit, const char* hash);
 
 /** Set the type of end of line to be used for unparse
  * @param unit A srcml_unit

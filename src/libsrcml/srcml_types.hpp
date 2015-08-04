@@ -292,4 +292,13 @@ struct srcml_unit {
 
 };
 
+/** Set the hash attribute for the srcml unit
+ * @param unit A srcml_unit
+ * @param hash A hash string
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+int srcml_unit_set_hash (struct srcml_unit* unit, const char* hash);
+
+
 #endif

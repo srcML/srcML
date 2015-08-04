@@ -115,7 +115,6 @@ _srcml_set_src_encoding
 _srcml_set_tabstop
 _srcml_set_version
 _srcml_set_timestamp
-_srcml_set_hash
 _srcml_set_srcdiff_revision
 _srcml_unparse_set_eol
 _srcml_unit_get_src_encoding
@@ -132,7 +131,6 @@ _srcml_unit_set_filename
 _srcml_unit_set_language
 _srcml_unit_set_version
 _srcml_unit_set_timestamp
-_srcml_unit_set_hash
 _srcml_unit_unparse_set_eol
 _srcml_unit_unparse_fd
 _srcml_unit_unparse_filename

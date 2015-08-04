@@ -130,6 +130,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         if (request->time_stamp)
             srcml_unit_set_timestamp(unit, request->time_stamp->c_str());
 
+#if 0
         // sha1 attribute, if hash is on
         // sha1 value based on the code as encoded (source text encoding) in the original file
         if (!request->disk_filename && (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get())) {
@@ -168,7 +169,8 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             
             srcml_unit_set_hash(unit, outmd);
         }
-        
+#endif
+ 
         // parse the buffer/file (unless it is already form a srcml archive)
         if (request->disk_filename)
             status = srcml_unit_parse_filename(unit, request->disk_filename->c_str());

@@ -371,20 +371,6 @@ int srcml_set_timestamp(const char* timestamp) {
 }
 
 /**
- * srcml_set_hash
- * @param hash a hash string
- *
- * Set the hash attribute.
- *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
- */
-int srcml_set_hash(const char* hash) {
-
-    return srcml_unit_set_hash(&global_unit, hash);
-
-}
-
-/**
  * srcml_set_options
  * @param option a srcml options
  *
