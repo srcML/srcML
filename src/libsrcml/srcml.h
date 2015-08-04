@@ -695,6 +695,22 @@ LIBSRCML_DECL int srcml_archive_read_open_io (struct srcml_archive* archive, voi
 
 /**@{ @name Set Configuration */
 
+/** Enable the full archive format. The full archive format allows for multiple units, and is default for
+    writing multiple units. This is only needed when there is only one unit to store
+ * @param archive A srcml_archive opened for writing
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+LIBSRCML_DECL int srcml_archive_enable_full_archive(struct srcml_archive* archive);
+
+/** Disable the full archive format. The result will be a single, non-nested unit. 
+    Note that writing multiple units to this archive is an error.
+ * @param archive A srcml_archive opened for writing
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+LIBSRCML_DECL int srcml_archive_disable_full_archive(struct srcml_archive* archive);
+
 /** Set the XML encoding of the srcML archive
  * @param archive The srcml_archive to set the encoding
  * @param encoding The encoding of the archive
@@ -812,6 +828,14 @@ LIBSRCML_DECL int srcml_archive_register_macro(struct srcml_archive* archive, co
 /**@}*/
 
 /**@{ @name Get Configuration */
+
+/** Whether the archive is a full archive, or just a single unit.
+ * @param archive A srcml_archive opened for reading or writing
+ * @retval 1 Is a full archive
+ * @retval 0 Is just a single unit
+ */
+LIBSRCML_DECL int srcml_archive_is_full_archive(const struct srcml_archive* archive);
+
 /**
  * @param archive A srcml_archive
  * @return The currently set XML encoding, or NULL

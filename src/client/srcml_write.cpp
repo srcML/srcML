@@ -34,7 +34,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
     if (!request)
         return;
 
-    bool isarchive = (srcml_archive_get_options(request->srcml_arch) & SRCML_OPTION_ARCHIVE) != 0;
+    bool isarchive = srcml_archive_is_full_archive(request->srcml_arch);
     isarchive = 1; //Print output for all processed files 
 
     // write the unit

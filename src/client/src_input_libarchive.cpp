@@ -152,7 +152,7 @@ void src_input_libarchive(ParseQueue& queue,
         }
 
         if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
-            srcml_archive_enable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+            srcml_archive_enable_full_archive(srcml_arch);
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
         }
 
@@ -160,7 +160,7 @@ void src_input_libarchive(ParseQueue& queue,
         if (filename.empty() || filename == "data")
             filename = input_file.resource;
 
-        if (srcml_request.att_filename && !(srcml_archive_get_options(srcml_arch) & SRCML_OPTION_ARCHIVE))
+        if (srcml_request.att_filename && !srcml_archive_is_full_archive(srcml_arch))
             filename = *srcml_request.att_filename;
 
         // language may have been explicitly set

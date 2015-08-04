@@ -291,6 +291,40 @@ int srcml_archive_set_options(srcml_archive* archive, unsigned long long options
 }
 
 /**
+ * @param archive a srcml_archive
+ */
+int srcml_archive_is_full_archive(const struct srcml_archive* archive) {
+
+    return (archive->options & SRCML_OPTION_ARCHIVE) != 0;
+
+}
+
+
+/**
+ * @param archive a srcml_archive
+ */
+int srcml_archive_enable_full_archive(srcml_archive* archive) {
+
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    archive->options |= SRCML_OPTION_ARCHIVE;
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * srcml_archive_disable_full_archive
+ * @param archive a srcml_archive
+ */
+int srcml_archive_disable_full_archive(srcml_archive* archive) {
+
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    archive->options &= ~SRCML_OPTION_ARCHIVE;
+    return SRCML_STATUS_OK;
+
+}
+/**
  * srcml_archive_enable_option
  * @param archive a srcml_archive
  * @param option a srcml option

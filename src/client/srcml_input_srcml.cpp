@@ -47,8 +47,8 @@ void srcml_input_srcml(ParseQueue& queue,
         srcml_archive_read_open_filename(srcml_input_archive, srcml_input.c_str());
 
     if (SRCML_COMMAND_XML & SRCMLOptions::get()) {
-        if (SRCML_OPTION_ARCHIVE & srcml_archive_get_options(srcml_input_archive) && srcml_input.unit == 0) {
-            srcml_archive_enable_option(srcml_output_archive, SRCML_OPTION_ARCHIVE);
+        if (srcml_archive_is_full_archive(srcml_input_archive) && srcml_input.unit == 0) {
+            srcml_archive_enable_full_archive(srcml_output_archive);
         }
 
         size_t nsSize = srcml_archive_get_namespace_size(srcml_input_archive);

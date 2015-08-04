@@ -53,7 +53,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     srcml_archive* srcml_arch = request->srcml_arch;
     if (isseparatearchive) {
         srcml_arch = srcml_archive_clone(request->srcml_arch);
-        srcml_archive_disable_option(srcml_arch, SRCML_OPTION_ARCHIVE);
+        srcml_archive_disable_full_archive(srcml_arch);
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
 
 
@@ -170,7 +170,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             srcml_unit_set_hash(unit, outmd);
         }
 #endif
- 
+
         // parse the buffer/file (unless it is already form a srcml archive)
         if (request->disk_filename)
             status = srcml_unit_parse_filename(unit, request->disk_filename->c_str());

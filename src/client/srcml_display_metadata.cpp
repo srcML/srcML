@@ -80,7 +80,7 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
 
 
     size_t nsSize = srcml_archive_get_namespace_size(srcml_arch);
-    bool isarchive = (srcml_archive_get_options(srcml_arch) & SRCML_OPTION_ARCHIVE) != 0;    
+    bool isarchive = srcml_archive_is_full_archive(srcml_arch);
 
     for (size_t i = 0; i < nsSize; ++i) {
         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {

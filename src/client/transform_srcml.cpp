@@ -193,8 +193,8 @@ void transform_srcml(const srcml_request_t& srcml_request,
         }
 
         // for non-archive input, then we want non-archive output, fool
-        if (!isxpath && !(srcml_archive_get_options(in_arch) & SRCML_OPTION_ARCHIVE)) {
-            srcml_archive_disable_option(out_arch, SRCML_OPTION_ARCHIVE);
+        if (!isxpath && !srcml_archive_is_full_archive(in_arch)) {
+            srcml_archive_disable_full_archive(out_arch);
         }
 
         // copy input xml namespaces
