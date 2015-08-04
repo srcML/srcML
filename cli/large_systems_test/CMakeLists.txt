@@ -24,7 +24,7 @@ file(STRINGS large_systems_list.csv FILE)
 
 # sets the max threads option. can be modified to match desired thread number,
 # or commented out to disable
-set(MAX_THREADS "--max-threads=8")
+set(MAX_THREADS "--jobs=8")
 
 foreach(LINE ${FILE})
 
