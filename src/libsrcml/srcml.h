@@ -692,7 +692,7 @@ LIBSRCML_DECL int srcml_archive_read_open_io (struct srcml_archive* archive, voi
 /**@}*/
 
 
-/**@{ @name Set Configuration */
+/**@{ @name Archive Configuration */
 
 /** Enable the full archive format. The full archive format allows for multiple units, and is default for
     writing multiple units. This is only needed when there is only one unit to store
@@ -746,22 +746,6 @@ LIBSRCML_DECL int srcml_archive_set_src_encoding(struct srcml_archive* archive, 
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_archive_set_language (struct srcml_archive* archive, const char* language);
-
-/** Set the root URL attribute of the srcML archive
- * @param archive A srcml_archive to set the root URL attribute on
- * @param url A url path
- * @retval SRCML_STATUS_OK on success
- * @retval SRCML_STATUS_INVALID_ARGUMENT
- */
-LIBSRCML_DECL int srcml_archive_set_url (struct srcml_archive* archive, const char* url);
-
-/** Set the root version attribute of the srcML archive
- * @param archive A srcml_archive to set the root version attribute on
- * @param version A version string
- * @retval SRCML_STATUS_OK on success
- * @retval SRCML_STATUS_INVALID_ARGUMENT
- */
-LIBSRCML_DECL int srcml_archive_set_version(struct srcml_archive* archive, const char* version);
 
 /** Set all options for processing an archive, erasing all previously set options
  * @param archive The srcml_archive to set the options for
@@ -838,6 +822,25 @@ LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive*
  * @return Status error code on failure.
  */
 LIBSRCML_DECL int srcml_archive_register_macro(struct srcml_archive* archive, const char* token, const char* type);
+/**@}*/
+
+/**@{ @name Archive Optional Attributes */
+
+/** Set the root URL attribute of the srcML archive
+ * @param archive A srcml_archive to set the root URL attribute on
+ * @param url A url path
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+LIBSRCML_DECL int srcml_archive_set_url (struct srcml_archive* archive, const char* url);
+
+/** Set the root version attribute of the srcML archive
+ * @param archive A srcml_archive to set the root version attribute on
+ * @param version A version string
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+LIBSRCML_DECL int srcml_archive_set_version(struct srcml_archive* archive, const char* version);
 /**@}*/
 
 /**@{ @name Get Configuration */
