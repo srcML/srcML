@@ -692,7 +692,14 @@ LIBSRCML_DECL int srcml_archive_read_open_io (struct srcml_archive* archive, voi
 /**@}*/
 
 
-/**@{ @name Archive Configuration */
+/**@{ @name Archive Options */
+
+/** Whether the archive is a full archive, or just a single unit.
+ * @param archive A srcml_archive opened for reading or writing
+ * @retval 1 Is a full archive
+ * @retval 0 Is just a single unit
+ */
+LIBSRCML_DECL int srcml_archive_is_full_archive(const struct srcml_archive* archive);
 
 /** Enable the full archive format. The full archive format allows for multiple units, and is default for
     writing multiple units. This is only needed when there is only one unit to store
@@ -709,6 +716,13 @@ LIBSRCML_DECL int srcml_archive_enable_full_archive(struct srcml_archive* archiv
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_archive_disable_full_archive(struct srcml_archive* archive);
+
+/** Whether the hash attribute exists (in the case of a read), or would be added (in case of a write)
+ * @param archive A srcml archive opened for reading or writing
+ * @retval 1 Will include hash attribute
+ * @retval 0 Does not include the hash attribute
+ */
+LIBSRCML_DECL int srcml_archive_has_hash(const struct srcml_archive* archive);
 
 /** Enable the hash attribute. This is the default.
  * @param archive A srcml_archive opened for writing
@@ -844,19 +858,6 @@ LIBSRCML_DECL int srcml_archive_set_version(struct srcml_archive* archive, const
 /**@}*/
 
 /**@{ @name Get Configuration */
-
-/** Whether the archive is a full archive, or just a single unit.
- * @param archive A srcml_archive opened for reading or writing
- * @retval 1 Is a full archive
- * @retval 0 Is just a single unit
- */
-LIBSRCML_DECL int srcml_archive_is_full_archive(const struct srcml_archive* archive);
-
-/** Whether the hash attribute would be added (in case of a write) or exists (in the case of a read)
- * @retval 1 Will include hash attribute
- * @retval 0 Does not include the hash attribute
- */
-LIBSRCML_DECL int srcml_archive_has_hash(const struct srcml_archive* archive);
 
 /**
  * @param archive A srcml_archive
