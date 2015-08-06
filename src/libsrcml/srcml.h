@@ -710,6 +710,20 @@ LIBSRCML_DECL int srcml_archive_enable_full_archive(struct srcml_archive* archiv
  */
 LIBSRCML_DECL int srcml_archive_disable_full_archive(struct srcml_archive* archive);
 
+/** Enable the hash attribute. This is the default.
+ * @param archive A srcml_archive opened for writing
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+LIBSRCML_DECL int srcml_archive_enable_hash(struct srcml_archive* archive);
+
+/** Disable the hash attribute
+ * @param archive A srcml_archive opened for writing
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+LIBSRCML_DECL int srcml_archive_disable_hash(struct srcml_archive* archive);
+
 /** Set the XML encoding of the srcML archive
  * @param archive The srcml_archive to set the encoding
  * @param encoding The encoding of the archive
@@ -834,6 +848,12 @@ LIBSRCML_DECL int srcml_archive_register_macro(struct srcml_archive* archive, co
  * @retval 0 Is just a single unit
  */
 LIBSRCML_DECL int srcml_archive_is_full_archive(const struct srcml_archive* archive);
+
+/** Whether the hash attribute would be added (in case of a write) or exists (in the case of a read)
+ * @retval 1 Will include hash attribute
+ * @retval 0 Does not include the hash attribute
+ */
+LIBSRCML_DECL int srcml_archive_has_hash(const struct srcml_archive* archive);
 
 /**
  * @param archive A srcml_archive

@@ -137,20 +137,6 @@ int main() {
     }
 
     /*
-      srcml_set_hash
-    */
-
-    {
-        srcml_set_hash(0);
-        dassert(global_unit.hash, boost::none);
-    }
-
-    {
-        srcml_set_hash("foo");
-        dassert(*global_unit.hash, "foo");
-    }
-
-    /*
       srcml_set_options
     */
 

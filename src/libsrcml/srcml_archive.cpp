@@ -299,6 +299,14 @@ int srcml_archive_is_full_archive(const struct srcml_archive* archive) {
 
 }
 
+/**
+ * @param archive a srcml_archive
+ */
+int srcml_archive_has_hash(const struct srcml_archive* archive) {
+
+    return (archive->options & SRCML_OPTION_HASH) != 0;
+
+}
 
 /**
  * @param archive a srcml_archive
@@ -324,6 +332,31 @@ int srcml_archive_disable_full_archive(srcml_archive* archive) {
     return SRCML_STATUS_OK;
 
 }
+
+/**
+ * @param archive a srcml_archive
+ */
+int srcml_archive_enable_hash(srcml_archive* archive) {
+
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    archive->options |= SRCML_OPTION_HASH;
+    return SRCML_STATUS_OK;
+
+}
+
+/**
+ * @param archive a srcml_archive
+ */
+int srcml_archive_disable_hash(srcml_archive* archive) {
+
+    if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+
+    archive->options &= ~SRCML_OPTION_HASH;
+    return SRCML_STATUS_OK;
+
+}
+
 /**
  * srcml_archive_enable_option
  * @param archive a srcml_archive
