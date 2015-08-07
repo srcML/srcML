@@ -168,8 +168,8 @@ LIBSRCML_DECL const char* srcml_version_string();
 /** Checks if a source-code language is supported.
  * Accepted string values for the languages can be found in @ref Language
  * @param language The language to check support for as a string
- * @retval 0 If the language is not supported
  * @retval pos The numeric representation for that language
+ * @retval 0 If the language is not supported
  */
 LIBSRCML_DECL int srcml_check_language(const char* language);
 
@@ -237,7 +237,6 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
 /** @defgroup convenience Convenience functions
 
   Convenience functions for translating to and from the srcML format
-
   A complete program to convert from a source-code file to srcML:
 
   @code 
@@ -568,7 +567,7 @@ LIBSRCML_DECL struct srcml_archive* srcml_archive_create();
 
 /** Clone the setup of an existing archive
  * @note Archive must be freed using srcml_archive_free()
- * @param srcml_archive A srcml_archive
+ * @param archive A srcml_archive
  * @return The cloned archive
  */
 LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archive* archive);
@@ -1011,12 +1010,6 @@ LIBSRCML_DECL int srcml_unit_read_body(struct srcml_unit* unit);
 
 
 /**@{ @name XPath query and XSLT transformations */
-/** Remove all appended transformations from the archive which have not been applied yet
- * @param archive A srcml_archive
- * @retval SRCML_STATUS_OK on success
- * @retval SRCML_STATUS_INVALID_ARGUMENT
- */
-LIBSRCML_DECL int srcml_clear_transforms(struct srcml_archive* archive);
 
 /** Append the XPath expression to the list of transformations/queries
  * @param archive A srcml_archive
@@ -1179,15 +1172,15 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
  */
 LIBSRCML_DECL int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 
-/** Calledallback function for apply transform for metadata on the input and output xml
- * Called after each transform is applied.
- * @param filename The filename of the unit currently being transformed
- * @param language The language of the unit currently being transformed
+/** Callback function for srcml_apply_transforms_verbose(). Called after each input unit in the archive is processed
+ * @param filename The filename of the original unit
+ * @param language The language of the original unit
  * @param oldLOC The LOC (Lines of Code) of the original unit
- * @param newLOC The LOC (Lines of Code) of the unit after transformation. This is automatically put on the output unit.
+ * @param newLOC The LOC (Lines of Code) of the transformed (output) unit
  * @param oldHASH The HASH of the source of the original unit
- * @param newHASH The HASH of the source of the unit after transformation. This is automatically put on the output unit.
- * @return Whether to continue transformations
+ * @param newHASH The HASH of the source of the transformed (output) unit
+ * @retval 1 Continue transformations
+ * @retval 0 Stop transformations
  */
 typedef int (*apply_transforms_callback)(const char* filename, const char* language, const char* oldLOC, const char* newLOC, const char* oldHASH, const char* newHASH);
 
@@ -1195,11 +1188,19 @@ typedef int (*apply_transforms_callback)(const char* filename, const char* langu
  * Intermediate results are stored in a temporary file and transformations are cleared.
  * @param iarchive An input srcml_archive
  * @param oarchive An output srcml archive with the applied transformations/queries
- * @param verbose  A callback after each result with the filename, language, loc, and hash values
+ * @param transforms_callback  A callback after each result with data about the unit
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_apply_transforms_verbose (struct srcml_archive* iarchive, struct srcml_archive* oarchive, apply_transforms_callback*);
+LIBSRCML_DECL int srcml_apply_transforms_verbose (struct srcml_archive* iarchive, struct srcml_archive* oarchive, apply_transforms_callback* transforms_callback);
+
+/** Remove all appended transformations from the archive which have not been applied yet
+ * @param archive A srcml_archive
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+LIBSRCML_DECL int srcml_clear_transforms(struct srcml_archive* archive);
+
 /**@}*/
 /**@}*/
 
@@ -1217,7 +1218,7 @@ LIBSRCML_DECL int srcml_apply_transforms_verbose (struct srcml_archive* iarchive
 LIBSRCML_DECL struct srcml_unit* srcml_unit_create(struct srcml_archive* archive);
 
 /** Free an allocated unit
- * @param srcml_unit The srcml unit to free
+ * @param unit The srcml unit to free
  */
 LIBSRCML_DECL void srcml_unit_free(struct srcml_unit* unit);
 
@@ -1229,7 +1230,7 @@ LIBSRCML_DECL void srcml_unit_free(struct srcml_unit* unit);
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_unit_set_src_encoding (struct srcml_unit* unit, const char* language);
+LIBSRCML_DECL int srcml_unit_set_src_encoding (struct srcml_unit* unit, const char* encoding);
 
 /** Set the source-code language for the srcml unit
  * @param unit A srcml_unit
@@ -1394,6 +1395,7 @@ LIBSRCML_DECL int srcml_unit_parse_io (struct srcml_unit* unit, void * context, 
  * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed
  * @param unit A srcml unit opened for reading
  * @param src_filename Name of a file to output contents of unit as source
+ * @param compression Amount of compression (gzip) to apply. Values are 0 - 9
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
@@ -1428,6 +1430,7 @@ LIBSRCML_DECL int srcml_unit_unparse_fd (struct srcml_unit* unit, int fd);
 
 /** Convert the srcML in a unit into source code and output using write callbacks
  * @param unit A srcml unit opened for reading
+ * @param context
  * @param write_callback a write callback function
  * @param close_callback a close callback function
  * @return SRCML_STATUS_OK on success
