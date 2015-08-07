@@ -1342,7 +1342,7 @@ LIBSRCML_DECL int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const c
       @brief Source code from a variety of input sources is converted into srcML, and stored in a unit
       @note Files/buffer can be compressed with gzip (i.e., .gz extension)
       */
-/** Convert the contents of the file with the name src_filename to srcML and stored in the unit
+/** Convert the contents of the file with the name src_filename to srcML and store in the unit
  * @param unit A srcml_unit to parse the results to
  * @param src_filename Name of a file to parse into srcML
  * @return SRCML_STATUS_OK on success
@@ -1350,7 +1350,7 @@ LIBSRCML_DECL int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const c
  */
 LIBSRCML_DECL int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename);
 
-/** Convert the contents of the src_buffer to srcML and stored in the unit
+/** Convert the contents of the src_buffer to srcML and store in the unit
  * @param unit A srcml_unit to parse the results to
  * @param src_buffer Buffer containing source code to parse into srcML
  * @param buffer_size Size of the buffer to parse
@@ -1359,9 +1359,9 @@ LIBSRCML_DECL int srcml_unit_parse_filename(struct srcml_unit* unit, const char*
  */
 LIBSRCML_DECL int srcml_unit_parse_memory(struct srcml_unit* unit, const char* src_buffer, size_t buffer_size);
 
-/** Convert the contents of the FILE* and stored in the unit
+/** Convert the contents of the source-code FILE* to srcML and store in the unit
  * @param unit A srcml_unit to parse the results to
- * @param src_file A FILE opened for reading
+ * @param src_file A FILE* opened for reading
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure.
  */
@@ -1493,13 +1493,13 @@ LIBSRCML_DECL int srcml_write_string(struct srcml_unit* unit, const char * conte
 /**
  * @return The current srcDiff revision number used for processing
  */
-LIBSRCML_DECL size_t             srcml_get_srcdiff_revision();
+LIBSRCML_DECL size_t srcml_get_srcdiff_revision();
 
 /**
  * @param archive A srcml_archive
  * @return The srcdiff revision number the archive is using for processing
  */
-LIBSRCML_DECL size_t             srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive);
+LIBSRCML_DECL size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive);
 
 /** Set what revision in a srcDiff archive to operate with
  * @param archive A srcml_archive
