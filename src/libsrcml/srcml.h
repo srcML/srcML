@@ -21,7 +21,7 @@
 /**
  * @mainpage libsrcml
  * 
- * The srcml functions available in libsrcml are for the purposes of:
+ * The functions in libsrcml are for the purposes of:
  *
  * * Converting source code to the srcML format
  * * Converting the srcML format back to source code
@@ -53,10 +53,9 @@ extern "C" {
 #define LIBSRCML_DECL
 #endif
 
-
 /** @defgroup macros Macros
-    @{
-*/
+    @{ */
+
 /**@{ @name Current Version */
 /** Number representing libsrcml version */
 #define SRCML_VERSION_NUMBER 9005
