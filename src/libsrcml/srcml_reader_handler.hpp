@@ -1088,7 +1088,6 @@ private :
         for(int pos = 0; pos < num_attributes; ++pos) {
 
             std::string value = attribute_revision(attributes[pos].value);
-            std::string local_name = localname;
             if(std::string(attributes[pos].value) != "" && value == "") continue;
 
             *unit->unit += " ";
