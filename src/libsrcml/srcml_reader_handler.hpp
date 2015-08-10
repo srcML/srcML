@@ -1088,7 +1088,8 @@ private :
         for(int pos = 0; pos < num_attributes; ++pos) {
 
             std::string value = attribute_revision(attributes[pos].value);
-            if(std::string(localname) == "block" && std::string(attributes[pos].value) != "" && value == "") continue;
+            std::string local_name = localname;
+            if(std::string(attributes[pos].value) != "" && value == "") continue;
 
             *unit->unit += " ";
             if(attributes[pos].prefix) {
@@ -1166,7 +1167,7 @@ private :
             std::string revision;
             revision.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
             std::string value = attribute_revision(revision);
-            if(std::string(localname) == "block" && revision != "" && value == "") continue;
+            if(revision != "" && value == "") continue;
 
             *unit->unit += " ";
             if(attributes[ATTR_PREFIX(pos)]) {
