@@ -113,8 +113,6 @@ extern "C" {
 #define SRCML_OPTION_CPP_TEXT_ELSE     1<<6
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
 #define SRCML_OPTION_CPP_MARKUP_IF0    1<<7
-/** Output hash attribute on each unit (default: on) */
-#define SRCML_OPTION_HASH              1<<10
 
 /** Encode the original source encoding as an attribute */
 #define SRCML_OPTION_STORE_ENCODING    1<<26

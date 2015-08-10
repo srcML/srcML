@@ -382,7 +382,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the filename attribute")
             ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the url attribute")
             ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the version attribute")
-            ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_HASH>), "add hash to srcml output")
+            ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_HASH>), "add hash to srcml output")
             ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
             ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>), "display prefix of namespace given by URI arg and exit")
             ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "display source language and exit")

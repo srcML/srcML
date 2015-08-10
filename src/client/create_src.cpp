@@ -144,11 +144,11 @@ void create_src(const srcml_request_t& srcml_request,
                 !input_sources[0].isdirectory) {
 
                 srcml_archive_disable_full_archive(oarch);
-                srcml_archive_disable_option(oarch, SRCML_OPTION_HASH);
+                srcml_archive_disable_hash(oarch);
             } else {
                 
                 srcml_archive_enable_full_archive(oarch);
-                srcml_archive_enable_option(oarch, SRCML_OPTION_HASH);
+                srcml_archive_enable_hash(oarch);
             }
 
             // register file extensions

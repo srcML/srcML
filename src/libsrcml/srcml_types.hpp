@@ -67,6 +67,8 @@
 
  /** Create an archive */
 #define SRCML_OPTION_ARCHIVE           1<<0
+ /** Output hash attribute on each unit (default: on) */
+#define SRCML_OPTION_HASH              1<<10
 
 /** All default enabled options */
 #define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH)

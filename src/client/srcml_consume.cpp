@@ -54,7 +54,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     if (isseparatearchive) {
         srcml_arch = srcml_archive_clone(request->srcml_arch);
         srcml_archive_disable_full_archive(srcml_arch);
-        srcml_archive_enable_option(srcml_arch, SRCML_OPTION_HASH);
+        srcml_archive_enable_hash(srcml_arch);
 
 
         //Ensure that the directory path has a final "/" when appended to filename

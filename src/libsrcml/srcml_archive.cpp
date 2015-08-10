@@ -315,7 +315,7 @@ int srcml_archive_enable_full_archive(srcml_archive* archive) {
 
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->options |= SRCML_OPTION_ARCHIVE;
+    archive->options |= (unsigned long long)(SRCML_OPTION_ARCHIVE);
     return SRCML_STATUS_OK;
 
 }
@@ -328,7 +328,7 @@ int srcml_archive_disable_full_archive(srcml_archive* archive) {
 
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->options &= ~SRCML_OPTION_ARCHIVE;
+    archive->options &= ~(unsigned long long)(SRCML_OPTION_ARCHIVE);
     return SRCML_STATUS_OK;
 
 }
@@ -340,7 +340,7 @@ int srcml_archive_enable_hash(srcml_archive* archive) {
 
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->options |= SRCML_OPTION_HASH;
+    archive->options |= (unsigned long long)(SRCML_OPTION_HASH);
     return SRCML_STATUS_OK;
 
 }
@@ -352,7 +352,8 @@ int srcml_archive_disable_hash(srcml_archive* archive) {
 
     if(archive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->options &= ~SRCML_OPTION_HASH;
+    archive->options &= ~(unsigned long long)(SRCML_OPTION_HASH);
+
     return SRCML_STATUS_OK;
 
 }
