@@ -937,7 +937,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
 
         // optional position xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_OPENMP) ? SRCML_EXT_OPENMP_NS_URI : 0,
+        (false && depth == 0) && isoption(options, SRCML_OPTION_OPENMP) ? SRCML_EXT_OPENMP_NS_URI : 0,
 
     };
 
@@ -945,6 +945,10 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     // record length of namespaces list
     ns_list_size = 0;
     for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
+
+        if (i == 0 && depth > 0)
+            continue;
+
         if (!ns[i])
             continue;
 
@@ -1149,7 +1153,8 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
         // output the namespaces
         // record length of namespaces list
         reduced_ns = "";
-        for (unsigned int i = 0; i < num2prefix.size(); ++i) {
+        // Note: Skipping first namespace (srcML)
+        for (unsigned int i = 1; i < num2prefix.size(); ++i) {
 
             if (!num2used[i])
                 continue;
