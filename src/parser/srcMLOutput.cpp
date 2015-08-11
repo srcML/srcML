@@ -943,7 +943,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
     // output the namespaces
     // record length of namespaces list
-    int ns_list_size = 0;
+    ns_list_size = 0;
     for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
         if (!ns[i])
             continue;
@@ -1014,7 +1014,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     srcMLTextWriterStartElement(xout, BAD_CAST /* type2name(SUNIT) */ maintag.c_str());
 
     // record where unit start tag name ends
-    start_ns_pos = (int) maintag.size();
+    start_ns_pos = 1 + (int) maintag.size() + 1;
 
     // outer units have namespaces
     if (/* outer && */ isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {

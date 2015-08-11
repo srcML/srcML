@@ -390,6 +390,9 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
     if (!srcml_archive_is_full_archive(unit->archive))
         unit->url = unit->archive->url;
 
+    int ns_pos_start;
+    int ns_list_size;
+    std::string reduced_ns;
     try {
 
         srcml_translator translator(
@@ -414,6 +417,10 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
 
         translator.translate(input);
 
+        ns_pos_start = translator.out.start_ns_pos;
+        reduced_ns = translator.out.reduced_ns;
+        ns_list_size = translator.out.ns_list_size;
+
     } catch(...) {
 
         xmlBufferFree(output_buffer);
@@ -428,7 +435,17 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
 
     int status = SRCML_STATUS_OK;
 
-    unit->unit = std::string((const char *)output_buffer->content, length);
+    bool reduce = false;
+
+    if (reduce) {
+
+	    unit->unit = std::string((const char *)output_buffer->content, ns_pos_start);
+	    unit->unit->append(reduced_ns);
+	    unit->unit->append((const char*)output_buffer->content + ns_pos_start + ns_list_size, length - ns_pos_start - ns_list_size);
+    } else {
+
+	    unit->unit = std::string((const char *)output_buffer->content, length);
+    }
 
     xmlBufferFree(output_buffer);
 

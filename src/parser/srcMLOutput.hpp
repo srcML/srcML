@@ -213,6 +213,8 @@ public:
     /** first position of namespaces on unit */
     int start_ns_pos;
 
+    int ns_list_size;
+
     /** reduced set of namespace declarations to those actually used */
     std::string reduced_ns;
 
