@@ -233,7 +233,7 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
 
 /** @defgroup convenience Convenience functions
 
-  Convenience functions for translating to and from the srcML format
+  Straightforward functions for translating single source-code files to and from the srcML format. 
   A complete program to convert from a source-code file to srcML:
 
   @code 
@@ -254,13 +254,14 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
   }
   @endcode
 
+  * Only applies to individual source-code files
+
   * Options can be specified with the global srcml_set_*(),
   srcml_clear_*(), and srcml_register_*()
 
   * Options can be queried with the global srcml_get_*() and
   srcml_check_*()
 
-  * Only applies to non-archive srcML files
   @{
  */
 /** Translate to and from the srcML format
@@ -269,45 +270,45 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
  * determined by file extension if language is not set with
  * srcml_set_language(). Translates from srcML to source code if the
  * input_filename extension is '.xml'
- * @param input_filename The name of a source-code file or srcML file
- * @param output_filename The name of the output srcML file or source-code file
+ * @param [in] input_filename The name of a source-code file or srcML file
+ * @param [in] output_filename The name of the output srcML file or source-code file
  * @return SRCML_STATUS_OK on success
  * @return Status error on failure
  */
 LIBSRCML_DECL int srcml(const char* input_filename, const char* output_filename);
 
 /**@{ @name Global settings
-      @brief Can be used with the convenience function srcml()
+      @brief To be used with the convenience function srcml()
 */
-/** Set the source encoding
+/** Set the source encoding for the srcML
  * @param encoding An output encoding
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_src_encoding(const char* encoding);
 
-/** Set the xml encoding
+/** Set the xml encoding for the srcML
  * @param encoding An output encoding
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_xml_encoding(const char* encoding);
 
-/** Set the language used to parse
+/** Set the language used to parse for the srcML
  * @param language A supported source-code language
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_language (const char* language);
 
-/** Set the filename attribute for the root unit
+/** Set the filename attribute for the srcML
  * @param filename Name of a file
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_filename (const char* filename);
 
-/** Set the url attribute for the archive
+/** Set the url attribute for the srcML
  * @note The url is not checked for validity
  * @param url a url path
  * @retval SRCML_STATUS_OK on success
@@ -315,7 +316,7 @@ LIBSRCML_DECL int srcml_set_filename (const char* filename);
  */
 LIBSRCML_DECL int srcml_set_url (const char* url);
 
-/** Set the version attribute for the root unit
+/** Set the version attribute for the srcML
  * @note The version value is user-defined, and can be any value
  * @param version A version string
  * @retval SRCML_STATUS_OK on success
@@ -323,42 +324,42 @@ LIBSRCML_DECL int srcml_set_url (const char* url);
  */
 LIBSRCML_DECL int srcml_set_version(const char* version);
 
-/** Set the timestamp attribute for the root unit
+/** Set the timestamp attribute for the srcML
  * @param timestamp A timestamp string in any format
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_timestamp(const char* timestamp);
 
-/** Set options on the unit, clearing all previously set options
+/** Set options on the srcML, clearing all previously set options
  * @param option A srcML option
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_options(unsigned long long option);
 
-/** Enable (set) an option or options
+/** Enable (set) a specific option on the srcML
  * @param option The srcML option(s)
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_enable_option(unsigned long long option);
 
-/** Remove an option or options
+/** Disable (unset) a specific option on the srcML
  * @param option The srcML option(s)
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_disable_option(unsigned long long option);
 
-/** Set the size of the tabstop
+/** Set the size of the tabstop on the srcML
  * @param tabstop Tabstop size
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_tabstop(size_t tabstop);
 
-/** Associate an extension with a supported source-code language
+/** Associate an extension with a supported source-code language on the srcML
  * @param extension A source file extension
  * @param language A supported source code language
  * @return SRCML_STATUS_OK on success
@@ -366,7 +367,7 @@ LIBSRCML_DECL int srcml_set_tabstop(size_t tabstop);
  */
 LIBSRCML_DECL int srcml_register_file_extension(const char* extension, const char* language);
 
-/** Add a new namespace or change the prefix of an existing namespace.
+/** Add a new namespace or change the prefix of an existing namespace on the srcML
  * @param prefix An XML namespace prefix
  * @param ns An XML namespace
  * @retval SRCML_STATUS_OK on success
