@@ -1170,10 +1170,6 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
             reduced_ns += num2uri[i];
             reduced_ns += "\" ";
         }
-
-        // leave a blank line before next nested unit even the last one
-        if (isoption(options, SRCML_OPTION_ARCHIVE))
-            processText("\n\n", 2);
     }
 }
 
