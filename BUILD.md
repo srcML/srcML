@@ -205,14 +205,14 @@ Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Ex
 * [Python 2.7.XX](https://www.python.org/downloads/release/python-2710/)
 * [CMake](http://www.cmake.org)
 * [Visual Studio 12](http://www.microsoft.com/en-us/download/details.aspx?id=34673)
-* Dependencies (win-dep.zip): **LINK PENDING**
+* Zipped [Build Dependencies](http://www.sdml.info/build/srcml_windows_build_dependencies.zip)
+* Zipped [Executable Dependencies](http://www.sdml.info/build/srcml_windows_exe_dependencies.zip)
 
 ##### Instructions
 * Install Visual Studio 12.0 or newer, CMake, and Python
 * Locate the source code for srcML
-* Extract the win-dep.zip dependencies folder into srcML folder.
-    * The extracted folder must be named dep (it should already be named dep).
-    * The folder structure will look like the following:
+* Extract the zipped [build dependencies](http://www.sdml.info/build/srcml_windows_build_dependencies.zip), srcml_windows_build_dependencies.zip, into the srcML folder.
+    * The extracted folder will be named dep, and its structure will look like the following:
     ```
         dep/
             bin/
@@ -236,7 +236,7 @@ Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Ex
 
 * Locate the CMake build output directory and open the solution `srcML.sln`. When the solution loads, change the Solution Configuration from `Debug` to `Release`. A debug version of srcML under windows is not supported.
     
-* Build solution. Once built, locate the build folder. Within that folder there is now a folder named `bin/Release` containing the srcML executable and libraries. Copy the dlls from **LINK PENDING** to `bin/Release` for dynamic linking.
+* Build solution. Once built, locate the build folder. Within that folder there is now a folder named `bin/Release` containing the srcML executable and libraries. Extract the dlls from the zipped [executable dependencies](http://www.sdml.info/build/srcml_windows_exe_dependencies.zip) to `bin/Release` for dynamic linking.
 
 
 ##### Notes
