@@ -421,6 +421,7 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
 
     }
 
+    // TODO: Trimming newlines here, couldn't that just be done by eliminating \n\n in parser?
     size_t length = strlen((const char *)output_buffer->content);
     while(length > 0 && output_buffer->content[length - 1] == '\n')
         --length;
