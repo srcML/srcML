@@ -564,6 +564,9 @@ void srcMLOutput::initNamespaces(const std::vector<std::string> & prefix, const 
 
     }
 
+    // keep track of which num2's were used
+    num2used.resize(num2uri.size(), false);
+
     // setup attributes names for line/column position if used
     if (isoption(options, SRCML_OPTION_POSITION)) {
 
@@ -709,7 +712,9 @@ void srcMLOutput::outputPosition() {
     if(end_position_output) return;
 
     const char * position_localname = "position";
-    const char* prefix = num2prefix[(int)ElementPrefix[SPOSITION]].c_str();
+    int position = ElementPrefix[SPOSITION];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST position_localname);
@@ -807,7 +812,9 @@ int srcMLOutput::consume_next() {
 void srcMLOutput::processEscape(const antlr::RefToken& token) {
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST localname);
@@ -935,6 +942,8 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     };
 
     // output the namespaces
+    // record length of namespaces list
+    int ns_list_size = 0;
     for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
         if (!ns[i])
             continue;
@@ -944,6 +953,10 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
             prefix += ':';
             prefix += num2prefix[i];
         }
+
+        ns_list_size += prefix.size();
+        ns_list_size += strlen(ns[i]);
+        ns_list_size += 4;
 
         xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
     }
@@ -987,6 +1000,9 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const char* encoding,
                             const std::vector<std::string> & attributes,
                             bool output_macrolist) {
+
+    // recording which namespaces are used on this unit
+    num2used.resize(num2prefix.size(), false);
 
     const char * prefix = num2prefix[0].c_str();
     std::string maintag = prefix ? prefix : "";
@@ -1219,7 +1235,9 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
     static const char* type_default = "default";
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (!isstart(token)) {
         processToken(token);
@@ -1267,7 +1285,9 @@ void srcMLOutput::processPseudoBlock(const antlr::RefToken& token) {
 void srcMLOutput::processToken(const antlr::RefToken& token) {
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (localname[0] == 0)
         return;
@@ -1308,7 +1328,9 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
 void srcMLOutput::processTypePrevious(const antlr::RefToken& token) {
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST localname);
@@ -1338,7 +1360,9 @@ void srcMLOutput::processJavadocCommentStart(const antlr::RefToken& token) {
     static const char* JAVADOC_COMMENT_ATTR = "javadoc";
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST localname);
@@ -1364,7 +1388,9 @@ void srcMLOutput::processDoxygenCommentStart(const antlr::RefToken& token) {
     static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST localname);
@@ -1390,7 +1416,9 @@ void srcMLOutput::processLineDoxygenCommentStart(const antlr::RefToken& token) {
     static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST localname);
@@ -1415,7 +1443,9 @@ void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
     static const char* BLOCK_COMMENT_ATTR = "block";
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST localname);
@@ -1439,7 +1469,9 @@ void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
     static const char* const LINE_COMMENT_ATTR = "line";
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST localname);
@@ -1502,7 +1534,9 @@ void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
 void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (isstart(token)) {
         if (prefix[0] == 0)
@@ -1730,7 +1764,9 @@ void srcMLOutput::processCudaArgumentList(const antlr::RefToken& token) {
 void srcMLOutput::processMarker(const antlr::RefToken& token) {
 
     const char* localname = ElementNames[token->getType()];
-    const char* prefix = num2prefix[(int)ElementPrefix[token->getType()]].c_str();
+    int position = ElementPrefix[token->getType()];
+    const char* prefix = num2prefix[position].c_str();
+    num2used[position] = true;
 
     if (localname[0] == 0)
         return;

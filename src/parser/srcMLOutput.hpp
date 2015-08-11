@@ -162,6 +162,9 @@ public:
     /** array for a number to uri */
     std::vector<std::string> num2uri;
 
+    /** array for number of uri's used */
+    std::vector<bool> num2used;
+    
     /** an array of name-value attribute pairs */
     const std::vector<std::string> & unit_attributes;
 
