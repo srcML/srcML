@@ -1013,6 +1013,9 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     // start of main tag
     srcMLTextWriterStartElement(xout, BAD_CAST /* type2name(SUNIT) */ maintag.c_str());
 
+    // record where unit start tag name ends
+    start_ns_pos = (int) maintag.size();
+
     // outer units have namespaces
     if (/* outer && */ isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
         outputNamespaces(xout, options, depth);
@@ -1142,6 +1145,26 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
         // end anything still open, including the unit
         while (openelementcount > 0)
             srcMLTextWriterEndElement(xout);
+
+        // output the namespaces
+        // record length of namespaces list
+        reduced_ns = "";
+        for (unsigned int i = 0; i < num2prefix.size(); ++i) {
+
+            if (!num2used[i])
+                continue;
+
+            std::string prefix = "xmlns";
+            if (num2prefix[i][0] != '\0') {
+                prefix += ':';
+                prefix += num2prefix[i];
+            }
+
+            reduced_ns += prefix;
+            reduced_ns += "=\"";
+            reduced_ns += num2uri[i];
+            reduced_ns += "\" ";
+        }
 
         // leave a blank line before next nested unit even the last one
         if (isoption(options, SRCML_OPTION_ARCHIVE))
