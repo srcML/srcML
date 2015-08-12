@@ -19,9 +19,9 @@
 
 include (config)
 include (testing)
-include (doc)
 include (build)
 include (buildExec)
 include (antlr)
 include (packageConfig)
+include (doc)
 include (install)
