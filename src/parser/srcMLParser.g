@@ -4464,7 +4464,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         )
     
         // default to variable in function body.  However, if anonymous function (does not end in :) not a variable
-        throw_exception[inTransparentMode(MODE_FUNCTION_BODY) && type == VARIABLE && fla == TERMINATE]
+        throw_exception[(inTransparentMode(MODE_FUNCTION_BODY) && type == VARIABLE && fla == TERMINATE)
+            || (inLanguage(LANGUAGE_JAVA) && inMode(MODE_ENUM) && (fla == COMMA || fla == TERMINATE))]
 
         // since we got this far, we have a function
         set_type[type, FUNCTION, !isoperator]
