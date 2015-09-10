@@ -42,7 +42,6 @@
 # __LIBSRCML_DECL int srcml_unit_set_directory(struct srcml_unit*, const char* directory);
 # __LIBSRCML_DECL int srcml_unit_set_version  (struct srcml_unit*, const char* version);
 # __LIBSRCML_DECL int srcml_unit_set_timestamp(struct srcml_unit*, const char* timestamp);
-# __LIBSRCML_DECL int srcml_unit_set_hash     (struct srcml_unit*, const char* hash);
 
 # /* Convert to srcml.  Files/buffer can be compressed, but not a
 #    source archive format (e.g., not .tar) */

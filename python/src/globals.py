@@ -94,10 +94,6 @@ libsrcml.srcml_set_url.argtypes = [c_char_p]
 libsrcml.srcml_set_version.restype = c_int
 libsrcml.srcml_set_version.argtypes = [c_char_p]
 
-# int srcml_set_hash(const char* hash);
-libsrcml.srcml_set_hash.restype = c_int
-libsrcml.srcml_set_hash.argtypes = [c_char_p]
-
 # int srcml_set_options(int option);
 libsrcml.srcml_set_options.restype = c_int
 libsrcml.srcml_set_options.argtypes = [c_ulonglong]
@@ -266,9 +262,6 @@ def set_version(version) :
 
 def set_timestamp(timestamp) :
     check_return(libsrcml.srcml_set_timestamp(timestamp))
-
-def set_hash(hash) :
-    check_return(libsrcml.srcml_set_hash(hash))
 
 def set_options(options) :
     check_return(libsrcml.srcml_set_options(options))
