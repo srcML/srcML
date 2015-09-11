@@ -59,6 +59,87 @@ xmlSAXHandler srcsax_sax2_factory() {
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 /**
+ * libxml2_namespaces2srcsax_namespaces
+ * @param number_namespaces the number of namespaces
+ * @param libxml2_namespaces
+ *
+ * Helper function to convert the libxml2 namespaces to srcsax namespaces
+ * returning a dynamically allocated struct containing the namespaces.
+ *
+ * @returns the converted namespaces as srcsax_namespace.
+ */
+static inline srcsax_namespace * libxml2_namespaces2srcsax_namespaces(int number_namespaces, const xmlChar ** libxml2_namespaces) {
+
+    struct srcsax_namespace * srcsax_namespaces = (srcsax_namespace *)calloc(number_namespaces, sizeof(srcsax_namespace));
+
+    for(int pos = 0, index = 0; pos < number_namespaces; ++pos, index += 2) {
+
+        srcsax_namespaces[pos].prefix = (const char *)libxml2_namespaces[index];
+        srcsax_namespaces[pos].uri = (const char *)libxml2_namespaces[index + 1];
+
+    }
+
+    return srcsax_namespaces;
+}
+
+/**
+ * free_srcsax_namespaces
+ * @param number_namespaces the number of namespaces (not currently used)
+ * @param libxml2_namespaces
+ *
+ * Helper function to free srcsax_namespace * struct allocated by libxml2_namespaces2srcsax_namespaces.
+ */
+static inline void free_srcsax_namespaces(int /*number_namespaces*/, srcsax_namespace * namespaces) {
+
+    free((void *)namespaces);
+
+}
+
+/**
+ * libxml2_attributes2srcsax_attributes
+ * @param number_attributes the number of attributes
+ * @param libxml2_attributes
+ *
+ * Helper function to convert the libxml2 attributes to srcsax attributes
+ * returning a dynamically allocated struct containing the attributes.
+ *
+ * @returns the converted attributes as srcsax_attribute.
+ */
+static inline srcsax_attribute * libxml2_attributes2srcsax_attributes(int number_attributes, const xmlChar ** libxml2_attributes) {
+
+    struct srcsax_attribute * srcsax_attributes = (srcsax_attribute *)calloc(number_attributes, sizeof(srcsax_attribute));
+
+    for(int pos = 0, index = 0; pos < number_attributes; ++pos, index += 5) {
+
+        srcsax_attributes[pos].localname = (const char *)libxml2_attributes[index];
+        srcsax_attributes[pos].prefix = (const char *)libxml2_attributes[index + 1];
+        srcsax_attributes[pos].uri = (const char *)libxml2_attributes[index + 2];
+        srcsax_attributes[pos].value = strndup((const char *)libxml2_attributes[index + 3], libxml2_attributes[index + 4] - libxml2_attributes[index + 3]);
+
+    }
+
+    return srcsax_attributes;
+}
+
+/**
+ * free_srcsax_attributes
+ * @param number_attributes the number of attributes
+ * @param libxml2_attributes
+ *
+ * Helper function to free srcsax_attribute * struct allocated by libxml2_attributes2srcsax_attributes.
+ */
+static inline void free_srcsax_attributes(int number_attributes, srcsax_attribute * attributes) {
+
+    return;
+
+    for(int pos = 0; pos < number_attributes; ++pos)
+        free((void *)attributes[pos].value);
+
+    free((void *)attributes);
+
+}
+
+/**
  * start_document
  * @param ctx an xmlParserCtxtPtr
  *
@@ -245,13 +326,19 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
 
             if(state->context->terminate) return;
 
+            srcsax_namespace * srcsax_namespaces_meta_tag = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(citr->nb_namespaces, citr->namespaces);
+            srcsax_attribute * srcsax_attributes_meta_tag = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(citr->nb_attributes, citr->attributes);
+
             state->libxml2_namespaces = citr->namespaces;
             state->libxml2_attributes = citr->attributes;
             state->context->handler->meta_tag(state->context, (const char *)citr->localname, (const char *)citr->prefix, (const char *)citr->URI,
-                                                citr->nb_namespaces, 0, citr->nb_attributes, 
-                                                0);
+                                                citr->nb_namespaces, srcsax_namespaces_meta_tag, citr->nb_attributes,
+                                                srcsax_attributes_meta_tag);
             state->libxml2_namespaces = 0;
             state->libxml2_attributes = 0;
+
+            free_srcsax_namespaces(citr->nb_namespaces, srcsax_namespaces_meta_tag);
+            free_srcsax_attributes(citr->nb_attributes, srcsax_attributes_meta_tag);
         }
 
     }
@@ -509,29 +596,35 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
                 state->libxml2_attributes = 0;    
             }
 
+            if(state->context->terminate) return;
+
             if(state->context->handler->meta_tag && !state->meta_tags.empty()) {
 
                 for(std::vector<srcml_element>::const_iterator citr = state->meta_tags.begin(); citr < state->meta_tags.end(); ++citr) {
 
-                    if(state->context->terminate)
+                    srcsax_namespace * srcsax_namespaces_meta_tag = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(citr->nb_namespaces, citr->namespaces);
+                    srcsax_attribute * srcsax_attributes_meta_tag = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(citr->nb_attributes, citr->attributes);  
+
+                    if(state->context->terminate) {
                         return;
 
-                    state->libxml2_namespaces = citr->namespaces;
-                    state->libxml2_attributes = citr->attributes;
+                    }
 
                     state->context->handler->meta_tag(state->context, (const char *)citr->localname, (const char *)citr->prefix, (const char *)citr->URI,
-                                                        citr->nb_namespaces, 0, citr->nb_attributes,
-                                                        0);
-                    state->libxml2_namespaces = 0;
-                    state->libxml2_attributes = 0;    
-                }
+                                                        citr->nb_namespaces, srcsax_namespaces_meta_tag, citr->nb_attributes,
+                                                        srcsax_attributes_meta_tag);
 
+                    free_srcsax_namespaces(citr->nb_namespaces, srcsax_namespaces_meta_tag);
+                    free_srcsax_attributes(citr->nb_attributes, srcsax_attributes_meta_tag);
+
+                }
 
             }
 
             if(state->context->terminate) {
 
                 return;
+
             }
 
             if(state->context->handler->start_unit) {
