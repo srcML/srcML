@@ -4941,8 +4941,7 @@ variable_identifier_array_grammar_sub_contents{ bool found_expr = false; ENTRY_D
 
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
             (options { greedy = true; } : { LA(1) != RBRACKET }?
-            ({ /* stop warning */ LA(1) == COMMA }? { if (!found_expr) { empty_element(SEXPRESSION, true); fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-}
+            ({ /* stop warning */ LA(1) == COMMA }? { if (!found_expr) { empty_element(SEXPRESSION, true); }
 
 
              } COMMA { found_expr = false; } | complete_expression { found_expr = true; }) 
