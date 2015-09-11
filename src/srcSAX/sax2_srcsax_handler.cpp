@@ -605,10 +605,11 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
                     srcsax_namespace * srcsax_namespaces_meta_tag = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(citr->nb_namespaces, citr->namespaces);
                     srcsax_attribute * srcsax_attributes_meta_tag = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(citr->nb_attributes, citr->attributes);  
 
-                    if(state->context->terminate) {
+                    if(state->context->terminate)
                         return;
 
-                    }
+                    state->libxml2_namespaces = citr->namespaces;
+                    state->libxml2_attributes = citr->attributes;
 
                     state->context->handler->meta_tag(state->context, (const char *)citr->localname, (const char *)citr->prefix, (const char *)citr->URI,
                                                         citr->nb_namespaces, srcsax_namespaces_meta_tag, citr->nb_attributes,
@@ -616,6 +617,9 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
                     free_srcsax_namespaces(citr->nb_namespaces, srcsax_namespaces_meta_tag);
                     free_srcsax_attributes(citr->nb_attributes, srcsax_attributes_meta_tag);
+
+                    state->libxml2_namespaces = 0;
+                    state->libxml2_attributes = 0;
 
                 }
 
