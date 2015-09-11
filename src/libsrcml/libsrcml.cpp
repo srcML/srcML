@@ -800,7 +800,7 @@ size_t srcml_get_srcdiff_revision() {
  *                                                                            *
  ******************************************************************************/
 
-static const char* langs[] = { "C", "C++", "C#", "Java" };
+static const char* langs[] = { "C", "C++", "C#", "Java", "Objective-C" };
 
 /**
  * srcml_check_language
