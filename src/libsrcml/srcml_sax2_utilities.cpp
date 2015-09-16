@@ -133,6 +133,8 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
         return SRCML_STATUS_INVALID_INPUT;
     }
 
+    xsltsrcMLRegister();
+
     // setup process handling
     xpath_query_units process(options, compiled_xpath, oarchive, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value);
     srcSAXController control(input_buffer);
@@ -254,7 +256,6 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     xsltStylesheetPtr stylesheet = xsltParseStylesheetDoc(xslt);
     if (!stylesheet)
         return SRCML_STATUS_ERROR;
-
 
 
     xsltsrcMLRegister();
