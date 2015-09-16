@@ -265,3 +265,17 @@ check_exit() {
 
     true
 }
+
+# Check the validity of the xml
+# Currently only checks for well-formed xml, not DTD validity
+xmlcheck() {
+
+    if [ "${1:0:1}" != "<" ] ; then
+        xmllint --noout ${1}
+    else
+        echo "${1}" | xmllint --noout /dev/stdin
+    fi;
+
+    true
+}
+

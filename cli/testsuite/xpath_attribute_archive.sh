@@ -8,14 +8,16 @@ define result <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:foo="foo.com" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name foo:foo="test">a</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name foo:foo="test">a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name foo:foo="test">b</name></expr>;</expr_stmt>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" hash="520b48acbdb61e411641fd94359a82686d5591eb"><expr_stmt><expr><name foo:foo="test">b</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
 	STDOUT
+
+xmlcheck "$result"
 
 createfile a.cpp "a;
 "

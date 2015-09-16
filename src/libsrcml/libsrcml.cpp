@@ -67,7 +67,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(
                                  std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY,
                                  8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
-                                 language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any() };
+                                 language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any(), boost::optional<size_t>() };
 
 /**
  * @var global_unit
@@ -218,7 +218,6 @@ int srcml(const char* input_filename, const char* output_filename) {
         else
             srcml_unit_set_filename(unit, input_filename);
 
-        srcml_unit_set_url(unit, srcml_archive_get_url(&global_archive));
         srcml_unit_set_version(unit, srcml_archive_get_version(&global_archive));
         srcml_unit_set_timestamp(unit, srcml_unit_get_timestamp(&global_unit));
         srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
@@ -260,7 +259,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         }
 
-        srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1", 0);
+        srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1", 0, global_archive.revision_number);
 
     }
 
@@ -368,20 +367,6 @@ int srcml_set_version(const char* version) {
 int srcml_set_timestamp(const char* timestamp) {
 
     return srcml_unit_set_timestamp(&global_unit, timestamp);
-
-}
-
-/**
- * srcml_set_hash
- * @param hash a hash string
- *
- * Set the hash attribute.
- *
- * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
- */
-int srcml_set_hash(const char* hash) {
-
-    return srcml_unit_set_hash(&global_unit, hash);
 
 }
 
@@ -513,6 +498,20 @@ int srcml_register_macro(const char* token, const char* type) {
 int srcml_unparse_set_eol(size_t eol) {
 
     return srcml_unit_unparse_set_eol(&global_unit, eol);
+
+}
+
+/**
+ * srcml_set_srcdiff_revision
+ * @param revision_number
+ *
+ * Set what revision (0 = original, 1 = modified) in a srcDiff docuement to operate with.
+ *
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_set_srcdiff_revision(size_t revision_number) {
+
+    return srcml_archive_set_srcdiff_revision(&global_archive, revision_number);
 
 }
 
@@ -782,11 +781,26 @@ const char* srcml_get_macro_type(size_t pos) {
 
 }
 
+/**
+ * srcml_get_srcdiff_revision
+ *
+ * Gets the srcdiff revision number that is being using for processing.
+ *
+ * @returns the srcdiff revision number is being using.
+ */
+size_t srcml_get_srcdiff_revision() {
+
+    return srcml_archive_get_srcdiff_revision(&global_archive);
+
+}
+
 /******************************************************************************
  *                                                                            *
  *                           libsrcml utility functions                       *
  *                                                                            *
  ******************************************************************************/
+
+static const char* langs[] = { "C", "C++", "C#", "Java", "Objective-C" };
 
 /**
  * srcml_check_language
@@ -797,7 +811,18 @@ const char* srcml_get_macro_type(size_t pos) {
  * @returns Return the numeric representation for that language if supported.
  * Not supported returns 0.
  */
-int srcml_check_language(const char* language) { return language == 0 ? 0 : Language::getLanguage(language); }
+int srcml_check_language(const char* language) {
+
+    if (!language)
+        return 0;
+
+    // first find in public languages (ones in langs[], then get the number)
+    for (size_t i = 0; i < srcml_get_language_list_size(); ++i)
+        if (strcmp(language, langs[i]) == 0)
+            return Language::getLanguage(language);
+
+    return 0;
+}
 
 /**
  * srcml_get_language_list_size
@@ -808,7 +833,7 @@ int srcml_check_language(const char* language) { return language == 0 ? 0 : Lang
  */
 size_t srcml_get_language_list_size() {
 
-    return 5;
+    return sizeof(langs) / sizeof(langs[0]);
 }
 
 /**
@@ -824,7 +849,6 @@ const char * srcml_get_language_list(size_t pos) {
 
     if(pos >= srcml_get_language_list_size()) return NULL;
 
-    static const char* langs[] = { "C", "C++", "C#", "Objective-C", "Java", 0 };
     return langs[pos];
 }
 

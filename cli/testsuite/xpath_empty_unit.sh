@@ -18,6 +18,8 @@ define xpath <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$srcml"
+xmlcheck "$xpath"
 createfile sub/a.cpp.xml "$srcml"
 
 srcml2src --xpath=/src:unit sub/a.cpp.xml

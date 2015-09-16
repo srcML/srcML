@@ -22,11 +22,6 @@
 
 #include <language_extension_registry.hpp>
 #include <algorithm>
-#include <boost/regex.hpp>
-
-/**  @todo since now in libsrcml change from camel case to underscore. */
-/** regular expression to match extension even if in an archive */
-static const boost::regex extRegEx("(zx\\.|zg\\.|2zb\\.)*([^\\.]*)");
 
 /**
 * language_extension_registry
@@ -53,25 +48,20 @@ language_extension_registry::~language_extension_registry() {}
  */
 bool get_language_extension(const char * const inpath, std::string & extension)
 {
-
-    // reversed copy of the path
     std::string path(inpath);
-    std::reverse(path.begin(), path.end());
 
-    std::string::const_iterator start = path.begin();
-    std::string::const_iterator end = path.end();
-    boost::match_results<std::string::const_iterator> what;
-    boost::match_flag_type flags = boost::match_default;
+    // remove any .gz extension
+    if (path.substr(path.size() - 3) == ".gz")
+        path.resize(path.size() - 3);
 
-    if(boost::regex_search(start, end, what, extRegEx, flags)) {
-
-        std::string temp = what[2].str();
-        extension.assign(temp.rbegin(), temp.rend());
+    // get the proper extension, not including the '.'
+    size_t pos = path.find_last_of(".");
+    if (pos != std::string::npos) {
+        extension = path.substr(pos + 1);
         return true;
-
-    } else
+    } else {
         return false;
-
+    }
 }
 
 /** 
@@ -122,7 +112,7 @@ bool language_extension_registry::register_user_ext(const char* ext, const char*
  *
  * @returns the numeric representation of the currently registered language from the given filename.
  */
-int language_extension_registry::get_language_from_filename(const char* const path) { 
+int language_extension_registry::get_language_from_filename(const char* const path) const { 
 
     // extract the (pure) extension
     std::string extension;
@@ -168,7 +158,7 @@ void language_extension_registry::register_standard_file_extensions()
 
     register_user_ext("java", Language::LANGUAGE_JAVA);
 
-    register_user_ext("aj",   Language::LANGUAGE_ASPECTJ);
+    register_user_ext("aj",   Language::LANGUAGE_JAVA);
 
     register_user_ext("cs",   Language::LANGUAGE_CSHARP);
 

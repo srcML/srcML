@@ -4,7 +4,7 @@
 source $(dirname "$0")/framework_test.sh
 
 # test setting the attribute on xpath query results
-define result <<- 'STDOUT'
+define resultstdin <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
@@ -14,6 +14,20 @@ define result <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$resultstdin"
+
+# test setting the attribute on xpath query results
+define result <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name cpp:foo="test">a</name></expr>;</expr_stmt>
+	</unit>
+
+	</unit>
+	STDOUT
+
+xmlcheck "$result"
 createfile a.cpp "a;
 "
 
@@ -26,7 +40,7 @@ check 3<<< "$result"
 
 # from standard input
 echo "a;" | srcml -l C++ --xpath="//src:name" --attribute="cpp:foo=test"
-check 3<<< "$result"
+check 3<<< "$resultstdin"
 
 # output to a file
 srcml a.cpp --xpath="//src:name" --attribute="cpp:foo=test" -o result.xml
@@ -36,4 +50,4 @@ srcml --xpath="//src:name" a.cpp --attribute="cpp:foo=test" -o result.xml
 check result.xml 3<<< "$result"
 
 echo "a;" | srcml -l C++ --xpath="//src:name" --attribute="cpp:foo=test" -o result.xml
-check result.xml 3<<< "$result"
+check result.xml 3<<< "$resultstdin"

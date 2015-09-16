@@ -44,7 +44,7 @@ int main() {
 
     {
         srcml_set_src_encoding(0);
-        dassert(global_archive.src_encoding, 0);
+        dassert(global_archive.src_encoding, boost::none);
     }
 
     {
@@ -58,7 +58,7 @@ int main() {
 
     {
         srcml_set_xml_encoding(0);
-        dassert(global_archive.encoding, 0);
+        dassert(global_archive.encoding, boost::none);
     }
 
     {
@@ -72,7 +72,7 @@ int main() {
 
     {
         srcml_set_language(0);
-        dassert(global_archive.language, 0);
+        dassert(global_archive.language, boost::none);
     }
 
     {
@@ -86,7 +86,7 @@ int main() {
 
     {
         srcml_set_filename(0);
-        dassert(global_unit.filename, 0);
+        dassert(global_unit.filename, boost::none);
     }
 
     {
@@ -100,7 +100,7 @@ int main() {
 
     {
         srcml_set_url(0);
-        dassert(global_archive.url, 0);
+        dassert(global_archive.url, boost::none);
     }
 
     {
@@ -114,7 +114,7 @@ int main() {
 
     {
         srcml_set_version(0);
-        dassert(global_archive.version, 0);
+        dassert(global_archive.version, boost::none);
     }
 
     {
@@ -128,26 +128,12 @@ int main() {
 
     {
         srcml_set_timestamp(0);
-        dassert(global_unit.timestamp, 0);
+        dassert(global_unit.timestamp, boost::none);
     }
 
     {
         srcml_set_timestamp("foo");
         dassert(*global_unit.timestamp, "foo");
-    }
-
-    /*
-      srcml_set_hash
-    */
-
-    {
-        srcml_set_hash(0);
-        dassert(global_unit.hash, 0);
-    }
-
-    {
-        srcml_set_hash("foo");
-        dassert(*global_unit.hash, "foo");
     }
 
     /*
@@ -302,20 +288,41 @@ int main() {
     */
 
     {
-        srcml_unparse_set_eol(SRCML_UNPARSE_OPTION_CRLF);
+        srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_CRLF);
 
-        dassert(global_unit.eol, SRCML_UNPARSE_OPTION_CRLF);
+        dassert(global_unit.eol, SOURCE_OUTPUT_EOL_CRLF);
     }
 
     {
-        srcml_unparse_set_eol(SRCML_UNPARSE_OPTION_CRLF);
-        srcml_unparse_set_eol(SRCML_UNPARSE_OPTION_AUTO);
+        srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_CRLF);
+        srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_AUTO);
 
-        dassert(global_unit.eol, SRCML_UNPARSE_OPTION_AUTO);
+        dassert(global_unit.eol, SOURCE_OUTPUT_EOL_AUTO);
     }
 
     {
-        dassert(srcml_unparse_set_eol(SRCML_UNPARSE_OPTION_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    /*
+      srcml_set_srcdiff_revision
+    */
+
+    {
+        srcml_set_srcdiff_revision(SRCDIFF_REVISION_ORIGINAL);
+
+        dassert(*global_archive.revision_number, SRCDIFF_REVISION_ORIGINAL);
+    }
+
+    {
+        srcml_set_srcdiff_revision(SRCDIFF_REVISION_ORIGINAL);
+        srcml_set_srcdiff_revision(SRCDIFF_REVISION_MODIFIED);
+
+        dassert(*global_archive.revision_number, SRCDIFF_REVISION_MODIFIED);
+    }
+
+    {
+        dassert(srcml_set_srcdiff_revision(SRCDIFF_REVISION_INVALID), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -620,6 +627,21 @@ int main() {
 
     {
         dassert(srcml_get_macro_type(3), 0);
+    }
+
+    /*
+      srcml_get_srcdiff_revision
+    */
+
+    {
+        global_archive.revision_number = boost::optional<size_t>();
+        dassert(srcml_get_srcdiff_revision(), SRCDIFF_REVISION_INVALID);
+    }
+
+    {
+        global_archive.revision_number = SRCDIFF_REVISION_ORIGINAL;
+        dassert(srcml_get_srcdiff_revision(), SRCDIFF_REVISION_ORIGINAL);
+        global_archive.revision_number = boost::optional<size_t>();
     }
 
 

@@ -94,27 +94,6 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
 }
 
 /**
- * srcml_unit_set_url
- * @param unit a srcml unit
- * @param url a url path
- *
- * Set the url attribute for the srcml unit.
- *
- * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
- * on failure.
- */
-int srcml_unit_set_url(srcml_unit* unit, const char* url) {
-
-    if(unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
-
-
-    unit->url = url ? std::string(url) : boost::optional<std::string>();
-
-    return SRCML_STATUS_OK;
-
-}
-
-/**
  * srcml_unit_set_version
  * @param unit a srcml unit
  * @param version a version string
@@ -186,7 +165,7 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
  */
 int srcml_unit_unparse_set_eol(srcml_unit* unit, size_t eol) {
 
-    if(unit == NULL || eol > SRCML_UNPARSE_OPTION_CRLF) return SRCML_STATUS_INVALID_ARGUMENT;
+    if(unit == NULL || eol > SOURCE_OUTPUT_EOL_CRLF) return SRCML_STATUS_INVALID_ARGUMENT;
 
     unit->eol = eol;
 
@@ -261,22 +240,6 @@ const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
     if(unit == NULL) return 0;
 
     return unit->filename ? unit->filename->c_str() : 0;
-
-}
-
-/**
- * srcml_unit_get_url
- * @param unit a srcml unit
- *
- * Get the url attribute for the srcml unit.
- *
- * @returns url attribute on successand NULL on failure.
- */
-const char* srcml_unit_get_url(const struct srcml_unit* unit) {
-
-    if(unit == NULL) return 0;
-
-    return unit->url ? unit->url->c_str() : 0;
 
 }
 
@@ -424,6 +387,12 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
     unit->encoding = input->getEncoding();
 
+    if (!srcml_archive_is_full_archive(unit->archive))
+        unit->url = unit->archive->url;
+
+    int ns_pos_start;
+    int ns_list_size;
+    std::string reduced_ns;
     try {
 
         srcml_translator translator(
@@ -448,6 +417,10 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
 
         translator.translate(input);
 
+        ns_pos_start = translator.out.start_ns_pos;
+        reduced_ns = translator.out.reduced_ns;
+        ns_list_size = translator.out.ns_list_size;
+
     } catch(...) {
 
         xmlBufferFree(output_buffer);
@@ -456,12 +429,24 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
     }
 
     size_t length = strlen((const char *)output_buffer->content);
+
+    // Note: Not sure why this is needed, but causes problems if not
     while(length > 0 && output_buffer->content[length - 1] == '\n')
         --length;
 
     int status = SRCML_STATUS_OK;
 
-    unit->unit = std::string((const char *)output_buffer->content, length);
+    bool reduce = false;
+
+    if (reduce) {
+
+	    unit->unit = std::string((const char *)output_buffer->content, ns_pos_start);
+	    unit->unit->append(reduced_ns);
+	    unit->unit->append((const char*)output_buffer->content + ns_pos_start + ns_list_size, length - ns_pos_start - ns_list_size);
+    } else {
+
+	    unit->unit = std::string((const char *)output_buffer->content, length);
+    }
 
     xmlBufferFree(output_buffer);
 
@@ -684,7 +669,8 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, int (*read_callback)(v
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    unit->context = libxml2_read_context{context, read_callback, close_callback};
+    libxml2_read_context libxml2_context = {context, read_callback, close_callback};
+    unit->context = libxml2_context;
     const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
@@ -743,7 +729,7 @@ int srcml_unit_unparse_filename(srcml_unit* unit, const char* src_filename, unsi
 
         }
 
-        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number);
 
         xmlOutputBufferClose(output_handler);
 
@@ -794,7 +780,7 @@ int srcml_unit_unparse_memory(srcml_unit* unit, char** src_buffer, size_t * src_
 
             unit->archive->reader->read_src(output_handler);
 
-        } else if(int error = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options)) {
+        } else if(int error = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number)) {
 
             xmlOutputBufferClose(output_handler);
             xmlBufferFree(buffer);
@@ -863,7 +849,7 @@ int srcml_unit_unparse_FILE(srcml_unit* unit, FILE* srcml_file) {
 
         }
 
-        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number);
         xmlOutputBufferClose(output_handler);
 
         return status;
@@ -915,7 +901,7 @@ int srcml_unit_unparse_fd(srcml_unit* unit, int srcml_fd) {
 
         }
 
-        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number);
         xmlOutputBufferClose(output_handler);
 
         return status;
@@ -956,7 +942,8 @@ int srcml_unit_unparse_io(srcml_unit* unit, void * context, int (*write_callback
         (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
 
     xmlOutputBufferPtr output_handler = 0;
-    unit->context = libxml2_write_context{context, write_callback, close_callback};
+    libxml2_write_context libxml2_context = {context, write_callback, close_callback};
+    unit->context = libxml2_context;
     try {
 
         output_handler = xmlOutputBufferCreateIO(write_callback_wrapper, write_close_callback_wrapper, boost::any_cast<libxml2_write_context>(&unit->context), encoding ? xmlFindCharEncodingHandler(encoding) : 0);
@@ -975,7 +962,7 @@ int srcml_unit_unparse_io(srcml_unit* unit, void * context, int (*write_callback
 
         }
 
-        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options);
+        int status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number);
         xmlOutputBufferClose(output_handler);
 
         return status;
@@ -1210,7 +1197,7 @@ srcml_unit * srcml_unit_create(srcml_archive * archive) {
     } catch(...) { return 0; }
     unit->revision = srcml_version_string();
     unit->archive = archive;
-    unit->eol = SRCML_UNPARSE_OPTION_AUTO;
+    unit->eol = SOURCE_OUTPUT_EOL_AUTO;
     unit->read_header = false;
     unit->unit_translator = 0;
 

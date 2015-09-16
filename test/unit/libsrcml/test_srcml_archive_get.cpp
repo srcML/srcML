@@ -567,5 +567,32 @@ int main() {
         dassert(srcml_archive_get_macro_type(0, 0), 0);
     }
 
+    /*
+      srcml_archive_get_srcdiff_revision
+    */
+
+    {
+
+        srcml_archive * archive = srcml_archive_create();
+        archive->revision_number = SRCDIFF_REVISION_ORIGINAL;
+        dassert(srcml_archive_get_srcdiff_revision(archive), SRCDIFF_REVISION_ORIGINAL);
+
+        srcml_archive_free(archive);
+
+    }
+
+    {
+
+        srcml_archive * archive = srcml_archive_create();
+        dassert(srcml_archive_get_srcdiff_revision(archive), SRCDIFF_REVISION_INVALID);
+
+        srcml_archive_free(archive);
+
+    }
+
+    {
+        dassert(srcml_archive_get_srcdiff_revision(0), SRCDIFF_REVISION_INVALID);
+    }
+
     return 0;
 }

@@ -68,4 +68,25 @@
 
 <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>main</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{}</block></function></unit>
 
+<unit>
+<enum><specifier>public</specifier> enum <name>Policy</name> <block>{
+
+  <decl><name>DISABLE</name><argument_list>(<argument><expr><name><name>Condition</name><operator>.</operator><name>FALSE</name></name></expr></argument>)</argument_list></decl>,
+  <decl><name>NEVER</name><argument_list>(<argument><expr><name><name>Condition</name><operator>.</operator><name>FALSE</name></name></expr></argument>)</argument_list></decl>,
+  <decl><name>DEFAULT</name><argument_list>(<argument><expr><name><name>Condition</name><operator>.</operator><name>DEFAULT</name></name></expr></argument>)</argument_list></decl>,
+  <decl><name>ALWAYS</name><argument_list>(<argument><expr><name><name>Condition</name><operator>.</operator><name>TRUE</name></name></expr></argument>)</argument_list></decl>;
+
+  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Condition</name></type> <name>condition</name></decl>;</decl_stmt>
+
+  <constructor><specifier>private</specifier> <name>Policy</name><parameter_list>(<parameter><decl><type><name>Condition</name></type> <name>condition</name></decl></parameter>)</parameter_list> <block>{
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>condition</name></name> <operator>=</operator> <name>condition</name></expr>;</expr_stmt>
+  }</block></constructor>
+
+  <function><type><name>Condition</name></type> <name>getCondition</name><parameter_list>()</parameter_list> <block>{
+    <return>return <expr><name>condition</name></expr>;</return>
+  }</block></function>
+
+}</block></enum>
+</unit>
+
 </unit>

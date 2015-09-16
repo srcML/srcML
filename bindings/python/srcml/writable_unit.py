@@ -205,16 +205,6 @@ class writable_unit(object):
         is enabled for the archive. If None it's not output.
         """
         return unit_get_hash(self.srcml_unit)
-    @hash.setter
-    def hash(self, value):
-        """
-        Set the hash of a unit.
-
-        Preconditions - value must be a string or None.
-        """
-        assert value is None or isinstance(value, str), "Invalid hash type must be a string or None."
-        unit_set_hash(self.srcml_unit, value)
-
     
     @property
     def revision(self):

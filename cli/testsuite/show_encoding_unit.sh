@@ -21,6 +21,8 @@ define archive <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$input"
+xmlcheck "$archive"
 createfile sub/a.cpp.xml "$input"
 createfile sub/archive.cpp.xml "$archive"
 

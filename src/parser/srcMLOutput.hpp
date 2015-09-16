@@ -162,6 +162,9 @@ public:
     /** array for a number to uri */
     std::vector<std::string> num2uri;
 
+    /** array for number of uri's used */
+    std::vector<bool> num2used;
+
     /** an array of name-value attribute pairs */
     const std::vector<std::string> & unit_attributes;
 
@@ -200,6 +203,20 @@ public:
 
     /** user defined macro list */
     std::vector<std::string> user_macro_list;
+
+    /**
+        Info needed to rewrite srcML so that only the actually-used
+        namespaces are listed. This is done external to the translator
+        since the string produced here is copied to a std::string in libsrcml
+    */
+
+    /** first position of namespaces on unit */
+    int start_ns_pos;
+
+    int ns_list_size;
+
+    /** reduced set of namespace declarations to those actually used */
+    std::string reduced_ns;
 
     void processUnit(const antlr::RefToken& token);
 

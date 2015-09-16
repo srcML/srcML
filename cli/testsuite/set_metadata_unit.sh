@@ -25,6 +25,8 @@ define nestedfile <<- 'STDOUT'
 	</src:unit>
 	STDOUT
 
+xmlcheck "$sxmlfile1"
+xmlcheck "$nestedfile"
 createfile sub/a.cpp.xml "$sxmlfile1"
 
 srcml sub/a.cpp.xml --show-language

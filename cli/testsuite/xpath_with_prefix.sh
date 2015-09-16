@@ -8,8 +8,8 @@ source $(dirname "$0")/framework_test.sh
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo">
-	
-	<unit language="Java">
+
+	<unit revision="REVISION" language="Java">
 	<foo:a/>
 	</unit>
 
@@ -39,6 +39,11 @@ define output <<- 'STDOUT'
 
 	</unit>
 	STDOUT
+
+# TODO: issue #1213
+xmlcheck "$srcml"
+xmlcheck "$xpathempty"
+xmlcheck "$output"
 
 createfile sub/a.cpp.xml "$srcml"
 

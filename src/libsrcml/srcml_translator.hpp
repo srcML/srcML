@@ -156,9 +156,11 @@ private:
     /** buffer to hold output to memory */
     xmlBuffer * buffer;
 
+public:
     /** member for handling output */
     srcMLOutput out;
 
+private:
     /** size of tabstop */
     size_t tabsize;
 

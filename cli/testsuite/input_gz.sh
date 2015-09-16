@@ -23,6 +23,9 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$foutput"
+xmlcheck "$output"
+
 createfile archive/a.cpp "$src"
 gzip -c archive/a.cpp > archive/a.cpp.gz
 

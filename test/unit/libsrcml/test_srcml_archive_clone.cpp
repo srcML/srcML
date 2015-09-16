@@ -59,12 +59,13 @@ int main() {
         trans.type = SRCML_XPATH;
         trans.arguments.str = "//src:unit";
         archive->transformations.push_back(trans);
+        archive->revision_number = SRCDIFF_REVISION_ORIGINAL;
 
         srcml_archive * new_archive = srcml_archive_clone(archive);
 
         dassert(new_archive->type, SRCML_ARCHIVE_INVALID);
         dassert(*new_archive->encoding, "e");
-        dassert(new_archive->src_encoding, 0);
+        dassert(new_archive->src_encoding, boost::none);
         dassert(*new_archive->language, "l");
         dassert(*new_archive->url, "u");
         dassert(*new_archive->version, "v");
@@ -92,6 +93,8 @@ int main() {
         dassert(new_archive->input, 0);
 
         dassert(new_archive->transformations.size(), 0);
+
+        dassert(*new_archive->revision_number, SRCDIFF_REVISION_ORIGINAL)
 
         archive->translator = 0;
         archive->reader = 0;

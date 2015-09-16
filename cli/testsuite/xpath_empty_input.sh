@@ -18,6 +18,8 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns="http://www.srcML.org/srcML/src"/>
 	STDOUT
 
+xmlcheck "$xpath_empty"
+xmlcheck "$output"
 createfile sub/a.cpp.xml ""
 
 # TODO: issue #973

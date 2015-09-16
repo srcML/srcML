@@ -10,6 +10,7 @@ define input <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$input"
 createfile sub/a.cpp.xml "$input"
 message "timestamp provided"
 
@@ -26,6 +27,7 @@ define none <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$none"
 createfile sub/a.cpp.xml "$none"
 message "timestamp missing"
 

@@ -47,6 +47,9 @@ define fnomarkup_else <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$fmarkup_else"
+xmlcheck "$fnomarkup_else"
+
 
 createfile sub/a.cpp "$input"
 createfile sub/b.cpp "b;"

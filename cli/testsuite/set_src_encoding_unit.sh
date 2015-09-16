@@ -12,25 +12,28 @@ define foutput <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$foutput"
 createfile sub/a.cpp "$sfile1"
 createfile sub/a.cpp.xml "$foutput"
 
-src2srcml sub/a.cpp --src-encoding "ISO-8859-1"
+iconv -f UTF-8 -t ISO-8859-1 sub/a.cpp > sub/a_ISO-8859-1.cpp
+
+src2srcml sub/a_ISO-8859-1.cpp --src-encoding "ISO-8859-1" --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml sub/a.cpp --src-encoding="ISO-8859-1"
+src2srcml sub/a_ISO-8859-1.cpp --src-encoding="ISO-8859-1" --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-1" sub/a.cpp
+src2srcml --src-encoding "ISO-8859-1" sub/a_ISO-8859-1.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-1" sub/a.cpp
+src2srcml --src-encoding "ISO-8859-1" sub/a_ISO-8859-1.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding="ISO-8859-1" sub/a.cpp
+src2srcml --src-encoding="ISO-8859-1" sub/a_ISO-8859-1.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-1" sub/a.cpp
+src2srcml --src-encoding "ISO-8859-1" sub/a_ISO-8859-1.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
 src2srcml sub/a.cpp.xml --src-encoding "ISO-8859-1"
@@ -39,96 +42,116 @@ check 3<<< "$sfile1"
 src2srcml --src-encoding "ISO-8859-1" sub/a.cpp.xml
 check 3<<< "$sfile1"
 
-src2srcml --src-encoding "ISO-8859-1" -o sub/a.cpp sub/a.cpp.xml
-check sub/a.cpp 3<<< "$sfile1"
+src2srcml --src-encoding "ISO-8859-1" -o sub/a_ISO-8859-1.cpp sub/a.cpp.xml
+check sub/a_ISO-8859-1.cpp 3<<< "$sfile1"
 
-src2srcml --src-encoding "ISO-8859-1" sub/a.cpp.xml -o sub/a.cpp
-check sub/a.cpp 3<<< "$sfile1"
+src2srcml --src-encoding "ISO-8859-1" sub/a.cpp.xml -o sub/a_ISO-8859-1.cpp
+check sub/a_ISO-8859-1.cpp 3<<< "$sfile1"
 
-src2srcml -l C++ --src-encoding "ISO-8859-1" -o sub/a.cpp.xml sub/a.cpp
+src2srcml -l C++ --src-encoding "ISO-8859-1" -o sub/a.cpp.xml sub/a_ISO-8859-1.cpp --filename "sub/a.cpp"
 check sub/a.cpp.xml 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml
+src2srcml --src-encoding "ISO-8859-1" sub/a_ISO-8859-1.cpp -o sub/a.cpp.xml --filename "sub/a.cpp"
 check sub/a.cpp.xml 3<<< "$foutput"
 
 
 # other supported encodings
-src2srcml --src-encoding "UTF-8" sub/a.cpp
+iconv -f UTF-8 -t UTF-8 sub/a.cpp > sub/a_UTF-8.cpp
+src2srcml --src-encoding "UTF-8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "UTF8" sub/a.cpp
+src2srcml --src-encoding "UTF8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "UTF-16" sub/a.cpp
+iconv -f UTF-8 -t UTF-16 sub/a.cpp > sub/a_UTF-16.cpp
+src2srcml --src-encoding "UTF-16" sub/a_UTF-16.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "UTF16" sub/a.cpp
+src2srcml --src-encoding "UTF16" sub/a_UTF-16.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-10646-UCS-2" sub/a.cpp
+iconv -f UTF-8 -t ISO-10646-UCS-2 sub/a.cpp > sub/a_ISO-10646-UCS-2.cpp
+src2srcml --src-encoding "ISO-10646-UCS-2" sub/a_ISO-10646-UCS-2.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "UCS-2" sub/a.cpp
+iconv -f UTF-8 -t UCS-2 sub/a.cpp > sub/a_UCS-2.cpp
+src2srcml --src-encoding "UCS-2" sub/a_UCS-2.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "UCS2" sub/a.cpp
+src2srcml --src-encoding "UCS2" sub/a_UCS-2.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-10646-UCS-4" sub/a.cpp
+iconv -f UTF-8 -t ISO-10646-UCS-4 sub/a.cpp > sub/a_ISO-10646-UCS-4.cpp
+src2srcml --src-encoding "ISO-10646-UCS-4" sub/a_ISO-10646-UCS-4.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "UCS-4" sub/a.cpp
+iconv -f UTF-8 -t UCS-4 sub/a.cpp > sub/a_USC-4.cpp
+src2srcml --src-encoding "UCS-4" sub/a_USC-4.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "UCS4" sub/a.cpp
+src2srcml --src-encoding "UCS4" sub/a_USC-4.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-1" sub/a.cpp
+iconv -f UTF-8 -t ISO-8859-1 sub/a.cpp > sub/a_ISO-8859-1.cpp
+src2srcml --src-encoding "ISO-8859-1" sub/a_ISO-8859-1.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-LATIN-1" sub/a.cpp
+iconv -f UTF-8 -t ISO-LATIN-1 sub/a.cpp > sub/a_ISO-LATIN-1.cpp
+src2srcml --src-encoding "ISO-LATIN-1" sub/a_ISO-LATIN-1.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO LATIN 1" sub/a.cpp
+src2srcml --src-encoding "ISO LATIN 1" sub/a_ISO-LATIN-1.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-2" sub/a.cpp
+iconv -f UTF-8 -t ISO-8859-2 sub/a.cpp > sub/a_ISO-8859-2.cpp
+src2srcml --src-encoding "ISO-8859-2" sub/a_ISO-8859-2.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-LATIN-2" sub/a.cpp
+iconv -f UTF-8 -t ISO-LATIN-2 sub/a.cpp > sub/a_ISO-LATIN-2.cpp
+src2srcml --src-encoding "ISO-LATIN-2" sub/a_ISO-LATIN-2.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO LATIN 2" sub/a.cpp
+src2srcml --src-encoding "ISO LATIN 2" sub/a_ISO-LATIN-2.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-3" sub/a.cpp
+iconv -f UTF-8 -t ISO-8859-3 sub/a.cpp > sub/a_ISO-8859-3.cpp
+src2srcml --src-encoding "ISO-8859-3" sub/a_ISO-8859-3.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-4" sub/a.cpp
+iconv -f UTF-8 -t ISO-8859-4 sub/a.cpp > sub/a_ISO-8859-4.cpp
+src2srcml --src-encoding "ISO-8859-4" sub/a_ISO-8859-4.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-5" sub/a.cpp
+iconv -f UTF-8 -t ISO-8859-5 sub/a.cpp > sub/a_ISO-8859-5.cpp
+src2srcml --src-encoding "ISO-8859-5" sub/a_ISO-8859-5.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-6" sub/a.cpp
+iconv -f UTF-8 -t ISO-8859-6 sub/a.cpp > sub/a_ISO-8859-6.cpp
+src2srcml --src-encoding "ISO-8859-6" sub/a_ISO-8859-6.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-7" sub/a.cpp
+iconv -f UTF-8 -t ISO-8859-7 sub/a.cpp > sub/a_ISO-8859-7.cpp
+src2srcml --src-encoding "ISO-8859-7" sub/a_ISO-8859-7.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-8" sub/a.cpp
+iconv -f UTF-8 -t ISO-8859-8 sub/a.cpp > sub/a_ISO-8859-8.cpp
+src2srcml --src-encoding "ISO-8859-8" sub/a_ISO-8859-8.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-8859-9" sub/a.cpp
+iconv -f UTF-8 -t ISO-8859-9 sub/a.cpp > sub/a_ISO-8859-9.cpp
+src2srcml --src-encoding "ISO-8859-9" sub/a_ISO-8859-9.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "ISO-2022-JP" sub/a.cpp
+iconv -f UTF-8 -t ISO-2022-JP sub/a.cpp > sub/a_ISO-2022-JP.cpp
+src2srcml --src-encoding "ISO-2022-JP" sub/a_ISO-2022-JP.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "SHIFT_JIS" sub/a.cpp
+iconv -f UTF-8 -t SHIFT_JIS sub/a.cpp > sub/a_SHIFT_JIS.cpp
+src2srcml --src-encoding "SHIFT_JIS" sub/a_SHIFT_JIS.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
-src2srcml --src-encoding "EUC-JP" sub/a.cpp
+iconv -f UTF-8 -t EUC-JP sub/a.cpp > sub/a_EUC-JP.cpp
+src2srcml --src-encoding "EUC-JP" sub/a.cpp --filename "sub/a.cpp"
 check 3<<< "$foutput"
 
 
@@ -148,8 +171,8 @@ createfile sub/special_characters_utf8.cpp "$special_characters_utf8_actual"
 createfile sub/chinese_characters_utf8.cpp "$chinese_characters_utf8_actual"
 
 # create utf16 versions of the files
-iconv -f UTF-8 -t UTF-16 sub/special_characters_utf8.cpp > sub/special_characters_utf16.cpp
-iconv -f UTF-8 -t UTF-16 sub/chinese_characters_utf8.cpp > sub/chinese_characters_utf16.cpp
+iconv -f UTF-8 -t UTF-16LE sub/special_characters_utf8.cpp > sub/special_characters_utf16.cpp
+iconv -f UTF-8 -t UTF-16LE sub/chinese_characters_utf8.cpp > sub/chinese_characters_utf16.cpp
 
 special_characters_utf16_actual=$(cat sub/special_characters_utf16.cpp)
 chinese_characters_utf16_actual=$(cat sub/chinese_characters_utf16.cpp)

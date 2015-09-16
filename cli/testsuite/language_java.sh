@@ -9,6 +9,7 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java" filename="sub/a.cpp"/>
 	STDOUT
 
+xmlcheck "$output"
 createfile sub/a.cpp ""
 
 src2srcml -l "Java" sub/a.cpp

@@ -21,6 +21,61 @@
 #ifndef INCLUDED_SRCML_TYPES_HPP
 #define INCLUDED_SRCML_TYPES_HPP
 
+/** string for language Objective-C */
+#define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
+
+/** Private options */
+
+/** Include any XML namespace declarations */
+#define SRCML_OPTION_NAMESPACE_DECL    1<<5
+/** Markup preprocessor elements (default for C, C++, C#) */
+#define SRCML_OPTION_CPP_NOMACRO       1<<2
+/** Wrap function/classes/etc with templates (default: on) */
+#define SRCML_OPTION_WRAP_TEMPLATE     1<<11
+/** Markups literal in special namespace */
+#define SRCML_OPTION_LITERAL           1<<21
+/** Markups modifiers in special namespace */
+#define SRCML_OPTION_MODIFIER          1<<22
+/** Markups operator in special namespace */
+#define SRCML_OPTION_OPERATOR          1<<23
+/** output is interactive (good for editing applications) */
+#define SRCML_OPTION_INTERACTIVE       1<<12
+/** Turn on optional ternary operator markup */
+#define SRCML_OPTION_TERNARY           1<<18
+/** Marks up one-line implicit blocks as psuedoblocks (default: on) */
+#define SRCML_OPTION_PSEUDO_BLOCK      1<<19
+/** Not sure what this used for */
+#define SRCML_OPTION_XPATH_TOTAL       1<<13
+/** Nest if in else if intead of elseif tag */
+#define SRCML_OPTION_NESTIF            1<<9
+/** Additional cpp:if/cpp:endif checking */
+#define SRCML_OPTION_CPPIF_CHECK       1<<16
+/** Extra processing of @code#line@endcode for position information */
+#define SRCML_OPTION_LINE              1<<15
+/** Markups OpenMP in special namespace */
+#define SRCML_OPTION_OPENMP            1<<25
+/** Expression mode */
+#define SRCML_OPTION_EXPRESSION        1<<14
+/** Apply transformations to the entire srcML file (default: each unit */
+#define SRCML_OPTION_APPLY_ROOT        1<<8
+/** Debug time attribute */
+#define SRCML_OPTION_DEBUG_TIMER       1<<17
+/** Parser output special tokens for debugging the parser */
+#define SRCML_OPTION_DEBUG             1<<24
+/** Turn on old optional markup behaviour */
+#define SRCML_OPTION_OPTIONAL_MARKUP   1<<20
+
+ /** Create an archive */
+#define SRCML_OPTION_ARCHIVE           1<<0
+ /** Output hash attribute on each unit (default: on) */
+#define SRCML_OPTION_HASH              1<<10
+
+/** All default enabled options */
+#define SRCML_OPTION_DEFAULT (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH)
+ 
+/** All default enabled options */
+#define SRCML_OPTION_DEFAULT_INTERNAL (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY /* | SRCML_OPTION_OPENMP*/)
+
 #include <libxml/xmlwriter.h>
 
 #include <Language.hpp>
@@ -189,6 +244,9 @@ struct srcml_archive {
     /** libxml2 callback wrapper context.  Only needed for IO functions */
     boost::any context;
 
+    /** srcDiff revision number */
+    boost::optional<size_t> revision_number;
+
 };
 
 /**
@@ -238,5 +296,14 @@ struct srcml_unit {
     boost::any context;
 
 };
+
+/** Set the hash attribute for the srcml unit
+ * @param unit A srcml_unit
+ * @param hash A hash string
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+int srcml_unit_set_hash (struct srcml_unit* unit, const char* hash);
+
 
 #endif

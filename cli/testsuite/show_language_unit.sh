@@ -11,6 +11,7 @@ define srcmlcpp <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" directory="bar" filename="foo" version="1.2"/>
 	STDOUT
 
+xmlcheck "$srcmlcpp"
 createfile sub/a.cpp.xml "$srcmlcpp"
 
 srcml --show-language sub/a.cpp.xml
@@ -26,6 +27,7 @@ define srcmljava <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$srcmljava"
 createfile sub/a.java.xml "$srcmljava"
 
 srcml --show-language sub/a.java.xml
@@ -41,6 +43,7 @@ define srcmlc <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$srcmlc"
 createfile sub/a.c.xml "$srcmlc"
 
 srcml --show-language sub/a.c.xml
@@ -56,6 +59,7 @@ define srcmlobjc <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+xmlcheck "$srcmlobjc"
 createfile sub/a.m.xml "$srcmlobjc"
 
 srcml --show-language sub/a.m.xml
@@ -67,17 +71,18 @@ check 3<<< "Objective-C"
 # Aspect J
 define srcmlaj <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="AspectJ">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java">
 	</unit>
 	STDOUT
 
+xmlcheck "$srcmlaj"
 createfile sub/a.aj.xml "$srcmlaj"
 
 srcml --show-language sub/a.aj.xml
-check 3<<< "AspectJ"
+check 3<<< "Java"
 
 srcml --show-language < sub/a.aj.xml
-check 3<<< "AspectJ"
+check 3<<< "Java"
 
 # Empty
 define empty <<- 'STDIN'
@@ -85,6 +90,7 @@ define empty <<- 'STDIN'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="" directory="" filename="" version=""/>
 	STDIN
 
+xmlcheck "$empty"
 createfile sub/a.cpp.xml "$empty"
 
 srcml --show-language sub/a.cpp.xml

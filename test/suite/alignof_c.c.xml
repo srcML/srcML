@@ -50,7 +50,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><alignof>_Alignof<argument_list>(<argument><expr><operator>(</operator><literal type="string">"a"</literal><operator>,</operator> <operator>(</operator><name>mAccWrapCreated</name><operator>-</operator><name>mAccWrapDeleted</name></expr><operator>)</operator><operator>)</operator></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
+<expr_stmt><expr><alignof>_Alignof<argument_list>(<argument><expr><operator>(</operator><literal type="string">"a"</literal><operator>,</operator> <operator>(</operator><name>mAccWrapCreated</name><operator>-</operator><name>mAccWrapDeleted</name><operator>)</operator><operator>)</operator></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 <unit>

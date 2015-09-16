@@ -49,7 +49,7 @@ namespace {
     xmlChar const* const decl_stmt_tag = BAD_CAST "decl_stmt";
     xmlChar const* const empty_stmt_tag = BAD_CAST "empty_stmt";
     xmlChar const* const decl_tag = BAD_CAST "decl";
-    xmlChar const* const param_tag = BAD_CAST "param";
+    xmlChar const* const param_tag = BAD_CAST "parameter";
     xmlChar const* const argument_list_tag = BAD_CAST "argument_list";
 
 
@@ -103,7 +103,7 @@ namespace {
     xmlChar const* const namespace_tag = BAD_CAST "namespace";
 
     xmlChar const* const type_attr = BAD_CAST "type";
-    xmlChar const* const template_attr_value = template_tag;
+    xmlChar const* const template_attr_value = BAD_CAST"generic";
 
     xmlChar const* const init_tag = BAD_CAST "init";
 
@@ -404,7 +404,8 @@ void xpath_exfun_is_class_template_partial_specialization(xmlXPathParserContextP
     xmlNodePtr currentNode = ctxt->context->node;
     if(currentNode->type == XML_ELEMENT_NODE) {
         if(xmlStrEqual(currentNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0) {
-            if (    xmlStrEqual(class_tag, currentNode->name) != 0
+            if (
+                xmlStrEqual(class_tag, currentNode->name) != 0
                 ||  xmlStrEqual(class_decl_tag, currentNode->name) != 0
                 ||  xmlStrEqual(struct_tag, currentNode->name) != 0
                 ||  xmlStrEqual(struct_decl_tag, currentNode->name) != 0
@@ -661,17 +662,18 @@ void xpath_exfun_is_mutually_exclusive(xmlXPathParserContextPtr ctxt, int nargs)
                 if (xmlStrEqual(currentNode->name, synchronized_tag) != 0) {
                     xmlXPathReturnTrue(ctxt); return;
                 }else if(xmlStrEqual(currentNode->name, function_tag) != 0) {
-                    xmlNodePtr typeNode = xmlFirstElementChild(currentNode);
+                    //xmlNodePtr typeNode = xmlFirstElementChild(currentNode);
                     // Function without a return type.
-                    if (!typeNode) {
-                        xmlXPathReturnFalse(ctxt); return;
-                    }else if ( !(typeNode->type == XML_ELEMENT_NODE
+                    //if (!typeNode) {
+                    //    xmlXPathReturnFalse(ctxt); return;
+                    //}
+                    /*else if ( !(typeNode->type == XML_ELEMENT_NODE
                         && xmlStrEqual(typeNode->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0
                         && xmlStrEqual(typeNode->name, type_tag) != 0))
                     {
                         xmlXPathReturnFalse(ctxt); return;
-                    }
-                    xmlNodePtr currentTypeElement = xmlFirstElementChild(typeNode);
+                    }*/
+                    xmlNodePtr currentTypeElement = xmlFirstElementChild(currentNode);
                     while(currentTypeElement) {
                         if (currentTypeElement->type == XML_ELEMENT_NODE
                             && xmlStrEqual(currentTypeElement->ns->href, BAD_CAST SRCML_SRC_NS_URI) != 0

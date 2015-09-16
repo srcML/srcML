@@ -16,16 +16,16 @@ define foutput <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="Java" filename="sub/a.java"/>
 	STDOUT
 
+xmlcheck "$output"
+xmlcheck "$foutput"
+
 createfile sub/a.java ""
 
 src2srcml --cpp sub/a.java
-
 check 3<<< "$foutput"
 
 echo -n "" | src2srcml -l Java --cpp -o sub/a.java.xml
-
 check sub/a.java.xml 3<<< "$output"
 
 src2srcml --cpp sub/a.java -o sub/a.java.xml
-
 check sub/a.java.xml 3<<< "$foutput"

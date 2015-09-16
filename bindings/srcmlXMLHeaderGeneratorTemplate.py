@@ -46,3 +46,4 @@ else:
     srcml(srcmlLibLocation, tempFileLocation, srcmlHeaderOutputPath, "temp", "C++")
 
 os.remove(tempFileLocation)
+

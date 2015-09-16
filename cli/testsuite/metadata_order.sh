@@ -12,6 +12,7 @@ define srcml <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="sub" filename="a.cpp" version="1.0"/>
 	STDOUT
 
+xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
 # TODO: Add get-hash and get-timestamp
@@ -20,11 +21,11 @@ options=( --show-language --show-url --show-filename --show-src-version --show-e
 size="${#options[@]}"
 
 define values <<- 'STDOUT'
-	language="C++"
-	filename="a.cpp"
-	url="sub"
-	version="1.0"
 	encoding="UTF-8"
+	url="sub"
+	filename="a.cpp"
+	language="C++"
+	version="1.0"
 	STDOUT
 
 index=-1
@@ -38,19 +39,6 @@ new_arg() {
 	message "$val"
 
 }
-
-# TODO: This would be cleaner, if only bash didn't output the new_arg history instead
-# of the srcml input
-
-#for (( i = 0; i < $size; i++ )); do
-#	new_arg
-#
-#	srcml2src $val sub/a.cpp.xml
-#	check 3<<< "$values"
-#
-#	srcml2src $val < sub/a.cpp.xml
-#	check 3<<< "$values"
-#done
 
 new_arg
 

@@ -9,6 +9,7 @@ define input <<- 'STDIN'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:foo="foo.com" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 	STDIN
 
+xmlcheck "$input"
 createfile sub/a.xml "$input"
 
 # from file
