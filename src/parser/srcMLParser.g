@@ -728,6 +728,7 @@ public:
     static const antlr::BitSet skip_tokens_set;
     static const antlr::BitSet class_tokens_set;
     static const antlr::BitSet decl_specifier_tokens_set;
+    static const antlr::BitSet identifier_list_tokens_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
@@ -2087,11 +2088,11 @@ ternary_check[] { ENTRY_DEBUG } :
 
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (options { greedy = true; } : paren_pair | curly_pair)*
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : {identifier_list_tokens_set.member(LA(1)) }? compound_name_inner[false] | paren_pair | bracket_pair (options { greedy = true; } : paren_pair | curly_pair)*
          | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))
 
     // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : paren_pair | bracket_pair (options { greedy = true; } : paren_pair | curly_pair)*
+    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : {identifier_list_tokens_set.member(LA(1)) }? compound_name_inner[false] | paren_pair | bracket_pair (options { greedy = true; } : paren_pair | curly_pair)*
          | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))* 
 
 ;
