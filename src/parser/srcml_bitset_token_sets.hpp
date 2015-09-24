@@ -150,4 +150,25 @@ create_token_set(decl_specifier_tokens,
 
 const antlr::BitSet srcMLParser::decl_specifier_tokens_set(bitset_buckets<decl_specifier_tokens>::data, bitset_buckets<decl_specifier_tokens>::num_token_longs);
 
+create_token_set(identifier_list_tokens, 
+
+    srcMLParser::NAME, srcMLParser::INCLUDE, srcMLParser::DEFINE, srcMLParser::ELIF, srcMLParser::ENDIF, srcMLParser::ERRORPREC, srcMLParser::IFDEF, srcMLParser::IFNDEF, srcMLParser::LINE, srcMLParser::PRAGMA, srcMLParser::UNDEF |
+    srcMLParser::WARNING, srcMLParser::SUPER, srcMLParser::REGION, srcMLParser::ENDREGION, srcMLParser::GET, srcMLParser::SET, srcMLParser::ADD, srcMLParser::REMOVE, srcMLParser::ASYNC, srcMLParser::YIELD |
+    srcMLParser::SIGNAL, srcMLParser::FINAL, srcMLParser::OVERRIDE, srcMLParser::VOID, srcMLParser::ASM,
+
+    // C# linq
+    srcMLParser::FROM, srcMLParser::WHERE, srcMLParser::SELECT, srcMLParser::LET, srcMLParser::ORDERBY, srcMLParser::ASCENDING, srcMLParser::DESCENDING, srcMLParser::GROUP, srcMLParser::BY, srcMLParser::JOIN, srcMLParser::ON, srcMLParser::EQUALS,
+        srcMLParser::INTO, srcMLParser::THIS, srcMLParser::ALIAS,
+
+    // Objective-C
+    srcMLParser::IMPORT, srcMLParser::ATPROTOCOL,
+
+    // C
+    srcMLParser::CRESTRICT, srcMLParser::MUTABLE, srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH,
+
+    //Qt
+    srcMLParser::EMIT);
+
+const antlr::BitSet srcMLParser::identifier_list_tokens_set(bitset_buckets<identifier_list_tokens>::data, bitset_buckets<identifier_list_tokens>::num_token_longs);
+
 #endif
