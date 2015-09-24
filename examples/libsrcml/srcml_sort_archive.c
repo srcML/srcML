@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     while (1) {
 
 
-        units[num_units] = srcml_archive_read_unit(iarchive);
+        units[num_units] = srcml_archive_read_unit_header(iarchive);
         if (units[num_units] == 0)
             break;
         ++num_units;

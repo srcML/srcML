@@ -39,7 +39,6 @@ int main(int argc, char* argv[]) {
     archive = srcml_archive_create();
 
     /* setup options and attributes */
-    srcml_archive_enable_option(archive, SRCML_OPTION_LITERAL | SRCML_OPTION_MODIFIER | SRCML_OPTION_POSITION);
     srcml_archive_set_version(archive, "211");
     srcml_archive_set_tabstop(archive, 4);
 
