@@ -6,8 +6,8 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr><name>a</name> <operator>is</operator> <name>int</name></expr>)</condition><then>
-<block type="pseudo"><empty_stmt>;</empty_stmt></block></then></if>
+<if>if<condition>(<expr><name>a</name> <operator>is</operator> <name>int</name></expr>)</condition><then><block type="pseudo">
+<empty_stmt>;</empty_stmt></block></then></if>
 </unit>
 
 <unit>

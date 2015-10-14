@@ -186,8 +186,8 @@
 </unit>
 
 <unit>
-<for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control>
-<block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
+<for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
 </unit>
 
 <unit>

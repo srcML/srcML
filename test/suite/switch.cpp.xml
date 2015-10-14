@@ -6,15 +6,15 @@
 </unit>
 
 <unit>
-<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><empty_stmt>;</empty_stmt></block></switch>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition><block type="pseudo"> <empty_stmt>;</empty_stmt></block></switch>
 </unit>
 
 <unit>
-<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><case>case <expr><name>foo</name></expr>:</case> <break>break;</break></block></switch>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition><block type="pseudo"> <case>case <expr><name>foo</name></expr>:</case> <break>break;</break></block></switch>
 </unit>
 
 <unit>
-<switch>switch <condition>(<expr><name>a</name></expr>)</condition> <block type="pseudo"><default>default:</default> <break>break;</break></block></switch>
+<switch>switch <condition>(<expr><name>a</name></expr>)</condition><block type="pseudo"> <default>default:</default> <break>break;</break></block></switch>
 </unit>
 
 <unit>
