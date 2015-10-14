@@ -49,8 +49,8 @@
 </unit>
 
 <unit>
-<if>if <condition>(<expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call> <operator>&lt;</operator> <name>t</name></expr>)</condition><then>
-     <block type="pseudo"><empty_stmt>;</empty_stmt></block></then></if>
+<if>if <condition>(<expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call> <operator>&lt;</operator> <name>t</name></expr>)</condition><then><block type="pseudo">
+     <empty_stmt>;</empty_stmt></block></then></if>
 </unit>
 
 <unit>

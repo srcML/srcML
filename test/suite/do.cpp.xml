@@ -10,11 +10,11 @@
 </unit>
 
 <unit>
-<do>do <block type="pseudo"><break>break;</break></block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
+<do>do<block type="pseudo"> <break>break;</break></block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
 </unit>
 
 <unit>
-<do>do <block type="pseudo"><while>while <condition>(<expr><name>b</name></expr>)</condition><block type="pseudo"><empty_stmt>;</empty_stmt></block></while></block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
+<do>do<block type="pseudo"> <while>while <condition>(<expr><name>b</name></expr>)</condition><block type="pseudo"><empty_stmt>;</empty_stmt></block></while></block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
 </unit>
 
 </unit>

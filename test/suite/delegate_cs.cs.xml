@@ -37,22 +37,22 @@
 
 <unit>
 <expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then>
-                    <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if>
+                <if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo">
+                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if>
  }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition>
-                    <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while>
+                <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
+                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while>
  }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit>
 <expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control>
-                    <block type="pseudo"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
+                <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo">
+                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
  }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 

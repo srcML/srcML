@@ -1627,7 +1627,7 @@ lambda_java[] { ENTRY_DEBUG } :
     {
 
         if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
-            startElement(SPSEUDO_BLOCK);
+            startNoSkipElement(SPSEUDO_BLOCK);
 
     }
 
@@ -2152,7 +2152,7 @@ do_statement[] { ENTRY_DEBUG } :
         {
 
             if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
-                startElement(SPSEUDO_BLOCK);
+                startNoSkipElement(SPSEUDO_BLOCK);
 
         }
 ;
@@ -2344,7 +2344,7 @@ else_statement[] { ENTRY_DEBUG } :
         {
 
             if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
-                startElement(SPSEUDO_BLOCK);
+                startNoSkipElement(SPSEUDO_BLOCK);
 
         }
 ;
@@ -6910,7 +6910,7 @@ lambda_csharp[] { ENTRY_DEBUG } :
 
         if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY) {
 
-            startElement(SPSEUDO_BLOCK);
+            startNoSkipElement(SPSEUDO_BLOCK);
 
         } else if(LA(1) == LCURLY)
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
@@ -7526,7 +7526,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     startNoSkipElement(STHEN);
 
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
-                        startElement(SPSEUDO_BLOCK);
+                        startNoSkipElement(SPSEUDO_BLOCK);
 
 
                     if(cppif_duplicate) {
@@ -7549,7 +7549,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 
                     endMode(MODE_LIST);
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
-                        startElement(SPSEUDO_BLOCK);
+                        startNoSkipElement(SPSEUDO_BLOCK);
 
                     if(cppif_duplicate) {
 
@@ -7571,7 +7571,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                         endMode(MODE_LIST);
     
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
-                        startElement(SPSEUDO_BLOCK);
+                        startNoSkipElement(SPSEUDO_BLOCK);
 
                     if(cppif_duplicate) {
 
@@ -7589,7 +7589,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 
                     endMode(MODE_FOR_CONDITION);
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
-                        startElement(SPSEUDO_BLOCK);
+                        startNoSkipElement(SPSEUDO_BLOCK);
 
                     if(cppif_duplicate) {
 
