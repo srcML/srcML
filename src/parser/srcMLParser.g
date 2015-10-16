@@ -3622,8 +3622,8 @@ else_handling[] { ENTRY_DEBUG } :
 ;
 
 // mid-statement
-statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE;
-                   CALL_TYPE type = NOCALL;  bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
+statement_part[] { int type_count; int secondtoken = 0; STMT_TYPE stmt_type = NONE;
+                   CALL_TYPE type = NOCALL; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
