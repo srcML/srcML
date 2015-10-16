@@ -1632,7 +1632,7 @@ void xsltsrcMLRegister () {
                                    "descendant::diff:*[self::diff:insert or self::diff:delete]");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "haschange",
-                                   "descendant::diff:delete[@type[.='change']]");
+                                   "descendant::diff:delete[@type[.='replace']]");
 
     // srcdiff includes functions
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "common",
@@ -1648,7 +1648,7 @@ void xsltsrcMLRegister () {
                                    "ancestor-or-self::diff:*[1][self::diff:insert or self::diff:delete] or (ancestor-or-self::diff:*[1][self::diff:ws] and ancestor-or-self::diff:*[2][self::diff:insert or self::diff:delete])");
 
     xpathRegisterExtensionFunction(SRCML_DIFF_NS_URI, "changed",
-                                   "ancestor-or-self::diff:*[1][@type[.='change']] or (ancestor-or-self::diff:*[1][self::diff:ws] and ancestor-or-self::diff:*[2][@type[.='change']])");
+                                   "ancestor-or-self::diff:*[1][@type[.='replace']] or (ancestor-or-self::diff:*[1][self::diff:ws] and ancestor-or-self::diff:*[2][@type[.='replace']])");
 
 
     // register all the xpath extension functions
