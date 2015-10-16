@@ -12,9 +12,14 @@
 <unit>
 <try>try<init>(<expr><name>a</name> <operator>=</operator> <name>b</name></expr>)</init> <block>{}</block></try>
 </unit>
-<unit>
 
+<unit>
 <try>try<init>(<decl><type><name>A</name></type> <name>a</name> <init>= <expr><operator>new</operator> <call><name>A</name><argument_list>()</argument_list></call></expr></init></decl>)</init> <block>{}</block></try>
+</unit>
+
+<unit>
+<try>try <init>(<decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;
+     <decl><type><name>int</name></type> <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>)</init> <block>{}</block></try>
 </unit>
 
 </unit>

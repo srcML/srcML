@@ -3638,6 +3638,9 @@ statement_part[] { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = N
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
         enum_short_variable_declaration |
 
+        { inMode(MODE_FOR_LIKE_LIST) }?
+        for_like_list_item |
+
         /*
           MODE_EXPRESSION
         */
@@ -6744,7 +6747,7 @@ for_like_statement_pre[int tag] { ENTRY_DEBUG } :
 
 ;
 
-for_like_statement_post[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+for_like_statement_post[] { ENTRY_DEBUG } :
 
     {
 
@@ -6755,30 +6758,34 @@ for_like_statement_post[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE 
 
     }
     LPAREN
+
     {
 
-        startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
+        startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
 
         //startElement(SFOR_INITIALIZATION);
     }
+    for_like_list_item
 
-    (
-        // explicitly check for a variable declaration since it can easily
-        // be confused with an expression
-        { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
-        for_initialization_variable_declaration[type_count] |
+;
 
-        {
-            // use a new mode without the expect so we don't nest expression parts
-            startNewMode(MODE_EXPRESSION);
+for_like_list_item[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
 
-            // start the expression element
-            startElement(SEXPRESSION);
-        }
-        // explicitly check for non-terminate so that a large switch statement
-        // isn't needed
-        expression
-    )
+    // explicitly check for a variable declaration since it can easily
+    // be confused with an expression
+    { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+    for_initialization_variable_declaration[type_count] |
+
+    {
+        // use a new mode without the expect so we don't nest expression parts
+        startNewMode(MODE_EXPRESSION);
+
+        // start the expression element
+        startElement(SEXPRESSION);
+    }
+    // explicitly check for non-terminate so that a large switch statement
+    // isn't needed
+    expression
 
 ;
 
