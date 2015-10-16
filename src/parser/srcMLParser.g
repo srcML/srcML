@@ -3552,6 +3552,7 @@ else_handling[] { ENTRY_DEBUG } :
             // catch and finally statements are nested inside of a try, if at that level
             // so if no CATCH or FINALLY, then end now
             bool intry = inMode(MODE_TRY);
+            bool in_for_like_list = inMode(MODE_FOR_LIKE_LIST);
             bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == FINALLY;
             if (intry && !restoftry) {
                 endMode(MODE_TRY);
@@ -3559,7 +3560,7 @@ else_handling[] { ENTRY_DEBUG } :
             }
 
             // handle parts of if
-            if (inTransparentMode(MODE_IF) && !(intry && restoftry)) {
+            if (inTransparentMode(MODE_IF) && !(intry && restoftry) && !in_for_like_list) {
 
                 if (LA(1) != ELSE) {
 
