@@ -2308,15 +2308,23 @@ for_increment[] { ENTRY_DEBUG } :
  condition will setup for the then part of the statement.  The end of the then looks
  ahead for an else.  If so, it ends the then part.  If not, it ends the entire statement.*/
 if_statement[] { ENTRY_DEBUG } :
-        {
+        {           
             // statement with nested statement
             // detection of else
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF);
 
+            // start if sequence container
+            startElement(SIF_STATEMENT);
+
             ++ifcount;
 
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
+
+            // start the elseif statement
+            startElement(SELSEIF);
+
             // start the if statement
-            startElement(SIF_STATEMENT);
+            // startElement(SIF_STATEMENT);
 
             // expect a condition
             // start THEN after condition
@@ -2370,7 +2378,7 @@ elseif_statement[] { ENTRY_DEBUG } :
         {
 
             // start the if statement
-            startElement(SIF_STATEMENT);
+            // startElement(SIF_STATEMENT);
 
             // expect a condition
             // start THEN after condition
