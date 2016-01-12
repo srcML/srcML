@@ -26,11 +26,19 @@
 #ifdef _MSC_BUILD
 #include <windows.h>
 #include <Wincrypt.h>
-#elif defined(__MACH__)
+#elif defined(__MACH__) // Should this be __APPLE__?
+
 #include <CommonCrypto/CommonDigest.h>
+
+#define SHA_LONG CC_LONG
+#define SHA_CTX     CC_SHA1_CTX
+#define SHA1_Init   CC_SHA1_Init
+#define SHA1_Update CC_SHA1_Update
+#define SHA1_Final  CC_SHA1_Final
+
 #define SHA1(a,b,c) CC_SHA1(a,b,c)
 #define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH
-#define SHA_LONG CC_LONG
+
 #else
 #include <openssl/sha.h>
 #endif
