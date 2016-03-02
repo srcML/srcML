@@ -8638,14 +8638,14 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
         (options { generateAmbigWarnings = false; } : generic_specifiers_csharp)*
         ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
 
-        (type_identifier | literals)
+        (type_identifier | { !inLanguage(LANGUAGE_JAVA) }? literals)
             (options { generateAmbigWarnings = false; } : template_operators)*
             ) |
 
             template_extends_java |
 
             template_super_java | qmark_name |
-            template_argument_expression
+            { !inLanguage(LANGUAGE_JAVA) }? template_argument_expression
         )+ 
 ;
 
