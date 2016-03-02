@@ -69,4 +69,8 @@
 <decl_stmt><decl><type><name><name>SortedSet</name><argument_list type="generic">&lt;<argument><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>?</name></argument>,<argument><name>?</name></argument>&gt;</argument_list></name></name></argument>&gt;</argument_list></name></type> <name>sortedEntries</name> <init>= <expr><operator>new</operator> <call><name><name>TreeSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Comparator</name><argument_list type="generic">&lt;<argument><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>?</name></argument>,<argument><name>?</name></argument>&gt;</argument_list></name></name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{}</block></class></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit>
+<if>if<condition>(<expr><name>a</name><operator>&lt;</operator> <literal type="number">0</literal> <operator>||</operator> <name>a</name> <operator>&gt;</operator> <literal type="number">9</literal></expr>)</condition><then><block type="pseudo"><empty_stmt>;</empty_stmt></block></then></if>
+</unit>
+
 </unit>
