@@ -154,6 +154,29 @@ public :
      */
     void append_attribute_to_node(xmlNodePtr node, const char * attr_prefix, const char * attr_uri) {
 
+        // attribute may already exist
+        xmlAttrPtr curprop = xmlHasNsProp(node, BAD_CAST attr_name, BAD_CAST attr_uri);
+        if (curprop) {
+
+            xmlNsPtr ns = xmlSearchNs(node->doc, node, BAD_CAST attr_uri);
+
+            // grab current value
+            std::string curvalue = (char*) xmlGetNsProp(node, BAD_CAST attr_name, BAD_CAST attr_uri);
+
+            // if current value is the same, then done
+            if (curvalue == attr_value)
+                return;
+
+            // append space and new value
+            curvalue += ' ';
+            curvalue += attr_value;
+
+            // set the new value of the property
+            xmlSetNsProp(node, ns, BAD_CAST attr_name, BAD_CAST curvalue.c_str());
+
+            return;
+        }
+
         xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) attr_uri, (const xmlChar *) attr_prefix);
         xmlNewNsProp(node, ns, (const xmlChar *) attr_name, (const xmlChar *) attr_value);
     }
