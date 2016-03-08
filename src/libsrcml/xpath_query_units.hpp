@@ -203,7 +203,7 @@ public :
     virtual xmlXPathContextPtr set_context() {
 
         // compile all the inner transformations
-        for (unsigned long i = 1; i < global_transformations.size(); ++i) {
+        for (unsigned long i = 0; i < global_transformations.size(); ++i) {
 
             transform& thistransform = global_transformations[i];
             thistransform.compiled_xpath = xmlXPathCompile(BAD_CAST thistransform.arguments.str->c_str());
@@ -324,14 +324,14 @@ public :
         if (!context)
             context = set_context();
 
+        std::vector<transform>::const_iterator tr = global_transformations.begin();
+
         // evaluate the xpath
-        xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
+        xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(tr->compiled_xpath, context);
         if (result_nodes == 0) {
             fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
             return false;
         }
-
-        std::vector<transform>::const_iterator tr = global_transformations.begin();
 
         applyxpath(++tr, global_transformations.end(), result_nodes);
 
