@@ -412,7 +412,6 @@ public :
         switch (nodetype) {
 
         case XPATH_NODESET:
-
             if (element)
                 outputXPathResultsElement(result_nodes);
             else if (attr_name)
@@ -639,7 +638,7 @@ public :
         xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
 
         // output all the found nodes
-        for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+        for (int i = 0; result_nodes->nodesetval && i < result_nodes->nodesetval->nodeNr; ++i) {
 
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
