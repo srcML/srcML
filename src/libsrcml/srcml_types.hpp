@@ -173,6 +173,8 @@ struct transform {
     xmlDocPtr doc;
 
     xmlXPathCompExprPtr compiled_xpath;
+
+    xmlXPathObjectPtr result_nodes;
 };
 
 /**
