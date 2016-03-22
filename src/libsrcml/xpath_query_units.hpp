@@ -161,7 +161,7 @@ public :
         const char* newvalue = attr_value;
 
         // previous property
-       std::string curvalue;
+        std::string curvalue;
         if (value && strcmp(value, newvalue)) {
 
             curvalue = value;
@@ -348,6 +348,9 @@ public :
             if (&tr == &global_transformations.back())
                 break;
 
+            if (!tr.result_nodes->nodesetval)
+                break;
+
             attr_uri = tr.arguments.attr_uri->c_str();
             attr_prefix = tr.arguments.attr_prefix->c_str();
             attr_name = tr.arguments.attr_name->c_str();
@@ -360,7 +363,6 @@ public :
 
                 append_attribute_to_node(onode, attr_prefix, attr_uri);
             }
-
         }
 
         // apply regularly to the last. Note this will be what outputs the node
