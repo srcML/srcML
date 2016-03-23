@@ -349,7 +349,7 @@ public :
                 break;
 
             if (!tr.result_nodes->nodesetval)
-                break;
+                continue;
 
             attr_uri = tr.arguments.attr_uri->c_str();
             attr_prefix = tr.arguments.attr_prefix->c_str();
