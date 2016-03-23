@@ -26,8 +26,18 @@
 #include <srcml.h>
 #include <string>
 #include <boost/foreach.hpp>
+#include <boost/tokenizer.hpp>
 
  int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
+
+    // normalize xpath
+    std::string normalized_input;
+
+    // prefix "//" to query if it starts with an element
+    if (transform_input[0] != '/' && transform_input[0] != '.')
+        normalized_input = "//";
+    normalized_input += transform_input;
+
  	// FIRST IS ELEMENT / SECOND IS ATTRIBUTE
 
  	// Check for element
@@ -65,7 +75,7 @@
                 return -1;
             }
 
- 			return srcml_append_transform_xpath_element_attribute (in_arch, transform_input.c_str(),
+ 			return srcml_append_transform_xpath_element_attribute (in_arch, normalized_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
                                                             element_uri,
                                                             xpath_support.first->name->c_str(),
@@ -75,7 +85,7 @@
                                                             xpath_support.second->value->c_str());
  		}
  		else {
- 			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
+ 			return srcml_append_transform_xpath_element (in_arch, normalized_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
                                                             element_uri,
                                                             xpath_support.first->name->c_str());
@@ -98,14 +108,14 @@
             return -1;
         }
  		
-        return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
+        return srcml_append_transform_xpath_attribute (in_arch, normalized_input.c_str(),
                                                             xpath_support.second->prefix->c_str(),
                                                             attribute_uri,
                                                             xpath_support.second->name->c_str(),
                                                             xpath_support.second->value->c_str());
  	}
 
- 	return srcml_append_transform_xpath(in_arch, transform_input.c_str());
+ 	return srcml_append_transform_xpath(in_arch, normalized_input.c_str());
  }
  
  int apply_xslt(srcml_archive* in_arch, const std::string& transform_input) {
