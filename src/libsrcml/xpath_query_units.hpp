@@ -559,14 +559,7 @@ public :
             }
         }
 
-        static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
-        if (size == 0)
-            return;
- 
-        output_archive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
- 
-        xmlBufferEmpty(lbuffer);
+        output_archive->translator->add_unit_raw_node(a_node, ctxt->myDoc);
 
         // restore manipulated namespaces
         if (save)
