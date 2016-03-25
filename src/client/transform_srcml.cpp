@@ -159,9 +159,9 @@ void transform_srcml(const srcml_request_t& srcml_request,
     }
 
     // register xml namespaces
-    std::map<std::string, std::string>::const_iterator itr;
-    for (itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
-        srcml_archive_register_namespace(out_arch, (*itr).first.c_str(), (*itr).second.c_str());
+    typedef std::map<std::string, std::string> map_type;
+    BOOST_FOREACH(const map_type::value_type& itr, srcml_request.xmlns_namespaces) {
+        srcml_archive_register_namespace(out_arch, itr.first.c_str(), itr.second.c_str());
     }
 
     // Convert inputs into srcml archive
@@ -229,8 +229,6 @@ void transform_srcml(const srcml_request_t& srcml_request,
 		            std::cerr << "srcml: error with xslt transformation\n";
                     exit(-1);
                 }
-				
-				//std::cerr << protocol << " : " << resource << "\n"; // Debug Printout
 			}
 			else if (protocol == "xpathparam") {
 				//std::cerr << protocol << " : " << resource << "\n"; // Stub
@@ -240,8 +238,6 @@ void transform_srcml(const srcml_request_t& srcml_request,
 		            std::cerr << "srcml: error with relaxng transformation\n";
                     exit(-1);
                 }
-
-				//std::cerr << protocol << " : " << resource << "\n"; //Debug Printout
 			}
 		}
 		srcml_apply_transforms(in_arch, out_arch);
