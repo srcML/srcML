@@ -1196,7 +1196,7 @@ function_pointer_name_grammar[] { ENTRY_DEBUG } :
 function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
         // special case for function pointer names that don't have '*'
-        { macro_call_token_set.member(LA(1)) }?
+        { !inMode(MODE_EXPRESSION) && macro_call_token_set.member(LA(1)) }?
         (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
