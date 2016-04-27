@@ -10,7 +10,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><name><name>CodeSeqData</name><index>[<expr><literal type="number">0u</literal></expr>]</index></name> <operator>=</operator> <operator>(</operator><name>uint8_t</name><operator>)</operator><operator>(</operator><name>CodeSequence</name> <operator>&gt;&gt;</operator> <literal type="number">24u</literal><operator>)</operator></expr>;</expr_stmt>
+<expr_stmt><expr><name><name>CodeSeqData</name><index>[<expr><literal type="number">0u</literal></expr>]</index></name> <operator>=</operator> <operator>(</operator><name>uint8_t</name><operator>)</operator><operator>(</operator><operator>(</operator><name>CodeSequence</name> <operator>&gt;&gt;</operator> <literal type="number">24u</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xFu</literal><operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 </unit>
