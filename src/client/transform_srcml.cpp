@@ -26,15 +26,26 @@
 #include <srcml.h>
 #include <string>
 #include <boost/foreach.hpp>
+#include <boost/tokenizer.hpp>
 
  int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
+
+    // normalize xpath
+    std::string normalized_input;
+
+    // prefix "//" to query if it starts with an element
+    if (transform_input[0] != '/' && transform_input[0] != '.')
+        normalized_input = "//";
+    normalized_input += transform_input;
+
  	// FIRST IS ELEMENT / SECOND IS ATTRIBUTE
 
- 	// Check for element
+    // Check element namespace
+    char const * element_uri = 0;
  	if (xpath_support.first){
 
         // check first if namespace is already declared
-        const char* element_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str());
+        element_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.first->prefix->c_str());
         
         // if not declared, check for xmlns from cli
         if (!element_uri) {
@@ -48,44 +59,13 @@
             std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.first->prefix->c_str() << "\"\n";
             return -1;
         }
+    }
 
- 		// See if an attribute is present as well
- 		if (xpath_support.second) {
-            const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
+    // Check attribute namespace
+    char const * attribute_uri = 0;
+	if (xpath_support.second) {
+        attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
             
-            // if not declared, check for xmlns from cli
-            if (!attribute_uri) {
-                std::map<std::string,std::string>::const_iterator it = xmlns_namespaces.find(*(xpath_support.second->prefix));
-                if (it != xmlns_namespaces.end())            
-                    attribute_uri = it->second.c_str();
-            }
-
-            if (!attribute_uri) {
-                std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.second->prefix->c_str() << "\"\n";
-                return -1;
-            }
-
- 			return srcml_append_transform_xpath_element_attribute (in_arch, transform_input.c_str(),
-                                                            xpath_support.first->prefix->c_str(),
-                                                            element_uri,
-                                                            xpath_support.first->name->c_str(),
-                                                            xpath_support.second->prefix->c_str(),
-                                                            attribute_uri,
-                                                            xpath_support.second->name->c_str(),
-                                                            xpath_support.second->value->c_str());
- 		}
- 		else {
- 			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
-                                                            xpath_support.first->prefix->c_str(),
-                                                            element_uri,
-                                                            xpath_support.first->name->c_str());
- 		}
- 	}
-
- 	// Check for attribute
- 	if (xpath_support.second) {
-        const char* attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, xpath_support.second->prefix->c_str());
-        
         // if not declared, check for xmlns from cli
         if (!attribute_uri) {
             std::map<std::string,std::string>::const_iterator it = xmlns_namespaces.find(*(xpath_support.second->prefix));
@@ -97,15 +77,34 @@
             std::cerr << "srcml: no uri exists for prefix \"" << xpath_support.second->prefix->c_str() << "\"\n";
             return -1;
         }
- 		
-        return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
+    }
+
+    // Call appropriate XPath transform
+    if (xpath_support.first && xpath_support.second) {
+		return srcml_append_transform_xpath_element_attribute (in_arch, normalized_input.c_str(),
+                                                            xpath_support.first->prefix->c_str(),
+                                                            element_uri,
+                                                            xpath_support.first->name->c_str(),
                                                             xpath_support.second->prefix->c_str(),
                                                             attribute_uri,
                                                             xpath_support.second->name->c_str(),
                                                             xpath_support.second->value->c_str());
- 	}
+	} else if (xpath_support.first) {
 
- 	return srcml_append_transform_xpath(in_arch, transform_input.c_str());
+ 			return srcml_append_transform_xpath_element (in_arch, normalized_input.c_str(),
+                                                            xpath_support.first->prefix->c_str(),
+                                                            element_uri,
+                                                            xpath_support.first->name->c_str());
+ 	} else if (xpath_support.second) {
+ 		
+        return srcml_append_transform_xpath_attribute (in_arch, normalized_input.c_str(),
+                                                            xpath_support.second->prefix->c_str(),
+                                                            attribute_uri,
+                                                            xpath_support.second->name->c_str(),
+                                                            xpath_support.second->value->c_str());
+ 	} else {
+            return srcml_append_transform_xpath(in_arch, normalized_input.c_str());
+    }
  }
  
  int apply_xslt(srcml_archive* in_arch, const std::string& transform_input) {
@@ -160,13 +159,26 @@ void transform_srcml(const srcml_request_t& srcml_request,
     }
 
     // register xml namespaces
-    std::map<std::string, std::string>::const_iterator itr;
-    for (itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
-        srcml_archive_register_namespace(out_arch, (*itr).first.c_str(), (*itr).second.c_str());
+    typedef std::map<std::string, std::string> map_type;
+    BOOST_FOREACH(const map_type::value_type& itr, srcml_request.xmlns_namespaces) {
+        srcml_archive_register_namespace(out_arch, itr.first.c_str(), itr.second.c_str());
     }
 
-    // Convert inputs into srcml archive
-	BOOST_FOREACH(const srcml_input_src& input, input_sources) {
+    // see if we have any xpath
+    bool isxpath = false;
+    BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
+        std::string protocol;
+        std::string resource;
+        src_prefix_split_uri(trans, protocol, resource);
+        if (protocol == "xpath") {
+            isxpath = true;
+            break;
+        }
+    }
+
+    // open all of the inputs
+    std::vector<srcml_archive*> inarchives;
+    BOOST_FOREACH(const srcml_input_src& input, input_sources) {
         srcml_archive* in_arch = srcml_archive_create();
         if (contains<int>(input))
             status = srcml_archive_read_open_fd(in_arch, input);
@@ -178,41 +190,26 @@ void transform_srcml(const srcml_request_t& srcml_request,
             std::cerr << "srcml: error with input archive for transformation\n";
             exit(-1);
         }
+        inarchives.push_back(in_arch);
+    }
 
-        // see if we have any XPath output
-        bool isxpath = false;
-        BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
-            std::string protocol;
-            std::string resource;
-            src_prefix_split_uri(trans, protocol, resource);
+    // get all of the namespaces on the input archives onto the output archives
+    BOOST_FOREACH(srcml_archive* in_arch, inarchives) {
 
-            if (protocol == "xpath") {
-                isxpath = true;
-                break;
-            }
-        }
+        for (int i = 0; i < (int)srcml_archive_get_namespace_size(in_arch); ++i)
+            srcml_archive_register_namespace(out_arch, srcml_archive_get_namespace_prefix(in_arch, i), srcml_archive_get_namespace_uri(in_arch, i));
+    }
 
-        // for non-archive input, then we want non-archive output, fool
-        if (!isxpath && !srcml_archive_is_full_archive(in_arch)) {
-            srcml_archive_disable_full_archive(out_arch);
-        }
+    // for non-archive input, then we want non-archive output, fool
+    if (inarchives.size() == 1 && !isxpath && srcml_archive_is_full_archive(inarchives[0])) {
+        srcml_archive_disable_full_archive(out_arch);
+    }
 
-        // copy input xml namespaces
-        // TODO: This assumes namespaces on first input. Need to open all, figure out
-        // output namespaces, then process
-        //if (srcml_archive_is_full_archive(in_arch)) {
-            for (int i = 0; i < (int)srcml_archive_get_namespace_size(in_arch); ++i) {
+    // Convert inputs into srcml archive
+    BOOST_FOREACH(srcml_archive* in_arch, inarchives) {
 
-                // do not register the srcML namespace, unless the prefix is different
-                if (std::string(srcml_archive_get_namespace_uri(in_arch, i)) == "http://www.srcML.org/srcML/src")
-                    continue;
-
-                srcml_archive_register_namespace(out_arch, srcml_archive_get_namespace_prefix(in_arch, i), srcml_archive_get_namespace_uri(in_arch, i));
-            }
-        //}
-
-		// iterate through all transformations added during cli parsing
-		int xpath_index = -1;
+		// setup all of the transforms
+		int xpath_index = 0;
         BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
             std::string protocol;
             std::string resource;
@@ -220,31 +217,26 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
             if (protocol == "xpath") {
                 // TODO: FIX BUG
-				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index), srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
+				if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support[xpath_index++], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
 					std::cerr << "srcml: error with xpath transformation\n";
                     exit(-1);
                 }
-			}
-			else if (protocol == "xslt") {
+			} else if (protocol == "xslt") {
 		        if (apply_xslt(in_arch, resource) != SRCML_STATUS_OK) {
 		            std::cerr << "srcml: error with xslt transformation\n";
                     exit(-1);
                 }
-				
-				//std::cerr << protocol << " : " << resource << "\n"; // Debug Printout
-			}
-			else if (protocol == "xpathparam") {
+			} else if (protocol == "xpathparam") {
 				//std::cerr << protocol << " : " << resource << "\n"; // Stub
-			}
-			else if (protocol == "relaxng") {
+			} else if (protocol == "relaxng") {
 		        if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
 		            std::cerr << "srcml: error with relaxng transformation\n";
                     exit(-1);
                 }
-
-				//std::cerr << protocol << " : " << resource << "\n"; //Debug Printout
 			}
 		}
+
+        // apply the transforms
 		srcml_apply_transforms(in_arch, out_arch);
 
 		srcml_archive_close(in_arch);

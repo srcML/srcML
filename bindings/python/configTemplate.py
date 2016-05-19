@@ -32,22 +32,23 @@ class GenPythonCode(BindingGenerator):
     def __init__(self):
         super(GenPythonCode, self).__init__()
         self.typeStrLookup = dict({
-            "srcml_unit *": "c_void_p",
-            "const srcml_unit *": "c_void_p",
+            "srcml_unit *" : "c_void_p",
+            "const srcml_unit *" : "c_void_p",
             "int" : "c_int",
-            "char * *":"c_void_p",
+            "char * *" : "c_void_p",
             "void" : "None",
-            "unsigned long long" :"c_ulonglong",
-            "srcml_archive *": "c_void_p",
-            "size_t *": "POINTER(c_size_t)",
+            "unsigned long long" : "c_ulonglong",
+            "srcml_archive *" : "c_void_p",
+            "size_t *" : "POINTER(c_size_t)",
             "const srcml_archive *": "c_void_p",
-            "FILE *": "IMPOSSIBLE",
+            "FILE *" : "IMPOSSIBLE",
             "int *" : "c_void_p",
             "char *" : "c_char_p",
             "void *" : "py_object",
-            "const char *": "c_char_p",
-            "unsigned short":"c_ushort",
-            "size_t" : "c_size_t"
+            "const char *" : "c_char_p",
+            "unsigned short" :"c_ushort",
+            "size_t" : "c_size_t",
+            "apply_transforms_callback *": "c_void_p"
         })
         self.fpLookup = dict()
 
