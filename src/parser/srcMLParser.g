@@ -5262,7 +5262,7 @@ identifier_list[] { ENTRY_DEBUG } :
             // C
             CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH/*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
             SIGNAL | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
-            DELETE | FALSE | TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
+            DELETE | LITERAL_FALSE | LITERAL_TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
             DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF*/
 
 ;
@@ -7931,7 +7931,7 @@ boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))
                 startElement(SBOOLEAN);
         }
-        (TRUE | FALSE)
+        (LITERAL_TRUE | LITERAL_FALSE)
 ;
 
 // a derived class
