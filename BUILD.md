@@ -20,7 +20,7 @@ Out of source builds (builds outside the source directory) are recommended, howe
 
 	`make`  
 	`make clean`  
- 	`make tests`  
+ 	`make test`  
 
 ### Unix Distribution Specifics
 
