@@ -917,11 +917,11 @@ keyword_statements[] { ENTRY_DEBUG } :
   Basically we have an identifier and we don't know yet whether it starts an expression
   function definition, function declaration, or even a label.
 */
-pattern_statements[] { int secondtoken = 0; int type_count = 0; bool isempty = false; int call_count = 1;
+pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token = 0; bool isempty = false; int call_count = 1;
         STMT_TYPE stmt_type = NONE; CALL_TYPE type = NOCALL;
 
         // detect the declaration/definition type
-        pattern_check(stmt_type, secondtoken, type_count);
+        pattern_check(stmt_type, secondtoken, type_count, after_token);
 
         ENTRY_DEBUG } :
 
@@ -1328,10 +1328,10 @@ ref_qualifier[]  { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // trailing return in function tail
-trailing_return[] {  int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+trailing_return[] {  int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
 
         TRETURN
-        ({ pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
+        ({ pattern_check(stmt_type, secondtoken, type_count, after_token, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL)}?
         { startNewMode(MODE_TRAILING_RETURN); } function_declaration[type_count] function_identifier parameter_list | set_int[type_count, type_count + 1] parameter_type_count[type_count]
         )
 ;
@@ -1818,7 +1818,7 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // Objective-C property declaration
-property_declaration[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+property_declaration[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
     {
 
         startNewMode(MODE_STATEMENT);
@@ -1827,7 +1827,7 @@ property_declaration[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stm
 
     }
     PROPERTY (property_attribute_list)*
-    { pattern_check(stmt_type, secondtoken, type_count) }?
+    { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
     variable_declaration[type_count]
 
 ;
@@ -2235,12 +2235,12 @@ for_initialization_action[] { ENTRY_DEBUG } :
 ;
 
 // handle initilization portion of a for.
-for_initialization[] { int type_count = 0;  int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+for_initialization[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         for_initialization_action
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
-            { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+            { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
             { if(secondtoken == COLON) setMode(MODE_RANGED_FOR); } expression
@@ -2752,7 +2752,7 @@ namespace_directive[] { ENTRY_DEBUG } :
         USING
 ;
 
-using_aliasing[]  { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+using_aliasing[]  { int type_count;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
@@ -2763,7 +2763,7 @@ using_aliasing[]  { int type_count;  int secondtoken = 0; STMT_TYPE stmt_type = 
         EQUAL 
 
         (
-            { pattern_check(stmt_type, secondtoken, type_count) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
+            { pattern_check(stmt_type, secondtoken, type_count, after_token) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
             || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }?
             {
                 startElement(STYPE);
@@ -3623,7 +3623,7 @@ else_handling[] { ENTRY_DEBUG } :
 ;
 
 // mid-statement
-statement_part[] { int type_count; int secondtoken = 0; STMT_TYPE stmt_type = NONE;
+statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE;
                    CALL_TYPE type = NOCALL; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
 
         { inMode(MODE_EAT_TYPE) }?
@@ -3677,7 +3677,7 @@ statement_part[] { int type_count; int secondtoken = 0; STMT_TYPE stmt_type = NO
 
         // K&R function parameters
         { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && inMode(MODE_FUNCTION_TAIL) &&
-          pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+          pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE && after_token != LCURLY }?
         kr_parameter[type_count] |
 
         // function try block, must be before function_specifier
@@ -4004,8 +4004,8 @@ condition[] { ENTRY_DEBUG } :
         LPAREN
 
         {
-            int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; 
-            pattern_check(stmt_type, secondtoken, type_count);
+            int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; 
+            pattern_check(stmt_type, secondtoken, type_count, after_token);
             if(stmt_type == VARIABLE) {
                 startNewMode(MODE_INTERNAL_END_PAREN);
                 for_initialization_variable_declaration(type_count);
@@ -4016,7 +4016,7 @@ condition[] { ENTRY_DEBUG } :
 ;
 
 // perform an arbitrary look ahead looking for a pattern
-pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false] returns [bool isdecl] {
+pattern_check[STMT_TYPE& type, int& token, int& type_count, int & after_token, bool inparam = false] returns [bool isdecl] {
 
     isdecl = true;
 
@@ -4063,7 +4063,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION)) {
 
-        pattern_check(type, token, type_count, inparam);
+        pattern_check(type, token, type_count, after_token, inparam);
         type_count += 1;
 
         if(type == CLASS_DECL || type == CLASS_DEFN || type == UNION_DECL || type == UNION_DEFN || type == STRUCT_DECL || type == STRUCT_DEFN || type == ENUM_DECL || type == ENUM_DEFN || type == 0) {
@@ -4106,7 +4106,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
     if((type == FUNCTION || type == FUNCTION_DECL) && fla == COMMA && !inparam)
         type = VARIABLE;
 
-    int save_la = LA(1);
+    after_token = LA(1);
 
     inputState->guessing--;
     rewind(start);
@@ -4116,7 +4116,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, bool inparam = false
 
     if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
        && (enum_preprocessing_token_set.member(LA(1)) || LA(1) == DECLTYPE) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
-       && save_la == TERMINATE) {
+       && after_token == TERMINATE) {
 
         type = VARIABLE;
         type_count = 1;
@@ -6770,11 +6770,11 @@ for_like_statement_post[] { ENTRY_DEBUG } :
 
 ;
 
-for_like_list_item[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
 
     // explicitly check for a variable declaration since it can easily
     // be confused with an expression
-    { pattern_check(stmt_type, secondtoken, type_count) && stmt_type == VARIABLE }?
+    { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
     for_initialization_variable_declaration[type_count] |
 
     {
@@ -7028,7 +7028,7 @@ generic_selection_association[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 ;
 
-generic_selection_association_type[] { int type_count = 0; int secondtoken = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+generic_selection_association_type[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
 
     {
 
@@ -7037,7 +7037,7 @@ generic_selection_association_type[] { int type_count = 0; int secondtoken = 0; 
     }
 
     (
-    { pattern_check(stmt_type, secondtoken, type_count, true) }?
+    { pattern_check(stmt_type, secondtoken, type_count, after_token, true) }?
     variable_declaration_type[type_count + 1] | generic_selection_association_default
     )
 
@@ -8199,7 +8199,7 @@ annotation_argument[] { ENTRY_DEBUG } :
 ;
 
 // a parameter
-parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+parameter[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
@@ -8209,7 +8209,7 @@ parameter[] { int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NON
         }
         (
 
-            { pattern_check(stmt_type, secondtoken, type_count, true) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
+            { pattern_check(stmt_type, secondtoken, type_count, after_token, true) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
                 || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }?
             function_declaration[type_count]
 
@@ -8312,7 +8312,7 @@ tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // do a parameter type
-parameter_type[] { CompleteElement element(this); int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; bool is_compound = false; ENTRY_DEBUG } :
+parameter_type[] { CompleteElement element(this); int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; bool is_compound = false; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -8320,7 +8320,7 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             // start of type
             startElement(STYPE);
         }
-        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
+        { pattern_check(stmt_type, secondtoken, type_count, after_token) && (type_count ? type_count : (type_count = 1))}?
 
         // match auto keyword first as special case do no warn about ambiguity
         ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
@@ -8394,10 +8394,10 @@ catch[antlr::RecognitionException] {
 }
 
 // complete inner full for template
-template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; STMT_TYPE stmt_type = NONE; } :
+template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; } :
 
         template_in_parameter_list_full
-        { pattern_check(stmt_type, secondtoken, type_count) && (type_count ? type_count : (type_count = 1))}?
+        { pattern_check(stmt_type, secondtoken, type_count, after_token) && (type_count ? type_count : (type_count = 1))}?
         eat_type[type_count]
         {
             endMode();
