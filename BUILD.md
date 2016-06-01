@@ -20,7 +20,16 @@ Out of source builds (builds outside the source directory) are recommended, howe
 
 	`make`  
 	`make clean`  
- 	`make test`  
+ 	`make test`
+
+    Tests are disabled by default, but can be enabled by editing the file `CMake/config.cmake`. Search for the section "Turn ON/OFF Tests", which contains a list of all test categories. For example, the CLI tests can be turned on by changing the line
+    ```bash
+    option(BUILD_CLI_TESTS "Build cli tests" OFF)
+    ```
+    to
+    ```bash
+    option(BUILD_CLI_TESTS "Build cli tests" ON)
+    ```
 
 ### Unix Distribution Specifics
 

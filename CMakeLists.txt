@@ -41,7 +41,7 @@ add_definitions(-DREVISION=\"1\")
 # Including extra directories.
 add_subdirectory(src)
 
-if(RUN_TIMING_TESTS)
+if(BUILD_TIMING_TESTS)
     add_subdirectory(timing)
 endif()
 

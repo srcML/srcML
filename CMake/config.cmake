@@ -50,10 +50,13 @@ if(NOT DYNAMIC_LOAD_ENABLED)
     add_definitions(-DNO_DLLOAD)
 endif()
 
-option(RUN_TIMING_TESTS "Run timing tests with ctest" OFF)
+# Turn ON/OFF tests
+option(BUILD_TIMING_TESTS "Run timing tests with ctest" OFF)
 option(BUILD_UNIT_TESTS "Build unit tests for srcML/libsrcml" OFF)
 option(BUILD_CLI_TESTS "Build cli tests" OFF)
 option(BUILD_LARGE_SYSTEMS_TESTS "Build tests run on large systems" OFF)
+
+
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 option(BUILD_PYTHON_BINDINGS "Build Python language bindings/wrapper" OFF)
 
