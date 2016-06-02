@@ -1992,7 +1992,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & is
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
-        set_bool[isempty, LA(1) == LPAREN && next_token() == RPAREN]
+        set_bool[isempty, (LA(1) == LPAREN && next_token() == RPAREN) || (inLanguage(LANGUAGE_CXX) && LA(1) == LCURLY && next_token() == RCURLY)]
         (
             { isoption(parser_options, SRCML_OPTION_CPP) }?
             // check for proper form of argument list
@@ -2006,9 +2006,9 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool & is
 ;
 
 // check the contents of a call
-call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; ENTRY_DEBUG } :
+call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1); bool name = false; ENTRY_DEBUG } :
 
-        LPAREN
+        (LPAREN | { inLanguage(LANGUAGE_CXX) }? LCURLY)
 
         // record token after the start of the argument list
         markend[argumenttoken]
@@ -2041,10 +2041,12 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { bool name = false; EN
             (identifier | generic_selection) throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
-            { !keyword_token_set.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false]
+            { call_token == LPAREN && !keyword_token_set.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false] |
+            { call_token == LCURLY && inLanguage(LANGUAGE_CXX) && !keyword_token_set.member(LA(1)) }? ~(LCURLY | RCURLY | TERMINATE) set_bool[name, false]
+
         )*
 
-        RPAREN
+        ({ call_token == LPAREN }? RPAREN | { call_token == LCURLY && inLanguage(LANGUAGE_CXX) }? RCURLY)
 ;
 
 perform_ternary_check[] returns [bool is_ternary] {
