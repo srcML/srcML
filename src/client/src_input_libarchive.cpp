@@ -105,7 +105,6 @@ void src_input_libarchive(ParseQueue& queue,
     // which then hangs
     // Note: may need to fix in libsrcml
     if (!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) {
-
         // if we are not verbose, then just end this attemp
         if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
             return;
@@ -157,8 +156,13 @@ void src_input_libarchive(ParseQueue& queue,
         }
 
         // archive entry filename for non-archive input is "data"
-        if (filename.empty() || filename == "data")
+        if (filename.empty() || filename == "data") {
             filename = input_file.resource;
+            std::string::iterator it = filename.begin();
+            while (*it == '.' || *it == '/') {
+                filename.erase(it);
+            }
+        }
 
         if (srcml_request.att_filename && !srcml_archive_is_full_archive(srcml_arch))
             filename = *srcml_request.att_filename;
