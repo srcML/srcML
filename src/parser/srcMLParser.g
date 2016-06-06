@@ -7923,7 +7923,7 @@ char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG
 ;
 
 // literals
-null_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
+null_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
             if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))
@@ -7933,7 +7933,7 @@ null_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 // literals
-nil_literal[]{ LightweightElement element(this); ENTRY_DEBUG } :
+nil_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup literals in literal option
             if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))
