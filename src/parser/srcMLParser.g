@@ -5897,7 +5897,7 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             do {
 
                 // start a new mode that will end after the argument list
-                startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+                startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
 
                 // start the function call element
                 startElement(SFUNCTION_CALL);
@@ -6129,7 +6129,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
         {
 
-            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT)) {
+            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
 
                 endDownToMode(MODE_INTERNAL_END_CURLY);
 
@@ -7878,7 +7878,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
         {
 
-            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT)) {
+            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
 
                 endDownToMode(MODE_INTERNAL_END_CURLY);
 

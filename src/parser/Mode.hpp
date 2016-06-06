@@ -258,4 +258,7 @@ const static srcMLState::MODE_TYPE MODE_END_FOR_CONTROL;
 /** mode for for-like statement */
 const static srcMLState::MODE_TYPE MODE_FOR_LIKE_LIST;
 
+/** mode for in function call */
+const static srcMLState::MODE_TYPE MODE_FUNCTION_CALL;
+
 #endif
