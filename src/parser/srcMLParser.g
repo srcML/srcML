@@ -1446,6 +1446,7 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
             { LA(1) == LPAREN }? LPAREN RPAREN |
 
             // general operator name case is anything from 'operator', operators, or names
+            /* #1343 Currently assumes simple name, but may any type */
             (options { greedy = true; } : ~(LPAREN))*
         )
 ;
