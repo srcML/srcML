@@ -44,8 +44,8 @@ addUnitTest(test_language_extension_registry test_language_extension_registry.cp
 addUnitTest(test_srcml_translator test_srcml_translator.cpp ${LIBXML2_LIBRARIES})
 
 add_definitions(-DSRCML_XPATH_EXFUN_TEST_DIR="${CMAKE_BINARY_DIR}/bin/xpath_test_data")
+file(COPY xpath_test_data DESTINATION "${CMAKE_BINARY_DIR}/bin")
 addUnitTest(test_srcexfun_impl test_srcexfun_impl.cpp)
-add_dependencies(test_srcexfun_impl copy_test_data_target)
 
 # Copying xpath test data into correct loction.
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
