@@ -1435,19 +1435,15 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
         set_bool[operatorname, true]
 
         OPERATOR 
-        {
-
-            startElement(SNAME);
-
-        }
-
         (
             // special case for 'operator()'
-            { LA(1) == LPAREN }? LPAREN RPAREN |
+            { LA(1) == LPAREN }? { startElement(SNAME); } LPAREN RPAREN |
 
-            // general operator name case is anything from 'operator', operators, or names
-            /* #1343 Currently assumes simple name, but may any type */
-            (options { greedy = true; } : ~(LPAREN))*
+            // for form operator type
+            { LA(1) != DESTOP }? (compound_name)=> compound_name |
+
+            // general operator name case is anything else
+            { startElement(SNAME); } (options { greedy = true; } : ~(LPAREN))*
         )
 ;
 
