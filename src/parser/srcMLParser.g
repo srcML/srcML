@@ -316,7 +316,7 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(this), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
     parser_options(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
     current_column(-1), current_line(-1), nxt_token(-1), last_consumed(-1), wait_terminate_post(false), cppif_duplicate(false),
-    number_finishing_elements(0), in_template_param(false)
+    number_finishing_elements(0), in_template_param(false), start_count(0)
 {
 
     // root, single mode
@@ -709,6 +709,7 @@ public:
     size_t number_finishing_elements;
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > > finish_elements_add;
     bool in_template_param;
+    int start_count;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -788,7 +789,7 @@ public:
 
   Order of evaluation is important.
 */
-start[] { ENTRY_DEBUG_START ENTRY_DEBUG } :
+start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         // end of file
         eof |
@@ -1950,7 +1951,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
-            || postcalltoken == 1 /* EOF ? */
+            || (postnametoken != 1 && postcalltoken == 1 /* EOF ? */)
             || postcalltoken == TEMPLATE || postcalltoken == INLINE
             || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED || postcalltoken == SIGNAL
             || postcalltoken == ATREQUIRED || postcalltoken == ATOPTIONAL
@@ -1962,6 +1963,7 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
             type = NOCALL;
 
     } catch (...) {
+
 
         type = NOCALL;
 
@@ -1975,6 +1977,9 @@ perform_call_check[CALL_TYPE& type, bool & isempty, int & call_count, int second
 
             type = MACRO;
     }
+
+    if (type == CALL && postnametoken == 1)
+        type = NOCALL;
 
     inputState->guessing--;
     rewind(start);
@@ -7077,6 +7082,7 @@ expression_statement_process[] { ENTRY_DEBUG } :
         }
 ;
 
+/*
 // an expression statement
 expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
@@ -7084,6 +7090,27 @@ expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG 
 
         expression[type, call_count]
 ;
+*/
+
+// an expression statement
+expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { bool check_fragment = start_count == 1; ++start_count; TokenPosition tp; int stsize = 0; ENTRY_DEBUG } :
+
+        
+        { stsize = size(); }
+        expression_statement_process
+        { setTokenPosition(tp); }
+
+        expression[type, call_count]
+
+        ( { check_fragment}? { size() > stsize && LA(1) != TERMINATE && LA(1) != 1}? safe_start)*
+
+        {
+           if (check_fragment && LA(1) == 1)
+               tp.setType(SNOP);
+        }
+;
+
+safe_start[] { start(); } :;
 
 // declartion statement
 variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
@@ -8960,7 +8987,7 @@ enum_short_variable_declaration[] { ENTRY_DEBUG } :
 
   EOF marks the end of all processing, so it must occur after any ending modes
 */
-eof[] :
+eof[] { ENTRY_DEBUG } :
         {
             endAllModes();
         }
