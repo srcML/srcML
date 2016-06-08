@@ -636,12 +636,14 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
   
   // Attribute must have a value
   if (attrib_equals == std::string::npos) {
-    exit(1);
+    std::cerr << "srcml: the attribute " << vals << "is missing a value\n";
+    exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 
   // Missing prefix requires an element with a prefix
   if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)) {
-    exit(1);
+    std::cerr << "srcml: the attribute " << vals << " is missing a prefix or an element with a prefix\n";
+    exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 
   attribute attrib;
