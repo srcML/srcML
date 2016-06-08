@@ -654,8 +654,19 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
     attrib.prefix = srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first->prefix;
     attrib.name = vals.substr(0, attrib_equals);
   }
-    
-  attrib.value = vals.substr(attrib_equals + 1);
+  
+  size_t attrib_value_start = attrib_equals + 1;
+
+  // value may be wrapped with quotes that need to be removed
+  if (vals[attrib_value_start] == '\'' || vals[attrib_value_start] == '"')
+    ++attrib_value_start;
+
+  size_t attrib_value_size = vals.size() - attrib_value_start;
+
+  if (vals[attrib_value_start + attrib_value_size - 1] == '\'' || vals[attrib_value_start + attrib_value_size - 1] == '"')
+    --attrib_value_size;
+
+  attrib.value = vals.substr(attrib_value_start, attrib_value_size);
 
   return attrib;
 }
