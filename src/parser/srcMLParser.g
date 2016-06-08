@@ -8654,7 +8654,7 @@ template_argument_expression[] { ENTRY_DEBUG } :
         lparen_marked
         
         // qmark matches before template argument expression is fine
-        ({ LA(1) != RPAREN }? (options { generateAmbigWarnings = false; } : general_operators | qmark | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression))*
+        ({ LA(1) != RPAREN }? (options { generateAmbigWarnings = false; } : general_operators | qmark | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression | COMMA))*
        rparen_operator[true]
 
 ;
