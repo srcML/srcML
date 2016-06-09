@@ -468,16 +468,12 @@ public :
         if (xmlXPathNodeSetGetLength(result_nodes->nodesetval) == 0)
             return;
 
-        // determine if the xpath result is already a unit by checking the first result
-        // TODO: Verify that if there is more then one result, unit -> all units, !unit -> !all units
-        bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0;
-
         // using the internal unit node to serve as the wrapper
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
-        // if the query result is the unit, then just output directly
-        if (isunit) {
-
+        // special case for a single result for a unit, and the result is the entire unit
+        bool singleunit = (result_nodes->nodesetval->nodeNr == 1) && (strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0);
+        if (singleunit) {
             outputResult(a_node);
             return;
         }
@@ -505,6 +501,15 @@ public :
             // set the item propery
             if (xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s) == 0)
                 return;
+
+            // one of the multiple query results is an entire unit, then output directly
+            bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[i]->name, "unit") == 0;
+            if (isunit) {
+                a_node->children = a_node_children;
+                outputResult(a_node);
+                a_node->children = 0;
+                continue;
+            }
 
             // location attribute on wrapping node
             if (false) {
