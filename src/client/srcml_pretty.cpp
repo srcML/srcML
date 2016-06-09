@@ -212,7 +212,7 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
     return "???";
 }
 
-void display_template(srcml_archive* srcml_arch, pretty_template_t& output_template, size_t ns_size, int unit_num) {
+void display_template(srcml_archive* srcml_arch, pretty_template_t& output_template, size_t ns_size, int unit_num, bool xml) {
 
     // C and c are available here as they are not metadata marked up in the file.
     int unit_count = 0;
@@ -240,7 +240,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 
     srcml_unit* unit = 0;
     
-    if (unit_num > 0) {
+    if (unit_num > 0 && !(xml)) {
         while (unit_count != unit_num) {
             unit = srcml_archive_read_unit_header(srcml_arch);
             ++unit_count;
@@ -306,7 +306,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
             unit = srcml_archive_read_unit_header(srcml_arch);
             
             // When you want to print only the information from a specific unit
-            if (unit_num > 0 && unit_num == unit_count) {
+            if (unit_num > 0 && unit_num == unit_count && !(xml)) {
                 break;
             }
 
@@ -338,7 +338,8 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 }
 
 // TODO: RETURN REAL ERRORS
-int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, int unit_num) {
+int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, const srcml_request_t& srcml_request) {
+    int unit_num = srcml_request.unit;
 	pretty_template_t output_template = split_template_sections(pretty_input);
     size_t ns_size = srcml_archive_get_namespace_size(srcml_arch);
 
@@ -372,7 +373,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, int
         }
 	}
 
-    display_template(srcml_arch, output_template, ns_size, unit_num);
+    display_template(srcml_arch, output_template, ns_size, unit_num, srcml_request.command & SRCML_COMMAND_XML);
     
     return 0;
 }
