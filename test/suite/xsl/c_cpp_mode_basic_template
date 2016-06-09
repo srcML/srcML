@@ -191,7 +191,7 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><operator>(</operator><name>NAME</name> <operator>&amp;</operator> <name>NAME</name><operator>)</operator></expr></expr_stmt>
+<expr_stmt><expr><operator>(</operator><name>NAME</name> <operator>&amp;</operator> <name>NAME</name><operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit>
