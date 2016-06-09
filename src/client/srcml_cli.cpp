@@ -636,12 +636,14 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
   
   // Attribute must have a value
   if (attrib_equals == std::string::npos) {
-    exit(1);
+    std::cerr << "srcml: the attribute " << vals << "is missing a value\n";
+    exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 
   // Missing prefix requires an element with a prefix
   if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)) {
-    exit(1);
+    std::cerr << "srcml: the attribute " << vals << " is missing a prefix or an element with a prefix\n";
+    exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 
   attribute attrib;
@@ -654,8 +656,19 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
     attrib.prefix = srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first->prefix;
     attrib.name = vals.substr(0, attrib_equals);
   }
-    
-  attrib.value = vals.substr(attrib_equals + 1);
+  
+  size_t attrib_value_start = attrib_equals + 1;
+
+  // value may be wrapped with quotes that need to be removed
+  if (vals[attrib_value_start] == '\'' || vals[attrib_value_start] == '"')
+    ++attrib_value_start;
+
+  size_t attrib_value_size = vals.size() - attrib_value_start;
+
+  if (vals[attrib_value_start + attrib_value_size - 1] == '\'' || vals[attrib_value_start + attrib_value_size - 1] == '"')
+    --attrib_value_size;
+
+  attrib.value = vals.substr(attrib_value_start, attrib_value_size);
 
   return attrib;
 }
