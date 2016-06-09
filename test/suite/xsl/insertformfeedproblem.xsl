@@ -23,7 +23,7 @@
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="ISO-8859-1" standalone="yes"/>
 
-<xsl:variable name="cmt" xml:space="preserve"> <escape char="0xc"/></xsl:variable> 
+<xsl:variable name="cmt" xml:space="preserve"> <escape char="0x0c"/></xsl:variable> 
 
 <!-- change url name -->
 <xsl:template match="src:unit/@url">
