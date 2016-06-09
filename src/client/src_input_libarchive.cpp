@@ -179,6 +179,11 @@ void src_input_libarchive(ParseQueue& queue,
             if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
                 language = l;
 
+        // with a compressed non-archive, need to check the actual extension of the file
+        if (language.empty())
+            if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.extension.c_str()))
+                language = l;
+
         // if we don't have a language, and are not verbose, then just end this attemp
         if (language.empty() && !(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
             ++count;
