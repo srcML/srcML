@@ -180,7 +180,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         // Overrides all others Perform a pretty output
         if (srcml_request.pretty_format) {
-            srcml_pretty(srcml_arch, *srcml_request.pretty_format);
+            srcml_pretty(srcml_arch, *srcml_request.pretty_format, srcml_request.unit);
             return;
         }
 
@@ -246,7 +246,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         if (pretty_meta_header != "" || pretty_meta_body != "") {
-            srcml_pretty(srcml_arch, pretty_meta_header + " { " + pretty_meta_body + " } ");
+            srcml_pretty(srcml_arch, pretty_meta_header + " { " + pretty_meta_body + " } ", srcml_request.unit);
         }
 
         // units

@@ -212,10 +212,10 @@ const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, 
     return "???";
 }
 
-void display_template(srcml_archive* srcml_arch, pretty_template_t& output_template, size_t ns_size) {
+void display_template(srcml_archive* srcml_arch, pretty_template_t& output_template, size_t ns_size, int unit_num) {
 
     // C and c are available here as they are not metadata marked up in the file.
-    int unit_number = 0;
+    int unit_count = 0;
 
     std::vector<std::string> header_params;
     std::vector<std::string> body_params;
@@ -223,6 +223,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 
     if (output_template.header) {
         BOOST_FOREACH(const std::string arg, output_template.header_args) {
+
             const char* param = acquire_metadata(srcml_arch, NULL, arg);
             if (param) {
                 header_params.push_back(std::string(param));
@@ -237,13 +238,23 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
             pretty_print(*output_template.header, header_params);
     }
 
-    srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
+    srcml_unit* unit = 0;
+    
+    if (unit_num > 0) {
+        while (unit_count != unit_num) {
+            unit = srcml_archive_read_unit_header(srcml_arch);
+            ++unit_count;
+        }
+    }
+    else {
+        unit = srcml_archive_read_unit_header(srcml_arch);
+    }
         
     if (output_template.body) {
         while (unit) {
             BOOST_FOREACH(const std::string arg, output_template.body_args) {
                 if (arg == "i") {
-                    body_params.push_back(std::to_string(unit_number));
+                    body_params.push_back(std::to_string(unit_count));
                 }
                 else if (arg == "N") {
                     for (size_t i = 0; i < ns_size; ++i) {
@@ -294,15 +305,20 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
             body_params.clear();
             unit = srcml_archive_read_unit_header(srcml_arch);
             
+            // When you want to print only the information from a specific unit
+            if (unit_num > 0 && unit_num == unit_count) {
+                break;
+            }
+
             if (unit)
-                ++unit_number;
+                ++unit_count;
         }
     }
 
     if (output_template.footer) {
         BOOST_FOREACH(const std::string arg, output_template.footer_args) {
             if (arg == "C") {
-                footer_params.push_back(std::to_string(unit_number + 1));
+                footer_params.push_back(std::to_string(unit_count + 1));
             }
             else {
                 const char* param = acquire_metadata(srcml_arch, NULL, arg);
@@ -322,8 +338,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 }
 
 // TODO: RETURN REAL ERRORS
-int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
-
+int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, int unit_num) {
 	pretty_template_t output_template = split_template_sections(pretty_input);
     size_t ns_size = srcml_archive_get_namespace_size(srcml_arch);
 
@@ -357,7 +372,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input) {
         }
 	}
 
-    display_template(srcml_arch, output_template, ns_size);
+    display_template(srcml_arch, output_template, ns_size, unit_num);
     
     return 0;
 }
