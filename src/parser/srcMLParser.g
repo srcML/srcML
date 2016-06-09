@@ -7082,35 +7082,31 @@ expression_statement_process[] { ENTRY_DEBUG } :
         }
 ;
 
-/*
-// an expression statement
-expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
-
-        expression_statement_process
-
-        expression[type, call_count]
-;
-*/
-
 // an expression statement
 expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { bool check_fragment = start_count == 1; ++start_count; TokenPosition tp; int stsize = 0; ENTRY_DEBUG } :
 
-        
         { stsize = size(); }
+
         expression_statement_process
+
         { setTokenPosition(tp); }
 
         expression[type, call_count]
 
-        ( { check_fragment}? { size() > stsize && LA(1) != TERMINATE && LA(1) != 1}? safe_start)*
-
+        // for a unit that starts with an expression statement, the statement may not end leaving a fragment
+        // in that case, we only want an expression, not an expression statement
+        // to do so have to parse the complete expression
+        // Note: Have to be careful not to parse nested expression statements (don't ask)
         {
-           if (check_fragment && LA(1) == 1)
-               tp.setType(SNOP);
+            if (check_fragment) {
+                while (size() > stsize && LA(1) != TERMINATE && LA(1) != 1)
+                    start();
+
+                if (LA(1) == 1)
+                   tp.setType(SNOP);
+           }
         }
 ;
-
-safe_start[] { start(); } :;
 
 // declartion statement
 variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
