@@ -33,11 +33,6 @@
     // normalize xpath
     std::string normalized_input;
 
-    // prefix "//" to query if it starts with an element
-    if (transform_input[0] != '/' && transform_input[0] != '.')
-        normalized_input = "//";
-    normalized_input += transform_input;
-
  	// FIRST IS ELEMENT / SECOND IS ATTRIBUTE
 
     // Check element namespace
@@ -81,7 +76,7 @@
 
     // Call appropriate XPath transform
     if (xpath_support.first && xpath_support.second) {
-		return srcml_append_transform_xpath_element_attribute (in_arch, normalized_input.c_str(),
+		return srcml_append_transform_xpath_element_attribute (in_arch, transform_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
                                                             element_uri,
                                                             xpath_support.first->name->c_str(),
@@ -91,19 +86,19 @@
                                                             xpath_support.second->value->c_str());
 	} else if (xpath_support.first) {
 
- 			return srcml_append_transform_xpath_element (in_arch, normalized_input.c_str(),
+ 			return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
                                                             xpath_support.first->prefix->c_str(),
                                                             element_uri,
                                                             xpath_support.first->name->c_str());
  	} else if (xpath_support.second) {
  		
-        return srcml_append_transform_xpath_attribute (in_arch, normalized_input.c_str(),
+        return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
                                                             xpath_support.second->prefix->c_str(),
                                                             attribute_uri,
                                                             xpath_support.second->name->c_str(),
                                                             xpath_support.second->value->c_str());
  	} else {
-            return srcml_append_transform_xpath(in_arch, normalized_input.c_str());
+            return srcml_append_transform_xpath(in_arch, transform_input.c_str());
     }
  }
  
