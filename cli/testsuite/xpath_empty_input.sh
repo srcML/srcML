@@ -6,6 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test
 define xpath_error <<- 'STDOUT'
 	Error Parsing: Start tag expected, '<' not found
+	Error Parsing: Start tag expected, '<' not found
 	STDOUT
 
 define xpath_empty <<- 'STDOUT'
