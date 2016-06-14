@@ -37,6 +37,7 @@ macro(addUnitTest TEST_NAME FILE_NAME)
     target_link_libraries(${TEST_NAME} srcml_static ${ARGN})
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
     set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 5)
 endmacro()
 
 #
@@ -49,6 +50,7 @@ endmacro()
 macro(addPythonTest TEST_NAME)
 
     add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_NAME})
+    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 5)
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
