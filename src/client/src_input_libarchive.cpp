@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef _MSC_BUILD 
+#ifdef _MSC_BUILD
 #define ssize_t __int64
 #endif
 
@@ -87,7 +87,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     }
 
     if (status != ARCHIVE_OK) {
-        std::cerr << "Unable to open file " << input_file.filename << '\n';
+        std::cerr << "srcml: Unable to open file " << input_file.filename << '\n';
         exit(1);
     }
 
@@ -215,7 +215,7 @@ void src_input_libarchive(ParseQueue& queue,
             //Standard ctime output and prune '/n' from string
             char* c_time = ctime(&mod_time);
             c_time[strlen(c_time) - 1] = 0;
-            
+
             prequest->time_stamp = c_time;
         }
 
@@ -240,7 +240,7 @@ void src_input_libarchive(ParseQueue& queue,
             if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
                 ++prequest->loc;
         }
-        
+
         // schedule for parsing
         queue.schedule(prequest);
 

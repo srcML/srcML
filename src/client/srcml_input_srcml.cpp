@@ -39,12 +39,19 @@ void srcml_input_srcml(ParseQueue& queue,
     if(revision)
         srcml_archive_set_srcdiff_revision(srcml_input_archive, *revision);
 
+    int open_status = SRCML_STATUS_OK;
+
     if (contains<int>(srcml_input))
-        srcml_archive_read_open_fd(srcml_input_archive, srcml_input);
+        open_status = srcml_archive_read_open_fd(srcml_input_archive, srcml_input);
     else if (contains<FILE*>(srcml_input))
-        srcml_archive_read_open_FILE(srcml_input_archive, srcml_input);
+        open_status = srcml_archive_read_open_FILE(srcml_input_archive, srcml_input);
     else
-        srcml_archive_read_open_filename(srcml_input_archive, srcml_input.c_str());
+        open_status = srcml_archive_read_open_filename(srcml_input_archive, srcml_input.c_str());
+
+    if (open_status != SRCML_STATUS_OK) {
+        std::cerr << "srcml: Unable to open file " << src_prefix_resource(srcml_input.filename) << '\n';
+        exit(1);
+    }
 
     if (SRCML_COMMAND_XML & SRCMLOptions::get()) {
         if (srcml_archive_is_full_archive(srcml_input_archive) && srcml_input.unit == 0) {
@@ -52,7 +59,7 @@ void srcml_input_srcml(ParseQueue& queue,
         }
 
         size_t nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
-        
+
         for (size_t i = 0; i < nsSize; ++i) {
 
             if(revision && srcml_archive_get_namespace_uri(srcml_input_archive, i) == std::string(SRCML_DIFF_NS_URI))
