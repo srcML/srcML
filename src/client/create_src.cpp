@@ -33,7 +33,6 @@
 class srcMLReadArchive {
 public:
     srcMLReadArchive(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
-
         arch = srcml_archive_create();
         if (!arch)
             throw srcMLReadArchiveError(0, input_source);
@@ -47,8 +46,10 @@ public:
             throw status;
 
         status = srcml_archive_read_open(arch, input_source);
-        if (status != SRCML_STATUS_OK)
+        if (status != SRCML_STATUS_OK) {
+            std::cerr << "srcml: Unable to open srcml file " << src_prefix_resource(input_source.filename) << "\n";
             throw status;
+        }
     }
 
     operator srcml_archive*() { return arch; }
@@ -101,7 +102,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // SETUP OUTPUT ARCHIVE
             srcml_archive* oarch = srcml_archive_create();
-            
+
             // set options for the output srcml archive
             if (srcml_request.att_xml_encoding)
                 srcml_archive_set_xml_encoding(oarch, srcml_request.att_xml_encoding->c_str());
@@ -146,7 +147,7 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_archive_disable_full_archive(oarch);
                 srcml_archive_disable_hash(oarch);
             } else {
-                
+
                 srcml_archive_enable_full_archive(oarch);
                 srcml_archive_enable_hash(oarch);
             }
@@ -162,7 +163,7 @@ void create_src(const srcml_request_t& srcml_request,
             for(itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
                 srcml_archive_register_namespace(oarch, (*itr).first.c_str(), (*itr).second.c_str());
             }
-            
+
             /**** SHOULD THIS GO
             if (srcml_request.markup_options)
                 srcml_archive_set_options(oarch, srcml_archive_get_options(oarch) | *srcml_request.markup_options);
@@ -182,7 +183,7 @@ void create_src(const srcml_request_t& srcml_request,
             else
                 srcml_archive_write_open_filename(oarch, destination.c_str(), compression);
 
-            
+
             srcml_write_unit(oarch, unit);
 
             srcml_unit_free(unit);
@@ -209,7 +210,7 @@ void create_src(const srcml_request_t& srcml_request,
                     std::cerr << "Requested unit " << srcml_request.unit << " out of range.\n";
                     exit(4);
                 }
-            
+
                 // set encoding for source output
                 // NOTE: How this is done may change in the future
                 if (srcml_request.src_encoding)
@@ -219,7 +220,7 @@ void create_src(const srcml_request_t& srcml_request,
                     char c = 0;
                     write(1, &c, 1);
                 }
-                
+
                 srcml_unit_unparse_fd(unit, destination);
 
                 srcml_unit_free(unit);
@@ -239,7 +240,7 @@ void create_src(const srcml_request_t& srcml_request,
                 if (dir.has_parent_path() && !is_directory(dir.parent_path()))
                     boost::filesystem::create_directories(dir.parent_path());
             }
-            
+
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_archive_read_unit_header(arch);
@@ -308,6 +309,6 @@ void create_src(const srcml_request_t& srcml_request,
         std::cerr << "Error " << e.status << " with " << e.errmsg << '\n';
 
     } catch (...) {
-
+        exit(1);
     }
 }
