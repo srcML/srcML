@@ -32,6 +32,9 @@
 # * Put in a trap for cleanup in test file:
 #   trap { cleanup; } EXIT
 
+# close our stderr file descriptors
+exec 4>&-
+
 # generated files, list is kept to cleanup
 genfiles=""
 
@@ -199,6 +202,9 @@ check() {
         # check that the captured stderr is empty
         [ ! -s $STDERR ]
     fi
+
+    # close our stderr file descriptors
+    exec 4>&-
 
     # # return to capturing stdout and stderr
     [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
