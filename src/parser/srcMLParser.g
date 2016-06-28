@@ -735,7 +735,9 @@ public:
     srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & options);
 
     // destructor
-    ~srcMLParser() {}
+    ~srcMLParser() {
+
+    }
 
     struct cppmodeitem {
         cppmodeitem(int current_size)

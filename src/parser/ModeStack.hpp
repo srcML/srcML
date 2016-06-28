@@ -50,14 +50,9 @@ public:
     /**
      * ~ModeStack
      *
-     * Destructor.  Ends all open modes/states.
+     * Destructor
      */
-    ~ModeStack() {
-
-        // end all modes
-        endAllModes();
-
-    }
+    ~ModeStack() {}
 
      /** token parser */
     TokenParser* parser;
