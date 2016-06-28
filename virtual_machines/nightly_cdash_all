@@ -19,12 +19,19 @@
 ./prlctlall.py --build --suse suspend
 
 # ubuntu
-./prlctlall.py --build --ubuntu resume; sleep 15
+./prlctlall.py --build --ubuntu --12 resume; sleep 15
 ./nightly_cdash "--ubuntu12build --~64" "Ubuntu-12.04"
 ./nightly_cdash "--ubuntu12build64" "Ubuntu-12.04-64bit"
+./prlctlall.py --build --ubuntu --12 suspend
+
+./prlctlall.py --build --ubuntu --14 resume; sleep 15
 ./nightly_cdash "--ubuntu14build --~64" "Ubuntu-14.04"
 ./nightly_cdash "--ubuntu14build64" "Ubuntu-14.04-64bit"
-./prlctlall.py --build --ubuntu suspend
+./prlctlall.py --build --ubuntu --14 suspend
+
+./prlctlall.py --build --ubuntu --16 resume; sleep 15
+./nightly_cdash "--ubuntu16build64" "Ubuntu-14.04-64bit"
+./prlctlall.py --build --ubuntu --16 suspend
 
 # mint
 ./prlctlall.py --build --mint --13 resume; sleep 15

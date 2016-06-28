@@ -28,6 +28,7 @@ machines = [
     , "ubuntu12test64"
     , "ubuntu14build64"
     , "ubuntu14test64"
+    , "ubuntu16build64"
     , "macmavericksbuild"
     , "macmaverickstest"
     , "mint13build"

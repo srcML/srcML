@@ -28,6 +28,7 @@ machines = [
  , '"Ubuntu Linux 12.04 Test (64-bit)"'
  , '"Ubuntu Linux 14.04 Build (64-bit)"'
  , '"Ubuntu Linux 14.04 Test (64-bit)"'
+ , '"Ubuntu Linux 16.04 Build (64-bit)"'
  , '"Mac OS X Mavericks Build"'
  , '"Mac OS X Mavericks Test"'
  , '"Mint Linux 13 Build"'
