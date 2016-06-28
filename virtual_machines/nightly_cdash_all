@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pushd /Users/srcml/Documents/srcML/virtual_machines/
+
 # fedora
 ./prlctlall.py --build --fedora --20 resume; sleep 15
 ./nightly_cdash "--fedora20build --~64" "Fedora-20"
@@ -50,3 +52,5 @@
 ./prlctlall.py --mac --build resume; sleep 15
 ./nightly_cdash "--mac" "Mac-OSX-Mavericks"
 ./prlctlall.py --mac --build suspend
+
+popd
