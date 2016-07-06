@@ -15,7 +15,7 @@ pushd /Users/srcml/Documents/srcML/virtual_machines/
 # open suse
 ./prlctlall.py --build --suse resume; sleep 15
 ./nightly_cdash "--suse13build --~64" "OpenSUSE-13.1"
-./nightly_cdash "--suse132build64" "OpenSUSE-13.1-64bit"
+./nightly_cdash "--suse13build64" "OpenSUSE-13.1-64bit"
 ./nightly_cdash "--suse132build --~64" "OpenSUSE-13.2"
 ./nightly_cdash "--suse132build64" "OpenSUSE-13.2-64bit"
 ./prlctlall.py --build --suse suspend
