@@ -1,12 +1,12 @@
 #!/bin/bash
 
 
-FIRST=1 
+FIRST=1
 
 while [[ FIRST -eq 1 || $1 != "" ]]; do
 
     FIRST=0
-    OS=$1 
+    OS=$1
 
     if [[ $OS = "" ]]; then
 
@@ -41,6 +41,7 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
         scp ~/Dropbox/srcML/Unix/Ubuntu12.04-64/srcML.tar.gz ubuntu12test64:/srcML
         scp ~/Dropbox/srcML/Unix/Ubuntu14.04/srcML.tar.gz ubuntu14test:/srcML
         scp ~/Dropbox/srcML/Unix/Ubuntu14.04-64/srcML.tar.gz ubuntu14test64:/srcML
+        scp ~/Dropbox/srcML/Unix/Ubuntu16.04-64/srcML.tar.gz ubuntu16test64:/srcML
     fi
 
     if [[ $OS = "mac" || $OS = "" ]]; then

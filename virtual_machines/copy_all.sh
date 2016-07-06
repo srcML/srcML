@@ -101,11 +101,13 @@ scp $from ubuntu12build:$to
 scp $from ubuntu14build:$to
 scp $from ubuntu12build64:$to
 scp $from ubuntu14build64:$to
+scp $from ubuntu16build64:$to
 
 scp $from root@ubuntu12build:$to
 scp $from root@ubuntu14build:$to
 scp $from root@ubuntu12build64:$to
 scp $from root@ubuntu14build64:$to
+scp $from root@ubuntu16build64:$to
 ./prlctlall.py --ubuntu --build suspend
 
 ./prlctlall.py --ubuntu --test resume; sleep 15

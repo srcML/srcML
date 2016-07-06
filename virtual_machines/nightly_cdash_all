@@ -32,7 +32,7 @@ pushd /Users/srcml/Documents/srcML/virtual_machines/
 ./prlctlall.py --build --ubuntu --14 suspend
 
 ./prlctlall.py --build --ubuntu --16 resume; sleep 15
-./nightly_cdash "--ubuntu16build64" "Ubuntu-14.04-64bit"
+./nightly_cdash "--ubuntu16build64" "Ubuntu-16.04-64bit"
 ./prlctlall.py --build --ubuntu --16 suspend
 
 # mint
