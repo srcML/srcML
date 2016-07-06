@@ -46,7 +46,7 @@ define archive_output <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.cpio.gz"/>
 	STDOUT
 
-gzip -c list.txt.cpio > archive/a.cpp.cpio.gz
+gzip -c list.txt.cpio > list.txt.cpio.gz
 
 src2srcml --files-from list.txt.cpio.gz
 check 3<<< "$archive_output" 4<<< "$error"
