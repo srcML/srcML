@@ -30,7 +30,7 @@
 
 
 <!-- filter the then elements, but not the contents of the then -->
-<xsl:template match="src:if/src:then[not(.//src:if)]/src:* | src:if/src:else[not(.//src:if)]/src:*">
+<xsl:template match="src:if_stmt/src:if[not(.//src:if)]/src:block[@type='pseudo'] | src:if_stmt/src:else[not(.//src:if_stmt)]/src:*">
   <block>{ <xsl:choose><xsl:when test="@type='pseudo'"><xsl:copy-of select="node()"/></xsl:when><xsl:otherwise><xsl:copy-of select="."/></xsl:otherwise></xsl:choose> }</block>
 </xsl:template>
 
