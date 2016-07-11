@@ -22,14 +22,15 @@ Out of source builds (builds outside the source directory) are recommended, howe
 	`make clean`  
  	`make test`
 
-    Tests are disabled by default, but can be enabled by editing the file `CMake/config.cmake`. Search for the section "Turn ON/OFF Tests", which contains a list of all test categories. For example, the CLI tests can be turned on by changing the line
-    ```bash
-    option(BUILD_CLI_TESTS "Build cli tests" OFF)
-    ```
-    to
+    Tests are enabled by default, but can be disabled by editing the file `CMake/config.cmake`. Search for the section "Turn ON/OFF Tests", which contains a list of all test categories. For example, the CLI tests can be turned off by changing the line
     ```bash
     option(BUILD_CLI_TESTS "Build cli tests" ON)
     ```
+    to
+    ```bash
+    option(BUILD_CLI_TESTS "Build cli tests" OFF)
+    ```
+* You may need to run `ldconfig` to get the link to the libsrcml shared library path up to date
 
 ### Unix Distribution Specifics
 
@@ -199,16 +200,16 @@ to download and install the lastest version of cmake.
 * The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC). Download boost at http://www.boost.org. The commands to build boost (written for boost 1.55.0) are:
 
 	`./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave`
-	
-	
+
+
 	`./b2 link=static cxxflags="-fPIC -static -Wl,--whole-archive" threading=multi install`
 
 ---
 
 ## Windows Using MSVC
- 
-Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Express or newer is known to work, while older versions have not been tested. 
-	
+
+Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Express or newer is known to work, while older versions have not been tested.
+
 ## Packages
 
 * [Python 2.7.XX](https://www.python.org/downloads/release/python-2710/)
@@ -244,7 +245,7 @@ Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Ex
 * Run CMake on the project using the CMake GUI program. Select the appropriate Visual Studio as the target system. At this tyme, 64-it compilation under Windows is not supported. Note that it's best practice to have CMake output into a separate directory, as this can cause problems if you decide to rebuild later on. Configure and generate CMake.
 
 * Locate the CMake build output directory and open the solution `srcML.sln`. When the solution loads, change the Solution Configuration from `Debug` to `Release`. A debug version of srcML under windows is not supported.
-    
+
 * Build solution. Once built, locate the build folder. Within that folder there is now a folder named `bin/Release` containing the srcML executable and libraries. Extract the dlls from the zipped [executable dependencies](http://www.sdml.info/build/srcml_windows_exe_dependencies.zip) to `bin/Release` for dynamic linking.
 
 
