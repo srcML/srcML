@@ -418,6 +418,7 @@ tokens {
     SENUM_DECLARATION;
 
 	SIF_STATEMENT;
+    SIF;
     STERNARY;
 	STHEN;
 	SELSE;
@@ -2326,11 +2327,8 @@ if_statement[] { ENTRY_DEBUG } :
 
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
 
-            // start the elseif statement
-            startElement(SELSEIF);
-
             // start the if statement
-            // startElement(SIF_STATEMENT);
+            startElement(SIF);
 
             // expect a condition
             // start THEN after condition

@@ -147,11 +147,12 @@ namespace {
     ELEMENT_MAP(SENUM,             "enum")
     ELEMENT_MAP(SENUM_DECLARATION, "enum_decl")
 
-    ELEMENT_MAP(SIF_STATEMENT, "if")
+    ELEMENT_MAP(SIF_STATEMENT, "if_stmt")
+    ELEMENT_MAP(SIF, "if")
     ELEMENT_MAP(STERNARY, "ternary")
-    ELEMENT_MAP(STHEN, "then")
+    ELEMENT_MAP(STHEN, "")
     ELEMENT_MAP(SELSE, "else")
-    ELEMENT_MAP(SELSEIF, "elseif")
+    ELEMENT_MAP(SELSEIF, "if")
 
     ELEMENT_MAP(SWHILE_STATEMENT, "while")
     ELEMENT_MAP(STYPEOF, "typeof")
@@ -1777,6 +1778,18 @@ void srcMLOutput::processCudaArgumentList(const antlr::RefToken& token) {
 
 }
 
+/**
+ * processElseIf
+ * @param token token to output as cuda argument list
+ *
+ * Callback to process/output token as cuda argument list.
+ */
+void srcMLOutput::processElseIf(const antlr::RefToken& token) {
+
+    processOptional(token, "type", "elseif");
+
+}
+
 #if DEBUG
 
 /**
@@ -1846,6 +1859,18 @@ const char* const srcMLOutput::ElementNames[] = {
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
+
+    // fill the array in order of token numbers
+/** set boost macro */
+#define BOOST_PP_LOCAL_MACRO(n)   element_name<512 + 1 + n>(),
+
+/** set boost macro limits */
+#define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 512)
+
+#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
+#undef BOOST_PP_LOCAL_LIMITS
+
 };
 
 /** element prefix number */
@@ -1872,6 +1897,18 @@ int srcMLOutput::ElementPrefix[] = {
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
 #undef BOOST_PP_LOCAL_LIMITS
+
+    // fill the array in order of token numbers
+/** set boost macro */
+#define BOOST_PP_LOCAL_MACRO(n)   element_prefix<512 + 1 + n>(),
+
+/** set boost macro limits */
+#define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 512)
+
+#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
+#undef BOOST_PP_LOCAL_LIMITS
+
 };
 
 /**

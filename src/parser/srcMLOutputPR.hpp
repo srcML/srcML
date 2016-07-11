@@ -65,7 +65,8 @@ enum {
     PROCESSINDEXERPARAMETERLIST,
     PROCESSSIZEOFPACK,
     PROCESSCUDAARGUMENTLIST,
-    PROCESSGENERICPARAMETERLIST
+    PROCESSGENERICPARAMETERLIST,
+    PROCESSELSEIF
 };
 
 /** for conversion of process numbers to callbacks */
@@ -105,7 +106,8 @@ srcMLOutput::PROCESS_PTR srcMLOutput::num2process[] = {
     &srcMLOutput::processIndexerParameterList,
     &srcMLOutput::processSizeofPack,
     &srcMLOutput::processCudaArgumentList,
-    &srcMLOutput::processGenericParameterList
+    &srcMLOutput::processGenericParameterList,
+    &srcMLOutput::processElseIf
 };
 
 /** element map call name */
@@ -188,7 +190,7 @@ namespace {
     ELEMENT_MAP(STERNARY, PROCESSTOKEN)
     ELEMENT_MAP(STHEN, PROCESSTOKEN)
     ELEMENT_MAP(SELSE, PROCESSTOKEN)
-    ELEMENT_MAP(SELSEIF, PROCESSTOKEN)
+    ELEMENT_MAP(SELSEIF, PROCESSELSEIF)
     ELEMENT_MAP(SWHILE_STATEMENT, PROCESSTOKEN)
     ELEMENT_MAP(SLOCK_STATEMENT, PROCESSTOKEN)
     ELEMENT_MAP(SFIXED_STATEMENT, PROCESSTOKEN)
@@ -373,6 +375,7 @@ namespace {
     ELEMENT_MAP(SOMP_EXPRESSION, PROCESSTOKEN)
     ELEMENT_MAP(SGENERIC_PARAMETER, PROCESSTOKEN)
     ELEMENT_MAP(SGENERIC_PARAMETER_LIST, PROCESSGENERICPARAMETERLIST)
+    ELEMENT_MAP(SIF, PROCESSTOKEN)
 
 }
 
@@ -404,6 +407,17 @@ char srcMLOutput::process_table[] = {
 
 /** boost macro limits */
 #define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 256)
+
+#include BOOST_PP_LOCAL_ITERATE()
+#undef BOOST_PP_LOCAL_MACRO
+#undef BOOST_PP_LOCAL_LIMITS
+
+    // fill the array in order of token numbers
+/** boost local macro */
+#define BOOST_PP_LOCAL_MACRO(n)   element_process<512 + 1 + n>(),
+
+/** boost macro limits */
+#define BOOST_PP_LOCAL_LIMITS     (0, TOKEN_END_ELEMENT_TOKEN - 1 - 512)
 
 #include BOOST_PP_LOCAL_ITERATE()
 #undef BOOST_PP_LOCAL_MACRO
