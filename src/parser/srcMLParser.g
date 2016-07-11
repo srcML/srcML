@@ -2318,7 +2318,7 @@ if_statement[] { ENTRY_DEBUG } :
         {           
             // statement with nested statement
             // detection of else
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_IF_STATEMENT);
 
             // start if sequence container
             startElement(SIF_STATEMENT);
@@ -2371,8 +2371,6 @@ elseif_statement[] { ENTRY_DEBUG } :
         {
             // treat as a statement with a nested statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
-
-            ++ifcount;
 
             // start the else part of the if statement
             startElement(SELSEIF);
@@ -3598,9 +3596,14 @@ else_handling[] { ENTRY_DEBUG } :
 
                         // ending an else means ending an if
                         if (inMode(MODE_IF)) {
+
+                            if(inMode(MODE_IF_STATEMENT))
+                                --ifcount;
+
                             endMode();
-                            --ifcount;
+
                         }
+
                     }
 
                     // following ELSE indicates end of outer then
@@ -3609,8 +3612,9 @@ else_handling[] { ENTRY_DEBUG } :
 
                     // if in elseif then end it
                     if(inMode(MODE_IF | MODE_ELSE)) {
+                        if(inMode(MODE_IF_STATEMENT))
+                            --ifcount;
                         endMode();
-                        --ifcount;
                     }
 
                 }

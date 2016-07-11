@@ -261,4 +261,7 @@ const static srcMLState::MODE_TYPE MODE_FOR_LIKE_LIST;
 /** mode for in function call */
 const static srcMLState::MODE_TYPE MODE_FUNCTION_CALL;
 
+/** mode for in function call */
+const static srcMLState::MODE_TYPE MODE_IF_STATEMENT;
+
 #endif
