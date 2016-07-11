@@ -498,6 +498,56 @@ bool srcml_translator::add_unit_raw(const char * xml, int size) {
   return true;
 
 }
+
+/**
+ * add_unit
+ * @param unit srcML to add to archive/non-archive with configuration options
+ * @param xml the xml to output
+ *
+ * Add a unit as string directly to the archive.  If not an archive
+ * and supplied unit does not have src namespace add it.  Also, write out
+ * a supplied hash as part of output unit if specified.
+ * Can not be in by element mode.
+ *
+ * @returns if succesfully added.
+ */
+bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
+
+  if(is_outputting_unit) return false;
+
+  bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
+
+  if(first) {
+
+    // Open for write;
+    out.initWriter();
+    out.initNamespaces(prefix, uri);
+
+    if ((options & SRCML_OPTION_XML_DECL) > 0)
+      out.outputXMLDecl();
+  
+    out.outputPreRootProcessingInstruction();
+
+    // root unit for compound srcML documents
+
+    if(is_archive)
+        out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
+
+    if (is_archive)
+        out.processText("\n\n", 2);
+
+  }
+
+  first = false;
+
+  xmlNodeDumpOutput(out.output_buffer, doc, node, 0, 0, 0);
+
+  if ((options & SRCML_OPTION_ARCHIVE) > 0)
+      out.processText("\n\n", 2);
+
+  return true;
+
+}
 /**
  * add_start_unit
  * @param unit srcML to add to archive/non-archive with configuration options

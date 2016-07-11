@@ -224,21 +224,21 @@ void option_field<&srcml_request_t::tabs>(int value) {
         std::cerr << "srcml: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
         exit(1); //ERROR CODE TBD
     }
-    
+
     srcml_request.tabs = value;
     *srcml_request.markup_options |= SRCML_OPTION_POSITION;
 }
 
 void option_output_filename(const std::string& value) {
   srcml_request.output_filename = srcml_output_dest(value == "-" ? "stdout://-" : value);
-  
+
   if (srcml_request.output_filename.protocol == "file")  {
-    if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension == "" 
+    if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension == ""
         && srcml_request.output_filename.filename[srcml_request.output_filename.filename.length() - 1] == '/')) {
-      
+
       srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
       srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
-    }  
+    }
   }
 }
 
@@ -294,7 +294,7 @@ void option_help(const std::string& help_opt) {
         // TODO: A new header and footer for the general option
         std::cout << SRCML_HEADER << "\n";
         std::cout << general << "\n";
-        
+
         std::cout << src2srcml << "\n";
         std::cout << srcml2src << "\n";
 
@@ -365,7 +365,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         markup_options.add_options()
             ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.srcML.org/srcML/position'")
-            ("tabs", prog_opts::value<int>()->implicit_value(8)->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
+            ("tabs", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
             ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "enable preprocessor parsing and markup for Java and non-C/C++ languages")
             ("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_MARKUP_IF0>), "markup cpp #if 0 regions")
             ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
@@ -450,7 +450,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // Assign the CLI args to the map
         prog_opts::variables_map cli_map;
-        
+
         const prog_opts::basic_parsed_options< char >& cliopts = prog_opts::command_line_parser(argc, argv).options(all).
                          positional(input_file).extra_parser(custom_parser).run();
 
@@ -458,7 +458,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // loop the cli options in the order they were processed/received
         BOOST_FOREACH(const prog_opts::basic_option< char >& option, parsedOptions) {
-          if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam" 
+          if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam"
              || option.string_key == "element" || option.string_key == "attribute") {
 
             if (option.string_key == "xpath")
@@ -507,11 +507,9 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {
           std::string url = srcml_request.input_sources[0].resource;
-          
-          while (url.at(0) == '.' || url.at(0) == '/') {
+          while (url.length() > 0 && (url.at(0) == '.' || url.at(0) == '/')) {
             url.erase(0,1);
           }
-          
           srcml_request.att_url = url;
         }
 
@@ -592,7 +590,7 @@ void option_dependency(const prog_opts::variables_map& vm,
 {
     if (vm.count(option) && !vm[option].defaulted()) {
         if (vm.count(dependent_option) == 0) {
-            throw std::logic_error(std::string("Option '") + option 
+            throw std::logic_error(std::string("Option '") + option
                                     + "' requires option '" + dependent_option + "'.");
         }
     }
@@ -607,7 +605,7 @@ bool is_transformation(const srcml_input_src& input) {
   }
 
   if (ext == ".xsl") {
-    srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));    
+    srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));
     return true;
   }
 
@@ -633,20 +631,22 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
   std::string vals = attribute_input;
   size_t attrib_colon = vals.find(":");
   size_t attrib_equals = vals.find("=");
-  
+
   // Attribute must have a value
   if (attrib_equals == std::string::npos) {
-    exit(1);
+    std::cerr << "srcml: the attribute " << vals << "is missing a value\n";
+    exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 
   // Missing prefix requires an element with a prefix
   if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)) {
-    exit(1);
+    std::cerr << "srcml: the attribute " << vals << " is missing a prefix or an element with a prefix\n";
+    exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 
   attribute attrib;
-  
-  if (attrib_colon != std::string::npos) {  
+
+  if (attrib_colon != std::string::npos) {
     attrib.prefix = vals.substr(0, attrib_colon);
     attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
   }
@@ -654,8 +654,19 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
     attrib.prefix = srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first->prefix;
     attrib.name = vals.substr(0, attrib_equals);
   }
-    
-  attrib.value = vals.substr(attrib_equals + 1);
+
+  size_t attrib_value_start = attrib_equals + 1;
+
+  // value may be wrapped with quotes that need to be removed
+  if (vals[attrib_value_start] == '\'' || vals[attrib_value_start] == '"')
+    ++attrib_value_start;
+
+  size_t attrib_value_size = vals.size() - attrib_value_start;
+
+  if (vals[attrib_value_start + attrib_value_size - 1] == '\'' || vals[attrib_value_start + attrib_value_size - 1] == '"')
+    --attrib_value_size;
+
+  attrib.value = vals.substr(attrib_value_start, attrib_value_size);
 
   return attrib;
 }

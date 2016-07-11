@@ -41,10 +41,11 @@ void src_input_filelist(ParseQueue& queue,
     archive_entry *entry = 0;
     int status = archive_read_next_header(arch, &entry);
     if (status != ARCHIVE_OK) {
-    	std::cerr << "ERROR\n";
-    	return;
+    	std::cerr << "srcml: Invalid filelist " << input_file << "\n";
+    	exit(1);
     }
 
+    // ARE THE LAST TWO NECESSARY?
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
     	std::cerr << "ERROR\n";

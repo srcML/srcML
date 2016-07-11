@@ -118,7 +118,7 @@ create_token_set(enum_preprocessing_tokens, srcMLParser::EXTERN, srcMLParser::RE
 
 const antlr::BitSet srcMLParser::enum_preprocessing_token_set(bitset_buckets<enum_preprocessing_tokens>::data, bitset_buckets<enum_preprocessing_tokens>::num_token_longs);
 
-create_token_set(literal_tokens, srcMLParser::CHAR_START, srcMLParser::COMPLEX_NUMBER, srcMLParser::STRING_START, srcMLParser::CONSTANTS, srcMLParser::FALSE, srcMLParser::TRUE, srcMLParser::NULLPTR,
+create_token_set(literal_tokens, srcMLParser::CHAR_START, srcMLParser::COMPLEX_NUMBER, srcMLParser::STRING_START, srcMLParser::CONSTANTS, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NULLPTR,
                                  srcMLParser::NULLLITERAL, srcMLParser::NIL);
 
 const antlr::BitSet srcMLParser::literal_tokens_set(bitset_buckets<literal_tokens>::data, bitset_buckets<literal_tokens>::num_token_longs);

@@ -44,21 +44,15 @@ public:
      *
      * Constructor.  Create mode stack from TokenParser and current language.
      */
-    ModeStack(TokenParser* ptp)
-        : parser(ptp)
+    ModeStack()
     {}
 
     /**
      * ~ModeStack
      *
-     * Destructor.  Ends all open modes/states.
+     * Destructor
      */
-    ~ModeStack() {
-
-        // end all modes
-        endAllModes();
-
-    }
+    ~ModeStack() {}
 
      /** token parser */
     TokenParser* parser;
@@ -464,7 +458,7 @@ protected:
 
         // close all open elements
         while (!st.empty() && !st.back().openelements.empty()) {
-            parser->endElement(st.back().openelements.top());
+            endElement(st.back().openelements.top());
         }
 
         st.pop_back();

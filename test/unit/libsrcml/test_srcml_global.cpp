@@ -58,11 +58,11 @@ int main() {
     }
 
     {
-        dassert(srcml_check_language("C#"), 16);
+        dassert(srcml_check_language("C#"), 8);
     }
 
     {
-        dassert(srcml_check_language("Objective-C"), 33);
+        dassert(srcml_check_language("Objective-C"), 17);
     }
 
     /*
@@ -90,11 +90,11 @@ int main() {
     }
 
     {
-        dassert(srcml_get_language_list(3), std::string("Objective-C"));
+        dassert(srcml_get_language_list(3), std::string("Java"));
     }
 
     {
-        dassert(srcml_get_language_list(4), std::string("Java"));
+        dassert(srcml_get_language_list(4), std::string("Objective-C"));
     }
 
     {

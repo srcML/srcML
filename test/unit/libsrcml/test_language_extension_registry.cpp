@@ -143,14 +143,14 @@ int main() {
     {
         language_extension_registry reg_ext;
         reg_ext.register_user_ext("cpp", "C++");
-        dassert(reg_ext.get_language_from_filename("a.cpp.bz2"), Language::LANGUAGE_CXX);
+        dassert(reg_ext.get_language_from_filename("a.cpp.bz2"), Language::LANGUAGE_NONE);
     }
 
 
     {
         language_extension_registry reg_ext;
         reg_ext.register_user_ext("cpp", "C++");
-        dassert(reg_ext.get_language_from_filename("a.cpp.xz"), Language::LANGUAGE_CXX);
+        dassert(reg_ext.get_language_from_filename("a.cpp.xz"), Language::LANGUAGE_NONE);
     }
 
     {

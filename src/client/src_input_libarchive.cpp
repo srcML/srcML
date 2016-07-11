@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef _MSC_BUILD 
+#ifdef _MSC_BUILD
 #define ssize_t __int64
 #endif
 
@@ -87,7 +87,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     }
 
     if (status != ARCHIVE_OK) {
-        std::cerr << "Unable to open file " << input_file.filename << '\n';
+        std::cerr << "srcml: Unable to open file " << input_file.filename << '\n';
         exit(1);
     }
 
@@ -105,7 +105,6 @@ void src_input_libarchive(ParseQueue& queue,
     // which then hangs
     // Note: may need to fix in libsrcml
     if (!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) {
-
         // if we are not verbose, then just end this attemp
         if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
             return;
@@ -157,8 +156,13 @@ void src_input_libarchive(ParseQueue& queue,
         }
 
         // archive entry filename for non-archive input is "data"
-        if (filename.empty() || filename == "data")
+        if (filename.empty() || filename == "data") {
             filename = input_file.resource;
+            std::string::iterator it = filename.begin();
+            while (*it == '.' || *it == '/') {
+                filename.erase(it);
+            }
+        }
 
         if (srcml_request.att_filename && !srcml_archive_is_full_archive(srcml_arch))
             filename = *srcml_request.att_filename;
@@ -173,6 +177,11 @@ void src_input_libarchive(ParseQueue& queue,
         // we have to do this ourselves, since libsrcml can't for memory
         if (language.empty())
             if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
+                language = l;
+
+        // with a compressed non-archive, need to check the actual extension of the file
+        if (language.empty())
+            if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.extension.c_str()))
                 language = l;
 
         // if we don't have a language, and are not verbose, then just end this attemp
@@ -206,7 +215,7 @@ void src_input_libarchive(ParseQueue& queue,
             //Standard ctime output and prune '/n' from string
             char* c_time = ctime(&mod_time);
             c_time[strlen(c_time) - 1] = 0;
-            
+
             prequest->time_stamp = c_time;
         }
 
@@ -231,7 +240,7 @@ void src_input_libarchive(ParseQueue& queue,
             if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
                 ++prequest->loc;
         }
-        
+
         // schedule for parsing
         queue.schedule(prequest);
 

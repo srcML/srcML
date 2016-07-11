@@ -23,6 +23,7 @@ cmake_minimum_required(VERSION 2.8.12)
 project(srcML)
 
 enable_testing()
+include(CTest)
 
 # Setting up Project includes.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
@@ -41,7 +42,7 @@ add_definitions(-DREVISION=\"1\")
 # Including extra directories.
 add_subdirectory(src)
 
-if(RUN_TIMING_TESTS)
+if(BUILD_TIMING_TESTS)
     add_subdirectory(timing)
 endif()
 

@@ -38,6 +38,8 @@
 /** literal followed by its size */
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
+#include <boost/foreach.hpp>
+
 #include <srcexfun.hpp>
 #include <unit_dom.hpp>
 #include <srcmlns.hpp>
@@ -154,8 +156,22 @@ public :
      */
     void append_attribute_to_node(xmlNodePtr node, const char * attr_prefix, const char * attr_uri) {
 
-        xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) attr_uri, (const xmlChar *) attr_prefix);
-        xmlNewNsProp(node, ns, (const xmlChar *) attr_name, (const xmlChar *) attr_value);
+        // grab current value
+        const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name, BAD_CAST attr_uri);
+        const char* newvalue = attr_value;
+
+        // previous property
+        std::string curvalue;
+        if (value && strcmp(value, newvalue)) {
+
+            curvalue = value;
+            curvalue += ' ';
+            curvalue += attr_value;
+            newvalue = curvalue.c_str();
+        }
+
+        static xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) attr_uri, (const xmlChar *) attr_prefix);
+        xmlSetNsProp(node, ns, (const xmlChar *) attr_name, (const xmlChar *) newvalue);
     }
 
     /**
@@ -180,7 +196,7 @@ public :
     virtual xmlXPathContextPtr set_context() {
 
         // compile all the inner transformations
-        for (unsigned long i = 1; i < global_transformations.size(); ++i) {
+        for (unsigned long i = 0; i < global_transformations.size(); ++i) {
 
             transform& thistransform = global_transformations[i];
             thistransform.compiled_xpath = xmlXPathCompile(BAD_CAST thistransform.arguments.str->c_str());
@@ -301,16 +317,62 @@ public :
         if (!context)
             context = set_context();
 
-        // evaluate the xpath
-        xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
-        if (result_nodes == 0) {
-            fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
-            return false;
+        // handle new elements and individual results the previous way
+        if (element || !attr_name) {
+
+            std::vector<transform>::const_iterator tr = global_transformations.begin();
+            // evaluate the xpath
+            xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(tr->compiled_xpath, context);
+            if (result_nodes == 0) {
+                fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
+                return false;
+            }
+            applyxpath(++tr, global_transformations.end(), result_nodes);
+            return true;
         }
 
-        std::vector<transform>::const_iterator tr = global_transformations.begin();
+        // apply all XPath transformations on the same base code, and save all the results
+        BOOST_FOREACH(transform& tr, global_transformations) {
 
-        applyxpath(++tr, global_transformations.end(), result_nodes);
+            // evaluate the xpath
+            tr.result_nodes = xmlXPathCompiledEval(tr.compiled_xpath, context);
+            if (tr.result_nodes == 0) {
+                fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
+                return false;
+            }
+        }
+
+        // process all the xpath transform results for everything except the last
+        BOOST_FOREACH(transform& tr, global_transformations) {
+
+            if (&tr == &global_transformations.back())
+                break;
+
+            if (!tr.result_nodes->nodesetval)
+                continue;
+
+            attr_uri = tr.arguments.attr_uri->c_str();
+            attr_prefix = tr.arguments.attr_prefix->c_str();
+            attr_name = tr.arguments.attr_name->c_str();
+            attr_value = tr.arguments.attr_value->c_str();
+
+            // convert all the found nodes
+            for (int i = 0; i < tr.result_nodes->nodesetval->nodeNr; ++i) {
+
+                xmlNodePtr onode = tr.result_nodes->nodesetval->nodeTab[i];
+
+                append_attribute_to_node(onode, attr_prefix, attr_uri);
+            }
+        }
+
+        // apply regularly to the last. Note this will be what outputs the node
+        attr_uri = global_transformations.back().arguments.attr_uri->c_str();
+        attr_prefix = global_transformations.back().arguments.attr_prefix->c_str();
+        attr_name = global_transformations.back().arguments.attr_name->c_str();
+        attr_value = global_transformations.back().arguments.attr_value->c_str();
+        apply(global_transformations.back().result_nodes);
+
+//        applyxpath(++tr, global_transformations.end(), result_nodes);
 
         // finished with the result nodes
         //xmlXPathFreeObject(result_nodes);
@@ -352,7 +414,6 @@ public :
         switch (nodetype) {
 
         case XPATH_NODESET:
-
             if (element)
                 outputXPathResultsElement(result_nodes);
             else if (attr_name)
@@ -407,16 +468,12 @@ public :
         if (xmlXPathNodeSetGetLength(result_nodes->nodesetval) == 0)
             return;
 
-        // determine if the xpath result is already a unit by checking the first result
-        // TODO: Verify that if there is more then one result, unit -> all units, !unit -> !all units
-        bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0;
-
         // using the internal unit node to serve as the wrapper
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
-        // if the query result is the unit, then just output directly
-        if (isunit) {
-
+        // special case for a single result for a unit, and the result is the entire unit
+        bool singleunit = (result_nodes->nodesetval->nodeNr == 1) && (strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0);
+        if (singleunit) {
             outputResult(a_node);
             return;
         }
@@ -444,6 +501,15 @@ public :
             // set the item propery
             if (xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s) == 0)
                 return;
+
+            // one of the multiple query results is an entire unit, then output directly
+            bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[i]->name, "unit") == 0;
+            if (isunit) {
+                a_node->children = a_node_children;
+                outputResult(a_node);
+                a_node->children = 0;
+                continue;
+            }
 
             // location attribute on wrapping node
             if (false) {
@@ -498,14 +564,7 @@ public :
             }
         }
 
-        static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
-        if (size == 0)
-            return;
- 
-        output_archive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
- 
-        xmlBufferEmpty(lbuffer);
+        output_archive->translator->add_unit_raw_node(a_node, ctxt->myDoc);
 
         // restore manipulated namespaces
         if (save)
@@ -579,7 +638,7 @@ public :
         xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
 
         // output all the found nodes
-        for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+        for (int i = 0; result_nodes->nodesetval && i < result_nodes->nodesetval->nodeNr; ++i) {
 
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 

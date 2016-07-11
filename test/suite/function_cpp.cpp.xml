@@ -204,4 +204,12 @@
 }</block></function>
 </unit>
 
+<unit>
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>final</specifier> <specifier>override</specifier> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>override</specifier> <specifier>final</specifier> <block>{}</block></function>
+</unit>
+
 </unit>

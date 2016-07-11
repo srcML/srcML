@@ -11,7 +11,7 @@ fi
 while [[ FIRST -eq 1 || $1 != "" ]]; do
 
     FIRST=0
-    OS=$1 
+    OS=$1
 
     if [[ $OS = "" ]]; then
 
@@ -88,6 +88,7 @@ while [[ FIRST -eq 1 || $1 != "" ]]; do
         scp ubuntu14build:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04
         scp ubuntu14build64:/srcML/dist/srcML*.tar.gz ~/Dropbox/srcML/Unix/Ubuntu14.04-64
         scp ubuntu14build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu14.04-64
+        scp ubuntu16build64:/srcML/dist/srcML*.deb ~/Dropbox/srcML/Unix/Ubuntu16.04-64
     fi
 
     if [[ $OS = "mac" || $OS = "" ]]; then

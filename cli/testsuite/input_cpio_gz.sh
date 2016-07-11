@@ -31,12 +31,27 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+define archive_output <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="archive/a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
+
+	</unit>
+	STDOUT
+
+xmlcheck "$archive_output"
 xmlcheck "$foutput"
 xmlcheck "$output"
 
 createfile archive/a.cpp "$src"
 echo archive/a.cpp | tr " " "\n" | cpio -o > archive/a.cpp.cpio
 gzip -c archive/a.cpp.cpio > archive/a.cpp.cpio.gz
+
+createfile list.txt "archive/a.cpp.cpio.gz"
+
 
 # src --> srcml
 src2srcml archive/a.cpp.cpio.gz -o archive/a.cpp.xml
@@ -51,9 +66,20 @@ check 3<<< "$output"
 src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.cpio.gz
 check archive/a.cpp.xml 3<<< "$output"
 
+
+# files from
+src2srcml --files-from list.txt
+check 3<<< "$archive_output"
+
+src2srcml --files-from list.txt -o archive/list.xml
+check archive/list.xml 3<<< "$archive_output"
+
+
+rmfile list.txt
 rmfile archive/a.cpp
 rmfile archive/a.cpp.cpio
 rmfile archive/a.cpp.cpio.gz
+
 
 # srcml --> src
 srcml2src archive/a.cpp.xml

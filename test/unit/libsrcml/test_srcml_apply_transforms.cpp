@@ -48,8 +48,8 @@ int main() {
     const std::string srcml_a = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
     const std::string srcml_b = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n";
     const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
-    const std::string srcml_a_after = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\" filename=\"a.cpp\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
-    const std::string srcml_b_after = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\" directory=\"test\" filename=\"project\" version=\"1\">\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
+    const std::string srcml_a_after = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
+    const std::string srcml_b_after = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\" version=\"1\" directory=\"test\">\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
     const std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
     const std::string srcml_full_python = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"Python\" directory=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
 
@@ -80,13 +80,10 @@ int main() {
         }
     }
 
-    /*
-      srcml_apply_transforms
-    */
-
-    /*
-      xpath
-    */
+    
+    //  srcml_apply_transforms
+    
+    //  xpath
 
     {
 
@@ -177,9 +174,8 @@ int main() {
 
     }
 
-    /*
-      xslt_filename
-    */
+    
+    //  xslt_filename
 
     {
 
@@ -246,7 +242,7 @@ int main() {
         free(s);
 
     }
-
+    
     {
 
         char * s;
@@ -292,9 +288,7 @@ int main() {
 
     }
 
-    /*
-      xslt_memory
-    */
+    //  xslt_memory
 
     {
 
@@ -430,9 +424,8 @@ int main() {
 
     }
 
-    /*
-      xslt_FILE
-    */
+    
+    //  xslt_FILE
 
     {
 
@@ -555,9 +548,8 @@ int main() {
 
     }
 
-    /*
-      xslt_fd
-    */
+    
+    //  xslt_fd
 
     {
 
@@ -684,9 +676,8 @@ int main() {
 
     }
 
-    /*
-      relaxng_filename
-    */
+    
+    //  relaxng_filename
 
     {
 
@@ -776,9 +767,8 @@ int main() {
 
     }
 
-    /*
-      relaxng_memory
-    */
+    
+    //  relaxng_memory
 
     {
 
@@ -868,9 +858,8 @@ int main() {
 
     }
 
-    /*
-      relaxng_FILE
-    */
+    
+    //  relaxng_FILE
 
     {
 
@@ -972,9 +961,7 @@ int main() {
 
     }
 
-    /*
-      relaxng_fd
-    */
+    //  relaxng_fd
 
     {
 
@@ -1076,9 +1063,7 @@ int main() {
 
     }
 
-    /*
-      all
-    */
+    //  all
 
     {
 

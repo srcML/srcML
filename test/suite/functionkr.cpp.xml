@@ -39,4 +39,12 @@
 <block>{}</block></function>
 </unit>
 
+<unit>
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <decl_stmt><decl><type><name>final</name></type> <name>override</name></decl>;</decl_stmt> <block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <decl_stmt><decl><type><name>override</name></type> <name>final</name></decl>;</decl_stmt> <block>{}</block></function>
+</unit>
+
 </unit>

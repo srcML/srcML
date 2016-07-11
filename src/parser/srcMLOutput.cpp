@@ -826,7 +826,7 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
     int n = token->getText()[0];
 
     char out[20 + 2 + 1];
-    snprintf(out, 22, "0x%x", n);
+    snprintf(out, 22, "0x%02x", n);
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST out);
 

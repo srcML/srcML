@@ -34,13 +34,3 @@ check sub/a.cpp.xml 3<<< "$fsrcml"
 
 srcml --tabs 8 -o sub/a.cpp.xml sub/a.cpp
 check sub/a.cpp.xml 3<<< "$fsrcml"
-
-# use default tab size of 8
-srcml -l C++ --tabs < sub/a.cpp
-check 3<<< "$srcml"
-
-srcml -l C++ --tabs -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
-
-srcml --tabs -o sub/a.cpp.xml sub/a.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"

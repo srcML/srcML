@@ -40,7 +40,6 @@
 
 #include "srcMLToken.hpp"
 #include "srcMLParser.hpp"
-#include "ModeStack.hpp"
 
 /**
  * StreamMLParser
