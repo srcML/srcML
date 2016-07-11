@@ -62,18 +62,6 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
-<!-- this test case is probably marked up wrong
-<unit>
-<if>if<condition>()</condition><then>
-<if>if<condition>()</condition><then> <block>{}</block></then></if>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
-<else>else <block>{}</block></else></if></then></if>
-<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
-<else>else <block>{}</block></else></if>
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-</unit>
--->
-
 <unit>
 <if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition> <block>{
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
@@ -253,7 +241,7 @@
 <unit>
 <if_stmt><if>if<condition>(<expr><name>a</name></expr>)</condition><block type="pseudo">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>a</name></expr></cpp:if>
-    <expr_stmt><expr><name>b</name></expr>;</expr_stmt><block type="pseudo"/><then/>
+    <expr_stmt><expr><name>b</name></expr>;</expr_stmt><block type="pseudo"/>
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
     <expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></if></if_stmt>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -299,7 +287,7 @@
 <block>{
 <if_stmt><if>if <condition>(<expr><name>is_tli</name></expr>)</condition><block type="pseudo">
 <cpp:if># <cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>
-  <expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr>;</expr_stmt><block type="pseudo"/><then/>
+  <expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr>;</expr_stmt><block type="pseudo"/>
 <cpp:else># <cpp:directive>else</cpp:directive></cpp:else>
   <expr_stmt><expr><name>a</name> <operator>=</operator> <name>c</name></expr>;</expr_stmt></block></if></if_stmt>
 <cpp:endif># <cpp:directive>endif</cpp:directive></cpp:endif>
