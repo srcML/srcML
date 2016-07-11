@@ -150,7 +150,7 @@ namespace {
     ELEMENT_MAP(SIF_STATEMENT, "if_stmt")
     ELEMENT_MAP(SIF, "if")
     ELEMENT_MAP(STERNARY, "ternary")
-    ELEMENT_MAP(STHEN, "")
+    ELEMENT_MAP(STHEN, "then")
     ELEMENT_MAP(SELSE, "else")
     ELEMENT_MAP(SELSEIF, "if")
 

@@ -3331,7 +3331,7 @@ lcurly[] { ENTRY_DEBUG } :
                 startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
                 // start the then element
-                startNoSkipElement(STHEN);
+                //startNoSkipElement(STHEN);
             }
 
             // special end for constructor member initialization list
@@ -7580,7 +7580,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
                     // start the then element
-                    startNoSkipElement(STHEN);
+                    //startNoSkipElement(STHEN);
 
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
@@ -7589,7 +7589,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     if(cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        open_elements.push(STHEN);
+                        //open_elements.push(STHEN);
                         if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
