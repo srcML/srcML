@@ -37,8 +37,8 @@
 
 <unit>
 <expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo">
-                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if>
+                <if_stmt>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo">
+                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if_stmt>
  }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 

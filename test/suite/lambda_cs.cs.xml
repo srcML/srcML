@@ -43,9 +43,9 @@
 
 <unit>
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> =&gt;<block type="pseudo"> <expr><literal type="boolean">true</literal></expr></block></lambda></expr></argument>, <argument><expr><delegate><name>delegate</name> <block>{
-    <if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then> <block>{
+    <if_stmt>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then> <block>{
 
-    }</block></then></if>
+    }</block></then></if_stmt>
 }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 

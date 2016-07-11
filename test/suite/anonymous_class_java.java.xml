@@ -56,7 +56,7 @@
 
     <function><specifier>public</specifier> <type><name>boolean</name></type> <name>init</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Shell</name></type> <name>aMainShell</name></decl></parameter>)</parameter_list> <block>{ 
 
-        <if>if<condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then><block>{ 
+        <if_stmt>if<condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then><block>{ 
               <return>return <expr><literal type="boolean">false</literal></expr>;</return> 
         }</block></then><else>else<block>{ 
               
@@ -68,7 +68,7 @@
 
               <return>return <expr><literal type="boolean">true</literal></expr>;</return>
 
-        }</block></else></if>
+        }</block></else></if_stmt>
 
     }</block></function>
     

@@ -76,10 +76,10 @@
 </unit>
 
 <unit>
-    <if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo">
+    <if_stmt>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo">
         <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
           <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
-          <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></block></then></if>
+          <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></block></then></if_stmt>
 </unit>
 
 </unit>
