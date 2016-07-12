@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef _MSC_BUILD 
+#ifdef _MSC_BUILD
 #define ssize_t __int64
 #endif
 
