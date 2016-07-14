@@ -47,7 +47,7 @@ size_t curl_cb(void* buffer, size_t len, size_t nmemb, void* data) {
     return curldata->data_len;
 }
 
-int archive_curl_open(archive* a, void* client_data) {
+int archive_curl_open(archive*, void* client_data) {
 
     curl* curldata = (curl*) client_data;
 
@@ -67,31 +67,31 @@ int archive_curl_open(archive* a, void* client_data) {
         // Quick check to see if the remote location exists or is available
     CURL* ping = curl_easy_duphandle(curldata->handle);
     curl_easy_setopt(ping, CURLOPT_NOBODY, 1L);
-    //curl_easy_setopt(ping, CURLOPT_HEADER, 1L);
+        //curl_easy_setopt(ping, CURLOPT_HEADER, 1L);
     curl_easy_perform(ping);
 
     long http_code = 0;
     double data_size = 0;
     curl_easy_getinfo (ping, CURLINFO_RESPONSE_CODE, &http_code);
     curl_easy_getinfo (ping, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &data_size);
-    curl_easy_cleanup(ping);
 
+    curl_easy_cleanup(ping);
     if (http_code != 200)
     {
-        archive_set_error(a, ARCHIVE_FATAL, "Cannot access %c", curldata->source.c_str());
-        return ARCHIVE_FATAL;
+        return -1;
     }
 
-    // The resource is there, so lets go get it!
+        // The resource is there, so lets go get it!
     curldata->multi_handle = curl_multi_init();
     curl_multi_add_handle(curldata->multi_handle, curldata->handle);
-    //curl_multi_perform(curldata->multi_handle, &curldata->still_running);
+    curl_multi_perform(curldata->multi_handle, &curldata->still_running);
         curldata->stopwatch = Timer(10); // 10 second timeout
 
         return ARCHIVE_OK;
     }
 
 __LA_SSIZE_T archive_curl_read(archive*, void* client_data, const void** buff) {
+
         curl* curldata = (curl*) client_data;
 
         curldata->data_len = 0;
@@ -112,17 +112,11 @@ __LA_SSIZE_T archive_curl_read(archive*, void* client_data, const void** buff) {
         return curldata->data_len;
     }
 
-    int archive_curl_close(archive* a, void* client_data) {
-        curl* curldata = (curl*) client_data;
-        if (archive_errno(a) == ARCHIVE_FATAL) {
-            archive_set_error(a, ARCHIVE_FATAL, "Cannot access %c", curldata->source.c_str());
-            return ARCHIVE_FATAL;
-        }
-        else {
-            curl_multi_remove_handle(curldata->multi_handle, curldata->handle);
-            curl_multi_cleanup(curldata->multi_handle);
-            curl_easy_cleanup(curldata->handle);
-        }
+    int archive_curl_close(archive*, void* client_data) {
 
-        return ARCHIVE_OK;
+        curl* curldata = (curl*) client_data;
+        curl_multi_cleanup(curldata->multi_handle);
+        curl_easy_cleanup(curldata->handle);
+
+        return 0;
     }
