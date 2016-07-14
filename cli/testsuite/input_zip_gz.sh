@@ -74,6 +74,8 @@ check 3<<< "$archive_output"
 src2srcml --files-from list.txt -o archive/list.xml
 check archive/list.xml 3<<< "$archive_output"
 
+# files from empty (not necessary - archive format)
+
 
 rmfile list.txt
 rmfile archive/a.cpp
