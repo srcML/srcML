@@ -76,6 +76,12 @@ check 3<<< "$empty_archive"
 src2srcml --files-from filelist.txt -o files-from-empty-cpp.xml
 check files-from-empty-cpp.xml 3<<< "$empty_archive"
 
+src2srcml --files-from filelist.txt --archive
+check 3<<< "$empty_archive"
+
+src2srcml --files-from filelist.txt --archive -o files-from-empty-cpp.xml
+check files-from-empty-cpp.xml 3<<< "$empty_archive"
+
 
 # empty archived file list
 define empty_srcml_with_url <<- 'STDOUT'
@@ -140,3 +146,41 @@ rmfile empty.txt.tgz
 rmfile empty.txt.zip
 rmfile empty.txt.zip.bz2
 rmfile empty.txt.zip.gz
+
+
+# empty file list from remote archived/crompressed file
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.bz2?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/raw/master/empty.txt.cpio --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.cpio.bz2?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.cpio.gz?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.tar.bz2?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.tar.gz?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/raw/master/empty.txt.tar --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.tbz2?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.tgz?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.zip?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.zip.bz2?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.zip.gz?raw=true --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
