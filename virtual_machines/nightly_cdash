@@ -12,7 +12,7 @@ NAME=$2
 ./sshall.py $ARG "bash -c \"cp -R /ci-build/cli/large_systems_test/cache /lst-cache"
 
 # clear out old build directory, make new one, copy over large systems test cache
-./sshall.py $ARG "bash -c \"rm -rf /ci-build; mkdir -p /ci-build/cli/large_systems_test/cache; mv /lst/cache /ci-build/cli/large_systems_test/cache\""
+./sshall.py $ARG "bash -c \"rm -rf /ci-build; mkdir -p /ci-build/cli/large_systems_test/cache; mv /lst-cache /ci-build/cli/large_systems_test/cache\""
 
 # configure cmake with every test enabled
 ./sshall.py $ARG "bash -c \"cd /ci-build; cmake -DBUILD_CLI_TESTS=ON -DBUILD_UNIT_TESTS=ON -DBUILD_TIMING_TESTS=ON -DBUILD_LARGE_SYSTEMS_TESTS=ON /srcML\""
