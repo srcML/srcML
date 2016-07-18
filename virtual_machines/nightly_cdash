@@ -18,4 +18,4 @@ NAME=$2
 ./sshall.py $ARG "bash -c \"cd /ci-build; cmake -DBUILD_CLI_TESTS=ON -DBUILD_UNIT_TESTS=ON -DBUILD_TIMING_TESTS=ON -DBUILD_LARGE_SYSTEMS_TESTS=ON /srcML\""
 
 # run ctest and post to cdash nightly using the given computer name specifying OS/version
-./sshall.py $ARG "bash -c \"cd /ci-build; make -j2; ctest -VV -D Nightly --overwrite Site='$NAME'\""
+./sshall.py $ARG "bash -c \"cd /ci-build; make -j2; ctest -VV -D Nightly -T MemCheck --overwrite Site='$NAME'\""
