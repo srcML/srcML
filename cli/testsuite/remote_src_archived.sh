@@ -11,37 +11,37 @@ define srcml_with_url <<- 'STDOUT'
 
 
 # archive/compression mix
-srcml https://github.com/hmm34/massive-lana/raw/master/a.cpp.cpio --url="test"
+srcml https://github.com/srcML/test-data/raw/master/a.cpp.cpio --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.cpio.bz2?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.cpio.bz2?raw=true --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.cpio.gz?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.cpio.gz?raw=true --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.tar.bz2?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.tar.bz2?raw=true --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.tar.gz?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.tar.gz?raw=true --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/raw/master/a.cpp.tar --url="test"
+srcml https://github.com/srcML/test-data/raw/master/a.cpp.tar --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.tbz2?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.tbz2?raw=true --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.tgz?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.tgz?raw=true --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.zip?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.zip?raw=true --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.zip.bz2?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.zip.bz2?raw=true --url="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.zip.gz?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.zip.gz?raw=true --url="test"
 check 3<<< "$srcml_with_url"
 
 
@@ -52,35 +52,35 @@ define empty_srcml_with_url <<- 'STDOUT'
 	STDOUT
 
 # archive/compressed mix
-srcml https://github.com/hmm34/massive-lana/raw/master/a.cpp.cpio --url="test"
+srcml https://github.com/srcML/test-data/raw/master/a.cpp.cpio --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.cpio.bz2?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.cpio.bz2?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.cpio.gz?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.cpio.gz?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.tar.bz2?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.tar.bz2?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.tar.gz?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.tar.gz?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/raw/master/a.cpp.tar --url="test"
+srcml https://github.com/srcML/test-data/raw/master/a.cpp.tar --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.tbz2?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.tbz2?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.tgz?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.tgz?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.zip?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.zip?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.zip.bz2?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.zip.bz2?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.zip.gz?raw=true --url="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.zip.gz?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url"

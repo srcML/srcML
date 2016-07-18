@@ -24,7 +24,7 @@ a;"
 createfile sub/b.cpp "
 b;"
 
-src2srcml --files-from "https://raw.githubusercontent.com/hmm34/massive-lana/master/file-list.txt" --in-order -o sub/both.xml
+src2srcml --files-from "https://raw.githubusercontent.com/srcML/test-data/master/file-list.txt" --in-order -o sub/both.xml
 check sub/both.xml 3<<< "$nestedfile"
 
 
@@ -35,14 +35,14 @@ define empty_srcml_with_url <<- 'STDOUT'
 	STDOUT
 
 
-src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.bz2?raw=true
+src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.bz2?raw=true
 check 3<<< "$empty_srcml_with_url"
 
-src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.gz?raw=true
+src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.gz?raw=true
 check 3<<< "$empty_srcml_with_url"
 
-src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.bz2.gz?raw=true
+src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.bz2.gz?raw=true
 check 3<<< "$empty_srcml_with_url"
 
-src2srcml --files-from https://github.com/hmm34/massive-lana/blob/master/empty.txt.gz.bz2?raw=true
+src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.gz.bz2?raw=true
 check 3<<< "$empty_srcml_with_url"

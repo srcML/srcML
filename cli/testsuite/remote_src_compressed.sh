@@ -10,16 +10,16 @@ define srcml_with_url <<- 'STDOUT'
 	STDOUT
 
 # compression only
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.bz2?raw=true --url="test" --filename="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.bz2?raw=true --url="test" --filename="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.gz?raw=true --url="test" --filename="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.gz?raw=true --url="test" --filename="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.bz2.gz?raw=true --url="test" --filename="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.bz2.gz?raw=true --url="test" --filename="test"
 check 3<<< "$srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.gz.bz2?raw=true --url="test" --filename="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.gz.bz2?raw=true --url="test" --filename="test"
 check 3<<< "$srcml_with_url"
 
 
@@ -30,14 +30,14 @@ define empty_srcml_with_url <<- 'STDOUT'
 	STDOUT
 
 # compressed
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.bz2?raw=true --url="test" --filename="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.bz2?raw=true --url="test" --filename="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.gz?raw=true --url="test" --filename="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.gz?raw=true --url="test" --filename="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.bz2.gz?raw=true --url="test" --filename="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.bz2.gz?raw=true --url="test" --filename="test"
 check 3<<< "$empty_srcml_with_url"
 
-srcml https://github.com/hmm34/massive-lana/blob/master/a.cpp.gz.bz2?raw=true --url="test" --filename="test"
+srcml https://github.com/srcML/test-data/blob/master/a.cpp.gz.bz2?raw=true --url="test" --filename="test"
 check 3<<< "$empty_srcml_with_url"
