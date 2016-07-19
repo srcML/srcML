@@ -9,6 +9,11 @@ define src <<- 'STDOUT'
 	a;
 	STDOUT
 
+define empty_output <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
+	STDOUT
+
 define foutput <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="archive/a.cpp.bz2">
@@ -37,12 +42,16 @@ define archive_output <<- 'STDOUT'
 xmlcheck "$archive_output"
 xmlcheck "$foutput"
 xmlcheck "$output"
+xmlcheck "$empty_output"
 
 createfile archive/a.cpp "$src"
 bzip2 -c archive/a.cpp > archive/a.cpp.bz2
 
 createfile list.txt "archive/a.cpp.bz2"
 bzip2 -c list.txt > list.txt.bz2
+
+createfile empty.txt " "
+bzip2 -c empty.txt > empty.txt.bz2
 
 
 # src --> srcml
@@ -73,8 +82,23 @@ src2srcml --files-from list.txt.bz2 -o archive/compressed_list.xml
 check archive/compressed_list.xml 3<<< "$archive_output"
 
 
+# files from empty
+src2srcml --files-from empty.txt
+check 3<<< "$empty_output"
+
+src2srcml --files-from empty.txt.bz2
+check 3<<< "$empty_output"
+
+src2srcml --files-from empty.txt -o archive/empty.xml
+check archive/empty.xml 3<<< "$empty_output"
+
+src2srcml --files-from empty.txt.bz2 -o archive/compressed_empty.xml
+check archive/compressed_empty.xml 3<<< "$empty_output"
+
 rmfile list.txt
 rmfile list.txt.bz2
+rmfile empty.txt
+rmfile empty.txt.bz2
 rmfile archive/a.cpp
 rmfile archive/a.cpp.bz2
 

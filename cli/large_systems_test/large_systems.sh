@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # optionally use max-threads, if set in CMakeLists.txt
-if [ $# -ge 2 ] && [[ "${1}" == *"max-threads"* ]] ; then
+if [ $# -ge 2 ] && [[ "${1}" == *"jobs"* ]] ; then
     MAX_THREADS="${1}"
     shift 1
 fi

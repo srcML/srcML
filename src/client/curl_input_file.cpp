@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef _MSC_BUILD 
+#ifdef _MSC_BUILD
 #define ssize_t __int64
 #endif
 
@@ -77,7 +77,7 @@ int archive_curl_open(archive*, void* client_data) {
 
     curl_easy_cleanup(ping);
     if (http_code != 200)
-    {   
+    {
         return -1;
     }
 
@@ -120,4 +120,3 @@ __LA_SSIZE_T archive_curl_read(archive*, void* client_data, const void** buff) {
 
         return 0;
     }
-
