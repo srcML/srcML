@@ -24,7 +24,7 @@ a;"
 createfile sub/b.cpp "
 b;"
 
-src2srcml --files-from "https://raw.githubusercontent.com/srcML/test-data/master/file-list.txt" --in-order -o sub/both.xml
+src2srcml --files-from "https://raw.githubusercontent.com/srcML/test-data/master/filelist/file-list.txt" --in-order -o sub/both.xml
 check sub/both.xml 3<<< "$nestedfile"
 
 
