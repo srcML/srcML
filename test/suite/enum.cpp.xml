@@ -45,5 +45,13 @@
 <enum>enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><name>c</name></decl> }</block>;</enum>
 </unit>
 
+<unit>
+<enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name></decl> }</block> <decl><name>a</name></decl>, <decl><type ref="prev"/><name>b</name></decl>;</enum>
+</unit>
+
+<unit>
+<enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name></decl>, <decl><name>c</name></decl> }</block> <decl><name>a</name></decl>, <decl><type ref="prev"/><name>b</name></decl>, <decl><type ref="prev"/><name>c</name></decl>;</enum>
+</unit>
+
 </unit>
 
