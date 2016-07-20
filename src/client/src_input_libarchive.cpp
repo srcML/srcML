@@ -42,7 +42,6 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     archive_read_support_format_cpio(arch);
     archive_read_support_format_gnutar(arch);
     archive_read_support_format_iso9660(arch);
-    archive_read_support_format_mtree(arch);
     archive_read_support_format_tar(arch);
     archive_read_support_format_xar(arch);
     archive_read_support_format_zip(arch);
