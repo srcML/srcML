@@ -47,7 +47,10 @@ public:
 
         status = srcml_archive_read_open(arch, input_source);
         if (status != SRCML_STATUS_OK) {
-            std::cerr << "srcml: Unable to open srcml file " << src_prefix_resource(input_source.filename) << "\n";
+            if (input_source.protocol == "file" )
+                std::cerr << "srcml: Unable to open srcml file " << src_prefix_resource(input_source.filename) << "\n";
+            else
+                std::cerr << "srcml: Unable to open srcml URL " << input_source.filename << "\n";
             throw status;
         }
     }
