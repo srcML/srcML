@@ -67,9 +67,11 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     int status;
     curl curling;
+    const int buffer_size = 16384;
+
     if (contains<int>(input_file)) {
 
-        status = archive_read_open_fd(arch, input_file, 16384);
+        status = archive_read_open_fd(arch, input_file, buffer_size);
 
     } else if (contains<FILE*>(input_file)) {
 
@@ -82,7 +84,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     } else {
 
-        status = archive_read_open_filename(arch, input_file.c_str(), 16384);
+        status = archive_read_open_filename(arch, input_file.c_str(), buffer_size);
     }
 
     if (status != ARCHIVE_OK) {
