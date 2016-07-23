@@ -51,9 +51,9 @@ int main(int argc, char * argv[]) {
 
     // version
     if (srcml_request.command & SRCML_COMMAND_VERSION) {
-        std::cout << "libsrcml Version Number " << srcml_version_string() << "\n";
-        std::cout << "srcml Version Number " << srcml_version_number() << "\n";
-        std::cout << "libarchive Version " << ARCHIVE_VERSION_NUMBER << "\n";
+        std::cout << "libsrcml " << srcml_version_string() << "\n";
+        std::cout << "srcml " << srcml_version_string() << "\n";
+        std::cout << archive_version_string() << "\n";
         return 0;
     }
 
