@@ -5,7 +5,7 @@ source $(dirname "$0")/framework_test.sh
 
 # files from an archived file list
 define error <<- 'STDOUT'
-	ERROR
+	srcml: filelist requires a non-archived file format
 	STDOUT
 
 createfile archive/a.cpp "a;"

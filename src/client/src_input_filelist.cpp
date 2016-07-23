@@ -48,12 +48,12 @@ void src_input_filelist(ParseQueue& queue,
     // ARE THE LAST TWO NECESSARY?
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
-    	std::cerr << "ERROR\n";
+    	std::cerr << "srcml: filelist requires a non-directory file format\n";
     	return;
     }
 
     if (strcmp(archive_entry_pathname(entry), "data") != 0) {
-    	std::cerr << "ERROR\n";
+    	std::cerr << "srcml: filelist requires a non-archived file format\n";
     	return;
     }
 
