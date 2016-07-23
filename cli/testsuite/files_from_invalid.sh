@@ -184,3 +184,10 @@ check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archive
 
 src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.zip.gz?raw=true --url="test"
 check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+
+
+# file list contains nonexistent srcml file
+createfile "list.txt" "nonexistent.xml"
+
+srcml --files-from list.txt
+check 4<<< "srcml: Unable to open srcml file nonexistent.xml"
