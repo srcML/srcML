@@ -191,3 +191,9 @@ createfile "list.txt" "nonexistent.xml"
 
 srcml --files-from list.txt
 check 4<<< "srcml: Unable to open srcml file nonexistent.xml"
+
+
+createfile "remote-list.txt" "https://github.com/srcML/test-data/blob/master/nonexistent_file.xml"
+
+srcml --files-from remote-list.txt
+check 4<<< "srcml: Unable to open srcml URL https://github.com/srcML/test-data/blob/master/nonexistent_file.xml"
