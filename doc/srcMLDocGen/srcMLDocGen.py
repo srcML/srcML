@@ -24,7 +24,7 @@ def genMainPage(maingPageName, pageLinks, nav):
     pageLinks.sort(key=lambda x: x.title)
     page = fileTemplate.render(Context({"pageLinks": pageLinks, "nav":nav}))
     out.write(page)
-    out.close()    
+    out.close()
 
 def genDocFile(docConfig, nav):
     global pageLinks
@@ -86,7 +86,7 @@ def genXPathExtFuncPage(extFuncDocInfo, grammarOutputFileName, nav):
 def genDocIndex(docConfig, nav):
     global pageLinks
     indexFileName = getDocIndexFileName(docConfig)
-    
+
     # indexEntries = []
     lang = docConfig.srcMLLanguage
     pageName = docConfig.outputFileName
@@ -243,7 +243,7 @@ if __name__ == "__main__":
     if not settings.configured:
         django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", ), INSTALLED_APPS=("DocGen",))
 
-    # django.setup()
+    django.setup()
 
     print "-"*80
     print "Language Support"
