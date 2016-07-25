@@ -41,10 +41,7 @@ navSubTitleAttr = "navSubTitle"
 
 namespaceDict={
     "src":"http://www.srcML.org/srcML/src",
-    # "op":"http://www.sdml.info/srcML/operator",
     "cpp":"http://www.srcML.org/srcML/cpp",
-    # "lit":"http://www.sdml.info/srcML/literal",
-    # "type":"http://www.sdml.info/srcML/modifier",
 }
 
 

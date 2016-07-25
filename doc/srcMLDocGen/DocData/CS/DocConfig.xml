@@ -231,7 +231,7 @@
                 <XPath path="//src:block/src:decl_stmt">
                     <Desc>Find all variable declaration within a block</Desc>
                 </XPath>
-            </XPathQueries>	
+            </XPathQueries>
             <Example file="../C/C-compound-block.c" />
         </DocEntry>
 
@@ -326,7 +326,7 @@
                 <XPath path="//src:using_stmt[src:init/src:decl/src:type/src:name = 'StreamReader']">
                     <Desc>Find all using statements that use a <code>StreamReader</code> variable</Desc>
                 </XPath>
-                
+
             </XPathQueries>
             <Example file="CS-using-1.cs" />
         </DocEntry>
@@ -693,7 +693,7 @@
             </XPathQueries>
             <Example file="CS-this-extension-method-1.cs" />
         </DocEntry>
-        
+
     </Category>
 
 
@@ -754,7 +754,7 @@
             </Elements>
             <XPathQueries>
                 <XPath path="//src:decl[src:type/src:name/src:index]">
-                    <Desc>Find all array declarations</Desc>
+                    <Desc>Find all explicit array declarations</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CS-array-decl-1.cs" />
@@ -1115,7 +1115,7 @@
             <Example file="CS-property-1.cs" />
             <Example file="CS-property-2.cs" />
         </DocEntry>
-    
+
         <DocEntry title="get">
             <Elements>
                 <Element name="function"/>
@@ -1290,7 +1290,7 @@
             <Example file="CS-dtor-1.cs" />
         </DocEntry>
 
-        <!--<DocEntry title="object initializer">
+        <DocEntry title="object initializer">
             <Elements>
                 <Element name="decl_stmt" />
                 <Subelement name="decl" />
@@ -1303,7 +1303,7 @@
                 </XPath>
             </XPathQueries>
             <Example file="CS-property-wise-init-1.cs" />
-        </DocEntry>-->
+        </DocEntry>
 
         <DocEntry title="enum">
             <Elements>
@@ -1926,8 +1926,8 @@
                     <Desc>Find all select clauses</Desc>
                 </XPath>
             </XPathQueries>
-            <Example file="CS-linq-select-1.cs" /> 
-            <Example file="CS-linq-select-2.cs" /> 
+            <Example file="CS-linq-select-1.cs" />
+            <Example file="CS-linq-select-2.cs" />
         </DocEntry>
 
         <DocEntry title="group">
@@ -2029,7 +2029,7 @@
             </XPathQueries>
             <Example file="CS-pp-else-1.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#elif">
             <Elements>
                 <Element name="elif" ns="cpp" />
@@ -2043,7 +2043,7 @@
             </XPathQueries>
             <Example file="CS-pp-elif-1.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#endif">
             <Elements>
                 <Element name="endif" ns="cpp"/>
@@ -2056,7 +2056,7 @@
             </XPathQueries>
             <Example file="CS-pp-endif-1.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#define">
             <Elements>
                 <Element name="define" ns="cpp"/>
@@ -2070,7 +2070,7 @@
             </XPathQueries>
             <Example file="CS-pp-define-1.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#undef">
             <Elements>
                 <Element name="undef" ns="cpp" />
@@ -2084,7 +2084,7 @@
             </XPathQueries>
             <Example file="CS-pp-undef-1.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#warning">
             <Elements>
                 <Element name="warning" ns="cpp"/>
@@ -2097,7 +2097,7 @@
             </XPathQueries>
             <Example file="CS-pp-warning-1.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#error">
             <Elements>
                 <Element name="error" ns="cpp"/>
@@ -2110,7 +2110,7 @@
             </XPathQueries>
             <Example file="CS-pp-error-1.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#line">
             <Elements>
                 <Element name="line" ns="cpp"/>
@@ -2127,7 +2127,7 @@
             <Example file="CS-pp-line-2.cs" />
             <Example file="CS-pp-line-3.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#region">
             <Elements>
                 <Element name="region" ns="cpp"/>
@@ -2141,7 +2141,7 @@
             </XPathQueries>
             <Example file="CS-pp-region-1.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#endregion">
             <Elements>
                 <Element name="endregion" ns="cpp" />
@@ -2154,7 +2154,7 @@
             </XPathQueries>
             <Example file="CS-pp-region-1.cs" />
         </DocEntry>
-        
+
         <DocEntry title="#pragma">
             <Elements>
                 <Element name="pragma" ns="cpp"/>
@@ -2170,4 +2170,3 @@
         </DocEntry>
     </Category>
 </DocConfig>
-

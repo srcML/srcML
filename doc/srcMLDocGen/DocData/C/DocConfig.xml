@@ -700,7 +700,7 @@
             <Example file="C-enum-declaration-1.c"/>
             <Example file="C-enum-declaration-3.c"/>
         </DocEntry>
-        
+
         <DocEntry title="enum declaration">
             <Elements>
                 <Element name="enum" />
@@ -714,8 +714,8 @@
             <Example file="C-enum-declaration-2.c"/>
         </DocEntry>
     </Category>
-    
-    
+
+
 
     <Category title="Expressions">
         <DocEntry title="function call">
@@ -895,11 +895,11 @@
             <Example file="C-_Atomic-3.c"/>
             <XPathQueries>
                 <XPath path="//src:atomic">
-                    <Desc>Find all uses of _Atomic</Desc>
+                    <Desc>Find all uses of _Atomic as a type specifier</Desc>
                 </XPath>
             </XPathQueries>
         </DocEntry>
-        
+
         <DocEntry title="_Generic">
             <Desc>The only use case for this keyword is within a macro, in which case srcML will not mark it up.</Desc>
             <Elements>
@@ -914,7 +914,7 @@
                 </XPath>
             </XPathQueries>
         </DocEntry>
-        
+
         <DocEntry title="_Noreturn">
             <Elements>
                 <Element name="specifier" />
@@ -950,7 +950,7 @@
             <XPathQueries>
                 <XPath path="//src:specifier[.='_Thread_local']">
                     <Desc>Find all uses of _Thread_local</Desc>
-                </XPath>                
+                </XPath>
             </XPathQueries>
         </DocEntry>
 
