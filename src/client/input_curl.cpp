@@ -27,6 +27,8 @@
 #include <boost/thread.hpp>
 #pragma GCC diagnostic pop
 
+#include <curl/curl.h>
+
 #if defined(_MSC_BUILD) || defined(__MINGW32__)
 #include <io.h>
 #include <fcntl.h>
@@ -37,9 +39,10 @@ static int outfd = 0;
 
 size_t write_data_because_libcurl_is_stupid(void *buffer, size_t size, size_t nmemb, void * /* userp */) {
 
-    write(outfd, buffer, nmemb);
+    size_t realsize = size * nmemb;
+    write(outfd, buffer, realsize);
 
-    return size;
+    return realsize;
 }
 
 // Note: Stupid name, but can be changed later
@@ -54,16 +57,60 @@ void curl_it_all(const srcml_request_t& /* srcml_request */,
     outfd = *destination.fd;
 
     // setup curl to use url with a write function write_data_because_libcurl_is_stupid()
+    CURL *curl_handle;
+    CURLcode response;
 
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+    curl_handle = curl_easy_init();
+
+    curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
+    curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
+    curl_easy_setopt(curl_handle, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
+    curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data_because_libcurl_is_stupid);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, NULL);
+    curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+
+        // Quick check to see if the remote location exists or is available
+    CURL* ping = curl_easy_duphandle(curl_handle);
+    curl_easy_setopt(ping, CURLOPT_NOBODY, 1L);
+        //curl_easy_setopt(ping, CURLOPT_HEADER, 1L);
+    curl_easy_perform(ping);
+
+    long http_code = 0;
+    //double data_size = 0;
+    curl_easy_getinfo (ping, CURLINFO_RESPONSE_CODE, &http_code);
+    //curl_easy_getinfo (ping, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &data_size);
+
+    curl_easy_cleanup(ping);
+    if (http_code != 200)
+    {
+        // bad, can't open the remote resource.
+        // what to do here...
+        std::cerr << "Resource: " << url << " unavailable - " << http_code << "\n";
+    }
+    // The resource is there, so lets go get it!
+    response = curl_easy_perform(curl_handle);
+
+    /* check for errors */
+    if(response != CURLE_OK) {
+        // this is also bad...
+        std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(response) << std::endl;
+    }
 
     // just to see if it works
-    const char buffer[] = "a;";
-    write_data_because_libcurl_is_stupid((void*) buffer, sizeof(buffer), sizeof(char), 0);
+    //const char buffer[] = "a;";
+    //write_data_because_libcurl_is_stupid((void*) buffer, sizeof(buffer), sizeof(char), 0);
     close(outfd);
 
-
     // make sure to close out libcurl read here
+    /* cleanup curl stuff */
+    curl_easy_cleanup(curl_handle);
 
+    /* we're done with libcurl, so clean it up */
+    curl_global_cleanup();
 }
 
 void input_curl(srcml_input_src& input) {

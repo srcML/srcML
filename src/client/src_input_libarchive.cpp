@@ -67,7 +67,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 #endif
 
     int status;
-    curl curling;
+    //curl curling;
     const int buffer_size = 16384;
 
     if (contains<int>(input_file)) {
@@ -85,7 +85,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
         input_curl(uninput);
         status = archive_read_open_fd(arch, uninput, buffer_size);
 
-    //        curling.source = input_file.filename;
+        //curling.source = input_file.filename;
         //status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
     } else {
