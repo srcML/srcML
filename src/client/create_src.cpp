@@ -28,7 +28,8 @@
 #include <src_output_filesystem.hpp>
 #include <src_prefix.hpp>
 #include <srcml_options.hpp>
-
+#include <curl_input_file.hpp>
+#include <input_curl.hpp>
 
 class srcMLReadArchive {
 public:
@@ -45,13 +46,20 @@ public:
         if (status != SRCML_STATUS_OK)
             throw status;
 
-        status = srcml_archive_read_open(arch, input_source);
-        if (status != SRCML_STATUS_OK) {
-            if (input_source.protocol == "file" )
+        if (curl_supported(input_source.protocol)) { 
+
+            // input must go through libcurl pipe
+            CurlStatus::latch.reset(1);
+            srcml_input_src uninput = input_source;
+            input_curl(uninput);
+            status = srcml_archive_read_open_fd(arch, *uninput.fd);
+
+        } else {
+            status = srcml_archive_read_open(arch, input_source);
+            if (status != SRCML_STATUS_OK) {
                 std::cerr << "srcml: Unable to open srcml file " << src_prefix_resource(input_source.filename) << "\n";
-            else
-                std::cerr << "srcml: Unable to open srcml URL " << input_source.filename << "\n";
-            throw status;
+                throw status;
+            }
         }
     }
 
