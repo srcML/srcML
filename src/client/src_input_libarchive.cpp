@@ -81,6 +81,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     } else if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
 
         // input must go through libcurl pipe
+        CurlStatus::latch.reset(1);
         srcml_input_src uninput = input_file;
         input_curl(uninput);
         status = archive_read_open_fd(arch, uninput, buffer_size);
@@ -239,8 +240,12 @@ void src_input_libarchive(ParseQueue& queue,
 #else
             int64_t offset;
 #endif
-            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
+
+                if (!CurlStatus::curlisgood(prequest->buffer.size()))
+                    return;
+            }
 
             // LOC count
             prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');

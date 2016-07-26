@@ -35,12 +35,19 @@
 #include <windows.h>
 #endif
 
+#include <boost/thread/latch.hpp>
+
+int CurlStatus::error = 0;
+boost::latch CurlStatus::latch(0);
+
 static int outfd = 0;
 
 // Note: Stupid name, but can be changed later
 void curl_it_all(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
+
+    CurlStatus::error = 0;
 
     // input comes from URL (I think)
     std::string url = input_sources[0].filename;
@@ -69,7 +76,7 @@ void curl_it_all(const srcml_request_t& /* srcml_request */,
 
     curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
- 
+/* 
     // Quick check to see if the remote location exists or is available
     CURL* ping = curl_easy_duphandle(curl_handle);
     curl_easy_setopt(ping, CURLOPT_NOBODY, 1L);
@@ -87,17 +94,24 @@ void curl_it_all(const srcml_request_t& /* srcml_request */,
         // bad, can't open the remote resource.
         // what to do here...
         std::cerr << "Resource: " << url << " unavailable - " << http_code << "\n";
-        exit(1);
+        CurlStatus::error = 1;
+//        exit(1);
     }
+    */
     // The resource is there, so lets go get it!
     response = curl_easy_perform(curl_handle);
+    long http_code = 0;
+    curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
 
     /* check for errors */
-    if(response != CURLE_OK) {
+    if(response != CURLE_OK || http_code != 200) {
         // this is also bad...
         std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(response) << std::endl;
-        exit(1);
+        CurlStatus::error = 1;
+    } else {
+        CurlStatus::error = 0;
     }
+    CurlStatus::latch.count_down();
 
     fclose(outfile);
 
