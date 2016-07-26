@@ -8052,7 +8052,7 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the derivation list
             startElement(SDERIVATION);
         }
-        (derive_access)*
+        (derive_virtual | derive_access)*
 
         ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? identifier | variable_identifier)
         ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
@@ -8101,9 +8101,7 @@ implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 // super list
 super_list[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
-            (derive_access)*
-
-            variable_identifier
+            derived
         |
             COMMA
         )*
@@ -8114,7 +8112,14 @@ derive_access[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCLASS_SPECIFIER);
         }
-        (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED) (options { greedy = true; } : VIRTUAL)*
+        (PUBLIC | PRIVATE | PROTECTED)
+;
+
+derive_virtual[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SCLASS_SPECIFIER);
+        }
+        VIRTUAL
 ;
 
 // do a parameter list
