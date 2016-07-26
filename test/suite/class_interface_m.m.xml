@@ -50,7 +50,7 @@
 </unit>
 
 <unit>
-<class type="@interface">@interface <name>classname</name> <super>: <name>super</name></super> @end</class>
+<class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> @end</class>
 </unit>
 
 <unit>
@@ -70,7 +70,7 @@
 </unit>
 
 <unit>
-<class type="@interface">@interface <name>classname</name> <super>: <name>super</name></super> <block>{<protected type="default"/>}</block> @end</class>
+<class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
 <unit>
@@ -78,7 +78,7 @@
 </unit>
 
 <unit>
-<class type="@interface">@interface <name>classname</name> <super>: <name>super</name></super> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{<protected type="default"/>}</block> @end</class>
+<class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
 <unit>
@@ -114,11 +114,11 @@
 </unit>
 
 <unit>
-<class type="@interface">@interface <name>classname</name> <super>: <name>super</name></super> <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> </protected>}</block> @end</class>
+<class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> </protected>}</block> @end</class>
 </unit>
 
 <unit>
-<class type="@interface">@interface <name>classname</name> <super>: <name>super</name></super> <block>{<protected type="default">
+<class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> <block>{<protected type="default">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
 <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>
 </protected>}</block>

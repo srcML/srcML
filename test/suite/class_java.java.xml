@@ -6,51 +6,51 @@
 </unit>
 
 <unit>
-<class>class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends></super> <block>{}</block></class>
+<class>class <name>A</name> <super_list><extends>extends <name>B</name>, <name>C</name></extends></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends></super> <block>{}</block></class>
+<class><specifier>public</specifier> class <name>A</name> <super_list><extends>extends <name>B</name>, <name>C</name></extends></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> <specifier>final</specifier> class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends></super> <block>{}</block></class>
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>A</name> <super_list><extends>extends <name>B</name>, <name>C</name></extends></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super><implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+<class>class <name>A</name> <super_list><implements>implements <name>D</name>, <name>E</name></implements></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>A</name> <super><implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+<class><specifier>public</specifier> class <name>A</name> <super_list><implements>implements <name>D</name>, <name>E</name></implements></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> <specifier>final</specifier> class <name>A</name> <super><implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>A</name> <super_list><implements>implements <name>D</name>, <name>E</name></implements></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+<class>class <name>A</name> <super_list><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+<class><specifier>public</specifier> class <name>A</name> <super_list><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> <specifier>final</specifier> class <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></class>
+<class><specifier>public</specifier> <specifier>final</specifier> class <name>A</name> <super_list><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class>class <name>test</name> <super><extends>extends <name>Object</name></extends> <implements>implements <name>Cloneable</name></implements></super> <block>{}</block></class>
+<class>class <name>test</name> <super_list><extends>extends <name>Object</name></extends> <implements>implements <name>Cloneable</name></implements></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class>class <name>test</name> <super><implements>implements <name>Cloneable</name></implements> <extends>extends <name>Object</name></extends></super> <block>{}</block></class>
+<class>class <name>test</name> <super_list><implements>implements <name>Cloneable</name></implements> <extends>extends <name>Object</name></extends></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class>class <name>D</name> <super><implements>implements <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></implements></super> <block>{ }</block></class>
+<class>class <name>D</name> <super_list><implements>implements <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></implements></super_list> <block>{ }</block></class>
 </unit>
 
 </unit>

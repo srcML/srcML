@@ -214,7 +214,8 @@ namespace {
     ELEMENT_MAP(SCONSTRUCTOR_DECLARATION,    "constructor_decl")
     ELEMENT_MAP(SDESTRUCTOR_DEFINITION,      "destructor")
     ELEMENT_MAP(SDESTRUCTOR_DECLARATION,     "destructor_decl")
-    ELEMENT_MAP(SDERIVATION_LIST,            "super")
+    ELEMENT_MAP(SDERIVATION_LIST,            "super_list")
+    ELEMENT_MAP(SDERIVATION,                 "super")
     ELEMENT_MAP(SFRIEND,                     "friend")
     ELEMENT_MAP(SCLASS_SPECIFIER,            "specifier")
 
