@@ -46,7 +46,7 @@ public:
         if (status != SRCML_STATUS_OK)
             throw status;
 
-        if (curl_supported(input_source.protocol)) { 
+        if (input_source.protocol != "file" && curl_supported(input_source.protocol)) { 
 
             // input must go through libcurl pipe
             CurlStatus::latch.reset(1);
