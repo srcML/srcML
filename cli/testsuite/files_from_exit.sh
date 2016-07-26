@@ -62,3 +62,15 @@ check_exit 1
 
 src2srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.zip
 check_exit 1
+
+# file list contains nonexistent srcml file
+createfile "list.txt" "nonexistent.xml"
+
+srcml --files-from list.txt
+check_exit 1
+
+
+createfile "remote-list.txt" "https://github.com/srcML/test-data/blob/master/nonexistent_file.xml"
+
+srcml --files-from remote-list.txt
+check_exit 1

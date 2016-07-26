@@ -102,37 +102,37 @@ bzip2 -c empty.txt.zip > empty.txt.zip.bz2
 gzip -c empty.txt.zip > empty.txt.zip.gz
 
 src2srcml --files-from empty.txt.cpio --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.cpio.bz2 --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.cpio.gz --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.tar.bz2 --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.tar.gz --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.tar --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.tbz2 --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.tgz --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.zip --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.zip.bz2 --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from empty.txt.zip.gz --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 rmfile empty.txt
 rmfile empty.txt.cpio
@@ -149,51 +149,38 @@ rmfile empty.txt.zip.gz
 
 
 # empty file list from remote archived/crompressed file
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.bz2?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.bz2 --url="test"
+check 3<<< "$empty_srcml_with_url"
 
 src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.cpio --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.cpio.bz2?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.cpio.bz2 --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.cpio.gz?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.cpio.gz --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.tar.bz2?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.tar.bz2 --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.tar.gz?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.tar.gz --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
 src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.tar --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.tbz2?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.tbz2 --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.tgz?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.tgz --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.zip?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.zip --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.zip.bz2?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.zip.bz2 --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
 
-src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.zip.gz?raw=true --url="test"
-check 3<<< "$empty_srcml_with_url" 4<<< "srcml: files-from expecting non-archived file"
-
-
-# file list contains nonexistent srcml file
-createfile "list.txt" "nonexistent.xml"
-
-srcml --files-from list.txt
-check 4<<< "srcml: Unable to open srcml file nonexistent.xml"
-
-
-createfile "remote-list.txt" "https://github.com/srcML/test-data/blob/master/nonexistent_file.xml"
-
-srcml --files-from remote-list.txt
-check 4<<< "srcml: Unable to open srcml URL https://github.com/srcML/test-data/blob/master/nonexistent_file.xml"
+src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.zip.gz --url="test"
+check 3<<< "$empty_srcml_with_url" 4<<< "srcml: filelist requires a non-archived file format"
