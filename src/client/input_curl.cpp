@@ -69,17 +69,8 @@ void curl_it_all(const srcml_request_t& /* srcml_request */,
 
     curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-
-    /*
-        I really don't like pinging first.
-
-        However, if the resource is not available, the error pages is written into the pipe,
-        and libarchive gets it instead of source.
-
-        Better solution: synchronize threads so that libarchive does not read from the input file descriptor
-        until we have read some data and know it is good.
-    */
-        // Quick check to see if the remote location exists or is available
+ 
+    // Quick check to see if the remote location exists or is available
     CURL* ping = curl_easy_duphandle(curl_handle);
     curl_easy_setopt(ping, CURLOPT_NOBODY, 1L);
         //curl_easy_setopt(ping, CURLOPT_HEADER, 1L);
@@ -96,7 +87,7 @@ void curl_it_all(const srcml_request_t& /* srcml_request */,
         // bad, can't open the remote resource.
         // what to do here...
         std::cerr << "Resource: " << url << " unavailable - " << http_code << "\n";
-        goto end;
+        exit(1);
     }
     // The resource is there, so lets go get it!
     response = curl_easy_perform(curl_handle);
@@ -105,9 +96,9 @@ void curl_it_all(const srcml_request_t& /* srcml_request */,
     if(response != CURLE_OK) {
         // this is also bad...
         std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(response) << std::endl;
+        exit(1);
     }
 
-end:
     fclose(outfile);
 
     // make sure to close out libcurl read here
