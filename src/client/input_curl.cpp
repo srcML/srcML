@@ -37,7 +37,6 @@ static int outfd = 0;
 
 size_t write_data_because_libcurl_is_stupid(void *buffer, size_t size, size_t nmemb, void * /* userp */) {
 
-
     write(outfd, buffer, nmemb);
 
     return size;
@@ -49,7 +48,7 @@ void curl_it_all(const srcml_request_t& /* srcml_request */,
     const srcml_output_dest& destination) {
 
     // input comes from URL (I think)
-    std::string url = input_sources[0].resource;
+    std::string url = input_sources[0].filename;
 
     // output is a file descriptor
     outfd = *destination.fd;

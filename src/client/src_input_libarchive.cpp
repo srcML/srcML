@@ -31,6 +31,7 @@
 #include <archive_entry.h>
 #include <algorithm>
 #include <timer.hpp>
+#include <input_curl.hpp>
 
 #include <curl_input_file.hpp>
 
@@ -79,8 +80,13 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     } else if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
 
-        curling.source = input_file.filename;
-        status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
+        // input must go through libcurl pipe
+        srcml_input_src uninput = input_file;
+        input_curl(uninput);
+        status = archive_read_open_fd(arch, uninput, buffer_size);
+
+    //        curling.source = input_file.filename;
+        //status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
     } else {
 
