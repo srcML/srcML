@@ -40,10 +40,13 @@
 int CurlStatus::error = 0;
 boost::latch CurlStatus::latch(0);
 
+// global request
+extern srcml_request_t global_srcml_request;
+
 static int outfd = 0;
 
 // Note: Stupid name, but can be changed later
-void curl_it_all(const srcml_request_t& /* srcml_request */,
+void curl_it_all(const srcml_request_t& srcml_request,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
 
@@ -105,8 +108,12 @@ void curl_it_all(const srcml_request_t& /* srcml_request */,
 
     /* check for errors */
     if(response != CURLE_OK || http_code != 200) {
-        // this is also bad...
-        std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(response) << std::endl;
+
+        std::cerr << "srcml: Unable to access URL " << url << std::endl;
+
+        if (global_srcml_request.input_sources.size() == 1)
+            exit(1);
+
         CurlStatus::error = 1;
     } else {
         CurlStatus::error = 0;
