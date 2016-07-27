@@ -71,7 +71,7 @@ void srcml_handler_dispatch(ParseQueue& queue,
        
         src_input_file(queue, srcml_arch, srcml_request, input);
 
-    } else if (input.protocol != "file" && curl_supported(input.protocol) && input.extension == "xml") { 
+    } else if (input.protocol != "file" && curl_supported(input.protocol) && input.extension == ".xml") { 
 
         // input must go through libcurl pipe
         CurlStatus::latch.reset(1);
