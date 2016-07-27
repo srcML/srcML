@@ -38,6 +38,8 @@
 #include <trace_log.hpp>
 #include <srcml_options.hpp>
 #include <input_file.hpp>
+#include <curl_input_file.hpp>
+#include <input_curl.hpp>
 
 void srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
@@ -46,6 +48,7 @@ void srcml_handler_dispatch(ParseQueue& queue,
 
     // call appropriate handler
     if (input.state == SRCML) {
+
         // libsrcml can apply gz decompression
         // all other srcml compressions require a per-input decompression stage
         srcml_input_src uninput = input;
@@ -68,8 +71,24 @@ void srcml_handler_dispatch(ParseQueue& queue,
        
         src_input_file(queue, srcml_arch, srcml_request, input);
 
+    } else if (input.protocol != "file" && curl_supported(input.protocol) && input.extension != "xml") { 
+
+        // input must go through libcurl pipe
+        CurlStatus::latch.reset(1);
+        srcml_input_src uninput = input;
+        input_curl(uninput);
+        srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+
+    } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
+
+        // input must go through libcurl pipe
+        CurlStatus::latch.reset(1);
+        srcml_input_src uninput = input;
+        input_curl(uninput);
+        src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
+
     } else {
-       
+
         src_input_libarchive(queue, srcml_arch, srcml_request, input);
     }
 }
