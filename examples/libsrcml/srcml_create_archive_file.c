@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
         srcml_input = fopen(argv[i], "r");
         srcml_unit_parse_FILE(unit, srcml_input);
 
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
 
         srcml_unit_free(unit);
         fclose(srcml_input);

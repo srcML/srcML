@@ -150,7 +150,7 @@ _srcml_archive_write_open_filename
 _srcml_archive_write_open_io
 _srcml_archive_write_open_memory
 _srcml_archive_write_open_FILE
-_srcml_write_unit
+_srcml_archive_write_unit
 _srcml_write_start_unit
 _srcml_write_end_unit
 _srcml_write_start_element

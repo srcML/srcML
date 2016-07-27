@@ -1,5 +1,5 @@
 /**
- * @file test_srcml_write_unit.cpp
+ * @file test_srcml_archive_write_unit.cpp
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -64,7 +64,7 @@ int main() {
         srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -87,7 +87,7 @@ int main() {
         srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -110,10 +110,10 @@ int main() {
         srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -145,7 +145,7 @@ int main() {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         dassert(srcml_write_end_unit(unit), SRCML_STATUS_INVALID_INPUT);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -170,7 +170,7 @@ int main() {
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -189,7 +189,7 @@ int main() {
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -209,7 +209,7 @@ int main() {
         srcml_write_start_element(unit, "foo", "element", 0);
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -229,7 +229,7 @@ int main() {
         srcml_write_start_element(unit, 0, "element", "bar");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -250,7 +250,7 @@ int main() {
         srcml_write_start_element(unit, "foo", "element", "bar");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -272,7 +272,7 @@ int main() {
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -293,7 +293,7 @@ int main() {
         srcml_write_end_element(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -315,7 +315,7 @@ int main() {
         srcml_write_end_element(unit);
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -335,7 +335,7 @@ int main() {
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -413,7 +413,7 @@ int main() {
         srcml_write_namespace(unit, "foo", "bar");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -434,7 +434,7 @@ int main() {
         srcml_write_namespace(unit, 0, "bar");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -491,7 +491,7 @@ int main() {
         srcml_write_attribute(unit, 0, "foo", 0, "bar");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -512,7 +512,7 @@ int main() {
         srcml_write_attribute(unit, "f", "foo", 0, "bar");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -533,7 +533,7 @@ int main() {
         srcml_write_attribute(unit, 0, "foo", "b", "bar");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -554,7 +554,7 @@ int main() {
         srcml_write_attribute(unit, "f", "foo", "b", "bar");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -575,7 +575,7 @@ int main() {
         srcml_write_attribute(unit, 0, "foo", 0, "bar");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -632,7 +632,7 @@ int main() {
         srcml_write_string(unit, "foo");
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -655,7 +655,7 @@ int main() {
         srcml_write_end_element(unit);
         srcml_write_end_element(unit);
         srcml_write_end_unit(unit);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);

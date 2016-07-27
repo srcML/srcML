@@ -195,7 +195,7 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_archive_write_open_filename(oarch, destination.c_str(), compression);
 
 
-            srcml_write_unit(oarch, unit);
+            srcml_archive_write_unit(oarch, unit);
 
             srcml_unit_free(unit);
 

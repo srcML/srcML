@@ -117,7 +117,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
         throw std::runtime_error("Failed to parse unit from file name.");
     }
 
-    rc = srcml_write_unit(processedArchive, unit);
+    rc = srcml_archive_write_unit(processedArchive, unit);
     if(rc != SRCML_STATUS_OK) {
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed to parse unit from file name.");
