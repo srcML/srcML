@@ -23,6 +23,7 @@
 #include <decompress_srcml.hpp>
 #include <curl/curl.h>
 #include <archive.h>
+#include <input_curl.hpp>
 
 namespace {
     struct curl {
@@ -81,16 +82,23 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
 
     int status = ARCHIVE_OK;
     curl curling;
+    const int buffer_size = 16384;
 
     if (contains<int>(input_sources[0])) {
-        status = archive_read_open_fd(libarchive_srcml, input_sources[0], 16384);
+        status = archive_read_open_fd(libarchive_srcml, input_sources[0], buffer_size);
     } else if (curl_supported(input_sources[0].protocol)) {
 
-        curling.source = input_sources[0].filename;
-        status = archive_read_open(libarchive_srcml, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
+        // input must go through libcurl pipe
+        CurlStatus::latch.reset(1);
+        srcml_input_src uninput = input_sources[0];
+        input_curl(uninput);
+        status = archive_read_open_fd(libarchive_srcml, uninput, buffer_size);
+
+//        curling.source = input_sources[0].filename;
+//        status = archive_read_open(libarchive_srcml, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
     } else {
-        status = archive_read_open_filename(libarchive_srcml, input_sources[0].resource.c_str(), 16384);
+        status = archive_read_open_filename(libarchive_srcml, input_sources[0].resource.c_str(), buffer_size);
     }
     if (status != ARCHIVE_OK) {
         std::cerr << status;

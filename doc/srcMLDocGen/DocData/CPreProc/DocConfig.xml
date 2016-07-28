@@ -1,6 +1,6 @@
 <DocConfig lang="C" outputFile="cpreproc_srcML.html" title="C Preprocessor srcML">
    <Category title="C Preprocessor">
-        
+
         <DocEntry title="#define">
             <Elements>
                 <Element name="define" ns="cpp" />
@@ -52,7 +52,7 @@
                 </XPath>
             </XPathQueries>
         </DocEntry>
-        
+
         <DocEntry title="#if">
             <Elements>
                 <Element name="if" ns="cpp" />
@@ -140,7 +140,7 @@
                 </XPath>
             </XPathQueries>
         </DocEntry>
-        
+
         <DocEntry title="#include">
             <Elements>
                 <Element name="include" ns="cpp" />
@@ -221,8 +221,8 @@
                 </XPath>
             </XPathQueries>
         </DocEntry>
-        
-        <DocEntry title="blank preprocessor line">
+
+        <DocEntry title="#">
             <Elements>
                 <Element ns="cpp" name="empty" />
             </Elements>

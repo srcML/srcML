@@ -221,7 +221,7 @@
                 <XPath path="//src:block/src:decl_stmt">
                     <Desc>Find all variable declaration within a block</Desc>
                 </XPath>
-            </XPathQueries>	
+            </XPathQueries>
             <Example file="../C/C-compound-block.c" />
         </DocEntry>
 
@@ -437,7 +437,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="/src:decl[src:type/src:specifier [.='thread_local']]">
+                <XPath path="//src:decl[src:type/src:specifier [.='thread_local']]">
                     <Desc>Find all thread_local variable declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -490,7 +490,7 @@
 
         <DocEntry title="friend">
             <Elements>
-                <Element name="specifier" />
+                <Element name="friend" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:friend[src:function_decl]">
@@ -614,7 +614,7 @@
             <Example file="../C/C-variable-declaration-1.c" />
             <Example title="struct declarations" file="../C/C-variable-declaration-2.c" />
         </DocEntry>
-        
+
         <DocEntry title="function declaration">
             <Elements>
                 <Element name="function_decl" />
@@ -829,10 +829,10 @@
                 <XPath path="//src:typedef[src:function_decl]">
                     <Desc>Find all typedefs that declare a function type</Desc>
                 </XPath>
-                <XPath path="//src:typedef[src:function_decl[contains(., ')')]]">
+                <XPath path="//src:typedef[src:function_decl/text()[contains(., ')')]]">
                     <Desc>Find all typedefs of a function pointers</Desc>
                 </XPath>
-                <XPath path="//src:typedef/src:function_decl[contains(., ')')]/src:name">
+                <XPath path="//src:typedef/src:function_decl[text()[contains(., ')')]]/src:name">
                     <Desc>Find all names from all typedefs of function pointers</Desc>
                 </XPath>
             </XPathQueries>
@@ -1099,7 +1099,7 @@
         <DocEntry title="default public visibility">
             <Elements>
                 <Element name="public">
-                    <AttribStr>type="default"</AttribStr>                
+                    <AttribStr>type="default"</AttribStr>
                 </Element>
             </Elements>
             <XPathQueries>
@@ -1125,7 +1125,7 @@
         <DocEntry title="default private visibility">
             <Elements>
                 <Element name="private">
-                    <AttribStr>type="default"</AttribStr>                
+                    <AttribStr>type="default"</AttribStr>
                 </Element>
             </Elements>
             <XPathQueries>
@@ -1289,7 +1289,7 @@
                 <XPath path="//src:struct">
                     <Desc>Find the definition of all structs</Desc>
                 </XPath>
-                <XPath path="//src:struct/src:block/src:specifier/src:decl_stmt">
+                <XPath path="//src:struct/src:block/*[self::src:public | self::src:private | self::src:protected]/src:decl_stmt">
                     <Desc>Find the members from all structs</Desc>
                 </XPath>
             </XPathQueries>
@@ -1439,7 +1439,7 @@
                 <XPath path="//src:expr[src:operator[.='delete']][src:index]">
                     <Desc>Find all expressions which call array delete</Desc>
                 </XPath>
-            </XPathQueries> 
+            </XPathQueries>
             <Example title="Regular delete" file="CPP-delete-1.cpp" />
             <Example title="Array delete" file="CPP-delete-2.cpp" />
         </DocEntry>
@@ -1457,7 +1457,7 @@
             </XPathQueries>
             <Example file="../C/C-array-access.c" />
         </DocEntry>
-        
+
         <DocEntry title="ternary operator">
             <Elements>
                 <Element name="ternary" />

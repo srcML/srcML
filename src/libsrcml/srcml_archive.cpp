@@ -880,7 +880,7 @@ size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive) {
 
     if(archive == NULL) return SRCDIFF_REVISION_INVALID;
 
-    return archive->revision_number ? *archive->revision_number : SRCDIFF_REVISION_INVALID;    
+    return archive->revision_number ? *archive->revision_number : SRCDIFF_REVISION_INVALID;
 
 }
 
@@ -914,10 +914,10 @@ if(output_buffer == NULL) return SRCML_STATUS_IO_ERROR;
                                                 archive->attributes, 0, 0, 0);
         archive->translator->set_macro_list(archive->user_macro_list);
 
-    } catch(...) { 
+    } catch(...) {
 
         xmlOutputBufferClose(output_buffer);
-        return SRCML_STATUS_IO_ERROR; 
+        return SRCML_STATUS_IO_ERROR;
 
     }
 
@@ -945,7 +945,7 @@ int srcml_archive_write_open_filename(srcml_archive* archive, const char* srcml_
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, compression);
 
     return srcml_archive_write_open_internal(archive, output_buffer);
-    
+
 }
 
 /**
@@ -1191,7 +1191,7 @@ int srcml_archive_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     if(archive == NULL || srcml_file == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFile(srcml_file, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
-    
+
     return srcml_archive_read_open_internal(archive);
 
     return SRCML_STATUS_OK;
@@ -1254,7 +1254,7 @@ int srcml_archive_read_open_io(srcml_archive* archive, void * context, int (*rea
  ******************************************************************************/
 
 /**
- * srcml_write_unit
+ * srcml_archive_write_unit
  * @param archive a srcml archive opened for writing
  * @param unit a srcml_unit to output
  *
@@ -1266,7 +1266,7 @@ int srcml_archive_read_open_io(srcml_archive* archive, void * context, int (*rea
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
+int srcml_archive_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
 
     if(archive == NULL || unit == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -1321,12 +1321,15 @@ srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
  *
  * Read the body (the non-header) from the archive.
  *
+ * @note srcml_archive_read_unit_header must first be called
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
 int srcml_unit_read_body(srcml_unit* unit) {
 
     if(unit == NULL) return 0;
+
+    if (unit->archive == NULL) return 0;
 
     if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW) return 0;
 

@@ -41,10 +41,7 @@ navSubTitleAttr = "navSubTitle"
 
 namespaceDict={
     "src":"http://www.srcML.org/srcML/src",
-    # "op":"http://www.sdml.info/srcML/operator",
     "cpp":"http://www.srcML.org/srcML/cpp",
-    # "lit":"http://www.sdml.info/srcML/literal",
-    # "type":"http://www.sdml.info/srcML/modifier",
 }
 
 
@@ -101,7 +98,7 @@ def srcMLFile(fileName, language):
     strm = open(fileName, "r")
     sourceCode = "".join([x.replace("\t","    ") for x in strm.readlines()])
     srcML = ""
-    srcMLProc = subprocess.Popen([srcMLExec, "--language", language, "--literal", "--modifier", "--operator", fileName],  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    srcMLProc = subprocess.Popen([srcMLExec, "--language", language, fileName],  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     errOutput = srcMLProc.stderr.readlines()
     try:
         return (sourceCode, srcMLProc.stdout.readlines())
@@ -227,10 +224,10 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
         srcMLExResults = srcMLFile(fileName, doc.srcMLLanguage)
         example.sourceCode = srcMLExResults[0]
         example.srcML = "".join(srcMLExResults[1])
-        
+
         # Attempting to get validator attribute from example
         # validate(ET.ElementTree(ET.fromstring(example.srcML)))
-        
+
 
         return example
 
@@ -243,7 +240,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
 
         # print entry.title
         entry.shortTitle = getAttribOrDefault(entryElement, shortTilteAttr, "")
-        
+
         for entryPart in entryElement:
             if entryPart.tag == ElementsTag:
                 buildElements(entryPart, entry)
@@ -257,7 +254,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
             else:
                 unexpectedOrUnknownTag(entryPart)
         return entry
-        
+
 
     def buildOperatorEntry(opElement):
         operatorEntry = OperatorEntry()
@@ -271,7 +268,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
             raise Exception("ERROR: Provided example file: {0} does not exist. Unable to continue. ".format(fileName) + formatElementErrorMsg(element) )
 
         operatorEntry.exampleFile = fileName
-        
+
         srcCodeAndTree = srcMLFile(fileName, doc.srcMLLanguage)
         operatorEntry.sourceCode = srcCodeAndTree[0]
         tempTree = ET.ElementTree(ET.fromstringlist(srcCodeAndTree[1]))
@@ -308,7 +305,7 @@ def loadXmlDocFile(dirPath, fileName, forceBuild = False):
             else:
                 unexpectedOrUnknownTag(entry)
         return category
-    
+
 
     # Basic set up.
     filePath = join(dirPath, fileName)
@@ -366,7 +363,7 @@ LanguageTag = "Language"
 def loadLanguageSupport(inputFileName):
     tree = ET.parse(inputFileName)
 
-    ret = LanguageSupportInfo() 
+    ret = LanguageSupportInfo()
     root = tree.getroot()
     verifyNodeNameOrFail(root, LanguageSupportTag)
     ret.outputFile = getAttribOrFail(root, outputFileAttr)
@@ -375,7 +372,7 @@ def loadLanguageSupport(inputFileName):
     for elem in root.iterchildren():
         if elem.tag == LanguageTag:
             currentLangInfo = LangInfo()
-            
+
             currentLangInfo.language = getAttribOrFail(elem, langAttr)
             supportLevelXPathResult = elem.xpath("SupportLevel")
             if len(supportLevelXPathResult) != 1:

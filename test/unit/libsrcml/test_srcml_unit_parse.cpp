@@ -280,7 +280,7 @@ int main() {
         srcml_unit_set_version(unit , "1");
         srcml_unit_parse_filename(unit, "project_latin.cpp");
         dassert(*unit->unit, latin_srcml);
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);

@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
         srcml_unit_parse_memory(unit, buffer, num_read);
 
         /* Translate to srcml and append to the archive */
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
 
         srcml_unit_free(unit);
     }

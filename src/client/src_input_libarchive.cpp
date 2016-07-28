@@ -31,6 +31,7 @@
 #include <archive_entry.h>
 #include <algorithm>
 #include <timer.hpp>
+#include <input_curl.hpp>
 
 #include <curl_input_file.hpp>
 
@@ -42,7 +43,6 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     archive_read_support_format_cpio(arch);
     archive_read_support_format_gnutar(arch);
     archive_read_support_format_iso9660(arch);
-    archive_read_support_format_mtree(arch);
     archive_read_support_format_tar(arch);
     archive_read_support_format_xar(arch);
     archive_read_support_format_zip(arch);
@@ -67,10 +67,12 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 #endif
 
     int status;
-    curl curling;
+    //curl curling;
+    const int buffer_size = 16384;
+
     if (contains<int>(input_file)) {
 
-        status = archive_read_open_fd(arch, input_file, 16384);
+        status = archive_read_open_fd(arch, input_file, buffer_size);
 
     } else if (contains<FILE*>(input_file)) {
 
@@ -78,12 +80,18 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     } else if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
 
-        curling.source = input_file.filename;
-        status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
+        // input must go through libcurl pipe
+        CurlStatus::latch.reset(1);
+        srcml_input_src uninput = input_file;
+        input_curl(uninput);
+        status = archive_read_open_fd(arch, uninput, buffer_size);
+
+        //curling.source = input_file.filename;
+        //status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
     } else {
 
-        status = archive_read_open_filename(arch, input_file.c_str(), 16384);
+        status = archive_read_open_filename(arch, input_file.c_str(), buffer_size);
     }
 
     if (status != ARCHIVE_OK) {
@@ -232,8 +240,14 @@ void src_input_libarchive(ParseQueue& queue,
 #else
             int64_t offset;
 #endif
-            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
+
+                if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
+                    if (!CurlStatus::curlisgood(prequest->buffer.size()))
+                        return;
+                }
+            }
 
             // LOC count
             prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');

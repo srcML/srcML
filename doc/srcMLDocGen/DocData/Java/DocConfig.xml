@@ -85,7 +85,7 @@
                 <XPath path="//src:for/src:control/src:condition">
                     <Desc>Find the conditions of all for loops</Desc>
                 </XPath>
-                <XPath path="//src:for[src:control/src:init/src:expr/src:range]">
+                <XPath path="//src:for[src:control/src:init/src:decl/src:range]">
                     <Desc>Find all range based for loops</Desc>
                 </XPath>
             </XPathQueries>
@@ -365,7 +365,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:specifier[.='private']][ancestor::src:class]">
+                <XPath path="//src:class[src:specifier[.='private'][ancestor::src:class]]">
                     <Desc>Find all private classes</Desc>
                 </XPath>
                 <XPath path="//src:decl_stmt[src:decl/src:type/src:specifier[.='private']][ancestor::src:class]">
@@ -385,7 +385,7 @@
                 <Element name="specifier" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:specifier[.='protected']][ancestor::src:class]">
+                <XPath path="//src:class[src:specifier[.='protected'][ancestor::src:class]]">
                     <Desc>Find all protected classes</Desc>
                 </XPath>
                 <XPath path="//src:decl_stmt[src:decl/src:type/src:specifier[.='protected']][ancestor::src:class]">
@@ -408,7 +408,7 @@
                 <XPath path="//src:class[src:specifier[.='public']]">
                     <Desc>Find all public classes</Desc>
                 </XPath>
-                <XPath path="//src:decl_stmt[src:decl/src:type/src:specifier[.='public']][ancestor::src:class]">
+                <XPath path="//src:decl_stmt[src:decl/src:type/src:specifier[.='public'][ancestor::src:class]]">
                     <Desc>Find all public member variables of all classes</Desc>
                 </XPath>
                 <XPath path="//src:function[src:type/src:specifier[.='public']]">
@@ -654,7 +654,7 @@
             <Example file="Java-extends.java" />
             <!-- <Example file="Java-extends-2.java" /> -->
         </DocEntry>
-        
+
         <DocEntry title="implements">
             <Elements>
                 <Element name="implements" />
@@ -754,7 +754,7 @@
                 </XPath>
             </XPathQueries>
         </DocEntry>
-        
+
         <DocEntry title="this">
             <Elements>
                 <Element name="name" />
@@ -1008,7 +1008,7 @@
                 <Subelement name="decl" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:decl[src:name/src:argument_list]">
+                <XPath path="//src:decl[src:type/src:name/src:argument_list]">
                     <Desc>Find all generic types used within variable declarations</Desc>
                 </XPath>
             </XPathQueries>
@@ -1068,7 +1068,7 @@
                     <Desc>Find all functions with a generic wildcard parameter that is unbound</Desc>
                 </XPath>
                 <XPath path="//src:function[src:parameter_list/src:parameter/src:decl/src:type/src:name/src:argument_list/src:argument[src:name[.='?']][src:super]]">
-                    <Desc>Find all functions with a generic wildcard parameter that has a lower</Desc>
+                    <Desc>Find all functions with a generic wildcard parameter that has a lower bound</Desc>
                 </XPath>
             </XPathQueries>
             <Example title="upper bound wildcard" file="Java-wildcard-1.java" />

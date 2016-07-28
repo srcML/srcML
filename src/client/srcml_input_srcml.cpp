@@ -36,20 +36,17 @@ void srcml_input_srcml(ParseQueue& queue,
     // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_archive_create();
 
-    if(revision)
-        srcml_archive_set_srcdiff_revision(srcml_input_archive, *revision);
-
     int open_status = SRCML_STATUS_OK;
+    if(revision)
+        open_status = srcml_archive_set_srcdiff_revision(srcml_input_archive, *revision);
 
-    if (contains<int>(srcml_input))
-        open_status = srcml_archive_read_open_fd(srcml_input_archive, srcml_input);
-    else if (contains<FILE*>(srcml_input))
-        open_status = srcml_archive_read_open_FILE(srcml_input_archive, srcml_input);
-    else
-        open_status = srcml_archive_read_open_filename(srcml_input_archive, srcml_input.c_str());
+    open_status = srcml_archive_read_open(srcml_input_archive, srcml_input);
 
     if (open_status != SRCML_STATUS_OK) {
-        std::cerr << "srcml: Unable to open file " << src_prefix_resource(srcml_input.filename) << '\n';
+        if (srcml_input.protocol == "file" )
+            std::cerr << "srcml: Unable to open srcml file " << src_prefix_resource(srcml_input.filename) << "\n";
+        else
+            std::cerr << "srcml: Unable to open srcml URL " << srcml_input.filename << "\n";
         exit(1);
     }
 

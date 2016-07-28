@@ -3900,7 +3900,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
             if(inMode(MODE_LOCAL | MODE_VARIABLE_NAME) && !inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
                 endMode();
 
-            if(inTransparentMode(MODE_ENUM) && inMode(MODE_INIT | MODE_EXPECT))
+            if(inMode(MODE_INIT | MODE_EXPECT | MODE_ENUM))
                 endDownToModeSet(MODE_ENUM | MODE_TOP);
 
             if(inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
@@ -8988,13 +8988,7 @@ enum_block[] { ENTRY_DEBUG } :
         lcurly_base
         {
             // nesting blocks, not statement
-            if(inLanguage(LANGUAGE_JAVA))
-                setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
-            else {
-
-                setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
-
-            }
+            setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
         }
 ;
 
@@ -9002,10 +8996,10 @@ enum_block[] { ENTRY_DEBUG } :
 enum_short_variable_declaration[] { ENTRY_DEBUG } :
         {
             // variable declarations may be in a list
-            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_ENUM | MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             // declaration
-            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_ENUM | MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             // start the declaration
             startElement(SDECLARATION);
