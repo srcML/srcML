@@ -243,8 +243,10 @@ void src_input_libarchive(ParseQueue& queue,
             while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
 
-                if (!CurlStatus::curlisgood(prequest->buffer.size()))
-                    return;
+                if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
+                    if (!CurlStatus::curlisgood(prequest->buffer.size()))
+                        return;
+                }
             }
 
             // LOC count

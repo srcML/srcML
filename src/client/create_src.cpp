@@ -46,7 +46,7 @@ public:
         if (status != SRCML_STATUS_OK)
             throw status;
 
-        if (curl_supported(input_source.protocol)) { 
+        if (input_source.protocol != "file" && curl_supported(input_source.protocol)) { 
 
             // input must go through libcurl pipe
             CurlStatus::latch.reset(1);
@@ -195,7 +195,7 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_archive_write_open_filename(oarch, destination.c_str(), compression);
 
 
-            srcml_write_unit(oarch, unit);
+            srcml_archive_write_unit(oarch, unit);
 
             srcml_unit_free(unit);
 

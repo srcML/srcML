@@ -63,6 +63,12 @@
         // since boost::filesystem does not support URIs, separate out the protocol
         src_prefix_split_uri(filename, protocol, resource);
 
+        // remove any query string
+        size_t query_pos = resource.find('?');
+        if (query_pos != std::string::npos) {
+          resource = resource.substr(0, query_pos);
+        }
+
         // boost::filesystem does not handle multiple extensions
         // so extract
         boost::filesystem::path rpath(resource.c_str());

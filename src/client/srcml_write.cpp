@@ -40,7 +40,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
-        srcml_write_unit(request->srcml_arch, request->unit);
+        srcml_archive_write_unit(request->srcml_arch, request->unit);
 
         if (isarchive) {
             std::string s = request->filename ? *request->filename : "";

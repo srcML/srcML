@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
         srcml_unit_parse_filename(unit, argv[i]);
 
         /* Append unit to the archive */
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
 
         /* Done with the entry for now */
         srcml_unit_free(unit);

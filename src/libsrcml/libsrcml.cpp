@@ -230,7 +230,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         }
 
-        srcml_write_unit(&global_archive, unit);
+        srcml_archive_write_unit(&global_archive, unit);
 
         srcml_unit_free(unit);
         srcml_archive_close(&global_archive);
