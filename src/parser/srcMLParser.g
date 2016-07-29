@@ -8661,7 +8661,7 @@ savenamestack[std::string namestack_save[]] { namestack_save[0].swap(namestack[0
 restorenamestack[std::string namestack_save[]] { namestack[0].swap(namestack_save[0]); namestack[1].swap(namestack_save[1]); ENTRY_DEBUG } :;
 
 // template argument
-template_argument[bool in_function_type = false] { CompleteElement element(this); ENTRY_DEBUG } :
+template_argument[bool in_function_type = false] { bool is_type = inLanguage(LANGUAGE_CXX); TokenPosition tp; CompleteElement element(this); ENTRY_DEBUG } :
         {
 
             // local mode
@@ -8672,24 +8672,33 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
             else
                startElement(STEMPLATE_PARAMETER);
 
-            if(inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C))
+            if(inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C)) {
                startElement(SEXPRESSION);
+               setTokenPosition(tp);
+            }
         }
         (options { greedy = true; } :
         { LA(1) != SUPER && LA(1) != QMARK }?
 
         (options { generateAmbigWarnings = false; } : generic_specifiers_csharp)*
-        ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
+        ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators literals set_bool[is_type, false])*
 
-        (type_identifier | { !inLanguage(LANGUAGE_JAVA) }? literals)
-            (options { generateAmbigWarnings = false; } : template_operators)*
+        (type_identifier | { !inLanguage(LANGUAGE_JAVA) }? literals set_bool[is_type, false])
+            (options { generateAmbigWarnings = false; } : template_operators set_bool[is_type, false])*
             ) |
 
             template_extends_java |
 
             template_super_java | qmark_name |
-            { !inLanguage(LANGUAGE_JAVA) }? template_argument_expression
+            { !inLanguage(LANGUAGE_JAVA) }? template_argument_expression literals set_bool[is_type, false]
         )+ 
+
+        {
+
+            if(is_type)
+                tp.setType(SNOP);
+
+        }
 ;
 
 // template argument expression
