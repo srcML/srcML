@@ -235,10 +235,13 @@ void transform_srcml(const srcml_request_t& srcml_request,
                 }
 			}
 		}
-		srcml_apply_transforms(in_arch, out_arch);
+		int status = srcml_apply_transforms(in_arch, out_arch);
 
 		srcml_archive_close(in_arch);
 		srcml_archive_free(in_arch);
+
+        if (status != SRCML_STATUS_OK)
+            exit(1);
 	}
 
 	srcml_archive_close(out_arch);
@@ -247,4 +250,5 @@ void transform_srcml(const srcml_request_t& srcml_request,
     if (contains<int>(output)) {
         close(*(output.fd));
     }
+
 }

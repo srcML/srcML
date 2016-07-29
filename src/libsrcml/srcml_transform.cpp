@@ -485,31 +485,32 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
 
     global_transformations = iarchive->transformations;
 
+    int status = SRCML_STATUS_OK;
     for(std::vector<transform>::size_type i = 0; i < iarchive->transformations.size(); ++i) {
 
         xmlParserInputBufferPtr pinput = iarchive->input;
 
-        int error = 0;
         try {
 
             switch(iarchive->transformations.at(i).type) {
 
             case SRCML_XPATH: {
 
-                error = srcml_xpath(pinput, "src:unit",
+                status = srcml_xpath(pinput, "src:unit",
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.str),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.prefix), optional_get_c_str(iarchive->transformations.at(i).arguments.uri),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.element),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_prefix), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_uri),
                                     optional_get_c_str(iarchive->transformations.at(i).arguments.attr_name), optional_get_c_str(iarchive->transformations.at(i).arguments.attr_value),
                                     oarchive->options, oarchive);
+
                 break;
             }
 
 #ifdef WITH_LIBXSLT
             case SRCML_XSLT: {
 
-                error = srcml_xslt(pinput, "src:unit",
+                status = srcml_xslt(pinput, "src:unit",
                                    iarchive->transformations.at(i).doc,
                                    &iarchive->transformations.at(i).xsl_parameters.front(), 0, oarchive->options, oarchive);
                 break;
@@ -518,7 +519,7 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
 
             case SRCML_RELAXNG: {
 
-                error = srcml_relaxng(pinput,
+                status = srcml_relaxng(pinput,
                                       iarchive->transformations.at(i).doc,
                                       oarchive->options, oarchive);
                 break;
@@ -539,7 +540,7 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
 
     //srcml_clear_transforms(iarchive);
 
-    return SRCML_STATUS_OK;
+    return status;
 
 }
 
