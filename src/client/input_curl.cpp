@@ -121,6 +121,7 @@ void curl_it_all(const srcml_request_t& srcml_request,
     CurlStatus::latch.count_down();
 
     fclose(outfile);
+    close(outfd);
 
     // make sure to close out libcurl read here
     /* cleanup curl stuff */
