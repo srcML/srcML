@@ -140,9 +140,9 @@ void src_input_libarchive(ParseQueue& queue,
        Exception: if empty, go through the loop exactly once */
     int count = 0;
     int totalbytes = 0;
+    bool iscurl = input_file.protocol != "file" && curl_supported(input_file.protocol);
     archive_entry *entry;
     int status = ARCHIVE_OK;
-    
     while (status == ARCHIVE_OK &&
            (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
             (status == ARCHIVE_EOF && !count))) {
@@ -243,11 +243,10 @@ void src_input_libarchive(ParseQueue& queue,
 #endif
             while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
+
                 totalbytes += size;
-                if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
-                    if (!CurlStatus::curlisgood(totalbytes))
+                if (iscurl && !CurlStatus::curlisgood(totalbytes))
                         return;
-                }
             }
 
             // LOC count
