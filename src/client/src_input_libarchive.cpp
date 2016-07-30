@@ -139,8 +139,10 @@ void src_input_libarchive(ParseQueue& queue,
     /* In general, go through this once for each time the header can be read
        Exception: if empty, go through the loop exactly once */
     int count = 0;
+    int totalbytes = 0;
     archive_entry *entry;
     int status = ARCHIVE_OK;
+    
     while (status == ARCHIVE_OK &&
            (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
             (status == ARCHIVE_EOF && !count))) {
@@ -207,7 +209,6 @@ void src_input_libarchive(ParseQueue& queue,
         if (srcml_request.att_filename || (filename != "-"))
             prequest->filename = filename;
 
-
         prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
@@ -242,9 +243,9 @@ void src_input_libarchive(ParseQueue& queue,
 #endif
             while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
-
+                totalbytes += size;
                 if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
-                    if (!CurlStatus::curlisgood(prequest->buffer.size()))
+                    if (!CurlStatus::curlisgood(totalbytes))
                         return;
                 }
             }
