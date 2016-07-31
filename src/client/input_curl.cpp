@@ -45,6 +45,11 @@ extern srcml_request_t global_srcml_request;
 
 static int outfd = 0;
 
+size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
+
+	return write(outfd, ptr, size * nmemb);
+}
+
 // Note: Stupid name, but can be changed later
 void curl_it_all(const srcml_request_t& srcml_request,
     const srcml_input_t& input_sources,
@@ -59,7 +64,7 @@ void curl_it_all(const srcml_request_t& srcml_request,
     outfd = *destination.fd;
 
     // libcurl needs a FILE* to write to
-    FILE* outfile = fdopen(outfd, "w");
+//    FILE* outfile = fdopen(outfd, "w");
 
     // setup curl to use url with a write function write_data_because_libcurl_is_stupid()
     CURL *curl_handle;
@@ -75,7 +80,8 @@ void curl_it_all(const srcml_request_t& srcml_request,
     curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
 
     // output will be to FILE* outfile (wrapper for file descriptor outfd) instead of STDOUT
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, outfile);
+//    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, outfile);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, our_curl_write_callback);
 
     curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
@@ -120,8 +126,8 @@ void curl_it_all(const srcml_request_t& srcml_request,
     }
     CurlStatus::latch.count_down();
 
-    fclose(outfile);
-    close(outfd);
+//    fclose(outfile);
+//    close(outfd);
 
     // make sure to close out libcurl read here
     /* cleanup curl stuff */
