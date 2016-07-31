@@ -81,6 +81,7 @@ void curl_it_all(const srcml_request_t& srcml_request,
 
     // output will be to FILE* outfile (wrapper for file descriptor outfd) instead of STDOUT
 //    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, outfile);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, 0);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, our_curl_write_callback);
 
     curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
@@ -109,6 +110,7 @@ void curl_it_all(const srcml_request_t& srcml_request,
     */
     // The resource is there, so lets go get it!
     response = curl_easy_perform(curl_handle);
+
     long http_code = 0;
     curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
 
@@ -127,7 +129,7 @@ void curl_it_all(const srcml_request_t& srcml_request,
     CurlStatus::latch.count_down();
 
 //    fclose(outfile);
-//    close(outfd);
+    close(outfd);
 
     // make sure to close out libcurl read here
     /* cleanup curl stuff */
