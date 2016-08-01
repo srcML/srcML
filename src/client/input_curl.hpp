@@ -24,23 +24,8 @@
 #define input_curl_HPP
 
 #include <srcml_input_src.hpp>
-#include <boost/thread/latch.hpp>
 
 // adjust input for libcurl and libarchive decompressions
 void input_curl(srcml_input_src& input);
-
-class CurlStatus {
-public:
-	static int error;
-	static boost::latch latch;
-	static bool curlisgood(unsigned long size) {
-
-		if (size < 100) {
-			CurlStatus::latch.wait();
-			return CurlStatus::error == 0;
-		}
-		return true;
-	}
-};
 
 #endif

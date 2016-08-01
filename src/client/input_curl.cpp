@@ -35,11 +35,6 @@
 #include <windows.h>
 #endif
 
-#include <boost/thread/latch.hpp>
-
-int CurlStatus::error = 0;
-boost::latch CurlStatus::latch(0);
-
 // global request
 extern srcml_request_t global_srcml_request;
 
@@ -49,6 +44,8 @@ struct curl_write_info {
     std::string buffer;
 };
 
+static const int CURL_MAX_ERROR_SIZE = 100;
+
 /*
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
     with our own callback does not entail an additional copy
@@ -57,8 +54,22 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 
     curl_write_info* data = (curl_write_info*) userdata;
 
+    // we may have previously buffered data to output
+    if (data->buffer.size() >= CURL_MAX_ERROR_SIZE) {
+        write(data->outfd, data->buffer.c_str(), data->buffer.size());
+        data->buffer.clear();
+    }
+
     size_t total_size = size * nmemb;
     data->currentsize += total_size;
+
+    // cache any data until we make sure we do not have a 404 error
+    // prevent the 404 or other error pages from getting into the pipe
+    // previously handled by latch in libarchive
+    if (data->currentsize < CURL_MAX_ERROR_SIZE) {
+        data->buffer.append(ptr, size * nmemb);
+        return total_size;
+    }
 
 	return write(data->outfd, ptr, total_size);
 }
@@ -67,8 +78,6 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 void curl_download_url(const srcml_request_t& srcml_request,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
-
-    CurlStatus::error = 0;
 
     // input comes from URL
     std::string url = input_sources[0].filename;
@@ -110,14 +119,17 @@ void curl_download_url(const srcml_request_t& srcml_request,
 
         std::cerr << "srcml: Unable to access URL " << url << std::endl;
 
+        // if there is only a single input source, and we have an error, then just error out here
         if (global_srcml_request.input_sources.size() == 1)
             exit(1);
 
-        CurlStatus::error = 1;
     } else {
-        CurlStatus::error = 0;
+
+        // ok, no errors, but may have cached data in the buffer, especially for small files
+        if (!write_info.buffer.empty()) {
+            write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size());
+        }
     }
-    CurlStatus::latch.count_down();
 
     // close the output file descriptor we were writing the download to
     close(write_info.outfd);

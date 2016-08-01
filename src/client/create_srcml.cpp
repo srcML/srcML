@@ -74,7 +74,6 @@ void srcml_handler_dispatch(ParseQueue& queue,
     } else if (input.protocol != "file" && curl_supported(input.protocol) && input.extension == ".xml") { 
 
         // input must go through libcurl pipe
-        CurlStatus::latch.reset(1);
         srcml_input_src uninput = input;
         input_curl(uninput);
         srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
@@ -82,7 +81,6 @@ void srcml_handler_dispatch(ParseQueue& queue,
     } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
 
         // input must go through libcurl pipe
-        CurlStatus::latch.reset(1);
         srcml_input_src uninput = input;
         input_curl(uninput);
         src_input_libarchive(queue, srcml_arch, srcml_request, uninput);

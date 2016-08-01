@@ -67,7 +67,6 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 #endif
 
     int status;
-    //curl curling;
     const int buffer_size = 16384;
 
     if (contains<int>(input_file)) {
@@ -81,13 +80,9 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     } else if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
 
         // input must go through libcurl pipe
-        CurlStatus::latch.reset(1);
         srcml_input_src uninput = input_file;
         input_curl(uninput);
         status = archive_read_open_fd(arch, uninput, buffer_size);
-
-        //curling.source = input_file.filename;
-        //status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
 
     } else {
 
@@ -138,8 +133,6 @@ void src_input_libarchive(ParseQueue& queue,
     /* In general, go through this once for each time the header can be read
        Exception: if empty, go through the loop exactly once */
     int count = 0;
-    int totalbytes = 0;
-    bool iscurl = input_file.protocol != "file" && curl_supported(input_file.protocol);
     archive_entry *entry;
 
     int status = ARCHIVE_OK;
@@ -243,10 +236,6 @@ void src_input_libarchive(ParseQueue& queue,
 #endif
             while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
-
-                totalbytes += size;
-                if (iscurl && !CurlStatus::curlisgood(totalbytes))
-                        return;
             }
 
             // LOC count

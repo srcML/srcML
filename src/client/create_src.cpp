@@ -49,7 +49,6 @@ public:
         if (input_source.protocol != "file" && curl_supported(input_source.protocol)) { 
 
             // input must go through libcurl pipe
-            CurlStatus::latch.reset(1);
             srcml_input_src uninput = input_source;
             input_curl(uninput);
             status = srcml_archive_read_open_fd(arch, *uninput.fd);
