@@ -47,7 +47,8 @@ void srcml_input_srcml(ParseQueue& queue,
             std::cerr << "srcml: Unable to open srcml file " << src_prefix_resource(srcml_input.filename) << "\n";
         else
             std::cerr << "srcml: Unable to open srcml URL " << srcml_input.filename << "\n";
-        exit(1);
+        srcml_archive_close(srcml_input_archive);
+        return;
     }
 
     if (SRCML_COMMAND_XML & SRCMLOptions::get()) {

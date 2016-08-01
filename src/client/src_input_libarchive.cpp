@@ -96,7 +96,6 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     if (status != ARCHIVE_OK) {
         std::cerr << "srcml: Unable to open file " << input_file.filename << '\n';
-        exit(1);
     }
 
     return arch;
@@ -142,6 +141,7 @@ void src_input_libarchive(ParseQueue& queue,
     int totalbytes = 0;
     bool iscurl = input_file.protocol != "file" && curl_supported(input_file.protocol);
     archive_entry *entry;
+
     int status = ARCHIVE_OK;
     while (status == ARCHIVE_OK &&
            (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
