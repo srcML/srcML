@@ -95,6 +95,10 @@ void curl_download_url(const srcml_request_t& srcml_request,
     curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 
+    curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1L);
+    curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_TIME, 5L);
+    //curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 0L);
+
     // start the download
     CURLcode response;
     response = curl_easy_perform(curl_handle);

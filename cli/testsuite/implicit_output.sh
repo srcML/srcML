@@ -3,6 +3,8 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+set +e
+
 # test output options
 define xmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -37,11 +39,8 @@ createfile sub/b.xml "$bxml"
 
 # issue #1368
 srcml sub/a.xml sub/b.xml output.tar
-tar -xvf output.tar
-check sub/a.cpp 3<<< "a;"
-check sub/b.cpp 3<<< "b;"
+check_exit 1
 
 # issue 1367
 srcml sub/a.xml filedoesntexist.xml output.tar
-check 4<<< "Unable to open file file://filedoesntexist.xml"
-
+check_exit 1
