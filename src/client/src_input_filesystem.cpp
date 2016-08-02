@@ -51,12 +51,15 @@ void src_input_filesystem(ParseQueue& queue,
         BOOST_FOREACH(boost::filesystem::path& file, files) {
 
             // regular files are passed to the handler
-            if (is_regular_file(file) && srcml_check_extension(file.string().c_str()))
+            if (is_regular_file(file) && srcml_check_extension(srcml_input_src(file.string()).extension.c_str())) {
+
                 src_input_libarchive(queue, srcml_arch, srcml_request, file.string());
 
             // directories are put at the back
-            else if (is_directory(file))
+            } else if (is_directory(file)) {
+
                 dirs.push_back(file);
+            }
 
               // TODO: Are we ignoring other types? symlinks? Should state so here.
         }
