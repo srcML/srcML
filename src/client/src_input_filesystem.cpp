@@ -51,7 +51,7 @@ void src_input_filesystem(ParseQueue& queue,
         BOOST_FOREACH(boost::filesystem::path& file, files) {
 
             // regular files are passed to the handler
-            if (is_regular_file(file) && srcml_check_extension(srcml_input_src(file.string()).extension.c_str())) {
+            if (is_regular_file(file)) {
 
                 src_input_libarchive(queue, srcml_arch, srcml_request, file.string());
 
