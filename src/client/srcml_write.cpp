@@ -74,6 +74,9 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
         else
             std::cerr << "Extension not supported\n";
 
+    } else if (request->errormsg) {
+        std::cerr << *(request->errormsg);
+
     } else {
         std::cerr << "Internal eror " << request->status << "\n";
     }
