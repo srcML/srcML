@@ -90,7 +90,8 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     }
 
     if (status != ARCHIVE_OK) {
-        std::cerr << "srcml: Unable to open file " << input_file.filename << '\n';
+        std::cerr << "srcml: Unable to open file " << src_prefix_resource(input_file.filename) << '\n';
+        return 0;
     }
 
     return arch;
@@ -129,6 +130,9 @@ void src_input_libarchive(ParseQueue& queue,
     }
 
     archive* arch = libarchive_input_file(input_file);
+    if (!arch) {
+        return;
+    }
 
     /* In general, go through this once for each time the header can be read
        Exception: if empty, go through the loop exactly once */
