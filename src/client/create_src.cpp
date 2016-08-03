@@ -30,6 +30,7 @@
 #include <srcml_options.hpp>
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
+#include <input_file.hpp>
 
 class srcMLReadArchive {
 public:
@@ -46,19 +47,33 @@ public:
         if (status != SRCML_STATUS_OK)
             throw status;
 
-        if (input_source.protocol != "file" && curl_supported(input_source.protocol)) { 
+        // may need to modify input source based on url and compressions
+        srcml_input_src curinput = input_source;
 
-            // input must go through libcurl pipe
-            srcml_input_src uninput = input_source;
+        // urls
+        if (curinput.protocol != "file" && curl_supported(curinput.protocol)) {
+            srcml_input_src uninput = curinput;
             input_curl(uninput);
-            status = srcml_archive_read_open_fd(arch, *uninput.fd);
+            curinput.fd = *uninput.fd;
+        }
 
+        // compressed files
+        if (!curinput.compressions.empty()) { 
+            srcml_input_src uninput = curinput;
+            input_file(uninput);
+            curinput.fd = *uninput.fd;
+        }
+
+        // open in put source
+        if (curinput.fd) {
+            status = srcml_archive_read_open_fd(arch, *curinput.fd);
         } else {
             status = srcml_archive_read_open(arch, input_source);
-            if (status != SRCML_STATUS_OK) {
-                std::cerr << "srcml: Unable to open srcml file " << src_prefix_resource(input_source.filename) << "\n";
-                throw status;
-            }
+        }
+
+        if (status != SRCML_STATUS_OK) {
+            std::cerr << "srcml: Unable to open srcml file " << src_prefix_resource(input_source.filename) << "\n";
+            throw status;
         }
     }
 
