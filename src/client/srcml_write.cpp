@@ -27,6 +27,13 @@
 #include <srcml_options.hpp>
 #include <trace_log.hpp>
 #include <srcml_cli.hpp>
+#include <srcml_input_src.hpp>
+
+srcml_output_dest gdestination;
+
+bool createdsrcml = false;
+
+extern srcml_archive* gsrcml_arch;
 
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log) {
@@ -40,7 +47,21 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
-        srcml_archive_write_unit(request->srcml_arch, request->unit);
+        if (!createdsrcml) {
+            createdsrcml = true;
+
+            int status = 0;
+            if (contains<int>(gdestination)) {
+
+                status = srcml_archive_write_open_fd(gsrcml_arch, *gdestination.fd);
+
+            } else {
+
+                status = srcml_archive_write_open_filename(gsrcml_arch, gdestination.c_str(), 0);
+            }
+        }
+
+        srcml_archive_write_unit(gsrcml_arch, request->unit);
 
         if (isarchive) {
             std::string s = request->filename ? *request->filename : "";

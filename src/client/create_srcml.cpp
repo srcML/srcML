@@ -41,6 +41,9 @@
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
 
+extern srcml_output_dest gdestination;
+srcml_archive* gsrcml_arch = 0;
+
 void srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
@@ -206,9 +209,10 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     int status = 0;
+        /* when no archive, this one is just used as a clone, so just don't open it */
+    /*
     if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
 
-        /* when no archive, this one is just used as a clone, so just don't open it */
 
     } else if (contains<int>(destination)) {
 
@@ -216,8 +220,20 @@ void create_srcml(const srcml_request_t& srcml_request,
     } else {
         status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), compression);
     }
-
+*/
     // gzip compression available directly from libsrcml
+
+    gdestination = destination;
+ 
+    gsrcml_arch = srcml_arch;
+
+    // a clone of the intended srcML archive is created
+    // the only purpose is to allow files to be parsed, without opening
+    // the real destination archive.
+    srcml_archive* csrcml_arch = srcml_archive_clone(srcml_arch);
+    char buffer[100];
+    size_t size;
+    srcml_archive_write_open_memory(csrcml_arch, (char**) &buffer, &size);
 
     // setup the parsing queue
     TraceLog log(SRCMLOptions::get());
@@ -235,7 +251,7 @@ if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.com
 return; // stdin was requested, but no data was received
 }
 */
-        srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input);
+        srcml_handler_dispatch(parse_queue, csrcml_arch, srcml_request, input);
     }
 
     // wait for the parsing and writing queues to finish
