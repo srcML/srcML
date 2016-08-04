@@ -268,7 +268,9 @@ return; // stdin was requested, but no data was received
 }
 */
 
-        srcml_handler_dispatch(parse_queue, csrcml_arch, srcml_request, input);
+        int numhandled = srcml_handler_dispatch(parse_queue, csrcml_arch, srcml_request, input);
+        if (!numhandled)
+            status = 1;
     }
 
     // wait for the parsing and writing queues to finish
@@ -286,4 +288,7 @@ return; // stdin was requested, but no data was received
     // if we were writing to a file descriptor, then close it
     if (contains<int>(destination))
         close(*destination.fd);
+
+    if (status == 1)
+        exit(1);
 }
