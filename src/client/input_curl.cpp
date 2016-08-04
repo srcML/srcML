@@ -120,8 +120,8 @@ void curl_download_url(const srcml_request_t& srcml_request,
         std::cerr << "srcml: Unable to access URL " << url << std::endl;
 
         // if there is only a single input source, and we have an error, then just error out here
-        if (global_srcml_request.input_sources.size() == 1)
-            exit(1);
+       //if (global_srcml_request.input_sources.size() == 1)
+//            exit(1);
 
     } else {
 
