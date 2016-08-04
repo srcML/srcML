@@ -252,6 +252,19 @@ if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.com
 return; // stdin was requested, but no data was received
 }
 */
+        if (!createdsrcml && input.protocol == "filelist") {
+            createdsrcml = true;
+
+            int status = 0;
+            if (contains<int>(gdestination)) {
+
+                status = srcml_archive_write_open_fd(gsrcml_arch, *gdestination.fd);
+
+            } else {
+
+                status = srcml_archive_write_open_filename(gsrcml_arch, gdestination.c_str(), 0);
+            }
+        }
         srcml_handler_dispatch(parse_queue, csrcml_arch, srcml_request, input);
     }
 

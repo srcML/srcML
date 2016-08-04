@@ -44,7 +44,7 @@ void src_input_filelist(ParseQueue& queue,
     int status = archive_read_next_header(arch, &entry);
     if (status != ARCHIVE_OK) {
     	std::cerr << "srcml: Invalid filelist " << input_file << "\n";
-    	exit(1);
+    	return;
     }
 
     // ARE THE LAST TWO NECESSARY?
