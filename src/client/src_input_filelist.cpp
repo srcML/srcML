@@ -37,6 +37,8 @@ void src_input_filelist(ParseQueue& queue,
                         const std::string& input_file) {
 
     archive* arch = libarchive_input_file(input_file);
+    if (!arch)
+        return;
 
     archive_entry *entry = 0;
     int status = archive_read_next_header(arch, &entry);

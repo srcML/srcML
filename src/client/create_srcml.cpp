@@ -43,6 +43,7 @@
 
 extern srcml_output_dest gdestination;
 srcml_archive* gsrcml_arch = 0;
+bool createdsrcml = false;
 
 void srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
@@ -261,8 +262,10 @@ return; // stdin was requested, but no data was received
     log.report();
     
     // close the created srcML archive
-    srcml_archive_close(srcml_arch);
-    srcml_archive_free(srcml_arch);
+    if (createdsrcml) {
+        srcml_archive_close(srcml_arch);
+        srcml_archive_free(srcml_arch);
+    }
 
     // if we were writing to a file descriptor, then close it
     if (contains<int>(destination))

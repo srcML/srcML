@@ -31,7 +31,7 @@
 
 srcml_output_dest gdestination;
 
-bool createdsrcml = false;
+extern bool createdsrcml;
 
 extern srcml_archive* gsrcml_arch;
 
