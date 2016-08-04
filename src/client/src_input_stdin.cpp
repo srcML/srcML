@@ -38,7 +38,7 @@
 #include <iostream>
 
 // check stdin for data
-bool src_input_stdin() {
+int src_input_stdin() {
 
     // init file descriptor with stdin
     fd_set fds;
@@ -58,11 +58,11 @@ bool src_input_stdin() {
 
     if (selectRetVal == -1) {
         std::cerr << "SELECT FAILED!\n";
-        return false;
+        return 0;
     }
     if (selectRetVal == 0) {
         std::cerr << "NO DATA TO FETCH!\n";
-        return false;
+        return 0;
     }
-    return true;
+    return 1;
 }

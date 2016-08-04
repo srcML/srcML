@@ -27,7 +27,7 @@
 #include <srcml_cli.hpp>
 #include <parse_queue.hpp>
 
-void src_input_filesystem(ParseQueue& queue,
+int src_input_filesystem(ParseQueue& queue,
   						  srcml_archive* srcml_arch,
   						  const srcml_request_t& srcml_request,
 						  const std::string& input_filename);

@@ -98,7 +98,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue,
+int src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input_file) {
@@ -110,7 +110,7 @@ void src_input_libarchive(ParseQueue& queue,
     if (!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) {
         // if we are not verbose, then just end this attemp
         if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
-            return;
+            return 0;
         }
 
         // form the parsing request
@@ -126,12 +126,12 @@ void src_input_libarchive(ParseQueue& queue,
         // schedule for parsing
         queue.schedule(prequest);
 
-        return;
+        return 1;
     }
 
     archive* arch = libarchive_input_file(input_file);
     if (!arch) {
-        return;
+        return 0;
     }
 
     /* In general, go through this once for each time the header can be read
@@ -254,4 +254,6 @@ void src_input_libarchive(ParseQueue& queue,
         ++count;
     }
     archive_read_finish(arch);
+
+    return 1;
 }

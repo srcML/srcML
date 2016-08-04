@@ -29,7 +29,7 @@
 #include <string>
 #include <boost/optional.hpp>
 
-void src_input_filelist(ParseQueue& queue,
+int src_input_filelist(ParseQueue& queue,
  						srcml_archive* srcml_arch,
 						const srcml_request_t& srcml_request,
 						const std::string& input_filename);

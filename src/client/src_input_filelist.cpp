@@ -31,32 +31,35 @@
 #include <archive.h>
 #include <archive_entry.h>
 
-void src_input_filelist(ParseQueue& queue,
+int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
                         const srcml_request_t& srcml_request,
                         const std::string& input_file) {
 
     archive* arch = libarchive_input_file(input_file);
     if (!arch)
-        return;
+        return 0;
 
     archive_entry *entry = 0;
     int status = archive_read_next_header(arch, &entry);
+    if (status == ARCHIVE_EOF) {
+        return 1;
+    }
     if (status != ARCHIVE_OK) {
     	std::cerr << "srcml: Invalid filelist " << input_file << "\n";
-    	return;
+    	return 1;
     }
 
     // ARE THE LAST TWO NECESSARY?
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
     	std::cerr << "srcml: filelist requires a non-directory file format\n";
-    	return;
+    	return 1;
     }
 
     if (strcmp(archive_entry_pathname(entry), "data") != 0) {
     	std::cerr << "srcml: filelist requires a non-archived file format\n";
-    	return;
+    	return 1;
     }
 
     // if we know the size, create the right sized data_buffer
@@ -104,4 +107,6 @@ void src_input_filelist(ParseQueue& queue,
         input.state = SRC;
         srcml_handler_dispatch(queue, srcml_arch, srcml_request, input);
     }
+
+    return 1;
 }

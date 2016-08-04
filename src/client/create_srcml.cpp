@@ -45,7 +45,7 @@ extern srcml_output_dest gdestination;
 srcml_archive* gsrcml_arch = 0;
 bool createdsrcml = false;
 
-void srcml_handler_dispatch(ParseQueue& queue,
+int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input) {
@@ -57,41 +57,56 @@ void srcml_handler_dispatch(ParseQueue& queue,
         // all other srcml compressions require a per-input decompression stage
         srcml_input_src uninput = input;
         input_file(uninput);
-        srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol == "text") {
 
-        src_input_text(queue, srcml_arch, srcml_request, input.filename);
+        return src_input_text(queue, srcml_arch, srcml_request, input.filename);
 
     } else if (input.protocol == "filelist") {
 
-        src_input_filelist(queue, srcml_arch, srcml_request, input);
+        int num = src_input_filelist(queue, srcml_arch, srcml_request, input);
+
+        if (num && !createdsrcml && input.protocol == "filelist") {
+            createdsrcml = true;
+
+            int status = 0;
+            if (contains<int>(gdestination)) {
+
+                status = srcml_archive_write_open_fd(gsrcml_arch, *gdestination.fd);
+
+            } else {
+
+                status = srcml_archive_write_open_filename(gsrcml_arch, gdestination.c_str(), 0);
+            }
+        }
+        return num;
 
     } else if (input.protocol == "file" && input.isdirectory) {
 
-        src_input_filesystem(queue, srcml_arch, srcml_request, input);
+        return src_input_filesystem(queue, srcml_arch, srcml_request, input);
 
     } else if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
        
-        src_input_file(queue, srcml_arch, srcml_request, input);
+        return src_input_file(queue, srcml_arch, srcml_request, input);
 
     } else if (input.protocol != "file" && curl_supported(input.protocol) && input.extension == ".xml") { 
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input;
         input_curl(uninput);
-        srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input;
         input_curl(uninput);
-        src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
+        return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
 
     } else {
 
-        src_input_libarchive(queue, srcml_arch, srcml_request, input);
+        return src_input_libarchive(queue, srcml_arch, srcml_request, input);
     }
 }
 
@@ -252,19 +267,7 @@ if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.com
 return; // stdin was requested, but no data was received
 }
 */
-        if (!createdsrcml && input.protocol == "filelist") {
-            createdsrcml = true;
 
-            int status = 0;
-            if (contains<int>(gdestination)) {
-
-                status = srcml_archive_write_open_fd(gsrcml_arch, *gdestination.fd);
-
-            } else {
-
-                status = srcml_archive_write_open_filename(gsrcml_arch, gdestination.c_str(), 0);
-            }
-        }
         srcml_handler_dispatch(parse_queue, csrcml_arch, srcml_request, input);
     }
 

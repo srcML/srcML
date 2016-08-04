@@ -25,14 +25,13 @@
 #include <src_input_libarchive.hpp>
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_file(ParseQueue& queue,
+int src_input_file(ParseQueue& queue,
                     srcml_archive* srcml_arch,
                     const srcml_request_t& srcml_request,
                     const std::string& input_file) {
 
     if (SRCML_COMMAND_VERBOSE & SRCMLOptions::get()) {
-        src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
-        return;
+        return src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
     }
 
     // form the parsing request
@@ -60,4 +59,6 @@ void src_input_file(ParseQueue& queue,
 
     // Hand request off to the processing queue
     queue.schedule(prequest);
+
+    return 1;
 }
