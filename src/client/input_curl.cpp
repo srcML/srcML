@@ -46,6 +46,8 @@ struct curl_write_info {
 
 static const int CURL_MAX_ERROR_SIZE = 100;
 
+int curl_error = 0;
+
 /*
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
     with our own callback does not entail an additional copy
@@ -78,6 +80,8 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 void curl_download_url(const srcml_request_t& srcml_request,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
+
+    curl_error = 0;
 
     // input comes from URL
     std::string url = input_sources[0].filename;
@@ -118,6 +122,7 @@ void curl_download_url(const srcml_request_t& srcml_request,
     if(response != CURLE_OK || http_code != 200) {
 
         std::cerr << "srcml: Unable to access URL " << url << std::endl;
+        curl_error = 1;
 
         // if there is only a single input source, and we have an error, then just error out here
        //if (global_srcml_request.input_sources.size() == 1)

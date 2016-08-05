@@ -36,6 +36,7 @@
 #include <curl_input_file.hpp>
 
 extern srcml_archive* gsrcml_arch;
+extern int curl_error;
 
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
@@ -145,6 +146,9 @@ int src_input_libarchive(ParseQueue& queue,
     while (status == ARCHIVE_OK &&
            (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
             (status == ARCHIVE_EOF && !count))) {
+
+        if (status == ARCHIVE_EOF && curl_error)
+            return 0;
 
         // skip any directories
         if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
