@@ -162,6 +162,8 @@ int src_input_libarchive(ParseQueue& queue,
         if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
             srcml_archive_enable_full_archive(gsrcml_arch);
             srcml_archive_enable_hash(gsrcml_arch);
+            srcml_archive_enable_full_archive(srcml_arch);
+            srcml_archive_enable_hash(srcml_arch);
         }
 
         // archive entry filename for non-archive input is "data"
