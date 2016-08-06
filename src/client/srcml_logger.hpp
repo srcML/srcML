@@ -42,12 +42,12 @@ public:
 
     static void log(int msg_type, const std::string& msg_text, int status = INT_MAX) {
 
-      // If we are in quiet mode only output a message that results in an exit
-      if (opts & SRCML_COMMAND_QUIET && !(msg_type == CRITICAL_MSG))
-        return;
-
       // Only print debug messages if the debug mode is enabled
       if ((msg_type == DEBUG_MSG) && !(opts & SRCML_DEBUG_MODE))
+        return;
+
+      // If we are in quiet mode only output a message that results in an exit
+      if (opts & SRCML_COMMAND_QUIET && !(msg_type == CRITICAL_MSG))
         return;
 
       if (status != INT_MAX)
