@@ -32,6 +32,8 @@
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
 #include <timer.hpp>
+#include <srcml_logger.hpp>
+#include <curl/curl.h>
 
 #include <archive.h>
 #include <iostream>
@@ -52,7 +54,13 @@ int main(int argc, char * argv[]) {
     // parse the command line
     srcml_request_t srcml_request = parseCLI(argc, argv);
     global_srcml_request = srcml_request;
-    
+
+    // global access to options
+    SRCMLOptions::set(srcml_request.command);
+
+    // init the logger
+    SRCMLLogger::set(srcml_request.command);
+
     // version
     if (srcml_request.command & SRCML_COMMAND_VERSION) {
         std::cout << "libsrcml " << srcml_version_string() << "\n";
@@ -61,8 +69,14 @@ int main(int argc, char * argv[]) {
         return 0;
     }
 
-    // global access to options
-    SRCMLOptions::set(srcml_request.command);
+    if (srcml_request.command & SRCML_DEBUG_MODE)
+        SRCMLLogger::log(SRCMLLogger::DEBUG_MSG,
+                         std::string("Library Versions:\n") +
+                         "libsrcml " + srcml_version_string() + "\n" +
+                         "srcml " + srcml_version_string() + "\n" +
+                         std::string(archive_version_string()) + "\n" +
+                         "libcurl " + std::string(curl_version_info(CURLVERSION_NOW)->version) + "\n" +
+                         "libboost " + BOOST_LIB_VERSION + "\n");
 
     if (srcml_request.input_sources.size() == 1 && srcml_request.unit != 0)
         srcml_request.input_sources[0].unit = srcml_request.unit;
@@ -75,7 +89,7 @@ int main(int argc, char * argv[]) {
         // stdin accessed as FILE*
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
         if (!pstdin->fileptr) {
-            std::cerr << "Unable to open stdin\n";
+            SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Unable to open stdin");
             exit(1);
         }
         pstdin->fd = boost::none;
@@ -124,7 +138,7 @@ int main(int argc, char * argv[]) {
 #if ARCHIVE_VERSION_NUMBER > 3001002
         pipeline.push_back(compress_srcml);
 #else
-        std::cerr << "Unsupported output compression\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Unsupported output compression");
         exit(1);
 #endif
     }
@@ -137,10 +151,8 @@ int main(int argc, char * argv[]) {
 
     srcml_cleanup_globals();
 
-    if (srcml_request.command & SRCML_DEBUG_MODE) {
-        std::cerr << "CPU Time: " << runtime.cpu_time_elapsed() << " ms\n";
-        std::cerr << "Real Time: " << runtime.real_world_elapsed() << "ms\n";
-    }
+    SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "\nCPU Time: " + std::to_string(runtime.cpu_time_elapsed()) + " ms");
+    SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "Real Time: " + std::to_string(runtime.real_world_elapsed()) + "ms");
 
     return 0;
 }
