@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <timer.hpp>
 #include <input_curl.hpp>
+#include <srcml_logger.hpp>
 
 #include <curl_input_file.hpp>
 
@@ -90,7 +91,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     }
 
     if (status != ARCHIVE_OK) {
-        std::cerr << "srcml: Unable to open file " << src_prefix_resource(input_file.filename) << '\n';
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open file " + src_prefix_resource(input_file.filename));
         return 0;
     }
 
@@ -153,7 +154,7 @@ void src_input_libarchive(ParseQueue& queue,
 
         // stdin, single files require a explicit filename
         if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
-            std::cerr << "Language required for stdin single files" << '\n';
+            SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Language required for stdin single files");
             exit(1);
         }
 
