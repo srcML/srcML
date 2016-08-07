@@ -24,6 +24,7 @@
 #include <srcml_pretty.hpp>
 #include <src_prefix.hpp>
 #include <srcml.h>
+#include <srcml_logger.hpp>
 #include <iostream>
 #include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
@@ -146,13 +147,13 @@ int srcml_unit_count(srcml_archive* srcml_arch) {
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
-    
+
     int display_commands =  SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
                             SRCML_COMMAND_DISPLAY_SRCML_URL |
                             SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
                             SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
                             SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
-                            SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP | 
+                            SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP |
                             SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
     BOOST_FOREACH(const srcml_input_src& input, src_input) {
@@ -161,19 +162,19 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         if (contains<int>(input)) {
             if (srcml_archive_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
-                std::cerr << "Srcml input cannot not be opened.\n";
+                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Srcml input cannot not be opened.");
                 return;
             }
         }
         else if (contains<FILE*>(input)){
             if (srcml_archive_read_open_FILE(srcml_arch, input) != SRCML_STATUS_OK) {
-                std::cerr << "Srcml input cannot not be opened.\n";
+                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Srcml input cannot not be opened.");
                 return;
-            }   
+            }
         }
         else {
             if (srcml_archive_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str())) != SRCML_STATUS_OK) {
-                std::cerr << "Srcml input cannot not be opened.\n";
+                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Srcml input cannot not be opened.");
                 return;
             }
         }
@@ -261,7 +262,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         // srcml long info
         if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
-            srcml_display_info(srcml_arch, true);   
+            srcml_display_info(srcml_arch, true);
         }
 
         if (srcml_request.command & SRCML_COMMAND_LIST) {
