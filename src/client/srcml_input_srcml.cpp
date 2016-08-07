@@ -27,6 +27,7 @@
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <srcmlns.hpp>
+#include <srcml_logger.hpp>
 
 void srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
@@ -44,9 +45,9 @@ void srcml_input_srcml(ParseQueue& queue,
 
     if (open_status != SRCML_STATUS_OK) {
         if (srcml_input.protocol == "file" )
-            std::cerr << "srcml: Unable to open srcml file " << src_prefix_resource(srcml_input.filename) << "\n";
+            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(srcml_input.filename));
         else
-            std::cerr << "srcml: Unable to open srcml URL " << srcml_input.filename << "\n";
+            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open srcml URL " + srcml_input.filename);
         srcml_archive_close(srcml_input_archive);
         return;
     }
@@ -98,7 +99,7 @@ void srcml_input_srcml(ParseQueue& queue,
     }
 
     if (!unitPresent) {
-        std::cerr << "Requested unit " << srcml_input.unit << " out of range.\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Requested unit " + std::to_string(srcml_input.unit) + " out of range.");
         exit(4);
     }
 
