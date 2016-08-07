@@ -98,11 +98,12 @@ endmacro()
 # - BASH_SCRIPT the name of the bash script that will be executed
 # - ARGN any arguments that are passed on to the bash test script
 # Adds a large systems test which executes on the provided bash script, passing
-# in arguments for the script which determine what large system to use
-#
+# in arguments for the script which determine what large system to use. It
+# takes at least 30 minutes to time out, as the systems can get huge
 #
 macro(addLargeSystemTest TEST_NAME BASH_SCRIPT)
     add_test(NAME ${TEST_NAME} COMMAND bash ${BASH_SCRIPT} ${SCRIPT_ARGS} ${ARGN})
+    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 1800) # default is 1500
 
     if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
         copyDependentFile(${BASH_SCRIPT})

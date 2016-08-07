@@ -90,6 +90,24 @@ echo "cmp ${XZOUTPUT} ${UNZOUTPUT}" | tee -a "${DLOG}"
 DIFF="$( cmp ${XZOUTPUT} ${UNZOUTPUT} )"
 echo "${DIFF}" | tee -a "${DLOG}"
 
+# ---------- https://source-only.tar.gz --> srcml --------------
+echo | tee -a "${TLOG}"
+REMOTEXZOUTPUT="${SRCZNAME}-output.xml"
+echo "$SRCML ${MAX_THREADS} ${location} --in-order -o ${REMOTEXZOUTPUT}" | tee -a "${TLOG}"
+
+# store timed output; redirect stderr to stdout to store time
+TIME="$(time ( $SRCML ${MAX_THREADS} ${location} --in-order -o ${REMOTEXZOUTPUT} ) 2>&1 1>/dev/null )"
+echo "${TIME}" | tee -a "${TLOG}"
+
+# store output size
+REMOTEZSIZE_OUTPUT="$(du -hs ${REMOTEXZOUTPUT})"
+echo "${REMOTEZSIZE_OUTPUT}" | tee -a "${SLOG}"
+
+# cmp srcml output from the local compressed output
+echo "cmp ${XZOUTPUT} ${REMOTEXZOUTPUT}" | tee -a "${DLOG}"
+DIFF="$( cmp ${XZOUTPUT} ${REMOTEXZOUTPUT} )"
+echo "${DIFF}" | tee -a "${DLOG}"
+
 # -------------- srcml --> source-only/ ------------------------
 echo | tee -a "${TLOG}" "${DLOG}"
 SMLOUTPUTDIR="${NAME}-from-srcml"
@@ -110,10 +128,11 @@ echo "${DIFF}" | tee -a "${DLOG}"
 
 
 # keep logs/* and cache/*; remove output/*
-rm "${SRCZNAME}"   # compressed file soucrce-only-tar.gz
-rm -r "${NAME}"    # uncompressed directory soucrce-only-tar/
-rm "${XZOUTPUT}"   # srcml output from running on soucrce-only-tar.gz
-rm "${UNZOUTPUT}"  # srcml output from running on soucrce-only-tar/
+rm "${SRCZNAME}"        # compressed file source-only-tar.gz
+rm -r "${NAME}"         # uncompressed directory source-only-tar/
+rm "${XZOUTPUT}"        # srcml output from running on source-only-tar.gz
+rm "${REMOTEXZOUTPUT}"  # srcml output from running on https://source-only-tar.gz
+rm "${UNZOUTPUT}"       # srcml output from running on source-only-tar/
 rm -r "${SMLOUTPUTDIR}" # created from srcml --to-dir
 
 echo | tee -a "${TLOG}" "${DLOG}" "${SLOG}"
