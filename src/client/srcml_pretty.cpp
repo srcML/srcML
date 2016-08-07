@@ -40,10 +40,11 @@ std::string expand_namespace(const std::string& separator, size_t ns_size) {
 }
 
 void show_carret_error(size_t pos) {
+    std::string spacing = "";
     for (size_t i = 0; i < pos; ++i) {
-        std::cerr << " ";
+        spacing += " ";
     }
-    std::cerr << "^\n";
+    SRCMLLogger::log(SRCMLLogger::WARNING_MSG, spacing + "^");
 }
 
 void pretty_print(const std::string& format_string, const std::vector<std::string>& args)
