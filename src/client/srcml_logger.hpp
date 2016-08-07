@@ -25,6 +25,7 @@
 
 #include <string>
 #include <iostream>
+#include <limits.h>
 #include <srcml_cli.hpp>
 
 class SRCMLLogger {
