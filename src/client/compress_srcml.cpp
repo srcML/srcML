@@ -24,6 +24,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <boost/foreach.hpp>
+#include <srcml_logger.hpp>
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
 void compress_srcml(const srcml_request_t& /* srcml_request */,
@@ -45,7 +46,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
         status = archive_write_open_filename(ar, destination.resource.c_str());
     }
     if (status != ARCHIVE_OK) {
-        std::cerr << status;
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, std::to_string(status));
         exit(1);
     }
 
@@ -55,7 +56,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     archive_entry_set_filetype(entry, AE_IFREG);
 
     if ((status = archive_write_header(ar, entry)) != ARCHIVE_OK) {
-        std::cerr << status;
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, std::to_string(status));
         exit(1);
     }
 

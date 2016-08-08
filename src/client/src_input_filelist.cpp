@@ -30,6 +30,7 @@
 #include <boost/algorithm/string.hpp>
 #include <archive.h>
 #include <archive_entry.h>
+#include <srcml_logger.hpp>
 
 int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
@@ -46,19 +47,19 @@ int src_input_filelist(ParseQueue& queue,
         return 1;
     }
     if (status != ARCHIVE_OK) {
-    	std::cerr << "srcml: Invalid filelist " << input_file << "\n";
-    	return 1;
+    	SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Invalid filelist " + input_file);
+        return 1;
     }
 
     // ARE THE LAST TWO NECESSARY?
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
-    	std::cerr << "srcml: filelist requires a non-directory file format\n";
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: filelist requires a non-directory file format");
     	return 1;
     }
 
     if (strcmp(archive_entry_pathname(entry), "data") != 0) {
-    	std::cerr << "srcml: filelist requires a non-archived file format\n";
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: filelist requires a non-archived file format");
     	return 1;
     }
 

@@ -21,6 +21,7 @@
  */
 
 #include <src_input_stdin.hpp>
+#include <srcml_logger.hpp>
 
 #include <stdio.h>
 
@@ -55,14 +56,15 @@ int src_input_stdin() {
 
     // use select to see if stdin has data
     int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
-
     if (selectRetVal == -1) {
-        std::cerr << "SELECT FAILED!\n";
-        return 0;
+
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "SELECT FAILED!");
+        return false;
     }
     if (selectRetVal == 0) {
-        std::cerr << "NO DATA TO FETCH!\n";
-        return 0;
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "NO DATA TO FETCH!");
+        return false;
     }
+    
     return 1;
 }

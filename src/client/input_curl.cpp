@@ -28,6 +28,7 @@
 #pragma GCC diagnostic pop
 
 #include <curl/curl.h>
+#include <srcml_logger.hpp>
 
 #if defined(_MSC_BUILD) || defined(__MINGW32__)
 #include <io.h>
@@ -120,8 +121,7 @@ void curl_download_url(const srcml_request_t& srcml_request,
     long http_code = 0;
     curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
     if(response != CURLE_OK || http_code != 200) {
-
-        std::cerr << "srcml: Unable to access URL " << url << std::endl;
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to access URL " + url);
         curl_error = 1;
 
         // if there is only a single input source, and we have an error, then just error out here

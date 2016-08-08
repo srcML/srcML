@@ -27,6 +27,7 @@
 #include <srcml_options.hpp>
 #include <trace_log.hpp>
 #include <srcml_cli.hpp>
+<<<<<<< HEAD
 #include <srcml_input_src.hpp>
 
 srcml_output_dest gdestination;
@@ -35,6 +36,8 @@ extern bool createdsrcml;
 
 extern srcml_archive* gsrcml_arch;
 
+#include <srcml_logger.hpp>
+
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
@@ -42,7 +45,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
         return;
 
     bool isarchive = srcml_archive_is_full_archive(request->srcml_arch);
-    isarchive = 1; //Print output for all processed files 
+    isarchive = 1; //Print output for all processed files
 
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
@@ -78,7 +81,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
             s += "\t";
 
             const char* hash = srcml_unit_get_hash(request->unit);
-            if (hash) {    
+            if (hash) {
                 s += std::string(hash);
             }
             else {
@@ -93,13 +96,13 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
         if (isarchive)
             log << '-' << (request->filename ? *request->filename : "");
         else
-            std::cerr << "Extension not supported\n";
+            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "Extension not supported");
 
     } else if (request->errormsg) {
-        std::cerr << *(request->errormsg);
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, *(request->errormsg));
 
     } else {
-        std::cerr << "Internal eror " << request->status << "\n";
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "Internal eror " + std::to_string(request->status));
     }
 
     // free the unit
