@@ -52,8 +52,15 @@ void src_input_filesystem(ParseQueue& queue,
 
             // regular files are passed to the handler
             if (is_regular_file(file)) {
+                //src_input_libarchive(queue, srcml_arch, srcml_request, file.string());
+                srcml_input_src input_file(file.string());
 
-                src_input_libarchive(queue, srcml_arch, srcml_request, file.string());
+                // If a directory contains archives skip them
+                if (!(input_file.archives.empty())) {
+                    input_file.skip = true;
+                }
+
+                src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
 
             // directories are put at the back
             } else if (is_directory(file)) {
