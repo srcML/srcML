@@ -27,16 +27,14 @@
 #include <srcml_options.hpp>
 #include <trace_log.hpp>
 #include <srcml_cli.hpp>
-<<<<<<< HEAD
 #include <srcml_input_src.hpp>
+#include <srcml_logger.hpp>
 
 srcml_output_dest gdestination;
 
 extern bool createdsrcml;
 
 extern srcml_archive* gsrcml_arch;
-
-#include <srcml_logger.hpp>
 
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log) {
