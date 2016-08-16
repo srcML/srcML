@@ -119,11 +119,11 @@ prog_opts::options_description general("GENERAL OPTIONS");
 prog_opts::options_description src2srcml_options("CREATING SRCML");
 prog_opts::options_description srcml2src_options("EXTRACTING SOURCE CODE");
 prog_opts::options_description query_transform("TRANSFORMATIONS");
-prog_opts::options_description positional_options("positional");
-prog_opts::options_description deprecated_options("Deprecated Options");
-prog_opts::options_description debug_options("Debug Options");
-prog_opts::options_description experimental_options("Experimental Options");
-prog_opts::options_description all("All Options");
+prog_opts::options_description positional_options("POSITIONAL");
+prog_opts::options_description deprecated_options("DEPRECATED OPTIONS");
+prog_opts::options_description debug_options("DEBUG OPTIONS");
+prog_opts::options_description experimental_options("EXPERIMENTAL OPTIONS");
+prog_opts::options_description all("ALL OPTIONS");
 
 prog_opts::options_description markup_options("MARKUP OPTIONS");
 prog_opts::options_description xml_form("XML FORM");
@@ -417,6 +417,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         deprecated_options.add_options()
             ("units,n", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
+            ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
             ;
 
         debug_options.add_options()
@@ -431,7 +432,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("compress,z", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMPRESS>), "output in gzip format")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
-            ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
             ;
 
         // Group src2srcml Options
