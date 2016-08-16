@@ -139,7 +139,7 @@ prog_opts::positional_options_description input_file;
 // tranformation check on input
 bool is_transformation(const srcml_input_src& input);
 
-/* DREW:  Most of the no parameter options could be recorded this way */
+/* Most of the no parameter options could be recorded this way */
 template <int option>
 void option_markup(bool opt) {
     /*
@@ -156,7 +156,22 @@ void option_markup(bool opt) {
 template <int command>
 void option_command(bool opt) {
     if (opt)
-        srcml_request.command |= command;
+      srcml_request.command |= command;
+}
+
+// deprecated option command
+// (This is required as non-deprecated options may use same values)
+template <int command>
+void option_command_deprecated(bool opt) {
+    if (opt) {
+      srcml_request.command |= command;
+
+      // Notify user of deprecated options
+      if (command == SRCML_COMMAND_UNITS)
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: use of option --units or -n is deprecated");
+      if (command == SRCML_COMMAND_EXPRESSION)
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: use of option --expression or -e is deprecated");
+    }
 }
 
 // Generic fields
@@ -416,8 +431,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         deprecated_options.add_options()
-            ("units,n", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
-            ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
+            ("units,n", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
+            ("expression,e", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
             ;
 
         debug_options.add_options()

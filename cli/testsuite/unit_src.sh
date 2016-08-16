@@ -37,13 +37,17 @@ define nestedfilesrc <<- 'STDOUT'
 xmlcheck "$nestedfile"
 xmlcheck "$nestedfilesrc"
 
+# Deprecated warning message
+define deprecated_warning <<- 'STDERR'
+	srcml: use of option --units or -n is deprecated
+STDERR
 
 # test
 srcml2src --units <<< "$nestedfile"
-check 3<<< "2"
+check 3<<< "2" 4<<< "$deprecated_warning"
 
 srcml2src --units <<< "$nestedfilesrc"
-check 3<<< "2"
+check 3<<< "2" 4<<< "$deprecated_warning"
 
 srcml2src -U "1" <<< "$nestedfile"
 check 3<<< $'\na;\n'
@@ -62,4 +66,3 @@ check 3<<< $'\nb;\n'
 
 srcml2src --unit="2" <<< "$nestedfile"
 check 3<<< $'\nb;\n'
-
