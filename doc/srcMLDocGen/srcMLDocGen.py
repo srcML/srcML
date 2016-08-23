@@ -3,11 +3,13 @@
 import os, sys, traceback, re
 import django
 from django.conf import settings
-from django.template import Template, Context, loader
+from django.template import Template
+from django.template.loader import get_template
 from DocGen import *
 from DocGen.ValidationChecker import *
 from DocGen.templatetags import *
 import DocGen.TagTracker
+import django.template.context_processors
 
 # -------------------------------------------------
 #                     Main
@@ -20,9 +22,9 @@ class PageLink:
 
 def genMainPage(maingPageName, pageLinks, nav):
     out = open(maingPageName, "w")
-    fileTemplate = loader.get_template("MainPage.html")
+    fileTemplate = get_template("MainPage.html")
     pageLinks.sort(key=lambda x: x.title)
-    page = fileTemplate.render(Context({"pageLinks": pageLinks, "nav":nav}))
+    page = fileTemplate.render({"pageLinks": pageLinks, "nav":nav})
     out.write(page)
     out.close()
 
@@ -30,8 +32,8 @@ def genDocFile(docConfig, nav):
     global pageLinks
     pageLinks.append(PageLink(docConfig.title, docConfig.outputFileName))
     out = open(docConfig.outputFileName, "w")
-    fileTemplate = loader.get_template("DefaultPage.html")
-    page = fileTemplate.render(Context({"doc": docConfig, "pageName" : docConfig.outputFileName, "grammarFileName" : grammarOutputFileName, "nav":nav}))
+    fileTemplate = get_template("DefaultPage.html")
+    page = fileTemplate.render({"doc": docConfig, "pageName" : docConfig.outputFileName, "grammarFileName" : grammarOutputFileName, "nav":nav})
     out.write(page)
     out.close()
 
@@ -39,8 +41,8 @@ def generateSrcMLGrammar(fileName, grmmr, nav):
     global pageLinks
     pageLinks.append(PageLink("srcML Grammar", fileName))
     out = open(fileName, "w")
-    fileTemplate = loader.get_template("Grammar.html")
-    page = fileTemplate.render(Context({"doc": grmmr, "title": "srcML Grammar", "nav":nav}))
+    fileTemplate = get_template("Grammar.html")
+    page = fileTemplate.render({"doc": grmmr, "title": "srcML Grammar", "nav":nav})
     out.write(page)
     out.close()
 
@@ -54,13 +56,13 @@ def genLangSupportFile(langSupport, nav):
     # print langSupport
     pageLinks.append(PageLink("srcML Language Support", langSupport.outputFile))
     out = open(langSupport.outputFile, "w")
-    fileTemplate = loader.get_template("LanguageSupport.html")
+    fileTemplate = get_template("LanguageSupport.html")
     page = fileTemplate.render(
-        Context({
+        {
             "doc" : langSupport,
             "title" : "srcML Language Support",
             "nav" : nav
-        })
+        }
     )
     out.write(page)
     out.close()
@@ -68,14 +70,14 @@ def genLangSupportFile(langSupport, nav):
 def genXPathExtFuncPage(extFuncDocInfo, grammarOutputFileName, nav):
     pageLinks.append(PageLink("srcML XPath Extension Functions", extFuncDocInfo.outputFile))
     out = open(extFuncDocInfo.outputFile, "w")
-    fileTemplate = loader.get_template("XPathExtFunc.html")
+    fileTemplate = get_template("XPathExtFunc.html")
     page = fileTemplate.render(
-        Context({
+        {
             "doc" : extFuncDocInfo,
             "title" : "srcML XPath Extension Functions",
             "gramarPageName":grammarOutputFileName,
             "nav" : nav
-        })
+        }
     )
     out.write(page)
     out.close()
@@ -132,10 +134,10 @@ def genDocIndex(docConfig, nav):
 
     pageLinks.append(PageLink(docConfig.title + " Index", indexFileName))
     out = open(indexFileName, "w")
-    fileTemplate = loader.get_template("IndexPage.html")
+    fileTemplate = get_template("IndexPage.html")
     sortedIndexItems = indexDictionary.items()
     sortedIndexItems.sort(key=lambda x: x[0].lower())
-    page = fileTemplate.render(Context({"indexItems": sortedIndexItems, "pageTitle": docConfig.title, "nav":nav}))
+    page = fileTemplate.render({"indexItems": sortedIndexItems, "pageTitle": docConfig.title, "nav":nav})
     out.write(page)
     out.close()
 
@@ -240,8 +242,29 @@ grammarToGenerate = None
 
 if __name__ == "__main__":
 
-    if not settings.configured:
-        django.conf.settings.configure(DEBUG=True, TEMPLATE_DEBUG=True, TEMPLATE_DIRS=("Templates", ), INSTALLED_APPS=("DocGen",))
+    settings.configure(
+        DEBUG=True,
+        INSTALLED_APPS=["DocGen",],
+        TEMPLATES=[
+            {
+                'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                'DIRS': [
+                    "Templates",
+                ],
+                'OPTIONS': {
+                    'context_processors': [
+                        'django.contrib.auth.context_processors.auth',
+                        'django.template.context_processors.debug',
+                        'django.template.context_processors.i18n',
+                        'django.template.context_processors.media',
+                        'django.template.context_processors.static',
+                        'django.template.context_processors.tz',
+                        'django.contrib.messages.context_processors.messages',
+                    ],
+                },
+            },
+        ]
+    )
 
     django.setup()
 
