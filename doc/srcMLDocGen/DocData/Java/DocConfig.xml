@@ -547,7 +547,7 @@
         <DocEntry title="anonymous class">
             <Elements>
                 <Element name="class" />
-                <Subelement name="super" />
+                <Subelement name="super_list" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
@@ -565,6 +565,7 @@
             <Elements>
                 <Element name="class" />
                 <Subelement name="name" />
+                <Subelement name="super_list" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:class">
@@ -579,6 +580,7 @@
                 <Element name="interface"/>
                 <Subelement name="name" />
                 <Subelement name="block" />
+                <Subelement name="super_list" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:interface">
@@ -638,16 +640,31 @@
             <Example file="Java-enum-def-1.java" />
         </DocEntry>
 
+        <DocEntry title="super_list">
+            <Elements>
+                <Element name="super_list" />
+                <Subelement name="extends" />
+                <Subelement name="implements" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:super_list">
+                    <Desc>Find all classes that either extend or implement another classs</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="Java-super-list.java" />
+            <!-- <Example file="Java-extends-2.java" /> -->
+        </DocEntry>
+
         <DocEntry title="extends">
             <Elements>
                 <Element name="extends" />
-                <Subelement name="name" />
+                <Subelement name="super" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:extends">
                     <Desc>Find all uses of extends</Desc>
                 </XPath>
-                <XPath path="//src:class[src:super/src:extends/src:name[.='BaseClass']]">
+                <XPath path="//src:class[src:super_list/src:extends//src:super/src:name[.='BaseClass']]">
                     <Desc>Find all classes that inherit from <code class="inline">BaseClass</code></Desc>
                 </XPath>
             </XPathQueries>
@@ -658,17 +675,18 @@
         <DocEntry title="implements">
             <Elements>
                 <Element name="implements" />
-                <Subelement name="name" />
+                <Subelement name="super" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:implements">
                     <Desc>Find all uses of implements</Desc>
                 </XPath>
-                <XPath path="//src:class[src:super/src:implements/src:name[.='IVehicle']]">
+                <XPath path="//src:class[src:super_list/src:implements/src:super/src:name[.='IVehicle']]">
                     <Desc>Find all classes which implement <code class="inline">IVehicle</code></Desc>
                 </XPath>
             </XPathQueries>
             <Example file="Java-implements-1.java" />
+            <Example file="Java-implements-2.java" />
         </DocEntry>
 
         <DocEntry title="constructor">
@@ -991,7 +1009,7 @@
                 <Element name="class" />
                 <Subelement name="name" />
                 <Subelement name="argument_list" />
-
+                <Subelement name="super_list" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>

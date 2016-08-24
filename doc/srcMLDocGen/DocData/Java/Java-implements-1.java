@@ -1,3 +1,3 @@
-public class Truck implements IVehicle
-{
-}
+public class Truck 
+    implements IVehicle
+{ }
