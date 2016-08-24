@@ -234,7 +234,7 @@
                 <XPath path="//src:label">
                     <Desc>Find all labels</Desc>
                 </XPath>
-                <XPath path="//src:label[not(src:name[. = //src:goto/src:name])]">
+                <XPath path="//src:label[not(src:name[.= //src:goto/src:name])]">
                     <Desc>Find all labels without a goto statement</Desc>
                 </XPath>
             </XPathQueries>
@@ -1043,6 +1043,7 @@
                 <Element name="class" />
                 <Subelement name="name" />
                 <Subelement name="block" />
+                <Subelement name="super_list" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:class">
@@ -1079,17 +1080,27 @@
             <Example file="CPP-class-decl-1.cpp" />
         </DocEntry>
 
-        <DocEntry title="inheritance list">
+        <DocEntry title="derivation list">
+            <Elements>
+                <Element name="super_list" />
+                <Subelement name="super" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:class[src:super_list]">
+                    <Desc>Find all classes with at least one super class</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-inherit-1.cpp" />
+        </DocEntry>
+
+        <DocEntry title="derivation">
             <Elements>
                 <Element name="super" />
                 <Subelement name="specifier" />
                 <Subelement name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:super]">
-                    <Desc>Find all classes with at least one super class</Desc>
-                </XPath>
-                <XPath path="//src:class[src:super/src:name[. = 'bar']]">
+                <XPath path="//src:class[src:super_list/src:super/src:name[.= 'bar']]">
                     <Desc>Find all classes that inherit from <code class="inline">bar</code></Desc>
                 </XPath>
             </XPathQueries>
@@ -1165,7 +1176,7 @@
                 <Element name="specifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:super/src:specifier[.='protected']]">
+                <XPath path="//src:class[src:super_list/src:super/src:specifier[.='protected']]">
                     <Desc>Find all class which use protected inheritance</Desc>
                 </XPath>
             </XPathQueries>
@@ -1177,7 +1188,7 @@
                 <Element name="specifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:super/src:specifier[.='private']]">
+                <XPath path="//src:class[src:super_list/src:super/src:specifier[.='private']]">
                     <Desc>Find all classes that use private inheritance</Desc>
                 </XPath>
             </XPathQueries>
@@ -1189,13 +1200,24 @@
                 <Element name="specifier"/>
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:super/src:specifier[.='public']]">
+                <XPath path="//src:class[src:super_list/src:super/src:specifier[.='public']]">
                     <Desc>Find all classes that use private inheritance</Desc>
                 </XPath>
             </XPathQueries>
             <Example file="CPP-public-inheritance-specifier-1.cpp" />
         </DocEntry>
 
+        <DocEntry title="virtual inheritance specifier">
+            <Elements>
+                <Element name="specifier"/>
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:class[src:super_list/src:super/src:specifier[.='virtual']]">
+                    <Desc>Find all classes that use virtual inheritance</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CPP-virtual-inheritance-specifier-1.cpp" />
+        </DocEntry>
 
         <DocEntry title="constructor">
             <Elements>
@@ -1283,7 +1305,7 @@
             <Elements>
                 <Element name="struct" />
                 <Subelement name="name" />
-                <Subelement name="super" />
+                <Subelement name="super_list" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:struct">

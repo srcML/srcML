@@ -1,3 +1,3 @@
 class Foo
-	:Bar1, OtherBar
+	: Bar1, OtherBar
 { };
