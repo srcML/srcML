@@ -1,5 +1,5 @@
 /**
- * @file input_curl.hpp
+ * @file srcml_logger.cpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
@@ -20,12 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef input_curl_HPP
-#define input_curl_HPP
+#include <srcml_logger.hpp>
 
-#include <srcml_input_src.hpp>
-
-// adjust input for libcurl and libarchive decompressions
-void input_curl(srcml_input_src& input);
-
-#endif
+int SRCMLLogger::opts;

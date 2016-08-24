@@ -29,6 +29,11 @@ xmlcheck "$sxmlfile1"
 xmlcheck "$nestedfile"
 createfile sub/a.cpp.xml "$sxmlfile1"
 
+# Deprecated warning message
+define deprecated_warning <<- 'STDERR'
+	srcml: use of option --units or -n is deprecated
+STDERR
+
 srcml sub/a.cpp.xml --show-language
 check 3<<< "C++"
 
@@ -45,9 +50,9 @@ srcml sub/a.cpp.xml --show-encoding
 check 3<<< "UTF-8"
 
 srcml2src --units sub/a.cpp.xml
-check 3<<< "1"
+check 3<<< "1" 4<<< "$deprecated_warning"
 
 createfile sub/nested.cpp.xml "$nestedfile"
 
 srcml2src --units sub/nested.cpp.xml
-check 3<<< "2"
+check 3<<< "2" 4<<< "$deprecated_warning"

@@ -51,6 +51,7 @@ struct ParseRequest {
     long runtime;
     boost::optional<std::string> time_stamp;
     unsigned long total_num_inputs;
+    boost::optional<std::string> errormsg;
 };
 
 #endif

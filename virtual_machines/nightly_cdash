@@ -9,7 +9,7 @@ NAME=$2
 ./sshall.py $ARG 'bash -c "cd /srcML; git clean -fdx; git checkout develop; git pull"'
 
 # copy large systems test cache so we don't have to pull back down the files every night
-./sshall.py $ARG "bash -c \"cp -R /ci-build/cli/large_systems_test/cache /lst-cache"
+./sshall.py $ARG "bash -c \"cp -R /ci-build/cli/large_systems_test/cache/lst-cache"
 
 # clear out old build directory, make new one, copy over large systems test cache
 ./sshall.py $ARG "bash -c \"rm -rf /ci-build; mkdir -p /ci-build/cli/large_systems_test/cache; mv /lst-cache /ci-build/cli/large_systems_test/cache\""

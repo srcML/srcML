@@ -3,9 +3,10 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+set +e
+
 # test
 define xpath_error <<- 'STDOUT'
-	Error Parsing: Start tag expected, '<' not found
 	Error Parsing: Start tag expected, '<' not found
 	STDOUT
 
@@ -14,25 +15,21 @@ define xpath_empty <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDOUT
 
-define output <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns="http://www.srcML.org/srcML/src"/>
-	STDOUT
 
 xmlcheck "$xpath_empty"
 xmlcheck "$output"
 createfile sub/a.cpp.xml ""
 
-# TODO: issue #973
-srcml2src --xpath=src:unit sub/a.cpp.xml
-check 3<<< "$xpath_empty" 4<<< "$xpath_error"
 
-srcml2src -l C++ --xpath=src:unit < sub/a.cpp.xml
-check 3<<< "$xpath_empty" 4<<< "$xpath_error"
+srcml2src --xpath=src:unit sub/a.cpp.xml
+check_exit 1
 
 srcml2src -l C++ --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
-check 3<<< "$xpath_empty" 4<<< "$xpath_error"
+check_exit 1
 
 srcml2src -l C++ --xpath=src:unit -o sub/b.cpp.xml sub/a.cpp.xml
-check 3<<< "$xpath_empty" 4<<< "$xpath_error"
+check_exit 1
 
+# equivalent as inputting an empty source file
+srcml2src -l C++ --xpath=src:unit < sub/a.cpp.xml
+check 3<<< "$xpath_empty"

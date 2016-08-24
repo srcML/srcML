@@ -28,6 +28,7 @@
 #pragma GCC diagnostic pop
 
 #include <curl/curl.h>
+#include <srcml_logger.hpp>
 
 #if defined(_MSC_BUILD) || defined(__MINGW32__)
 #include <io.h>
@@ -35,35 +36,58 @@
 #include <windows.h>
 #endif
 
-#include <boost/thread/latch.hpp>
-
-int CurlStatus::error = 0;
-boost::latch CurlStatus::latch(0);
-
 // global request
 extern srcml_request_t global_srcml_request;
 
-static int outfd = 0;
+struct curl_write_info {
+    int outfd;
+    size_t currentsize;
+    std::string buffer;
+};
 
-// Note: Stupid name, but can be changed later
-void curl_it_all(const srcml_request_t& srcml_request,
+static const int CURL_MAX_ERROR_SIZE = 100;
+
+/*
+    Write callback for curl. libcurl internals use fwrite() as default, so replacing it
+    with our own callback does not entail an additional copy
+*/
+size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
+
+    curl_write_info* data = (curl_write_info*) userdata;
+
+    // we may have previously buffered data to output
+    if (data->buffer.size() >= CURL_MAX_ERROR_SIZE) {
+        write(data->outfd, data->buffer.c_str(), data->buffer.size());
+        data->buffer.clear();
+    }
+
+    size_t total_size = size * nmemb;
+    data->currentsize += total_size;
+
+    // cache any data until we make sure we do not have a 404 error
+    // prevent the 404 or other error pages from getting into the pipe
+    // previously handled by latch in libarchive
+    if (data->currentsize < CURL_MAX_ERROR_SIZE) {
+        data->buffer.append(ptr, size * nmemb);
+        return total_size;
+    }
+
+	return write(data->outfd, ptr, total_size);
+}
+
+// downloads URL into file descriptor
+void curl_download_url(const srcml_request_t& srcml_request,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
 
-    CurlStatus::error = 0;
-
-    // input comes from URL (I think)
+    // input comes from URL
     std::string url = input_sources[0].filename;
 
-    // output is a file descriptor
-    outfd = *destination.fd;
+    curl_write_info write_info;
+    write_info.outfd = *destination.fd; // output is a file descriptor
+    write_info.currentsize = 0;
 
-    // libcurl needs a FILE* to write to
-    FILE* outfile = fdopen(outfd, "w");
-
-    // setup curl to use url with a write function write_data_because_libcurl_is_stupid()
     CURL *curl_handle;
-    CURLcode response;
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl_handle = curl_easy_init();
@@ -74,59 +98,47 @@ void curl_it_all(const srcml_request_t& srcml_request,
     curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
 
-    // output will be to FILE* outfile (wrapper for file descriptor outfd) instead of STDOUT
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, outfile);
+    // setup to use a write function
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &write_info);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, our_curl_write_callback);
 
     curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-/* 
-    // Quick check to see if the remote location exists or is available
-    CURL* ping = curl_easy_duphandle(curl_handle);
-    curl_easy_setopt(ping, CURLOPT_NOBODY, 1L);
-        //curl_easy_setopt(ping, CURLOPT_HEADER, 1L);
-    curl_easy_perform(ping);
 
-    long http_code = 0;
-    //double data_size = 0;
-    curl_easy_getinfo (ping, CURLINFO_RESPONSE_CODE, &http_code);
-    //curl_easy_getinfo (ping, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &data_size);
+    curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1L);
+    curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_TIME, 5L);
+    //curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 0L);
 
-    curl_easy_cleanup(ping);
-    if (http_code != 200)
-    {
-        // bad, can't open the remote resource.
-        // what to do here...
-        std::cerr << "Resource: " << url << " unavailable - " << http_code << "\n";
-        CurlStatus::error = 1;
-//        exit(1);
-    }
-    */
-    // The resource is there, so lets go get it!
+    // start the download
+    CURLcode response;
     response = curl_easy_perform(curl_handle);
+
+    // check for download errors
     long http_code = 0;
     curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
-
-    /* check for errors */
     if(response != CURLE_OK || http_code != 200) {
 
-        std::cerr << "srcml: Unable to access URL " << url << std::endl;
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to access URL " + url);
 
+        // if there is only a single input source, and we have an error, then just error out here
         if (global_srcml_request.input_sources.size() == 1)
             exit(1);
 
-        CurlStatus::error = 1;
     } else {
-        CurlStatus::error = 0;
+
+        // ok, no errors, but may have cached data in the buffer, especially for small files
+        if (!write_info.buffer.empty()) {
+            write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size());
+        }
     }
-    CurlStatus::latch.count_down();
 
-    fclose(outfile);
+    // close the output file descriptor we were writing the download to
+    close(write_info.outfd);
 
-    // make sure to close out libcurl read here
-    /* cleanup curl stuff */
+    // cleanup out download
     curl_easy_cleanup(curl_handle);
 
-    /* we're done with libcurl, so clean it up */
+    // all done with libcurl
     curl_global_cleanup();
 }
 
@@ -148,7 +160,7 @@ void input_curl(srcml_input_src& input) {
    	    // create a single thread to prefix decompression
         boost::thread input_thread(
             boost::bind(
-                curl_it_all,
+                curl_download_url,
                 srcml_request_t(),
                 srcml_input_t(1, input),
                 srcml_output_dest("-", fds[1])

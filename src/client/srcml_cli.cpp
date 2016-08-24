@@ -25,6 +25,7 @@
 #include <boost/program_options.hpp>
 #include <boost/foreach.hpp>
 #include <stdlib.h>
+#include <srcml_logger.hpp>
 
 namespace prog_opts = boost::program_options;
 
@@ -118,11 +119,11 @@ prog_opts::options_description general("GENERAL OPTIONS");
 prog_opts::options_description src2srcml_options("CREATING SRCML");
 prog_opts::options_description srcml2src_options("EXTRACTING SOURCE CODE");
 prog_opts::options_description query_transform("TRANSFORMATIONS");
-prog_opts::options_description positional_options("positional");
-prog_opts::options_description deprecated_options("Deprecated Options");
-prog_opts::options_description debug_options("Debug Options");
-prog_opts::options_description experimental_options("Experimental Options");
-prog_opts::options_description all("All Options");
+prog_opts::options_description positional_options("POSITIONAL");
+prog_opts::options_description deprecated_options("DEPRECATED OPTIONS");
+prog_opts::options_description debug_options("DEBUG OPTIONS");
+prog_opts::options_description experimental_options("EXPERIMENTAL OPTIONS");
+prog_opts::options_description all("ALL OPTIONS");
 
 prog_opts::options_description markup_options("MARKUP OPTIONS");
 prog_opts::options_description xml_form("XML FORM");
@@ -138,7 +139,7 @@ prog_opts::positional_options_description input_file;
 // tranformation check on input
 bool is_transformation(const srcml_input_src& input);
 
-/* DREW:  Most of the no parameter options could be recorded this way */
+/* Most of the no parameter options could be recorded this way */
 template <int option>
 void option_markup(bool opt) {
     /*
@@ -155,7 +156,22 @@ void option_markup(bool opt) {
 template <int command>
 void option_command(bool opt) {
     if (opt)
-        srcml_request.command |= command;
+      srcml_request.command |= command;
+}
+
+// deprecated option command
+// (This is required as non-deprecated options may use same values)
+template <int command>
+void option_command_deprecated(bool opt) {
+    if (opt) {
+      srcml_request.command |= command;
+
+      // Notify user of deprecated options
+      if (command == SRCML_COMMAND_UNITS)
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: use of option --units or -n is deprecated");
+      if (command == SRCML_COMMAND_EXPRESSION)
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: use of option --expression or -e is deprecated");
+    }
 }
 
 // Generic fields
@@ -186,7 +202,7 @@ template <>
 void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-        std::cerr << "srcml: invalid src encoding \"" << value.c_str() << "\"\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: invalid src encoding \"" + value + "\"");
         exit(CLI_ERROR_INVALID_ARGUMENT);
     }
     srcml_request.src_encoding = value;
@@ -197,7 +213,7 @@ template <>
 void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) {
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-        std::cerr << "srcml: invalid xml encoding \"" << value.c_str() << "\"\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: invalid xml encoding \"" + value + "\"");
         exit(CLI_ERROR_INVALID_ARGUMENT);
     }
     srcml_request.att_xml_encoding = value;
@@ -209,7 +225,7 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
 
     // check language
     if (value.empty() || srcml_check_language(value.c_str()) == 0) {
-        std::cerr << "srcml: invalid language \"" << value.c_str() << "\"\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: invalid language \"" + value + "\"");
         exit(6); //ERROR CODE TBD
     }
     srcml_request.att_language = value;
@@ -221,7 +237,7 @@ void option_field<&srcml_request_t::tabs>(int value) {
 
     // check tabstop
     if (value < 1) {
-        std::cerr << "srcml: " << value << " is an invalid tab stop. Tab stops must be 1 or higher.\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::to_string(value) + " is an invalid tab stop. Tab stops must be 1 or higher.");
         exit(1); //ERROR CODE TBD
     }
 
@@ -252,7 +268,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
     {
       std::size_t delim = value.find("=");
       if (delim == std::string::npos) {
-        std::cerr << "srcml: xmlns format missing \"=\"\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: xmlns format missing \"=\"");
         exit(1); //ERROR CODE TBD
       }
 
@@ -415,7 +431,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         deprecated_options.add_options()
-            ("units,n", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
+            ("units,n", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
+            ("expression,e", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
             ;
 
         debug_options.add_options()
@@ -430,7 +447,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("compress,z", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMPRESS>), "output in gzip format")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
-            ("expression,e", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_EXPRESSION>), "expression mode for translating a single expression not in a statement")
             ;
 
         // Group src2srcml Options
@@ -466,11 +482,13 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
             BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
               if (option.string_key == "element" && srcml_request.xpath_query_support.size() < 1) {
-                std::cerr << "srcml: element option must follow an --xpath option\n";
+
+                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: element option must follow an --xpath option");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
               }
               if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() < 1) {
-                std::cerr << "srcml: attribute option must follow an --xpath option\n";
+
+                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: attribute option must follow an --xpath option");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
               }
 
@@ -544,24 +562,24 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             continue;
           }
 
-          std::cerr << "srcml: prefix " << "\"" << prefix << "\" assigned multiple URIs \"" << uri << "\", \"" << srcml_request.xmlns_namespaces[prefix] << "\"\n";
+          SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: prefix \"" + prefix + "\" assigned multiple URIs \"" + uri + "\", \"" + srcml_request.xmlns_namespaces[prefix] + "\"");
           exit(1); // TODO Need a real error code
         }
 
     }
     // Unknown Option
     catch(boost::program_options::unknown_option& e) {
-        std::cerr << "srcml: " << e.what() << "\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(e.what()));
         exit(3);
     }
     // Missing Option Value
     catch(boost::program_options::error_with_option_name& e) {
-        std::cerr << "srcml: " << e.what() << "\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(e.what()));
         exit(7);
     }
     // Catch all other issues with generic error
     catch(std::exception& e) {
-        std::cerr << "srcml: " << e.what() << "\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(e.what()));
         exit(1);
     }
 
@@ -579,7 +597,7 @@ std::pair<std::string, std::string> custom_parser(const std::string& s) {
 // Set to detect option conflicts
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
     if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
-        std::cerr << "srcml: " << "Conflicting options '" << opt1 << "' and '" << opt2 << "'.\n";
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Conflicting options '" + std::string(opt1) + "' and '" + std::string(opt2) + "'.");
         exit(15);
     }
 }
@@ -634,13 +652,13 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
 
   // Attribute must have a value
   if (attrib_equals == std::string::npos) {
-    std::cerr << "srcml: the attribute " << vals << "is missing a value\n";
+    SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: the attribute " + vals + "is missing a value");
     exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 
   // Missing prefix requires an element with a prefix
   if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)) {
-    std::cerr << "srcml: the attribute " << vals << " is missing a prefix or an element with a prefix\n";
+    SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: the attribute " + vals + " is missing a prefix or an element with a prefix");
     exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 

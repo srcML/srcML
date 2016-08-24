@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# use the srcml from the bin directory of the build
+SRCML='../../bin/srcml'
+
 # optionally use max-threads, if set in CMakeLists.txt
 if [ $# -ge 2 ] && [[ "${1}" == *"jobs"* ]] ; then
     MAX_THREADS="${1}"
@@ -59,10 +62,10 @@ echo "${SIZE_ORIGINAL}" | tee -a "${SLOG}"
 
 # ----------------- source-only/ --> srcml -----------------------
 UNZOUTPUT="${NAME}-output.xml" # output from
-echo "srcml ${MAX_THREADS} ${NAME} --in-order -o ${UNZOUTPUT}" | tee -a "${TLOG}"
+echo "$SRCML ${MAX_THREADS} ${NAME} --in-order -o ${UNZOUTPUT}" | tee -a "${TLOG}"
 
 # store timed output; redirect stderr to stdout to store time
-TIME="$(time ( srcml ${MAX_THREADS} ${NAME} --in-order -o ${UNZOUTPUT} ) 2>&1 1>/dev/null )"
+TIME="$(time ( $SRCML ${MAX_THREADS} ${NAME} --in-order -o ${UNZOUTPUT} ) 2>&1 1>/dev/null )"
 echo "${TIME}" | tee -a "${TLOG}"
 
 # store srcml on uncompressed size
@@ -72,10 +75,10 @@ echo "${SIZE_OUTPUT}" | tee -a "${SLOG}"
 # ---------------- source-only.tar.gz --> srcml ----------------
 echo | tee -a "${TLOG}"
 XZOUTPUT="${SRCZNAME}-output.xml"
-echo "srcml ${MAX_THREADS} ${SRCZNAME} --in-order -o ${XZOUTPUT}" | tee -a "${TLOG}"
+echo "$SRCML ${MAX_THREADS} ${SRCZNAME} --in-order -o ${XZOUTPUT}" | tee -a "${TLOG}"
 
 # store timed output; redirect stderr to stdout to store time
-TIME="$(time ( srcml ${MAX_THREADS} ${SRCZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
+TIME="$(time ( $SRCML ${MAX_THREADS} ${SRCZNAME} --in-order -o ${XZOUTPUT} ) 2>&1 1>/dev/null )"
 echo "${TIME}" | tee -a "${TLOG}"
 
 # store output size
@@ -87,13 +90,31 @@ echo "cmp ${XZOUTPUT} ${UNZOUTPUT}" | tee -a "${DLOG}"
 DIFF="$( cmp ${XZOUTPUT} ${UNZOUTPUT} )"
 echo "${DIFF}" | tee -a "${DLOG}"
 
+# ---------- https://source-only.tar.gz --> srcml --------------
+echo | tee -a "${TLOG}"
+REMOTEXZOUTPUT="${SRCZNAME}-output.xml"
+echo "$SRCML ${MAX_THREADS} ${location} --in-order -o ${REMOTEXZOUTPUT}" | tee -a "${TLOG}"
+
+# store timed output; redirect stderr to stdout to store time
+TIME="$(time ( $SRCML ${MAX_THREADS} ${location} --in-order -o ${REMOTEXZOUTPUT} ) 2>&1 1>/dev/null )"
+echo "${TIME}" | tee -a "${TLOG}"
+
+# store output size
+REMOTEZSIZE_OUTPUT="$(du -hs ${REMOTEXZOUTPUT})"
+echo "${REMOTEZSIZE_OUTPUT}" | tee -a "${SLOG}"
+
+# cmp srcml output from the local compressed output
+echo "cmp ${XZOUTPUT} ${REMOTEXZOUTPUT}" | tee -a "${DLOG}"
+DIFF="$( cmp ${XZOUTPUT} ${REMOTEXZOUTPUT} )"
+echo "${DIFF}" | tee -a "${DLOG}"
+
 # -------------- srcml --> source-only/ ------------------------
 echo | tee -a "${TLOG}" "${DLOG}"
 SMLOUTPUTDIR="${NAME}-from-srcml"
-echo "srcml ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR}" | tee -a "${TLOG}"
+echo "$SRCML ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR}" | tee -a "${TLOG}"
 
 # store timed output
-TIME="$(time ( srcml ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR} ) 2>&1 1>/dev/null )"
+TIME="$(time ( $SRCML ${MAX_THREADS} ${UNZOUTPUT} --to-dir=${SMLOUTPUTDIR} ) 2>&1 1>/dev/null )"
 echo "${TIME}" | tee -a "${TLOG}"
 
 # store output size
@@ -107,10 +128,11 @@ echo "${DIFF}" | tee -a "${DLOG}"
 
 
 # keep logs/* and cache/*; remove output/*
-rm "${SRCZNAME}"   # compressed file soucrce-only-tar.gz
-rm -r "${NAME}"    # uncompressed directory soucrce-only-tar/
-rm "${XZOUTPUT}"   # srcml output from running on soucrce-only-tar.gz
-rm "${UNZOUTPUT}"  # srcml output from running on soucrce-only-tar/
+rm "${SRCZNAME}"        # compressed file source-only-tar.gz
+rm -r "${NAME}"         # uncompressed directory source-only-tar/
+rm "${XZOUTPUT}"        # srcml output from running on source-only-tar.gz
+rm "${REMOTEXZOUTPUT}"  # srcml output from running on https://source-only-tar.gz
+rm "${UNZOUTPUT}"       # srcml output from running on source-only-tar/
 rm -r "${SMLOUTPUTDIR}" # created from srcml --to-dir
 
 echo | tee -a "${TLOG}" "${DLOG}" "${SLOG}"

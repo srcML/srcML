@@ -183,14 +183,17 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
     } catch (...) {
 
-        fprintf(stderr, "srcml: Unable to open file %s\n", original_filename.c_str());
-        if (unit)
-            srcml_unit_free(unit);
-        unit = 0;
-        if (request)
-            delete request;
-        request = 0;
-        return;
+        request->errormsg = std::string("srcml: Unable to open file ");
+        *(request->errormsg) += original_filename;
+        *(request->errormsg) += "\n";
+
+//        if (unit)
+//            srcml_unit_free(unit);
+//        unit = 0;
+//        if (request)
+//            delete request;
+//        request = 0;
+//        return;
     }
 
     // schedule unit for output

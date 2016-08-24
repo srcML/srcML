@@ -139,19 +139,20 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
     xpath_query_units process(options, compiled_xpath, oarchive, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value);
     srcSAXController control(input_buffer);
 
+    int status = 0;
     try {
 
         control.parse(&process);
 
     } catch(SAXError error) {
 
-        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
-
+        //        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+        status = 1;
     }
 
     xmlXPathFreeCompExpr(compiled_xpath);
 
-    return 0;//status;
+    return status;
 
 }
 
