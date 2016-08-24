@@ -1056,7 +1056,7 @@
             <Elements>
                 <Element name="struct" />
                 <Subelement name="name" />
-                <Subelement name="super" />
+                <Subelement name="super_list" />
             </Elements>
             <XPathQueries>
                 <XPath path="//src:struct">
@@ -1075,7 +1075,7 @@
             <Elements>
                 <Element name="interface" />
                 <Subelement name="name" />
-                <Subelement name="super" />
+                <Subelement name="super_list" />
                 <Subelement name="block" />
             </Elements>
             <XPathQueries>
@@ -1215,17 +1215,27 @@
             <Example file="CS-remove-1.cs" />
         </DocEntry>
 
-        <DocEntry title="inheritance list">
+        <DocEntry title="deriviation list">
+            <Elements>
+                <Element name="super_list" />
+                <Subelement name="super" />
+            </Elements>
+            <XPathQueries>
+                <XPath path="//src:class[src:super_list]">
+                    <Desc>Find all classes with at least one super class</Desc>
+                </XPath>
+            </XPathQueries>
+            <Example file="CS-inheritance-1.cs" />
+        </DocEntry>
+
+        <DocEntry title="deriviation">
             <Elements>
                 <Element name="super" />
                 <Subelement name="specifier" />
                 <Subelement name="name" />
             </Elements>
             <XPathQueries>
-                <XPath path="//src:class[src:super]">
-                    <Desc>Find all classes with at least one super class</Desc>
-                </XPath>
-                <XPath path="//src:class[src:super/src:name[. = 'bar']]">
+                <XPath path="//src:class[src:super_list/src:super/src:name[. = 'bar']]">
                     <Desc>Find all classes that inherit from <code class="inline">bar</code></Desc>
                 </XPath>
             </XPathQueries>
