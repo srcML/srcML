@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./prlctlall.py --test exec 'bash -c "cd srcML; svn update; cd ..; chown -R srcml:srcml srcML"'
+./vmctl.py --test exec 'bash -c "cd srcML; svn update; cd ..; chown -R srcml:srcml srcML"'
 
 URL="http://www.sdml.info/projects/srcml/trunk8"
 
@@ -39,8 +39,8 @@ scp srcML.tar.gz ubuntu16test64:/srcML
 curl ${URL}/srcML-OSX.tar.gz -o srcML.tar.gz
 cp srcML.tar.gz ~/srcML
 
-./prlctlall.py --test exec 'bash -c "cd srcML; tar xvf srcML.tar.gz"'
-./prlctlall.py --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd srcML/trunk/test/; rm -f srcMLTestReport*; make clean; make;"'
+./vmctl.py --test exec 'bash -c "cd srcML; tar xvf srcML.tar.gz"'
+./vmctl.py --test exec 'bash -c "export SRC2SRCML=\"/srcML/srcML/src2srcml\"; export SRCML2SRC=\"/srcML/srcML/srcml2src\"; cd srcML/trunk/test/; rm -f srcMLTestReport*; make clean; make;"'
 
 cd srcML
 svn update
@@ -51,5 +51,5 @@ cd trunk/test/
 rm -f srcMLTestReport*
 make clean; make
 
-~/prlctlall.py --test exec 'bash -c "grep -a \"Errors:\" srcML/trunk/test/srcMLTestReport*"'
+~/vmctl.py --test exec 'bash -c "grep -a \"Errors:\" srcML/trunk/test/srcMLTestReport*"'
 grep -a "Errors:" srcMLTestReport*
