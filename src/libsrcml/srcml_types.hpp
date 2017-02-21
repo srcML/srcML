@@ -66,6 +66,8 @@ const unsigned int SRCML_OPTION_DEBUG_TIMER       = 1<<17;
 const unsigned int SRCML_OPTION_DEBUG             = 1<<24;
 /** Turn on old optional markup behaviour */
 const unsigned int SRCML_OPTION_OPTIONAL_MARKUP   = 1<<20;
+/** Is a fragment, i.e., no unit element */
+const unsigned int SRCML_OPTION_FRAGMENT = 1<<21;
 
  /** Create an archive */
 const unsigned int SRCML_OPTION_ARCHIVE           = 1<<0;
