@@ -46,6 +46,21 @@ elif os.path.exists('../bin/Debug/libsrcml.so') :
     LIBSRCML_PATH = "../bin/Debug/libsrcml.so"
 elif os.path.exists('../bin/Debug/libsrcml.dll') :
     LIBSRCML_PATH = "../bin/Debug/libsrcml.dll"
+# Note: Some of the following do not make sense
+# to be in /usr/bin or /usr/local/bin, so could be
+# weeded out
+elif os.path.exists('/usr/local/lib/libsrcml.dylib') :
+    LIBSRCML_PATH = "/usr/local/lib/libsrcml.dylib"
+elif os.path.exists('/usr/local/lib/libsrcml.so') :
+    LIBSRCML_PATH = "/usr/local/lib/libsrcml.so"
+elif os.path.exists('/usr/local/lib/libsrcml.dll') :
+    LIBSRCML_PATH = "/usr/local/lib/libsrcml.dll"
+elif os.path.exists('/usr/lib/libsrcml.dylib') :
+    LIBSRCML_PATH = "/usr/lib/libsrcml.dylib"
+elif os.path.exists('/usr/lib/libsrcml.so') :
+    LIBSRCML_PATH = "/usr/lib/libsrcml.so"
+elif os.path.exists('/usr/lib/libsrcml.dll') :
+    LIBSRCML_PATH = "/usr/lib/libsrcml.dll"
 
 libsrcml = cdll.LoadLibrary(LIBSRCML_PATH)
 
