@@ -66,7 +66,7 @@ bzip2 dir2/b.cpp
 
 createfile dir2/c.cpp "\nc;"
 bzip2 dir2/c.cpp
-gzip dir2/c.cpp.bz2
+gzip -f dir2/c.cpp.bz2
 
 createfile dir2/d.cpp "\nd;"
 find dir2/d.cpp -print | cpio --quiet -o > dir2/d.cpp.cpio
@@ -80,13 +80,13 @@ bzip2 dir2/e.cpp.cpio
 createfile dir2/f.cpp "\nf;"
 find dir2/f.cpp -print | cpio --quiet -o > dir2/f.cpp.cpio
 rm dir2/f.cpp
-gzip dir2/f.cpp.cpio
+gzip -f dir2/f.cpp.cpio
 
 createfile dir2/g.cpp "\ng;"
-gzip dir2/g.cpp
+gzip -f dir2/g.cpp
 
 createfile dir2/h.cpp "\nh;"
-gzip dir2/h.cpp
+gzip -f dir2/h.cpp
 bzip2 dir2/h.cpp.gz
 
 createfile dir2/i.cpp "\ni;"
@@ -121,7 +121,7 @@ bzip2 dir2/o.zip
 createfile dir2/p.cpp "\np;"
 zip dir2/p.zip dir2/p.cpp -q
 rm dir2/p.cpp
-gzip dir2/p.zip
+gzip -f dir2/p.zip
 
 createfile dir2/q.cpp "\nq;"
 
