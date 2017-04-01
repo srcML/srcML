@@ -58,6 +58,19 @@ createfile dir/file.c  "\na;"
 createfile dir/file.cpp "\na;"
 createfile dir/file.java "\na;"
 
+# Check typical source directory
+src2srcml dir --quiet -o dir/dir.xml --in-order
+check dir/dir.xml 3<<< "$output"
+
+src2srcml dir --quiet --in-order -o dir/dir.xml
+check dir/dir.xml 3<<< "$output"
+
+src2srcml --in-order dir --quiet -o dir/dir.xml
+check dir/dir.xml 3<<< "$output"
+
+src2srcml dir --quiet --in-order
+check 3<<< "$output"
+
 # directory of source, compressed, and compressed archive variations
 createfile dir2/a.cpp "\na;"
 
@@ -124,19 +137,6 @@ rm dir2/p.cpp
 gzip -f dir2/p.zip
 
 createfile dir2/q.cpp "\nq;"
-
-# Check typical source directory
-src2srcml dir --quiet -o dir/dir.xml --in-order
-check dir/dir.xml 3<<< "$output"
-
-src2srcml dir --quiet --in-order -o dir/dir.xml
-check dir/dir.xml 3<<< "$output"
-
-src2srcml --in-order dir --quiet -o dir/dir.xml
-check dir/dir.xml 3<<< "$output"
-
-src2srcml dir --quiet --in-order
-check 3<<< "$output"
 
 # Check a directory with a combination of source, compressed, and archived files.
 src2srcml dir2 --quiet -o dir2/dir2.xml --in-order
