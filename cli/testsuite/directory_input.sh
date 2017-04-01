@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # test framework
-source $(dirname "$0")/framework_test.sh
+source $(dirname $BASH_SOURCE)/framework_test.sh
 
 # test directory input
 define output <<- 'STDOUT'
