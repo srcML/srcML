@@ -74,8 +74,11 @@
     				prequest->buffer.push_back('\a');
     			} else if (*p == 'b') {
     				prequest->buffer.push_back('\b');
-    			} else if (*p == 'e') {
-    				prequest->buffer.push_back('\e');
+
+                /* \e not directly supported in C, but echo command does */
+                } else if (*p == 'e') {
+                    prequest->buffer.push_back('\x1B');
+
     			} else if (*p == 'r') {
     				prequest->buffer.push_back('\r');
     			} else if (*p == 'v') {
