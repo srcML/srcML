@@ -422,7 +422,7 @@ Report bugs to collard@uakron.edu
 ## AUTHORS
 
 Written by Michael L. Collard, Michael Decker, Brian Bartman, Drew Guarnera,
-and Heather Michaud.
+and Heather Guarnera.
 
 
 
