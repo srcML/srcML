@@ -327,7 +327,11 @@ void create_src(const srcml_request_t& srcml_request,
             }
 
             archive_write_close(ar);
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+            archive_write_free(ar);
+#else
             archive_write_finish(ar);
+#endif
         }
 
     } catch (srcMLReadArchiveError e) {

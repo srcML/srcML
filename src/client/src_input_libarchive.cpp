@@ -254,5 +254,9 @@ void src_input_libarchive(ParseQueue& queue,
 
         ++count;
     }
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+    archive_read_free(arch);
+#else
     archive_read_finish(arch);
+#endif
 }

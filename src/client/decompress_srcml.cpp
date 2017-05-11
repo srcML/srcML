@@ -95,5 +95,9 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
     close(*destination.fd);
 
     archive_read_close(libarchive_srcml);
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+    archive_read_free(libarchive_srcml);
+#else
     archive_read_finish(libarchive_srcml);
+#endif
 }
