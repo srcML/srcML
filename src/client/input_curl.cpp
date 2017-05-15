@@ -45,7 +45,7 @@ struct curl_write_info {
     std::string buffer;
 };
 
-static const int CURL_MAX_ERROR_SIZE = 100;
+static const size_t CURL_MAX_ERROR_SIZE = 100;
 
 /*
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
@@ -76,7 +76,7 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 }
 
 // downloads URL into file descriptor
-void curl_download_url(const srcml_request_t& srcml_request,
+void curl_download_url(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
 

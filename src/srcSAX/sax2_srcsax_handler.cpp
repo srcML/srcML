@@ -521,19 +521,20 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
 
     if(state->context->handler->start_element) {
 
-       int ns_length = state->root.nb_namespaces * 2;
-       for (int i = 0; i < ns_length; i += 2)
-        if(prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
-            prefix = state->root.namespaces[i];
+        int ns_length = state->root.nb_namespaces * 2;
+        for (int i = 0; i < ns_length; i += 2) {
+            if(prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
+                prefix = state->root.namespaces[i];
+        }
 
-        for (int i = 1; i < ns_length; i += 2)
+        for (int i = 1; i < ns_length; i += 2) {
             if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
                 URI = state->root.namespaces[i];
-
+        }
         state->libxml2_namespaces = namespaces;
         state->libxml2_attributes = attributes;
         state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                nb_namespaces, 0, nb_attributes, 0);
+            nb_namespaces, 0, nb_attributes, 0);
         state->libxml2_namespaces = 0;
         state->libxml2_attributes = 0;
     }

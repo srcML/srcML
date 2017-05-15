@@ -541,8 +541,9 @@ public :
 
         a_node->children = a_node_children;
 
-        if (hashprop)
+        if (hashprop) {
             ;
+        }
         //xmlFreeProp(itemprop);
     }
 
@@ -731,7 +732,7 @@ public :
         if ((int)result_nodes->floatval == result_nodes->floatval) {
             sprintf(buffer, "%d\n", (int)result_nodes->floatval);
         } else {
-            sprintf(buffer, "%lf\n", result_nodes->floatval);
+            sprintf(buffer, "%f\n", result_nodes->floatval);
         }
         xmlOutputBufferWriteString(buf, buffer);
     }
