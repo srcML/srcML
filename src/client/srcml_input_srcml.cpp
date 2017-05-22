@@ -29,7 +29,7 @@
 #include <srcmlns.hpp>
 #include <srcml_logger.hpp>
 
-void srcml_input_srcml(ParseQueue& queue,
+int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_input_src& srcml_input,
                        const boost::optional<size_t> & revision) {
@@ -49,7 +49,7 @@ void srcml_input_srcml(ParseQueue& queue,
         else
             SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open srcml URL " + srcml_input.filename);
         srcml_archive_close(srcml_input_archive);
-        return;
+        return 0;
     }
 
     if (SRCML_COMMAND_XML & SRCMLOptions::get()) {
@@ -103,4 +103,5 @@ void srcml_input_srcml(ParseQueue& queue,
         exit(4);
     }
 
+    return 1;
 }

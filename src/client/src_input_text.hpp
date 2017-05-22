@@ -28,7 +28,7 @@
 #include <string>
 #include <parse_queue.hpp>
 
-void src_input_text(ParseQueue& queue,
+int src_input_text(ParseQueue& queue,
                     srcml_archive* srcml_arch,
                     const srcml_request_t& srcml_request,
                     const std::string& input_file);

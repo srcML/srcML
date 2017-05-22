@@ -41,7 +41,11 @@
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
 
-void srcml_handler_dispatch(ParseQueue& queue,
+extern srcml_output_dest gdestination;
+srcml_archive* gsrcml_arch = 0;
+bool createdsrcml = false;
+
+int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input) {
@@ -53,41 +57,56 @@ void srcml_handler_dispatch(ParseQueue& queue,
         // all other srcml compressions require a per-input decompression stage
         srcml_input_src uninput = input;
         input_file(uninput);
-        srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol == "text") {
 
-        src_input_text(queue, srcml_arch, srcml_request, input.filename);
+        return src_input_text(queue, srcml_arch, srcml_request, input.filename);
 
     } else if (input.protocol == "filelist") {
 
-        src_input_filelist(queue, srcml_arch, srcml_request, input);
+        int num = src_input_filelist(queue, srcml_arch, srcml_request, input);
+
+        if (num && !createdsrcml && input.protocol == "filelist") {
+            createdsrcml = true;
+
+            int status = 0;
+            if (contains<int>(gdestination)) {
+
+                status = srcml_archive_write_open_fd(gsrcml_arch, *gdestination.fd);
+
+            } else {
+
+                status = srcml_archive_write_open_filename(gsrcml_arch, gdestination.c_str(), 0);
+            }
+        }
+        return num;
 
     } else if (input.protocol == "file" && input.isdirectory) {
 
-        src_input_filesystem(queue, srcml_arch, srcml_request, input);
+        return src_input_filesystem(queue, srcml_arch, srcml_request, input);
 
     } else if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
        
-        src_input_file(queue, srcml_arch, srcml_request, input);
+        return src_input_file(queue, srcml_arch, srcml_request, input);
 
     } else if (input.protocol != "file" && curl_supported(input.protocol) && input.extension == ".xml") { 
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input;
         input_curl(uninput);
-        srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input;
         input_curl(uninput);
-        src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
+        return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
 
     } else {
 
-        src_input_libarchive(queue, srcml_arch, srcml_request, input);
+        return src_input_libarchive(queue, srcml_arch, srcml_request, input);
     }
 }
 
@@ -206,9 +225,10 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     int status = 0;
+        /* when no archive, this one is just used as a clone, so just don't open it */
+    /*
     if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
 
-        /* when no archive, this one is just used as a clone, so just don't open it */
 
     } else if (contains<int>(destination)) {
 
@@ -216,8 +236,20 @@ void create_srcml(const srcml_request_t& srcml_request,
     } else {
         status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), compression);
     }
-
+*/
     // gzip compression available directly from libsrcml
+
+    gdestination = destination;
+ 
+    gsrcml_arch = srcml_arch;
+
+    // a clone of the intended srcML archive is created
+    // the only purpose is to allow files to be parsed, without opening
+    // the real destination archive.
+    srcml_archive* csrcml_arch = srcml_archive_clone(srcml_arch);
+    char buffer[100];
+    size_t size;
+    srcml_archive_write_open_memory(csrcml_arch, (char**) &buffer, &size);
 
     // setup the parsing queue
     TraceLog log(SRCMLOptions::get());
@@ -235,7 +267,10 @@ if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.com
 return; // stdin was requested, but no data was received
 }
 */
-        srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input);
+
+        int numhandled = srcml_handler_dispatch(parse_queue, csrcml_arch, srcml_request, input);
+        if (!numhandled)
+            status = 1;
     }
 
     // wait for the parsing and writing queues to finish
@@ -245,10 +280,15 @@ return; // stdin was requested, but no data was received
     log.report();
     
     // close the created srcML archive
-    srcml_archive_close(srcml_arch);
-    srcml_archive_free(srcml_arch);
+    if (createdsrcml) {
+        srcml_archive_close(srcml_arch);
+        srcml_archive_free(srcml_arch);
+    }
 
     // if we were writing to a file descriptor, then close it
     if (contains<int>(destination))
         close(*destination.fd);
+
+    if (status == 1)
+        exit(1);
 }

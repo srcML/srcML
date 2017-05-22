@@ -36,6 +36,9 @@
 
 #include <curl_input_file.hpp>
 
+extern srcml_archive* gsrcml_arch;
+extern int curl_error;
+
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     archive* arch = archive_read_new();
@@ -99,7 +102,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue,
+int src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input_file) {
@@ -111,7 +114,7 @@ void src_input_libarchive(ParseQueue& queue,
     if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) | input_file.skip) {
         // if we are not verbose, then just end this attemp
         if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
-            return;
+            return 0;
         }
 
         // form the parsing request
@@ -127,12 +130,12 @@ void src_input_libarchive(ParseQueue& queue,
         // schedule for parsing
         queue.schedule(prequest);
 
-        return;
+        return 1;
     }
 
     archive* arch = libarchive_input_file(input_file);
     if (!arch) {
-        return;
+        return 0;
     }
 
     /* In general, go through this once for each time the header can be read
@@ -144,6 +147,9 @@ void src_input_libarchive(ParseQueue& queue,
     while (status == ARCHIVE_OK &&
            (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
             (status == ARCHIVE_EOF && !count))) {
+
+        if (status == ARCHIVE_EOF && curl_error)
+            return 0;
 
         // skip any directories
         if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
@@ -159,6 +165,8 @@ void src_input_libarchive(ParseQueue& queue,
         }
 
         if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
+            srcml_archive_enable_full_archive(gsrcml_arch);
+            srcml_archive_enable_hash(gsrcml_arch);
             srcml_archive_enable_full_archive(srcml_arch);
             srcml_archive_enable_hash(srcml_arch);
         }
@@ -259,4 +267,6 @@ void src_input_libarchive(ParseQueue& queue,
 #else
     archive_read_finish(arch);
 #endif
+
+    return 0;
 }

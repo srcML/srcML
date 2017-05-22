@@ -39,7 +39,7 @@
 #include <iostream>
 
 // check stdin for data
-bool src_input_stdin() {
+int src_input_stdin() {
 
     // init file descriptor with stdin
     fd_set fds;
@@ -56,8 +56,8 @@ bool src_input_stdin() {
 
     // use select to see if stdin has data
     int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
-
     if (selectRetVal == -1) {
+
         SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "SELECT FAILED!");
         return false;
     }
@@ -65,5 +65,6 @@ bool src_input_stdin() {
         SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "NO DATA TO FETCH!");
         return false;
     }
-    return true;
+    
+    return 1;
 }

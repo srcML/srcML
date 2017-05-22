@@ -26,7 +26,7 @@
 #include <src_prefix.hpp>
 
 // Convert input to a ParseRequest and assign request to the processing queue
- void src_input_text(ParseQueue& queue,
+ int src_input_text(ParseQueue& queue,
  	srcml_archive* srcml_arch,
  	const srcml_request_t& srcml_request,
  	const std::string& input_file) {
@@ -100,4 +100,5 @@
     // schedule for parsing
     queue.schedule(prequest);
 
+    return 1;
 }

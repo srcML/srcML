@@ -31,7 +31,7 @@
 #include <list>
 #include <vector>
 
-void src_input_filesystem(ParseQueue& queue,
+int src_input_filesystem(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const std::string& input) {
@@ -71,4 +71,6 @@ void src_input_filesystem(ParseQueue& queue,
               // TODO: Are we ignoring other types? symlinks? Should state so here.
         }
     }
+
+    return 1;
 }
