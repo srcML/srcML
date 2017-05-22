@@ -79,6 +79,8 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
                 status = srcml_archive_write_open_filename(gsrcml_arch, gdestination.c_str(), 0);
             }
+            if (status != SRCML_STATUS_OK)
+                return 0;
         }
         return num;
 
