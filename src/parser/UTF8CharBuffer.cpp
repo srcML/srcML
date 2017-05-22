@@ -316,7 +316,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
     }
 
     srcMLIO * sio = new srcMLIO();
-    sio->context = (void *)fd;
+    sio->context = (void *)(size_t)fd;
     sio->read_callback = srcMLFdRead;
     sio->close_callback = 0;
 
