@@ -60,6 +60,8 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
                 status = srcml_archive_write_open_filename(gsrcml_arch, gdestination.c_str(), 0);
             }
+            if (status != SRCML_STATUS_OK)
+                return;
         }
 
         srcml_archive_write_unit(gsrcml_arch, request->unit);
