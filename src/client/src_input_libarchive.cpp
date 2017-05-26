@@ -268,5 +268,5 @@ int src_input_libarchive(ParseQueue& queue,
     archive_read_finish(arch);
 #endif
 
-    return 0;
+    return count;
 }
