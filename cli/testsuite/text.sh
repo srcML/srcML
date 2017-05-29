@@ -14,6 +14,19 @@ xmlcheck "$srcml"
 src2srcml -t "" -l "C++"
 check 3<<< "$srcml"
 
+src2srcml --text "" -l "C++"
+check 3<<< "$srcml"
+
+
+set +e
+#Boost prog options interprets this as a missing argument value
+src2srcml --text="" -l "C++"
+check_exit 7
+
+src2srcml --text -l "C++"
+check_exit 7
+set -e
+
 echo -n "" | src2srcml -l "C++"
 check 3<<< "$srcml"
 
@@ -22,6 +35,26 @@ check sub/a.cpp.xml 3<<< "$srcml"
 
 src2srcml -l C++ -t "" -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
+
+src2srcml --text "" -l "C++" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$srcml"
+
+src2srcml -l C++ --text "" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$srcml"
+
+set +e
+src2srcml --text="" -l "C++" -o sub/a.cpp.xml
+check_exit 7
+
+src2srcml -l C++ --text="" -o sub/a.cpp.xml
+check_exit 7
+
+src2srcml --text -l "C++" -o sub/a.cpp.xml
+check_exit 7
+
+src2srcml -l C++ --text -o sub/a.cpp.xml
+check_exit 7
+set -e
 
 # simple input
 define asrcml <<- 'STDOUT'
@@ -34,6 +67,12 @@ xmlcheck "$asrcml"
 src2srcml -t "a;" -l "C++"
 check 3<<< "$asrcml"
 
+src2srcml --text "a;" -l "C++"
+check 3<<< "$asrcml"
+
+src2srcml --text="a;" -l "C++"
+check 3<<< "$asrcml"
+
 echo -n "a;" | src2srcml -l "C++"
 check 3<<< "$asrcml"
 
@@ -41,6 +80,18 @@ src2srcml -t "a;" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$asrcml"
 
 src2srcml -l C++ -t "a;" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$asrcml"
+
+src2srcml --text "a;" -l "C++" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$asrcml"
+
+src2srcml -l C++ --text "a;" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$asrcml"
+
+src2srcml --text="a;" -l "C++" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$asrcml"
+
+src2srcml -l C++ --text="a;" -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$asrcml"
 
 # embedded newline
@@ -55,6 +106,12 @@ xmlcheck "$ansrcml"
 src2srcml -t "a;\n" -l "C++"
 check 3<<< "$ansrcml"
 
+src2srcml --text "a;\n" -l "C++"
+check 3<<< "$ansrcml"
+
+src2srcml --text="a;\n" -l "C++"
+check 3<<< "$ansrcml"
+
 echo "a;" | src2srcml -l "C++"
 check 3<<< "$ansrcml"
 
@@ -62,4 +119,16 @@ src2srcml -t "a;\n" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$ansrcml"
 
 src2srcml -l C++ -t "a;\n" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$ansrcml"
+
+src2srcml --text "a;\n" -l "C++" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$ansrcml"
+
+src2srcml -l C++ --text "a;\n" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$ansrcml"
+
+src2srcml --text="a;\n" -l "C++" -o sub/a.cpp.xml
+check sub/a.cpp.xml 3<<< "$ansrcml"
+
+src2srcml -l C++ --text="a;\n" -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$ansrcml"
