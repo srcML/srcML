@@ -17,14 +17,14 @@ check 3<<< "$srcml"
 src2srcml --text "" -l "C++"
 check 3<<< "$srcml"
 
+src2srcml --text="" -l "C++"
+check 3<<< "$srcml"
 
 set +e
-#Boost prog options interprets this as a missing argument value
-src2srcml --text="" -l "C++"
-check_exit 7
 
 src2srcml --text -l "C++"
 check_exit 7
+
 set -e
 
 echo -n "" | src2srcml -l "C++"
@@ -42,18 +42,20 @@ check sub/a.cpp.xml 3<<< "$srcml"
 src2srcml -l C++ --text "" -o sub/a.cpp.xml
 check sub/a.cpp.xml 3<<< "$srcml"
 
-set +e
 src2srcml --text="" -l "C++" -o sub/a.cpp.xml
-check_exit 7
+check sub/a.cpp.xml 3<<< "$srcml"
 
 src2srcml -l C++ --text="" -o sub/a.cpp.xml
-check_exit 7
+check sub/a.cpp.xml 3<<< "$srcml"
+
+set +e
 
 src2srcml --text -l "C++" -o sub/a.cpp.xml
 check_exit 7
 
 src2srcml -l C++ --text -o sub/a.cpp.xml
 check_exit 7
+
 set -e
 
 # simple input

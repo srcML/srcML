@@ -447,6 +447,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("compress,z", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMPRESS>), "output in gzip format")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
+            ("text-equals-null", prog_opts::value<std::string>()->implicit_value("")->notifier(&raw_text_args), "work around for null text")
             ;
 
         // Group src2srcml Options
@@ -590,8 +591,17 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 std::pair<std::string, std::string> custom_parser(const std::string& s) {
     if (s.find("--xmlns:") == 0)
         return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
-    else
-        return std::make_pair(std::string(), std::string());
+    
+    // Divert --text="" to a hidden option that allows empty args
+    if (s.find("--text=") == 0) {
+        std::string val = s.substr(s.find("=") + 1);
+        if (val == "")
+            return std::make_pair(std::string("text-equals-null"), std::string());
+        else
+            return std::make_pair(std::string("text"), std::string(val));
+    }
+
+    return std::make_pair(std::string(), std::string());
 }
 
 // Set to detect option conflicts
