@@ -358,7 +358,7 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
 srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
         general.add_options()
-            ("help,h", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
+            ("help,h", prog_opts::value<std::string>()->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppress status messages")
@@ -580,7 +580,19 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
     }
     // Missing Option Value
     catch(boost::program_options::error_with_option_name& e) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(e.what()));
+        std::string error_msg(e.what());
+        
+        /*
+            This allows for --help with no value (currently a work around for implicit issues)
+            We check the error message for a section to identify when --help is used without a value
+            and call the function manually to print the appropriate help message. 
+            Calls to option_help automatically exit the cli.
+        */
+        if (error_msg.find("'--help' is missing") != std::string::npos) {
+                option_help("");
+        }
+
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(error_msg));
         exit(7);
     }
     // Catch all other issues with generic error
