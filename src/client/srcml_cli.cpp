@@ -123,6 +123,7 @@ prog_opts::options_description positional_options("POSITIONAL");
 prog_opts::options_description deprecated_options("DEPRECATED OPTIONS");
 prog_opts::options_description debug_options("DEBUG OPTIONS");
 prog_opts::options_description experimental_options("EXPERIMENTAL OPTIONS");
+prog_opts::options_description implicit_value_handlers("IMPLICIT VALUE HANDLER");
 prog_opts::options_description all("ALL OPTIONS");
 
 prog_opts::options_description markup_options("MARKUP OPTIONS");
@@ -429,6 +430,11 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         positional_options.add_options()
             ("input-files", prog_opts::value< std::vector<std::string> >()->notifier(&positional_args), "input files")
             ;
+        
+        // Work arounds for dealing with implicit option values properly
+        implicit_value_handlers.add_options()
+            ("text-equals-null", prog_opts::value<std::string>()->implicit_value("")->notifier(&raw_text_args), "work around for null text")
+            ;
 
         deprecated_options.add_options()
             ("units,n", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
@@ -447,7 +453,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("compress,z", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMPRESS>), "output in gzip format")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
-            ("text-equals-null", prog_opts::value<std::string>()->implicit_value("")->notifier(&raw_text_args), "work around for null text")
             ;
 
         // Group src2srcml Options
@@ -460,7 +465,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // Group all Options
         all.add(general).add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options).add(srcml2src_options).
-            add(query_transform).add(positional_options).add(deprecated_options).add(debug_options).add(experimental_options);
+            add(query_transform).add(positional_options).add(implicit_value_handlers).add(deprecated_options).add(debug_options).add(experimental_options);
 
         // Positional Args
         input_file.add("input-files", -1);
