@@ -49,6 +49,11 @@ int src_input_filesystem(ParseQueue& queue,
 
         // process the files from the top directory
         BOOST_FOREACH(boost::filesystem::path& file, files) {
+            
+            // TODO: Are we ignoring other types? symlinks? Should state so here.
+            // Skip ALL symlinks (files or directories)
+            if (is_symlink(file))
+                continue;
 
             // regular files are passed to the handler
             if (is_regular_file(file)) {
@@ -67,8 +72,6 @@ int src_input_filesystem(ParseQueue& queue,
 
                 dirs.push_back(file);
             }
-
-              // TODO: Are we ignoring other types? symlinks? Should state so here.
         }
     }
 
