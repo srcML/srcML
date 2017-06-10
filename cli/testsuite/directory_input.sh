@@ -181,3 +181,8 @@ ln -s $(pwd)/symtest/b.cpp symtest/sim_b.cpp
 src2srcml symtest --quiet -o symtest/symtest.xml --in-order
 check symtest/symtest.xml 3<<< "$output3"
 
+#Cleanup
+rm -rf symtest
+rm -rf dir
+rm -rf dir2
+
