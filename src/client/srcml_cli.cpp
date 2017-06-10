@@ -30,7 +30,11 @@
 namespace prog_opts = boost::program_options;
 
 const char* SRCML_HEADER = "";
-const char* SRCML_FOOTER = "";
+
+const char* SRCML_FOOTER = "\n\
+  Have a question or need to report a bug?\n\
+  Contact us at http://www.srcml.org/support.html\n\
+  www.srcML.org";
 
 const char* SRC2SRCML_HEADER = "Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]\
   \n\n\
@@ -73,8 +77,9 @@ const char* SRC2SRCML_FOOTER = "Examples:\
   Set encoding of srcML file to ISO-8859-1:\n\
   srcml --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml\n\
   \n\
-  www.srcML.org\n\
-  Report bugs to collard@uakron.edu";
+  Have a question or need to report a bug?\n\
+  Contact us at http://www.srcml.org/support.html\n\
+  www.srcML.org";
 
 const char* SRCML2SRC_HEADER = "Usage: srcml [options] <srcML_infile>... [-o <src_outfile>]\
   \n\n\
@@ -109,8 +114,9 @@ const char* SRCML2SRC_FOOTER = "Examples:\
   Read from file m.cpp.xml, output language attribute to stdout:\n\
   srcml m.cpp.xml --show-language\n\
   \n\
-  www.srcML.org\n\
-  Report bugs to collard@uakron.edu";
+  Have a question or need to report a bug?\n\
+  Contact us at http://www.srcml.org/support.html\n\
+  www.srcML.org";
 
 srcml_request_t srcml_request;
 
