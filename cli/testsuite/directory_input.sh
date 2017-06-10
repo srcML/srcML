@@ -52,6 +52,25 @@ define output2 <<- 'STDOUT'
 
 xmlcheck "$output2"
 
+define output3 <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="0.9.5" url="symtest">
+
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.9.5" language="C++" filename="symtest/a.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.9.5" language="C++" filename="symtest/b.cpp" hash="127b042b36b196e169310240b313dd9fc065ccf2">
+	<expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="0.9.5" language="C++" filename="symtest/c.cpp" hash="b3b530fc0b5ee90a1e6ca6bb15d22907cde385cb">
+	<expr_stmt><expr><name>c</name></expr>;</expr_stmt></unit>
+
+	</unit>
+	STDOUT
+
+xmlcheck "$output3"
+
+
 # directory of just source
 createfile dir/file.aj "\na;"
 createfile dir/file.c  "\na;"
@@ -150,3 +169,15 @@ check dir2/dir2.xml 3<<< "$output2"
 
 src2srcml dir2 --quiet --in-order
 check 3<<< "$output2"
+
+#Ensure proper behavior with symbolic links (ignore them)
+createfile symtest/a.cpp "\na;"
+createfile symtest/b.cpp "\nb;"
+createfile symtest/c.cpp "\nc;"
+
+ln -s $(pwd)/symtest symtest/slink
+ln -s $(pwd)/symtest/b.cpp symtest/sim_b.cpp
+
+src2srcml symtest --quiet -o symtest/symtest.xml --in-order
+check symtest/symtest.xml 3<<< "$output3"
+
