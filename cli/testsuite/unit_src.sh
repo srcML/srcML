@@ -39,7 +39,7 @@ xmlcheck "$nestedfilesrc"
 
 # Deprecated warning message
 define deprecated_warning <<- 'STDERR'
-	srcml: use of option --units or -n is deprecated
+	WARNING srcml: use of option --units or -n is deprecated
 STDERR
 
 # test

@@ -38,10 +38,10 @@ public:
     static const int DEBUG_MSG = 1<<0;
 
     static void set(int options) {
-    	opts = options;
+      opts = options;
     }
 
-    static void log(int msg_type, const std::string& msg_text, int status = INT_MAX) {
+    static void log(int msg_type, const std::string& msg_text) {
 
       // Only print debug messages if the debug mode is enabled
       if ((msg_type == DEBUG_MSG) && !(opts & SRCML_DEBUG_MODE))
@@ -51,14 +51,22 @@ public:
       if (opts & SRCML_COMMAND_QUIET && !(msg_type == CRITICAL_MSG))
         return;
 
-      if (status != INT_MAX)
-        std::cerr << msg_text << status << "\n";
-      else
-        std::cerr << msg_text << "\n";
+      if (msg_type == CRITICAL_MSG)
+        std::cerr << "CRITICAL ";
+      if (msg_type == ERROR_MSG)
+        std::cerr << "ERROR ";
+      if (msg_type == WARNING_MSG)
+        std::cerr << "WARNING ";
+      if (msg_type == INFO_MSG)
+        std::cerr << "INFO ";
+      if (msg_type == DEBUG_MSG)
+        std::cerr << "DEBUG ";
+
+      std::cerr << msg_text << "\n";
     }
 
  private:
- 	static int opts;
+  static int opts;
 };
 
 #endif
