@@ -54,7 +54,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
-set(CPACK_PACKAGE_CONTACT "Software Developement Laboratories <bugs@srcML.org>")
+set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <bugs@srcML.org>")
  
 # package version
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
