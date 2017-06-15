@@ -32,6 +32,14 @@
 # * Put in a trap for cleanup in test file:
 #   trap { cleanup; } EXIT
 
+# need -z option on GNU sed, not available on BSD sed
+if [ -e /usr/local/bin/gsed ]
+then
+   SED="gsed"
+else
+   SED="sed"
+fi
+
 # close our stderr file descriptors
 exec 4>&-
 
@@ -179,11 +187,11 @@ check() {
         registerfile ${1}
 
         # compare the parameter file to the expected output
-        diff $1 <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/3)
+        diff $1 <($SED -z -e 's/\n\n$/\n/m' /dev/fd/3)
 
     elif [ -e /dev/fd/3 ]; then
         # redirection using immediate here document (<<) adds newline
-        diff $STDOUT <(perl -0 -pe 's/\n\n$/\n/m;' -pe "s/REVISION/${REVISION}/;" /dev/fd/3)
+        diff $STDOUT <($SED -z -e 's/\n\n$/\n/m;' -e "s/REVISION/${REVISION}/;" /dev/fd/3)
 
     else
         # check that the captured stdout is empty
@@ -193,10 +201,10 @@ check() {
     # verify expected stderr to the captured stderr
     if [ $# -ge 2 ]; then
         # compare the captured stderr to the required stderr
-        diff $2 <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/4)
+        diff $2 <($SED -z -e 's/\n\n$/\n/m' /dev/fd/4)
 
     elif [ -e /dev/fd/4 ]; then
-        diff $STDERR <(perl -0 -pe 's/\n\n$/\n/m' /dev/fd/4)
+        diff $STDERR <($SED -z -e 's/\n\n$/\n/m' /dev/fd/4)
 
     else
         # check that the captured stderr is empty
