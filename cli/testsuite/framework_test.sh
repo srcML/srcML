@@ -105,21 +105,22 @@ set -e
 set -o history
 export HISTIGNORE=check:\#
 HISTSIZE=2
-FIRSTHISTORYENTRY='fc -l -n -1'
+
+# output the first entry in the history file, without numbers
+firsthistoryentry() {
+    fc -l -n -1
+}
 
 CAPTURE_STDOUT=true
 CAPTURE_STDERR=true
 
 # variable $1 is set to the contents of stdin
 define() {
-    IFS= read -r -d '' ${1} || true;
-
-    # temporarily store the contents of the variable named in $1
-    CONTENT=${!1}
+    # read stdin into variable $1
+    IFS= read -r -d '' $1 || true
 
     # replace any mention of REVISION with the revision number,
-    # and put the revised contents of the variable named in $1
-    eval $1=\${CONTENT//REVISION/${REVISION}}
+    eval $1=\${$1//REVISION/${REVISION}}
 }
 
 # variable $1 is set to the contents of file $2
@@ -134,7 +135,7 @@ createfile() {
     fi
 
     # add contents to file
-    echo -ne "${2}" > ${1};
+    echo -ne "${2}" > ${1}
 
     # register to cleanup
     registerfile ${1}
@@ -142,16 +143,26 @@ createfile() {
 
 rmfile() { rm -f ${1}; }
 
-message() {
-    # return stdout and stderr to standard streams
+# capture stdout and stderr
+capture_output() {
+    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
+    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+}
+
+# uncapture stdout and stderr
+uncapture_output() {
     [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
     [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+}
+
+message() {
+    # return stdout and stderr to standard streams
+    uncapture_output
 
     # trace the command
     echo "$1" >&2
 
-    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
-    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+    capture_output
 
     true
 }
@@ -161,8 +172,7 @@ typeset STDERR=.stderr_$(basename $0 .sh)
 typeset STDOUT=.stdout_$(basename $0 .sh)
 
 # save stdout and stderr to our files
-[ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
-[ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+capture_output
 
 ##
 # checks the result of a command
@@ -176,11 +186,10 @@ typeset STDOUT=.stdout_$(basename $0 .sh)
 check() {
 
     # return stdout and stderr to standard streams
-    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
-    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+    uncapture_output
 
     # trace the command
-    $FIRSTHISTORYENTRY
+    firsthistoryentry
 
     # verify expected stderr to the captured stdout
     if [ $# -ge 1 ]; then
@@ -216,9 +225,8 @@ check() {
     # close our stderr file descriptors
     exec 4>&-
 
-    # # return to capturing stdout and stderr
-    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
-    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+    # return to capturing stdout and stderr
+    capture_output
 
     true
 }
@@ -232,11 +240,10 @@ check() {
 check_null() {
 
     # return stdout and stderr to standard streams
-    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
-    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+    uncapture_output
 
     # trace the command
-    $FIRSTHISTORYENTRY
+    firsthistoryentry
 
     # verify expected stderr to the captured stdout
 
@@ -247,8 +254,7 @@ check_null() {
     [ ! -s $STDERR ]
 
     # # return to capturing stdout and stderr
-    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
-    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+    capture_output
 
     true
 }
@@ -264,20 +270,18 @@ check_exit() {
     local exit_status=$?
 
     # return stdout and stderr to standard streams
-    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
-    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+    uncapture_output
 
     # trace the command
-    $FIRSTHISTORYENTRY
+    firsthistoryentry
 
     # verify expected stderr to the captured stdout
     if [ $exit_status -ne $1 ]; then
         exit 8
     fi
 
-    # # return to capturing stdout and stderr
-    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
-    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+    # return to capturing stdout and stderr
+    capture_output
 
     true
 }
@@ -286,7 +290,7 @@ check_exit() {
 # Currently only checks for well-formed xml, not DTD validity
 xmlcheck() {
 
-    if [ "${1:0:1}" != "<" ] ; then
+    if [ "${1:0:1}" != "<" ]; then
         xmllint --noout ${1}
     else
         echo "${1}" | xmllint --noout /dev/stdin
@@ -294,4 +298,3 @@ xmlcheck() {
 
     true
 }
-
