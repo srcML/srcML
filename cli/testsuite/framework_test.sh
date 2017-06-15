@@ -101,9 +101,11 @@ function srcml () {
 set -e
 
 # turn history on so we can output the command issued
+# note that the fc command accesses the history
 set -o history
 export HISTIGNORE=check:\#
 HISTSIZE=2
+FIRSTHISTORYENTRY='fc -l -n -1'
 
 CAPTURE_STDOUT=true
 CAPTURE_STDERR=true
@@ -178,7 +180,7 @@ check() {
     [ "$CAPTURE_STDERR" = true ] && exec 2>&6
 
     # trace the command
-    echo $(history | head -n 1 | cut -c 8-)
+    $FIRSTHISTORYENTRY
 
     # verify expected stderr to the captured stdout
     if [ $# -ge 1 ]; then
@@ -234,7 +236,7 @@ check_null() {
     [ "$CAPTURE_STDERR" = true ] && exec 2>&6
 
     # trace the command
-    echo $(history | head -n 1 | cut -c 8-)
+    $FIRSTHISTORYENTRY
 
     # verify expected stderr to the captured stdout
 
@@ -266,7 +268,7 @@ check_exit() {
     [ "$CAPTURE_STDERR" = true ] && exec 2>&6
 
     # trace the command
-    echo $(history | head -n 1 | cut -c 8-)
+    $FIRSTHISTORYENTRY
 
     # verify expected stderr to the captured stdout
     if [ $exit_status -ne $1 ]; then
