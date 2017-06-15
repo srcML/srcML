@@ -191,7 +191,7 @@ check() {
     # trace the command
     firsthistoryentry
 
-    # verify expected stderr to the captured stdout
+    # verify expected stdout to the captured stdout
     if [ $# -ge 1 ]; then
 
         # register to cleanup
