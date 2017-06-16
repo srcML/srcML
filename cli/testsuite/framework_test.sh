@@ -125,7 +125,7 @@ define() {
 }
 
 # variable $1 is set to the contents of file $2
-readfile() { ${1}="$(cat $2)"; }
+readfile() { ${1}="$(< $2)"; }
 
 # file with name $1 is created from the contents of string variable $2
 # created files are recorded so that cleanup can occur
