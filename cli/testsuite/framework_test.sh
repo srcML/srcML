@@ -116,9 +116,10 @@ CAPTURE_STDERR=true
 
 # variable $1 is set to the contents of stdin
 define() {
+
     # read stdin into variable $1
     IFS= read -r -d '' $1 || true
-
+ 
     # replace any mention of REVISION with the revision number,
     eval $1=\${$1//REVISION/${REVISION}}
 }
@@ -130,9 +131,7 @@ readfile() { ${1}="$(cat $2)"; }
 # created files are recorded so that cleanup can occur
 createfile() {
     # make directory paths as needed
-    if [ ! -d $(dirname $1) ]; then
-        mkdir -p $(dirname $1)
-    fi
+    mkdir -p $(dirname $1)
 
     # add contents to file
     echo -ne "${2}" > ${1}
@@ -173,8 +172,9 @@ compare_file_expected() {
 }
 
 # output filenames for capturing stdout and stderr from the command
-typeset STDERR=.stderr_$(basename $0 .sh)
-typeset STDOUT=.stdout_$(basename $0 .sh)
+base=$(basename $0 .sh)
+typeset STDERR=.stderr_$base
+typeset STDOUT=.stdout_$base
 
 # save stdout and stderr to our files
 capture_output
