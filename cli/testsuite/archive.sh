@@ -150,8 +150,150 @@ check sub/ab.cpp.xml 3<<< "$asrcml"
 
 
 # test issue #1063: nondeterministic failures when run multiple times
-for (( i = 0; i < 50; i++ )); do
-	src2srcml sub/a.cpp sub/b.cpp --in-order
-	check 3<<< "$nestedfile"
-done
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
+
+src2srcml sub/a.cpp sub/b.cpp --in-order
+check 3<<< "$nestedfile"
 
