@@ -167,6 +167,11 @@ message() {
     true
 }
 
+compare_file_expected() {
+
+    diff $1 <($SED -z -e 's/\n\n$/\n/m' $2)
+}
+
 # output filenames for capturing stdout and stderr from the command
 typeset STDERR=.stderr_$(basename $0 .sh)
 typeset STDOUT=.stdout_$(basename $0 .sh)
@@ -198,7 +203,7 @@ check() {
         registerfile ${1}
 
         # compare the parameter file to the expected output
-        diff $1 <($SED -z -e 's/\n\n$/\n/m' /dev/fd/3)
+        compare_file_expected $1 /dev/fd/3
 
     elif [ -e /dev/fd/3 ]; then
         # redirection using immediate here document (<<) adds newline
@@ -212,10 +217,10 @@ check() {
     # verify expected stderr to the captured stderr
     if [ $# -ge 2 ]; then
         # compare the captured stderr to the required stderr
-        diff $2 <($SED -z -e 's/\n\n$/\n/m' /dev/fd/4)
+        compare_file_expected $2 /dev/fd/4
 
     elif [ -e /dev/fd/4 ]; then
-        diff $STDERR <($SED -z -e 's/\n\n$/\n/m' /dev/fd/4)
+        compare_file_expected $STDERR /dev/fd/4
 
     else
         # check that the captured stderr is empty
