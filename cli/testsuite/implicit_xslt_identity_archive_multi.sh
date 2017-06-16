@@ -4,7 +4,7 @@
 source $(dirname "$0")/framework_test.sh
 
 # xslt identity transformation (archive of single file)
-define identiy_xslt <<- 'STDOUT'
+define identity_xslt <<- 'STDOUT'
 	<xsl:stylesheet
 	xmlns="http://www.srcML.org/srcML/src"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -34,7 +34,7 @@ define srcml <<- 'STDOUT'
 
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
-createfile identity.xsl "$identiy_xslt"
+createfile identity.xsl "$identity_xslt"
 
 srcml identity.xsl sub/a.cpp.xml
 check 3<<< "$srcml"
