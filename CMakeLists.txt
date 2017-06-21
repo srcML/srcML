@@ -48,12 +48,8 @@ if(BUILD_TIMING_TESTS)
     add_subdirectory(timing)
 endif()
 
-if(BUILD_UNIT_TESTS)
+if(BUILD_UNIT_TESTS OR BUILD_CLIENT_TESTS)
     add_subdirectory(test)
-endif()
-
-if(BUILD_CLIENT_TESTS)
-    add_subdirectory(cli)
 endif()
 
 if(BUILD_EXAMPLES)
