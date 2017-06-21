@@ -17,8 +17,10 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
 # Including the unit tests before building the tests in this file.
-add_subdirectory(unit)
-add_subdirectory(suite)
+if(BUILD_UNIT_TESTS)
+    add_subdirectory(unit)
+	add_subdirectory(suite)
+endif()
+
 add_subdirectory(client)
