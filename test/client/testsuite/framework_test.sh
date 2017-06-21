@@ -74,15 +74,15 @@ export PATH=.:$PATH
 echo "$SRC2SRCML"
 
 if [ -z "$SRC2SRCML" ]; then
-    SRC2SRCML='../../bin/srcml'
+    SRC2SRCML='../../../bin/srcml'
 fi
 
 if [ -z "$SRCML2SRC" ]; then
-    SRCML2SRC='../../bin/srcml'
+    SRCML2SRC='../../../bin/srcml'
 fi
 
 if [ -z "$SRCML"]; then
-    SRCML='../../bin/srcml'
+    SRCML='../../../bin/srcml'
 fi
 
 function src2srcml () {
