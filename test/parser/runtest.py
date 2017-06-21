@@ -39,11 +39,11 @@ xml_filename = ""
 
 srcmltranslator = os.environ.get("SRC2SRCML")
 if srcmltranslator == "" or srcmltranslator == None:
-    srcmltranslator = "../bin/src2srcml"
+    srcmltranslator = "../../bin/src2srcml"
 
 srcmlutility = os.environ.get("SRCML2SRC")
 if srcmlutility == "" or srcmlutility == None:
-    srcmlutility = "../bin/srcml2src"
+    srcmlutility = "../../bin/srcml2src"
 
 # Walk into directories in filesystem
 # Ripped from os module and slightly modified
@@ -375,7 +375,7 @@ if use_exec :
     print src2srcmlversion()
     print srcml2srcversion()
 else :
-    sys.path.append("../python/src")
+    sys.path.append("../../python/src")
     from srcml import *
     print version_string()
 
@@ -410,7 +410,7 @@ elif len(sys.argv) > 2:
         speclang = sys.argv[3]
 
 # base url
-base_dir = "suite"
+base_dir = "testsuite"
 
 errorlist = []
 

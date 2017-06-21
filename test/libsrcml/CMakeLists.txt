@@ -1,7 +1,7 @@
 ##
 # @file CMakeLists.txt
 #
-# @copyright Copyright (C) 2014-2014 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,11 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# add cli tests
-if (BUILD_LARGE_SYSTEMS_TESTS)
-    add_subdirectory(large_systems_test)
-endif()
+include_directories(.)
 
-if (BUILD_CLIENT_TESTS)
-    add_subdirectory(testsuite)
-endif()
+add_subdirectory(unit)
