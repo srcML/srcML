@@ -410,7 +410,7 @@ elif len(sys.argv) > 2:
         speclang = sys.argv[3]
 
 # base url
-base_dir = "suite"
+base_dir = "testsuite"
 
 errorlist = []
 
