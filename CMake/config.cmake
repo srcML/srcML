@@ -53,7 +53,7 @@ endif()
 # Turn ON/OFF tests
 option(BUILD_TIMING_TESTS "Run timing tests with ctest" ON)
 option(BUILD_UNIT_TESTS "Build unit tests for srcML/libsrcml" ON)
-option(BUILD_CLI_TESTS "Build cli tests" ON)
+option(BUILD_CLIENT_TESTS "Build cli tests" ON)
 option(BUILD_LARGE_SYSTEMS_TESTS "Build tests run on large systems" OFF)
 
 

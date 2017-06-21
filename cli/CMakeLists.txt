@@ -22,6 +22,6 @@ if (BUILD_LARGE_SYSTEMS_TESTS)
     add_subdirectory(large_systems_test)
 endif()
 
-if (BUILD_CLI_TESTS)
+if (BUILD_CLIENT_TESTS)
     add_subdirectory(testsuite)
 endif()
