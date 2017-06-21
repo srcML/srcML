@@ -17,11 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# add cli tests
-if (BUILD_LARGE_SYSTEMS_TESTS)
-    add_subdirectory(large_systems_test)
-endif()
-
 if (BUILD_CLIENT_TESTS)
     add_subdirectory(testsuite)
 endif()
