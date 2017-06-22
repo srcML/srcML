@@ -253,15 +253,26 @@ checkv2() {
     # trace the command
     firsthistoryentry
 
-    # verify expected stdout to the captured stdout
-    if [ $# -ge 2 ]; then
+    # check <filename> stdoutstr stderrstr
+    if [ $# -ge 3 ]; then
 
-        # register to cleanup
         registerfile ${1}
+        diff $1 <(echo -n "$2")
+        diff $STDERR <(echo -n "$3")
 
-        # compare the parameter file to the expected output
+    # check <filename> stdoutstr
+    elif [ $# -ge 2 ] && [ -e $1 ]; then
+
+        registerfile ${1}
         diff $1 <(echo -n "$2")
 
+    # check stdoutstr stderrstr
+    elif [ $# -ge 2 ]; then
+
+        diff $STDOUT <(echo -n "$1")
+        diff $STDERR <(echo -n "$2")
+
+    # check <filename>
     elif [ $# -ge 1 ]; then
         diff $STDOUT <(echo -n "$1" | sed -e "s/REVISION/${REVISION}/;")
     else
