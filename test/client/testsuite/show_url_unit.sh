@@ -7,7 +7,7 @@ source $(dirname "$0")/framework_test.sh
 define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="bar" filename="foo" version="1.2"/>
-	STDOUT
+  STDOUT
 
 # test on archive
 define archive <<- 'STDOUT'
@@ -19,7 +19,7 @@ define archive <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$input"
 xmlcheck "$archive"
@@ -44,7 +44,7 @@ checkv2 "bar"
 define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="" url="" filename="" version=""/>
-	STDOUT
+  STDOUT
 
 # empty on the archive
 define empty <<- 'STDOUT'
@@ -56,7 +56,7 @@ define empty <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$input"
 xmlcheck "$empty"
@@ -81,7 +81,7 @@ checkv2 ""
 define none <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDIN
+  STDIN
 
 xmlcheck "$none"
 createfile sub/a.cpp.xml "$none"

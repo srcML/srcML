@@ -9,7 +9,7 @@ source $(dirname "$0")/framework_test.sh
 define srcmlcpp <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" directory="bar" filename="foo" version="1.2"/>
-	STDOUT
+  STDOUT
 
 xmlcheck "$srcmlcpp"
 createfile sub/a.cpp.xml "$srcmlcpp"
@@ -25,7 +25,7 @@ define srcmljava <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java">
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$srcmljava"
 createfile sub/a.java.xml "$srcmljava"
@@ -41,7 +41,7 @@ define srcmlc <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C">
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$srcmlc"
 createfile sub/a.c.xml "$srcmlc"
@@ -57,7 +57,7 @@ define srcmlobjc <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Objective-C">
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$srcmlobjc"
 createfile sub/a.m.xml "$srcmlobjc"
@@ -73,7 +73,7 @@ define srcmlaj <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java">
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$srcmlaj"
 createfile sub/a.aj.xml "$srcmlaj"
@@ -88,7 +88,7 @@ checkv2 "Java"
 define empty <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="" directory="" filename="" version=""/>
-	STDIN
+  STDIN
 
 xmlcheck "$empty"
 createfile sub/a.cpp.xml "$empty"

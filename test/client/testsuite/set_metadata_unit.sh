@@ -8,7 +8,7 @@ define sxmlfile1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="sub" filename="a.cpp" version="1.2">
 	</unit>
-	STDOUT
+  STDOUT
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -23,7 +23,7 @@ define nestedfile <<- 'STDOUT'
 	</src:unit>
 
 	</src:unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$sxmlfile1"
 xmlcheck "$nestedfile"

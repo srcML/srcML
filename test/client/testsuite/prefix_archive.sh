@@ -11,7 +11,7 @@ define input <<- 'INPUT'
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	INPUT
+  INPUT
 
 xmlcheck "$input"
 createfile sub/a.xml "$input"
@@ -71,7 +71,7 @@ define archive_multi <<- 'INPUT'
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/b.cpp" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	INPUT
+  INPUT
 
 createfile sub/archive_multi.xml "$archive_multi"
 

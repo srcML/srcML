@@ -17,7 +17,7 @@ define nestedfile <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 define nestedfilesrc <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -32,7 +32,7 @@ define nestedfilesrc <<- 'STDOUT'
 	</src:unit>
 
 	</src:unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$nestedfile"
 xmlcheck "$nestedfilesrc"

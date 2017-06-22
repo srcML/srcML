@@ -8,7 +8,7 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+  STDOUT
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -21,12 +21,12 @@ define nestedfile <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 define output <<- 'STDERR'
 	    1 sub/a.cpp
 	    2 sub/b.cpp
-	STDERR
+  STDERR
 
 xmlcheck "$srcml"
 xmlcheck "$nestedfile"

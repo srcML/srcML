@@ -15,7 +15,7 @@ define result <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$result"
 

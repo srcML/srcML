@@ -7,10 +7,9 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+  STDOUT
 createfile a.xml "$srcml"
-createfile a.cpp "a;
-"
+createfile a.cpp "a;"
 
 # output directory does not exist
 rm -rf nonexistent_dir

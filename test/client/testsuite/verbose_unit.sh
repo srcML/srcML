@@ -7,7 +7,7 @@ source $(dirname "$0")/framework_test.sh
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
-	STDOUT
+  STDOUT
 
 define output <<- 'STDERR'
 	Source encoding:  (null)
@@ -15,7 +15,7 @@ define output <<- 'STDERR'
 	    1 sub/a.cpp	C++	1	
 
 	Translated: 1	Skipped: 0	Error: 0	Total: 1
-	STDERR
+  STDERR
 
 xmlcheck "$fsrcml"
 createfile sub/a.cpp "a;"
@@ -38,7 +38,7 @@ checkv2 sub/c.cpp.xml "$fsrcml" 4<<< "$output"
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
-	STDOUT
+  STDOUT
 
 define output <<- 'STDERR'
 	Source encoding:  (null)
@@ -46,7 +46,7 @@ define output <<- 'STDERR'
 	    1 	C++	1	
 
 	Translated: 1	Skipped: 0	Error: 0	Total: 1
-	STDERR
+  STDERR
 
 xmlcheck "$srcml"
 

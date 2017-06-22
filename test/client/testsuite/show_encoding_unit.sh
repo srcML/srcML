@@ -7,7 +7,7 @@ source $(dirname "$0")/framework_test.sh
 define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" directory="bar" filename="foo" version="1.2"/>
-	STDOUT
+  STDOUT
 
 # test on archive of one unit
 define archive <<- 'STDOUT'
@@ -19,7 +19,7 @@ define archive <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$input"
 xmlcheck "$archive"
@@ -42,8 +42,8 @@ checkv2 "UTF-8"
 # test on empty archive
 define empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDOUT
+  <unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
+  STDOUT
 
 createfile sub/emptyarchive.xml "$empty"
 

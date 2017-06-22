@@ -14,7 +14,7 @@ define none <<- 'STDIN'
 	</unit>
 
 	</unit>
-	STDIN
+  STDIN
 
 xmlcheck "$none"
 createfile sub/archive.cpp.xml "$none"
@@ -29,7 +29,7 @@ checkv2 "C++"
 define empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDOUT
+  STDOUT
 
 createfile sub/archive.cpp.xml "$empty"
 
