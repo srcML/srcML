@@ -44,28 +44,32 @@ define foutput <<- STDOUT
 	</unit>
 	STDOUT
 
+define fstuff <<- STDOUT
+	a;
+	STDOUT
+
 createfile sub/a.cpp.xml "$foutput"
 
 srcml2src sub/a.cpp.xml --output sub/a.cpp
-checkv2 sub/a.cpp "a;"
+checkv2 sub/a.cpp "$fstuff"
 
 srcml2src sub/a.cpp.xml --output=sub/a.cpp
-checkv2 sub/a.cpp "a;"
+checkv2 sub/a.cpp "$fstuff"
 
 srcml2src sub/a.cpp.xml -o sub/a.cpp
-checkv2 sub/a.cpp "a;"
+checkv2 sub/a.cpp "$fstuff"
 
 srcml2src - -o sub/a.cpp <<< "$foutput"
-checkv2 sub/a.cpp "a;"
+checkv2 sub/a.cpp "$fstuff"
 
 srcml2src -o sub/a.cpp <<< "$foutput"
-checkv2 sub/a.cpp "a;"
+checkv2 sub/a.cpp "$fstuff"
 
 srcml2src - --output /dev/stdout <<< "$foutput"
-checkv2 "a;"
+checkv2 "$fstuff"
 
 srcml2src - --output=/dev/stdout <<< "$foutput"
-checkv2 "a;"
+checkv2 "$fstuff"
 
 srcml2src - -o /dev/stdout <<< "$foutput"
-checkv2 "a;"
+checkv2 "$fstuff"
