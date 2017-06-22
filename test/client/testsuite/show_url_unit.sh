@@ -87,8 +87,8 @@ xmlcheck "$none"
 createfile sub/a.cpp.xml "$none"
 
 srcml --show-url sub/a.cpp.xml
-checkv2_null
+check_null
 
 srcml --show-url < sub/a.cpp.xml
-checkv2_null
+check_null
 

@@ -58,10 +58,10 @@ createfile sub/emptyarchive.cpp.xml "$empty"
 message "hash missing"
 
 srcml --show-hash sub/a.cpp.xml
-checkv2_null
+check_null
 
 srcml --show-hash < sub/a.cpp.xml
-checkv2_null
+check_null
 
 srcml --show-hash sub/archive.cpp.xml
 checkv2 "1a2c5d67e6f651ae10b7673c53e8c502c97316d6"
@@ -70,7 +70,7 @@ srcml --show-hash < sub/archive.cpp.xml
 checkv2 "1a2c5d67e6f651ae10b7673c53e8c502c97316d6"
 
 srcml --show-hash sub/emptyarchive.cpp.xml
-checkv2_null
+check_null
 
 srcml --show-hash < sub/emptyarchive.cpp.xml
-checkv2_null
+check_null

@@ -102,14 +102,14 @@ createfile sub/a.cpp.xml "$noneempty"
 createfile sub/archive.cpp.xml "$none"
 
 srcml --show-src-version sub/a.cpp.xml
-checkv2_null
+check_null
 
 srcml --show-src-version < sub/a.cpp.xml
-checkv2_null
+check_null
 
 srcml --show-src-version sub/archive.cpp.xml
-checkv2_null
+check_null
 
 srcml --show-src-version < sub/archive.cpp.xml
-checkv2_null
+check_null
 

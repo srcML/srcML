@@ -58,7 +58,7 @@ checkv2 sub/c.cpp.xml "$srcml" 4<<< "$output"
 
 # srcml to src
 srcml --verbose sub/a.cpp.xml -o sub/c.cpp
-checkv2_null
+check_null
 
 srcml --verbose -l C++ -o sub/c.cpp < sub/a.cpp.xml
-checkv2_null
+check_null

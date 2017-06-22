@@ -36,10 +36,10 @@ srcml sub/a.xml -p "foo.com"
 checkv2 "foo"
 
 srcml -p "nonexistent.com" sub/a.xml
-checkv2_null
+check_null
 
 srcml sub/a.xml -p "nonexistent.com"
-checkv2_null
+check_null
 
 # standard in
 srcml2src -U 1 -X -p "http://www.srcML.org/srcML/cpp" <<< "$input"
@@ -94,10 +94,10 @@ srcml sub/archive_multi.xml -p "foo.com"
 checkv2 "foo"
 
 srcml -p "nonexistent.com" sub/archive_multi.xml
-checkv2_null
+check_null
 
 srcml sub/archive_multi.xml -p "nonexistent.com"
-checkv2_null
+check_null
 
 # standard in
 srcml2src -U 1 -X  -p "http://www.srcML.org/srcML/cpp" <<< "$archive_multi"

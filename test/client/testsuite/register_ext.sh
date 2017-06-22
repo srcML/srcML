@@ -31,8 +31,8 @@ xmlcheck "$fsxmlfile"
 createfile sub/a.xml "$fsxmlfile"
 
 src2srcml --register-ext xml=Java sub/a.xml
-checkv2_null
+check_null
 
 src2srcml --register-ext="xml=Java" sub/a.xml
-checkv2_null
+check_null
 

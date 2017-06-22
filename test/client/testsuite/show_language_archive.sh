@@ -34,7 +34,7 @@ define empty <<- 'STDOUT'
 createfile sub/archive.cpp.xml "$empty"
 
 srcml --show-language sub/archive.cpp.xml
-checkv2_null
+check_null
 
 srcml --show-language < sub/archive.cpp.xml
-checkv2_null
+check_null
