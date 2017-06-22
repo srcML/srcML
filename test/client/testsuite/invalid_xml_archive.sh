@@ -81,19 +81,19 @@ checkv2 "$info_archive"
 # bad
 # TODO: issue #1039
 srcml2src xml_error/illformedarchive_multi.xml --show-unit-count
-checkv2 "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" "$xml_archive_error"
 
 srcml2src xml_error/illformedarchive_single.xml --show-unit-count
-checkv2 "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" "$xml_archive_error"
 
 srcml2src --show-unit-count xml_error/illformedarchive_multi.xml
-checkv2 "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" "$xml_archive_error"
 
 srcml2src --show-unit-count xml_error/illformedarchive_single.xml
-checkv2 "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" "$xml_archive_error"
 
 srcml2src --show-unit-count < xml_error/illformedarchive_multi.xml
-checkv2 "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" "$xml_archive_error"
 
 srcml2src --show-unit-count < xml_error/illformedarchive_single.xml
-checkv2 "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" "$xml_archive_error"

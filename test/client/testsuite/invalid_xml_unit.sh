@@ -38,4 +38,4 @@ define xml_error <<- 'STDERR'
 
 # bad
 srcml2src xml_error/illformed.xml
-checkv2 "$output" 4<<< "$xml_error"
+checkv2 "$output" "$xml_error"

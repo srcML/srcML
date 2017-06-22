@@ -35,7 +35,7 @@ rmfile sub/a.cpp
 
 srcml2src --verbose --to-dir=. a.cpp.xml
 
-checkv2 sub/a.cpp "a;" 4<<< "    1 sub/a.cpp"
+checkv2 sub/a.cpp "a;" "    1 sub/a.cpp"
 
 createfile a.cpp.xml "$nestedfile"
 
@@ -43,7 +43,7 @@ rmfile sub/a.cpp
 rmfile sub/b.cpp
 
 srcml2src --verbose --to-dir=. a.cpp.xml
-checkv2 sub/a.cpp "a;" 4<<< "$output"
+checkv2 sub/a.cpp "a;" "$output"
 checkv2 sub/b.cpp "b;"
 
 rmfile sub/a.cpp
@@ -51,6 +51,6 @@ rmfile sub/b.cpp
 
 srcml2src --verbose --to-dir '.' a.cpp.xml
 
-checkv2 sub/a.cpp "a;" 4<<< "$output"
+checkv2 sub/a.cpp "a;" "$output"
 checkv2 sub/b.cpp "b;"
 

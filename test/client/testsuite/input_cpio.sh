@@ -54,7 +54,7 @@ createfile list.txt "archive/a.cpp.cpio"
 
 # src --> srcml
 src2srcml archive/a.cpp.cpio -o archive/a.cpp.xml
-checkv2 archive/a.cpp.xml "$foutput" 4<<< "1 block"
+checkv2 archive/a.cpp.xml "$foutput" "1 block"
 
 src2srcml archive/a.cpp.cpio
 checkv2 "$foutput"

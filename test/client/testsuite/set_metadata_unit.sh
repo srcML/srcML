@@ -50,9 +50,9 @@ srcml sub/a.cpp.xml --show-encoding
 checkv2 "UTF-8"
 
 srcml2src --units sub/a.cpp.xml
-checkv2 "1" 4<<< "$deprecated_warning"
+checkv2 "1" "$deprecated_warning"
 
 createfile sub/nested.cpp.xml "$nestedfile"
 
 srcml2src --units sub/nested.cpp.xml
-checkv2 "2" 4<<< "$deprecated_warning"
+checkv2 "2" "$deprecated_warning"

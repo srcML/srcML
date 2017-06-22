@@ -238,10 +238,6 @@ check() {
 
 ##
 # checks the result of a command
-#   $1 (optional) file of expected stdout
-#   $2 (optional) file of expected stderr
-#   $STDOUT - filename of captured stdout
-#   $STDERR - filename of captured stderr
 #
 # If stdout is not specified, it is assumed to be empty
 # If stderr is not specified, it is assumed to be empty
@@ -262,10 +258,11 @@ checkv2() {
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
-    elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e $1 ]; then
+    elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
         registerfile ${1}
         diff $1 <(echo -n "$2")
+        [ ! -s $STDERR ]
 
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then

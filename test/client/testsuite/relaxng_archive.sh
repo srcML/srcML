@@ -150,18 +150,18 @@ checkv2 sub/b.cpp.xml "$srcml"
 ## TODO really make sure this is ok to return ok when no schema supplied.
 #srcml2src --relaxng srcml
 #
-#check 4<<< "0"
+#check "" "0"
 #if sys.platform != 'cygwin' :
 #	srcml2src --relaxng + '=' srcml
 #
-#	check 4<<< "0"
+#	check "" "0"
 #
 
 ## TODO really make sure this is ok to return ok when no schema supplied.
 #srcml2src --relaxng srcml
 #
-#check 4<<< "0"
+#check "" "0"
 #if sys.platform != 'cygwin' :
 #	srcml2src --relaxng + '=' srcml
 #
-#	check 4<<< "0"
+#	check "" "0"
