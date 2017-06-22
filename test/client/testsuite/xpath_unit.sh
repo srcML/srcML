@@ -43,48 +43,48 @@ createfile sub/a.cpp.xml "$srcml"
 
 # /src:unit/src:expr_stmt/src:expr/src:name
 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml
-check 3<<< "$output1"
+checkv2 "$output1"
 
 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name < sub/a.cpp.xml
-check 3<<< "$output1"
+checkv2 "$output1"
 
 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$output1"
+checkv2 sub/b.cpp.xml "$output1"
 
 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$output1"
+checkv2 sub/b.cpp.xml "$output1"
 
 srcml2src --xpath=/src:unit/src:expr_stmt/src:expr/src:name -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$output1"
+checkv2 sub/b.cpp.xml "$output1"
 
 # //src:name
 srcml2src --xpath=//src:name sub/a.cpp.xml
-check 3<<< "$output2"
+checkv2 "$output2"
 
 srcml2src --xpath=//src:name < sub/a.cpp.xml
-check 3<<< "$output2"
+checkv2 "$output2"
 
 srcml2src --xpath=//src:name sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$output2"
+checkv2 sub/b.cpp.xml "$output2"
 
 srcml2src --xpath=//src:name -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$output2"
+checkv2 sub/b.cpp.xml "$output2"
 
 srcml2src --xpath=//src:name -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$output2"
+checkv2 sub/b.cpp.xml "$output2"
 
 # src:name
 srcml2src --xpath=src:name sub/a.cpp.xml
-check 3<<< "$output_empty"
+checkv2 "$output_empty"
 
 srcml2src --xpath=src:name < sub/a.cpp.xml
-check 3<<< "$output_empty"
+checkv2 "$output_empty"
 
 srcml2src --xpath=src:name sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$output_empty"
+checkv2 sub/b.cpp.xml "$output_empty"
 
 srcml2src --xpath=src:name -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$output_empty"
+checkv2 sub/b.cpp.xml "$output_empty"
 
 srcml2src --xpath=src:name -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$output_empty"
+checkv2 sub/b.cpp.xml "$output_empty"

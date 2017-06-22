@@ -43,100 +43,100 @@ createfile sub/a.cpp.xml "$srcml"
 
 # file before options
 srcml2src sub/a.cpp.xml -X --unit 1 -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputa"
+checkv2 sub/b.cpp.xml "$outputa"
 
 srcml2src sub/a.cpp.xml --unit 1 -X -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputa"
+checkv2 sub/b.cpp.xml "$outputa"
 
 srcml2src sub/a.cpp.xml -X --unit 1
-check 3<<< "$outputa"
+checkv2 "$outputa"
 
 srcml2src sub/a.cpp.xml --unit 1 -X
-check 3<<< "$outputa"
+checkv2 "$outputa"
 
 srcml2src sub/a.cpp.xml -X --unit 2 -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputb"
+checkv2 sub/b.cpp.xml "$outputb"
 
 srcml2src sub/a.cpp.xml --unit 2 -X -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputb"
+checkv2 sub/b.cpp.xml "$outputb"
 
 srcml2src sub/a.cpp.xml -X --unit 2
-check 3<<< "$outputb"
+checkv2 "$outputb"
 
 srcml2src sub/a.cpp.xml --unit 2 -X
-check 3<<< "$outputb"
+checkv2 "$outputb"
 
 srcml sub/a.cpp.xml -X
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 # options before file
 srcml2src -X --unit 1 sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputa"
+checkv2 sub/b.cpp.xml "$outputa"
 
 srcml2src --unit 1 -X sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputa"
+checkv2 sub/b.cpp.xml "$outputa"
 
 srcml2src -X --unit 1 sub/a.cpp.xml
-check 3<<< "$outputa"
+checkv2 "$outputa"
 
 srcml2src --unit 1 -X sub/a.cpp.xml
-check 3<<< "$outputa"
+checkv2 "$outputa"
 
 srcml2src -X --unit 1 -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputa"
+checkv2 sub/b.cpp.xml "$outputa"
 
 srcml2src --unit 1 -X -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputa"
+checkv2 sub/b.cpp.xml "$outputa"
 
 srcml2src -X --unit 2 sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputb"
+checkv2 sub/b.cpp.xml "$outputb"
 
 srcml2src --unit 2 -X sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputb"
+checkv2 sub/b.cpp.xml "$outputb"
 
 srcml2src -X --unit 2 sub/a.cpp.xml
-check 3<<< "$outputb"
+checkv2 "$outputb"
 
 srcml2src --unit 2 -X sub/a.cpp.xml
-check 3<<< "$outputb"
+checkv2 "$outputb"
 
 srcml2src -X --unit 2 -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputb"
+checkv2 sub/b.cpp.xml "$outputb"
 
 srcml2src --unit 2 -X -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputb"
+checkv2 sub/b.cpp.xml "$outputb"
 
 srcml -X sub/a.cpp.xml
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml -X < sub/a.cpp.xml
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 # XML from standard in
 echo "$srcml" | srcml2src -X --unit 1 -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputa"
+checkv2 sub/b.cpp.xml "$outputa"
 
 echo "$srcml" | srcml2src --unit 1 -X -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputa"
+checkv2 sub/b.cpp.xml "$outputa"
 
 echo "$srcml" | srcml2src -X --unit 1
-check 3<<< "$outputa"
+checkv2 "$outputa"
 
 echo "$srcml" | srcml2src --unit 1 -X
-check 3<<< "$outputa"
+checkv2 "$outputa"
 
 echo "$srcml" | srcml2src -X --unit 2 -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputb"
+checkv2 sub/b.cpp.xml "$outputb"
 
 echo "$srcml" | srcml2src --unit 2 -X -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$outputb"
+checkv2 sub/b.cpp.xml "$outputb"
 
 echo "$srcml" | srcml2src -X --unit 2
-check 3<<< "$outputb"
+checkv2 "$outputb"
 
 echo "$srcml" | srcml2src --unit 2 -X
-check 3<<< "$outputb"
+checkv2 "$outputb"
 
 echo "$srcml" | srcml -X
-check 3<<< "$srcml"
+checkv2 "$srcml"
 

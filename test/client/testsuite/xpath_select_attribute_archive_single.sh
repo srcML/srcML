@@ -49,28 +49,28 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename" -o sub/a.xml
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml sub/archive_single.cpp.xml -o sub/a.xml --xpath "//src:unit/@filename"
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml -o sub/a.xml
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 
 # select comment format (doxygen)
@@ -86,27 +86,27 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format" -o sub/a.xml
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml sub/archive_single.cpp.xml -o sub/a.xml --xpath "//src:comment/@format"
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml -o sub/a.xml
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
-check sub/a.xml 3<<< "$output"
+checkv2 sub/a.xml "$output"
 
 

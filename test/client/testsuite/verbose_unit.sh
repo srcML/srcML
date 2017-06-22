@@ -23,16 +23,16 @@ createfile sub/a.cpp.xml "$fsrcml"
  
 # from a file
 srcml sub/a.cpp --verbose
-check 3<<< "$fsrcml" 4<<< "$output"
+checkv2 "$fsrcml" 4<<< "$output"
 
 srcml --verbose sub/a.cpp
-check 3<<< "$fsrcml" 4<<< "$output"
+checkv2 "$fsrcml" 4<<< "$output"
 
 srcml sub/a.cpp --verbose -o sub/c.cpp.xml
-check sub/c.cpp.xml 3<<< "$fsrcml" 4<<< "$output"
+checkv2 sub/c.cpp.xml "$fsrcml" 4<<< "$output"
 
 srcml --verbose sub/a.cpp -o sub/c.cpp.xml
-check sub/c.cpp.xml 3<<< "$fsrcml" 4<<< "$output"
+checkv2 sub/c.cpp.xml "$fsrcml" 4<<< "$output"
 
 # from standard in
 define srcml <<- 'STDOUT'
@@ -51,14 +51,14 @@ define output <<- 'STDERR'
 xmlcheck "$srcml"
 
 srcml --verbose -l C++ < sub/a.cpp
-check 3<<< "$srcml" 4<<< "$output"
+checkv2 "$srcml" 4<<< "$output"
 
 srcml --verbose -l C++ -o sub/c.cpp.xml < sub/a.cpp
-check sub/c.cpp.xml 3<<< "$srcml" 4<<< "$output"
+checkv2 sub/c.cpp.xml "$srcml" 4<<< "$output"
 
 # srcml to src
 srcml --verbose sub/a.cpp.xml -o sub/c.cpp
-check_null
+checkv2_null
 
 srcml --verbose -l C++ -o sub/c.cpp < sub/a.cpp.xml
-check_null
+checkv2_null

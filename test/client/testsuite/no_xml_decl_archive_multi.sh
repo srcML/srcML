@@ -21,38 +21,38 @@ createfile sub/b.cpp "b;"
 
 # from a file
 srcml sub/a.cpp sub/b.cpp --in-order --no-xml-declaration
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml sub/a.cpp --in-order sub/b.cpp --no-xml-declaration
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml --no-xml-declaration sub/a.cpp sub/b.cpp --in-order
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml --no-xml-declaration sub/a.cpp --in-order sub/b.cpp
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml --no-xml-declaration --in-order sub/a.cpp sub/b.cpp
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml --in-order --no-xml-declaration sub/a.cpp sub/b.cpp
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml sub/a.cpp sub/b.cpp --in-order --no-xml-declaration -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$srcml"
+checkv2 sub/a.cpp.xml "$srcml"
 
 srcml --no-xml-declaration sub/a.cpp sub/b.cpp --in-order -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$srcml"
+checkv2 sub/a.cpp.xml "$srcml"
 
 srcml --no-xml-declaration -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
-check sub/a.cpp.xml 3<<< "$srcml"
+checkv2 sub/a.cpp.xml "$srcml"
 
 srcml sub/a.cpp sub/b.cpp --in-order -o sub/a.cpp.xml --no-xml-declaration
-check sub/a.cpp.xml 3<<< "$srcml"
+checkv2 sub/a.cpp.xml "$srcml"
 
 srcml -o sub/a.cpp.xml --no-xml-declaration sub/a.cpp sub/b.cpp --in-order
-check sub/a.cpp.xml 3<<< "$srcml"
+checkv2 sub/a.cpp.xml "$srcml"
 
 srcml -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order --no-xml-declaration
-check sub/a.cpp.xml 3<<< "$srcml"
+checkv2 sub/a.cpp.xml "$srcml"
 

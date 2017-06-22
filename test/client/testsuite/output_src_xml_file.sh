@@ -18,19 +18,19 @@ xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
 srcml2src --output-src sub/a.cpp.xml
-check 3<<< "$src"
+checkv2 "$src"
 
 srcml2src -S sub/a.cpp.xml
-check 3<<< "$src"
+checkv2 "$src"
 
 src2srcml -S < sub/a.cpp.xml
-check 3<<< "$src"
+checkv2 "$src"
 
 src2srcml -S sub/a.cpp.xml -o sub/b.cpp
-check sub/b.cpp 3<<< "$src"
+checkv2 sub/b.cpp "$src"
 
 src2srcml -S -o sub/b.cpp sub/a.cpp.xml
-check sub/b.cpp 3<<< "$src"
+checkv2 sub/b.cpp "$src"
 
 src2srcml -S -o sub/b.cpp < sub/a.cpp.xml
-check sub/b.cpp 3<<< "$src"
+checkv2 sub/b.cpp "$src"

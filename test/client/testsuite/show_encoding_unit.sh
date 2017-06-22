@@ -27,16 +27,16 @@ createfile sub/a.cpp.xml "$input"
 createfile sub/archive.cpp.xml "$archive"
 
 srcml --show-encoding sub/a.cpp.xml
-check 3<<< "UTF-8"
+checkv2 "UTF-8"
 
 srcml --show-encoding < sub/a.cpp.xml
-check 3<<< "UTF-8"
+checkv2 "UTF-8"
 
 srcml --show-encoding sub/archive.cpp.xml
-check 3<<< "UTF-8"
+checkv2 "UTF-8"
 
 srcml --show-encoding < sub/archive.cpp.xml
-check 3<<< "UTF-8"
+checkv2 "UTF-8"
 
 
 # test on empty archive
@@ -48,8 +48,8 @@ define empty <<- 'STDOUT'
 createfile sub/emptyarchive.xml "$empty"
 
 srcml --show-encoding sub/emptyarchive.xml
-check 3<<< "UTF-8"
+checkv2 "UTF-8"
 
 srcml --show-encoding < sub/emptyarchive.xml
-check 3<<< "UTF-8"
+checkv2 "UTF-8"
 

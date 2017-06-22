@@ -11,8 +11,8 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 echo -n "" | src2srcml -l C++ -f foo --url bar
-check 3<<< "$output"
+checkv2 "$output"
 
 echo -n "" | src2srcml -l C++ --url bar -f foo
-check 3<<< "$output"
+checkv2 "$output"
 

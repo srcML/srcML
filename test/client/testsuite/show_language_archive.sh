@@ -20,10 +20,10 @@ xmlcheck "$none"
 createfile sub/archive.cpp.xml "$none"
 
 srcml --show-language sub/archive.cpp.xml
-check 3<<< "C++"
+checkv2 "C++"
 
 srcml --show-language < sub/archive.cpp.xml
-check 3<<< "C++"
+checkv2 "C++"
 
 # empty
 define empty <<- 'STDOUT'
@@ -34,7 +34,7 @@ define empty <<- 'STDOUT'
 createfile sub/archive.cpp.xml "$empty"
 
 srcml --show-language sub/archive.cpp.xml
-check_null
+checkv2_null
 
 srcml --show-language < sub/archive.cpp.xml
-check_null
+checkv2_null

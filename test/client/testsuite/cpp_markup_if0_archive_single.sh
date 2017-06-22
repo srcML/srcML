@@ -73,223 +73,223 @@ createfile sub/a.cpp "$input"
 
 # use default, where if 0 sections are not marked up
 src2srcml -l C++ --archive < sub/a.cpp
-check 3<<< "$nomarkupif0"
+checkv2 "$nomarkupif0"
 
 src2srcml --archive -l C++ < sub/a.cpp
-check 3<<< "$nomarkupif0"
+checkv2 "$nomarkupif0"
 
 src2srcml -l C++ -o sub/b.xml --archive < sub/a.cpp
-check sub/b.xml 3<<< "$nomarkupif0"
+checkv2 sub/b.xml "$nomarkupif0"
 
 src2srcml -l C++ --archive -o sub/b.xml < sub/a.cpp
-check sub/b.xml 3<<< "$nomarkupif0"
+checkv2 sub/b.xml "$nomarkupif0"
 
 src2srcml --archive -l C++ -o sub/b.xml < sub/a.cpp
-check sub/b.xml 3<<< "$nomarkupif0"
+checkv2 sub/b.xml "$nomarkupif0"
 
 src2srcml -o sub/b.xml -l C++ --archive < sub/a.cpp
-check sub/b.xml 3<<< "$nomarkupif0"
+checkv2 sub/b.xml "$nomarkupif0"
 
 src2srcml -o sub/b.xml --archive -l C++ < sub/a.cpp
-check sub/b.xml 3<<< "$nomarkupif0"
+checkv2 sub/b.xml "$nomarkupif0"
 
 src2srcml --archive -o sub/b.xml -l C++ < sub/a.cpp
-check sub/b.xml 3<<< "$nomarkupif0"
+checkv2 sub/b.xml "$nomarkupif0"
 
 src2srcml sub/a.cpp --archive
-check 3<<< "$fnomarkupif0"
+checkv2 "$fnomarkupif0"
 
 src2srcml --archive sub/a.cpp
-check 3<<< "$fnomarkupif0"
+checkv2 "$fnomarkupif0"
 
 src2srcml sub/a.cpp -o sub/b.xml --archive
-check sub/b.xml 3<<< "$fnomarkupif0"
+checkv2 sub/b.xml "$fnomarkupif0"
 
 src2srcml sub/a.cpp --archive -o sub/b.xml
-check sub/b.xml 3<<< "$fnomarkupif0"
+checkv2 sub/b.xml "$fnomarkupif0"
 
 src2srcml --archive sub/a.cpp -o sub/b.xml
-check sub/b.xml 3<<< "$fnomarkupif0"
+checkv2 sub/b.xml "$fnomarkupif0"
 
 
 # markup if0 regions
 src2srcml -l C++ --cpp-markup-if0 --archive < sub/a.cpp
-check 3<<< "$markupif0"
+checkv2 "$markupif0"
 
 src2srcml -l C++ --archive --cpp-markup-if0 < sub/a.cpp
-check 3<<< "$markupif0"
+checkv2 "$markupif0"
 
 src2srcml --archive -l C++ --cpp-markup-if0 < sub/a.cpp
-check 3<<< "$markupif0"
+checkv2 "$markupif0"
 
 src2srcml --cpp-markup-if0 -l C++ --archive < sub/a.cpp
-check 3<<< "$markupif0"
+checkv2 "$markupif0"
 
 src2srcml --cpp-markup-if0 --archive -l C++ < sub/a.cpp
-check 3<<< "$markupif0"
+checkv2 "$markupif0"
 
 src2srcml --archive --cpp-markup-if0 -l C++ < sub/a.cpp
-check 3<<< "$markupif0"
+checkv2 "$markupif0"
 
 src2srcml -l C++ --cpp-markup-if0 -o sub/b.xml --archive < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -l C++ --cpp-markup-if0 --archive -o sub/b.xml < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -l C++ --archive --cpp-markup-if0 -o sub/b.xml < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --archive -l C++ --cpp-markup-if0 -o sub/b.xml < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -l C++ -o sub/b.xml --cpp-markup-if0 --archive < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -l C++ -o sub/b.xml --archive --cpp-markup-if0 < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -l C++ --archive -o sub/b.xml --cpp-markup-if0 < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --archive -l C++ -o sub/b.xml --cpp-markup-if0 < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -o sub/b.xml -l C++ --cpp-markup-if0 --archive < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -o sub/b.xml -l C++ --archive --cpp-markup-if0 < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -o sub/b.xml --archive -l C++ --cpp-markup-if0 < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --archive -o sub/b.xml -l C++ --cpp-markup-if0 < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --cpp-markup-if0 -l C++ -o sub/b.xml --archive < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --cpp-markup-if0 -l C++ --archive -o sub/b.xml < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --cpp-markup-if0 --archive -l C++ -o sub/b.xml < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --archive --cpp-markup-if0 -l C++ -o sub/b.xml < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --cpp-markup-if0 -o sub/b.xml -l C++ --archive < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --cpp-markup-if0 -o sub/b.xml --archive -l C++ < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --cpp-markup-if0 --archive -o sub/b.xml -l C++ < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --archive --cpp-markup-if0 -o sub/b.xml -l C++ < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -o sub/b.xml --cpp-markup-if0 -l C++ --archive < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -o sub/b.xml --cpp-markup-if0 --archive -l C++ < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml -o sub/b.xml --archive --cpp-markup-if0 -l C++ < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml --archive -o sub/b.xml --cpp-markup-if0 -l C++ < sub/a.cpp
-check sub/b.xml 3<<< "$markupif0"
+checkv2 sub/b.xml "$markupif0"
 
 src2srcml sub/a.cpp --cpp-markup-if0 --archive
-check 3<<< "$fmarkupif0"
+checkv2 "$fmarkupif0"
 
 src2srcml sub/a.cpp --archive --cpp-markup-if0
-check 3<<< "$fmarkupif0"
+checkv2 "$fmarkupif0"
 
 src2srcml --archive sub/a.cpp --cpp-markup-if0
-check 3<<< "$fmarkupif0"
+checkv2 "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 sub/a.cpp --archive
-check 3<<< "$fmarkupif0"
+checkv2 "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 --archive sub/a.cpp
-check 3<<< "$fmarkupif0"
+checkv2 "$fmarkupif0"
 
 src2srcml --archive --cpp-markup-if0 sub/a.cpp
-check 3<<< "$fmarkupif0"
+checkv2 "$fmarkupif0"
 
 src2srcml sub/a.cpp --cpp-markup-if0 -o sub/b.xml --archive
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp --cpp-markup-if0 --archive -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp --archive --cpp-markup-if0 -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --archive sub/a.cpp --cpp-markup-if0 -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 sub/a.cpp -o sub/b.xml --archive
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 sub/a.cpp --archive -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 --archive sub/a.cpp -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --archive --cpp-markup-if0 sub/a.cpp -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp -o sub/b.xml --cpp-markup-if0 --archive
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp -o sub/b.xml --archive --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp --archive -o sub/b.xml --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --archive sub/a.cpp -o sub/b.xml --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 -o sub/b.xml sub/a.cpp --archive
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 -o sub/b.xml --archive sub/a.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 --archive -o sub/b.xml sub/a.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --archive --cpp-markup-if0 -o sub/b.xml sub/a.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml sub/a.cpp --cpp-markup-if0 --archive
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml sub/a.cpp --archive --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml --archive sub/a.cpp --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --archive -o sub/b.xml sub/a.cpp --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml --cpp-markup-if0 sub/a.cpp --archive
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml --cpp-markup-if0 --archive sub/a.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml --archive --cpp-markup-if0 sub/a.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 
 src2srcml --archive -o sub/b.xml --cpp-markup-if0 sub/a.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+checkv2 sub/b.xml "$fmarkupif0"
 

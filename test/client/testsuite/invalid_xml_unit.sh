@@ -22,10 +22,10 @@ createfile xml_error/illformed.xml "$illformed"
 
 # ok
 srcml2src xml_error/illformed.xml --info
-check 3<<< "$info_single"
+checkv2 "$info_single"
 
 srcml2src --info xml_error/illformed.xml
-check 3<<< "$info_single"
+checkv2 "$info_single"
 
 define output <<- 'STDOUT'
 	
@@ -38,4 +38,4 @@ define xml_error <<- 'STDERR'
 
 # bad
 srcml2src xml_error/illformed.xml
-check 3<<< "$output" 4<<< "$xml_error"
+checkv2 "$output" 4<<< "$xml_error"

@@ -29,22 +29,22 @@ xmlcheck "$nestedfileextra"
 xmlcheck "$file1"
 
 srcml2src -X --unit "1" - <<< "$nestedfileextra"
-check 3<<< "$file1"
+checkv2 "$file1"
 
 srcml2src -X --unit "1" <<< "$nestedfileextra"
-check 3<<< "$file1"
+checkv2 "$file1"
 
 srcml -X --unit "1" --show-filename <<< "$nestedfileextra"
-check 3<<< "a.cpp"
+checkv2 "a.cpp"
 
 srcml -X --unit "2" --show-filename <<< "$nestedfileextra"
-check 3<<< "b.cpp"
+checkv2 "b.cpp"
 
 srcml -X --unit "1" --show-language <<< "$nestedfileextra"
-check 3<<< "C"
+checkv2 "C"
 	
 srcml -X --unit "2" --show-language <<< "$nestedfileextra"
-check 3<<< "Java"
+checkv2 "Java"
 
 
 define input <<- 'INPUT'
@@ -82,37 +82,37 @@ define file3 <<- 'STDOUT'
 	STDOUT
 
 srcml2src --show-url <<< "$input"
-check 3<<< "sub"
+checkv2 "sub"
 
 srcml2src -X --unit "1" - <<< "$input"
-check 3<<< "$file1"
+checkv2 "$file1"
 
 srcml2src -X --unit "1" <<< "$input"
-check 3<<< "$file1"
+checkv2 "$file1"
 
 srcml2src -X --unit "2" - <<< "$input"
-check 3<<< "$file2"
+checkv2 "$file2"
 
 srcml2src -X --unit "2" <<< "$input"
-check 3<<< "$file2"
+checkv2 "$file2"
 
 srcml2src -X --unit "3" - <<< "$input"
-check 3<<< "$file3"
+checkv2 "$file3"
 
 srcml2src -X --unit "3" <<< "$input"
-check 3<<< "$file3"
+checkv2 "$file3"
 
 srcml -X --unit "1" --show-filename <<< "$input"
-check 3<<< "a.cpp"
+checkv2 "a.cpp"
 
 srcml -X --unit "2" --show-filename <<< "$input"
-check 3<<< "b.cpp"
+checkv2 "b.cpp"
 
 srcml -X --unit "1" --show-language <<< "$input"
-check 3<<< "C"
+checkv2 "C"
 
 srcml -X --unit "2" --show-language <<< "$input"
-check 3<<< "Java"
+checkv2 "Java"
 
 
 define nestedfileextra <<- 'STDOUT'
@@ -133,16 +133,16 @@ define nestedfileextra <<- 'STDOUT'
 createfile sub/a.cpp.xml "$nestedfileextra"
 
 srcml -X --unit "1" --show-language sub/a.cpp.xml
-check 3<<< "C++"
+checkv2 "C++"
 
 srcml -X --unit "1" --show-filename sub/a.cpp.xml
-check 3<<< "a.cpp"
+checkv2 "a.cpp"
 
 srcml -X --unit "2" --show-language sub/a.cpp.xml
-check 3<<< "Java"
+checkv2 "Java"
 
 srcml -X --unit "2" --show-filename sub/a.cpp.xml
-check 3<<< "empty.java"
+checkv2 "empty.java"
 
 srcml --show-url sub/a.cpp.xml
-check 3<<< "sub"
+checkv2 "sub"

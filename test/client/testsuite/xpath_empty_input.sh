@@ -22,14 +22,14 @@ createfile sub/a.cpp.xml ""
 
 
 srcml2src --xpath=src:unit sub/a.cpp.xml
-check_exit 1
+checkv2_exit 1
 
 srcml2src -l C++ --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
-check_exit 1
+checkv2_exit 1
 
 srcml2src -l C++ --xpath=src:unit -o sub/b.cpp.xml sub/a.cpp.xml
-check_exit 1
+checkv2_exit 1
 
 # equivalent as inputting an empty source file
 srcml2src -l C++ --xpath=src:unit < sub/a.cpp.xml
-check 3<<< "$xpath_empty"
+checkv2 "$xpath_empty"

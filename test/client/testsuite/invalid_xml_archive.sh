@@ -60,40 +60,40 @@ createfile xml_error/illformedarchive_single.xml "$illformed_archive_single"
 
 # ok
 srcml2src xml_error/illformedarchive_multi.xml --info
-check 3<<< "$info_archive"
+checkv2 "$info_archive"
 
 srcml2src xml_error/illformedarchive_single.xml --info
-check 3<<< "$info_archive"
+checkv2 "$info_archive"
 
 srcml2src --info xml_error/illformedarchive_multi.xml
-check 3<<< "$info_archive"
+checkv2 "$info_archive"
 
 srcml2src --info xml_error/illformedarchive_single.xml
-check 3<<< "$info_archive"
+checkv2 "$info_archive"
 
 srcml2src --info < xml_error/illformedarchive_multi.xml
-check 3<<< "$info_archive"
+checkv2 "$info_archive"
 
 srcml2src --info < xml_error/illformedarchive_single.xml
-check 3<<< "$info_archive"
+checkv2 "$info_archive"
 
 
 # bad
 # TODO: issue #1039
 srcml2src xml_error/illformedarchive_multi.xml --show-unit-count
-check 3<<< "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" 4<<< "$xml_archive_error"
 
 srcml2src xml_error/illformedarchive_single.xml --show-unit-count
-check 3<<< "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" 4<<< "$xml_archive_error"
 
 srcml2src --show-unit-count xml_error/illformedarchive_multi.xml
-check 3<<< "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" 4<<< "$xml_archive_error"
 
 srcml2src --show-unit-count xml_error/illformedarchive_single.xml
-check 3<<< "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" 4<<< "$xml_archive_error"
 
 srcml2src --show-unit-count < xml_error/illformedarchive_multi.xml
-check 3<<< "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" 4<<< "$xml_archive_error"
 
 srcml2src --show-unit-count < xml_error/illformedarchive_single.xml
-check 3<<< "$units" 4<<< "$xml_archive_error"
+checkv2 "$units" 4<<< "$xml_archive_error"

@@ -28,16 +28,16 @@ createfile sub/a.cpp.xml "$input"
 createfile sub/archive.cpp.xml "$archive"
 
 srcml --show-src-version sub/a.cpp.xml
-check 3<<< "1.0"
+checkv2 "1.0"
 
 srcml --show-src-version < sub/a.cpp.xml
-check 3<<< "1.0"
+checkv2 "1.0"
 
 srcml --show-src-version sub/archive.cpp.xml
-check 3<<< "1.0"
+checkv2 "1.0"
 
 srcml --show-src-version < sub/archive.cpp.xml
-check 3<<< "1.0"
+checkv2 "1.0"
 
 
 # test src version on single unit with empty version
@@ -65,16 +65,16 @@ createfile sub/a.cpp.xml "$empty"
 createfile sub/archive.cpp.xml "$emptyarchive"
 
 srcml --show-src-version sub/a.cpp.xml
-check 3<<< ""
+checkv2 ""
 
 srcml --show-src-version < sub/a.cpp.xml
-check 3<<< ""
+checkv2 ""
 
 srcml --show-src-version sub/archive.cpp.xml
-check 3<<< ""
+checkv2 ""
 
 srcml --show-src-version < sub/archive.cpp.xml
-check 3<<< ""
+checkv2 ""
 
 
 # test on empty archive with no version
@@ -102,14 +102,14 @@ createfile sub/a.cpp.xml "$noneempty"
 createfile sub/archive.cpp.xml "$none"
 
 srcml --show-src-version sub/a.cpp.xml
-check_null
+checkv2_null
 
 srcml --show-src-version < sub/a.cpp.xml
-check_null
+checkv2_null
 
 srcml --show-src-version sub/archive.cpp.xml
-check_null
+checkv2_null
 
 srcml --show-src-version < sub/archive.cpp.xml
-check_null
+checkv2_null
 

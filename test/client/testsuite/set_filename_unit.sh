@@ -16,27 +16,27 @@ xmlcheck "$output"
 createfile sub/a.cpp ""
 
 src2srcml sub/a.cpp -f "foo.cpp"
-check 3<<< "$output"
+checkv2 "$output"
 
 src2srcml sub/a.cpp --filename "foo.cpp"
-check 3<<< "$output"
+checkv2 "$output"
 
 src2srcml sub/a.cpp --filename="foo.cpp"
-check 3<<< "$output"
+checkv2 "$output"
 
 src2srcml -l C++ -f 'foo.cpp' -o sub/a.cpp.xml sub/a.cpp
-check sub/a.cpp.xml 3<<< "$output"
+checkv2 sub/a.cpp.xml "$output"
 
 src2srcml -f 'foo.cpp' sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$output"
+checkv2 sub/a.cpp.xml "$output"
 
 
 # standard input
 echo -n "" | src2srcml -l C++ -f foo.cpp
-check 3<<< "$output"
+checkv2 "$output"
 
 echo -n "" | src2srcml -l C++ --filename foo.cpp
-check 3<<< "$output"
+checkv2 "$output"
 
 echo -n "" | src2srcml -l C++ --filename=foo.cpp
-check 3<<< "$output"
+checkv2 "$output"

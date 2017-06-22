@@ -23,37 +23,37 @@ createfile sub/b.cpp ""
 
 # specify tab size of 8
 srcml --tabs 8 --archive sub/a.cpp sub/b.cpp --in-order
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml --archive --tabs 8 sub/a.cpp sub/b.cpp --in-order
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml --tabs 8 sub/a.cpp sub/b.cpp --archive --in-order
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml sub/a.cpp sub/b.cpp --archive --tabs 8 --in-order
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml --tabs 8 sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 sub/a.cpp sub/b.cpp --archive -o sub/a.cpp.xml --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --archive --tabs 8 sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 --archive sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --archive --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 -o sub/a.cpp.xml --archive sub/a.cpp sub/b.cpp --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 --archive -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --archive --tabs 8 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"

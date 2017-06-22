@@ -44,25 +44,25 @@ STDERR
 
 # test
 srcml2src --units <<< "$nestedfile"
-check 3<<< "2" 4<<< "$deprecated_warning"
+checkv2 "2" 4<<< "$deprecated_warning"
 
 srcml2src --units <<< "$nestedfilesrc"
-check 3<<< "2" 4<<< "$deprecated_warning"
+checkv2 "2" 4<<< "$deprecated_warning"
 
 srcml2src -U "1" <<< "$nestedfile"
-check 3<<< $'\na;\n'
+checkv2 $'\na;\n'
 
 srcml2src --unit "1" <<< "$nestedfile"
-check 3<<< $'\na;\n'
+checkv2 $'\na;\n'
 
 srcml2src --unit="1" <<< "$nestedfile"
-check 3<<< $'\na;\n'
+checkv2 $'\na;\n'
 
 srcml2src -U "2" <<< "$nestedfile"
-check 3<<< $'\nb;\n'
+checkv2 $'\nb;\n'
 
 srcml2src --unit "2" <<< "$nestedfile"
-check 3<<< $'\nb;\n'
+checkv2 $'\nb;\n'
 
 srcml2src --unit="2" <<< "$nestedfile"
-check 3<<< $'\nb;\n'
+checkv2 $'\nb;\n'

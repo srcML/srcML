@@ -21,11 +21,11 @@ createfile sub/a.cpp.xml "$srcml"
 
 # test --list on input archives
 srcml sub/a.cpp.xml --list
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --list sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --list < sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 

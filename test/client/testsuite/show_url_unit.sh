@@ -28,16 +28,16 @@ createfile sub/a.cpp.xml "$input"
 createfile sub/archive.cpp.xml "$archive"
 
 srcml --show-url sub/a.cpp.xml
-check 3<<< "bar"
+checkv2 "bar"
 
 srcml --show-url < sub/a.cpp.xml
-check 3<<< "bar"
+checkv2 "bar"
 
 srcml --show-url sub/archive.cpp.xml
-check 3<<< "bar"
+checkv2 "bar"
 
 srcml --show-url < sub/archive.cpp.xml
-check 3<<< "bar"
+checkv2 "bar"
 
 
 # empty on the unit
@@ -65,16 +65,16 @@ createfile sub/a.cpp.xml "$input"
 createfile sub/archive.cpp.xml "$empty"
 
 srcml --show-url sub/a.cpp.xml
-check 3<<< ""
+checkv2 ""
 
 srcml --show-url < sub/a.cpp.xml
-check 3<<< ""
+checkv2 ""
 
 srcml --show-url sub/archive.cpp.xml
-check 3<<< ""
+checkv2 ""
 
 srcml --show-url < sub/archive.cpp.xml
-check 3<<< ""
+checkv2 ""
 
 
 # none
@@ -87,8 +87,8 @@ xmlcheck "$none"
 createfile sub/a.cpp.xml "$none"
 
 srcml --show-url sub/a.cpp.xml
-check_null
+checkv2_null
 
 srcml --show-url < sub/a.cpp.xml
-check_null
+checkv2_null
 

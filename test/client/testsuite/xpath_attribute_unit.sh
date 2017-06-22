@@ -33,21 +33,21 @@ createfile a.cpp "a;
 
 # from a file
 srcml a.cpp --xpath="//src:name" --attribute="cpp:foo=test"
-check 3<<< "$result"
+checkv2 "$result"
 
 srcml --xpath="//src:name" a.cpp --attribute="cpp:foo=test"
-check 3<<< "$result"
+checkv2 "$result"
 
 # from standard input
 echo "a;" | srcml -l C++ --xpath="//src:name" --attribute="cpp:foo=test"
-check 3<<< "$resultstdin"
+checkv2 "$resultstdin"
 
 # output to a file
 srcml a.cpp --xpath="//src:name" --attribute="cpp:foo=test" -o result.xml
-check result.xml 3<<< "$result"
+checkv2 result.xml "$result"
 
 srcml --xpath="//src:name" a.cpp --attribute="cpp:foo=test" -o result.xml
-check result.xml 3<<< "$result"
+checkv2 result.xml "$result"
 
 echo "a;" | srcml -l C++ --xpath="//src:name" --attribute="cpp:foo=test" -o result.xml
-check result.xml 3<<< "$resultstdin"
+checkv2 result.xml "$resultstdin"

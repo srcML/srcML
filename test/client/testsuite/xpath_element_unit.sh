@@ -32,21 +32,21 @@ srcml sub/a.cpp --xmlns:foo=foo.com -o sub/a.xml
 
 # from a file
 srcml sub/a.xml --xpath="//src:name" --element="foo:foo"
-check 3<<< "$result"
+checkv2 "$result"
 
 srcml --xpath="//src:name" sub/a.xml --element="foo:foo"
-check 3<<< "$result"
+checkv2 "$result"
 
 # from standard input
 echo "a;" | srcml -l C++ --xmlns:foo=foo.com --xpath="//src:name" --element="foo:foo"
-check 3<<< "$resultstdin"
+checkv2 "$resultstdin"
 
 # output to a file
 srcml sub/a.xml --xpath="//src:name" --element="foo:foo" -o result.xml
-check result.xml 3<<< "$result"
+checkv2 result.xml "$result"
 
 srcml --xpath="//src:name" sub/a.xml --element="foo:foo" -o result.xml
-check result.xml 3<<< "$result"
+checkv2 result.xml "$result"
 
 echo "a;" | srcml -l C++  --xmlns:foo=foo.com --xpath="//src:name" --element="foo:foo" -o result.xml
-check result.xml 3<<< "$resultstdin"
+checkv2 result.xml "$resultstdin"

@@ -40,59 +40,59 @@ STDERR
 
 # expression only
 src2srcml -e sub/a.cpp
-check 3<<< "$fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 "$fsxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml --expression sub/a.cpp
-check 3<<< "$fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 "$fsxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml sub/a.cpp -e
-check 3<<< "$fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 "$fsxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml sub/a.cpp --expression
-check 3<<< "$fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 "$fsxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml -l C++ --expression -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$sxmlfile" 4<<< "$deprecated_warning"
+checkv2 sub/a.cpp.xml "$sxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml --expression sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 sub/a.cpp.xml "$fsxmlfile" 4<<< "$deprecated_warning"
 
 # auto-detection
 src2srcml sub/a.cpp
-check 3<<< "$fsxmlfile"
+checkv2 "$fsxmlfile"
 
 src2srcml -l C++ -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$sxmlfile"
+checkv2 sub/a.cpp.xml "$sxmlfile"
 
 src2srcml sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsxmlfile"
+checkv2 sub/a.cpp.xml "$fsxmlfile"
 
 
 # within expression statement
 src2srcml -e sub/b.cpp
-check 3<<< "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml --expression sub/b.cpp
-check 3<<< "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml sub/b.cpp -e
-check 3<<< "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml sub/b.cpp --expression
-check 3<<< "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml -l C++ --expression -o sub/b.cpp.xml < sub/b.cpp
-check sub/b.cpp.xml 3<<< "$expr_stmt_sxmlfile" 4<<< "$deprecated_warning"
+checkv2 sub/b.cpp.xml "$expr_stmt_sxmlfile" 4<<< "$deprecated_warning"
 
 src2srcml --expression sub/b.cpp -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
+checkv2 sub/b.cpp.xml "$expr_stmt_fsxmlfile" 4<<< "$deprecated_warning"
 
 # auto-detection
 src2srcml sub/b.cpp
-check 3<<< "$expr_stmt_fsxmlfile"
+checkv2 "$expr_stmt_fsxmlfile"
 
 src2srcml -l C++ -o sub/b.cpp.xml < sub/b.cpp
-check sub/b.cpp.xml 3<<< "$expr_stmt_sxmlfile"
+checkv2 sub/b.cpp.xml "$expr_stmt_sxmlfile"
 
 src2srcml sub/b.cpp -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$expr_stmt_fsxmlfile"
+checkv2 sub/b.cpp.xml "$expr_stmt_fsxmlfile"

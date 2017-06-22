@@ -51,10 +51,10 @@ createfile sub/b.cpp "
 b;"
 
 src2srcml --archive sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$output"
+checkv2 sub/a.cpp.xml "$output"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$nestedfile"
+checkv2 sub/a.cpp.xml "$nestedfile"
 
 src2srcml --xmlns:src=http://www.srcML.org/srcML/src sub/a.cpp sub/b.cpp --in-order  -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$nestedfilesrc"
+checkv2 sub/a.cpp.xml "$nestedfilesrc"

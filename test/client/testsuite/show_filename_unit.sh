@@ -14,17 +14,17 @@ createfile sub/a.cpp.xml "$input"
 createfile sub/a.cpp "a;"
 
 srcml sub/a.cpp.xml --show-filename
-check 3<<< "sub/a.cpp"
+checkv2 "sub/a.cpp"
 
 srcml --show-filename sub/a.cpp.xml
-check 3<<< "sub/a.cpp"
+checkv2 "sub/a.cpp"
 
 srcml --show-filename < sub/a.cpp.xml
-check 3<<< "sub/a.cpp"
+checkv2 "sub/a.cpp"
 
 srcml sub/a.cpp --show-filename
-check 3<<< "sub/a.cpp"
+checkv2 "sub/a.cpp"
 
 srcml --show-filename sub/a.cpp
-check 3<<< "sub/a.cpp"
+checkv2 "sub/a.cpp"
 

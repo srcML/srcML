@@ -43,45 +43,45 @@ new_arg() {
 new_arg
 
 srcml2src $val sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 srcml2src $val < sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 
 new_arg
 
 srcml2src $val sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 srcml2src $val < sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 
 new_arg
 
 srcml2src $val sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 srcml2src $val < sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 
 new_arg
 
 srcml2src $val sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 srcml2src $val < sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 
 new_arg
 
 srcml2src $val sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 srcml2src $val < sub/a.cpp.xml
-check 3<<< "$values"
+checkv2 "$values"
 
 

@@ -15,10 +15,10 @@ xmlcheck "$srcmlcpp"
 createfile sub/a.cpp.xml "$srcmlcpp"
 
 srcml --show-language sub/a.cpp.xml
-check 3<<< "C++"
+checkv2 "C++"
 
 srcml --show-language < sub/a.cpp.xml
-check 3<<< "C++"
+checkv2 "C++"
 
 # Java
 define srcmljava <<- 'STDOUT'
@@ -31,10 +31,10 @@ xmlcheck "$srcmljava"
 createfile sub/a.java.xml "$srcmljava"
 
 srcml --show-language sub/a.java.xml
-check 3<<< "Java"
+checkv2 "Java"
 
 srcml --show-language < sub/a.java.xml
-check 3<<< "Java"
+checkv2 "Java"
 
 # C
 define srcmlc <<- 'STDOUT'
@@ -47,10 +47,10 @@ xmlcheck "$srcmlc"
 createfile sub/a.c.xml "$srcmlc"
 
 srcml --show-language sub/a.c.xml
-check 3<<< "C"
+checkv2 "C"
 
 srcml --show-language < sub/a.c.xml
-check 3<<< "C"
+checkv2 "C"
 
 # Objective-C
 define srcmlobjc <<- 'STDOUT'
@@ -63,10 +63,10 @@ xmlcheck "$srcmlobjc"
 createfile sub/a.m.xml "$srcmlobjc"
 
 srcml --show-language sub/a.m.xml
-check 3<<< "Objective-C"
+checkv2 "Objective-C"
 
 srcml --show-language < sub/a.m.xml
-check 3<<< "Objective-C"
+checkv2 "Objective-C"
 
 # Aspect J
 define srcmlaj <<- 'STDOUT'
@@ -79,10 +79,10 @@ xmlcheck "$srcmlaj"
 createfile sub/a.aj.xml "$srcmlaj"
 
 srcml --show-language sub/a.aj.xml
-check 3<<< "Java"
+checkv2 "Java"
 
 srcml --show-language < sub/a.aj.xml
-check 3<<< "Java"
+checkv2 "Java"
 
 # Empty
 define empty <<- 'STDIN'
@@ -94,8 +94,8 @@ xmlcheck "$empty"
 createfile sub/a.cpp.xml "$empty"
 
 srcml --show-language sub/a.cpp.xml
-check 3<<< ""
+checkv2 ""
 
 srcml --show-language < sub/a.cpp.xml
-check 3<<< ""
+checkv2 ""
 

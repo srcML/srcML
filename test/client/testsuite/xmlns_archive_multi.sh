@@ -21,67 +21,67 @@ createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
 
 srcml --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp --in-order
-check 3<<< "$foosrcml"
+checkv2 "$foosrcml"
 
 srcml sub/a.cpp sub/b.cpp --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" --in-order
-check 3<<< "$foosrcml"
+checkv2 "$foosrcml"
 
 srcml sub/a.cpp sub/b.cpp --in-order --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src"
-check 3<<< "$foosrcml"
+checkv2 "$foosrcml"
 
 srcml --in-order --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp
-check 3<<< "$foosrcml"
+checkv2 "$foosrcml"
 
 srcml --in-order sub/a.cpp sub/b.cpp --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src"
-check 3<<< "$foosrcml"
+checkv2 "$foosrcml"
 
 srcml --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp --in-order -o sub/a.xml
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp -o sub/a.xml --in-order
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" -o sub/a.xml sub/a.cpp sub/b.cpp --in-order
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml -o sub/a.xml --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp --in-order
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml sub/a.cpp sub/b.cpp --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" --in-order -o sub/a.xml
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml sub/a.cpp sub/b.cpp --in-order -o sub/a.xml --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src"
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml sub/a.cpp sub/b.cpp -o sub/a.xml --in-order --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src"
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml -o sub/a.xml sub/a.cpp sub/b.cpp --in-order --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src"
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml --in-order --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp -o sub/a.xml
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml --in-order --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" -o sub/a.xml sub/a.cpp sub/b.cpp
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml --in-order -o sub/a.xml --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml -o sub/a.xml --in-order --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml --in-order sub/a.cpp sub/b.cpp --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" -o sub/a.xml
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml --in-order sub/a.cpp sub/b.cpp -o sub/a.xml --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src"
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml --in-order -o sub/a.xml sub/a.cpp sub/b.cpp --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src"
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 srcml -o sub/a.xml --in-order sub/a.cpp sub/b.cpp --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src"
-check sub/a.xml 3<<< "$foosrcml"
+checkv2 sub/a.xml "$foosrcml"
 
 # with prefix
 define fooprefixsrcml <<- 'STDOUT'
@@ -98,65 +98,65 @@ define fooprefixsrcml <<- 'STDOUT'
 xmlcheck "$fooprefixsrcml"
 
 srcml --xmlns:foo="http://www.foo.com" sub/a.cpp sub/b.cpp --in-order
-check 3<<< "$fooprefixsrcml"
+checkv2 "$fooprefixsrcml"
 
 srcml sub/a.cpp sub/b.cpp --xmlns:foo="http://www.foo.com" --in-order
-check 3<<< "$fooprefixsrcml"
+checkv2 "$fooprefixsrcml"
 
 srcml sub/a.cpp sub/b.cpp --in-order --xmlns:foo="http://www.foo.com"
-check 3<<< "$fooprefixsrcml"
+checkv2 "$fooprefixsrcml"
 
 srcml --in-order --xmlns:foo="http://www.foo.com" sub/a.cpp sub/b.cpp
-check 3<<< "$fooprefixsrcml"
+checkv2 "$fooprefixsrcml"
 
 srcml --in-order sub/a.cpp sub/b.cpp --xmlns:foo="http://www.foo.com"
-check 3<<< "$fooprefixsrcml"
+checkv2 "$fooprefixsrcml"
 
 srcml --xmlns:foo="http://www.foo.com" sub/a.cpp sub/b.cpp --in-order -o sub/a.xml
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml --xmlns:foo="http://www.foo.com" sub/a.cpp sub/b.cpp -o sub/a.xml --in-order
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml --xmlns:foo="http://www.foo.com" -o sub/a.xml sub/a.cpp sub/b.cpp --in-order
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml -o sub/a.xml --xmlns:foo="http://www.foo.com" sub/a.cpp sub/b.cpp --in-order
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml sub/a.cpp sub/b.cpp --xmlns:foo="http://www.foo.com" --in-order -o sub/a.xml
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml sub/a.cpp sub/b.cpp --in-order -o sub/a.xml --xmlns:foo="http://www.foo.com"
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml sub/a.cpp sub/b.cpp -o sub/a.xml --in-order --xmlns:foo="http://www.foo.com"
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml -o sub/a.xml sub/a.cpp sub/b.cpp --in-order --xmlns:foo="http://www.foo.com"
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml --in-order --xmlns:foo="http://www.foo.com" sub/a.cpp sub/b.cpp -o sub/a.xml
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml --in-order --xmlns:foo="http://www.foo.com" -o sub/a.xml sub/a.cpp sub/b.cpp
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml --in-order -o sub/a.xml --xmlns:foo="http://www.foo.com" sub/a.cpp sub/b.cpp
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml -o sub/a.xml --in-order --xmlns:foo="http://www.foo.com" sub/a.cpp sub/b.cpp
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml --in-order sub/a.cpp sub/b.cpp --xmlns:foo="http://www.foo.com" -o sub/a.xml
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml --in-order sub/a.cpp sub/b.cpp -o sub/a.xml --xmlns:foo="http://www.foo.com"
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml --in-order -o sub/a.xml sub/a.cpp sub/b.cpp --xmlns:foo="http://www.foo.com"
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 
 srcml -o sub/a.xml --in-order sub/a.cpp sub/b.cpp --xmlns:foo="http://www.foo.com"
-check sub/a.xml 3<<< "$fooprefixsrcml"
+checkv2 sub/a.xml "$fooprefixsrcml"
 

@@ -21,37 +21,37 @@ createfile sub/a.cpp ""
 createfile sub/b.cpp ""
 
 srcml --tabs 4 --archive --position sub/a.cpp sub/b.cpp --in-order
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml --archive --tabs 4 --position sub/a.cpp sub/b.cpp --in-order
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml --tabs 4 sub/a.cpp sub/b.cpp --position --archive --in-order
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml sub/a.cpp sub/b.cpp --archive --tabs 4 --position --in-order
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml --tabs 4 --position sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --position --tabs 4 sub/a.cpp sub/b.cpp --archive -o sub/a.cpp.xml --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --archive --tabs 4 --position sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 4 --archive sub/a.cpp sub/b.cpp --position -o sub/a.cpp.xml --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --archive --position --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 4 -o sub/a.cpp.xml --archive sub/a.cpp sub/b.cpp --position  --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 4 --position --archive -o sub/a.cpp.xml sub/a.cpp sub/b.cpp  --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --position --archive --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp  --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"

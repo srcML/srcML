@@ -21,16 +21,16 @@ createfile sub/a.cpp ""
 
 # specify tab size of 8
 srcml -l C++ --tabs 8 < sub/a.cpp
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml --tabs 8 sub/a.cpp
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml -l C++ --tabs 8 -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+checkv2 sub/a.cpp.xml "$srcml"
 
 srcml --tabs 8 sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 -o sub/a.cpp.xml sub/a.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"

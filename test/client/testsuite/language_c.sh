@@ -13,25 +13,25 @@ xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 
 src2srcml -l "C" sub/a.cpp
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 src2srcml --language "C" sub/a.cpp
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 src2srcml --language="C" sub/a.cpp
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 src2srcml sub/a.cpp -l "C"
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 src2srcml sub/a.cpp --language "C"
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 src2srcml sub/a.cpp --language="C"
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 src2srcml -l 'C' -o sub/a.cpp.xml sub/a.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 src2srcml -l 'C' sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"

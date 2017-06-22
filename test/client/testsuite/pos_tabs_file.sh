@@ -20,31 +20,31 @@ xmlcheck "$srcml"
 createfile sub/a.cpp ""
 
 srcml -l C++ --position --tabs 4 < sub/a.cpp
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml -l C++ --tabs 4 --position < sub/a.cpp
-check 3<<< "$srcml"
+checkv2 "$srcml"
 
 srcml --position --tabs 4 sub/a.cpp
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml --tabs 4 --position sub/a.cpp
-check 3<<< "$fsrcml"
+checkv2 "$fsrcml"
 
 srcml -l C++ --position --tabs 4 -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+checkv2 sub/a.cpp.xml "$srcml"
 
 srcml -l C++ --tabs 4 --position -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+checkv2 sub/a.cpp.xml "$srcml"
 
 srcml --tabs 4 --position sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --position --tabs 4 sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 4 --position -o sub/a.cpp.xml sub/a.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"
 
 srcml --position --tabs 4 -o sub/a.cpp.xml sub/a.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+checkv2 sub/a.cpp.xml "$fsrcml"

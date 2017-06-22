@@ -20,38 +20,38 @@ createfile sub/a.cpp ""
 
 # separate
 src2srcml --xmlns="http://www.srcML.org/srcML/src" sub/a.cpp
-check 3<<< "$foutput"
+checkv2 "$foutput"
 
 echo -n "" | src2srcml -l C++ --xmlns="http://www.srcML.org/srcML/src"
-check 3<<< "$output"
+checkv2 "$output"
 
 echo -n "" | src2srcml -l C++ --xmlns:cpp="http://www.srcML.org/srcML/cpp"
-check 3<<< "$output"
+checkv2 "$output"
 
 echo -n "" | src2srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$output"
+checkv2 sub/a.cpp.xml "$output"
 
 src2srcml --xmlns="http://www.srcML.org/srcML/src" sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$foutput"
+checkv2 sub/a.cpp.xml "$foutput"
 
 src2srcml --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp
-check 3<<< "$foutput"
+checkv2 "$foutput"
 
 echo -n "" | src2srcml -l C++ --xmlns:cpp="http://www.srcML.org/srcML/cpp" -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$output"
+checkv2 sub/a.cpp.xml "$output"
 
 src2srcml --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$foutput"
+checkv2 sub/a.cpp.xml "$foutput"
 
 # multiple
 echo -n "" | src2srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp"
-check 3<<< "$output"
+checkv2 "$output"
 
 echo -n "" | src2srcml --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp
-check 3<<< "$foutput"
+checkv2 "$foutput"
 
 echo -n "" | src2srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$output"
+checkv2 sub/a.cpp.xml "$output"
 
 src2srcml --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$foutput"
+checkv2 sub/a.cpp.xml "$foutput"

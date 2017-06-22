@@ -18,47 +18,47 @@ createfile sub/a.xml "$input"
 
 # from a file
 srcml -U 1 -X -p "http://www.srcML.org/srcML/cpp" sub/a.xml
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml sub/a.xml -U 1 -X -p "http://www.srcML.org/srcML/cpp"
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml -p "http://www.srcML.org/srcML/src" sub/a.xml
-check 3<<< ""
+checkv2 ""
 
 srcml sub/a.xml -p "http://www.srcML.org/srcML/src"
-check 3<<< ""
+checkv2 ""
 
 srcml -p "foo.com" sub/a.xml
-check 3<<< "foo"
+checkv2 "foo"
 
 srcml sub/a.xml -p "foo.com"
-check 3<<< "foo"
+checkv2 "foo"
 
 srcml -p "nonexistent.com" sub/a.xml
-check_null
+checkv2_null
 
 srcml sub/a.xml -p "nonexistent.com"
-check_null
+checkv2_null
 
 # standard in
 srcml2src -U 1 -X -p "http://www.srcML.org/srcML/cpp" <<< "$input"
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml2src -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml2src -U 1 -X --prefix="http://www.srcML.org/srcML/cpp" <<< "$input"
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml2src -p "http://www.srcML.org/srcML/src" <<< "$input"
-check 3<<< ""
+checkv2 ""
 
 srcml2src --prefix "http://www.srcML.org/srcML/src" <<< "$input"
-check 3<<< ""
+checkv2 ""
 
 srcml2src --prefix="http://www.srcML.org/srcML/src" <<< "$input"
-check 3<<< ""
+checkv2 ""
 
 
 # archive of multiple units
@@ -76,45 +76,45 @@ define archive_multi <<- 'INPUT'
 createfile sub/archive_multi.xml "$archive_multi"
 
 srcml -U 1 -X -p "http://www.srcML.org/srcML/cpp" sub/archive_multi.xml
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml sub/archive_multi.xml -U 1 -X -p "http://www.srcML.org/srcML/cpp"
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml -p "http://www.srcML.org/srcML/src" sub/archive_multi.xml
-check 3<<< ""
+checkv2 ""
 
 srcml sub/archive_multi.xml -p "http://www.srcML.org/srcML/src"
-check 3<<< ""
+checkv2 ""
 
 srcml -p "foo.com" sub/archive_multi.xml
-check 3<<< "foo"
+checkv2 "foo"
 
 srcml sub/archive_multi.xml -p "foo.com"
-check 3<<< "foo"
+checkv2 "foo"
 
 srcml -p "nonexistent.com" sub/archive_multi.xml
-check_null
+checkv2_null
 
 srcml sub/archive_multi.xml -p "nonexistent.com"
-check_null
+checkv2_null
 
 # standard in
 srcml2src -U 1 -X  -p "http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml2src -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml2src -U 1 -X --prefix="http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
-check 3<<< "cpp"
+checkv2 "cpp"
 
 srcml2src -p "http://www.srcML.org/srcML/src" <<< "$archive_multi"
-check 3<<< ""
+checkv2 ""
 
 srcml2src --prefix "http://www.srcML.org/srcML/src" <<< "$archive_multi"
-check 3<<< ""
+checkv2 ""
 
 srcml2src --prefix="http://www.srcML.org/srcML/src" <<< "$archive_multi"
-check 3<<< ""
+checkv2 ""
 

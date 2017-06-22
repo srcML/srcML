@@ -16,14 +16,14 @@ createfile a.cpp "a;
 rm -rf nonexistent_dir
 
 echo "a;" | srcml -l C++ -o nonexistent_dir/a.xml --filename "a.cpp"
-check nonexistent_dir/a.xml 3<<< "$srcml"
+checkv2 nonexistent_dir/a.xml "$srcml"
 
 rm -rf nonexistent_dir
 
 srcml a.cpp -o nonexistent_dir/a.xml
-check nonexistent_dir/a.xml 3<<< "$srcml"
+checkv2 nonexistent_dir/a.xml "$srcml"
 
 rm -rf nonexistent_dir
 
 srcml a.xml -o nonexistent_dir/a.cpp
-check nonexistent_dir/a.cpp 3<<< "a;"
+checkv2 nonexistent_dir/a.cpp "a;"

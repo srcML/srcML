@@ -21,24 +21,24 @@ createfile sub/a.cpp.xml "$input"
 
 # language, url, filename
 srcml --show-language --show-url --show-filename sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --show-language --show-url --show-filename < sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 # url, language, filename
 srcml --show-url --show-language --show-filename sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --show-url --show-language --show-filename < sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 # filename, url, language
 srcml --show-filename --show-url --show-language sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --show-filename --show-url --show-language < sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 
 define output <<- 'STDOUT'
@@ -50,17 +50,17 @@ define output <<- 'STDOUT'
 
 # language, url, filename, encoding
 srcml --show-language --show-url --show-filename --show-encoding sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --show-language --show-url --show-filename --show-encoding < sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 # encoding, url, language, filename
 srcml --show-encoding --show-url --show-language --show-filename sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --show-encoding --show-url --show-language --show-filename < sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 
 define output <<- 'STDOUT'
@@ -73,16 +73,16 @@ define output <<- 'STDOUT'
 
 # filename, url, language, encoding, src version
 srcml --show-filename --show-url --show-language --show-encoding --show-src-version sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --show-filename --show-url --show-language --show-encoding --show-src-version < sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 # version, language, encoding, filename, url
 srcml --show-src-version --show-language --show-filename --show-encoding --show-url sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 srcml --show-src-version --show-language --show-filename --show-encoding --show-url < sub/a.cpp.xml
-check 3<<< "$output"
+checkv2 "$output"
 
 
