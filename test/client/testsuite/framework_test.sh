@@ -235,6 +235,46 @@ check() {
 
     true
 }
+
+##
+# checks the result of a command
+#   $1 (optional) file of expected stdout
+#   $2 (optional) file of expected stderr
+#   $STDOUT - filename of captured stdout
+#   $STDERR - filename of captured stderr
+#
+# If stdout is not specified, it is assumed to be empty
+# If stderr is not specified, it is assumed to be empty
+checkv2() {
+
+    # return stdout and stderr to standard streams
+    uncapture_output
+
+    # trace the command
+    firsthistoryentry
+
+    # verify expected stdout to the captured stdout
+    if [ $# -ge 2 ]; then
+
+        # register to cleanup
+        registerfile ${1}
+
+        # compare the parameter file to the expected output
+        diff $1 <(echo -n "$2")
+
+    elif [ $# -ge 1 ]; then
+        diff $STDOUT <(echo -n "$1" | sed -e "s/REVISION/${REVISION}/;")
+    else
+        # check that the captured stdout is empty
+        [ ! -s $STDOUT ]
+    fi
+
+    # return to capturing stdout and stderr
+    capture_output
+
+    true
+}
+
 ##
 # checks the result of a command to verify that it is empty
 #   $1 (optional) file of expected stdout
