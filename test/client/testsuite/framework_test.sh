@@ -28,9 +28,6 @@
 #
 # * Multiple tests of cli command followed by call to function check
 #   can be made
-#
-# * Put in a trap for cleanup in test file:
-#   trap { cleanup; } EXIT
 
 # current revision number, replaced in expected output strings
 export REVISION=0.9.5
