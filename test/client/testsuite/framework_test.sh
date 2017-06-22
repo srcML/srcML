@@ -144,14 +144,14 @@ rmfile() { rm -f ${1}; }
 
 # capture stdout and stderr
 capture_output() {
-    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
-    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+    [ "$CAPTURE_STDOUT" = true ] && exec 3>&1 1>$STDOUT
+    [ "$CAPTURE_STDERR" = true ] && exec 4>&2 2>$STDERR
 }
 
 # uncapture stdout and stderr
 uncapture_output() {
-    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
-    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+    [ "$CAPTURE_STDOUT" = true ] && exec 1>&3
+    [ "$CAPTURE_STDERR" = true ] && exec 2>&4
 }
 
 message() {
