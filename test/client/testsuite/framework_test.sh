@@ -32,10 +32,6 @@
 # * Put in a trap for cleanup in test file:
 #   trap { cleanup; } EXIT
 
-# close our stderr file descriptors
-# FIXME: Why was this needed?
-#exec 4>&-
-
 # current revision number, replaced in expected output strings
 export REVISION=0.9.5
 
@@ -96,8 +92,9 @@ set -e
 # turn history on so we can output the command issued
 # note that the fc command accesses the history
 set -o history
-export HISTIGNORE=check:\#
+HISTIGNORE=check:\#
 HISTSIZE=2
+HISTFILESIZE=0
 
 # output the first entry in the history file, without numbers
 firsthistoryentry() {
