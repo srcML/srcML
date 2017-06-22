@@ -271,11 +271,20 @@ checkv2() {
         diff $STDERR <(echo -n "$2")
 
     # check <filename>
+    elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
+        diff $STDOUT $1
+        [ ! -s $STDERR ]
+
+    # check stdoutstr
     elif [ $# -ge 1 ]; then
+
         diff $STDOUT <(echo -n "$1" | sed -e "s/REVISION/${REVISION}/;")
+        [ ! -s $STDERR ]
+
     else
         # check that the captured stdout is empty
         [ ! -s $STDOUT ]
+        [ ! -s $STDERR ]
     fi
 
     # return to capturing stdout and stderr

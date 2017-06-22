@@ -23,7 +23,7 @@ checkv2 "$srcml"
 set +e
 
 src2srcml --text -l "C++"
-checkv2_exit 7
+check_exit 7
 
 set -e
 
@@ -65,6 +65,8 @@ define asrcml <<- 'STDOUT'
 	STDOUT
 
 xmlcheck "$asrcml"
+
+message "FIXME: Why is this message required?"
 
 src2srcml -t "a;" -l "C++"
 checkv2 "$asrcml"
