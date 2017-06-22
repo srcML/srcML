@@ -56,8 +56,6 @@ const unsigned int SRCML_OPTION_CPPIF_CHECK       = 1<<16;
 const unsigned int SRCML_OPTION_LINE              = 1<<15;
 /** Markups OpenMP in special namespace */
 const unsigned int SRCML_OPTION_OPENMP            = 1<<25;
-/** Expression mode */
-const unsigned int SRCML_OPTION_EXPRESSION        = 1<<14;
 /** Apply transformations to the entire srcML file (default: each unit */
 const unsigned int SRCML_OPTION_APPLY_ROOT        = 1<<8;
 /** Debug time attribute */

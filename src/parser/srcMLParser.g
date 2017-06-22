@@ -319,24 +319,13 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
     number_finishing_elements(0), in_template_param(false), start_count(0)
 {
 
-    // root, single mode
-    if (isoption(parser_options, SRCML_OPTION_EXPRESSION))
-        // root, single mode to allows for an expression without a statement
-        startNewMode(MODE_TOP | MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
-    else
-       // root, single mode that allows statements to be nested
-       startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
+    // root, single mode that allows statements to be nested
+    startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
    
 }
 
 // ends all currently open modes
 void srcMLParser::endAllModes() {
-
-     // expression mode has an extra mode
-     /*
-       if (isoption(parser_options, SRCML_OPTION_EXPRESSION))
-       endMode();
-     */
 
      // should only be one mode
      if (size() > 1 && isoption(parser_options, SRCML_OPTION_DEBUG))
@@ -3504,8 +3493,7 @@ terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_
 
             // end all statements this statement is nested in
             // special case when ending then of if statement
-            if (!isoption(parser_options, SRCML_OPTION_EXPRESSION) &&
-                 (!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
+            if ((!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
                 !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INTERNAL_END_PAREN)
                 && !inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)
                 && !inMode(MODE_END_AT_ENDIF)) {

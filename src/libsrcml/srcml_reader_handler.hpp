@@ -455,8 +455,6 @@ public :
                         archive->options |= SRCML_OPTION_CPP_TEXT_ELSE;
                     else if(option == "CPP_MARKUP_IF0")
                         archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
-                    else if(option == "EXPRESSION")
-                        archive->options |= SRCML_OPTION_EXPRESSION;
                     else if(option == "LINE")
                         archive->options |= SRCML_OPTION_LINE;
                     else if(option == "NESTIF")
