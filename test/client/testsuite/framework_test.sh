@@ -35,27 +35,13 @@
 # current revision number, replaced in expected output strings
 export REVISION=0.9.5
 
-# generated files, list is kept to cleanup
-genfiles=""
+# construct a temporary directory name based on the test name (without the .sh)
+TEMPDIR=./tmp/$(basename $0 .sh)
 
-# restores environment, deletes files created with createfile command.
-# or registerd with registerfile command
-cleanup() {
-    # remove createfile files, and registerfile files
-    rm -f $genfiles
-
-    genfiles=""
-}
-
-# registers a file so that it will be cleaned up
-# does not create it
-registerfile() {
-
-    # append to our list of files
-    genfiles="$genfiles  "${1}
-}
-
-trap "{ cleanup; }" EXIT
+# remove old TEMPDIR, and create new fresh one
+rm -fR $TEMPDIR
+mkdir -p $TEMPDIR
+cd $TEMPDIR
 
 # make sure to find the srcml executable
 export PATH=.:$PATH
@@ -63,15 +49,15 @@ export PATH=.:$PATH
 echo "$SRC2SRCML"
 
 if [ -z "$SRC2SRCML" ]; then
-    SRC2SRCML='../../../bin/srcml'
+    SRC2SRCML='/usr/local/bin/srcml'
 fi
 
 if [ -z "$SRCML2SRC" ]; then
-    SRCML2SRC='../../../bin/srcml'
+    SRCML2SRC='/usr/local/bin/srcml'
 fi
 
 if [ -z "$SRCML"]; then
-    SRCML='../../../bin/srcml'
+    SRCML='/usr/local/bin/srcml'
 fi
 
 function src2srcml () {
@@ -125,9 +111,6 @@ createfile() {
 
     # add contents to file
     echo -ne "${2}" > ${1}
-
-    # register to cleanup
-    registerfile ${1}
 }
 
 rmfile() { rm -f ${1}; }
@@ -164,7 +147,6 @@ typeset STDOUT=.stdout_$base
 # save stdout and stderr to our files
 capture_output
 
-
 ##
 # checks the result of a command
 #
@@ -181,7 +163,6 @@ check() {
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        registerfile ${1}
         diff $1 <(echo -n "$2")
         diff $STDERR <(echo -n "$3")
 
@@ -189,7 +170,6 @@ check() {
     # note: empty string reports as a valid file
     elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-        registerfile ${1}
         diff $1 <(echo -n "$2")
         [ ! -s $STDERR ]
 
