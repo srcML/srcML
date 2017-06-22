@@ -159,11 +159,6 @@ message() {
     true
 }
 
-compare_file_expected() {
-
-    diff $1 <($SED -z -e 's/\n\n$/\n/m' $2)
-}
-
 # output filenames for capturing stdout and stderr from the command
 base=$(basename $0 .sh)
 typeset STDERR=.stderr_$base
