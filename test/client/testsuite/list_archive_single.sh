@@ -25,8 +25,8 @@ createfile sub/a.cpp.xml "$srcml"
 
 # test --list on input archives
 srcml --list sub/a.cpp.xml
-check 3<<< "$output"
+check "$output"
 
 srcml --list < sub/a.cpp.xml
-check 3<<< "$output"
+check "$output"
 

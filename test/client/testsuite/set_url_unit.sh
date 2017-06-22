@@ -20,28 +20,28 @@ xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 
 echo -n "" | src2srcml -l C++ --url bar
-check 3<<< "$output"
+check "$output"
 
 echo -n "" | src2srcml -l C++ --url=bar
-check 3<<< "$output"
+check "$output"
 
 src2srcml --url "bar" sub/a.cpp 
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml --url "bar" sub/a.cpp 
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml --url="bar" sub/a.cpp
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml --url 'bar' sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml sub/a.cpp --url "bar"
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --url="bar"
-check 3<<< "$fsrcml"
+check "$fsrcml"

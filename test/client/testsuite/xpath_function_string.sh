@@ -22,12 +22,12 @@ xmlcheck "$srcml_nested"
 createfile sub/a.cpp.xml "$srcml_nested"
 
 srcml2src sub/a.cpp.xml --xpath "string(//src:unit/@filename)"
-check 3<<< "$output"
+check "$output"
 
 srcml2src --xpath "string(//src:unit/@filename)" sub/a.cpp.xml
-check 3<<< "$output"
+check "$output"
 
 srcml2src --xpath "string(//src:unit/@filename)" <<< "$srcml_nested"
-check 3<<< "$output"
+check "$output"
 
 	

@@ -17,7 +17,7 @@ define nestedfile <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 define nestedfilesrc <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -32,7 +32,7 @@ define nestedfilesrc <<- 'STDOUT'
 	</src:unit>
 
 	</src:unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$nestedfile"
 xmlcheck "$nestedfilesrc"
@@ -44,25 +44,25 @@ STDERR
 
 # test
 srcml2src --units <<< "$nestedfile"
-check 3<<< "2" 4<<< "$deprecated_warning"
+check "2" "$deprecated_warning"
 
 srcml2src --units <<< "$nestedfilesrc"
-check 3<<< "2" 4<<< "$deprecated_warning"
+check "2" "$deprecated_warning"
 
 srcml2src -U "1" <<< "$nestedfile"
-check 3<<< $'\na;\n'
+check $'\na;\n'
 
 srcml2src --unit "1" <<< "$nestedfile"
-check 3<<< $'\na;\n'
+check $'\na;\n'
 
 srcml2src --unit="1" <<< "$nestedfile"
-check 3<<< $'\na;\n'
+check $'\na;\n'
 
 srcml2src -U "2" <<< "$nestedfile"
-check 3<<< $'\nb;\n'
+check $'\nb;\n'
 
 srcml2src --unit "2" <<< "$nestedfile"
-check 3<<< $'\nb;\n'
+check $'\nb;\n'
 
 srcml2src --unit="2" <<< "$nestedfile"
-check 3<<< $'\nb;\n'
+check $'\nb;\n'

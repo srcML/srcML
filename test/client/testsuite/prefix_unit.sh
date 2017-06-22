@@ -7,29 +7,29 @@ source $(dirname "$0")/framework_test.sh
 define input <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:foo="foo.com" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
-	STDIN
+  STDIN
 
 xmlcheck "$input"
 createfile sub/a.xml "$input"
 
 # from file
 srcml -p "http://www.srcML.org/srcML/src" sub/a.xml
-check 3<<< ""
+check ""
 
 srcml sub/a.xml -p "http://www.srcML.org/srcML/src"
-check 3<<< ""
+check ""
 
 srcml -p "http://www.srcML.org/srcML/cpp" sub/a.xml
-check 3<<< "cpp"
+check "cpp"
 
 srcml sub/a.xml -p "http://www.srcML.org/srcML/cpp"
-check 3<<< "cpp"
+check "cpp"
 
 srcml -p "foo.com" sub/a.xml
-check 3<<< "foo"
+check "foo"
 
 srcml sub/a.xml -p "foo.com"
-check 3<<< "foo"
+check "foo"
 
 srcml -p "nonexistent.com" sub/a.xml
 check_null
@@ -39,25 +39,25 @@ check_null
 
 # standard input
 srcml2src -p "http://www.srcML.org/srcML/src" <<< "$input"
-check 3<<< ""
+check ""
 
 srcml2src --prefix "http://www.srcML.org/srcML/src" <<< "$input"
-check 3<<< ""
+check ""
 
 srcml2src --prefix="http://www.srcML.org/srcML/src" <<< "$input"
-check 3<<< ""
+check ""
 
 srcml2src -p "http://www.srcML.org/srcML/cpp" <<< "$input"
-check 3<<< "cpp"
+check "cpp"
 
 srcml2src --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
-check 3<<< "cpp"
+check "cpp"
 
 srcml2src --prefix="http://www.srcML.org/srcML/cpp" <<< "$input"
-check 3<<< "cpp"
+check "cpp"
 
 srcml2src --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
-check 3<<< "cpp"
+check "cpp"
 
 srcml2src -p "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 check_null

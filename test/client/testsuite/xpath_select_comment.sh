@@ -36,28 +36,28 @@ xmlcheck "$output"
 createfile sub/archive.xml "$input"
 
 srcml --xpath "//comment()" <<< "$input"
-check 3<<< "$output"
+check "$output"
 
 srcml sub/archive.xml --xpath "//comment()"
-check 3<<< "$output"
+check "$output"
 
 srcml --xpath "//comment()" sub/archive.xml
-check 3<<< "$output"
+check "$output"
 
 srcml sub/archive.xml --xpath "//comment()" -o sub/a.xml
-check sub/a.xml 3<<< "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//comment()" sub/archive.xml -o sub/a.xml
-check sub/a.xml 3<<< "$output"
+check sub/a.xml "$output"
 
 srcml sub/archive.xml -o sub/a.xml --xpath "//comment()"
-check sub/a.xml 3<<< "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//comment()" -o sub/a.xml sub/archive.xml
-check sub/a.xml 3<<< "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/archive.xml --xpath "//comment()"
-check sub/a.xml 3<<< "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml --xpath "//comment()" sub/archive.xml
-check sub/a.xml 3<<< "$output"
+check sub/a.xml "$output"

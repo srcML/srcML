@@ -61,35 +61,35 @@ createfile sub/unit.cpp.xml "$srcml"
 createfile schema.rng "$schema"
 
 srcml2src --relaxng=schema.rng sub/unit.cpp.xml
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml2src --relaxng=schema.rng < sub/unit.cpp.xml
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml2src --relaxng=schema.rng sub/unit.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --relaxng=schema.rng -o sub/b.cpp.xml sub/unit.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --relaxng=schema.rng -o sub/b.cpp.xml < sub/unit.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # apply root and apply schema
 srcml2src --relaxng=schema.rng sub/unit.cpp.xml
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml2src --relaxng=schema.rng < sub/unit.cpp.xml
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml2src --relaxng=schema.rng sub/unit.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --relaxng=schema.rng -o sub/b.cpp.xml sub/unit.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --relaxng=schema.rng -o sub/b.cpp.xml < sub/unit.cpp.xml
-check sub/b.cpp.xml 3<<< "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 
 ## TODO really make sure this is ok to return ok when no schema supplied.
@@ -99,14 +99,14 @@ check sub/b.cpp.xml 3<<< "$srcml"
 #if sys.platform != 'cygwin' :
 #	srcml2src --relaxng + '=' srcml
 #
-#	check 4<<< "0"
+#	check "" "0"
 #
 
 ## TODO really make sure this is ok to return ok when no schema supplied.
 #srcml2src --relaxng srcml
 #
-#check 4<<< "0"
+#check "" "0"
 #if sys.platform != 'cygwin' :
 #	srcml2src --relaxng + '=' srcml
 #
-#	check 4<<< "0"
+#	check "" "0"

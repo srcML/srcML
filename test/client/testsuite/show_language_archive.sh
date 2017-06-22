@@ -14,22 +14,22 @@ define none <<- 'STDIN'
 	</unit>
 
 	</unit>
-	STDIN
+  STDIN
 
 xmlcheck "$none"
 createfile sub/archive.cpp.xml "$none"
 
 srcml --show-language sub/archive.cpp.xml
-check 3<<< "C++"
+check "C++"
 
 srcml --show-language < sub/archive.cpp.xml
-check 3<<< "C++"
+check "C++"
 
 # empty
 define empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDOUT
+  STDOUT
 
 createfile sub/archive.cpp.xml "$empty"
 

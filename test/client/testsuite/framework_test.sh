@@ -32,22 +32,15 @@
 # * Put in a trap for cleanup in test file:
 #   trap { cleanup; } EXIT
 
-# need -z option on GNU sed, not available on BSD sed
-if [ -e /usr/local/bin/gsed ]
-then
-   SED="gsed"
-else
-   SED="sed"
-fi
-
 # close our stderr file descriptors
-exec 4>&-
-
-# generated files, list is kept to cleanup
-genfiles=""
+# FIXME: Why was this needed?
+#exec 4>&-
 
 # current revision number, replaced in expected output strings
 export REVISION=0.9.5
+
+# generated files, list is kept to cleanup
+genfiles=""
 
 # restores environment, deletes files created with createfile command.
 # or registerd with registerfile command
@@ -144,14 +137,14 @@ rmfile() { rm -f ${1}; }
 
 # capture stdout and stderr
 capture_output() {
-    [ "$CAPTURE_STDOUT" = true ] && exec 5>&1 1>$STDOUT
-    [ "$CAPTURE_STDERR" = true ] && exec 6>&2 2>$STDERR
+    [ "$CAPTURE_STDOUT" = true ] && exec 3>&1 1>$STDOUT
+    [ "$CAPTURE_STDERR" = true ] && exec 4>&2 2>$STDERR
 }
 
 # uncapture stdout and stderr
 uncapture_output() {
-    [ "$CAPTURE_STDOUT" = true ] && exec 1>&5
-    [ "$CAPTURE_STDERR" = true ] && exec 2>&6
+    [ "$CAPTURE_STDOUT" = true ] && exec 1>&3
+    [ "$CAPTURE_STDERR" = true ] && exec 2>&4
 }
 
 message() {
@@ -166,11 +159,6 @@ message() {
     true
 }
 
-compare_file_expected() {
-
-    diff $1 <($SED -z -e 's/\n\n$/\n/m' $2)
-}
-
 # output filenames for capturing stdout and stderr from the command
 base=$(basename $0 .sh)
 typeset STDERR=.stderr_$base
@@ -179,12 +167,9 @@ typeset STDOUT=.stdout_$base
 # save stdout and stderr to our files
 capture_output
 
+
 ##
 # checks the result of a command
-#   $1 (optional) file of expected stdout
-#   $2 (optional) file of expected stderr
-#   $STDOUT - filename of captured stdout
-#   $STDERR - filename of captured stderr
 #
 # If stdout is not specified, it is assumed to be empty
 # If stderr is not specified, it is assumed to be empty
@@ -196,45 +181,50 @@ check() {
     # trace the command
     firsthistoryentry
 
-    # verify expected stdout to the captured stdout
-    if [ $# -ge 1 ]; then
+    # check <filename> stdoutstr stderrstr
+    if [ $# -ge 3 ]; then
 
-        # register to cleanup
         registerfile ${1}
+        diff $1 <(echo -n "$2")
+        diff $STDERR <(echo -n "$3")
 
-        # compare the parameter file to the expected output
-        compare_file_expected $1 /dev/fd/3
+    # check <filename> stdoutstr
+    # note: empty string reports as a valid file
+    elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-    elif [ -e /dev/fd/3 ]; then
-        # redirection using immediate here document (<<) adds newline
-        diff $STDOUT <($SED -z -e 's/\n\n$/\n/m;' -e "s/REVISION/${REVISION}/;" /dev/fd/3)
+        registerfile ${1}
+        diff $1 <(echo -n "$2")
+        [ ! -s $STDERR ]
+
+    # check stdoutstr stderrstr
+    elif [ $# -ge 2 ]; then
+
+        diff $STDOUT <(echo -n "$1")
+        diff $STDERR <(echo -n "$2")
+
+    # check <filename>
+    elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
+        diff $STDOUT $1
+        [ ! -s $STDERR ]
+
+    # check stdoutstr
+    elif [ $# -ge 1 ]; then
+
+        diff $STDOUT <(echo -n "$1")
+        [ ! -s $STDERR ]
 
     else
         # check that the captured stdout is empty
         [ ! -s $STDOUT ]
-    fi
-
-    # verify expected stderr to the captured stderr
-    if [ $# -ge 2 ]; then
-        # compare the captured stderr to the required stderr
-        compare_file_expected $2 /dev/fd/4
-
-    elif [ -e /dev/fd/4 ]; then
-        compare_file_expected $STDERR /dev/fd/4
-
-    else
-        # check that the captured stderr is empty
         [ ! -s $STDERR ]
     fi
-
-    # close our stderr file descriptors
-    exec 4>&-
 
     # return to capturing stdout and stderr
     capture_output
 
     true
 }
+
 ##
 # checks the result of a command to verify that it is empty
 #   $1 (optional) file of expected stdout

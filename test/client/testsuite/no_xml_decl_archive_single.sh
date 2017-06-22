@@ -27,63 +27,63 @@ createfile sub/a.cpp "a;"
 
 # from standard in
 srcml --no-xml-declaration -l C++ --archive < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml --no-xml-declaration --archive -l C++ < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml --archive --no-xml-declaration -l C++ < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml -l C++ --no-xml-declaration --archive < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml -l C++ --archive --no-xml-declaration < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml --archive -l C++ --no-xml-declaration < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml --no-xml-declaration -l C++ -o sub/a.cpp.xml --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml --no-xml-declaration -o sub/a.cpp.xml -l C++ --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml -o sub/a.cpp.xml --no-xml-declaration -l C++ --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml -l C++ --no-xml-declaration -o sub/a.cpp.xml --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml -l C++ -o sub/a.cpp.xml --no-xml-declaration --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml -o sub/a.cpp.xml -l C++ --no-xml-declaration --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 # from a file
 srcml sub/a.cpp --no-xml-declaration --archive
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 srcml --no-xml-declaration sub/a.cpp --archive
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 srcml sub/a.cpp --no-xml-declaration -o sub/a.cpp.xml --archive
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml --no-xml-declaration sub/a.cpp -o sub/a.cpp.xml --archive
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml --no-xml-declaration -o sub/a.cpp.xml sub/a.cpp --archive
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml sub/a.cpp -o sub/a.cpp.xml --no-xml-declaration --archive
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml -o sub/a.cpp.xml --no-xml-declaration sub/a.cpp --archive
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml -o sub/a.cpp.xml sub/a.cpp --no-xml-declaration --archive
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 

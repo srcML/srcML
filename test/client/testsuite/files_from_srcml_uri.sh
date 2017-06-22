@@ -38,7 +38,7 @@ createfile "list.txt" "a.xml
 b.xml"
 
 srcml --files-from list.txt
-check 3<<< "$output"
+check "$output"
 
 srcml --files-from list.txt -o output.xml
-check output.xml 3<<< "$output"
+check output.xml "$output"

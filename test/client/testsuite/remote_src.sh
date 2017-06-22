@@ -24,23 +24,23 @@ xmlcheck "$output"
 
 # input from a valid remote source file
 srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp
-check 3<<< "$output"
+check "$output"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp -o remote.xml
-check remote.xml 3<<< "$output"
+check remote.xml "$output"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp --archive
-check 3<<< "$archive_output"
+check "$archive_output"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp	--archive -o remote_archive.xml
-check remote_archive.xml 3<<< "$archive_output"
+check remote_archive.xml "$archive_output"
 
 
 # files from contains a remote source file
 createfile list.txt "https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp"
 
 srcml --files-from list.txt
-check 3<<< "$archive_output"
+check "$archive_output"
 
 srcml --files-from list.txt -o remote_from_list.xml
-check remote_from_list.xml 3<<< "$archive_output"
+check remote_from_list.xml "$archive_output"

@@ -8,7 +8,7 @@ define sxmlfile1 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="sub" filename="a.cpp" version="1.2">
 	</unit>
-	STDOUT
+  STDOUT
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -23,7 +23,7 @@ define nestedfile <<- 'STDOUT'
 	</src:unit>
 
 	</src:unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$sxmlfile1"
 xmlcheck "$nestedfile"
@@ -35,24 +35,24 @@ define deprecated_warning <<- 'STDERR'
 STDERR
 
 srcml sub/a.cpp.xml --show-language
-check 3<<< "C++"
+check "C++"
 
 srcml sub/a.cpp.xml --show-url
-check 3<<< "sub"
+check "sub"
 
 srcml sub/a.cpp.xml --show-filename
-check 3<<< "a.cpp"
+check "a.cpp"
 
 srcml sub/a.cpp.xml --show-src-version
-check 3<<< "1.2"
+check "1.2"
 
 srcml sub/a.cpp.xml --show-encoding
-check 3<<< "UTF-8"
+check "UTF-8"
 
 srcml2src --units sub/a.cpp.xml
-check 3<<< "1" 4<<< "$deprecated_warning"
+check "1" "$deprecated_warning"
 
 createfile sub/nested.cpp.xml "$nestedfile"
 
 srcml2src --units sub/nested.cpp.xml
-check 3<<< "2" 4<<< "$deprecated_warning"
+check "2" "$deprecated_warning"

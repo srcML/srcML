@@ -36,25 +36,25 @@ xmlcheck "$srcml"
 createfile sub/unit.cpp.xml "$srcml"
 
 srcml sub/unit.cpp.xml -i
-check 3<<< "$info"
+check "$info"
 
 srcml sub/unit.cpp.xml --info
-check 3<<< "$info"
+check "$info"
 
 srcml --info < sub/unit.cpp.xml
-check 3<<< "$info"
+check "$info"
 
 srcml -i sub/unit.cpp.xml
-check 3<<< "$info"
+check "$info"
 
 srcml --info sub/unit.cpp.xml
-check 3<<< "$info"
+check "$info"
 
 srcml --longinfo sub/unit.cpp.xml
-check 3<<< "$longinfo"
+check "$longinfo"
 
 srcml sub/unit.cpp.xml --longinfo
-check 3<<< "$longinfo"
+check "$longinfo"
 
 srcml --longinfo < sub/unit.cpp.xml
-check 3<<< "$longinfo"
+check "$longinfo"

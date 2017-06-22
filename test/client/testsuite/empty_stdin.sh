@@ -12,5 +12,5 @@ xmlcheck "$output"
 
 # test simple
 echo -n "" | src2srcml -l C++
-check 3<<< "$output"
+check "$output"
 

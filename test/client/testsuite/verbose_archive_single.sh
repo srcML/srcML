@@ -30,13 +30,13 @@ createfile sub/a.cpp.xml "$fsrcml"
  
 # from a file
 srcml sub/a.cpp --archive --verbose
-check 3<<< "$fsrcml" 4<<< "$foutput"
+check "$fsrcml" "$foutput"
 
 srcml --verbose sub/a.cpp --archive
-check 3<<< "$fsrcml" 4<<< "$foutput"
+check "$fsrcml" "$foutput"
 
 srcml --verbose sub/a.cpp --archive -o sub/c.cpp.xml
-check sub/c.cpp.xml 3<<< "$fsrcml" 4<<< "$foutput"
+check sub/c.cpp.xml "$fsrcml" "$foutput"
 
 # standard in
 define srcml <<- 'STDOUT'
@@ -59,7 +59,7 @@ define output <<- 'STDERR'
 xmlcheck "$srcml"
 
 srcml --verbose -l C++ --archive < sub/a.cpp
-check 3<<< "$srcml" 4<<< "$output"
+check "$srcml" "$output"
 
 srcml --verbose -l C++ --archive -o sub/c.cpp.xml < sub/a.cpp
-check sub/c.cpp.xml 3<<< "$srcml" 4<<< "$output"
+check sub/c.cpp.xml "$srcml" "$output"

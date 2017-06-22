@@ -26,10 +26,10 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 src2srcml -l C++ <<< "$input"
-check 3<<< "$output"
+check "$output"
 
 #src2srcml -l C++ --cpp-text-if0 <<< "$input"
-#check 3<<< "$output"
+#check "$output"
 
 define output2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -44,4 +44,4 @@ define output2 <<- 'STDOUT'
 xmlcheck "$output"
 
 src2srcml -l C++ --cpp-markup-if0 <<< "$input"
-check 3<<< "$output2"
+check "$output2"

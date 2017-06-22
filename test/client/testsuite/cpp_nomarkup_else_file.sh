@@ -68,64 +68,64 @@ createfile sub/a.cpp "$input"
 
 # markup else by default
 src2srcml -l C++ < sub/a.cpp
-check 3<<< "$markup_else"
+check "$markup_else"
 
 src2srcml -l C++ -o sub/b.cpp.xml < sub/a.cpp
-check sub/b.cpp.xml 3<<< "$markup_else"
+check sub/b.cpp.xml "$markup_else"
 
 src2srcml -o sub/b.cpp.xml -l C++ < sub/a.cpp
-check sub/b.cpp.xml 3<<< "$markup_else"
+check sub/b.cpp.xml "$markup_else"
 
 src2srcml sub/a.cpp
-check 3<<< "$fmarkup_else"
+check "$fmarkup_else"
 
 src2srcml sub/a.cpp -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$fmarkup_else"
+check sub/b.cpp.xml "$fmarkup_else"
 
 src2srcml -o sub/b.cpp.xml sub/a.cpp
-check sub/b.cpp.xml 3<<< "$fmarkup_else"
+check sub/b.cpp.xml "$fmarkup_else"
 
 
 # don't markup else
 src2srcml -l C++ --cpp-nomarkup-else < sub/a.cpp
-check 3<<< "$nomarkup_else"
+check "$nomarkup_else"
 
 src2srcml -l C++ --cpp-nomarkup-else -o sub/b.cpp.xml < sub/a.cpp
-check sub/b.cpp.xml 3<<< "$nomarkup_else"
+check sub/b.cpp.xml "$nomarkup_else"
 
 src2srcml -l C++ -o sub/b.cpp.xml --cpp-nomarkup-else < sub/a.cpp
-check sub/b.cpp.xml 3<<< "$nomarkup_else"
+check sub/b.cpp.xml "$nomarkup_else"
 
 src2srcml -o sub/b.cpp.xml -l C++ --cpp-nomarkup-else < sub/a.cpp
-check sub/b.cpp.xml 3<<< "$nomarkup_else"
+check sub/b.cpp.xml "$nomarkup_else"
 
 src2srcml -o sub/b.cpp.xml --cpp-nomarkup-else -l C++ < sub/a.cpp
-check sub/b.cpp.xml 3<<< "$nomarkup_else"
+check sub/b.cpp.xml "$nomarkup_else"
 
 src2srcml --cpp-nomarkup-else -o sub/b.cpp.xml -l C++ < sub/a.cpp
-check sub/b.cpp.xml 3<<< "$nomarkup_else"
+check sub/b.cpp.xml "$nomarkup_else"
 
 src2srcml --cpp-nomarkup-else -l C++ -o sub/b.cpp.xml < sub/a.cpp
-check sub/b.cpp.xml 3<<< "$nomarkup_else"
+check sub/b.cpp.xml "$nomarkup_else"
 
 src2srcml --cpp-nomarkup-else -l C++ < sub/a.cpp
-check 3<<< "$nomarkup_else"
+check "$nomarkup_else"
 
 src2srcml sub/a.cpp --cpp-nomarkup-else
-check 3<<< "$fnomarkup_else"
+check "$fnomarkup_else"
 
 src2srcml sub/a.cpp --cpp-nomarkup-else -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$fnomarkup_else"
+check sub/b.cpp.xml "$fnomarkup_else"
 
 src2srcml sub/a.cpp -o sub/b.cpp.xml --cpp-nomarkup-else
-check sub/b.cpp.xml 3<<< "$fnomarkup_else"
+check sub/b.cpp.xml "$fnomarkup_else"
 
 src2srcml --cpp-nomarkup-else sub/a.cpp
-check 3<<< "$fnomarkup_else"
+check "$fnomarkup_else"
 
 src2srcml --cpp-nomarkup-else sub/a.cpp -o sub/b.cpp.xml
-check sub/b.cpp.xml 3<<< "$fnomarkup_else"
+check sub/b.cpp.xml "$fnomarkup_else"
 
 src2srcml --cpp-nomarkup-else -o sub/b.cpp.xml sub/a.cpp
-check sub/b.cpp.xml 3<<< "$fnomarkup_else"
+check sub/b.cpp.xml "$fnomarkup_else"
 

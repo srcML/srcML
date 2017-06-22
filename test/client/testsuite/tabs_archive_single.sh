@@ -29,61 +29,61 @@ createfile sub/a.cpp ""
 
 # specify tab size of 8
 srcml -l C++ --tabs 8 --archive < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml -l C++ --archive --tabs 8 < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml --archive -l C++ --tabs 8 < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 srcml --tabs 8 --archive sub/a.cpp
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 srcml --archive --tabs 8 sub/a.cpp
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 srcml --tabs 8 sub/a.cpp --archive
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 srcml sub/a.cpp --archive --tabs 8
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 srcml -l C++ --tabs 8 -o sub/a.cpp.xml --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml -l C++ -o sub/a.cpp.xml --tabs 8 --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml -o sub/a.cpp.xml --tabs 8 -l C++ --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml -l C++ --tabs 8 --archive -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml  --archive -l C++ -o sub/a.cpp.xml --tabs 8 < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 srcml --tabs 8 sub/a.cpp -o sub/a.cpp.xml --archive
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 sub/a.cpp --archive -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml --archive --tabs 8 sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 --archive sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 -o sub/a.cpp.xml sub/a.cpp --archive
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 -o sub/a.cpp.xml --archive sub/a.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml --tabs 8 --archive -o sub/a.cpp.xml sub/a.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 srcml --archive --tabs 8 -o sub/a.cpp.xml sub/a.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"

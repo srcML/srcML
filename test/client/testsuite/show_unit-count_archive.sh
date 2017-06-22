@@ -43,16 +43,16 @@ createfile sub/archive_single.cpp.xml "$archive_single"
 createfile sub/archive_multi.cpp.xml "$archive_multi"
 
 srcml2src --show-unit-count sub/archive_single.cpp.xml
-check 3<<< "$archive_single_output"
+check "$archive_single_output"
 
 srcml2src --show-unit-count < sub/archive_single.cpp.xml
-check 3<<< "$archive_single_output"
+check "$archive_single_output"
 
 srcml2src --show-unit-count sub/archive_multi.cpp.xml
-check 3<<< "$archive_multi_output"
+check "$archive_multi_output"
 
 srcml2src --show-unit-count < sub/archive_multi.cpp.xml
-check 3<<< "$archive_multi_output"
+check "$archive_multi_output"
 
 
 # test on on multiple input src files that create an archive
@@ -60,10 +60,10 @@ createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
 
 src2srcml --show-unit-count sub/a.cpp sub/b.cpp
-check 3<<< "$archive_multi_output"
+check "$archive_multi_output"
 
 src2srcml sub/a.cpp sub/b.cpp --show-unit-count
-check 3<<< "$archive_multi_output"
+check "$archive_multi_output"
 
 
 # test count on empty archive
@@ -79,8 +79,8 @@ xmlcheck "$empty"
 createfile sub/emptyarchive.xml "$empty"
 
 srcml2src --show-unit-count sub/emptyarchive.xml
-check 3<<< "$empty_output"
+check "$empty_output"
 
 srcml2src --show-unit-count < sub/emptyarchive.xml
-check 3<<< "$empty_output"
+check "$empty_output"
 

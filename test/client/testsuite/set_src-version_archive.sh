@@ -28,62 +28,62 @@ createfile sub/a.cpp "a;"
 
 # standard input
 src2srcml -l C++ -s '1.0' -o sub/a.cpp.xml --archive < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml -l C++ -s '1.0' --archive -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml -l C++ --archive -s '1.0' -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml --archive -l C++ -s '1.0' -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml 3<<< "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml -l C++ -s '1.0' --archive < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 src2srcml -l C++ --archive -s '1.0' < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 src2srcml --archive -l C++ -s '1.0' < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 # from a file
 src2srcml sub/a.cpp -s 1.0 --archive
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --archive -s 1.0
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml --archive sub/a.cpp -s 1.0
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml -s 1.0 sub/a.cpp --archive
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml -s 1.0 --archive sub/a.cpp
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml --archive -s 1.0 sub/a.cpp
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp -s 1.0 --archive
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --archive -s 1.0
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml --archive sub/a.cpp -s 1.0
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml -s 1.0 sub/a.cpp --archive
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml -s 1.0 --archive sub/a.cpp
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml --archive -s 1.0 sub/a.cpp
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 
 # test src-version attribute an archive of more than one
@@ -101,59 +101,59 @@ define fsrcml <<- 'STDOUT'
 createfile sub/b.cpp "b;"
 
 src2srcml sub/a.cpp sub/b.cpp -s "1.0" --in-order
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order -s "1.0"
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --in-order sub/b.cpp -s "1.0"
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml --in-order sub/a.cpp sub/b.cpp -s "1.0"
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp sub/b.cpp --src-version "1.0" --in-order
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order --src-version="1.0"
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --in-order sub/b.cpp --src-version="1.0"
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml --in-order sub/a.cpp sub/b.cpp --src-version="1.0"
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp --in-order sub/b.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -l C++ -s '1.0' -o sub/a.cpp.xml --in-order sub/a.cpp sub/b.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -l C++ -s '1.0' --in-order -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -l C++ --in-order -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml --in-order -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -s '1.0' sub/a.cpp sub/b.cpp --in-order -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -s '1.0' sub/a.cpp --in-order sub/b.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -s '1.0' --in-order sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml --in-order -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml 3<<< "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 

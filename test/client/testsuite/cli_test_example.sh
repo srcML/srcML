@@ -16,12 +16,12 @@ xmlcheck "$output"
 # conduct test
 echo -n "" | src2srcml -l C++
 
-check 3<<< "$output"
+check "$output"
 
 
 createfile sub/test.cpp ""
 
 echo -n "" | src2srcml -l C++ -o sub/stuff.cpp
 
-check sub/stuff.cpp 3<<< "$output"
+check sub/stuff.cpp "$output"
 

@@ -8,24 +8,24 @@ define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C" directory="sub" filename="a.cpp" timestamp="Sun Jan 11 18:39:22 2015"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$input"
 createfile sub/a.cpp.xml "$input"
 message "timestamp provided"
 
 srcml --show-timestamp sub/a.cpp.xml
-check 3<<< "Sun Jan 11 18:39:22 2015"
+check "Sun Jan 11 18:39:22 2015"
 
 srcml --show-timestamp < sub/a.cpp.xml
-check 3<<< "Sun Jan 11 18:39:22 2015"
+check "Sun Jan 11 18:39:22 2015"
 
 
 define none <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C" directory="sub" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$none"
 createfile sub/a.cpp.xml "$none"

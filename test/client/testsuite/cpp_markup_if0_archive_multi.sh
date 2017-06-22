@@ -58,130 +58,130 @@ createfile sub/b.cpp "$input"
 
 # use default, where if 0 sections are not marked up
 src2srcml sub/a.cpp sub/b.cpp --in-order
-check 3<<< "$fnomarkupif0"
+check "$fnomarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order --archive
-check 3<<< "$fnomarkupif0"
+check "$fnomarkupif0"
 
 src2srcml sub/a.cpp --in-order sub/b.cpp
-check 3<<< "$fnomarkupif0"
+check "$fnomarkupif0"
 
 src2srcml --in-order sub/a.cpp sub/b.cpp
-check 3<<< "$fnomarkupif0"
+check "$fnomarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp -o sub/b.xml --in-order
-check sub/b.xml 3<<< "$fnomarkupif0"
+check sub/b.xml "$fnomarkupif0"
 
 src2srcml sub/a.cpp --in-order sub/b.cpp -o sub/b.xml
-check sub/b.xml 3<<< "$fnomarkupif0"
+check sub/b.xml "$fnomarkupif0"
 
 src2srcml --in-order sub/a.cpp sub/b.cpp -o sub/b.xml
-check sub/b.xml 3<<< "$fnomarkupif0"
+check sub/b.xml "$fnomarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order -o sub/b.xml
-check sub/b.xml 3<<< "$fnomarkupif0"
+check sub/b.xml "$fnomarkupif0"
 
 
 # markup if0 regions
 src2srcml sub/a.cpp sub/b.cpp --cpp-markup-if0 --in-order
-check 3<<< "$fmarkupif0"
+check "$fmarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order --cpp-markup-if0
-check 3<<< "$fmarkupif0"
+check "$fmarkupif0"
 
 src2srcml sub/a.cpp --in-order sub/b.cpp --cpp-markup-if0
-check 3<<< "$fmarkupif0"
+check "$fmarkupif0"
 
 src2srcml --in-order sub/a.cpp sub/b.cpp --cpp-markup-if0
-check 3<<< "$fmarkupif0"
+check "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 sub/a.cpp sub/b.cpp --in-order
-check 3<<< "$fmarkupif0"
+check "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 sub/a.cpp --in-order sub/b.cpp
-check 3<<< "$fmarkupif0"
+check "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 --in-order sub/a.cpp sub/b.cpp
-check 3<<< "$fmarkupif0"
+check "$fmarkupif0"
 
 src2srcml --in-order --cpp-markup-if0 sub/a.cpp sub/b.cpp
-check 3<<< "$fmarkupif0"
+check "$fmarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp --cpp-markup-if0 -o sub/b.xml --in-order
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp --cpp-markup-if0 --in-order -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order --cpp-markup-if0 -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp --in-order sub/b.cpp --cpp-markup-if0 -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --in-order sub/a.cpp sub/b.cpp --cpp-markup-if0 -o sub/b.xml
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 sub/a.cpp sub/b.cpp -o sub/b.xml --in-order
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp -o sub/b.xml --cpp-markup-if0 --in-order
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp -o sub/b.xml --in-order --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order -o sub/b.xml --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml sub/a.cpp --in-order sub/b.cpp -o sub/b.xml --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --in-order sub/a.cpp sub/b.cpp -o sub/b.xml --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 -o sub/b.xml sub/a.cpp sub/b.cpp --in-order
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 -o sub/b.xml sub/a.cpp --in-order sub/b.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 -o sub/b.xml --in-order sub/a.cpp sub/b.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --cpp-markup-if0 --in-order -o sub/b.xml sub/a.cpp sub/b.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --in-order --cpp-markup-if0 -o sub/b.xml sub/a.cpp sub/b.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml sub/a.cpp sub/b.cpp --cpp-markup-if0 --in-order
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml sub/a.cpp sub/b.cpp --in-order --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml sub/a.cpp --in-order sub/b.cpp --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml --in-order sub/a.cpp sub/b.cpp --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --in-order -o sub/b.xml sub/a.cpp sub/b.cpp --cpp-markup-if0
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml --cpp-markup-if0 sub/a.cpp sub/b.cpp --in-order
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml --cpp-markup-if0 sub/a.cpp --in-order sub/b.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml --cpp-markup-if0 --in-order sub/a.cpp sub/b.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml -o sub/b.xml --in-order --cpp-markup-if0 sub/a.cpp sub/b.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 
 src2srcml --in-order -o sub/b.xml --cpp-markup-if0 sub/a.cpp sub/b.cpp
-check sub/b.xml 3<<< "$fmarkupif0"
+check sub/b.xml "$fmarkupif0"
 

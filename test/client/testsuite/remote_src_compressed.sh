@@ -12,16 +12,16 @@ define srcml_with_url <<- 'STDOUT'
 
 # compression only
 srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp.bz2 --url="test" --filename="test"
-check 3<<< "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp.gz --url="test" --filename="test"
-check 3<<< "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp.bz2.gz --url="test" --filename="test"
-check 3<<< "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp.gz.bz2 --url="test" --filename="test"
-check 3<<< "$srcml_with_url"
+check "$srcml_with_url"
 
 
 # empty direct remote source input with various compressions
@@ -32,13 +32,13 @@ define empty_srcml_with_url <<- 'STDOUT'
 
 # compressed
 srcml https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.bz2 --url="test" --filename="test"
-check 3<<< "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.gz --url="test" --filename="test"
-check 3<<< "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.bz2.gz --url="test" --filename="test"
-check 3<<< "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.gz.bz2 --url="test" --filename="test"
-check 3<<< "$empty_srcml_with_url"
+check "$empty_srcml_with_url"

@@ -32,4 +32,4 @@ check_exit 1
 
 # equivalent as inputting an empty source file
 srcml2src -l C++ --xpath=src:unit < sub/a.cpp.xml
-check 3<<< "$xpath_empty"
+check "$xpath_empty"

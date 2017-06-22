@@ -47,56 +47,56 @@ cmp --verbose ab expected_output
 rm ab
 
 srcml2src -U 1 --output-src sub/a.cpp.xml
-check 3<<< "$srca"
+check "$srca"
 
 srcml2src -U 1 -S sub/a.cpp.xml
-check 3<<< "$srca"
+check "$srca"
 
 srcml2src -U 2 --output-src sub/a.cpp.xml
-check 3<<< "$srcb"
+check "$srcb"
 
 srcml2src -U 2 -S sub/a.cpp.xml
-check 3<<< "$srcb"
+check "$srcb"
 
 cat sub/a.cpp.xml | src2srcml -S > ab
 cmp --verbose ab expected_output
 rm ab
 
 src2srcml -U 1 -S < sub/a.cpp.xml
-check 3<<< "$srca"
+check "$srca"
 
 src2srcml -U 2 -S < sub/a.cpp.xml
-check 3<<< "$srcb"
+check "$srcb"
 
 src2srcml -S sub/a.cpp.xml -o sub/b.cpp
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -S -U 1 sub/a.cpp.xml -o sub/b.cpp
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -S -U 2 sub/a.cpp.xml -o sub/b.cpp
-check sub/b.cpp 3<<< "$srcb"
+check sub/b.cpp "$srcb"
 
 src2srcml -S -o sub/b.cpp sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -S -U 1 -o sub/b.cpp sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -U 1 -S -o sub/b.cpp sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -U 2 -S -o sub/b.cpp sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srcb"
+check sub/b.cpp "$srcb"
 
 src2srcml -S -o sub/b.cpp < sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -U 1 -S -o sub/b.cpp < sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -U 2 -S -o sub/b.cpp < sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srcb"
+check sub/b.cpp "$srcb"
 
 # single archive
 define srcml <<- 'STDOUT'
@@ -114,41 +114,41 @@ xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
 srcml2src --output-src sub/a.cpp.xml
-check 3<<< "$srca"
+check "$srca"
 
 srcml2src -S sub/a.cpp.xml
-check 3<<< "$srca"
+check "$srca"
 
 srcml2src -U 1 --output-src sub/a.cpp.xml
-check 3<<< "$srca"
+check "$srca"
 
 srcml2src -U 1 -S sub/a.cpp.xml
-check 3<<< "$srca"
+check "$srca"
 
 src2srcml -S < sub/a.cpp.xml
-check 3<<< "$srca"
+check "$srca"
 
 src2srcml -U 1 -S < sub/a.cpp.xml
-check 3<<< "$srca"
+check "$srca"
 
 src2srcml -S sub/a.cpp.xml -o sub/b.cpp
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -S -U 1 sub/a.cpp.xml -o sub/b.cpp
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -S -o sub/b.cpp sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -S -U 1 -o sub/b.cpp sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -U 1 -S -o sub/b.cpp sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -S -o sub/b.cpp < sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 
 src2srcml -U 1 -S -o sub/b.cpp < sub/a.cpp.xml
-check sub/b.cpp 3<<< "$srca"
+check sub/b.cpp "$srca"
 

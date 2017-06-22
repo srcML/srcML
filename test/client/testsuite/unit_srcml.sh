@@ -29,10 +29,10 @@ xmlcheck "$nestedfile"
 xmlcheck "$sxmlfile1"
 
 srcml2src -X --unit "1" - <<< "$nestedfile"
-check 3<<< "$sxmlfile1"
+check "$sxmlfile1"
 
 srcml2src -X --unit "1" <<< "$nestedfile"
-check 3<<< "$sxmlfile1"
+check "$sxmlfile1"
 
 define sxmlfile2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -44,7 +44,7 @@ define sxmlfile2 <<- 'STDOUT'
 xmlcheck "$sxmlfile2"
 
 srcml2src -X --unit "2" - <<< "$nestedfile"
-check 3<<< "$sxmlfile2"
+check "$sxmlfile2"
 
 srcml2src -X --unit "2" <<< "$nestedfile"
-check 3<<< "$sxmlfile2"
+check "$sxmlfile2"

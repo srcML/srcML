@@ -15,7 +15,7 @@ define result <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$result"
 
@@ -28,14 +28,14 @@ srcml a.cpp b.cpp --xmlns:foo=foo.com -o archive.xml
 
 # from the files
 srcml archive.xml --xpath="//src:name" --attribute="foo:foo=test"
-check 3<<< "$result"
+check "$result"
 
 srcml --xpath="//src:name" archive.xml --attribute="foo:foo=test"
-check 3<<< "$result"
+check "$result"
 
 # output to a file
 srcml archive.xml --xpath="//src:name" --attribute="foo:foo=test" -o result.xml
-check result.xml 3<<< "$result"
+check result.xml "$result"
 
 srcml --xpath="//src:name" archive.xml --attribute="foo:foo=test" -o result.xml
-check result.xml 3<<< "$result"
+check result.xml "$result"

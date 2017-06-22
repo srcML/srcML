@@ -55,24 +55,24 @@ createfile list.txt "archive/a.cpp.zip.bz2"
 
 # src --> srcml
 src2srcml archive/a.cpp.zip.bz2 -o archive/a.cpp.xml
-check archive/a.cpp.xml 3<<< "$foutput"
+check archive/a.cpp.xml "$foutput"
 
 src2srcml archive/a.cpp.zip.bz2
-check 3<<< "$foutput"
+check "$foutput"
 
 src2srcml -l C++ < archive/a.cpp.zip.bz2
-check 3<<< "$output"
+check "$output"
 
 src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.zip.bz2
-check archive/a.cpp.xml 3<<< "$output"
+check archive/a.cpp.xml "$output"
 
 
 # files from
 src2srcml --files-from list.txt
-check 3<<< "$archive_output"
+check "$archive_output"
 
 src2srcml --files-from list.txt -o archive/list.xml
-check archive/list.xml 3<<< "$archive_output"
+check archive/list.xml "$archive_output"
 
 # files from empty (not necessary - archive format)
 
@@ -85,13 +85,13 @@ rmfile archive/a.cpp.zip.bz2
 
 # srcml --> src
 srcml2src archive/a.cpp.xml
-check 3<<< "$src"
+check "$src"
 
 srcml2src archive/a.cpp.xml -o archive/a.cpp
-check archive/a.cpp 3<<< "$src"
+check archive/a.cpp "$src"
 
 srcml2src < archive/a.cpp.xml
-check 3<<< "$src"
+check "$src"
 
 srcml2src -o archive/a.cpp < archive/a.cpp.xml
-check archive/a.cpp 3<<< "$src"
+check archive/a.cpp "$src"

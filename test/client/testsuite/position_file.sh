@@ -19,13 +19,13 @@ xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 
 src2srcml -l C++ --position < sub/a.cpp
-check 3<<< "$srcml"
+check "$srcml"
 
 src2srcml -l C++ --position -o sub/b.cpp < sub/a.cpp
-check sub/b.cpp 3<<< "$srcml"
+check sub/b.cpp "$srcml"
 
 src2srcml sub/a.cpp --position
-check 3<<< "$fsrcml"
+check "$fsrcml"
 
 src2srcml --position sub/a.cpp
-check 3<<< "$fsrcml"
+check "$fsrcml"

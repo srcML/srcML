@@ -7,7 +7,7 @@ source $(dirname "$0")/framework_test.sh
 define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="bar" filename="foo" version="1.2"/>
-	STDOUT
+  STDOUT
 
 # test on archive
 define archive <<- 'STDOUT'
@@ -19,7 +19,7 @@ define archive <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$input"
 xmlcheck "$archive"
@@ -28,23 +28,23 @@ createfile sub/a.cpp.xml "$input"
 createfile sub/archive.cpp.xml "$archive"
 
 srcml --show-url sub/a.cpp.xml
-check 3<<< "bar"
+check "bar"
 
 srcml --show-url < sub/a.cpp.xml
-check 3<<< "bar"
+check "bar"
 
 srcml --show-url sub/archive.cpp.xml
-check 3<<< "bar"
+check "bar"
 
 srcml --show-url < sub/archive.cpp.xml
-check 3<<< "bar"
+check "bar"
 
 
 # empty on the unit
 define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="" url="" filename="" version=""/>
-	STDOUT
+  STDOUT
 
 # empty on the archive
 define empty <<- 'STDOUT'
@@ -56,7 +56,7 @@ define empty <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+  STDOUT
 
 xmlcheck "$input"
 xmlcheck "$empty"
@@ -65,23 +65,23 @@ createfile sub/a.cpp.xml "$input"
 createfile sub/archive.cpp.xml "$empty"
 
 srcml --show-url sub/a.cpp.xml
-check 3<<< ""
+check ""
 
 srcml --show-url < sub/a.cpp.xml
-check 3<<< ""
+check ""
 
 srcml --show-url sub/archive.cpp.xml
-check 3<<< ""
+check ""
 
 srcml --show-url < sub/archive.cpp.xml
-check 3<<< ""
+check ""
 
 
 # none
 define none <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDIN
+  STDIN
 
 xmlcheck "$none"
 createfile sub/a.cpp.xml "$none"
