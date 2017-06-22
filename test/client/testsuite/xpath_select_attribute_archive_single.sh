@@ -49,28 +49,28 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
-checkv2 "$output"
+check "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:unit/@filename" -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/archive_single.cpp.xml -o sub/a.xml --xpath "//src:unit/@filename"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/archive_single.cpp.xml --xpath "//src:unit/@filename"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 
 # select comment format (doxygen)
@@ -86,27 +86,27 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
-checkv2 "$output"
+check "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/archive_single.cpp.xml --xpath "//src:comment/@format" -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/archive_single.cpp.xml -o sub/a.xml --xpath "//src:comment/@format"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/archive_single.cpp.xml --xpath "//src:comment/@format"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 

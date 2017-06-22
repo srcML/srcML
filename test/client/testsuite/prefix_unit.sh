@@ -14,22 +14,22 @@ createfile sub/a.xml "$input"
 
 # from file
 srcml -p "http://www.srcML.org/srcML/src" sub/a.xml
-checkv2 ""
+check ""
 
 srcml sub/a.xml -p "http://www.srcML.org/srcML/src"
-checkv2 ""
+check ""
 
 srcml -p "http://www.srcML.org/srcML/cpp" sub/a.xml
-checkv2 "cpp"
+check "cpp"
 
 srcml sub/a.xml -p "http://www.srcML.org/srcML/cpp"
-checkv2 "cpp"
+check "cpp"
 
 srcml -p "foo.com" sub/a.xml
-checkv2 "foo"
+check "foo"
 
 srcml sub/a.xml -p "foo.com"
-checkv2 "foo"
+check "foo"
 
 srcml -p "nonexistent.com" sub/a.xml
 check_null
@@ -39,25 +39,25 @@ check_null
 
 # standard input
 srcml2src -p "http://www.srcML.org/srcML/src" <<< "$input"
-checkv2 ""
+check ""
 
 srcml2src --prefix "http://www.srcML.org/srcML/src" <<< "$input"
-checkv2 ""
+check ""
 
 srcml2src --prefix="http://www.srcML.org/srcML/src" <<< "$input"
-checkv2 ""
+check ""
 
 srcml2src -p "http://www.srcML.org/srcML/cpp" <<< "$input"
-checkv2 "cpp"
+check "cpp"
 
 srcml2src --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
-checkv2 "cpp"
+check "cpp"
 
 srcml2src --prefix="http://www.srcML.org/srcML/cpp" <<< "$input"
-checkv2 "cpp"
+check "cpp"
 
 srcml2src --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
-checkv2 "cpp"
+check "cpp"
 
 srcml2src -p "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 check_null

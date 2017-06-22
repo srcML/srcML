@@ -27,15 +27,15 @@ srcml a.cpp b.cpp --xmlns:foo=foo.com --in-order -o archive.xml
 
 # from a file
 srcml archive.xml --xpath="//src:name" --element="foo:foo"
-checkv2 "$result"
+check "$result"
 
 srcml --xpath="//src:name" archive.xml --element="foo:foo"
-checkv2 "$result"
+check "$result"
 
 # output to a file
 srcml archive.xml --xpath="//src:name" --element="foo:foo" -o result.xml
-checkv2 result.xml "$result"
+check result.xml "$result"
 
 srcml --xpath="//src:name" archive.xml --element="foo:foo" -o result.xml
-checkv2 result.xml "$result"
+check result.xml "$result"
 

@@ -20,22 +20,22 @@ createfile sub/a.cpp "a;"
 
 # output to scrML
 src2srcml sub/a.cpp --output sub/a.cpp.xml
-checkv2 sub/a.cpp.xml "$sxmlfile"
+check sub/a.cpp.xml "$sxmlfile"
 
 src2srcml sub/a.cpp --output=sub/a.cpp.xml
-checkv2 sub/a.cpp.xml "$sxmlfile"
+check sub/a.cpp.xml "$sxmlfile"
 
 src2srcml sub/a.cpp -o sub/a.cpp.xml
-checkv2 sub/a.cpp.xml "$sxmlfile"
+check sub/a.cpp.xml "$sxmlfile"
 
 src2srcml -l C++ -o sub/a.cpp.xml sub/a.cpp
-checkv2 sub/a.cpp.xml "$sxmlfile"
+check sub/a.cpp.xml "$sxmlfile"
 
 src2srcml -l C++ - --output /dev/stdout < sub/a.cpp
-checkv2 "$xmlfile"
+check "$xmlfile"
 
 src2srcml -l C++ - -o sub/a.cpp.xml < sub/a.cpp
-checkv2 sub/a.cpp.xml "$xmlfile"
+check sub/a.cpp.xml "$xmlfile"
 
 # output to source code
 define foutput <<- STDOUT
@@ -51,25 +51,25 @@ define fstuff <<- STDOUT
 createfile sub/a.cpp.xml "$foutput"
 
 srcml2src sub/a.cpp.xml --output sub/a.cpp
-checkv2 sub/a.cpp "$fstuff"
+check sub/a.cpp "$fstuff"
 
 srcml2src sub/a.cpp.xml --output=sub/a.cpp
-checkv2 sub/a.cpp "$fstuff"
+check sub/a.cpp "$fstuff"
 
 srcml2src sub/a.cpp.xml -o sub/a.cpp
-checkv2 sub/a.cpp "$fstuff"
+check sub/a.cpp "$fstuff"
 
 srcml2src - -o sub/a.cpp <<< "$foutput"
-checkv2 sub/a.cpp "$fstuff"
+check sub/a.cpp "$fstuff"
 
 srcml2src -o sub/a.cpp <<< "$foutput"
-checkv2 sub/a.cpp "$fstuff"
+check sub/a.cpp "$fstuff"
 
 srcml2src - --output /dev/stdout <<< "$foutput"
-checkv2 "$fstuff"
+check "$fstuff"
 
 srcml2src - --output=/dev/stdout <<< "$foutput"
-checkv2 "$fstuff"
+check "$fstuff"
 
 srcml2src - -o /dev/stdout <<< "$foutput"
-checkv2 "$fstuff"
+check "$fstuff"

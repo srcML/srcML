@@ -15,10 +15,10 @@ createfile sub/a.cpp.xml "$input"
 message "timestamp provided"
 
 srcml --show-timestamp sub/a.cpp.xml
-checkv2 "Sun Jan 11 18:39:22 2015"
+check "Sun Jan 11 18:39:22 2015"
 
 srcml --show-timestamp < sub/a.cpp.xml
-checkv2 "Sun Jan 11 18:39:22 2015"
+check "Sun Jan 11 18:39:22 2015"
 
 
 define none <<- 'STDOUT'

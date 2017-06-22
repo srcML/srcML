@@ -61,35 +61,35 @@ createfile sub/unit.cpp.xml "$srcml"
 createfile schema.rng "$schema"
 
 srcml2src --relaxng=schema.rng sub/unit.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --relaxng=schema.rng < sub/unit.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --relaxng=schema.rng sub/unit.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --relaxng=schema.rng -o sub/b.cpp.xml sub/unit.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --relaxng=schema.rng -o sub/b.cpp.xml < sub/unit.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # apply root and apply schema
 srcml2src --relaxng=schema.rng sub/unit.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --relaxng=schema.rng < sub/unit.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --relaxng=schema.rng sub/unit.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --relaxng=schema.rng -o sub/b.cpp.xml sub/unit.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --relaxng=schema.rng -o sub/b.cpp.xml < sub/unit.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 
 ## TODO really make sure this is ok to return ok when no schema supplied.

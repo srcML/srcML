@@ -31,48 +31,48 @@ createfile identity.xsl "$identity"
 
 # simple copy
 srcml sub/unit.cpp.xml identity.xsl
-checkv2 "$srcml"
+check "$srcml"
 
 srcml identity.xsl sub/unit.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml identity.xsl < sub/unit.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml sub/unit.cpp.xml identity.xsl -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml sub/unit.cpp.xml -o sub/b.cpp.xml identity.xsl
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml identity.xsl sub/unit.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml identity.xsl -o sub/b.cpp.xml sub/unit.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml identity.xsl -o sub/b.cpp.xml < sub/unit.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # xslt apply root copy
 srcml sub/unit.cpp.xml identity.xsl
-checkv2 "$srcml"
+check "$srcml"
 
 srcml sub/unit.cpp.xml identity.xsl
-checkv2 "$srcml"
+check "$srcml"
 
 srcml identity.xsl sub/unit.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml identity.xsl < sub/unit.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml identity.xsl sub/unit.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml identity.xsl -o sub/b.cpp.xml sub/unit.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml identity.xsl -o sub/b.cpp.xml < sub/unit.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 

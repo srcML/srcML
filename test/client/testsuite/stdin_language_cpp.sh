@@ -12,11 +12,11 @@ define output <<- 'OUTPUT'
 xmlcheck "$output"
 
 echo -n "" | src2srcml -l "C++"
-checkv2 "$output"
+check "$output"
 
 echo -n "" | src2srcml --language "C++"
-checkv2 "$output"
+check "$output"
 
 echo -n "" | src2srcml --language="C++"
-checkv2 "$output"
+check "$output"
 

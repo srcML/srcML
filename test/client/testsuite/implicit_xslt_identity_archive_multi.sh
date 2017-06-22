@@ -37,16 +37,16 @@ createfile sub/a.cpp.xml "$srcml"
 createfile identity.xsl "$identity_xslt"
 
 srcml identity.xsl sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml identity.xsl < sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml identity.xsl sub/a.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml identity.xsl -o sub/b.cpp.xml sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml identity.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"

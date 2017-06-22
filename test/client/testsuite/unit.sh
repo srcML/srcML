@@ -44,51 +44,51 @@ xmlcheck "$nestedfile"
 createfile sub/a.cpp.xml "$nestedfile"
 
 srcml2src sub/a.cpp.xml -U "1"
-checkv2 "$sfile1"
+check "$sfile1"
 
 srcml2src sub/a.cpp.xml --unit "1"
-checkv2 "$sfile1"
+check "$sfile1"
 
 srcml2src sub/a.cpp.xml --unit="1"
-checkv2 "$sfile1"
+check "$sfile1"
 
 srcml2src --unit "1" -o sub/a.cpp < sub/a.cpp.xml
-checkv2 sub/a.cpp "$sfile1"
+check sub/a.cpp "$sfile1"
 
 srcml2src --unit "1" sub/a.cpp.xml -o sub/a.cpp
-checkv2 sub/a.cpp "$sfile1"
+check sub/a.cpp "$sfile1"
 
 srcml2src sub/a.cpp.xml -U "2" 
-checkv2 "$sfile2"
+check "$sfile2"
 
 srcml2src sub/a.cpp.xml --unit "2"
-checkv2 "$sfile2"
+check "$sfile2"
 
 srcml2src sub/a.cpp.xml --unit="2"
-checkv2 "$sfile2"
+check "$sfile2"
 
 srcml2src --unit "2" -o sub/b.cpp < sub/a.cpp.xml
-checkv2 sub/b.cpp "$sfile2"
+check sub/b.cpp "$sfile2"
 
 srcml2src --unit "2" sub/a.cpp.xml -o sub/b.cpp
-checkv2 sub/b.cpp "$sfile2"
+check sub/b.cpp "$sfile2"
 
 
 # check xml and unit option
 srcml2src -X --unit "1" sub/a.cpp.xml
-checkv2 "$sxmlfile1"
+check "$sxmlfile1"
 
 srcml2src -X --unit "1" -o sub/b.cpp.xml < sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$sxmlfile1"
+check sub/b.cpp.xml "$sxmlfile1"
 
 srcml2src -X --unit "1" sub/a.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$sxmlfile1"
+check sub/b.cpp.xml "$sxmlfile1"
 
 srcml2src -X --unit "2" sub/a.cpp.xml 
-checkv2 "$sxmlfile2"
+check "$sxmlfile2"
 
 srcml2src -X --unit "2" -o sub/b.cpp.xml < sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$sxmlfile2"
+check sub/b.cpp.xml "$sxmlfile2"
 
 srcml2src -X --unit "2" sub/a.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$sxmlfile2"
+check sub/b.cpp.xml "$sxmlfile2"

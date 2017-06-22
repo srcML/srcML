@@ -22,10 +22,10 @@ xmlcheck "$foutput"
 createfile sub/a.java ""
 
 src2srcml --cpp sub/a.java
-checkv2 "$foutput"
+check "$foutput"
 
 echo -n "" | src2srcml -l Java --cpp -o sub/a.java.xml
-checkv2 sub/a.java.xml "$output"
+check sub/a.java.xml "$output"
 
 src2srcml --cpp sub/a.java -o sub/a.java.xml
-checkv2 sub/a.java.xml "$foutput"
+check sub/a.java.xml "$foutput"

@@ -27,28 +27,28 @@ xmlcheck "$fsrcml"
 createfile sub/a.cpp "a;"
 
 src2srcml sub/a.cpp -x "ISO-8859-1" --archive 
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --xml-encoding="ISO-8859-1" --archive 
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml --xml-encoding "ISO-8859-1" sub/a.cpp --archive 
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml -l C++ -x "ISO-8859-1" -o sub/a.cpp.xml --archive < sub/a.cpp
-checkv2 sub/a.cpp.xml "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml -l C++ -o sub/a.cpp.xml -x "ISO-8859-1" --archive < sub/a.cpp
-checkv2 sub/a.cpp.xml "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml -o sub/a.cpp.xml -l C++ -x "ISO-8859-1" --archive < sub/a.cpp
-checkv2 sub/a.cpp.xml "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml -x "ISO-8859-1" -l C++ -o sub/a.cpp.xml --archive < sub/a.cpp
-checkv2 sub/a.cpp.xml "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml -x "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml --archive 
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 # test encoding flag on an archive of more than one
 define srcmlb <<- 'STDOUT'
@@ -78,38 +78,38 @@ xmlcheck "$fsrcmlb"
 createfile sub/b.cpp "b;"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order -x "ISO-8859-1"
-checkv2 "$fsrcmlb"
+check "$fsrcmlb"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order --xml-encoding="ISO-8859-1"
-checkv2 "$fsrcmlb"
+check "$fsrcmlb"
 
 src2srcml --xml-encoding "ISO-8859-1" sub/a.cpp sub/b.cpp --in-order
-checkv2 "$fsrcmlb"
+check "$fsrcmlb"
 
 src2srcml --xml-encoding "ISO-8859-1" sub/a.cpp --in-order sub/b.cpp
-checkv2 "$fsrcmlb"
+check "$fsrcmlb"
 
 src2srcml --xml-encoding "ISO-8859-1" --in-order sub/a.cpp sub/b.cpp
-checkv2 "$fsrcmlb"
+check "$fsrcmlb"
 
 src2srcml --in-order --xml-encoding "ISO-8859-1" sub/a.cpp sub/b.cpp
-checkv2 "$fsrcmlb"
+check "$fsrcmlb"
 
 src2srcml --in-order sub/a.cpp --xml-encoding "ISO-8859-1" sub/b.cpp
-checkv2 "$fsrcmlb"
+check "$fsrcmlb"
 
 src2srcml -x "ISO-8859-1" sub/a.cpp sub/b.cpp --in-order -o sub/a.cpp.xml
-checkv2 sub/a.cpp.xml "$fsrcmlb"
+check sub/a.cpp.xml "$fsrcmlb"
 
 src2srcml -o sub/a.cpp.xml -x "ISO-8859-1" sub/a.cpp sub/b.cpp --in-order
-checkv2 sub/a.cpp.xml "$fsrcmlb"
+check sub/a.cpp.xml "$fsrcmlb"
 
 src2srcml -o sub/a.cpp.xml sub/a.cpp -x "ISO-8859-1" sub/b.cpp --in-order
-checkv2 sub/a.cpp.xml "$fsrcmlb"
+check sub/a.cpp.xml "$fsrcmlb"
 
 src2srcml -o sub/a.cpp.xml sub/a.cpp sub/b.cpp -x "ISO-8859-1" --in-order
-checkv2 sub/a.cpp.xml "$fsrcmlb"
+check sub/a.cpp.xml "$fsrcmlb"
 
 src2srcml -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order -x "ISO-8859-1"
-checkv2 sub/a.cpp.xml "$fsrcmlb"
+check sub/a.cpp.xml "$fsrcmlb"
 

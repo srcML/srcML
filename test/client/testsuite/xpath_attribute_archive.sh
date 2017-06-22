@@ -28,14 +28,14 @@ srcml a.cpp b.cpp --xmlns:foo=foo.com -o archive.xml
 
 # from the files
 srcml archive.xml --xpath="//src:name" --attribute="foo:foo=test"
-checkv2 "$result"
+check "$result"
 
 srcml --xpath="//src:name" archive.xml --attribute="foo:foo=test"
-checkv2 "$result"
+check "$result"
 
 # output to a file
 srcml archive.xml --xpath="//src:name" --attribute="foo:foo=test" -o result.xml
-checkv2 result.xml "$result"
+check result.xml "$result"
 
 srcml --xpath="//src:name" archive.xml --attribute="foo:foo=test" -o result.xml
-checkv2 result.xml "$result"
+check result.xml "$result"

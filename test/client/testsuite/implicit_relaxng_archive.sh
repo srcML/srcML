@@ -69,35 +69,35 @@ createfile sub/archive_multi.xml "$srcml"
 
 # apply schema to archive of many units
 srcml schema.rng sub/archive_multi.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml schema.rng < sub/archive_multi.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml schema.rng sub/archive_multi.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml schema.rng -o sub/b.cpp.xml sub/archive_multi.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml schema.rng -o sub/b.cpp.xml < sub/archive_multi.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # apply root and apply schema
 srcml schema.rng sub/archive_multi.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml schema.rng < sub/archive_multi.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml schema.rng sub/archive_multi.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml schema.rng -o sub/b.cpp.xml sub/archive_multi.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml schema.rng -o sub/b.cpp.xml < sub/archive_multi.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 
 # test on archive of one
@@ -115,33 +115,33 @@ createfile sub/archive_single.xml "$srcml"
 
 # apply schema
 srcml schema.rng sub/archive_single.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml schema.rng < sub/archive_single.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml schema.rng sub/archive_single.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml schema.rng -o sub/b.cpp.xml sub/archive_single.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # apply root and apply schema
 srcml schema.rng sub/archive_single.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml schema.rng < sub/archive_single.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml schema.rng sub/archive_single.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml schema.rng -o sub/b.cpp.xml sub/archive_single.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 

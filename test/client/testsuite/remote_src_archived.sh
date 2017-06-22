@@ -17,37 +17,37 @@ define srcml_with_url <<- 'STDOUT'
 
 # archive/compression mix
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.cpio --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.cpio.bz2 --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.cpio.gz --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tar.bz2 --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tar.gz --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tar --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tbz2 --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tgz --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.zip --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.zip.bz2 --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.zip.gz --url="test"
-checkv2 "$srcml_with_url"
+check "$srcml_with_url"
 
 # empty direct remote source input with various compressions
 define empty_srcml_with_url <<- 'STDOUT'
@@ -57,34 +57,34 @@ define empty_srcml_with_url <<- 'STDOUT'
 
 # archive/compressed mix
 srcml https://github.com/srcML/test-data/raw/master/empty/empty.cpp.cpio --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/blob/master/empty/empty.cpp.cpio.bz2?raw=true --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/blob/master/empty/empty.cpp.cpio.gz?raw=true --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/blob/master/empty/empty.cpp.tar.bz2?raw=true --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/blob/master/empty/empty.cpp.tar.gz?raw=true --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/raw/master/empty/empty.cpp.tar --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/blob/master/empty/empty.cpp.tbz2?raw=true --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/blob/master/empty/empty.cpp.tgz?raw=true --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/blob/master/empty/empty.cpp.zip?raw=true --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/blob/master/empty/empty.cpp.zip.bz2?raw=true --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 srcml https://github.com/srcML/test-data/blob/master/empty/empty.cpp.zip.gz?raw=true --url="test"
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"

@@ -29,30 +29,30 @@ xmlcheck "$fsrcml"
 createfile sub/a.cpp "a;"
 
 echo -n "a;" | src2srcml -l C++ --url bar --archive
-checkv2 "$output"
+check "$output"
 
 echo -n "a;" | src2srcml -l C++ --url=bar --archive
-checkv2 "$output"
+check "$output"
 
 
 src2srcml sub/a.cpp --url "bar" --archive
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --url="bar" --archive
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml --url "bar" sub/a.cpp --archive
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 
 src2srcml --url="bar" sub/a.cpp --archive
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp --archive
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml --url 'bar' sub/a.cpp -o sub/a.cpp.xml --archive
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 
 # archive of multiple units
@@ -71,23 +71,23 @@ define fsrcml <<- 'STDOUT'
 createfile sub/b.cpp "b;"
 
 src2srcml sub/a.cpp sub/b.cpp --url "bar" --in-order
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp sub/b.cpp --url="bar" --in-order
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml --url="bar" sub/a.cpp sub/b.cpp --in-order
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml --url 'bar' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 

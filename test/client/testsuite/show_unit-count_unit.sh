@@ -33,26 +33,26 @@ createfile sub/a.cpp "$src"
 createfile sub/empty.xml "$empty"
 
 srcml2src --show-unit-count sub/a.cpp.xml
-checkv2 "$output"
+check "$output"
 
 srcml2src --show-unit-count < sub/a.cpp.xml
-checkv2 "$output"
+check "$output"
 
 src2srcml sub/a.cpp --show-unit-count
-checkv2 "$output"
+check "$output"
 
 src2srcml --show-unit-count sub/a.cpp
-checkv2 "$output"
+check "$output"
 
 src2srcml --show-unit-count -l C++ < sub/a.cpp
-checkv2 "$output"
+check "$output"
 
 src2srcml -l C++ --show-unit-count < sub/a.cpp
-checkv2 "$output"
+check "$output"
 
 srcml2src --show-unit-count  sub/empty.xml
-checkv2 "$output"
+check "$output"
 
 srcml2src --show-unit-count  < sub/empty.xml
-checkv2 "$output"
+check "$output"
 

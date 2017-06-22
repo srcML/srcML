@@ -20,50 +20,50 @@ createfile sub/a.cpp "a;"
 
 # from a file
 src2srcml sub/a.cpp --hash
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml --hash sub/a.cpp
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --hash -o sub/a.xml
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml sub/a.cpp -o sub/a.xml --hash
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml -o sub/a.xml sub/a.cpp --hash
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml --hash sub/a.cpp -o sub/a.xml
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml --hash -o sub/a.xml sub/a.cpp
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml -o sub/a.xml --hash sub/a.cpp
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 # standard input
 src2srcml -l C++ --hash < sub/a.cpp
-checkv2 "$srcml"
+check "$srcml"
 
 src2srcml --hash -l C++ < sub/a.cpp
-checkv2 "$srcml"
+check "$srcml"
 
 src2srcml -l C++ --hash -o sub/a.xml < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml -l C++ -o sub/a.xml --hash < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml -o sub/a.xml -l C++ --hash < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml --hash -l C++ -o sub/a.xml < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml --hash -o sub/a.xml -l C++ < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml -o sub/a.xml --hash -l C++ < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"

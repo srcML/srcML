@@ -54,28 +54,28 @@ define output <<- 'STDOUT'
 xmlcheck "$output"	
 
 srcml sub/archive_multi.xml --xpath "//src:unit/@filename"
-checkv2 "$output"
+check "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_multi.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/archive_multi.xml --xpath "//src:unit/@filename" -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/archive_multi.xml -o sub/a.xml --xpath "//src:unit/@filename"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/archive_multi.xml --xpath "//src:unit/@filename"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_multi.xml -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_multi.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/archive_multi.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 
 # select comment format (doxygen)
@@ -91,27 +91,27 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/archive_multi.xml --xpath "//src:comment/@format"
-checkv2 "$output"
+check "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_multi.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/archive_multi.xml --xpath "//src:comment/@format" -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/archive_multi.xml -o sub/a.xml --xpath "//src:comment/@format"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/archive_multi.xml --xpath "//src:comment/@format"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_multi.xml -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_multi.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_multi.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 

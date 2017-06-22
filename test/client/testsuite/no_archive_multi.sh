@@ -21,17 +21,17 @@ createfile a.cpp "a;"
 createfile b.cpp "b;"
 
 srcml2src --to-dir . a.cpp b.cpp
-checkv2 a.cpp.xml "$srcmla"
-checkv2 b.cpp.xml "$srcmlb"
+check a.cpp.xml "$srcmla"
+check b.cpp.xml "$srcmlb"
 
 srcml2src --to-dir . a.cpp b.cpp
-checkv2 a.cpp.xml "$srcmla"
+check a.cpp.xml "$srcmla"
 
 srcml2src a.cpp b.cpp --to-dir .
-checkv2 a.cpp.xml "$srcmla"
+check a.cpp.xml "$srcmla"
 
 srcml2src a.cpp b.cpp --to-dir .
-checkv2 a.cpp.xml "$srcmla"
+check a.cpp.xml "$srcmla"
 
 srcml2src a.cpp b.cpp --to-dir . 
-checkv2 a.cpp.xml "$srcmla"
+check a.cpp.xml "$srcmla"

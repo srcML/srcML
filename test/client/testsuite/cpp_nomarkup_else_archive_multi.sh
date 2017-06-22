@@ -56,29 +56,29 @@ createfile sub/b.cpp "b;"
 
 # markup else by default
 src2srcml sub/a.cpp sub/b.cpp --in-order
-checkv2 "$fmarkup_else"
+check "$fmarkup_else"
 
 src2srcml sub/a.cpp sub/b.cpp -o sub/b.cpp.xml --in-order
-checkv2 sub/b.cpp.xml "$fmarkup_else"
+check sub/b.cpp.xml "$fmarkup_else"
 
 src2srcml -o sub/b.cpp.xml sub/a.cpp sub/b.cpp --in-order
-checkv2 sub/b.cpp.xml "$fmarkup_else"
+check sub/b.cpp.xml "$fmarkup_else"
 
 # don't markup else
 src2srcml sub/a.cpp sub/b.cpp --cpp-nomarkup-else --in-order
-checkv2 "$fnomarkup_else"
+check "$fnomarkup_else"
 
 src2srcml sub/a.cpp sub/b.cpp --cpp-nomarkup-else -o sub/b.cpp.xml --in-order
-checkv2 sub/b.cpp.xml "$fnomarkup_else"
+check sub/b.cpp.xml "$fnomarkup_else"
 
 src2srcml sub/a.cpp sub/b.cpp -o sub/b.cpp.xml --cpp-nomarkup-else --in-order
-checkv2 sub/b.cpp.xml "$fnomarkup_else"
+check sub/b.cpp.xml "$fnomarkup_else"
 
 src2srcml --cpp-nomarkup-else sub/a.cpp sub/b.cpp --in-order
-checkv2 "$fnomarkup_else"
+check "$fnomarkup_else"
 
 src2srcml --cpp-nomarkup-else sub/a.cpp sub/b.cpp -o sub/b.cpp.xml --in-order
-checkv2 sub/b.cpp.xml "$fnomarkup_else"
+check sub/b.cpp.xml "$fnomarkup_else"
 
 src2srcml --cpp-nomarkup-else -o sub/b.cpp.xml sub/a.cpp sub/b.cpp --in-order
-checkv2 sub/b.cpp.xml "$fnomarkup_else"
+check sub/b.cpp.xml "$fnomarkup_else"

@@ -18,9 +18,9 @@ define input <<- 'STDIN'
 xmlcheck "$input"
 
 srcml2src <<< "$input"
-checkv2 "$src"
+check "$src"
 
 createfile sub/a.cpp.xml "$input"
 
 srcml2src sub/a.cpp.xml
-checkv2 "$src"
+check "$src"

@@ -79,16 +79,16 @@ createfile dir/file.java "\na;"
 
 # Check typical source directory
 src2srcml dir --quiet -o dir/dir.xml --in-order
-checkv2 dir/dir.xml "$output"
+check dir/dir.xml "$output"
 
 src2srcml dir --quiet --in-order -o dir/dir.xml
-checkv2 dir/dir.xml "$output"
+check dir/dir.xml "$output"
 
 src2srcml --in-order dir --quiet -o dir/dir.xml
-checkv2 dir/dir.xml "$output"
+check dir/dir.xml "$output"
 
 src2srcml dir --quiet --in-order
-checkv2 "$output"
+check "$output"
 
 # directory of source, compressed, and compressed archive variations
 createfile dir2/a.cpp "\na;"
@@ -159,16 +159,16 @@ createfile dir2/q.cpp "\nq;"
 
 # Check a directory with a combination of source, compressed, and archived files.
 src2srcml dir2 --quiet -o dir2/dir2.xml --in-order
-checkv2 dir2/dir2.xml "$output2"
+check dir2/dir2.xml "$output2"
 
 src2srcml dir2 --quiet --in-order -o dir2/dir2.xml
-checkv2 dir2/dir2.xml "$output2"
+check dir2/dir2.xml "$output2"
 
 src2srcml --in-order dir2 --quiet -o dir2/dir2.xml
-checkv2 dir2/dir2.xml "$output2"
+check dir2/dir2.xml "$output2"
 
 src2srcml dir2 --quiet --in-order
-checkv2 "$output2"
+check "$output2"
 
 #Ensure proper behavior with symbolic links (ignore them)
 createfile symtest/a.cpp "\na;"
@@ -179,7 +179,7 @@ ln -s $(pwd)/symtest symtest/slink
 ln -s $(pwd)/symtest/b.cpp symtest/sim_b.cpp
 
 src2srcml symtest --quiet -o symtest/symtest.xml --in-order
-checkv2 symtest/symtest.xml "$output3"
+check symtest/symtest.xml "$output3"
 
 #Cleanup
 rm -rf symtest

@@ -39,28 +39,28 @@ xmlcheck "$srcml"
 createfile sub/archive_multi.xml "$srcml"
 
 srcml sub/archive_multi.xml -i
-checkv2 "$info"
+check "$info"
 
 srcml sub/archive_multi.xml --info
-checkv2 "$info"
+check "$info"
 
 srcml --info < sub/archive_multi.xml
-checkv2 "$info"
+check "$info"
 
 srcml -i sub/archive_multi.xml
-checkv2 "$info"
+check "$info"
 
 srcml --info sub/archive_multi.xml
-checkv2 "$info"
+check "$info"
 
 srcml --longinfo sub/archive_multi.xml
-checkv2 "$longinfo"
+check "$longinfo"
 
 srcml sub/archive_multi.xml --longinfo
-checkv2 "$longinfo"
+check "$longinfo"
 
 srcml --longinfo < sub/archive_multi.xml
-checkv2 "$longinfo"
+check "$longinfo"
 
 
 # test on archive of one unit
@@ -85,25 +85,25 @@ xmlcheck "$srcml"
 createfile sub/archive_single.xml "$srcml"
 
 srcml sub/archive_single.xml -i
-checkv2 "$info"
+check "$info"
 
 srcml sub/archive_single.xml --info
-checkv2 "$info"
+check "$info"
 
 srcml --info < sub/archive_single.xml
-checkv2 "$info"
+check "$info"
 
 srcml -i sub/archive_single.xml
-checkv2 "$info"
+check "$info"
 
 srcml --info sub/archive_single.xml
-checkv2 "$info"
+check "$info"
 
 srcml --longinfo sub/archive_single.xml
-checkv2 "$longinfo"
+check "$longinfo"
 
 srcml sub/archive_single.xml --longinfo
-checkv2 "$longinfo"
+check "$longinfo"
 
 srcml --longinfo < sub/archive_single.xml
-checkv2 "$longinfo"
+check "$longinfo"

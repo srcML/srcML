@@ -57,22 +57,22 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/a.cpp.xml --xpath "//src:argument/src:expr/src:name"
-checkv2 "$output"
+check "$output"
 
 srcml --xpath "//src:argument/src:expr/src:name" sub/a.cpp.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/a.cpp.xml --xpath "//src:argument/src:expr/src:name" -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:argument/src:expr/src:name" sub/a.cpp.xml -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/a.cpp.xml -o sub/a.xml --xpath "//src:argument/src:expr/src:name"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/a.cpp.xml --xpath "//src:argument/src:expr/src:name"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 
 # select the first elements (from each archive unit) that match *<name>*
@@ -88,25 +88,25 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/a.cpp.xml --xpath "(//src:name)[1]"
-checkv2 "$output"
+check "$output"
 
 srcml --xpath "(//src:name)[1]" sub/a.cpp.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/a.cpp.xml --xpath "(//src:name)[1]" -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/a.cpp.xml -o sub/a.xml --xpath "(//src:name)[1]"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/a.cpp.xml --xpath "(//src:name)[1]"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml --xpath "(//src:name)[1]" sub/a.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "(//src:name)[1]" -o sub/a.xml sub/a.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 
 
@@ -125,28 +125,28 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/a.cpp.xml --xpath "//src:type/src:name/text()"
-checkv2 "$output"
+check "$output"
 
 srcml --xpath "//src:type/src:name/text()" sub/a.cpp.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/a.cpp.xml --xpath "//src:type/src:name/text()" -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/a.cpp.xml -o sub/a.xml --xpath "//src:type/src:name/text()"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/a.cpp.xml --xpath "//src:type/src:name/text()"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml --xpath "//src:type/src:name/text()" sub/a.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:type/src:name/text()" -o sub/a.xml sub/a.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:type/src:name/text()" sub/a.cpp.xml -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 
 
@@ -165,25 +165,25 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/a.cpp.xml --xpath='//src:comment[@type="block"]'
-checkv2 "$output"
+check "$output"
 
 srcml --xpath='//src:comment[@type="block"]' sub/a.cpp.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/a.cpp.xml --xpath='//src:comment[@type="block"]' -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/a.cpp.xml -o sub/a.xml --xpath='//src:comment[@type="block"]'
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/a.cpp.xml --xpath='//src:comment[@type="block"]'
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml --xpath='//src:comment[@type="block"]' sub/a.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath='//src:comment[@type="block"]' -o sub/a.xml sub/a.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath='//src:comment[@type="block"]' sub/a.cpp.xml -o sub/a.xml
-checkv2 sub/a.xml "$output" 
+check sub/a.xml "$output" 

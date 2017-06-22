@@ -36,64 +36,64 @@ createfile identity.xsl "$identity_xslt"
 
 # --xslt=identity.xsl
 srcml2src --xslt=identity.xsl sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --xslt=identity.xsl < sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --xslt=identity.xsl sub/a.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --xslt=identity.xsl -o sub/b.cpp.xml sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --xslt=identity.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # --xslt identity.xsl
 srcml2src --xslt identity.xsl sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --xslt identity.xsl < sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --xslt identity.xsl sub/a.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --xslt identity.xsl -o sub/b.cpp.xml sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --xslt identity.xsl -o sub/b.cpp.xml < sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # --xslt "identity.xsl"
 srcml2src --xslt "identity.xsl" sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --xslt "identity.xsl" < sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --xslt "identity.xsl" sub/a.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --xslt "identity.xsl" -o sub/b.cpp.xml sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --xslt "identity.xsl" -o sub/b.cpp.xml < sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # --xslt="identity.xsl"
 srcml2src --xslt="identity.xsl" sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --xslt="identity.xsl" < sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src --xslt="identity.xsl" sub/a.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --xslt="identity.xsl" -o sub/b.cpp.xml sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src --xslt="identity.xsl" -o sub/b.cpp.xml < sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"

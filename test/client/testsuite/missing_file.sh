@@ -9,19 +9,19 @@ source $(dirname "$0")/framework_test.sh
 
 src2srcml foo.c
 
-checkv2 "" "WARNING srcml: Unable to open file foo.c
+check "" "WARNING srcml: Unable to open file foo.c
 
 "
 
 
 src2srcml abc.c
 
-checkv2 "" "WARNING srcml: Unable to open file abc.c
+check "" "WARNING srcml: Unable to open file abc.c
 
 "
 
 src2srcml ../src/foo.c
 
-checkv2 "" "WARNING srcml: Unable to open file ../src/foo.c
+check "" "WARNING srcml: Unable to open file ../src/foo.c
 
 "

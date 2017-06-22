@@ -11,40 +11,40 @@ set +e
 createfile sub/a.cpp "a;"
 
 src2srcml sub/a.cpp --archive -f "compressed.tar.gz"
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 src2srcml sub/a.cpp --archive --filename "compressed.tar.gz"
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 src2srcml sub/a.cpp --archive --filename="compressed.tar.gz"
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 src2srcml -l C++ --archive -f 'compressed.tar.gz' -o sub/a.cpp.xml sub/a.cpp
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 src2srcml --archive  -f 'compressed.tar.gz' sub/a.cpp -o sub/a.cpp.xml
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 
 # standard input
 echo -n "a;" | src2srcml -l C++ --archive -f compressed.tar.gz
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 echo -n "a;" | src2srcml -l C++ --archive --filename compressed.tar.gz
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 echo -n "a;" | src2srcml -l C++ --archive --filename=compressed.tar.gz
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 
 # filename flag on archive of multiple units
 createfile sub/b.cpp "b;"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order -f "compressed.tar.gz"
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 src2srcml sub/a.cpp sub/b.cpp --in-order -f=compressed.tar.gz
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"
 
 src2srcml --in-order -f "compressed.tar.gz" sub/a.cpp sub/b.cpp
-checkv2 "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive"

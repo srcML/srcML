@@ -22,33 +22,33 @@ createfile sub/a.cpp.xml "$srcml"
 
 # file before options
 srcml2src sub/a.cpp.xml -X -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src sub/a.cpp.xml -X
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src sub/a.cpp.xml -o sub/b.cpp.xml -X
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # options before file
 srcml2src -X sub/a.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src -X sub/a.cpp.xml
-checkv2 "$srcml"
+check "$srcml"
 
 srcml2src -o sub/b.cpp.xml -X < sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src -X -o sub/b.cpp.xml < sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 srcml2src -o sub/b.cpp.xml -X sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"
 
 # XML from standard in
 echo "$srcml" | srcml -X
-checkv2 "$srcml"
+check "$srcml"
 
 echo "$srcml" | srcml -X -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$srcml"
+check sub/b.cpp.xml "$srcml"

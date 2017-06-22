@@ -35,24 +35,24 @@ define deprecated_warning <<- 'STDERR'
 STDERR
 
 srcml sub/a.cpp.xml --show-language
-checkv2 "C++"
+check "C++"
 
 srcml sub/a.cpp.xml --show-url
-checkv2 "sub"
+check "sub"
 
 srcml sub/a.cpp.xml --show-filename
-checkv2 "a.cpp"
+check "a.cpp"
 
 srcml sub/a.cpp.xml --show-src-version
-checkv2 "1.2"
+check "1.2"
 
 srcml sub/a.cpp.xml --show-encoding
-checkv2 "UTF-8"
+check "UTF-8"
 
 srcml2src --units sub/a.cpp.xml
-checkv2 "1" "$deprecated_warning"
+check "1" "$deprecated_warning"
 
 createfile sub/nested.cpp.xml "$nestedfile"
 
 srcml2src --units sub/nested.cpp.xml
-checkv2 "2" "$deprecated_warning"
+check "2" "$deprecated_warning"

@@ -36,27 +36,27 @@ createfile sub/a.cpp "$sfile"
 
 src2srcml -z sub/a.cpp -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
-checkv2 "$xmlfile"
+check "$xmlfile"
 
 src2srcml sub/a.cpp -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
-checkv2 "$xmlfile"
+check "$xmlfile"
 
 srcml -l C++ -z sub/a.cpp -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
-checkv2 "$xmlfile"
+check "$xmlfile"
 
 srcml -l C++ sub/a.cpp -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
-checkv2 "$xmlfile"
+check "$xmlfile"
 
 src2srcml -z --archive sub/a.cpp -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
-checkv2 "$sxmlfile"
+check "$sxmlfile"
 
 src2srcml --archive sub/a.cpp -o sub/a.cpp.xml.gz
 gunzip -c sub/a.cpp.xml.gz
-checkv2 "$sxmlfile"
+check "$sxmlfile"
 
 # TODO: issue #1057 - cannot gz a raw source output file
 # srcml2src

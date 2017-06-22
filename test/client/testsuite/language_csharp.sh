@@ -13,26 +13,26 @@ xmlcheck "$output"
 createfile sub/a.cpp ""
 
 src2srcml -l "C#" sub/a.cpp
-checkv2 "$output"
+check "$output"
 
 src2srcml --language "C#" sub/a.cpp
-checkv2 "$output"
+check "$output"
 
 src2srcml --language="C#" sub/a.cpp
-checkv2 "$output"
+check "$output"
 
 src2srcml sub/a.cpp -l "C#"
-checkv2 "$output"
+check "$output"
 
 src2srcml sub/a.cpp --language "C#"
-checkv2 "$output"
+check "$output"
 
 src2srcml sub/a.cpp --language="C#"
-checkv2 "$output"
+check "$output"
 
 src2srcml -l 'C#' -o sub/a.cpp.xml sub/a.cpp
-checkv2 sub/a.cpp.xml "$output"
+check sub/a.cpp.xml "$output"
 
 src2srcml -l 'C#' sub/a.cpp -o sub/a.cpp.xml
-checkv2 sub/a.cpp.xml "$output"
+check sub/a.cpp.xml "$output"
 

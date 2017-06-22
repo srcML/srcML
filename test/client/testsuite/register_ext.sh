@@ -14,13 +14,13 @@ createfile sub/a.cpp ""
 
 # src to srcml
 src2srcml --register-ext cpp=Java sub/a.cpp
-checkv2 "$fxmlfile"
+check "$fxmlfile"
 
 src2srcml --register-ext="cpp=Java" sub/a.cpp 
-checkv2 "$fxmlfile"
+check "$fxmlfile"
 
 src2srcml --register-ext cpp=Java sub/a.cpp -o sub/a.cpp.xml
-checkv2 sub/a.cpp.xml "$fxmlfile"
+check sub/a.cpp.xml "$fxmlfile"
 
 define fsxmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

@@ -45,28 +45,28 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/unit.cpp.xml --xpath "//src:unit/@filename"
-checkv2 "$output"
+check "$output"
 
 srcml --xpath "//src:unit/@filename" sub/unit.cpp.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/unit.cpp.xml --xpath "//src:unit/@filename" -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/unit.cpp.xml -o sub/a.xml --xpath "//src:unit/@filename"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/unit.cpp.xml --xpath "//src:unit/@filename"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/unit.cpp.xml -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/unit.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:unit/@filename" sub/unit.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 
 # select comment format (doxygen)
@@ -82,27 +82,27 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 srcml sub/unit.cpp.xml --xpath "//src:comment/@format"
-checkv2 "$output"
+check "$output"
 
 srcml --xpath "//src:comment/@format" sub/unit.cpp.xml
-checkv2 "$output"
+check "$output"
 
 srcml sub/unit.cpp.xml --xpath "//src:comment/@format" -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml sub/unit.cpp.xml -o sub/a.xml --xpath "//src:comment/@format"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml -o sub/a.xml sub/unit.cpp.xml --xpath "//src:comment/@format"
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/unit.cpp.xml -o sub/a.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/unit.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/unit.cpp.xml
-checkv2 sub/a.xml "$output"
+check sub/a.xml "$output"
 
 

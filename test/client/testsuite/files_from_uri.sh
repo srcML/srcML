@@ -25,7 +25,7 @@ createfile sub/b.cpp "
 b;"
 
 src2srcml --files-from "https://raw.githubusercontent.com/srcML/test-data/master/filelist/file-list.txt" --in-order -o sub/both.xml
-checkv2 sub/both.xml "$nestedfile"
+check sub/both.xml "$nestedfile"
 
 
 # compressed remote filelist
@@ -36,13 +36,13 @@ define empty_srcml_with_url <<- 'STDOUT'
 
 
 src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.bz2?raw=true
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.gz?raw=true
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.bz2.gz?raw=true
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"
 
 src2srcml --files-from https://github.com/srcML/test-data/blob/master/empty/empty.txt.gz.bz2?raw=true
-checkv2 "$empty_srcml_with_url"
+check "$empty_srcml_with_url"

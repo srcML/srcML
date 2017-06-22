@@ -30,7 +30,7 @@ sub/b.cpp
 "
 
 src2srcml --files-from "sub/filelistab" --in-order -o sub/both.xml
-checkv2 sub/both.xml "$nestedfile"
+check sub/both.xml "$nestedfile"
 
 src2srcml --files-from "sub/filelistab" --in-order
-checkv2 "$nestedfile"
+check "$nestedfile"

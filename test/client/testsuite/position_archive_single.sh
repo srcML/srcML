@@ -27,49 +27,49 @@ xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 
 src2srcml -l C++ --position --archive < sub/a.cpp
-checkv2 "$srcml"
+check "$srcml"
 
 src2srcml -l C++ --archive --position < sub/a.cpp
-checkv2 "$srcml"
+check "$srcml"
 
 src2srcml -l C++ --position  --archive -o sub/a.cpp.xml < sub/a.cpp
-checkv2 sub/a.cpp.xml "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml -l C++ --archive --position -o sub/a.cpp.xml < sub/a.cpp
-checkv2 sub/a.cpp.xml "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml --position -l C++ --archive -o sub/a.cpp.xml < sub/a.cpp
-checkv2 sub/a.cpp.xml "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml -l C++ --archive -o sub/a.cpp.xml --position < sub/a.cpp
-checkv2 sub/a.cpp.xml "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 src2srcml sub/a.cpp --position --archive
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --archive --position
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --position -o sub/a.cpp.xml --archive
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml sub/a.cpp -o sub/a.cpp.xml --position --archive
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml sub/a.cpp -o sub/a.cpp.xml --archive --position
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml --position sub/a.cpp --archive
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --archive --position
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml --position sub/a.cpp -o sub/a.cpp.xml --archive
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml sub/a.cpp -o sub/a.cpp.xml --archive --position
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -o sub/a.cpp.xml --position sub/a.cpp --archive
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"

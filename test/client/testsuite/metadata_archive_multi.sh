@@ -29,22 +29,22 @@ xmlcheck "$nestedfileextra"
 xmlcheck "$file1"
 
 srcml2src -X --unit "1" - <<< "$nestedfileextra"
-checkv2 "$file1"
+check "$file1"
 
 srcml2src -X --unit "1" <<< "$nestedfileextra"
-checkv2 "$file1"
+check "$file1"
 
 srcml -X --unit "1" --show-filename <<< "$nestedfileextra"
-checkv2 "a.cpp"
+check "a.cpp"
 
 srcml -X --unit "2" --show-filename <<< "$nestedfileextra"
-checkv2 "b.cpp"
+check "b.cpp"
 
 srcml -X --unit "1" --show-language <<< "$nestedfileextra"
-checkv2 "C"
+check "C"
 	
 srcml -X --unit "2" --show-language <<< "$nestedfileextra"
-checkv2 "Java"
+check "Java"
 
 
 define input <<- 'INPUT'
@@ -82,37 +82,37 @@ define file3 <<- 'STDOUT'
 	STDOUT
 
 srcml2src --show-url <<< "$input"
-checkv2 "sub"
+check "sub"
 
 srcml2src -X --unit "1" - <<< "$input"
-checkv2 "$file1"
+check "$file1"
 
 srcml2src -X --unit "1" <<< "$input"
-checkv2 "$file1"
+check "$file1"
 
 srcml2src -X --unit "2" - <<< "$input"
-checkv2 "$file2"
+check "$file2"
 
 srcml2src -X --unit "2" <<< "$input"
-checkv2 "$file2"
+check "$file2"
 
 srcml2src -X --unit "3" - <<< "$input"
-checkv2 "$file3"
+check "$file3"
 
 srcml2src -X --unit "3" <<< "$input"
-checkv2 "$file3"
+check "$file3"
 
 srcml -X --unit "1" --show-filename <<< "$input"
-checkv2 "a.cpp"
+check "a.cpp"
 
 srcml -X --unit "2" --show-filename <<< "$input"
-checkv2 "b.cpp"
+check "b.cpp"
 
 srcml -X --unit "1" --show-language <<< "$input"
-checkv2 "C"
+check "C"
 
 srcml -X --unit "2" --show-language <<< "$input"
-checkv2 "Java"
+check "Java"
 
 
 define nestedfileextra <<- 'STDOUT'
@@ -133,16 +133,16 @@ define nestedfileextra <<- 'STDOUT'
 createfile sub/a.cpp.xml "$nestedfileextra"
 
 srcml -X --unit "1" --show-language sub/a.cpp.xml
-checkv2 "C++"
+check "C++"
 
 srcml -X --unit "1" --show-filename sub/a.cpp.xml
-checkv2 "a.cpp"
+check "a.cpp"
 
 srcml -X --unit "2" --show-language sub/a.cpp.xml
-checkv2 "Java"
+check "Java"
 
 srcml -X --unit "2" --show-filename sub/a.cpp.xml
-checkv2 "empty.java"
+check "empty.java"
 
 srcml --show-url sub/a.cpp.xml
-checkv2 "sub"
+check "sub"

@@ -20,30 +20,30 @@ xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 
 src2srcml sub/a.cpp -s "1.0"
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --src-version "1.0"
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --src-version="1.0"
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 src2srcml -s '1.0' sub/a.cpp -o sub/a.cpp.xml
-checkv2 sub/a.cpp.xml "$fsrcml"
+check sub/a.cpp.xml "$fsrcml"
 
 # standard input
 src2srcml -l C++ -s '1.0' -o sub/a.cpp.xml < sub/a.cpp
-checkv2 sub/a.cpp.xml "$srcml"
+check sub/a.cpp.xml "$srcml"
 
 echo -n "" | src2srcml -l C++ -s 1.0
-checkv2 "$srcml"
+check "$srcml"
 
 echo -n "" | src2srcml -l C++ --src-version 1.0
-checkv2 "$srcml"
+check "$srcml"
 
 echo -n "" | src2srcml -l C++ --src-version=1.0
-checkv2 "$srcml"
+check "$srcml"
 

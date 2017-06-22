@@ -28,56 +28,56 @@ createfile sub/a.cpp "a;"
 
 # from a file
 src2srcml sub/a.cpp --archive
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --hash --archive
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml --hash sub/a.cpp --archive
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp --hash -o sub/a.xml --archive
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml sub/a.cpp -o sub/a.xml --hash --archive
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml -o sub/a.xml sub/a.cpp --hash --archive
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml --hash sub/a.cpp -o sub/a.xml --archive
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml --hash -o sub/a.xml sub/a.cpp --archive
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml -o sub/a.xml --hash sub/a.cpp --archive
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 # standard input
 src2srcml -l C++ --hash --archive < sub/a.cpp
-checkv2 "$srcml"
+check "$srcml"
 
 src2srcml --hash -l C++ --archive < sub/a.cpp
-checkv2 "$srcml"
+check "$srcml"
 
 src2srcml -l C++ --hash -o sub/a.xml --archive < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml -l C++ -o sub/a.xml --hash --archive < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml -o sub/a.xml -l C++ --hash --archive < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml --hash -l C++ -o sub/a.xml --archive < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml --hash -o sub/a.xml -l C++ --archive < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 src2srcml -o sub/a.xml --hash -l C++ --archive < sub/a.cpp
-checkv2 sub/a.xml "$srcml"
+check sub/a.xml "$srcml"
 
 # with more than one unit in the archive
 define fsrcml <<- 'STDOUT'
@@ -96,28 +96,28 @@ createfile sub/b.cpp "b;"
 
 # from a file
 src2srcml sub/a.cpp sub/b.cpp --in-order
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp sub/b.cpp --hash --in-order
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml --hash sub/a.cpp sub/b.cpp --in-order
-checkv2 "$fsrcml"
+check "$fsrcml"
 
 src2srcml sub/a.cpp sub/b.cpp --hash -o sub/a.xml --in-order
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml sub/a.cpp sub/b.cpp -o sub/a.xml --hash --in-order
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml -o sub/a.xml sub/a.cpp sub/b.cpp --hash --in-order
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml --hash sub/a.cpp sub/b.cpp -o sub/a.xml --in-order
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml --hash -o sub/a.xml sub/a.cpp sub/b.cpp --in-order
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"
 
 src2srcml -o sub/a.xml --hash sub/a.cpp sub/b.cpp --in-order
-checkv2 sub/a.xml "$fsrcml"
+check sub/a.xml "$fsrcml"

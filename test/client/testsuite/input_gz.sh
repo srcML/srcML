@@ -56,44 +56,44 @@ gzip -c empty.txt > empty.txt.gz
 
 # src --> srcml
 src2srcml archive/a.cpp.gz -o archive/a.cpp.xml
-checkv2 archive/a.cpp.xml "$foutput"
+check archive/a.cpp.xml "$foutput"
 
 src2srcml archive/a.cpp.gz
-checkv2 "$foutput"
+check "$foutput"
 
 src2srcml -l C++ < archive/a.cpp.gz
-checkv2 "$output"
+check "$output"
 
 src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.gz
-checkv2 archive/a.cpp.xml "$output"
+check archive/a.cpp.xml "$output"
 
 
 # files from
 src2srcml --files-from list.txt
-checkv2 "$archive_output"
+check "$archive_output"
 
 src2srcml --files-from list.txt.gz
-checkv2 "$archive_output"
+check "$archive_output"
 
 src2srcml --files-from list.txt -o archive/list.xml
-checkv2 archive/list.xml "$archive_output"
+check archive/list.xml "$archive_output"
 
 src2srcml --files-from list.txt.gz -o archive/compressed_list.xml
-checkv2 archive/compressed_list.xml "$archive_output"
+check archive/compressed_list.xml "$archive_output"
 
 
 # files from empty
 src2srcml --files-from empty.txt
-checkv2 "$empty_output"
+check "$empty_output"
 
 src2srcml --files-from empty.txt.gz
-checkv2 "$empty_output"
+check "$empty_output"
 
 src2srcml --files-from empty.txt -o archive/empty.xml
-checkv2 archive/empty.xml "$empty_output"
+check archive/empty.xml "$empty_output"
 
 src2srcml --files-from empty.txt.gz -o archive/compressed_empty.xml
-checkv2 archive/compressed_empty.xml "$empty_output"
+check archive/compressed_empty.xml "$empty_output"
 
 rmfile list.txt
 rmfile list.txt.gz
@@ -105,13 +105,13 @@ rmfile archive/a.cpp.gz
 
 # srcml --> src
 srcml2src archive/a.cpp.xml
-checkv2 "$src"
+check "$src"
 
 srcml2src archive/a.cpp.xml -o archive/a.cpp
-checkv2 archive/a.cpp "$src"
+check archive/a.cpp "$src"
 
 srcml2src < archive/a.cpp.xml
-checkv2 "$src"
+check "$src"
 
 srcml2src -o archive/a.cpp < archive/a.cpp.xml
-checkv2 archive/a.cpp "$src"
+check archive/a.cpp "$src"

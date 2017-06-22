@@ -6,64 +6,64 @@ source $(dirname "$0")/framework_test.sh
 
 # input from a valid remote srcML archive multiple units
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml
-checkv2 "a;
+check "a;
 return b;"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml -o sub/archive_multi.cpp
-checkv2 sub/archive_multi.cpp "a;
+check sub/archive_multi.cpp "a;
 return b;"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml --unit 1
-checkv2 "a;"
+check "a;"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml --unit 1 -o sub/archive_multi.cpp
-checkv2 sub/archive_multi.cpp "a;"
+check sub/archive_multi.cpp "a;"
 
 
 # input from a compressed srcml file
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.bz2?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.gz?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.bz2.gz?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.gz.bz2?raw=true
-checkv2 "a;"
+check "a;"
 
 
 # input from an archived srcml file
 srcml https://github.com/srcML/test-data/raw/master/srcml/archive-multi.xml.cpio
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.cpio.bz2?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.cpio.gz?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.tar.bz2?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.tar.gz?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/raw/master/srcml/archive-multi.xml.tar
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.tbz2?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.tgz?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.zip?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.zip.bz2?raw=true
-checkv2 "a;"
+check "a;"
 
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-multi.xml.zip.gz?raw=true
-checkv2 "a;"
+check "a;"

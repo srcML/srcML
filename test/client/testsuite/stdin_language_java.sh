@@ -12,11 +12,11 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 echo -n "" | src2srcml -l Java
-checkv2 "$output"
+check "$output"
 
 echo -n "" | src2srcml --language Java
-checkv2 "$output"
+check "$output"
 
 echo -n "" | src2srcml --language=Java
-checkv2 "$output"
+check "$output"
 

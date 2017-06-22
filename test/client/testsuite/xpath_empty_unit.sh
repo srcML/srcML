@@ -23,14 +23,14 @@ xmlcheck "$xpath"
 createfile sub/a.cpp.xml "$srcml"
 
 srcml2src --xpath=/src:unit sub/a.cpp.xml
-checkv2 "$xpath"
+check "$xpath"
 
 srcml2src --xpath=/src:unit < sub/a.cpp.xml
-checkv2 "$xpath"
+check "$xpath"
 
 srcml2src --xpath=/src:unit -o sub/b.cpp.xml sub/a.cpp.xml
-checkv2 sub/b.cpp.xml "$xpath"
+check sub/b.cpp.xml "$xpath"
 
 srcml2src --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
-checkv2 sub/b.cpp.xml "$xpath"
+check sub/b.cpp.xml "$xpath"
 

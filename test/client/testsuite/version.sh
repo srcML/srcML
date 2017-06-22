@@ -10,7 +10,7 @@ define output <<- 'STDOUT'
 	STDOUT
 
 srcml2src -V | head -n 2
-checkv2 "$output"
+check "$output"
 
 srcml2src --version | head -n 2
-checkv2 "$output"
+check "$output"

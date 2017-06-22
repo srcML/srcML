@@ -26,7 +26,7 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 src2srcml -l C++ <<< "$input"
-checkv2 "$output"
+check "$output"
 
 #src2srcml -l C++ --cpp-text-if0 <<< "$input"
 #check "$output"
@@ -44,4 +44,4 @@ define output2 <<- 'STDOUT'
 xmlcheck "$output"
 
 src2srcml -l C++ --cpp-markup-if0 <<< "$input"
-checkv2 "$output2"
+check "$output2"

@@ -23,13 +23,13 @@ xmlcheck "$foutput"
 
 src2srcml --language 'C' <<< "a;"
 
-checkv2 "$output"
+check "$output"
 createfile bomfile.c "\xef\xbb\xbfa;
 "
 
 src2srcml bomfile.c
-checkv2 "$foutput"
+check "$foutput"
 
 # NOTE: This is broken in libsrcml
 src2srcml --language 'C' < bomfile.c
-checkv2 "$output"
+check "$output"
