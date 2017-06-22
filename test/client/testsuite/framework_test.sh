@@ -32,14 +32,6 @@
 # * Put in a trap for cleanup in test file:
 #   trap { cleanup; } EXIT
 
-# need -z option on GNU sed, not available on BSD sed
-if [ -e /usr/local/bin/gsed ]
-then
-   SED="gsed"
-else
-   SED="sed"
-fi
-
 # close our stderr file descriptors
 exec 4>&-
 
