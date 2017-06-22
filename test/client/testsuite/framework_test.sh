@@ -261,7 +261,8 @@ checkv2() {
         diff $STDERR <(echo -n "$3")
 
     # check <filename> stdoutstr
-    elif [ $# -ge 2 ] && [ -e $1 ]; then
+    # note: empty string reports as a valid file
+    elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e $1 ]; then
 
         registerfile ${1}
         diff $1 <(echo -n "$2")
