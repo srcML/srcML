@@ -33,13 +33,14 @@
 #   trap { cleanup; } EXIT
 
 # close our stderr file descriptors
-exec 4>&-
-
-# generated files, list is kept to cleanup
-genfiles=""
+# FIXME: Why was this needed?
+#exec 4>&-
 
 # current revision number, replaced in expected output strings
 export REVISION=0.9.5
+
+# generated files, list is kept to cleanup
+genfiles=""
 
 # restores environment, deletes files created with createfile command.
 # or registerd with registerfile command
@@ -214,7 +215,7 @@ check() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        diff $STDOUT <(echo -n "$1" | sed -e "s/REVISION/${REVISION}/;")
+        diff $STDOUT <(echo -n "$1")
         [ ! -s $STDERR ]
 
     else
