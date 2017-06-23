@@ -261,12 +261,6 @@ void create_src(const srcml_request_t& srcml_request,
         } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
             srcMLReadArchive arch(input_sources[0], srcml_request.revision);
 
-            if (destination.protocol == "file") {
-                boost::filesystem::path dir(destination.resource);
-                if (dir.has_parent_path() && !is_directory(dir.parent_path()))
-                    boost::filesystem::create_directories(dir.parent_path());
-            }
-
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_archive_read_unit_header(arch);
@@ -285,7 +279,11 @@ void create_src(const srcml_request_t& srcml_request,
             if (srcml_request.src_encoding)
                 srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
 
-            srcml_unit_unparse_filename(unit, destination.c_str(), 0);
+            int status = srcml_unit_unparse_filename(unit, destination.c_str(), 0);
+            if (status) {
+                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: unable to open output file " + destination.resource);
+                exit(4);
+            }
 
             srcml_unit_free(unit);
 
