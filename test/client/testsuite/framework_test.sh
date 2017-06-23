@@ -160,21 +160,21 @@ check() {
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        diff $1 <(echo -n "$2")
-        diff $STDERR <(echo -n "$3")
+        diff $1 <(echo -en "$2")
+        diff $STDERR <(echo -en "$3")
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
     elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-        diff $1 <(echo -n "$2")
+        diff $1 <(echo -en "$2")
         [ ! -s $STDERR ]
 
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        diff $STDOUT <(echo -n "$1")
-        diff $STDERR <(echo -n "$2")
+        diff $STDOUT <(echo -en "$1")
+        diff $STDERR <(echo -en "$2")
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
@@ -184,7 +184,7 @@ check() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        diff $STDOUT <(echo -n "$1")
+        diff $STDOUT <(echo -en "$1")
         [ ! -s $STDERR ]
 
     else
