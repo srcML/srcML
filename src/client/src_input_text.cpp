@@ -47,54 +47,54 @@
     prequest->status = 0; //!language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
     std::string raw_text = src_prefix_resource(input_file);
+    prequest->loc = 0;
 
     // fill up the parse request buffer
     if (!prequest->status) {
     	// copy from the text directly into a buffer
     	// perform newline and tab expansion
-    	// TODO: Do this more efficiently
     	// TODO: Make test cases for each part
     	// TODO: Support \nnn, \xnnn, \unnn, \Unnnnnnnn
-    	bool startescape = false;
-    	for (std::string::const_iterator p = raw_text.begin(); p != raw_text.end(); ++p) {
 
-    		if (!startescape && *p == '\\') {
+        const char* ptext = raw_text.c_str();
+        while (ptext) {
 
-    			startescape = true;
+            // find up to an escape
+            const char* epos = strchr(ptext, '\\');
+            if (!epos) {
+                break;
+            }
+            // append up to the special char
+            prequest->buffer.insert(prequest->buffer.end(), ptext, epos);
 
-    		} else if (startescape) {
+            // append the special character
+            ++epos;
+            if (*epos == 'n') {
+                prequest->buffer.push_back('\n');
+                ++prequest->loc;
+            } else if (*epos == 't') {
+                prequest->buffer.push_back('\t');
+            } else if (*epos == 'f') {
+                prequest->buffer.push_back('\f');
+            } else if (*epos == 'a') {
+                prequest->buffer.push_back('\a');
+            } else if (*epos == 'b') {
+                prequest->buffer.push_back('\b');
+            /* \e not directly supported in C, but echo command does */
+            } else if (*epos == 'e') {
+                prequest->buffer.push_back('\x1B');
+            } else if (*epos == 'r') {
+                prequest->buffer.push_back('\r');
+            } else if (*epos == 'v') {
+                prequest->buffer.push_back('\v');
+            } else {
+                prequest->buffer.push_back('\\');
+            }
+            ptext = epos + 1;
+        }
 
-    			if (*p == 'n') {
-    				prequest->buffer.push_back('\n');
-    			} else if (*p == 't') {
-    				prequest->buffer.push_back('\t');
-    			} else if (*p == 'f') {
-    				prequest->buffer.push_back('\f');
-    			} else if (*p == 'a') {
-    				prequest->buffer.push_back('\a');
-    			} else if (*p == 'b') {
-    				prequest->buffer.push_back('\b');
-
-                /* \e not directly supported in C, but echo command does */
-                } else if (*p == 'e') {
-                    prequest->buffer.push_back('\x1B');
-
-    			} else if (*p == 'r') {
-    				prequest->buffer.push_back('\r');
-    			} else if (*p == 'v') {
-    				prequest->buffer.push_back('\v');
-    			} else {
-    				prequest->buffer.push_back('\\');
-    				prequest->buffer.push_back(*p);
-    			}
-
-   				startescape = false;
-    		} else {
-
-    			prequest->buffer.push_back(*p);
-    		}
-    	}
-    	++prequest->loc;
+        // finished with no '\\' remaining, so flush buffer
+        prequest->buffer.insert(prequest->buffer.end(), ptext, ptext + strlen(ptext));
     }
 
     // schedule for parsing
