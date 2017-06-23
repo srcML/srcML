@@ -717,6 +717,10 @@ int srcml_unit_unparse_filename(srcml_unit* unit, const char* src_filename, unsi
         (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
 
     xmlOutputBufferPtr output_handler = xmlOutputBufferCreateFilename(src_filename, encoding ? xmlFindCharEncodingHandler(encoding) : 0, compression);
+    if (!output_handler) {
+        xmlOutputBufferClose(output_handler);
+        return SRCML_STATUS_IO_ERROR;
+    }
 
     try {
 
