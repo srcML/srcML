@@ -75,7 +75,7 @@ endmacro()
 #
 macro(addBashTest TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME)
-    add_test(NAME ${TEST_NAME} COMMAND bash ${TEST_FILE})
+    add_test(NAME ${TEST_NAME} COMMAND ${TEST_FILE})
     set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 60)
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})

@@ -20,10 +20,10 @@ createfile sub/archive.cpp.xml "$archive"
 
 # TODO: issue #1042
 srcml --show-timestamp sub/archive.cpp.xml
-check_null
+check
 
 srcml --show-timestamp < sub/archive.cpp.xml
-check_null
+check
 
 # empty
 define empty <<- 'STDOUT'
@@ -41,10 +41,10 @@ xmlcheck "$empty"
 createfile sub/archive.cpp.xml "$empty"
 
 srcml --show-timestamp sub/archive.cpp.xml
-check_null
+check
 
 srcml --show-timestamp < sub/archive.cpp.xml
-check_null
+check
 
 # none
 define none <<- 'STDIN'
@@ -62,8 +62,8 @@ xmlcheck "$none"
 createfile sub/archive.cpp.xml "$none"
 
 srcml --show-timestamp sub/archive.cpp.xml
-check_null
+check
 
 srcml --show-timestamp < sub/archive.cpp.xml
-check_null
+check
 

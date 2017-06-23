@@ -200,35 +200,6 @@ check() {
 }
 
 ##
-# checks the result of a command to verify that it is empty
-#   $1 (optional) file of expected stdout
-#   $2 (optional) file of expected stderr
-#   $STDOUT - filename of captured stdout
-#   $STDERR - filename of captured stderr
-#
-check_null() {
-
-    # return stdout and stderr to standard streams
-    uncapture_output
-
-    # trace the command
-    firsthistoryentry
-
-    # verify expected stderr to the captured stdout
-
-    # check that the captured stdout is empty
-    [ ! -s $STDOUT ]
-
-    # check that the captured stderr is empty
-    [ ! -s $STDERR ]
-
-    # # return to capturing stdout and stderr
-    capture_output
-
-    true
-}
-
-##
 # checks the exit status of a command
 #   $1 expected return value
 #

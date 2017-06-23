@@ -58,7 +58,7 @@ check sub/c.cpp.xml "$srcml" "$output"
 
 # srcml to src
 srcml --verbose sub/a.cpp.xml -o sub/c.cpp
-check_null
+check
 
 srcml --verbose -l C++ -o sub/c.cpp < sub/a.cpp.xml
-check_null
+check
