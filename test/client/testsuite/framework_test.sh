@@ -217,6 +217,7 @@ check_exit() {
 
     # verify expected stderr to the captured stdout
     if [ $exit_status -ne $1 ]; then
+        echo "error: exit was $exit_status instead of $1"
         exit 8
     fi
 
