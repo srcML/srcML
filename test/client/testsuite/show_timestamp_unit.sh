@@ -32,7 +32,7 @@ createfile sub/a.cpp.xml "$none"
 message "timestamp missing"
 
 srcml --show-timestamp sub/a.cpp.xml
-check_null
+check
 
 srcml --show-timestamp < sub/a.cpp.xml
-check_null
+check

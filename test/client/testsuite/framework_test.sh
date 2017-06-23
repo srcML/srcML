@@ -160,21 +160,21 @@ check() {
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        diff $1 <(echo -n "$2")
-        diff $STDERR <(echo -n "$3")
+        diff $1 <(echo -en "$2")
+        diff $STDERR <(echo -en "$3")
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
     elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-        diff $1 <(echo -n "$2")
+        diff $1 <(echo -en "$2")
         [ ! -s $STDERR ]
 
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        diff $STDOUT <(echo -n "$1")
-        diff $STDERR <(echo -n "$2")
+        diff $STDOUT <(echo -en "$1")
+        diff $STDERR <(echo -en "$2")
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
@@ -184,7 +184,7 @@ check() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        diff $STDOUT <(echo -n "$1")
+        diff $STDOUT <(echo -en "$1")
         [ ! -s $STDERR ]
 
     else
@@ -194,35 +194,6 @@ check() {
     fi
 
     # return to capturing stdout and stderr
-    capture_output
-
-    true
-}
-
-##
-# checks the result of a command to verify that it is empty
-#   $1 (optional) file of expected stdout
-#   $2 (optional) file of expected stderr
-#   $STDOUT - filename of captured stdout
-#   $STDERR - filename of captured stderr
-#
-check_null() {
-
-    # return stdout and stderr to standard streams
-    uncapture_output
-
-    # trace the command
-    firsthistoryentry
-
-    # verify expected stderr to the captured stdout
-
-    # check that the captured stdout is empty
-    [ ! -s $STDOUT ]
-
-    # check that the captured stderr is empty
-    [ ! -s $STDERR ]
-
-    # # return to capturing stdout and stderr
     capture_output
 
     true
@@ -246,6 +217,7 @@ check_exit() {
 
     # verify expected stderr to the captured stdout
     if [ $exit_status -ne $1 ]; then
+        echo "error: exit was $exit_status instead of $1"
         exit 8
     fi
 

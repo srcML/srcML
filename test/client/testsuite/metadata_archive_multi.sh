@@ -35,17 +35,16 @@ srcml2src -X --unit "1" <<< "$nestedfileextra"
 check "$file1"
 
 srcml -X --unit "1" --show-filename <<< "$nestedfileextra"
-check "a.cpp"
+check "a.cpp\n"
 
 srcml -X --unit "2" --show-filename <<< "$nestedfileextra"
-check "b.cpp"
+check "b.cpp\n"
 
 srcml -X --unit "1" --show-language <<< "$nestedfileextra"
-check "C"
+check "C\n"
 	
 srcml -X --unit "2" --show-language <<< "$nestedfileextra"
-check "Java"
-
+check "Java\n"
 
 define input <<- 'INPUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -82,7 +81,7 @@ define file3 <<- 'STDOUT'
 	STDOUT
 
 srcml2src --show-url <<< "$input"
-check "sub"
+check "sub\n"
 
 srcml2src -X --unit "1" - <<< "$input"
 check "$file1"
@@ -103,17 +102,16 @@ srcml2src -X --unit "3" <<< "$input"
 check "$file3"
 
 srcml -X --unit "1" --show-filename <<< "$input"
-check "a.cpp"
+check "a.cpp\n"
 
 srcml -X --unit "2" --show-filename <<< "$input"
-check "b.cpp"
+check "b.cpp\n"
 
 srcml -X --unit "1" --show-language <<< "$input"
-check "C"
+check "C\n"
 
 srcml -X --unit "2" --show-language <<< "$input"
-check "Java"
-
+check "Java\n"
 
 define nestedfileextra <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -133,16 +131,16 @@ define nestedfileextra <<- 'STDOUT'
 createfile sub/a.cpp.xml "$nestedfileextra"
 
 srcml -X --unit "1" --show-language sub/a.cpp.xml
-check "C++"
+check "C++\n"
 
 srcml -X --unit "1" --show-filename sub/a.cpp.xml
-check "a.cpp"
+check "a.cpp\n"
 
 srcml -X --unit "2" --show-language sub/a.cpp.xml
-check "Java"
+check "Java\n"
 
 srcml -X --unit "2" --show-filename sub/a.cpp.xml
-check "empty.java"
+check "empty.java\n"
 
 srcml --show-url sub/a.cpp.xml
-check "sub"
+check "sub\n"

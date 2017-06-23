@@ -32,10 +32,10 @@ srcml sub/a.xml -p "foo.com"
 check "foo"
 
 srcml -p "nonexistent.com" sub/a.xml
-check_null
+check
 
 srcml sub/a.xml -p "nonexistent.com"
-check_null
+check
 
 # standard input
 srcml2src -p "http://www.srcML.org/srcML/src" <<< "$input"
@@ -60,11 +60,11 @@ srcml2src --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
 srcml2src -p "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
-check_null
+check
 
 srcml2src --prefix "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
-check_null
+check
 
 srcml2src --prefix="http://www.cs.uakron.edu/~collard/foo" <<< "$input"
-check_null
+check
 

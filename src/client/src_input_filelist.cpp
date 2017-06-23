@@ -32,6 +32,8 @@
 #include <archive_entry.h>
 #include <srcml_logger.hpp>
 
+extern int curl_error;
+
 int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
                         const srcml_request_t& srcml_request,
@@ -39,6 +41,10 @@ int src_input_filelist(ParseQueue& queue,
 
     archive* arch = libarchive_input_file(input_file);
     if (!arch)
+        return 0;
+
+    // curl handling could produce a 404 error
+    if (curl_error)
         return 0;
 
     archive_entry *entry = 0;
