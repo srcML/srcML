@@ -27,7 +27,6 @@
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <list>
 #include <vector>
 

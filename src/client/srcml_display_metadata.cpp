@@ -26,11 +26,9 @@
 #include <srcml.h>
 #include <srcml_logger.hpp>
 #include <iostream>
-#include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <iomanip>
 #include <string.h>
-#include <boost/format.hpp>
 
 // display all files in srcml archive
 void srcml_list(srcml_archive* srcml_arch) {
