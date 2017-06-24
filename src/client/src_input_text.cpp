@@ -24,7 +24,26 @@
 #include <srcml_options.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_prefix.hpp>
+#include <ctype.h>
 
+static int hex2decimal(unsigned char c) {
+
+    switch (c) {
+        case 'a':
+        case 'A': return 10;
+        case 'b':
+        case 'B': return 11;
+        case 'c':
+        case 'C': return 12;
+        case 'd':
+        case 'D': return 13;
+        case 'e':
+        case 'E': return 14;
+        case 'f':
+        case 'F': return 15;
+        default: return c - '0';
+    }
+}
 // Convert input to a ParseRequest and assign request to the processing queue
  int src_input_text(ParseQueue& queue,
  	srcml_archive* srcml_arch,
@@ -69,25 +88,50 @@
 
             // append the special character
             ++epos;
-            if (*epos == 'n') {
+            switch (*epos) {
+            case 'n':
                 prequest->buffer.push_back('\n');
                 ++prequest->loc;
-            } else if (*epos == 't') {
+                break;
+            case 't':
                 prequest->buffer.push_back('\t');
-            } else if (*epos == 'f') {
+                break;
+            case 'f':
                 prequest->buffer.push_back('\f');
-            } else if (*epos == 'a') {
+                break;
+            case 'a':
                 prequest->buffer.push_back('\a');
-            } else if (*epos == 'b') {
+                break;
+            case 'b':
                 prequest->buffer.push_back('\b');
+                break;
             /* \e not directly supported in C, but echo command does */
-            } else if (*epos == 'e') {
+            case 'e':
                 prequest->buffer.push_back('\x1B');
-            } else if (*epos == 'r') {
+                break;
+            case 'r':
                 prequest->buffer.push_back('\r');
-            } else if (*epos == 'v') {
+                break;
+            case 'v':
                 prequest->buffer.push_back('\v');
-            } else {
+                break;
+            case 'x':
+            {
+                int value = 0;
+                int offset = 1;
+                for (; offset < 3 && isxdigit(*(epos + offset)); ++offset) {
+                    value = hex2decimal(*(epos + offset)) + 16 * value;
+                }
+                if (offset != 1) {
+                    prequest->buffer.push_back(value);
+                    epos += offset;
+                } else {
+                    prequest->buffer.push_back('\\');
+                    prequest->buffer.push_back('x');
+                }
+                break;
+            }
+            default:
                 prequest->buffer.push_back('\\');
             }
             ptext = epos + 1;
