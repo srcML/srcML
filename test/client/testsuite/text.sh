@@ -165,6 +165,20 @@ check "$(echo -en "\tt;\t")"
 src2srcml -l C++ --text="\vv;\v" | srcml2src
 check "$(echo -en "\vv;\v")"
 
+# hex characters
+src2srcml -l C++ --text="\x68;" | srcml2src
+check "$(echo -en "\x68;")"
+
+src2srcml -l C++ --text="\x3;" | srcml2src
+check "$(echo -en "\x3;")"
+
+# octal characters
+src2srcml -l C++ --text="\0150;" | srcml2src
+check "$(echo -en "\0150;")"
+
+src2srcml -l C++ --text="\03;" | srcml2src
+check "$(echo -en "\03;")"
+
 exit 0
 
 # Problems with these
