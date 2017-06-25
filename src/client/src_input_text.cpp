@@ -136,6 +136,8 @@ static bool isodigit(char c) {
                 }
 
                 prequest->buffer.push_back(value);
+                if (value == '\n')
+                    ++prequest->loc;
                 epos += offset;
                 break;
             }
@@ -155,6 +157,8 @@ static bool isodigit(char c) {
                 }
 
                 prequest->buffer.push_back(value);
+                if (value == '\n')
+                    ++prequest->loc;
                 epos += offset;
                 break;
             }
