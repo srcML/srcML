@@ -169,8 +169,8 @@ check "$(echo -en "\vv;\v")"
 src2srcml -l C++ --text="\x68;" | srcml2src
 check "$(echo -en "\x68;")"
 
-src2srcml -l C++ --text="\x3;" | srcml2src
-check "$(echo -en "\x3;")"
+src2srcml -l C++ --text="\10;" | srcml2src
+check "$(echo -en "\10;")"
 
 # octal characters
 src2srcml -l C++ --text="\0150;" | srcml2src

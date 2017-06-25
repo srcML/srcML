@@ -164,6 +164,7 @@ static bool isodigit(char c) {
             }
             default:
                 prequest->buffer.push_back('\\');
+                prequest->buffer.push_back(*(epos));
             }
             ptext = epos + 1;
         }
