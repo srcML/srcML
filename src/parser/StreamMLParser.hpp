@@ -190,6 +190,19 @@ private:
         }
     }
 
+    int safeLA() {
+
+        int n = 1;
+        try {
+
+            n = srcMLParser::LA(1);
+        } catch (...) {
+            n = 1;
+        }
+
+        return n;
+    }
+
     /**
      * fillTokenBuffer
      *
@@ -280,7 +293,7 @@ private:
     bool consumeSkippedToken() {
 
         // preprocessor (unless we already are in one)
-        if (isoption(options, SRCML_OPTION_CPP) && !inskip && srcMLParser::LA(1) == srcMLParser::PREPROC) {
+        if (isoption(options, SRCML_OPTION_CPP) && !inskip && safeLA() == srcMLParser::PREPROC) {
 
             // start preprocessor handling
             inskip = true;
@@ -313,7 +326,7 @@ private:
         }
 
         // macro call
-        if (srcMLParser::LA(1) == srcMLParser::MACRO_NAME && !inskip) {
+        if (safeLA() == srcMLParser::MACRO_NAME && !inskip) {
 
             inskip = true;
 
@@ -339,7 +352,7 @@ private:
 
         }
 
-        if (!inskip && srcMLParser::LA(1) == srcMLParser::VISUAL_CXX_ASM) {
+        if (!inskip && safeLA() == srcMLParser::VISUAL_CXX_ASM) {
 
             // start preprocessor handling
             inskip = true;
@@ -371,7 +384,7 @@ private:
             return true;
         }
 
-        if (isSkipToken(srcMLParser::LA(1))) {
+        if (isSkipToken(safeLA())) {
             // skipped tokens are put on a special buffer
             pushSkipToken();
 
@@ -540,7 +553,7 @@ private:
      */
     inline void pushCorrectToken(const antlr::RefToken& rtoken) {
 
-        if (isSkipToken(srcMLParser::LA(1)))
+        if (isSkipToken(safeLA()))
 
             // push the token
             pushSkipToken();
