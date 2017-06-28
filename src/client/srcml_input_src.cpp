@@ -73,7 +73,7 @@ srcml_input_src::srcml_input_src(const std::string& other) : arch(0), state(INDE
 
         plainfile = resource;
 
-        for (extension = cur_extension(plainfile); is_compressed(extension) || is_archive(extension); extension = cur_extension(plainfile), pop_extension(plainfile)) {
+        for (;(extension = cur_extension(plainfile)) != "" && (is_compressed(extension) || is_archive(extension)); pop_extension(plainfile)) {
 
             // collect compressions
             if (is_compressed(extension)) {
