@@ -21,7 +21,6 @@
  */
 
 #include <create_src.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/foreach.hpp>
 #include <srcml.h>
 #include <src_output_libarchive.hpp>

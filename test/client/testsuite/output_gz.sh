@@ -34,43 +34,34 @@ xmlcheck "$xmlfile"
 # src2srcml
 createfile sub/a.cpp "$sfile"
 
-src2srcml -z sub/a.cpp -o sub/a.cpp.xml.gz
-gunzip -c sub/a.cpp.xml.gz
+src2srcml sub/a.cpp -o sub/a.cpp.xml.gz && gunzip -c sub/a.cpp.xml.gz
 check "$xmlfile"
 
-src2srcml sub/a.cpp -o sub/a.cpp.xml.gz
-gunzip -c sub/a.cpp.xml.gz
+src2srcml sub/a.cpp -o sub/a.cpp.xml.gz && gunzip -c sub/a.cpp.xml.gz
 check "$xmlfile"
 
-srcml -l C++ -z sub/a.cpp -o sub/a.cpp.xml.gz
-gunzip -c sub/a.cpp.xml.gz
+srcml -l C++ sub/a.cpp -o sub/a.cpp.xml.gz && gunzip -c sub/a.cpp.xml.gz
 check "$xmlfile"
 
-srcml -l C++ sub/a.cpp -o sub/a.cpp.xml.gz
-gunzip -c sub/a.cpp.xml.gz
+srcml -l C++ sub/a.cpp -o sub/a.cpp.xml.gz && gunzip -c sub/a.cpp.xml.gz
 check "$xmlfile"
 
-src2srcml -z --archive sub/a.cpp -o sub/a.cpp.xml.gz
-gunzip -c sub/a.cpp.xml.gz
+src2srcml --archive sub/a.cpp -o sub/a.cpp.xml.gz && gunzip -c sub/a.cpp.xml.gz
 check "$sxmlfile"
 
-src2srcml --archive sub/a.cpp -o sub/a.cpp.xml.gz
-gunzip -c sub/a.cpp.xml.gz
+src2srcml --archive sub/a.cpp -o sub/a.cpp.xml.gz && gunzip -c sub/a.cpp.xml.gz
 check "$sxmlfile"
 
 # TODO: issue #1057 - cannot gz a raw source output file
 # srcml2src
 # createfile sub/a.cpp.xml "$xmlfile"
 
-#srcml2src -z sub/a.cpp.xml -o sub/a.cpp.gz
-#gunzip -c sub/a.cpp.gz
+#srcml2src sub/a.cpp.xml -o sub/a.cpp.gz && gunzip -c sub/a.cpp.gz
 #check "$sfile"
 
-#srcml2src --archive sub/a.cpp.xml -o sub/a.cpp.gz
-#gunzip -c sub/a.cpp.gz
+#srcml2src --archive sub/a.cpp.xml -o sub/a.cpp.gz && gunzip -c sub/a.cpp.gz
 #check "$sfile"
 
-#srcml2src -z -o sub/a.cpp.gz
-#gunzip -c sub/a.cpp.gz
+#srcml2src -o sub/a.cpp.gz  && gunzip -c sub/a.cpp.gz
 #check "$sfile"
 

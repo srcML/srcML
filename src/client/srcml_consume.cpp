@@ -32,7 +32,6 @@
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <string>
-#include <boost/filesystem.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
@@ -84,10 +83,6 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             pos = 0;
         }
         std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";*/
-
-        boost::filesystem::path dir(xml_filename);
-        if (dir.has_parent_path() && !is_directory(dir.parent_path()))
-            boost::filesystem::create_directories(dir.parent_path());
 
         srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str(), 0);
         request->srcml_arch = srcml_arch;
