@@ -9,6 +9,13 @@ define srcml <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
 	STDOUT
 
+# requires a GNU echo, for macOS, gecho
+if [[ "$(/bin/echo --version)" == "--version" ]]; then
+	export ECHO=/usr/local/bin/gecho
+else
+	export ECHO=/bin/echo
+fi
+
 xmlcheck "$srcml"
 
 src2srcml -t "" -l "C++"
@@ -146,35 +153,47 @@ check sub/a.cpp.xml "$ansrcml"
 # escaped \a
 text="\aa;\a"
 src2srcml -l C++ --text="\aa;\a" | srcml2src
-check "$(echo -en "\aa;\a")"
+message "$($ECHO -en "\aa;\a")"
 
 # escaped \b
 text="\bb;\b"
 src2srcml -l C++ --text="\bb;\b" | srcml2src
-check "$(echo -en "\bb;\b")"
+check "$($ECHO -en "\bb;\b")"
 
 # escaped \f
 src2srcml -l C++ --text="\ff;\f" | srcml2src
-check "$(echo -en "\ff;\f")"
+check "$($ECHO -en "\ff;\f")"
 
 # escaped \t
 src2srcml -l C++ --text="\tt;\t" | srcml2src
-check "$(echo -en "\tt;\t")"
+check "$($ECHO -en "\tt;\t")"
 
 # escaped \v
 src2srcml -l C++ --text="\vv;\v" | srcml2src
-check "$(echo -en "\vv;\v")"
+check "$($ECHO -en "\vv;\v")"
 
-exit 0
+# hex characters
+src2srcml -l C++ --text="\x68;" | srcml2src
+check "$($ECHO -en "\x68;")"
 
-# Problems with these
+src2srcml -l C++ --text="\10;" | srcml2src
+check "$($ECHO -en "\10;")"
 
-# escaped \r
-# Note: \r currently get normalized to \n in src->srcml
-text="\rr;\r"
-src2srcml -l C++ --text="\rt;\r" | srcml2src
-check $(echo -en "\nr;\n\n")
+# octal characters
+src2srcml -l C++ --text="\0150;" | srcml2src
+check "$($ECHO -en "\0150;")"
+
+src2srcml -l C++ --text="\03;" | srcml2src
+check "$($ECHO -en "\03;")"
 
 # escaped \e
 src2srcml -l C++ --text="\ee;\e" | srcml2src
-check "$(echo -en "\ee;\e")"
+check "$($ECHO -en "\ee;\e")"
+
+exit 0
+
+# escaped \r
+# Note: \r currently get normalized to \n in src->srcml
+# FIXME
+src2srcml -l C++ --text="\rr;" | srcml2src
+check $($ECHO -en "\nr;")

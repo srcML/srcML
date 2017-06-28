@@ -44,6 +44,11 @@ static int hex2decimal(unsigned char c) {
         default: return c - '0';
     }
 }
+
+static bool isodigit(char c) {
+    return c >= '0' && c <= '7';
+}
+
 // Convert input to a ParseRequest and assign request to the processing queue
  int src_input_text(ParseQueue& queue,
  	srcml_archive* srcml_arch,
@@ -115,24 +120,61 @@ static int hex2decimal(unsigned char c) {
             case 'v':
                 prequest->buffer.push_back('\v');
                 break;
+            // byte with hex value from 1 to 2 charcters
             case 'x':
             {
                 int value = 0;
-                int offset = 1;
-                for (; offset < 3 && isxdigit(*(epos + offset)); ++offset) {
-                    value = hex2decimal(*(epos + offset)) + 16 * value;
+                int offset = 0;
+                while (offset < 2 && isxdigit(*(epos + offset + 1))) {
+                    value = hex2decimal(*(epos + offset + 1)) + 16 * value;
+                    ++offset;
                 }
-                if (offset != 1) {
-                    prequest->buffer.push_back(value);
-                    epos += offset;
-                } else {
+                if (offset == 0) {
                     prequest->buffer.push_back('\\');
                     prequest->buffer.push_back('x');
+                    break;
                 }
+
+                prequest->buffer.push_back(value);
+                if (value == '\n')
+                    ++prequest->loc;
+                epos += offset;
+                break;
+            }
+            // byte with octal value from 1 to 3 characters
+            // Note: GNU echo documentation says that the \0 is required, but
+            // the actual implementation accepts \1, \2, ..., \7
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            {
+                int value = 0;
+                int offset = *epos == '0' ? 1 : 0;
+                int maxlength = *epos == '0' ? 4 : 3;
+                while (offset < maxlength && isodigit(*(epos + offset))) {
+                    value = (*(epos + offset) - '0') + 8 * value;
+                    ++offset;
+                }
+                if (offset == 0) {
+                    prequest->buffer.push_back('\\');
+                    prequest->buffer.push_back('0');
+                    break;
+                }
+
+                prequest->buffer.push_back(value);
+                if (value == '\n')
+                    ++prequest->loc;
+                epos += offset - 1;
                 break;
             }
             default:
                 prequest->buffer.push_back('\\');
+                prequest->buffer.push_back(*(epos));
             }
             ptext = epos + 1;
         }
