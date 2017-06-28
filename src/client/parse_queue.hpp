@@ -30,6 +30,7 @@
 #pragma GCC diagnostic pop
 #include <boost/function.hpp>
 #include <write_queue.hpp>
+#include <ctpl_stl.h>
 
 class ParseQueue {
 public:
