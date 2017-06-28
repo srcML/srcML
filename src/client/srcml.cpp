@@ -184,8 +184,8 @@ bool request_additional_compression(const srcml_request_t& /* srcml_request */,
                                     const srcml_input_t& /* input_sources */,
                                     const srcml_output_dest& destination) {
 
-    return (destination.compressions.size() > 1) ||
-        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz");
+    return (destination.compressions.size() >= 1) /* ||
+        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz")*/;
 }
 
 bool request_create_src(const srcml_request_t& srcml_request,
