@@ -67,7 +67,7 @@ const int SRCML_COMMAND_NOARCHIVE                 = 1<<24;
 
 const int SRCML_DEBUG_MODE                        = 1<<25;
 
-const int SRCML_COMPRESS                          = 1<<26;
+//const int SRCML_COMPRESS                          = 1<<26;
 
 const int SRCML_ARCHIVE                           = 1<<27;
 

@@ -205,11 +205,8 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // create the srcML output file
 
+    // we handle all compression externally now
     unsigned short compression = 0;
-    // If you enabled compression
-    if (srcml_request.command & SRCML_COMPRESS) {
-        compression = 9;
-    }
 
     // If you didn't enable compression, but the output extension is gz
     if (compression == 0) {
