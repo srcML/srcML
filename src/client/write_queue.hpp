@@ -31,15 +31,27 @@
 class WriteQueue {
 public:
 
-    WriteQueue(boost::function<void(ParseRequest*)> writearg, bool /* order */)
-        : write(writearg) {
+    WriteQueue(boost::function<void(ParseRequest*)> writearg, bool ordered = true)
+        : write(writearg), counter(0), ordered(ordered) {
     }
 
-    /* puts an element in the back of the queue by swapping with parameter */
+    /* writes out the current srcml */
     inline void schedule(ParseRequest* pvalue) {
         std::unique_lock<std::mutex> lock(this->mutex);
 
+        if (ordered) {
+            while (pvalue->position != counter + 1)
+                cv.wait(lock);
+
+            ++counter;
+        }
+        
         write(pvalue);
+
+        if (ordered) {
+            lock.unlock();
+            cv.notify_all();
+        }
     }
 
     inline void wait() {
@@ -49,6 +61,9 @@ public:
 private:
     boost::function<void(ParseRequest*)> write;
     std::mutex mutex;
+    std::condition_variable cv;
+    int counter;
+    bool ordered;
 };
 
 #endif
