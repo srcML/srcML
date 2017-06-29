@@ -40,6 +40,7 @@
 #include <input_file.hpp>
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
+#include <boost/filesystem.hpp>
 
 extern srcml_output_dest gdestination;
 srcml_archive* gsrcml_arch = 0;

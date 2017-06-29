@@ -1,7 +1,7 @@
 /**
  * @file srcml_input_src.cpp
  *
- * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2014-2017 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -21,6 +21,122 @@
  */
 
 #include <srcml_input_src.hpp>
+
+namespace {
+    std::string cur_extension(const std::string& filename) {
+
+        size_t pos = filename.rfind('.');
+        if (pos == std::string::npos)
+            return "";
+
+        return filename.substr(pos);
+    }
+
+    void pop_extension(std::string& filename) {
+
+        size_t pos = filename.rfind('.');
+        if (pos == std::string::npos)
+            return;
+
+        filename = filename.substr(0, pos);
+    }
+}
+
+srcml_input_src::srcml_input_src(const std::string& other) : arch(0), state(INDETERMINATE), isdirectory(false), exists(false), isdirectoryform(false), unit(0) {
+
+    skip = false;
+
+    filename = src_prefix_add_uri(other);
+
+    // filename into protocol and resource
+    src_prefix_split_uri(filename, protocol, resource);
+
+    // remove any query string
+    size_t query_pos = resource.find('?');
+    if (query_pos != std::string::npos) {
+        resource = resource.substr(0, query_pos);
+    }
+
+    exists = false;
+
+    if (protocol == "file") {
+        struct stat s;
+        exists = stat(resource.c_str(), &s) == 0;
+
+        isdirectory = exists && S_ISDIR(s.st_mode);
+    }
+
+    // TODO: Fix for Windows paths
+    isdirectoryform = resource.back() == '/';
+
+    if (!isdirectory && protocol != "text") {
+
+        plainfile = resource;
+
+        for (;(extension = cur_extension(plainfile)) != "" && (is_compressed(extension) || is_archive(extension)); pop_extension(plainfile)) {
+
+            // collect compressions
+            if (is_compressed(extension)) {
+                compressions.push_back(extension);
+            }
+
+            // collect archives
+            if (is_archive(extension)) {
+                archives.push_back(extension);
+            }
+        }
+    }
+
+    if (resource != "-" && protocol != "text")
+        state = (extension == ".xml" || extension == ".srcml") ? SRCML : SRC;
+
+    if (protocol == "text")
+        state = SRC;
+
+    if (protocol == "stdin")
+        fd = STDIN_FILENO;
+    if (protocol == "stdout")
+        fd = STDOUT_FILENO;
+}
+
+srcml_input_src::srcml_input_src(const std::string& other, int fds) : unit(0) {
+
+    srcml_input_src s(other);
+    s = fds;
+
+    swap(s);
+}
+
+srcml_input_src::srcml_input_src(int fds) : unit(0) {
+
+    srcml_input_src s("-");
+    s = fds;
+
+    swap(s);
+}
+
+srcml_input_src& srcml_input_src::operator=(const std::string& other) { srcml_input_src t(other); swap(t); return *this; }
+srcml_input_src& srcml_input_src::operator=(FILE* other) { fileptr = other; return *this; }
+srcml_input_src& srcml_input_src::operator=(int other) { fd = other; return *this; }
+
+void srcml_input_src::swap(srcml_input_src& other) {
+
+    std::swap(filename, other.filename);
+    std::swap(protocol, other.protocol);
+    std::swap(resource, other.resource);
+    std::swap(plainfile, other.plainfile);
+    std::swap(extension, other.extension);
+    std::swap(fileptr, other.fileptr);
+    std::swap(fd, other.fd);
+    std::swap(arch, other.arch);
+    std::swap(state, other.state);
+    std::swap(compressions, other.compressions);
+    std::swap(archives, other.archives);
+    std::swap(isdirectory, other.isdirectory);
+    std::swap(exists, other.exists);
+    std::swap(isdirectoryform, other.isdirectoryform);
+    std::swap(unit, other.unit);
+}
 
 int srcml_read_callback(void* context, char * buffer, size_t len) {
     archive* libarchive_srcml = (archive*) context;
@@ -57,3 +173,4 @@ int srcml_archive_read_open(srcml_archive* arch, const srcml_input_src& input_so
 
     return status;
 }
+

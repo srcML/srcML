@@ -24,12 +24,10 @@
 #define PARSE_QUEUE_HPP
 
 #include <parse_request.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <threadpool.hpp>
-#pragma GCC diagnostic pop
 #include <boost/function.hpp>
+#include <boost/bind.hpp>
 #include <write_queue.hpp>
+#include <ctpl_stl.h>
 
 class ParseQueue {
 public:
@@ -48,17 +46,17 @@ public:
 	        return;
 	    }
 
-	    pool.schedule( boost::bind(consume, pvalue));
+            pool.push( boost::bind(consume, pvalue));
 	}
 
 	inline void wait() {
 
-		pool.wait();
+            pool.stop(true);
 	}
 
 private:
     boost::function<void(ParseRequest*)> consume;
-    boost::threadpool::pool pool;
+    ctpl::thread_pool pool;
     int counter;
     WriteQueue& wqueue;
 };
