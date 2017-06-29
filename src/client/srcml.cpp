@@ -128,6 +128,7 @@ int main(int argc, char * argv[]) {
 
     // srcml->src
     if (request_create_src(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
+fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         pipeline.push_back(create_src);
     }
