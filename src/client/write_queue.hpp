@@ -27,6 +27,7 @@
 #include <parse_request.hpp>
 #include <boost/function.hpp>
 #include <mutex>
+#include <condition_variable>
 
 class WriteQueue {
 public:
