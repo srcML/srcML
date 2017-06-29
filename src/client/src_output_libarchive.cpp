@@ -25,11 +25,26 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <stdlib.h>
+#include <cstdio>
+#include <string>
+#include <srcml_logger.hpp>
 
 void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
     long arch_status = ARCHIVE_OK;
+    int badfilenamecounter = 0;
     while (srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch)) {
+
+        // have to make sure we have a valid filename
+        std::string newfilename = srcml_unit_get_filename(unit) ? srcml_unit_get_filename(unit) : "";
+        if (newfilename.empty()) {
+            newfilename = "SRCML_GENERATED_";
+            char s[10];
+            sprintf(s, "%d", ++badfilenamecounter);
+            newfilename += s;
+            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "A srcML unit without a filename was found. Generated random filename " +
+            newfilename + " for source archive");
+        }
 
         // setup the entry header
         archive_entry* entry = archive_entry_new();
@@ -40,7 +55,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         size_t buffer_size;
         srcml_unit_unparse_memory(unit, &buffer, &buffer_size);
 
-        archive_entry_set_pathname(entry, srcml_unit_get_filename(unit));
+        archive_entry_set_pathname(entry, newfilename.c_str());
         archive_entry_set_size(entry, buffer_size);
         archive_entry_set_filetype(entry, AE_IFREG);
         archive_entry_set_perm(entry, 0644);
