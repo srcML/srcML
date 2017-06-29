@@ -25,36 +25,30 @@
 
 #include <srcml.h>
 #include <parse_request.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <threadpool.hpp>
-#pragma GCC diagnostic pop
 #include <boost/function.hpp>
-#include <prio_scheduler_strict.hpp>
+#include <mutex>
 
 class WriteQueue {
 public:
 
-    WriteQueue(boost::function<void(ParseRequest*)> writearg, bool order)
-        : write(writearg), pool(1) {
-
-        set_ordering(order);
+    WriteQueue(boost::function<void(ParseRequest*)> writearg, bool /* order */)
+        : write(writearg) {
     }
 
     /* puts an element in the back of the queue by swapping with parameter */
     inline void schedule(ParseRequest* pvalue) {
+        std::unique_lock<std::mutex> lock(this->mutex);
 
-        pool.schedule(prio_strict_task_func(pvalue->position, boost::bind(write, pvalue)));
+        write(pvalue);
     }
 
     inline void wait() {
-
-        pool.wait();
+        std::unique_lock<std::mutex> lock(this->mutex);
     }
 
 private:
     boost::function<void(ParseRequest*)> write;
-    prio_strict_pool pool;
+    std::mutex mutex;
 };
 
 #endif
