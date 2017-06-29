@@ -34,7 +34,7 @@
 #include <timer.hpp>
 #include <srcml_logger.hpp>
 #include <curl/curl.h>
-
+#include <boost/version.hpp>
 #include <archive.h>
 #include <iostream>
 
