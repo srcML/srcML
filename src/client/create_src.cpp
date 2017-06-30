@@ -30,6 +30,7 @@
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
 #include <input_file.hpp>
+#include <input_archive.hpp>
 #include <srcml_logger.hpp>
 
 class srcMLReadArchive {
@@ -58,9 +59,16 @@ public:
         }
 
         // compressed files
-        if (!curinput.compressions.empty()) {
+        if (!curinput.compressions.empty() && curinput.archives.empty()) {
             srcml_input_src uninput = curinput;
             input_file(uninput);
+            curinput.fd = *uninput.fd;
+        }
+
+        // archives (and possibly compressions)
+        if (!curinput.archives.empty()) {
+            srcml_input_src uninput = curinput;
+            input_archive(uninput);
             curinput.fd = *uninput.fd;
         }
 
@@ -93,6 +101,7 @@ private:
 void create_src(const srcml_request_t& srcml_request,
                 const srcml_input_t& input_sources,
                 const srcml_output_dest& destination) {
+
     try {
 
         if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
@@ -287,6 +296,7 @@ void create_src(const srcml_request_t& srcml_request,
             srcml_unit_free(unit);
 
         } else {
+
             // srcml->src extract to libarchive file
             if (destination.archives.size() == 0) {
                 SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: source output requires an archive format (tar, zip, etc.)");

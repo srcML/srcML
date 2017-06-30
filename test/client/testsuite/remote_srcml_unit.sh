@@ -36,30 +36,31 @@ srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.gz
 check "$srca"
 
 # input from an archived srcml file
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.cpio
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.cpio
+check "$srca"
 
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.cpio.bz2
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.cpio.bz2
+check "$srca"
 
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.cpio.gz
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.cpio.gz
+check "$srca"
 
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tar.bz2
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tar.bz2
+check "$srca"
 
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tar.gz
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tar.gz
+check "$srca"
 
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tar
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tar
+check "$srca"
 
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tbz2
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tbz2
+check "$srca"
 
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tgz
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tgz
+check "$srca"
 
+# FIXME: Posted unit.xml.zip is not a valid zip file
 #srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip
 #check "$srca"
 
