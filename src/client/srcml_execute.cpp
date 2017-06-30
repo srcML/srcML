@@ -21,10 +21,6 @@
  */
 
 #include <srcml_execute.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread.hpp>
-#pragma GCC diagnostic pop
 #include <boost/foreach.hpp>
 
 #if defined(_MSC_BUILD) || defined(__MINGW32__)
@@ -32,6 +28,14 @@
 #include <fcntl.h>
 #include <windows.h>
 #endif
+#include <boost/bind.hpp>
+#include <thread>
+#include <list>
+
+void join(std::thread& t)
+{
+    t.join();
+}
 
 void srcml_execute(const srcml_request_t& srcml_request,
                    std::list<process_srcml>& pipeline,
@@ -39,7 +43,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
                    const srcml_output_dest& destination) {
 
     // create a thread for each step, creating pipes between adjoining steps
-    boost::thread_group pipeline_threads;
+    std::list<std::thread> pipethreads;
     int fds[2] = { -1, -1 };
     BOOST_FOREACH(process_srcml command, pipeline) {
 
@@ -64,7 +68,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
         }
 
         /* run this step in the sequence */
-        pipeline_threads.create_thread(
+        pipethreads.push_back(std::thread(
             boost::bind(
                 command,
                 srcml_request,
@@ -73,9 +77,9 @@ void srcml_execute(const srcml_request_t& srcml_request,
                 /* last process_srcml uses destination, rest output to pipe */                
                 last  ? destination   : srcml_output_dest("-", fds[1])
             )
-        );
-
+        ));
     }
 
-    pipeline_threads.join_all();
+    // wait on all threads
+    std::for_each(pipethreads.begin(), pipethreads.end(), join);
 }
