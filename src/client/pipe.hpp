@@ -1,7 +1,7 @@
 /**
- * @file input_file.hpp
+ * @file pipe.hpp
  *
- * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2017 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -20,15 +20,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <pipe.hpp>
-#include <input_file.hpp>
-#include <decompress_srcml.hpp>
+#ifndef PIPE_HPP
+#define PIPE_HPP
 
-void input_file(srcml_input_src& input) {
+#include <srcml_input_src.hpp>
+#include <srcml_cli.hpp>
 
-    if (!input.compressions.empty() /* &&
-       (input.compressions.size() > 1 || input.compressions.front() != ".gz")*/) {
+typedef void (*pipe_process)(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 
-        input_pipe(input, decompress_srcml);
-    }
-}
+void input_pipe(srcml_input_src& input, pipe_process process);
+
+#endif
