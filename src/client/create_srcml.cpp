@@ -20,6 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <functional>
 #include <create_srcml.hpp>
 #include <srcml.h>
 #include <boost/foreach.hpp>
@@ -254,8 +255,8 @@ void create_srcml(const srcml_request_t& srcml_request,
     // setup the parsing queue
     TraceLog log(SRCMLOptions::get());
     log.header();
-    WriteQueue write_queue(boost::bind(srcml_write_request, _1, boost::ref(log)), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
-    ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, _1, &write_queue), write_queue);
+    WriteQueue write_queue(std::bind(srcml_write_request, std::placeholders::_1, std::ref(log)), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
+    ParseQueue parse_queue(srcml_request.max_threads, std::bind(srcml_consume, std::placeholders::_1, &write_queue), write_queue);
 
     // process input sources
     BOOST_FOREACH(const srcml_input_src& input, input_sources) {
