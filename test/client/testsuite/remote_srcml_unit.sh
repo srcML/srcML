@@ -60,12 +60,11 @@ check "$srca"
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tgz
 check "$srca"
 
-# FIXME: Posted unit.xml.zip is not a valid zip file
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip
+check "$srca"
 
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip.bz2
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip.bz2
+check "$srca"
 
-#srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip.gz
-#check "$srca"
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip.gz
+check "$srca"
