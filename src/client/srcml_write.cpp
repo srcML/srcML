@@ -52,7 +52,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
-        if (!createdsrcml) {
+        if (!createdsrcml && !(SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get())) {
             createdsrcml = true;
 
             int status = 0;
@@ -68,7 +68,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
                 return;
         }
 
-        srcml_archive_write_unit(gsrcml_arch, request->unit);
+        srcml_archive_write_unit((SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) ? request->srcml_arch : gsrcml_arch, request->unit);
 
         if (isarchive) {
             std::string s = request->filename ? *request->filename : "";
