@@ -22,10 +22,7 @@
 
 #include <pipe.hpp>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread.hpp>
-#pragma GCC diagnostic pop
+#include <thread>
 
 #include <srcml_logger.hpp>
 
@@ -34,6 +31,8 @@
 #include <fcntl.h>
 #include <windows.h>
 #endif
+
+static std::list<std::thread*> lthreads;
 
 void input_pipe(srcml_input_src& input, pipe_process process) {
 
@@ -51,14 +50,12 @@ void input_pipe(srcml_input_src& input, pipe_process process) {
 #endif
 
    	// create a single thread to prefix decompression
-    boost::thread input_thread(
-        boost::bind(
+    lthreads.push_back(new std::thread(
             process,
             srcml_request_t(),
             srcml_input_t(1, input),
             srcml_output_dest("-", fds[1])
-            )
-        );
+    ));
 
     // the thread will write to fds[1], and the following input can read
     // from fds[0]
