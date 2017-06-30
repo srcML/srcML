@@ -36,6 +36,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
     while (srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch)) {
 
         // have to make sure we have a valid filename
+        // TODO: Counter must span input sources
         std::string newfilename = srcml_unit_get_filename(unit) ? srcml_unit_get_filename(unit) : "";
         if (newfilename.empty()) {
             newfilename = "SRCML_GENERATED_";
