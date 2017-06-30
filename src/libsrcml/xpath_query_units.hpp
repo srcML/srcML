@@ -80,11 +80,11 @@ public :
      *
      * Constructor.
      */
-    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, srcml_archive* out_archive, 
+    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr /* compiled_xpath */, srcml_archive* out_archive, 
                       const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0)
-        : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
+        : unit_dom(options), options(options), /* compiled_xpath(compiled_xpath) ,*/
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), context(0), result_count(0), output_archive(out_archive) {
+          total(0), context(0), /* result_count(0),*/ output_archive(out_archive) {
     }
 
     /**
@@ -844,7 +844,7 @@ public :
 private :
 
     OPTION_TYPE options;
-    xmlXPathCompExprPtr compiled_xpath;
+ //   xmlXPathCompExprPtr compiled_xpath;
     const char * prefix;
     const char * uri;
     const char * element;
@@ -857,7 +857,7 @@ private :
     int nodetype;
     xmlOutputBufferPtr buf;
     xmlXPathContextPtr context;
-    int result_count;
+//    int result_count;
     srcml_archive* output_archive;
 
     static const char * const simple_xpath_attribute_name;
