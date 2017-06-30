@@ -3,11 +3,15 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+define srca <<- 'STDOUT'a;
+	return b;
+	STDOUT
 
 # input from a valid remote srcML archive multiple units
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml
-check "a;
-return b;"
+check "$srca"
+
+mkdir sub
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml -o sub/archive_multi.cpp
 check sub/archive_multi.cpp "a;
