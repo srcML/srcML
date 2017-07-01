@@ -25,14 +25,14 @@
 
 #include <srcml.h>
 #include <parse_request.hpp>
-#include <boost/function.hpp>
 #include <mutex>
 #include <condition_variable>
+#include <functional>
 
 class WriteQueue {
 public:
 
-    WriteQueue(boost::function<void(ParseRequest*)> writearg, bool ordered = true)
+    WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered = true)
         : write(writearg), counter(0), ordered(ordered) {
     }
 
@@ -60,7 +60,7 @@ public:
     }
 
 private:
-    boost::function<void(ParseRequest*)> write;
+    std::function<void(ParseRequest*)> write;
     std::mutex mutex;
     std::condition_variable cv;
     int counter;

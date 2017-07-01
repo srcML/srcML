@@ -23,16 +23,15 @@
 #ifndef PARSE_QUEUE_HPP
 #define PARSE_QUEUE_HPP
 
+#include <functional>
 #include <parse_request.hpp>
-#include <boost/function.hpp>
-#include <boost/bind.hpp>
 #include <write_queue.hpp>
 #include <ctpl_stl.h>
 
 class ParseQueue {
 public:
 
-	ParseQueue(int max_threads, boost::function<void(ParseRequest*)> consumearg, WriteQueue& write_queue)
+	ParseQueue(int max_threads, std::function<void(ParseRequest*)> consumearg, WriteQueue& write_queue)
 	    : consume(consumearg), pool(max_threads), counter(0), wqueue(write_queue) {}
 
 	inline void schedule(ParseRequest* pvalue) {
@@ -46,16 +45,16 @@ public:
 	        return;
 	    }
 
-            pool.push( boost::bind(consume, pvalue));
+        pool.push(std::bind(consume, pvalue));
 	}
 
 	inline void wait() {
 
-            pool.stop(true);
+        pool.stop(true);
 	}
 
 private:
-    boost::function<void(ParseRequest*)> consume;
+    std::function<void(ParseRequest*)> consume;
     ctpl::thread_pool pool;
     int counter;
     WriteQueue& wqueue;
