@@ -178,9 +178,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
     } catch (...) {
 
-        request->errormsg = std::string("srcml: Unable to open file ");
-        *(request->errormsg) += original_filename;
-        *(request->errormsg) += "\n";
+        request->errormsg = "srcml: Unable to open file " + original_filename;
 
 //        if (unit)
 //            srcml_unit_free(unit);
