@@ -62,9 +62,8 @@ const char * srcml_archive_check_extension(const srcml_archive * archive, const 
  *
  * @returns the created archive.
  */
-srcml_archive* srcml_archive_create()
-
-{
+srcml_archive* srcml_archive_create() {
+    
     srcml_archive * archive;
     try {
 
