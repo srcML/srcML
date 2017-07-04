@@ -25,11 +25,9 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/timer.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <ctime>
 #include <chrono>
-#pragma GCC diagnostic pop
+#pragma GCC diagnostic pop 
 
 class Timer {
 public:
@@ -37,22 +35,18 @@ public:
 	Timer(unsigned int limit) : time_limit(limit) {}
 
 	inline void start() {
-		//real_world_time = boost::posix_time::microsec_clock::local_time();
-		//cpu_time.restart();
-		chrono_cpu_time = std::chrono::high_resolution_clock::now();
-		ctime_cpu_time = std::clock();
+		real_world_time = std::chrono::high_resolution_clock::now();
+		cpu_time = std::clock();
 	}
 
 	// time in milliseconds
 	inline double real_world_elapsed() {
-		//std::cerr << "BOOST WALL TIME: " << (boost::posix_time::microsec_clock::local_time() - real_world_time).total_milliseconds() << "ms\n";
-		return std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - chrono_cpu_time).count();
+		return std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - real_world_time).count();
 	}
 
 	// time in milliseconds
 	inline double cpu_time_elapsed() {
-		//std::cerr << "BOOST CPU CLOCK: " << cpu_time.elapsed() * 1000 << "ms\n";
-		return  1000.0 * (std::clock() - ctime_cpu_time) / CLOCKS_PER_SEC;
+		return  1000.0 * (std::clock() - cpu_time) / CLOCKS_PER_SEC;
 	}
 
 	inline bool is_expired() {
@@ -64,12 +58,8 @@ public:
 	}
 
 private:
-	std::chrono::time_point<std::chrono::high_resolution_clock> chrono_cpu_time;
-	std::clock_t ctime_cpu_time;
-	
-	//boost::posix_time::ptime real_world_time;
-	//boost::timer cpu_time;
-    
+	std::chrono::time_point<std::chrono::high_resolution_clock> real_world_time;
+	std::clock_t cpu_time;
     unsigned int time_limit; // in seconds
 };
 
