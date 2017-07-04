@@ -200,7 +200,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
         //if (srcml_archive_is_full_archive(in_arch)) {
         for (int i = 0; i < (int)srcml_archive_get_namespace_size(in_arch); ++i) {
 
-                // do not register the srcML namespace, unless the prefix is different
+            // do not register the srcML namespace, unless the prefix is different
             if (std::string(srcml_archive_get_namespace_uri(in_arch, i)) == "http://www.srcML.org/srcML/src")
                 continue;
 
