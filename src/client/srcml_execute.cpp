@@ -37,7 +37,7 @@ void join(std::thread& t)
 }
 
 void srcml_execute(const srcml_request_t& srcml_request,
-                   std::list<process_srcml>& pipeline,
+                   processing_steps_t& pipeline,
                    const srcml_input_t& input_sources,
                    const srcml_output_dest& destination) {
 

@@ -26,6 +26,7 @@
 #include <srcml_input_src.hpp>
 #include <srcml_cli.hpp>
 
+// has to be a typedef for older gcc compilers
 typedef void (*pipe_process)(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 
 void input_pipe(srcml_input_src& input, pipe_process process);
