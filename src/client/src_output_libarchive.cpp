@@ -29,20 +29,23 @@
 #include <string>
 #include <srcml_logger.hpp>
 
+int badfilenamecounter = 0;
+
 void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
     long arch_status = ARCHIVE_OK;
-    int badfilenamecounter = 0;
     while (srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch)) {
 
         // have to make sure we have a valid filename
         // TODO: Counter must span input sources
         std::string newfilename = srcml_unit_get_filename(unit) ? srcml_unit_get_filename(unit) : "";
         if (newfilename.empty()) {
-            newfilename = "SRCML_GENERATED_";
+            newfilename = "srcml_generated_name_";
             char s[10];
             sprintf(s, "%d", ++badfilenamecounter);
             newfilename += s;
+            if (language_to_std_extension(srcml_unit_get_language(unit)) != "")
+                newfilename += language_to_std_extension(srcml_unit_get_language(unit));
             SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "A srcML unit without a filename was found. Generated random filename " +
             newfilename + " for source archive");
         }

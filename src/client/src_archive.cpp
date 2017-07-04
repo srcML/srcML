@@ -85,6 +85,15 @@ namespace {
         { ".z"   , archive_write_set_compression_compress },
 #endif
     };
+
+    // map from language to file extension
+    std::unordered_map<std::string, const char *> lang2ext = {
+        { "C", ".c" },
+        { "C++", ".cpp" },
+        { "C#", ".cs" },
+        { "Java", ".java" },
+    };
+
 }
 
 int archive_write_set_format_by_extension(struct archive* ar, const char* extension) {
@@ -105,6 +114,15 @@ int archive_write_set_compression_by_extension(struct archive* ar, const char* e
 
     archive_set_error(ar, EINVAL, "No such compression for this extension '%s'", extension);
     return ARCHIVE_FATAL;
+}
+
+std::string language_to_std_extension(const char* extension) {
+
+    auto it = lang2ext.find(extension);
+    if (it != lang2ext.end())
+        return it->second;
+
+    return "";
 }
 
 bool is_archive(const std::string& extension) {
