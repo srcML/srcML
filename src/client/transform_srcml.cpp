@@ -25,7 +25,6 @@
 #include <input_file.hpp>
 #include <srcml.h>
 #include <string>
-#include <boost/foreach.hpp>
 #include <srcml_logger.hpp>
 
  int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
@@ -154,13 +153,12 @@ void transform_srcml(const srcml_request_t& srcml_request,
     }
 
     // register xml namespaces
-    typedef std::map<std::string, std::string> map_type;
-    BOOST_FOREACH(const map_type::value_type& itr, srcml_request.xmlns_namespaces) {
+    for (const auto& itr : srcml_request.xmlns_namespaces) {
         srcml_archive_register_namespace(out_arch, itr.first.c_str(), itr.second.c_str());
     }
 
     // Convert inputs into srcml archive
-	BOOST_FOREACH(const srcml_input_src& input, input_sources) {
+	for (const auto& input : input_sources) {
         srcml_archive* in_arch = srcml_archive_create();
         if (contains<int>(input))
             status = srcml_archive_read_open_fd(in_arch, input);
@@ -175,7 +173,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
         // see if we have any XPath output
         bool isxpath = false;
-        BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
+        for (const auto& trans : srcml_request.transformations) {
             std::string protocol;
             std::string resource;
             src_prefix_split_uri(trans, protocol, resource);
@@ -207,7 +205,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
 		// iterate through all transformations added during cli parsing
 		int xpath_index = -1;
-        BOOST_FOREACH(const std::string& trans, srcml_request.transformations) {
+        for (const auto& trans : srcml_request.transformations) {
             std::string protocol;
             std::string resource;
             src_prefix_split_uri(trans, protocol, resource);

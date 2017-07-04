@@ -25,7 +25,6 @@
 #include <vector>
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/foreach.hpp>
 #include <srcml_logger.hpp>
 
 std::string expand_namespace(const std::string& separator, size_t ns_size) {
@@ -224,7 +223,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     std::vector<std::string> footer_params;
 
     if (output_template.header) {
-        BOOST_FOREACH(const std::string arg, output_template.header_args) {
+        for (const auto& arg : output_template.header_args) {
 
             const char* param = acquire_metadata(srcml_arch, NULL, arg);
             if (param) {
@@ -254,7 +253,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 
     if (output_template.body) {
         while (unit) {
-            BOOST_FOREACH(const std::string arg, output_template.body_args) {
+            for (const auto& arg : output_template.body_args) {
                 if (arg == "i") {
                     body_params.push_back(std::to_string(unit_count));
                 }
@@ -318,7 +317,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     }
 
     if (output_template.footer) {
-        BOOST_FOREACH(const std::string arg, output_template.footer_args) {
+        for (const auto& arg : output_template.footer_args) {
             if (arg == "C") {
                 footer_params.push_back(std::to_string(unit_count + 1));
             }

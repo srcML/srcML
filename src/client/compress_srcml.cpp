@@ -23,7 +23,6 @@
 #include <compress_srcml.hpp>
 #include <archive.h>
 #include <archive_entry.h>
-#include <boost/foreach.hpp>
 #include <srcml_logger.hpp>
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
@@ -36,7 +35,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     archive_write_set_format_raw(ar);
 
     // setup compressions
-    BOOST_FOREACH(const std::string& ext, destination.compressions)
+    for (const auto& ext : destination.compressions)
         archive_write_set_compression_by_extension(ar, ext.c_str());
 
     int status = ARCHIVE_OK;

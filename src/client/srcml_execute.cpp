@@ -21,7 +21,6 @@
  */
 
 #include <srcml_execute.hpp>
-#include <boost/foreach.hpp>
 
 #if defined(_MSC_BUILD) || defined(__MINGW32__)
 #include <io.h>
@@ -45,7 +44,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
     // create a thread for each step, creating pipes between adjoining steps
     std::list<std::thread> pipethreads;
     int fds[2] = { -1, -1 };
-    BOOST_FOREACH(process_srcml command, pipeline) {
+    for (const auto& command : pipeline) {
 
         // special handling for first and last steps
         bool first = command == pipeline.front();

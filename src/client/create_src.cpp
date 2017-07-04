@@ -21,7 +21,6 @@
  */
 
 #include <create_src.hpp>
-#include <boost/foreach.hpp>
 #include <srcml.h>
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
@@ -110,7 +109,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             TraceLog log(SRCMLOptions::get());
 
-            BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
+            for (const auto& input_source : input_sources) {
                 srcMLReadArchive arch(input_source, srcml_request.revision);
 
                 src_output_filesystem(arch, destination, log);
@@ -187,7 +186,7 @@ void create_src(const srcml_request_t& srcml_request,
             }
 
             // register file extensions
-            BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {
+            for (const auto& ext : srcml_request.language_ext) {
                 size_t pos = ext.find('=');
                 srcml_archive_register_file_extension(oarch, ext.substr(0, pos).c_str(), ext.substr(pos+1).c_str());
             }
@@ -306,11 +305,11 @@ void create_src(const srcml_request_t& srcml_request,
             archive* ar = archive_write_new();
 
             // setup format
-            BOOST_FOREACH(const std::string& ext, destination.archives)
+            for (const auto& ext : destination.archives)
                 archive_write_set_format_by_extension(ar, ext.c_str());
 
             // setup compressions
-            BOOST_FOREACH(const std::string& ext, destination.compressions)
+            for (const auto& ext : destination.compressions)
                 archive_write_set_compression_by_extension(ar, ext.c_str());
 
             int status = ARCHIVE_OK;
@@ -325,7 +324,7 @@ void create_src(const srcml_request_t& srcml_request,
             }
 
             // extract all the srcml archives to this libarchive
-            BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
+            for (const auto& input_source : input_sources) {
 
                 srcMLReadArchive arch(input_source, srcml_request.revision);
 

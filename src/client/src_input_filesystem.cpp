@@ -47,7 +47,7 @@ int src_input_filesystem(ParseQueue& queue,
         dirs.pop_back();
 
         // process the files from the top directory
-        BOOST_FOREACH(boost::filesystem::path& file, files) {
+        for (const auto& file : files) {
             
             // TODO: Are we ignoring other types? symlinks? Should state so here.
             // Skip ALL symlinks (files or directories)

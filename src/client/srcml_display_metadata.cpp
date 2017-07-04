@@ -26,7 +26,6 @@
 #include <srcml.h>
 #include <srcml_logger.hpp>
 #include <iostream>
-#include <boost/foreach.hpp>
 #include <iomanip>
 #include <cstring>
 
@@ -154,7 +153,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                             SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP |
                             SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
-    BOOST_FOREACH(const srcml_input_src& input, src_input) {
+    for (const auto& input : src_input) {
         // create the output srcml archive
         srcml_archive* srcml_arch = srcml_archive_create();
 

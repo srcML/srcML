@@ -23,7 +23,6 @@
 #include <functional>
 #include <create_srcml.hpp>
 #include <srcml.h>
-#include <boost/foreach.hpp>
 #include <parse_queue.hpp>
 #include <write_queue.hpp>
 #include <srcml_consume.hpp>
@@ -193,7 +192,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // rns
-    BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {
+    for (const auto& ext : srcml_request.language_ext) {
         size_t pos = ext.find('=');
         srcml_archive_register_file_extension(srcml_arch, ext.substr(0, pos).c_str(), ext.substr(pos+1).c_str());
     }
@@ -211,7 +210,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // If you didn't enable compression, but the output extension is gz
     if (compression == 0) {
-        BOOST_FOREACH( std::string extension, destination.compressions) {
+        for (const auto& extension : destination.compressions) {
             if (extension == ".gz") {
                 compression = 9;
                 break;
@@ -259,7 +258,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     ParseQueue parse_queue(srcml_request.max_threads, std::bind(srcml_consume, std::placeholders::_1, &write_queue), write_queue);
 
     // process input sources
-    BOOST_FOREACH(const srcml_input_src& input, input_sources) {
+    for (const auto& input : input_sources) {
 /*
 // if stdin, then there has to be data
 // TODO: Safe to remove this? We already read data.
