@@ -33,6 +33,7 @@
 #include <timer.hpp>
 #include <input_curl.hpp>
 #include <srcml_logger.hpp>
+#include <string.h>
 
 #include <curl_input_file.hpp>
 
