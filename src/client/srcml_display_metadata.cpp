@@ -182,8 +182,8 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             return;
         }
 
-        std::string pretty_meta_header = "";
-        std::string pretty_meta_body = "";
+        std::string pretty_meta_header;
+        std::string pretty_meta_body;
 
         // HEADER ONLY METADATA
         if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING) {
