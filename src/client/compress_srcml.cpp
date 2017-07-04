@@ -64,6 +64,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     }
 
     // write the data into the archive
+    // Note: Assumes input source is a fd, not a filename
     std::vector<char> buffer(4092);
     while (ssize_t s = read(*input_sources[0].fd, &buffer.front(), buffer.size())) {
 

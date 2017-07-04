@@ -41,11 +41,11 @@ public:
 
         int status = SRCML_STATUS_OK;
 
-        if(revision)
+        if (revision) {
             status = srcml_archive_set_srcdiff_revision(arch, *revision);
-
-        if (status != SRCML_STATUS_OK)
-            throw status;
+            if (status != SRCML_STATUS_OK)
+                throw status;
+        }
 
         // may need to modify input source based on url and compressions
         srcml_input_src curinput = input_source;
@@ -71,13 +71,12 @@ public:
             curinput.fd = *uninput.fd;
         }
 
-        // open in put source
+        // open input source
         if (curinput.fd) {
             status = srcml_archive_read_open_fd(arch, *curinput.fd);
         } else {
             status = srcml_archive_read_open(arch, input_source);
         }
-
         if (status != SRCML_STATUS_OK) {
             SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(input_source.filename));
             throw status;
@@ -116,6 +115,7 @@ void create_src(const srcml_request_t& srcml_request,
             }
 
         } else if (input_sources.size() == 1 && (srcml_request.command & SRCML_COMMAND_XML)) {
+
             // srcml->src extract individual unit in XML
 
             srcMLReadArchive arch(input_sources[0], srcml_request.revision);
@@ -126,14 +126,14 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_unit_free(unit);
             }
 
+            // read the current unit
             srcml_unit* unit = srcml_archive_read_unit_header(arch);
-
             if (!unit) {
                 SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
                 exit(4);
             }
 
-            // SETUP OUTPUT ARCHIVE
+            // setup output archive
             srcml_archive* oarch = srcml_archive_create();
 
             // set options for the output srcml archive
@@ -196,26 +196,18 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_archive_register_namespace(oarch, ns.first.c_str(), ns.second.c_str());
             }
 
-            /**** SHOULD THIS GO
-            if (srcml_request.markup_options)
-                srcml_archive_set_options(oarch, srcml_archive_get_options(oarch) | *srcml_request.markup_options);
-
-            if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
-                    srcml_archive_disable_option(oarch, SRCML_OPTION_XML_DECL);
-
-            srcml_archive_disable_full_archive(oarch);
-            *****/
-
+            // TODO: Not sure we will be using this anymore
             unsigned short compression = 0;
             if (!destination.compressions.empty() && destination.compressions.front() == ".gz")
                 compression = 9;
 
+            // open the srcml output file
             if (contains<int>(destination))
                 srcml_archive_write_open_fd(oarch, destination);
             else
                 srcml_archive_write_open_filename(oarch, destination.c_str(), compression);
 
-
+            // write the unit that we found
             srcml_archive_write_unit(oarch, unit);
 
             srcml_unit_free(unit);
@@ -248,11 +240,12 @@ void create_src(const srcml_request_t& srcml_request,
                 if (srcml_request.src_encoding)
                     srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
 
+                // null separator before every unit (except the first)
                 if (count) {
-                    char c = 0;
-                    write(1, &c, 1);
+                    write(1, "", 1);
                 }
 
+                // unaparse directly to the destintation
                 srcml_unit_unparse_fd(unit, destination);
 
                 srcml_unit_free(unit);
