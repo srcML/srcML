@@ -24,7 +24,6 @@
 #include <srcml_cli.hpp>
 #include <srcml_options.hpp>
 #include <create_srcml.hpp>
-#include <decompress_srcml.hpp>
 #include <compress_srcml.hpp>
 #include <create_src.hpp>
 #include <transform_srcml.hpp>
