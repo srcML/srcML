@@ -101,31 +101,31 @@ int main(int argc, char * argv[]) {
     // steps in the internal pipeline
     processing_steps_t pipeline;
 
-    // src->srcml
+    // step src->srcml
     if (request_create_srcml(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
 
         pipeline.push_back(create_srcml);
     }
 
-    // srcml->srcml
+    // step srcml->srcml
     if (request_transform_srcml(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
 
         pipeline.push_back(transform_srcml);
     }
 
-    // srcml->metadata
+    // step srcml->metadata
     if (request_display_metadata(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
 
         pipeline.push_back(srcml_display_metadata);
     }
 
-    // srcml->src
+    // step srcml->src
     if (request_create_src(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
 
         pipeline.push_back(create_src);
     }
 
-    // (srcml|src)->compressed
+    // step (srcml|src)->compressed
     if (request_additional_compression(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
@@ -137,7 +137,10 @@ int main(int argc, char * argv[]) {
     }
 
     // should always have something to do
-    assert(!pipeline.empty());
+    if (pipeline.empty()) {
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Internal error, cannot decide what processing needed");
+        exit(1);
+    }
 
     // execute the pipeline
     srcml_execute(srcml_request, pipeline, srcml_request.input_sources, srcml_request.output_filename);
