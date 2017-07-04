@@ -39,18 +39,15 @@ std::string expand_namespace(const std::string& separator, size_t ns_size) {
 }
 
 void show_carret_error(size_t pos) {
-    std::string spacing = "";
-    for (size_t i = 0; i < pos; ++i) {
-        spacing += " ";
-    }
+    std::string spacing(pos, ' ');
     SRCMLLogger::log(SRCMLLogger::WARNING_MSG, spacing + "^");
 }
 
 void pretty_print(const std::string& format_string, const std::vector<std::string>& args)
 {
     boost::format output_string(format_string);
-    for (std::vector<std::string>::const_iterator it = args.begin(); it != args.end(); ++it) {
-        output_string % *it;
+    for (const auto& item : args) {
+        output_string % item;
     }
 
     std::cout << output_string.str();
