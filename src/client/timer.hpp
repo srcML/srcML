@@ -27,40 +27,50 @@
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/timer.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <ctime>
+#include <chrono>
 #pragma GCC diagnostic pop
 
 class Timer {
 public:
 	Timer() : time_limit(0) {}
-	Timer(double limit) : time_limit(limit) {}
+	Timer(unsigned int limit) : time_limit(limit) {}
 
 	inline void start() {
-		real_world_time = boost::posix_time::microsec_clock::local_time();
-		cpu_time.restart();
+		//real_world_time = boost::posix_time::microsec_clock::local_time();
+		//cpu_time.restart();
+		chrono_cpu_time = std::chrono::high_resolution_clock::now();
+		ctime_cpu_time = std::clock();
 	}
 
 	// time in milliseconds
-	inline long real_world_elapsed() {
-		return  (boost::posix_time::microsec_clock::local_time() - real_world_time).total_milliseconds();
+	inline double real_world_elapsed() {
+		//std::cerr << "BOOST WALL TIME: " << (boost::posix_time::microsec_clock::local_time() - real_world_time).total_milliseconds() << "ms\n";
+		return std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - chrono_cpu_time).count();
 	}
 
 	// time in milliseconds
-	inline long cpu_time_elapsed() {
-		return cpu_time.elapsed() * 10000;
+	inline double cpu_time_elapsed() {
+		//std::cerr << "BOOST CPU CLOCK: " << cpu_time.elapsed() * 1000 << "ms\n";
+		return  1000.0 * (std::clock() - ctime_cpu_time) / CLOCKS_PER_SEC;
 	}
 
 	inline bool is_expired() {
-		return ((cpu_time.elapsed() >= time_limit) && time_limit != 0);
+		return (time_limit != 0 && (cpu_time_elapsed() >= time_limit));
 	}
 
-	inline void set_limit(double limit) {
+	inline void set_limit(unsigned int limit) {
 		time_limit = limit;
 	}
 
 private:
-	boost::posix_time::ptime real_world_time;
-	boost::timer cpu_time;
-    int time_limit; // in seconds
+	std::chrono::time_point<std::chrono::high_resolution_clock> chrono_cpu_time;
+	std::clock_t ctime_cpu_time;
+	
+	//boost::posix_time::ptime real_world_time;
+	//boost::timer cpu_time;
+    
+    unsigned int time_limit; // in seconds
 };
 
 #endif
