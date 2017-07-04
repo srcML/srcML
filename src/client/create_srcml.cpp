@@ -279,6 +279,9 @@ return; // stdin was requested, but no data was received
     write_queue.wait();
 
     log.report();
+
+    srcml_archive_close(csrcml_arch);
+    srcml_archive_free(csrcml_arch);
     
     // close the created srcML archive
     if (createdsrcml) {
