@@ -22,7 +22,7 @@
 
 #include <src_prefix.hpp>
 
-#include <string.h>
+#include <cstring>
 #include <iostream>
 
 const char* PROTOCOL_SEPARATOR = "://";

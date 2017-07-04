@@ -27,7 +27,7 @@
 #include <curl_input_file.hpp>
 #include <archive.h>
 #include <timer.hpp>
-#include <string.h>
+#include <cstring>
 
 bool curl_supported(const std::string& input_protocol) {
     const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;

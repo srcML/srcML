@@ -28,7 +28,7 @@
 #include <iostream>
 #include <boost/foreach.hpp>
 #include <iomanip>
-#include <string.h>
+#include <cstring>
 
 // display all files in srcml archive
 void srcml_list(srcml_archive* srcml_arch) {

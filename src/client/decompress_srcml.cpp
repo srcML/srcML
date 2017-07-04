@@ -25,7 +25,7 @@
 #include <archive.h>
 #include <input_curl.hpp>
 #include <srcml_logger.hpp>
-#include <string.h>
+#include <cstring>
 
 namespace {
 

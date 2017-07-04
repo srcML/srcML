@@ -25,6 +25,7 @@
 #include <src_input_libarchive.hpp>
 #include <src_prefix.hpp>
 #include <ctype.h>
+#include <cstring>
 
 static int hex2decimal(unsigned char c) {
 

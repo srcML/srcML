@@ -22,7 +22,7 @@
 
 #include <src_archive.hpp>
 #include <archive.h>
-#include <string.h>
+#include <cstring>
 #include <errno.h>
 #include <string>
 #include <algorithm>
