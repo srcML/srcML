@@ -313,6 +313,11 @@ void raw_text_args(const std::vector<std::string>& value) {
   }
 }
 
+void raw_null_text_arg(const std::vector<std::string>& value) {
+    for (size_t i = 0; i < value.size(); ++i)
+        srcml_request.input_sources.push_back(src_prefix_add_uri("text", ""));
+}
+
 void option_help(const std::string& help_opt) {
     if (help_opt.empty()) {
         // TODO: A new header and footer for the general option
@@ -438,9 +443,9 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("input-files", prog_opts::value< std::vector<std::string> >()->notifier(&positional_args), "input files")
             ;
         
-        // Work arounds for dealing with implicit option values properly
+        // Work arounds for dealing with implicit option properly
         implicit_value_handlers.add_options()
-            ("text-equals-null", prog_opts::value< std::vector<std::string> >()->implicit_value(std::vector<std::string>(), "")->notifier(&raw_text_args), "work around for null text")
+            ("text-equals-null", prog_opts::value< std::vector<std::string> >()->notifier(&raw_null_text_arg), "work around for null text")
             ;
 
         deprecated_options.add_options()
@@ -588,12 +593,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
     catch(boost::program_options::error_with_option_name& e) {
         std::string error_msg(e.what());
         
-        /*
-            This allows for --help with no value (currently a work around for implicit issues)
+        /* This allows for --help with no value (currently a work around for implicit issues)
             We check the error message for a section to identify when --help is used without a value
             and call the function manually to print the appropriate help message. 
-            Calls to option_help automatically exit the cli.
-        */
+            Calls to option_help automatically exit the cli. */
         if (error_msg.find("'--help' is missing") != std::string::npos) {
                 option_help("");
         }
@@ -615,13 +618,16 @@ std::pair<std::string, std::string> custom_parser(const std::string& s) {
     if (s.find("--xmlns:") == 0)
         return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
     
-    // Divert --text="" to a hidden option that allows empty args
+    // Divert --text="" to a hidden option that allows empty args (implicit work around)
     if (s.find("--text=") == 0) {
         std::string val = s.substr(s.find("=") + 1);
         if (val == "")
-            return std::make_pair(std::string("text-equals-null"), std::string());
+            /* We have already determined that we have an empty string, but we need to pass a non-null value.
+                The value doesn't matter as it is not used it just allows the program options to record the correct
+                number of empty strings provided by one or more --text="" uses. */
+            return std::make_pair(std::string("text-equals-null"), " ");
         else
-            return std::make_pair(std::string("text"), std::string(val));
+            return std::make_pair(std::string("text"), val);
     }
 
     return std::make_pair(std::string(), std::string());
