@@ -25,42 +25,42 @@
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/timer.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#pragma GCC diagnostic pop
+#include <ctime>
+#include <chrono>
+#pragma GCC diagnostic pop 
 
 class Timer {
 public:
 	Timer() : time_limit(0) {}
-	Timer(double limit) : time_limit(limit) {}
+	Timer(unsigned int limit) : time_limit(limit) {}
 
 	inline void start() {
-		real_world_time = boost::posix_time::microsec_clock::local_time();
-		cpu_time.restart();
+		real_world_time = std::chrono::high_resolution_clock::now();
+		cpu_time = std::clock();
 	}
 
 	// time in milliseconds
-	inline long real_world_elapsed() {
-		return  (boost::posix_time::microsec_clock::local_time() - real_world_time).total_milliseconds();
+	inline double real_world_elapsed() {
+		return std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - real_world_time).count();
 	}
 
 	// time in milliseconds
-	inline long cpu_time_elapsed() {
-		return cpu_time.elapsed() * 10000;
+	inline double cpu_time_elapsed() {
+		return  1000.0 * (std::clock() - cpu_time) / CLOCKS_PER_SEC;
 	}
 
 	inline bool is_expired() {
-		return ((cpu_time.elapsed() >= time_limit) && time_limit != 0);
+		return (time_limit != 0 && (cpu_time_elapsed() >= time_limit));
 	}
 
-	inline void set_limit(double limit) {
+	inline void set_limit(unsigned int limit) {
 		time_limit = limit;
 	}
 
 private:
-	boost::posix_time::ptime real_world_time;
-	boost::timer cpu_time;
-    int time_limit; // in seconds
+	std::chrono::time_point<std::chrono::high_resolution_clock> real_world_time;
+	std::clock_t cpu_time;
+    unsigned int time_limit; // in seconds
 };
 
 #endif

@@ -151,7 +151,7 @@ int main(int argc, char * argv[]) {
 
     srcml_cleanup_globals();
 
-    SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "\nCPU Time: " + std::to_string(runtime.cpu_time_elapsed()) + " ms");
+    SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "CPU Time: " + std::to_string(runtime.cpu_time_elapsed()) + "ms");
     SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "Real Time: " + std::to_string(runtime.real_world_elapsed()) + "ms");
 
     return 0;
