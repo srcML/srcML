@@ -96,13 +96,6 @@ int main(int argc, char * argv[]) {
 
         // determine if the input is srcML or src
         pstdin->state = isxml(*(pstdin->fileptr)) ? SRCML : SRC;
-
-        // language is required when standard input is used for source
-        /*
-        if ((pstdin->state == SRC) && !srcml_request.att_language) {
-            std::cerr << "Using stdin requires a declared language\n";
-            exit(1);
-        }*/
     }
 
     // steps in the internal pipeline
