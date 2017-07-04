@@ -29,11 +29,8 @@
 
 int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
 
-    // normalize xpath
-    std::string normalized_input;
-
-    boost::optional<element> element = xpath_support.first;
-    boost::optional<attribute> attribute = xpath_support.second;
+    auto element = xpath_support.first;
+    auto attribute = xpath_support.second;
 
     // Check element namespace
     char const * element_uri = 0;
