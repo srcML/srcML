@@ -23,6 +23,7 @@
 #include <srcml_cli.hpp>
 #include <src_prefix.hpp>
 #include <boost/program_options.hpp>
+#include <boost/foreach.hpp>
 #include <stdlib.h>
 #include <srcml_logger.hpp>
 
@@ -198,7 +199,7 @@ template <>
 void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& value) {
 
     srcml_request.files_from = value;
-    for (const auto& inputFile : value) {
+    BOOST_FOREACH(const std::string& inputFile, value) {
         srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", inputFile));
     }
 }
@@ -270,8 +271,8 @@ void option_xmlns_uri(const std::string& value) {
 }
 
 void option_xmlns_prefix(const std::vector<std::string>& values) {
-    for (const auto& value : values ) {
-
+    BOOST_FOREACH( std::string value, values )
+    {
       std::size_t delim = value.find("=");
       if (delim == std::string::npos) {
         SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: xmlns format missing \"=\"");
@@ -293,7 +294,7 @@ void option_to_dir(const std::string& value) {
 void positional_args(const std::vector<std::string>& value) {
     srcml_request.input_sources.reserve(srcml_request.input_sources.size() + value.size());
 
-    for (const auto& iname : value) {
+    BOOST_FOREACH(const std::string& iname, value) {
 
         // record the position of stdin
         if (iname == "-" || iname == "stdin://-")
@@ -307,8 +308,10 @@ void positional_args(const std::vector<std::string>& value) {
     }
 }
 
-void raw_text_args(const std::string& value) {
-  srcml_request.input_sources.push_back(src_prefix_add_uri("text",value));
+void raw_text_args(const std::vector<std::string>& value) {
+  BOOST_FOREACH(const std::string& raw_text, value) {
+    srcml_request.input_sources.push_back(src_prefix_add_uri("text",raw_text));
+  }
 }
 
 void option_help(const std::string& help_opt) {
@@ -382,7 +385,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
             ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_ARCHIVE>), "store output in a srcML archive, default for multiple input files")
             ("in-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_ORDERED>), "enable strict output ordering")
-            ("text,t", prog_opts::value<std::string>()->notifier(&raw_text_args), "raw string text to be processed")
+            ("text,t", prog_opts::value< std::vector<std::string> >()->notifier(&raw_text_args), "raw string text to be processed")
             ;
 
         markup_options.add_options()
@@ -438,7 +441,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         
         // Work arounds for dealing with implicit option values properly
         implicit_value_handlers.add_options()
-            ("text-equals-null", prog_opts::value<std::string>()->implicit_value("")->notifier(&raw_text_args), "work around for null text")
+            ("text-equals-null", prog_opts::value< std::vector<std::string> >()->implicit_value(std::vector<std::string>(), "")->notifier(&raw_text_args), "work around for null text")
             ;
 
         deprecated_options.add_options()
@@ -483,14 +486,14 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         std::vector< prog_opts::basic_option< char > > parsedOptions = cliopts.options;
 
         // loop the cli options in the order they were processed/received
-        for (const auto& option : parsedOptions) {
+        BOOST_FOREACH(const prog_opts::basic_option< char >& option, parsedOptions) {
           if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam"
              || option.string_key == "element" || option.string_key == "attribute") {
 
             if (option.string_key == "xpath")
               srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
 
-            for (const auto& vals : option.value) {
+            BOOST_FOREACH(const std::basic_string< char >& vals, option.value) {
               if (option.string_key == "element" && srcml_request.xpath_query_support.size() < 1) {
 
                 SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: element option must follow an --xpath option");
@@ -557,8 +560,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         "cpp=http://www.srcML.org/srcML/cpp",
         "java=http://www.srcML.org/srcML/java",};
 
-        for (const auto& ns : reserved_namespaces) {
-
+        BOOST_FOREACH(const std::string& ns, reserved_namespaces) {
           size_t delim = ns.find('=');
           std::string prefix = ns.substr(0, delim);
           std::string uri = ns.substr(delim + 1);
