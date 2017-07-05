@@ -5282,7 +5282,7 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 identifier_list[] { ENTRY_DEBUG } :
             NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
             WARNING | SUPER | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            SIGNAL | FINAL | OVERRIDE | VOID | ASM |
+            FINAL | OVERRIDE | VOID | ASM |
 
             // C# linq
             FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
@@ -5292,13 +5292,17 @@ identifier_list[] { ENTRY_DEBUG } :
             IMPORT | ATPROTOCOL |
 
             // C
-            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |/*| CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
-            SIGNAL | FOREACH | FOREVER | VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
+            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |
+
+            // Not sure why these are commented out
+            /* CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
             DELETE | LITERAL_FALSE | LITERAL_TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
-            DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF*/
+            DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF
+            */
 
             //Qt
-            EMIT
+            EMIT | FOREACH | SIGNAL | FOREVER
 
 ;
 

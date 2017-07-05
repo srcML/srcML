@@ -35,4 +35,24 @@
     <empty_stmt>;</empty_stmt></forever></forever>
 </unit>
 
+<unit>
+<function_decl><type><name>void</name></type> <name>forever</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>forever</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>void</name></type> <name>forever</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<class_decl>class <name>forever</name>;</class_decl>
+</unit>
+
+<unit>
+<class>class <name>forever</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
 </unit>
