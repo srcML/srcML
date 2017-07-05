@@ -21,11 +21,15 @@
  */
 
 #include <peek4char.hpp>
+#include <unistd.h>
+#include <csignal>
+#include <cstdlib>
 
 int peek4char(FILE* fp, unsigned char data[]) {
     int size = 0;
     int c;
     if ((c = getc(fp)) != EOF) {
+        signal(SIGALRM, SIG_DFL);
         data[0] = c;
         ++size;
         if ((c = getc(fp)) != EOF) {
@@ -45,5 +49,7 @@ int peek4char(FILE* fp, unsigned char data[]) {
         }
         ungetc(data[0], fp);
     }
+    signal(SIGALRM, SIG_DFL);
+
     return size;
 }

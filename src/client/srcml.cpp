@@ -46,6 +46,12 @@ bool request_create_src            (const srcml_request_t&, const srcml_input_t&
 // global request
 srcml_request_t global_srcml_request;
 
+// stdin timeout message
+void timeout(int) {
+
+    fprintf(stderr, "srcml is waiting for input from stdin\n");
+}
+
 int main(int argc, char * argv[]) {
     Timer runtime = Timer();
     runtime.start();
@@ -92,6 +98,12 @@ int main(int argc, char * argv[]) {
             exit(1);
         }
         pstdin->fd = boost::none;
+
+        // setup a 5 second timeout for stdin from the terminal
+        if (isatty(0)) {
+            alarm(5);
+            signal(SIGALRM, timeout);
+        }
 
         // determine if the input is srcML or src
         pstdin->state = isxml(*(pstdin->fileptr)) ? SRCML : SRC;
