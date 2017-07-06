@@ -31,6 +31,6 @@
 int src_input_file(ParseQueue& queue,
                     srcml_archive* srcml_arch,
                     const srcml_request_t& srcml_request,
-                    const std::string& input_file);
+                    const srcml_input_src& input);
 
 #endif

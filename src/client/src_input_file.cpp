@@ -28,10 +28,10 @@
 int src_input_file(ParseQueue& queue,
                     srcml_archive* srcml_arch,
                     const srcml_request_t& srcml_request,
-                    const std::string& input_file) {
+                    const srcml_input_src& input) {
 
     if (SRCML_COMMAND_VERBOSE & SRCMLOptions::get()) {
-        return src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
+        return src_input_libarchive(queue, srcml_arch, srcml_request, input);
     }
 
     // form the parsing request
@@ -42,8 +42,8 @@ int src_input_file(ParseQueue& queue,
 
     if (srcml_request.att_filename)
         prequest->filename = *srcml_request.att_filename;
-    else if (input_file != "_")
-        prequest->filename = input_file;
+    else if (input.resource != "_")
+        prequest->filename = input.resource;
 
     prequest->url = srcml_request.att_url;
     prequest->version = srcml_request.att_version;
@@ -55,7 +55,7 @@ int src_input_file(ParseQueue& queue,
             if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
                 prequest->language = l;
     
-    prequest->disk_filename = input_file;
+    prequest->disk_filename = input.resource;
 
     // Hand request off to the processing queue
     queue.schedule(prequest);
