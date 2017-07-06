@@ -37,6 +37,8 @@
 #include <archive.h>
 #include <iostream>
 #include <global_errors.hpp>
+#include <unistd.h>
+#include <csignal>
 
 bool request_create_srcml          (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 bool request_transform_srcml       (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);

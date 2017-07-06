@@ -22,6 +22,7 @@
 
 #include <global_errors.hpp>
 #include <mutex>
+#include <condition_variable>
 
 static std::mutex e;
 static bool production_errors = false;

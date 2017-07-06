@@ -37,8 +37,6 @@ struct curl_write_info {
 
 static const size_t CURL_MAX_ERROR_SIZE = 100;
 
-static std::mutex c;
-
 /*
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
     with our own callback does not entail an additional copy
