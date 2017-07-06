@@ -53,7 +53,9 @@ public:
         // urls
         if (curinput.protocol != "file" && curl_supported(curinput.protocol)) {
             srcml_input_src uninput = curinput;
-            input_curl(uninput);
+            if (!input_curl(uninput))
+                throw -1;
+
             curinput.fd = *uninput.fd;
         }
 

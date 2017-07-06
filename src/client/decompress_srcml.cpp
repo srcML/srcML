@@ -77,7 +77,9 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input_sources[0];
-        input_curl(uninput);
+        if (!input_curl(uninput))
+            exit(1);
+
         status = archive_read_open_fd(libarchive_srcml, uninput, buffer_size);
 
     } else {

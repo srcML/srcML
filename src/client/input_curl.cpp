@@ -45,6 +45,8 @@ static std::mutex c;
 */
 size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
 
+    goCurl(true);
+
     curl_write_info* data = (curl_write_info*) userdata;
 
     // we may have previously buffered data to output
@@ -113,11 +115,11 @@ void curl_download_url(const srcml_request_t& /* srcml_request */,
         setProductionErrors();
         setCurlErrors();
         goCurl(false);
-        
+
     } else {
 
         goCurl(true);
-
+        
         // ok, no errors, but may have cached data in the buffer, especially for small files
         if (!write_info.buffer.empty()) {
             write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size());
@@ -138,5 +140,6 @@ int input_curl(srcml_input_src& input) {
 
     input_pipe(input, curl_download_url);
 
+    // wait to see if curl is able to download the url at all
     return waitCurl();
 }
