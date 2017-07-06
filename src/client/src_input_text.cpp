@@ -54,7 +54,7 @@ static bool isodigit(char c) {
  int src_input_text(ParseQueue& queue,
  	srcml_archive* srcml_arch,
  	const srcml_request_t& srcml_request,
- 	const std::string& input_file) {
+ 	const srcml_input_src& input) {
 
     // form the parsing request
  	ParseRequest* prequest = new ParseRequest;
@@ -71,7 +71,7 @@ static bool isodigit(char c) {
 
     prequest->status = 0; //!language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
-    std::string raw_text = src_prefix_resource(input_file);
+    std::string raw_text = src_prefix_resource(input.resource);
     prequest->loc = 0;
 
     // fill up the parse request buffer

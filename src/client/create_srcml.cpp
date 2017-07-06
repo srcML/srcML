@@ -62,7 +62,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
     } else if (input.protocol == "text") {
 
-        return src_input_text(queue, srcml_arch, srcml_request, input.filename);
+        return src_input_text(queue, srcml_arch, srcml_request, input);
 
     } else if (input.protocol == "filelist") {
 
