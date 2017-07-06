@@ -97,14 +97,18 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input;
-        input_curl(uninput);
+        if (!input_curl(uninput))
+            return 0;
+
         return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input;
-        input_curl(uninput);
+        if (!input_curl(uninput))
+            return 0;
+
         return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
 
     } else {

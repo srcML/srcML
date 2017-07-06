@@ -24,8 +24,12 @@
 #include <mutex>
 
 static std::mutex e;
-
 static bool production_errors = false;
+
+static std::mutex c;
+static bool curl_errors = false;
+
+static std::mutex d;
 
 void setProductionErrors() {
     std::unique_lock<std::mutex> l(e);
@@ -40,4 +44,34 @@ void clearProductionErrors() {
 bool getProductionErrors() {
     std::unique_lock<std::mutex> l(e);
     return production_errors;
+}
+
+void setCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    curl_errors = true;
+}
+
+void clearCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    curl_errors = false;
+}
+
+bool getCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    return curl_errors;
+}
+
+static bool go = false;
+std::condition_variable cv;
+
+int waitCurl() {
+    std::unique_lock<std::mutex> l(d);
+    cv.wait(l);
+    return go;
+}
+
+void goCurl(bool flag) {
+    std::unique_lock<std::mutex> l(d);
+    go = flag;
+    cv.notify_one();
 }

@@ -29,4 +29,14 @@ void clearProductionErrors();
 
 bool getProductionErrors();
 
+void setCurlErrors();
+
+void clearCurlErrors();
+
+bool getCurlErrors();
+
+int waitCurl();
+
+void goCurl(bool flag);
+
 #endif

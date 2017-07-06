@@ -37,7 +37,7 @@ struct curl_write_info {
 
 static const size_t CURL_MAX_ERROR_SIZE = 100;
 
-int curl_error = 0;
+static std::mutex c;
 
 /*
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
@@ -71,8 +71,6 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 void curl_download_url(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
-
-    curl_error = 0;
 
     // input comes from URL
     std::string url = input_sources[0].filename;
@@ -113,9 +111,12 @@ void curl_download_url(const srcml_request_t& /* srcml_request */,
     if(response != CURLE_OK || http_code != 200) {
         SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to access URL " + url);
         setProductionErrors();
-        curl_error = 1;
-
+        setCurlErrors();
+        goCurl(false);
+        
     } else {
+
+        goCurl(true);
 
         // ok, no errors, but may have cached data in the buffer, especially for small files
         if (!write_info.buffer.empty()) {
@@ -133,7 +134,9 @@ void curl_download_url(const srcml_request_t& /* srcml_request */,
     curl_global_cleanup();
 }
 
-void input_curl(srcml_input_src& input) {
+int input_curl(srcml_input_src& input) {
 
     input_pipe(input, curl_download_url);
+
+    return waitCurl();
 }
