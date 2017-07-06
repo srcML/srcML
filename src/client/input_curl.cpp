@@ -43,8 +43,6 @@ static const size_t CURL_MAX_ERROR_SIZE = 100;
 */
 size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
 
-    goCurl(true);
-
     curl_write_info* data = (curl_write_info*) userdata;
 
     // we may have previously buffered data to output
