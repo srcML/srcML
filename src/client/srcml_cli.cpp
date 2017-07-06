@@ -610,6 +610,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         exit(1);
     }
 
+    // allow each input source to know its position
+    for (int i = 0; i < (int) srcml_request.input_sources.size(); ++i)
+      srcml_request.input_sources[i].input_pos = i + 1;
+
     return srcml_request;
 }
 
