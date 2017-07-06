@@ -36,6 +36,7 @@
 #include <boost/version.hpp>
 #include <archive.h>
 #include <iostream>
+#include <global_errors.hpp>
 
 bool request_create_srcml          (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 bool request_transform_srcml       (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
@@ -153,6 +154,8 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
+    clearProductionErrors();
+
     // execute the pipeline
     srcml_execute(srcml_request, pipeline, srcml_request.input_sources, srcml_request.output_filename);
 
@@ -161,7 +164,8 @@ int main(int argc, char * argv[]) {
     SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "CPU Time: " + std::to_string(runtime.cpu_time_elapsed()) + "ms");
     SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "Real Time: " + std::to_string(runtime.real_world_elapsed()) + "ms");
 
-    return 0;
+    // error status is 0 unless a production error occurred
+    return getProductionErrors()? 1 : 0;
 }
 
 bool request_create_srcml(const srcml_request_t& srcml_request,
