@@ -74,6 +74,7 @@ int srcml_input_srcml(ParseQueue& queue,
                 srcml_archive_get_namespace_uri(srcml_input_archive, i));
         }
     }
+fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
     // move to the correct unit
     for (int i = 1; i < srcml_input.unit; ++i) {

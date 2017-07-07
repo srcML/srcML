@@ -41,6 +41,8 @@
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
 #include <boost/filesystem.hpp>
+#include <iostream>
+#include <input_archive.hpp>
 
 extern srcml_output_dest gdestination;
 srcml_archive* gsrcml_arch = 0;
@@ -100,7 +102,11 @@ int srcml_handler_dispatch(ParseQueue& queue,
         if (!input_curl(uninput))
             return 0;
 
-        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+        // may have some compressions/archives
+        srcml_input_src uuninput = uninput;
+        input_archive(uuninput);
+
+        return srcml_input_srcml(queue, srcml_arch, uuninput, srcml_request.revision);
 
     } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
 
