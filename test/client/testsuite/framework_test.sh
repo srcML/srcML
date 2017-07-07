@@ -221,9 +221,14 @@ check_exit() {
         exit 8
     fi
 
-    if [ $# -ge 2 ]; then
+    if [ $# -eq 2 ]; then
         diff $STDERR <(echo -en "$2")
         [ ! -s $STDOUT ]
+    fi
+
+    if [ $# -eq 3 ]; then
+        diff $STDOUT <(echo -en "$2")
+        diff $STDERR <(echo -en "$3")
     fi
 
     # return to capturing stdout and stderr
