@@ -27,6 +27,7 @@
 #include <parse_request.hpp>
 #include <write_queue.hpp>
 #include <ctpl_stl.h>
+#include <mutex>
 
 class ParseQueue {
 public:
@@ -36,7 +37,13 @@ public:
 
 	inline void schedule(ParseRequest* pvalue) {
 
-	    pvalue->position = ++counter;
+		int next;
+		{
+			std::unique_lock<std::mutex> l(e);
+
+	    	next = ++counter;
+		}
+		pvalue->position = next;
 
 	    // error passthrough to output for proper output in trace
 	    if (pvalue->status) {
@@ -58,6 +65,7 @@ private:
     ctpl::thread_pool pool;
     int counter;
     WriteQueue& wqueue;
+    std::mutex e;
 };
 
 #endif
