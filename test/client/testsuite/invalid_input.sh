@@ -43,7 +43,7 @@ check_exit 7
 
 # invalid input filename
 srcml2src foobar
-check_exit 0
+check_exit 1
 
 # unknown option
 srcml2src --strip foobar
@@ -79,4 +79,4 @@ check_exit 7
 
 # invalid combinations
 srcml2src -X --src-encoding "UTF-8" "foobar"
-check_exit 0
+check_exit 1
