@@ -221,6 +221,11 @@ check_exit() {
         exit 8
     fi
 
+    if [ $# -ge 2 ]; then
+        diff $STDERR <(echo -en "$2")
+        [ ! -s $STDOUT ]
+    fi
+
     # return to capturing stdout and stderr
     capture_output
 
