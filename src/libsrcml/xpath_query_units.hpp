@@ -519,6 +519,18 @@ public :
 
             // index into results
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
+            xmlNodePtr save_onode = 0;
+            if (onode->type == 2) {
+                std::string attr = (const char*) onode->name;
+                attr += "=";
+                attr += "\"";
+                attr += (const char*) onode->children->content;
+                attr += "\"";
+
+                save_onode = onode;
+
+                onode = xmlNewText((const xmlChar*) attr.c_str());
+            }
 
             // unlink this result node and link to the master parent
             xmlNodePtr onode_parent = onode->parent;
@@ -537,6 +549,12 @@ public :
             onode->next = onode_next;
             onode->prev = onode_prev;
             a_node->children = 0;
+
+            if (save_onode) {
+                xmlFreeNode(onode);
+                onode = save_onode;
+                save_onode = 0;
+            }
         }
 
         a_node->children = a_node_children;
