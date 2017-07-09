@@ -14,13 +14,13 @@ define srca <<- 'STDOUT'
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml
 check tfile
 
-mkdir sub
-
 #srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml -o sub/archive_multi.cpp
 #check sub/archive_multi.cpp tfile
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml --unit 1
 check "$srca"
+
+mkdir sub
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml --unit 1 -o sub/archive_multi.cpp
 check sub/archive_multi.cpp "$srca"
@@ -55,7 +55,7 @@ check tfile
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml.tar.gz
 check tfile
 
-srcml https://raw.githubusercontent.com/srcML/test-data/raw/master/srcml/archive-multi.xml.tar
+srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml.tar
 check tfile
 
 srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-multi.xml.tbz2
