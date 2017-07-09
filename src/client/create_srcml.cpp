@@ -68,9 +68,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
     } else if (input.protocol == "filelist") {
 
-        int num = src_input_filelist(queue, srcml_arch, srcml_request, input);
-
-        if (num && !createdsrcml && input.protocol == "filelist") {
+        if (!createdsrcml) {
             createdsrcml = true;
 
             int status = 0;
@@ -85,6 +83,9 @@ int srcml_handler_dispatch(ParseQueue& queue,
             if (status != SRCML_STATUS_OK)
                 return 0;
         }
+
+        int num = src_input_filelist(queue, srcml_arch, srcml_request, input);
+
         return num;
 
     } else if (input.protocol == "file" && input.isdirectory) {
