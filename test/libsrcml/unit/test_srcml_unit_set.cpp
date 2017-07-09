@@ -129,6 +129,33 @@ int main() {
     }
 
     {
+        const char * v1 = "version1";
+        const char * v2 = "version2";
+
+        srcml_unit * unit1 = srcml_unit_create(archive);
+        int status = srcml_unit_set_version(unit1, v1);
+        dassert(status, SRCML_STATUS_OK);
+        dassert(*unit1->version, v1);
+        assert(strcmp(srcml_unit_get_version(unit1), v1) == 0);
+
+        srcml_unit * unit2 = srcml_unit_create(archive);
+        status = srcml_unit_set_version(unit2, v2);
+        dassert(status, SRCML_STATUS_OK);
+        dassert(*unit2->version, v2);
+        assert(strcmp(srcml_unit_get_version(unit2), v2) == 0);
+
+        srcml_archive_set_version(archive, "archiveVersion");
+
+        dassert(*unit1->version, v1);
+        assert(strcmp(srcml_unit_get_version(unit1), v1) == 0);
+        dassert(*unit2->version, v2);
+        assert(strcmp(srcml_unit_get_version(unit2), v2) == 0);
+
+        srcml_unit_free(unit1);
+        srcml_unit_free(unit2);
+    }
+
+    {
         dassert(srcml_unit_set_version(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
