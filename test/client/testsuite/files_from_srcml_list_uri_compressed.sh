@@ -8,69 +8,40 @@ define empty_srcml_archive <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="test">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="empty.cpp" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
 
 	</unit>
 	STDOUT
 
-createfile "list-empty.txt" "https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml"
+
+message "HERE"
+
+createfile list-empty.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml"
+
+message "HERE2"
+
+message "$empty_srcml_archive"
+
 src2srcml --files-from list-empty.txt --url="test"
 check "$empty_srcml_archive"
-rmfile list-empty.txt
 
-# compressed
-define empty_srcml_archive <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="test">
+createfile list-empty-bz2.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.bz2"
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.bz2" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
-
-	</unit>
-	STDOUT
-
-createfile "list-empty-bz2.txt" "https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.bz2"
 src2srcml --files-from list-empty-bz2.txt --url="test"
+message "HERE4"
 check "$empty_srcml_archive"
-rmfile list-empty-bz2.txt
 
+createfile list-empty-gz.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.gz"
 
-define empty_srcml_archive <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="test">
-
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.gz" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
-
-	</unit>
-	STDOUT
-
-createfile "list-empty-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.gz"
 src2srcml --files-from list-empty-gz.txt --url="test"
 check "$empty_srcml_archive"
-rmfile list-empty-gz.txt
 
-define empty_srcml_archive <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="test">
+createfile list-empty-bz2-gz.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.bz2.gz"
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.bz2.gz" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
-
-	</unit>
-	STDOUT
-
-createfile "list-empty-bz2-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.bz2.gz"
 src2srcml --files-from list-empty-bz2-gz.txt --url="test"
 check "$empty_srcml_archive"
-rmfile list-empty-bz2-gz.txt
 
-define empty_srcml_archive <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="test">
+createfile list-empty-gz-b2.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.gz.bz2"
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.gz.bz2" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
-
-	</unit>
-	STDOUT
-createfile "list-empty-gz-b2.txt" "https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.gz.bz2"
 src2srcml --files-from list-empty-gz-b2.txt --url="test"
 check "$empty_srcml_archive"
-rmfile list-empty-gz-bz2.txt
