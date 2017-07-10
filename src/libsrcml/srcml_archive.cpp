@@ -128,6 +128,7 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
     new_archive->language = archive->language;
     new_archive->url = archive->url;
     new_archive->version = archive->version;
+    new_archive->src_encoding = archive->src_encoding;
 
     try {
 
