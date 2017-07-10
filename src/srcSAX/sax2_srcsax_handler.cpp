@@ -196,6 +196,19 @@ void end_document(void * ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;
 
+    const char* errmsg = 0;
+    switch (ctxt->errNo) {
+    case XML_ERR_DOCUMENT_END:
+        errmsg = "Extra content at the end of the document";
+        break;
+    default:
+        break;
+    };
+
+    if (errmsg) {
+        fprintf(stderr, "srcml: %s\n", errmsg);
+    }
+
     state->context->stack_size = 0;
     state->context->srcml_element_stack = 0;
 

@@ -47,12 +47,16 @@ define output <<- 'STDOUT'
 	a;
 	STDOUT
 
-define units <<- 'STDOUT'
+define units3 <<- 'STDOUT'
 	3
 	STDOUT
 
+define units1 <<- 'STDOUT'
+	1
+	STDOUT
+
 define xml_archive_error <<- 'STDERR'
-	srcml: Extra content at the end of the document in 'xml_error/illformedarchive_multi.xml'
+	srcml: Extra content at the end of the document
 	STDERR
 
 createfile xml_error/illformedarchive_multi.xml "$illformed_archive_mulit"
@@ -81,19 +85,19 @@ check "$info_archive"
 # bad
 # TODO: issue #1039
 srcml2src xml_error/illformedarchive_multi.xml --show-unit-count
-check "$units" "$xml_archive_error"
+check "$units3" "$xml_archive_error"
 
 srcml2src xml_error/illformedarchive_single.xml --show-unit-count
-check "$units" "$xml_archive_error"
+check "$units1" "$xml_archive_error"
 
 srcml2src --show-unit-count xml_error/illformedarchive_multi.xml
-check "$units" "$xml_archive_error"
+check "$units3" "$xml_archive_error"
 
 srcml2src --show-unit-count xml_error/illformedarchive_single.xml
-check "$units" "$xml_archive_error"
+check "$units1" "$xml_archive_error"
 
 srcml2src --show-unit-count < xml_error/illformedarchive_multi.xml
-check "$units" "$xml_archive_error"
+check "$units3" "$xml_archive_error"
 
 srcml2src --show-unit-count < xml_error/illformedarchive_single.xml
-check "$units" "$xml_archive_error"
+check "$units1" "$xml_archive_error"
