@@ -13,14 +13,7 @@ define empty_srcml_archive <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-
-message "HERE"
-
 createfile list-empty.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml"
-
-message "HERE2"
-
-message "$empty_srcml_archive"
 
 src2srcml --files-from list-empty.txt --url="test"
 check "$empty_srcml_archive"
@@ -28,7 +21,6 @@ check "$empty_srcml_archive"
 createfile list-empty-bz2.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.bz2"
 
 src2srcml --files-from list-empty-bz2.txt --url="test"
-message "HERE4"
 check "$empty_srcml_archive"
 
 createfile list-empty-gz.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.gz"

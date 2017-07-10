@@ -26,7 +26,7 @@
 
 void input_archive(srcml_input_src& input) {
 
-    if (!input.archives.empty() /* &&
+    if (!input.archives.empty() || !input.compressions.empty() /* &&
        (input.compressions.size() > 1 || input.compressions.front() != ".gz")*/) {
 
         input_pipe(input, unarchive_srcml);

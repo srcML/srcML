@@ -27,18 +27,6 @@
 #include <srcml_logger.hpp>
 #include <cstring>
 
-namespace {
-
-    bool curl_supported(const std::string& input_protocol) {
-        const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
-        for (int i = 0; curl_types[i] != NULL; ++i) {
-            if (strcmp(curl_types[i], input_protocol.c_str()) == 0)
-                return true;
-        }
-        return false;
-    }
-}
-
 void unarchive_srcml(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
@@ -80,16 +68,8 @@ void unarchive_srcml(const srcml_request_t& /* srcml_request */,
     const int buffer_size = 16384;
 
     if (contains<int>(input_sources[0])) {
+
         status = archive_read_open_fd(libarchive_srcml, input_sources[0], buffer_size);
-    } else if (curl_supported(input_sources[0].protocol)) {
-
-        // input must go through libcurl pipe
-        srcml_input_src uninput = input_sources[0];
-        if (!input_curl(uninput))
-            exit(1);
-
-        status = archive_read_open_fd(libarchive_srcml, uninput, buffer_size);
-
     } else {
         status = archive_read_open_filename(libarchive_srcml, input_sources[0].resource.c_str(), buffer_size);
     }
