@@ -101,6 +101,7 @@ public:
     UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash);
     UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback, const char * encoding, boost::optional<std::string> * hash);
 
+
     // Get the next character from the stream
     int getChar();
 
@@ -110,12 +111,9 @@ public:
     ~UTF8CharBuffer();
 
 private:
+    UTF8CharBuffer(const char* encoding, boost::optional<std::string> * hash);
 
     int growBuffer();
-    void init(const char * encoding);
-
-    /** xml input handles encodings */
-    xmlParserInputBufferPtr input;
 
     /** Store encoding for later queries */
     boost::optional<std::string> encoding;

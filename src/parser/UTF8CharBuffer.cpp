@@ -75,146 +75,8 @@ struct srcMLIO {
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
-
-    if (!ifilename)
-        throw UTF8FileError();
-
-    // open the file
-    fd = open(ifilename, O_RDONLY);
-    if (fd == -1)
-        throw UTF8FileError();
-
-    sio = new srcMLIO();
-    sio->context = (void*) (long) fd;
-    sio->read_callback = [](void* context, char* buf, int size) -> int {
-        return read((int)(long) context, buf, size);
-    };
-    sio->close_callback = [](void* context) -> int {
-        return close((int)(long) context);
-    };
-
-    // setup encoding
-    curinbuf = inbuf;
-    init(encoding);
-}
-
-/**
- * UTF8CharBuffer
- * @param c_buffer byte input buffer
- * @param buffer_size size of input buffer (or length of input to use)
- * @param encoding input encoding
- * @param hash optional location to output hash of input (default = 0)
- *
- * Constructor.  Setup input from memory and hashing if needed.
- */
-UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
-
-    if(!c_buffer) throw UTF8FileError();
-
-    sio = new srcMLIO();
-    sio->context = 0;
-    sio->read_callback = [](void*, char*, int) -> int {
-        // indicate EOF for read since we have already stored the data
-        return 0;
-    };
-    sio->close_callback = 0;
-
-    // initialize read buffers, encoding, and hash
-    // instead of a read_callback, just setup the memory here
-    curinbuf = c_buffer;
-    size = buffer_size;
-    inbuf_size = buffer_size;
-    init(encoding);
-}
-
-/**
- * UTF8CharBuffer
- * @param file input FILE open for reading
- * @param encoding input encoding
- * @param hash optional location to output hash of input (default = 0)
- *
- * Constructor.  Setup input from FILE * and hashing if needed.
- */
-UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
-
-    if (!file)
-        throw UTF8FileError();
-
-    sio = new srcMLIO();
-    sio->context = (void*) (long) fileno(file);
-    sio->read_callback = [](void* context, char* buf, int size) -> int {
-        return read((int)(long) context, buf, size);
-    };
-    sio->close_callback = 0;
-
-    // initialize read buffers, encoding, and hash
-    curinbuf = inbuf;
-    init(encoding);
-}
-
-/**
- * UTF8CharBuffer
- * @param fd a file descriptor open for reading
- * @param encoding input encoding
- * @param hash optional location to output hash of input (default = 0)
- *
- * Constructor.  Setup input from file descriptor and hashing if needed.
- */
-UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
-
-    if (fd < 0)
-        throw UTF8FileError();
-
-    sio = new srcMLIO();
-    sio->context = (void*) fd;
-    sio->read_callback = [](void* context, char* buf, int size) -> int {
-        return read((int)(long) context, buf, size);
-    };
-    sio->close_callback = 0;
-
-    // setup encoding
-    curinbuf = inbuf;
-    init(encoding);
-}
-
-/**
- * UTF8CharBuffer
- * @param ifilename input filename (complete path)
- * @param encoding input encoding
- * @param hash optional location to output hash of input (default = 0)
- *
- * Constructor.  Setup input from filename and hashing if needed.
- */
-UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback,
-     const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
-
-    if (read_callback == 0 || context == 0)
-        throw UTF8FileError();
-
-    srcMLIO * sio = new srcMLIO();
-    sio->context = context;
-    sio->read_callback = read_callback;
-    sio->close_callback = close_callback;
-
-    // initialize read buffers, encoding, and hash
-    curinbuf = inbuf;
-    init(encoding);
-}
-
-/**
- * init
- * @param encoding the input encoding
- *
- * Helper function with common initialization for constructors.
- * Handles setup/detection of encoding.
- */
-void UTF8CharBuffer::init(const char * encoding) {
+UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string> * hash)
+    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
 
     // if no encoding specified, assume ISO-8859-1
     this->encoding = encoding ? encoding : "ISO-8859-1";
@@ -232,21 +94,6 @@ void UTF8CharBuffer::init(const char * encoding) {
     iconvctl(ic, ICONV_TRIVIALP, &isit);
     trivial = isit;
 
-    // setup the buffer used, inbuf if no conversion, and outbuf if there is
-    curbuf = trivial ? curinbuf : outbuf;
-    inbuf_size = 0;
-    outbuf_size = 0;
-    size = 0;
-    pos = 0;
-
-/*
-        // detect (and remove) BOMs for UTF8 and UTF16
-        if ((size >= 3 || save_size >= 3) &&
-            xmlBufContent(input->buffer)[0] == 0xEF &&
-            xmlBufContent(input->buffer)[1] == 0xBB &&
-            xmlBufContent(input->buffer)[2] == 0xBF) {
-*/
-
     if(hash) {
 #ifdef _MSC_BUILD
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
@@ -257,6 +104,140 @@ void UTF8CharBuffer::init(const char * encoding) {
         SHA1_Init(&ctx);
 #endif
     }
+
+    curbuf = trivial ? inbuf : outbuf;
+
+    /*
+        // detect (and remove) BOMs for UTF8 and UTF16
+        if ((size >= 3 || save_size >= 3) &&
+            xmlBufContent(input->buffer)[0] == 0xEF &&
+            xmlBufContent(input->buffer)[1] == 0xBB &&
+            xmlBufContent(input->buffer)[2] == 0xBF) {
+*/
+}
+
+/**
+ * UTF8CharBuffer
+ * @param ifilename input filename (complete path)
+ * @param encoding input encoding
+ * @param hash optional location to output hash of input (default = 0)
+ *
+ * Constructor.  Setup input from filename and hashing if needed.
+ */
+UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
+    : UTF8CharBuffer(encoding, hash) {
+
+    if (!ifilename)
+        throw UTF8FileError();
+
+    // open the file
+    fd = open(ifilename, O_RDONLY);
+    if (fd == -1)
+        throw UTF8FileError();
+
+    // setup callbacks, wrappers around read() and close()
+    sio = new srcMLIO();
+    sio->context = (void*) (long) fd;
+    sio->read_callback = [](void* context, char* buf, int size) -> int {
+        return read((int)(long) context, buf, size);
+    };
+    sio->close_callback = [](void* context) -> int {
+        return close((int)(long) context);
+    };
+}
+
+/**
+ * UTF8CharBuffer
+ * @param c_buffer byte input buffer
+ * @param buffer_size size of input buffer (or length of input to use)
+ * @param encoding input encoding
+ * @param hash optional location to output hash of input (default = 0)
+ *
+ * Constructor.  Setup input from memory and hashing if needed.
+ */
+UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash)
+    : UTF8CharBuffer(encoding, hash) {
+
+    if(!c_buffer) throw UTF8FileError();
+
+    sio = new srcMLIO();
+    sio->context = 0;
+    sio->read_callback = [](void*, char*, int) -> int {
+        // indicate EOF for read since we have already stored the data
+        return 0;
+    };
+    sio->close_callback = 0;
+
+    // initialize read buffers, encoding, and hash
+    // instead of a read_callback, just setup the memory here
+    curinbuf = c_buffer;
+    size = buffer_size;
+    inbuf_size = buffer_size;
+}
+
+/**
+ * UTF8CharBuffer
+ * @param file input FILE open for reading
+ * @param encoding input encoding
+ * @param hash optional location to output hash of input (default = 0)
+ *
+ * Constructor.  Setup input from FILE * and hashing if needed.
+ */
+UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash)
+    : UTF8CharBuffer(encoding, hash) {
+
+    if (!file)
+        throw UTF8FileError();
+
+    sio = new srcMLIO();
+    sio->context = (void*) (long) fileno(file);
+    sio->read_callback = [](void* context, char* buf, int size) -> int {
+        return read((int)(long) context, buf, size);
+    };
+    sio->close_callback = 0;
+}
+
+/**
+ * UTF8CharBuffer
+ * @param fd a file descriptor open for reading
+ * @param encoding input encoding
+ * @param hash optional location to output hash of input (default = 0)
+ *
+ * Constructor.  Setup input from file descriptor and hashing if needed.
+ */
+UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash)
+    : UTF8CharBuffer(encoding, hash) {
+
+    if (fd < 0)
+        throw UTF8FileError();
+
+    sio = new srcMLIO();
+    sio->context = (void*) fd;
+    sio->read_callback = [](void* context, char* buf, int size) -> int {
+        return read((int)(long) context, buf, size);
+    };
+    sio->close_callback = 0;
+}
+
+/**
+ * UTF8CharBuffer
+ * @param ifilename input filename (complete path)
+ * @param encoding input encoding
+ * @param hash optional location to output hash of input (default = 0)
+ *
+ * Constructor.  Setup input from filename and hashing if needed.
+ */
+UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback,
+     const char * encoding, boost::optional<std::string> * hash)
+    : UTF8CharBuffer(encoding, hash) {
+
+    if (read_callback == 0 || context == 0)
+        throw UTF8FileError();
+
+    srcMLIO * sio = new srcMLIO();
+    sio->context = context;
+    sio->read_callback = read_callback;
+    sio->close_callback = close_callback;
 }
 
 /**
@@ -379,14 +360,9 @@ const boost::optional<std::string> & UTF8CharBuffer::getEncoding() const {
  */
 UTF8CharBuffer::~UTF8CharBuffer() {
 
-    if(!input) return;
-
-    xmlFreeParserInputBuffer(input);
-    input = 0;
-
-    unsigned char md[20];
-
     if(hash) {
+        unsigned char md[20];
+
 #ifdef _MSC_BUILD
         DWORD        SHA_DIGEST_LENGTH;
         DWORD        hash_length_size = sizeof(DWORD);
@@ -400,7 +376,5 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
         const char outmd[] = { HEXCHARASCII(md), '\0'};
         *hash = outmd;
-
     }
-
 }
