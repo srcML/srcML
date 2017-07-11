@@ -40,13 +40,6 @@
 
 #include <fcntl.h>
 
-#ifndef LIBXML2_NEW_BUFFER
-
-/** Use same accessor for buffer content with both libxml2 buffer types */
-#define xmlBufContent(b) (b->content)
-
-#endif
-
 /**
  * srcMLIO
  *
@@ -75,70 +68,6 @@ struct srcMLIO {
 };
 
 /**
- * srcMLFdRead
- * @param context a srcMLFd context
- * @param buffer a buffer to write output of read
- * @param len number of bytes to read/size of buffer
- *
- * Wrapper around read to provide hashing.
- * Read len bytes from file and put in buffer.
- * Update hash with newly read data.
- */
-int srcMLFdRead(void * context, char * buffer, int len) {
-
-    int fd = (int)(size_t)context;
-
-    size_t num_read = READ(fd, buffer, len);
-
-    return (int)num_read;
-
-}
-
-/**
- * srcMLIORead
- * @param context a srcMLIO context
- * @param buffer a buffer to write output of read
- * @param len number of bytes to read/size of buffer
- *
- * Wrapper around provided read callback to provide hashing.
- * Read len bytes from file and put in buffer.
- * Update hash with newly read data.
- */
-int srcMLIORead(void * context,  char * buffer, int len) {
-
-    srcMLIO * sio = (srcMLIO *)context;
-    size_t num_read = -1;
-    if(sio->read_callback) num_read = sio->read_callback(sio->context, buffer, len);
-
-    if(sio->ctx)
-#ifdef _MSC_BUILD
-        CryptHashData(*sio->ctx, (BYTE *)buffer, num_read, 0);
-#else
-        SHA1_Update(sio->ctx, buffer, (SHA_LONG)num_read);
-#endif
-
-    return (int)num_read;
-}
-
-/**
- * srcMLIOClose
- * @param context a srcMLIO context
- *
- * Wrapper around xmlFileClose.
- * Cleans up memory of srcMLIO and closes context.
- */
-int srcMLIOClose(void * context) {
-
-    srcMLIO * sio = (srcMLIO *)context;
-    int ret = 0;
-    if(sio->close_callback) ret = sio->close_callback(sio->context);
-
-    delete sio;
-
-    return ret;
-}
-
-/**
  * UTF8CharBuffer
  * @param ifilename input filename (complete path)
  * @param encoding input encoding
@@ -149,26 +78,26 @@ int srcMLIOClose(void * context) {
 UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
 
-    if(!ifilename) throw UTF8FileError();
+    if (!ifilename)
+        throw UTF8FileError();
 
     // open the file
     fd = open(ifilename, O_RDONLY);
     if (fd == -1)
         throw UTF8FileError();
 
-    // setup encoding
-    init(encoding);
+    sio = new srcMLIO();
+    sio->context = (void*) (long) fd;
+    sio->read_callback = [](void* context, char* buf, int size) -> int {
+        return read((int)(long) context, buf, size);
+    };
+    sio->close_callback = [](void* context) -> int {
+        return close((int)(long) context);
+    };
 
-    if(hash) {
-#ifdef _MSC_BUILD
-        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(!success && GetLastError() == NTE_BAD_KEYSET)
-            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
+    // setup encoding
+    curinbuf = inbuf;
+    init(encoding);
 }
 
 /**
@@ -185,21 +114,20 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 
     if(!c_buffer) throw UTF8FileError();
 
-    //curbuf = c_buffer;
-    size = buffer_size;
+    sio = new srcMLIO();
+    sio->context = 0;
+    sio->read_callback = [](void*, char*, int) -> int {
+        // indicate EOF for read since we have already stored the data
+        return 0;
+    };
+    sio->close_callback = 0;
 
-    if(hash) {
-#ifdef _MSC_BUILD
-        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(!success && GetLastError() == NTE_BAD_KEYSET)
-            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-        CryptHashData(crypt_hash, (BYTE *)c_buffer, buffer_size, 0);
-#else
-        SHA1_Init(&ctx);
-        SHA1_Update(&ctx, c_buffer, (SHA_LONG)buffer_size);
-#endif
-    }
+    // initialize read buffers, encoding, and hash
+    // instead of a read_callback, just setup the memory here
+    curinbuf = c_buffer;
+    size = buffer_size;
+    inbuf_size = buffer_size;
+    init(encoding);
 }
 
 /**
@@ -213,21 +141,19 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
 UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
 
-    if(!file) throw UTF8FileError();
+    if (!file)
+        throw UTF8FileError();
 
-    fd = fileno(file);
+    sio = new srcMLIO();
+    sio->context = (void*) (long) fileno(file);
+    sio->read_callback = [](void* context, char* buf, int size) -> int {
+        return read((int)(long) context, buf, size);
+    };
+    sio->close_callback = 0;
 
-    // setup encoding
+    // initialize read buffers, encoding, and hash
+    curinbuf = inbuf;
     init(encoding);
-
-    if(hash) {
-#ifdef _MSC_BUILD
-        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
 }
 
 /**
@@ -241,21 +167,19 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
 UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
 
-    if(fd < 0) throw UTF8FileError();
+    if (fd < 0)
+        throw UTF8FileError();
 
-    this->fd = fd;
+    sio = new srcMLIO();
+    sio->context = (void*) fd;
+    sio->read_callback = [](void* context, char* buf, int size) -> int {
+        return read((int)(long) context, buf, size);
+    };
+    sio->close_callback = 0;
 
     // setup encoding
+    curinbuf = inbuf;
     init(encoding);
-
-    if(hash) {
-#ifdef _MSC_BUILD
-        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
 }
 
 /**
@@ -270,38 +194,17 @@ UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback
      const char * encoding, boost::optional<std::string> * hash)
     : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
 
-    if(read_callback == 0 || context == 0) throw UTF8FileError();
-
-    if(hash) {
-#ifdef _MSC_BUILD
-        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(!success && GetLastError() == NTE_BAD_KEYSET)
-            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
+    if (read_callback == 0 || context == 0)
+        throw UTF8FileError();
 
     srcMLIO * sio = new srcMLIO();
     sio->context = context;
     sio->read_callback = read_callback;
     sio->close_callback = close_callback;
-    
-#ifdef _MSC_BUILD
-    hash ? sio->ctx = &crypt_hash : 0;
-#else
-    hash ? sio->ctx = &ctx : 0;
-#endif
 
-    input = xmlParserInputBufferCreateIO(srcMLIORead, srcMLIOClose, sio,
-                                         encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    if(!input) throw UTF8FileError();
-
-
+    // initialize read buffers, encoding, and hash
+    curinbuf = inbuf;
     init(encoding);
-
 }
 
 /**
@@ -330,7 +233,7 @@ void UTF8CharBuffer::init(const char * encoding) {
     trivial = isit;
 
     // setup the buffer used, inbuf if no conversion, and outbuf if there is
-    curbuf = trivial ? inbuf : outbuf;
+    curbuf = trivial ? curinbuf : outbuf;
     inbuf_size = 0;
     outbuf_size = 0;
     size = 0;
@@ -343,6 +246,17 @@ void UTF8CharBuffer::init(const char * encoding) {
             xmlBufContent(input->buffer)[1] == 0xBB &&
             xmlBufContent(input->buffer)[2] == 0xBF) {
 */
+
+    if(hash) {
+#ifdef _MSC_BUILD
+        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
+        if(!success && GetLastError() == NTE_BAD_KEYSET)
+            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
+        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
+#else
+        SHA1_Init(&ctx);
+#endif
+    }
 }
 
 /**
@@ -353,23 +267,33 @@ void UTF8CharBuffer::init(const char * encoding) {
  */
 int UTF8CharBuffer::growBuffer() {
 
-    // read more data into inbuf
-    size = (int) read(fd, &inbuf, BUFSIZE);
-    if (size == 0) {
+    // read more data into inbuf (may already be data in there)
+    if (size == 0 || pos >= size) {
+        size = sio->read_callback ? (int) sio->read_callback(sio->context, inbuf, SRCBUFSIZE) : 0;
+        if (size == 0) {
+            return 0;
+        }
+    }
 
-        return 0;
+    // hash the grown data
+    if(hash) {
+#ifdef _MSC_BUILD
+        CryptHashData(crypt_hash, (BYTE *)curinbuf, size, 0);
+#else
+        SHA1_Update(&ctx, curinbuf, (SHA_LONG)size);
+#endif
     }
 
     // for non-trivial conversions, convert from inbuf to outbuf
     if (!trivial) {
-        size_t osize = BUFSIZE;
+        size_t osize = SRCBUFSIZE;
         size_t isize = size;
-        osize = BUFSIZE;
+        osize = SRCBUFSIZE;
         char* pi = inbuf;
         char* po = outbuf;
         size_t bsize = iconv(ic, &pi, &isize, &po, &osize);
 
-        size = BUFSIZE - (int) osize;
+        size = SRCBUFSIZE - (int) osize;
     }
 
     pos = 0;
@@ -414,7 +338,7 @@ int UTF8CharBuffer::getChar() {
 
     // sequence "\r\n" where the '\r'
     // has already been converted to a '\n' so we need to skip over this '\n'
-    if (lastcr && c == '\n') {
+    if (false && lastcr && c == '\n') {
         lastcr = false;
 
         // may need more characters
@@ -473,7 +397,6 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 #else
         SHA1_Final(md, &ctx);
 #endif
-fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         const char outmd[] = { HEXCHARASCII(md), '\0'};
         *hash = outmd;

@@ -76,6 +76,8 @@
  */
 class UTF8FileError {};
 
+struct srcMLIO;
+
 /**
  * UTF8CharBuffer
  *
@@ -139,14 +141,15 @@ private:
     /** openssl/CommonCrypto hash context */
     SHA_CTX ctx;
 #endif
-    static const int BUFSIZE = 4196;
-    char inbuf[BUFSIZE];
+    char inbuf[SRCBUFSIZE];
     int inbuf_size;
-    char outbuf[BUFSIZE];
+    char outbuf[SRCBUFSIZE];
     int outbuf_size;
     int fd;
     iconv_t ic;
-    char* curbuf;
+    const char* curbuf;
+    const char* curinbuf;
     bool trivial;
+    srcMLIO* sio;
 };
 #endif
