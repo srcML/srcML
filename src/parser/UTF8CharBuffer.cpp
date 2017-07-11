@@ -23,22 +23,15 @@
 
 #include "UTF8CharBuffer.hpp"
 
-#include <srcml_macros.hpp>
 #include <sha1utilities.hpp>
-
 #include <iostream>
-#include <sstream>
-#include <iomanip>
-
-#include <stdio.h>
+#include <fcntl.h>
 
 #ifndef _MSC_BUILD
 #include <unistd.h>
 #else
 #include <io.h>
 #endif
-
-#include <fcntl.h>
 
 /**
  * srcMLIO
@@ -56,15 +49,6 @@ struct srcMLIO {
 
     /** provided close callback */
     UTF8CharBuffer::srcml_close_callback close_callback;
-
-#ifdef _MSC_BUILD
-    /** mvcs hash context object */
-    HCRYPTHASH * ctx;
-#else
-    /** openssl/CommonCrypto hash context */
-    SHA_CTX * ctx;
-#endif
-
 };
 
 /**
@@ -82,7 +66,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
     this->encoding = encoding ? encoding : "ISO-8859-1";
 
     // setup encoder from encoding to UTF-8
-    ic = iconv_open("UTF8", this->encoding->c_str());
+    ic = iconv_open("UTF8", this->encoding.c_str());
     if (ic == (iconv_t) -1) {
         fprintf(stderr, "%s", strerror(errno));
          throw UTF8FileError();
@@ -158,8 +142,10 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
 UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash)
     : UTF8CharBuffer(encoding, hash) {
 
-    if(!c_buffer) throw UTF8FileError();
+    if (!c_buffer)
+        throw UTF8FileError();
 
+    // setup callbacks, null since we have the input buffer already
     sio = new srcMLIO();
     sio->context = 0;
     sio->read_callback = [](void*, char*, int) -> int {
@@ -168,7 +154,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
     };
     sio->close_callback = 0;
 
-    // initialize read buffers, encoding, and hash
     // instead of a read_callback, just setup the memory here
     curinbuf = c_buffer;
     size = buffer_size;
@@ -189,6 +174,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
     if (!file)
         throw UTF8FileError();
 
+    // setup callbacks, mainly wrappers around read() for FILE* converted to file descriptor
     sio = new srcMLIO();
     sio->context = (void*) (long) fileno(file);
     sio->read_callback = [](void* context, char* buf, int size) -> int {
@@ -297,33 +283,11 @@ int UTF8CharBuffer::growBuffer() {
  */
 int UTF8CharBuffer::getChar() {
 
-    // may need more characters
-    if (size == 0 || pos >= size) {
-
-        // read more data into inbuf
-        size = growBuffer();
-        if (size == 0) {
-            // EOF
-            return -1;
-        }
-    }
-
-    char c = curbuf[pos];
-    ++pos;
-
-    // convert carriage returns to a line feed
-    if (c == '\r') {
-        lastcr = true;
-        c = '\n';
-    }
-
-    // sequence "\r\n" where the '\r'
-    // has already been converted to a '\n' so we need to skip over this '\n'
-    if (false && lastcr && c == '\n') {
-        lastcr = false;
+    char c = 0;
+    while (1) {
 
         // may need more characters
-        if (pos >= size) {
+        if (size == 0 || pos >= size) {
 
             // read more data into inbuf
             size = growBuffer();
@@ -331,9 +295,25 @@ int UTF8CharBuffer::getChar() {
                 // EOF
                 return -1;
             }
+            pos = 0;
         }
+
         c = curbuf[pos];
         ++pos;
+
+        // convert carriage returns to a line feed
+        if (c == '\r') {
+            lastcr = true;
+            c = '\n';
+        }
+
+        // sequence "\r\n" where the '\r'
+        // has already been converted to a '\n' so we need to skip over this '\n'
+        // so another pass through the loop
+        if (false && lastcr && c == '\n') {
+            lastcr = false;
+            continue;
+        }
     }
 
     return c;
@@ -346,7 +326,7 @@ int UTF8CharBuffer::getChar() {
  *
  * @returns the used source encoding.
  */
-const boost::optional<std::string> & UTF8CharBuffer::getEncoding() const {
+const std::string& UTF8CharBuffer::getEncoding() const {
 
     return encoding;
 
@@ -359,6 +339,11 @@ const boost::optional<std::string> & UTF8CharBuffer::getEncoding() const {
  * place in buffer if requested.
  */
 UTF8CharBuffer::~UTF8CharBuffer() {
+
+    if (sio) {
+        delete sio;
+        sio = 0;
+    }
 
     if(hash) {
         unsigned char md[20];

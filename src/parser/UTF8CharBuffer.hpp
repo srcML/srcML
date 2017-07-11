@@ -32,11 +32,6 @@
 #define INCLUDED_UTF8CHARBUFFER_HPP
 
 #include <antlr/CharBuffer.hpp>
-#include <cstring>
-
-#include <stdio.h>
-
-#include <libxml/xmlIO.h>
 
 #include <iconv.h>
 
@@ -101,12 +96,11 @@ public:
     UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash);
     UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback, const char * encoding, boost::optional<std::string> * hash);
 
-
     // Get the next character from the stream
     int getChar();
 
     // Get the used encoding
-    const boost::optional<std::string> & getEncoding() const;
+    const std::string& getEncoding() const;
 
     ~UTF8CharBuffer();
 
@@ -116,7 +110,7 @@ private:
     int growBuffer();
 
     /** Store encoding for later queries */
-    boost::optional<std::string> encoding;
+    std::string encoding;
 
     /* position currently at in input buffer */
     int pos;
