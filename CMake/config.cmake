@@ -92,16 +92,19 @@ else()
 
     set(WINDOWS_DEP_PATH "")
     
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
     # Locating packages.
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
     find_package(CURL REQUIRED)
+    find_package(Iconv REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
     find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
 
     # add include directories
-    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
+    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
 
     if(DYNAMIC_LOAD_ENABLED)
         find_package(LibXslt)
@@ -121,7 +124,7 @@ endif()
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 if(DYNAMIC_LOAD_ENABLED)
-    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl pthread
+    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${ICONV_LIBRARIES} dl pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
 elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC" AND NOT WIN32)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} pthread

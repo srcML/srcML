@@ -38,6 +38,8 @@
 
 #include <libxml/xmlIO.h>
 
+#include <iconv.h>
+
 #ifdef _MSC_BUILD
 #include <windows.h>
 #include <Wincrypt.h>
@@ -137,6 +139,14 @@ private:
     /** openssl/CommonCrypto hash context */
     SHA_CTX ctx;
 #endif
-
+    static const int BUFSIZE = 4196;
+    char inbuf[BUFSIZE];
+    int inbuf_size;
+    char outbuf[BUFSIZE];
+    int outbuf_size;
+    int fd;
+    iconv_t ic;
+    char* curbuf;
+    bool trivial;
 };
 #endif
