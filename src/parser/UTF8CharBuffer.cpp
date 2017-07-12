@@ -59,7 +59,7 @@ struct srcMLIO {
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string> * hash)
+UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string>* hash)
     : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
 
     // if no encoding specified, assume ISO-8859-1
@@ -108,7 +108,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
+UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, boost::optional<std::string>* hash)
     : UTF8CharBuffer(encoding, hash) {
 
     if (!ifilename)
@@ -139,7 +139,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
  *
  * Constructor.  Setup input from memory and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash)
+UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const char* encoding, boost::optional<std::string>* hash)
     : UTF8CharBuffer(encoding, hash) {
 
     if (!c_buffer)
@@ -168,17 +168,17 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
  *
  * Constructor.  Setup input from FILE * and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash)
+UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, boost::optional<std::string>* hash)
     : UTF8CharBuffer(encoding, hash) {
 
     if (!file)
         throw UTF8FileError();
 
-    // setup callbacks, mainly wrappers around read() for FILE* converted to file descriptor
+    // setup callbacks, mainly wrappers around fread() for FILE* converted to file descriptor
     sio = new srcMLIO();
-    sio->context = (void*) (long) fileno(file);
+    sio->context = (void*) file;
     sio->read_callback = [](void* context, char* buf, int size) -> int {
-        return read((int)(long) context, buf, size);
+        return fread(buf, 1, size, (FILE*) context);
     };
     sio->close_callback = 0;
 }
@@ -191,7 +191,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
  *
  * Constructor.  Setup input from file descriptor and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash)
+UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, boost::optional<std::string>* hash)
     : UTF8CharBuffer(encoding, hash) {
 
     if (fd < 0)
@@ -214,7 +214,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
  * Constructor.  Setup input from filename and hashing if needed.
  */
 UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback,
-     const char * encoding, boost::optional<std::string> * hash)
+     const char* encoding, boost::optional<std::string>* hash)
     : UTF8CharBuffer(encoding, hash) {
 
     if (read_callback == 0 || context == 0)
@@ -229,8 +229,7 @@ UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback
 /**
  * growBuffer
  *
- * Grow the libxml2 input buffer.  Read next sequence
- * of data.
+ * Grow the input buffer.  Read next sequence of data.
  */
 int UTF8CharBuffer::growBuffer() {
 
@@ -284,7 +283,7 @@ int UTF8CharBuffer::growBuffer() {
 int UTF8CharBuffer::getChar() {
 
     char c = 0;
-    while (1) {
+    for (int i = 0; i < 2; ++i) {
 
         // may need more characters
         if (size == 0 || pos >= size) {
@@ -314,6 +313,7 @@ int UTF8CharBuffer::getChar() {
             lastcr = false;
             continue;
         }
+        break;
     }
 
     return c;
@@ -345,7 +345,7 @@ UTF8CharBuffer::~UTF8CharBuffer() {
         sio = 0;
     }
 
-    if(hash) {
+    if (hash) {
         unsigned char md[20];
 
 #ifdef _MSC_BUILD
