@@ -331,12 +331,17 @@ void srcMLParser::endAllModes() {
      if (size() > 1 && isoption(parser_options, SRCML_OPTION_DEBUG))
          emptyElement(SERROR_MODE);
 
+    if (isPaused() && size() == 3)
+        nopStreamStart();
+
      // end all modes except the last
      while (size() > 1)
          endMode();
 
      // flush any skipped characters
      flushSkip();
+
+     resumeStream();
 
      // end the very last mode which forms the entire unit
      if (size() == 1)
@@ -3441,7 +3446,7 @@ rcurly[] { ENTRY_DEBUG } :
 ;
 
 // terminate (';')
-terminate[] { ENTRY_DEBUG } :
+terminate[] { ENTRY_DEBUG resumeStream(); } :
         {
             if (inMode(MODE_IGNORE_TERMINATE)) {
 
@@ -7077,35 +7082,20 @@ expression_statement_process[] { ENTRY_DEBUG } :
 ;
 
 // an expression statement
-expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { bool check_fragment = start_count == 1; ++start_count; TokenPosition tp; int stsize = 0; ENTRY_DEBUG } :
-
-        { stsize = size(); }
+expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { bool check_fragment = start_count == 1; ++start_count; ENTRY_DEBUG } :
 
         expression_statement_process
 
-        { setTokenPosition(tp); }
+        { 
+            if (check_fragment)
+                pauseStream();
+        }
 
         expression[type, call_count]
-
-        // for a unit that starts with an expression statement, the statement may not end leaving a fragment
-        // in that case, we only want an expression, not an expression statement
-        // to do so have to parse the complete expression
-        // Note: Have to be careful not to parse nested expression statements (don't ask)
-        {
-            if (check_fragment) {
-                while (size() > stsize && LA(1) != TERMINATE && LA(1) != 1)
-                    start();
-
-                if (LA(1) == 1)
-                   tp.setType(SNOP);
-           }
-        }
 ;
 
 // declartion statement
-variable_declaration_statement[int type_count] { bool check_fragment = start_count == 1; ++start_count; TokenPosition tp; int stsize = 0; ENTRY_DEBUG } :
-        { stsize = size(); }
-
+variable_declaration_statement[int type_count] { bool check_fragment = start_count == 1; ++start_count; ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -7113,27 +7103,16 @@ variable_declaration_statement[int type_count] { bool check_fragment = start_cou
             if(!inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL)) {
                 // start the declaration statement
                 startElement(SDECLARATION_STATEMENT);
-                setTokenPosition(tp);
             } else {
 
                 check_fragment = false;
             }
+        
+            if (check_fragment)
+                pauseStream();
         }
 
         variable_declaration[type_count]
-
-        // for a unit that starts with an expression statement, the statement may not end leaving a fragment
-        // in that case, we only want an expression, not an expression statement
-        // to do so have to parse the complete expression
-        // Note: Have to be careful not to parse nested expression statements (don't ask)
-        {
-            if (check_fragment) {
-                while (size() > stsize && LA(1) != TERMINATE && LA(1) != 1)
-                    start();
-            if (LA(1) == 1)
-                tp.setType(SNOP);
-           }
-        }
 ;
 
 // processing for short variable declaration
