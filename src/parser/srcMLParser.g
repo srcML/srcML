@@ -327,25 +327,27 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE & pars
 // ends all currently open modes
 void srcMLParser::endAllModes() {
 
-     // should only be one mode
-     if (size() > 1 && isoption(parser_options, SRCML_OPTION_DEBUG))
+    // should only be one mode
+    if (size() > 1 && isoption(parser_options, SRCML_OPTION_DEBUG))
          emptyElement(SERROR_MODE);
 
-    if (isPaused() && size() == 3)
+    if (isPaused() && ((size() == 3) || (size() == 4))) {
+        while (size() > 1)
+           endMode();
         nopStreamStart();
+    }
+    resumeStream();
 
-     // end all modes except the last
-     while (size() > 1)
-         endMode();
+    // end all modes except the last
+    while (size() > 1)
+       endMode();
 
-     // flush any skipped characters
-     flushSkip();
+    // flush any skipped characters
+    flushSkip();
 
-     resumeStream();
-
-     // end the very last mode which forms the entire unit
-     if (size() == 1)
-         endLastMode();
+    // end the very last mode which forms the entire unit
+    if (size() == 1)
+       endLastMode();
 }
 
 #include <srcml_bitset_token_sets.hpp>
@@ -4397,7 +4399,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         */
         /*! @todo verify this is correct */
         set_type[type, VARIABLE, ((((type_count - specifier_count - template_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
-                && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
+                && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == 1 || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
                                               || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL || LA(1) == IN
                                               || ((inTransparentMode(MODE_FOR_CONDITION) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && LA(1) == COLON)
                                               || (inLanguage(LANGUAGE_CSHARP) && LA(1) == RBRACKET)))) ||

@@ -621,6 +621,10 @@ private:
         auto& loc = *tb.begin();
         if (loc->getType() == SEXPRESSION_STATEMENT || loc->getType() == SDECLARATION_STATEMENT)
             loc->setType(SNOP);
+
+        auto& locend = tb.back();
+        if (locend->getType() == SEXPRESSION_STATEMENT || locend->getType() == SDECLARATION_STATEMENT)
+            locend->setType(SNOP);
     }
 
 private:
