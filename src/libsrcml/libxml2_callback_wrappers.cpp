@@ -64,7 +64,7 @@ int write_close_callback_wrapper(void * context) {
  *
  * @returns the number of bytes read or -1 in case of error.
  */
-int read_callback_wrapper(void * context, char * buffer, int len) {
+ssize_t read_callback_wrapper(void * context, void * buffer, size_t len) {
 
 	libxml2_read_context & read_context = *(libxml2_read_context*)context;
 

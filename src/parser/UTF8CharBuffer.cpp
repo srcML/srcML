@@ -51,6 +51,12 @@ struct srcMLIO {
     UTF8CharBuffer::srcml_close_callback close_callback;
 };
 
+template<typename T>
+struct Context {
+    Context(T v) : value(v) {}
+    T value;
+};
+
 /**
  * UTF8CharBuffer
  * @param ifilename input filename (complete path)
@@ -121,12 +127,14 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, boos
 
     // setup callbacks, wrappers around read() and close()
     sio = new srcMLIO();
-    sio->context = (void*) (long) fd;
-    sio->read_callback = [](void* context, char* buf, int size) -> int {
-        return read((int)(long) context, buf, size);
+    sio->context = new Context<int>(fd);
+    sio->read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
+        return read(((Context<int>*)(context))->value, buf, size);
     };
     sio->close_callback = [](void* context) -> int {
-        return close((int)(long) context);
+        int fd = ((Context<int>*)(context))->value;
+        delete (Context<int>*) context;
+        return close(fd);
     };
 }
 
@@ -148,7 +156,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
     // setup callbacks, null since we have the input buffer already
     sio = new srcMLIO();
     sio->context = 0;
-    sio->read_callback = [](void*, char*, int) -> int {
+    sio->read_callback = [](void*, void*, size_t) -> ssize_t {
         // indicate EOF for read since we have already stored the data
         return 0;
     };
@@ -177,7 +185,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, boost::optional
     // setup callbacks, mainly wrappers around fread() for FILE* converted to file descriptor
     sio = new srcMLIO();
     sio->context = (void*) file;
-    sio->read_callback = [](void* context, char* buf, int size) -> int {
+    sio->read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
         return fread(buf, 1, size, (FILE*) context);
     };
     sio->close_callback = 0;
@@ -197,12 +205,16 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, boost::optional<std
     if (fd < 0)
         throw UTF8FileError();
 
+    // setup callbacks, wrappers around read()
     sio = new srcMLIO();
-    sio->context = (void*) fd;
-    sio->read_callback = [](void* context, char* buf, int size) -> int {
-        return read((int)(long) context, buf, size);
+    sio->context = new Context<int>(fd);
+    sio->read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
+        return read(((Context<int>*)(context))->value, buf, size);
     };
-    sio->close_callback = 0;
+    sio->close_callback = [](void* context) -> int {
+        delete (Context<int>*) context;
+        return 0;
+    };
 }
 
 /**
@@ -300,19 +312,20 @@ int UTF8CharBuffer::getChar() {
         c = curbuf[pos];
         ++pos;
 
+        // sequence "\r\n" where the '\r'
+        // has already been converted to a '\n' so we need to skip over this '\n'
+        // so another pass through the loop
+        if (lastcr && c == '\n') {
+            lastcr = false;
+            continue;
+        }
+
         // convert carriage returns to a line feed
         if (c == '\r') {
             lastcr = true;
             c = '\n';
         }
 
-        // sequence "\r\n" where the '\r'
-        // has already been converted to a '\n' so we need to skip over this '\n'
-        // so another pass through the loop
-        if (false && lastcr && c == '\n') {
-            lastcr = false;
-            continue;
-        }
         break;
     }
 

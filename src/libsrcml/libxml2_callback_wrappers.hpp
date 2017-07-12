@@ -22,6 +22,7 @@
 #define INCLUDED_LIBXML2_CALLBACK_WRAPPERS_HPP
 
 #include <stddef.h>
+#include <sys/types.h>
 
 struct libxml2_write_context {
 
@@ -34,7 +35,7 @@ struct libxml2_write_context {
 struct libxml2_read_context {
 
 	void * context;
-	int (*read_callback)(void * context, char * buffer, size_t len);
+	ssize_t (*read_callback)(void * context, void * buffer, size_t len);
 	int (*close_callback)(void * context);
 
 };
@@ -42,7 +43,7 @@ struct libxml2_read_context {
 int write_callback_wrapper(void * context, const char * buffer, int len);
 int write_close_callback_wrapper(void * context);
 
-int read_callback_wrapper (void * context, char * buffer, int len);
+ssize_t read_callback_wrapper (void * context, void * buffer, size_t len);
 int read_close_callback_wrapper(void * context);
 
 #endif
