@@ -7084,12 +7084,12 @@ expression_statement_process[] { ENTRY_DEBUG } :
 ;
 
 // an expression statement
-expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { bool check_fragment = start_count == 1; ++start_count; ENTRY_DEBUG } :
+expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
 
         expression_statement_process
 
         { 
-            if (check_fragment)
+            if (start_count == 1)
                 pauseStream();
         }
 
@@ -7097,7 +7097,7 @@ expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { bool check_f
 ;
 
 // declartion statement
-variable_declaration_statement[int type_count] { bool check_fragment = start_count == 1; ++start_count; ENTRY_DEBUG } :
+variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
@@ -7105,13 +7105,10 @@ variable_declaration_statement[int type_count] { bool check_fragment = start_cou
             if(!inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL)) {
                 // start the declaration statement
                 startElement(SDECLARATION_STATEMENT);
-            } else {
 
-                check_fragment = false;
+                if (start_count == 1)
+                    pauseStream();
             }
-        
-            if (check_fragment)
-                pauseStream();
         }
 
         variable_declaration[type_count]
