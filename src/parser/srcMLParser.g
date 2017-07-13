@@ -244,7 +244,6 @@ public:
         start_size = parent->currentState().size();
 
         ++parent->number_finishing_elements;
-
     }
 
     ~LightweightElement() {
@@ -257,21 +256,16 @@ public:
             parent->endElement(parent->currentState().openelements.top());
 
         --parent->number_finishing_elements;
-        if(parent->number_finishing_elements == 0) {
+        if (parent->number_finishing_elements == 0) {
 
-            for(std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > >::const_iterator citr = parent->finish_elements_add.begin(); 
-                citr != parent->finish_elements_add.end(); ++citr) {
+            for (auto citr = parent->finish_elements_add.begin(); citr != parent->finish_elements_add.end(); ++citr) {
 
                 parent->startNewMode(citr->first);
                 parent->currentState().openelements = citr->second;
-
-
             }
 
             parent->finish_elements_add.clear();
-
         }
-
     }
 
 private:
@@ -9273,62 +9267,53 @@ eol_post[int directive_token, bool markblockzero] {
 
                 // should work unless also creates a dangling lcurly or lparen
                 // in which case may need to run on everthing except else.
-                if(isoption(parser_options, SRCML_OPTION_CPPIF_CHECK) && !inputState->guessing) {
+                if (isoption(parser_options, SRCML_OPTION_CPPIF_CHECK) && !inputState->guessing) {
 
-                    std::list<int> end_order = cppif_end_count_check();
-                    srcMLState::MODE_TYPE current_mode = getMode();
+                    for (auto& item : cppif_end_count_check()) {
 
-                    // @todo When C++11 is default, switch to ranged for or at least auto keyword.
-                    for(std::list<int>::iterator pos = end_order.begin(); pos != end_order.end(); ++pos) {
+                        if (item == RCURLY) {
 
-                        if(*pos == RCURLY) {    
                             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK);
-                            startNewMode(current_mode | MODE_ISSUE_EMPTY_AT_POP);
-                            addElement(SBLOCK);
 
+                            startNewMode(getMode() | MODE_ISSUE_EMPTY_AT_POP);
+
+                            addElement(SBLOCK);
                         }
 
-                        if(inTransparentMode(MODE_CONDITION) && *pos == RPAREN) {
+                        if (inTransparentMode(MODE_CONDITION) && item == RPAREN) {
 
                             std::stack<int> open_elements;
                             open_elements.push(SCONDITION);
 
                             /** @todo Could have multipl endings of a name as well.  However, just correct double ending of condition. */
-                            if(number_finishing_elements)
+                            if (number_finishing_elements)
                                 finish_elements_add.push_back(std::pair<const srcMLState::MODE_TYPE, std::stack<int> >(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP, open_elements));
                             else
                                 insertModeAfter(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT,
                                                 MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP,
                                                 open_elements);
-
-
                         }
 
-                        if(*pos == TERMINATE) {
+                        if (item == TERMINATE) {
 
-                            if(inMode(MODE_CONDITION) && inPrevMode(MODE_IF)) {
-
-                                cppif_duplicate = true;
-
-                            } else if(inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
+                            if (inMode(MODE_CONDITION) && inPrevMode(MODE_IF)) {
 
                                 cppif_duplicate = true;
 
-                            } else if(inMode(MODE_END_FOR_CONTROL) || inMode(MODE_LIST | MODE_FOR_CONDITION)) {
+                            } else if (inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
+
+                                cppif_duplicate = true;
+
+                            } else if (inMode(MODE_END_FOR_CONTROL) || inMode(MODE_LIST | MODE_FOR_CONDITION)) {
 
                                 cppif_duplicate = true;
 
                             } else {
 
                                 dupDownOverMode(MODE_STATEMENT);
-
                             }
-
                         }
-
                     }
-
-
                 }                      
 
                 // start a new blank mode for new zero'ed blocks
