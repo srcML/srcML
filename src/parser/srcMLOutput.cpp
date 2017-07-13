@@ -1540,13 +1540,14 @@ void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr
             xmlTextWriterStartElement(xout, BAD_CAST localname);
         else
             xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
         ++openelementcount;
-        if(attr_name)
+
+        if (attr_name)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
+
     } else {
 
-        if(isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
+        if (isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
             outputPosition();
 
         xmlTextWriterEndElement(xout);
