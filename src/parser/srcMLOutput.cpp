@@ -450,7 +450,6 @@ namespace {
     ELEMENT_MAP(SOMP_ARGUMENT_LIST, SRCML_EXT_OPENMP_NS_URI_POS)
     ELEMENT_MAP(SOMP_ARGUMENT,      SRCML_EXT_OPENMP_NS_URI_POS)
     ELEMENT_MAP(SOMP_EXPRESSION,    SRCML_EXT_OPENMP_NS_URI_POS)
-
 }
 
 /**
@@ -478,7 +477,6 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       openelementcount(0), curline(0), curcolumn(0), tabsize(ts), depth(0), 
       debug_time_start(boost::posix_time::microsec_clock::universal_time())
 {
-
     if(!isoption(options, SRCML_OPTION_OPTIONAL_MARKUP)) {
 
         ElementPrefix[SSTRING]   = SRCML_SRC_NS_URI_POS;
@@ -490,14 +488,12 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
         ElementPrefix[SNIL]      = SRCML_SRC_NS_URI_POS;
         ElementPrefix[SOPERATOR] = SRCML_SRC_NS_URI_POS;
         ElementPrefix[SMODIFIER] = SRCML_SRC_NS_URI_POS;
-
     }
 
     if (isoption(options, SRCML_OPTION_POSITION) && isoption(options, SRCML_OPTION_LINE))
       num2process[2] = &srcMLOutput::processTextPositionLine;
     else if (isoption(options, SRCML_OPTION_POSITION))
       num2process[2] = &srcMLOutput::processTextPosition;
-
 }
 
 /**
@@ -513,11 +509,9 @@ int srcMLOutput::initWriter() {
 
         fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
         return SRCML_STATUS_ERROR;
-        
     }
 
     return SRCML_STATUS_OK;
-
 }
 
 /**
@@ -559,9 +553,7 @@ void srcMLOutput::initNamespaces(const std::vector<std::string> & prefix, const 
 
             num2prefix.push_back(prefix[outer_pos]);
             num2uri.push_back(uri[outer_pos]);
-
         }
-
     }
 
     // keep track of which num2's were used
@@ -579,7 +571,6 @@ void srcMLOutput::initNamespaces(const std::vector<std::string> & prefix, const 
         columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
         columnAttribute += ":column";
     }
-
 }
 
 /**
@@ -610,7 +601,6 @@ void srcMLOutput::close() {
 
         xmlOutputBufferClose(output_buffer);
         output_buffer = 0;
-
     }
 }
 
@@ -709,7 +699,8 @@ const char * srcMLOutput::columnAttributeValue(int acolumn) {
  */
 void srcMLOutput::outputPosition() {
 
-    if(end_position_output) return;
+    if (end_position_output)
+        return;
 
     const char * position_localname = "position";
     int position = ElementPrefix[SPOSITION];
@@ -721,7 +712,6 @@ void srcMLOutput::outputPosition() {
     else
         xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST position_localname, 0);
 
-
     xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(last_line));
 
     if(isoption(options,SRCML_OPTION_LINE))
@@ -732,7 +722,6 @@ void srcMLOutput::outputPosition() {
     xmlTextWriterEndElement(xout);
 
     end_position_output = true;
-
 }
 
 /**
@@ -840,11 +829,10 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
  *
  * Outputs a assert tag with static attribute.
  */
- void srcMLOutput::processStaticAssert(const antlr::RefToken& token) {
+void srcMLOutput::processStaticAssert(const antlr::RefToken& token) {
 
     processOptional(token, "type", "static");
-
- }
+}
 
 /**
  * processClassInterface
@@ -852,11 +840,10 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
  *
  * Outputs a class tag with @interface type attribute.
  */
- void srcMLOutput::processClassInterface(const antlr::RefToken& token) {
+void srcMLOutput::processClassInterface(const antlr::RefToken& token) {
 
     processOptional(token, "type", "@interface");
-
- }
+}
 
 /**
  * processClassImplementation
@@ -864,12 +851,10 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
  *
  * Outputs a class tag with @interface type attribute.
  */
- void srcMLOutput::processClassImplementation(const antlr::RefToken& token) {
+void srcMLOutput::processClassImplementation(const antlr::RefToken& token) {
 
     processOptional(token, "type", "@implementation");
-
- }
-
+}
 
 /**
  * outputXMLDecl
@@ -879,8 +864,8 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
 void srcMLOutput::outputXMLDecl() {
 
     // issue the xml declaration, but only if we want to
-    if(depth == 0 && isoption(options, SRCML_OPTION_XML_DECL)) xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
-
+    if (depth == 0 && isoption(options, SRCML_OPTION_XML_DECL))
+        xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
 /**
@@ -890,15 +875,13 @@ void srcMLOutput::outputXMLDecl() {
  */
 void srcMLOutput::outputPreRootProcessingInstruction() {
 
-    if(depth == 0 && processing_instruction) {
+    if (depth == 0 && processing_instruction) {
 
         xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.c_str());
         xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.c_str());
         xmlTextWriterEndPI(xout);
         xmlTextWriterWriteString(xout, BAD_CAST "\n");
-
     }
-
 }
 
 /**
@@ -938,7 +921,6 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
         // optional position xml namespace
         (false && depth == 0) && isoption(options, SRCML_OPTION_OPENMP) ? SRCML_EXT_OPENMP_NS_URI : 0,
-
     };
 
     // output the namespaces
@@ -976,11 +958,8 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
          }
         
             xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST num2uri[pos].c_str());
-            
         }
-
     }
-
 }
 
 /**
@@ -1093,10 +1072,10 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     for(std::vector<std::string>::size_type pos = 0; pos < attributes.size(); pos += 2) {
 
         xmlTextWriterWriteAttribute(xout, BAD_CAST attributes[pos].c_str(), BAD_CAST attributes[pos + 1].c_str());
-
     }
 
-    if(output_macrolist) outputMacroList();
+    if (output_macrolist)
+        outputMacroList();
 
     ++depth;
 }
@@ -1108,6 +1087,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
  * Set the macro list to use for output.
  */
 void srcMLOutput::setMacroList(std::vector<std::string> & list) {
+
     user_macro_list = list;
 }
 
@@ -1124,9 +1104,7 @@ void srcMLOutput::outputMacroList() {
         xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
         xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST user_macro_list[i + 1].c_str());
         xmlTextWriterEndElement(xout);
-
     }
-
 }
 
 /**
@@ -1255,6 +1233,7 @@ void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
  * Callback to process/output token for access region.
  */
 void srcMLOutput::processAccess(const antlr::RefToken& token) {
+
     static const char* type_default = "default";
 
     const char* localname = ElementNames[token->getType()];
@@ -1284,7 +1263,6 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
     }
 }
 
-
 /**
  * processPseudoBlock
  * @param token token to output
@@ -1293,10 +1271,7 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
  */
 void srcMLOutput::processPseudoBlock(const antlr::RefToken& token) {
 
-    static const char* type_pseudo = "pseudo";
-
-    processOptional(token, "type", type_pseudo);
-
+    processOptional(token, "type", "pseudo");
 }
 
 /**
@@ -1368,8 +1343,8 @@ void srcMLOutput::processTypePrevious(const antlr::RefToken& token) {
         xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_TIMESTAMP, BAD_CAST time.c_str());
 
     }
-    xmlTextWriterEndElement(xout);
 
+    xmlTextWriterEndElement(xout);
 }
 
 /**
@@ -1516,14 +1491,13 @@ void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
  */
 void srcMLOutput::processEndLineToken(const antlr::RefToken& token) {
 
-    std::string::size_type size = token->getText().size();
+    auto size = token->getText().size();
 
     bool output = false;
     if (size > 1 || token->getText()[0] != '\n') {
         processText(token);
         output = true;
     }
-
 
     xmlTextWriterEndElement(xout);
     --openelementcount;
@@ -1666,7 +1640,6 @@ void srcMLOutput::processComplex(const antlr::RefToken& token) {
 void srcMLOutput::processGenericArgumentList(const antlr::RefToken& token) {
 
     processOptional(token, "type", "generic");
-
 }
 
 /**
@@ -1678,7 +1651,6 @@ void srcMLOutput::processGenericArgumentList(const antlr::RefToken& token) {
 void srcMLOutput::processGenericParameterList(const antlr::RefToken& token) {
 
     processOptional(token, "type", "generic");
-
 }
 
 /**
@@ -1701,7 +1673,6 @@ void srcMLOutput::processCast(const antlr::RefToken& token) {
         processOptional(token, "type", "static");
     else
         processOptional(token, 0, 0);
-
 }
 
 /**
@@ -1713,7 +1684,6 @@ void srcMLOutput::processCast(const antlr::RefToken& token) {
 void srcMLOutput::processEnumClass(const antlr::RefToken& token) {
 
     processOptional(token, "type", "class");
-
 }
 
 /**
@@ -1725,7 +1695,6 @@ void srcMLOutput::processEnumClass(const antlr::RefToken& token) {
 void srcMLOutput::processOperatorFunction(const antlr::RefToken& token) {
 
     processOptional(token, "type", "operator");
-
 }
 
 /**
@@ -1737,7 +1706,6 @@ void srcMLOutput::processOperatorFunction(const antlr::RefToken& token) {
 void srcMLOutput::processPseudoParameterList(const antlr::RefToken& token) {
 
     processOptional(token, "type", "pseudo");
-
 }
 
 /**
@@ -1749,7 +1717,6 @@ void srcMLOutput::processPseudoParameterList(const antlr::RefToken& token) {
 void srcMLOutput::processIndexerParameterList(const antlr::RefToken& token) {
 
     processOptional(token, "type", "indexer");
-
 }
 
 /**
@@ -1761,7 +1728,6 @@ void srcMLOutput::processIndexerParameterList(const antlr::RefToken& token) {
 void srcMLOutput::processSizeofPack(const antlr::RefToken& token) {
 
     processOptional(token, "type", "pack");
-
 }
 
 /**
@@ -1883,7 +1849,6 @@ int srcMLOutput::ElementPrefix[] = {
 void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
 
     this->output_buffer = output_buffer;
-
 }
 
 /**
