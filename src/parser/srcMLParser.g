@@ -210,21 +210,17 @@ public:
         }
 
         --parent->number_finishing_elements;
-        if(parent->number_finishing_elements == 0) {
 
-            for(std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > >::const_iterator citr = parent->finish_elements_add.begin(); 
-                citr != parent->finish_elements_add.end(); ++citr) {
+        if (parent->number_finishing_elements == 0) {
 
-                parent->startNewMode(citr->first);
-                parent->currentState().openelements = citr->second;
+            for (auto& citr : parent->finish_elements_add) {
 
-
+                parent->startNewMode(citr.first);
+                parent->currentState().openelements = citr.second;
             }
 
             parent->finish_elements_add.clear();
-
         }
-
     }
 
 private:
@@ -256,12 +252,13 @@ public:
             parent->endElement(parent->currentState().openelements.top());
 
         --parent->number_finishing_elements;
+
         if (parent->number_finishing_elements == 0) {
 
-            for (auto citr = parent->finish_elements_add.begin(); citr != parent->finish_elements_add.end(); ++citr) {
+            for (auto& citr : parent->finish_elements_add) {
 
-                parent->startNewMode(citr->first);
-                parent->currentState().openelements = citr->second;
+                parent->startNewMode(citr.first);
+                parent->currentState().openelements = citr.second;
             }
 
             parent->finish_elements_add.clear();
@@ -3542,7 +3539,7 @@ else_handling[] { ENTRY_DEBUG } :
             // record the current size of the top of the cppmode stack to detect
             // any #else or #endif in consumeSkippedTokens
             // see below
-            std::deque<int>::size_type cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
+            auto cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
 
             // catch and finally statements are nested inside of a try, if at that level
             // so if no CATCH or FINALLY, then end now
@@ -9287,7 +9284,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                             /** @todo Could have multipl endings of a name as well.  However, just correct double ending of condition. */
                             if (number_finishing_elements)
-                                finish_elements_add.push_back(std::pair<const srcMLState::MODE_TYPE, std::stack<int> >(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP, open_elements));
+                                finish_elements_add.push_back(std::make_pair(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP, open_elements));
                             else
                                 insertModeAfter(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT,
                                                 MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP,
@@ -9416,11 +9413,12 @@ eol_post[int directive_token, bool markblockzero] {
 cppmode_cleanup[] {
 
         bool equal = true;
-        for (std::deque<int>::size_type i = 0; i < cppmode.top().statesize.size(); ++i)
-            if (cppmode.top().statesize[i] != cppmode.top().statesize[0]) {
+        for (auto& state : cppmode.top().statesize) {
+            if (state != cppmode.top().statesize[0]) {
                 equal = false;
                 break;
             }
+        }
 
         if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2))
             cppmode.pop();
@@ -9517,7 +9515,7 @@ cpp_symbol[] { ENTRY_DEBUG } :
 
 cpp_define_name[] { CompleteElement element(this);
     int line_pos = LT(1)->getLine();
-    std::string::size_type pos = LT(1)->getColumn() + LT(1)->getText().size();
+    auto pos = LT(1)->getColumn() + LT(1)->getText().size();
 } :
 
         {
