@@ -107,7 +107,7 @@ public:
 private:
     UTF8CharBuffer(const char* encoding, boost::optional<std::string> * hash);
 
-    int growBuffer();
+    ssize_t growBuffer();
 
     /** Store encoding for later queries */
     std::string encoding;
@@ -116,7 +116,7 @@ private:
     int pos;
 
     /** size of read in buffer */
-    int size;
+    ssize_t size;
 
     /** if last character was carriage return */
     bool lastcr;
@@ -134,9 +134,8 @@ private:
     SHA_CTX ctx;
 #endif
     char inbuf[SRCBUFSIZE];
-    int inbuf_size;
+    ssize_t inbuf_size;
     char outbuf[SRCBUFSIZE];
-    int outbuf_size;
     int fd;
     iconv_t ic;
     const char* curbuf;

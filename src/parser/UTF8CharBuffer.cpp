@@ -66,7 +66,7 @@ struct Context {
  * Constructor.  Setup input from filename and hashing if needed.
  */
 UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string>* hash)
-    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf_size(0) {
+    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0) {
 
     // if no encoding specified, assume ISO-8859-1
     this->encoding = encoding ? encoding : "ISO-8859-1";
@@ -97,6 +97,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
 
     curbuf = trivial ? inbuf : outbuf;
 
+    sio = new srcMLIO();
+
     /*
         // detect (and remove) BOMs for UTF8 and UTF16
         if ((size >= 3 || save_size >= 3) &&
@@ -126,7 +128,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, boos
         throw UTF8FileError();
 
     // setup callbacks, wrappers around read() and close()
-    sio = new srcMLIO();
     sio->context = new Context<int>(fd);
     sio->read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
         return read(((Context<int>*)(context))->value, buf, size);
@@ -154,7 +155,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
         throw UTF8FileError();
 
     // setup callbacks, null since we have the input buffer already
-    sio = new srcMLIO();
     sio->context = 0;
     sio->read_callback = [](void*, void*, size_t) -> ssize_t {
         // indicate EOF for read since we have already stored the data
@@ -183,7 +183,6 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, boost::optional
         throw UTF8FileError();
 
     // setup callbacks, mainly wrappers around fread() for FILE* converted to file descriptor
-    sio = new srcMLIO();
     sio->context = (void*) file;
     sio->read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
         return fread(buf, 1, size, (FILE*) context);
@@ -206,7 +205,6 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, boost::optional<std
         throw UTF8FileError();
 
     // setup callbacks, wrappers around read()
-    sio = new srcMLIO();
     sio->context = new Context<int>(fd);
     sio->read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
         return read(((Context<int>*)(context))->value, buf, size);
@@ -232,7 +230,6 @@ UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback
     if (read_callback == 0 || context == 0)
         throw UTF8FileError();
 
-    srcMLIO * sio = new srcMLIO();
     sio->context = context;
     sio->read_callback = read_callback;
     sio->close_callback = close_callback;
@@ -243,7 +240,7 @@ UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback
  *
  * Grow the input buffer.  Read next sequence of data.
  */
-int UTF8CharBuffer::growBuffer() {
+ssize_t UTF8CharBuffer::growBuffer() {
 
     // read more data into inbuf (may already be data in there)
     if (size == 0 || pos >= size) {
@@ -342,7 +339,6 @@ int UTF8CharBuffer::getChar() {
 const std::string& UTF8CharBuffer::getEncoding() const {
 
     return encoding;
-
 }
 
 /**
