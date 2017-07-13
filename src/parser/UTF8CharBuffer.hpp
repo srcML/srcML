@@ -135,10 +135,11 @@ private:
 #endif
     char inbuf[SRCBUFSIZE];
     ssize_t inbuf_size;
-    char outbuf[SRCBUFSIZE];
+    char* outbuf;
+    ssize_t outbuf_size;
     int fd;
     iconv_t ic;
-    const char* curbuf;
+    const char* const * curbuf;
     const char* curinbuf;
     bool trivial;
     srcMLIO* sio;

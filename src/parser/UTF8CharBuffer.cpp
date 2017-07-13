@@ -66,7 +66,7 @@ struct Context {
  * Constructor.  Setup input from filename and hashing if needed.
  */
 UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string>* hash)
-    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0) {
+    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), sio(0) {
 
     // if no encoding specified, assume ISO-8859-1
     this->encoding = encoding ? encoding : "ISO-8859-1";
@@ -95,7 +95,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
 #endif
     }
 
-    curbuf = trivial ? inbuf : outbuf;
+    curinbuf = inbuf;
+    curbuf = trivial ? &curinbuf : &outbuf;
 
     sio = new srcMLIO();
 
@@ -127,14 +128,17 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, boos
     if (fd == -1)
         throw UTF8FileError();
 
+    outbuf_size = SRCBUFSIZE * 6;
+    outbuf = new char[outbuf_size];
+
     // setup callbacks, wrappers around read() and close()
     sio->context = new Context<int>(fd);
     sio->read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
-        return read(((Context<int>*)(context))->value, buf, size);
+        return read(static_cast<Context<int>*>(context)->value, buf, size);
     };
     sio->close_callback = [](void* context) -> int {
-        int fd = ((Context<int>*)(context))->value;
-        delete (Context<int>*) context;
+        int fd = static_cast<Context<int>*>(context)->value;
+        delete static_cast<Context<int>*>(context);
         return close(fd);
     };
 }
@@ -154,6 +158,9 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
     if (!c_buffer)
         throw UTF8FileError();
 
+    outbuf_size = buffer_size * 6;
+    outbuf = new char[outbuf_size];
+
     // setup callbacks, null since we have the input buffer already
     sio->context = 0;
     sio->read_callback = [](void*, void*, size_t) -> ssize_t {
@@ -166,6 +173,9 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
     curinbuf = c_buffer;
     size = buffer_size;
     inbuf_size = buffer_size;
+
+    // since we already have all the data, need to hash and perform encoding
+    size = growBuffer();
 }
 
 /**
@@ -181,6 +191,9 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, boost::optional
 
     if (!file)
         throw UTF8FileError();
+
+    outbuf_size = SRCBUFSIZE * 6;
+    outbuf = new char[outbuf_size];
 
     // setup callbacks, mainly wrappers around fread() for FILE* converted to file descriptor
     sio->context = (void*) file;
@@ -204,13 +217,16 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, boost::optional<std
     if (fd < 0)
         throw UTF8FileError();
 
+    outbuf_size = SRCBUFSIZE * 6;
+    outbuf = new char[outbuf_size];
+
     // setup callbacks, wrappers around read()
     sio->context = new Context<int>(fd);
     sio->read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
-        return read(((Context<int>*)(context))->value, buf, size);
+        return read(static_cast<Context<int>*>(context)->value, buf, size);
     };
     sio->close_callback = [](void* context) -> int {
-        delete (Context<int>*) context;
+        delete static_cast<Context<int>*>(context);
         return 0;
     };
 }
@@ -223,12 +239,15 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, boost::optional<std
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback,
+UTF8CharBuffer::UTF8CharBuffer(void* context, srcml_read_callback read_callback, srcml_close_callback close_callback,
      const char* encoding, boost::optional<std::string>* hash)
     : UTF8CharBuffer(encoding, hash) {
 
-    if (read_callback == 0 || context == 0)
+    if (read_callback == 0)
         throw UTF8FileError();
+
+    outbuf_size = SRCBUFSIZE * 6;
+    outbuf = new char[outbuf_size];
 
     sio->context = context;
     sio->read_callback = read_callback;
@@ -244,6 +263,8 @@ ssize_t UTF8CharBuffer::growBuffer() {
 
     // read more data into inbuf (may already be data in there)
     if (size == 0 || pos >= size) {
+        // we use inbuf instead of curinbuf because curinbuf can point to inbut, or a 
+        // user-provided chunk of memory. Since already read in, no need to copy
         size = sio->read_callback ? (int) sio->read_callback(sio->context, inbuf, SRCBUFSIZE) : 0;
         if (size == 0) {
             return 0;
@@ -251,7 +272,7 @@ ssize_t UTF8CharBuffer::growBuffer() {
     }
 
     // hash the grown data
-    if(hash) {
+    if (hash) {
 #ifdef _MSC_BUILD
         CryptHashData(crypt_hash, (BYTE *)curinbuf, size, 0);
 #else
@@ -292,6 +313,8 @@ ssize_t UTF8CharBuffer::growBuffer() {
 int UTF8CharBuffer::getChar() {
 
     char c = 0;
+
+    // primarily go through a single time, unless converting "\r\n" to "\n"
     for (int i = 0; i < 2; ++i) {
 
         // may need more characters
@@ -306,7 +329,7 @@ int UTF8CharBuffer::getChar() {
             pos = 0;
         }
 
-        c = curbuf[pos];
+        c = (*curbuf)[pos];
         ++pos;
 
         // sequence "\r\n" where the '\r'
