@@ -45,10 +45,6 @@ add_definitions(-DREVISION=\"1\")
 add_subdirectory(src)
 add_subdirectory(test)
 
-if(BUILD_TIMING_TESTS)
-    add_subdirectory(timing)
-endif()
-
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
