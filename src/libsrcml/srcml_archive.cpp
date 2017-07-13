@@ -1454,7 +1454,6 @@ void srcml_archive_close(srcml_archive * archive) {
 
     if(archive->translator) archive->translator->close();
 
-    /* FIXME: Crashes when deleted */
     if(archive->translator) delete archive->translator, archive->translator = 0;
     if(archive->reader) delete archive->reader, archive->reader = 0;
     if(archive->input) xmlFreeParserInputBuffer(archive->input), archive->input = 0;
