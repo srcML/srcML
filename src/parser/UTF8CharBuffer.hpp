@@ -94,7 +94,7 @@ public:
     UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash);
     UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash);
     UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash);
-    UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(void * context, srcml_read_callback, srcml_close_callback, const char * encoding, boost::optional<std::string> * hash);
 
     // Get the next character from the stream
     int getChar();

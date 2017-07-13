@@ -674,13 +674,11 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, ssize_t (*read_callbac
         translation_options |= SRCML_OPTION_CPP_NOMACRO;
 
     UTF8CharBuffer * input = 0;
-    libxml2_read_context libxml2_context = {context, read_callback, close_callback};
-    unit->context = libxml2_context;
     const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
-        input = new UTF8CharBuffer(boost::any_cast<libxml2_read_context>(&unit->context), read_callback_wrapper, read_close_callback_wrapper, src_encoding, output_hash ? &unit->hash : 0);
+        input = new UTF8CharBuffer(context, read_callback, close_callback, src_encoding, output_hash ? &unit->hash : 0);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 

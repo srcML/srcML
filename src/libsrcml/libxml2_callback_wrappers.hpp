@@ -32,18 +32,7 @@ struct libxml2_write_context {
 
 };
 
-struct libxml2_read_context {
-
-	void * context;
-	ssize_t (*read_callback)(void * context, void * buffer, size_t len);
-	int (*close_callback)(void * context);
-
-};
-
 int write_callback_wrapper(void * context, const char * buffer, int len);
 int write_close_callback_wrapper(void * context);
-
-ssize_t read_callback_wrapper (void * context, void * buffer, size_t len);
-int read_close_callback_wrapper(void * context);
 
 #endif
