@@ -51,9 +51,8 @@ if(NOT DYNAMIC_LOAD_ENABLED)
 endif()
 
 # Turn ON/OFF tests
-option(BUILD_TIMING_TESTS "Run timing tests with ctest" ON)
-option(BUILD_UNIT_TESTS "Build unit tests for srcML/libsrcml" ON)
-option(BUILD_CLIENT_TESTS "Build cli tests" ON)
+option(BUILD_UNIT_TESTS "Build unit tests for libsrcml" ON)
+option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
 
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 option(BUILD_PYTHON_BINDINGS "Build Python language bindings/wrapper" OFF)

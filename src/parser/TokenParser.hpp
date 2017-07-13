@@ -84,6 +84,18 @@ public:
     /** abstract method for Current token */
     virtual antlr::RefToken* CurrentToken() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; return 0; }
 
+    /** abstract method for pausing the output of tokens */
+    virtual void pauseStream() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+
+    /** abstract method for resuming the output of tokens */
+    virtual void resumeStream() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+
+    /** abstract method for indicating if the stream is paused */
+    virtual bool isPaused() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; return false; }
+
+    /** abstract method for replacing start of stream with a NOP */
+    virtual void nopStreamStart() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+
     /**
      * ~TokenParser
      *

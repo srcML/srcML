@@ -452,6 +452,9 @@ private:
         if(tb.empty())
             consume();
 
+        while (paused)
+            fillTokenBuffer();
+
         // pop and send back the top token
         const antlr::RefToken& tok = tb.front();
 
@@ -598,6 +601,32 @@ private:
         return &(output().back());
     }
 
+    /** abstract method for pausing the output of tokens */
+    void pauseStream() {
+        paused = true;
+    }
+
+    /** abstract method for resuming the output of tokens */
+    void resumeStream() {
+        paused = false;
+    }
+
+    /** abstract method for indicating if the stream is paused */
+    virtual bool isPaused() { 
+        return paused;
+    }
+
+    /** abstract method for replacing start of stream with a NOP */
+    void nopStreamStart() {
+        auto& loc = *tb.begin();
+        if (loc->getType() == SEXPRESSION_STATEMENT || loc->getType() == SDECLARATION_STATEMENT)
+            loc->setType(SNOP);
+
+        auto& locend = tb.back();
+        if (locend->getType() == SEXPRESSION_STATEMENT || locend->getType() == SDECLARATION_STATEMENT)
+            locend->setType(SNOP);
+    }
+
 private:
 
     /** parser options */
@@ -624,6 +653,8 @@ private:
     /** current skipped token buffer */
     std::list<antlr::RefToken>* pskiptb;
 
+    /** any output is paused */
+    bool paused;
 };
 
 #endif
