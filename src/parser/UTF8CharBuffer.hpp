@@ -143,5 +143,6 @@ private:
     const char* curinbuf;
     bool trivial;
     srcMLIO* sio;
+    const char* spec_encoding;
 };
 #endif

@@ -66,7 +66,7 @@ struct Context {
  * Constructor.  Setup input from filename and hashing if needed.
  */
 UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string>* hash)
-    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf(0), sio(0) {
+    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf(0), sio(0), spec_encoding(encoding) {
 
     // if no encoding specified, assume ISO-8859-1
     this->encoding = encoding ? encoding : "ISO-8859-1";
@@ -100,14 +100,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
     curbuf = trivial ? &curinbuf : &outbuf;
 
     sio = new srcMLIO();
-
-    /*
-        // detect (and remove) BOMs for UTF8 and UTF16
-        if ((size >= 3 || save_size >= 3) &&
-            xmlBufContent(input->buffer)[0] == 0xEF &&
-            xmlBufContent(input->buffer)[1] == 0xBB &&
-            xmlBufContent(input->buffer)[2] == 0xBF) {
-*/
 }
 
 /**
@@ -270,19 +262,37 @@ ssize_t UTF8CharBuffer::growBuffer() {
 #endif
     }
 
+    pos = 0;
+
+    // skip over BOM for UTF8 and UTF16(?)
+    if ((size >= 3) &&
+            static_cast<const unsigned char>(curinbuf[0]) == 0xEF &&
+            static_cast<const unsigned char>(curinbuf[1]) == 0xBB &&
+            static_cast<const unsigned char>(curinbuf[2]) == 0xBF) {
+
+        pos += 3;
+
+        // if we guessed at the encoding, guess what? We have UTF-8!
+        if (!spec_encoding) {
+
+            // treat as UTF-8
+            this->encoding = "UTF-8";
+            trivial = true;
+            curbuf = &curinbuf;
+        }
+    }
+
     // for non-trivial conversions, convert from inbuf to outbuf
     if (!trivial) {
         size_t osize = SRCBUFSIZE;
         size_t isize = size;
         osize = SRCBUFSIZE;
-        char* pi = inbuf;
+        char* pi = const_cast<char*>(curinbuf);
         char* po = outbuf;
         size_t bsize = iconv(ic, &pi, &isize, &po, &osize);
 
         size = SRCBUFSIZE - (int) osize;
     }
-
-    pos = 0;
 
     return size;
 }
@@ -316,7 +326,6 @@ int UTF8CharBuffer::getChar() {
                 // EOF
                 return -1;
             }
-            pos = 0;
         }
 
         c = (*curbuf)[pos];
