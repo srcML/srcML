@@ -49,7 +49,7 @@ struct Context {
  * Constructor.  Setup input from filename and hashing if needed.
  */
 UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string>* hash)
-    : antlr::CharBuffer(std::cin), pos(0), size(0), lastcr(false), hash(hash), inbuf_size(0), outbuf(0), spec_encoding(encoding) {
+    : antlr::CharBuffer(std::cin), hash(hash), spec_encoding(encoding) {
 
     // if no encoding specified, assume ISO-8859-1
     this->encoding = encoding ? encoding : "ISO-8859-1";

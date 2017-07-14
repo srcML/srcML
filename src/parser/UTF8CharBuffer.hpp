@@ -130,13 +130,13 @@ private:
     std::string encoding;
 
     /* position currently at in input buffer */
-    int pos;
+    int pos = 0;
 
     /** size of read in buffer */
-    ssize_t size;
+    ssize_t size = 0;
 
     /** if last character was carriage return */
-    bool lastcr;
+    bool lastcr = false;
 
     /** where to place computed hash */
     boost::optional<std::string> * hash;
@@ -151,15 +151,15 @@ private:
     SHA_CTX ctx;
 #endif
     char inbuf[SRCBUFSIZE];
-    ssize_t inbuf_size;
-    char* outbuf;
-    ssize_t outbuf_size;
+    ssize_t inbuf_size = 0;
+    char* outbuf = 0;
+    ssize_t outbuf_size = 0;
     int fd;
     iconv_t ic;
     const char* const * curbuf;
     const char* curinbuf;
-    bool trivial;
+    bool trivial = false;
     srcMLIO sio;
-    const char* spec_encoding;
+    const char* spec_encoding = 0;
 };
 #endif
