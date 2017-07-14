@@ -68,9 +68,7 @@ public:
 
         // archives (and possibly compressions)
         if (!curinput.archives.empty()) {
-            srcml_input_src uninput = curinput;
-            input_archive(uninput);
-            curinput.fd = *uninput.fd;
+            curinput.fd = input_archive(curinput);
         }
 
         // open input source

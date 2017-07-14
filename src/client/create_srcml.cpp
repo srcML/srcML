@@ -104,10 +104,9 @@ int srcml_handler_dispatch(ParseQueue& queue,
             return 0;
 
         // may have some compressions/archives
-        srcml_input_src uuninput = uninput;
-        input_archive(uuninput);
+        uninput.fd = input_archive(uninput);
 
-        return srcml_input_srcml(queue, srcml_arch, uuninput, srcml_request.revision);
+        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
 
