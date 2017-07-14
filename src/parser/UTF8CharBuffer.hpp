@@ -160,5 +160,6 @@ private:
     int trivial = false;
     srcMLIO sio;
     const char* spec_encoding = 0;
+    bool firstGrow = true;
 };
 #endif

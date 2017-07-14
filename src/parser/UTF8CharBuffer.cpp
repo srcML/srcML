@@ -246,7 +246,7 @@ ssize_t UTF8CharBuffer::growBuffer() {
     pos = 0;
 
     // skip over BOM for UTF8 and UTF16(?)
-    if ((size >= 3) &&
+    if (firstGrow && (size >= 3) &&
             static_cast<const unsigned char>(curinbuf[0]) == 0xEF &&
             static_cast<const unsigned char>(curinbuf[1]) == 0xBB &&
             static_cast<const unsigned char>(curinbuf[2]) == 0xBF) {
@@ -261,7 +261,8 @@ ssize_t UTF8CharBuffer::growBuffer() {
             trivial = true;
         }
     }
-
+    firstGrow = false;
+    
     // for non-trivial conversions, convert from inbuf to outbuf
     if (!trivial) {
         size_t osize = outbuf_size;
