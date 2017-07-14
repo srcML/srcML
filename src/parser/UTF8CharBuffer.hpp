@@ -156,8 +156,7 @@ private:
     ssize_t outbuf_size = 0;
     int fd;
     iconv_t ic;
-    const char* const * curbuf;
-    const char* curinbuf;
+    const char* curinbuf = 0;
     int trivial = false;
     srcMLIO sio;
     const char* spec_encoding = 0;

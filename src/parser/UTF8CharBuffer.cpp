@@ -64,7 +64,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
     }
 
     // see if this encoding to UTF-8 is trivial
-    // meaning not conversion necessary
+    // meaning no conversion necessary
     iconvctl(ic, ICONV_TRIVIALP, &trivial);
 
     if(hash) {
@@ -81,7 +81,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
     curinbuf = inbuf;
     outbuf_size = SRCBUFSIZE * 6;
     outbuf = new char[outbuf_size];
-    curbuf = trivial ? &curinbuf : &outbuf;
 }
 
 /**
@@ -227,7 +226,7 @@ ssize_t UTF8CharBuffer::growBuffer() {
 
     // read more data into inbuf (may already be data in there)
     if (size == 0 || pos >= size) {
-        // we use inbuf instead of curinbuf because curinbuf can point to inbut, or a 
+        // we use inbuf instead of curinbuf because curinbuf can point to inbuf, or a 
         // user-provided chunk of memory. Since already read in, no need to copy
         size = sio.read_callback ? (int) sio.read_callback(sio.context, inbuf, SRCBUFSIZE) : 0;
         if (size == 0) {
@@ -260,7 +259,6 @@ ssize_t UTF8CharBuffer::growBuffer() {
             // treat as UTF-8
             this->encoding = "UTF-8";
             trivial = true;
-            curbuf = &curinbuf;
         }
     }
 
@@ -308,7 +306,7 @@ int UTF8CharBuffer::getChar() {
             }
         }
 
-        c = (*curbuf)[pos];
+        c = (trivial ? curinbuf : outbuf)[pos];
         ++pos;
 
         // sequence "\r\n" where the '\r'
