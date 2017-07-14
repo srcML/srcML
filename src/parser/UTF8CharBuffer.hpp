@@ -71,7 +71,26 @@
  */
 class UTF8FileError {};
 
-struct srcMLIO;
+typedef ssize_t (*srcml_read_callback)(void * context, void * buffer, size_t len);
+typedef int (*srcml_close_callback)(void * context);
+
+/**
+ * srcMLIO
+ *
+ * Data struct passed around for reading/closing of Generic IO.
+ * Structure to hold context with callbacks to provide hashing.
+ */
+struct srcMLIO {
+
+    /** hold void * context */
+    void* context;
+
+    /** provided read callback */
+    srcml_read_callback read_callback;
+
+    /** provided close callback */
+    srcml_close_callback close_callback;
+};
 
 /**
  * UTF8CharBuffer
@@ -86,8 +105,6 @@ public:
     /** size of the original character buffer */
     static const size_t SRCBUFSIZE = 1024;
     typedef void * (*srcml_open_callback)(const char * filename);
-    typedef ssize_t (*srcml_read_callback)(void * context, void * buffer, size_t len);
-    typedef int (*srcml_close_callback)(void * context);
 
     // Create a character buffer
     UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash);
@@ -142,7 +159,7 @@ private:
     const char* const * curbuf;
     const char* curinbuf;
     bool trivial;
-    srcMLIO* sio;
+    srcMLIO sio;
     const char* spec_encoding;
 };
 #endif
