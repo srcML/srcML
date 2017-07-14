@@ -94,10 +94,6 @@ public:
     int unit;
 };
 
-int srcml_read_callback(void* context, char * buffer, int len);
-
-int srcml_close_callback(void* context);
-
 struct srcMLReadArchiveError {
     srcMLReadArchiveError(int status, const std::string& emsg)
     : status(status), errmsg(emsg) {}
