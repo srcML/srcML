@@ -601,7 +601,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
                 option_help("");
         }
 
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(error_msg));
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + error_msg);
         exit(7);
     }
     // Catch all other issues with generic error
@@ -616,11 +616,11 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 // Custom parser for xmlns: option
 std::pair<std::string, std::string> custom_parser(const std::string& s) {
     if (s.find("--xmlns:") == 0)
-        return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
+        return std::make_pair(std::string("xmlns:"), s.substr(s.find(":")+1));
     
     // Divert --text="" to a hidden option that allows empty args (implicit work around)
     if (s.find("--text=") == 0) {
-        std::string val = s.substr(s.find("=") + 1);
+        auto val = s.substr(s.find("=") + 1);
         if (val == "")
             /* We have already determined that we have an empty string, but we need to pass a non-null value.
                 The value doesn't matter as it is not used it just allows the program options to record the correct
