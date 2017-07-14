@@ -309,7 +309,7 @@ void positional_args(const std::vector<std::string>& value) {
 
 void raw_text_args(const std::vector<std::string>& value) {
   for (const auto& raw_text : value) {
-    srcml_request.input_sources.push_back(src_prefix_add_uri("text",raw_text));
+    srcml_request.input_sources.push_back(src_prefix_add_uri("text", raw_text));
   }
 }
 
@@ -609,10 +609,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(e.what()));
         exit(1);
     }
-
-    // allow each input source to know its position
-    for (int i = 0; i < (int) srcml_request.input_sources.size(); ++i)
-      srcml_request.input_sources[i].input_pos = i + 1;
 
     return srcml_request;
 }

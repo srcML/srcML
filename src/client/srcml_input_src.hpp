@@ -92,7 +92,6 @@ public:
     bool isdirectoryform;
     bool skip;
     int unit;
-    int input_pos;
 };
 
 int srcml_read_callback(void* context, char * buffer, int len);
