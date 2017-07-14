@@ -122,9 +122,9 @@ public:
     ~UTF8CharBuffer();
 
 private:
-    UTF8CharBuffer(const char* encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(const char* encoding, boost::optional<std::string> * hash, size_t outbuf_size);
 
-    ssize_t growBuffer();
+    ssize_t readChars();
 
     /** Store encoding for later queries */
     std::string encoding;
@@ -150,9 +150,9 @@ private:
     /** openssl/CommonCrypto hash context */
     SHA_CTX ctx;
 #endif
-    char inbuf[SRCBUFSIZE];
+    std::vector<char> inbuf;
     ssize_t inbuf_size = 0;
-    char* outbuf = 0;
+    std::vector<char> outbuf;
     ssize_t outbuf_size = 0;
     int fd;
     iconv_t ic;
