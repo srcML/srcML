@@ -60,7 +60,7 @@ int main(int argc, char * argv[]) {
     runtime.start();
 
     // parse the command line
-    srcml_request_t srcml_request = parseCLI(argc, argv);
+    auto srcml_request = parseCLI(argc, argv);
     global_srcml_request = srcml_request;
 
     // global access to options
@@ -92,7 +92,7 @@ int main(int argc, char * argv[]) {
     // standard input handled as FILE* to determine if srcML or src
     if (srcml_request.stdindex) {
 
-        srcml_input_src* pstdin = &srcml_request.input_sources[*srcml_request.stdindex];
+        auto* pstdin = &srcml_request.input_sources[*srcml_request.stdindex];
 
         // stdin accessed as FILE*
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
