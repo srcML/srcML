@@ -74,8 +74,10 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
     // setup encoder from encoding to UTF-8
     ic = iconv_open("UTF8", this->encoding.c_str());
     if (ic == (iconv_t) -1) {
-        fprintf(stderr, "%s", strerror(errno));
-         throw UTF8FileError();
+        if (errno == EINVAL) {
+            fprintf(stderr, "Conversion from encoding '%s' not supported\n", this->encoding.c_str());
+            exit(4);
+        }
     }
 
     // see if this encoding to UTF-8 is trivial

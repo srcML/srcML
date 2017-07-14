@@ -50,11 +50,11 @@ srcml2src --strip foobar
 check_exit 3
 
 # unknown encoding
-srcml2src --src-encoding="ISO"
+srcml2src --src-encoding="ISO" --text="a;" -l C
 check_exit 4
 
 # source encoding not given
-srcml2src --src-encoding
+srcml2src  --text="a;" -l C --src-encoding
 check_exit 7
 
 # unit option selected but no value
