@@ -158,7 +158,7 @@ private:
     iconv_t ic;
     const char* const * curbuf;
     const char* curinbuf;
-    bool trivial = false;
+    int trivial = false;
     srcMLIO sio;
     const char* spec_encoding = 0;
 };

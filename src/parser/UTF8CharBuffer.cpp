@@ -65,9 +65,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
 
     // see if this encoding to UTF-8 is trivial
     // meaning not conversion necessary
-    int isit = 0;
-    iconvctl(ic, ICONV_TRIVIALP, &isit);
-    trivial = isit;
+    iconvctl(ic, ICONV_TRIVIALP, &trivial);
 
     if(hash) {
 #ifdef _MSC_BUILD
