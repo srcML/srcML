@@ -484,10 +484,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // Assign the CLI args to the map
         prog_opts::variables_map cli_map;
 
-        const prog_opts::basic_parsed_options< char >& cliopts = prog_opts::command_line_parser(argc, argv).options(all).
+        const auto& cliopts = prog_opts::command_line_parser(argc, argv).options(all).
                          positional(input_file).extra_parser(custom_parser).run();
 
-        std::vector< prog_opts::basic_option< char > > parsedOptions = cliopts.options;
+        auto parsedOptions = cliopts.options;
 
         // loop the cli options in the order they were processed/received
         for (const auto& option : parsedOptions) {
@@ -541,7 +541,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
           positional_args(std::vector<std::string>(1, "stdin://-"));
 
         if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {
-          std::string url = srcml_request.input_sources[0].resource;
+          auto url = srcml_request.input_sources[0].resource;
           while (url.length() > 0 && (url.at(0) == '.' || url.at(0) == '/')) {
             url.erase(0,1);
           }
