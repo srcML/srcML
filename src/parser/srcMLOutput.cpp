@@ -631,66 +631,6 @@ void srcMLOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
 
 /**
  * lineAttributeValue
- * @param token the token to output
- *
- * Convert the current tokens line to string attribute.
- *
- * @returns the line as a string.
- */
-const char * srcMLOutput::lineAttributeValue(const antlr::RefToken& token) {
-
-    snprintf(out, 20, "%d", token->getLine());
-
-    return out;
-}
-
-/**
- * columnAttributeValue
- * @param token the token to output
- *
- * Convert the current tokens column to string attribute.
- *
- * @returns the column as a string.
-  */
-const char * srcMLOutput::columnAttributeValue(const antlr::RefToken& token) {
-
-    snprintf(out, 20, "%d", token->getColumn());
-
-    return out;
-}
-
-/**
- * lineAttributeValue
- * @param aline to convert to string
- *
- * Convert the line to string attribute.
- *
- * @returns the line as a string.
- */
-const char * srcMLOutput::lineAttributeValue(int aline) {
-
-    snprintf(out, 20, "%d", aline);
-
-    return out;
-}
-
-/**
- * columnAttributeValue
- * @param acolumn to convert to string
- *
- * Convert the column to string attribute.
- *
- * @returns the column as a string.
- */
-const char * srcMLOutput::columnAttributeValue(int acolumn) {
-
-    snprintf(out, 20, "%d", acolumn);
-
-    return out;
-}
-
-/**
- * lineAttributeValue
  * @param aline to convert to string
  *
  * Convert the line to string attribute.
@@ -712,12 +652,12 @@ void srcMLOutput::outputPosition() {
     else
         xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST position_localname, 0);
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(last_line));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(last_line).c_str());
 
     if(isoption(options,SRCML_OPTION_LINE))
-        xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST lineAttributeValue(last_line2));
+        xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST std::to_string(last_line2).c_str());
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(last_column));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(last_column).c_str());
 
     xmlTextWriterEndElement(xout);
 
@@ -1192,9 +1132,9 @@ void srcMLOutput::processText(const antlr::RefToken& token) {
  */
 void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(token->getLine()).c_str());
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(token->getColumn()).c_str());
 
     last_line = token->getLine();
     last_column = token->getColumn() + (int)token->getText().size();
@@ -1212,10 +1152,10 @@ void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
  */
 void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() & 0xFFFF));
-    xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST lineAttributeValue(token->getLine() >> 16));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(token->getLine() & 0xFFFF).c_str());
+    xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST std::to_string(token->getLine() >> 16).c_str());
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST columnAttributeValue(token));
+    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(token->getColumn()).c_str());
 
     last_line = token->getLine() & 0xFFFF;
     last_line2 = token->getLine() >> 16;
