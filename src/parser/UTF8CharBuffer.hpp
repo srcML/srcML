@@ -32,7 +32,7 @@
 #define INCLUDED_UTF8CHARBUFFER_HPP
 
 #include <antlr/CharBuffer.hpp>
-
+#include <string>
 #include <iconv.h>
 
 #ifdef _MSC_BUILD
