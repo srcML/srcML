@@ -98,7 +98,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
     }
 
     curinbuf = inbuf;
-    outbuf = new char[SRCBUFSIZE * 6];
+    outbuf_size = SRCBUFSIZE * 6;
+    outbuf = new char[outbuf_size];
     curbuf = trivial ? &curinbuf : &outbuf;
 
     sio = new srcMLIO();
@@ -286,14 +287,12 @@ ssize_t UTF8CharBuffer::growBuffer() {
 
     // for non-trivial conversions, convert from inbuf to outbuf
     if (!trivial) {
-        size_t osize = SRCBUFSIZE;
+        size_t osize = outbuf_size;
         size_t isize = size;
-        osize = SRCBUFSIZE;
         char* pi = const_cast<char*>(curinbuf);
         char* po = outbuf;
         size_t bsize = iconv(ic, &pi, &isize, &po, &osize);
-
-        size = SRCBUFSIZE - (int) osize;
+        size = outbuf_size - (int) osize;
     }
 
     return size;
