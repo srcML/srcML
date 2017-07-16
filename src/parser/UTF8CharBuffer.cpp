@@ -230,6 +230,31 @@ ssize_t UTF8CharBuffer::readChars() {
         }
     }
 
+    // assume nothing to skip over
+    pos = 0;
+
+    // if we see a BOM, then we know we have to skip over it
+    // additionally, unless the user stated a specific encoding,
+    // we need to get rid of it
+    if (firstRead && (size >= 3) &&
+            static_cast<const unsigned char>(curinbuf[0]) == 0xEF &&
+            static_cast<const unsigned char>(curinbuf[1]) == 0xBB &&
+            static_cast<const unsigned char>(curinbuf[2]) == 0xBF) {
+
+        pos += 3;
+
+        // if we guessed at the encoding, guess what? We have UTF-8!
+        if (!spec_encoding) {
+
+            // treat as UTF-8
+            this->encoding = "UTF-8";
+            trivial = true;
+            outbuf.resize(0);
+            outbuf.shrink_to_fit();
+        }
+    }
+    firstRead = false;
+
     // hash the grown data
     if (hash) {
 #ifdef _MSC_BUILD
@@ -257,26 +282,6 @@ ssize_t UTF8CharBuffer::readChars() {
         }
         size = outbuf_size - (int) osize;
     }
-
-    pos = 0;
-
-    // skip over BOM for UTF8 and UTF16(?)
-    if (firstRead && (size >= 3) &&
-            static_cast<const unsigned char>((trivial ? curinbuf : outbuf.data())[0]) == 0xEF &&
-            static_cast<const unsigned char>((trivial ? curinbuf : outbuf.data())[1]) == 0xBB &&
-            static_cast<const unsigned char>((trivial ? curinbuf : outbuf.data())[2]) == 0xBF) {
-
-        pos += 3;
-
-        // if we guessed at the encoding, guess what? We have UTF-8!
-        if (!spec_encoding) {
-
-            // treat as UTF-8
-            this->encoding = "UTF-8";
-            trivial = true;
-        }
-    }
-    firstRead = false;
 
     return size;
 }
