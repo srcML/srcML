@@ -310,7 +310,7 @@ void positional_args(const std::vector<std::string>& value) {
 
 void raw_text_args(const std::vector<std::string>& value) {
   for (const auto& raw_text : value) {
-    srcml_request.input_sources.push_back(src_prefix_add_uri("text",raw_text));
+    srcml_request.input_sources.push_back(src_prefix_add_uri("text", raw_text));
   }
 }
 
@@ -485,10 +485,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // Assign the CLI args to the map
         prog_opts::variables_map cli_map;
 
-        const prog_opts::basic_parsed_options< char >& cliopts = prog_opts::command_line_parser(argc, argv).options(all).
+        const auto& cliopts = prog_opts::command_line_parser(argc, argv).options(all).
                          positional(input_file).extra_parser(custom_parser).run();
 
-        std::vector< prog_opts::basic_option< char > > parsedOptions = cliopts.options;
+        auto parsedOptions = cliopts.options;
 
         // loop the cli options in the order they were processed/received
         for (const auto& option : parsedOptions) {
@@ -542,7 +542,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
           positional_args(std::vector<std::string>(1, "stdin://-"));
 
         if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {
-          std::string url = srcml_request.input_sources[0].resource;
+          auto url = srcml_request.input_sources[0].resource;
           while (url.length() > 0 && (url.at(0) == '.' || url.at(0) == '/')) {
             url.erase(0,1);
           }
@@ -602,7 +602,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
                 option_help("");
         }
 
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(error_msg));
+        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + error_msg);
         exit(7);
     }
     // Catch all other issues with generic error
@@ -611,21 +611,17 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         exit(1);
     }
 
-    // allow each input source to know its position
-    for (int i = 0; i < (int) srcml_request.input_sources.size(); ++i)
-      srcml_request.input_sources[i].input_pos = i + 1;
-
     return srcml_request;
 }
 
 // Custom parser for xmlns: option
 std::pair<std::string, std::string> custom_parser(const std::string& s) {
     if (s.find("--xmlns:") == 0)
-        return std::make_pair(std::string("xmlns:"), std::string(s.substr(s.find(":")+1)));
+        return std::make_pair(std::string("xmlns:"), s.substr(s.find(":")+1));
     
     // Divert --text="" to a hidden option that allows empty args (implicit work around)
     if (s.find("--text=") == 0) {
-        std::string val = s.substr(s.find("=") + 1);
+        auto val = s.substr(s.find("=") + 1);
         if (val == "")
             /* We have already determined that we have an empty string, but we need to pass a non-null value.
                 The value doesn't matter as it is not used it just allows the program options to record the correct

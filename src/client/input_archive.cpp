@@ -24,11 +24,15 @@
 #include <input_archive.hpp>
 #include <unarchive_srcml.hpp>
 
-void input_archive(srcml_input_src& input) {
+int input_archive(const srcml_input_src& input) {
+
+    srcml_input_src uninput = input;
 
     if (!input.archives.empty() || !input.compressions.empty() /* &&
        (input.compressions.size() > 1 || input.compressions.front() != ".gz")*/) {
 
-        input_pipe(input, unarchive_srcml);
+        input_pipe(uninput, unarchive_srcml);
     }
+
+    return *uninput.fd;
 }

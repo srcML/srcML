@@ -26,6 +26,6 @@
 #include <srcml_input_src.hpp>
 
 // adjust input for libcurl and libarchive decompressions
-void input_archive(srcml_input_src& input);
+int input_archive(const srcml_input_src& input);
 
 #endif
