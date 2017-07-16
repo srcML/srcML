@@ -52,7 +52,10 @@ srcml_request_t global_srcml_request;
 // stdin timeout message
 void timeout(int) {
 
-    fprintf(stderr, "srcml is waiting for input from stdin\n");
+    fprintf(stderr, "srcml only accepts input from standard input from a pipe, not a terminal.\n");
+    fprintf(stderr, "Consider using the --text option for direct entry of text.\n");
+    fprintf(stderr, "See `srcml --help` for more information.\n");
+    exit(1);
 }
 
 int main(int argc, char * argv[]) {
