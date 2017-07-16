@@ -224,7 +224,7 @@ ssize_t UTF8CharBuffer::readChars() {
         if (inbuf.empty())
             inbuf.resize(SRCBUFSIZE);
         curinbuf = inbuf.data();
-        size = sio.read_callback ? (int) sio.read_callback(sio.context, inbuf.data(), SRCBUFSIZE) : 0;
+        size = sio.read_callback ? (int) sio.read_callback(sio.context, inbuf.data() + oldcharsize, SRCBUFSIZE - oldcharsize) : 0;
         if (size == 0) {
             return 0;
         }
@@ -239,13 +239,32 @@ ssize_t UTF8CharBuffer::readChars() {
 #endif
     }
 
+    // for non-trivial conversions, convert from inbuf to outbuf
+    if (!trivial) {
+
+        if (outbuf.empty())
+            outbuf.resize(outbuf_size);
+        size_t osize = outbuf_size;
+        size_t isize = size + oldcharsize;
+        char* pi = const_cast<char*>(curinbuf);
+        char* po = outbuf.data();
+        size_t bsize = iconv(ic, &pi, &isize, &po, &osize);
+        if (isize) {
+            std::move(pi, pi + isize, inbuf.data());
+            oldcharsize = isize;
+        } else {
+            oldcharsize = 0;
+        }
+        size = outbuf_size - (int) osize;
+    }
+
     pos = 0;
 
     // skip over BOM for UTF8 and UTF16(?)
     if (firstRead && (size >= 3) &&
-            static_cast<const unsigned char>(curinbuf[0]) == 0xEF &&
-            static_cast<const unsigned char>(curinbuf[1]) == 0xBB &&
-            static_cast<const unsigned char>(curinbuf[2]) == 0xBF) {
+            static_cast<const unsigned char>((trivial ? curinbuf : outbuf.data())[0]) == 0xEF &&
+            static_cast<const unsigned char>((trivial ? curinbuf : outbuf.data())[1]) == 0xBB &&
+            static_cast<const unsigned char>((trivial ? curinbuf : outbuf.data())[2]) == 0xBF) {
 
         pos += 3;
 
@@ -258,18 +277,6 @@ ssize_t UTF8CharBuffer::readChars() {
         }
     }
     firstRead = false;
-
-    // for non-trivial conversions, convert from inbuf to outbuf
-    if (!trivial) {
-        if (outbuf.empty())
-            outbuf.resize(outbuf_size);
-        size_t osize = outbuf_size;
-        size_t isize = size;
-        char* pi = const_cast<char*>(curinbuf);
-        char* po = outbuf.data();
-        size_t bsize = iconv(ic, &pi, &isize, &po, &osize);
-        size = outbuf_size - (int) osize;
-    }
 
     return size;
 }
