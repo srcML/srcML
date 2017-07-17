@@ -175,7 +175,7 @@ COMMENT_TEXT {
                   setLine(getLine() + (1 << 16));
 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-              if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))) {
+              if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
 
                   rawstring = false;
                   $setType(mode); selector->pop();
@@ -296,7 +296,7 @@ COMMENT_TEXT {
 
             // about to read a newline, or the end of the files.  Line comments need to end before the newline is consumed.
             // strings and characters on a preprocessor line also need to end, even if unterminated
-            if (_ttype == COMMENT_TEXT && (LA(1) == '\n' || LA(1) == EOF_CHAR) &&
+            if (_ttype == COMMENT_TEXT && ((LA(1) == '\n' && !rawstring) || LA(1) == EOF_CHAR) &&
                 (((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))
                  || (mode == LINECOMMENT_END))) {
                 rawstring = false;
