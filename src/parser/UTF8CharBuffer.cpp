@@ -229,20 +229,43 @@ ssize_t UTF8CharBuffer::readChars() {
     // we need to get rid of it
     if (firstRead) {
 
+        // treat unsigned int field as just 4 bytes regardless of endianness
+        // with 0 for any missing data
+        union { unsigned char d[4]; uint32_t i; } data = { { 0, 0, 0, 0 } };
+        for (int i = 0; i < insize; ++i)
+            data.d[i] = static_cast<const unsigned char>(curinbuf[i]);
+
         // check for UTF-8 BOM
-        if (insize >= 3) {
+        if ((data.i & 0x00FFFFFF) == 0x00BFBBEF) {
 
-            if (static_cast<const unsigned char>(curinbuf[0]) == 0xEF &&
-                static_cast<const unsigned char>(curinbuf[1]) == 0xBB &&
-                static_cast<const unsigned char>(curinbuf[2]) == 0xBF) {
+            // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually removed
+            pos += 3;
 
-                // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually removed
-                pos += 3;
+            // no encoding specified (by user) then UTF-8 it is
+            if (encoding.empty())
+                encoding = "UTF-8";
+        }
 
-                // no encoding specified (by user) then UTF-8 it is
-                if (encoding.empty())
-                    encoding = "UTF-8";
-            }
+        // auto-detect UTF-16 based on BOM
+        // both UTF-16LE and UTF-16BE are determined automatically from BOM
+        // and processed as UTF-16
+        if ((data.i & 0x0000FFFF) == 0x0000FFFE ||
+            (data.i & 0x0000FFFF) == 0x0000FEFF) {
+
+            // no encoding found yet
+            if (encoding.empty())
+                encoding = "UTF-16";
+        }
+
+        // auto-detect UTF-32 based on BOM
+        // both UTF-32LE and UTF-32BE are determined automatically from BOM
+        // and processed as UTF-32
+        if (data.i == 0xFFFE0000 ||
+            data.i == 0xFEFF0000) {
+
+            // no encoding found yet
+            if (encoding.empty())
+                encoding = "UTF-32";
         }
 
         // if no encoding found or specified, assume ISO-8859-1
