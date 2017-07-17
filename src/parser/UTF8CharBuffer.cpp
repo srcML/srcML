@@ -49,23 +49,10 @@ struct Context {
  * Constructor.  Setup input from filename and hashing if needed.
  */
 UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t outbuf_size)
-    : antlr::CharBuffer(std::cin), hashneeded(hashneeded), hash(hash), outbuf_size(outbuf_size), spec_encoding(encoding) {
+    : antlr::CharBuffer(std::cin), hashneeded(hashneeded), hash(hash), outbuf_size(outbuf_size) {
 
-    // if no encoding specified, assume ISO-8859-1
-    this->encoding = encoding ? encoding : "ISO-8859-1";
-
-    // setup encoder from encoding to UTF-8
-    ic = iconv_open("UTF8", this->encoding.c_str());
-    if (ic == (iconv_t) -1) {
-        if (errno == EINVAL) {
-            fprintf(stderr, "Conversion from encoding '%s' not supported\n", this->encoding.c_str());
-            exit(4);
-        }
-    }
-
-    // see if this encoding to UTF-8 is trivial
-    // meaning no conversion necessary
-    iconvctl(ic, ICONV_TRIVIALP, &trivial);
+    // may be null
+    this->encoding = encoding ? encoding : "";
 
     if(hashneeded) {
 #ifdef _MSC_BUILD
@@ -136,7 +123,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
     // instead of a read_callback, just setup the memory here
     curinbuf = c_buffer;
     insize = buffer_size;
-    inbuf_size = buffer_size;
 
     // since we already have all the data, need to hash and perform encoding
     insize = readChars();
@@ -241,22 +227,38 @@ ssize_t UTF8CharBuffer::readChars() {
     // if we see a BOM, then we know we have to skip over it
     // additionally, unless the user stated a specific encoding,
     // we need to get rid of it
-    if (firstRead && (insize >= 3) &&
+    if (firstRead) {
+
+        // check for UTF-8 BOM
+        if (insize >= 3 &&
             static_cast<const unsigned char>(curinbuf[0]) == 0xEF &&
             static_cast<const unsigned char>(curinbuf[1]) == 0xBB &&
             static_cast<const unsigned char>(curinbuf[2]) == 0xBF) {
 
-        pos += 3;
+            // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually removed
+            pos += 3;
 
-        // if we guessed at the encoding, guess what? We have UTF-8!
-        if (!spec_encoding) {
-
-            // treat as UTF-8
-            this->encoding = "UTF-8";
-            trivial = true;
-            outbuf.resize(0);
-            outbuf.shrink_to_fit();
+            // no encoding specified (by user) then UTF-8 it is
+            if (encoding.empty())
+                encoding = "UTF-8";
         }
+
+        // if no encoding found or specified, assume ISO-8859-1
+        if (encoding.empty())
+            encoding = "ISO-8859-1";
+
+        // setup encoder from encoding to UTF-8
+        ic = iconv_open("UTF8", encoding.c_str());
+        if (ic == (iconv_t) -1) {
+            if (errno == EINVAL) {
+                fprintf(stderr, "Conversion from encoding '%s' not supported\n", encoding.c_str());
+                exit(4);
+            }
+        }
+
+        // see if this encoding to UTF-8 is trivial
+        // meaning no conversion necessary
+        iconvctl(ic, ICONV_TRIVIALP, &trivial);
     }
     firstRead = false;
 

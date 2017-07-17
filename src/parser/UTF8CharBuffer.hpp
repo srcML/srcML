@@ -126,9 +126,6 @@ private:
 
     ssize_t readChars();
 
-    /** Store encoding for later queries */
-    std::string encoding;
-
     /* position currently at in input buffer */
     int pos = 0;
 
@@ -151,16 +148,36 @@ private:
     /** openssl/CommonCrypto hash context */
     SHA_CTX ctx;
 #endif
+
+    /** input buffer for all non-memory constructor calls */
     std::vector<char> inbuf;
-    ssize_t inbuf_size = 0;
-    std::vector<char> outbuf;
-    ssize_t outbuf_size = 0;
-    iconv_t ic;
+
+    /** current input buffer, either inbuf.data(), or user-provided buffer */
     const char* curinbuf = 0;
-    int trivial = false;
-    srcMLIO sio;
-    const char* spec_encoding = 0;
-    bool firstRead = true;
+
+    /** input data that was not converted due to an incomplete multibyte sequence */
     size_t inbytesleft = 0;
+
+    /** output buffer for any needed encoding conversions */
+    std::vector<char> outbuf;
+
+    /** size of the output buffer, applies to both outbuf,
+        and user-provided memory */
+    ssize_t outbuf_size = 0;
+
+    /** Store encoding for later queries */
+    std::string encoding;
+
+    /** iconv() encoding converter */
+    iconv_t ic;
+
+    /** whether the encoding conversion is trivial (i.e., not needed) */
+    int trivial = false;
+
+    /** contacts and callbacks for read and close */
+    srcMLIO sio;
+
+    /** first time reading data */
+    bool firstRead = true;
 };
 #endif
