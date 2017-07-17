@@ -94,7 +94,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool
         throw UTF8FileError();
 
     // open the file
-    fd = open(ifilename, O_RDONLY);
+    int fd = open(ifilename, O_RDONLY);
     if (fd == -1)
         throw UTF8FileError();
 

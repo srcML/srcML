@@ -155,7 +155,6 @@ private:
     ssize_t inbuf_size = 0;
     std::vector<char> outbuf;
     ssize_t outbuf_size = 0;
-    int fd;
     iconv_t ic;
     const char* curinbuf = 0;
     int trivial = false;
