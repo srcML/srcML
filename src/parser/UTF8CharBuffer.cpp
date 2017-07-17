@@ -230,17 +230,19 @@ ssize_t UTF8CharBuffer::readChars() {
     if (firstRead) {
 
         // check for UTF-8 BOM
-        if (insize >= 3 &&
-            static_cast<const unsigned char>(curinbuf[0]) == 0xEF &&
-            static_cast<const unsigned char>(curinbuf[1]) == 0xBB &&
-            static_cast<const unsigned char>(curinbuf[2]) == 0xBF) {
+        if (insize >= 3) {
 
-            // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually removed
-            pos += 3;
+            if (static_cast<const unsigned char>(curinbuf[0]) == 0xEF &&
+                static_cast<const unsigned char>(curinbuf[1]) == 0xBB &&
+                static_cast<const unsigned char>(curinbuf[2]) == 0xBF) {
 
-            // no encoding specified (by user) then UTF-8 it is
-            if (encoding.empty())
-                encoding = "UTF-8";
+                // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually removed
+                pos += 3;
+
+                // no encoding specified (by user) then UTF-8 it is
+                if (encoding.empty())
+                    encoding = "UTF-8";
+            }
         }
 
         // if no encoding found or specified, assume ISO-8859-1
