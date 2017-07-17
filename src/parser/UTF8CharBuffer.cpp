@@ -354,7 +354,7 @@ ssize_t UTF8CharBuffer::readChars() {
  */
 int UTF8CharBuffer::getChar() {
 
-    char c = 0;
+    unsigned char c = 0;
 
     // primarily go through a single time, unless converting "\r\n" to "\n"
     for (int i = 0; i < 2; ++i) {
