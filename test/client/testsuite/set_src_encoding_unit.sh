@@ -54,7 +54,6 @@ check sub/a.cpp.xml "$foutput"
 src2srcml --src-encoding "ISO-8859-1" sub/a_ISO-8859-1.cpp -o sub/a.cpp.xml --filename "sub/a.cpp"
 check sub/a.cpp.xml "$foutput"
 
-
 # other supported encodings
 iconv -f UTF-8 -t UTF-8 sub/a.cpp > sub/a_UTF-8.cpp
 src2srcml --src-encoding "UTF-8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
@@ -63,11 +62,16 @@ check "$foutput"
 src2srcml --src-encoding "UTF8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-iconv -f UTF-8 -t UTF-16LE sub/a.cpp > sub/a_UTF-16.cpp
+iconv -f UTF-8 -t UTF-16 sub/a.cpp > sub/a_UTF-16.cpp
 src2srcml --src-encoding "UTF-16" sub/a_UTF-16.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-src2srcml --src-encoding "UTF16" sub/a_UTF-16.cpp --filename "sub/a.cpp"
+iconv -f UTF-8 -t UTF-16LE sub/a.cpp > sub/a_UTF-16LE.cpp
+src2srcml --src-encoding "UTF-16LE" sub/a_UTF-16LE.cpp --filename "sub/a.cpp"
+check "$foutput"
+
+iconv -f UTF-8 -t UTF-16BE sub/a.cpp > sub/a_UTF-16BE.cpp
+src2srcml --src-encoding "UTF-16BE" sub/a_UTF-16BE.cpp --filename "sub/a.cpp"
 check "$foutput"
 
 iconv -f UTF-8 -t ISO-10646-UCS-2 sub/a.cpp > sub/a_ISO-10646-UCS-2.cpp
@@ -78,18 +82,12 @@ iconv -f UTF-8 -t UCS-2 sub/a.cpp > sub/a_UCS-2.cpp
 src2srcml --src-encoding "UCS-2" sub/a_UCS-2.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-src2srcml --src-encoding "UCS2" sub/a_UCS-2.cpp --filename "sub/a.cpp"
-check "$foutput"
-
 iconv -f UTF-8 -t ISO-10646-UCS-4 sub/a.cpp > sub/a_ISO-10646-UCS-4.cpp
 src2srcml --src-encoding "ISO-10646-UCS-4" sub/a_ISO-10646-UCS-4.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-iconv -f UTF-8 -t UCS-4 sub/a.cpp > sub/a_USC-4.cpp
-src2srcml --src-encoding "UCS-4" sub/a_USC-4.cpp --filename "sub/a.cpp"
-check "$foutput"
-
-src2srcml --src-encoding "UCS4" sub/a_USC-4.cpp --filename "sub/a.cpp"
+iconv -f UTF-8 -t UCS-4 sub/a.cpp > sub/a_UCS-4.cpp
+src2srcml --src-encoding "UCS-4" sub/a_UCS-4.cpp --filename "sub/a.cpp"
 check "$foutput"
 
 iconv -f UTF-8 -t ISO-8859-1 sub/a.cpp > sub/a_ISO-8859-1.cpp
