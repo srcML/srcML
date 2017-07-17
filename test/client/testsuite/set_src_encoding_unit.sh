@@ -94,24 +94,17 @@ iconv -f UTF-8 -t ISO-8859-1 sub/a.cpp > sub/a_ISO-8859-1.cpp
 src2srcml --src-encoding "ISO-8859-1" sub/a_ISO-8859-1.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-# No ISO-LATIN-1 in iconv
-#iconv -f UTF-8 -t ISO-LATIN-1 sub/a.cpp > sub/a_ISO-LATIN-1.cpp
-#src2srcml --src-encoding "ISO-LATIN-1" sub/a_ISO-LATIN-1.cpp --filename "sub/a.cpp"
-#check "$foutput"
-
-#src2srcml --src-encoding "ISO LATIN 1" sub/a_ISO-LATIN-1.cpp --filename "sub/a.cpp"
-#check "$foutput"
+iconv -f UTF-8 -t LATIN1 sub/a.cpp > sub/a_LATIN1.cpp
+src2srcml --src-encoding "LATIN1" sub/a_LATIN1.cpp --filename "sub/a.cpp"
+check "$foutput"
 
 iconv -f UTF-8 -t ISO-8859-2 sub/a.cpp > sub/a_ISO-8859-2.cpp
 src2srcml --src-encoding "ISO-8859-2" sub/a_ISO-8859-2.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-#iconv -f UTF-8 -t ISO-LATIN-2 sub/a.cpp > sub/a_ISO-LATIN-2.cpp
-#src2srcml --src-encoding "ISO-LATIN-2" sub/a_ISO-LATIN-2.cpp --filename "sub/a.cpp"
-#check "$foutput"
-
-#src2srcml --src-encoding "ISO LATIN 2" sub/a_ISO-LATIN-2.cpp --filename "sub/a.cpp"
-#check "$foutput"
+iconv -f UTF-8 -t LATIN2 sub/a.cpp > sub/a_LATIN2.cpp
+src2srcml --src-encoding "LATIN2" sub/a_LATIN2.cpp --filename "sub/a.cpp"
+check "$foutput"
 
 iconv -f UTF-8 -t ISO-8859-3 sub/a.cpp > sub/a_ISO-8859-3.cpp
 src2srcml --src-encoding "ISO-8859-3" sub/a_ISO-8859-3.cpp --filename "sub/a.cpp"
@@ -170,8 +163,8 @@ createfile sub/special_characters_utf8.cpp "$special_characters_utf8_actual"
 createfile sub/chinese_characters_utf8.cpp "$chinese_characters_utf8_actual"
 
 # create utf16 versions of the files
-iconv -f UTF-8 -t UTF-16LE sub/special_characters_utf8.cpp > sub/special_characters_utf16.cpp
-iconv -f UTF-8 -t UTF-16LE sub/chinese_characters_utf8.cpp > sub/chinese_characters_utf16.cpp
+iconv -f UTF-8 -t UTF-16 sub/special_characters_utf8.cpp > sub/special_characters_utf16.cpp
+iconv -f UTF-8 -t UTF-16 sub/chinese_characters_utf8.cpp > sub/chinese_characters_utf16.cpp
 
 special_characters_utf16_actual=$(cat sub/special_characters_utf16.cpp)
 chinese_characters_utf16_actual=$(cat sub/chinese_characters_utf16.cpp)
