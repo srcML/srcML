@@ -491,7 +491,7 @@ int srcml_unit_parse_filename(srcml_unit* unit, const char* src_filename) {
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
-        input = new UTF8CharBuffer(src_filename, src_encoding, output_hash ? &unit->hash : 0);
+        input = new UTF8CharBuffer(src_filename, src_encoding, output_hash, unit->hash);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -536,7 +536,7 @@ int srcml_unit_parse_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
-        input = new UTF8CharBuffer(src_buffer ? src_buffer : "", buffer_size, src_encoding, output_hash ? &unit->hash : 0);
+        input = new UTF8CharBuffer(src_buffer ? src_buffer : "", buffer_size, src_encoding, output_hash, unit->hash);
 
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
@@ -580,7 +580,7 @@ int srcml_unit_parse_FILE(srcml_unit* unit, FILE* src_file) {
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
-        input = new UTF8CharBuffer(src_file, src_encoding, output_hash ? &unit->hash : 0);
+        input = new UTF8CharBuffer(src_file, src_encoding, output_hash, unit->hash);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -624,7 +624,7 @@ int srcml_unit_parse_fd(srcml_unit* unit, int src_fd) {
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
-        input = new UTF8CharBuffer(src_fd, src_encoding, output_hash ? &unit->hash : 0);
+        input = new UTF8CharBuffer(src_fd, src_encoding, output_hash, unit->hash);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
@@ -670,7 +670,7 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, ssize_t (*read_callbac
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
-        input = new UTF8CharBuffer(context, read_callback, close_callback, src_encoding, output_hash ? &unit->hash : 0);
+        input = new UTF8CharBuffer(context, read_callback, close_callback, src_encoding, output_hash, unit->hash);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 

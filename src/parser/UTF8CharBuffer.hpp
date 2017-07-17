@@ -107,11 +107,11 @@ public:
     typedef void * (*srcml_open_callback)(const char * filename);
 
     // Create a character buffer
-    UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash);
-    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash);
-    UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash);
-    UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash);
-    UTF8CharBuffer(void * context, srcml_read_callback, srcml_close_callback, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(const char * ifilename, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
+    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
+    UTF8CharBuffer(FILE * file, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
+    UTF8CharBuffer(int fd, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
+    UTF8CharBuffer(void * context, srcml_read_callback, srcml_close_callback, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
 
     // Get the next character from the stream
     int getChar();
@@ -122,7 +122,7 @@ public:
     ~UTF8CharBuffer();
 
 private:
-    UTF8CharBuffer(const char* encoding, boost::optional<std::string> * hash, size_t outbuf_size);
+    UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t outbuf_size);
 
     ssize_t readChars();
 
@@ -139,7 +139,8 @@ private:
     bool lastcr = false;
 
     /** where to place computed hash */
-    boost::optional<std::string> * hash;
+    bool hashneeded = false;
+    boost::optional<std::string>& hash;
 
 #ifdef _MSC_BUILD
     /** msvc hash provider object */

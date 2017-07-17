@@ -48,8 +48,8 @@ struct Context {
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string>* hash, size_t outbuf_size)
-    : antlr::CharBuffer(std::cin), hash(hash), outbuf_size(outbuf_size), spec_encoding(encoding) {
+UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t outbuf_size)
+    : antlr::CharBuffer(std::cin), hashneeded(hashneeded), hash(hash), outbuf_size(outbuf_size), spec_encoding(encoding) {
 
     // if no encoding specified, assume ISO-8859-1
     this->encoding = encoding ? encoding : "ISO-8859-1";
@@ -67,7 +67,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
     // meaning no conversion necessary
     iconvctl(ic, ICONV_TRIVIALP, &trivial);
 
-    if(hash) {
+    if(hashneeded) {
 #ifdef _MSC_BUILD
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         if(!success && GetLastError() == NTE_BAD_KEYSET)
@@ -87,8 +87,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, boost::optional<std::string
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, boost::optional<std::string>* hash)
-    : UTF8CharBuffer(encoding, hash, SRCBUFSIZE * 6) {
+UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
     if (!ifilename)
         throw UTF8FileError();
@@ -119,8 +119,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, boos
  *
  * Constructor.  Setup input from memory and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const char* encoding, boost::optional<std::string>* hash)
-    : UTF8CharBuffer(encoding, hash, buffer_size * 6) {
+UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, buffer_size * 4) {
 
     if (!c_buffer)
         throw UTF8FileError();
@@ -150,8 +150,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
  *
  * Constructor.  Setup input from FILE * and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, boost::optional<std::string>* hash)
-    : UTF8CharBuffer(encoding, hash, SRCBUFSIZE * 6) {
+UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
     if (!file)
         throw UTF8FileError();
@@ -172,8 +172,8 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, boost::optional
  *
  * Constructor.  Setup input from file descriptor and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, boost::optional<std::string>* hash)
-    : UTF8CharBuffer(encoding, hash, SRCBUFSIZE * 6) {
+UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
     if (fd < 0)
         throw UTF8FileError();
@@ -198,8 +198,8 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, boost::optional<std
  * Constructor.  Setup input from filename and hashing if needed.
  */
 UTF8CharBuffer::UTF8CharBuffer(void* context, srcml_read_callback read_callback, srcml_close_callback close_callback,
-     const char* encoding, boost::optional<std::string>* hash)
-    : UTF8CharBuffer(encoding, hash, SRCBUFSIZE * 6) {
+     const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
     // requires only a read callback, not a close callback or a context
     if (read_callback == 0)
@@ -256,7 +256,7 @@ ssize_t UTF8CharBuffer::readChars() {
     firstRead = false;
 
     // hash the grown data
-    if (hash) {
+    if (hashneeded) {
 #ifdef _MSC_BUILD
         CryptHashData(crypt_hash, (BYTE *)curinbuf, size, 0);
 #else
@@ -360,7 +360,7 @@ const std::string& UTF8CharBuffer::getEncoding() const {
  */
 UTF8CharBuffer::~UTF8CharBuffer() {
 
-    if (hash) {
+    if (hashneeded) {
         unsigned char md[20];
 
 #ifdef _MSC_BUILD
@@ -374,6 +374,6 @@ UTF8CharBuffer::~UTF8CharBuffer() {
         SHA1_Final(md, &ctx);
 #endif
         const char outmd[] = { HEXCHARASCII(md), '\0'};
-        *hash = outmd;
+        hash = outmd;
     }
 }
