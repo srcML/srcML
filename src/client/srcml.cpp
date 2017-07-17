@@ -52,7 +52,26 @@ srcml_request_t global_srcml_request;
 // stdin timeout message
 void timeout(int) {
 
-    fprintf(stderr, "srcml is waiting for input from stdin\n");
+    fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
+Typical usage includes:
+
+    # convert from a source file to srcML
+    srcml main.cpp -o main.cpp.xml
+
+    # convert from text to srcML
+    srcml --text="int i = 1;" --language C++
+
+    # pipe in source code
+    echo "int i = 1;" | srcml --language C++
+
+    # convert from srcML back to source code 
+    srcml main.cpp.xml -o main.cpp
+
+Consider using the --text option for direct entry of text.
+
+See `srcml --help` for more information.
+)");
+    exit(1);
 }
 
 int main(int argc, char * argv[]) {

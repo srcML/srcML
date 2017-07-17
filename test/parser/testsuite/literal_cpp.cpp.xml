@@ -30,21 +30,22 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="string">R"(The String Data \ Stuff " )"</literal></expr>;</expr_stmt>
+<expr_stmt><expr><literal type="string">R"(The String Data 
+ Stuff " )"</literal></expr>;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="string">R"The</literal></expr>
+<expr_stmt><expr><literal type="string">R"The"</literal></expr>
 ;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="string">R"(The String Data \ Stuff</literal></expr>
+<expr_stmt><expr><literal type="string">R"(The String Data \ Stuff)"</literal></expr>
 ;</expr_stmt>
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="string">R"(The String Data \ Stuff)</literal></expr>
+<expr_stmt><expr><literal type="string">R"(The String Data \ Stuff)"</literal></expr>
 ;</expr_stmt>
 </unit>
 
