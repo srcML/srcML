@@ -100,8 +100,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool
 
     // setup callbacks, wrappers around read() and close()
     sio.context = new Context<int>(fd);
-    sio.read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
-        return read(static_cast<Context<int>*>(context)->value, buf, size);
+    sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
+        return read(static_cast<Context<int>*>(context)->value, buf, insize);
     };
     sio.close_callback = [](void* context) -> int {
         int fd = static_cast<Context<int>*>(context)->value;
@@ -135,11 +135,11 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
 
     // instead of a read_callback, just setup the memory here
     curinbuf = c_buffer;
-    size = buffer_size;
+    insize = buffer_size;
     inbuf_size = buffer_size;
 
     // since we already have all the data, need to hash and perform encoding
-    size = readChars();
+    insize = readChars();
 }
 
 /**
@@ -158,8 +158,8 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded
 
     // setup callbacks, mainly wrappers around fread() for FILE* converted to file descriptor
     sio.context = (void*) file;
-    sio.read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
-        return fread(buf, 1, size, (FILE*) context);
+    sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
+        return fread(buf, 1, insize, (FILE*) context);
     };
     sio.close_callback = 0;
 }
@@ -180,8 +180,8 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, bo
 
     // setup callbacks, wrappers around read()
     sio.context = new Context<int>(fd);
-    sio.read_callback = [](void* context, void* buf, size_t size) -> ssize_t {
-        return read(static_cast<Context<int>*>(context)->value, buf, size);
+    sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
+        return read(static_cast<Context<int>*>(context)->value, buf, insize);
     };
     sio.close_callback = [](void* context) -> int {
         delete static_cast<Context<int>*>(context);
@@ -218,7 +218,7 @@ UTF8CharBuffer::UTF8CharBuffer(void* context, srcml_read_callback read_callback,
 ssize_t UTF8CharBuffer::readChars() {
 
     // read more data into inbuf (may already be data in there)
-    if (size == 0 || pos >= size) {
+    if (insize == 0 || pos >= insize) {
 
         // we use inbuf instead of curinbuf because curinbuf can point to inbuf, or a 
         // user-provided chunk of memory. Since already read in, no need to copy
@@ -229,8 +229,8 @@ ssize_t UTF8CharBuffer::readChars() {
         // use the provided callback
         // the entire input buffer may not be available because of incomplete multi-byte sequences
         // from a previous read
-        size = sio.read_callback ? (int) sio.read_callback(sio.context, inbuf.data() + inbytesleft, SRCBUFSIZE - inbytesleft) : 0;
-        if (size == 0) {
+        insize = sio.read_callback ? (int) sio.read_callback(sio.context, inbuf.data() + inbytesleft, SRCBUFSIZE - inbytesleft) : 0;
+        if (insize == 0) {
             return 0;
         }
     }
@@ -241,7 +241,7 @@ ssize_t UTF8CharBuffer::readChars() {
     // if we see a BOM, then we know we have to skip over it
     // additionally, unless the user stated a specific encoding,
     // we need to get rid of it
-    if (firstRead && (size >= 3) &&
+    if (firstRead && (insize >= 3) &&
             static_cast<const unsigned char>(curinbuf[0]) == 0xEF &&
             static_cast<const unsigned char>(curinbuf[1]) == 0xBB &&
             static_cast<const unsigned char>(curinbuf[2]) == 0xBF) {
@@ -263,9 +263,9 @@ ssize_t UTF8CharBuffer::readChars() {
     // hash the grown data
     if (hashneeded) {
 #ifdef _MSC_BUILD
-        CryptHashData(crypt_hash, (BYTE *)curinbuf, size, 0);
+        CryptHashData(crypt_hash, (BYTE *)curinbuf, insize, 0);
 #else
-        SHA1_Update(&ctx, curinbuf, (SHA_LONG)size);
+        SHA1_Update(&ctx, curinbuf, (SHA_LONG)insize);
 #endif
     }
 
@@ -283,7 +283,7 @@ ssize_t UTF8CharBuffer::readChars() {
         // user-supplied memory is const, so curinbuf is const,
         // therefore we need a non-const cast for passing to inconv()
         char* linbuf = const_cast<char*>(curinbuf);
-        inbytesleft = size + inbytesleft;
+        inbytesleft = insize + inbytesleft;
 
         // conversion output
         // full output buffer is available since all previous characters
@@ -292,24 +292,24 @@ ssize_t UTF8CharBuffer::readChars() {
         size_t outbytesleft = outbuf.size();
 
         // convert from input buffer to output buffer
-        size_t bsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
-        if (bsize == (size_t) -1) {
+        size_t binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
+        if (binsize == (size_t) -1) {
             fprintf(stderr, "%s\n", strerror(errno));
             exit(1);
         }
 
         // all of the input characters may not have been converted
-        // as not all of their bytes read in (think buffersize of 5 with UTF-16 input)
+        // as not all of their bytes read in (think bufferinsize of 5 with UTF-16 input)
         // so just move all of them to the start of the buffer
         if (inbytesleft)
             std::move(linbuf, linbuf + inbytesleft, inbuf.data());
 
-        // number of bytes is the total output buffer size minus 
+        // number of bytes is the total output buffer insize minus 
         // the bytes that were "left", i.e., not used, by iconv()
-        size = outbuf.size() - outbytesleft;
+        insize = outbuf.size() - outbytesleft;
     }
 
-    return size;
+    return insize;
 }
 
 /**
@@ -333,11 +333,11 @@ int UTF8CharBuffer::getChar() {
     for (int i = 0; i < 2; ++i) {
 
         // may need more characters
-        if (size == 0 || pos >= size) {
+        if (insize == 0 || pos >= insize) {
 
             // read more data into inbuf
-            size = readChars();
-            if (size == 0) {
+            insize = readChars();
+            if (insize == 0) {
                 // EOF
                 return -1;
             }
@@ -393,8 +393,8 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
 #ifdef _MSC_BUILD
         DWORD        SHA_DIGEST_LENGTH;
-        DWORD        hash_length_size = sizeof(DWORD);
-        CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
+        DWORD        hash_length_size = insizeof(DWORD);
+        CryptGetHashParam(crypt_hash, HP_HASHinSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
         CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
         CryptDestroyHash(crypt_hash);
         CryptReleaseContext(crypt_provider, 0);

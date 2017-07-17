@@ -133,7 +133,7 @@ private:
     int pos = 0;
 
     /** size of read in buffer */
-    ssize_t size = 0;
+    ssize_t insize = 0;
 
     /** if last character was carriage return */
     bool lastcr = false;
@@ -155,7 +155,6 @@ private:
     ssize_t inbuf_size = 0;
     std::vector<char> outbuf;
     ssize_t outbuf_size = 0;
-    ssize_t oldcharsize = 0;
     int fd;
     iconv_t ic;
     const char* curinbuf = 0;
