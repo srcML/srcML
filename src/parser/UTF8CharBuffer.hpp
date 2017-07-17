@@ -163,5 +163,6 @@ private:
     srcMLIO sio;
     const char* spec_encoding = 0;
     bool firstRead = true;
+    size_t inbytesleft = 0;
 };
 #endif

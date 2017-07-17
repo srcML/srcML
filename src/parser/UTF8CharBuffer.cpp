@@ -219,12 +219,17 @@ ssize_t UTF8CharBuffer::readChars() {
 
     // read more data into inbuf (may already be data in there)
     if (size == 0 || pos >= size) {
+
         // we use inbuf instead of curinbuf because curinbuf can point to inbuf, or a 
         // user-provided chunk of memory. Since already read in, no need to copy
         if (inbuf.empty())
             inbuf.resize(SRCBUFSIZE);
         curinbuf = inbuf.data();
-        size = sio.read_callback ? (int) sio.read_callback(sio.context, inbuf.data() + oldcharsize, SRCBUFSIZE - oldcharsize) : 0;
+
+        // use the provided callback
+        // the entire input buffer may not be available because of incomplete multi-byte sequences
+        // from a previous read
+        size = sio.read_callback ? (int) sio.read_callback(sio.context, inbuf.data() + inbytesleft, SRCBUFSIZE - inbytesleft) : 0;
         if (size == 0) {
             return 0;
         }
@@ -267,20 +272,41 @@ ssize_t UTF8CharBuffer::readChars() {
     // for non-trivial conversions, convert from inbuf to outbuf
     if (!trivial) {
 
+        // only happens on first read
+        // we do this here because this is the first place
+        // where we know that the buffer is actually needed
         if (outbuf.empty())
             outbuf.resize(outbuf_size);
-        size_t osize = outbuf_size;
-        size_t isize = size + oldcharsize;
-        char* pi = const_cast<char*>(curinbuf);
-        char* po = outbuf.data();
-        size_t bsize = iconv(ic, &pi, &isize, &po, &osize);
-        if (isize) {
-            std::move(pi, pi + isize, inbuf.data());
-            oldcharsize = isize;
-        } else {
-            oldcharsize = 0;
+
+        // conversion input
+        // input can be from inbuf, or user-supplied memory
+        // user-supplied memory is const, so curinbuf is const,
+        // therefore we need a non-const cast for passing to inconv()
+        char* linbuf = const_cast<char*>(curinbuf);
+        inbytesleft = size + inbytesleft;
+
+        // conversion output
+        // full output buffer is available since all previous characters
+        // have been returned
+        char* loutbuf = outbuf.data();
+        size_t outbytesleft = outbuf.size();
+
+        // convert from input buffer to output buffer
+        size_t bsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
+        if (bsize == (size_t) -1) {
+            fprintf(stderr, "%s\n", strerror(errno));
+            exit(1);
         }
-        size = outbuf_size - (int) osize;
+
+        // all of the input characters may not have been converted
+        // as not all of their bytes read in (think buffersize of 5 with UTF-16 input)
+        // so just move all of them to the start of the buffer
+        if (inbytesleft)
+            std::move(linbuf, linbuf + inbytesleft, inbuf.data());
+
+        // number of bytes is the total output buffer size minus 
+        // the bytes that were "left", i.e., not used, by iconv()
+        size = outbuf.size() - outbytesleft;
     }
 
     return size;
@@ -317,6 +343,8 @@ int UTF8CharBuffer::getChar() {
             }
         }
 
+        // read the next char either from the current input buffer (for a trivial, no-iconv needed)
+        // or from the iconv'ed output buffer
         c = (trivial ? curinbuf : outbuf.data())[pos];
         ++pos;
 
