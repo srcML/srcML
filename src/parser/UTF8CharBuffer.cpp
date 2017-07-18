@@ -303,7 +303,7 @@ ssize_t UTF8CharBuffer::readChars() {
         // with 0 for any missing data
         union { unsigned char d[4]; uint32_t i; } data = { { 0, 0, 0, 0 } };
         for (size_t i = 0; i < 4 && i < raw.size(); ++i)
-            data.d[i] = static_cast<const unsigned char>(raw[i]);
+            data.d[i] = static_cast<unsigned char>(raw[i]);
 
         // check for UTF-8 BOM
         if ((data.i & 0x00FFFFFF) == 0x00BFBBEF) {
@@ -418,7 +418,6 @@ int UTF8CharBuffer::getChar() {
     // may need more characters
     if (insize == 0 || pos >= insize) {
 
-        // read more data into raw
         insize = readChars();
         if (insize == 0) {
                 // EOF
