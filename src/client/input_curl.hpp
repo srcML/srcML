@@ -28,4 +28,10 @@
 // adjust input for libcurl and libarchive decompressions
 int input_curl(srcml_input_src& input);
 
+void setCurlErrors();
+
+void clearCurlErrors();
+
+bool getCurlErrors();
+
 #endif

@@ -27,9 +27,6 @@
 static std::mutex e;
 static bool production_errors = false;
 
-static std::mutex c;
-static bool curl_errors = false;
-
 void setProductionErrors() {
     std::unique_lock<std::mutex> l(e);
     production_errors = true;
@@ -45,19 +42,5 @@ bool getProductionErrors() {
     return production_errors;
 }
 
-void setCurlErrors() {
-    std::unique_lock<std::mutex> l(c);
-    curl_errors = true;
-}
-
-void clearCurlErrors() {
-    std::unique_lock<std::mutex> l(c);
-    curl_errors = false;
-}
-
-bool getCurlErrors() {
-    std::unique_lock<std::mutex> l(c);
-    return curl_errors;
-}
 
 

@@ -54,6 +54,10 @@ namespace {
     };
 
     const size_t CURL_MAX_ERROR_SIZE = 100;
+
+    std::mutex c;
+
+    bool curl_errors = false;
 }
 
 
@@ -158,4 +162,19 @@ int input_curl(srcml_input_src& input) {
 
     // wait to see if curl is able to download the url at all
     return waitCurl();
+}
+
+void setCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    curl_errors = true;
+}
+
+void clearCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    curl_errors = false;
+}
+
+bool getCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    return curl_errors;
 }

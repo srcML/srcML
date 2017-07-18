@@ -31,6 +31,7 @@
 #include <archive_entry.h>
 #include <srcml_logger.hpp>
 #include <global_errors.hpp>
+#include <input_curl.hpp>
 
 int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
