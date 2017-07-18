@@ -91,7 +91,6 @@ STRING_START :
                     } else {
                         match('(');
                     }
-
                 }
                 changetotextlexer(STRING_END); } |
 
