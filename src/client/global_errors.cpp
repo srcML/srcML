@@ -63,7 +63,7 @@ bool getCurlErrors() {
 }
 
 static bool go = false;
-std::condition_variable cv;
+static std::condition_variable cv;
 
 int waitCurl() {
     std::unique_lock<std::mutex> l(d);
