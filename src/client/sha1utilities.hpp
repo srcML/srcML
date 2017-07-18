@@ -23,7 +23,7 @@
 #ifndef SHA1_UTILITIES_HPP
 #define SHA1_UTILITIES_HPP
 
-#include <boost/static_assert.hpp>
+#include <type_traits>
 
 #ifdef _MSC_BUILD
 #include <windows.h>
@@ -68,6 +68,6 @@ static const char hexchar[] = { '0','1','2','3','4','5','6','7','8','9','a','b',
             hexchar[md[17] >> 4], hexchar[md[17] & 0x0F], \
             hexchar[md[18] >> 4], hexchar[md[18] & 0x0F], \
             hexchar[md[19] >> 4], hexchar[md[19] & 0x0F]
-BOOST_STATIC_ASSERT_MSG(sizeof(hexchar) == 16, "Wrong size for hex conversion");
+static_assert(sizeof(hexchar) == 16, "Wrong size for hex conversion");
 
 #endif
