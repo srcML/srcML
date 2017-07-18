@@ -52,6 +52,9 @@ namespace {
         // see if encoding is trivial
         bool trivial = false;
         iconvctl(ce, ICONV_TRIVIALP, &trivial);
+
+        iconv_close(ce);
+
         return trivial;
     }
 }
@@ -441,6 +444,9 @@ const std::string& UTF8CharBuffer::getEncoding() const {
  */
 UTF8CharBuffer::~UTF8CharBuffer() {
 
+    if (ic)
+        iconv_close(ic);
+    
     if (hashneeded) {
         unsigned char md[20];
 

@@ -169,7 +169,7 @@ private:
     std::string encoding;
 
     /** iconv() encoding converter */
-    iconv_t ic;
+    iconv_t ic = nullptr;
 
     /** whether the encoding conversion is trivial (i.e., not needed) */
     int trivial = false;
