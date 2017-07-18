@@ -18,26 +18,26 @@ xmlcheck "$srcml"
 xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 
-echo -n "" | src2srcml -l C++ -x "ISO-8859-1"
+echo -n "" | srcml -l C++ -x "ISO-8859-1"
 check "$srcml"
 
-echo -n "" | src2srcml -l C++ --xml-encoding "ISO-8859-1"
+echo -n "" | srcml -l C++ --xml-encoding "ISO-8859-1"
 check "$srcml"
 
-echo -n "" | src2srcml -l C++ --xml-encoding="ISO-8859-1"
+echo -n "" | srcml -l C++ --xml-encoding="ISO-8859-1"
 check "$srcml"
 
-src2srcml sub/a.cpp -x "ISO-8859-1"
+srcml sub/a.cpp -x "ISO-8859-1"
 check "$fsrcml"
 
-src2srcml sub/a.cpp --xml-encoding="ISO-8859-1"
+srcml sub/a.cpp --xml-encoding="ISO-8859-1"
 check "$fsrcml"
 
-src2srcml sub/a.cpp --xml-encoding "ISO-8859-1"
+srcml sub/a.cpp --xml-encoding "ISO-8859-1"
 check "$fsrcml"
 
-src2srcml -l C++ -x "ISO-8859-1" -o sub/a.cpp.xml < sub/a.cpp
+srcml -l C++ -x "ISO-8859-1" -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml "$srcml"
 
-src2srcml -x "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml
+srcml -x "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"

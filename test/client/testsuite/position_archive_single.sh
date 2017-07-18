@@ -26,50 +26,50 @@ xmlcheck "$srcml"
 xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 
-src2srcml -l C++ --position --archive < sub/a.cpp
+srcml -l C++ --position --archive < sub/a.cpp
 check "$srcml"
 
-src2srcml -l C++ --archive --position < sub/a.cpp
+srcml -l C++ --archive --position < sub/a.cpp
 check "$srcml"
 
-src2srcml -l C++ --position  --archive -o sub/a.cpp.xml < sub/a.cpp
+srcml -l C++ --position  --archive -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml "$srcml"
 
-src2srcml -l C++ --archive --position -o sub/a.cpp.xml < sub/a.cpp
+srcml -l C++ --archive --position -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml "$srcml"
 
-src2srcml --position -l C++ --archive -o sub/a.cpp.xml < sub/a.cpp
+srcml --position -l C++ --archive -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml "$srcml"
 
-src2srcml -l C++ --archive -o sub/a.cpp.xml --position < sub/a.cpp
+srcml -l C++ --archive -o sub/a.cpp.xml --position < sub/a.cpp
 check sub/a.cpp.xml "$srcml"
 
-src2srcml sub/a.cpp --position --archive
+srcml sub/a.cpp --position --archive
 check "$fsrcml"
 
-src2srcml sub/a.cpp --archive --position
+srcml sub/a.cpp --archive --position
 check "$fsrcml"
 
-src2srcml sub/a.cpp --position -o sub/a.cpp.xml --archive
+srcml sub/a.cpp --position -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml "$fsrcml"
 
-src2srcml sub/a.cpp -o sub/a.cpp.xml --position --archive
+srcml sub/a.cpp -o sub/a.cpp.xml --position --archive
 check sub/a.cpp.xml "$fsrcml"
 
-src2srcml sub/a.cpp -o sub/a.cpp.xml --archive --position
+srcml sub/a.cpp -o sub/a.cpp.xml --archive --position
 check sub/a.cpp.xml "$fsrcml"
 
-src2srcml --position sub/a.cpp --archive
+srcml --position sub/a.cpp --archive
 check "$fsrcml"
 
-src2srcml sub/a.cpp --archive --position
+srcml sub/a.cpp --archive --position
 check "$fsrcml"
 
-src2srcml --position sub/a.cpp -o sub/a.cpp.xml --archive
+srcml --position sub/a.cpp -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml "$fsrcml"
 
-src2srcml sub/a.cpp -o sub/a.cpp.xml --archive --position
+srcml sub/a.cpp -o sub/a.cpp.xml --archive --position
 check sub/a.cpp.xml "$fsrcml"
 
-src2srcml -o sub/a.cpp.xml --position sub/a.cpp --archive
+srcml -o sub/a.cpp.xml --position sub/a.cpp --archive
 check sub/a.cpp.xml "$fsrcml"

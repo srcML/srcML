@@ -10,9 +10,9 @@ define output <<- 'STDOUT'
 	STDOUT
 xmlcheck "$output"
 
-echo -n "" | src2srcml -l C++ -f foo --url bar
+echo -n "" | srcml -l C++ -f foo --url bar
 check "$output"
 
-echo -n "" | src2srcml -l C++ --url bar -f foo
+echo -n "" | srcml -l C++ --url bar -f foo
 check "$output"
 

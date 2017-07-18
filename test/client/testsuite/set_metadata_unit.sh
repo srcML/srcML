@@ -49,10 +49,10 @@ check "1.2"
 srcml sub/a.cpp.xml --show-encoding
 check "UTF-8"
 
-srcml2src --units sub/a.cpp.xml
+srcml --units sub/a.cpp.xml
 check "1" "$deprecated_warning"
 
 createfile sub/nested.cpp.xml "$nestedfile"
 
-srcml2src --units sub/nested.cpp.xml
+srcml --units sub/nested.cpp.xml
 check "2" "$deprecated_warning"

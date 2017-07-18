@@ -14,7 +14,7 @@ define empty_srcml_archive <<- 'STDOUT'
 	STDOUT
 
 createfile "list-empty.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp"
-src2srcml --files-from list-empty.txt --url="test"
+srcml --files-from list-empty.txt --url="test"
 check "$empty_srcml_archive"
 rmfile list-empty.txt
 
@@ -29,7 +29,7 @@ define empty_srcml_archive <<- 'STDOUT'
 	STDOUT
 
 createfile "list-empty-bz2.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.bz2"
-src2srcml --files-from list-empty-bz2.txt --url="test"
+srcml --files-from list-empty-bz2.txt --url="test"
 check "$empty_srcml_archive"
 rmfile list-empty-bz2.txt
 
@@ -44,7 +44,7 @@ define empty_srcml_archive <<- 'STDOUT'
 	STDOUT
 
 createfile "list-empty-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.gz"
-src2srcml --files-from list-empty-gz.txt --url="test"
+srcml --files-from list-empty-gz.txt --url="test"
 check "$empty_srcml_archive"
 rmfile list-empty-gz.txt
 
@@ -58,7 +58,7 @@ define empty_srcml_archive <<- 'STDOUT'
 	STDOUT
 
 createfile "list-empty-bz2-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.bz2.gz"
-src2srcml --files-from list-empty-bz2-gz.txt --url="test"
+srcml --files-from list-empty-bz2-gz.txt --url="test"
 check "$empty_srcml_archive"
 rmfile list-empty-bz2-gz.txt
 
@@ -71,6 +71,6 @@ define empty_srcml_archive <<- 'STDOUT'
 	</unit>
 	STDOUT
 createfile "list-empty-gz-b2.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.gz.bz2"
-src2srcml --files-from list-empty-gz-b2.txt --url="test"
+srcml --files-from list-empty-gz-b2.txt --url="test"
 check "$empty_srcml_archive"
 rmfile list-empty-gz-bz2.txt

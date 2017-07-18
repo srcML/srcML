@@ -21,10 +21,10 @@ define illformed <<- 'INPUT'
 createfile xml_error/illformed.xml "$illformed"
 
 # ok
-srcml2src xml_error/illformed.xml --info
+srcml xml_error/illformed.xml --info
 check "$info_single"
 
-srcml2src --info xml_error/illformed.xml
+srcml --info xml_error/illformed.xml
 check "$info_single"
 
 define output <<- 'STDOUT'
@@ -37,5 +37,5 @@ define xml_error <<- 'STDERR'
 	STDERR
 
 # bad
-srcml2src xml_error/illformed.xml
+srcml xml_error/illformed.xml
 check "$output" "$xml_error"

@@ -24,7 +24,7 @@ a;"
 createfile sub/b.cpp "
 b;"
 
-src2srcml --files-from "https://raw.githubusercontent.com/srcML/test-data/master/filelist/file-list.txt" --in-order -o sub/both.xml
+srcml --files-from "https://raw.githubusercontent.com/srcML/test-data/master/filelist/file-list.txt" --in-order -o sub/both.xml
 check sub/both.xml "$nestedfile"
 
 # compressed remote filelist
@@ -33,14 +33,14 @@ define empty_srcml_with_url <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
 	STDOUT
 
-src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.bz2
+srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.bz2
 check "$empty_srcml_with_url"
 
-src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.gz
+srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.gz
 check "$empty_srcml_with_url"
 
-src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.bz2.gz
+srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.bz2.gz
 check "$empty_srcml_with_url"
 
-src2srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.gz.bz2
+srcml --files-from https://github.com/srcML/test-data/raw/master/empty/empty.txt.gz.bz2
 check "$empty_srcml_with_url"

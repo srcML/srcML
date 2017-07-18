@@ -13,24 +13,24 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-# srcml2src - input srcml single file
+# srcml --> src : input srcml single file
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
-srcml2src --output-src sub/a.cpp.xml
+srcml --output-src sub/a.cpp.xml
 check "$src"
 
-srcml2src -S sub/a.cpp.xml
+srcml -S sub/a.cpp.xml
 check "$src"
 
-src2srcml -S < sub/a.cpp.xml
+srcml -S < sub/a.cpp.xml
 check "$src"
 
-src2srcml -S sub/a.cpp.xml -o sub/b.cpp
+srcml -S sub/a.cpp.xml -o sub/b.cpp
 check sub/b.cpp "$src"
 
-src2srcml -S -o sub/b.cpp sub/a.cpp.xml
+srcml -S -o sub/b.cpp sub/a.cpp.xml
 check sub/b.cpp "$src"
 
-src2srcml -S -o sub/b.cpp < sub/a.cpp.xml
+srcml -S -o sub/b.cpp < sub/a.cpp.xml
 check sub/b.cpp "$src"

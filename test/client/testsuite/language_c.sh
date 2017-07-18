@@ -12,26 +12,26 @@ define fsrcml <<- 'STDOUT'
 xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 
-src2srcml -l "C" sub/a.cpp
+srcml -l "C" sub/a.cpp
 check "$fsrcml"
 
-src2srcml --language "C" sub/a.cpp
+srcml --language "C" sub/a.cpp
 check "$fsrcml"
 
-src2srcml --language="C" sub/a.cpp
+srcml --language="C" sub/a.cpp
 check "$fsrcml"
 
-src2srcml sub/a.cpp -l "C"
+srcml sub/a.cpp -l "C"
 check "$fsrcml"
 
-src2srcml sub/a.cpp --language "C"
+srcml sub/a.cpp --language "C"
 check "$fsrcml"
 
-src2srcml sub/a.cpp --language="C"
+srcml sub/a.cpp --language="C"
 check "$fsrcml"
 
-src2srcml -l 'C' -o sub/a.cpp.xml sub/a.cpp
+srcml -l 'C' -o sub/a.cpp.xml sub/a.cpp
 check sub/a.cpp.xml "$fsrcml"
 
-src2srcml -l 'C' sub/a.cpp -o sub/a.cpp.xml
+srcml -l 'C' sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"

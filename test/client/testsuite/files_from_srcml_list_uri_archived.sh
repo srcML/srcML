@@ -14,55 +14,55 @@ define empty_srcml_archive <<- 'STDOUT'
 
 createfile list-empty-cpio-bz2.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.cpio.bz2"
 
-src2srcml --files-from list-empty-cpio-bz2.txt --url="test"
+srcml --files-from list-empty-cpio-bz2.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-cpio-gz.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.cpio.gz"
 
-src2srcml --files-from list-empty-cpio-gz.txt --url="test"
+srcml --files-from list-empty-cpio-gz.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-tar-bz2.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.tar.bz2"
 
-src2srcml --files-from list-empty-tar-bz2.txt --url="test"
+srcml --files-from list-empty-tar-bz2.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-tar-gz.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.tar.gz"
 
-src2srcml --files-from list-empty-tar-gz.txt --url="test"
+srcml --files-from list-empty-tar-gz.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-tbz2.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.tbz2"
 
-src2srcml --files-from list-empty-tbz2.txt --url="test"
+srcml --files-from list-empty-tbz2.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-tgz.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.tgz"
 
-src2srcml --files-from list-empty-tgz.txt --url="test"
+srcml --files-from list-empty-tgz.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-zip-bz2.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.zip.bz2"
 
-src2srcml --files-from list-empty-zip-bz2.txt --url="test"
+srcml --files-from list-empty-zip-bz2.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-zip-gz.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.zip.gz"
 
-src2srcml --files-from list-empty-zip-gz.txt --url="test"
+srcml --files-from list-empty-zip-gz.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-zip.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.zip"
 
-src2srcml --files-from list-empty-zip.txt --url="test"
+srcml --files-from list-empty-zip.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-cpio.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.cpio"
 
-src2srcml --files-from list-empty-cpio.txt --url="test"
+srcml --files-from list-empty-cpio.txt --url="test"
 check "$empty_srcml_archive"
 
 createfile list-empty-tar.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.tar"
 
-src2srcml --files-from list-empty-tar.txt --url="test"
+srcml --files-from list-empty-tar.txt --url="test"
 check "$empty_srcml_archive"

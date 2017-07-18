@@ -11,6 +11,6 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 # test simple
-echo -n "" | src2srcml -l C++
+echo -n "" | srcml -l C++
 check "$output"
 

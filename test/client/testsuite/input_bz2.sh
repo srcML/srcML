@@ -55,44 +55,44 @@ bzip2 -c empty.txt > empty.txt.bz2
 
 
 # src --> srcml
-src2srcml archive/a.cpp.bz2 -o archive/a.cpp.xml
+srcml archive/a.cpp.bz2 -o archive/a.cpp.xml
 check archive/a.cpp.xml "$foutput"
 
-src2srcml archive/a.cpp.bz2
+srcml archive/a.cpp.bz2
 check "$foutput"
 
-src2srcml -l C++ < archive/a.cpp.bz2
+srcml -l C++ < archive/a.cpp.bz2
 check "$output"
 
-src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.bz2
+srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.bz2
 check archive/a.cpp.xml "$output"
 
 
 # files from
-src2srcml --files-from list.txt
+srcml --files-from list.txt
 check "$archive_output"
 
-src2srcml --files-from list.txt.bz2
+srcml --files-from list.txt.bz2
 check "$archive_output"
 
-src2srcml --files-from list.txt -o archive/list.xml
+srcml --files-from list.txt -o archive/list.xml
 check archive/list.xml "$archive_output"
 
-src2srcml --files-from list.txt.bz2 -o archive/compressed_list.xml
+srcml --files-from list.txt.bz2 -o archive/compressed_list.xml
 check archive/compressed_list.xml "$archive_output"
 
 
 # files from empty
-src2srcml --files-from empty.txt
+srcml --files-from empty.txt
 check "$empty_output"
 
-src2srcml --files-from empty.txt.bz2
+srcml --files-from empty.txt.bz2
 check "$empty_output"
 
-src2srcml --files-from empty.txt -o archive/empty.xml
+srcml --files-from empty.txt -o archive/empty.xml
 check archive/empty.xml "$empty_output"
 
-src2srcml --files-from empty.txt.bz2 -o archive/compressed_empty.xml
+srcml --files-from empty.txt.bz2 -o archive/compressed_empty.xml
 check archive/compressed_empty.xml "$empty_output"
 
 rmfile list.txt
@@ -104,14 +104,14 @@ rmfile archive/a.cpp.bz2
 
 
 # srcml --> src
-srcml2src archive/a.cpp.xml
+srcml archive/a.cpp.xml
 check "$src"
 
-srcml2src archive/a.cpp.xml -o archive/a.cpp
+srcml archive/a.cpp.xml -o archive/a.cpp
 check archive/a.cpp "$src"
 
-srcml2src < archive/a.cpp.xml
+srcml < archive/a.cpp.xml
 check "$src"
 
-srcml2src -o archive/a.cpp < archive/a.cpp.xml
+srcml -o archive/a.cpp < archive/a.cpp.xml
 check archive/a.cpp "$src"

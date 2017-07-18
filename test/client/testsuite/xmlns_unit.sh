@@ -19,39 +19,39 @@ xmlcheck "$foutput"
 createfile sub/a.cpp ""
 
 # separate
-src2srcml --xmlns="http://www.srcML.org/srcML/src" sub/a.cpp
+srcml --xmlns="http://www.srcML.org/srcML/src" sub/a.cpp
 check "$foutput"
 
-echo -n "" | src2srcml -l C++ --xmlns="http://www.srcML.org/srcML/src"
+echo -n "" | srcml -l C++ --xmlns="http://www.srcML.org/srcML/src"
 check "$output"
 
-echo -n "" | src2srcml -l C++ --xmlns:cpp="http://www.srcML.org/srcML/cpp"
+echo -n "" | srcml -l C++ --xmlns:cpp="http://www.srcML.org/srcML/cpp"
 check "$output"
 
-echo -n "" | src2srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" -o sub/a.cpp.xml
+echo -n "" | srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$output"
 
-src2srcml --xmlns="http://www.srcML.org/srcML/src" sub/a.cpp -o sub/a.cpp.xml
+srcml --xmlns="http://www.srcML.org/srcML/src" sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$foutput"
 
-src2srcml --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp
+srcml --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp
 check "$foutput"
 
-echo -n "" | src2srcml -l C++ --xmlns:cpp="http://www.srcML.org/srcML/cpp" -o sub/a.cpp.xml
+echo -n "" | srcml -l C++ --xmlns:cpp="http://www.srcML.org/srcML/cpp" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$output"
 
-src2srcml --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
+srcml --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$foutput"
 
 # multiple
-echo -n "" | src2srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp"
+echo -n "" | srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp"
 check "$output"
 
-echo -n "" | src2srcml --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp
+echo -n "" | srcml --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp
 check "$foutput"
 
-echo -n "" | src2srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" -o sub/a.cpp.xml
+echo -n "" | srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$output"
 
-src2srcml --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
+srcml --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$foutput"

@@ -28,10 +28,10 @@ define file1 <<- 'STDOUT'
 xmlcheck "$nestedfileextra"
 xmlcheck "$file1"
 
-srcml2src -X --unit "1" - <<< "$nestedfileextra"
+srcml -X --unit "1" - <<< "$nestedfileextra"
 check "$file1"
 
-srcml2src -X --unit "1" <<< "$nestedfileextra"
+srcml -X --unit "1" <<< "$nestedfileextra"
 check "$file1"
 
 srcml -X --unit "1" --show-filename <<< "$nestedfileextra"
@@ -82,25 +82,25 @@ define file3 <<- 'STDOUT'
 
 
 # unit always only gets namespaces for src and cpp by default
-srcml2src --show-url <<< "$input"
+srcml --show-url <<< "$input"
 check "sub\n"
 
-srcml2src -X --unit "1" - <<< "$input"
+srcml -X --unit "1" - <<< "$input"
 check "$file1"
 
-srcml2src -X --unit "1" <<< "$input"
+srcml -X --unit "1" <<< "$input"
 check "$file1"
 
-srcml2src -X --unit "2" - <<< "$input"
+srcml -X --unit "2" - <<< "$input"
 check "$file2"
 
-srcml2src -X --unit "2" <<< "$input"
+srcml -X --unit "2" <<< "$input"
 check "$file2"
 
-srcml2src -X --unit "3" - <<< "$input"
+srcml -X --unit "3" - <<< "$input"
 check "$file3"
 
-srcml2src -X --unit "3" <<< "$input"
+srcml -X --unit "3" <<< "$input"
 check "$file3"
 
 srcml -X --unit "1" --show-filename <<< "$input"

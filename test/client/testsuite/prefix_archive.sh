@@ -42,22 +42,22 @@ srcml sub/a.xml -p "nonexistent.com"
 check
 
 # standard in
-srcml2src -U 1 -X -p "http://www.srcML.org/srcML/cpp" <<< "$input"
+srcml -U 1 -X -p "http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
-srcml2src -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
+srcml -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
-srcml2src -U 1 -X --prefix="http://www.srcML.org/srcML/cpp" <<< "$input"
+srcml -U 1 -X --prefix="http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
-srcml2src -p "http://www.srcML.org/srcML/src" <<< "$input"
+srcml -p "http://www.srcML.org/srcML/src" <<< "$input"
 check ""
 
-srcml2src --prefix "http://www.srcML.org/srcML/src" <<< "$input"
+srcml --prefix "http://www.srcML.org/srcML/src" <<< "$input"
 check ""
 
-srcml2src --prefix="http://www.srcML.org/srcML/src" <<< "$input"
+srcml --prefix="http://www.srcML.org/srcML/src" <<< "$input"
 check ""
 
 
@@ -100,21 +100,21 @@ srcml sub/archive_multi.xml -p "nonexistent.com"
 check
 
 # standard in
-srcml2src -U 1 -X  -p "http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
+srcml -U 1 -X  -p "http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
 check "cpp"
 
-srcml2src -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
+srcml -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
 check "cpp"
 
-srcml2src -U 1 -X --prefix="http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
+srcml -U 1 -X --prefix="http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
 check "cpp"
 
-srcml2src -p "http://www.srcML.org/srcML/src" <<< "$archive_multi"
+srcml -p "http://www.srcML.org/srcML/src" <<< "$archive_multi"
 check ""
 
-srcml2src --prefix "http://www.srcML.org/srcML/src" <<< "$archive_multi"
+srcml --prefix "http://www.srcML.org/srcML/src" <<< "$archive_multi"
 check ""
 
-srcml2src --prefix="http://www.srcML.org/srcML/src" <<< "$archive_multi"
+srcml --prefix="http://www.srcML.org/srcML/src" <<< "$archive_multi"
 check ""
 

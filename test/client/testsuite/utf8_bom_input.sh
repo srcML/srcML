@@ -21,15 +21,15 @@ define foutput <<- 'STDOUT'
 xmlcheck "$output"
 xmlcheck "$foutput"
 
-src2srcml --language 'C' <<< "a;"
+srcml --language 'C' <<< "a;"
 
 check "$output"
 createfile bomfile.c "\xef\xbb\xbfa;
 "
 
-src2srcml bomfile.c
+srcml bomfile.c
 check "$foutput"
 
 # NOTE: This is broken in libsrcml
-src2srcml --language 'C' < bomfile.c
+srcml --language 'C' < bomfile.c
 check "$output"

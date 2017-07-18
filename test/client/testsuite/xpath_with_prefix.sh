@@ -48,50 +48,50 @@ xmlcheck "$output"
 createfile sub/a.cpp.xml "$srcml"
 
 # /src:unit
-srcml2src --xpath=/src:unit sub/a.cpp.xml
+srcml --xpath=/src:unit sub/a.cpp.xml
 check "$output"
 
-srcml2src --xpath=/src:unit < sub/a.cpp.xml
+srcml --xpath=/src:unit < sub/a.cpp.xml
 check "$output"
 
-srcml2src --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+srcml --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$output"
 
-srcml2src --xpath=/src:unit -o sub/b.cpp.xml sub/a.cpp.xml
+srcml --xpath=/src:unit -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml "$output"
 
-srcml2src --xpath=/src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml --xpath=/src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$output"
 
 # //src:unit
-srcml2src --xpath=//src:unit sub/a.cpp.xml
+srcml --xpath=//src:unit sub/a.cpp.xml
 check "$output"
 
-srcml2src --xpath=//src:unit < sub/a.cpp.xml
+srcml --xpath=//src:unit < sub/a.cpp.xml
 check "$output"
 
-srcml2src --xpath=//src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+srcml --xpath=//src:unit sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$output"
 
-srcml2src --xpath=//src:unit -o sub/b.cpp.xml sub/a.cpp.xml
+srcml --xpath=//src:unit -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml "$output"
 
-srcml2src --xpath=//src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml --xpath=//src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$output"
 
 # src:unit
-srcml2src --xpath=src:unit sub/a.cpp.xml
+srcml --xpath=src:unit sub/a.cpp.xml
 check "$xpathempty"
 
-srcml2src --xpath=src:unit < sub/a.cpp.xml
+srcml --xpath=src:unit < sub/a.cpp.xml
 check "$xpathempty"
 
-srcml2src --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
+srcml --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$xpathempty"
 
-srcml2src --xpath=src:unit -o sub/b.cpp.xml sub/a.cpp.xml
+srcml --xpath=src:unit -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml "$xpathempty"
 
-srcml2src --xpath=src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml --xpath=src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$xpathempty"
 

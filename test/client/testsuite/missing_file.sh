@@ -9,14 +9,14 @@ set +e
 ##
 # check missingfile
 
-src2srcml foo.c
+srcml foo.c
 check_exit 1 "WARNING srcml: Unable to open file foo.c
 "
 
-src2srcml abc.c
+srcml abc.c
 check_exit 1 "WARNING srcml: Unable to open file abc.c
 "
 
-src2srcml ../src/foo.c
+srcml ../src/foo.c
 check_exit 1 "WARNING srcml: Unable to open file ../src/foo.c
 "

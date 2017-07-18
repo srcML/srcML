@@ -32,27 +32,27 @@ createfile sub/a.cpp.xml "$srcml"
 createfile sub/a.cpp "$src"
 createfile sub/empty.xml "$empty"
 
-srcml2src --show-unit-count sub/a.cpp.xml
+srcml --show-unit-count sub/a.cpp.xml
 check "$output"
 
-srcml2src --show-unit-count < sub/a.cpp.xml
+srcml --show-unit-count < sub/a.cpp.xml
 check "$output"
 
-src2srcml sub/a.cpp --show-unit-count
+srcml sub/a.cpp --show-unit-count
 check "$output"
 
-src2srcml --show-unit-count sub/a.cpp
+srcml --show-unit-count sub/a.cpp
 check "$output"
 
-src2srcml --show-unit-count -l C++ < sub/a.cpp
+srcml --show-unit-count -l C++ < sub/a.cpp
 check "$output"
 
-src2srcml -l C++ --show-unit-count < sub/a.cpp
+srcml -l C++ --show-unit-count < sub/a.cpp
 check "$output"
 
-srcml2src --show-unit-count  sub/empty.xml
+srcml --show-unit-count  sub/empty.xml
 check "$output"
 
-srcml2src --show-unit-count  < sub/empty.xml
+srcml --show-unit-count  < sub/empty.xml
 check "$output"
 

@@ -63,41 +63,41 @@ createfile xml_error/illformedarchive_multi.xml "$illformed_archive_mulit"
 createfile xml_error/illformedarchive_single.xml "$illformed_archive_single"
 
 # ok
-srcml2src xml_error/illformedarchive_multi.xml --info
+srcml xml_error/illformedarchive_multi.xml --info
 check "$info_archive"
 
-srcml2src xml_error/illformedarchive_single.xml --info
+srcml xml_error/illformedarchive_single.xml --info
 check "$info_archive"
 
-srcml2src --info xml_error/illformedarchive_multi.xml
+srcml --info xml_error/illformedarchive_multi.xml
 check "$info_archive"
 
-srcml2src --info xml_error/illformedarchive_single.xml
+srcml --info xml_error/illformedarchive_single.xml
 check "$info_archive"
 
-srcml2src --info < xml_error/illformedarchive_multi.xml
+srcml --info < xml_error/illformedarchive_multi.xml
 check "$info_archive"
 
-srcml2src --info < xml_error/illformedarchive_single.xml
+srcml --info < xml_error/illformedarchive_single.xml
 check "$info_archive"
 
 
 # bad
 # TODO: issue #1039
-srcml2src xml_error/illformedarchive_multi.xml --show-unit-count
+srcml xml_error/illformedarchive_multi.xml --show-unit-count
 check "$units3" "$xml_archive_error"
 
-srcml2src xml_error/illformedarchive_single.xml --show-unit-count
+srcml xml_error/illformedarchive_single.xml --show-unit-count
 check "$units1" "$xml_archive_error"
 
-srcml2src --show-unit-count xml_error/illformedarchive_multi.xml
+srcml --show-unit-count xml_error/illformedarchive_multi.xml
 check "$units3" "$xml_archive_error"
 
-srcml2src --show-unit-count xml_error/illformedarchive_single.xml
+srcml --show-unit-count xml_error/illformedarchive_single.xml
 check "$units1" "$xml_archive_error"
 
-srcml2src --show-unit-count < xml_error/illformedarchive_multi.xml
+srcml --show-unit-count < xml_error/illformedarchive_multi.xml
 check "$units3" "$xml_archive_error"
 
-srcml2src --show-unit-count < xml_error/illformedarchive_single.xml
+srcml --show-unit-count < xml_error/illformedarchive_single.xml
 check "$units1" "$xml_archive_error"

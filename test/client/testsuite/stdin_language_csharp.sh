@@ -11,12 +11,12 @@ define output <<- 'STDOUT'
 
 xmlcheck "$output"
 
-echo -n "" | src2srcml -l C#
+echo -n "" | srcml -l C#
 check "$output"
 
-echo -n "" | src2srcml --language C#
+echo -n "" | srcml --language C#
 check "$output"
 
-echo -n "" | src2srcml --language=C#
+echo -n "" | srcml --language=C#
 check "$output"
 
