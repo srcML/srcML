@@ -58,6 +58,21 @@ namespace {
 
         return trivial;
     }
+
+    bool isUTF8(const std::vector<char>& buffer) {
+
+        bool ascii = true;
+        for (const unsigned char& c : buffer) {
+            // no ISO-8859-1 numbers in this range
+            if (c > 0x7E && c < 0xA0)
+                return true;
+
+            if (c > 0x7E)
+                ascii = false;
+        }
+
+        return ascii;
+    }
 }
 
 /**
@@ -269,8 +284,11 @@ ssize_t UTF8CharBuffer::readChars() {
         // treat unsigned int field as just 4 bytes regardless of endianness
         // with 0 for any missing data
         union { unsigned char d[4]; uint32_t i; } data = { { 0, 0, 0, 0 } };
-        for (size_t i = 0; i < raw.size(); ++i)
+        for (size_t i = 0; i < 4 && i < raw.size(); ++i)
             data.d[i] = static_cast<const unsigned char>(raw[i]);
+
+        fprintf(stderr, "DEBUG:  %s %s %d %p ISUTF8: %d\n", __FILE__,  __FUNCTION__, __LINE__, this, isUTF8(raw));
+
 
         // check for UTF-8 BOM
         if ((data.i & 0x00FFFFFF) == 0x00BFBBEF) {
