@@ -415,40 +415,34 @@ int UTF8CharBuffer::getChar() {
 
     unsigned char c = 0;
 
-    // primarily go through a single time, unless converting "\r\n" to "\n"
-    for (int i = 0; i < 2; ++i) {
+    // may need more characters
+    if (insize == 0 || pos >= insize) {
 
-        // may need more characters
-        if (insize == 0 || pos >= insize) {
-
-            // read more data into raw
-            insize = readChars();
-            if (insize == 0) {
+        // read more data into raw
+        insize = readChars();
+        if (insize == 0) {
                 // EOF
-                return -1;
-            }
+            return -1;
         }
+    }
 
-        // read the next char either from the current input buffer (for a trivial, no-iconv needed)
-        // or from the iconv'ed output buffer
-        c = (trivial ? raw : cooked)[pos];
-        ++pos;
+    // read the next char either from the current input buffer (for a trivial, no-iconv needed)
+    // or from the iconv'ed output buffer
+    c = (trivial ? raw : cooked)[pos];
+    ++pos;
 
-        // sequence "\r\n" where the '\r'
-        // has already been converted to a '\n' so we need to skip over this '\n'
-        // so another pass through the loop
-        if (lastcr && c == '\n') {
-            lastcr = false;
-            continue;
-        }
+    // sequence "\r\n" where the '\r'
+    // has already been converted to a '\n' so we need to skip over this '\n'
+    // so start over
+    if (lastcr && c == '\n') {
+        lastcr = false;
+        getChar();
+    }
 
-        // convert carriage returns to a line feed
-        if (c == '\r') {
-            lastcr = true;
-            c = '\n';
-        }
-
-        break;
+    // convert carriage returns to a line feed
+    if (c == '\r') {
+        lastcr = true;
+        c = '\n';
     }
 
     return c;
