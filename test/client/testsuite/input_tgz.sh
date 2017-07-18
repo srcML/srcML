@@ -53,24 +53,24 @@ createfile list.txt "archive/a.cpp.tgz"
 
 
 # src --> srcml
-src2srcml archive/a.cpp.tgz -o archive/a.cpp.xml
+srcml archive/a.cpp.tgz -o archive/a.cpp.xml
 check archive/a.cpp.xml "$foutput"
 
-src2srcml archive/a.cpp.tgz
+srcml archive/a.cpp.tgz
 check "$foutput"
 
-src2srcml -l C++ < archive/a.cpp.tgz
+srcml -l C++ < archive/a.cpp.tgz
 check "$output"
 
-src2srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.tgz
+srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.tgz
 check archive/a.cpp.xml "$output"
 
 
 # files from
-src2srcml --files-from list.txt
+srcml --files-from list.txt
 check "$archive_output"
 
-src2srcml --files-from list.txt -o archive/list.xml
+srcml --files-from list.txt -o archive/list.xml
 check archive/list.xml "$archive_output"
 
 # files from empty (not necessary - archive format)
@@ -82,14 +82,14 @@ rmfile archive/a.cpp.tgz
 
 
 # srcml --> src
-srcml2src archive/a.cpp.xml
+srcml archive/a.cpp.xml
 check "$src"
 
-srcml2src archive/a.cpp.xml -o archive/a.cpp
+srcml archive/a.cpp.xml -o archive/a.cpp
 check archive/a.cpp "$src"
 
-srcml2src < archive/a.cpp.xml
+srcml < archive/a.cpp.xml
 check "$src"
 
-srcml2src -o archive/a.cpp < archive/a.cpp.xml
+srcml -o archive/a.cpp < archive/a.cpp.xml
 check archive/a.cpp "$src"

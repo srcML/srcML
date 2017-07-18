@@ -21,11 +21,11 @@ xmlcheck "$foutput"
 
 createfile sub/a.java ""
 
-src2srcml --cpp sub/a.java
+srcml --cpp sub/a.java
 check "$foutput"
 
-echo -n "" | src2srcml -l Java --cpp -o sub/a.java.xml
+echo -n "" | srcml -l Java --cpp -o sub/a.java.xml
 check sub/a.java.xml "$output"
 
-src2srcml --cpp sub/a.java -o sub/a.java.xml
+srcml --cpp sub/a.java -o sub/a.java.xml
 check sub/a.java.xml "$foutput"

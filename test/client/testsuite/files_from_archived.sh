@@ -20,10 +20,10 @@ define archive_output <<- 'STDOUT'
 
 echo list.txt | tr " " "\n" | cpio --quiet -o > list.txt.cpio
 
-src2srcml --files-from list.txt.cpio
+srcml --files-from list.txt.cpio
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.cpio -o archive/list.xml
+srcml --files-from list.txt.cpio -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # cpio.bz2
@@ -34,10 +34,10 @@ define archive_output <<- 'STDOUT'
 
 bzip2 -c list.txt.cpio > list.txt.cpio.bz2
 
-src2srcml --files-from list.txt.cpio.bz2
+srcml --files-from list.txt.cpio.bz2
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.cpio.bz2 -o archive/list.xml
+srcml --files-from list.txt.cpio.bz2 -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # cpio.gz
@@ -48,10 +48,10 @@ define archive_output <<- 'STDOUT'
 
 gzip -c list.txt.cpio > list.txt.cpio.gz
 
-src2srcml --files-from list.txt.cpio.gz
+srcml --files-from list.txt.cpio.gz
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.cpio.gz -o archive/list.xml
+srcml --files-from list.txt.cpio.gz -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # tar
@@ -62,10 +62,10 @@ define archive_output <<- 'STDOUT'
 
 tar -cf list.txt.tar list.txt
 
-src2srcml --files-from list.txt.tar
+srcml --files-from list.txt.tar
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.tar -o archive/list.xml
+srcml --files-from list.txt.tar -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # tar.bz2
@@ -76,10 +76,10 @@ define archive_output <<- 'STDOUT'
 
 tar -cjf list.txt.tar.bz2 list.txt
 
-src2srcml --files-from list.txt.tar.bz2
+srcml --files-from list.txt.tar.bz2
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.tar.bz2 -o archive/list.xml
+srcml --files-from list.txt.tar.bz2 -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # tar.gz
@@ -90,10 +90,10 @@ define archive_output <<- 'STDOUT'
 
 tar -czf list.txt.tar.gz list.txt
 
-src2srcml --files-from list.txt.tar.gz
+srcml --files-from list.txt.tar.gz
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.tar.gz -o archive/list.xml
+srcml --files-from list.txt.tar.gz -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # tbz2
@@ -104,10 +104,10 @@ define archive_output <<- 'STDOUT'
 
 tar -cjf list.txt.tbz2 list.txt
 
-src2srcml --files-from list.txt.tbz2
+srcml --files-from list.txt.tbz2
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.tbz2 -o archive/list.xml
+srcml --files-from list.txt.tbz2 -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # tgz
@@ -118,10 +118,10 @@ define archive_output <<- 'STDOUT'
 
 tar -czf list.txt.tgz list.txt
 
-src2srcml --files-from list.txt.tgz
+srcml --files-from list.txt.tgz
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.tgz -o archive/list.xml
+srcml --files-from list.txt.tgz -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # zip
@@ -132,10 +132,10 @@ define archive_output <<- 'STDOUT'
 
 zip --quiet list.txt.zip list.txt
 
-src2srcml --files-from list.txt.zip
+srcml --files-from list.txt.zip
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.zip -o archive/list.xml
+srcml --files-from list.txt.zip -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # zip.bz2
@@ -146,10 +146,10 @@ define archive_output <<- 'STDOUT'
 
 bzip2 -c list.txt.zip > list.txt.zip.bz2
 
-src2srcml --files-from list.txt.zip.bz2
+srcml --files-from list.txt.zip.bz2
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.zip.bz2 -o archive/list.xml
+srcml --files-from list.txt.zip.bz2 -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # zip.gz
@@ -160,8 +160,8 @@ define archive_output <<- 'STDOUT'
 
 gzip -c list.txt.zip > list.txt.zip.gz
 
-src2srcml --files-from list.txt.zip.gz
+srcml --files-from list.txt.zip.gz
 check "$archive_output" "$error"
 
-src2srcml --files-from list.txt.zip.gz -o archive/list.xml
+srcml --files-from list.txt.zip.gz -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"

@@ -43,26 +43,26 @@ define deprecated_warning <<- 'STDERR'
 STDERR
 
 # test
-srcml2src --units <<< "$nestedfile"
+srcml --units <<< "$nestedfile"
 check "2" "$deprecated_warning"
 
-srcml2src --units <<< "$nestedfilesrc"
+srcml --units <<< "$nestedfilesrc"
 check "2" "$deprecated_warning"
 
-srcml2src -U "1" <<< "$nestedfile"
+srcml -U "1" <<< "$nestedfile"
 check $'\na;\n'
 
-srcml2src --unit "1" <<< "$nestedfile"
+srcml --unit "1" <<< "$nestedfile"
 check $'\na;\n'
 
-srcml2src --unit="1" <<< "$nestedfile"
+srcml --unit="1" <<< "$nestedfile"
 check $'\na;\n'
 
-srcml2src -U "2" <<< "$nestedfile"
+srcml -U "2" <<< "$nestedfile"
 check $'\nb;\n'
 
-srcml2src --unit "2" <<< "$nestedfile"
+srcml --unit "2" <<< "$nestedfile"
 check $'\nb;\n'
 
-srcml2src --unit="2" <<< "$nestedfile"
+srcml --unit="2" <<< "$nestedfile"
 check $'\nb;\n'

@@ -28,10 +28,10 @@ define sxmlfile1 <<- 'STDOUT'
 xmlcheck "$nestedfile"
 xmlcheck "$sxmlfile1"
 
-srcml2src -X --unit "1" - <<< "$nestedfile"
+srcml -X --unit "1" - <<< "$nestedfile"
 check "$sxmlfile1"
 
-srcml2src -X --unit "1" <<< "$nestedfile"
+srcml -X --unit "1" <<< "$nestedfile"
 check "$sxmlfile1"
 
 define sxmlfile2 <<- 'STDOUT'
@@ -43,8 +43,8 @@ define sxmlfile2 <<- 'STDOUT'
 
 xmlcheck "$sxmlfile2"
 
-srcml2src -X --unit "2" - <<< "$nestedfile"
+srcml -X --unit "2" - <<< "$nestedfile"
 check "$sxmlfile2"
 
-srcml2src -X --unit "2" <<< "$nestedfile"
+srcml -X --unit "2" <<< "$nestedfile"
 check "$sxmlfile2"

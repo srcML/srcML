@@ -41,138 +41,138 @@ xmlcheck "$foutput"
 createfile sub/a.java "$input"
 
 # standard in
-#src2srcml -l Java -cpp <<< "$input"
+#srcml -l Java -cpp <<< "$input"
 #check "$output"
 #
-#src2srcml -cpp -l Java <<< "$input"
+#srcml -cpp -l Java <<< "$input"
 #check "$output"
 #
-#src2srcml -l Java -cpp -o sub/a.java.xml <<< "$input"
+#srcml -l Java -cpp -o sub/a.java.xml <<< "$input"
 #check sub/a.java.xml "$output"
 #
-#src2srcml -l Java -o sub/a.java.xml -cpp <<< "$input"
+#srcml -l Java -o sub/a.java.xml -cpp <<< "$input"
 #check sub/a.java.xml "$output"
 #
-#src2srcml -o sub/a.java.xml -l Java -cpp <<< "$input"
+#srcml -o sub/a.java.xml -l Java -cpp <<< "$input"
 #check sub/a.java.xml "$output"
 #
-#src2srcml -o sub/a.java.xml -cpp -l Java <<< "$input"
+#srcml -o sub/a.java.xml -cpp -l Java <<< "$input"
 #check sub/a.java.xml "$output"
 #
-#src2srcml -cpp -o sub/a.java.xml -l Java <<< "$input"
+#srcml -cpp -o sub/a.java.xml -l Java <<< "$input"
 #check sub/a.java.xml "$output"
 #
-#src2srcml -cpp -l Java -o sub/a.java.xml <<< "$input"
+#srcml -cpp -l Java -o sub/a.java.xml <<< "$input"
 #check sub/a.java.xml "$output"
 
-echo "$input" | src2srcml -l Java --cpp
+echo "$input" | srcml -l Java --cpp
 check "$output"
 
-echo "$input" | src2srcml --cpp -l Java
+echo "$input" | srcml --cpp -l Java
 check "$output"
 
-echo "$input" | src2srcml -l Java --cpp -o sub/a.java.xml
+echo "$input" | srcml -l Java --cpp -o sub/a.java.xml
 check sub/a.java.xml "$output"
 
-echo "$input" | src2srcml -l Java -o sub/a.java.xml --cpp
+echo "$input" | srcml -l Java -o sub/a.java.xml --cpp
 check sub/a.java.xml "$output"
 
-echo "$input" | src2srcml --cpp -l Java -o sub/a.java.xml
+echo "$input" | srcml --cpp -l Java -o sub/a.java.xml
 check sub/a.java.xml "$output"
 
-echo "$input" | src2srcml --cpp -o sub/a.java.xml -l Java
+echo "$input" | srcml --cpp -o sub/a.java.xml -l Java
 check sub/a.java.xml "$output"
 
-echo "$input" | src2srcml -o sub/a.java.xml -l Java --cpp
+echo "$input" | srcml -o sub/a.java.xml -l Java --cpp
 check sub/a.java.xml "$output"
 
-echo "$input" | src2srcml -o sub/a.java.xml --cpp -l Java
+echo "$input" | srcml -o sub/a.java.xml --cpp -l Java
 check sub/a.java.xml "$output"
 
 # from file - options after input
-src2srcml sub/a.java -l Java --cpp
+srcml sub/a.java -l Java --cpp
 check "$foutput"
 
-src2srcml sub/a.java --cpp -l Java
+srcml sub/a.java --cpp -l Java
 check "$foutput"
 
-src2srcml sub/a.java --cpp -l Java -o sub/a.java.xml
+srcml sub/a.java --cpp -l Java -o sub/a.java.xml
 check sub/a.java.xml "$foutput"
 
-src2srcml sub/a.java -l Java --cpp -o sub/a.java.xml
+srcml sub/a.java -l Java --cpp -o sub/a.java.xml
 check sub/a.java.xml "$foutput"
 
-src2srcml sub/a.java -l Java -o sub/a.java.xml --cpp
+srcml sub/a.java -l Java -o sub/a.java.xml --cpp
 check sub/a.java.xml "$foutput"
 
-src2srcml sub/a.java -o sub/a.java.xml -l Java --cpp
+srcml sub/a.java -o sub/a.java.xml -l Java --cpp
 check sub/a.java.xml "$foutput"
 
-src2srcml sub/a.java -o sub/a.java.xml --cpp -l Java
+srcml sub/a.java -o sub/a.java.xml --cpp -l Java
 check sub/a.java.xml "$foutput"
 
-src2srcml sub/a.java --cpp -o sub/a.java.xml -l Java
+srcml sub/a.java --cpp -o sub/a.java.xml -l Java
 check sub/a.java.xml "$foutput"
 
 # from file - options before input
-src2srcml -l Java --cpp sub/a.java
+srcml -l Java --cpp sub/a.java
 check "$foutput"
 
-src2srcml --cpp -l Java sub/a.java
+srcml --cpp -l Java sub/a.java
 check "$foutput"
 
-src2srcml --cpp -l Java -o sub/a.java.xml sub/a.java
+srcml --cpp -l Java -o sub/a.java.xml sub/a.java
 check sub/a.java.xml "$foutput"
 
-src2srcml -l Java --cpp -o sub/a.java.xml sub/a.java
+srcml -l Java --cpp -o sub/a.java.xml sub/a.java
 check sub/a.java.xml "$foutput"
 
-src2srcml -l Java -o sub/a.java.xml --cpp sub/a.java
+srcml -l Java -o sub/a.java.xml --cpp sub/a.java
 check sub/a.java.xml "$foutput"
 
-src2srcml -o sub/a.java.xml -l Java --cpp sub/a.java
+srcml -o sub/a.java.xml -l Java --cpp sub/a.java
 check sub/a.java.xml "$foutput"
 
-src2srcml -o sub/a.java.xml --cpp -l Java sub/a.java
+srcml -o sub/a.java.xml --cpp -l Java sub/a.java
 check sub/a.java.xml "$foutput"
 
-src2srcml --cpp -o sub/a.java.xml -l Java sub/a.java
+srcml --cpp -o sub/a.java.xml -l Java sub/a.java
 check sub/a.java.xml "$foutput"
 
 # from file - options intermixed with input
-src2srcml --cpp -l Java sub/a.java -o sub/a.java.xml
+srcml --cpp -l Java sub/a.java -o sub/a.java.xml
 check sub/a.java.xml "$foutput"
 
-src2srcml -l Java --cpp sub/a.java -o sub/a.java.xml
+srcml -l Java --cpp sub/a.java -o sub/a.java.xml
 check sub/a.java.xml "$foutput"
 
-src2srcml -l Java -o sub/a.java.xml sub/a.java --cpp 
+srcml -l Java -o sub/a.java.xml sub/a.java --cpp 
 check sub/a.java.xml "$foutput"
 
-src2srcml -o sub/a.java.xml -l Java sub/a.java --cpp 
+srcml -o sub/a.java.xml -l Java sub/a.java --cpp 
 check sub/a.java.xml "$foutput"
 
-src2srcml -o sub/a.java.xml --cpp sub/a.java -l Java
+srcml -o sub/a.java.xml --cpp sub/a.java -l Java
 check sub/a.java.xml "$foutput"
 
-src2srcml --cpp -o sub/a.java.xml sub/a.java -l Java
+srcml --cpp -o sub/a.java.xml sub/a.java -l Java
 check sub/a.java.xml "$foutput"
 
-src2srcml --cpp sub/a.java -l Java -o sub/a.java.xml
+srcml --cpp sub/a.java -l Java -o sub/a.java.xml
 check sub/a.java.xml "$foutput"
 
-src2srcml -l Java sub/a.java --cpp -o sub/a.java.xml
+srcml -l Java sub/a.java --cpp -o sub/a.java.xml
 check sub/a.java.xml "$foutput"
 
-src2srcml -l Java sub/a.java -o sub/a.java.xml --cpp
+srcml -l Java sub/a.java -o sub/a.java.xml --cpp
 check sub/a.java.xml "$foutput"
 
-src2srcml -o sub/a.java.xml sub/a.java -l Java --cpp 
+srcml -o sub/a.java.xml sub/a.java -l Java --cpp 
 check sub/a.java.xml "$foutput"
 
-src2srcml -o sub/a.java.xml sub/a.java --cpp -l Java
+srcml -o sub/a.java.xml sub/a.java --cpp -l Java
 check sub/a.java.xml "$foutput"
 
-src2srcml --cpp sub/a.java -o sub/a.java.xml -l Java
+srcml --cpp sub/a.java -o sub/a.java.xml -l Java
 check sub/a.java.xml "$foutput"
 

@@ -38,33 +38,33 @@ srcml sub/a.xml -p "nonexistent.com"
 check
 
 # standard input
-srcml2src -p "http://www.srcML.org/srcML/src" <<< "$input"
+srcml -p "http://www.srcML.org/srcML/src" <<< "$input"
 check ""
 
-srcml2src --prefix "http://www.srcML.org/srcML/src" <<< "$input"
+srcml --prefix "http://www.srcML.org/srcML/src" <<< "$input"
 check ""
 
-srcml2src --prefix="http://www.srcML.org/srcML/src" <<< "$input"
+srcml --prefix="http://www.srcML.org/srcML/src" <<< "$input"
 check ""
 
-srcml2src -p "http://www.srcML.org/srcML/cpp" <<< "$input"
+srcml -p "http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
-srcml2src --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
+srcml --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
-srcml2src --prefix="http://www.srcML.org/srcML/cpp" <<< "$input"
+srcml --prefix="http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
-srcml2src --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
+srcml --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
-srcml2src -p "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
+srcml -p "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 check
 
-srcml2src --prefix "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
+srcml --prefix "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 check
 
-srcml2src --prefix="http://www.cs.uakron.edu/~collard/foo" <<< "$input"
+srcml --prefix="http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 check
 

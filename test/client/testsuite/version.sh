@@ -9,8 +9,8 @@ define output <<- 'STDOUT'
 	srcml REVISION
 	STDOUT
 
-srcml2src -V | head -n 2
+srcml -V | head -n 2
 check "$output"
 
-srcml2src --version | head -n 2
+srcml --version | head -n 2
 check "$output"

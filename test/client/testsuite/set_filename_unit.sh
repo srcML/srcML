@@ -15,28 +15,28 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 createfile sub/a.cpp ""
 
-src2srcml sub/a.cpp -f "foo.cpp"
+srcml sub/a.cpp -f "foo.cpp"
 check "$output"
 
-src2srcml sub/a.cpp --filename "foo.cpp"
+srcml sub/a.cpp --filename "foo.cpp"
 check "$output"
 
-src2srcml sub/a.cpp --filename="foo.cpp"
+srcml sub/a.cpp --filename="foo.cpp"
 check "$output"
 
-src2srcml -l C++ -f 'foo.cpp' -o sub/a.cpp.xml sub/a.cpp
+srcml -l C++ -f 'foo.cpp' -o sub/a.cpp.xml sub/a.cpp
 check sub/a.cpp.xml "$output"
 
-src2srcml -f 'foo.cpp' sub/a.cpp -o sub/a.cpp.xml
+srcml -f 'foo.cpp' sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$output"
 
 
 # standard input
-echo -n "" | src2srcml -l C++ -f foo.cpp
+echo -n "" | srcml -l C++ -f foo.cpp
 check "$output"
 
-echo -n "" | src2srcml -l C++ --filename foo.cpp
+echo -n "" | srcml -l C++ --filename foo.cpp
 check "$output"
 
-echo -n "" | src2srcml -l C++ --filename=foo.cpp
+echo -n "" | srcml -l C++ --filename=foo.cpp
 check "$output"

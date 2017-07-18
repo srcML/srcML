@@ -28,30 +28,30 @@ xmlcheck "$output"
 xmlcheck "$fsrcml"
 createfile sub/a.cpp "a;"
 
-echo -n "a;" | src2srcml -l C++ --url bar --archive
+echo -n "a;" | srcml -l C++ --url bar --archive
 check "$output"
 
-echo -n "a;" | src2srcml -l C++ --url=bar --archive
+echo -n "a;" | srcml -l C++ --url=bar --archive
 check "$output"
 
 
-src2srcml sub/a.cpp --url "bar" --archive
+srcml sub/a.cpp --url "bar" --archive
 check "$fsrcml"
 
-src2srcml sub/a.cpp --url="bar" --archive
+srcml sub/a.cpp --url="bar" --archive
 check "$fsrcml"
 
-src2srcml --url "bar" sub/a.cpp --archive
+srcml --url "bar" sub/a.cpp --archive
 check "$fsrcml"
 
 
-src2srcml --url="bar" sub/a.cpp --archive
+srcml --url="bar" sub/a.cpp --archive
 check "$fsrcml"
 
-src2srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp --archive
+srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp --archive
 check sub/a.cpp.xml "$fsrcml"
 
-src2srcml --url 'bar' sub/a.cpp -o sub/a.cpp.xml --archive
+srcml --url 'bar' sub/a.cpp -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml "$fsrcml"
 
 
@@ -70,24 +70,24 @@ define fsrcml <<- 'STDOUT'
 
 createfile sub/b.cpp "b;"
 
-src2srcml sub/a.cpp sub/b.cpp --url "bar" --in-order
+srcml sub/a.cpp sub/b.cpp --url "bar" --in-order
 check "$fsrcml"
 
-src2srcml sub/a.cpp sub/b.cpp --url="bar" --in-order
+srcml sub/a.cpp sub/b.cpp --url="bar" --in-order
 check "$fsrcml"
 
-src2srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
+srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
 check "$fsrcml"
 
-src2srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
+srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
 check "$fsrcml"
 
-src2srcml --url="bar" sub/a.cpp sub/b.cpp --in-order
+srcml --url="bar" sub/a.cpp sub/b.cpp --in-order
 check "$fsrcml"
 
-src2srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
+srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
 check sub/a.cpp.xml "$fsrcml"
 
-src2srcml --url 'bar' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
+srcml --url 'bar' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
 check sub/a.cpp.xml "$fsrcml"
 

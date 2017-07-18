@@ -30,7 +30,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-# srcml2src - input srcml single file
+# src --> srcml : input srcml single file
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
@@ -38,64 +38,64 @@ echo "a;" > expected_output
 echo -en '\0' >> expected_output
 echo "b;" >> expected_output
 
-srcml2src --output-src sub/a.cpp.xml > ab
+srcml --output-src sub/a.cpp.xml > ab
 cmp --verbose ab expected_output
 rm ab
 
-srcml2src -S sub/a.cpp.xml > ab
+srcml -S sub/a.cpp.xml > ab
 cmp --verbose ab expected_output
 rm ab
 
-srcml2src -U 1 --output-src sub/a.cpp.xml
+srcml -U 1 --output-src sub/a.cpp.xml
 check "$srca"
 
-srcml2src -U 1 -S sub/a.cpp.xml
+srcml -U 1 -S sub/a.cpp.xml
 check "$srca"
 
-srcml2src -U 2 --output-src sub/a.cpp.xml
+srcml -U 2 --output-src sub/a.cpp.xml
 check "$srcb"
 
-srcml2src -U 2 -S sub/a.cpp.xml
+srcml -U 2 -S sub/a.cpp.xml
 check "$srcb"
 
-cat sub/a.cpp.xml | src2srcml -S > ab
+cat sub/a.cpp.xml | srcml -S > ab
 cmp --verbose ab expected_output
 rm ab
 
-src2srcml -U 1 -S < sub/a.cpp.xml
+srcml -U 1 -S < sub/a.cpp.xml
 check "$srca"
 
-src2srcml -U 2 -S < sub/a.cpp.xml
+srcml -U 2 -S < sub/a.cpp.xml
 check "$srcb"
 
-src2srcml -S sub/a.cpp.xml -o sub/b.cpp
+srcml -S sub/a.cpp.xml -o sub/b.cpp
 check sub/b.cpp "$srca"
 
-src2srcml -S -U 1 sub/a.cpp.xml -o sub/b.cpp
+srcml -S -U 1 sub/a.cpp.xml -o sub/b.cpp
 check sub/b.cpp "$srca"
 
-src2srcml -S -U 2 sub/a.cpp.xml -o sub/b.cpp
+srcml -S -U 2 sub/a.cpp.xml -o sub/b.cpp
 check sub/b.cpp "$srcb"
 
-src2srcml -S -o sub/b.cpp sub/a.cpp.xml
+srcml -S -o sub/b.cpp sub/a.cpp.xml
 check sub/b.cpp "$srca"
 
-src2srcml -S -U 1 -o sub/b.cpp sub/a.cpp.xml
+srcml -S -U 1 -o sub/b.cpp sub/a.cpp.xml
 check sub/b.cpp "$srca"
 
-src2srcml -U 1 -S -o sub/b.cpp sub/a.cpp.xml
+srcml -U 1 -S -o sub/b.cpp sub/a.cpp.xml
 check sub/b.cpp "$srca"
 
-src2srcml -U 2 -S -o sub/b.cpp sub/a.cpp.xml
+srcml -U 2 -S -o sub/b.cpp sub/a.cpp.xml
 check sub/b.cpp "$srcb"
 
-src2srcml -S -o sub/b.cpp < sub/a.cpp.xml
+srcml -S -o sub/b.cpp < sub/a.cpp.xml
 check sub/b.cpp "$srca"
 
-src2srcml -U 1 -S -o sub/b.cpp < sub/a.cpp.xml
+srcml -U 1 -S -o sub/b.cpp < sub/a.cpp.xml
 check sub/b.cpp "$srca"
 
-src2srcml -U 2 -S -o sub/b.cpp < sub/a.cpp.xml
+srcml -U 2 -S -o sub/b.cpp < sub/a.cpp.xml
 check sub/b.cpp "$srcb"
 
 # single archive
@@ -109,46 +109,45 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-# srcml2src - input srcml single file
+# srcml --> src : input srcml single file
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
-srcml2src --output-src sub/a.cpp.xml
+srcml --output-src sub/a.cpp.xml
 check "$srca"
 
-srcml2src -S sub/a.cpp.xml
+srcml -S sub/a.cpp.xml
 check "$srca"
 
-srcml2src -U 1 --output-src sub/a.cpp.xml
+srcml -U 1 --output-src sub/a.cpp.xml
 check "$srca"
 
-srcml2src -U 1 -S sub/a.cpp.xml
+srcml -U 1 -S sub/a.cpp.xml
 check "$srca"
 
-src2srcml -S < sub/a.cpp.xml
+srcml -S < sub/a.cpp.xml
 check "$srca"
 
-src2srcml -U 1 -S < sub/a.cpp.xml
+srcml -U 1 -S < sub/a.cpp.xml
 check "$srca"
 
-src2srcml -S sub/a.cpp.xml -o sub/b.cpp
+srcml -S sub/a.cpp.xml -o sub/b.cpp
 check sub/b.cpp "$srca"
 
-src2srcml -S -U 1 sub/a.cpp.xml -o sub/b.cpp
+srcml -S -U 1 sub/a.cpp.xml -o sub/b.cpp
 check sub/b.cpp "$srca"
 
-src2srcml -S -o sub/b.cpp sub/a.cpp.xml
+srcml -S -o sub/b.cpp sub/a.cpp.xml
 check sub/b.cpp "$srca"
 
-src2srcml -S -U 1 -o sub/b.cpp sub/a.cpp.xml
+srcml -S -U 1 -o sub/b.cpp sub/a.cpp.xml
 check sub/b.cpp "$srca"
 
-src2srcml -U 1 -S -o sub/b.cpp sub/a.cpp.xml
+srcml -U 1 -S -o sub/b.cpp sub/a.cpp.xml
 check sub/b.cpp "$srca"
 
-src2srcml -S -o sub/b.cpp < sub/a.cpp.xml
+srcml -S -o sub/b.cpp < sub/a.cpp.xml
 check sub/b.cpp "$srca"
 
-src2srcml -U 1 -S -o sub/b.cpp < sub/a.cpp.xml
+srcml -U 1 -S -o sub/b.cpp < sub/a.cpp.xml
 check sub/b.cpp "$srca"
-

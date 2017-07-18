@@ -13,13 +13,13 @@ xmlcheck "$fxmlfile"
 createfile sub/a.cpp ""
 
 # src to srcml
-src2srcml --register-ext cpp=Java sub/a.cpp
+srcml --register-ext cpp=Java sub/a.cpp
 check "$fxmlfile"
 
-src2srcml --register-ext="cpp=Java" sub/a.cpp 
+srcml --register-ext="cpp=Java" sub/a.cpp 
 check "$fxmlfile"
 
-src2srcml --register-ext cpp=Java sub/a.cpp -o sub/a.cpp.xml
+srcml --register-ext cpp=Java sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fxmlfile"
 
 define fsxmlfile <<- 'STDOUT'
@@ -30,9 +30,9 @@ define fsxmlfile <<- 'STDOUT'
 xmlcheck "$fsxmlfile"
 createfile sub/a.xml "$fsxmlfile"
 
-src2srcml --register-ext xml=Java sub/a.xml
+srcml --register-ext xml=Java sub/a.xml
 check
 
-src2srcml --register-ext="xml=Java" sub/a.xml
+srcml --register-ext="xml=Java" sub/a.xml
 check
 

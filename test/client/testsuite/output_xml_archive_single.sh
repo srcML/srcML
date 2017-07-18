@@ -21,29 +21,29 @@ xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
 # file before options
-srcml2src sub/a.cpp.xml -X -o sub/b.cpp.xml
+srcml sub/a.cpp.xml -X -o sub/b.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-srcml2src sub/a.cpp.xml -X
+srcml sub/a.cpp.xml -X
 check "$srcml"
 
-srcml2src sub/a.cpp.xml -o sub/b.cpp.xml -X
+srcml sub/a.cpp.xml -o sub/b.cpp.xml -X
 check sub/b.cpp.xml "$srcml"
 
 # options before file
-srcml2src -X sub/a.cpp.xml -o sub/b.cpp.xml
+srcml -X sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-srcml2src -X sub/a.cpp.xml
+srcml -X sub/a.cpp.xml
 check "$srcml"
 
-srcml2src -o sub/b.cpp.xml -X < sub/a.cpp.xml
+srcml -o sub/b.cpp.xml -X < sub/a.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-srcml2src -X -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml -X -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-srcml2src -o sub/b.cpp.xml -X sub/a.cpp.xml
+srcml -o sub/b.cpp.xml -X sub/a.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
 # XML from standard in

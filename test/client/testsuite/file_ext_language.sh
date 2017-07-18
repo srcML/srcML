@@ -14,7 +14,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.c ""
 
-src2srcml emptysrc/empty.c
+srcml emptysrc/empty.c
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -24,7 +24,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.h ""
 
-src2srcml emptysrc/empty.h
+srcml emptysrc/empty.h
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -34,7 +34,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.c.gz ""
 
-src2srcml emptysrc/empty.c.gz
+srcml emptysrc/empty.c.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -44,7 +44,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.h.gz ""
 
-src2srcml emptysrc/empty.h.gz
+srcml emptysrc/empty.h.gz
 check "$checkvar"
 
 #check c++ file extensions
@@ -55,7 +55,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.cpp ""
 
-src2srcml emptysrc/empty.cpp
+srcml emptysrc/empty.cpp
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -65,7 +65,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.cc ""
 
-src2srcml emptysrc/empty.cc
+srcml emptysrc/empty.cc
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -75,7 +75,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.cxx ""
 
-src2srcml emptysrc/empty.cxx
+srcml emptysrc/empty.cxx
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -85,7 +85,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.c++ ""
 
-src2srcml emptysrc/empty.c++
+srcml emptysrc/empty.c++
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -95,7 +95,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.hpp ""
 
-src2srcml emptysrc/empty.hpp
+srcml emptysrc/empty.hpp
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -105,7 +105,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.hh ""
 
-src2srcml emptysrc/empty.hh
+srcml emptysrc/empty.hh
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -115,7 +115,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.hxx ""
 
-src2srcml emptysrc/empty.hxx
+srcml emptysrc/empty.hxx
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -125,7 +125,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.h++ ""
 
-src2srcml emptysrc/empty.h++
+srcml emptysrc/empty.h++
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -135,7 +135,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.tcc ""
 
-src2srcml emptysrc/empty.tcc
+srcml emptysrc/empty.tcc
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -145,7 +145,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.cpp.gz ""
 
-src2srcml emptysrc/empty.cpp.gz
+srcml emptysrc/empty.cpp.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -155,7 +155,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.cc.gz ""
 
-src2srcml emptysrc/empty.cc.gz
+srcml emptysrc/empty.cc.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -165,7 +165,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.cxx.gz ""
 
-src2srcml emptysrc/empty.cxx.gz
+srcml emptysrc/empty.cxx.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -175,7 +175,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.c++.gz ""
 
-src2srcml emptysrc/empty.c++.gz
+srcml emptysrc/empty.c++.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -185,7 +185,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.hpp.gz ""
 
-src2srcml emptysrc/empty.hpp.gz
+srcml emptysrc/empty.hpp.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -195,7 +195,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.hh.gz ""
 
-src2srcml emptysrc/empty.hh.gz
+srcml emptysrc/empty.hh.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -205,7 +205,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.hxx.gz ""
 
-src2srcml emptysrc/empty.hxx.gz
+srcml emptysrc/empty.hxx.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -215,7 +215,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.h++.gz ""
 
-src2srcml emptysrc/empty.h++.gz
+srcml emptysrc/empty.h++.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -225,7 +225,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.tcc.gz ""
 
-src2srcml emptysrc/empty.tcc.gz
+srcml emptysrc/empty.tcc.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -236,7 +236,7 @@ define checkvar <<- 'STDOUT'
 # check java file extension
 createfile emptysrc/empty.java ""
 
-src2srcml emptysrc/empty.java
+srcml emptysrc/empty.java
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -246,7 +246,7 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.java.gz ""
 
-src2srcml emptysrc/empty.java.gz
+srcml emptysrc/empty.java.gz
 check "$checkvar"
 
 define checkvar <<- 'STDOUT'
@@ -256,5 +256,5 @@ define checkvar <<- 'STDOUT'
 
 createfile emptysrc/empty.aj.gz ""
 
-src2srcml emptysrc/empty.aj.gz
+srcml emptysrc/empty.aj.gz
 check "$checkvar"

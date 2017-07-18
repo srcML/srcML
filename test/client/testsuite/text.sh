@@ -18,49 +18,49 @@ fi
 
 xmlcheck "$srcml"
 
-src2srcml -t "" -l "C++"
+srcml -t "" -l "C++"
 check "$srcml"
 
-src2srcml --text "" -l "C++"
+srcml --text "" -l "C++"
 check "$srcml"
 
-src2srcml --text="" -l "C++"
+srcml --text="" -l "C++"
 check "$srcml"
 
 set +e
 
-src2srcml --text -l "C++"
+srcml --text -l "C++"
 check_exit 7
 
 set -e
 
-echo -n "" | src2srcml -l "C++"
+echo -n "" | srcml -l "C++"
 check "$srcml"
 
-src2srcml -t "" -l "C++" -o sub/a.cpp.xml
+srcml -t "" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$srcml"
 
-src2srcml -l C++ -t "" -o sub/a.cpp.xml
+srcml -l C++ -t "" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$srcml"
 
-src2srcml --text "" -l "C++" -o sub/a.cpp.xml
+srcml --text "" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$srcml"
 
-src2srcml -l C++ --text "" -o sub/a.cpp.xml
+srcml -l C++ --text "" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$srcml"
 
-src2srcml --text="" -l "C++" -o sub/a.cpp.xml
+srcml --text="" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$srcml"
 
-src2srcml -l C++ --text="" -o sub/a.cpp.xml
+srcml -l C++ --text="" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$srcml"
 
 set +e
 
-src2srcml --text -l "C++" -o sub/a.cpp.xml
+srcml --text -l "C++" -o sub/a.cpp.xml
 check_exit 7
 
-src2srcml -l C++ --text -o sub/a.cpp.xml
+srcml -l C++ --text -o sub/a.cpp.xml
 check_exit 7
 
 set -e
@@ -75,34 +75,34 @@ xmlcheck "$asrcml"
 
 message "FIXME: Why is this message required?"
 
-src2srcml -t "a;" -l "C++"
+srcml -t "a;" -l "C++"
 check "$asrcml"
 
-src2srcml --text "a;" -l "C++"
+srcml --text "a;" -l "C++"
 check "$asrcml"
 
-src2srcml --text="a;" -l "C++"
+srcml --text="a;" -l "C++"
 check "$asrcml"
 
-echo -n "a;" | src2srcml -l "C++"
+echo -n "a;" | srcml -l "C++"
 check "$asrcml"
 
-src2srcml -t "a;" -l "C++" -o sub/a.cpp.xml
+srcml -t "a;" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$asrcml"
 
-src2srcml -l C++ -t "a;" -o sub/a.cpp.xml
+srcml -l C++ -t "a;" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$asrcml"
 
-src2srcml --text "a;" -l "C++" -o sub/a.cpp.xml
+srcml --text "a;" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$asrcml"
 
-src2srcml -l C++ --text "a;" -o sub/a.cpp.xml
+srcml -l C++ --text "a;" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$asrcml"
 
-src2srcml --text="a;" -l "C++" -o sub/a.cpp.xml
+srcml --text="a;" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$asrcml"
 
-src2srcml -l C++ --text="a;" -o sub/a.cpp.xml
+srcml -l C++ --text="a;" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$asrcml"
 
 # escaped newline
@@ -114,34 +114,34 @@ define ansrcml <<- 'STDOUT'
 
 xmlcheck "$ansrcml"
 
-src2srcml -t "a;\n" -l "C++"
+srcml -t "a;\n" -l "C++"
 check "$ansrcml"
 
-src2srcml --text "a;\n" -l "C++"
+srcml --text "a;\n" -l "C++"
 check "$ansrcml"
 
-src2srcml --text="a;\n" -l "C++"
+srcml --text="a;\n" -l "C++"
 check "$ansrcml"
 
-echo "a;" | src2srcml -l "C++"
+echo "a;" | srcml -l "C++"
 check "$ansrcml"
 
-src2srcml -t "a;\n" -l "C++" -o sub/a.cpp.xml
+srcml -t "a;\n" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$ansrcml"
 
-src2srcml -l C++ -t "a;\n" -o sub/a.cpp.xml
+srcml -l C++ -t "a;\n" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$ansrcml"
 
-src2srcml --text "a;\n" -l "C++" -o sub/a.cpp.xml
+srcml --text "a;\n" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$ansrcml"
 
-src2srcml -l C++ --text "a;\n" -o sub/a.cpp.xml
+srcml -l C++ --text "a;\n" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$ansrcml"
 
-src2srcml --text="a;\n" -l "C++" -o sub/a.cpp.xml
+srcml --text="a;\n" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$ansrcml"
 
-src2srcml -l C++ --text="a;\n" -o sub/a.cpp.xml
+srcml -l C++ --text="a;\n" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$ansrcml"
 
 ##
@@ -152,42 +152,42 @@ check sub/a.cpp.xml "$ansrcml"
 
 # escaped \a
 text="\aa;\a"
-src2srcml -l C++ --text="\aa;\a" | srcml2src
+srcml -l C++ --text="\aa;\a" | srcml
 message "$($ECHO -en "\aa;\a")"
 
 # escaped \b
 text="\bb;\b"
-src2srcml -l C++ --text="\bb;\b" | srcml2src
+srcml -l C++ --text="\bb;\b" | srcml
 check "$($ECHO -en "\bb;\b")"
 
 # escaped \f
-src2srcml -l C++ --text="\ff;\f" | srcml2src
+srcml -l C++ --text="\ff;\f" | srcml
 check "$($ECHO -en "\ff;\f")"
 
 # escaped \t
-src2srcml -l C++ --text="\tt;\t" | srcml2src
+srcml -l C++ --text="\tt;\t" | srcml
 check "$($ECHO -en "\tt;\t")"
 
 # escaped \v
-src2srcml -l C++ --text="\vv;\v" | srcml2src
+srcml -l C++ --text="\vv;\v" | srcml
 check "$($ECHO -en "\vv;\v")"
 
 # hex characters
-src2srcml -l C++ --text="\x68;" | srcml2src
+srcml -l C++ --text="\x68;" | srcml
 check "$($ECHO -en "\x68;")"
 
-src2srcml -l C++ --text="\10;" | srcml2src
+srcml -l C++ --text="\10;" | srcml
 check "$($ECHO -en "\10;")"
 
 # octal characters
-src2srcml -l C++ --text="\0150;" | srcml2src
+srcml -l C++ --text="\0150;" | srcml
 check "$($ECHO -en "\0150;")"
 
-src2srcml -l C++ --text="\03;" | srcml2src
+srcml -l C++ --text="\03;" | srcml
 check "$($ECHO -en "\03;")"
 
 # escaped \e
-src2srcml -l C++ --text="\ee;\e" | srcml2src
+srcml -l C++ --text="\ee;\e" | srcml
 check "$($ECHO -en "\ee;\e")"
 
 exit 0
@@ -195,5 +195,5 @@ exit 0
 # escaped \r
 # Note: \r currently get normalized to \n in src->srcml
 # FIXME
-src2srcml -l C++ --text="\rr;" | srcml2src
+srcml -l C++ --text="\rr;" | srcml
 check $($ECHO -en "\nr;")

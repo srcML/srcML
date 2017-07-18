@@ -58,68 +58,68 @@ createfile sub/a.cpp "$input"
 
 
 # use default, where if 0 sections are not marked up
-src2srcml -l C++ < sub/a.cpp
+srcml -l C++ < sub/a.cpp
 check "$nomarkupif0"
 
-src2srcml -l C++ -o sub/b.xml < sub/a.cpp
+srcml -l C++ -o sub/b.xml < sub/a.cpp
 check sub/b.xml "$nomarkupif0"
 
-src2srcml -o sub/b.xml -l C++ < sub/a.cpp
+srcml -o sub/b.xml -l C++ < sub/a.cpp
 check sub/b.xml "$nomarkupif0"
 
-src2srcml sub/a.cpp
+srcml sub/a.cpp
 check "$fnomarkupif0"
 
-src2srcml sub/a.cpp -o sub/b.xml
+srcml sub/a.cpp -o sub/b.xml
 check sub/b.xml "$fnomarkupif0"
 
 
 # markup if0 regions
-src2srcml -l C++ --cpp-markup-if0 < sub/a.cpp
+srcml -l C++ --cpp-markup-if0 < sub/a.cpp
 check "$markupif0"
 
-src2srcml --cpp-markup-if0 -l C++ < sub/a.cpp
+srcml --cpp-markup-if0 -l C++ < sub/a.cpp
 check "$markupif0"
 
-src2srcml -l C++ --cpp-markup-if0 -o sub/b.xml < sub/a.cpp
+srcml -l C++ --cpp-markup-if0 -o sub/b.xml < sub/a.cpp
 check sub/b.xml "$markupif0"
 
-src2srcml -l C++ -o sub/b.xml --cpp-markup-if0 < sub/a.cpp
+srcml -l C++ -o sub/b.xml --cpp-markup-if0 < sub/a.cpp
 check sub/b.xml "$markupif0"
 
-src2srcml -o sub/b.xml -l C++ --cpp-markup-if0 < sub/a.cpp
+srcml -o sub/b.xml -l C++ --cpp-markup-if0 < sub/a.cpp
 check sub/b.xml "$markupif0"
 
-src2srcml --cpp-markup-if0 -l C++ -o sub/b.xml < sub/a.cpp
+srcml --cpp-markup-if0 -l C++ -o sub/b.xml < sub/a.cpp
 check sub/b.xml "$markupif0"
 
-src2srcml --cpp-markup-if0 -o sub/b.xml -l C++ < sub/a.cpp
+srcml --cpp-markup-if0 -o sub/b.xml -l C++ < sub/a.cpp
 check sub/b.xml "$markupif0"
 
-src2srcml -o sub/b.xml --cpp-markup-if0 -l C++ < sub/a.cpp
+srcml -o sub/b.xml --cpp-markup-if0 -l C++ < sub/a.cpp
 check sub/b.xml "$markupif0"
 
-src2srcml sub/a.cpp --cpp-markup-if0
+srcml sub/a.cpp --cpp-markup-if0
 check "$fmarkupif0"
 
-src2srcml --cpp-markup-if0 sub/a.cpp
+srcml --cpp-markup-if0 sub/a.cpp
 check "$fmarkupif0"
 
-src2srcml sub/a.cpp --cpp-markup-if0 -o sub/b.xml
+srcml sub/a.cpp --cpp-markup-if0 -o sub/b.xml
 check sub/b.xml "$fmarkupif0"
 
-src2srcml --cpp-markup-if0 sub/a.cpp -o sub/b.xml
+srcml --cpp-markup-if0 sub/a.cpp -o sub/b.xml
 check sub/b.xml "$fmarkupif0"
 
-src2srcml sub/a.cpp -o sub/b.xml --cpp-markup-if0
+srcml sub/a.cpp -o sub/b.xml --cpp-markup-if0
 check sub/b.xml "$fmarkupif0"
 
-src2srcml --cpp-markup-if0 -o sub/b.xml sub/a.cpp
+srcml --cpp-markup-if0 -o sub/b.xml sub/a.cpp
 check sub/b.xml "$fmarkupif0"
 
-src2srcml -o sub/b.xml sub/a.cpp --cpp-markup-if0
+srcml -o sub/b.xml sub/a.cpp --cpp-markup-if0
 check sub/b.xml "$fmarkupif0"
 
-src2srcml -o sub/b.xml --cpp-markup-if0 sub/a.cpp
+srcml -o sub/b.xml --cpp-markup-if0 sub/a.cpp
 check sub/b.xml "$fmarkupif0"
 

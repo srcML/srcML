@@ -43,27 +43,9 @@ cd $TEMPDIR
 # make sure to find the srcml executable
 export PATH=.:$PATH
 
-echo "$SRC2SRCML"
-
-if [ -z "$SRC2SRCML" ]; then
-    SRC2SRCML='/usr/local/bin/srcml'
-fi
-
-if [ -z "$SRCML2SRC" ]; then
-    SRCML2SRC='/usr/local/bin/srcml'
-fi
-
 if [ -z "$SRCML"]; then
     SRCML='/usr/local/bin/srcml'
 fi
-
-function src2srcml () {
-    $SRC2SRCML "$@"
-}
-
-function srcml2src () {
-    $SRCML2SRC "$@"
-}
 
 function srcml () {
     $SRCML "$@"
@@ -92,7 +74,7 @@ define() {
 
     # read stdin into variable $1
     IFS= read -r -d '' $1 || true
- 
+
     # replace any mention of REVISION with the revision number,
     eval $1=\${$1//REVISION/${REVISION}}
 }

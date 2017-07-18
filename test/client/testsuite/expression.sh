@@ -39,60 +39,60 @@ define deprecated_warning <<- 'STDERR'
 STDERR
 
 # expression only
-src2srcml -e sub/a.cpp
+srcml -e sub/a.cpp
 check "$fsxmlfile" "$deprecated_warning"
 
-src2srcml --expression sub/a.cpp
+srcml --expression sub/a.cpp
 check "$fsxmlfile" "$deprecated_warning"
 
-src2srcml sub/a.cpp -e
+srcml sub/a.cpp -e
 check "$fsxmlfile" "$deprecated_warning"
 
-src2srcml sub/a.cpp --expression
+srcml sub/a.cpp --expression
 check "$fsxmlfile" "$deprecated_warning"
 
-src2srcml -l C++ --expression -o sub/a.cpp.xml < sub/a.cpp
+srcml -l C++ --expression -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml "$sxmlfile" "$deprecated_warning"
 
-src2srcml --expression sub/a.cpp -o sub/a.cpp.xml
+srcml --expression sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsxmlfile" "$deprecated_warning"
 
 # auto-detection
-src2srcml sub/a.cpp
+srcml sub/a.cpp
 check "$fsxmlfile"
 
-src2srcml -l C++ -o sub/a.cpp.xml < sub/a.cpp
+srcml -l C++ -o sub/a.cpp.xml < sub/a.cpp
 check sub/a.cpp.xml "$sxmlfile"
 
-src2srcml sub/a.cpp -o sub/a.cpp.xml
+srcml sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsxmlfile"
 
 
 # within expression statement
-src2srcml -e sub/b.cpp
+srcml -e sub/b.cpp
 check "$expr_stmt_fsxmlfile" "$deprecated_warning"
 
-src2srcml --expression sub/b.cpp
+srcml --expression sub/b.cpp
 check "$expr_stmt_fsxmlfile" "$deprecated_warning"
 
-src2srcml sub/b.cpp -e
+srcml sub/b.cpp -e
 check "$expr_stmt_fsxmlfile" "$deprecated_warning"
 
-src2srcml sub/b.cpp --expression
+srcml sub/b.cpp --expression
 check "$expr_stmt_fsxmlfile" "$deprecated_warning"
 
-src2srcml -l C++ --expression -o sub/b.cpp.xml < sub/b.cpp
+srcml -l C++ --expression -o sub/b.cpp.xml < sub/b.cpp
 check sub/b.cpp.xml "$expr_stmt_sxmlfile" "$deprecated_warning"
 
-src2srcml --expression sub/b.cpp -o sub/b.cpp.xml
+srcml --expression sub/b.cpp -o sub/b.cpp.xml
 check sub/b.cpp.xml "$expr_stmt_fsxmlfile" "$deprecated_warning"
 
 # auto-detection
-src2srcml sub/b.cpp
+srcml sub/b.cpp
 check "$expr_stmt_fsxmlfile"
 
-src2srcml -l C++ -o sub/b.cpp.xml < sub/b.cpp
+srcml -l C++ -o sub/b.cpp.xml < sub/b.cpp
 check sub/b.cpp.xml "$expr_stmt_sxmlfile"
 
-src2srcml sub/b.cpp -o sub/b.cpp.xml
+srcml sub/b.cpp -o sub/b.cpp.xml
 check sub/b.cpp.xml "$expr_stmt_fsxmlfile"

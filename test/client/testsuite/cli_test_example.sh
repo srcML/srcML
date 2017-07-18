@@ -11,10 +11,10 @@ define output <<- 'STDOUT'
 xmlcheck "$output"
 
 # conduct test
-echo -n "" | src2srcml -l C++
+echo -n "" | srcml -l C++
 check "$output"
 
 createfile sub/test.cpp ""
 
-echo -n "" | src2srcml -l C++ -o sub/stuff.cpp
+echo -n "" | srcml -l C++ -o sub/stuff.cpp
 check sub/stuff.cpp "$output"

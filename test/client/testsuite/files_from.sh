@@ -29,8 +29,8 @@ createfile sub/filelistab "sub/a.cpp
 sub/b.cpp
 "
 
-src2srcml --files-from "sub/filelistab" --in-order -o sub/both.xml
+srcml --files-from "sub/filelistab" --in-order -o sub/both.xml
 check sub/both.xml "$nestedfile"
 
-src2srcml --files-from "sub/filelistab" --in-order
+srcml --files-from "sub/filelistab" --in-order
 check "$nestedfile"
