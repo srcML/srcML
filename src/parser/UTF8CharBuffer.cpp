@@ -43,7 +43,6 @@ namespace {
     // indicates if the two given encodings are basically the same,
     // with a trivial encoding process
     bool compatibleEncodings(const char* encoding1, const char* encoding2) {
-        fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
 
         // setup encoder from encoding to UTF-8
         iconv_t ce = iconv_open(encoding1, encoding2);
@@ -263,7 +262,7 @@ ssize_t UTF8CharBuffer::readChars() {
             if (encoding.empty()) {
                 encoding = "UTF-8";
             } else if (!compatibleEncodings(encoding.c_str(), "UTF-8")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM", encoding.c_str());
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.c_str());
             }
         }
 
@@ -277,7 +276,7 @@ ssize_t UTF8CharBuffer::readChars() {
             if (encoding.empty()) {
                 encoding = "UTF-16";
             } else if (!compatibleEncodings(encoding.c_str(), "UTF-16")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM", encoding.c_str());
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.c_str());
             }
         }
 
@@ -291,7 +290,7 @@ ssize_t UTF8CharBuffer::readChars() {
             if (encoding.empty()) {
                 encoding = "UTF-32";
             } else if (!compatibleEncodings(encoding.c_str(), "UTF-32")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM", encoding.c_str());
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.c_str());
             }
         }
 
@@ -300,10 +299,10 @@ ssize_t UTF8CharBuffer::readChars() {
             encoding = "ISO-8859-1";
 
         // setup encoder from encoding to UTF-8
-        ic = iconv_open("UTF8", encoding.c_str());
+        ic = iconv_open("UTF-8", encoding.c_str());
         if (ic == (iconv_t) -1) {
             if (errno == EINVAL) {
-                fprintf(stderr, "Conversion from encoding '%s' not supported\n", encoding.c_str());
+                fprintf(stderr, "Conversion from encoding '%s' not supported\n\n", encoding.c_str());
                 exit(4);
             }
         }
