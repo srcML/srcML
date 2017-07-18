@@ -26,6 +26,7 @@
 #include <sha1utilities.hpp>
 #include <iostream>
 #include <fcntl.h>
+#include <iterator>
 
 #ifndef _MSC_BUILD
 #include <unistd.h>
@@ -44,7 +45,7 @@ namespace {
     // with a trivial encoding process
     bool compatibleEncodings(const char* encoding1, const char* encoding2) {
 
-        // setup encoder from encoding to UTF-8
+        // setup encoder between the two encodings
         iconv_t ce = iconv_open(encoding1, encoding2);
         if (ce == (iconv_t) -1)
             return false;
@@ -67,8 +68,8 @@ namespace {
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t outbuf_size)
-    : antlr::CharBuffer(std::cin), hashneeded(hashneeded), hash(hash), outbuf_size(outbuf_size) {
+UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t cooked_size)
+    : antlr::CharBuffer(std::cin), hashneeded(hashneeded), hash(hash), cooked_size(cooked_size) {
 
     // may be null
     this->encoding = encoding ? encoding : "";
@@ -139,9 +140,11 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
     };
     sio.close_callback = 0;
 
-    // instead of a read_callback, just setup the memory here
-    curinbuf = c_buffer;
-    insize = buffer_size;
+    // copy the data from the user parameter
+    // would be nice to use directly, but would have to verify it is not deallocated
+    raw.reserve(buffer_size);
+    raw.insert(raw.begin(), c_buffer, c_buffer + buffer_size);
+    insize = raw.size();
 
     // since we already have all the data, need to hash and perform encoding
     insize = readChars();
@@ -222,22 +225,37 @@ UTF8CharBuffer::UTF8CharBuffer(void* context, srcml_read_callback read_callback,
  */
 ssize_t UTF8CharBuffer::readChars() {
 
-    // read more data into inbuf (may already be data in there)
+    // read more data into raw (may already be data in there)
     if (insize == 0 || pos >= insize) {
 
-        // we use inbuf instead of curinbuf because curinbuf can point to inbuf, or a 
-        // user-provided chunk of memory. Since already read in, no need to copy
-        if (inbuf.empty())
-            inbuf.resize(SRCBUFSIZE);
-        curinbuf = inbuf.data();
+        // create room for the raw characters
+        raw.resize(SRCBUFSIZE);
 
         // use the provided callback
         // the entire input buffer may not be available because of incomplete multi-byte sequences
         // from a previous read
-        insize = sio.read_callback ? (int) sio.read_callback(sio.context, inbuf.data() + inbytesleft, SRCBUFSIZE - inbytesleft) : 0;
+        ssize_t insize = sio.read_callback ? (int) sio.read_callback(sio.context, raw.data() + inbytesleft, raw.size() - inbytesleft) : 0;
+        if (insize == -1) {
+            fprintf(stderr, "Error reading: %s", strerror(errno));
+            exit(1);
+        }
+
+        // EOF
         if (insize == 0) {
             return 0;
         }
+
+        // new size is the number of bytes read in, plus any incomplete multibyte sequences from previous
+        raw.resize(insize + inbytesleft);
+    }
+    
+    // hash only the read data, not the inbytesleft (from previous call)
+    if (hashneeded) {
+#ifdef _MSC_BUILD
+        CryptHashData(crypt_hash, (BYTE *)raw.data() + inbytesleft, raw.size() - inbytesleft, 0);
+#else
+        SHA1_Update(&ctx, raw.data() + inbytesleft, (SHA_LONG) (raw.size() - inbytesleft));
+#endif
     }
 
     // assume nothing to skip over
@@ -251,8 +269,8 @@ ssize_t UTF8CharBuffer::readChars() {
         // treat unsigned int field as just 4 bytes regardless of endianness
         // with 0 for any missing data
         union { unsigned char d[4]; uint32_t i; } data = { { 0, 0, 0, 0 } };
-        for (int i = 0; i < insize; ++i)
-            data.d[i] = static_cast<const unsigned char>(curinbuf[i]);
+        for (size_t i = 0; i < raw.size(); ++i)
+            data.d[i] = static_cast<const unsigned char>(raw[i]);
 
         // check for UTF-8 BOM
         if ((data.i & 0x00FFFFFF) == 0x00BFBBEF) {
@@ -316,36 +334,21 @@ ssize_t UTF8CharBuffer::readChars() {
     }
     firstRead = false;
 
-    // hash the grown data
-    if (hashneeded) {
-#ifdef _MSC_BUILD
-        CryptHashData(crypt_hash, (BYTE *)curinbuf, insize, 0);
-#else
-        SHA1_Update(&ctx, curinbuf, (SHA_LONG)insize);
-#endif
-    }
-
-    // for non-trivial conversions, convert from inbuf to outbuf
+    // for non-trivial conversions, convert from raw to cooked
     if (!trivial) {
 
-        // only happens on first read
-        // we do this here because this is the first place
-        // where we know that the buffer is actually needed
-        if (outbuf.empty())
-            outbuf.resize(outbuf_size);
-
-        // conversion input
-        // input can be from inbuf, or user-supplied memory
-        // user-supplied memory is const, so curinbuf is const,
-        // therefore we need a non-const cast for passing to inconv()
-        char* linbuf = const_cast<char*>(curinbuf);
-        inbytesleft = insize + inbytesleft;
+        // input characters
+        // after call to iconv(), linbuf will point to start of any 
+        // incomplete multibyte sequences that were not cooked
+        char* linbuf = raw.data();
+        inbytesleft = raw.size();
 
         // conversion output
         // full output buffer is available since all previous characters
         // have been returned
-        char* loutbuf = outbuf.data();
-        size_t outbytesleft = outbuf.size();
+        cooked.resize(cooked_size);
+        char* loutbuf = cooked.data();
+        size_t outbytesleft = cooked.size();
 
         // convert from input buffer to output buffer
         size_t binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
@@ -354,18 +357,18 @@ ssize_t UTF8CharBuffer::readChars() {
             exit(1);
         }
 
+        // number of bytes is the total output buffer insize minus 
+        // the bytes that were "left", i.e., not used, by iconv()
+        cooked.resize(cooked.size() - outbytesleft);
+
         // all of the input characters may not have been converted
         // as not all of their bytes read in (think bufferinsize of 5 with UTF-16 input)
         // so just move all of them to the start of the buffer
         if (inbytesleft)
-            std::move(linbuf, linbuf + inbytesleft, inbuf.data());
-
-        // number of bytes is the total output buffer insize minus 
-        // the bytes that were "left", i.e., not used, by iconv()
-        insize = outbuf.size() - outbytesleft;
+            std::move(linbuf, linbuf + inbytesleft, raw.begin());
     }
 
-    return insize;
+    return trivial ? raw.size() : cooked.size();
 }
 
 /**
@@ -391,7 +394,7 @@ int UTF8CharBuffer::getChar() {
         // may need more characters
         if (insize == 0 || pos >= insize) {
 
-            // read more data into inbuf
+            // read more data into raw
             insize = readChars();
             if (insize == 0) {
                 // EOF
@@ -401,7 +404,7 @@ int UTF8CharBuffer::getChar() {
 
         // read the next char either from the current input buffer (for a trivial, no-iconv needed)
         // or from the iconv'ed output buffer
-        c = (trivial ? curinbuf : outbuf.data())[pos];
+        c = (trivial ? raw : cooked)[pos];
         ++pos;
 
         // sequence "\r\n" where the '\r'

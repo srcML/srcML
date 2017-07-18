@@ -127,10 +127,10 @@ private:
     ssize_t readChars();
 
     /* position currently at in input buffer */
-    int pos = 0;
+    size_t pos = 0;
 
-    /** size of read in buffer */
-    ssize_t insize = 0;
+    /** size of buffer to read from, either raw or cooked */
+    size_t insize = 0;
 
     /** if last character was carriage return */
     bool lastcr = false;
@@ -149,23 +149,19 @@ private:
     SHA_CTX ctx;
 #endif
 
-    /** input buffer for all non-memory constructor calls */
-    std::vector<char> inbuf;
+    /** raw character buffer */
+    std::vector<char> raw;
 
-    /** current input buffer, either inbuf.data(), or user-provided buffer */
-    const char* curinbuf = 0;
-
-    /** input data that was not converted due to an incomplete multibyte sequence */
+    /** raw characters that were not converted due to an incomplete multibyte sequence */
     size_t inbytesleft = 0;
 
-    /** output buffer for any needed encoding conversions */
-    std::vector<char> outbuf;
+    /** cooked (encoded) characters */
+    std::vector<char> cooked;
 
-    /** size of the output buffer, applies to both outbuf,
-        and user-provided memory */
-    ssize_t outbuf_size = 0;
+    /** number of encoded characters */
+    ssize_t cooked_size = 0;
 
-    /** Store encoding for later queries */
+    /** store encoding for later queries */
     std::string encoding;
 
     /** iconv() encoding converter */
