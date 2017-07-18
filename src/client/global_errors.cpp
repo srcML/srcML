@@ -24,8 +24,10 @@
 #include <mutex>
 #include <condition_variable>
 
-static std::mutex e;
-static bool production_errors = false;
+namespace {
+    std::mutex e;
+    bool production_errors = false;
+}
 
 void setProductionErrors() {
     std::unique_lock<std::mutex> l(e);
