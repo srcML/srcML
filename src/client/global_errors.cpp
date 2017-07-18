@@ -30,8 +30,6 @@ static bool production_errors = false;
 static std::mutex c;
 static bool curl_errors = false;
 
-static std::mutex d;
-
 void setProductionErrors() {
     std::unique_lock<std::mutex> l(e);
     production_errors = true;
@@ -62,17 +60,4 @@ bool getCurlErrors() {
     return curl_errors;
 }
 
-static bool go = false;
-static std::condition_variable cv;
 
-int waitCurl() {
-    std::unique_lock<std::mutex> l(d);
-    cv.wait(l);
-    return go;
-}
-
-void goCurl(bool flag) {
-    std::unique_lock<std::mutex> l(d);
-    go = flag;
-    cv.notify_one();
-}

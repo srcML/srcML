@@ -29,13 +29,33 @@
 // global request
 extern srcml_request_t global_srcml_request;
 
-struct curl_write_info {
-    int outfd;
-    size_t currentsize;
-    std::string buffer;
-};
+namespace {
 
-static const size_t CURL_MAX_ERROR_SIZE = 100;
+    bool go = false;
+    std::condition_variable cv;
+    std::mutex d;
+
+    int waitCurl() {
+        std::unique_lock<std::mutex> l(d);
+        cv.wait(l);
+        return go;
+    }
+
+    void goCurl(bool flag) {
+        std::unique_lock<std::mutex> l(d);
+        go = flag;
+        cv.notify_one();
+    }
+
+    struct curl_write_info {
+        int outfd;
+        size_t currentsize;
+        std::string buffer;
+    };
+
+    const size_t CURL_MAX_ERROR_SIZE = 100;
+}
+
 
 /*
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
