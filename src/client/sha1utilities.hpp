@@ -23,6 +23,8 @@
 #ifndef SHA1_UTILITIES_HPP
 #define SHA1_UTILITIES_HPP
 
+#include <boost/static_assert.hpp>
+
 #ifdef _MSC_BUILD
 #include <windows.h>
 #include <Wincrypt.h>
@@ -30,6 +32,7 @@
 
 #include <CommonCrypto/CommonDigest.h>
 
+/** Use same symbols for openssl and CommonCrypto  */
 #define SHA_LONG CC_LONG
 #define SHA_CTX     CC_SHA1_CTX
 #define SHA1_Init   CC_SHA1_Init

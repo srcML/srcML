@@ -34,6 +34,7 @@
 #include <antlr/CharBuffer.hpp>
 #include <string>
 #include <iconv.h>
+#include <sha1utilities.hpp>
 
 #ifdef _MSC_BUILD
 #include <windows.h>
