@@ -53,7 +53,7 @@ namespace {
             return false;
 
         // see if encoding is trivial
-        bool trivial = false;
+        int trivial = false;
         iconvctl(ce, ICONV_TRIVIALP, &trivial);
 
         iconv_close(ce);
@@ -88,12 +88,12 @@ namespace {
 
     std::string normalizeEncodingName(const char* name) {
 
-        auto search = encodingAliases.find(name);
-        if (search == encodingAliases.end()) {
-            std::string str = name;
-            std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-            return name;
-        }
+        std::string str = name;
+        std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+
+        auto search = encodingAliases.find(str);
+        if (search == encodingAliases.end())
+            return str;
 
         return search->second;
     }
@@ -113,7 +113,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::opt
     // may be null
     this->encoding = encoding ? normalizeEncodingName(encoding) : "";
 
-    if(hashneeded) {
+    if (hashneeded) {
 #ifdef _MSC_BUILD
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         if(!success && GetLastError() == NTE_BAD_KEYSET)
@@ -173,15 +173,11 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
 
     // setup callbacks, null since we have the input buffer already
     sio.context = 0;
-    sio.read_callback = [](void*, void*, size_t) -> ssize_t {
-        // indicate EOF for read since we have already stored the data
-        return 0;
-    };
+    sio.read_callback = 0;
     sio.close_callback = 0;
 
     // copy the data from the user parameter
-    // would be nice to use directly, but would have to verify it is not deallocated
-    raw.reserve(buffer_size);
+    // would be nice to use directly, but would have to verify it is not deallocated after constructor call
     raw.insert(raw.begin(), c_buffer, c_buffer + buffer_size);
     insize = raw.size();
 
@@ -300,9 +296,7 @@ ssize_t UTF8CharBuffer::readChars() {
     // assume nothing to skip over
     pos = 0;
 
-    // if we see a BOM, then we know we have to skip over it
-    // additionally, unless the user stated a specific encoding,
-    // we need to get rid of it
+    // setup encoding on first read of data
     if (firstRead) {
 
         // treat unsigned int field as just 4 bytes regardless of endianness
@@ -314,11 +308,10 @@ ssize_t UTF8CharBuffer::readChars() {
         // check for UTF-8 BOM
         if ((data.i & 0x00FFFFFF) == 0x00BFBBEF) {
 
-            // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually removed
+            // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually skipped
             pos += 3;
 
-            // no encoding specified (by user) then UTF-8 it is
-            // no encoding found yet
+            // no encoding specified (by user) then UTF-8, otherwise check if it is compatible with UTF-8
             if (encoding.empty()) {
                 encoding = "UTF-8";
             } else if (!compatibleEncodings(encoding.c_str(), "UTF-8")) {
@@ -329,10 +322,9 @@ ssize_t UTF8CharBuffer::readChars() {
         // auto-detect UTF-16 based on BOM
         // both UTF-16LE and UTF-16BE are determined automatically from BOM
         // and processed as UTF-16
-        if ((data.i & 0x0000FFFF) == 0x0000FFFE ||
-            (data.i & 0x0000FFFF) == 0x0000FEFF) {
+        if ((data.i & 0x0000FFFF) == 0x0000FFFE || (data.i & 0x0000FFFF) == 0x0000FEFF) {
 
-            // no encoding found yet
+            // no encoding specified (by user) then UTF-16, otherwise check if it is compatible with UTF-16
             if (encoding.empty()) {
                 encoding = "UTF-16";
             } else if (!compatibleEncodings(encoding.c_str(), "UTF-16")) {
@@ -343,10 +335,9 @@ ssize_t UTF8CharBuffer::readChars() {
         // auto-detect UTF-32 based on BOM
         // both UTF-32LE and UTF-32BE are determined automatically from BOM
         // and processed as UTF-32
-        if (data.i == 0xFFFE0000 ||
-            data.i == 0xFEFF0000) {
+        if (data.i == 0xFFFE0000 || data.i == 0xFEFF0000) {
 
-            // no encoding found yet
+            // no encoding specified (by user) then UTF-32, otherwise check if it is compatible with UTF-32
             if (encoding.empty()) {
                 encoding = "UTF-32";
             } else if (!compatibleEncodings(encoding.c_str(), "UTF-32")) {
@@ -367,8 +358,7 @@ ssize_t UTF8CharBuffer::readChars() {
             }
         }
 
-        // see if this encoding to UTF-8 is trivial
-        // meaning no conversion necessary
+        // see if this encoding to UTF-8 is trivial, if so we can use raw characters directly
         iconvctl(ic, ICONV_TRIVIALP, &trivial);
     }
     firstRead = false;
@@ -376,28 +366,26 @@ ssize_t UTF8CharBuffer::readChars() {
     // for non-trivial conversions, convert from raw to cooked
     if (!trivial) {
 
-        // input characters
+        // raw input characters
         // after call to iconv(), linbuf will point to start of any 
         // incomplete multibyte sequences that were not cooked
         char* linbuf = raw.data();
         inbytesleft = raw.size();
 
-        // conversion output
-        // full output buffer is available since all previous characters
-        // have been returned
+        // cooked (encoded in UTF-8) input characters
+        // full output buffer is available since all previous characters have been processed
         cooked.resize(cooked_size);
         char* loutbuf = cooked.data();
         size_t outbytesleft = cooked.size();
 
-        // convert from input buffer to output buffer
+        // convert from raw characters to cooked, encoded in UTF-8 characters
         size_t binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
         if (binsize == (size_t) -1) {
             fprintf(stderr, "%s\n", strerror(errno));
             exit(1);
         }
 
-        // number of bytes is the total output buffer insize minus 
-        // the bytes that were "left", i.e., not used, by iconv()
+        // number of bytes cooked is the total size minus the bytes that were "left", i.e., not used, by iconv()
         cooked.resize(cooked.size() - outbytesleft);
 
         // all of the input characters may not have been converted
