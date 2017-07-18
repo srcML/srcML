@@ -61,19 +61,22 @@ namespace {
         return trivial;
     }
 
-    bool isUTF8(const std::vector<char>& buffer) {
+    std::string estimateEncoding(const std::vector<char>& buffer) {
 
         bool ascii = true;
         for (const unsigned char& c : buffer) {
             // no ISO-8859-1 numbers in this range
             if (c > 0x7E && c < 0xA0)
-                return true;
+                return "UTF-8";
 
             if (c > 0x7E)
                 ascii = false;
         }
 
-        return ascii;
+        if (ascii)
+            return "ASCII";
+
+        return "ISO-8859-1";
     }
 
     // some common aliases that libiconv does not accept
