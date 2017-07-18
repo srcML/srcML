@@ -27,6 +27,8 @@
 #include <iostream>
 #include <fcntl.h>
 #include <iterator>
+#include <map>
+#include <string>
 
 #ifndef _MSC_BUILD
 #include <unistd.h>
@@ -73,6 +75,25 @@ namespace {
 
         return ascii;
     }
+
+    // some common aliases that libiconv does not accept
+    std::map<std::string, std::string> encodingAliases = {
+        { "UTF16", "UTF-16"},
+        { "UCS2", "UCS-2"},
+        { "UCS4", "UCS-4"},
+    };
+
+    std::string normalizeEncodingName(const char* name) {
+
+        auto search = encodingAliases.find(name);
+        if (search == encodingAliases.end()) {
+            std::string str = name;
+            std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+            return name;
+        }
+
+        return search->second;
+    }
 }
 
 /**
@@ -87,7 +108,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::opt
     : antlr::CharBuffer(std::cin), hashneeded(hashneeded), hash(hash), cooked_size(cooked_size) {
 
     // may be null
-    this->encoding = encoding ? encoding : "";
+    this->encoding = encoding ? normalizeEncodingName(encoding) : "";
 
     if(hashneeded) {
 #ifdef _MSC_BUILD
@@ -286,9 +307,6 @@ ssize_t UTF8CharBuffer::readChars() {
         union { unsigned char d[4]; uint32_t i; } data = { { 0, 0, 0, 0 } };
         for (size_t i = 0; i < 4 && i < raw.size(); ++i)
             data.d[i] = static_cast<const unsigned char>(raw[i]);
-
-        fprintf(stderr, "DEBUG:  %s %s %d %p ISUTF8: %d\n", __FILE__,  __FUNCTION__, __LINE__, this, isUTF8(raw));
-
 
         // check for UTF-8 BOM
         if ((data.i & 0x00FFFFFF) == 0x00BFBBEF) {
