@@ -31,7 +31,7 @@
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <string>
-#include <global_errors.hpp>
+#include <srcml_logger.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
@@ -139,7 +139,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         request->errormsg = "srcml: Unable to open file " + original_filename;
 
-        setProductionErrors();
+        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open file " + original_filename);
 
 //        if (unit)
 //            srcml_unit_free(unit);

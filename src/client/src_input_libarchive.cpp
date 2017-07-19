@@ -34,7 +34,6 @@
 #include <input_curl.hpp>
 #include <srcml_logger.hpp>
 #include <cstring>
-#include <global_errors.hpp>
 
 #include <curl_input_file.hpp>
 

@@ -28,7 +28,7 @@ check empty-remote.xml "$empty_srcml"
 
 # file list of non-existent files
 define open_error <<- 'STDERR'
-	srcml: Unable to open file nonexistent1.txt
+	WARNING srcml: Unable to open file nonexistent1.txt
 	STDERR
 
 createfile nonexistent_files.txt "nonexistent1.txt"
@@ -44,7 +44,7 @@ check_exit 1 "$open_error"
 
 # file list references itself
 define open_error <<- 'STDOUT'
-	srcml: Unable to open file loop.txt
+	WARNING srcml: Unable to open file loop.txt
 	STDOUT
 
 createfile loop.txt "loop.txt"

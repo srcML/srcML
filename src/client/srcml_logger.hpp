@@ -32,13 +32,18 @@ class SRCMLLogger {
 public:
     // message type priorities
     static const int CRITICAL_MSG = 1<<4;
-    static const int ERROR_MSG = 1<<3;
-    static const int WARNING_MSG = 1<<2;
-    static const int INFO_MSG = 1<<1;
-    static const int DEBUG_MSG = 1<<0;
+    static const int ERROR_MSG    = 1<<3;
+    static const int WARNING_MSG  = 1<<2;
+    static const int INFO_MSG     = 1<<1;
+    static const int DEBUG_MSG    = 1<<0;
 
     static void set(int options) {
       opts = options;
+      error_count = 0;
+    }
+
+    static bool errors() {
+      return error_count > 0;
     }
 
     static void log(int msg_type, const std::string& msg_text) {
@@ -51,22 +56,35 @@ public:
       if (opts & SRCML_COMMAND_QUIET && !(msg_type == CRITICAL_MSG))
         return;
 
-      if (msg_type == CRITICAL_MSG)
+      switch (msg_type) {
+      case CRITICAL_MSG:
         std::cerr << "CRITICAL ";
-      if (msg_type == ERROR_MSG)
+        ++error_count;
+        break;
+      case ERROR_MSG:
         std::cerr << "ERROR ";
-      if (msg_type == WARNING_MSG)
+        ++error_count;
+        break;
+      case WARNING_MSG:
         std::cerr << "WARNING ";
-      if (msg_type == INFO_MSG)
+        ++error_count;
+        break;
+      case INFO_MSG:
         std::cerr << "INFO ";
-      if (msg_type == DEBUG_MSG)
+        break;
+      case DEBUG_MSG:
         std::cerr << "DEBUG ";
+        break;
+      default:
+        break;
+      }
 
       std::cerr << msg_text << "\n";
     }
 
  private:
   static int opts;
+  static int error_count;
 };
 
 #endif

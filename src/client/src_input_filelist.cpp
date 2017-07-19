@@ -30,8 +30,6 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <srcml_logger.hpp>
-#include <global_errors.hpp>
-#include <input_curl.hpp>
 
 int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
@@ -40,10 +38,6 @@ int src_input_filelist(ParseQueue& queue,
 
     archive* arch = libarchive_input_file(input_file);
     if (!arch)
-        return 0;
-
-    // curl handling could produce a 404 error
-    if (getCurlErrors())
         return 0;
 
     archive_entry *entry = 0;

@@ -24,7 +24,6 @@
 #include <input_curl.hpp>
 #include <curl/curl.h>
 #include <srcml_logger.hpp>
-#include <global_errors.hpp>
 
 // global request
 extern srcml_request_t global_srcml_request;
@@ -132,7 +131,6 @@ void curl_download_url(const srcml_request_t& /* srcml_request */,
     curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
     if(response != CURLE_OK || http_code != 200) {
         SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to access URL " + url);
-        setProductionErrors();
         setCurlErrors();
         goCurl(false);
 
