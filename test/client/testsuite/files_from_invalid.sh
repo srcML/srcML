@@ -104,71 +104,71 @@ bzip2 -c empty.txt.zip > empty.txt.zip.bz2
 gzip -c empty.txt.zip > empty.txt.zip.gz
 
 srcml --files-from empty.txt.cpio --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.cpio.bz2 --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.cpio.gz --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.tar.bz2 --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.tar.gz --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.tar --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.tbz2 --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.tgz --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.zip --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.zip.bz2 --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from empty.txt.zip.gz --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 # empty file list from remote archived/crompressed file
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.bz2 --url="test"
 check "$empty_srcml_with_url"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.cpio --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.cpio.bz2 --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.cpio.gz --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.tar.bz2 --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.tar.gz --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.tar --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.tbz2 --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.tgz --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.zip --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.zip.bz2 --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.txt.zip.gz --url="test"
-check "$empty_srcml_with_url" "WARNING srcml: filelist requires a non-archived file format\n"
+check "$empty_srcml_with_url" "INFO srcml: filelist requires a non-archived file format\n"

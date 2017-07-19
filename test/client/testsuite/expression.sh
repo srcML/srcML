@@ -35,7 +35,7 @@ createfile sub/b.cpp "b;"
 
 # Deprecated warning message
 define deprecated_warning <<- 'STDERR'
-	WARNING srcml: use of option --expression or -e is deprecated
+	INFO srcml: use of option --expression or -e is deprecated
 STDERR
 
 # expression only

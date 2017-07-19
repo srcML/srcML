@@ -53,12 +53,12 @@ int src_input_filelist(ParseQueue& queue,
     // ARE THE LAST TWO NECESSARY?
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: filelist requires a non-directory file format");
+        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: filelist requires a non-directory file format");
     	return 1;
     }
 
     if (strcmp(archive_entry_pathname(entry), "data") != 0) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: filelist requires a non-archived file format");
+        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: filelist requires a non-archived file format");
     	return 1;
     }
 

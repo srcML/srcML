@@ -84,9 +84,6 @@ int main(int argc, char * argv[]) {
     // global access to options
     SRCMLOptions::set(srcml_request.command);
 
-    // init the logger
-    SRCMLLogger::set(srcml_request.command);
-
     // version
     if (srcml_request.command & SRCML_COMMAND_VERSION) {
         std::cout << "libsrcml " << srcml_version_string() << "\n";

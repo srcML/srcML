@@ -176,9 +176,9 @@ void option_command_deprecated(bool opt) {
 
       // Notify user of deprecated options
       if (command == SRCML_COMMAND_UNITS)
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: use of option --units or -n is deprecated");
+        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: use of option --units or -n is deprecated");
       if (command == SRCML_COMMAND_EXPRESSION)
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: use of option --expression or -e is deprecated");
+        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: use of option --expression or -e is deprecated");
     }
 }
 
