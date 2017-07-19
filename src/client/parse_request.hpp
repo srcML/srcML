@@ -33,7 +33,7 @@
 #include <timer.hpp>
 
 struct ParseRequest {
-    ParseRequest(int size = 0) : buffer(size), srcml_arch(0), unit(0), position(0), status(0), loc(0) {}
+    ParseRequest(int size = 0) : buffer(size) {}
 
     // Fields required by thread to process a unit
     std::string language;
@@ -41,14 +41,14 @@ struct ParseRequest {
     boost::optional<std::string> url;
     boost::optional<std::string> version;
     std::vector<char> buffer;
-    srcml_archive* srcml_arch;
-    srcml_unit* unit;
+    srcml_archive* srcml_arch = nullptr;
+    srcml_unit* unit = nullptr;
     boost::optional<std::string> disk_filename;
     boost::optional<std::string> disk_dir;
-    int position;
-    int status;
-    long loc;
-    long runtime;
+    int position = 0;
+    int status = 0;
+    long loc = 0;
+    long runtime = 0;
     boost::optional<std::string> time_stamp;
     unsigned long total_num_inputs;
     boost::optional<std::string> errormsg;

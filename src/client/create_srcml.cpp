@@ -56,8 +56,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
     // call appropriate handler
     if (input.state == SRCML) {
 
-        // libsrcml can apply gz decompression
-        // all other srcml compressions require a per-input decompression stage
+        // compressions require a per-input decompression stage
         srcml_input_src uninput = input;
         input_file(uninput);
         return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);

@@ -75,22 +75,13 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
             s += "\t";
             s += request->language;
             s += "\t";
-
-            char str[5] = { 0 };
-            sprintf(str,"%ld", request->loc);
-
-            s += str;
+            s += std::to_string(request->loc);
             //s += "\t";
             //s += "10"; //This will be processing time
             s += "\t";
 
             const char* hash = srcml_unit_get_hash(request->unit);
-            if (hash) {
-                s += std::string(hash);
-            }
-            else {
-                s += "";
-            }
+            s += hash ? hash : "";
 
             log << 'a' << s;
         }
