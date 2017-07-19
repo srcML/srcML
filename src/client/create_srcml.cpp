@@ -237,14 +237,6 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // process input sources
     for (const auto& input : input_sources) {
-/*
-// if stdin, then there has to be data
-// TODO: Safe to remove this? We already read data.
-if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
-!src_input_stdin()) {
-return; // stdin was requested, but no data was received
-}
-*/
 
         int numhandled = srcml_handler_dispatch(parse_queue, csrcml_arch, srcml_request, input);
         if (!numhandled)
