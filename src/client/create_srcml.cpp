@@ -218,14 +218,6 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     gdestination = destination;
  
-    // a clone of the intended srcML archive is created
-    // the only purpose is to allow files to be parsed, without opening
-    // the real destination archive.
-    srcml_archive* csrcml_arch = srcml_archive_clone(srcml_arch);
-    char buffer[100];
-    size_t size;
-    srcml_archive_write_open_memory(csrcml_arch, (char**) &buffer, &size);
-
     // setup the parsing queue
     TraceLog log(SRCMLOptions::get());
     log.header();
@@ -245,9 +237,6 @@ void create_srcml(const srcml_request_t& srcml_request,
     write_queue.wait();
 
     log.report();
-
-    srcml_archive_close(csrcml_arch);
-    srcml_archive_free(csrcml_arch);
     
     // close the created srcML archive
     if (createdsrcml) {
