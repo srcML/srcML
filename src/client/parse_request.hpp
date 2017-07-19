@@ -24,13 +24,10 @@
 #define PARSE_REQUEST_HPP
 
 #include <srcml.h>
-
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-
-#include <timer.hpp>
 
 struct ParseRequest {
     ParseRequest(int size = 0) : buffer(size) {}

@@ -23,9 +23,11 @@
 #ifndef SRCML_WRITE_HPP
 #define SRCML_WRITE_HPP
 
+#include <srcml_input_src.hpp>
+
 struct ParseRequest;
 class TraceLog;
 
-void srcml_write_request(ParseRequest*, TraceLog&);
+void srcml_write_request(ParseRequest*, TraceLog&, srcml_output_dest& destination);
 
 #endif

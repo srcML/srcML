@@ -44,14 +44,13 @@
 #include <iostream>
 #include <input_archive.hpp>
 
-extern srcml_output_dest gdestination;
-
 bool createdsrcml = false;
 
 int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
-                          const srcml_input_src& input) {
+                          const srcml_input_src& input,
+                          const srcml_output_dest& destination) {
 
     // call appropriate handler
     if (input.state == SRCML) {
@@ -71,19 +70,19 @@ int srcml_handler_dispatch(ParseQueue& queue,
             createdsrcml = true;
 
             int status = 0;
-            if (contains<int>(gdestination)) {
+            if (contains<int>(destination)) {
 
-                status = srcml_archive_write_open_fd(srcml_arch, *gdestination.fd);
+                status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
 
             } else {
 
-                status = srcml_archive_write_open_filename(srcml_arch, gdestination.c_str(), 0);
+                status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
             }
             if (status != SRCML_STATUS_OK)
                 return 0;
         }
 
-        int num = src_input_filelist(queue, srcml_arch, srcml_request, input);
+        int num = src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
 
         return num;
 
@@ -212,22 +211,17 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_register_namespace(srcml_arch, ns.first.c_str(), ns.second.c_str());
     }
 
-    // create the srcML output file
-
-    int status = 0;
-
-    gdestination = destination;
- 
     // setup the parsing queue
     TraceLog log(SRCMLOptions::get());
     log.header();
-    WriteQueue write_queue(std::bind(srcml_write_request, std::placeholders::_1, std::ref(log)), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
+    WriteQueue write_queue(std::bind(srcml_write_request, std::placeholders::_1, std::ref(log), destination), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
     ParseQueue parse_queue(srcml_request.max_threads, std::bind(srcml_consume, std::placeholders::_1, &write_queue), write_queue);
 
     // process input sources
+    int status = 0;
     for (const auto& input : input_sources) {
 
-        int numhandled = srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input);
+        int numhandled = srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input, destination);
         if (!numhandled)
             status = 1;
     }

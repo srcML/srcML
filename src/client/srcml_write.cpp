@@ -30,12 +30,10 @@
 #include <srcml_input_src.hpp>
 #include <srcml_logger.hpp>
 
-srcml_output_dest gdestination;
-
 extern bool createdsrcml;
 
 // Public consumption thread function
-void srcml_write_request(ParseRequest* request, TraceLog& log) {
+void srcml_write_request(ParseRequest* request, TraceLog& log, srcml_output_dest& destination) {
 
     if (!request)
         return;
@@ -52,17 +50,20 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
+        // we don't create the output srcml archive until we are going to write to it
+        // Why? Well if we did, then we get an empty srcml archive, and that is not
+        // what we want if there were errors along the way
         if (!createdsrcml && !(srcmlOption(SRCML_COMMAND_NOARCHIVE))) {
             createdsrcml = true;
 
             int status = 0;
-            if (contains<int>(gdestination)) {
+            if (contains<int>(destination)) {
 
-                status = srcml_archive_write_open_fd(request->srcml_arch, *gdestination.fd);
+                status = srcml_archive_write_open_fd(request->srcml_arch, *destination.fd);
 
             } else {
 
-                status = srcml_archive_write_open_filename(request->srcml_arch, gdestination.c_str(), 0);
+                status = srcml_archive_write_open_filename(request->srcml_arch, destination.c_str(), 0);
             }
             if (status != SRCML_STATUS_OK)
                 return;
