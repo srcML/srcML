@@ -291,7 +291,7 @@ COMMENT_TEXT {
         ']'..'\377'
         )
         {
-         newline_break:
+/*         newline_break: */
 
             ++realbegin;
 
