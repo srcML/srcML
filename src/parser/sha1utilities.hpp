@@ -23,6 +23,8 @@
 #ifndef SHA1_UTILITIES_HPP
 #define SHA1_UTILITIES_HPP
 
+#include <type_traits>
+
 #ifdef _MSC_BUILD
 #include <windows.h>
 #include <Wincrypt.h>
@@ -30,6 +32,7 @@
 
 #include <CommonCrypto/CommonDigest.h>
 
+/** Use same symbols for openssl and CommonCrypto  */
 #define SHA_LONG CC_LONG
 #define SHA_CTX     CC_SHA1_CTX
 #define SHA1_Init   CC_SHA1_Init
@@ -65,6 +68,6 @@ static const char hexchar[] = { '0','1','2','3','4','5','6','7','8','9','a','b',
             hexchar[md[17] >> 4], hexchar[md[17] & 0x0F], \
             hexchar[md[18] >> 4], hexchar[md[18] & 0x0F], \
             hexchar[md[19] >> 4], hexchar[md[19] & 0x0F]
-BOOST_STATIC_ASSERT_MSG(sizeof(hexchar) == 16, "Wrong size for hex conversion");
+static_assert(sizeof(hexchar) == 16, "Wrong size for hex conversion");
 
 #endif

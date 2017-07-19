@@ -1265,15 +1265,17 @@ int srcml_archive_read_open_fd(srcml_archive* archive, int srcml_fd) {
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_archive_read_open_io(srcml_archive* archive, void * context, int (*read_callback)(void * context, char * buffer, size_t len), int (*close_callback)(void * context)) {
+
+typedef int (*libxml2_read)(void * context, char* buffer, int len);
+
+int srcml_archive_read_open_io(srcml_archive* archive, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context)) {
 
     if(archive == NULL || context == NULL || read_callback == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    libxml2_read_context libxml2_context = {context, read_callback, close_callback};
-    archive->context = libxml2_context;
+    archive->context = context;
     try {
 
-        archive->input = xmlParserInputBufferCreateIO(read_callback_wrapper, read_close_callback_wrapper, boost::any_cast<libxml2_read_context>(&archive->context), archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+        archive->input = xmlParserInputBufferCreateIO((libxml2_read) read_callback, close_callback, context, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
     } catch(boost::bad_any_cast cast) {}
 

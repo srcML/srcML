@@ -176,9 +176,9 @@ void option_command_deprecated(bool opt) {
 
       // Notify user of deprecated options
       if (command == SRCML_COMMAND_UNITS)
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: use of option --units or -n is deprecated");
+        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: use of option --units or -n is deprecated");
       if (command == SRCML_COMMAND_EXPRESSION)
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: use of option --expression or -e is deprecated");
+        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: use of option --expression or -e is deprecated");
     }
 }
 
@@ -208,11 +208,12 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
 // option src encoding
 template <>
 void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
-
+/*
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
         SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: invalid src encoding \"" + value + "\"");
         exit(CLI_ERROR_INVALID_ARGUMENT);
     }
+    */
     srcml_request.src_encoding = value;
 }
 

@@ -24,18 +24,41 @@
 #include <input_curl.hpp>
 #include <curl/curl.h>
 #include <srcml_logger.hpp>
-#include <global_errors.hpp>
 
 // global request
 extern srcml_request_t global_srcml_request;
 
-struct curl_write_info {
-    int outfd;
-    size_t currentsize;
-    std::string buffer;
-};
+namespace {
 
-static const size_t CURL_MAX_ERROR_SIZE = 100;
+    bool go = false;
+    std::condition_variable cv;
+    std::mutex d;
+
+    int waitCurl() {
+        std::unique_lock<std::mutex> l(d);
+        cv.wait(l);
+        return go;
+    }
+
+    void goCurl(bool flag) {
+        std::unique_lock<std::mutex> l(d);
+        go = flag;
+        cv.notify_one();
+    }
+
+    struct curl_write_info {
+        int outfd;
+        size_t currentsize;
+        std::string buffer;
+    };
+
+    const size_t CURL_MAX_ERROR_SIZE = 100;
+
+    std::mutex c;
+
+    bool curl_errors = false;
+}
+
 
 /*
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
@@ -108,7 +131,6 @@ void curl_download_url(const srcml_request_t& /* srcml_request */,
     curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
     if(response != CURLE_OK || http_code != 200) {
         SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to access URL " + url);
-        setProductionErrors();
         setCurlErrors();
         goCurl(false);
 
@@ -138,4 +160,19 @@ int input_curl(srcml_input_src& input) {
 
     // wait to see if curl is able to download the url at all
     return waitCurl();
+}
+
+void setCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    curl_errors = true;
+}
+
+void clearCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    curl_errors = false;
+}
+
+bool getCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    return curl_errors;
 }

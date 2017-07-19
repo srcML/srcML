@@ -138,10 +138,10 @@ void srcml_input_src::swap(srcml_input_src& other) {
     std::swap(unit, other.unit);
 }
 
-int srcml_read_callback(void* context, char * buffer, size_t len) {
+ssize_t srcml_read_callback(void* context, void * buffer, size_t len) {
     archive* libarchive_srcml = (archive*) context;
 
-    ssize_t status = archive_read_data(libarchive_srcml, (void*) buffer, len);
+    ssize_t status = archive_read_data(libarchive_srcml, buffer, len);
 
     return (int) status;
 }

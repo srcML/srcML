@@ -56,7 +56,7 @@ int srcml_input_srcml(ParseQueue& queue,
     }
 
     // output is in srcML
-    if (SRCML_COMMAND_XML & SRCMLOptions::get()) {
+    if (srcmlOption(SRCML_COMMAND_XML)) {
 
         if (srcml_archive_is_full_archive(srcml_input_archive) && srcml_input.unit == 0)
             srcml_archive_enable_full_archive(srcml_output_archive);

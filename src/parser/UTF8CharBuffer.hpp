@@ -32,11 +32,9 @@
 #define INCLUDED_UTF8CHARBUFFER_HPP
 
 #include <antlr/CharBuffer.hpp>
-#include <cstring>
-
-#include <stdio.h>
-
-#include <libxml/xmlIO.h>
+#include <string>
+#include <iconv.h>
+#include <sha1utilities.hpp>
 
 #ifdef _MSC_BUILD
 #include <windows.h>
@@ -74,6 +72,27 @@
  */
 class UTF8FileError {};
 
+typedef ssize_t (*srcml_read_callback)(void * context, void * buffer, size_t len);
+typedef int (*srcml_close_callback)(void * context);
+
+/**
+ * srcMLIO
+ *
+ * Data struct passed around for reading/closing of Generic IO.
+ * Structure to hold context with callbacks to provide hashing.
+ */
+struct srcMLIO {
+
+    /** hold void * context */
+    void* context;
+
+    /** provided read callback */
+    srcml_read_callback read_callback;
+
+    /** provided close callback */
+    srcml_close_callback close_callback;
+};
+
 /**
  * UTF8CharBuffer
  *
@@ -87,46 +106,39 @@ public:
     /** size of the original character buffer */
     static const size_t SRCBUFSIZE = 1024;
     typedef void * (*srcml_open_callback)(const char * filename);
-    typedef int (*srcml_read_callback)(void * context, char * buffer, int len);
-    typedef int (*srcml_close_callback)(void * context);
 
     // Create a character buffer
-    UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash);
-    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash);
-    UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash);
-    UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash);
-    UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback, const char * encoding, boost::optional<std::string> * hash);
+    UTF8CharBuffer(const char * ifilename, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
+    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
+    UTF8CharBuffer(FILE * file, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
+    UTF8CharBuffer(int fd, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
+    UTF8CharBuffer(void * context, srcml_read_callback, srcml_close_callback, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
 
     // Get the next character from the stream
     int getChar();
 
     // Get the used encoding
-    const boost::optional<std::string> & getEncoding() const;
+    const std::string& getEncoding() const;
 
     ~UTF8CharBuffer();
 
 private:
+    UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t outbuf_size);
 
-    int growBuffer();
-    void init(const char * encoding);
-
-    /** xml input handles encodings */
-    xmlParserInputBufferPtr input;
-
-    /** Store encoding for later queries */
-    boost::optional<std::string> encoding;
+    ssize_t readChars();
 
     /* position currently at in input buffer */
-    int pos;
+    size_t pos = 0;
 
-    /** size of read in buffer */
-    int size;
+    /** size of buffer to read from, either raw or cooked */
+    size_t insize = 0;
 
     /** if last character was carriage return */
-    bool lastcr;
+    bool lastcr = false;
 
     /** where to place computed hash */
-    boost::optional<std::string> * hash;
+    bool hashneeded = false;
+    boost::optional<std::string>& hash;
 
 #ifdef _MSC_BUILD
     /** msvc hash provider object */
@@ -138,5 +150,31 @@ private:
     SHA_CTX ctx;
 #endif
 
+    /** raw character buffer */
+    std::vector<char> raw;
+
+    /** raw characters that were not converted due to an incomplete multibyte sequence */
+    size_t inbytesleft = 0;
+
+    /** cooked (encoded) characters */
+    std::vector<char> cooked;
+
+    /** number of encoded characters */
+    ssize_t cooked_size = 0;
+
+    /** store encoding for later queries */
+    std::string encoding;
+
+    /** iconv() encoding converter */
+    iconv_t ic = nullptr;
+
+    /** whether the encoding conversion is trivial (i.e., not needed) */
+    int trivial = false;
+
+    /** contacts and callbacks for read and close */
+    srcMLIO sio;
+
+    /** first time reading data */
+    bool firstRead = true;
 };
 #endif

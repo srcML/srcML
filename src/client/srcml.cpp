@@ -36,7 +36,6 @@
 #include <boost/version.hpp>
 #include <archive.h>
 #include <iostream>
-#include <global_errors.hpp>
 #include <unistd.h>
 #include <csignal>
 
@@ -84,9 +83,6 @@ int main(int argc, char * argv[]) {
 
     // global access to options
     SRCMLOptions::set(srcml_request.command);
-
-    // init the logger
-    SRCMLLogger::set(srcml_request.command);
 
     // version
     if (srcml_request.command & SRCML_COMMAND_VERSION) {
@@ -175,8 +171,6 @@ int main(int argc, char * argv[]) {
         exit(1);
     }
 
-    clearProductionErrors();
-
     // execute the pipeline
     srcml_execute(srcml_request, pipeline, srcml_request.input_sources, srcml_request.output_filename);
 
@@ -185,8 +179,8 @@ int main(int argc, char * argv[]) {
     SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "CPU Time: " + std::to_string(runtime.cpu_time_elapsed()) + "ms");
     SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "Real Time: " + std::to_string(runtime.real_world_elapsed()) + "ms");
 
-    // error status is 0 unless a production error occurred
-    return getProductionErrors()? 1 : 0;
+    // error status is 0 unless a critical, error, or warning
+    return SRCMLLogger::errors() ? 1 : 0;
 }
 
 bool request_create_srcml(const srcml_request_t& srcml_request,

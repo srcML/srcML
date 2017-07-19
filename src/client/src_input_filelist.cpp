@@ -30,7 +30,6 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <srcml_logger.hpp>
-#include <global_errors.hpp>
 
 int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
@@ -39,10 +38,6 @@ int src_input_filelist(ParseQueue& queue,
 
     archive* arch = libarchive_input_file(input_file);
     if (!arch)
-        return 0;
-
-    // curl handling could produce a 404 error
-    if (getCurlErrors())
         return 0;
 
     archive_entry *entry = 0;
@@ -58,12 +53,12 @@ int src_input_filelist(ParseQueue& queue,
     // ARE THE LAST TWO NECESSARY?
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: filelist requires a non-directory file format");
+        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: filelist requires a non-directory file format");
     	return 1;
     }
 
     if (strcmp(archive_entry_pathname(entry), "data") != 0) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: filelist requires a non-archived file format");
+        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: filelist requires a non-archived file format");
     	return 1;
     }
 

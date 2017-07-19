@@ -22,4 +22,4 @@
 
 #include <srcml_logger.hpp>
 
-int SRCMLLogger::opts;
+int SRCMLLogger::error_count = 0;

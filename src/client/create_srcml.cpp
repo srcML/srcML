@@ -237,7 +237,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     int status = 0;
         /* when no archive, this one is just used as a clone, so just don't open it */
     /*
-    if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
+    if (srcmlOption(SRCML_COMMAND_NOARCHIVE)) {
 
 
     } else if (contains<int>(destination)) {

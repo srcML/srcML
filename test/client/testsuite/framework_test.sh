@@ -182,6 +182,28 @@ check() {
 }
 
 ##
+# checks the result of a command
+#
+# If stdout is not specified, it is assumed to be empty
+# If stderr is not specified, it is assumed to be empty
+check_file() {
+
+    # return stdout and stderr to standard streams
+    uncapture_output
+
+    # trace the command
+    firsthistoryentry
+
+    diff $1 $2
+    [ ! -s $STDERR ]
+
+    # return to capturing stdout and stderr
+    capture_output
+
+    true
+}
+
+##
 # checks the exit status of a command
 #   $1 expected return value
 #

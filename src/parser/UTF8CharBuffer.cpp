@@ -23,14 +23,12 @@
 
 #include "UTF8CharBuffer.hpp"
 
-#include <srcml_macros.hpp>
 #include <sha1utilities.hpp>
-
 #include <iostream>
-#include <sstream>
-#include <iomanip>
-
-#include <stdio.h>
+#include <fcntl.h>
+#include <iterator>
+#include <map>
+#include <string>
 
 #ifndef _MSC_BUILD
 #include <unistd.h>
@@ -38,102 +36,67 @@
 #include <io.h>
 #endif
 
-#ifndef LIBXML2_NEW_BUFFER
+namespace {
+    template<typename T>
+    struct Context {
+        Context(T v) : value(v) {}
+        T value;
+    };
 
-/** Use same accessor for buffer content with both libxml2 buffer types */
-#define xmlBufContent(b) (b->content)
+    // indicates if the two given encodings are basically the same,
+    // with a trivial encoding process
+    bool compatibleEncodings(const char* encoding1, const char* encoding2) {
 
-#endif
+        // setup encoder between the two encodings
+        iconv_t ce = iconv_open(encoding1, encoding2);
+        if (ce == (iconv_t) -1)
+            return false;
 
-/**
- * srcMLIO
- *
- * Data struct passed around for reading/closing of Generic IO.
- * Structure to hold context with callbacks to provide hashing.
- */
-struct srcMLIO {
+        // see if encoding is trivial
+        int trivial = false;
+        iconvctl(ce, ICONV_TRIVIALP, &trivial);
 
-    /** hold void * context */
-    void * context;
+        iconv_close(ce);
 
-    /** provided read callback */
-    UTF8CharBuffer::srcml_read_callback read_callback;
+        return trivial;
+    }
 
-    /** provided close callback */
-    UTF8CharBuffer::srcml_close_callback close_callback;
+    std::string estimateEncoding(const std::vector<char>& buffer) {
 
-#ifdef _MSC_BUILD
-    /** mvcs hash context object */
-    HCRYPTHASH * ctx;
-#else
-    /** openssl/CommonCrypto hash context */
-    SHA_CTX * ctx;
-#endif
+        bool ascii = true;
+        for (const unsigned char& c : buffer) {
+            // no ISO-8859-1 numbers in this range
+            if (c > 0x7E && c < 0xA0)
+                return "UTF-8";
 
-};
+            if (c > 0x7E)
+                ascii = false;
+        }
 
-/**
- * srcMLFdRead
- * @param context a srcMLFd context
- * @param buffer a buffer to write output of read
- * @param len number of bytes to read/size of buffer
- *
- * Wrapper around read to provide hashing.
- * Read len bytes from file and put in buffer.
- * Update hash with newly read data.
- */
-int srcMLFdRead(void * context, char * buffer, int len) {
+        if (ascii)
+            return "ASCII";
 
-    int fd = (int)(size_t)context;
+        return "ISO-8859-1";
+    }
 
-    size_t num_read = READ(fd, buffer, len);
+    // some common aliases that libiconv does not accept
+    std::map<std::string, std::string> encodingAliases = {
+        { "UTF16", "UTF-16"},
+        { "UCS2", "UCS-2"},
+        { "UCS4", "UCS-4"},
+    };
 
-    return (int)num_read;
+    std::string normalizeEncodingName(const char* name) {
 
-}
+        std::string str = name;
+        std::transform(str.begin(), str.end(), str.begin(), ::toupper);
 
-/**
- * srcMLIORead
- * @param context a srcMLIO context
- * @param buffer a buffer to write output of read
- * @param len number of bytes to read/size of buffer
- *
- * Wrapper around provided read callback to provide hashing.
- * Read len bytes from file and put in buffer.
- * Update hash with newly read data.
- */
-int srcMLIORead(void * context,  char * buffer, int len) {
+        auto search = encodingAliases.find(str);
+        if (search == encodingAliases.end())
+            return str;
 
-    srcMLIO * sio = (srcMLIO *)context;
-    size_t num_read = -1;
-    if(sio->read_callback) num_read = sio->read_callback(sio->context, buffer, len);
-
-    if(sio->ctx)
-#ifdef _MSC_BUILD
-        CryptHashData(*sio->ctx, (BYTE *)buffer, num_read, 0);
-#else
-        SHA1_Update(sio->ctx, buffer, (SHA_LONG)num_read);
-#endif
-
-    return (int)num_read;
-}
-
-/**
- * srcMLIOClose
- * @param context a srcMLIO context
- *
- * Wrapper around xmlFileClose.
- * Cleans up memory of srcMLIO and closes context.
- */
-int srcMLIOClose(void * context) {
-
-    srcMLIO * sio = (srcMLIO *)context;
-    int ret = 0;
-    if(sio->close_callback) ret = sio->close_callback(sio->context);
-
-    delete sio;
-
-    return ret;
+        return search->second;
+    }
 }
 
 /**
@@ -144,15 +107,13 @@ int srcMLIOClose(void * context) {
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
+UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t cooked_size)
+    : antlr::CharBuffer(std::cin), hashneeded(hashneeded), hash(hash), cooked_size(cooked_size) {
 
-    if(!ifilename) throw UTF8FileError();
+    // may be null
+    this->encoding = encoding ? normalizeEncodingName(encoding) : "";
 
-    void * file = xmlFileOpen(ifilename);
-    if(!file) throw UTF8FileError();
-
-    if(hash) {
+    if (hashneeded) {
 #ifdef _MSC_BUILD
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         if(!success && GetLastError() == NTE_BAD_KEYSET)
@@ -162,26 +123,37 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
         SHA1_Init(&ctx);
 #endif
     }
+}
 
-    srcMLIO * sio = new srcMLIO();
-    sio->context = file;
-    sio->read_callback = xmlFileRead;
-    sio->close_callback = xmlFileClose;
+/**
+ * UTF8CharBuffer
+ * @param ifilename input filename (complete path)
+ * @param encoding input encoding
+ * @param hash optional location to output hash of input (default = 0)
+ *
+ * Constructor.  Setup input from filename and hashing if needed.
+ */
+UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
-#ifdef _MSC_BUILD
-    hash ? sio->ctx = &crypt_hash : 0;
-#else
-    hash ? sio->ctx = &ctx : 0;
-#endif
+    if (!ifilename)
+        throw UTF8FileError();
 
-    input = xmlParserInputBufferCreateIO(srcMLIORead, srcMLIOClose, sio,
-                                         encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    // open the file
+    int fd = open(ifilename, O_RDONLY);
+    if (fd == -1)
+        throw UTF8FileError();
 
-    if(!input) throw UTF8FileError();
-
-
-    init(encoding);
-
+    // setup callbacks, wrappers around read() and close()
+    sio.context = new Context<int>(fd);
+    sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
+        return read(static_cast<Context<int>*>(context)->value, buf, insize);
+    };
+    sio.close_callback = [](void* context) -> int {
+        int fd = static_cast<Context<int>*>(context)->value;
+        delete static_cast<Context<int>*>(context);
+        return close(fd);
+    };
 }
 
 /**
@@ -193,62 +165,24 @@ UTF8CharBuffer::UTF8CharBuffer(const char * ifilename, const char * encoding, bo
  *
  * Constructor.  Setup input from memory and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size((int)buffer_size), lastcr(false), hash(hash) {
+UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, buffer_size * 4) {
 
-    if(!c_buffer) throw UTF8FileError();
+    if (!c_buffer)
+        throw UTF8FileError();
 
-    if(hash) {
-#ifdef _MSC_BUILD
-        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(!success && GetLastError() == NTE_BAD_KEYSET)
-            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-        CryptHashData(crypt_hash, (BYTE *)c_buffer, buffer_size, 0);
-#else
-        SHA1_Init(&ctx);
-        SHA1_Update(&ctx, c_buffer, (SHA_LONG)buffer_size);
-#endif
+    // setup callbacks, null since we have the input buffer already
+    sio.context = 0;
+    sio.read_callback = 0;
+    sio.close_callback = 0;
 
-    }
+    // copy the data from the user parameter
+    // would be nice to use directly, but would have to verify it is not deallocated after constructor call
+    raw.insert(raw.begin(), c_buffer, c_buffer + buffer_size);
+    insize = raw.size();
 
-    bool use_init = true;
-    if(size == 0) {
-
-        input = xmlParserInputBufferCreateMem("\xff\xff\xff\xff", 1, xmlParseCharEncoding("UTF-8"));
-        this->encoding = encoding ? encoding : "ISO-8859-1";
-        use_init = false;
-
-    } else {
-
-        input = xmlParserInputBufferCreateMem(c_buffer, size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    }
-
-    if(!input) throw UTF8FileError();
-
-    /* Mem seems to skip encoding  force it */
-    if(encoding && input->encoder) {
-#ifdef LIBXML2_NEW_BUFFER
-        input->raw = input->buffer;
-        input->rawconsumed = 0;
-        xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(xmlParseCharEncoding(encoding));
-        input->buffer = temp_parser->buffer;
-        temp_parser->buffer = 0;
-        xmlFreeParserInputBuffer(temp_parser);
-        size = growBuffer();
-#else
-        if(input->raw)
-            xmlBufferFree(input->raw);
-        input->raw = input->buffer;
-        input->rawconsumed = 0;
-        input->buffer = xmlBufferCreate();
-        size = growBuffer();
-#endif
-    }
-
-    if(use_init) init(encoding);
-
+    // since we already have all the data, need to hash and perform encoding
+    insize = readChars();
 }
 
 /**
@@ -259,38 +193,18 @@ UTF8CharBuffer::UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const 
  *
  * Constructor.  Setup input from FILE * and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
+UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
-    if(!file) throw UTF8FileError();
+    if (!file)
+        throw UTF8FileError();
 
-    if(hash) {
-#ifdef _MSC_BUILD
-        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
-
-    srcMLIO * sio = new srcMLIO();
-    sio->context = file;
-    sio->read_callback = xmlFileRead;
-    sio->close_callback = 0;
-
-#ifdef _MSC_BUILD
-    hash ? sio->ctx= &crypt_hash : 0;
-#else
-    hash ? sio->ctx = &ctx : 0;
-#endif
-
-    input = xmlParserInputBufferCreateIO(srcMLIORead, srcMLIOClose, sio,
-                                         encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    if(!input) throw UTF8FileError();
-
-    init(encoding);
-
+    // setup callbacks, mainly wrappers around fread() for FILE* converted to file descriptor
+    sio.context = (void*) file;
+    sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
+        return fread(buf, 1, insize, (FILE*) context);
+    };
+    sio.close_callback = 0;
 }
 
 /**
@@ -301,38 +215,21 @@ UTF8CharBuffer::UTF8CharBuffer(FILE * file, const char * encoding, boost::option
  *
  * Constructor.  Setup input from file descriptor and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
+UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
-    if(fd < 0) throw UTF8FileError();
+    if (fd < 0)
+        throw UTF8FileError();
 
-    if(hash) {
-#ifdef _MSC_BUILD
-        CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
-
-    srcMLIO * sio = new srcMLIO();
-    sio->context = (void *)(size_t)fd;
-    sio->read_callback = srcMLFdRead;
-    sio->close_callback = 0;
-
-#ifdef _MSC_BUILD
-    hash ? sio->ctx = &crypt_hash : 0;
-#else
-    hash ? sio->ctx = &ctx : 0;
-#endif
-
-    input = xmlParserInputBufferCreateIO(srcMLIORead, srcMLIOClose, sio,
-                                         encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    if(!input) throw UTF8FileError();
-
-    init(encoding);
-
+    // setup callbacks, wrappers around read()
+    sio.context = new Context<int>(fd);
+    sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
+        return read(static_cast<Context<int>*>(context)->value, buf, insize);
+    };
+    sio.close_callback = [](void* context) -> int {
+        delete static_cast<Context<int>*>(context);
+        return 0;
+    };
 }
 
 /**
@@ -343,127 +240,162 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char * encoding, boost::optional<st
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(void * context, srcml_read_callback read_callback, srcml_close_callback close_callback,
-     const char * encoding, boost::optional<std::string> * hash)
-    : antlr::CharBuffer(std::cin), input(0), pos(0), size(0), lastcr(false), hash(hash) {
+UTF8CharBuffer::UTF8CharBuffer(void* context, srcml_read_callback read_callback, srcml_close_callback close_callback,
+     const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+    : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
-    if(read_callback == 0 || context == 0) throw UTF8FileError();
+    // requires only a read callback, not a close callback or a context
+    if (read_callback == 0)
+        throw UTF8FileError();
 
-    if(hash) {
-#ifdef _MSC_BUILD
-        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(!success && GetLastError() == NTE_BAD_KEYSET)
-            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
-
-    srcMLIO * sio = new srcMLIO();
-    sio->context = context;
-    sio->read_callback = read_callback;
-    sio->close_callback = close_callback;
-    
-#ifdef _MSC_BUILD
-    hash ? sio->ctx = &crypt_hash : 0;
-#else
-    hash ? sio->ctx = &ctx : 0;
-#endif
-
-    input = xmlParserInputBufferCreateIO(srcMLIORead, srcMLIOClose, sio,
-                                         encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    if(!input) throw UTF8FileError();
-
-
-    init(encoding);
-
+    sio.context = context;
+    sio.read_callback = read_callback;
+    sio.close_callback = close_callback;
 }
 
 /**
- * init
- * @param encoding the input encoding
+ * readChars
  *
- * Helper function with common initialization for constructors.
- * Handles setup/detection of encoding.
+ * Read and process the next sequence of data.
  */
-void UTF8CharBuffer::init(const char * encoding) {
+ssize_t UTF8CharBuffer::readChars() {
 
-    if(encoding) this->encoding = encoding;
+    // read more data into raw (may already be data in there)
+    if (insize == 0 || pos >= insize) {
 
-    /* If an encoding was not specified, then try to detect it.
-       This is especially important for the BOM for UTF-8.
-       If nothing is detected, then use ISO-8859-1 */
-    if (!encoding) {
+        // create room for the raw characters
+        raw.resize(SRCBUFSIZE);
 
-        // need to save the mem buffer ssize
-        int save_size = size;
-        // input enough characters to detect.
-        // 4 is good because you either get 4 or some standard size which is probably larger (really)
-        size = xmlParserInputBufferGrow(input, 4);
-
-        // detect (and remove) BOMs for UTF8 and UTF16
-        if ((size >= 3 || save_size >= 3) &&
-            xmlBufContent(input->buffer)[0] == 0xEF &&
-            xmlBufContent(input->buffer)[1] == 0xBB &&
-            xmlBufContent(input->buffer)[2] == 0xBF) {
-
-            pos = 3;
-
-            this->encoding = "UTF-8";
-
-            // restore mem buffer size
-            if(size == 0) size = save_size;
-
-        } else {
-
-            // assume ISO-8859-1 unless we can detect it otherwise
-            xmlCharEncoding denc = XML_CHAR_ENCODING_8859_1;
-
-            // now see if we can detect it
-            xmlCharEncoding newdenc = xmlDetectCharEncoding(xmlBufContent(input->buffer), size);
-            if (newdenc && newdenc != XML_CHAR_ENCODING_UTF8)
-                denc = newdenc;
-
-            /* Transform the data already read in */
-
-            // since original encoding was NONE, no raw buffer was allocated, so use the regular buffer
-            pos = 0;
-            input->raw = input->buffer;
-            input->rawconsumed = 0;
-
-            // need a new regular buffer
-#ifdef LIBXML2_NEW_BUFFER
-            xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(denc);
-            input->buffer = temp_parser->buffer;
-            temp_parser->buffer = 0;
-            xmlFreeParserInputBuffer(temp_parser);
-#else
-            input->buffer = xmlBufferCreate();
-#endif
-            // setup the encoder being used
-            input->encoder = xmlGetCharEncodingHandler(denc);
-
-            this->encoding = xmlGetCharEncodingName(denc);
-
-            // fill up the buffer with even more data
-            size = growBuffer();
+        // use the provided callback
+        // the entire input buffer may not be available because of incomplete multi-byte sequences
+        // from a previous read
+        ssize_t insize = sio.read_callback ? (int) sio.read_callback(sio.context, raw.data() + inbytesleft, raw.size() - inbytesleft) : 0;
+        if (insize == -1) {
+            fprintf(stderr, "Error reading: %s", strerror(errno));
+            exit(1);
         }
+
+        // EOF
+        if (insize == 0) {
+            return 0;
+        }
+
+        // new size is the number of bytes read in, plus any incomplete multibyte sequences from previous
+        raw.resize(insize + inbytesleft);
+    }
+    
+    // hash only the read data, not the inbytesleft (from previous call)
+    if (hashneeded) {
+#ifdef _MSC_BUILD
+        CryptHashData(crypt_hash, (BYTE *)raw.data() + inbytesleft, raw.size() - inbytesleft, 0);
+#else
+        SHA1_Update(&ctx, raw.data() + inbytesleft, (SHA_LONG) (raw.size() - inbytesleft));
+#endif
     }
 
-}
+    // assume nothing to skip over
+    pos = 0;
 
-/**
- * growBuffer
- *
- * Grow the libxml2 input buffer.  Read next sequence
- * of data.
- */
-int UTF8CharBuffer::growBuffer() {
+    // setup encoding on first read of data
+    if (firstRead) {
 
-    return xmlParserInputBufferGrow(input, SRCBUFSIZE);
+        // treat unsigned int field as just 4 bytes regardless of endianness
+        // with 0 for any missing data
+        union { unsigned char d[4]; uint32_t i; } data = { { 0, 0, 0, 0 } };
+        for (size_t i = 0; i < 4 && i < raw.size(); ++i)
+            data.d[i] = static_cast<unsigned char>(raw[i]);
 
+        // check for UTF-8 BOM
+        if ((data.i & 0x00FFFFFF) == 0x00BFBBEF) {
+
+            // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually skipped
+            pos += 3;
+
+            // no encoding specified (by user) then UTF-8, otherwise check if it is compatible with UTF-8
+            if (encoding.empty()) {
+                encoding = "UTF-8";
+            } else if (!compatibleEncodings(encoding.c_str(), "UTF-8")) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.c_str());
+            }
+        }
+
+        // auto-detect UTF-16 based on BOM
+        // both UTF-16LE and UTF-16BE are determined automatically from BOM
+        // and processed as UTF-16
+        if ((data.i & 0x0000FFFF) == 0x0000FFFE || (data.i & 0x0000FFFF) == 0x0000FEFF) {
+
+            // no encoding specified (by user) then UTF-16, otherwise check if it is compatible with UTF-16
+            if (encoding.empty()) {
+                encoding = "UTF-16";
+            } else if (!compatibleEncodings(encoding.c_str(), "UTF-16")) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.c_str());
+            }
+        }
+
+        // auto-detect UTF-32 based on BOM
+        // both UTF-32LE and UTF-32BE are determined automatically from BOM
+        // and processed as UTF-32
+        if (data.i == 0xFFFE0000 || data.i == 0xFEFF0000) {
+
+            // no encoding specified (by user) then UTF-32, otherwise check if it is compatible with UTF-32
+            if (encoding.empty()) {
+                encoding = "UTF-32";
+            } else if (!compatibleEncodings(encoding.c_str(), "UTF-32")) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.c_str());
+            }
+        }
+
+        // if no encoding found or specified, assume ISO-8859-1
+        if (encoding.empty())
+            encoding = "ISO-8859-1";
+
+        // setup encoder from encoding to UTF-8
+        ic = iconv_open("UTF-8", encoding.c_str());
+        if (ic == (iconv_t) -1) {
+            if (errno == EINVAL) {
+                fprintf(stderr, "Conversion from encoding '%s' not supported\n\n", encoding.c_str());
+                exit(4);
+            }
+        }
+
+        // see if this encoding to UTF-8 is trivial, if so we can use raw characters directly
+        iconvctl(ic, ICONV_TRIVIALP, &trivial);
+    }
+    firstRead = false;
+
+    // for non-trivial conversions, convert from raw to cooked
+    if (!trivial) {
+
+        // raw input characters
+        // after call to iconv(), linbuf will point to start of any 
+        // incomplete multibyte sequences that were not cooked
+        char* linbuf = raw.data();
+        inbytesleft = raw.size();
+
+        // cooked (encoded in UTF-8) input characters
+        // full output buffer is available since all previous characters have been processed
+        cooked.resize(cooked_size);
+        char* loutbuf = cooked.data();
+        size_t outbytesleft = cooked.size();
+
+        // convert from raw characters to cooked, encoded in UTF-8 characters
+        size_t binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
+        if (binsize == (size_t) -1) {
+            fprintf(stderr, "%s\n", strerror(errno));
+            exit(1);
+        }
+
+        // number of bytes cooked is the total size minus the bytes that were "left", i.e., not used, by iconv()
+        cooked.resize(cooked.size() - outbytesleft);
+
+        // all of the input characters may not have been converted
+        // as not all of their bytes read in (think bufferinsize of 5 with UTF-16 input)
+        // so just move all of them to the start of the buffer
+        if (inbytesleft)
+            std::move(linbuf, linbuf + inbytesleft, raw.begin());
+    }
+
+    return trivial ? raw.size() : cooked.size();
 }
 
 /**
@@ -481,57 +413,29 @@ int UTF8CharBuffer::growBuffer() {
  */
 int UTF8CharBuffer::getChar() {
 
-    if(!input) return getchar();
+    unsigned char c = 0;
 
-    // need to refill the buffer
-    if (size == 0 || pos >= size) {
+    // may need more characters
+    if (insize == 0 || pos >= insize) {
 
-        // refill the buffer
-#ifdef LIBXML2_NEW_BUFFER
-        xmlBufShrink(input->buffer, size);
-#else
-        input->buffer->use = 0;
-#endif
-        size = xmlParserInputBufferGrow(input, SRCBUFSIZE);
-
-        // found problem or eof
-        if (size == -1 || size == 0)
+        insize = readChars();
+        if (insize == 0) {
+                // EOF
             return -1;
-
-        // start at the beginning
-        pos = 0;
+        }
     }
 
-    // individual 8-bit character to return
-    int c = (int) xmlBufContent(input->buffer)[pos++];
+    // read the next char either from the current input buffer (for a trivial, no-iconv needed)
+    // or from the iconv'ed output buffer
+    c = (trivial ? raw : cooked)[pos];
+    ++pos;
 
     // sequence "\r\n" where the '\r'
     // has already been converted to a '\n' so we need to skip over this '\n'
+    // so start over
     if (lastcr && c == '\n') {
         lastcr = false;
-
-        // might need to refill the buffer
-        if (pos >= size) {
-
-            // refill the buffer
-#ifdef LIBXML2_NEW_BUFFER
-            xmlBufShrink(input->buffer, size);
-#else
-            input->buffer->use = 0;
-#endif
-
-            size = growBuffer();
-
-            // found problem or eof
-            if (size == -1 || size == 0)
-                return -1;
-
-            // start at the beginning
-            pos = 0;
-        }
-
-        // certain to have a character
-        c = (int) xmlBufContent(input->buffer)[pos++];
+        getChar();
     }
 
     // convert carriage returns to a line feed
@@ -550,10 +454,9 @@ int UTF8CharBuffer::getChar() {
  *
  * @returns the used source encoding.
  */
-const boost::optional<std::string> & UTF8CharBuffer::getEncoding() const {
+const std::string& UTF8CharBuffer::getEncoding() const {
 
     return encoding;
-
 }
 
 /**
@@ -564,28 +467,23 @@ const boost::optional<std::string> & UTF8CharBuffer::getEncoding() const {
  */
 UTF8CharBuffer::~UTF8CharBuffer() {
 
-    if(!input) return;
+    if (ic)
+        iconv_close(ic);
+    
+    if (hashneeded) {
+        unsigned char md[20];
 
-    xmlFreeParserInputBuffer(input);
-    input = 0;
-
-    unsigned char md[20];
-
-    if(hash) {
 #ifdef _MSC_BUILD
         DWORD        SHA_DIGEST_LENGTH;
-        DWORD        hash_length_size = sizeof(DWORD);
-        CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
+        DWORD        hash_length_size = insizeof(DWORD);
+        CryptGetHashParam(crypt_hash, HP_HASHinSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
         CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
         CryptDestroyHash(crypt_hash);
         CryptReleaseContext(crypt_provider, 0);
 #else
         SHA1_Final(md, &ctx);
 #endif
-
         const char outmd[] = { HEXCHARASCII(md), '\0'};
-        *hash = outmd;
-
+        hash = outmd;
     }
-
 }

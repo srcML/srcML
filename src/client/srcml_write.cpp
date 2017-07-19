@@ -52,7 +52,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
-        if (!createdsrcml && !(SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get())) {
+        if (!createdsrcml && !(srcmlOption(SRCML_COMMAND_NOARCHIVE))) {
             createdsrcml = true;
 
             int status = 0;
@@ -68,7 +68,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
                 return;
         }
 
-        srcml_archive_write_unit((SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) ? request->srcml_arch : gsrcml_arch, request->unit);
+        srcml_archive_write_unit((srcmlOption(SRCML_COMMAND_NOARCHIVE)) ? request->srcml_arch : gsrcml_arch, request->unit);
 
         if (isarchive) {
             std::string s = request->filename ? *request->filename : "";
@@ -114,7 +114,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
         srcml_unit_free(request->unit);
 
         // close the archive (if per-unit)
-        if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
+        if (srcmlOption(SRCML_COMMAND_NOARCHIVE)) {
             srcml_archive_close(request->srcml_arch);
             srcml_archive_free(request->srcml_arch);
         }

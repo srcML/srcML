@@ -39,4 +39,9 @@ public:
  	static int opt;
 };
 
+inline bool srcmlOption(int option) {
+
+	return SRCMLOptions::get() & option;
+}
+
 #endif
