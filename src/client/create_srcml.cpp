@@ -215,12 +215,6 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // create the srcML output file
 
-    if (destination.protocol == "file") {
-        boost::filesystem::path dir(destination.resource);
-        if (dir.has_parent_path() && !is_directory(dir.parent_path()))
-            boost::filesystem::create_directories(dir.parent_path());
-    }
-
     int status = 0;
 
     gdestination = destination;

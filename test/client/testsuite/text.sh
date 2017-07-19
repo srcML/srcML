@@ -37,6 +37,8 @@ set -e
 echo -n "" | srcml -l "C++"
 check "$srcml"
 
+mkdir sub
+
 srcml -t "" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$srcml"
 
