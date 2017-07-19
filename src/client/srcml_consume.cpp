@@ -48,13 +48,15 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     // global access to options
     bool isseparatearchive = srcmlOption(SRCML_COMMAND_NOARCHIVE);
 
-    // current output archive
-    srcml_archive* srcml_arch = request->srcml_arch;
+    // a clone of the intended srcML archive is created
+    // the only purpose is to allow files to be parsed, without opening
+    // the real destination archive.
+    srcml_archive* srcml_arch = srcml_archive_clone(request->srcml_arch);
+
     if (isseparatearchive) {
-        srcml_arch = srcml_archive_clone(request->srcml_arch);
+        request->srcml_arch = srcml_arch;
         srcml_archive_disable_full_archive(srcml_arch);
         srcml_archive_enable_hash(srcml_arch);
-
 
         //Ensure that the directory path has a final "/" when appended to filename
         //Build the output filename        
@@ -85,7 +87,11 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";*/
 
         srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str(), 0);
-        request->srcml_arch = srcml_arch;
+    } else {
+            char buffer[100];
+    size_t size;
+    srcml_archive_write_open_memory(srcml_arch, (char**) &buffer, &size);
+
     }
 
     std::string original_filename;
@@ -96,9 +102,10 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     try {
 
         // create the unit start tag
-        if (!unit)
+        if (!unit) {
             if (!(unit = srcml_unit_create(srcml_arch)))
                 throw SRCML_STATUS_ERROR;
+        }
 
         // language attribute, required if from memory
         if ((status = srcml_unit_set_language(unit, request->language.c_str())) != SRCML_STATUS_OK)
@@ -131,9 +138,10 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         else if (!request->unit)
             status = srcml_unit_parse_memory(unit, &request->buffer.front(), request->buffer.size());
 
-        if (status != SRCML_STATUS_OK)
+        if (status != SRCML_STATUS_OK) {
             // FIXME: Cannot throw exception from thread
             throw status;
+        }
 
     } catch (...) {
 

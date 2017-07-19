@@ -45,7 +45,7 @@
 #include <input_archive.hpp>
 
 extern srcml_output_dest gdestination;
-srcml_archive* gsrcml_arch = 0;
+
 bool createdsrcml = false;
 
 int srcml_handler_dispatch(ParseQueue& queue,
@@ -73,11 +73,11 @@ int srcml_handler_dispatch(ParseQueue& queue,
             int status = 0;
             if (contains<int>(gdestination)) {
 
-                status = srcml_archive_write_open_fd(gsrcml_arch, *gdestination.fd);
+                status = srcml_archive_write_open_fd(srcml_arch, *gdestination.fd);
 
             } else {
 
-                status = srcml_archive_write_open_filename(gsrcml_arch, gdestination.c_str(), 0);
+                status = srcml_archive_write_open_filename(srcml_arch, gdestination.c_str(), 0);
             }
             if (status != SRCML_STATUS_OK)
                 return 0;
@@ -218,8 +218,6 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     gdestination = destination;
  
-    gsrcml_arch = srcml_arch;
-
     // a clone of the intended srcML archive is created
     // the only purpose is to allow files to be parsed, without opening
     // the real destination archive.
@@ -237,7 +235,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     // process input sources
     for (const auto& input : input_sources) {
 
-        int numhandled = srcml_handler_dispatch(parse_queue, csrcml_arch, srcml_request, input);
+        int numhandled = srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input);
         if (!numhandled)
             status = 1;
     }

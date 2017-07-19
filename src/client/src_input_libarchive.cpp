@@ -37,8 +37,6 @@
 
 #include <curl_input_file.hpp>
 
-extern srcml_archive* gsrcml_arch;
-
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     archive* arch = archive_read_new();
@@ -167,8 +165,6 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
-            srcml_archive_enable_full_archive(gsrcml_arch);
-            srcml_archive_enable_hash(gsrcml_arch);
             srcml_archive_enable_full_archive(srcml_arch);
             srcml_archive_enable_hash(srcml_arch);
         }

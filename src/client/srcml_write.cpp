@@ -34,20 +34,20 @@ srcml_output_dest gdestination;
 
 extern bool createdsrcml;
 
-extern srcml_archive* gsrcml_arch;
-
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log) {
 
     if (!request)
         return;
 
-    bool isarchive = srcml_archive_is_full_archive(request->srcml_arch);
     // if the input is an archive, then the output should be an archive
+    // TODO: Above comment does not apply here. This is NOT the input archive. Investigating...
+/*
+    bool isarchive = srcml_archive_is_full_archive(request->srcml_arch);
     if (isarchive)
        srcml_archive_enable_full_archive(gsrcml_arch);
-
-    isarchive = 1; //Print output for all processed files
+*/
+    bool isarchive = 1;
 
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
@@ -58,17 +58,17 @@ void srcml_write_request(ParseRequest* request, TraceLog& log) {
             int status = 0;
             if (contains<int>(gdestination)) {
 
-                status = srcml_archive_write_open_fd(gsrcml_arch, *gdestination.fd);
+                status = srcml_archive_write_open_fd(request->srcml_arch, *gdestination.fd);
 
             } else {
 
-                status = srcml_archive_write_open_filename(gsrcml_arch, gdestination.c_str(), 0);
+                status = srcml_archive_write_open_filename(request->srcml_arch, gdestination.c_str(), 0);
             }
             if (status != SRCML_STATUS_OK)
                 return;
         }
 
-        srcml_archive_write_unit((srcmlOption(SRCML_COMMAND_NOARCHIVE)) ? request->srcml_arch : gsrcml_arch, request->unit);
+        srcml_archive_write_unit(request->srcml_arch, request->unit);
 
         if (isarchive) {
             std::string s = request->filename ? *request->filename : "";
