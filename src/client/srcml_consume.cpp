@@ -46,7 +46,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     // NOTE: thread task cannot throw exception
 
     // global access to options
-    bool isseparatearchive = SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get();
+    bool isseparatearchive = srcmlOption(SRCML_COMMAND_NOARCHIVE);
 
     // current output archive
     srcml_archive* srcml_arch = request->srcml_arch;
