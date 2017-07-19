@@ -215,19 +215,6 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // create the srcML output file
 
-    // we handle all compression externally now
-    unsigned short compression = 0;
-
-    // If you didn't enable compression, but the output extension is gz
-    if (compression == 0) {
-        for (const auto& extension : destination.compressions) {
-            if (extension == ".gz") {
-                compression = 9;
-                break;
-            }
-        }
-    }
-
     if (destination.protocol == "file") {
         boost::filesystem::path dir(destination.resource);
         if (dir.has_parent_path() && !is_directory(dir.parent_path()))
@@ -235,19 +222,6 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     int status = 0;
-        /* when no archive, this one is just used as a clone, so just don't open it */
-    /*
-    if (srcmlOption(SRCML_COMMAND_NOARCHIVE)) {
-
-
-    } else if (contains<int>(destination)) {
-
-        status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
-    } else {
-        status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), compression);
-    }
-*/
-    // gzip compression available directly from libsrcml
 
     gdestination = destination;
  
