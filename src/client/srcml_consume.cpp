@@ -87,11 +87,11 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";*/
 
         srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str(), 0);
+        request->srcml_arch = srcml_arch;
     } else {
-            char buffer[100];
-    size_t size;
-    srcml_archive_write_open_memory(srcml_arch, (char**) &buffer, &size);
-
+        char buffer[100];
+        size_t size;
+        srcml_archive_write_open_memory(srcml_arch, (char**) &buffer, &size);
     }
 
     std::string original_filename;
