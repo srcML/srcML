@@ -21,7 +21,7 @@
  */
 
 
-#include "UTF8CharBuffer.hpp"
+#include <UTF8CharBuffer.hpp>
 
 #include <sha1utilities.hpp>
 #include <iostream>
@@ -29,6 +29,7 @@
 #include <iterator>
 #include <map>
 #include <string>
+#include <stdio.h>
 
 #ifndef _MSC_BUILD
 #include <unistd.h>
