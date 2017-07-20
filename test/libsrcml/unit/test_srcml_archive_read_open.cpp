@@ -43,7 +43,7 @@
 
 #include <unit_tests.hpp>
 
-int read_callback(void * context, char * buffer, size_t len) {
+ssize_t read_callback(void * context, void * buffer, size_t len) {
 
     return (int)fread(buffer, 1, len, (FILE *)context);
 

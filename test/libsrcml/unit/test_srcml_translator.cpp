@@ -125,7 +125,8 @@ int main() {
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, "archive", 0, 0, 0, attributes, 0, 0, 0);
 
-        UTF8CharBuffer * input = new UTF8CharBuffer("a;", 2, "UTF-8", 0);
+        boost::optional<std::string> hash;
+        UTF8CharBuffer * input = new UTF8CharBuffer("a;", 2, "UTF-8", false, hash);
 
         translator.translate(input);
         translator.close();
