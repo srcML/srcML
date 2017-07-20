@@ -44,7 +44,15 @@ cd $TEMPDIR
 export PATH=.:$PATH
 
 if [ -z "$SRCML"]; then
-    SRCML='/usr/local/bin/srcml'
+
+    if [ -e "/usr/bin/srcml" ]; then
+        SRCML='/usr/bin/srcml'
+    fi
+
+    if [ -e "/usr/local/bin/srcml" ]; then
+        SRCML='/usr/local/bin/srcml'
+    fi
+
 fi
 
 function srcml () {
