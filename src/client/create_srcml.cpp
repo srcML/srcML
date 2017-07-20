@@ -35,7 +35,7 @@
 #include <src_input_text.hpp>
 #include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
-#include <trace_log.hpp>
+#include <TraceLog.hpp>
 #include <srcml_options.hpp>
 #include <input_file.hpp>
 #include <curl_input_file.hpp>

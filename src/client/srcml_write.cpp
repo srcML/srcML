@@ -25,7 +25,7 @@
 #include <parse_request.hpp>
 #include <iostream>
 #include <srcml_options.hpp>
-#include <trace_log.hpp>
+#include <TraceLog.hpp>
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
 #include <srcml_logger.hpp>

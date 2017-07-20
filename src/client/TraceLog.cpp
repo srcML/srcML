@@ -1,5 +1,5 @@
 /**
- * @file trace_log.cpp
+ * @file TraceLog.cpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <trace_log.hpp>
+#include <TraceLog.hpp>
 #include <srcml_cli.hpp>
 #include <iomanip>
 #include <iostream>
