@@ -33,8 +33,6 @@ define open_error <<- 'STDERR'
 
 createfile nonexistent_files.txt "nonexistent1.txt"
 
-set +e
-
 srcml --files-from nonexistent_files.txt
 check_exit 1 "$empty_srcml" "$open_error"
 
@@ -56,8 +54,6 @@ check_exit 1 "$empty_srcml" "$open_error"
 srcml --files-from loop.txt -o loop.xml
 check_exit 1 "$open_error" 
 #loop.xml "$empty_srcml"
-
-set -e
 
 # file list references empty file
 define empty_archive <<- 'STDOUT'

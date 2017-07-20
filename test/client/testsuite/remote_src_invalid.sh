@@ -3,8 +3,6 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-set +e
-
 # input from an invalid remote source file
 srcml https://nonexistent-file.cpp
 check_exit 1
@@ -17,7 +15,6 @@ check_exit 1
 
 srcml https://nonexistent-file.cpp	--archive -o remote_archive.xml
 check_exit 1
-
 
 # files from contains an invalid remote source file
 createfile list.txt "https://nonexistent-file.cpp"

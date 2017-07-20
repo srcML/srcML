@@ -2,7 +2,6 @@
 
 # test framework
 source $(dirname "$0")/framework_test.sh
-set +e
 
 # test specify element after xpath (archive)
 define result <<- 'STDOUT'
@@ -23,8 +22,8 @@ createfile a.cpp "a;
 "
 createfile b.cpp "b;
 "
-srcml a.cpp b.cpp --xmlns:foo=foo.com -o archive.xml
 
+srcml a.cpp b.cpp --xmlns:foo=foo.com -o archive.xml
 
 srcml archive.xml --element="foo:foo" --xpath="//src:name"
 check_exit 2

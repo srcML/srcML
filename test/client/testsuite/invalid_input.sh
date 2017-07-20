@@ -3,8 +3,6 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-set +e
-
 # test invalid_input
 echo "a;" | srcml -l C++ --strip
 check_exit 3

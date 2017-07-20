@@ -4,7 +4,6 @@
 source $(dirname "$0")/framework_test.sh
 
 # test tabs
-set +e
 
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

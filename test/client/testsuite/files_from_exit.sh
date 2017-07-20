@@ -3,8 +3,6 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-set +e
-
 # file list doesn't exist
 srcml --files-from nonexistent_list.txt
 check_exit 1

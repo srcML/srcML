@@ -3,8 +3,6 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-set +e
-
 # test
 define xpath_error <<- 'STDOUT'
 	Error Parsing: Start tag expected, '<' not found

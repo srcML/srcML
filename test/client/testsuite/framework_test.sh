@@ -51,9 +51,6 @@ function srcml () {
     $SRCML "$@"
 }
 
-# always exit when a command exits with a non-zero status
-set -e
-
 # turn history on so we can output the command issued
 # note that the fc command accesses the history
 set -o history
@@ -133,6 +130,8 @@ capture_output
 # If stderr is not specified, it is assumed to be empty
 check() {
 
+    local exit_status=$?
+
     # return stdout and stderr to standard streams
     uncapture_output
 
@@ -175,6 +174,10 @@ check() {
         [ ! -s $STDERR ]
     fi
 
+    if [ $exit_status -ne 0 ]; then
+        exit 1
+    fi
+
     # return to capturing stdout and stderr
     capture_output
 
@@ -188,6 +191,8 @@ check() {
 # If stderr is not specified, it is assumed to be empty
 check_file() {
 
+    local exit_status=$?
+
     # return stdout and stderr to standard streams
     uncapture_output
 
@@ -196,6 +201,10 @@ check_file() {
 
     diff $1 $2
     [ ! -s $STDERR ]
+
+    if [ $exit_status -ne 0 ]; then
+        exit 1
+    fi
 
     # return to capturing stdout and stderr
     capture_output
@@ -206,9 +215,6 @@ check_file() {
 ##
 # checks the exit status of a command
 #   $1 expected return value
-#
-# NOTE: Requires the following in test file header:
-#   set +e
 check_exit() {
 
     local exit_status=$?

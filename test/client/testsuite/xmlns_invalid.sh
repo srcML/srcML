@@ -2,7 +2,6 @@
 
 # test framework
 source $(dirname "$0")/framework_test.sh
-set +e
 
 # can't overwrite default namespace without redefining src
 createfile sub/a.cpp "a;"

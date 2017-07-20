@@ -3,7 +3,6 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-set +e
 # filename is not allowed to be set on the archive, only on the individual
 # srcML units
 
@@ -11,7 +10,8 @@ set +e
 createfile sub/a.cpp "a;"
 
 srcml sub/a.cpp --archive -f "compressed.tar.gz"
-check "" "Attribute filename cannot be set for a srcML archive"
+check "" "Attribute filename cannot be set for a srcML archive
+"
 
 srcml sub/a.cpp --archive --filename "compressed.tar.gz"
 check "" "Attribute filename cannot be set for a srcML archive"

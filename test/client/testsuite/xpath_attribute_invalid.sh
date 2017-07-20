@@ -2,7 +2,6 @@
 
 # test framework
 source $(dirname "$0")/framework_test.sh
-set +e
 
 # must specify attribute after xpath query
 define result <<- 'STDOUT'
