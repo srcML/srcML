@@ -37,16 +37,10 @@ public:
     void report();
 
 private:
-    int count;
-    // int overallcount;
     bool enabled;
-    int num_skipped;
-    int num_error;
+    int count = 0;
+    int num_skipped = 0;
+    int num_error = 0;
 };
-
-
-TraceLog& operator<<(TraceLog& tlog, char c);
-
-TraceLog& operator<<(TraceLog& tlog, const std::string& s);
 
 #endif
