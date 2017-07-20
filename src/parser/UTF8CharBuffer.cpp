@@ -29,7 +29,7 @@
 #include <iterator>
 #include <map>
 #include <string>
-#include <stdio.h>
+#include <cstring>
 
 #ifndef _MSC_BUILD
 #include <unistd.h>
@@ -55,13 +55,14 @@ namespace {
 
         // see if encoding is trivial
         int trivial = false;
+#if _LIBICONV_VERSION >= 0x0108
         iconvctl(ce, ICONV_TRIVIALP, &trivial);
-
+#endif
         iconv_close(ce);
 
         return trivial;
     }
-
+#if 0
     std::string estimateEncoding(const std::vector<char>& buffer) {
 
         bool ascii = true;
@@ -79,7 +80,8 @@ namespace {
 
         return "ISO-8859-1";
     }
-
+#endif
+    
     // some common aliases that libiconv does not accept
     std::map<std::string, std::string> encodingAliases = {
         { "UTF16", "UTF-16"},
@@ -360,7 +362,11 @@ ssize_t UTF8CharBuffer::readChars() {
         }
 
         // see if this encoding to UTF-8 is trivial, if so we can use raw characters directly
+#if _LIBICONV_VERSION >= 0x0108
         iconvctl(ic, ICONV_TRIVIALP, &trivial);
+#else
+        trivial = false;
+#endif
     }
     firstRead = false;
 
