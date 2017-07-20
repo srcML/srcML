@@ -24,6 +24,8 @@
 #include <input_curl.hpp>
 #include <curl/curl.h>
 #include <srcml_logger.hpp>
+#include <mutex>
+#include <condition_variable>
 
 // global request
 extern srcml_request_t global_srcml_request;
