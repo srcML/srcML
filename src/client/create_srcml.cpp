@@ -66,21 +66,19 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
     } else if (input.protocol == "filelist") {
 
-        if (!createdsrcml) {
-            createdsrcml = true;
+        // always create the archive
+        int status = 0;
+        if (contains<int>(destination)) {
 
-            int status = 0;
-            if (contains<int>(destination)) {
+            status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
 
-                status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
+        } else {
 
-            } else {
-
-                status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
-            }
-            if (status != SRCML_STATUS_OK)
-                return 0;
+            status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
         }
+        if (status != SRCML_STATUS_OK)
+            return 0;
+        createdsrcml = true;
 
         int num = src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
 
@@ -230,17 +228,13 @@ void create_srcml(const srcml_request_t& srcml_request,
     parse_queue.wait();
     write_queue.wait();
 
-    log.report();
-    
-    // close the created srcML archive
-    if (createdsrcml) {
-        srcml_archive_close(srcml_arch);
-        srcml_archive_free(srcml_arch);
-    }
+    // send an EOS (End Of Stream) write request
+    ParseRequest* eos = new ParseRequest();
+    eos->srcml_arch = srcml_arch;
+    eos->status = createdsrcml ? 2000 : 1000;
+    write_queue.eos(eos);
 
-    // if we were writing to a file descriptor, then close it
-    if (contains<int>(destination))
-        close(*destination.fd);
+    log.report();
 
     if (status == 1)
         exit(1);

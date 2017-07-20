@@ -30,13 +30,29 @@
 #include <srcml_input_src.hpp>
 #include <srcml_logger.hpp>
 
-extern bool createdsrcml;
+static bool createdsrcml = false;
 
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log, srcml_output_dest& destination) {
 
     if (!request)
         return;
+
+    // values are a hack
+    if (request->status == 1000 || request->status == 2000) {
+
+        // close the created srcML archive
+        if (createdsrcml || request->status == 2000) {
+            srcml_archive_close(request->srcml_arch);
+            srcml_archive_free(request->srcml_arch);
+        }
+
+        // if we were writing to a file descriptor, then close it
+        if (contains<int>(destination))
+            close(*destination.fd);
+
+        return;
+    }
 
     // if the input is an archive, then the output should be an archive
     // TODO: Above comment does not apply here. This is NOT the input archive. Investigating...
@@ -53,8 +69,11 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, srcml_output_dest
         // we don't create the output srcml archive until we are going to write to it
         // Why? Well if we did, then we get an empty srcml archive, and that is not
         // what we want if there were errors along the way
-        if (!createdsrcml && !(srcmlOption(SRCML_COMMAND_NOARCHIVE))) {
-            createdsrcml = true;
+        fprintf(stderr, "DEBUG:  %s %s %d srcmlOption(SRCML_COMMAND_NOARCHIVE): %zd\n", __FILE__,  __FUNCTION__, __LINE__,  srcmlOption(SRCML_COMMAND_NOARCHIVE));
+
+
+        if (!createdsrcml || srcmlOption(SRCML_COMMAND_NOARCHIVE)) {
+fprintf(stderr, "DEBUG:  %s %s %d destination: %s\n", __FILE__,  __FUNCTION__, __LINE__,  destination.c_str());
 
             int status = 0;
             if (contains<int>(destination)) {
@@ -67,6 +86,8 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, srcml_output_dest
             }
             if (status != SRCML_STATUS_OK)
                 return;
+
+            createdsrcml = true;
         }
 
         srcml_archive_write_unit(request->srcml_arch, request->unit);

@@ -55,9 +55,15 @@ public:
         }
     }
 
+    inline void eos(ParseRequest* pvalue) {
+//        pvalue->status = 1000;
+        write(pvalue);
+    }
+
     inline void wait() {
         std::unique_lock<std::mutex> lock(this->mutex);
     }
+
 
 private:
     std::function<void(ParseRequest*)> write;
