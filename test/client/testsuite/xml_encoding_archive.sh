@@ -77,39 +77,39 @@ xmlcheck "$srcmlb"
 xmlcheck "$fsrcmlb"
 createfile sub/b.cpp "b;"
 
-srcml sub/a.cpp sub/b.cpp --in-order -x "ISO-8859-1"
+srcml sub/a.cpp sub/b.cpp -x "ISO-8859-1"
 check "$fsrcmlb"
 
-srcml sub/a.cpp sub/b.cpp --in-order --xml-encoding="ISO-8859-1"
+srcml sub/a.cpp sub/b.cpp --xml-encoding="ISO-8859-1"
 check "$fsrcmlb"
 
-srcml --xml-encoding "ISO-8859-1" sub/a.cpp sub/b.cpp --in-order
+srcml --xml-encoding "ISO-8859-1" sub/a.cpp sub/b.cpp
 check "$fsrcmlb"
 
-srcml --xml-encoding "ISO-8859-1" sub/a.cpp --in-order sub/b.cpp
+srcml --xml-encoding "ISO-8859-1" sub/a.cpp sub/b.cpp
 check "$fsrcmlb"
 
-srcml --xml-encoding "ISO-8859-1" --in-order sub/a.cpp sub/b.cpp
+srcml --xml-encoding "ISO-8859-1" sub/a.cpp sub/b.cpp
 check "$fsrcmlb"
 
-srcml --in-order --xml-encoding "ISO-8859-1" sub/a.cpp sub/b.cpp
+srcml --xml-encoding "ISO-8859-1" sub/a.cpp sub/b.cpp
 check "$fsrcmlb"
 
-srcml --in-order sub/a.cpp --xml-encoding "ISO-8859-1" sub/b.cpp
+srcml sub/a.cpp --xml-encoding "ISO-8859-1" sub/b.cpp
 check "$fsrcmlb"
 
-srcml -x "ISO-8859-1" sub/a.cpp sub/b.cpp --in-order -o sub/a.cpp.xml
+srcml -x "ISO-8859-1" sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcmlb"
 
-srcml -o sub/a.cpp.xml -x "ISO-8859-1" sub/a.cpp sub/b.cpp --in-order
+srcml -o sub/a.cpp.xml -x "ISO-8859-1" sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcmlb"
 
-srcml -o sub/a.cpp.xml sub/a.cpp -x "ISO-8859-1" sub/b.cpp --in-order
+srcml -o sub/a.cpp.xml sub/a.cpp -x "ISO-8859-1" sub/b.cpp
 check sub/a.cpp.xml "$fsrcmlb"
 
-srcml -o sub/a.cpp.xml sub/a.cpp sub/b.cpp -x "ISO-8859-1" --in-order
+srcml -o sub/a.cpp.xml sub/a.cpp sub/b.cpp -x "ISO-8859-1"
 check sub/a.cpp.xml "$fsrcmlb"
 
-srcml -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order -x "ISO-8859-1"
+srcml -o sub/a.cpp.xml sub/a.cpp sub/b.cpp -x "ISO-8859-1"
 check sub/a.cpp.xml "$fsrcmlb"
 

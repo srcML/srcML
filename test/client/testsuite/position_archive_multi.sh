@@ -19,32 +19,32 @@ xmlcheck "$fsrcml"
 createfile sub/a.cpp ""
 createfile sub/b.cpp ""
 
-srcml sub/a.cpp sub/b.cpp --position --archive --in-order
+srcml sub/a.cpp sub/b.cpp --position --archive
 check "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --archive --position --in-order
+srcml sub/a.cpp sub/b.cpp --archive --position
 check "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --position -o sub/a.cpp.xml --archive --in-order
+srcml sub/a.cpp sub/b.cpp --position -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --position --archive --in-order
+srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --position --archive
 check sub/a.cpp.xml "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --position --in-order
+srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --position
 check sub/a.cpp.xml "$fsrcml"
 
-srcml --position sub/a.cpp sub/b.cpp --archive --in-order
+srcml --position sub/a.cpp sub/b.cpp --archive
 check "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --archive --position --in-order
+srcml sub/a.cpp sub/b.cpp --archive --position
 check "$fsrcml"
 
-srcml --position sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --in-order
+srcml --position sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --position --in-order
+srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --archive --position
 check sub/a.cpp.xml "$fsrcml"
 
-srcml -o sub/a.cpp.xml --position sub/a.cpp sub/b.cpp --archive --in-order
+srcml -o sub/a.cpp.xml --position sub/a.cpp sub/b.cpp --archive
 check sub/a.cpp.xml "$fsrcml"

@@ -100,60 +100,60 @@ define fsrcml <<- 'STDOUT'
 
 createfile sub/b.cpp "b;"
 
-srcml sub/a.cpp sub/b.cpp -s "1.0" --in-order
+srcml sub/a.cpp sub/b.cpp -s "1.0"
 check "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --in-order -s "1.0"
+srcml sub/a.cpp sub/b.cpp -s "1.0"
 check "$fsrcml"
 
-srcml sub/a.cpp --in-order sub/b.cpp -s "1.0"
+srcml sub/a.cpp sub/b.cpp -s "1.0"
 check "$fsrcml"
 
-srcml --in-order sub/a.cpp sub/b.cpp -s "1.0"
+srcml sub/a.cpp sub/b.cpp -s "1.0"
 check "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --src-version "1.0" --in-order
+srcml sub/a.cpp sub/b.cpp --src-version "1.0"
 check "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --in-order --src-version="1.0"
+srcml sub/a.cpp sub/b.cpp --src-version="1.0"
 check "$fsrcml"
 
-srcml sub/a.cpp --in-order sub/b.cpp --src-version="1.0"
+srcml sub/a.cpp sub/b.cpp --src-version="1.0"
 check "$fsrcml"
 
-srcml --in-order sub/a.cpp sub/b.cpp --src-version="1.0"
+srcml sub/a.cpp sub/b.cpp --src-version="1.0"
 check "$fsrcml"
 
-srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
+srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcml"
 
-srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp --in-order sub/b.cpp
+srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcml"
 
-srcml -l C++ -s '1.0' -o sub/a.cpp.xml --in-order sub/a.cpp sub/b.cpp
+srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcml"
 
-srcml -l C++ -s '1.0' --in-order -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
+srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcml"
 
-srcml -l C++ --in-order -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
+srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcml"
 
-srcml --in-order -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
+srcml -l C++ -s '1.0' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcml"
 
-srcml -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
+srcml -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"
 
-srcml -s '1.0' sub/a.cpp sub/b.cpp --in-order -o sub/a.cpp.xml
+srcml -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"
 
-srcml -s '1.0' sub/a.cpp --in-order sub/b.cpp -o sub/a.cpp.xml
+srcml -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"
 
-srcml -s '1.0' --in-order sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+srcml -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"
 
-srcml --in-order -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
+srcml -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"
 

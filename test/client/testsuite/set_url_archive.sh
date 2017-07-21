@@ -70,24 +70,24 @@ define fsrcml <<- 'STDOUT'
 
 createfile sub/b.cpp "b;"
 
-srcml sub/a.cpp sub/b.cpp --url "bar" --in-order
+srcml sub/a.cpp sub/b.cpp --url "bar"
 check "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --url="bar" --in-order
+srcml sub/a.cpp sub/b.cpp --url="bar"
 check "$fsrcml"
 
-srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
+srcml --url "bar" sub/a.cpp sub/b.cpp
 check "$fsrcml"
 
-srcml --url "bar" sub/a.cpp sub/b.cpp --in-order
+srcml --url "bar" sub/a.cpp sub/b.cpp
 check "$fsrcml"
 
-srcml --url="bar" sub/a.cpp sub/b.cpp --in-order
+srcml --url="bar" sub/a.cpp sub/b.cpp
 check "$fsrcml"
 
-srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --in-order
+srcml -l C++ --url 'bar' -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcml"
 
-srcml --url 'bar' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml --in-order
+srcml --url 'bar' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"
 

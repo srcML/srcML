@@ -55,30 +55,30 @@ createfile sub/a.cpp "$input"
 createfile sub/b.cpp "b;"
 
 # markup else by default
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$fmarkup_else"
 
-srcml sub/a.cpp sub/b.cpp -o sub/b.cpp.xml --in-order
+srcml sub/a.cpp sub/b.cpp -o sub/b.cpp.xml
 check sub/b.cpp.xml "$fmarkup_else"
 
-srcml -o sub/b.cpp.xml sub/a.cpp sub/b.cpp --in-order
+srcml -o sub/b.cpp.xml sub/a.cpp sub/b.cpp
 check sub/b.cpp.xml "$fmarkup_else"
 
 # don't markup else
-srcml sub/a.cpp sub/b.cpp --cpp-nomarkup-else --in-order
+srcml sub/a.cpp sub/b.cpp --cpp-nomarkup-else
 check "$fnomarkup_else"
 
-srcml sub/a.cpp sub/b.cpp --cpp-nomarkup-else -o sub/b.cpp.xml --in-order
+srcml sub/a.cpp sub/b.cpp --cpp-nomarkup-else -o sub/b.cpp.xml
 check sub/b.cpp.xml "$fnomarkup_else"
 
-srcml sub/a.cpp sub/b.cpp -o sub/b.cpp.xml --cpp-nomarkup-else --in-order
+srcml sub/a.cpp sub/b.cpp -o sub/b.cpp.xml --cpp-nomarkup-else
 check sub/b.cpp.xml "$fnomarkup_else"
 
-srcml --cpp-nomarkup-else sub/a.cpp sub/b.cpp --in-order
+srcml --cpp-nomarkup-else sub/a.cpp sub/b.cpp
 check "$fnomarkup_else"
 
-srcml --cpp-nomarkup-else sub/a.cpp sub/b.cpp -o sub/b.cpp.xml --in-order
+srcml --cpp-nomarkup-else sub/a.cpp sub/b.cpp -o sub/b.cpp.xml
 check sub/b.cpp.xml "$fnomarkup_else"
 
-srcml --cpp-nomarkup-else -o sub/b.cpp.xml sub/a.cpp sub/b.cpp --in-order
+srcml --cpp-nomarkup-else -o sub/b.cpp.xml sub/a.cpp sub/b.cpp
 check sub/b.cpp.xml "$fnomarkup_else"

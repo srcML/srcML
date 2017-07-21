@@ -53,8 +53,8 @@ b;"
 srcml --archive sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$output"
 
-srcml sub/a.cpp sub/b.cpp --in-order -o sub/a.cpp.xml
+srcml sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$nestedfile"
 
-srcml --xmlns:src=http://www.srcML.org/srcML/src sub/a.cpp sub/b.cpp --in-order  -o sub/a.cpp.xml
+srcml --xmlns:src=http://www.srcML.org/srcML/src sub/a.cpp sub/b.cpp  -o sub/a.cpp.xml
 check sub/a.cpp.xml "$nestedfilesrc"

@@ -95,29 +95,29 @@ xmlcheck "$fsrcml"
 createfile sub/b.cpp "b;"
 
 # from a file
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --hash --in-order
+srcml sub/a.cpp sub/b.cpp --hash
 check "$fsrcml"
 
-srcml --hash sub/a.cpp sub/b.cpp --in-order
+srcml --hash sub/a.cpp sub/b.cpp
 check "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp --hash -o sub/a.xml --in-order
+srcml sub/a.cpp sub/b.cpp --hash -o sub/a.xml
 check sub/a.xml "$fsrcml"
 
-srcml sub/a.cpp sub/b.cpp -o sub/a.xml --hash --in-order
+srcml sub/a.cpp sub/b.cpp -o sub/a.xml --hash
 check sub/a.xml "$fsrcml"
 
-srcml -o sub/a.xml sub/a.cpp sub/b.cpp --hash --in-order
+srcml -o sub/a.xml sub/a.cpp sub/b.cpp --hash
 check sub/a.xml "$fsrcml"
 
-srcml --hash sub/a.cpp sub/b.cpp -o sub/a.xml --in-order
+srcml --hash sub/a.cpp sub/b.cpp -o sub/a.xml
 check sub/a.xml "$fsrcml"
 
-srcml --hash -o sub/a.xml sub/a.cpp sub/b.cpp --in-order
+srcml --hash -o sub/a.xml sub/a.cpp sub/b.cpp
 check sub/a.xml "$fsrcml"
 
-srcml -o sub/a.xml --hash sub/a.cpp sub/b.cpp --in-order
+srcml -o sub/a.xml --hash sub/a.cpp sub/b.cpp
 check sub/a.xml "$fsrcml"

@@ -23,7 +23,7 @@ createfile a.cpp "a;
 createfile b.cpp "b;
 "
 
-srcml a.cpp b.cpp --xmlns:foo=foo.com --in-order -o archive.xml
+srcml a.cpp b.cpp --xmlns:foo=foo.com -o archive.xml
 
 # from a file
 srcml archive.xml --xpath="//src:name" --element="foo:foo"

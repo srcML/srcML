@@ -42,258 +42,258 @@ createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
 
 # test that two files will output in an archive by default
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml --in-order sub/a.cpp sub/b.cpp
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp --in-order sub/b.cpp
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order -o sub/ab.cpp.xml
+srcml sub/a.cpp sub/b.cpp -o sub/ab.cpp.xml
 check sub/ab.cpp.xml "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp -o sub/ab.cpp.xml --in-order
+srcml sub/a.cpp sub/b.cpp -o sub/ab.cpp.xml
 check sub/ab.cpp.xml "$nestedfile"
 
-srcml -o sub/ab.cpp.xml --in-order sub/a.cpp sub/b.cpp
+srcml -o sub/ab.cpp.xml sub/a.cpp sub/b.cpp
 check sub/ab.cpp.xml "$nestedfile"
 
-srcml --in-order -o sub/ab.cpp.xml sub/a.cpp sub/b.cpp
+srcml -o sub/ab.cpp.xml sub/a.cpp sub/b.cpp
 check sub/ab.cpp.xml "$nestedfile"
 
 # test explicit archive flag
-srcml sub/a.cpp --archive --in-order
+srcml sub/a.cpp --archive
 check "$fileasrcml"
 
-srcml sub/a.cpp --in-order --archive
+srcml sub/a.cpp --archive
 check "$fileasrcml"
 
-srcml --archive --in-order sub/a.cpp
+srcml --archive sub/a.cpp
 check "$fileasrcml"
 
-srcml --in-order --archive sub/a.cpp
+srcml --archive sub/a.cpp
 check "$fileasrcml"
 
-srcml sub/a.cpp --archive --in-order -o sub/ab.cpp.xml
+srcml sub/a.cpp --archive -o sub/ab.cpp.xml
 check sub/ab.cpp.xml "$fileasrcml"
 
-srcml sub/a.cpp --in-order --archive -o sub/ab.cpp.xml
+srcml sub/a.cpp --archive -o sub/ab.cpp.xml
 check sub/ab.cpp.xml "$fileasrcml"
 
-srcml sub/a.cpp --in-order -o sub/ab.cpp.xml --archive
+srcml sub/a.cpp -o sub/ab.cpp.xml --archive
 check sub/ab.cpp.xml "$fileasrcml"
 
-srcml --in-order sub/a.cpp -o sub/ab.cpp.xml --archive
+srcml sub/a.cpp -o sub/ab.cpp.xml --archive
 check sub/ab.cpp.xml "$fileasrcml"
 
-srcml --in-order --archive sub/a.cpp -o sub/ab.cpp.xml
+srcml --archive sub/a.cpp -o sub/ab.cpp.xml
 check sub/ab.cpp.xml "$fileasrcml"
 
-srcml --in-order sub/a.cpp --archive -o sub/ab.cpp.xml
+srcml sub/a.cpp --archive -o sub/ab.cpp.xml
 check sub/ab.cpp.xml "$fileasrcml"
 
-srcml --archive --in-order sub/a.cpp -o sub/ab.cpp.xml
+srcml --archive sub/a.cpp -o sub/ab.cpp.xml
 check sub/ab.cpp.xml "$fileasrcml"
 
-srcml --archive sub/a.cpp --in-order -o sub/ab.cpp.xml
+srcml --archive sub/a.cpp -o sub/ab.cpp.xml
 check sub/ab.cpp.xml "$fileasrcml"
 
-srcml --archive sub/a.cpp -o sub/ab.cpp.xml --in-order
+srcml --archive sub/a.cpp -o sub/ab.cpp.xml
 check sub/ab.cpp.xml "$fileasrcml"
 
-srcml --archive -o sub/ab.cpp.xml --in-order sub/a.cpp
+srcml --archive -o sub/ab.cpp.xml sub/a.cpp
 check sub/ab.cpp.xml "$fileasrcml"
 
 # from standard in
-echo -n "a;" | srcml --archive -l C++ --in-order
+echo -n "a;" | srcml --archive -l C++
 check "$asrcml"
 
-echo -n "a;" | srcml --in-order --archive -l C++
+echo -n "a;" | srcml --archive -l C++
 check "$asrcml"
 
-echo -n "a;" | srcml --archive --in-order -o sub/ab.cpp.xml -l C++
+echo -n "a;" | srcml --archive -o sub/ab.cpp.xml -l C++
 check sub/ab.cpp.xml "$asrcml"
 
-echo -n "a;" | srcml --in-order --archive -o sub/ab.cpp.xml -l C++
+echo -n "a;" | srcml --archive -o sub/ab.cpp.xml -l C++
 check sub/ab.cpp.xml "$asrcml"
 
-echo -n "a;" | srcml --in-order -o sub/ab.cpp.xml --archive -l C++
+echo -n "a;" | srcml -o sub/ab.cpp.xml --archive -l C++
 check sub/ab.cpp.xml "$asrcml"
 
-echo -n "a;" | srcml -o sub/ab.cpp.xml --archive --in-order -l C++
+echo -n "a;" | srcml -o sub/ab.cpp.xml --archive -l C++
 check sub/ab.cpp.xml "$asrcml"
 
-echo -n "a;" | srcml -o sub/ab.cpp.xml --in-order --archive -l C++
+echo -n "a;" | srcml -o sub/ab.cpp.xml --archive -l C++
 check sub/ab.cpp.xml "$asrcml"
 
-srcml --archive -l C++ --in-order < sub/a.cpp
+srcml --archive -l C++ < sub/a.cpp
 check "$asrcml"
 
-srcml --in-order --archive -l C++ < sub/a.cpp
+srcml --archive -l C++ < sub/a.cpp
 check "$asrcml"
 
-srcml --archive --in-order -o sub/ab.cpp.xml -l C++ < sub/a.cpp
+srcml --archive -o sub/ab.cpp.xml -l C++ < sub/a.cpp
 check sub/ab.cpp.xml "$asrcml"
 
-srcml --in-order --archive -o sub/ab.cpp.xml -l C++ < sub/a.cpp
+srcml --archive -o sub/ab.cpp.xml -l C++ < sub/a.cpp
 check sub/ab.cpp.xml "$asrcml"
 
-srcml --in-order -o sub/ab.cpp.xml --archive -l C++ < sub/a.cpp
+srcml -o sub/ab.cpp.xml --archive -l C++ < sub/a.cpp
 check sub/ab.cpp.xml "$asrcml"
 
-srcml -o sub/ab.cpp.xml --archive --in-order -l C++ < sub/a.cpp
+srcml -o sub/ab.cpp.xml --archive -l C++ < sub/a.cpp
 check sub/ab.cpp.xml "$asrcml"
 
-srcml -o sub/ab.cpp.xml --in-order --archive -l C++ < sub/a.cpp
+srcml -o sub/ab.cpp.xml --archive -l C++ < sub/a.cpp
 check sub/ab.cpp.xml "$asrcml"
 
 
 # test issue #1063: nondeterministic failures when run multiple times
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
 
-srcml sub/a.cpp sub/b.cpp --in-order
+srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"
