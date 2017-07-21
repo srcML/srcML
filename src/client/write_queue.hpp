@@ -25,52 +25,70 @@
 
 #include <srcml.h>
 #include <parse_request.hpp>
+#include <ctpl_stl.h>
 #include <mutex>
 #include <condition_variable>
 #include <functional>
+#include <queue>
+#include <deque>
+
+struct cmp
+{
+    bool operator()(ParseRequest* r1, ParseRequest* r2) {
+        return r1->position > r2->position;
+    }
+};
 
 class WriteQueue {
 public:
 
     WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered = true)
-        : write(writearg), counter(0), ordered(ordered) {
-    }
+        : write(writearg), pool(1), counter(0), ordered(ordered) {}
 
     /* writes out the current srcml */
     inline void schedule(ParseRequest* pvalue) {
-        std::unique_lock<std::mutex> lock(this->mutex);
 
-        if (ordered) {
-            while (pvalue->position != counter + 1)
-                cv.wait(lock);
+      	if (!ordered) {
 
-            ++counter;
-        }
-        
-        write(pvalue);
+       		pool.push(std::bind(write, pvalue));
 
-        if (ordered) {
-            lock.unlock();
-            cv.notify_all();
-        }
+       	} else {
+
+       		std::unique_lock<std::mutex> lock(mutex);
+
+   			// put this request into the queue
+       		q.push(pvalue);
+
+	       	// as long as there are parse requests in order, put them into the general pool
+       		while (!q.empty()) {
+       			ParseRequest* cur = q.top();
+       			if (cur->position != counter + 1)
+       				break;
+
+      			pool.push(std::bind(write, cur));
+
+       			q.pop();
+
+       			++counter;
+       		}
+       	}
     }
 
     inline void eos(ParseRequest* pvalue) {
-//        pvalue->status = 1000;
         write(pvalue);
     }
 
     inline void wait() {
-        std::unique_lock<std::mutex> lock(this->mutex);
+    	pool.stop(true);
     }
-
 
 private:
     std::function<void(ParseRequest*)> write;
     std::mutex mutex;
-    std::condition_variable cv;
-    int counter;
+    ctpl::thread_pool pool;
+	std::atomic<int> counter;
     bool ordered;
+  	std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, cmp > q;
 };
 
 #endif
