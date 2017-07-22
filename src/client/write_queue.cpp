@@ -36,7 +36,7 @@ void WriteQueue::schedule(ParseRequest* pvalue) {
 		q.push(pvalue);
 	}
 
-    cv.notify_all();
+    cv.notify_one();
 }
 
 void WriteQueue::eos(ParseRequest* pvalue) {
@@ -46,7 +46,7 @@ void WriteQueue::eos(ParseRequest* pvalue) {
 
 void WriteQueue::wait() {
 
-	cv.notify_all();
+	cv.notify_one();
 	{
 		std::unique_lock<std::mutex> lock(gmutex);
 
@@ -72,10 +72,14 @@ void process() {
         }
         ++counter;
 
+        // record this here because calling write with a request
+        // causes it to be deleted
         bool lastone = pvalue->status == 1000 || pvalue->status == 2000;
 
+        // finally write it out
         wq->write(pvalue);
 
+        // may be all done
         if (lastone)
         	break;
     }
