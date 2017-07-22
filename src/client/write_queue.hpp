@@ -31,64 +31,26 @@
 #include <functional>
 #include <queue>
 #include <deque>
+#include <thread>
 
-struct cmp
-{
-    bool operator()(ParseRequest* r1, ParseRequest* r2) {
-        return r1->position > r2->position;
-    }
-};
+void process();
 
 class WriteQueue {
-public:
 
-    WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered = true)
-        : write(writearg), pool(1), counter(0), ordered(ordered) {}
+public:
+    WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered = true);
 
     /* writes out the current srcml */
-    inline void schedule(ParseRequest* pvalue) {
+    void schedule(ParseRequest* pvalue);
 
-      	if (!ordered) {
+    void eos(ParseRequest* pvalue);
 
-       		pool.push(std::bind(write, pvalue));
+    void wait();
 
-       	} else {
-
-       		std::unique_lock<std::mutex> lock(mutex);
-
-   			// put this request into the queue
-       		q.push(pvalue);
-
-	       	// as long as there are parse requests in order, put them into the general pool
-       		while (!q.empty()) {
-       			ParseRequest* cur = q.top();
-       			if (cur->position != counter + 1)
-       				break;
-
-      			pool.push(std::bind(write, cur));
-
-       			q.pop();
-
-       			++counter;
-       		}
-       	}
-    }
-
-    inline void eos(ParseRequest* pvalue) {
-        write(pvalue);
-    }
-
-    inline void wait() {
-    	pool.stop(true);
-    }
-
-private:
+public:
     std::function<void(ParseRequest*)> write;
-    std::mutex mutex;
-    ctpl::thread_pool pool;
-	std::atomic<int> counter;
     bool ordered;
-  	std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, cmp > q;
+    std::thread* pthread;
 };
 
 #endif
