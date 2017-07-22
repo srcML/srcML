@@ -231,7 +231,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     ParseRequest* eos = new ParseRequest();
     eos->srcml_arch = srcml_arch;
     eos->status = createdsrcml ? 2000 : 1000;
-    write_queue.schedule(eos);
+    write_queue.eos(eos);
 
     write_queue.wait();
 

@@ -51,6 +51,7 @@ public:
     std::function<void(ParseRequest*)> write;
     bool ordered;
     std::thread* pthread;
+    std::atomic<int> lastposition;
 };
 
 #endif

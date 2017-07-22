@@ -15,7 +15,7 @@ static std::condition_variable cv;
 static std::condition_variable cv2;
 
 WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered)
-       : ordered(ordered) {
+       : ordered(ordered), lastposition(0) {
 
     write = writearg;
     wq = this;
@@ -25,6 +25,10 @@ WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered
 
 /* writes out the current srcml */
 void WriteQueue::schedule(ParseRequest* pvalue) {
+
+	if (pvalue->position > lastposition)
+		lastposition = pvalue->position;
+
 	{
 		std::unique_lock<std::mutex> lock(gmutex);
 
@@ -32,16 +36,12 @@ void WriteQueue::schedule(ParseRequest* pvalue) {
 		q.push(pvalue);
 	}
 
-    cv.notify_one();
+    cv.notify_all();
 }
 
 void WriteQueue::eos(ParseRequest* pvalue) {
-
-	pvalue->position = 1000;
+	pvalue->position = lastposition + 1;
     schedule(pvalue);
-
-	std::unique_lock<std::mutex> lock(gmutex);
-	cv2.wait(lock);
 }
 
 void WriteQueue::wait() {
@@ -63,8 +63,9 @@ void process() {
         {
             std::unique_lock<std::mutex> lock(gmutex);
 
-            while (q.empty() /* || ((q.top()->position != counter + 1) || (q.top()->status != 1000))*/)
+            while (q.empty() || (wq->ordered && (q.top()->position != counter + 1))) {
             	cv.wait(lock);
+            }
 
             pvalue = q.top();
             q.pop();
@@ -78,6 +79,5 @@ void process() {
         if (lastone)
         	break;
     }
-
     cv2.notify_all();
 }
