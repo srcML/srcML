@@ -1,74 +1,59 @@
 #include <write_queue.hpp>
 
-static WriteQueue* wq;
-
-struct cmp
-{
-    bool operator()(ParseRequest* r1, ParseRequest* r2) {
-        return r1->position > r2->position;
-    }
-};
-
-static std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, cmp > q;
-static std::mutex gmutex;
-static std::condition_variable cv;
-static std::condition_variable cv2;
-
 WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered)
-       : ordered(ordered), lastposition(0) {
+       : maxposition(0) {
 
-    write = writearg;
-    wq = this;
-
-    pthread = new std::thread(process);
+    WriteQueue::write = writearg;
+    WriteQueue::ordered = ordered;
+    pwrite_thread = new std::thread(process);
 }
 
 /* writes out the current srcml */
 void WriteQueue::schedule(ParseRequest* pvalue) {
 
-	if (pvalue->position > lastposition)
-		lastposition = pvalue->position;
+	if (pvalue->position > maxposition)
+		maxposition = pvalue->position;
 
 	{
-		std::unique_lock<std::mutex> lock(gmutex);
+		std::unique_lock<std::mutex> lock(WriteQueue::gmutex);
 
 		// put this request into the queue
-		q.push(pvalue);
+		WriteQueue::q.push(pvalue);
 	}
 
-    cv.notify_one();
+    WriteQueue::cv.notify_one();
 }
 
 void WriteQueue::eos(ParseRequest* pvalue) {
-	pvalue->position = lastposition + 1;
+
+	// schedule the last one
+	pvalue->position = maxposition + 1;
     schedule(pvalue);
 }
 
 void WriteQueue::wait() {
 
-	cv.notify_one();
-	{
-		std::unique_lock<std::mutex> lock(gmutex);
+	// make sure the process thread is not asleep
+	//WriteQueue::cv.notify_one();
 
-		cv2.wait(lock);
-	}
+	pwrite_thread->join();
 }
 
-void process() {
+void WriteQueue::process() {
     int counter = 0;
 
     while (1) {
 
         ParseRequest* pvalue = 0;
         {
-            std::unique_lock<std::mutex> lock(gmutex);
+            std::unique_lock<std::mutex> lock(WriteQueue::gmutex);
 
-            while (q.empty() || (wq->ordered && (q.top()->position != counter + 1))) {
-            	cv.wait(lock);
+            while (WriteQueue::q.empty() || (WriteQueue::ordered && (WriteQueue::q.top()->position != counter + 1))) {
+            	WriteQueue::cv.wait(lock);
             }
 
-            pvalue = q.top();
-            q.pop();
+            pvalue = WriteQueue::q.top();
+            WriteQueue::q.pop();
         }
         ++counter;
 
@@ -77,11 +62,16 @@ void process() {
         bool lastone = pvalue->status == 1000 || pvalue->status == 2000;
 
         // finally write it out
-        wq->write(pvalue);
+        WriteQueue::write(pvalue);
 
         // may be all done
         if (lastone)
         	break;
     }
-    cv2.notify_all();
 }
+
+bool WriteQueue::ordered;
+std::function<void(ParseRequest*)> WriteQueue::write;
+std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, WriteOrder> WriteQueue::q;
+std::mutex WriteQueue::gmutex;
+std::condition_variable WriteQueue::cv;

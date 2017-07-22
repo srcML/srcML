@@ -33,7 +33,11 @@
 #include <deque>
 #include <thread>
 
-void process();
+struct WriteOrder {
+    bool operator()(ParseRequest* r1, ParseRequest* r2) {
+        return r1->position > r2->position;
+    }
+};
 
 class WriteQueue {
 
@@ -47,11 +51,17 @@ public:
 
     void wait();
 
+    static void process();
+
 public:
-    std::function<void(ParseRequest*)> write;
-    bool ordered;
-    std::thread* pthread;
-    std::atomic<int> lastposition;
+    static std::function<void(ParseRequest*)> write;
+    static bool ordered;
+    std::thread* pwrite_thread;
+    std::atomic<int> maxposition;
+    static std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, WriteOrder> q;
+    static std::mutex gmutex;
+    static std::condition_variable cv;
+    static std::condition_variable cv2;
 };
 
 #endif
