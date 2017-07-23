@@ -27,7 +27,7 @@ WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered
 
     WriteQueue::write = writearg;
     WriteQueue::ordered = ordered;
-    pwrite_thread = new std::thread(process);
+
 }
 
 /* writes out the current srcml */
@@ -56,12 +56,17 @@ void WriteQueue::eos(ParseRequest* pvalue) {
     schedule(pvalue);
 }
 
-void WriteQueue::wait() {
+void WriteQueue::start() {
 
-	// make sure the process thread is not asleep
-	//WriteQueue::cv.notify_one();
+    // actual thread created here (and not in constructor) because
+    // at this point we kwow all object data members are created
+    // and initialized correctly
+    write_thread = std::thread(process);
+}
 
-	pwrite_thread->join();
+void WriteQueue::stop() {
+
+    write_thread.join();
 }
 
 void WriteQueue::process() {

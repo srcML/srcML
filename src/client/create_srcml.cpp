@@ -212,7 +212,10 @@ void create_srcml(const srcml_request_t& srcml_request,
     // setup the parsing queue
     TraceLog log(SRCMLOptions::get());
     log.header();
+    
     WriteQueue write_queue(std::bind(srcml_write_request, std::placeholders::_1, std::ref(log), destination), !(srcml_request.command & SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER));
+    write_queue.start();
+
     ParseQueue parse_queue(srcml_request.max_threads, std::bind(srcml_consume, std::placeholders::_1, &write_queue), write_queue);
 
     // process input sources
@@ -233,7 +236,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     eos->status = createdsrcml ? 2000 : 1000;
     write_queue.eos(eos);
 
-    write_queue.wait();
+    write_queue.stop();
 
     log.report();
 

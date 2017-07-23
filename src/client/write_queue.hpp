@@ -44,19 +44,25 @@ class WriteQueue {
 public:
     WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered = true);
 
-    /* writes out the current srcml */
+    // writes out the current srcml
     void schedule(ParseRequest* pvalue);
 
+    // end of stream
     void eos(ParseRequest* pvalue);
 
-    void wait();
+    // start the write proces
+    void start();
 
+    // stop the write process, allowing it to continue
+    void stop();
+
+    // actual process
     static void process();
 
 public:
     static std::function<void(ParseRequest*)> write;
     static bool ordered;
-    std::thread* pwrite_thread;
+    std::thread write_thread;
     std::atomic<int> maxposition;
     static std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, WriteOrder> q;
     static std::mutex gmutex;
