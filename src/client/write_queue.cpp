@@ -23,11 +23,7 @@
 #include <write_queue.hpp>
 
 WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered)
-       : maxposition(0) {
-
-    WriteQueue::write = writearg;
-    WriteQueue::ordered = ordered;
-
+       : write(writearg), ordered(ordered), maxposition(0) {
 }
 
 /* writes out the current srcml */
@@ -39,10 +35,10 @@ void WriteQueue::schedule(ParseRequest* pvalue) {
 
     // push the value on the priority queue
 	{
-		std::unique_lock<std::mutex> lock(WriteQueue::gmutex);
+		std::unique_lock<std::mutex> lock(qmutex);
 
 		// put this request into the queue
-		WriteQueue::q.push(pvalue);
+		q.push(pvalue);
 	}
 
     // let the write processing know there is something
@@ -61,7 +57,7 @@ void WriteQueue::start() {
     // actual thread created here (and not in constructor) because
     // at this point we kwow all object data members are created
     // and initialized correctly
-    write_thread = std::thread(process);
+    write_thread = std::thread(&WriteQueue::process, this);
 }
 
 void WriteQueue::stop() {
@@ -77,14 +73,14 @@ void WriteQueue::process() {
         // get a parse request to handle
         ParseRequest* pvalue = 0;
         {
-            std::unique_lock<std::mutex> lock(WriteQueue::gmutex);
+            std::unique_lock<std::mutex> lock(qmutex);
 
-            while (WriteQueue::q.empty() || (WriteQueue::ordered && (WriteQueue::q.top()->position != position + 1))) {
-            	WriteQueue::cv.wait(lock);
+            while (q.empty() || (ordered && (q.top()->position != position + 1))) {
+            	cv.wait(lock);
             }
 
-            pvalue = WriteQueue::q.top();
-            WriteQueue::q.pop();
+            pvalue = q.top();
+            q.pop();
         }
         ++position;
 
@@ -93,16 +89,10 @@ void WriteQueue::process() {
         bool lastone = pvalue->status == 1000 || pvalue->status == 2000;
 
         // finally write it out
-        WriteQueue::write(pvalue);
+        write(pvalue);
 
         // may be all done
         if (lastone)
         	break;
     }
 }
-
-bool WriteQueue::ordered;
-std::function<void(ParseRequest*)> WriteQueue::write;
-std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, WriteOrder> WriteQueue::q;
-std::mutex WriteQueue::gmutex;
-std::condition_variable WriteQueue::cv;

@@ -57,17 +57,16 @@ public:
     void stop();
 
     // actual process
-    static void process();
+    void process();
 
 public:
-    static std::function<void(ParseRequest*)> write;
-    static bool ordered;
+    std::function<void(ParseRequest*)> write;
+    bool ordered;
     std::thread write_thread;
     std::atomic<int> maxposition;
-    static std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, WriteOrder> q;
-    static std::mutex gmutex;
-    static std::condition_variable cv;
-    static std::condition_variable cv2;
+    std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, WriteOrder> q;
+    std::mutex qmutex;
+    std::condition_variable cv;
 };
 
 #endif
