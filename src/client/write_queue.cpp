@@ -58,7 +58,7 @@ void WriteQueue::eos(ParseRequest* pvalue) {
 void WriteQueue::start() {
 
     // actual thread created here (and not in constructor) because
-    // at this point we kwow all object data members are created
+    // at this point we know all object data members are created
     // and initialized correctly
     write_thread = std::thread(&WriteQueue::process, this);
 }
@@ -87,7 +87,7 @@ void WriteQueue::process() {
         }
         ++position;
 
-        // record this here because calling write with a request
+        // record here because calling write with a request
         // causes it to be deleted
         bool lastone = pvalue->status == 1000 || pvalue->status == 2000;
 
