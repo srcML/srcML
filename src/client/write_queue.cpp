@@ -1,3 +1,25 @@
+/**
+ * @file write_queue.cpp
+ *
+ * @copyright Copyright (C) 2017 srcML, LLC. (www.srcML.org)
+ *
+ * This file is part of the srcml command-line client.
+ *
+ * The srcML Toolkit is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The srcML Toolkit is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcml command-line client; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 #include <write_queue.hpp>
 
 WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered)
@@ -11,9 +33,11 @@ WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered
 /* writes out the current srcml */
 void WriteQueue::schedule(ParseRequest* pvalue) {
 
+    // record max position for eos()
 	if (pvalue->position > maxposition)
 		maxposition = pvalue->position;
 
+    // push the value on the priority queue
 	{
 		std::unique_lock<std::mutex> lock(WriteQueue::gmutex);
 
@@ -21,6 +45,7 @@ void WriteQueue::schedule(ParseRequest* pvalue) {
 		WriteQueue::q.push(pvalue);
 	}
 
+    // let the write processing know there is something
     WriteQueue::cv.notify_one();
 }
 
@@ -40,22 +65,23 @@ void WriteQueue::wait() {
 }
 
 void WriteQueue::process() {
-    int counter = 0;
 
+    int position = 0;
     while (1) {
 
+        // get a parse request to handle
         ParseRequest* pvalue = 0;
         {
             std::unique_lock<std::mutex> lock(WriteQueue::gmutex);
 
-            while (WriteQueue::q.empty() || (WriteQueue::ordered && (WriteQueue::q.top()->position != counter + 1))) {
+            while (WriteQueue::q.empty() || (WriteQueue::ordered && (WriteQueue::q.top()->position != position + 1))) {
             	WriteQueue::cv.wait(lock);
             }
 
             pvalue = WriteQueue::q.top();
             WriteQueue::q.pop();
         }
-        ++counter;
+        ++position;
 
         // record this here because calling write with a request
         // causes it to be deleted
