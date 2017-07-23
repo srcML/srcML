@@ -45,7 +45,7 @@ void WriteQueue::schedule(ParseRequest* pvalue) {
 	}
 
     // let the write processing know there is something
-    WriteQueue::cv.notify_one();
+    cv.notify_one();
 }
 
 void WriteQueue::eos(ParseRequest* pvalue) {
