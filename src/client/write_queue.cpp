@@ -23,7 +23,10 @@
 #include <write_queue.hpp>
 
 WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered)
-       : write(writearg), ordered(ordered), maxposition(0) {
+       : write(writearg), ordered(ordered), maxposition(0), q(
+            [](ParseRequest* r1, ParseRequest* r2) {
+                return r1->position > r2->position;
+            }) {
 }
 
 /* writes out the current srcml */

@@ -33,12 +33,6 @@
 #include <deque>
 #include <thread>
 
-struct WriteOrder {
-    bool operator()(ParseRequest* r1, ParseRequest* r2) {
-        return r1->position > r2->position;
-    }
-};
-
 class WriteQueue {
 
 public:
@@ -64,7 +58,7 @@ public:
     bool ordered;
     std::thread write_thread;
     std::atomic<int> maxposition;
-    std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, WriteOrder> q;
+    std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, std::function<bool(ParseRequest*, ParseRequest*)>> q;
     std::mutex qmutex;
     std::condition_variable cv;
 };
