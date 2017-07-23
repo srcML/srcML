@@ -57,7 +57,7 @@ public:
     std::function<void(ParseRequest*)> write;
     bool ordered;
     std::thread write_thread;
-    std::atomic<int> maxposition;
+    int maxposition;
     std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, std::function<bool(ParseRequest*, ParseRequest*)>> q;
     std::mutex qmutex;
     std::condition_variable cv;

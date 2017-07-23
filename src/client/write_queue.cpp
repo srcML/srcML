@@ -32,13 +32,13 @@ WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered
 /* writes out the current srcml */
 void WriteQueue::schedule(ParseRequest* pvalue) {
 
-    // record max position for eos()
-	if (pvalue->position > maxposition)
-		maxposition = pvalue->position;
-
     // push the value on the priority queue
 	{
-		std::unique_lock<std::mutex> lock(qmutex);
+		std::lock_guard<std::mutex> lock(qmutex);
+
+        // record max position for eos()
+        if (pvalue->position > maxposition)
+            maxposition = pvalue->position;
 
 		// put this request into the queue
 		q.push(pvalue);
@@ -79,7 +79,7 @@ void WriteQueue::process() {
             std::unique_lock<std::mutex> lock(qmutex);
 
             while (q.empty() || (ordered && (q.top()->position != position + 1))) {
-            	cv.wait(lock);
+                cv.wait(lock);
             }
 
             pvalue = q.top();
