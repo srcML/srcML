@@ -1269,8 +1269,6 @@ void srcMLOutput::processTypePrevious(const antlr::RefToken& token) {
     num2used[position] = true;
 
     processToken(token, localname, prefix, "ref", "prev");
-
-    xmlTextWriterEndElement(xout);
 }
 
 /**
@@ -1420,7 +1418,10 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* attr_na
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value) {
 
-    if (isstart(token)) {
+    if (name[0] == 0)
+        return;
+
+    if (isstart(token) || isempty(token)) {
         if (prefix[0] == 0)
             xmlTextWriterStartElement(xout, BAD_CAST name);
         else
@@ -1430,7 +1431,9 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         if (attr_name)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
 
-    } else {
+    } 
+
+    if (!isstart(token) || isempty(token)) {
 
         if (isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
             outputPosition();
@@ -1443,7 +1446,10 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2) {
 
-    if (isstart(token)) {
+    if (name[0] == 0)
+        return;
+
+    if (isstart(token) || isempty(token)) {
         if (prefix[0] == 0)
             xmlTextWriterStartElement(xout, BAD_CAST name);
         else
@@ -1669,20 +1675,7 @@ void srcMLOutput::processMarker(const antlr::RefToken& token) {
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (localname[0] == 0)
-        return;
-
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
-    ++openelementcount;
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "location", BAD_CAST token->getText().c_str());
-
-    xmlTextWriterEndElement(xout);
-    --openelementcount;
+    processToken(token, localname, prefix, "location", token->getText().c_str());
 }
 
 #endif
