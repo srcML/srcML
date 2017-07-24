@@ -1364,6 +1364,7 @@ void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
 
     processText(token);
 
+    // TODO: Not sure why this is needed. Part of COMMENT_END processing
     xmlTextWriterEndElement(xout);
     --openelementcount;
 }
@@ -1388,29 +1389,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* attr_na
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value) {
 
-    if (name[0] == 0)
-        return;
-
-    if (isstart(token) || isempty(token)) {
-        if (prefix[0] == 0)
-            xmlTextWriterStartElement(xout, BAD_CAST name);
-        else
-            xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST name, 0);
-        ++openelementcount;
-
-        if (attr_name)
-            xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
-
-    } 
-
-    if (!isstart(token) || isempty(token)) {
-
-        if (isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
-            outputPosition();
-
-        xmlTextWriterEndElement(xout);
-        --openelementcount;
-    }
+    processToken(token, name, prefix, attr_name, attr_value, 0, 0);
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
@@ -1432,7 +1411,9 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         if (attr_name2)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
 
-    } else {
+    } 
+
+    if (!isstart(token) || isempty(token)) {
 
         if (isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
             outputPosition();
