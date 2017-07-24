@@ -244,40 +244,10 @@ public:
     void srcMLTextWriterEndElement(xmlTextWriter*);
 
     // token handlers
-    void processAccess(const antlr::RefToken& token);
-    void processPseudoBlock(const antlr::RefToken& token);
     void processToken(const antlr::RefToken& token);
-    void processTypePrevious(const antlr::RefToken& token);
-    void processBlockCommentStart(const antlr::RefToken& token);
-    void processJavadocCommentStart(const antlr::RefToken& token);
-    void processDoxygenCommentStart(const antlr::RefToken& token);
-    void processLineDoxygenCommentStart(const antlr::RefToken& token);
-    void processLineCommentStart(const antlr::RefToken& token);
-    void processEndBlockToken(const antlr::RefToken& token);
-    void processEndLineToken(const antlr::RefToken& token);
 #if DEBUG
     void processMarker(const antlr::RefToken& token);
 #endif
-    void processString(const antlr::RefToken& token);
-    void processChar(const antlr::RefToken& token);
-    void processLiteral(const antlr::RefToken& token);
-    void processBoolean(const antlr::RefToken& token);
-    void processNull(const antlr::RefToken& token);
-    void processNil(const antlr::RefToken& token);
-    void processComplex(const antlr::RefToken& token);
-    void processEscape(const antlr::RefToken& token);
-    void processStaticAssert(const antlr::RefToken& token);
-    void processClassInterface(const antlr::RefToken& token);
-    void processClassImplementation(const antlr::RefToken& token);
-    void processGenericArgumentList(const antlr::RefToken& token);
-    void processCast(const antlr::RefToken& token);
-    void processEnumClass(const antlr::RefToken& token);
-    void processOperatorFunction(const antlr::RefToken& token);
-    void processPseudoParameterList(const antlr::RefToken& token);
-    void processIndexerParameterList(const antlr::RefToken& token);
-    void processSizeofPack(const antlr::RefToken& token);
-    void processCudaArgumentList(const antlr::RefToken& token);
-    void processGenericParameterList(const antlr::RefToken& token);
 
     void processToken(const antlr::RefToken& token, const char* attr_name, const char* attr_value);
     void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value);
