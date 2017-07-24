@@ -324,7 +324,18 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SINTO,                        { "into", SRC, 0, 0, nullptr }},
 
     // special characters
-    { CONTROL_CHAR,                 { "escape", SRC, 0, 0, nullptr }},
+    { CONTROL_CHAR,                 { "escape", SRC, 0, 0, [](args) {
+
+        int n = token->getText()[0];
+        char out[20 + 2 + 1];
+        snprintf(out, 22, "0x%02x", n);
+
+        pout->processToken(token, name, prefix, "char", out);
+
+        xmlTextWriterEndElement(pout->xout);
+        --(pout->openelementcount);
+    }}},
+
     { SANNOTATION,                  { "annotation", SRC, 0, 0, nullptr }},
 
     // C++
