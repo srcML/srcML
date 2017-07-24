@@ -51,19 +51,6 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     { START_ELEMENT_TOKEN,  { "", SRC, [](args) { pout->processText(token); }}},
 
-/*
-   ELEMENT_MAP(SUNIT, PROCESSUNIT)
-    ELEMENT_MAP(START_ELEMENT_TOKEN, PROCESSTEXT)
-//
-    ELEMENT_MAP(COMMENT_START, PROCESSBLOCKCOMMENTSTART)
-    ELEMENT_MAP(COMMENT_END, PROCESSENDBLOCKTOKEN)
-
-    ELEMENT_MAP(LINECOMMENT_START, PROCESSLINECOMMENTSTART)
-    ELEMENT_MAP(LINECOMMENT_END, PROCESSENDLINETOKEN)
-    ELEMENT_MAP(JAVADOC_COMMENT_START, PROCESSJAVADOCCOMMENTSTART)
-    ELEMENT_MAP(DOXYGEN_COMMENT_START, PROCESSDOXYGENCOMMENTSTART)
-    ELEMENT_MAP(LINE_DOXYGEN_COMMENT_START, PROCESSLINEDOXYGENCOMMENTSTART)
- */
     { COMMENT_START, { "comment", SRC, [](args) {
         pout->processToken(token, name, prefix, "type", "block");
         pout->processTextPosition(token);
@@ -122,6 +109,27 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SBOOLEAN, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "boolean"   ); }}},
     { SNULL,    { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "null"      ); }}},
     { SCOMPLEX, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "complex"   ); }}},
+    { SOPERATOR, { "operator", SRC, nullptr }},
+    { SMODIFIER, { "modifier", SRC, nullptr }},
+    { SNAME, { "name", SRC, nullptr }},
+    { SONAME, { "", SRC, nullptr }},
+    { SCNAME, { "name", SRC, nullptr }},
+    { STYPE, { "type", SRC, nullptr }},
+
+    { STYPEPREV, { "type", SRC, [](args) { pout->processToken(token, name, prefix, "ref", "prev"); }}},
+    { SCONDITION, { "condition", SRC, nullptr }},
+    { SBLOCK, { "block", SRC, nullptr }},
+    { SPSEUDO_BLOCK, { "block", SRC, [](args) { pout->processToken(token, name, prefix, "type", "pseudo"); }}},
+    { SINDEX, { "index", SRC, nullptr }},
+    { SDECLTYPE, { "decltype", SRC, nullptr }},
+    { STYPENAME, { "typename", SRC, nullptr }},
+    { SATOMIC, { "atomic", SRC, nullptr }},
+    { SSTATIC_ASSERT_STATEMENT, { "assert", SRC, [](args) { pout->processToken(token, name, prefix, "type", "static"); }}},
+    { SGENERIC_SELECTION, { "generic_selection", SRC, nullptr }},
+    { SGENERIC_SELECTOR, { "selector", SRC, nullptr }},
+    { SGENERIC_ASSOCIATION_LIST, { "association_list", SRC, nullptr }},
+    { SGENERIC_ASSOCIATION, { "association", SRC, nullptr }},
+
 
 };
 
@@ -1705,7 +1713,12 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
     if (search != process.end()) {
         const Element& eparts = search->second;
 
-        eparts.process(this, token, eparts.name, num2prefix[eparts.prefix].c_str());
+        auto f = eparts.process;
+
+        if (f)
+            eparts.process(this, token, eparts.name, num2prefix[eparts.prefix].c_str());
+        else
+            processToken(token, eparts.name, num2prefix[eparts.prefix].c_str(), 0, 0);
 
         return;
     }
