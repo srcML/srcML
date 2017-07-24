@@ -47,22 +47,37 @@
 
 std::unordered_map<int, Element> srcMLOutput::process = {
 
+    { SUNIT,  { "unit", SRC, [](args) { pout->processUnit(token); }}},
+    { START_ELEMENT_TOKEN,  { "", SRC, [](args) { pout->processText(token); }}},
+/*
+   ELEMENT_MAP(SUNIT, PROCESSUNIT)
+    ELEMENT_MAP(START_ELEMENT_TOKEN, PROCESSTEXT)
+//
+    ELEMENT_MAP(COMMENT_START, PROCESSBLOCKCOMMENTSTART)
+    ELEMENT_MAP(COMMENT_END, PROCESSENDBLOCKTOKEN)
 
-    { COMMENT_START, { "comment", SRC, [](args) { 
-
-        if (prefix[0] == 0)
-            xmlTextWriterStartElement(pout->xout, BAD_CAST name);
-        else
-            xmlTextWriterStartElementNS(pout->xout, BAD_CAST prefix, BAD_CAST name, 0);
-        ++(pout->openelementcount);
-
-        xmlTextWriterWriteAttribute(pout->xout, BAD_CAST "type", BAD_CAST "block");
-
+    ELEMENT_MAP(LINECOMMENT_START, PROCESSLINECOMMENTSTART)
+    ELEMENT_MAP(LINECOMMENT_END, PROCESSENDLINETOKEN)
+    ELEMENT_MAP(JAVADOC_COMMENT_START, PROCESSJAVADOCCOMMENTSTART)
+    ELEMENT_MAP(DOXYGEN_COMMENT_START, PROCESSDOXYGENCOMMENTSTART)
+    ELEMENT_MAP(LINE_DOXYGEN_COMMENT_START, PROCESSLINEDOXYGENCOMMENTSTART)
+ */
+    { COMMENT_START, { "comment", SRC, [](args) {
+        pout->processToken(token, name, prefix, "type", "block");
         pout->processTextPosition(token);
     }}},
-    /*
-    { COMMENT_END,   { "comment", SRC, [](args) { pout->processUnit(token);  }}},
-*/
+   { COMMENT_END,   { "comment", SRC, [](args) { 
+
+        pout->processText(token);
+
+        // TODO: Not sure why this is needed. Part of COMMENT_END processing
+        xmlTextWriterEndElement(pout->xout);
+        --(pout->openelementcount);
+    }}},
+    { LINECOMMENT_START, { "comment", SRC, [](args) {
+        pout->processToken(token, name, prefix, "type", "line");
+        pout->processTextPosition(token);
+    }}},
 
     { SSTRING,  { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "string"    ); }}},
     { SCHAR,    { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "char"      ); }}},
