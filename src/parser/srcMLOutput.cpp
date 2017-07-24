@@ -745,22 +745,11 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
-    ++openelementcount;
-
     int n = token->getText()[0];
-
     char out[20 + 2 + 1];
     snprintf(out, 22, "0x%02x", n);
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "char", BAD_CAST out);
-
-    xmlTextWriterEndElement(xout);
-    --openelementcount;
+    processToken(token, localname, prefix, "char", out);
 }
 
 /**
