@@ -292,18 +292,7 @@ private:
     int consume_next();
 
     void outputToken(const antlr::RefToken& token);
-
-    /** list of element names */
-    static const char* const ElementNames[];
-
-    /** list of element prefixes */
     static int ElementPrefix[];
-
-    /* table of method pointers for token processing dispatch */
-    static char process_table[];
-
-    /** table for conversion from number to process */
-    static srcMLOutput::PROCESS_PTR num2process[];
 
     static const std::unordered_map<int, Element> process;
 
