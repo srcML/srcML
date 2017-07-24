@@ -1198,34 +1198,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token) {
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (localname[0] == 0)
-        return;
-
-    if (isstart(token) || isempty(token)) {
-        if (prefix[0] == 0)
-            xmlTextWriterStartElement(xout, BAD_CAST localname);
-        else
-            xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-        ++openelementcount;
-
-        if(isoption(options, SRCML_OPTION_DEBUG_TIMER)) {
-
-            std::string time = to_simple_string(boost::posix_time::microsec_clock::universal_time() - debug_time_start);
-            xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_TIMESTAMP, BAD_CAST time.c_str());
-
-        }
-
-    }
-
-    if (!isstart(token) || isempty(token)) {
-
-        if(isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
-            outputPosition();
-
-        xmlTextWriterEndElement(xout);
-        --openelementcount;
-
-    }
+    processToken(token, localname, prefix, 0, 0, 0, 0);
 }
 
 /**
