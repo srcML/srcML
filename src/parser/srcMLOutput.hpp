@@ -223,9 +223,6 @@ public:
     void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
     void srcMLTextWriterEndElement(xmlTextWriter*);
 
-    // handler for optional literal tokens
-    void processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value);
-
     // token handlers
     void processAccess(const antlr::RefToken& token);
     void processPseudoBlock(const antlr::RefToken& token);
@@ -261,6 +258,10 @@ public:
     void processSizeofPack(const antlr::RefToken& token);
     void processCudaArgumentList(const antlr::RefToken& token);
     void processGenericParameterList(const antlr::RefToken& token);
+
+    void processToken(const antlr::RefToken& token, const char* attr_name, const char* attr_value);
+    void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value);
+
 
     /** method pointer for token processing dispatch */
     typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );

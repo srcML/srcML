@@ -771,7 +771,7 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
  */
 void srcMLOutput::processStaticAssert(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "static");
+    processToken(token, "type", "static");
 }
 
 /**
@@ -782,7 +782,7 @@ void srcMLOutput::processStaticAssert(const antlr::RefToken& token) {
  */
 void srcMLOutput::processClassInterface(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "@interface");
+    processToken(token, "type", "@interface");
 }
 
 /**
@@ -793,7 +793,7 @@ void srcMLOutput::processClassInterface(const antlr::RefToken& token) {
  */
 void srcMLOutput::processClassImplementation(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "@implementation");
+    processToken(token, "type", "@implementation");
 }
 
 /**
@@ -1211,7 +1211,7 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
  */
 void srcMLOutput::processPseudoBlock(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "pseudo");
+    processToken(token, "type", "pseudo");
 }
 
 /**
@@ -1461,25 +1461,30 @@ void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
 }
 
 /**
- * processOptional
+ * processToken
  * @param token token to output optional markup
  * @param attr_name name of attribute
  * @param attr_value value of attribute
  *
  * Callback to process/output token as for optional markup
  */
-void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
+void srcMLOutput::processToken(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
 
     const char* localname = ElementNames[token->getType()];
     int position = ElementPrefix[token->getType()];
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
+    processToken(token, localname, prefix, attr_name, attr_value);
+}
+
+void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value) {
+
     if (isstart(token)) {
         if (prefix[0] == 0)
-            xmlTextWriterStartElement(xout, BAD_CAST localname);
+            xmlTextWriterStartElement(xout, BAD_CAST name);
         else
-            xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
+            xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST name, 0);
         ++openelementcount;
 
         if (attr_name)
@@ -1503,7 +1508,7 @@ void srcMLOutput::processOptional(const antlr::RefToken& token, const char* attr
  */
 void srcMLOutput::processString(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "string");
+    processToken(token, "type", "string");
 }
 
 /**
@@ -1514,7 +1519,7 @@ void srcMLOutput::processString(const antlr::RefToken& token) {
  */
  void srcMLOutput::processChar(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "char");
+    processToken(token, "type", "char");
 }
 
 /**
@@ -1525,7 +1530,7 @@ void srcMLOutput::processString(const antlr::RefToken& token) {
  */
 void srcMLOutput::processLiteral(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "number");
+    processToken(token, "type", "number");
 }
 
 /**
@@ -1536,7 +1541,7 @@ void srcMLOutput::processLiteral(const antlr::RefToken& token) {
  */
 void srcMLOutput::processBoolean(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "boolean");
+    processToken(token, "type", "boolean");
 }
 
 /**
@@ -1547,7 +1552,7 @@ void srcMLOutput::processBoolean(const antlr::RefToken& token) {
  */
 void srcMLOutput::processNull(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "null");
+    processToken(token, "type", "null");
 }
 
 /**
@@ -1558,7 +1563,7 @@ void srcMLOutput::processNull(const antlr::RefToken& token) {
  */
 void srcMLOutput::processNil(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "nil");
+    processToken(token, "type", "nil");
 }
 
 /**
@@ -1569,7 +1574,7 @@ void srcMLOutput::processNil(const antlr::RefToken& token) {
  */
 void srcMLOutput::processComplex(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "complex");
+    processToken(token, "type", "complex");
 }
 
 /**
@@ -1580,7 +1585,7 @@ void srcMLOutput::processComplex(const antlr::RefToken& token) {
  */
 void srcMLOutput::processGenericArgumentList(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "generic");
+    processToken(token, "type", "generic");
 }
 
 /**
@@ -1591,7 +1596,7 @@ void srcMLOutput::processGenericArgumentList(const antlr::RefToken& token) {
  */
 void srcMLOutput::processGenericParameterList(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "generic");
+    processToken(token, "type", "generic");
 }
 
 /**
@@ -1603,17 +1608,17 @@ void srcMLOutput::processGenericParameterList(const antlr::RefToken& token) {
 void srcMLOutput::processCast(const antlr::RefToken& token) {
 
     if(token->getType() == SCAST)
-        processOptional(token, 0, 0);
+        processToken(token, 0, 0);
     else if(token->getType() == SCONST_CAST)
-        processOptional(token, "type", "const");
+        processToken(token, "type", "const");
     else if(token->getType() == SDYNAMIC_CAST)
-        processOptional(token, "type", "dynamic");
+        processToken(token, "type", "dynamic");
     else if(token->getType() == SREINTERPRET_CAST)
-        processOptional(token, "type", "reinterpret");
+        processToken(token, "type", "reinterpret");
     else if(token->getType() == SSTATIC_CAST)
-        processOptional(token, "type", "static");
+        processToken(token, "type", "static");
     else
-        processOptional(token, 0, 0);
+        processToken(token, 0, 0);
 }
 
 /**
@@ -1624,7 +1629,7 @@ void srcMLOutput::processCast(const antlr::RefToken& token) {
  */
 void srcMLOutput::processEnumClass(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "class");
+    processToken(token, "type", "class");
 }
 
 /**
@@ -1635,7 +1640,7 @@ void srcMLOutput::processEnumClass(const antlr::RefToken& token) {
  */
 void srcMLOutput::processOperatorFunction(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "operator");
+    processToken(token, "type", "operator");
 }
 
 /**
@@ -1646,7 +1651,7 @@ void srcMLOutput::processOperatorFunction(const antlr::RefToken& token) {
  */
 void srcMLOutput::processPseudoParameterList(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "pseudo");
+    processToken(token, "type", "pseudo");
 }
 
 /**
@@ -1657,7 +1662,7 @@ void srcMLOutput::processPseudoParameterList(const antlr::RefToken& token) {
  */
 void srcMLOutput::processIndexerParameterList(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "indexer");
+    processToken(token, "type", "indexer");
 }
 
 /**
@@ -1668,7 +1673,7 @@ void srcMLOutput::processIndexerParameterList(const antlr::RefToken& token) {
  */
 void srcMLOutput::processSizeofPack(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "pack");
+    processToken(token, "type", "pack");
 }
 
 /**
@@ -1679,7 +1684,7 @@ void srcMLOutput::processSizeofPack(const antlr::RefToken& token) {
  */
 void srcMLOutput::processCudaArgumentList(const antlr::RefToken& token) {
 
-    processOptional(token, "type", "cuda");
+    processToken(token, "type", "cuda");
 
 }
 
