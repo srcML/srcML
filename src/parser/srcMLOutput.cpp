@@ -1496,7 +1496,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name1, BAD_CAST attr_value1);
 
         if (attr_name2)
-            xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name1, BAD_CAST attr_value2);
+            xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
 
     } else {
 
