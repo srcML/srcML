@@ -131,6 +131,260 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SGENERIC_ASSOCIATION, { "association", SRC, nullptr }},
 
 
+    { SEXPRESSION_STATEMENT,    { "expr_stmt", SRC, nullptr }},
+    { SEXPRESSION,  { "expr", SRC, nullptr }},
+
+    { SDECLARATION_STATEMENT,   { "decl_stmt", SRC, nullptr }},
+    { SDECLARATION, { "decl", SRC, nullptr }},
+    { SDECLARATION_INITIALIZATION,  { "init", SRC, nullptr }},
+    { SDECLARATION_RANGE,   { "range", SRC, nullptr }},
+
+    { SBREAK_STATEMENT, { "break", SRC, nullptr }},
+    { SCONTINUE_STATEMENT,  { "continue", SRC, nullptr }},
+    { SGOTO_STATEMENT,  { "goto", SRC, nullptr }},
+    { SLABEL_STATEMENT, { "label", SRC, nullptr }},
+
+    { STYPEDEF, {          "typedef", SRC, nullptr }},
+    { SASM, {              "asm", SRC, nullptr }},
+    { SMACRO_CALL,  {       "macro", SRC, nullptr }},
+    { SENUM,    {             "enum", SRC, nullptr }},
+    { SENUM_DECLARATION,    { "enum_decl", SRC, nullptr }},
+
+    { SIF_STATEMENT,    { "if", SRC, nullptr }},
+    { STERNARY, { "ternary", SRC, nullptr }},
+    { STHEN,    { "then", SRC, nullptr }},
+    { SELSE,    { "else", SRC, nullptr }},
+    { SELSEIF,  { "elseif", SRC, nullptr }},
+
+    { SWHILE_STATEMENT, { "while", SRC, nullptr }},
+    { STYPEOF,  { "typeof", SRC, nullptr }},
+    { SDO_STATEMENT,    { "do", SRC, nullptr }},
+
+    { SSWITCH,  { "switch", SRC, nullptr }},
+    { SCASE,    { "case", SRC, nullptr }},
+    { SDEFAULT, { "default", SRC, nullptr }},
+
+    { SFOR_STATEMENT,   { "for", SRC, nullptr }},
+    { SFOREACH_STATEMENT,   { "foreach", SRC, nullptr }},
+    { SFOR_CONTROL, { "control", SRC, nullptr }},
+    { SFOR_INITIALIZATION,  { "init", SRC, nullptr }},
+    { SFOR_CONDITION,   { "condition", SRC, nullptr }},
+    { SFOR_INCREMENT,   { "incr", SRC, nullptr }},
+    { SFOR_LIKE_CONTROL,    { "init", SRC, nullptr }},
+
+    // functions
+    { SFUNCTION_DEFINITION, {    "function", SRC, nullptr }},
+    { SFUNCTION_DECLARATION,    {   "function_decl", SRC, nullptr }},
+    { SFUNCTION_LAMBDA, {        "lambda", SRC, nullptr }},
+    { SFUNCTION_SPECIFIER,  {     "specifier", SRC, nullptr }},
+    { SRETURN_STATEMENT,    {       "return", SRC, nullptr }},
+    { SFUNCTION_CALL,   {          "call", SRC, nullptr }},
+    { SSIZEOF_CALL, {            "sizeof", SRC, nullptr }},
+    { SPARAMETER_LIST,  {         "parameter_list", SRC, nullptr }},
+    { SPARAMETER,   {              "parameter", SRC, nullptr }},
+    { SKRPARAMETER_LIST,    {       "krparameter_list", SRC, nullptr }},
+    { SKRPARAMETER, {            "krparameter", SRC, nullptr }},
+    { SARGUMENT_LIST,   {          "argument_list", SRC, nullptr }},
+    { SARGUMENT,    {               "argument", SRC, nullptr }},
+    { SLAMBDA_CAPTURE,  {         "capture", SRC, nullptr }},
+    { SPSEUDO_PARAMETER_LIST,   {  "parameter_list", SRC, nullptr }},
+    { SINDEXER_PARAMETER_LIST,  { "parameter_list", SRC, nullptr }},
+
+    // struct,  { unio, SRC, nullptr }},
+    { SSTRUCT,  { "struct", SRC, nullptr }},
+    { SSTRUCT_DECLARATION,  {   "struct_decl", SRC, nullptr }},
+    { SUNION,   { "union", SRC, nullptr }},
+    { SUNION_DECLARATION,   {    "union_decl", SRC, nullptr }},
+
+    // class
+    { SCLASS,   {                    "class", SRC, nullptr }},
+    { SCLASS_DECLARATION,   {        "class_decl", SRC, nullptr }},
+    { SPUBLIC_ACCESS,   {            "public", SRC, nullptr }},
+    { SPUBLIC_ACCESS_DEFAULT,   {    "public", SRC, [](args) { pout->processToken(token, name, prefix, "type", "default"    ); }}},
+    { SPRIVATE_ACCESS,  {           "private", SRC, nullptr }},
+    { SPRIVATE_ACCESS_DEFAULT,  {   "private", SRC, [](args) { pout->processToken(token, name, prefix, "type", "default"    ); }}},
+    { SPROTECTED_ACCESS,    {         "protected", SRC, nullptr }},
+    { SPROTECTED_ACCESS_DEFAULT,    { "protected", SRC, [](args) { pout->processToken(token, name, prefix, "type", "default"    ); }}},
+
+    // Qt
+    { SSIGNAL_ACCESS,   {           "signals", SRC, nullptr }},
+    { SFOREVER_STATEMENT,   {       "forever", SRC, nullptr }},
+    { SEMIT_STATEMENT,  {          "emit", SRC, nullptr }},
+
+    { SMEMBER_INITIALIZATION_LIST,  { "member_init_list", SRC, nullptr }},
+    { SMEMBER_INITIALIZATION,   {      "call", SRC, nullptr }},
+    { SCONSTRUCTOR_DEFINITION,  {     "constructor", SRC, nullptr }},
+    { SCONSTRUCTOR_DECLARATION, {    "constructor_decl", SRC, nullptr }},
+    { SDESTRUCTOR_DEFINITION,   {      "destructor", SRC, nullptr }},
+    { SDESTRUCTOR_DECLARATION,  {     "destructor_decl", SRC, nullptr }},
+    { SDERIVATION_LIST, {            "super", SRC, nullptr }},
+    { SFRIEND,  {                     "friend", SRC, nullptr }},
+    { SCLASS_SPECIFIER, {            "specifier", SRC, nullptr }},
+
+    // extern definition
+    { SEXTERN,  { "extern", SRC, nullptr }},
+
+    // namespaces
+    { SNAMESPACE,   { "namespace", SRC, nullptr }},
+    { SUSING_DIRECTIVE, { "using", SRC, nullptr }},
+
+    // exception handling
+    { STRY_BLOCK,   {       "try", SRC, nullptr }},
+    { SCATCH_BLOCK, {     "catch", SRC, nullptr }},
+    { SFINALLY_BLOCK,   {   "finally", SRC, nullptr }},
+    { STHROW_STATEMENT, { "throw", SRC, nullptr }},
+    { STHROW_SPECIFIER, { "throw", SRC, nullptr }},
+    { STHROW_SPECIFIER_JAVA,    { "throws", SRC, nullptr }},
+    { SNOEXCEPT,    { "noexcept", SRC, nullptr }},
+
+    // template
+    { STEMPLATE,    { "template", SRC, nullptr }},
+    { SGENERIC_ARGUMENT,    {        "argument", SRC, nullptr }},
+    { SGENERIC_ARGUMENT_LIST,   {   "argument_list", SRC, [](args) { pout->processToken(token, name, prefix, "type", "generic"    ); }}},
+    { STEMPLATE_PARAMETER,  {      "parameter", SRC, nullptr }},
+    { STEMPLATE_PARAMETER_LIST, { "parameter_list", SRC, nullptr }},
+    { SGENERIC_PARAMETER,   {       "parameter", SRC, nullptr }},
+    { SGENERIC_PARAMETER_LIST,  {  "parameter_list", SRC, nullptr }},
+
+    // cpp
+    { SCPP_DIRECTIVE,   {   "directive", CPP, nullptr }},
+    { SCPP_FILENAME,    {    "file", CPP, nullptr }},
+    { SCPP_NUMBER,  {      "number", CPP, nullptr }},
+    { SCPP_LITERAL, {     "literal", CPP, nullptr }},
+    { SCPP_INCLUDE, {     "include", CPP, nullptr }},
+    { SCPP_DEFINE,  {      "define", CPP, nullptr }},
+    { SCPP_UNDEF,   {       "undef", CPP, nullptr }},
+    { SCPP_LINE,    {        "line", CPP, nullptr }},
+    { SCPP_IF,  {          "if", CPP, nullptr }},
+    { SCPP_IFDEF,   {       "ifdef", CPP, nullptr }},
+    { SCPP_IFNDEF,  {      "ifndef", CPP, nullptr }},
+    { SCPP_ELSE,    {        "else", CPP, nullptr }},
+    { SCPP_ELIF,    {        "elif", CPP, nullptr }},
+    { SCPP_ENDIF,   {       "endif", CPP, nullptr }},
+    { SCPP_THEN,    {        "then", CPP, nullptr }},
+    { SCPP_PRAGMA,  {      "pragma", CPP, nullptr }},
+    { SCPP_ERROR,   {       "error", CPP, nullptr }},
+    { SCPP_WARNING, {     "warning", CPP, nullptr }},
+    { SCPP_MACRO_DEFN,  {  "macro", CPP, nullptr }},
+    { SCPP_MACRO_VALUE, { "value", CPP, nullptr }},
+    { SCPP_EMPTY,   {       "empty", CPP, nullptr }},
+
+    // C# cpp
+    { SCPP_REGION,  {    "region", SRC, nullptr }},
+    { SCPP_ENDREGION,   { "endregion", SRC, nullptr }},
+
+    // Objective-C cpp
+    { SCPP_IMPORT,  {    "import", SRC, nullptr }},
+
+    // debug
+    { SMARKER,  {        "marker", SRC, nullptr }},
+    { SERROR_PARSE, {   "parse", SRC, nullptr }},
+    { SERROR_MODE,  {    "mode", SRC, nullptr }},
+
+    // C#
+    { SLOCK_STATEMENT,  {      "lock", SRC, nullptr }},
+    { SFIXED_STATEMENT, {     "fixed", SRC, nullptr }},
+    { SCHECKED_STATEMENT,   {   "checked", SRC, nullptr }},
+    { SUNCHECKED_STATEMENT, { "unchecked", SRC, nullptr }},
+    { SUNSAFE_STATEMENT,    {    "unsafe", SRC, nullptr }},
+    { SUSING_STATEMENT, {     "using_stmt", SRC, nullptr }},
+    { SFUNCTION_DELEGATE,   {   "delegate", SRC, nullptr }},
+    { SEVENT,   {               "event", SRC, nullptr }},
+    { SCONSTRAINT,  {          "constraint", SRC, nullptr }},
+
+    // Java elements
+    { SEXTENDS, {                "extends", SRC, nullptr }},
+    { SIMPLEMENTS,  {             "implements", SRC, nullptr }},
+    { SIMPORT,  {                 "import", SRC, nullptr }},
+    { SPACKAGE, {                "package", SRC, nullptr }},
+    { SASSERT_STATEMENT,    {       "assert", SRC, nullptr }},
+    { SSYNCHRONIZED_STATEMENT,  { "synchronized", SRC, nullptr }},
+    { SINTERFACE,   {              "interface", SRC, nullptr }},
+    { SINTERFACE_DECLARATION,   {  "interface_decl", SRC, nullptr }},
+    { SANNOTATION_DEFN, {        "annotation_defn", SRC, nullptr }},
+    { SSTATIC_BLOCK,    {           "static", SRC, nullptr }},
+
+    // special characters
+    { SATTRIBUTE,   {   "attribute", SRC, nullptr }},
+    { STARGET,  {      "target", SRC, nullptr }},
+
+    // linq
+    { SLINQ,    {   "linq", SRC, nullptr }},
+    { SFROM,    { "from", SRC, nullptr }},
+    { SSELECT,  {   "select", SRC, nullptr }},
+    { SWHERE,   {   "where", SRC, nullptr }},
+    { SLET, {   "let", SRC, nullptr }},
+    { SORDERBY, {   "orderby", SRC, nullptr }},
+    { SGROUP,   {   "group", SRC, nullptr }},
+    { SJOIN,    {   "join", SRC, nullptr }},
+    { SIN,  {   "in", SRC, nullptr }},
+    { SON,  {   "on", SRC, nullptr }},
+    { SEQUALS,  {   "equals", SRC, nullptr }},
+    { SBY,  {   "by", SRC, nullptr }},
+    { SINTO,    {   "into", SRC, nullptr }},
+
+    // special characters
+    { CONTROL_CHAR, {   "escape", SRC, nullptr }},
+    { SANNOTATION,  {    "annotation", SRC, nullptr }},
+
+    // C++
+    { SALIGNAS, {                "alignas", SRC, nullptr }},
+    { SALIGNOF, {                "alignof", SRC, nullptr }},
+    { STYPEID,  {                 "typeid", SRC, nullptr }},
+    { SSIZEOF_PACK, {            "sizeof", SRC, [](args) { pout->processToken(token, name, prefix, "type", "pack"    ); }}},
+    { SENUM_CLASS,  {             "enum", SRC, [](args) { pout->processToken(token, name, prefix, "type", "class"    ); }}},
+    { SENUM_CLASS_DECLARATION,  { "enum_decl", SRC, [](args) { pout->processToken(token, name, prefix, "type", "class"    ); }}},
+    { SOPERATOR_FUNCTION,   {      "function", SRC, [](args) { pout->processToken(token, name, prefix, "type", "operator"    ); }}},
+    { SOPERATOR_FUNCTION_DECL,  { "function_decl", SRC, [](args) { pout->processToken(token, name, prefix, "type", "operator"    ); }}},
+    { SREF_QUALIFIER,   {          "ref_qualifier", SRC, nullptr }},
+
+    // Objective-C
+    { SRECEIVER,    {             "receiver", SRC, nullptr }},
+    { SMESSAGE, {              "message", SRC, nullptr }},
+    { SSELECTOR,    {             "selector", SRC, nullptr }},
+    { SPROTOCOL_LIST,   {        "protocol_list", SRC, nullptr }},
+    { SCATEGORY,    {             "category", SRC, nullptr }},
+    { SPROTOCOL,    {             "protocol", SRC, nullptr }},
+    { SREQUIRED_DEFAULT,    {     "required", SRC, nullptr }},
+    { SREQUIRED,    {             "required", SRC, nullptr }},
+    { SOPTIONAL,    {             "optional", SRC, nullptr }},
+    { SPROPERTY,    {             "property", SRC, nullptr }},
+    { SATTRIBUTE_LIST,  {       "attribute_list", SRC, nullptr }},
+    { SSYNTHESIZE,  {           "synthesize", SRC, nullptr }},
+    { SDYNAMIC, {              "dynamic", SRC, nullptr }},
+    { SENCODE,  {               "encode", SRC, nullptr }},
+    { SAUTORELEASEPOOL, {      "autoreleasepool", SRC, nullptr }},
+    { SCOMPATIBILITY_ALIAS, {  "compatibility_alias", SRC, nullptr }},
+    { SNIL, {                  "literal", SRC, nullptr }},
+    { SCLASS_INTERFACE, {      "class", SRC, [](args) { pout->processToken(token, name, prefix, "type", "interface"    ); }}},
+    { SCLASS_IMPLEMENTATION,    { "class", SRC, [](args) { pout->processToken(token, name, prefix, "type", "implementation"    ); }}},
+    { SPROTOCOL_DECLARATION,    { "protocol_decl", SRC, nullptr }},
+
+    // casts
+    { SCAST,    {             "cast", SRC, nullptr }},
+    { SCONST_CAST,  {       "cast", SRC, [](args) { pout->processToken(token, name, prefix, "type", "const"    ); }}},
+    { SDYNAMIC_CAST,    {     "cast", SRC, [](args) { pout->processToken(token, name, prefix, "type", "dynamic"    ); }}},
+    { SREINTERPRET_CAST,    { "cast", SRC, [](args) { pout->processToken(token, name, prefix, "type", "reinterpret"    ); }}},
+    { SSTATIC_CAST, {      "cast", SRC, [](args) { pout->processToken(token, name, prefix, "type", "static"    ); }}},
+
+    // srcMLOutput only
+    { SPOSITION,    { "position", SRC, nullptr }},
+
+    // Other
+    { SCUDA_ARGUMENT_LIST,  {  "argument_list", SRC, [](args) { pout->processToken(token, name, prefix, "type", "cuda"    ); }}},
+
+
+    // OpenMP
+    { SOMP_DIRECTIVE,   {    "directive", OMP, nullptr }},
+    { SOMP_NAME,    {         "name", OMP, nullptr }},
+    { SOMP_CLAUSE,  {       "clause", OMP, nullptr }},
+    { SOMP_ARGUMENT_LIST,   { "argument_list", OMP, nullptr }},
+    { SOMP_ARGUMENT,    {      "argument", OMP, nullptr }},
+    { SOMP_EXPRESSION,  {    "expr", OMP, nullptr }},
+
+    //
+    { SEMPTY,   {         "empty_stmt", SRC, nullptr }},
+
 };
 
 #pragma GCC diagnostic warning "-Wunused-parameter"

@@ -49,7 +49,7 @@
 
 #include <libxml/xmlwriter.h>
 
-enum PREFIXES { SRC = 0, CPP = 1 };
+enum PREFIXES { SRC = 0, CPP = 1, OMP = 7 };
 
 class srcMLOutput;
 
