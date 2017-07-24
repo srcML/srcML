@@ -45,10 +45,12 @@
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-std::unordered_map<int, Element> srcMLOutput::process = {
+const std::unordered_map<int, Element> srcMLOutput::process = {
 
     { SUNIT,  { "unit", SRC, [](args) { pout->processUnit(token); }}},
+
     { START_ELEMENT_TOKEN,  { "", SRC, [](args) { pout->processText(token); }}},
+
 /*
    ELEMENT_MAP(SUNIT, PROCESSUNIT)
     ELEMENT_MAP(START_ELEMENT_TOKEN, PROCESSTEXT)
@@ -66,6 +68,7 @@ std::unordered_map<int, Element> srcMLOutput::process = {
         pout->processToken(token, name, prefix, "type", "block");
         pout->processTextPosition(token);
     }}},
+
    { COMMENT_END,   { "comment", SRC, [](args) { 
 
         pout->processText(token);
@@ -74,8 +77,42 @@ std::unordered_map<int, Element> srcMLOutput::process = {
         xmlTextWriterEndElement(pout->xout);
         --(pout->openelementcount);
     }}},
+
     { LINECOMMENT_START, { "comment", SRC, [](args) {
         pout->processToken(token, name, prefix, "type", "line");
+        pout->processTextPosition(token);
+    }}},
+
+    { LINECOMMENT_END, { "comment", SRC, [](args) {
+
+        auto size = token->getText().size();
+
+        bool output = false;
+        if (size > 1 || token->getText()[0] != '\n') {
+            pout->processText(token);
+            output = true;
+        }
+
+        xmlTextWriterEndElement(pout->xout);
+        --(pout->openelementcount);
+
+        if (size == 1 && !output)
+            pout->processText(token);
+    }}},
+
+
+    { LINE_DOXYGEN_COMMENT_START, { "comment", SRC, [](args) {
+        pout->processToken(token, name, prefix, "type", "line", "format", "doxygen");
+        pout->processTextPosition(token);
+    }}},
+
+    { JAVADOC_COMMENT_START, { "comment", SRC, [](args) {
+        pout->processToken(token, name, prefix, "type", "block", "format", "javadoc");
+        pout->processTextPosition(token);
+    }}},
+
+    { DOXYGEN_COMMENT_START, { "comment", SRC, [](args) {
+        pout->processToken(token, name, prefix, "type", "block", "format", "doxygen");
         pout->processTextPosition(token);
     }}},
 
@@ -85,6 +122,7 @@ std::unordered_map<int, Element> srcMLOutput::process = {
     { SBOOLEAN, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "boolean"   ); }}},
     { SNULL,    { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "null"      ); }}},
     { SCOMPLEX, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "complex"   ); }}},
+
 };
 
 #pragma GCC diagnostic warning "-Wunused-parameter"
@@ -1401,7 +1439,7 @@ void srcMLOutput::processEndBlockToken(const antlr::RefToken& token) {
  *
  * Callback to process/output token as for optional markup
  */
-void srcMLOutput::processToken(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
+inline void srcMLOutput::processToken(const antlr::RefToken& token, const char* attr_name, const char* attr_value) {
 
     const char* localname = ElementNames[token->getType()];
     int position = ElementPrefix[token->getType()];
@@ -1411,7 +1449,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* attr_na
     processToken(token, localname, prefix, attr_name, attr_value);
 }
 
-void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value) {
+inline void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value) {
 
     processToken(token, name, prefix, attr_name, attr_value, 0, 0);
 }
@@ -1665,9 +1703,9 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
     auto search = process.find(token->getType());
     if (search != process.end()) {
-        Element& eparts = search->second;
+        const Element& eparts = search->second;
 
-        eparts.process(this, token, eparts.name.c_str(), num2prefix[eparts.prefix].c_str());
+        eparts.process(this, token, eparts.name, num2prefix[eparts.prefix].c_str());
 
         return;
     }

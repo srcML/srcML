@@ -40,6 +40,7 @@
 #include <srcml_macros.hpp>
 #include <srcml.h>
 #include <unordered_map>
+#include <functional>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
@@ -54,8 +55,12 @@ class srcMLOutput;
 
 typedef void (*call)(srcMLOutput*, const antlr::RefToken&, const char* name, const char* prefix);
 
+auto lambda_base = [](srcMLOutput*, const antlr::RefToken&, const char*, const char*) {};
+
+typedef decltype(lambda_base) lambda;
+
 struct Element {
-    std::string name;
+    const char* name;
     PREFIXES prefix;
     call process;
 };
@@ -298,7 +303,7 @@ private:
     /** table for conversion from number to process */
     static srcMLOutput::PROCESS_PTR num2process[];
 
-    static std::unordered_map<int, Element> process;
+    static const std::unordered_map<int, Element> process;
 
 };
 
