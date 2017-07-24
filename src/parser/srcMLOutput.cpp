@@ -47,6 +47,7 @@
 
 std::unordered_map<int, Element> srcMLOutput::process = {
 
+
     { COMMENT_START, { "comment", SRC, [](args) { 
 
         if (prefix[0] == 0)
@@ -1651,7 +1652,7 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
     if (search != process.end()) {
         Element& eparts = search->second;
 
-        eparts.process(this, token, eparts.name.c_str(), num2prefix[0].c_str());
+        eparts.process(this, token, eparts.name.c_str(), num2prefix[eparts.prefix].c_str());
 
         return;
     }

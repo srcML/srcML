@@ -48,7 +48,7 @@
 
 #include <libxml/xmlwriter.h>
 
-enum PREFIXES { SRC, CPP };
+enum PREFIXES { SRC = 0, CPP = 1 };
 
 class srcMLOutput;
 
