@@ -245,27 +245,21 @@ public:
 
     // token handlers
     void processToken(const antlr::RefToken& token);
-#if DEBUG
-    void processMarker(const antlr::RefToken& token);
-#endif
-
     void processToken(const antlr::RefToken& token, const char* attr_name, const char* attr_value);
     void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value);
     void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2);
-
-    /** method pointer for token processing dispatch */
-    typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
+#if DEBUG
+    void processMarker(const antlr::RefToken& token);
+#endif
 
 private:
 
     int consume_next();
 
     void outputToken(const antlr::RefToken& token);
-    static int ElementPrefix[];
 
     static const std::unordered_map<int, Element> process;
-
 };
 
 #endif
