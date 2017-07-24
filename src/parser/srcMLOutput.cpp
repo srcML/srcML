@@ -41,6 +41,38 @@
 
 #define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
 
+#define args srcMLOutput* pout, const antlr::RefToken& token, const char* name, const char* prefix
+
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
+std::unordered_map<int, Element> srcMLOutput::process = {
+
+    { COMMENT_START, { "comment", SRC, [](args) { 
+
+        if (prefix[0] == 0)
+            xmlTextWriterStartElement(pout->xout, BAD_CAST name);
+        else
+            xmlTextWriterStartElementNS(pout->xout, BAD_CAST prefix, BAD_CAST name, 0);
+        ++(pout->openelementcount);
+
+        xmlTextWriterWriteAttribute(pout->xout, BAD_CAST "type", BAD_CAST "block");
+
+        pout->processTextPosition(token);
+    }}},
+    /*
+    { COMMENT_END,   { "comment", SRC, [](args) { pout->processUnit(token);  }}},
+*/
+
+    { SSTRING,  { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "string"    ); }}},
+    { SCHAR,    { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "char"      ); }}},
+    { SLITERAL, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "number"    ); }}},
+    { SBOOLEAN, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "boolean"   ); }}},
+    { SNULL,    { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "null"      ); }}},
+    { SCOMPLEX, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "complex"   ); }}},
+};
+
+#pragma GCC diagnostic warning "-Wunused-parameter"
+
 /** 
  * anonymous enum for prefix positions
  */
@@ -1614,6 +1646,15 @@ void srcMLOutput::processMarker(const antlr::RefToken& token) {
  * Get callback that output token and output.
  */
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
+
+    auto search = process.find(token->getType());
+    if (search != process.end()) {
+        Element& eparts = search->second;
+
+        eparts.process(this, token, eparts.name.c_str(), num2prefix[0].c_str());
+
+        return;
+    }
 
     // use the array of pointers to methods to call the correct output routine
     ((*this).*(num2process[(int)process_table[token->getType()]]))(token);

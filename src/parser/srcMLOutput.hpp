@@ -39,6 +39,7 @@
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
 #include <srcml.h>
+#include <unordered_map>
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
@@ -46,6 +47,18 @@
 #pragma GCC diagnostic pop
 
 #include <libxml/xmlwriter.h>
+
+enum PREFIXES { SRC, CPP };
+
+class srcMLOutput;
+
+typedef void (*call)(srcMLOutput*, const antlr::RefToken&, const char* name, const char* prefix);
+
+struct Element {
+    std::string name;
+    PREFIXES prefix;
+    call process;
+};
 
 /**
  * srcMLOutput
@@ -284,6 +297,8 @@ private:
 
     /** table for conversion from number to process */
     static srcMLOutput::PROCESS_PTR num2process[];
+
+    static std::unordered_map<int, Element> process;
 
 };
 
