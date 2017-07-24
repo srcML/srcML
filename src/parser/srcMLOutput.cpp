@@ -1168,26 +1168,7 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (!isstart(token)) {
-        processToken(token);
-        return;
-    }
-
-    // start the element
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
-    ++openelementcount;
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST "default");
-
-    // end the element right away if empty
-    if (isempty(token)) {
-        xmlTextWriterEndElement(xout);
-        --openelementcount;
-    }
+    processToken(token, localname, prefix, "type", "default");
 }
 
 /**
