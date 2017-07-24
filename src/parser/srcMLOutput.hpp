@@ -62,6 +62,8 @@ typedef decltype(lambda_base) lambda;
 struct Element {
     const char* name;
     PREFIXES prefix;
+    const char* attr_name;
+    const char* attr_value;
     call process;
 };
 

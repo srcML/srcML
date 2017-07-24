@@ -47,16 +47,16 @@
 
 const std::unordered_map<int, Element> srcMLOutput::process = {
 
-    { SUNIT,  { "unit", SRC, [](args) { pout->processUnit(token); }}},
+    { SUNIT,  { "unit", SRC, 0, 0, [](args) { pout->processUnit(token); }}},
 
-    { START_ELEMENT_TOKEN,  { "", SRC, [](args) { pout->processText(token); }}},
+    { START_ELEMENT_TOKEN,  { "", SRC, 0, 0, [](args) { pout->processText(token); }}},
 
-    { COMMENT_START, { "comment", SRC, [](args) {
+    { COMMENT_START, { "comment", SRC, 0, 0, [](args) {
         pout->processToken(token, name, prefix, "type", "block");
         pout->processTextPosition(token);
     }}},
 
-   { COMMENT_END,   { "comment", SRC, [](args) { 
+   { COMMENT_END,   { "comment", SRC, 0, 0, [](args) { 
 
         pout->processText(token);
 
@@ -65,12 +65,12 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
         --(pout->openelementcount);
     }}},
 
-    { LINECOMMENT_START, { "comment", SRC, [](args) {
+    { LINECOMMENT_START, { "comment", SRC, 0, 0, [](args) {
         pout->processToken(token, name, prefix, "type", "line");
         pout->processTextPosition(token);
     }}},
 
-    { LINECOMMENT_END, { "comment", SRC, [](args) {
+    { LINECOMMENT_END, { "comment", SRC, 0, 0, [](args) {
 
         auto size = token->getText().size();
 
@@ -88,302 +88,302 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     }}},
 
 
-    { LINE_DOXYGEN_COMMENT_START, { "comment", SRC, [](args) {
+    { LINE_DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](args) {
         pout->processToken(token, name, prefix, "type", "line", "format", "doxygen");
         pout->processTextPosition(token);
     }}},
 
-    { JAVADOC_COMMENT_START, { "comment", SRC, [](args) {
+    { JAVADOC_COMMENT_START, { "comment", SRC, 0, 0, [](args) {
         pout->processToken(token, name, prefix, "type", "block", "format", "javadoc");
         pout->processTextPosition(token);
     }}},
 
-    { DOXYGEN_COMMENT_START, { "comment", SRC, [](args) {
+    { DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](args) {
         pout->processToken(token, name, prefix, "type", "block", "format", "doxygen");
         pout->processTextPosition(token);
     }}},
 
-    { SSTRING,  { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "string"    ); }}},
-    { SCHAR,    { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "char"      ); }}},
-    { SLITERAL, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "number"    ); }}},
-    { SBOOLEAN, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "boolean"   ); }}},
-    { SNULL,    { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "null"      ); }}},
-    { SCOMPLEX, { "literal", SRC, [](args) { pout->processToken(token, name, prefix, "type", "complex"   ); }}},
-    { SOPERATOR, { "operator", SRC, nullptr }},
-    { SMODIFIER, { "modifier", SRC, nullptr }},
-    { SNAME, { "name", SRC, nullptr }},
-    { SONAME, { "", SRC, nullptr }},
-    { SCNAME, { "name", SRC, nullptr }},
-    { STYPE, { "type", SRC, nullptr }},
+    { SSTRING,                      { "literal", SRC, "type", "string", nullptr }},
+    { SCHAR,                        { "literal", SRC, "type", "char"  , nullptr }},
+    { SLITERAL,                     { "literal", SRC, "type", "number", nullptr }},
+    { SBOOLEAN,                     { "literal", SRC, "type", "boolean"   , nullptr }},
+    { SNULL,                        { "literal", SRC, "type", "null"  , nullptr }},
+    { SCOMPLEX,                     { "literal", SRC, "type", "complex"   , nullptr }},
+    { SOPERATOR,                    { "operator", SRC, 0, 0, nullptr }},
+    { SMODIFIER,                    { "modifier", SRC, 0, 0, nullptr }},
+    { SNAME,                        { "name", SRC, 0, 0, nullptr }},
+    { SONAME,                       { "", SRC, 0, 0, nullptr }},
+    { SCNAME,                       { "name", SRC, 0, 0, nullptr }},
+    { STYPE,                        { "type", SRC, 0, 0, nullptr }},
 
-    { STYPEPREV, { "type", SRC, [](args) { pout->processToken(token, name, prefix, "ref", "prev"); }}},
-    { SCONDITION, { "condition", SRC, nullptr }},
-    { SBLOCK, { "block", SRC, nullptr }},
-    { SPSEUDO_BLOCK, { "block", SRC, [](args) { pout->processToken(token, name, prefix, "type", "pseudo"); }}},
-    { SINDEX, { "index", SRC, nullptr }},
-    { SDECLTYPE, { "decltype", SRC, nullptr }},
-    { STYPENAME, { "typename", SRC, nullptr }},
-    { SATOMIC, { "atomic", SRC, nullptr }},
-    { SSTATIC_ASSERT_STATEMENT, { "assert", SRC, [](args) { pout->processToken(token, name, prefix, "type", "static"); }}},
-    { SGENERIC_SELECTION, { "generic_selection", SRC, nullptr }},
-    { SGENERIC_SELECTOR, { "selector", SRC, nullptr }},
-    { SGENERIC_ASSOCIATION_LIST, { "association_list", SRC, nullptr }},
-    { SGENERIC_ASSOCIATION, { "association", SRC, nullptr }},
+    { STYPEPREV,                    { "type", SRC, "ref", "prev", nullptr }},
+    { SCONDITION,                   { "condition", SRC, 0, 0, nullptr }},
+    { SBLOCK,                       { "block", SRC, 0, 0, nullptr }},
+    { SPSEUDO_BLOCK,                { "block", SRC, "type", "pseudo", nullptr }},
+    { SINDEX,                       { "index", SRC, 0, 0, nullptr }},
+    { SDECLTYPE,                    { "decltype", SRC, 0, 0, nullptr }},
+    { STYPENAME,                    { "typename", SRC, 0, 0, nullptr }},
+    { SATOMIC,                      { "atomic", SRC, 0, 0, nullptr }},
+    { SSTATIC_ASSERT_STATEMENT,     { "assert", SRC, "type", "static", nullptr }},
+    { SGENERIC_SELECTION,           { "generic_selection", SRC, 0, 0, nullptr }},
+    { SGENERIC_SELECTOR,            { "selector", SRC, 0, 0, nullptr }},
+    { SGENERIC_ASSOCIATION_LIST,    { "association_list", SRC, 0, 0, nullptr }},
+    { SGENERIC_ASSOCIATION,         { "association", SRC, 0, 0, nullptr }},
 
 
-    { SEXPRESSION_STATEMENT,    { "expr_stmt", SRC, nullptr }},
-    { SEXPRESSION,  { "expr", SRC, nullptr }},
+    { SEXPRESSION_STATEMENT,        { "expr_stmt", SRC, 0, 0, nullptr }},
+    { SEXPRESSION,                  { "expr", SRC, 0, 0, nullptr }},
 
-    { SDECLARATION_STATEMENT,   { "decl_stmt", SRC, nullptr }},
-    { SDECLARATION, { "decl", SRC, nullptr }},
-    { SDECLARATION_INITIALIZATION,  { "init", SRC, nullptr }},
-    { SDECLARATION_RANGE,   { "range", SRC, nullptr }},
+    { SDECLARATION_STATEMENT,       { "decl_stmt", SRC, 0, 0, nullptr }},
+    { SDECLARATION,                 { "decl", SRC, 0, 0, nullptr }},
+    { SDECLARATION_INITIALIZATION,  { "init", SRC, 0, 0, nullptr }},
+    { SDECLARATION_RANGE,           { "range", SRC, 0, 0, nullptr }},
 
-    { SBREAK_STATEMENT, { "break", SRC, nullptr }},
-    { SCONTINUE_STATEMENT,  { "continue", SRC, nullptr }},
-    { SGOTO_STATEMENT,  { "goto", SRC, nullptr }},
-    { SLABEL_STATEMENT, { "label", SRC, nullptr }},
+    { SBREAK_STATEMENT,             { "break", SRC, 0, 0, nullptr }},
+    { SCONTINUE_STATEMENT,          { "continue", SRC, 0, 0, nullptr }},
+    { SGOTO_STATEMENT,              { "goto", SRC, 0, 0, nullptr }},
+    { SLABEL_STATEMENT,             { "label", SRC, 0, 0, nullptr }},
 
-    { STYPEDEF, {          "typedef", SRC, nullptr }},
-    { SASM, {              "asm", SRC, nullptr }},
-    { SMACRO_CALL,  {       "macro", SRC, nullptr }},
-    { SENUM,    {             "enum", SRC, nullptr }},
-    { SENUM_DECLARATION,    { "enum_decl", SRC, nullptr }},
+    { STYPEDEF,                     { "typedef", SRC, 0, 0, nullptr }},
+    { SASM,                         { "asm", SRC, 0, 0, nullptr }},
+    { SMACRO_CALL,                  { "macro", SRC, 0, 0, nullptr }},
+    { SENUM,                        { "enum", SRC, 0, 0, nullptr }},
+    { SENUM_DECLARATION,            { "enum_decl", SRC, 0, 0, nullptr }},
 
-    { SIF_STATEMENT,    { "if", SRC, nullptr }},
-    { STERNARY, { "ternary", SRC, nullptr }},
-    { STHEN,    { "then", SRC, nullptr }},
-    { SELSE,    { "else", SRC, nullptr }},
-    { SELSEIF,  { "elseif", SRC, nullptr }},
+    { SIF_STATEMENT,                { "if", SRC, 0, 0, nullptr }},
+    { STERNARY,                     { "ternary", SRC, 0, 0, nullptr }},
+    { STHEN,                        { "then", SRC, 0, 0, nullptr }},
+    { SELSE,                        { "else", SRC, 0, 0, nullptr }},
+    { SELSEIF,                      { "elseif", SRC, 0, 0, nullptr }},
 
-    { SWHILE_STATEMENT, { "while", SRC, nullptr }},
-    { STYPEOF,  { "typeof", SRC, nullptr }},
-    { SDO_STATEMENT,    { "do", SRC, nullptr }},
+    { SWHILE_STATEMENT, { "while", SRC, 0, 0, nullptr }},
+    { STYPEOF,  { "typeof", SRC, 0, 0, nullptr }},
+    { SDO_STATEMENT,    { "do", SRC, 0, 0, nullptr }},
 
-    { SSWITCH,  { "switch", SRC, nullptr }},
-    { SCASE,    { "case", SRC, nullptr }},
-    { SDEFAULT, { "default", SRC, nullptr }},
+    { SSWITCH,  { "switch", SRC, 0, 0, nullptr }},
+    { SCASE,    { "case", SRC, 0, 0, nullptr }},
+    { SDEFAULT, { "default", SRC, 0, 0, nullptr }},
 
-    { SFOR_STATEMENT,   { "for", SRC, nullptr }},
-    { SFOREACH_STATEMENT,   { "foreach", SRC, nullptr }},
-    { SFOR_CONTROL, { "control", SRC, nullptr }},
-    { SFOR_INITIALIZATION,  { "init", SRC, nullptr }},
-    { SFOR_CONDITION,   { "condition", SRC, nullptr }},
-    { SFOR_INCREMENT,   { "incr", SRC, nullptr }},
-    { SFOR_LIKE_CONTROL,    { "init", SRC, nullptr }},
+    { SFOR_STATEMENT,   { "for", SRC, 0, 0, nullptr }},
+    { SFOREACH_STATEMENT,   { "foreach", SRC, 0, 0, nullptr }},
+    { SFOR_CONTROL, { "control", SRC, 0, 0, nullptr }},
+    { SFOR_INITIALIZATION,  { "init", SRC, 0, 0, nullptr }},
+    { SFOR_CONDITION,   { "condition", SRC, 0, 0, nullptr }},
+    { SFOR_INCREMENT,   { "incr", SRC, 0, 0, nullptr }},
+    { SFOR_LIKE_CONTROL,    { "init", SRC, 0, 0, nullptr }},
 
     // functions
-    { SFUNCTION_DEFINITION, {    "function", SRC, nullptr }},
-    { SFUNCTION_DECLARATION,    {   "function_decl", SRC, nullptr }},
-    { SFUNCTION_LAMBDA, {        "lambda", SRC, nullptr }},
-    { SFUNCTION_SPECIFIER,  {     "specifier", SRC, nullptr }},
-    { SRETURN_STATEMENT,    {       "return", SRC, nullptr }},
-    { SFUNCTION_CALL,   {          "call", SRC, nullptr }},
-    { SSIZEOF_CALL, {            "sizeof", SRC, nullptr }},
-    { SPARAMETER_LIST,  {         "parameter_list", SRC, nullptr }},
-    { SPARAMETER,   {              "parameter", SRC, nullptr }},
-    { SKRPARAMETER_LIST,    {       "krparameter_list", SRC, nullptr }},
-    { SKRPARAMETER, {            "krparameter", SRC, nullptr }},
-    { SARGUMENT_LIST,   {          "argument_list", SRC, nullptr }},
-    { SARGUMENT,    {               "argument", SRC, nullptr }},
-    { SLAMBDA_CAPTURE,  {         "capture", SRC, nullptr }},
-    { SPSEUDO_PARAMETER_LIST,   {  "parameter_list", SRC, nullptr }},
-    { SINDEXER_PARAMETER_LIST,  { "parameter_list", SRC, nullptr }},
+    { SFUNCTION_DEFINITION, { "function", SRC, 0, 0, nullptr }},
+    { SFUNCTION_DECLARATION,    { "function_decl", SRC, 0, 0, nullptr }},
+    { SFUNCTION_LAMBDA, { "lambda", SRC, 0, 0, nullptr }},
+    { SFUNCTION_SPECIFIER,  { "specifier", SRC, 0, 0, nullptr }},
+    { SRETURN_STATEMENT,    { "return", SRC, 0, 0, nullptr }},
+    { SFUNCTION_CALL,   { "call", SRC, 0, 0, nullptr }},
+    { SSIZEOF_CALL, { "sizeof", SRC, 0, 0, nullptr }},
+    { SPARAMETER_LIST,  { "parameter_list", SRC, 0, 0, nullptr }},
+    { SPARAMETER,   { "parameter", SRC, 0, 0, nullptr }},
+    { SKRPARAMETER_LIST,    { "krparameter_list", SRC, 0, 0, nullptr }},
+    { SKRPARAMETER, { "krparameter", SRC, 0, 0, nullptr }},
+    { SARGUMENT_LIST,   { "argument_list", SRC, 0, 0, nullptr }},
+    { SARGUMENT,    { "argument", SRC, 0, 0, nullptr }},
+    { SLAMBDA_CAPTURE,  { "capture", SRC, 0, 0, nullptr }},
+    { SPSEUDO_PARAMETER_LIST,   {  "parameter_list", SRC, "type", "pseudo", nullptr }},
+    { SINDEXER_PARAMETER_LIST,  { "parameter_list", SRC, "type", "indexer", nullptr }},
 
-    // struct,  { unio, SRC, nullptr }},
-    { SSTRUCT,  { "struct", SRC, nullptr }},
-    { SSTRUCT_DECLARATION,  {   "struct_decl", SRC, nullptr }},
-    { SUNION,   { "union", SRC, nullptr }},
-    { SUNION_DECLARATION,   {    "union_decl", SRC, nullptr }},
+    // struct,  { unio, SRC, 0, 0, nullptr }},
+    { SSTRUCT,  { "struct", SRC, 0, 0, nullptr }},
+    { SSTRUCT_DECLARATION,  { "struct_decl", SRC, 0, 0, nullptr }},
+    { SUNION,   { "union", SRC, 0, 0, nullptr }},
+    { SUNION_DECLARATION,   { "union_decl", SRC, 0, 0, nullptr }},
 
     // class
-    { SCLASS,   {                    "class", SRC, nullptr }},
-    { SCLASS_DECLARATION,   {        "class_decl", SRC, nullptr }},
-    { SPUBLIC_ACCESS,   {            "public", SRC, nullptr }},
-    { SPUBLIC_ACCESS_DEFAULT,   {    "public", SRC, [](args) { pout->processToken(token, name, prefix, "type", "default"    ); }}},
-    { SPRIVATE_ACCESS,  {           "private", SRC, nullptr }},
-    { SPRIVATE_ACCESS_DEFAULT,  {   "private", SRC, [](args) { pout->processToken(token, name, prefix, "type", "default"    ); }}},
-    { SPROTECTED_ACCESS,    {         "protected", SRC, nullptr }},
-    { SPROTECTED_ACCESS_DEFAULT,    { "protected", SRC, [](args) { pout->processToken(token, name, prefix, "type", "default"    ); }}},
+    { SCLASS,   {                    "class", SRC, 0, 0, nullptr }},
+    { SCLASS_DECLARATION,   { "class_decl", SRC, 0, 0, nullptr }},
+    { SPUBLIC_ACCESS,   { "public", SRC, 0, 0, nullptr }},
+    { SPUBLIC_ACCESS_DEFAULT,   { "public", SRC, "type", "default", nullptr }},
+    { SPRIVATE_ACCESS,  {           "private", SRC, 0, 0, nullptr }},
+    { SPRIVATE_ACCESS_DEFAULT,  { "private", SRC, "type", "default", nullptr }},
+    { SPROTECTED_ACCESS,    { "protected", SRC, 0, 0, nullptr }},
+    { SPROTECTED_ACCESS_DEFAULT,    { "protected", SRC, "type", "default", nullptr }},
 
     // Qt
-    { SSIGNAL_ACCESS,   {           "signals", SRC, nullptr }},
-    { SFOREVER_STATEMENT,   {       "forever", SRC, nullptr }},
-    { SEMIT_STATEMENT,  {          "emit", SRC, nullptr }},
+    { SSIGNAL_ACCESS,   {           "signals", SRC, 0, 0, nullptr }},
+    { SFOREVER_STATEMENT,   { "forever", SRC, 0, 0, nullptr }},
+    { SEMIT_STATEMENT,  { "emit", SRC, 0, 0, nullptr }},
 
-    { SMEMBER_INITIALIZATION_LIST,  { "member_init_list", SRC, nullptr }},
-    { SMEMBER_INITIALIZATION,   {      "call", SRC, nullptr }},
-    { SCONSTRUCTOR_DEFINITION,  {     "constructor", SRC, nullptr }},
-    { SCONSTRUCTOR_DECLARATION, {    "constructor_decl", SRC, nullptr }},
-    { SDESTRUCTOR_DEFINITION,   {      "destructor", SRC, nullptr }},
-    { SDESTRUCTOR_DECLARATION,  {     "destructor_decl", SRC, nullptr }},
-    { SDERIVATION_LIST, {            "super", SRC, nullptr }},
-    { SFRIEND,  {                     "friend", SRC, nullptr }},
-    { SCLASS_SPECIFIER, {            "specifier", SRC, nullptr }},
+    { SMEMBER_INITIALIZATION_LIST,  { "member_init_list", SRC, 0, 0, nullptr }},
+    { SMEMBER_INITIALIZATION,   { "call", SRC, 0, 0, nullptr }},
+    { SCONSTRUCTOR_DEFINITION,  { "constructor", SRC, 0, 0, nullptr }},
+    { SCONSTRUCTOR_DECLARATION, { "constructor_decl", SRC, 0, 0, nullptr }},
+    { SDESTRUCTOR_DEFINITION,   { "destructor", SRC, 0, 0, nullptr }},
+    { SDESTRUCTOR_DECLARATION,  { "destructor_decl", SRC, 0, 0, nullptr }},
+    { SDERIVATION_LIST, { "super", SRC, 0, 0, nullptr }},
+    { SFRIEND,  {                     "friend", SRC, 0, 0, nullptr }},
+    { SCLASS_SPECIFIER, { "specifier", SRC, 0, 0, nullptr }},
 
     // extern definition
-    { SEXTERN,  { "extern", SRC, nullptr }},
+    { SEXTERN,  { "extern", SRC, 0, 0, nullptr }},
 
     // namespaces
-    { SNAMESPACE,   { "namespace", SRC, nullptr }},
-    { SUSING_DIRECTIVE, { "using", SRC, nullptr }},
+    { SNAMESPACE,   { "namespace", SRC, 0, 0, nullptr }},
+    { SUSING_DIRECTIVE, { "using", SRC, 0, 0, nullptr }},
 
     // exception handling
-    { STRY_BLOCK,   {       "try", SRC, nullptr }},
-    { SCATCH_BLOCK, {     "catch", SRC, nullptr }},
-    { SFINALLY_BLOCK,   {   "finally", SRC, nullptr }},
-    { STHROW_STATEMENT, { "throw", SRC, nullptr }},
-    { STHROW_SPECIFIER, { "throw", SRC, nullptr }},
-    { STHROW_SPECIFIER_JAVA,    { "throws", SRC, nullptr }},
-    { SNOEXCEPT,    { "noexcept", SRC, nullptr }},
+    { STRY_BLOCK,   { "try", SRC, 0, 0, nullptr }},
+    { SCATCH_BLOCK, { "catch", SRC, 0, 0, nullptr }},
+    { SFINALLY_BLOCK,   { "finally", SRC, 0, 0, nullptr }},
+    { STHROW_STATEMENT, { "throw", SRC, 0, 0, nullptr }},
+    { STHROW_SPECIFIER, { "throw", SRC, 0, 0, nullptr }},
+    { STHROW_SPECIFIER_JAVA,    { "throws", SRC, 0, 0, nullptr }},
+    { SNOEXCEPT,    { "noexcept", SRC, 0, 0, nullptr }},
 
     // template
-    { STEMPLATE,    { "template", SRC, nullptr }},
-    { SGENERIC_ARGUMENT,    {        "argument", SRC, nullptr }},
-    { SGENERIC_ARGUMENT_LIST,   {   "argument_list", SRC, [](args) { pout->processToken(token, name, prefix, "type", "generic"    ); }}},
-    { STEMPLATE_PARAMETER,  {      "parameter", SRC, nullptr }},
-    { STEMPLATE_PARAMETER_LIST, { "parameter_list", SRC, nullptr }},
-    { SGENERIC_PARAMETER,   {       "parameter", SRC, nullptr }},
-    { SGENERIC_PARAMETER_LIST,  {  "parameter_list", SRC, nullptr }},
+    { STEMPLATE,    { "template", SRC, 0, 0, nullptr }},
+    { SGENERIC_ARGUMENT,    { "argument", SRC, 0, 0, nullptr }},
+    { SGENERIC_ARGUMENT_LIST,   { "argument_list", SRC, "type", "generic", nullptr }},
+    { STEMPLATE_PARAMETER,  { "parameter", SRC, 0, 0, nullptr }},
+    { STEMPLATE_PARAMETER_LIST, { "parameter_list", SRC, 0, 0, nullptr }},
+    { SGENERIC_PARAMETER,   { "parameter", SRC, 0, 0, nullptr }},
+    { SGENERIC_PARAMETER_LIST,  {  "parameter_list", SRC, "type", "generic", nullptr }},
 
     // cpp
-    { SCPP_DIRECTIVE,   {   "directive", CPP, nullptr }},
-    { SCPP_FILENAME,    {    "file", CPP, nullptr }},
-    { SCPP_NUMBER,  {      "number", CPP, nullptr }},
-    { SCPP_LITERAL, {     "literal", CPP, nullptr }},
-    { SCPP_INCLUDE, {     "include", CPP, nullptr }},
-    { SCPP_DEFINE,  {      "define", CPP, nullptr }},
-    { SCPP_UNDEF,   {       "undef", CPP, nullptr }},
-    { SCPP_LINE,    {        "line", CPP, nullptr }},
-    { SCPP_IF,  {          "if", CPP, nullptr }},
-    { SCPP_IFDEF,   {       "ifdef", CPP, nullptr }},
-    { SCPP_IFNDEF,  {      "ifndef", CPP, nullptr }},
-    { SCPP_ELSE,    {        "else", CPP, nullptr }},
-    { SCPP_ELIF,    {        "elif", CPP, nullptr }},
-    { SCPP_ENDIF,   {       "endif", CPP, nullptr }},
-    { SCPP_THEN,    {        "then", CPP, nullptr }},
-    { SCPP_PRAGMA,  {      "pragma", CPP, nullptr }},
-    { SCPP_ERROR,   {       "error", CPP, nullptr }},
-    { SCPP_WARNING, {     "warning", CPP, nullptr }},
-    { SCPP_MACRO_DEFN,  {  "macro", CPP, nullptr }},
-    { SCPP_MACRO_VALUE, { "value", CPP, nullptr }},
-    { SCPP_EMPTY,   {       "empty", CPP, nullptr }},
+    { SCPP_DIRECTIVE,   { "directive", CPP, 0, 0, nullptr }},
+    { SCPP_FILENAME,    { "file", CPP, 0, 0, nullptr }},
+    { SCPP_NUMBER,  { "number", CPP, 0, 0, nullptr }},
+    { SCPP_LITERAL, { "literal", CPP, 0, 0, nullptr }},
+    { SCPP_INCLUDE, { "include", CPP, 0, 0, nullptr }},
+    { SCPP_DEFINE,  { "define", CPP, 0, 0, nullptr }},
+    { SCPP_UNDEF,   { "undef", CPP, 0, 0, nullptr }},
+    { SCPP_LINE,    { "line", CPP, 0, 0, nullptr }},
+    { SCPP_IF,  { "if", CPP, 0, 0, nullptr }},
+    { SCPP_IFDEF,   { "ifdef", CPP, 0, 0, nullptr }},
+    { SCPP_IFNDEF,  { "ifndef", CPP, 0, 0, nullptr }},
+    { SCPP_ELSE,    { "else", CPP, 0, 0, nullptr }},
+    { SCPP_ELIF,    { "elif", CPP, 0, 0, nullptr }},
+    { SCPP_ENDIF,   { "endif", CPP, 0, 0, nullptr }},
+    { SCPP_THEN,    { "then", CPP, 0, 0, nullptr }},
+    { SCPP_PRAGMA,  { "pragma", CPP, 0, 0, nullptr }},
+    { SCPP_ERROR,   { "error", CPP, 0, 0, nullptr }},
+    { SCPP_WARNING, { "warning", CPP, 0, 0, nullptr }},
+    { SCPP_MACRO_DEFN,  {  "macro", CPP, 0, 0, nullptr }},
+    { SCPP_MACRO_VALUE, { "value", CPP, 0, 0, nullptr }},
+    { SCPP_EMPTY,   { "empty", CPP, 0, 0, nullptr }},
 
     // C# cpp
-    { SCPP_REGION,  {    "region", SRC, nullptr }},
-    { SCPP_ENDREGION,   { "endregion", SRC, nullptr }},
+    { SCPP_REGION,  { "region", CPP, 0, 0, nullptr }},
+    { SCPP_ENDREGION,   { "endregion", CPP, 0, 0, nullptr }},
 
     // Objective-C cpp
-    { SCPP_IMPORT,  {    "import", SRC, nullptr }},
+    { SCPP_IMPORT,  { "import", CPP, 0, 0, nullptr }},
 
     // debug
-    { SMARKER,  {        "marker", SRC, nullptr }},
-    { SERROR_PARSE, {   "parse", SRC, nullptr }},
-    { SERROR_MODE,  {    "mode", SRC, nullptr }},
+    { SMARKER,  { "marker", SRC, 0, 0, nullptr }},
+    { SERROR_PARSE, { "parse", SRC, 0, 0, nullptr }},
+    { SERROR_MODE,  { "mode", SRC, 0, 0, nullptr }},
 
     // C#
-    { SLOCK_STATEMENT,  {      "lock", SRC, nullptr }},
-    { SFIXED_STATEMENT, {     "fixed", SRC, nullptr }},
-    { SCHECKED_STATEMENT,   {   "checked", SRC, nullptr }},
-    { SUNCHECKED_STATEMENT, { "unchecked", SRC, nullptr }},
-    { SUNSAFE_STATEMENT,    {    "unsafe", SRC, nullptr }},
-    { SUSING_STATEMENT, {     "using_stmt", SRC, nullptr }},
-    { SFUNCTION_DELEGATE,   {   "delegate", SRC, nullptr }},
-    { SEVENT,   {               "event", SRC, nullptr }},
-    { SCONSTRAINT,  {          "constraint", SRC, nullptr }},
+    { SLOCK_STATEMENT,  { "lock", SRC, 0, 0, nullptr }},
+    { SFIXED_STATEMENT, { "fixed", SRC, 0, 0, nullptr }},
+    { SCHECKED_STATEMENT,   { "checked", SRC, 0, 0, nullptr }},
+    { SUNCHECKED_STATEMENT, { "unchecked", SRC, 0, 0, nullptr }},
+    { SUNSAFE_STATEMENT,    { "unsafe", SRC, 0, 0, nullptr }},
+    { SUSING_STATEMENT, { "using_stmt", SRC, 0, 0, nullptr }},
+    { SFUNCTION_DELEGATE,   { "delegate", SRC, 0, 0, nullptr }},
+    { SEVENT,   { "event", SRC, 0, 0, nullptr }},
+    { SCONSTRAINT,  { "constraint", SRC, 0, 0, nullptr }},
 
     // Java elements
-    { SEXTENDS, {                "extends", SRC, nullptr }},
-    { SIMPLEMENTS,  {             "implements", SRC, nullptr }},
-    { SIMPORT,  {                 "import", SRC, nullptr }},
-    { SPACKAGE, {                "package", SRC, nullptr }},
-    { SASSERT_STATEMENT,    {       "assert", SRC, nullptr }},
-    { SSYNCHRONIZED_STATEMENT,  { "synchronized", SRC, nullptr }},
-    { SINTERFACE,   {              "interface", SRC, nullptr }},
-    { SINTERFACE_DECLARATION,   {  "interface_decl", SRC, nullptr }},
-    { SANNOTATION_DEFN, {        "annotation_defn", SRC, nullptr }},
-    { SSTATIC_BLOCK,    {           "static", SRC, nullptr }},
+    { SEXTENDS, { "extends", SRC, 0, 0, nullptr }},
+    { SIMPLEMENTS,  { "implements", SRC, 0, 0, nullptr }},
+    { SIMPORT,  { "import", SRC, 0, 0, nullptr }},
+    { SPACKAGE, { "package", SRC, 0, 0, nullptr }},
+    { SASSERT_STATEMENT,    { "assert", SRC, 0, 0, nullptr }},
+    { SSYNCHRONIZED_STATEMENT,  { "synchronized", SRC, 0, 0, nullptr }},
+    { SINTERFACE,   { "interface", SRC, 0, 0, nullptr }},
+    { SINTERFACE_DECLARATION,   {  "interface_decl", SRC, 0, 0, nullptr }},
+    { SANNOTATION_DEFN, { "annotation_defn", SRC, 0, 0, nullptr }},
+    { SSTATIC_BLOCK,    {           "static", SRC, 0, 0, nullptr }},
 
     // special characters
-    { SATTRIBUTE,   {   "attribute", SRC, nullptr }},
-    { STARGET,  {      "target", SRC, nullptr }},
+    { SATTRIBUTE,   { "attribute", SRC, 0, 0, nullptr }},
+    { STARGET,  { "target", SRC, 0, 0, nullptr }},
 
     // linq
-    { SLINQ,    {   "linq", SRC, nullptr }},
-    { SFROM,    { "from", SRC, nullptr }},
-    { SSELECT,  {   "select", SRC, nullptr }},
-    { SWHERE,   {   "where", SRC, nullptr }},
-    { SLET, {   "let", SRC, nullptr }},
-    { SORDERBY, {   "orderby", SRC, nullptr }},
-    { SGROUP,   {   "group", SRC, nullptr }},
-    { SJOIN,    {   "join", SRC, nullptr }},
-    { SIN,  {   "in", SRC, nullptr }},
-    { SON,  {   "on", SRC, nullptr }},
-    { SEQUALS,  {   "equals", SRC, nullptr }},
-    { SBY,  {   "by", SRC, nullptr }},
-    { SINTO,    {   "into", SRC, nullptr }},
+    { SLINQ,    { "linq", SRC, 0, 0, nullptr }},
+    { SFROM,    { "from", SRC, 0, 0, nullptr }},
+    { SSELECT,  { "select", SRC, 0, 0, nullptr }},
+    { SWHERE,   { "where", SRC, 0, 0, nullptr }},
+    { SLET, { "let", SRC, 0, 0, nullptr }},
+    { SORDERBY, { "orderby", SRC, 0, 0, nullptr }},
+    { SGROUP,   { "group", SRC, 0, 0, nullptr }},
+    { SJOIN,    { "join", SRC, 0, 0, nullptr }},
+    { SIN,  { "in", SRC, 0, 0, nullptr }},
+    { SON,  { "on", SRC, 0, 0, nullptr }},
+    { SEQUALS,  { "equals", SRC, 0, 0, nullptr }},
+    { SBY,  { "by", SRC, 0, 0, nullptr }},
+    { SINTO,    { "into", SRC, 0, 0, nullptr }},
 
     // special characters
-    { CONTROL_CHAR, {   "escape", SRC, nullptr }},
-    { SANNOTATION,  {    "annotation", SRC, nullptr }},
+    { CONTROL_CHAR, { "escape", SRC, 0, 0, nullptr }},
+    { SANNOTATION,  { "annotation", SRC, 0, 0, nullptr }},
 
     // C++
-    { SALIGNAS, {                "alignas", SRC, nullptr }},
-    { SALIGNOF, {                "alignof", SRC, nullptr }},
-    { STYPEID,  {                 "typeid", SRC, nullptr }},
-    { SSIZEOF_PACK, {            "sizeof", SRC, [](args) { pout->processToken(token, name, prefix, "type", "pack"    ); }}},
-    { SENUM_CLASS,  {             "enum", SRC, [](args) { pout->processToken(token, name, prefix, "type", "class"    ); }}},
-    { SENUM_CLASS_DECLARATION,  { "enum_decl", SRC, [](args) { pout->processToken(token, name, prefix, "type", "class"    ); }}},
-    { SOPERATOR_FUNCTION,   {      "function", SRC, [](args) { pout->processToken(token, name, prefix, "type", "operator"    ); }}},
-    { SOPERATOR_FUNCTION_DECL,  { "function_decl", SRC, [](args) { pout->processToken(token, name, prefix, "type", "operator"    ); }}},
-    { SREF_QUALIFIER,   {          "ref_qualifier", SRC, nullptr }},
+    { SALIGNAS, { "alignas", SRC, 0, 0, nullptr }},
+    { SALIGNOF, { "alignof", SRC, 0, 0, nullptr }},
+    { STYPEID,  { "typeid", SRC, 0, 0, nullptr }},
+    { SSIZEOF_PACK, { "sizeof", SRC, "type", "pack", nullptr }},
+    { SENUM_CLASS,  { "enum", SRC, "type", "class", nullptr }},
+    { SENUM_CLASS_DECLARATION,  { "enum_decl", SRC, "type", "class", nullptr }},
+    { SOPERATOR_FUNCTION,   { "function", SRC, "type", "operator", nullptr }},
+    { SOPERATOR_FUNCTION_DECL,  { "function_decl", SRC, "type", "operator", nullptr }},
+    { SREF_QUALIFIER,   { "ref_qualifier", SRC, 0, 0, nullptr }},
 
     // Objective-C
-    { SRECEIVER,    {             "receiver", SRC, nullptr }},
-    { SMESSAGE, {              "message", SRC, nullptr }},
-    { SSELECTOR,    {             "selector", SRC, nullptr }},
-    { SPROTOCOL_LIST,   {        "protocol_list", SRC, nullptr }},
-    { SCATEGORY,    {             "category", SRC, nullptr }},
-    { SPROTOCOL,    {             "protocol", SRC, nullptr }},
-    { SREQUIRED_DEFAULT,    {     "required", SRC, nullptr }},
-    { SREQUIRED,    {             "required", SRC, nullptr }},
-    { SOPTIONAL,    {             "optional", SRC, nullptr }},
-    { SPROPERTY,    {             "property", SRC, nullptr }},
-    { SATTRIBUTE_LIST,  {       "attribute_list", SRC, nullptr }},
-    { SSYNTHESIZE,  {           "synthesize", SRC, nullptr }},
-    { SDYNAMIC, {              "dynamic", SRC, nullptr }},
-    { SENCODE,  {               "encode", SRC, nullptr }},
-    { SAUTORELEASEPOOL, {      "autoreleasepool", SRC, nullptr }},
-    { SCOMPATIBILITY_ALIAS, {  "compatibility_alias", SRC, nullptr }},
-    { SNIL, {                  "literal", SRC, nullptr }},
-    { SCLASS_INTERFACE, {      "class", SRC, [](args) { pout->processToken(token, name, prefix, "type", "interface"    ); }}},
-    { SCLASS_IMPLEMENTATION,    { "class", SRC, [](args) { pout->processToken(token, name, prefix, "type", "implementation"    ); }}},
-    { SPROTOCOL_DECLARATION,    { "protocol_decl", SRC, nullptr }},
+    { SRECEIVER,                { "receiver", SRC, 0, 0, nullptr }},
+    { SMESSAGE,                 { "message", SRC, 0, 0, nullptr }},
+    { SSELECTOR,                { "selector", SRC, 0, 0, nullptr }},
+    { SPROTOCOL_LIST,           { "protocol_list", SRC, 0, 0, nullptr }},
+    { SCATEGORY,                { "category", SRC, 0, 0, nullptr }},
+    { SPROTOCOL,                { "protocol", SRC, 0, 0, nullptr }},
+    { SREQUIRED_DEFAULT,        { "required", SRC, "type", "default", nullptr }},
+    { SREQUIRED,                { "required", SRC, 0, 0, nullptr }},
+    { SOPTIONAL,                { "optional", SRC, 0, 0, nullptr }},
+    { SPROPERTY,                { "property", SRC, 0, 0, nullptr }},
+    { SATTRIBUTE_LIST,          { "attribute_list", SRC, 0, 0, nullptr }},
+    { SSYNTHESIZE,              { "synthesize", SRC, 0, 0, nullptr }},
+    { SDYNAMIC,                 { "dynamic", SRC, 0, 0, nullptr }},
+    { SENCODE,                  { "encode", SRC, 0, 0, nullptr }},
+    { SAUTORELEASEPOOL,         { "autoreleasepool", SRC, 0, 0, nullptr }},
+    { SCOMPATIBILITY_ALIAS,     { "compatibility_alias", SRC, 0, 0, nullptr }},
+    { SNIL,                     { "literal", SRC, "type", "nil", nullptr }},
+    { SCLASS_INTERFACE,         { "class", SRC, "type", "@interface", nullptr }},
+    { SCLASS_IMPLEMENTATION,    { "class", SRC, "type", "@implementation", nullptr }},
+    { SPROTOCOL_DECLARATION,    { "protocol_decl", SRC, 0, 0, nullptr }},
 
     // casts
-    { SCAST,    {             "cast", SRC, nullptr }},
-    { SCONST_CAST,  {       "cast", SRC, [](args) { pout->processToken(token, name, prefix, "type", "const"    ); }}},
-    { SDYNAMIC_CAST,    {     "cast", SRC, [](args) { pout->processToken(token, name, prefix, "type", "dynamic"    ); }}},
-    { SREINTERPRET_CAST,    { "cast", SRC, [](args) { pout->processToken(token, name, prefix, "type", "reinterpret"    ); }}},
-    { SSTATIC_CAST, {      "cast", SRC, [](args) { pout->processToken(token, name, prefix, "type", "static"    ); }}},
+    { SCAST,                    { "cast", SRC, 0, 0, nullptr }},
+    { SCONST_CAST,              { "cast", SRC, "type", "const", nullptr }},
+    { SDYNAMIC_CAST,            { "cast", SRC, "type", "dynamic", nullptr }},
+    { SREINTERPRET_CAST,        { "cast", SRC, "type", "reinterpret", nullptr }},
+    { SSTATIC_CAST,             { "cast", SRC, "type", "static", nullptr }},
 
     // srcMLOutput only
-    { SPOSITION,    { "position", SRC, nullptr }},
+    { SPOSITION,                { "position", SRC, 0, 0, nullptr }},
 
     // Other
-    { SCUDA_ARGUMENT_LIST,  {  "argument_list", SRC, [](args) { pout->processToken(token, name, prefix, "type", "cuda"    ); }}},
+    { SCUDA_ARGUMENT_LIST,  {  "argument_list", SRC, "type", "cuda", nullptr }},
 
 
     // OpenMP
-    { SOMP_DIRECTIVE,   {    "directive", OMP, nullptr }},
-    { SOMP_NAME,    {         "name", OMP, nullptr }},
-    { SOMP_CLAUSE,  {       "clause", OMP, nullptr }},
-    { SOMP_ARGUMENT_LIST,   { "argument_list", OMP, nullptr }},
-    { SOMP_ARGUMENT,    {      "argument", OMP, nullptr }},
-    { SOMP_EXPRESSION,  {    "expr", OMP, nullptr }},
+    { SOMP_DIRECTIVE,   { "directive", OMP, 0, 0, nullptr }},
+    { SOMP_NAME,    { "name", OMP, 0, 0, nullptr }},
+    { SOMP_CLAUSE,  { "clause", OMP, 0, 0, nullptr }},
+    { SOMP_ARGUMENT_LIST,   { "argument_list", OMP, 0, 0, nullptr }},
+    { SOMP_ARGUMENT,    { "argument", OMP, 0, 0, nullptr }},
+    { SOMP_EXPRESSION,  { "expr", OMP, 0, 0, nullptr }},
 
     //
-    { SEMPTY,   {         "empty_stmt", SRC, nullptr }},
+    { SEMPTY,   { "empty_stmt", SRC, 0, 0, nullptr }},
 
 };
 
@@ -1972,13 +1972,12 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
         if (f)
             eparts.process(this, token, eparts.name, num2prefix[eparts.prefix].c_str());
         else
-            processToken(token, eparts.name, num2prefix[eparts.prefix].c_str(), 0, 0);
+            processToken(token, eparts.name, num2prefix[eparts.prefix].c_str(), eparts.attr_name, eparts.attr_value);
 
         return;
     }
-
     // use the array of pointers to methods to call the correct output routine
-    ((*this).*(num2process[(int)process_table[token->getType()]]))(token);
+   ((*this).*(num2process[(int)process_table[token->getType()]]))(token);
 }
 
 /** element names array */
