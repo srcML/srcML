@@ -1268,19 +1268,7 @@ void srcMLOutput::processTypePrevious(const antlr::RefToken& token) {
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "ref", BAD_CAST "prev");
-
-    if(isoption(options, SRCML_OPTION_DEBUG_TIMER)) {
-
-        std::string time = to_simple_string(boost::posix_time::microsec_clock::universal_time() - debug_time_start);
-        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_TIMESTAMP, BAD_CAST time.c_str());
-
-    }
+    processToken(token, localname, prefix, "ref", "prev");
 
     xmlTextWriterEndElement(xout);
 }
@@ -1292,23 +1280,13 @@ void srcMLOutput::processTypePrevious(const antlr::RefToken& token) {
  * Callback to process/output token as Javadoc comment.
  */
 void srcMLOutput::processJavadocCommentStart(const antlr::RefToken& token) {
-    static const char* BLOCK_COMMENT_ATTR = "block";
-    static const char* JAVADOC_COMMENT_ATTR = "javadoc";
 
     const char* localname = ElementNames[token->getType()];
     int position = ElementPrefix[token->getType()];
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
-    ++openelementcount;
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST JAVADOC_COMMENT_ATTR);
+    processToken(token, localname, prefix, "type", "block", "format", "javadoc");
 
     ((*this).*num2process[2])(token);
 }
