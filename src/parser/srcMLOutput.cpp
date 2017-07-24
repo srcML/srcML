@@ -1174,8 +1174,6 @@ void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
  */
 void srcMLOutput::processAccess(const antlr::RefToken& token) {
 
-    static const char* type_default = "default";
-
     const char* localname = ElementNames[token->getType()];
     int position = ElementPrefix[token->getType()];
     const char* prefix = num2prefix[position].c_str();
@@ -1194,7 +1192,7 @@ void srcMLOutput::processAccess(const antlr::RefToken& token) {
 
     ++openelementcount;
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST type_default);
+    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST "default");
 
     // end the element right away if empty
     if (isempty(token)) {
@@ -1378,21 +1376,13 @@ void srcMLOutput::processLineDoxygenCommentStart(const antlr::RefToken& token) {
  * Callback to process/output token as block comment.
  */
 void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
-    static const char* BLOCK_COMMENT_ATTR = "block";
 
     const char* localname = ElementNames[token->getType()];
     int position = ElementPrefix[token->getType()];
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
-    ++openelementcount;
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
+    processToken(token, localname, prefix, "type", "block");
 
     ((*this).*num2process[2])(token);
 }
@@ -1404,21 +1394,13 @@ void srcMLOutput::processBlockCommentStart(const antlr::RefToken& token) {
  * Callback to process/output token as line comment.
  */
 void srcMLOutput::processLineCommentStart(const antlr::RefToken& token) {
-    static const char* const LINE_COMMENT_ATTR = "line";
 
     const char* localname = ElementNames[token->getType()];
     int position = ElementPrefix[token->getType()];
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
-    ++openelementcount;
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
+    processToken(token, localname, prefix, "type", "line");
 
     ((*this).*num2process[2])(token);
 }
@@ -1489,6 +1471,32 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 
         if (attr_name)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name, BAD_CAST attr_value);
+
+    } else {
+
+        if (isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
+            outputPosition();
+
+        xmlTextWriterEndElement(xout);
+        --openelementcount;
+    }
+}
+
+void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
+                                const char* attr_name2, const char* attr_value2) {
+
+    if (isstart(token)) {
+        if (prefix[0] == 0)
+            xmlTextWriterStartElement(xout, BAD_CAST name);
+        else
+            xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST name, 0);
+        ++openelementcount;
+
+        if (attr_name1)
+            xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name1, BAD_CAST attr_value1);
+
+        if (attr_name2)
+            xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name1, BAD_CAST attr_value2);
 
     } else {
 
