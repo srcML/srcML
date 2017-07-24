@@ -750,6 +750,9 @@ void srcMLOutput::processEscape(const antlr::RefToken& token) {
     snprintf(out, 22, "0x%02x", n);
 
     processToken(token, localname, prefix, "char", out);
+
+    xmlTextWriterEndElement(xout);
+    --openelementcount;
 }
 
 /**
