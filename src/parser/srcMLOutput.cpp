@@ -1320,23 +1320,13 @@ void srcMLOutput::processJavadocCommentStart(const antlr::RefToken& token) {
  * Callback to process/output token as Doxygen comment (block).
  */
 void srcMLOutput::processDoxygenCommentStart(const antlr::RefToken& token) {
-    static const char* BLOCK_COMMENT_ATTR = "block";
-    static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
 
     const char* localname = ElementNames[token->getType()];
     int position = ElementPrefix[token->getType()];
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
-    ++openelementcount;
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST BLOCK_COMMENT_ATTR);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
+    processToken(token, localname, prefix, "type", "block", "format", "doxygen");
 
     ((*this).*num2process[2])(token);
 }
@@ -1348,23 +1338,13 @@ void srcMLOutput::processDoxygenCommentStart(const antlr::RefToken& token) {
  * Callback to process/output token as Doxygen comment (line).
  */
 void srcMLOutput::processLineDoxygenCommentStart(const antlr::RefToken& token) {
-    static const char* LINE_COMMENT_ATTR = "line";
-    static const char* DOXYGEN_COMMENT_ATTR = "doxygen";
 
     const char* localname = ElementNames[token->getType()];
     int position = ElementPrefix[token->getType()];
     const char* prefix = num2prefix[position].c_str();
     num2used[position] = true;
 
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST localname, 0);
-
-    ++openelementcount;
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST LINE_COMMENT_ATTR);
-    xmlTextWriterWriteAttribute(xout, BAD_CAST "format", BAD_CAST DOXYGEN_COMMENT_ATTR);
+    processToken(token, localname, prefix, "type", "line", "format", "doxygen");
 
     ((*this).*num2process[2])(token);
 }
