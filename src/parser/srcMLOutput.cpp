@@ -265,6 +265,12 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SCPP_MACRO_VALUE,             { "value",              CPP,      0,         0, nullptr }},
     { SCPP_EMPTY,                   { "empty",              CPP,      0,         0, nullptr }},
 
+#if DEBUG
+    { SMARKER,                      { "comment", SRC, 0, 0, [](args) {
+        pout->processToken(token, name, prefix, "location", token->getText().c_str());
+    }}},
+#endif
+
     // C# cpp
     { SCPP_REGION,                  { "region",             CPP,      0,         0, nullptr }},
     { SCPP_ENDREGION,               { "endregion",          CPP,      0,         0, nullptr }},
@@ -422,16 +428,16 @@ enum { SRCML_SRC_NS_URI_POS,
  * Constructor. Handles all outputs.
  */
 srcMLOutput::srcMLOutput(TokenStream* ints,
-                         xmlOutputBuffer * output_buffer,
+                         xmlOutputBuffer* output_buffer,
                          const char* language,
                          const char* xml_enc,
                          OPTION_TYPE& op,
                          const std::vector<std::string> & attributes,
                          boost::optional<std::pair<std::string, std::string> > processing_instruction,
                          size_t ts)
-    : last_line(0), last_line2(0), last_column(0), end_position_output(false), input(ints), xout(0), output_buffer(output_buffer), unit_language(language), unit_url(0), unit_filename(0),
-      unit_version(0), options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
-      openelementcount(0), tabsize(ts), depth(0)
+    : input(ints), output_buffer(output_buffer), unit_language(language), 
+      options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
+      tabsize(ts)
 {
 }
 
@@ -446,7 +452,7 @@ int srcMLOutput::initWriter() {
     xout = xmlNewTextWriter(output_buffer);
     if (!xout) {
 
-        fprintf(stderr, "src2srcml: " "Unable to open output buffer\n");
+        fprintf(stderr, "srcml: " "Unable to open output buffer\n");
         return SRCML_STATUS_ERROR;
     }
 
@@ -1077,26 +1083,6 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
     }
 }
 
-#if DEBUG
-
-/**
- * processMarker
- * @param token token to output as marker
- *
- * Callback to process/output token as debug marker.
- */
-void srcMLOutput::processMarker(const antlr::RefToken& token) {
-
-    const char* localname = ElementNames[token->getType()];
-    int position = ElementPrefix[token->getType()];
-    const char* prefix = num2prefix[position].c_str();
-    num2used[position] = true;
-
-    processToken(token, localname, prefix, "location", token->getText().c_str());
-}
-
-#endif
-
 /**
  * outputToken
  * @param token token to output
@@ -1108,8 +1094,8 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
     auto search = process.find(token->getType());
     if (search != process.end() && search->second.name) {
         const Element& eparts = search->second;
-        if (eparts.process)
-            eparts.process(this, token, eparts.name, num2prefix[eparts.prefix].c_str());
+        if (eparts.token_output)
+            eparts.token_output(this, token, eparts.name, num2prefix[eparts.prefix].c_str());
         else
             processToken(token, eparts.name, num2prefix[eparts.prefix].c_str(), eparts.attr_name, eparts.attr_value);
 
@@ -1124,7 +1110,6 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
  * @param output_buffer an output buffer
  *
  * Set to output to output_buffer.  Should be called before initWriter.
- * @todo see if still needed.
  */
 void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
 
@@ -1134,7 +1119,7 @@ void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
 /**
  * getWriter
  *
- * Get the current writer. @todo see if still needed.
+ * Get the current writer
  */
 xmlTextWriter * srcMLOutput::getWriter() {
 
@@ -1145,7 +1130,7 @@ xmlTextWriter * srcMLOutput::getWriter() {
  * setDepth
  * @param thedepth depth to set to
  *
- * Set the current depth to thedepth @todo see if still needed.
+ * Set the current depth to thedepth
  */
 void srcMLOutput::setDepth(int thedepth) {
 

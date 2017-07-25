@@ -34,12 +34,7 @@
 #include "TokenStream.hpp"
 #include "srcMLException.hpp"
 #include <string>
-#include <vector>
-#include <srcml_types.hpp>
-#include <srcml_macros.hpp>
-#include <srcml.h>
 #include <unordered_map>
-#include <functional>
 
 #include <libxml/xmlwriter.h>
 
@@ -47,18 +42,14 @@ enum PREFIXES { SRC = 0, CPP = 1, OMP = 7 };
 
 class srcMLOutput;
 
-typedef void (*call)(srcMLOutput*, const antlr::RefToken&, const char* name, const char* prefix);
-
-auto lambda_base = [](srcMLOutput*, const antlr::RefToken&, const char*, const char*) {};
-
-typedef decltype(lambda_base) lambda;
+typedef void (*token_output_t)(srcMLOutput*, const antlr::RefToken&, const char* name, const char* prefix);
 
 struct Element {
     const char* name;
     PREFIXES prefix;
     const char* attr_name;
     const char* attr_value;
-    call process;
+    token_output_t token_output;
 };
 
 /**
@@ -118,8 +109,11 @@ public:
     void processTextPositionLine(const antlr::RefToken& token);
 
 
-    int last_line, last_line2, last_column;
-    bool end_position_output;
+    int last_line = 0;
+    int last_line2 = 0;
+    int last_column = 0;
+    bool end_position_output = false;
+
     void outputPosition();
 
     // destructor
@@ -130,7 +124,7 @@ public:
     TokenStream* input;
 
     /** output xml writer */
-    xmlTextWriter* xout;
+    xmlTextWriter* xout = nullptr;
     
     /** output buffer */
     xmlOutputBuffer * output_buffer;
@@ -142,28 +136,28 @@ public:
     const char* unit_revision;
 
     /** unit attribute url */
-    const char* unit_url;
+    const char* unit_url = nullptr;
 
     /** unit attribute filename */
-    const char* unit_filename;
+    const char* unit_filename = nullptr;
 
     /** unit attribute version */
-    const char* unit_version;
+    const char* unit_version = nullptr;
 
     /** unit attribute timestamp */
-    const char* unit_timestamp;
+    const char* unit_timestamp = nullptr;
 
     /** unit attribute hash */
-    const char* unit_hash;
+    const char* unit_hash = nullptr;
 
     /** unit attribute encoding */
-    const char* unit_encoding;
+    const char* unit_encoding = nullptr;
 
     /** output options */
     OPTION_TYPE& options;
 
     /** xml encoding */
-    const char* xml_encoding;
+    const char* xml_encoding = nullptr;
 
     /** array for a number to prefix */
     std::vector<std::string> num2prefix;
@@ -181,13 +175,13 @@ public:
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
 
     /** number of open elements */
-    int openelementcount;
+    int openelementcount = 0;
 
     /** the tabstop size */
     size_t tabsize;
 
     /** number of units output or depth into archive */
-    int depth;
+    int depth = 0;
 
     /** line attribute content */
     std::string lineAttribute;
@@ -234,9 +228,6 @@ public:
     void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value);
     void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2);
-#if DEBUG
-    void processMarker(const antlr::RefToken& token);
-#endif
 
 private:
 
