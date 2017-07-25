@@ -37,22 +37,22 @@
 
 #define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
 
-#define args srcMLOutput* pout, const antlr::RefToken& token, const char* name, const char* prefix
+#define params srcMLOutput* pout, const antlr::RefToken& token, const char* name, const char* prefix
 
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 const std::unordered_map<int, Element> srcMLOutput::process = {
 
-    { SUNIT,  { "unit", SRC, 0, 0, [](args) { pout->processUnit(token); }}},
+    { SUNIT,  { "unit", SRC, 0, 0, [](params) { pout->processUnit(token); }}},
 
-    { START_ELEMENT_TOKEN,  { "", SRC, 0, 0, [](args) { pout->processText(token); }}},
+    { START_ELEMENT_TOKEN,  { "", SRC, 0, 0, [](params) { pout->processText(token); }}},
 
-    { COMMENT_START, { "comment", SRC, 0, 0, [](args) {
+    { COMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "block");
         pout->processTextPosition(token);
     }}},
 
-   { COMMENT_END,   { "comment", SRC, 0, 0, [](args) { 
+   { COMMENT_END,   { "comment", SRC, 0, 0, [](params) { 
 
         pout->processText(token);
 
@@ -61,12 +61,12 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
         --(pout->openelementcount);
     }}},
 
-    { LINECOMMENT_START, { "comment", SRC, 0, 0, [](args) {
+    { LINECOMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "line");
         pout->processTextPosition(token);
     }}},
 
-    { LINECOMMENT_END, { "comment", SRC, 0, 0, [](args) {
+    { LINECOMMENT_END, { "comment", SRC, 0, 0, [](params) {
 
         auto size = token->getText().size();
 
@@ -84,17 +84,17 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     }}},
 
 
-    { LINE_DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](args) {
+    { LINE_DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "line", "format", "doxygen");
         pout->processTextPosition(token);
     }}},
 
-    { JAVADOC_COMMENT_START, { "comment", SRC, 0, 0, [](args) {
+    { JAVADOC_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "block", "format", "javadoc");
         pout->processTextPosition(token);
     }}},
 
-    { DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](args) {
+    { DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "block", "format", "doxygen");
         pout->processTextPosition(token);
     }}},
@@ -266,7 +266,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SCPP_EMPTY,                   { "empty",              CPP,      0,         0, nullptr }},
 
 #if DEBUG
-    { SMARKER,                      { "comment", SRC, 0, 0, [](args) {
+    { SMARKER,                      { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "location", token->getText().c_str());
     }}},
 #endif
@@ -326,7 +326,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SINTO,                        { "into",               SRC,      0,         0, nullptr }},
 
     // special characters
-    { CONTROL_CHAR,                 { "escape",             SRC,      0,         0, [](args) {
+    { CONTROL_CHAR,                 { "escape",             SRC,      0,         0, [](params) {
 
         int n = token->getText()[0];
         char out[20 + 2 + 1];
