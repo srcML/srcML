@@ -42,11 +42,6 @@
 #include <unordered_map>
 #include <functional>
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/date_time/posix_time/posix_time.hpp>
-#pragma GCC diagnostic pop
-
 #include <libxml/xmlwriter.h>
 
 enum PREFIXES { SRC = 0, CPP = 1, OMP = 7 };
@@ -194,9 +189,6 @@ public:
 
     /** number of units output or depth into archive */
     int depth;
-
-    /** starting time for debug stopwatch */
-    boost::posix_time::ptime debug_time_start;
 
     /** line attribute content */
     std::string lineAttribute;
