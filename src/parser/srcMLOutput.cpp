@@ -1107,7 +1107,7 @@ void srcMLOutput::processMarker(const antlr::RefToken& token) {
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
     auto search = process.find(token->getType());
-    if (search != process.end()) {
+    if (search != process.end() && search->second.name) {
         const Element& eparts = search->second;
 
         auto f = eparts.process;
