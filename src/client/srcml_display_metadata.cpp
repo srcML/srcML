@@ -159,19 +159,19 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         if (contains<int>(input)) {
             if (srcml_archive_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml input cannot not be opened.");
+                SRCMLlog(CRITICAL_MSG, "srcml input cannot not be opened.");
                 return;
             }
         }
         else if (contains<FILE*>(input)){
             if (srcml_archive_read_open_FILE(srcml_arch, input) != SRCML_STATUS_OK) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml input cannot not be opened.");
+                SRCMLlog(CRITICAL_MSG, "srcml input cannot not be opened.");
                 return;
             }
         }
         else {
             if (srcml_archive_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str())) != SRCML_STATUS_OK) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml input cannot not be opened.");
+                SRCMLlog(CRITICAL_MSG, "srcml input cannot not be opened.");
                 return;
             }
         }

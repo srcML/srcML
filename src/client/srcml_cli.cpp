@@ -176,9 +176,9 @@ void option_command_deprecated(bool opt) {
 
       // Notify user of deprecated options
       if (command == SRCML_COMMAND_UNITS)
-        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: use of option --units or -n is deprecated");
+        SRCMLlog(INFO_MSG, "srcml: use of option --units or -n is deprecated");
       if (command == SRCML_COMMAND_EXPRESSION)
-        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: use of option --expression or -e is deprecated");
+        SRCMLlog(INFO_MSG, "srcml: use of option --expression or -e is deprecated");
     }
 }
 
@@ -210,7 +210,7 @@ template <>
 void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
 /*
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: invalid src encoding \"" + value + "\"");
+        SRCMLlog(CRITICAL_MSG, "srcml: invalid src encoding \"" + value + "\"");
         exit(CLI_ERROR_INVALID_ARGUMENT);
     }
     */
@@ -222,7 +222,7 @@ template <>
 void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) {
 
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: invalid xml encoding \"" + value + "\"");
+        SRCMLlog(CRITICAL_MSG, "srcml: invalid xml encoding \"" + value + "\"");
         exit(CLI_ERROR_INVALID_ARGUMENT);
     }
     srcml_request.att_xml_encoding = value;
@@ -234,7 +234,7 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
 
     // check language
     if (value.empty() || srcml_check_language(value.c_str()) == 0) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: invalid language \"" + value + "\"");
+        SRCMLlog(CRITICAL_MSG, "srcml: invalid language \"" + value + "\"");
         exit(6); //ERROR CODE TBD
     }
     srcml_request.att_language = value;
@@ -246,7 +246,7 @@ void option_field<&srcml_request_t::tabs>(int value) {
 
     // check tabstop
     if (value < 1) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::to_string(value) + " is an invalid tab stop. Tab stops must be 1 or higher.");
+        SRCMLlog(CRITICAL_MSG, "srcml: " + std::to_string(value) + " is an invalid tab stop. Tab stops must be 1 or higher.");
         exit(1); //ERROR CODE TBD
     }
 
@@ -277,7 +277,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
     {
       std::size_t delim = value.find("=");
       if (delim == std::string::npos) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: xmlns format missing \"=\"");
+        SRCMLlog(CRITICAL_MSG, "srcml: xmlns format missing \"=\"");
         exit(1); //ERROR CODE TBD
       }
 
@@ -503,12 +503,12 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             for (const auto& vals : option.value) {
               if (option.string_key == "element" && srcml_request.xpath_query_support.size() < 1) {
 
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: element option must follow an --xpath option");
+                SRCMLlog(CRITICAL_MSG, "srcml: element option must follow an --xpath option");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
               }
               if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() < 1) {
 
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: attribute option must follow an --xpath option");
+                SRCMLlog(CRITICAL_MSG, "srcml: attribute option must follow an --xpath option");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
               }
 
@@ -582,14 +582,14 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             continue;
           }
 
-          SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: prefix \"" + prefix + "\" assigned multiple URIs \"" + uri + "\", \"" + srcml_request.xmlns_namespaces[prefix] + "\"");
+          SRCMLlog(CRITICAL_MSG, "srcml: prefix \"" + prefix + "\" assigned multiple URIs \"" + uri + "\", \"" + srcml_request.xmlns_namespaces[prefix] + "\"");
           exit(1); // TODO Need a real error code
         }
 
     }
     // Unknown Option
     catch(boost::program_options::unknown_option& e) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(e.what()));
+        SRCMLlog(CRITICAL_MSG, "srcml: " + std::string(e.what()));
         exit(3);
     }
     // Missing Option Value
@@ -604,12 +604,12 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
                 option_help("");
         }
 
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + error_msg);
+        SRCMLlog(CRITICAL_MSG, "srcml: " + error_msg);
         exit(7);
     }
     // Catch all other issues with generic error
     catch(std::exception& e) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: " + std::string(e.what()));
+        SRCMLlog(CRITICAL_MSG, "srcml: " + std::string(e.what()));
         exit(1);
     }
 
@@ -639,7 +639,7 @@ std::pair<std::string, std::string> custom_parser(const std::string& s) {
 // Set to detect option conflicts
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
     if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Conflicting options '" + std::string(opt1) + "' and '" + std::string(opt2) + "'.");
+        SRCMLlog(CRITICAL_MSG, "srcml: Conflicting options '" + std::string(opt1) + "' and '" + std::string(opt2) + "'.");
         exit(15);
     }
 }
@@ -694,13 +694,13 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
 
   // Attribute must have a value
   if (attrib_equals == std::string::npos) {
-    SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: the attribute " + vals + "is missing a value");
+    SRCMLlog(CRITICAL_MSG, "srcml: the attribute " + vals + "is missing a value");
     exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 
   // Missing prefix requires an element with a prefix
   if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)) {
-    SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: the attribute " + vals + " is missing a prefix or an element with a prefix");
+    SRCMLlog(CRITICAL_MSG, "srcml: the attribute " + vals + " is missing a prefix or an element with a prefix");
     exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
 

@@ -29,14 +29,15 @@
 #include <srcml_cli.hpp>
 #include <srcml_options.hpp>
 
+enum { CRITICAL_MSG = 1<<4,
+       ERROR_MSG    = 1<<3,
+       WARNING_MSG  = 1<<2,
+       INFO_MSG     = 1<<1,
+       DEBUG_MSG    = 1<<0  
+};
+
 class SRCMLLogger {
 public:
-    // message type priorities
-    static const int CRITICAL_MSG = 1<<4;
-    static const int ERROR_MSG    = 1<<3;
-    static const int WARNING_MSG  = 1<<2;
-    static const int INFO_MSG     = 1<<1;
-    static const int DEBUG_MSG    = 1<<0;
 
     static bool errors() {
       return error_count > 0;
@@ -82,5 +83,10 @@ public:
   static int opts;
   static int error_count;
 };
+
+inline void SRCMLlog(int msg_type, const std::string& msg_text) {
+
+  SRCMLLogger::log(msg_type, msg_text);
+}
 
 #endif

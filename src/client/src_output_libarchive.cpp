@@ -47,7 +47,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
             newfilename += s;
             if (language_to_std_extension(srcml_unit_get_language(unit)) != "")
                 newfilename += language_to_std_extension(srcml_unit_get_language(unit));
-            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "A srcML unit without a filename saved as " + newfilename);
+            SRCMLlog(WARNING_MSG, "A srcML unit without a filename saved as " + newfilename);
         }
 
         // setup the entry header
@@ -77,7 +77,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         // write the data into the archive
         arch_status = archive_write_data(src_archive, buffer, (size_t) buffer_size);
         if (arch_status == -1 /* || arch_status != buffer_size */) {
-            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "Unable to save " + newfilename + " to source archive");
+            SRCMLlog(WARNING_MSG, "Unable to save " + newfilename + " to source archive");
             break;
         }
 

@@ -109,13 +109,13 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, srcml_output_dest
         if (isarchive)
             log << '-' << (request->filename ? *request->filename : "");
         else
-            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "Extension not supported");
+            SRCMLlog(WARNING_MSG, "Extension not supported");
 
     } else if (request->errormsg) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, *(request->errormsg));
+        SRCMLlog(WARNING_MSG, *(request->errormsg));
 
     } else {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "Internal eror " + std::to_string(request->status));
+        SRCMLlog(WARNING_MSG, "Internal eror " + std::to_string(request->status));
     }
 
     // free the unit

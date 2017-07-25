@@ -147,7 +147,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         request->errormsg = "srcml: Unable to open file " + original_filename;
 
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open file " + original_filename);
+        SRCMLlog(WARNING_MSG, "srcml: Unable to open file " + original_filename);
 
 //        if (unit)
 //            srcml_unit_free(unit);

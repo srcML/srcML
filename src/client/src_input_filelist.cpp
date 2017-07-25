@@ -47,19 +47,19 @@ int src_input_filelist(ParseQueue& queue,
         return 1;
     }
     if (status != ARCHIVE_OK) {
-    	SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Invalid filelist " + input_file);
+    	SRCMLlog(CRITICAL_MSG, "srcml: Invalid filelist " + input_file);
         return 1;
     }
 
     // ARE THE LAST TWO NECESSARY?
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
-        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: filelist requires a non-directory file format");
+        SRCMLlog(INFO_MSG, "srcml: filelist requires a non-directory file format");
     	return 1;
     }
 
     if (strcmp(archive_entry_pathname(entry), "data") != 0) {
-        SRCMLLogger::log(SRCMLLogger::INFO_MSG, "srcml: filelist requires a non-archived file format");
+        SRCMLlog(INFO_MSG, "srcml: filelist requires a non-archived file format");
     	return 1;
     }
 

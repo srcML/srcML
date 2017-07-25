@@ -58,11 +58,11 @@ int src_input_stdin() {
     int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
     if (selectRetVal == -1) {
 
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "SELECT FAILED!");
+        SRCMLlog(WARNING_MSG, "SELECT FAILED!");
         return false;
     }
     if (selectRetVal == 0) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "NO DATA TO FETCH!");
+        SRCMLlog(WARNING_MSG, "NO DATA TO FETCH!");
         return false;
     }
     

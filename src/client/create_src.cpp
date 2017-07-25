@@ -78,7 +78,7 @@ public:
             status = srcml_archive_read_open(arch, input_source);
         }
         if (status != SRCML_STATUS_OK) {
-            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(input_source.filename));
+            SRCMLlog(WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(input_source.filename));
             throw status;
         }
     }
@@ -129,7 +129,7 @@ void create_src(const srcml_request_t& srcml_request,
             // read the current unit
             srcml_unit* unit = srcml_archive_read_unit_header(arch);
             if (!unit) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
+                SRCMLlog(CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
                 exit(4);
             }
 
@@ -231,7 +231,7 @@ void create_src(const srcml_request_t& srcml_request,
             while (srcml_unit* unit = srcml_archive_read_unit_header(arch)) {
 
                 if (srcml_request.unit && !unit) {
-                    SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
+                    SRCMLlog(CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
                     exit(4);
                 }
 
@@ -269,7 +269,7 @@ void create_src(const srcml_request_t& srcml_request,
             srcml_unit* unit = srcml_archive_read_unit_header(arch);
 
             if (!unit) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
+                SRCMLlog(CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
                 exit(4);
             }
 
@@ -280,7 +280,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             int status = srcml_unit_unparse_filename(unit, destination.c_str(), 0);
             if (status) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: unable to open output file " + destination.resource);
+                SRCMLlog(CRITICAL_MSG, "srcml: unable to open output file " + destination.resource);
                 exit(4);
             }
 
@@ -290,7 +290,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // srcml->src extract to libarchive file
             if (destination.archives.size() == 0) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: source output requires an archive format (tar, zip, etc.)");
+                SRCMLlog(CRITICAL_MSG, "srcml: source output requires an archive format (tar, zip, etc.)");
                 exit(1); //TODO: Need an error code
             }
 
@@ -311,7 +311,7 @@ void create_src(const srcml_request_t& srcml_request,
                 status = archive_write_open_filename(ar, destination.resource.c_str());
             }
             if (status != ARCHIVE_OK) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, std::to_string(status));
+                SRCMLlog(CRITICAL_MSG, std::to_string(status));
                 exit(1);
             }
 
@@ -333,7 +333,7 @@ void create_src(const srcml_request_t& srcml_request,
         }
 
     } catch (srcMLReadArchiveError e) {
-        SRCMLLogger::log(SRCMLLogger::ERROR_MSG, "Error " + std::to_string(e.status) + " with " + e.errmsg);
+        SRCMLlog(ERROR_MSG, "Error " + std::to_string(e.status) + " with " + e.errmsg);
     } catch (...) {
         exit(1);
     }

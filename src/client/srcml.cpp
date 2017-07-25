@@ -93,7 +93,7 @@ int main(int argc, char * argv[]) {
     }
 
     if (srcml_request.command & SRCML_DEBUG_MODE)
-        SRCMLLogger::log(SRCMLLogger::DEBUG_MSG,
+        SRCMLlog(DEBUG_MSG,
                          std::string("Library Versions:\n") +
                          "libsrcml " + srcml_version_string() + "\n" +
                          "srcml " + srcml_version_string() + "\n" +
@@ -112,7 +112,7 @@ int main(int argc, char * argv[]) {
         // stdin accessed as FILE*
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
         if (!pstdin->fileptr) {
-            SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Unable to open stdin");
+            SRCMLlog(CRITICAL_MSG, "srcml: Unable to open stdin");
             exit(1);
         }
         pstdin->fd = boost::none;
@@ -160,14 +160,14 @@ int main(int argc, char * argv[]) {
 #if ARCHIVE_VERSION_NUMBER > 3001002
         pipeline.push_back(compress_srcml);
 #else
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Unsupported output compression");
+        SRCMLlog(CRITICAL_MSG, "srcml: Unsupported output compression");
         exit(1);
 #endif
     }
 
     // should always have something to do
     if (pipeline.empty()) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Internal error, cannot decide what processing needed");
+        SRCMLlog(CRITICAL_MSG, "srcml: Internal error, cannot decide what processing needed");
         exit(1);
     }
 
@@ -176,8 +176,8 @@ int main(int argc, char * argv[]) {
 
     srcml_cleanup_globals();
 
-    SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "CPU Time: " + std::to_string(runtime.cpu_time_elapsed()) + "ms");
-    SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "Real Time: " + std::to_string(runtime.real_world_elapsed()) + "ms");
+    SRCMLlog(DEBUG_MSG, "CPU Time: " + std::to_string(runtime.cpu_time_elapsed()) + "ms");
+    SRCMLlog(DEBUG_MSG, "Real Time: " + std::to_string(runtime.real_world_elapsed()) + "ms");
 
     // error status is 0 unless a critical, error, or warning
     return SRCMLLogger::errors() ? 1 : 0;
