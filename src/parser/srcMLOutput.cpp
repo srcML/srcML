@@ -338,11 +338,11 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SALIGNAS,                     { "alignas",            SRC,      0,         0, nullptr }},
     { SALIGNOF,                     { "alignof",            SRC,      0,         0, nullptr }},
     { STYPEID,                      { "typeid",             SRC,      0,         0, nullptr }},
-    { SSIZEOF_PACK,                 { "sizeof",             SRC, "type", "pack", nullptr }},
-    { SENUM_CLASS,                  { "enum",               SRC, "type", "class", nullptr }},
-    { SENUM_CLASS_DECLARATION,      { "enum_decl",          SRC, "type", "class", nullptr }},
-    { SOPERATOR_FUNCTION,           { "function",           SRC, "type", "operator", nullptr }},
-    { SOPERATOR_FUNCTION_DECL,      { "function_decl",      SRC, "type", "operator", nullptr }},
+    { SSIZEOF_PACK,                 { "sizeof",             SRC, "type",    "pack", nullptr }},
+    { SENUM_CLASS,                  { "enum",               SRC, "type",   "class", nullptr }},
+    { SENUM_CLASS_DECLARATION,      { "enum_decl",          SRC, "type",   "class", nullptr }},
+    { SOPERATOR_FUNCTION,           { "function",           SRC, "type","operator", nullptr }},
+    { SOPERATOR_FUNCTION_DECL,      { "function_decl",      SRC, "type","operator", nullptr }},
     { SREF_QUALIFIER,               { "ref_qualifier",      SRC,      0,         0, nullptr }},
 
     // Objective-C
@@ -551,7 +551,7 @@ void srcMLOutput::close() {
  *
  * Start output of element s in writer xout.
  */
-void srcMLOutput::srcMLTextWriterStartElement(xmlTextWriter* xout, const xmlChar* s) {
+inline void srcMLOutput::srcMLTextWriterStartElement(xmlTextWriter* xout, const xmlChar* s) {
 
     xmlTextWriterStartElement(xout, s);
     ++openelementcount;
