@@ -27,7 +27,6 @@
 #ifndef SRCMLOUTPUT_HPP
 #define SRCMLOUTPUT_HPP
 
-#include <iostream>
 #include "antlr/Token.hpp"
 #include "srcMLParserTokenTypes.hpp"
 #include <antlr/TokenStream.hpp>
