@@ -55,11 +55,10 @@ struct Element {
 /**
  * srcMLOutput
  *
- * Class for outputting of srcML. Consumes produced tokens.
+ * Class for output of srcML. Consumes produced tokens.
  * progressively running the srcML parser and consuming tokens i.e. like a pull parser.
  */
 class srcMLOutput : public srcMLParserTokenTypes {
-
 public:
     // constructor
     srcMLOutput(TokenStream* ints,
@@ -108,11 +107,12 @@ public:
     void processTextPosition(const antlr::RefToken& token);
     void processTextPositionLine(const antlr::RefToken& token);
 
-
+private:
     int last_line = 0;
     int last_line2 = 0;
     int last_column = 0;
     bool end_position_output = false;
+public:
 
     void outputPosition();
 
@@ -127,7 +127,7 @@ public:
     xmlTextWriter* xout = nullptr;
     
     /** output buffer */
-    xmlOutputBuffer * output_buffer;
+    xmlOutputBuffer* output_buffer;
 
     /** unit attribute language */
     const char* unit_language;
