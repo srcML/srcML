@@ -189,12 +189,6 @@ public:
     /** number of open elements */
     int openelementcount;
 
-    /** current line @todo is this used */
-    int curline;
-
-    /** current column @todo is this used */
-    int curcolumn;
-
     /** the tabstop size */
     size_t tabsize;
 
