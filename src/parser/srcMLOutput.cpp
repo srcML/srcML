@@ -977,7 +977,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
  *
  * Callback to process/output text.
  */
-void srcMLOutput::processText(const std::string& str) {
+inline void srcMLOutput::processText(const std::string& str) {
 
     xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
 }
@@ -1000,7 +1000,7 @@ void srcMLOutput::processText(const char* s, int size) {
  *
  * Callback to process/output token as text.
  */
-void srcMLOutput::processText(const antlr::RefToken& token) {
+inline void srcMLOutput::processText(const antlr::RefToken& token) {
 
     processText(token->getText());
 }
@@ -1055,14 +1055,12 @@ inline void srcMLOutput::processToken(const antlr::RefToken& token, const char* 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2) {
 
-    if (name[0] == 0)
-        return;
-
     if (isstart(token) || isempty(token)) {
         if (prefix[0] == 0)
             xmlTextWriterStartElement(xout, BAD_CAST name);
-        else
+        else {
             xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST name, 0);
+        }
         ++openelementcount;
 
         if (attr_name1)
@@ -1070,7 +1068,6 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 
         if (attr_name2)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
-
     } 
 
     if (!isstart(token) || isempty(token)) {
