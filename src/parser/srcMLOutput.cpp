@@ -1055,6 +1055,9 @@ inline void srcMLOutput::processToken(const antlr::RefToken& token, const char* 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2) {
 
+	if (name[0] == 0)
+		return;
+	
     if (isstart(token) || isempty(token)) {
         if (prefix[0] == 0)
             xmlTextWriterStartElement(xout, BAD_CAST name);
