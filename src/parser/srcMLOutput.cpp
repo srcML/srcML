@@ -1109,10 +1109,7 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
     auto search = process.find(token->getType());
     if (search != process.end() && search->second.name) {
         const Element& eparts = search->second;
-
-        auto f = eparts.process;
-
-        if (f)
+        if (eparts.process)
             eparts.process(this, token, eparts.name, num2prefix[eparts.prefix].c_str());
         else
             processToken(token, eparts.name, num2prefix[eparts.prefix].c_str(), eparts.attr_name, eparts.attr_value);
