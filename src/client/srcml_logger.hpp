@@ -114,30 +114,6 @@ inline SRCMLLogger SRCMLlog(int msg_type) {
 inline void SRCMLlog(int msg_type, const std::string& msg_text) {
 
   SRCMLLogger::log(msg_type, msg_text);
-
-  return SRCMLLogger();
-}
-
-template<typename T, typename... Args>
-inline SRCMLLogger SRCMLlog(int msg_type, const std::string& format, T value, Args... args) {
-
-  // replace the first argument in the format with the value
-  // note: Ignoring the format type
-  std::ostringstream msg_text;
-  const char* s = format.c_str();
-  while (s && *s) {
-    if (*s == '%' && *++s != '%') {
-      msg_text << value;
-      ++s;
-      break;
-    }
-
-    msg_text << *s++;
-  }
-  msg_text << s;
-
-  // handle the rest of the arguments
-  return SRCMLlog(msg_type, msg_text.str().c_str(), args...);
 }
 
 template<typename T, typename... Args>
