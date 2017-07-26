@@ -96,7 +96,7 @@ int main(int argc, char * argv[]) {
     }
 
     if (srcml_request.command & SRCML_DEBUG_MODE) {
-        SRCMLlog(DEBUG_MSG) << "Library Versions: " << srcml_version_string() << '\n'
+        SRCMLlog(DEBUG_MSG) << "Library Versions: " << '\n'
                             << "libsrcml " << srcml_version_string() << '\n'
                             << "srcml " << srcml_version_string() << '\n'
                             <<  archive_version_string() << '\n'
