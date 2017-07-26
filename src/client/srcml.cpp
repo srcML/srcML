@@ -77,8 +77,8 @@ See `srcml --help` for more information.
 }
 
 int main(int argc, char * argv[]) {
+
     Timer runtime = Timer();
-    runtime.start();
 
     // parse the command line
     auto srcml_request = parseCLI(argc, argv);
