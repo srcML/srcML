@@ -79,6 +79,10 @@ public:
 
     static void log(int msg_type, const std::string& msg_text) {
 
+      // Only print debug messages if the debug mode is enabled
+      if ((msg_type == DEBUG_MSG) && !(srcmlOption(SRCML_DEBUG_MODE)))
+        return;
+
       startlog(msg_type);
 
       std::cerr << msg_text << "\n";
