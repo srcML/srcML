@@ -43,7 +43,7 @@ public:
       return error_count > 0;
     }
 
-    static void log(int msg_type, const std::string& msg_text) {
+    static void startlog(int msg_type) {
 
       if ((msg_type == CRITICAL_MSG) || (msg_type == ERROR_MSG) || (msg_type == WARNING_MSG))
         ++error_count;
@@ -75,6 +75,11 @@ public:
       default:
         break;
       }
+    }
+
+    static void log(int msg_type, const std::string& msg_text) {
+
+      startlog(msg_type);
 
       std::cerr << msg_text << "\n";
     }
@@ -84,16 +89,33 @@ public:
   static int error_count;
 };
 
+template <typename T>
+inline SRCMLLogger operator<<(SRCMLLogger status, T value) {
+
+  std::cerr << value;
+
+  return status;
+}
+
 // convenience functions for logging
 // allows for a format string with multiple types of arguments
 
-inline void SRCMLlog(int msg_type, const std::string& msg_text) {
+inline SRCMLLogger SRCMLlog(int msg_type) {
+
+  SRCMLLogger::startlog(msg_type);
+
+  return SRCMLLogger();
+}
+
+inline SRCMLLogger SRCMLlog(int msg_type, const std::string& msg_text) {
 
   SRCMLLogger::log(msg_type, msg_text);
+
+  return SRCMLLogger();
 }
 
 template<typename T, typename... Args>
-inline void SRCMLlog(int msg_type, const std::string& format, T value, Args... args) {
+inline SRCMLLogger SRCMLlog(int msg_type, const std::string& format, T value, Args... args) {
 
   // replace the first argument in the format with the value
   // note: Ignoring the format type
@@ -111,7 +133,7 @@ inline void SRCMLlog(int msg_type, const std::string& format, T value, Args... a
   msg_text << s;
 
   // handle the rest of the arguments
-  SRCMLlog(msg_type, msg_text.str().c_str(), args...);
+  return SRCMLlog(msg_type, msg_text.str().c_str(), args...);
 }
 
 #endif
