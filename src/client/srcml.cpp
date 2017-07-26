@@ -42,11 +42,11 @@
 
 // decide if each step is needed
 namespace {
-    bool request_create_srcml          (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-    bool request_transform_srcml       (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-    bool request_display_metadata      (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-    bool request_additional_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-    bool request_create_src            (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_create_srcml      (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_transform_srcml   (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_display_metadata  (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_output_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_create_src        (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 };
 
 // stdin timeout message
@@ -155,7 +155,7 @@ int main(int argc, char * argv[]) {
     }
 
     // step (srcml|src)->compressed
-    if (request_additional_compression(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
+    if (request_output_compression(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
         pipeline.push_back(compress_srcml);
@@ -189,6 +189,13 @@ int main(int argc, char * argv[]) {
 
 namespace {
 
+    /*
+        Create srcML
+
+        * One of the input sources is source code
+        * More than one input, and the destination is srcML
+        * One input, a specific unit, and the output is srcML
+    */
     bool request_create_srcml(const srcml_request_t& /* srcml_request */, 
                               const srcml_input_t& input_sources,
                               const srcml_output_dest& destination) {
@@ -198,6 +205,11 @@ namespace {
         (input_sources.size() == 1 && input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
     }
 
+    /*
+        Transform srcml
+
+        * Transformations requested
+    */
     bool request_transform_srcml(const srcml_request_t& srcml_request,
                                  const srcml_input_t& /* input_sources */,
                                  const srcml_output_dest& /* destination */) {
@@ -205,6 +217,12 @@ namespace {
         return !srcml_request.transformations.empty();
     }
 
+    /*
+        Extract out of srcML
+
+        * ?
+        * 
+    */
     bool request_display_metadata(const srcml_request_t& srcml_request,
                                   const srcml_input_t& /* input_sources */,
                                   const srcml_output_dest& /* destination */) {
@@ -212,19 +230,30 @@ namespace {
         return (option(SRCML_COMMAND_INSRCML) || srcml_request.xmlns_prefix_query || srcml_request.pretty_format);
     }
 
-    bool request_additional_compression(const srcml_request_t& /* srcml_request */,
+    /*
+        Output is compressed
+
+        * Format of output includes compression
+    */
+    bool request_output_compression(const srcml_request_t& /* srcml_request */,
                                         const srcml_input_t& /* input_sources */,
                                         const srcml_output_dest& destination) {
 
         return destination.compressions.size() >= 1;
     }
 
+    /*
+        Creating source code
+
+        * Specific option for source output
+        * The destination is not a srcML file and we are not creating srcML, asking for metadata, or performing a transformation
+    */
     bool request_create_src(const srcml_request_t& srcml_request,
                             const srcml_input_t& input_sources,
                             const srcml_output_dest& destination) {
 
-        return (option(SRCML_COMMAND_SRC) || (!request_create_srcml(srcml_request, input_sources, destination) &&
-            destination.state != SRCML &&
+        return (option(SRCML_COMMAND_SRC) || (destination.state != SRCML &&
+            !request_create_srcml(srcml_request, input_sources, destination) &&
             !request_display_metadata(srcml_request, input_sources, destination) &&
             !request_transform_srcml(srcml_request, input_sources, destination)));
     }
