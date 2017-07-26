@@ -101,7 +101,7 @@ void create_src(const srcml_request_t& srcml_request,
 
     try {
 
-        if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
+        if (option(SRCML_COMMAND_TO_DIRECTORY)) {
 
             // srcml->src extract all archives to the filesystem
 
@@ -113,7 +113,7 @@ void create_src(const srcml_request_t& srcml_request,
                 src_output_filesystem(arch, destination, log);
             }
 
-        } else if (input_sources.size() == 1 && (srcml_request.command & SRCML_COMMAND_XML)) {
+        } else if (input_sources.size() == 1 && option(SRCML_COMMAND_XML)) {
 
             // srcml->src extract individual unit in XML
 

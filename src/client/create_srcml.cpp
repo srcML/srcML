@@ -23,6 +23,7 @@
 #include <functional>
 #include <create_srcml.hpp>
 #include <srcml.h>
+#include <srcml_options.hpp>
 #include <parse_queue.hpp>
 #include <write_queue.hpp>
 #include <srcml_consume.hpp>
@@ -211,7 +212,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     // setup the parsing queue
     TraceLog log;
     log.header();
-    WriteQueue write_queue(std::bind(srcml_write_request, std::placeholders::_1, std::ref(log), destination), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
+    WriteQueue write_queue(std::bind(srcml_write_request, std::placeholders::_1, std::ref(log), destination), option(SRCML_COMMAND_OUTPUT_ORDERED));
     ParseQueue parse_queue(srcml_request.max_threads, std::bind(srcml_consume, std::placeholders::_1, &write_queue), write_queue);
 
     // process input sources
