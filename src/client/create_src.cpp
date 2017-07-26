@@ -25,7 +25,6 @@
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
 #include <src_prefix.hpp>
-#include <srcml_options.hpp>
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
 #include <input_file.hpp>
@@ -106,7 +105,7 @@ void create_src(const srcml_request_t& srcml_request,
 
             // srcml->src extract all archives to the filesystem
 
-            TraceLog log(SRCMLOptions::get());
+            TraceLog log;
 
             for (const auto& input_source : input_sources) {
                 srcMLReadArchive arch(input_source, srcml_request.revision);

@@ -22,11 +22,12 @@
 
 #include <TraceLog.hpp>
 #include <srcml_cli.hpp>
+#include <srcml_options.hpp>
 #include <iomanip>
 #include <iostream>
 
-TraceLog::TraceLog(int options)
-    : enabled(options & SRCML_COMMAND_VERBOSE) {
+TraceLog::TraceLog()
+    : enabled(SRCMLOptions::get() & SRCML_COMMAND_VERBOSE) {
 }
 
 void TraceLog::header() {

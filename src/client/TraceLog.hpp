@@ -28,7 +28,7 @@
 
 class TraceLog {
 public:
-    TraceLog(int options);
+    TraceLog();
 
     friend TraceLog& operator<<(TraceLog& tlog, char c);
     friend TraceLog& operator<<(TraceLog& tlog, const std::string& s);
