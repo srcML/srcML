@@ -27,9 +27,6 @@
 #include <mutex>
 #include <condition_variable>
 
-// global request
-extern srcml_request_t global_srcml_request;
-
 namespace {
 
     bool go = false;

@@ -48,9 +48,6 @@ namespace {
     bool request_create_src            (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 };
 
-// global request
-srcml_request_t global_srcml_request;
-
 // stdin timeout message
 void timeout(int) {
 
@@ -82,7 +79,6 @@ int main(int argc, char * argv[]) {
 
     // parse the command line
     auto srcml_request = parseCLI(argc, argv);
-    global_srcml_request = srcml_request;
 
     // global access to options
     SRCMLOptions::set(srcml_request.command);
