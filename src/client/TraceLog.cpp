@@ -26,6 +26,8 @@
 #include <iomanip>
 #include <iostream>
 
+long TraceLog::loc = 0;
+
 TraceLog::TraceLog()
     : enabled(option(SRCML_COMMAND_VERBOSE)) {
 }

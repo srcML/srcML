@@ -38,6 +38,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <csignal>
+#include <TraceLog.hpp>
 
 // decide if each step is needed
 namespace {
@@ -175,8 +176,10 @@ int main(int argc, char * argv[]) {
 
     srcml_cleanup_globals();
 
+
     SRCMLlog(DEBUG_MSG, "CPU Time: %l ms", runtime.cpu_time_elapsed());
     SRCMLlog(DEBUG_MSG, "Real Time: %l ms", runtime.real_world_elapsed());
+    SRCMLlog(DEBUG_MSG, "LOC: %l", TraceLog::totalLOC());
 
     // error status is 0 unless a critical, error, or warning
     return SRCMLLogger::errors() ? 1 : 0;

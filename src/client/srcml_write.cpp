@@ -66,6 +66,8 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, srcml_output_dest
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
+        log.totalLOC(request->loc);
+
         // we don't create the output srcml archive until we are going to write to it
         // Why? Well if we did, then we get an empty srcml archive, and that is not
         // what we want if there were errors along the way
