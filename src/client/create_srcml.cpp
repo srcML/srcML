@@ -135,22 +135,24 @@ void create_srcml(const srcml_request_t& srcml_request,
     // set options for the output srcml archive
     if (srcml_request.att_xml_encoding) {
         if (srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml: invalid xml encoding for srcml archive");
+            // while stored as an attribute, xml encoding is an XML attribute, not a srcML attribute
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid xml encoding '%s'for srcml archive", *srcml_request.att_xml_encoding);
             exit(1);
         }
     }
 
     if (srcml_request.src_encoding) {
         if (srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml: invalid source encoding for srcml archive");
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid source encoding '%s' for srcml archive", *srcml_request.src_encoding);
             exit(1);
         }
     }
 
-    // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
+    // for single input src archives (e.g., .tar), url attribute is the source url (if not already given)
     if (srcml_request.att_url) {
-        if (srcml_archive_set_url(srcml_arch, src_prefix_resource(*srcml_request.att_url).c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml: invalid XXX for srcml archive");
+        std::string url = src_prefix_resource(*srcml_request.att_url);
+        if (srcml_archive_set_url(srcml_arch, url.c_str()) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid url attribute value '%s' for srcml archive", url);
             exit(1);
         }
     } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
@@ -162,20 +164,20 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
         
         if (srcml_archive_set_url(srcml_arch, url_name.c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml: invalid XXX for srcml archive");
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid url '%s' for srcml archive", url_name);
             exit(1);
         }
     }
 
     if (srcml_request.att_version)
         if (srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml: invalid XXX for srcml archive");
-        exit(1);
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid version attribute value for srcml archive");
+            exit(1);
         }
 
     if (srcml_request.markup_options)
         if (srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options) != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml: invalid XXX for srcml archive");
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid options for srcml archive");
             exit(1);
         }
 
