@@ -39,11 +39,14 @@
 #include <unistd.h>
 #include <csignal>
 
-bool request_create_srcml          (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_transform_srcml       (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_display_metadata      (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_additional_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_create_src            (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+// logic for each stage to decide if needed
+namespace {
+    bool request_create_srcml          (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_transform_srcml       (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_display_metadata      (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_additional_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_create_src            (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+};
 
 // global request
 srcml_request_t global_srcml_request;
@@ -183,43 +186,46 @@ int main(int argc, char * argv[]) {
     return SRCMLLogger::errors() ? 1 : 0;
 }
 
-bool request_create_srcml(const srcml_request_t& srcml_request,
-                          const srcml_input_t& input_sources,
-                          const srcml_output_dest& destination) {
+namespace {
 
-    return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
+    bool request_create_srcml(const srcml_request_t& srcml_request,
+      const srcml_input_t& input_sources,
+      const srcml_output_dest& destination) {
+
+        return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
         (input_sources.size() > 1 && destination.state == SRCML) ||
         (input_sources.size() == 1 && input_sources[0].unit >= 0 && (srcml_request.command & SRCML_COMMAND_XML));
-}
+    }
 
-bool request_transform_srcml(const srcml_request_t& srcml_request,
+    bool request_transform_srcml(const srcml_request_t& srcml_request,
                              const srcml_input_t& /* input_sources */,
                              const srcml_output_dest& /* destination */) {
 
-    return !srcml_request.transformations.empty();
-}
+        return !srcml_request.transformations.empty();
+    }
 
-bool request_display_metadata(const srcml_request_t& srcml_request,
+    bool request_display_metadata(const srcml_request_t& srcml_request,
                               const srcml_input_t& /* input_sources */,
                               const srcml_output_dest& /* destination */) {
 
-    return (srcml_request.command & SRCML_COMMAND_INSRCML || srcml_request.xmlns_prefix_query || srcml_request.pretty_format);
-}
+        return (srcml_request.command & SRCML_COMMAND_INSRCML || srcml_request.xmlns_prefix_query || srcml_request.pretty_format);
+    }
 
-bool request_additional_compression(const srcml_request_t& /* srcml_request */,
-                                    const srcml_input_t& /* input_sources */,
-                                    const srcml_output_dest& destination) {
+    bool request_additional_compression(const srcml_request_t& /* srcml_request */,
+                                        const srcml_input_t& /* input_sources */,
+        const srcml_output_dest& destination) {
 
-    return (destination.compressions.size() >= 1) /* ||
-        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz")*/;
-}
+        return (destination.compressions.size() >= 1) /* ||
+            (destination.compressions.size() == 1 && destination.compressions.front() != ".gz")*/;
+    }
 
-bool request_create_src(const srcml_request_t& srcml_request,
-                        const srcml_input_t& input_sources,
-                        const srcml_output_dest& destination) {
+    bool request_create_src(const srcml_request_t& srcml_request,
+        const srcml_input_t& input_sources,
+        const srcml_output_dest& destination) {
 
-    return (srcml_request.command & SRCML_COMMAND_SRC) || (!request_create_srcml(srcml_request, input_sources, destination) &&
+        return (srcml_request.command & SRCML_COMMAND_SRC) || (!request_create_srcml(srcml_request, input_sources, destination) &&
             destination.state != SRCML &&
             !request_display_metadata(srcml_request, input_sources, destination) &&
             !request_transform_srcml(srcml_request, input_sources, destination));
-}
+    }
+};
