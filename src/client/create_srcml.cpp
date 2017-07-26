@@ -274,7 +274,6 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // wait for the parsing and writing queues to finish
     parse_queue.wait();
-    write_queue.wait();
 
     // send an EOS (End Of Stream) write request
     ParseRequest* eos = new ParseRequest();
@@ -282,8 +281,8 @@ void create_srcml(const srcml_request_t& srcml_request,
     eos->status = createdsrcml ? 2000 : 1000;
     write_queue.eos(eos);
 
-    log.report();
+    // wait for the write queue to completely finish
+    write_queue.wait();
 
-    if (status == 1)
-        exit(1);
+    log.report();
 }
