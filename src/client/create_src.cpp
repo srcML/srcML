@@ -25,7 +25,6 @@
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
 #include <src_prefix.hpp>
-#include <srcml_options.hpp>
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
 #include <input_file.hpp>
@@ -102,11 +101,11 @@ void create_src(const srcml_request_t& srcml_request,
 
     try {
 
-        if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
+        if (option(SRCML_COMMAND_TO_DIRECTORY)) {
 
             // srcml->src extract all archives to the filesystem
 
-            TraceLog log(SRCMLOptions::get());
+            TraceLog log;
 
             for (const auto& input_source : input_sources) {
                 srcMLReadArchive arch(input_source, srcml_request.revision);
@@ -114,7 +113,7 @@ void create_src(const srcml_request_t& srcml_request,
                 src_output_filesystem(arch, destination, log);
             }
 
-        } else if (input_sources.size() == 1 && (srcml_request.command & SRCML_COMMAND_XML)) {
+        } else if (input_sources.size() == 1 && option(SRCML_COMMAND_XML)) {
 
             // srcml->src extract individual unit in XML
 

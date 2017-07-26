@@ -113,7 +113,7 @@ int src_input_libarchive(ParseQueue& queue,
     // Note: may need to fix in libsrcml
     if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) | input_file.skip) {
         // if we are not verbose, then just end this attemp
-        if (!(srcmlOption(SRCML_COMMAND_VERBOSE))) {
+        if (!(option(SRCML_COMMAND_VERBOSE))) {
             return 0;
         }
 
@@ -199,7 +199,7 @@ int src_input_libarchive(ParseQueue& queue,
                 language = l;
 
         // if we don't have a language, and are not verbose, then just end this attemp
-        if (language.empty() && !(srcmlOption(SRCML_COMMAND_VERBOSE))) {
+        if (language.empty() && !(option(SRCML_COMMAND_VERBOSE))) {
             ++count;
             continue;
         }
@@ -207,7 +207,7 @@ int src_input_libarchive(ParseQueue& queue,
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
 
-        if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
+        if (option(SRCML_COMMAND_NOARCHIVE))
             prequest->disk_dir = srcml_request.output_filename;
 
         if (srcml_request.att_filename || (filename != "-"))
@@ -220,7 +220,7 @@ int src_input_libarchive(ParseQueue& queue,
         prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
         prequest->total_num_inputs = srcml_request.input_sources.size();
 
-        if (srcmlOption(SRCML_COMMAND_TIMESTAMP)) {
+        if (option(SRCML_COMMAND_TIMESTAMP)) {
 
             //Long time provided by libarchive needs to be time_t
             time_t mod_time(archive_entry_mtime(entry));

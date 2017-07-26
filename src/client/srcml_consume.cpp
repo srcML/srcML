@@ -46,7 +46,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     // NOTE: thread task cannot throw exception
 
     // global access to options
-    bool isseparatearchive = srcmlOption(SRCML_COMMAND_NOARCHIVE);
+    bool isseparatearchive = option(SRCML_COMMAND_NOARCHIVE);
 
     // a clone of the intended srcML archive is created
     // the only purpose is to allow files to be parsed, without opening

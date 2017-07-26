@@ -371,7 +371,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, con
         }
 	}
 
-    display_template(srcml_arch, output_template, ns_size, unit_num, srcml_request.command & SRCML_COMMAND_XML);
+    display_template(srcml_arch, output_template, ns_size, unit_num, option(SRCML_COMMAND_XML));
 
     return 0;
 }

@@ -69,7 +69,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, srcml_output_dest
         // we don't create the output srcml archive until we are going to write to it
         // Why? Well if we did, then we get an empty srcml archive, and that is not
         // what we want if there were errors along the way
-        if (!createdsrcml && !srcmlOption(SRCML_COMMAND_NOARCHIVE)) {
+        if (!createdsrcml && !option(SRCML_COMMAND_NOARCHIVE)) {
 
             int status = 0;
             if (contains<int>(destination)) {
@@ -123,7 +123,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, srcml_output_dest
         srcml_unit_free(request->unit);
 
         // close the archive (if per-unit)
-        if (srcmlOption(SRCML_COMMAND_NOARCHIVE)) {
+        if (option(SRCML_COMMAND_NOARCHIVE)) {
             srcml_archive_close(request->srcml_arch);
             srcml_archive_free(request->srcml_arch);
         }

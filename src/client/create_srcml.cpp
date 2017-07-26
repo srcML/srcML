@@ -23,6 +23,7 @@
 #include <functional>
 #include <create_srcml.hpp>
 #include <srcml.h>
+#include <srcml_options.hpp>
 #include <parse_queue.hpp>
 #include <write_queue.hpp>
 #include <srcml_consume.hpp>
@@ -36,13 +37,13 @@
 #include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
 #include <TraceLog.hpp>
-#include <srcml_options.hpp>
 #include <input_file.hpp>
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <input_archive.hpp>
+#include <srcml_logger.hpp>
 
 bool createdsrcml = false;
 
@@ -126,17 +127,34 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // create the output srcml archive
     srcml_archive* srcml_arch = srcml_archive_create();
+    if (!srcml_arch) {
+        SRCMLlog(CRITICAL_MSG, "srcml: allocation error for srcml archive");
+        exit(1);
+    }
 
     // set options for the output srcml archive
-    if (srcml_request.att_xml_encoding)
-        srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str());
+    if (srcml_request.att_xml_encoding) {
+        if (srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str()) != SRCML_STATUS_OK) {
+            // while stored as an attribute, xml encoding is an XML attribute, not a srcML attribute
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid xml encoding '%s'for srcml archive", *srcml_request.att_xml_encoding);
+            exit(1);
+        }
+    }
 
-    if (srcml_request.src_encoding)
-        srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
+    if (srcml_request.src_encoding) {
+        if (srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str()) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid source encoding '%s' for srcml archive", *srcml_request.src_encoding);
+            exit(1);
+        }
+    }
 
-    // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
+    // for single input src archives (e.g., .tar), url attribute is the source url (if not already given)
     if (srcml_request.att_url) {
-        srcml_archive_set_url(srcml_arch, src_prefix_resource(*srcml_request.att_url).c_str());
+        std::string url = src_prefix_resource(*srcml_request.att_url);
+        if (srcml_archive_set_url(srcml_arch, url.c_str()) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid url attribute value '%s' for srcml archive", url);
+            exit(1);
+        }
     } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
 
         // Cleanup filename
@@ -145,26 +163,38 @@ void create_srcml(const srcml_request_t& srcml_request,
             url_name.erase(0,1);
         }
         
-        srcml_archive_set_url(srcml_arch, url_name.c_str());
+        if (srcml_archive_set_url(srcml_arch, url_name.c_str()) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid url '%s' for srcml archive", url_name);
+            exit(1);
+        }
     }
 
     if (srcml_request.att_version)
-        srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str());
+        if (srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str()) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid version attribute value for srcml archive");
+            exit(1);
+        }
 
     if (srcml_request.markup_options)
-        srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
+        if (srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: invalid options for srcml archive");
+            exit(1);
+        }
 
     if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_XML_DECL);
     else
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_XML_DECL);
 
-    if (srcml_request.att_language)
-        srcml_archive_set_language(srcml_arch, srcml_request.att_language->c_str());
-    else
-        srcml_archive_set_language(srcml_arch, SRCML_LANGUAGE_NONE);
+    if (srcml_archive_set_language(srcml_arch, srcml_request.att_language ? srcml_request.att_language->c_str() : SRCML_LANGUAGE_NONE) != SRCML_STATUS_OK) {
+        SRCMLlog(CRITICAL_MSG, "srcml: invalid XXX for srcml archive");
+        exit(1);
+    }
 
-    srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
+    if (srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs) != SRCML_STATUS_OK) {
+        SRCMLlog(CRITICAL_MSG, "srcml: invalid tab stop for srcml archive");
+        exit(1);
+    }
 
     // non-archive when:
     //   only one input
@@ -210,9 +240,9 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // setup the parsing queue
-    TraceLog log(SRCMLOptions::get());
+    TraceLog log;
     log.header();
-    WriteQueue write_queue(std::bind(srcml_write_request, std::placeholders::_1, std::ref(log), destination), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
+    WriteQueue write_queue(std::bind(srcml_write_request, std::placeholders::_1, std::ref(log), destination), option(SRCML_COMMAND_OUTPUT_ORDERED));
     ParseQueue parse_queue(srcml_request.max_threads, std::bind(srcml_consume, std::placeholders::_1, &write_queue), write_queue);
 
     // process input sources

@@ -48,9 +48,6 @@ namespace {
     bool request_create_src            (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 };
 
-// global request
-srcml_request_t global_srcml_request;
-
 // stdin timeout message
 void timeout(int) {
 
@@ -77,18 +74,17 @@ See `srcml --help` for more information.
 }
 
 int main(int argc, char * argv[]) {
+
     Timer runtime = Timer();
-    runtime.start();
 
     // parse the command line
     auto srcml_request = parseCLI(argc, argv);
-    global_srcml_request = srcml_request;
 
     // global access to options
     SRCMLOptions::set(srcml_request.command);
 
     // version
-    if (srcml_request.command & SRCML_COMMAND_VERSION) {
+    if (option(SRCML_COMMAND_VERSION)) {
         std::cout << "libsrcml " << srcml_version_string() << '\n'
                   << "srcml " << srcml_version_string() << '\n'
                   << archive_version_string() << '\n';
@@ -188,13 +184,13 @@ int main(int argc, char * argv[]) {
 
 namespace {
 
-    bool request_create_srcml(const srcml_request_t& srcml_request, 
+    bool request_create_srcml(const srcml_request_t& /* srcml_request */, 
                               const srcml_input_t& input_sources,
                               const srcml_output_dest& destination) {
 
         return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
         (input_sources.size() > 1 && destination.state == SRCML) ||
-        (input_sources.size() == 1 && input_sources[0].unit >= 0 && (srcml_request.command & SRCML_COMMAND_XML));
+        (input_sources.size() == 1 && input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
     }
 
     bool request_transform_srcml(const srcml_request_t& srcml_request,
@@ -208,7 +204,7 @@ namespace {
                                   const srcml_input_t& /* input_sources */,
                                   const srcml_output_dest& /* destination */) {
 
-        return (srcml_request.command & SRCML_COMMAND_INSRCML || srcml_request.xmlns_prefix_query || srcml_request.pretty_format);
+        return (option(SRCML_COMMAND_INSRCML) || srcml_request.xmlns_prefix_query || srcml_request.pretty_format);
     }
 
     bool request_additional_compression(const srcml_request_t& /* srcml_request */,
@@ -222,9 +218,9 @@ namespace {
                             const srcml_input_t& input_sources,
                             const srcml_output_dest& destination) {
 
-        return (srcml_request.command & SRCML_COMMAND_SRC) || (!request_create_srcml(srcml_request, input_sources, destination) &&
+        return (option(SRCML_COMMAND_SRC) || (!request_create_srcml(srcml_request, input_sources, destination) &&
             destination.state != SRCML &&
             !request_display_metadata(srcml_request, input_sources, destination) &&
-            !request_transform_srcml(srcml_request, input_sources, destination));
+            !request_transform_srcml(srcml_request, input_sources, destination)));
     }
 };
