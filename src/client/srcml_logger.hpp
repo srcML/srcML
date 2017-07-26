@@ -49,11 +49,11 @@ public:
         ++error_count;
 
       // Only print debug messages if the debug mode is enabled
-      if ((msg_type == DEBUG_MSG) && !(srcmlOption(SRCML_DEBUG_MODE)))
+      if ((msg_type == DEBUG_MSG) && !(option(SRCML_DEBUG_MODE)))
         return;
 
       // If we are in quiet mode only output a message that results in an exit
-      if (srcmlOption(SRCML_COMMAND_QUIET) && !(msg_type == CRITICAL_MSG))
+      if (option(SRCML_COMMAND_QUIET) && !(msg_type == CRITICAL_MSG))
         return;
 
       switch (msg_type) {

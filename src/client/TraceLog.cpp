@@ -27,7 +27,7 @@
 #include <iostream>
 
 TraceLog::TraceLog()
-    : enabled(SRCMLOptions::get() & SRCML_COMMAND_VERBOSE) {
+    : enabled(option(SRCML_COMMAND_VERBOSE)) {
 }
 
 void TraceLog::header() {

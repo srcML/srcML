@@ -30,7 +30,7 @@ int src_input_file(ParseQueue& queue,
                     const srcml_request_t& srcml_request,
                     const srcml_input_src& input) {
 
-    if (srcmlOption(SRCML_COMMAND_VERBOSE)) {
+    if (option(SRCML_COMMAND_VERBOSE)) {
         return src_input_libarchive(queue, srcml_arch, srcml_request, input);
     }
 
