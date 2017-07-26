@@ -43,17 +43,17 @@ public:
       return error_count > 0;
     }
 
-    static void log(int msg_type, const std::string& msg_text) {
+    static void startlog(int msg_type) {
 
       if ((msg_type == CRITICAL_MSG) || (msg_type == ERROR_MSG) || (msg_type == WARNING_MSG))
         ++error_count;
 
       // Only print debug messages if the debug mode is enabled
-      if ((msg_type == DEBUG_MSG) && !(option(SRCML_DEBUG_MODE)))
+      if ((msg_type == DEBUG_MSG) && !(srcmlOption(SRCML_DEBUG_MODE)))
         return;
 
       // If we are in quiet mode only output a message that results in an exit
-      if (option(SRCML_COMMAND_QUIET) && !(msg_type == CRITICAL_MSG))
+      if (srcmlOption(SRCML_COMMAND_QUIET) && !(msg_type == CRITICAL_MSG))
         return;
 
       switch (msg_type) {
@@ -75,6 +75,15 @@ public:
       default:
         break;
       }
+    }
+
+    static void log(int msg_type, const std::string& msg_text) {
+
+      // Only print debug messages if the debug mode is enabled
+      if ((msg_type == DEBUG_MSG) && !(srcmlOption(SRCML_DEBUG_MODE)))
+        return;
+
+      startlog(msg_type);
 
       std::cerr << msg_text << "\n";
     }
@@ -84,9 +93,49 @@ public:
   static int error_count;
 };
 
+template <typename T>
+inline SRCMLLogger operator<<(SRCMLLogger status, T value) {
+
+  std::cerr << value;
+
+  return status;
+}
+
+// convenience functions for logging
+// allows for a format string with multiple types of arguments
+
+inline SRCMLLogger SRCMLlog(int msg_type) {
+
+  SRCMLLogger::startlog(msg_type);
+
+  return SRCMLLogger();
+}
+
 inline void SRCMLlog(int msg_type, const std::string& msg_text) {
 
   SRCMLLogger::log(msg_type, msg_text);
+}
+
+template<typename T, typename... Args>
+inline void SRCMLlog(int msg_type, const std::string& format, T value, Args... args) {
+
+  // replace the first argument in the format with the value
+  // note: Ignoring the format type
+  std::ostringstream msg_text;
+  const char* s = format.c_str();
+  while (s && *s) {
+    if (*s == '%' && *++s != '%') {
+      msg_text << value;
+      ++s;
+      break;
+    }
+
+    msg_text << *s++;
+  }
+  msg_text << s;
+
+  // handle the rest of the arguments
+  SRCMLlog(msg_type, msg_text.str(), args...);
 }
 
 #endif
