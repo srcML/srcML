@@ -30,49 +30,43 @@
 #include <iomanip>
 #include <cstring>
 
+namespace {
+
+    const char* value(const char* call) {
+        if (call)
+            return call;
+        else
+            return "";
+    }
+};
+
 // display all files in srcml archive
 void srcml_list(srcml_archive* srcml_arch) {
 
     std::cout << "Source encoding: ";
-
     const char* src_encoding = srcml_archive_get_src_encoding(srcml_arch);
-
-    if (src_encoding) {
-        std::cout << src_encoding;
-    }
-    else {
-        std::cout << "(null)";
-    }
-
-    std::cout << "\n";
+    std::cout << (src_encoding ? src_encoding : "(null)") << '\n';
 
     std::cout << "XML encoding: ";
-
     const char* xml_encoding = srcml_archive_get_xml_encoding(srcml_arch);
-
-    if (xml_encoding) {
-        std::cout << xml_encoding;
-    }
-    else {
-        std::cout << "(null)";
-    }
-
-    std::cout << "\n";
+    std::cout << (xml_encoding ? xml_encoding : "(null)") << '\n'
+              << "\n";
 
     int numUnits = 0;
     while (true) {
         srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
-
         if (!unit)
             break;
 
         ++numUnits;
-        std::cout << std::setw(5) << numUnits << " " << (srcml_unit_get_filename(unit) ?  srcml_unit_get_filename(unit) : "")
-                  << '\t' << (srcml_unit_get_language(unit) ? srcml_unit_get_language(unit) : "")
-                  << '\t' << (srcml_unit_get_hash(unit) ? srcml_unit_get_hash(unit) : "") << "\n";
+        std::cout << std::setw(5) << numUnits << " " 
+                  << value(srcml_unit_get_filename(unit)) << '\t'
+                  << value(srcml_unit_get_language(unit)) << '\t'
+                  << value(srcml_unit_get_hash(unit)) << '\n';
+        // TODO: Other parts of verbose here. Have to collect.
         srcml_unit_free(unit);
     }
-    std::cout << "Total: " << numUnits << "\n";
+    std::cout << "Total: " << numUnits << '\n';
 }
 
 void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
