@@ -185,10 +185,11 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
 
     // xml declaration
-    if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
+    if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL) {
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_XML_DECL);
-    else
+    } else {
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_XML_DECL);
+    }
 
     // language
     auto language = srcml_request.att_language ? srcml_request.att_language->c_str() : SRCML_LANGUAGE_NONE;
@@ -207,7 +208,6 @@ void create_srcml(const srcml_request_t& srcml_request,
     //   only one input
     //   no cli request to make it an archive
     //   not a directory (if local file)
-    // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
     if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_ARCHIVE)) &&
         !input_sources[0].isdirectory && input_sources[0].archives.empty()) {
