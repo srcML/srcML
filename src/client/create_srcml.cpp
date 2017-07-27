@@ -248,17 +248,22 @@ void create_srcml(const srcml_request_t& srcml_request,
     // rns
     for (const auto& ext : srcml_request.language_ext) {
         auto pos = ext.find('=');
-        std::string prefix = ext.substr(0, pos);
-        std::string uri = ext.substr(pos+1);
-        if (srcml_archive_register_file_extension(srcml_arch, prefix.c_str(), uri.c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml: unable to register file extension '%s=%s' for srcml archive", prefix, uri);
+        const auto& extension = ext.substr(0, pos);
+        const auto& language = ext.substr(pos+1);
+        if (srcml_archive_register_file_extension(srcml_arch, extension.c_str(), language.c_str()) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: unable to register file extension '%s' for language '%s' for srcml archive", extension, language);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
 
     // register xml namespaces
     for (const auto& ns : srcml_request.xmlns_namespaces) {
-        srcml_archive_register_namespace(srcml_arch, ns.first.c_str(), ns.second.c_str());
+        const auto& prefix = ns.first;
+        const auto& uri = ns.second;
+        if (srcml_archive_register_namespace(srcml_arch, prefix.c_str(), uri.c_str()) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: unable to register namespace '%s:%s' for srcml archive", prefix, uri);
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
     }
 
     // start tracing
