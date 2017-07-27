@@ -46,49 +46,29 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
     // NOTE: thread task cannot throw exception
 
-    // global access to options
-    bool isseparatearchive = option(SRCML_COMMAND_NOARCHIVE);
-
     // a clone of the intended srcML archive is created
     // the only purpose is to allow files to be parsed, without opening
-    // the real destination archive.
+    // the real destination archive
     srcml_archive* srcml_arch = srcml_archive_clone(request->srcml_arch);
 
-    if (isseparatearchive) {
+    if (option(SRCML_COMMAND_NOARCHIVE)) {
         request->srcml_arch = srcml_arch;
+
         srcml_archive_disable_full_archive(srcml_arch);
         srcml_archive_enable_hash(srcml_arch);
 
-        //Ensure that the directory path has a final "/" when appended to filename
-        //Build the output filename        
-        //Mirror input filesystem
-        std::string xml_filename = "";
-        
-        if (request->disk_dir->back() != '/') {
-            if (request->total_num_inputs == 1) {
-                xml_filename = *request->filename + ".xml";
-            }
-            else {
-                xml_filename = *request->disk_dir + '/' + *request->filename + ".xml";    
-            }
+        // build the output filename mirroring input filesystem
+        // ensure that the directory path has a final "/" when appended to filename
+        std::string xml_filename;
+        if (request->disk_dir) {
+            xml_filename += *request->disk_dir;
+            if (request->disk_dir->back() != '/')
+                xml_filename += '/';
         }
-        else {
-            xml_filename = *request->disk_dir + *request->filename + ".xml";
-        }
-
-        /*Flat filesystem
-        size_t pos = request->filename->find_last_of("/\\");
-
-        if (pos != std::string::npos) {
-            ++pos;
-        }
-        else {
-            pos = 0;
-        }
-        std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";*/
+        xml_filename += *request->filename + ".xml";
 
         srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str(), 0);
-        request->srcml_arch = srcml_arch;
+
     } else {
         char buffer[100];
         size_t size;
