@@ -113,33 +113,31 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         if (request->time_stamp)
             srcml_unit_set_timestamp(unit, request->time_stamp->c_str());
 
-        // parse the buffer/file (unless it is already form a srcml archive)
+        // parse the buffer/file
         Timer parsetime;
-
         if (request->disk_filename)
             status = srcml_unit_parse_filename(unit, request->disk_filename->c_str());
         else if (!request->unit)
             status = srcml_unit_parse_memory(unit, &request->buffer.front(), request->buffer.size());
-        request->runtime = parsetime.cpu_time_elapsed();
-
         if (status != SRCML_STATUS_OK) {
-            // FIXME: Cannot throw exception from thread
             throw status;
         }
+
+        request->runtime = parsetime.cpu_time_elapsed();
 
     } catch (...) {
 
         request->errormsg = "srcml: Unable to open file " + original_filename;
 
-        SRCMLlog(WARNING_MSG, "srcml: Unable to open file " + original_filename);
+        SRCMLlog(WARNING_MSG, *request->errormsg);
 
-//        if (unit)
-//            srcml_unit_free(unit);
-//        unit = 0;
-//        if (request)
-//            delete request;
-//        request = 0;
-//        return;
+        if (unit)
+            srcml_unit_free(unit);
+        unit = 0;
+        if (request)
+            delete request;
+        request = 0;
+        return;
     }
 
     // schedule unit for output
