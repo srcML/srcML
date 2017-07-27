@@ -71,18 +71,18 @@ void srcml_list(srcml_archive* srcml_arch) {
 
 void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
 
-
-    size_t nsSize = srcml_archive_get_namespace_size(srcml_arch);
+    auto nsSize = srcml_archive_get_namespace_size(srcml_arch);
     bool isarchive = srcml_archive_is_full_archive(srcml_arch);
 
     for (size_t i = 0; i < nsSize; ++i) {
         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
-                std::cout << "xmlns=\"" << srcml_archive_get_namespace_uri(srcml_arch, i) << "\"\n";
+            auto prefix = srcml_archive_get_namespace_uri(srcml_arch, i);
+            auto uri = srcml_archive_get_namespace_uri(srcml_arch, i);
+            std::cout << "xmlns";
+            if (prefix[0] != 0) {
+                std::cout << prefix;
             }
-            else{
-                std::cout << "xmlns:" << srcml_archive_get_namespace_prefix(srcml_arch, i) << "=\"" << srcml_archive_get_namespace_uri(srcml_arch, i) << "\"\n";
-            }
+            std::cout << "=\"" << uri << "\"\n";
         }
     }
 
