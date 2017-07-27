@@ -28,6 +28,6 @@
 struct ParseRequest;
 class TraceLog;
 
-void srcml_write_request(ParseRequest*, TraceLog&, srcml_output_dest& destination);
+void srcml_write_request(ParseRequest*, TraceLog&, const srcml_output_dest& destination);
 
 #endif

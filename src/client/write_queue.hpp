@@ -28,12 +28,14 @@
 #include <mutex>
 #include <condition_variable>
 #include <functional>
+#include <TraceLog.hpp>
+#include <srcml_write.hpp>
 
 class WriteQueue {
 public:
 
-    WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered = true)
-        : write(writearg), counter(0), ordered(ordered) {
+    WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool ordered = true)
+        : log(log), destination(destination), ordered(ordered) {
     }
 
     /* writes out the current srcml */
@@ -47,7 +49,7 @@ public:
             ++counter;
         }
         
-        write(pvalue);
+        srcml_write_request(pvalue, log, destination);
 
         if (ordered) {
             lock.unlock();
@@ -56,20 +58,19 @@ public:
     }
 
     inline void eos(ParseRequest* pvalue) {
-//        pvalue->status = 1000;
-        write(pvalue);
+        srcml_write_request(pvalue, log, destination);
     }
 
     inline void wait() {
         std::unique_lock<std::mutex> lock(this->mutex);
     }
 
-
 private:
-    std::function<void(ParseRequest*)> write;
+    TraceLog& log;
+    const srcml_output_dest& destination;
     std::mutex mutex;
     std::condition_variable cv;
-    int counter;
+    int counter = 0;
     bool ordered;
 };
 

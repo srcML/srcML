@@ -33,7 +33,7 @@
 static bool createdsrcml = false;
 
 // Public consumption thread function
-void srcml_write_request(ParseRequest* request, TraceLog& log, srcml_output_dest& destination) {
+void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_output_dest& destination) {
 
     if (!request)
         return;
