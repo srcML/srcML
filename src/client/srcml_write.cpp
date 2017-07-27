@@ -38,15 +38,6 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
     if (!request)
         return;
 
-    // if the input is an archive, then the output should be an archive
-    // TODO: Above comment does not apply here. This is NOT the input archive. Investigating...
-/*
-    bool isarchive = srcml_archive_is_full_archive(request->srcml_arch);
-    if (isarchive)
-       srcml_archive_enable_full_archive(gsrcml_arch);
-*/
-    bool isarchive = 1;
-
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
@@ -74,28 +65,26 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
 
         srcml_archive_write_unit(request->srcml_arch, request->unit);
 
-        if (isarchive) {
-            std::string s = request->filename ? *request->filename : "";
-            s += "\t";
-            s += request->language;
-            s += "\t";
-            s += std::to_string(request->loc);
-            //s += "\t";
-            //s += "10"; //This will be processing time
-            s += "\t";
+        // logging
+        std::string s = request->filename ? *request->filename : "";
+        s += "\t";
+        s += request->language;
+        s += "\t";
+        s += std::to_string(request->loc);
+        //s += "\t";
+        //s += "10"; //This will be processing time
+        s += "\t";
 
-            const char* hash = srcml_unit_get_hash(request->unit);
-            s += hash ? hash : "";
+        const char* hash = srcml_unit_get_hash(request->unit);
+        s += hash ? hash : "";
 
-            log << 'a' << s;
-        }
+        log << 'a' << s;
 
     } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
-        if (isarchive)
-            log << '-' << (request->filename ? *request->filename : "");
-        else
-            SRCMLlog(WARNING_MSG, "Extension not supported");
+        log << '-' << (request->filename ? *request->filename : "");
+
+//            SRCMLlog(WARNING_MSG, "Extension not supported");
 
     } else if (request->errormsg) {
         SRCMLlog(WARNING_MSG, *(request->errormsg));
