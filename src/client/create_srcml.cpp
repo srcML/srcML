@@ -210,7 +210,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
     if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_ARCHIVE)) &&
-        !input_sources[0].isdirectory && input_sources[0].archives.size() < 1) {
+        !input_sources[0].isdirectory && input_sources[0].archives.empty()) {
 
         srcml_archive_disable_full_archive(srcml_arch);
         
@@ -230,12 +230,19 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         // if this is an archive, then no filename attribute is allowed
         if (srcml_request.att_filename) {
-            fprintf(stderr, "Attribute filename cannot be set for a srcML archive\n");
+            fprintf(stderr, "Attribute filename cannot be set for a srcML archive. Use attribute uri instead.\n");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
 
-        srcml_archive_enable_full_archive(srcml_arch);
-        srcml_archive_enable_hash(srcml_arch);
+        if (srcml_archive_enable_full_archive(srcml_arch) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: unable to enable full srcml archive");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
+
+        if (srcml_archive_enable_hash(srcml_arch) != SRCML_STATUS_OK) {
+            SRCMLlog(CRITICAL_MSG, "srcml: unable to enable hash for srcml archive");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
     }
 
     // rns
