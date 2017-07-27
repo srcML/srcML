@@ -66,19 +66,14 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
         srcml_archive_write_unit(request->srcml_arch, request->unit);
 
         // logging
-        std::string s = request->filename ? *request->filename : "";
-        s += "\t";
-        s += request->language;
-        s += "\t";
-        s += std::to_string(request->loc);
-        //s += "\t";
-        //s += "10"; //This will be processing time
-        s += "\t";
+        std::ostringstream outs;
+        outs << (request->filename ? *request->filename : "") << '\t' << request->language << '\t' << request->loc << '\t';
 
         const char* hash = srcml_unit_get_hash(request->unit);
-        s += hash ? hash : "";
+        if (hash)
+            outs << '\t' << hash;
 
-        log << 'a' << s;
+        log << 'a' << outs.str();
 
     } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
