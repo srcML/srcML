@@ -86,26 +86,32 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
         }
     }
 
-    if (srcml_archive_get_xml_encoding(srcml_arch))
-        std::cout << "encoding=" << "\"" << srcml_archive_get_xml_encoding(srcml_arch) << "\"\n";
+    auto xml_encoding = srcml_archive_get_xml_encoding(srcml_arch);
+    if (xml_encoding)
+        std::cout << "encoding=" << "\"" << xml_encoding << "\"\n";
 
     srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
     int unit_count = 0;
 
     if (!isarchive && unit) {
-        if (srcml_unit_get_language(unit))
-            std::cout << "language=" << "\"" << srcml_unit_get_language(unit) << "\"\n";
+        auto language = srcml_unit_get_language(unit);
+        if (language)
+            std::cout << "language=" << "\"" << language << "\"\n";
     }
 
-    if (srcml_archive_get_url(srcml_arch))
-        std::cout << "url=" << "\"" << srcml_archive_get_url(srcml_arch) << "\"\n";
+    auto url = srcml_archive_get_url(srcml_arch);
+    if (url) {
+        std::cout << "url=" << "\"" << url << "\"\n";
+    }
 
     if (!isarchive && unit) {
-        if (srcml_unit_get_filename(unit))
-            std::cout << "filename=" << "\"" << srcml_unit_get_filename(unit) << "\"\n";
+        auto filename = srcml_unit_get_filename(unit);
+        if (filename)
+            std::cout << "filename=" << "\"" << filename << "\"\n";
     }
 
     if (long_info) {
+
         while (unit) {
             ++unit_count;
 
@@ -114,10 +120,10 @@ void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
         }
 
         std::cout << "units=\"" << unit_count << "\"\n";
-    }
-    else {
-        if (unit)
-            srcml_unit_free(unit);
+
+    } else if (unit) {
+
+        srcml_unit_free(unit);
     }
 }
 
