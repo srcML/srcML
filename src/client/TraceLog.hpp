@@ -41,8 +41,7 @@ public:
     	return loc;
     }
 
-    void header();
-    void report();
+    ~TraceLog();
 
 private:
     bool enabled;
