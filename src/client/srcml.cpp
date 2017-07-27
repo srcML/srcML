@@ -181,7 +181,7 @@ int main(int argc, char * argv[]) {
     auto realtime = runtime.real_world_elapsed();
     SRCMLlog(DEBUG_MSG, "Real Time: %l ms", realtime);
     SRCMLlog(DEBUG_MSG, "LOC: %l", TraceLog::totalLOC());
-    SRCMLlog(DEBUG_MSG, "LOC/sec: %l", TraceLog::totalLOC() / (realtime / 1000));
+    SRCMLlog(DEBUG_MSG, "KLOC/s: %l", realtime > 0 ? (TraceLog::totalLOC() / realtime) : 0);
 
     // error status is 0 unless a critical, error, or warning
     return SRCMLLogger::errors() ? 1 : 0;

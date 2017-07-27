@@ -67,11 +67,14 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
 
         // logging
         std::ostringstream outs;
-        outs << (request->filename ? *request->filename : "") << '\t' << request->language << '\t' << request->loc << '\t';
-
+        outs << (request->filename ? *request->filename : "") << '\t' << request->language << '\t' << request->loc;
         const char* hash = srcml_unit_get_hash(request->unit);
         if (hash)
             outs << '\t' << hash;
+        if (option(SRCML_DEBUG_MODE)) {
+            outs << '\t' << request->runtime << " ms";
+            outs << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
+        }
 
         log << 'a' << outs.str();
 

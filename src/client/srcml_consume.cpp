@@ -32,6 +32,7 @@
 #include <srcml_cli.hpp>
 #include <string>
 #include <srcml_logger.hpp>
+#include <timer.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
@@ -133,10 +134,13 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             srcml_unit_set_timestamp(unit, request->time_stamp->c_str());
 
         // parse the buffer/file (unless it is already form a srcml archive)
+        Timer parsetime;
+
         if (request->disk_filename)
             status = srcml_unit_parse_filename(unit, request->disk_filename->c_str());
         else if (!request->unit)
             status = srcml_unit_parse_memory(unit, &request->buffer.front(), request->buffer.size());
+        request->runtime = parsetime.cpu_time_elapsed();
 
         if (status != SRCML_STATUS_OK) {
             // FIXME: Cannot throw exception from thread
