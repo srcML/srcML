@@ -261,13 +261,16 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_register_namespace(srcml_arch, ns.first.c_str(), ns.second.c_str());
     }
 
-    // setup the parsing queue
+    // start tracing
     TraceLog log;
 
+    // write queue for output of parsing
     WriteQueue write_queue(log, destination, option(SRCML_COMMAND_OUTPUT_ORDERED));
+
+    // parsing queue
     ParseQueue parse_queue(srcml_request.max_threads, &write_queue);
 
-    // process input sources
+    // convert input sources to srcml
     int status = 0;
     for (const auto& input : input_sources) {
 
@@ -276,7 +279,7 @@ void create_srcml(const srcml_request_t& srcml_request,
             status = 1;
     }
 
-    // wait for the parsing and writing queues to finish
+    // wait for the parsing queue to finish
     parse_queue.wait();
 
     // send an EOS (End Of Stream) write request
