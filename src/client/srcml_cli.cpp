@@ -513,10 +513,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
               }
 
               if (option.string_key == "element") {
-                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first = clean_element_input(vals);
+                srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first = clean_element_input(vals);
               }
               else if (option.string_key == "attribute") {
-                srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).second = clean_attribute_input(vals);
+                srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].second = clean_attribute_input(vals);
               }
               else {
                 srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
@@ -545,7 +545,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {
           auto url = srcml_request.input_sources[0].resource;
-          while (url.length() > 0 && (url.at(0) == '.' || url.at(0) == '/')) {
+          while (url.length() > 0 && (url[0] == '.' || url[0] == '/')) {
             url.erase(0,1);
           }
           srcml_request.att_url = url;
@@ -699,7 +699,7 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
   }
 
   // Missing prefix requires an element with a prefix
-  if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first)) {
+  if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first)) {
     SRCMLlog(CRITICAL_MSG, "srcml: the attribute %s is missing a prefix or an element with a prefix", vals);
     exit(SRCML_STATUS_INVALID_ARGUMENT);
   }
@@ -711,7 +711,7 @@ attribute clean_attribute_input(const std::basic_string< char >& attribute_input
     attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
   }
   else {
-    attrib.prefix = srcml_request.xpath_query_support.at(srcml_request.xpath_query_support.size() - 1).first->prefix;
+    attrib.prefix = srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first->prefix;
     attrib.name = vals.substr(0, attrib_equals);
   }
 

@@ -162,7 +162,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         // Cleanup filename
         std::string url_name = src_prefix_resource(input_sources[0].filename);
-        while (url_name.at(0) == '.' || url_name.at(0) == '/') {
+        while (url_name[0] == '.' || url_name[0] == '/') {
             url_name.erase(0,1);
         }
         

@@ -117,7 +117,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             original_filename = *request->filename;
             
             // Cleanup filename
-            while (request->filename->at(0) == '.' || request->filename->at(0) == '/') {
+            while (request->filename->[0] == '.' || request->filename->[0] == '/') {
                 request->filename->erase(0,1);
             }
             

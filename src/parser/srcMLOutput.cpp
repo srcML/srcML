@@ -1117,16 +1117,6 @@ void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
 }
 
 /**
- * getWriter
- *
- * Get the current writer
- */
-xmlTextWriter * srcMLOutput::getWriter() {
-
-    return xout;
-}
-
-/**
  * setDepth
  * @param thedepth depth to set to
  *

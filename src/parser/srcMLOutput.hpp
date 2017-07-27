@@ -73,7 +73,16 @@ public:
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
     int initWriter();
     void initNamespaces(const std::vector<std::string> & prefix, const std::vector<std::string> & uri);
-    xmlTextWriter * getWriter();
+
+     /**
+     * getWriter
+     *
+     * Get the current writer
+     */
+    inline xmlTextWriter * getWriter() {
+        return xout;
+    }
+
     void setDepth(int thedepth);
 
     // same srcml file can be generated from multiple input token streams

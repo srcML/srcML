@@ -216,7 +216,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
             if (protocol == "xpath") {
                 // TODO: FIX BUG
-                if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support.at(++xpath_index), srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
+                if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
                   SRCMLlog(CRITICAL_MSG, "srcml: error with xpath transformation");
                   exit(-1);
             }
