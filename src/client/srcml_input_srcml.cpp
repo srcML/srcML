@@ -37,7 +37,7 @@ int srcml_input_srcml(ParseQueue& queue,
     // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_archive_create();
     if (!srcml_input_archive) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Internal libsrcml error");
+        SRCMLlog(WARNING_MSG, "srcml: Internal libsrcml error");
         return 0;
     }
 
@@ -48,15 +48,15 @@ int srcml_input_srcml(ParseQueue& queue,
     open_status = srcml_archive_read_open(srcml_input_archive, srcml_input);
     if (open_status != SRCML_STATUS_OK) {
         if (srcml_input.protocol == "file" )
-            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(srcml_input.filename));
+            SRCMLlog(WARNING_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
         else
-            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open srcml URL " + srcml_input.filename);
+            SRCMLlog(WARNING_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
         srcml_archive_close(srcml_input_archive);
         return 0;
     }
 
     // output is in srcML
-    if (srcmlOption(SRCML_COMMAND_XML)) {
+    if (option(SRCML_COMMAND_XML)) {
 
         if (srcml_archive_is_full_archive(srcml_input_archive) && srcml_input.unit == 0)
             srcml_archive_enable_full_archive(srcml_output_archive);
@@ -105,7 +105,7 @@ int srcml_input_srcml(ParseQueue& queue,
     }
 
     if (!unitFound) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Requested unit " + std::to_string(srcml_input.unit) + " out of range.");
+        SRCMLlog(CRITICAL_MSG, "Requested unit %d out of range.", srcml_input.unit);
         exit(4);
     }
 

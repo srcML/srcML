@@ -27,9 +27,6 @@
 #include <mutex>
 #include <condition_variable>
 
-// global request
-extern srcml_request_t global_srcml_request;
-
 namespace {
 
     bool go = false;
@@ -132,7 +129,7 @@ void curl_download_url(const srcml_request_t& /* srcml_request */,
     long http_code = 0;
     curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
     if(response != CURLE_OK || http_code != 200) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to access URL " + url);
+        SRCMLlog(WARNING_MSG, "srcml: Unable to access URL " + url);
         setCurlErrors();
         goCurl(false);
 

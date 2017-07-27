@@ -28,19 +28,27 @@
 
 class TraceLog {
 public:
-    TraceLog(int options);
+    TraceLog();
 
     friend TraceLog& operator<<(TraceLog& tlog, char c);
     friend TraceLog& operator<<(TraceLog& tlog, const std::string& s);
 
-    void header();
-    void report();
+    inline void totalLOC(long floc) {
+    	loc += floc;
+    }
+
+    inline static long totalLOC() {
+    	return loc;
+    }
+
+    ~TraceLog();
 
 private:
     bool enabled;
     int count = 0;
     int num_skipped = 0;
     int num_error = 0;
+    static long loc;
 };
 
 #endif

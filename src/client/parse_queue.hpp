@@ -28,12 +28,13 @@
 #include <write_queue.hpp>
 #include <ctpl_stl.h>
 #include <mutex>
+#include <srcml_consume.hpp>
 
 class ParseQueue {
 public:
 
-	ParseQueue(int max_threads, std::function<void(ParseRequest*)> consumearg, WriteQueue& write_queue)
-	    : consume(consumearg), pool(max_threads), counter(0), wqueue(write_queue) {}
+	ParseQueue(int max_threads, WriteQueue* write_queue)
+	    : pool(max_threads), wqueue(write_queue) {}
 
 	inline void schedule(ParseRequest* pvalue) {
 
@@ -48,11 +49,11 @@ public:
 	    // error passthrough to output for proper output in trace
 	    if (pvalue->status) {
 	        pvalue->unit = 0;
-	        wqueue.schedule(pvalue);
+	        wqueue->schedule(pvalue);
 	        return;
 	    }
 
-        pool.push(std::bind(consume, pvalue));
+        pool.push(std::bind(srcml_consume, pvalue, wqueue));
 	}
 
 	inline void wait() {
@@ -61,10 +62,9 @@ public:
 	}
 
 private:
-    std::function<void(ParseRequest*)> consume;
     ctpl::thread_pool pool;
-    int counter;
-    WriteQueue& wqueue;
+    WriteQueue* wqueue;
+    int counter = 0;
     std::mutex e;
 };
 

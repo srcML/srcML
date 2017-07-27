@@ -22,29 +22,19 @@
 
 #include <TraceLog.hpp>
 #include <srcml_cli.hpp>
+#include <srcml_options.hpp>
 #include <iomanip>
 #include <iostream>
 
-TraceLog::TraceLog(int options)
-    : enabled(options & SRCML_COMMAND_VERBOSE) {
-}
+long TraceLog::loc = 0;
 
-void TraceLog::header() {
+TraceLog::TraceLog()
+    : enabled(option(SRCML_COMMAND_VERBOSE)) {
 
     if (!enabled)
         return;
 
     std::clog << "Source encoding:  (null)\nXML encoding:  UTF-8\n";
-}
-
-void TraceLog::report() {
-
-    if (!enabled)
-        return;
-
-    int total = count + num_skipped + num_error;
-
-    std::clog << "\nTranslated: " << count << "\tSkipped: " << num_skipped << "\tError: " << num_error << "\tTotal: " << total << "\n";
 }
 
 TraceLog& operator<<(TraceLog& tlog, char c) {
@@ -71,3 +61,14 @@ TraceLog& operator<<(TraceLog& tlog, const std::string& s) {
 
     return tlog;
 }
+
+TraceLog::~TraceLog() {
+
+    if (!enabled)
+        return;
+
+    int total = count + num_skipped + num_error;
+
+    std::clog << "\nTranslated: " << count << "\tSkipped: " << num_skipped << "\tError: " << num_error << "\tTotal: " << total << "\n";
+}
+

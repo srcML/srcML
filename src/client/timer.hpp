@@ -30,8 +30,12 @@
 
 class Timer {
 public:
-	Timer() : time_limit(0) {}
-	Timer(unsigned int limit) : time_limit(limit) {}
+	Timer() {
+		start();
+	}
+	Timer(unsigned int limit) : time_limit(limit) {
+		start();
+	}
 
 	inline void start() {
 		real_world_time = std::chrono::high_resolution_clock::now();
@@ -59,7 +63,7 @@ public:
 private:
 	std::chrono::time_point<std::chrono::high_resolution_clock> real_world_time;
 	std::clock_t cpu_time;
-    unsigned int time_limit; // in seconds
+    unsigned int time_limit = 0; // in seconds
 };
 
 #endif

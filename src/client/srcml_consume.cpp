@@ -46,7 +46,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     // NOTE: thread task cannot throw exception
 
     // global access to options
-    bool isseparatearchive = srcmlOption(SRCML_COMMAND_NOARCHIVE);
+    bool isseparatearchive = option(SRCML_COMMAND_NOARCHIVE);
 
     // a clone of the intended srcML archive is created
     // the only purpose is to allow files to be parsed, without opening
@@ -117,7 +117,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             original_filename = *request->filename;
             
             // Cleanup filename
-            while (request->filename->at(0) == '.' || request->filename->at(0) == '/') {
+            while ((*request->filename)[0] == '.' || (*request->filename)[0] == '/') {
                 request->filename->erase(0,1);
             }
             
@@ -147,7 +147,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         request->errormsg = "srcml: Unable to open file " + original_filename;
 
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open file " + original_filename);
+        SRCMLlog(WARNING_MSG, "srcml: Unable to open file " + original_filename);
 
 //        if (unit)
 //            srcml_unit_free(unit);

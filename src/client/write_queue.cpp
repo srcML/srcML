@@ -21,9 +21,10 @@
  */
 
 #include <write_queue.hpp>
+#include <srcml_write.hpp>
 
-WriteQueue::WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered)
-       : write(writearg), ordered(ordered), maxposition(0), q(
+WriteQueue::WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool ordered)
+       : log(log), destination(destination), ordered(ordered), maxposition(0), q(
             [](ParseRequest* r1, ParseRequest* r2) {
                 return r1->position > r2->position;
             }) {
@@ -92,7 +93,7 @@ void WriteQueue::process() {
         bool lastone = pvalue->status == 1000 || pvalue->status == 2000;
 
         // finally write it out
-        write(pvalue);
+        srcml_write_request(pvalue, log, destination);
 
         // may be all done
         if (lastone)

@@ -32,11 +32,13 @@
 #include <queue>
 #include <deque>
 #include <thread>
+#include <TraceLog.hpp>
+#include <srcml_input_src.hpp>
 
 class WriteQueue {
 
 public:
-    WriteQueue(std::function<void(ParseRequest*)> writearg, bool ordered = true);
+    WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool ordered = true);
 
     // writes out the current srcml
     void schedule(ParseRequest* pvalue);
@@ -54,7 +56,8 @@ public:
     void process();
 
 public:
-    std::function<void(ParseRequest*)> write;
+    TraceLog& log;
+    const srcml_output_dest& destination;
     bool ordered;
     std::thread write_thread;
     int maxposition;

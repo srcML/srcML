@@ -38,15 +38,16 @@
 #include <iostream>
 #include <unistd.h>
 #include <csignal>
+#include <TraceLog.hpp>
 
-bool request_create_srcml          (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_transform_srcml       (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_display_metadata      (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_additional_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-bool request_create_src            (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-
-// global request
-srcml_request_t global_srcml_request;
+// decide if each step is needed
+namespace {
+    bool request_create_srcml      (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_transform_srcml   (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_display_metadata  (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_output_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+    bool request_create_src        (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+};
 
 // stdin timeout message
 void timeout(int) {
@@ -74,32 +75,31 @@ See `srcml --help` for more information.
 }
 
 int main(int argc, char * argv[]) {
+
     Timer runtime = Timer();
-    runtime.start();
 
     // parse the command line
     auto srcml_request = parseCLI(argc, argv);
-    global_srcml_request = srcml_request;
 
     // global access to options
     SRCMLOptions::set(srcml_request.command);
 
     // version
-    if (srcml_request.command & SRCML_COMMAND_VERSION) {
-        std::cout << "libsrcml " << srcml_version_string() << "\n";
-        std::cout << "srcml " << srcml_version_string() << "\n";
-        std::cout << archive_version_string() << "\n";
+    if (option(SRCML_COMMAND_VERSION)) {
+        std::cout << "libsrcml " << srcml_version_string() << '\n'
+                  << "srcml " << srcml_version_string() << '\n'
+                  << archive_version_string() << '\n';
         return 0;
     }
 
-    if (srcml_request.command & SRCML_DEBUG_MODE)
-        SRCMLLogger::log(SRCMLLogger::DEBUG_MSG,
-                         std::string("Library Versions:\n") +
-                         "libsrcml " + srcml_version_string() + "\n" +
-                         "srcml " + srcml_version_string() + "\n" +
-                         std::string(archive_version_string()) + "\n" +
-                         "libcurl " + std::string(curl_version_info(CURLVERSION_NOW)->version) + "\n" +
-                         "libboost " + BOOST_LIB_VERSION + "\n");
+    if (srcml_request.command & SRCML_DEBUG_MODE) {
+        SRCMLlog(DEBUG_MSG) << "Library Versions: " << '\n'
+                            << "libsrcml " << srcml_version_string() << '\n'
+                            << "srcml " << srcml_version_string() << '\n'
+                            <<  archive_version_string() << '\n'
+                            << "libcurl " << curl_version_info(CURLVERSION_NOW)->version << '\n'
+                            << "libboost " << BOOST_LIB_VERSION << '\n';
+    }
 
     if (srcml_request.input_sources.size() == 1 && srcml_request.unit != 0)
         srcml_request.input_sources[0].unit = srcml_request.unit;
@@ -112,7 +112,7 @@ int main(int argc, char * argv[]) {
         // stdin accessed as FILE*
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
         if (!pstdin->fileptr) {
-            SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Unable to open stdin");
+            SRCMLlog(CRITICAL_MSG, "srcml: Unable to open stdin");
             exit(1);
         }
         pstdin->fd = boost::none;
@@ -155,19 +155,19 @@ int main(int argc, char * argv[]) {
     }
 
     // step (srcml|src)->compressed
-    if (request_additional_compression(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
+    if (request_output_compression(srcml_request, srcml_request.input_sources, srcml_request.output_filename)) {
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
         pipeline.push_back(compress_srcml);
 #else
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Unsupported output compression");
+        SRCMLlog(CRITICAL_MSG, "srcml: Unsupported output compression");
         exit(1);
 #endif
     }
 
     // should always have something to do
     if (pipeline.empty()) {
-        SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Internal error, cannot decide what processing needed");
+        SRCMLlog(CRITICAL_MSG, "srcml: Internal error, cannot decide what processing needed");
         exit(1);
     }
 
@@ -176,50 +176,85 @@ int main(int argc, char * argv[]) {
 
     srcml_cleanup_globals();
 
-    SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "CPU Time: " + std::to_string(runtime.cpu_time_elapsed()) + "ms");
-    SRCMLLogger::log(SRCMLLogger::DEBUG_MSG, "Real Time: " + std::to_string(runtime.real_world_elapsed()) + "ms");
+    // debugging information
+    SRCMLlog(DEBUG_MSG, "CPU Time: %l ms", runtime.cpu_time_elapsed());
+    auto realtime = runtime.real_world_elapsed();
+    SRCMLlog(DEBUG_MSG, "Real Time: %l ms", realtime);
+    SRCMLlog(DEBUG_MSG, "LOC: %l", TraceLog::totalLOC());
+    SRCMLlog(DEBUG_MSG, "LOC/sec: %l", TraceLog::totalLOC() / (realtime / 1000));
 
     // error status is 0 unless a critical, error, or warning
     return SRCMLLogger::errors() ? 1 : 0;
 }
 
-bool request_create_srcml(const srcml_request_t& srcml_request,
-                          const srcml_input_t& input_sources,
-                          const srcml_output_dest& destination) {
+namespace {
 
-    return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
+    /*
+        Create srcML
+
+        * One of the input sources is source code
+        * More than one input, and the destination is srcML
+        * One input, a specific unit, and the output is srcML
+    */
+    bool request_create_srcml(const srcml_request_t& /* srcml_request */, 
+                              const srcml_input_t& input_sources,
+                              const srcml_output_dest& destination) {
+
+        return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
         (input_sources.size() > 1 && destination.state == SRCML) ||
-        (input_sources.size() == 1 && input_sources[0].unit >= 0 && (srcml_request.command & SRCML_COMMAND_XML));
-}
+        (input_sources.size() == 1 && input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
+    }
 
-bool request_transform_srcml(const srcml_request_t& srcml_request,
-                             const srcml_input_t& /* input_sources */,
-                             const srcml_output_dest& /* destination */) {
+    /*
+        Transform srcml
 
-    return !srcml_request.transformations.empty();
-}
+        * Transformations requested
+    */
+    bool request_transform_srcml(const srcml_request_t& srcml_request,
+                                 const srcml_input_t& /* input_sources */,
+                                 const srcml_output_dest& /* destination */) {
 
-bool request_display_metadata(const srcml_request_t& srcml_request,
-                              const srcml_input_t& /* input_sources */,
-                              const srcml_output_dest& /* destination */) {
+        return !srcml_request.transformations.empty();
+    }
 
-    return (srcml_request.command & SRCML_COMMAND_INSRCML || srcml_request.xmlns_prefix_query || srcml_request.pretty_format);
-}
+    /*
+        Extract out of srcML
 
-bool request_additional_compression(const srcml_request_t& /* srcml_request */,
-                                    const srcml_input_t& /* input_sources */,
-                                    const srcml_output_dest& destination) {
+        * ?
+        * 
+    */
+    bool request_display_metadata(const srcml_request_t& srcml_request,
+                                  const srcml_input_t& /* input_sources */,
+                                  const srcml_output_dest& /* destination */) {
 
-    return (destination.compressions.size() >= 1) /* ||
-        (destination.compressions.size() == 1 && destination.compressions.front() != ".gz")*/;
-}
+        return (option(SRCML_COMMAND_INSRCML) || srcml_request.xmlns_prefix_query || srcml_request.pretty_format);
+    }
 
-bool request_create_src(const srcml_request_t& srcml_request,
-                        const srcml_input_t& input_sources,
-                        const srcml_output_dest& destination) {
+    /*
+        Output is compressed
 
-    return (srcml_request.command & SRCML_COMMAND_SRC) || (!request_create_srcml(srcml_request, input_sources, destination) &&
-            destination.state != SRCML &&
+        * Format of output includes compression
+    */
+    bool request_output_compression(const srcml_request_t& /* srcml_request */,
+                                        const srcml_input_t& /* input_sources */,
+                                        const srcml_output_dest& destination) {
+
+        return destination.compressions.size() >= 1;
+    }
+
+    /*
+        Creating source code
+
+        * Specific option for source output
+        * The destination is not a srcML file and we are not creating srcML, asking for metadata, or performing a transformation
+    */
+    bool request_create_src(const srcml_request_t& srcml_request,
+                            const srcml_input_t& input_sources,
+                            const srcml_output_dest& destination) {
+
+        return (option(SRCML_COMMAND_SRC) || (destination.state != SRCML &&
+            !request_create_srcml(srcml_request, input_sources, destination) &&
             !request_display_metadata(srcml_request, input_sources, destination) &&
-            !request_transform_srcml(srcml_request, input_sources, destination));
-}
+            !request_transform_srcml(srcml_request, input_sources, destination)));
+    }
+};

@@ -25,6 +25,7 @@
 #include <src_prefix.hpp>
 #include <srcml.h>
 #include <srcml_logger.hpp>
+#include <srcml_options.hpp>
 #include <iostream>
 #include <iomanip>
 #include <cstring>
@@ -159,19 +160,19 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         if (contains<int>(input)) {
             if (srcml_archive_read_open_fd(srcml_arch, input) != SRCML_STATUS_OK) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml input cannot not be opened.");
+                SRCMLlog(CRITICAL_MSG, "srcml input cannot not be opened.");
                 return;
             }
         }
         else if (contains<FILE*>(input)){
             if (srcml_archive_read_open_FILE(srcml_arch, input) != SRCML_STATUS_OK) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml input cannot not be opened.");
+                SRCMLlog(CRITICAL_MSG, "srcml input cannot not be opened.");
                 return;
             }
         }
         else {
             if (srcml_archive_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str())) != SRCML_STATUS_OK) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml input cannot not be opened.");
+                SRCMLlog(CRITICAL_MSG, "srcml input cannot not be opened.");
                 return;
             }
         }
@@ -186,14 +187,14 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         std::string pretty_meta_body;
 
         // HEADER ONLY METADATA
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_ENCODING) {
+        if (option(SRCML_COMMAND_DISPLAY_SRCML_ENCODING)) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_ENCODING)
                 pretty_meta_header += "%X\n";
             else
                 pretty_meta_header += "encoding=\"%X\"\n";
         }
 
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_URL) {
+        if (option(SRCML_COMMAND_DISPLAY_SRCML_URL)) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_URL)
                 pretty_meta_header += "%U\n";
             else
@@ -201,35 +202,35 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         // BODY METADATA
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_FILENAME) {
+        if (option(SRCML_COMMAND_DISPLAY_SRCML_FILENAME)) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_FILENAME)
                 pretty_meta_body += "%f\n";
             else
                 pretty_meta_body += "filename=\"%f\"\n";
         }
 
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE) {
+        if (option(SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE)
                 pretty_meta_body += "%l\n";
             else
                 pretty_meta_body += "language=\"%l\"\n";
         }
 
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION) {
+        if (option(SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION)
                 pretty_meta_body += "%v\n";
             else
                 pretty_meta_body += "version=\"%v\"\n";
         }
 
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_HASH) {
+        if (option(SRCML_COMMAND_DISPLAY_SRCML_HASH)) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_HASH)
                 pretty_meta_body += "%h\n";
             else
                 pretty_meta_body += "hash=\"%h\"\n";
         }
 
-        if (srcml_request.command & SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP) {
+        if (option(SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP)) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP)
                 pretty_meta_body += "%t\n";
             else
@@ -248,21 +249,21 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         // units
-        if (srcml_request.command & SRCML_COMMAND_UNITS) {
+        if (option(SRCML_COMMAND_UNITS)) {
             std::cout << srcml_unit_count(srcml_arch) << "\n";
         }
 
         // srcml info
-        if (srcml_request.command & SRCML_COMMAND_INFO) {
+        if (option(SRCML_COMMAND_INFO)) {
             srcml_display_info(srcml_arch, false);
         }
 
         // srcml long info
-        if (srcml_request.command & SRCML_COMMAND_LONGINFO) {
+        if (option(SRCML_COMMAND_LONGINFO)) {
             srcml_display_info(srcml_arch, true);
         }
 
-        if (srcml_request.command & SRCML_COMMAND_LIST) {
+        if (option(SRCML_COMMAND_LIST)) {
             srcml_list(srcml_arch);
         }
 
