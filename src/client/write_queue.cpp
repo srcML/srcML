@@ -49,10 +49,12 @@ void WriteQueue::schedule(ParseRequest* pvalue) {
     cv.notify_one();
 }
 
-void WriteQueue::eos(ParseRequest* pvalue) {
+void WriteQueue::eos() {
 
 	// schedule the last one
+    ParseRequest* pvalue = new ParseRequest;
 	pvalue->position = maxposition + 1;
+    pvalue->status = 1000;
     schedule(pvalue);
 }
 
@@ -65,6 +67,8 @@ void WriteQueue::start() {
 }
 
 void WriteQueue::stop() {
+
+    eos();
 
     write_thread.join();
 }
@@ -88,15 +92,14 @@ void WriteQueue::process() {
         }
         ++position;
 
-        // record here because calling write with a request
-        // causes it to be deleted
-        bool lastone = pvalue->status == 1000 || pvalue->status == 2000;
+        if (pvalue->status == 1000)
+            break;
+
+        // record real units written
+        if (pvalue->status == SRCML_STATUS_OK)
+            ++total;
 
         // finally write it out
         srcml_write_request(pvalue, log, destination);
-
-        // may be all done
-        if (lastone)
-        	break;
     }
 }

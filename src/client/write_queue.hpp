@@ -44,7 +44,7 @@ public:
     void schedule(ParseRequest* pvalue);
 
     // end of stream
-    void eos(ParseRequest* pvalue);
+    void eos();
 
     // start the write proces
     void start();
@@ -55,6 +55,9 @@ public:
     // actual process
     void process();
 
+    // number of units writtent
+    int numWritten() const { return total; }
+
 public:
     TraceLog& log;
     const srcml_output_dest& destination;
@@ -64,6 +67,7 @@ public:
     std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, std::function<bool(ParseRequest*, ParseRequest*)>> q;
     std::mutex qmutex;
     std::condition_variable cv;
+    int total = 0;
 };
 
 #endif

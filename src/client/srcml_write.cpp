@@ -38,22 +38,6 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
     if (!request)
         return;
 
-    // values are a hack
-    if (request->status == 1000 || request->status == 2000) {
-
-        // close the created srcML archive
-        if (createdsrcml || request->status == 2000) {
-            srcml_archive_close(request->srcml_arch);
-            srcml_archive_free(request->srcml_arch);
-        }
-
-        // if we were writing to a file descriptor, then close it
-        if (contains<int>(destination))
-            close(*destination.fd);
-
-        return;
-    }
-
     // if the input is an archive, then the output should be an archive
     // TODO: Above comment does not apply here. This is NOT the input archive. Investigating...
 /*

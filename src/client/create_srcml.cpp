@@ -288,11 +288,16 @@ void create_srcml(const srcml_request_t& srcml_request,
     // wait for the parsing queue to finish
     parse_queue.wait();
 
-    // send an EOS (End Of Stream) write request
-    ParseRequest* eos = new ParseRequest();
-    eos->srcml_arch = srcml_arch;
-    eos->status = createdsrcml ? 2000 : 1000;
-    write_queue.eos(eos);
-
+    // wait for the writing queue to finish
     write_queue.stop();
+
+    // close any created srcML archive
+    if (write_queue.numWritten()) {
+        srcml_archive_close(srcml_arch);
+        srcml_archive_free(srcml_arch);
+
+        // if we were writing to a file descriptor, then close it
+        if (contains<int>(destination))
+            close(*destination.fd);
+    }
 }
