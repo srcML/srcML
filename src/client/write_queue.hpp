@@ -25,53 +25,45 @@
 
 #include <srcml.h>
 #include <parse_request.hpp>
+#include <ctpl_stl.h>
 #include <mutex>
 #include <condition_variable>
 #include <functional>
+#include <queue>
+#include <deque>
+#include <thread>
 #include <TraceLog.hpp>
-#include <srcml_write.hpp>
+#include <srcml_input_src.hpp>
 
 class WriteQueue {
+
 public:
+    WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool ordered = true);
 
-    WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool ordered = true)
-        : log(log), destination(destination), ordered(ordered) {
-    }
+    // writes out the current srcml
+    void schedule(ParseRequest* pvalue);
 
-    /* writes out the current srcml */
-    inline void schedule(ParseRequest* pvalue) {
-        std::unique_lock<std::mutex> lock(this->mutex);
+    // end of stream
+    void eos(ParseRequest* pvalue);
 
-        if (ordered) {
-            while (pvalue->position != counter + 1)
-                cv.wait(lock);
+    // start the write proces
+    void start();
 
-            ++counter;
-        }
-        
-        srcml_write_request(pvalue, log, destination);
+    // stop the write process, allowing it to continue
+    void stop();
 
-        if (ordered) {
-            lock.unlock();
-            cv.notify_all();
-        }
-    }
+    // actual process
+    void process();
 
-    inline void eos(ParseRequest* pvalue) {
-        srcml_write_request(pvalue, log, destination);
-    }
-
-    inline void wait() {
-        std::unique_lock<std::mutex> lock(this->mutex);
-    }
-
-private:
+public:
     TraceLog& log;
     const srcml_output_dest& destination;
-    std::mutex mutex;
-    std::condition_variable cv;
-    int counter = 0;
     bool ordered;
+    std::thread write_thread;
+    int maxposition;
+    std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, std::function<bool(ParseRequest*, ParseRequest*)>> q;
+    std::mutex qmutex;
+    std::condition_variable cv;
 };
 
 #endif

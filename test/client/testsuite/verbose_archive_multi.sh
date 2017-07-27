@@ -33,36 +33,36 @@ createfile sub/b.cpp "b;"
 createfile sub/a.cpp.xml "$fsrcml"
  
 # from a file
-srcml sub/a.cpp sub/b.cpp --in-order --archive --verbose
+srcml sub/a.cpp sub/b.cpp --archive --verbose
 check "$fsrcml" "$foutput"
 
-srcml sub/a.cpp sub/b.cpp --in-order --verbose --archive
+srcml sub/a.cpp sub/b.cpp --verbose --archive
 check "$fsrcml" "$foutput"
 
-srcml sub/a.cpp sub/b.cpp --verbose --in-order --archive
+srcml sub/a.cpp sub/b.cpp --verbose --archive
 check "$fsrcml" "$foutput"
 
-srcml sub/a.cpp --verbose sub/b.cpp --in-order --archive
+srcml sub/a.cpp --verbose sub/b.cpp --archive
 check "$fsrcml" "$foutput"
 
-srcml --verbose sub/a.cpp sub/b.cpp --in-order --archive
+srcml --verbose sub/a.cpp sub/b.cpp --archive
 check "$fsrcml" "$foutput"
 
-srcml sub/a.cpp sub/b.cpp --in-order --archive --verbose -o sub/c.cpp.xml
+srcml sub/a.cpp sub/b.cpp --archive --verbose -o sub/c.cpp.xml
 check sub/c.cpp.xml "$fsrcml" "$foutput"
 
-srcml sub/a.cpp sub/b.cpp --in-order --archive -o sub/c.cpp.xml --verbose
+srcml sub/a.cpp sub/b.cpp --archive -o sub/c.cpp.xml --verbose
 check sub/c.cpp.xml "$fsrcml" "$foutput"
 
-srcml sub/a.cpp sub/b.cpp --in-order -o sub/c.cpp.xml --archive --verbose
+srcml sub/a.cpp sub/b.cpp -o sub/c.cpp.xml --archive --verbose
 check sub/c.cpp.xml "$fsrcml" "$foutput"
 
-srcml sub/a.cpp sub/b.cpp -o sub/c.cpp.xml --in-order --archive --verbose
+srcml sub/a.cpp sub/b.cpp -o sub/c.cpp.xml --archive --verbose
 check sub/c.cpp.xml "$fsrcml" "$foutput"
 
-srcml sub/a.cpp -o sub/c.cpp.xml sub/b.cpp --in-order --archive --verbose
+srcml sub/a.cpp -o sub/c.cpp.xml sub/b.cpp --archive --verbose
 check sub/c.cpp.xml "$fsrcml" "$foutput"
 
-srcml -o sub/c.cpp.xml sub/a.cpp sub/b.cpp --in-order --archive --verbose
+srcml -o sub/c.cpp.xml sub/a.cpp sub/b.cpp --archive --verbose
 check sub/c.cpp.xml "$fsrcml" "$foutput"
 

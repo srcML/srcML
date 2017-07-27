@@ -40,11 +40,11 @@ check_exit 2 "Attribute filename cannot be set for a srcML archive"
 # filename flag on archive of multiple units
 createfile sub/b.cpp "b;"
 
-srcml sub/a.cpp sub/b.cpp --in-order -f "compressed.tar.gz"
-check_exit 2 "Attribute filename cannot be set for a srcML archive"
+srcml sub/a.cpp sub/b.cpp -f "compressed.tar.gz"
+check "" "Attribute filename cannot be set for a srcML archive"
 
-srcml sub/a.cpp sub/b.cpp --in-order -f=compressed.tar.gz
-check_exit 2 "Attribute filename cannot be set for a srcML archive"
+srcml sub/a.cpp sub/b.cpp -f=compressed.tar.gz
+check "" "Attribute filename cannot be set for a srcML archive"
 
-srcml --in-order -f "compressed.tar.gz" sub/a.cpp sub/b.cpp
-check_exit 2 "Attribute filename cannot be set for a srcML archive"
+srcml -f "compressed.tar.gz" sub/a.cpp sub/b.cpp
+check "" "Attribute filename cannot be set for a srcML archive"
