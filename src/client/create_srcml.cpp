@@ -250,7 +250,6 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // register xml namespaces
-    std::map<std::string, std::string>::const_iterator itr;
     for (const auto& ns : srcml_request.xmlns_namespaces) {
         srcml_archive_register_namespace(srcml_arch, ns.first.c_str(), ns.second.c_str());
     }
