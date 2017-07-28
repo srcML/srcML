@@ -467,7 +467,7 @@ private:
      *
      * Push the token onto the output token stream.
      */
-    void pushToken(const antlr::RefToken& rtoken) {
+    inline void pushToken(const antlr::RefToken& rtoken) {
 
         // don't push any tokens during guessing stage
         if (srcMLParser::inputState->guessing)
@@ -504,7 +504,7 @@ private:
      *
      * @returns the output buffer.
      */
-    std::list<antlr::RefToken>& output() {
+    inline std::list<antlr::RefToken>& output() {
         return *pouttb;
     }
 
@@ -515,7 +515,7 @@ private:
      *
      * @returns the skip buffer.
      */
-    std::list<antlr::RefToken>& skip() {
+    inline std::list<antlr::RefToken>& skip() {
         return *pskiptb;
     }
 
@@ -525,7 +525,7 @@ private:
      *
      * Push the skipped token onto the output token stream
      */
-    void pushSkipToken(const antlr::RefToken& rtoken) {
+    inline void pushSkipToken(const antlr::RefToken& rtoken) {
 
         // don't push any tokens during guessing stage
         if (srcMLParser::inputState->guessing)
@@ -574,7 +574,7 @@ private:
      *
      * Push the current token onto the output token stream.
      */
-    void pushToken() {
+    inline void pushToken() {
 
         pushTokenFlush(srcMLParser::LT(1));
     }
@@ -584,7 +584,7 @@ private:
      *
      * Push the current skip token onto the output token stream.
      */
-    void pushSkipToken() {
+    inline void pushSkipToken() {
 
         pushSkipToken(srcMLParser::LT(1));
     }
@@ -596,7 +596,7 @@ private:
      *
      * @returns the current token (last added).
      */
-    antlr::RefToken* CurrentToken() {
+    inline antlr::RefToken* CurrentToken() {
 
         return &(output().back());
     }
