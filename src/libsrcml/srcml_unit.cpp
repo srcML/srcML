@@ -337,24 +337,20 @@ int srcml_unit_get_xml_standalone(struct srcml_unit * unit, const char* xml_enco
 
     *xml_buffer = 0;
     *buffer_size = 0;
-    if(unit->unit) {
-
-        struct srcml_archive * formatting_archive = srcml_archive_clone(unit->archive);
-        srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE);
-        if(xml_encoding) srcml_archive_set_xml_encoding(formatting_archive, xml_encoding);
-        srcml_archive_write_open_memory(formatting_archive, xml_buffer, buffer_size);
-        srcml_archive_write_unit(formatting_archive, unit);
-        srcml_archive_close(formatting_archive);
-        srcml_archive_free(formatting_archive);
-
-        while(*buffer_size > 0 && (*xml_buffer)[*buffer_size - 1] == '\n')
-            (*xml_buffer)[--(*buffer_size)] = '\0';
-
-    } else {
-
+    if (!unit->unit)
         return SRCML_STATUS_ERROR;
 
-    }
+    srcml_archive* formatting_archive = srcml_archive_clone(unit->archive);
+    srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE);
+    if (xml_encoding)
+        srcml_archive_set_xml_encoding(formatting_archive, xml_encoding);
+    srcml_archive_write_open_memory(formatting_archive, xml_buffer, buffer_size);
+    srcml_archive_write_unit(formatting_archive, unit);
+    srcml_archive_close(formatting_archive);
+    srcml_archive_free(formatting_archive);
+
+    while (*buffer_size > 0 && (*xml_buffer)[*buffer_size - 1] == '\n')
+        (*xml_buffer)[--(*buffer_size)] = '\0';
 
     return SRCML_STATUS_OK;
 }
