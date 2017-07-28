@@ -47,7 +47,7 @@ namespace {
     bool request_display_metadata  (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
     bool request_output_compression(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
     bool request_create_src        (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-};
+}
 
 // stdin timeout message
 void timeout(int) {
@@ -257,4 +257,4 @@ namespace {
             !request_display_metadata(srcml_request, input_sources, destination) &&
             !request_transform_srcml(srcml_request, input_sources, destination)));
     }
-};
+}
