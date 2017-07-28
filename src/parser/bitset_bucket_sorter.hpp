@@ -33,6 +33,7 @@ constexpr unsigned long convert(const int pos, T value, Args... args) {
     return ((value < 32 * (pos + 1)) ? (1 << (value - 32 * pos)) : 0UL) | convert(pos, args...);
 }
 
-#define token_set(...) (const unsigned long[]){ convert(0, __VA_ARGS__), convert(1, __VA_ARGS__), convert(2, __VA_ARGS__), convert(3, __VA_ARGS__), convert(4, __VA_ARGS__), convert(5, __VA_ARGS__), convert(6, __VA_ARGS__), convert(7, __VA_ARGS__) }
+#define token_set(...) (const unsigned long[]){ convert(0, __VA_ARGS__), convert(1, __VA_ARGS__), convert(2, __VA_ARGS__), convert(3, __VA_ARGS__), convert(4, __VA_ARGS__), convert(5, __VA_ARGS__), convert(6, __VA_ARGS__), convert(7, __VA_ARGS__), \
+convert(8, __VA_ARGS__), convert(9, __VA_ARGS__), convert(10, __VA_ARGS__), convert(11, __VA_ARGS__), convert(12, __VA_ARGS__), convert(13, __VA_ARGS__), convert(14, __VA_ARGS__), convert(15, __VA_ARGS__) }, 10
 
 #endif

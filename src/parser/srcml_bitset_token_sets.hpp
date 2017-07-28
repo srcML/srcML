@@ -30,7 +30,7 @@ const antlr::BitSet srcMLParser::keyword_name_token_set(token_set(
     srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
     srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
     srcMLParser::QMARK, srcMLParser::BAR, srcMLParser::REFOPS, srcMLParser::RVALUEREF
-), 8);
+));
 
 const antlr::BitSet srcMLParser::keyword_token_set(token_set(
     srcMLParser::DO, srcMLParser::RETURN, srcMLParser::DEFAULT, srcMLParser::UNSAFE, srcMLParser::WHILE, srcMLParser::CASE,
@@ -40,7 +40,7 @@ const antlr::BitSet srcMLParser::keyword_token_set(token_set(
     srcMLParser::UNCHECKED, srcMLParser::BREAK, srcMLParser::CONTINUE, srcMLParser::TEMPLATE, srcMLParser::USING,
     srcMLParser::THROW, srcMLParser::ASSERT, srcMLParser::MACRO_CASE, srcMLParser::FOREVER, srcMLParser::STATIC_ASSERT,
     srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY
-), 8);
+));
 
 const antlr::BitSet srcMLParser::macro_call_token_set(token_set(srcMLParser::ELIF, srcMLParser::GROUP, srcMLParser::JOIN, srcMLParser::REGION, srcMLParser::LINE, srcMLParser::FINAL,
     srcMLParser::SELECT, srcMLParser::SET, srcMLParser::GET, srcMLParser::ASCENDING, srcMLParser::OVERRIDE, srcMLParser::BY,
@@ -50,7 +50,7 @@ const antlr::BitSet srcMLParser::macro_call_token_set(token_set(srcMLParser::ELI
     srcMLParser::ENDREGION, srcMLParser::THIS, srcMLParser::SIGNAL, srcMLParser::REMOVE, srcMLParser::LET, srcMLParser::IFDEF,
     srcMLParser::IFNDEF, srcMLParser::SUPER, srcMLParser::UNCHECKED, srcMLParser::VOID, srcMLParser::CRESTRICT, srcMLParser::ASM,
     srcMLParser::MUTABLE, srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY, srcMLParser::CXX_CLASS
-), 8);
+));
 
 const antlr::BitSet srcMLParser::argument_token_set(token_set(
     srcMLParser::VOLATILE, srcMLParser::REGISTER, srcMLParser::LBRACKET, srcMLParser::PROTECTED, srcMLParser::LINE, srcMLParser::BY, srcMLParser::DEFINE,
@@ -72,7 +72,7 @@ const antlr::BitSet srcMLParser::argument_token_set(token_set(
     srcMLParser::MACRO_SPECIFIER, srcMLParser::TEMPLATE, srcMLParser::CRESTRICT, srcMLParser::COMPLEX, srcMLParser::ATOMIC,
     srcMLParser::NORETURN, srcMLParser::IMAGINARY, srcMLParser::GENERIC_SELECTION, srcMLParser::ASM, srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH,
     srcMLParser::CXX_CLASS, srcMLParser::ATREQUIRED, srcMLParser::ATOPTIONAL, srcMLParser::BLOCK, srcMLParser::WEAK, srcMLParser::STRONG
-    ), 8);
+));
 
 const antlr::BitSet srcMLParser::enum_preprocessing_token_set(token_set(
     srcMLParser::EXTERN, srcMLParser::RESTRICT, srcMLParser::CONSTEXPR, srcMLParser::THREAD_LOCAL, srcMLParser::ALIGNAS,
@@ -83,28 +83,25 @@ const antlr::BitSet srcMLParser::enum_preprocessing_token_set(token_set(
     srcMLParser::OVERRIDE, srcMLParser::IMPLICIT, srcMLParser::DELEGATE, srcMLParser::UNSAFE, srcMLParser::READONLY, srcMLParser::PARTIAL,
     srcMLParser::EVENT, srcMLParser::ASYNC, srcMLParser::PARAMS, srcMLParser::CRESTRICT, srcMLParser::COMPLEX, srcMLParser::NORETURN,
     srcMLParser::IMAGINARY, srcMLParser::ENUM, srcMLParser::BLOCK, srcMLParser::WEAK, srcMLParser::STRONG
-), 8);
+));
 
 const antlr::BitSet srcMLParser::literal_tokens_set(token_set(
     srcMLParser::CHAR_START, srcMLParser::COMPLEX_NUMBER, srcMLParser::STRING_START, srcMLParser::CONSTANTS, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NULLPTR,
     srcMLParser::NULLLITERAL, srcMLParser::NIL
-
-), 8);
+));
 
 const antlr::BitSet srcMLParser::modifier_tokens_set(token_set(
     srcMLParser::MULTOPS, srcMLParser::REFOPS, srcMLParser::RVALUEREF, srcMLParser::QMARK, srcMLParser::BLOCKOP
-), 8);
+));
 
 const antlr::BitSet srcMLParser::skip_tokens_set(token_set(
     srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLParser::EOL_BACKSLASH, srcMLParser::COMMENT_START, srcMLParser::COMMENT_END, srcMLParser::LINECOMMENT_END, srcMLParser::COMMENT_TEXT, 
     srcMLParser::LINECOMMENT_START, srcMLParser::JAVADOC_COMMENT_START, srcMLParser::DOXYGEN_COMMENT_START, srcMLParser::LINE_DOXYGEN_COMMENT_START, srcMLParser::EOL
-
-), 8);
+));
 
 const antlr::BitSet srcMLParser::class_tokens_set(token_set(
     srcMLParser::CLASS, srcMLParser::CXX_CLASS, srcMLParser::STRUCT, srcMLParser::UNION, srcMLParser::ENUM
-
-), 8);
+));
 
 const antlr::BitSet srcMLParser::decl_specifier_tokens_set(token_set( 
 
@@ -116,7 +113,7 @@ const antlr::BitSet srcMLParser::decl_specifier_tokens_set(token_set(
     // decl_stmt
     srcMLParser::TRANSIENT, srcMLParser::INTERNAL
 
-), 8);
+));
 
 const antlr::BitSet srcMLParser::identifier_list_tokens_set(token_set(
 
@@ -136,6 +133,7 @@ const antlr::BitSet srcMLParser::identifier_list_tokens_set(token_set(
 
     //Qt
     srcMLParser::EMIT
-), 8);
+
+));
 
 #endif
