@@ -701,15 +701,7 @@ public:
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
     static const antlr::BitSet macro_call_token_set;
-
-#ifdef SRCML_BOOST_MPL_LARGE
     static const antlr::BitSet argument_token_set;
-#else
-    static const antlr::BitSet argument_token_set_one;
-    static const antlr::BitSet argument_token_set_two;
-    static const antlr::BitSet argument_token_set_three;
-#endif
-
     static const antlr::BitSet enum_preprocessing_token_set;
     static const antlr::BitSet literal_tokens_set;
     static const antlr::BitSet modifier_tokens_set;
@@ -4200,11 +4192,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             (
 
                 { 
-#ifdef SRCML_BOOST_MPL_LARGE
                     argument_token_set.member(LA(1))
-#else
-                    (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
-#endif
                     && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) && (LA(1) != ATOMIC || next_token() != LPAREN)
                  }?
@@ -4578,11 +4566,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // specifiers that occur in a type
 
         { 
-#ifdef SRCML_BOOST_MPL_LARGE
             argument_token_set.member(LA(1))
-#else
-            (argument_token_set_one.member(LA(1)) || argument_token_set_two.member(LA(1)) || argument_token_set_three.member(LA(1)))
-#endif
         }?
         specifier | template_specifier | auto_keyword[true] |
 
