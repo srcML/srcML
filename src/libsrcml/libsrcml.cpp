@@ -175,22 +175,12 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         global_archive.registered_languages.append(registry);
 
-        std::vector<std::string> save_prefix;
-        std::vector<std::string> save_ns;
-        try {
-            for(std::vector<std::string>::size_type i = 0; i < global_archive.prefixes.size(); ++i) {
-                save_prefix.push_back(global_archive.prefixes.at(i));
-                save_ns.push_back(global_archive.namespaces.at(i));
-
-            }
-
-        } catch(...) {
-            return SRCML_STATUS_ERROR;
-        }
+        std::vector<std::string> save_prefix = global_archive.prefixes;
+        std::vector<std::string> save_ns = global_archive.namespaces;
 
         srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
 
-        for(std::vector<std::string>::size_type i = 0; i < save_prefix.size(); ++i) {
+        for(decltype(save_prefix)::size_type i = 0; i < save_prefix.size(); ++i) {
             try {
                 srcml_archive_register_namespace(&global_archive, save_prefix.at(i).c_str(), save_ns.at(i).c_str());
             } catch(...) {
