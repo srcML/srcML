@@ -190,19 +190,6 @@ private:
         }
     }
 
-    int safeLA() {
-
-        int n = 1;
-        try {
-
-            n = srcMLParser::LA(1);
-        } catch (...) {
-            n = 1;
-        }
-
-        return n;
-    }
-
     /**
      * fillTokenBuffer
      *
@@ -240,13 +227,13 @@ private:
      * Push the start token token onto the output token stream flushing skipped tokens before output
      * if requested.
      */
-    void pushSToken(int token) {
+    inline void pushSToken(int token) {
 
         // push a new start token
         pushToken(antlr::RefToken(StartTokenFactory(token)));
     }
 
-    void pushSTokenFlush(int token) {
+    inline void pushSTokenFlush(int token) {
 
         // push a new start token
         pushTokenFlush(antlr::RefToken(StartTokenFactory(token)));
@@ -259,7 +246,7 @@ private:
      *
      * Push the end token token onto the output token stream no flushing skipped tokens before output.
      */
-    void pushEToken(int token) {
+    inline void pushEToken(int token) {
 
         // push a new end token
         pushToken(antlr::RefToken(EndTokenFactory(token)));
@@ -293,7 +280,7 @@ private:
     bool consumeSkippedToken() {
 
         // preprocessor (unless we already are in one)
-        if (isoption(options, SRCML_OPTION_CPP) && !inskip && safeLA() == srcMLParser::PREPROC) {
+        if (isoption(options, SRCML_OPTION_CPP) && !inskip && srcMLParser::LA(1) == srcMLParser::PREPROC) {
 
             // start preprocessor handling
             inskip = true;
@@ -326,7 +313,7 @@ private:
         }
 
         // macro call
-        if (safeLA() == srcMLParser::MACRO_NAME && !inskip) {
+        if (srcMLParser::LA(1) == srcMLParser::MACRO_NAME && !inskip) {
 
             inskip = true;
 
@@ -352,7 +339,7 @@ private:
 
         }
 
-        if (!inskip && safeLA() == srcMLParser::VISUAL_CXX_ASM) {
+        if (!inskip && srcMLParser::LA(1) == srcMLParser::VISUAL_CXX_ASM) {
 
             // start preprocessor handling
             inskip = true;
@@ -384,7 +371,7 @@ private:
             return true;
         }
 
-        if (isSkipToken(safeLA())) {
+        if (isSkipToken(srcMLParser::LA(1))) {
             // skipped tokens are put on a special buffer
             pushSkipToken();
 
@@ -403,7 +390,7 @@ private:
      *
      * Flush any skipped tokens to the output token stream.
      */
-    void flushSkip() {
+    inline void flushSkip() {
         flushSkip(output());
     }
 
@@ -414,7 +401,7 @@ private:
      *
      * @returns the number of skipped elements 
      */
-    int SkipBufferSize() {
+    inline int SkipBufferSize() {
         return (int)skiptb.size();
     }
 
@@ -424,7 +411,7 @@ private:
      *
      * Flush any skipped tokens to the output token stream.
      */
-    void flushSkip(std::list<antlr::RefToken>& rf) {
+    inline void flushSkip(std::list<antlr::RefToken>& rf) {
 
         rf.splice(rf.end(), skip());
     }
@@ -556,7 +543,7 @@ private:
      */
     inline void pushCorrectToken(const antlr::RefToken& rtoken) {
 
-        if (isSkipToken(safeLA()))
+        if (isSkipToken(srcMLParser::LA(1)))
 
             // push the token
             pushSkipToken();
