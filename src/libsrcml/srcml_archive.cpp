@@ -120,49 +120,12 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
     if(archive == NULL) return 0;
 
     srcml_archive * new_archive = srcml_archive_create();
+    if (!new_archive)
+        return 0;
 
-    if(!new_archive) return 0;
-
-    new_archive->encoding = archive->encoding;
-    new_archive->revision = archive->revision;
-    new_archive->language = archive->language;
-    new_archive->url = archive->url;
-    new_archive->version = archive->version;
-    new_archive->src_encoding = archive->src_encoding;
-
-    try {
-
-        for(std::vector<std::string>::size_type pos = 0; pos < archive->attributes.size(); ++pos)
-            new_archive->attributes.push_back(archive->attributes.at(pos));
-
-    } catch(...) {}
-
-    new_archive->options = archive->options;
-    new_archive->tabstop = archive->tabstop;
-
-    // clear out those added by srcml_archive_create
-    new_archive->prefixes.clear();
-    new_archive->namespaces.clear();
-    for(std::vector<std::string>::size_type pos = 0; pos < archive->namespaces.size(); ++pos) {
-
-        try {
-
-            srcml_archive_register_namespace(new_archive, archive->prefixes.at(pos).c_str(), archive->namespaces.at(pos).c_str());
-
-        } catch(...) {}
-
-    }
-
-    new_archive->processing_instruction = archive->processing_instruction;
-
-    new_archive->registered_languages = archive->registered_languages;
-
-    new_archive->user_macro_list = archive->user_macro_list;
-
-    new_archive->revision_number = archive->revision_number;
+    *new_archive = *archive;
 
     return new_archive;
-
 }
 
 /******************************************************************************
