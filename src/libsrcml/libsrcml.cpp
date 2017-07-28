@@ -862,9 +862,9 @@ const char * srcml_get_language_list(size_t pos) {
  */
 const char * srcml_check_extension(const char* filename) {
 
-    if(register_languages) {
-
+    if (register_languages) {
         register_languages = false;
+
         language_extension_registry registry = global_archive.registered_languages;
 
         global_archive.registered_languages = language_extension_registry();
@@ -872,20 +872,6 @@ const char * srcml_check_extension(const char* filename) {
         global_archive.registered_languages.register_standard_file_extensions();
 
         global_archive.registered_languages.append(registry);
-
-        std::vector<std::string> save_prefix;
-        std::vector<std::string> save_ns;
-        try {
-            for(std::vector<std::string>::size_type i = 0; i < global_archive.prefixes.size(); ++i) {
-                save_prefix.push_back(global_archive.prefixes.at(i));
-                save_ns.push_back(global_archive.namespaces.at(i));
-
-            }
-
-        } catch(...) {
-            return 0;
-        }
-
     }
 
     return srcml_archive_check_extension(&global_archive, filename);
