@@ -466,55 +466,43 @@ int srcMLOutput::initWriter() {
  */
 void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const std::vector<std::string>& uri) {
 
-    num2prefix.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
-    num2prefix.push_back(SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT);
-
-    num2uri.push_back(SRCML_SRC_NS_URI);
-    num2uri.push_back(SRCML_CPP_NS_URI);
-    num2uri.push_back(SRCML_ERR_NS_URI);
-    num2uri.push_back(SRCML_EXT_LITERAL_NS_URI);
-    num2uri.push_back(SRCML_EXT_OPERATOR_NS_URI);
-    num2uri.push_back(SRCML_EXT_MODIFIER_NS_URI);
-    num2uri.push_back(SRCML_EXT_POSITION_NS_URI);
-    num2uri.push_back(SRCML_EXT_OPENMP_NS_URI);
+    namespaces = {
+        { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,                     false },
+        { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_PREFIX_DEFAULT,          false },
+        { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_PREFIX_DEFAULT,          false },
+        { SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,  false },
+        { SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, false },
+        { SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, false },
+        { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, false },
+        { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   false },
+    };
 
     for (std::vector<std::string>::size_type outer_pos = 0; outer_pos < uri.size(); ++outer_pos) {
 
+        const std::string& value = uri[outer_pos];
+
         // find where the new URI is in the default URI list, or not
-        auto posit = std::find(num2uri.begin(), num2uri.end(), uri[outer_pos]);
-        if (posit != num2uri.end()) {
+        auto posit = std::find_if(namespaces.begin(), namespaces.end(), [value](const Namespace& n) { return n.uri == value; });
+        if (posit != namespaces.end()) {
 
             // update the default prefix
-            num2prefix[std::distance(num2uri.begin(), posit)] = prefix[outer_pos];
+            posit->prefix = prefix[outer_pos];
 
         } else {
 
             // create a new entry for this URI
-            num2prefix.push_back(prefix[outer_pos]);
-            num2uri.push_back(uri[outer_pos]);
+            namespaces.push_back({ prefix[outer_pos], uri[outer_pos], false });
         }
     }
-
-    // keep track of which num2's were used
-    num2used.resize(num2uri.size(), false);
 
     // setup attributes names for line/column position if used
     if (isoption(options, SRCML_OPTION_POSITION)) {
 
-        lineAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-        lineAttribute += ":line";
+        lineAttribute = namespaces[SRCML_EXT_POSITION_NS_URI_POS].prefix + ":line;";
 
-        line2Attribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-        line2Attribute += ":line2";
+        line2Attribute = namespaces[SRCML_EXT_POSITION_NS_URI_POS].prefix + ":line2";
 
-        columnAttribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
-        columnAttribute += ":column";
+        columnAttribute = namespaces[SRCML_EXT_POSITION_NS_URI_POS].prefix + ":column";
     }
 }
 
@@ -589,8 +577,8 @@ void srcMLOutput::outputPosition() {
         return;
 
     const char * position_localname = "position";
-    const char* prefix = num2prefix[3].c_str();
-    num2used[3] = true;
+    const char* prefix = namespaces[3].prefix.c_str();
+    namespaces[3].used = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST position_localname);
@@ -756,9 +744,9 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
             continue;
 
         std::string prefix = "xmlns";
-        if (num2prefix[i][0] != '\0') {
+        if (namespaces[i].prefix[0] != '\0') {
             prefix += ':';
-            prefix += num2prefix[i];
+            prefix += namespaces[i].prefix;
         }
 
         ns_list_size += prefix.size();
@@ -770,15 +758,15 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
     if(depth == 0) {
 
-        for(std::vector<std::string>::size_type pos =  SRCML_EXT_OPENMP_NS_URI_POS + 1; pos < num2prefix.size(); ++pos) {
+        for(std::vector<std::string>::size_type pos =  SRCML_EXT_OPENMP_NS_URI_POS + 1; pos < namespaces.size(); ++pos) {
 
             std::string prefix = "xmlns";
-            if (num2prefix[pos][0] != '\0') {
+            if (namespaces[pos].prefix[0] != '\0') {
                 prefix += ':';
-                prefix += num2prefix[pos];
+                prefix += namespaces[pos].prefix;
          }
         
-            xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST num2uri[pos].c_str());
+            xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST namespaces[pos].uri.c_str());
         }
     }
 }
@@ -806,9 +794,10 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             bool output_macrolist) {
 
     // recording which namespaces are used on this unit
-    num2used.resize(num2prefix.size(), false);
+    for (auto& ns : namespaces)
+        ns.used = false;
 
-    const char * prefix = num2prefix[0].c_str();
+    const char* prefix = namespaces[0].prefix.c_str();
     std::string maintag = prefix ? prefix : "";
     if (!maintag.empty())
         maintag += ":";
@@ -830,7 +819,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     std::string tabattribute;
     if (isoption(options, SRCML_OPTION_POSITION)) {
         stabs << tabsize;
-        tabattribute = num2prefix[SRCML_EXT_POSITION_NS_URI_POS];
+        tabattribute = namespaces[SRCML_EXT_POSITION_NS_URI_POS].prefix;
         tabattribute.append(":tabs");
     }
 
@@ -952,20 +941,20 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
         // record length of namespaces list
         reduced_ns = "";
         // Note: Skipping first namespace (srcML)
-        for (unsigned int i = 1; i < num2prefix.size(); ++i) {
+        for (unsigned int i = 1; i < namespaces.size(); ++i) {
 
-            if (!num2used[i])
+            if (!namespaces[i].used)
                 continue;
 
             std::string prefix = "xmlns";
-            if (num2prefix[i][0] != '\0') {
+            if (namespaces[i].prefix[0] != '\0') {
                 prefix += ':';
-                prefix += num2prefix[i];
+                prefix += namespaces[i].prefix;
             }
 
             reduced_ns += prefix;
             reduced_ns += "=\"";
-            reduced_ns += num2uri[i];
+            reduced_ns += namespaces[i].uri;
             reduced_ns += "\" ";
         }
     }
@@ -1095,9 +1084,9 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
     if (search != process.end() && search->second.name) {
         const Element& eparts = search->second;
         if (eparts.token_output)
-            eparts.token_output(this, token, eparts.name, num2prefix[eparts.prefix].c_str());
+            eparts.token_output(this, token, eparts.name, namespaces[eparts.prefix].prefix.c_str());
         else
-            processToken(token, eparts.name, num2prefix[eparts.prefix].c_str(), eparts.attr_name, eparts.attr_value);
+            processToken(token, eparts.name, namespaces[eparts.prefix].prefix.c_str(), eparts.attr_name, eparts.attr_value);
 
         return;
     }

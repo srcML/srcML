@@ -52,6 +52,12 @@ struct Element {
     token_output_t token_output;
 };
 
+struct Namespace {
+    std::string prefix;
+    std::string uri;
+    bool used;
+};
+
 /**
  * srcMLOutput
  *
@@ -168,14 +174,8 @@ public:
     /** xml encoding */
     const char* xml_encoding = nullptr;
 
-    /** array for a number to prefix */
-    std::vector<std::string> num2prefix;
-
-    /** array for a number to uri */
-    std::vector<std::string> num2uri;
-
-    /** array for number of uri's used */
-    std::vector<bool> num2used;
+    /* namespaces declared and used */
+    std::vector<Namespace> namespaces;
 
     /** an array of name-value attribute pairs */
     const std::vector<std::string> & unit_attributes;
