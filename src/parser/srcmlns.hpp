@@ -30,8 +30,6 @@
 #include <string>
 #include <array>
 
-#include <boost/optional.hpp>
-
 /** xml declaration standalone attribute */
 const char* const XML_DECLARATION_STANDALONE = "yes";
 
