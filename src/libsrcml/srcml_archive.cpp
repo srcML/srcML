@@ -442,16 +442,16 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     // find if the namespace is already in
-    auto urientry = std::find(archive->namespaces.begin(), archive->namespaces.end(), uri);
-    if (urientry != archive->namespaces.end()) {
+    auto urientry = std::find(archive->uris.begin(), archive->uris.end(), uri);
+    if (urientry != archive->uris.end()) {
 
-        auto pos = std::distance(archive->namespaces.begin(), urientry);
+        auto pos = std::distance(archive->uris.begin(), urientry);
         archive->prefixes[pos] = prefix;
 
     } else {
 
         archive->prefixes.push_back(prefix);
-        archive->namespaces.push_back(uri);
+        archive->uris.push_back(uri);
     }
 
     return SRCML_STATUS_OK;
@@ -650,7 +650,7 @@ size_t srcml_archive_get_tabstop(const struct srcml_archive* archive) {
 size_t srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
 
     /** @todo may want to make ssize_t so can return -1 */
-    return archive ? archive->namespaces.size() : 0;
+    return archive ? archive->uris.size() : 0;
 
 }
 
@@ -687,10 +687,10 @@ const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archiv
         return 0;
 
     // find if the namespace is already in
-    auto urientry = std::find(archive->namespaces.begin(), archive->namespaces.end(), namespace_uri);
-    if (urientry != archive->namespaces.end()) {
+    auto urientry = std::find(archive->uris.begin(), archive->uris.end(), namespace_uri);
+    if (urientry != archive->uris.end()) {
 
-        auto pos = std::distance(archive->namespaces.begin(), urientry);
+        auto pos = std::distance(archive->uris.begin(), urientry);
         return archive->prefixes[pos].c_str();
     }
 
@@ -710,10 +710,10 @@ const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive,
     if (archive == NULL)
         return 0;
 
-    if (pos >= archive->namespaces.size())
+    if (pos >= archive->uris.size())
         return 0;
 
-    return archive->namespaces[pos].c_str();
+    return archive->uris[pos].c_str();
 }
 
 /**
@@ -734,7 +734,7 @@ const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archiv
     if (prefixentry != archive->prefixes.end()) {
 
         auto pos = std::distance(archive->prefixes.begin(), prefixentry);
-        return archive->namespaces[pos].c_str();
+        return archive->uris[pos].c_str();
     }
 
     return 0;
@@ -875,7 +875,7 @@ int srcml_archive_write_open_internal(srcml_archive * archive, xmlOutputBufferPt
                                                 archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                                 archive->options,
                                                 archive->prefixes,
-                                                archive->namespaces,
+                                                archive->uris,
                                                 archive->processing_instruction,
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -944,7 +944,7 @@ int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_
                                                 archive->encoding ? archive->encoding->c_str() : "UTF-8",
                                                 archive->options,
                                                 archive->prefixes,
-                                                archive->namespaces,
+                                                archive->uris,
                                                 archive->processing_instruction,
                                                 archive->tabstop,
                                                 srcml_check_language(archive->language ? archive->language->c_str() : 0),
@@ -1062,7 +1062,7 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
     boost::optional<std::string> encoding, language, url, version;
     bool done = !archive->reader->read_root_unit_attributes(encoding, language, url, version,
                                                             archive->attributes, archive->prefixes,
-                                                            archive->namespaces,
+                                                            archive->uris,
                                                             archive->processing_instruction,
                                                             archive->options,
                                                             archive->tabstop,

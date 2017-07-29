@@ -151,6 +151,8 @@ private:
     std::vector<std::string> & prefix;
     std::vector<std::string> & uri;
 
+    std::vector<Namespace> namespaces;
+
     /** translation options */
     OPTION_TYPE& options;
 

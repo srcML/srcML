@@ -222,7 +222,7 @@ struct srcml_archive {
     std::vector<std::string> prefixes;
 
     /** namespaces an array of XML namespaces */
-    std::vector<std::string> namespaces;
+    std::vector<std::string> uris;
 
     /** target/data pair for processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;

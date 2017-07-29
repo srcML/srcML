@@ -176,7 +176,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         global_archive.registered_languages.append(registry);
 
         std::vector<std::string> save_prefix = global_archive.prefixes;
-        std::vector<std::string> save_ns = global_archive.namespaces;
+        std::vector<std::string> save_ns = global_archive.uris;
 
         srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
 

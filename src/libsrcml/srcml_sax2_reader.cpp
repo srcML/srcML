@@ -182,7 +182,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
     version.swap(handler.archive->version);
     attributes.swap(handler.archive->attributes);
     prefixes.swap(handler.archive->prefixes);
-    namespaces.swap(handler.archive->namespaces);
+    namespaces.swap(handler.archive->uris);
     processing_instruction.swap(handler.archive->processing_instruction);
     options = handler.archive->options;
     tabstop = handler.archive->tabstop;
