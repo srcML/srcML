@@ -35,7 +35,7 @@
 #include "srcMLException.hpp"
 #include <string>
 #include <unordered_map>
-
+#include "srcmlns.hpp"
 #include <libxml/xmlwriter.h>
 
 enum PREFIXES { SRC = 0, CPP = 1, OMP = 7 };
@@ -50,12 +50,6 @@ struct Element {
     const char* attr_name;
     const char* attr_value;
     token_output_t token_output;
-};
-
-struct Namespace {
-    std::string prefix;
-    std::string uri;
-    bool used;
 };
 
 /**

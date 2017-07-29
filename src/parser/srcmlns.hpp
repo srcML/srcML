@@ -30,6 +30,12 @@
 #include <string>
 #include <array>
 
+struct Namespace {
+    std::string prefix;
+    std::string uri;
+    bool used;
+};
+
 /** xml declaration standalone attribute */
 const char* const XML_DECLARATION_STANDALONE = "yes";
 
