@@ -345,13 +345,12 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
   /** is there a cpp namespace */
   bool is_cpp = false;
-  for(int pos = 0; SRCML_URI_PREFIX[pos][0]; ++pos) {
+  for (auto& prefix : SRCML_URI_PREFIX) {
 
-    std::string cpp_uri = SRCML_URI_PREFIX[pos] + "srcML/cpp";
+    std::string cpp_uri = prefix + "srcML/cpp";
 
     is_cpp = strnstr(xml, cpp_uri.c_str(), end_start_unit - xml) != 0;
     if(is_cpp) break;
-
   }
 
   OPTION_TYPE save_options = options;
