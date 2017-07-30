@@ -20,7 +20,7 @@ define foutput <<- 'STDERR'
 	XML encoding:  UTF-8
 	    1 sub/a.cpp	C++	1	a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8
 
-	Translated: 1	Skipped: 0	Error: 0	Total: 1
+	srcML Files: 1	non-srcML Files: 0	Errors: 0	Total Files: 1
 	STDERR
 
 xmlcheck "$fsrcml"
@@ -53,7 +53,7 @@ define output <<- 'STDERR'
 	XML encoding:  UTF-8
 	    1 	C++	1	a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8
 
-	Translated: 1	Skipped: 0	Error: 0	Total: 1
+	srcML Files: 1	non-srcML Files: 0	Errors: 0	Total Files: 1
 	STDERR
 
 xmlcheck "$srcml"
