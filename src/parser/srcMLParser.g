@@ -659,6 +659,9 @@ tokens {
 
     SCOMMENT;
     SLINECOMMENT;
+    SLINE_DOXYGEN_COMMENT;
+    SJAVADOC_COMMENT;
+    SDOXYGEN_COMMENT;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;

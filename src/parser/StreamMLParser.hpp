@@ -163,6 +163,9 @@ private:
         case srcMLParser::EOL_BACKSLASH:
         case srcMLParser::COMMENT_START:
         case srcMLParser::COMMENT_END:
+        case srcMLParser::JAVADOC_COMMENT_END:
+        case srcMLParser::DOXYGEN_COMMENT_END:
+        case srcMLParser::LINE_DOXYGEN_COMMENT_END:
         case srcMLParser::LINECOMMENT_END:
         case srcMLParser::COMMENT_TEXT:
         case srcMLParser::LINECOMMENT_START:
@@ -380,7 +383,6 @@ private:
 
                 pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SCOMMENT)));
                 pushSkipToken();
-                srcMLParser::consume();
 
                 break;
 
@@ -388,7 +390,55 @@ private:
 
                 pushSkipToken();
                 pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SCOMMENT)));
-                srcMLParser::consume();
+
+                break;
+
+            case srcMLParser::LINE_DOXYGEN_COMMENT_START:
+
+                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SLINE_DOXYGEN_COMMENT)));
+                pushSkipToken();
+
+                break;
+
+            case srcMLParser::LINE_DOXYGEN_COMMENT_END:
+
+                s = srcMLParser::LT(1)->getText();
+
+                if (s.back() != '\n') {
+                    pushSkipToken();
+                    pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SLINE_DOXYGEN_COMMENT)));
+                } else {
+                    pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SLINE_DOXYGEN_COMMENT)));
+                    pushSkipToken();
+                }
+
+                break;
+
+            case srcMLParser::DOXYGEN_COMMENT_START:
+
+                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SDOXYGEN_COMMENT)));
+                pushSkipToken();
+
+                break;
+
+            case srcMLParser::DOXYGEN_COMMENT_END:
+
+                pushSkipToken();
+                pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SDOXYGEN_COMMENT)));
+
+                break;
+
+            case srcMLParser::JAVADOC_COMMENT_START:
+
+                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SJAVADOC_COMMENT)));
+                pushSkipToken();
+
+                break;
+
+            case srcMLParser::JAVADOC_COMMENT_END:
+
+                pushSkipToken();
+                pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SJAVADOC_COMMENT)));
 
                 break;
 
@@ -396,7 +446,6 @@ private:
 
                 pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SLINECOMMENT)));
                 pushSkipToken();
-                srcMLParser::consume();
 
                 break;
 
@@ -411,7 +460,6 @@ private:
                     pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SLINECOMMENT)));
                     pushSkipToken();
                 }
-                srcMLParser::consume();
 
                 break;
 
@@ -419,11 +467,12 @@ private:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
 
-                // rest of consume process
-                srcMLParser::consume();
 
                 break;
             }
+
+            // rest of consume process
+            srcMLParser::consume();
 
             return true;
         }

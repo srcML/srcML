@@ -39,19 +39,16 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SCOMMENT,   { "comment", SRC, "type", "block", nullptr }},
     { SLINECOMMENT,   { "comment", SRC, "type", "line", nullptr }},
 
-    { LINE_DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
+    { SLINE_DOXYGEN_COMMENT, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "line", "format", "doxygen");
-        pout->processText(token);
     }}},
 
-    { JAVADOC_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
+    { SJAVADOC_COMMENT, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "block", "format", "javadoc");
-        pout->processText(token);
     }}},
 
-    { DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
+    { SDOXYGEN_COMMENT, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "block", "format", "doxygen");
-        pout->processText(token);
     }}},
 
     { SSTRING,                      { "literal",            SRC, "type", "string",  nullptr }},

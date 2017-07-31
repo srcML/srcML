@@ -60,6 +60,9 @@ tokens {
     STRING_END;
     CHAR_END;
     CONTROL_CHAR;
+    LINE_DOXYGEN_COMMENT_END;
+    JAVADOC_COMMENT_END;
+    DOXYGEN_COMMENT_END;
 }
 
 {
@@ -177,7 +180,7 @@ COMMENT_TEXT {
                   setLine(getLine() + (1 << 16));
 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-              if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+              if (mode == LINECOMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
 
                   rawstring = false;
                   $setType(mode); selector->pop();
@@ -243,7 +246,7 @@ COMMENT_TEXT {
         '\052'..'\056' |
 
         '\057' /* '/' */
-                { if (prevLA == '*' && mode == COMMENT_END) { $setType(mode); selector->pop(); } } |
+                { if (prevLA == '*' && ((mode == COMMENT_END) || (mode == JAVADOC_COMMENT_END) || (mode == DOXYGEN_COMMENT_END) ) ) { $setType(mode); selector->pop(); } } |
 
         '\060'..';' | 
 

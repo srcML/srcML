@@ -54,7 +54,10 @@ tokens {
     COMMENT_START;
     JAVADOC_COMMENT_START;
     DOXYGEN_COMMENT_START;
+    JAVADOC_COMMENT_END;
+    DOXYGEN_COMMENT_END;
     LINE_DOXYGEN_COMMENT_START;
+    LINE_DOXYGEN_COMMENT_END;
     CHAR_START;
     MACRO_NAME;
     COMPLEX_NUMBER;
@@ -162,10 +165,13 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
 LINECOMMENT_START
     :   '/' ('/' { 
 
-                if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!'))
+                int mode = LINECOMMENT_END;
+                if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!')) {
                     $setType(LINE_DOXYGEN_COMMENT_START);
+                    mode = LINE_DOXYGEN_COMMENT_END;
+                }
                 
-                changetotextlexer(LINECOMMENT_END);
+                changetotextlexer(mode);
 
                 // when we return, we may have eaten the EOL, so we will turn back on startline
                 startline = true;
@@ -174,19 +180,24 @@ LINECOMMENT_START
             } |
             '*'
             { 
+                int mode = COMMENT_END;
                 if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*') {
 
-                    if(next_char()  != '/')
+                    if(next_char()  != '/') {
                         $setType(JAVADOC_COMMENT_START);
-                    else
+                        mode = JAVADOC_COMMENT_END;
+                    } else {
                         $setType(COMMENT_START);
+                    }
 
                 } else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!')) {
 
-                    if(next_char() != '/')
+                    if(next_char() != '/') {
                         $setType(DOXYGEN_COMMENT_START);
-                    else
+                        mode = DOXYGEN_COMMENT_END;
+                    } else {
                         $setType(COMMENT_START);
+                    }
 
                 } else {
 
@@ -194,7 +205,7 @@ LINECOMMENT_START
 
                 }
 
-                changetotextlexer(COMMENT_END);
+                changetotextlexer(mode);
 
                 // comment are removed before includes are processed, so we are at the start of a line
                 startline = true;
