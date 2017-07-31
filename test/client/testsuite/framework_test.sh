@@ -211,12 +211,16 @@ check_file() {
     # trace the command
     firsthistoryentry
 
+    set -e
+
     diff $1 $2
     [ ! -s $STDERR ]
 
     if [ $exit_status -ne 0 ]; then
         exit 1
     fi
+
+    set +e
 
     # return to capturing stdout and stderr
     capture_output
@@ -263,11 +267,14 @@ check_exit() {
 # Currently only checks for well-formed xml, not DTD validity
 xmlcheck() {
 
+    set -e
+
     if [ "${1:0:1}" != "<" ]; then
         xmllint --noout ${1}
     else
         echo "${1}" | xmllint --noout /dev/stdin
     fi;
 
+    set +e
     true
 }
