@@ -34,11 +34,11 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     { SUNIT,  { "unit", SRC, 0, 0, [](params) { pout->processUnit(token); }}},
 
-    { START_ELEMENT_TOKEN,  { "", SRC, 0, 0, [](params) { pout->processText(token); }}},
+    { START_ELEMENT_TOKEN,  { 0, SRC, 0, 0, nullptr }},
 
     { COMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "block");
-        pout->processTextPosition(token);
+        pout->processText(token);
     }}},
 
    { COMMENT_END,   { "comment", SRC, 0, 0, [](params) { 
@@ -52,7 +52,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     { LINECOMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "line");
-        pout->processTextPosition(token);
+        pout->processText(token);
     }}},
 
     { LINECOMMENT_END, { "comment", SRC, 0, 0, [](params) {
@@ -75,17 +75,17 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     { LINE_DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "line", "format", "doxygen");
-        pout->processTextPosition(token);
+        pout->processText(token);
     }}},
 
     { JAVADOC_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "block", "format", "javadoc");
-        pout->processTextPosition(token);
+        pout->processText(token);
     }}},
 
     { DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "block", "format", "doxygen");
-        pout->processTextPosition(token);
+        pout->processText(token);
     }}},
 
     { SSTRING,                      { "literal",            SRC, "type", "string",  nullptr }},
