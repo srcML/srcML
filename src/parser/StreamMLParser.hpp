@@ -152,7 +152,7 @@ private:
      *
      * @returns if the token should be skipped.
      */
-    bool isSkipToken(int token_type) const {
+    bool isSkipToken(int token_type) {
 
         switch (token_type) {
 
@@ -371,7 +371,28 @@ private:
             return true;
         }
 
-        if (isSkipToken(srcMLParser::LA(1))) {
+        if (srcMLParser::LA(1) == srcMLParser::COMMENT_START) {
+
+            pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SCOMMENT)));
+
+            pushSkipToken();
+
+            srcMLParser::consume();
+
+            return true;
+
+        } else if (srcMLParser::LA(1) == srcMLParser::COMMENT_END) {
+
+            pushSkipToken();
+
+            pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SCOMMENT)));
+
+            srcMLParser::consume();
+
+            return true;
+
+        } else if (isSkipToken(srcMLParser::LA(1))) {
+
             // skipped tokens are put on a special buffer
             pushSkipToken();
 

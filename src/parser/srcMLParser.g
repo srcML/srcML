@@ -657,6 +657,8 @@ tokens {
     SOMP_ARGUMENT;
     SOMP_EXPRESSION;
 
+    SCOMMENT;
+
     // Last token used for boundary
     END_ELEMENT_TOKEN;
 }
@@ -8891,7 +8893,6 @@ enum_short_variable_declaration[] { ENTRY_DEBUG } :
         }
         variable_declaration_nameinit
 ;
-
 
 /*
   end of file
