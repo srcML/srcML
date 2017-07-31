@@ -371,33 +371,34 @@ private:
             return true;
         }
 
-        if (srcMLParser::LA(1) == srcMLParser::COMMENT_START) {
+        if (isSkipToken(srcMLParser::LA(1))) {
 
-            pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SCOMMENT)));
+            switch (srcMLParser::LA(1)) {
+            case srcMLParser::COMMENT_START:
 
-            pushSkipToken();
+                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SCOMMENT)));
+                pushSkipToken();
+                srcMLParser::consume();
 
-            srcMLParser::consume();
+                break;
 
-            return true;
+            case srcMLParser::COMMENT_END:
 
-        } else if (srcMLParser::LA(1) == srcMLParser::COMMENT_END) {
+                pushSkipToken();
+                pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SCOMMENT)));
+                srcMLParser::consume();
 
-            pushSkipToken();
+                break;
 
-            pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SCOMMENT)));
+            default:
+                // skipped tokens are put on a special buffer
+                pushSkipToken();
 
-            srcMLParser::consume();
+                // rest of consume process
+                srcMLParser::consume();
 
-            return true;
-
-        } else if (isSkipToken(srcMLParser::LA(1))) {
-
-            // skipped tokens are put on a special buffer
-            pushSkipToken();
-
-            // rest of consume process
-            srcMLParser::consume();
+                break;
+            }
 
             return true;
         }
