@@ -321,7 +321,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
         out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
 
     if (is_archive)
-        out.processText("\n\n", 2);
+        out.outputUnitSeparator();
 
   }
 
@@ -378,7 +378,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
   out.srcMLTextWriterEndElement(out.getWriter());
 
   if ((options & SRCML_OPTION_ARCHIVE) > 0)
-      out.processText("\n\n", 2);
+      out.outputUnitSeparator();
 
   return true;
 
@@ -425,7 +425,7 @@ bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xm
         out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
 
     if (is_archive)
-        out.processText("\n\n", 2);
+        out.outputUnitSeparator();
 
   }
 
@@ -441,7 +441,7 @@ bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xm
   out.srcMLTextWriterEndElement(out.getWriter());
 
   if ((options & SRCML_OPTION_ARCHIVE) > 0)
-      out.processText("\n\n", 2);
+      out.outputUnitSeparator();
 
   return true;
 
@@ -482,7 +482,7 @@ bool srcml_translator::add_unit_raw(const char * xml, int size) {
         out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
 
     if (is_archive)
-        out.processText("\n\n", 2);
+        out.outputUnitSeparator();
 
   }
 
@@ -492,7 +492,7 @@ bool srcml_translator::add_unit_raw(const char * xml, int size) {
     xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
 
   if ((options & SRCML_OPTION_ARCHIVE) > 0)
-      out.processText("\n\n", 2);
+      out.outputUnitSeparator();
 
   return true;
 
@@ -533,7 +533,7 @@ bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
         out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
 
     if (is_archive)
-        out.processText("\n\n", 2);
+        out.outputUnitSeparator();
 
   }
 
@@ -542,7 +542,7 @@ bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
   xmlNodeDumpOutput(out.output_buffer, doc, node, 0, 0, 0);
 
   if ((options & SRCML_OPTION_ARCHIVE) > 0)
-      out.processText("\n\n", 2);
+      out.outputUnitSeparator();
 
   return true;
 

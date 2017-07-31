@@ -188,6 +188,10 @@ void srcMLOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
     --openelementcount;
 }
 
+void srcMLOutput::outputUnitSeparator() {
+    
+    processText("\n\n", 2);
+}
 
 /**
  * lineAttributeValue
@@ -387,7 +391,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         for(std::vector<std::string>::size_type pos =  OMP + 1; pos < namespaces.size(); ++pos) {
 
             std::string prefix = "xmlns";
-            if (namespaces[pos].prefix[0] != '\0') {
+            if (namespaces[pos].prefix[SRC] != '\0') {
                 prefix += ':';
                 prefix += namespaces[pos].prefix;
          }
@@ -573,7 +577,7 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
                 continue;
 
             std::string prefix = "xmlns";
-            if (namespaces[i].prefix[0] != '\0') {
+            if (namespaces[i].prefix[SRC] != '\0') {
                 prefix += ':';
                 prefix += namespaces[i].prefix;
             }
@@ -604,7 +608,7 @@ inline void srcMLOutput::processText(const std::string& str) {
  *
  * Callback to process/output text outputting size bytes.
  */
-void srcMLOutput::processText(const char* s, int size) {
+inline void srcMLOutput::processText(const char* s, int size) {
 
     xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s, size);
 }

@@ -103,6 +103,8 @@ public:
 
     void outputPreRootProcessingInstruction();
 
+    void outputUnitSeparator();
+
     // start a unit element with the passed metadata
     void startUnit(const char* unit_language, const char * revision,
                    const char* unit_url, const char* unit_filename,
