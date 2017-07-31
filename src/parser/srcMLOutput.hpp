@@ -38,7 +38,18 @@
 #include "srcmlns.hpp"
 #include <libxml/xmlwriter.h>
 
-enum PREFIXES { SRC = 0, CPP = 1, OMP = 7 };
+/** 
+ * anonymous enum for prefix positions
+ */
+enum PREFIXES { SRC,
+       CPP,
+       ERR,
+       LIT,
+       OP,
+       MOD,
+       POS,
+       OMP
+};
 
 class srcMLOutput;
 

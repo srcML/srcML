@@ -41,20 +41,6 @@
 
 #define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
 
-/** 
- * anonymous enum for prefix positions
- */
-enum { SRCML_SRC_NS_URI_POS,
-       SRCML_CPP_NS_URI_POS,
-       SRCML_ERR_NS_URI_POS,
-       SRCML_EXT_LITERAL_NS_URI_POS,
-       SRCML_EXT_OPERATOR_NS_URI_POS,
-       SRCML_EXT_MODIFIER_NS_URI_POS,
-       SRCML_EXT_POSITION_NS_URI_POS,
-       SRCML_EXT_OPENMP_NS_URI_POS
-
-};
-
 /**
  * srcMLOutput
  * @param ints a token stream
@@ -138,11 +124,11 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
     // setup attributes names for line/column position if used
     if (isoption(options, SRCML_OPTION_POSITION)) {
 
-        lineAttribute = namespaces[SRCML_EXT_POSITION_NS_URI_POS].prefix + ":line;";
+        lineAttribute = namespaces[POS].prefix + ":line;";
 
-        line2Attribute = namespaces[SRCML_EXT_POSITION_NS_URI_POS].prefix + ":line2";
+        line2Attribute = namespaces[POS].prefix + ":line2";
 
-        columnAttribute = namespaces[SRCML_EXT_POSITION_NS_URI_POS].prefix + ":column";
+        columnAttribute = namespaces[POS].prefix + ":column";
     }
 }
 
@@ -398,7 +384,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
     if(depth == 0) {
 
-        for(std::vector<std::string>::size_type pos =  SRCML_EXT_OPENMP_NS_URI_POS + 1; pos < namespaces.size(); ++pos) {
+        for(std::vector<std::string>::size_type pos =  OMP + 1; pos < namespaces.size(); ++pos) {
 
             std::string prefix = "xmlns";
             if (namespaces[pos].prefix[0] != '\0') {
@@ -459,7 +445,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     std::string tabattribute;
     if (isoption(options, SRCML_OPTION_POSITION)) {
         stabs << tabsize;
-        tabattribute = namespaces[SRCML_EXT_POSITION_NS_URI_POS].prefix;
+        tabattribute = namespaces[POS].prefix;
         tabattribute.append(":tabs");
     }
 
