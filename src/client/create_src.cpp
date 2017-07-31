@@ -125,13 +125,6 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_unit_free(unit);
             }
 
-            // read the current unit
-            srcml_unit* unit = srcml_archive_read_unit_header(arch);
-            if (!unit) {
-                SRCMLlog(CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
-                exit(4);
-            }
-
             // setup output archive
             srcml_archive* oarch = srcml_archive_create();
 
@@ -172,7 +165,8 @@ void create_src(const srcml_request_t& srcml_request,
             //   no cli request to make it an archive
             //   not a directory (if local file)
             // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
-            if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
+            if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" && (srcml_request.unit > 0
+                || !srcml_archive_is_full_archive(arch)) &&
                 !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_ARCHIVE)) &&
                 !input_sources[0].isdirectory) {
 
@@ -206,10 +200,22 @@ void create_src(const srcml_request_t& srcml_request,
             else
                 srcml_archive_write_open_filename(oarch, destination.c_str(), compression);
 
-            // write the unit that we found
-            srcml_archive_write_unit(oarch, unit);
+            // read the current unit
+            while (1) {
+                srcml_unit* unit = srcml_archive_read_unit_header(arch);
+                if (!unit && srcml_request.unit > 0) {
+                    SRCMLlog(CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
+                    exit(4);
+                }
+                if (!unit)
+                    break;
 
-            srcml_unit_free(unit);
+                srcml_archive_write_unit(oarch, unit);
+                srcml_unit_free(unit);
+
+                if (srcml_request.unit)
+                    break;
+            }
 
             srcml_archive_close(oarch);
             srcml_archive_free(oarch);

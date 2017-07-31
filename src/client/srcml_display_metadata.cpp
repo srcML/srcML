@@ -48,8 +48,7 @@ namespace {
 
         std::cout << "XML encoding: ";
         const char* xml_encoding = srcml_archive_get_xml_encoding(srcml_arch);
-        std::cout << (xml_encoding ? xml_encoding : "(null)") << '\n'
-                  << "\n";
+        std::cout << (xml_encoding ? xml_encoding : "(null)") << '\n';
 
         int numUnits = 0;
         while (true) {
@@ -75,11 +74,11 @@ namespace {
 
         for (size_t i = 0; i < nsSize; ++i) {
             if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-                auto prefix = srcml_archive_get_namespace_uri(srcml_arch, i);
+                auto prefix = srcml_archive_get_namespace_prefix(srcml_arch, i);
                 auto uri = srcml_archive_get_namespace_uri(srcml_arch, i);
                 std::cout << "xmlns";
                 if (prefix[0] != 0) {
-                    std::cout << prefix;
+                    std::cout << ':' << prefix;
                 }
                 std::cout << "=\"" << uri << "\"\n";
             }
@@ -184,6 +183,12 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         std::string pretty_meta_body;
 
         // HEADER ONLY METADATA
+        if (option(SRCML_COMMAND_DISPLAY_SRCML_ENCODING)) {
+            if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_ENCODING)
+                pretty_meta_header += "%X\n";
+            else
+                pretty_meta_header += "encoding=\"%X\"\n";
+        }
 
         if (option(SRCML_COMMAND_DISPLAY_SRCML_URL)) {
             if ((display_commands & srcml_request.command) == SRCML_COMMAND_DISPLAY_SRCML_URL)

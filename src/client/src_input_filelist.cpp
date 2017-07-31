@@ -105,7 +105,7 @@ int src_input_filelist(ParseQueue& queue,
         // process this file
         // everything in a filelist is assumed to be source, including srcML files, so change the state
         srcml_input_src input(sline);
-        input.state = SRC;
+     //   input.state = SRC;e
         srcml_handler_dispatch(queue, srcml_arch, srcml_request, input, destination);
     }
 

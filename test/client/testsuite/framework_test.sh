@@ -140,6 +140,8 @@ check() {
 
     local exit_status=$?
 
+    set -e
+
     # return stdout and stderr to standard streams
     uncapture_output
 
@@ -181,6 +183,8 @@ check() {
         [ ! -s $STDOUT ]
         [ ! -s $STDERR ]
     fi
+
+    set +e
 
     if [ $exit_status -ne 0 ]; then
         exit 1

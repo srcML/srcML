@@ -20,15 +20,12 @@ define archive_output <<- 'STDOUT'
 
 echo list.txt | tr " " "\n" | cpio --quiet -o > list.txt.cpio
 
-message "A"
 srcml --files-from list.txt.cpio
 check "$archive_output" "$error"
 
-message "B"
 srcml --files-from list.txt.cpio -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
-message "C"
 # cpio.bz2
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

@@ -54,9 +54,14 @@ int srcml_handler_dispatch(ParseQueue& queue,
     // call appropriate handler
     if (input.state == SRCML) {
 
-        // compressions require a per-input decompression stage
+       // input must go through libcurl pipe
         srcml_input_src uninput = input;
-        input_file(uninput);
+        if (!input_curl(uninput))
+            return 0;
+
+        // may have some compressions/archives
+        uninput.fd = input_archive(uninput);
+
         return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol == "text") {
@@ -78,6 +83,8 @@ int srcml_handler_dispatch(ParseQueue& queue,
         if (status != SRCML_STATUS_OK)
             return 0;
         createdsrcml = true;
+
+        srcml_archive_enable_full_archive(srcml_arch);
 
         int num = src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
 
@@ -292,7 +299,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     write_queue.stop();
 
     // close any created srcML archive
-    if (write_queue.numWritten()) {
+    if (createdsrcml || write_queue.numWritten()) {
         srcml_archive_close(srcml_arch);
         srcml_archive_free(srcml_arch);
 

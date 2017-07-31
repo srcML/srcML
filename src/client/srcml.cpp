@@ -201,8 +201,8 @@ namespace {
                               const srcml_output_dest& destination) {
 
         return std::find_if(input_sources.begin(), input_sources.end(), is_src) != input_sources.end() ||
-        (input_sources.size() > 1 && destination.state == SRCML) ||
-        (input_sources.size() == 1 && input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
+        (input_sources.size() > 1 && destination.state == SRCML) /*||
+        (input_sources.size() == 1 && input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML)) */;
     }
 
     /*
@@ -255,6 +255,8 @@ namespace {
         return (option(SRCML_COMMAND_SRC) || (destination.state != SRCML &&
             !request_create_srcml(srcml_request, input_sources, destination) &&
             !request_display_metadata(srcml_request, input_sources, destination) &&
-            !request_transform_srcml(srcml_request, input_sources, destination)));
+            !request_transform_srcml(srcml_request, input_sources, destination))) ||
+            (input_sources.size() == 1 && input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
+        ;
     }
 }

@@ -468,13 +468,13 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
 
     namespaces = {
         { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,                     false },
-        { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_PREFIX_DEFAULT,          false },
-        { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_PREFIX_DEFAULT,          false },
-        { SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,  SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,  false },
-        { SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, false },
-        { SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, false },
-        { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, false },
-        { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   false },
+        { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_URI,                     false },
+        { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_URI,                     false },
+        { SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,  SRCML_EXT_LITERAL_NS_URI,             false },
+        { SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_URI,            false },
+        { SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI,            false },
+        { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI,            false },
+        { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_URI,              false },
     };
 
     for (std::vector<std::string>::size_type outer_pos = 0; outer_pos < uri.size(); ++outer_pos) {
@@ -765,7 +765,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
                 prefix += ':';
                 prefix += namespaces[pos].prefix;
          }
-        
+
             xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST namespaces[pos].uri.c_str());
         }
     }
