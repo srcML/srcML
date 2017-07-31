@@ -165,6 +165,7 @@ private:
         case srcMLParser::COMMENT_END:
         case srcMLParser::JAVADOC_COMMENT_END:
         case srcMLParser::DOXYGEN_COMMENT_END:
+        case srcMLParser::LINE_DOXYGEN_COMMENT_START:
         case srcMLParser::LINE_DOXYGEN_COMMENT_END:
         case srcMLParser::LINECOMMENT_END:
         case srcMLParser::COMMENT_TEXT:
@@ -179,7 +180,6 @@ private:
             // a line comment)
         case srcMLParser::JAVADOC_COMMENT_START:
         case srcMLParser::DOXYGEN_COMMENT_START:
-        case srcMLParser::LINE_DOXYGEN_COMMENT_START:
         case srcMLParser::EOL:
 
             return !inskip;
