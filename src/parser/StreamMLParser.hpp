@@ -165,6 +165,7 @@ private:
         case srcMLParser::COMMENT_END:
         case srcMLParser::LINECOMMENT_END:
         case srcMLParser::COMMENT_TEXT:
+        case srcMLParser::LINECOMMENT_START:
             return true;
             break;
 
@@ -173,7 +174,6 @@ private:
             // where the detection of the end of the preprocessing line
             // is needed (preprocessing lines end at EOL, or the start of
             // a line comment)
-        case srcMLParser::LINECOMMENT_START:
         case srcMLParser::JAVADOC_COMMENT_START:
         case srcMLParser::DOXYGEN_COMMENT_START:
         case srcMLParser::LINE_DOXYGEN_COMMENT_START:
