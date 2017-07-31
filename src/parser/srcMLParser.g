@@ -658,6 +658,7 @@ tokens {
     SOMP_EXPRESSION;
 
     SCOMMENT;
+    SLINECOMMENT;
 
     // Last token used for boundary
     END_ELEMENT_TOKEN;

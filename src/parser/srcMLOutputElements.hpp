@@ -37,29 +37,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { START_ELEMENT_TOKEN,  { 0, SRC, 0, 0, nullptr }},
 
     { SCOMMENT,   { "comment", SRC, "type", "block", nullptr }},
-
-    { LINECOMMENT_START, { "comment", SRC, 0, 0, [](params) {
-        pout->processToken(token, name, prefix, "type", "line");
-        pout->processText(token);
-    }}},
-
-    { LINECOMMENT_END, { "comment", SRC, 0, 0, [](params) {
-
-        auto size = token->getText().size();
-
-        bool output = false;
-        if (size > 1 || token->getText()[0] != '\n') {
-            pout->processText(token);
-            output = true;
-        }
-
-        xmlTextWriterEndElement(pout->xout);
-        --(pout->openelementcount);
-
-        if (size == 1 && !output)
-            pout->processText(token);
-    }}},
-
+    { SLINECOMMENT,   { "comment", SRC, "type", "line", nullptr }},
 
     { LINE_DOXYGEN_COMMENT_START, { "comment", SRC, 0, 0, [](params) {
         pout->processToken(token, name, prefix, "type", "line", "format", "doxygen");

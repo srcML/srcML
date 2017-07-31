@@ -373,6 +373,8 @@ private:
 
         if (isSkipToken(srcMLParser::LA(1))) {
 
+            std::string s;
+
             switch (srcMLParser::LA(1)) {
             case srcMLParser::COMMENT_START:
 
@@ -386,6 +388,29 @@ private:
 
                 pushSkipToken();
                 pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SCOMMENT)));
+                srcMLParser::consume();
+
+                break;
+
+            case srcMLParser::LINECOMMENT_START:
+
+                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SLINECOMMENT)));
+                pushSkipToken();
+                srcMLParser::consume();
+
+                break;
+
+            case srcMLParser::LINECOMMENT_END:
+
+                s = srcMLParser::LT(1)->getText();
+
+                if (s.back() != '\n') {
+                    pushSkipToken();
+                    pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SLINECOMMENT)));
+                } else {
+                    pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SLINECOMMENT)));
+                    pushSkipToken();
+                }
                 srcMLParser::consume();
 
                 break;
