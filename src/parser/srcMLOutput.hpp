@@ -53,8 +53,6 @@ enum PREFIXES { SRC,
 
 class srcMLOutput;
 
-typedef void (*token_output_t)(srcMLOutput*, const antlr::RefToken&, const char* name, const char* prefix);
-
 struct Element {
     const char* name;
     PREFIXES prefix;
@@ -62,7 +60,6 @@ struct Element {
     const char* attr_value;
     const char* attr2_name;
     const char* attr2_value;
-    token_output_t token_output;
 };
 
 /**
