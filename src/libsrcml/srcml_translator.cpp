@@ -31,7 +31,6 @@
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
 #include <srcml_types.hpp>
-#include <cstring>
 
 /** 
  * srcml_translator
