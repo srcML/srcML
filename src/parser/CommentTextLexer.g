@@ -305,7 +305,7 @@ COMMENT_TEXT {
             // strings and characters on a preprocessor line also need to end, even if unterminated
             if (_ttype == COMMENT_TEXT && ((LA(1) == '\n' && !rawstring) || LA(1) == EOF_CHAR) &&
                 (((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))
-                 || (mode == LINECOMMENT_END))) {
+                 || (mode == LINECOMMENT_END || mode == LINE_DOXYGEN_COMMENT_END))) {
                 rawstring = false;
                 $setType(mode);
                 selector->pop();
