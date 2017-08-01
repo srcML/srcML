@@ -54,12 +54,12 @@ enum PREFIXES { SRC,
 class srcMLOutput;
 
 struct Element {
-    const char* name;
-    PREFIXES prefix;
-    const char* attr_name;
-    const char* attr_value;
-    const char* attr2_name;
-    const char* attr2_value;
+    char const * const name;
+    const PREFIXES prefix;
+    char const * const attr_name;
+    char const * const attr_value;
+    char const * const attr2_name;
+    char const * const attr2_value;
 };
 
 /**

@@ -26,8 +26,6 @@
     Included to be able to use inlined srcMLOutput methods
 */
 
-#define params srcMLOutput* pout, const antlr::RefToken& token, const char* name, const char* prefix
-
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 const std::unordered_map<int, Element> srcMLOutput::process = {
