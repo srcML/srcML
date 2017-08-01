@@ -237,10 +237,7 @@ public:
     void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
     void srcMLTextWriterEndElement(xmlTextWriter*);
 
-    // token handlers
-    void processToken(const antlr::RefToken& token);
-    void processToken(const antlr::RefToken& token, const char* attr_name, const char* attr_value);
-    void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value);
+    // token handler
     void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2);
 

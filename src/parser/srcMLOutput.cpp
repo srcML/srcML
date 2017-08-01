@@ -666,11 +666,6 @@ void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
     processText(token->getText());
 }
 
-inline void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name, const char* attr_value) {
-
-    processToken(token, name, prefix, attr_name, attr_value, 0, 0);
-}
-
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2) {
 
