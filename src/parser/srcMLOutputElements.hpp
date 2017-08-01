@@ -34,8 +34,6 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     { SUNIT,  { "unit", SRC, 0, 0, [](params) { pout->processUnit(token); }}},
 
-    { START_ELEMENT_TOKEN,  { 0, SRC, 0, 0, nullptr }},
-
     { SCOMMENT,   { "comment", SRC, "type", "block", nullptr }},
     { SLINECOMMENT,   { "comment", SRC, "type", "line", nullptr }},
 

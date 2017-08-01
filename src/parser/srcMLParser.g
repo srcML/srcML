@@ -369,9 +369,6 @@ tokens {
     // entire source file
     SUNIT;
 
-    // First token used for boundary
-    START_ELEMENT_TOKEN;
-
     // No output at all.  Only a placeholder
     SNOP;
 
@@ -662,9 +659,6 @@ tokens {
     SLINE_DOXYGEN_COMMENT;
     SJAVADOC_COMMENT;
     SDOXYGEN_COMMENT;
-
-    // Last token used for boundary
-    END_ELEMENT_TOKEN;
 }
 
 /*
