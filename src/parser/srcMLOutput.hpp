@@ -237,11 +237,11 @@ public:
     void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
     void srcMLTextWriterEndElement(xmlTextWriter*);
 
+private:
+
     // token handler
     void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2);
-
-private:
 
     int consume_next();
 

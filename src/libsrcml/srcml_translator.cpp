@@ -34,13 +34,6 @@
 
 #include <cstring>
 
-#ifdef _MSC_BUILD
-
-/** correction for Visual Studio not liking POSIX style names */
-#define strdup _strdup
-
-#endif
-
 #ifndef __APPLE__
 
 /**
@@ -105,11 +98,11 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  const char* timestamp,
                                  const char* hash,
                                  const char* encoding)
-    :  Language(language), first(true),
+    :  Language(language),
        revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
        options(op), buffer(0),
        out(0, 0, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
-       str_buffer(str_buf), size(size), is_outputting_unit(false), output_unit_depth(0), text_only(false) {
+       str_buffer(str_buf), size(size), is_outputting_unit(false), text_only(false) {
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
@@ -169,7 +162,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
       options(op), buffer(0),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
-      str_buffer(0), size(0), is_outputting_unit(false), output_unit_depth(0), text_only(false) {}
+      size(0), is_outputting_unit(false), output_unit_depth(0), text_only(false) {}
 
 /**
  * set_macro_list
@@ -398,7 +391,6 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
  */
 bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xml, int size) {
 
-
   if(is_outputting_unit) return false;
 
   bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
@@ -572,7 +564,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     is_outputting_unit = true;
 
-
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
     if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
@@ -638,7 +629,7 @@ bool srcml_translator::add_start_element(const char * prefix, const char * name,
 
     ++output_unit_depth;
 
-    return xmlTextWriterStartElementNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri) != -1;
+    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST uri) != -1;
 
 }
 
@@ -682,7 +673,7 @@ bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
 
     }
 
-    return xmlTextWriterWriteAttributeNS(out.getWriter(), 0, (const xmlChar *)name.c_str(), 0, (const xmlChar *)uri) != -1;
+    return xmlTextWriterWriteAttributeNS(out.getWriter(), 0, BAD_CAST name.c_str(), 0, BAD_CAST uri) != -1;
 
 }
 
@@ -700,10 +691,10 @@ bool srcml_translator::add_namespace(const char * prefix, const char * uri) {
  */
 bool srcml_translator::add_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
 
-    if(!is_outputting_unit || name == 0) return false;
+    if (!is_outputting_unit || name == 0)
+        return false;
 
-    return xmlTextWriterWriteAttributeNS(out.getWriter(), (const xmlChar *)prefix, (const xmlChar *)name, (const xmlChar *)uri, (const xmlChar *)content) != -1;
-
+    return xmlTextWriterWriteAttributeNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST uri, BAD_CAST content) != -1;
 }
 
 /**
@@ -716,34 +707,30 @@ bool srcml_translator::add_attribute(const char * prefix, const char * name, con
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_string(const char * content) {
+bool srcml_translator::add_string(const char *content) {
 
     if(!is_outputting_unit || content == 0) return false;
 
-    int ret = 0;
     char * text = (char *)content;
     for(char * pos = text; *pos; ++pos) {
 
-      if(*pos != '"') continue;
+        if (*pos != '"')
+            continue;
 
-      *pos = 0;
-      ret = xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)text);
-      if(ret == -1) return false;
+        *pos = 0;
+        if (xmlTextWriterWriteString(out.getWriter(), BAD_CAST text) == -1)
+            return false;
 
-      *pos = '\"';
-      xmlTextWriterWriteRaw(out.getWriter(), (const xmlChar *)"\"");
-      if(ret == -1) return false;
+        *pos = '\"';
+        if ( xmlTextWriterWriteRaw(out.getWriter(), BAD_CAST "\"") == -1)
+            return false;
 
-      text = pos + 1;
+        text = pos + 1;
+    }
 
-  }
+    int ret = xmlTextWriterWriteString(out.getWriter(), BAD_CAST text);
 
-  ret = xmlTextWriterWriteString(out.getWriter(), (const xmlChar *)text);
-
-
-
-  return ret != -1;
-
+    return ret != -1;
 }
 
 /**
@@ -753,7 +740,6 @@ bool srcml_translator::add_string(const char * content) {
  */
 srcml_translator::~srcml_translator() {
 
-    if(buffer)
+    if (buffer)
         xmlBufferFree(buffer);
-
 }

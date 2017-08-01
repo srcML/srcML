@@ -122,28 +122,28 @@ public:
 private:
 
     /** is this the first unit */
-    bool first;
+    bool first = true;
 
     /** the unit revision attribute */
-    const char* revision;
+    const char* revision = nullptr;
 
     /** the unit url attribute */
-    const char* url;
+    const char* url = nullptr;
 
     /** the unit filename attribute */
-    const char* filename;
+    const char* filename = nullptr;
 
     /** the unit version attribute */
-    const char* version;
+    const char* version = nullptr;
 
     /** the unit timestamp attribute */
-    const char* timestamp;
+    const char* timestamp = nullptr;
 
     /** the unit hash attribute */
-    const char* hash;
+    const char* hash = nullptr;
 
     /** the unit encoding attribute */
-    const char* encoding;
+    const char* encoding = nullptr;
 
     /** an array of name-value attribute pairs */
     const std::vector<std::string> & attributes;
@@ -157,7 +157,7 @@ private:
     OPTION_TYPE& options;
 
     /** buffer to hold output to memory */
-    xmlBuffer * buffer;
+    xmlBuffer * buffer = nullptr;
 
 public:
     /** member for handling output */
@@ -171,16 +171,16 @@ private:
     std::vector<std::string> user_macro_list;
 
     /** location to store output when output is to memory */
-    char ** str_buffer;
+    char** str_buffer = nullptr;
     
     /** location to store size of output when output is to memory */
-    size_t * size;
+    size_t* size = nullptr;
 
     /** mark if have outputted starting unit tag for by element writing */
     bool is_outputting_unit;
 
     /** track depth for by element writing */
-    int output_unit_depth;
+    int output_unit_depth = 0;
 
     /** text-only mode (no XML) */
     bool text_only;
