@@ -52,11 +52,12 @@ srcml_input_src::srcml_input_src(const std::string& other) : arch(0), state(INDE
     src_prefix_split_uri(filename, protocol, resource);
 
     // remove any query string
-    size_t query_pos = resource.find('?');
-    if (query_pos != std::string::npos) {
-        resource = resource.substr(0, query_pos);
+    if (protocol != "text" && protocol != "filelist" && protocol != "stdin") {
+        size_t query_pos = resource.find('?');
+        if (query_pos != std::string::npos) {
+            resource = resource.substr(0, query_pos);
+        }
     }
-
     exists = false;
 
     if (protocol == "file") {
