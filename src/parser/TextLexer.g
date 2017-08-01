@@ -54,7 +54,10 @@ tokens {
     COMMENT_START;
     JAVADOC_COMMENT_START;
     DOXYGEN_COMMENT_START;
+    JAVADOC_COMMENT_END;
+    DOXYGEN_COMMENT_END;
     LINE_DOXYGEN_COMMENT_START;
+    LINE_DOXYGEN_COMMENT_END;
     CHAR_START;
     MACRO_NAME;
     COMPLEX_NUMBER;
@@ -161,24 +164,20 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
 // Single-line comments (no EOL)
 LINECOMMENT_START
     :   '/' ('/' { 
-                changetotextlexer(LINECOMMENT_END);
 
-                // when we return, we may have eaten the EOL, so we will turn back on startline
-                startline = true;
-
-                onpreprocline = false;
-            } ( { inLanguage(LANGUAGE_CXX) }? ('/' | '!') {
-
-                $setType(LINE_DOXYGEN_COMMENT_START);
+                int mode = LINECOMMENT_END;
+                if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!')) {
+                    $setType(LINE_DOXYGEN_COMMENT_START);
+                    mode = LINE_DOXYGEN_COMMENT_END;
+                }
                 
-                changetotextlexer(LINE_DOXYGEN_COMMENT_END);
+                changetotextlexer(mode);
 
                 // when we return, we may have eaten the EOL, so we will turn back on startline
                 startline = true;
 
                 onpreprocline = false;
-            } 
-                )|
+            } |
             '*'
             { 
                 int mode = COMMENT_END;
