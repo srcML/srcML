@@ -776,7 +776,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         eof |
 
         // end of line
-        line_continuation | EOL | LINECOMMENT_START |
+        line_continuation | EOL | LINECOMMENT_START | LINE_DOXYGEN_COMMENT_START |
 
         comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
