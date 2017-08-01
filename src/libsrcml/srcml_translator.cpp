@@ -31,34 +31,7 @@
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
 #include <srcml_types.hpp>
-
 #include <cstring>
-
-#ifndef __APPLE__
-
-/**
- * strnstr
- * @param s1 string to search
- * @param s2 string to search for in s1
- * @param n number of items to search
- * 
- * strnstr is only on BSD by default 
- * Bounded substring search. Search for s2 in s1 only search first n characters.
- *
- * @returns location of first match or NULL.
- */
-char * strnstr(const char *s1, const char *s2, size_t n) {
-
-  char save_char = s1[n];
-  ((char *)s1)[n] = 0;
-   char * ret = (char *)strstr(s1, s2);
-  ((char *)s1)[n] = save_char;
-
-  return ret;
-
-}
-
-#endif
 
 /** 
  * srcml_translator
@@ -320,10 +293,11 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char* xml) {
         return false;
 
     /** extract language */
-    char * language_start_name = strnstr(xml, "language", end_start_unit - xml);
+    const char* lang = "language";
+    const char* language_start_name = std::search(xml, end_start_unit, lang, lang + strlen(lang));
 
-    char * language_start_value = 0;
-    char * language_end_value = 0;
+    char* language_start_value = 0;
+    char* language_end_value = 0;
     if (language_start_name) {
 
         language_start_value = (char *)strchr(language_start_name, '"');
@@ -338,7 +312,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char* xml) {
 
         std::string cpp_uri = prefix + "srcML/cpp";
 
-        is_cpp = strnstr(xml, cpp_uri.c_str(), end_start_unit - xml) != 0;
+        is_cpp = std::search(xml, end_start_unit, cpp_uri.begin(), cpp_uri.end()) != end_start_unit;
         if (is_cpp)
             break;
     }
