@@ -69,6 +69,7 @@ public:
 bool onpreprocline;
 bool rawstring;
 std::string delimiter;
+int currentmode;
 
 }
 
@@ -161,17 +162,19 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         )
 ;
 
-// Single-line comments (no EOL)
-LINECOMMENT_START
-    :   '/' ('/' { 
-
-                int mode = LINECOMMENT_END;
+/*
                 if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!')) {
                     $setType(LINE_DOXYGEN_COMMENT_START);
                     mode = LINE_DOXYGEN_COMMENT_END;
                 }
-                
-                changetotextlexer(mode);
+*/                
+
+// Single-line comments (no EOL)
+LINECOMMENT_START
+    :   '/' ('/' { currentmode = LINECOMMENT_END; }
+                (('/' | '!') { $setType(LINE_DOXYGEN_COMMENT_START); currentmode = LINE_DOXYGEN_COMMENT_END; })?
+            {
+                changetotextlexer(currentmode);
 
                 // when we return, we may have eaten the EOL, so we will turn back on startline
                 startline = true;
@@ -180,29 +183,19 @@ LINECOMMENT_START
             } |
             '*'
             { 
+                $setType(COMMENT_START);
                 int mode = COMMENT_END;
-                if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*') {
 
-                    if(next_char()  != '/') {
+                // have "/*" followed by anything except "/", e.g., "/*/"
+                if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*' && next_char() != '/') {
+
                         $setType(JAVADOC_COMMENT_START);
                         mode = JAVADOC_COMMENT_END;
-                    } else {
-                        $setType(COMMENT_START);
-                    }
 
-                } else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!')) {
+                } else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!') && next_char() != '/') {
 
-                    if(next_char() != '/') {
                         $setType(DOXYGEN_COMMENT_START);
                         mode = DOXYGEN_COMMENT_END;
-                    } else {
-                        $setType(COMMENT_START);
-                    }
-
-                } else {
-
-                    $setType(COMMENT_START);
-
                 }
 
                 changetotextlexer(mode);

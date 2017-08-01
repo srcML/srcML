@@ -340,6 +340,7 @@ bool isline;
 long line_number;
 int lastpos;
 int prev;
+int currentmode;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
