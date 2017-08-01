@@ -32,7 +32,7 @@
 
 const std::unordered_map<int, Element> srcMLOutput::process = {
 
-    { SUNIT,  { "unit", SRC, 0, 0, 0, 0, [](params) { pout->processUnit(token); }}},
+//    { SUNIT,  { "unit", SRC, 0, 0, 0, 0, [](params) { pout->processUnit(token); }}},
 
     { SCOMMENT,                     { "comment",            SRC, "type", "block",     0,      0,  nullptr }},
     { SLINECOMMENT,                 { "comment",            SRC, "type", "line",     0,      0,  nullptr }},
@@ -207,9 +207,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SCPP_EMPTY,                   { "empty",              CPP,      0,         0,     0,      0,  nullptr }},
 
 #if DEBUG
-    { SMARKER,                      { "comment", SRC, 0, 0, 0, 0, [](params) {
-        pout->processToken(token, name, prefix, "location", token->getText().c_str());
-    }}},
+    { SMARKER,                      { "comment",            SRC, "location",     0,     0,      0,  nullptr }},
 #endif
 
     // C# cpp
@@ -267,17 +265,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SINTO,                        { "into",               SRC,      0,         0,     0,      0,  nullptr }},
 
     // special characters
-    { CONTROL_CHAR,                 { "escape",             SRC,      0,         0,     0,      0, [](params) {
-
-        int n = token->getText()[0];
-        char out[20 + 2 + 1];
-        snprintf(out, 22, "0x%02x", n);
-
-        pout->processToken(token, name, prefix, "char", out);
-
-        xmlTextWriterEndElement(pout->xout);
-        --(pout->openelementcount);
-    }}},
+    { CONTROL_CHAR,                 { "escape",             SRC, "char",         0,     0,      0,  nullptr }},
 
     { SANNOTATION,                  { "annotation",         SRC,      0,         0,     0,      0,  nullptr }},
 
@@ -309,7 +297,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SENCODE,                      { "encode",             SRC,      0,         0,     0,      0,  nullptr }},
     { SAUTORELEASEPOOL,             { "autoreleasepool",    SRC,      0,         0,     0,      0,  nullptr }},
     { SCOMPATIBILITY_ALIAS,         { "compatibility_alias",SRC,      0,         0,     0,      0,  nullptr }},
-    { SNIL,                         { "literal",            SRC, "type", "nil",     0,      0,  nullptr }},
+    { SNIL,                         { "literal",            SRC, "type",     "nil",     0,      0,  nullptr }},
     { SCLASS_INTERFACE,             { "class",              SRC, "type", "@interface",     0,      0,  nullptr }},
     { SCLASS_IMPLEMENTATION,        { "class",              SRC, "type", "@implementation",     0,      0,  nullptr }},
     { SPROTOCOL_DECLARATION,        { "protocol_decl",      SRC,      0,         0,     0,      0,  nullptr }},
@@ -325,7 +313,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SPOSITION,                    { "position",           SRC,      0,         0,     0,      0,  nullptr }},
 
     // Other
-    { SCUDA_ARGUMENT_LIST,          { "argument_list",      SRC, "type", "cuda",     0,      0,  nullptr }},
+    { SCUDA_ARGUMENT_LIST,          { "argument_list",      SRC, "type",    "cuda",     0,      0,  nullptr }},
 
     // OpenMP
     { SOMP_DIRECTIVE,               { "directive",          OMP,      0,         0,     0,      0,  nullptr }},

@@ -710,14 +710,17 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
  */
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
+    if (SUNIT == token->getType()) {
+        processUnit(token);
+        return;
+    }
+
     auto search = process.find(token->getType());
     if (search != process.end() && search->second.name) {
         const Element& eparts = search->second;
-        if (eparts.token_output)
-            eparts.token_output(this, token, eparts.name, namespaces[eparts.prefix].prefix.c_str());
-        else
-            processToken(token, eparts.name, namespaces[eparts.prefix].prefix.c_str(), eparts.attr_name, eparts.attr_value,
-                eparts.attr2_name, eparts.attr2_value);
+        processToken(token, eparts.name, namespaces[eparts.prefix].prefix.c_str(), eparts.attr_name, 
+            eparts.attr_name && !eparts.attr_value ? token->getText().c_str() : eparts.attr_value,
+            eparts.attr2_name, eparts.attr2_value);
 
         return;
     }

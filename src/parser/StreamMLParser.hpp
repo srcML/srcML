@@ -379,6 +379,17 @@ private:
             std::string s;
 
             switch (srcMLParser::LA(1)) {
+            case srcMLParser::CONTROL_CHAR:
+            {
+                antlr::RefToken controlElement = EmptyTokenFactory(LA(1));
+                int n = LT(1)->getText()[0];
+                char outar[20 + 2 + 1];
+                snprintf(outar, 22, "0x%02x", n);
+                controlElement->setText(outar);
+                pushSkipToken(controlElement);
+
+                break;
+            }
             case srcMLParser::COMMENT_START:
 
                 pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SCOMMENT)));
