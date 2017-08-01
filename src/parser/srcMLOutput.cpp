@@ -716,7 +716,8 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
         if (eparts.token_output)
             eparts.token_output(this, token, eparts.name, namespaces[eparts.prefix].prefix.c_str());
         else
-            processToken(token, eparts.name, namespaces[eparts.prefix].prefix.c_str(), eparts.attr_name, eparts.attr_value);
+            processToken(token, eparts.name, namespaces[eparts.prefix].prefix.c_str(), eparts.attr_name, eparts.attr_value,
+                eparts.attr2_name, eparts.attr2_value);
 
         return;
     }

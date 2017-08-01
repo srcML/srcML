@@ -60,6 +60,8 @@ struct Element {
     PREFIXES prefix;
     const char* attr_name;
     const char* attr_value;
+    const char* attr2_name;
+    const char* attr2_value;
     token_output_t token_output;
 };
 
