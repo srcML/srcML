@@ -164,6 +164,9 @@ public:
     srcMLOutput out;
 
 private:
+
+    void prepareOutput();
+    
     /** size of tabstop */
     size_t tabsize;
 

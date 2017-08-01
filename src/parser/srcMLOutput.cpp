@@ -705,11 +705,13 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
  */
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
+    // unit element is handled specially
     if (SUNIT == token->getType()) {
         processUnit(token);
         return;
     }
 
+    // find the token in the element map. If found and it has a name, then process the token
     auto search = process.find(token->getType());
     if (search != process.end() && search->second.name) {
         const Element& eparts = search->second;
@@ -720,6 +722,7 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
         return;
     }
 
+    // remainder are treated as text tokens
     processText(token);
 }
 

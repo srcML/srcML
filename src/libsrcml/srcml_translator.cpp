@@ -148,7 +148,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
                                  int language,
-                                 const char * revision,
+                                 const char* revision,
                                  const char* url,
                                  const char* filename,
                                  const char* version,
@@ -273,6 +273,27 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
     out.setDepth(0);
 }
 
+void srcml_translator::prepareOutput() {
+
+    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
+
+    // Open for write;
+    out.initWriter();
+    out.initNamespaces(prefix, uri);
+
+    if ((options & SRCML_OPTION_XML_DECL) > 0)
+      out.outputXMLDecl();
+  
+    out.outputPreRootProcessingInstruction();
+
+    // root unit for compound srcML documents
+
+    if (is_archive) {
+        out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
+        out.outputUnitSeparator();
+    }
+}
+
 /**
  * add_unit
  * @param unit srcML to add to archive/non-archive with configuration options
@@ -285,36 +306,16 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
+bool srcml_translator::add_unit(const srcml_unit * unit, const char* xml) {
 
     if (is_outputting_unit)
         return false;
 
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
-
-    if (first) {
-
-        // Open for write;
-        out.initWriter();
-        out.initNamespaces(prefix, uri);
-
-        if ((options & SRCML_OPTION_XML_DECL) > 0)
-          out.outputXMLDecl();
-      
-        out.outputPreRootProcessingInstruction();
-
-        // root unit for compound srcML documents
-
-        if(is_archive)
-            out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
-
-        if (is_archive)
-            out.outputUnitSeparator();
-
-    }
+    if (first)
+        prepareOutput();
     first = false;
 
-    const char * end_start_unit = (char *)strchr(xml, '>');
+    const char* end_start_unit = (char *)strchr(xml, '>');
     if (!end_start_unit)
         return false;
 
@@ -323,7 +324,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
 
     char * language_start_value = 0;
     char * language_end_value = 0;
-    if(language_start_name) {
+    if (language_start_name) {
 
         language_start_value = (char *)strchr(language_start_name, '"');
         language_end_value = (char *)strchr(language_start_value + 1, '"');
@@ -345,6 +346,8 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
     OPTION_TYPE save_options = options;
     if (is_cpp)
         options |= SRCML_OPTION_CPP;
+
+    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
     out.startUnit(language_start_value ? language_start_value + 1 : 0, is_archive && unit->revision ? unit->revision->c_str() : revision, unit->url ? unit->url->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
                        unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, 
@@ -385,7 +388,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char * xml) {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xml, int size) {
+bool srcml_translator::add_unit_content(const srcml_unit * unit, const char* xml, int size) {
 
     if (is_outputting_unit)
         return false;
@@ -397,26 +400,8 @@ bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xm
     if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
         options |= SRCML_OPTION_CPP;
 
-    if (first) {
-
-        // Open for write;
-        out.initWriter();
-        out.initNamespaces(prefix, uri);
-
-        if ((options & SRCML_OPTION_XML_DECL) > 0)
-          out.outputXMLDecl();
-      
-        out.outputPreRootProcessingInstruction();
-
-        // root unit for compound srcML documents
-
-        if(is_archive)
-            out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
-
-        if (is_archive)
-            out.outputUnitSeparator();
-
-    }
+    if (first)
+        prepareOutput();
     first = false;
 
     out.startUnit(unit->language->c_str(), is_archive && unit->revision ? unit->revision->c_str() : revision, unit->url ? unit->url->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
@@ -446,33 +431,12 @@ bool srcml_translator::add_unit_content(const srcml_unit * unit, const char * xm
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_unit_raw(const char * xml, int size) {
+bool srcml_translator::add_unit_raw(const char* xml, int size) {
 
     if(is_outputting_unit) return false;
 
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
-
-    if(first) {
-
-        // Open for write;
-        out.initWriter();
-        out.initNamespaces(prefix, uri);
-
-        if ((options & SRCML_OPTION_XML_DECL) > 0)
-          out.outputXMLDecl();
-      
-        out.outputPreRootProcessingInstruction();
-
-        // root unit for compound srcML documents
-
-        if(is_archive)
-            out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
-
-        if (is_archive)
-            out.outputUnitSeparator();
-
-    }
-
+    if (first)
+        prepareOutput();
     first = false;
 
     if (size)
@@ -501,27 +465,8 @@ bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
     if (is_outputting_unit)
         return false;
 
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
-
-    if (first) {
-
-        // Open for write;
-        out.initWriter();
-        out.initNamespaces(prefix, uri);
-
-        if ((options & SRCML_OPTION_XML_DECL) > 0)
-          out.outputXMLDecl();
-      
-        out.outputPreRootProcessingInstruction();
-
-        // root unit for compound srcML documents
-
-        if (is_archive) {
-            out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
-            out.outputUnitSeparator();
-        }
-    }
-
+    if (first)
+        prepareOutput();
     first = false;
 
     xmlNodeDumpOutput(out.output_buffer, doc, node, 0, 0, 0);
@@ -545,10 +490,8 @@ bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
 bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     if (first) {
-
         out.initWriter();
         out.initNamespaces(prefix, uri);
-
     }
     first = false;
 
@@ -564,6 +507,7 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
     if (isoption(options, SRCML_OPTION_ARCHIVE))
         out.setDepth(1);
 
+    // @todo Why are we saving the options then restoring them?
     OPTION_TYPE save_options = options;
 
     out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0), revision, unit->url ? unit->url->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
@@ -592,8 +536,6 @@ bool srcml_translator::add_end_unit() {
 
     while (output_unit_depth--)
         xmlTextWriterEndElement(out.getWriter());
-
-    output_unit_depth = 0;
 
     is_outputting_unit = false;
 
@@ -665,7 +607,7 @@ bool srcml_translator::add_namespace(const char* prefix, const char *uri) {
         name += prefix;
     }
 
-    return xmlTextWriterWriteAttributeNS(out.getWriter(), 0, BAD_CAST name.c_str(), 0, BAD_CAST uri) != -1;
+    return xmlTextWriterWriteAttribute(out.getWriter(), BAD_CAST name.c_str(), BAD_CAST uri) != -1;
 }
 
 /**
@@ -680,7 +622,7 @@ bool srcml_translator::add_namespace(const char* prefix, const char *uri) {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_attribute(const char * prefix, const char * name, const char * uri, const char * content) {
+bool srcml_translator::add_attribute(const char* prefix, const char* name, const char* uri, const char* content) {
 
     if (!is_outputting_unit || name == 0)
         return false;
