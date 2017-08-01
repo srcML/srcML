@@ -26,8 +26,6 @@
     Included to be able to use inlined srcMLOutput methods
 */
 
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-
 const std::unordered_map<int, Element> srcMLOutput::process = {
 
 //    { SUNIT, { "unit",SRC, 0, 0, 0, 0, [](params) { pout->processUnit(token); }}},
@@ -327,7 +325,3 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SEMPTY,                      { "empty_stmt",        SRC,      0,         0,     0,      0 }},
 
 };
-
-#pragma GCC diagnostic warning "-Wunused-parameter"
-
-#undef params
