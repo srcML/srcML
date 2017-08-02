@@ -161,7 +161,7 @@ void srcml_translator::close() {
         out.initNamespaces(prefix, uri);
 
         out.outputXMLDecl();
-        out.outputPreRootProcessingInstruction();
+        out.outputProcessingInstruction();
 
         // root unit for compound srcML documents
         out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
@@ -255,7 +255,7 @@ void srcml_translator::prepareOutput() {
     if ((options & SRCML_OPTION_XML_DECL) > 0)
       out.outputXMLDecl();
   
-    out.outputPreRootProcessingInstruction();
+    out.outputProcessingInstruction();
 
     // root unit for compound srcML documents
 

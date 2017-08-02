@@ -1,7 +1,7 @@
 /**
  * @file srcMLOutput.hpp
  *
- * @copyright Copyright (C) 2003-2014 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2003-2017 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -75,9 +75,9 @@ public:
                 xmlOutputBuffer * output_buffer,
                 const char* language,
                 const char* encoding,
-                OPTION_TYPE& option,
-                const std::vector<std::string> & attributes,
-                boost::optional<std::pair<std::string, std::string> > processing_instruction,
+                const OPTION_TYPE& option,
+                const std::vector<std::string>& attributes,
+                const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
                 size_t tabsize);
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
@@ -100,12 +100,12 @@ public:
 
     void outputXMLDecl();
 
-    void outputPreRootProcessingInstruction();
+    void outputProcessingInstruction();
 
     void outputUnitSeparator();
 
     // start a unit element with the passed metadata
-    void startUnit(const char* unit_language, const char * revision,
+    void startUnit(const char* unit_language, const char* revision,
                    const char* unit_url, const char* unit_filename,
                    const char* unit_version, const char* unit_timestamp,
                    const char* unit_hash,
@@ -114,30 +114,23 @@ public:
                    bool output_macrolist);
 
     // consume the entire tokenstream with output of srcml
-    void consume(const char* language, const char * unit_revision, const char* unit_url, const char* unit_filename,
+    void consume(const char* language, const char* unit_revision, const char* unit_url, const char* unit_filename,
                  const char* unit_version, const char* unit_timestamp, const char* unit_hash, const char* encoding);
 
     // close the output
     void close();
 
+    // destructor
+    ~srcMLOutput();
+
+private:
     // standard processing of text
     void processText(const antlr::RefToken& token);
     void processText(const std::string&);
     void processText(const char* s, int size);
 
+    // adds the position attributes to a token
     void addPosition(const antlr::RefToken& token);
-
-private:
-    int last_line = 0;
-    int last_line2 = 0;
-    int last_column = 0;
-    bool end_position_output = false;
-public:
-
-    void outputPosition();
-
-    // destructor
-    ~srcMLOutput();
 
 public:
     /** token stream input */
@@ -174,7 +167,7 @@ public:
     const char* unit_encoding = nullptr;
 
     /** output options */
-    const OPTION_TYPE options;
+    const OPTION_TYPE options = 0;
 
     /** xml encoding */
     const char* xml_encoding = nullptr;
@@ -183,7 +176,7 @@ public:
     std::vector<Namespace> namespaces;
 
     /** an array of name-value attribute pairs */
-    const std::vector<std::string> & unit_attributes;
+    const std::vector<std::string> unit_attributes;
 
     /** pre-root processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
@@ -192,7 +185,7 @@ public:
     int openelementcount = 0;
 
     /** the tabstop size */
-    size_t tabsize;
+    size_t tabsize = 0;
 
     /** number of units output or depth into archive */
     int depth = 0;

@@ -57,9 +57,9 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          xmlOutputBuffer* output_buffer,
                          const char* language,
                          const char* xml_enc,
-                         OPTION_TYPE& op,
-                         const std::vector<std::string> & attributes,
-                         boost::optional<std::pair<std::string, std::string> > processing_instruction,
+                         const OPTION_TYPE& op,
+                         const std::vector<std::string>& attributes,
+                         const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
                          size_t ts)
     : input(ints), output_buffer(output_buffer), unit_language(language), 
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
@@ -153,7 +153,7 @@ void srcMLOutput::close() {
         xout = 0;
         output_buffer = 0;
 
-    } else if(output_buffer) {
+    } else if (output_buffer) {
 
         xmlOutputBufferClose(output_buffer);
         output_buffer = 0;
@@ -246,11 +246,11 @@ void srcMLOutput::outputXMLDecl() {
 }
 
 /**
- * outputPreRootProcessingInstruction
+ * outputProcessingInstruction
  *
  * Output a pre-root preprocessing instruction.
  */
-void srcMLOutput::outputPreRootProcessingInstruction() {
+void srcMLOutput::outputProcessingInstruction() {
 
     if (depth == 0 && processing_instruction) {
 
@@ -576,8 +576,6 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(token->getLine()).c_str());
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(token->getColumn()).c_str());
-
-    end_position_output = false;
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
