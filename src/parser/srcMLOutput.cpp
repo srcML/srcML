@@ -57,7 +57,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          xmlOutputBuffer* output_buffer,
                          const char* language,
                          const char* xml_enc,
-                         const OPTION_TYPE& op,
+                         OPTION_TYPE& op,
                          const std::vector<std::string>& attributes,
                          const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
                          size_t ts)

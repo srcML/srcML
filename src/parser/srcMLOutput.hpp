@@ -72,7 +72,7 @@ public:
                 xmlOutputBuffer * output_buffer,
                 const char* language,
                 const char* encoding,
-                const OPTION_TYPE& option,
+                OPTION_TYPE& option,
                 const std::vector<std::string>& attributes,
                 const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
                 size_t tabsize);
@@ -164,7 +164,9 @@ public:
     const char* unit_encoding = nullptr;
 
     /** output options */
-    const OPTION_TYPE options = 0;
+    // @todo Bad design, but making it a value breaks cpp namespace
+    // have to figure out why the options are being changed later
+    OPTION_TYPE& options;
 
     /** xml encoding */
     const char* xml_encoding = nullptr;
