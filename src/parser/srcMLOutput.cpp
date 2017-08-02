@@ -96,9 +96,6 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
         { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,                     false },
         { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_URI,                     false },
         { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_URI,                     false },
-        { SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,  SRCML_EXT_LITERAL_NS_URI,             false },
-        { SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT, SRCML_EXT_OPERATOR_NS_URI,            false },
-        { SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT, SRCML_EXT_MODIFIER_NS_URI,            false },
         { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI,            false },
         { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_URI,              false },
     };
@@ -283,15 +280,6 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
         // optional debugging xml namespace
         (depth == 0) && isoption(options, SRCML_OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
-
-        // optional literal xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_OPTIONAL_MARKUP) && isoption(options, SRCML_OPTION_LITERAL)  ? SRCML_EXT_LITERAL_NS_URI : 0,
-
-        // optional operator xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_OPTIONAL_MARKUP) && isoption(options, SRCML_OPTION_OPERATOR) ? SRCML_EXT_OPERATOR_NS_URI : 0,
-
-        // optional modifier xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_OPTIONAL_MARKUP) && isoption(options, SRCML_OPTION_MODIFIER) ? SRCML_EXT_MODIFIER_NS_URI : 0,
 
         // optional position xml namespace
         (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,

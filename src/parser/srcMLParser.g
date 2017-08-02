@@ -1511,7 +1511,6 @@ lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
 lambda_expression_full_csharp[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : ASYNC)* (variable_identifier | paren_pair) LAMBDA
-
 ;
 
 // completely match a C++ lambda expression
@@ -1519,24 +1518,19 @@ lambda_expression_full_cpp[] { ENTRY_DEBUG } :
 
         // paren_pair and curly_pair seem to have nondeterminism because both can match LPAREN
         LBRACKET (~RBRACKET)* RBRACKET (options { warnWhenFollowAmbig = false; } : paren_pair)* function_tail curly_pair
-
 ;
 
 // modifiers that can occur within a lambda capture.
 lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // markup type modifiers if option is on
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_MODIFIER))
-                    startElement(SMODIFIER);
+            startElement(SMODIFIER);
         }
         (EQUAL | REFOPS)
-
 ;
 
 // handle a block expression lambda
 block_lambda_expression[] { ENTRY_DEBUG } :
         {
-
             bool iscall = look_past_rule(&srcMLParser::block_lambda_expression_full) == LPAREN;
             if(iscall) {
 
@@ -1555,14 +1549,12 @@ block_lambda_expression[] { ENTRY_DEBUG } :
         }
 
         BLOCKOP (options { greedy = true; } : type_identifier)* (options { greedy = true; } : parameter_list)*
-
 ;
 
 // completely match block expression lambda
 block_lambda_expression_full[] { ENTRY_DEBUG } :
 
         BLOCKOP (options { greedy = true; } : type_identifier)* (options { greedy = true; } : paren_pair)* curly_pair
-
 ;
 
 // handle a Java lambda expression
@@ -1576,7 +1568,6 @@ lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
         }
 
         (parameter_list | lambda_single_parameter) lambda_java (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
-
 ;
 
 lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1589,21 +1580,16 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SDECLARATION);
         }
         variable_identifier
-
 ;
 
 // lambda character
 lambda_java[] { ENTRY_DEBUG } :
         
     TRETURN
-
     {
-
         if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
             startNoSkipElement(SPSEUDO_BLOCK);
-
     }
-
 ;
 
 // handle the beginning of a function definition
@@ -7836,8 +7822,7 @@ literals[] { ENTRY_DEBUG } :
 // The contents of the string are handled as whitespace.
 string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // only markup strings in literal option
-            if (markup && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL)))
+            if (markup)
                 startElement(SSTRING);
         }
         (STRING_START STRING_END)
@@ -7847,8 +7832,7 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
 // The contents of the character are handled as whitespace.
 char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // only markup characters in literal option
-            if (markup && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL)))
+            if (markup)
                 startElement(SCHAR);
         }
         (CHAR_START CHAR_END)
@@ -7857,9 +7841,7 @@ char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG
 // literals
 null_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // only markup literals in literal option
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))
-                startElement(SNULL);
+            startElement(SNULL);
         }
         (NULLPTR | NULLLITERAL)
 ;
@@ -7867,9 +7849,7 @@ null_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 // literals
 nil_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // only markup literals in literal option
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))
-                startElement(SNIL);
+            startElement(SNIL);
         }
         NIL
 ;
@@ -7877,9 +7857,7 @@ nil_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 // complex numbers
 complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // only markup literals in literal option
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))
-                startElement(SCOMPLEX);
+            startElement(SCOMPLEX);
         }
         COMPLEX_NUMBER ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == CONSTANTS }? OPERATORS CONSTANTS)?
   
@@ -7890,7 +7868,7 @@ complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 literal[bool markup = true] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             // only markup literals in literal option
-            if (markup && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))) {
+            if (markup) {
 
                 startElement(SLITERAL);
 
@@ -7906,8 +7884,6 @@ literal[bool markup = true] { LightweightElement element(this); TokenPosition tp
 // booleans
 boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // only markup boolean values in literal option
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_LITERAL))
                 startElement(SBOOLEAN);
         }
         (LITERAL_TRUE | LITERAL_FALSE)
@@ -8100,9 +8076,7 @@ argument[] { ENTRY_DEBUG } :
 
 argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // markup type modifiers if option is on
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_MODIFIER))
-                startElement(SMODIFIER);
+            startElement(SMODIFIER);
         }
         (OUT | REF)
 
@@ -8218,29 +8192,22 @@ parameter_type_count[int& type_count, bool output_type = true] { CompleteElement
 // Modifier ops
 multops[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // markup type modifiers if option is on
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_MODIFIER))
-                startElement(SMODIFIER);
+            startElement(SMODIFIER);
         }
         (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true] | BLOCKOP)
 ;
 
 modifiers_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
-    {
-        // markup type modifiers if option is on
-        if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_MODIFIER))
+        {
             startElement(SMODIFIER);
-    }
-    (REF | OUT)
-
+        }
+        (REF | OUT)
  ;
 
 // ...
 tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            // markup type modifiers if option is on
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_MODIFIER))
-                startElement(SMODIFIER);
+            startElement(SMODIFIER);
         }
         DOTDOTDOT
 ;

@@ -209,13 +209,12 @@ public :
         // TODO:  Detect error
 
         // register standard prefixes for standard namespaces
+        // @todo Can this be put in srcmlns.hpp and shared
+        // @todo Why isn't OPENMP here?
         const char* prefixes[] = {
-            SRCML_SRC_NS_URI, "src",
+            SRCML_SRC_NS_URI, "src", // @todo state why
             SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
             SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
-            SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-            SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-            SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
             SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
             SRCML_DIFF_NS_URI, SRCML_DIFF_NS_PREFIX_DEFAULT,
             0, 0

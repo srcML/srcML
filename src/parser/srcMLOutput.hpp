@@ -44,9 +44,6 @@
 enum PREFIXES { SRC,
        CPP,
        ERR,
-       LIT,
-       OP,
-       MOD,
        POS,
        OMP
 };
