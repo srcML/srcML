@@ -141,19 +141,19 @@ public:
 
 public:
     /** token stream input */
-    TokenStream* input;
+    TokenStream* input = nullptr;
 
     /** output xml writer */
     xmlTextWriter* xout = nullptr;
     
     /** output buffer */
-    xmlOutputBuffer* output_buffer;
+    xmlOutputBuffer* output_buffer = nullptr;
 
     /** unit attribute language */
-    const char* unit_language;
+    const char* unit_language = nullptr;
 
     /** unit attribute revision */
-    const char* unit_revision;
+    const char* unit_revision = nullptr;
 
     /** unit attribute url */
     const char* unit_url = nullptr;
@@ -174,7 +174,7 @@ public:
     const char* unit_encoding = nullptr;
 
     /** output options */
-    OPTION_TYPE& options;
+    const OPTION_TYPE options;
 
     /** xml encoding */
     const char* xml_encoding = nullptr;
