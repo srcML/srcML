@@ -140,7 +140,6 @@ header "post_include_hpp" {
 // Macros to introduce trace statements
 #define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
-#define ENTRY_DEBUG_INIT ruledepth(0),
 #define ENTRY_DEBUG_START ruledepth = 0;
 #endif
 
@@ -303,16 +302,12 @@ private:
 #endif
 
 // constructor
-srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE& parser_options)
-   : antlr::LLkParser(lexer,1), Language(lang), ModeStack(), cpp_zeromode(false), cpp_skipelse(false), cpp_ifcount(0),
-    parser_options(parser_options), ifcount(0), ENTRY_DEBUG_INIT notdestructor(false), curly_count(0), skip_ternary(false),
-    current_column(-1), current_line(-1), nxt_token(-1), last_consumed(-1), wait_terminate_post(false), cppif_duplicate(false),
-    number_finishing_elements(0), in_template_param(false), start_count(0)
+srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& parser_options)
+   : antlr::LLkParser(lexer,1), Language(lang), ModeStack(),
+    parser_options(parser_options)
 {
-
     // root, single mode that allows statements to be nested
     startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
-   
 }
 
 // ends all currently open modes
@@ -670,33 +665,32 @@ public:
     friend class LightweightElement;
     friend class SingleElement;
 
-    bool cpp_zeromode;
-    bool cpp_skipelse;
-    int cpp_ifcount;
-    bool isdestructor;
-    OPTION_TYPE& parser_options;
+    bool cpp_zeromode = false;
+    bool cpp_skipelse = false;
+    int cpp_ifcount = 0;
+    bool isdestructor = false;
+    const OPTION_TYPE parser_options = 0;
     std::string namestack[2];
-    int ifcount;
+    int ifcount = 0;
 #ifdef ENTRY_DEBUG
-    int ruledepth;
+    int ruledepth = 0;
 #endif
-    bool is_qmark;
-    bool notdestructor;
-    bool operatorname;
-    int curly_count;
+    bool is_qmark = false;
+    bool notdestructor = false;
+    bool operatorname = false;
 
-    bool skip_ternary;
+    bool skip_ternary = false;
 
-    int current_column;
-    int current_line;
-    int nxt_token;
-    int last_consumed;
-    bool wait_terminate_post;
-    bool cppif_duplicate;
-    size_t number_finishing_elements;
+    int current_column = -1;
+    int current_line = -1;
+    int nxt_token = -1;
+    int last_consumed = -1;
+    bool wait_terminate_post = false;
+    bool cppif_duplicate = false;
+    size_t number_finishing_elements = 0;
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > > finish_elements_add;
-    bool in_template_param;
-    int start_count;
+    bool in_template_param = false;
+    int start_count = 0;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -711,7 +705,7 @@ public:
     static const antlr::BitSet identifier_list_tokens_set;
 
     // constructor
-    srcMLParser(antlr::TokenStream& lexer, int lang, OPTION_TYPE& options);
+    srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
 
     // destructor
     ~srcMLParser() {
@@ -3345,9 +3339,6 @@ lcurly_base[] { ENTRY_DEBUG } :
                 setMode(MODE_FUNCTION_BODY);
 
             startElement(SBLOCK);
-
-            ++curly_count;
-
         }
         LCURLY
         set_bool[skip_ternary, false]
@@ -3418,9 +3409,6 @@ rcurly[] { ENTRY_DEBUG } :
 
             if(getCurly() != 0)
                 decCurly();
-
-            --curly_count;
-
         }
         RCURLY
         {
