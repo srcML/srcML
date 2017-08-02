@@ -125,9 +125,6 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
     if (isoption(options, SRCML_OPTION_POSITION)) {
 
         lineAttribute = namespaces[POS].prefix + ":line";
-
-        line2Attribute = namespaces[POS].prefix + ":line2";
-
         columnAttribute = namespaces[POS].prefix + ":column";
     }
 }
@@ -193,39 +190,6 @@ void srcMLOutput::outputUnitSeparator() {
     processText("\n\n", 2);
 }
 
-/**
- * lineAttributeValue
- * @param aline to convert to string
- *
- * Convert the line to string attribute.
- *
- * @returns the line as a string.
- */
-void srcMLOutput::outputPosition() {
-
-    if (end_position_output)
-        return;
-
-    const char * position_localname = "position";
-    const char* prefix = namespaces[POS].prefix.c_str();
-    namespaces[POS].used = true;
-
-    if (prefix[0] == 0)
-        xmlTextWriterStartElement(xout, BAD_CAST position_localname);
-    else
-        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST position_localname, 0);
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(last_line).c_str());
-
-    if(isoption(options,SRCML_OPTION_LINE))
-        xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST std::to_string(last_line2).c_str());
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(last_column).c_str());
-
-    xmlTextWriterEndElement(xout);
-
-    end_position_output = true;
-}
 
 /**
  * setTokenStream
@@ -630,40 +594,13 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
  *
  * Callback to process/output token as text with position information.
  */
-void srcMLOutput::processTextPosition(const antlr::RefToken& token) {
+void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(token->getLine()).c_str());
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(token->getColumn()).c_str());
 
-    last_line = token->getLine();
-    last_column = token->getColumn() + (int)token->getText().size();
-
     end_position_output = false;
-
-    processText(token->getText());
-}
-
-/**
- * processTextPositionLine
- * @param token token to output as text
- *
- * Callback to process/output token as text with position information using @code#line@endcode embedded in half of set line.
- */
-void srcMLOutput::processTextPositionLine(const antlr::RefToken& token) {
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(token->getLine() & 0xFFFF).c_str());
-    xmlTextWriterWriteAttribute(xout, BAD_CAST line2Attribute.c_str(), BAD_CAST std::to_string(token->getLine() >> 16).c_str());
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(token->getColumn()).c_str());
-
-    last_line = token->getLine() & 0xFFFF;
-    last_line2 = token->getLine() >> 16;
-    last_column = token->getColumn() + (int)token->getText().size();
-
-    end_position_output = false;
-
-    processText(token->getText());
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
@@ -686,12 +623,12 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 
         if (attr_name2)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
+
+        if (isoption(options, SRCML_OPTION_POSITION))
+            addPosition(token);
     } 
 
     if (!isstart(token) || isempty(token)) {
-
-        if (isoption(options, SRCML_OPTION_POSITION) && !isempty(token))
-            outputPosition();
 
         xmlTextWriterEndElement(xout);
         --openelementcount;

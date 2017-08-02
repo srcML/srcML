@@ -233,13 +233,21 @@ private:
     inline void pushSToken(int token) {
 
         // push a new start token
-        pushToken(antlr::RefToken(StartTokenFactory(token)));
+        auto ntoken = antlr::RefToken(StartTokenFactory(token));
+        ntoken->setLine(LT(1)->getLine());
+        ntoken->setColumn(LT(1)->getColumn());
+
+        pushToken(ntoken);
     }
 
     inline void pushSTokenFlush(int token) {
 
         // push a new start token
-        pushTokenFlush(antlr::RefToken(StartTokenFactory(token)));
+        auto ntoken = antlr::RefToken(StartTokenFactory(token));
+        ntoken->setLine(LT(1)->getLine());
+        ntoken->setColumn(LT(1)->getColumn());
+
+        pushTokenFlush(ntoken);
     }
 
     /**
@@ -251,8 +259,13 @@ private:
      */
     inline void pushEToken(int token) {
 
+        // push a new start token
+        auto ntoken = antlr::RefToken(EndTokenFactory(token));
+        ntoken->setLine(LT(1)->getLine());
+        ntoken->setColumn(LT(1)->getColumn());
+
         // push a new end token
-        pushToken(antlr::RefToken(EndTokenFactory(token)));
+        pushToken(ntoken);
     }
 
     /**

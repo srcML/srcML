@@ -125,8 +125,7 @@ public:
     void processText(const std::string&);
     void processText(const char* s, int size);
 
-    void processTextPosition(const antlr::RefToken& token);
-    void processTextPositionLine(const antlr::RefToken& token);
+    void addPosition(const antlr::RefToken& token);
 
 private:
     int last_line = 0;
@@ -200,9 +199,6 @@ public:
 
     /** line attribute content */
     std::string lineAttribute;
-
-    /** line attribute content for second line */
-    std::string line2Attribute;
 
     /** column attribute content */
     std::string columnAttribute;
