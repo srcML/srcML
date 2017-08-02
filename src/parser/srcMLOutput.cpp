@@ -124,7 +124,7 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
     // setup attributes names for line/column position if used
     if (isoption(options, SRCML_OPTION_POSITION)) {
 
-        lineAttribute = namespaces[POS].prefix + ":line;";
+        lineAttribute = namespaces[POS].prefix + ":line";
 
         line2Attribute = namespaces[POS].prefix + ":line2";
 
@@ -207,8 +207,8 @@ void srcMLOutput::outputPosition() {
         return;
 
     const char * position_localname = "position";
-    const char* prefix = namespaces[3].prefix.c_str();
-    namespaces[3].used = true;
+    const char* prefix = namespaces[POS].prefix.c_str();
+    namespaces[POS].used = true;
 
     if (prefix[0] == 0)
         xmlTextWriterStartElement(xout, BAD_CAST position_localname);
@@ -673,6 +673,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 		return;
 	
     if (isstart(token) || isempty(token)) {
+
         if (prefix[0] == 0)
             xmlTextWriterStartElement(xout, BAD_CAST name);
         else {
