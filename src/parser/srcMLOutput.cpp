@@ -160,36 +160,10 @@ void srcMLOutput::close() {
     }
 }
 
-/**
- * srcMLTextWriterStartElement
- * @param xout xml writer
- * @param s name of element to start
- *
- * Start output of element s in writer xout.
- */
-inline void srcMLOutput::srcMLTextWriterStartElement(xmlTextWriter* xout, const xmlChar* s) {
-
-    xmlTextWriterStartElement(xout, s);
-    ++openelementcount;
-}
-
-/**
- * srcMLTextWriterEndElement
- * @param xout xml writer
- *
- * End element in writer xout.
- */
-void srcMLOutput::srcMLTextWriterEndElement(xmlTextWriter* xout) {
-
-    xmlTextWriterEndElement(xout);
-    --openelementcount;
-}
-
 void srcMLOutput::outputUnitSeparator() {
     
     processText("\n\n", 2);
 }
-
 
 /**
  * setTokenStream
@@ -398,7 +372,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     maintag += "unit";
 
     // start of main tag
-    srcMLTextWriterStartElement(xout, BAD_CAST /* type2name(SUNIT) */ maintag.c_str());
+    xmlTextWriterStartElement(xout, BAD_CAST /* type2name(SUNIT) */ maintag.c_str());
+    ++openelementcount;
 
     // record where unit start tag name ends
     start_ns_pos = 1 + (int) maintag.size() + 1;
@@ -528,8 +503,10 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
     } else {
 
         // end anything still open, including the unit
-        while (openelementcount > 0)
-            srcMLTextWriterEndElement(xout);
+        while (openelementcount > 0) {
+            xmlTextWriterEndElement(xout);
+            --openelementcount;
+        }
 
         // output the namespaces
         // record length of namespaces list

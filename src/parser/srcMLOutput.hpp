@@ -227,9 +227,6 @@ public:
     void setMacroList(std::vector<std::string> & list);
     void outputMacroList();
 
-    void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
-    void srcMLTextWriterEndElement(xmlTextWriter*);
-
 private:
 
     // token handler

@@ -53,12 +53,12 @@
  * 
  * Constructor for output to memory.
  */
-srcml_translator::srcml_translator(char ** str_buf,
-                                 size_t * size,
+srcml_translator::srcml_translator(char** str_buf,
+                                 size_t* size,
                                  const char* xml_encoding,
-                                 OPTION_TYPE & op,
-                                 std::vector<std::string> & prefix,
-                                 std::vector<std::string> & uri,
+                                 OPTION_TYPE& op,
+                                 std::vector<std::string>& prefix,
+                                 std::vector<std::string>& uri,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
                                  int language,
@@ -66,7 +66,7 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  const char* url,
                                  const char* filename,
                                  const char* version,
-                                 const std::vector<std::string> & attributes,
+                                 const std::vector<std::string>& attributes,
                                  const char* timestamp,
                                  const char* hash,
                                  const char* encoding)
@@ -114,8 +114,8 @@ srcml_translator::srcml_translator(char ** str_buf,
 srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-                                 std::vector<std::string> & prefix,
-                                 std::vector<std::string> & uri,
+                                 std::vector<std::string>& prefix,
+                                 std::vector<std::string>& uri,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
                                  int language,
@@ -123,7 +123,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* url,
                                  const char* filename,
                                  const char* version,
-                                 const std::vector<std::string> & attributes,
+                                 const std::vector<std::string>& attributes,
                                  const char* timestamp, 
                                  const char* hash,
                                  const char* encoding)
@@ -340,7 +340,7 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char* xml) {
         xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
     }
 
-    out.srcMLTextWriterEndElement(out.getWriter());
+    xmlTextWriterEndElement(out.getWriter());
 
     if ((options & SRCML_OPTION_ARCHIVE) > 0)
         out.outputUnitSeparator();
@@ -383,7 +383,7 @@ bool srcml_translator::add_unit_content(const srcml_unit * unit, const char* xml
     if (size)
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
 
-    out.srcMLTextWriterEndElement(out.getWriter());
+    xmlTextWriterEndElement(out.getWriter());
 
     if ((options & SRCML_OPTION_ARCHIVE) > 0)
         out.outputUnitSeparator();
