@@ -36,8 +36,6 @@ define nestedfile <<- 'STDOUT'
 	STDOUT
 xmlcheck "$nestedfile"
 
-mkdir sub
-
 createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
 

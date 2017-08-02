@@ -247,6 +247,8 @@ check_exit() {
         exit 8
     fi
 
+    set -e
+
     if [ $# -eq 2 ]; then
         diff $STDERR <(echo -en "$2")
         [ ! -s $STDOUT ]
@@ -257,6 +259,8 @@ check_exit() {
         diff $STDERR <(echo -en "$3")
     fi
 
+    set +e
+    
     # return to capturing stdout and stderr
     capture_output
 
