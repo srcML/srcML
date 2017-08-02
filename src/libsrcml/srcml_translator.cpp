@@ -72,15 +72,14 @@ srcml_translator::srcml_translator(char ** str_buf,
                                  const char* encoding)
     :  Language(language),
        revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
-       options(op), buffer(0),
+       options(op),
        out(0, 0, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
-       str_buffer(str_buf), size(size), is_outputting_unit(false), text_only(false) {
+       str_buffer(str_buf), size(size) {
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
 
-    // delete initialization as writer seems to init again causing double init.
-    if(xml_encoding) {
+    if (xml_encoding) {
 
 #ifdef LIBXML2_NEW_BUFFER
         xmlBufShrink(obuffer->conv, xmlBufUse(obuffer->conv));
@@ -128,11 +127,11 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* timestamp, 
                                  const char* hash,
                                  const char* encoding)
-    : Language(language), first(true),
+    : Language(language),
       revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
-      options(op), buffer(0),
-      out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
-      size(0), is_outputting_unit(false), output_unit_depth(0), text_only(false) {}
+      options(op),
+      out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize)
+{}
 
 /**
  * set_macro_list
