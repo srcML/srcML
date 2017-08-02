@@ -203,9 +203,6 @@ public:
     /** column attribute content */
     std::string columnAttribute;
 
-    /** output array for line/column temporary storage */
-    char out[21];
-
     /** user defined macro list */
     std::vector<std::string> user_macro_list;
 
