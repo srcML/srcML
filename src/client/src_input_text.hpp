@@ -26,7 +26,7 @@
 #include <srcml.h>
 #include <srcml_cli.hpp>
 #include <string>
-#include <parse_queue.hpp>
+#include <ParseQueue.hpp>
 
 int src_input_text(ParseQueue& queue,
                     srcml_archive* srcml_arch,
