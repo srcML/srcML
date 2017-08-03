@@ -1,1 +1,0 @@
-typedef void (*DRAWF)( int, int );

@@ -1,1 +1,0 @@
-inline namespace ns { }

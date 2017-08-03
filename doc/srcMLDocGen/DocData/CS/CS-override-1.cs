@@ -1,2 +1,0 @@
-override double area() {
-}

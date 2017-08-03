@@ -1,1 +1,0 @@
-float matrix[10][15];

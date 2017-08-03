@@ -1,1 +1,0 @@
-strictfp class FooNum { }

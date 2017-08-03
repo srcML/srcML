@@ -1,1 +1,0 @@
-explicit operator int*() const;

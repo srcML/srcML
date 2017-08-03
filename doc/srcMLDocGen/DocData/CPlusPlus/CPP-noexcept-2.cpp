@@ -1,1 +1,0 @@
-void no_throw() noexcept { }

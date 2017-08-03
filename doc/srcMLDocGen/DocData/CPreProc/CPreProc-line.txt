@@ -1,2 +1,0 @@
-// #line directive example
-#line 151 "copy.c"

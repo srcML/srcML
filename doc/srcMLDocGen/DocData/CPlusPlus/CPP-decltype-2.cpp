@@ -1,1 +1,0 @@
-decltype(int)

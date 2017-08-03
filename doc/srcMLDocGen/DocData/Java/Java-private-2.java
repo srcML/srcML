@@ -1,1 +1,0 @@
-private int i;

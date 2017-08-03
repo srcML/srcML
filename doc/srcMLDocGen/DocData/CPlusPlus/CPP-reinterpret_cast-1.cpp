@@ -1,1 +1,0 @@
-reinterpret_cast<double>(number);
