@@ -3818,8 +3818,7 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             incParen();
 
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
+            startElement(SOPERATOR);
         }
         LPAREN
 ;
@@ -3827,7 +3826,7 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 // marking | operator
 bar[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR)) && !inMode(MODE_PARAMETER))
+            if (!inMode(MODE_PARAMETER))
                 startElement(SOPERATOR);
         }
         BAR
@@ -3873,7 +3872,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
 // marking comma operator
 comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup_comma && ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (markup_comma && ((true)
                  && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)))
                 && !inMode(MODE_ENUM) && !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INITIALIZATION_LIST))
                 startElement(SOPERATOR);
@@ -3917,7 +3916,7 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
             }
 
             if (markup_colon && !(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY))
-                && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+                && (true)
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
@@ -4702,7 +4701,7 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
 qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITION); LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR)))
+            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (true))
                 startElement(SOPERATOR);
         }
         QMARK ({ SkipBufferSize() == 0 }? QMARK)?
@@ -7353,7 +7352,7 @@ pure_expression_block[] { ENTRY_DEBUG } :
 // All possible operators
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if ((!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if ((true)
                 && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)))
                 startElement(SOPERATOR);
         }
@@ -7378,8 +7377,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
 // only new operator
 sole_new[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
+            startElement(SOPERATOR);
         }
         NEW
 ;
@@ -7387,8 +7385,7 @@ sole_new[] { LightweightElement element(this); ENTRY_DEBUG } :
 // only ~
 sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
+            startElement(SOPERATOR);
         }
         DESTOP
 ;
@@ -7402,7 +7399,7 @@ general_operators_list[] { ENTRY_DEBUG } :
 // mark up )
 rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup && (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
+            if (markup && (true)
                  && !inMode(MODE_END_ONLY_AT_RPAREN))
                 startElement(SOPERATOR);
         }
@@ -7597,8 +7594,7 @@ rbracket[] { ENTRY_DEBUG } :
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
+            startElement(SOPERATOR);
         }
         PERIOD
 ;
@@ -7606,8 +7602,7 @@ period[] { LightweightElement element(this); ENTRY_DEBUG } :
 // -> operator
 member_pointer[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
+            startElement(SOPERATOR);
         }
       TRETURN  
 ;
@@ -7615,8 +7610,7 @@ member_pointer[] { LightweightElement element(this); ENTRY_DEBUG } :
 // ->* operator
 member_pointer_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
+            startElement(SOPERATOR);
         }
       MPDEREF  
 ;
@@ -7624,8 +7618,7 @@ member_pointer_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
 // .* operator
 dot_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
+            startElement(SOPERATOR);
         }
         DOTDEREF
 ;
@@ -7633,8 +7626,7 @@ dot_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
 // Namespace operator '::'
 dcolon[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
+            startElement(SOPERATOR);
         }
         DCOLON
 ;
@@ -8564,8 +8556,7 @@ template_argument_expression[] { ENTRY_DEBUG } :
 // All possible operators
 template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!isoption(parser_options, SRCML_OPTION_OPTIONAL_MARKUP) || isoption(parser_options, SRCML_OPTION_OPERATOR))
-                startElement(SOPERATOR);
+            startElement(SOPERATOR);
         }
         (
         OPERATORS | TRETURN | TEMPOPS | EQUAL | MULTOPS | REFOPS | DOTDOT | RVALUEREF |

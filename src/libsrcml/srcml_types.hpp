@@ -34,12 +34,6 @@ const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<5;
 const unsigned int SRCML_OPTION_CPP_NOMACRO       = 1<<2;
 /** Wrap function/classes/etc with templates (default: on) */
 const unsigned int SRCML_OPTION_WRAP_TEMPLATE     = 1<<11;
-/** Markups literal in special namespace */
-const unsigned int SRCML_OPTION_LITERAL           = 1<<21;
-/** Markups modifiers in special namespace */
-const unsigned int SRCML_OPTION_MODIFIER          = 1<<22;
-/** Markups operator in special namespace */
-const unsigned int SRCML_OPTION_OPERATOR          = 1<<23;
 /** output is interactive (good for editing applications) */
 const unsigned int SRCML_OPTION_INTERACTIVE       = 1<<12;
 /** Turn on optional ternary operator markup */
@@ -62,8 +56,6 @@ const unsigned int SRCML_OPTION_APPLY_ROOT        = 1<<8;
 const unsigned int SRCML_OPTION_DEBUG_TIMER       = 1<<17;
 /** Parser output special tokens for debugging the parser */
 const unsigned int SRCML_OPTION_DEBUG             = 1<<24;
-/** Turn on old optional markup behaviour */
-const unsigned int SRCML_OPTION_OPTIONAL_MARKUP   = 1<<20;
 /** Is a fragment, i.e., no unit element */
 const unsigned int SRCML_OPTION_FRAGMENT = 1<<21;
 
