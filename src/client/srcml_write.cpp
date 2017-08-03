@@ -22,7 +22,7 @@
 
 #include <srcml_write.hpp>
 #include <srcml.h>
-#include <parse_request.hpp>
+#include <ParseRequest.hpp>
 #include <iostream>
 #include <srcml_options.hpp>
 #include <TraceLog.hpp>

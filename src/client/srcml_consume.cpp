@@ -25,7 +25,7 @@
 
 #include <srcml_consume.hpp>
 #include <srcml.h>
-#include <parse_request.hpp>
+#include <ParseRequest.hpp>
 #include <WriteQueue.hpp>
 #include <boost/static_assert.hpp>
 #include <srcml_options.hpp>

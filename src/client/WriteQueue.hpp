@@ -24,7 +24,7 @@
 #define WRITE_QUEUE_HPP
 
 #include <srcml.h>
-#include <parse_request.hpp>
+#include <ParseRequest.hpp>
 #include <ctpl_stl.h>
 #include <mutex>
 #include <condition_variable>
