@@ -31,8 +31,10 @@ include (srcml)
 
 set(CMAKE_MACOSX_RPATH 1)
 
+set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
+
 # Setting up source include directories.
-include_directories(BEFORE src/client src/libsrcml src/parser src/srcSAX)
+include_directories(BEFORE src/client src/libsrcml src/parser src/srcSAX ${CMAKE_GENERATED_SOURCE_DIR})
 
 # Setting major and minor version numbers (TODO fix this so that it is set using something
 # more correct that being input from within the build system).
@@ -41,18 +43,7 @@ add_definitions(-DREVISION=\"1\")
 
 # Including extra directories.
 add_subdirectory(src)
-
-if(BUILD_TIMING_TESTS)
-    add_subdirectory(timing)
-endif()
-
-if(BUILD_UNIT_TESTS)
-    add_subdirectory(test)
-endif()
-
-if(BUILD_CLI_TESTS OR BUILD_LARGE_SYSTEMS_TESTS)
-    add_subdirectory(cli)
-endif()
+add_subdirectory(test)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
@@ -61,3 +52,5 @@ endif()
 if(${BUILD_LANGUAGE_BINDINGS})
     add_subdirectory(bindings)
 endif()
+
+add_subdirectory(CMake/post-install)

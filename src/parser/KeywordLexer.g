@@ -22,11 +22,9 @@
 
 header "pre_include_hpp" {
     #include <cstring>
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
 }
 
 header {
-    #pragma GCC diagnostic warning "-Wunused-parameter"
     #include <string>
     #include "Language.hpp"
     #include "UTF8CharBuffer.hpp"
@@ -46,7 +44,6 @@ header {
 }
 
 header "post_include_cpp" {
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 
 void KeywordLexer::changetotextlexer(int typeend) {
     selector->push("text"); 
@@ -343,6 +340,7 @@ bool isline;
 long line_number;
 int lastpos;
 int prev;
+int currentmode;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };

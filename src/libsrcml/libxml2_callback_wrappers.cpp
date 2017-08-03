@@ -53,37 +53,3 @@ int write_close_callback_wrapper(void * context) {
 	return write_context.close_callback(write_context.context);
 
 }
-
-/**
- * read_callback_wrapper
- * @param context the input context
- * @param buffer the buffer to read into
- * @param len the number of bytes to read
- *
- * Wrapper around libsrcml read callback wrapper to conform to libxml2.
- *
- * @returns the number of bytes read or -1 in case of error.
- */
-int read_callback_wrapper(void * context, char * buffer, int len) {
-
-	libxml2_read_context & read_context = *(libxml2_read_context*)context;
-
-	return read_context.read_callback(read_context.context, buffer, (size_t)len);
-
-}
-
-/**
- * read_close_callback_wrapper
- * @param context the input context
- *
- * Wrapper around libsrcml close callback to close the read_callback_wrapper context.
- *
- * @returns 0 or -1 on error.
- */
-int read_close_callback_wrapper(void * context) {
-
-	libxml2_read_context & read_context = *(libxml2_read_context*)context;
-
-	return read_context.close_callback(read_context.context);
-
-}

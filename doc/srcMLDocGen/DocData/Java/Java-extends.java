@@ -1,3 +1,0 @@
-class DerivedClass
-	extends BaseClass
-{ }

@@ -1,3 +1,0 @@
-public synchronized String mySyncMethod()
-{
-}

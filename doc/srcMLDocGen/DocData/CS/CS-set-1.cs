@@ -1,3 +1,0 @@
-set {
-    x = value;
-}

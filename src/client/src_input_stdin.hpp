@@ -23,6 +23,6 @@
 #ifndef SRC_INPUT_STDIN_HPP
 #define SRC_INPUT_STDIN_HPP
 
-bool src_input_stdin();
+int src_input_stdin();
 
 #endif

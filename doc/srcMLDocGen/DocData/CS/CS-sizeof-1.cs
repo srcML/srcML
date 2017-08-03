@@ -1,1 +1,0 @@
-int i = sizeof(x);

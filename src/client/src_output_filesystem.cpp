@@ -23,19 +23,8 @@
 #include <src_output_filesystem.hpp>
 #include <srcml.h>
 #include <iostream>
-#include <iomanip>
 #include <boost/filesystem.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread.hpp>
-#pragma GCC diagnostic pop
 
-void src_output_file(srcml_unit* unit, std::string filename) {
-
-    srcml_unit_unparse_filename(unit, filename.c_str(), 0);
-
-    srcml_unit_free(unit);
-}
 void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
 
     // construct the relative directory
@@ -43,7 +32,6 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
     if (output_dir != "." && output_dir != "./")
         prefix = output_dir;
 
-    boost::thread_group writers;
     int count = 0;
     while (srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch)) {
 
@@ -57,17 +45,10 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
             boost::filesystem::create_directories(out.parent_path());
 
         // unparse directory to filename
-    //    writers.create_thread( boost::bind(src_output_file, unit, out.string()));
-
-        // trace
         log << ++count << (const char *)out.c_str();
 
         srcml_unit_unparse_filename(unit, (const char *)out.c_str(), 0);
 
         srcml_unit_free(unit);
-
-        //        srcml_unit_free(unit);
     }
-
-    writers.join_all();
 }

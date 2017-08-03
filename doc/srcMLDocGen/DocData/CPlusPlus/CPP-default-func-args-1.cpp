@@ -1,1 +1,0 @@
-void point(int x = 3, int y = 4);

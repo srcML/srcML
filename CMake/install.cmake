@@ -18,7 +18,9 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-if(NOT WIN32)
+if(OS_NAME STREQUAL "Fedora")
+    set(CMAKE_INSTALL_PREFIX "/usr")
+elseif(NOT WIN32)
     set(CMAKE_INSTALL_PREFIX "/usr/local")
 elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     # file(GLOB SRCML_DLLS ${CMAKE_SOURCE_DIR}/dlls/*)

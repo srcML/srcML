@@ -22,7 +22,7 @@
 
 #ifndef SRCML_CONSUME_HPP
 #define SRCML_CONSUME_HPP
-#include <parse_request.hpp>
+#include <ParseRequest.hpp>
   
 class WriteQueue;
 

@@ -21,8 +21,7 @@
  */
 
 #include <isxml.hpp>
-#include <boost/static_assert.hpp>
-#include <stdint.h>
+#include <cstdint>
 #include <peek4char.hpp>
 
 // determine if XML from first four bytes in almost any encoding

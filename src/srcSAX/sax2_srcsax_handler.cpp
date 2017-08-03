@@ -196,6 +196,19 @@ void end_document(void * ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler * state = (sax2_srcsax_handler *) ctxt->_private;
 
+    const char* errmsg = 0;
+    switch (ctxt->errNo) {
+    case XML_ERR_DOCUMENT_END:
+        errmsg = "Extra content at the end of the document";
+        break;
+    default:
+        break;
+    };
+
+    if (errmsg) {
+        fprintf(stderr, "srcml: %s\n", errmsg);
+    }
+
     state->context->stack_size = 0;
     state->context->srcml_element_stack = 0;
 
@@ -521,19 +534,20 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
 
     if(state->context->handler->start_element) {
 
-       int ns_length = state->root.nb_namespaces * 2;
-       for (int i = 0; i < ns_length; i += 2)
-        if(prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
-            prefix = state->root.namespaces[i];
+        int ns_length = state->root.nb_namespaces * 2;
+        for (int i = 0; i < ns_length; i += 2) {
+            if(prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
+                prefix = state->root.namespaces[i];
+        }
 
-        for (int i = 1; i < ns_length; i += 2)
+        for (int i = 1; i < ns_length; i += 2) {
             if(URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
                 URI = state->root.namespaces[i];
-
+        }
         state->libxml2_namespaces = namespaces;
         state->libxml2_attributes = attributes;
         state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                nb_namespaces, 0, nb_attributes, 0);
+            nb_namespaces, 0, nb_attributes, 0);
         state->libxml2_namespaces = 0;
         state->libxml2_attributes = 0;
     }

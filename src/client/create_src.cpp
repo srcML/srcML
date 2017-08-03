@@ -21,17 +21,15 @@
  */
 
 #include <create_src.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <srcml.h>
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
 #include <src_prefix.hpp>
-#include <srcml_options.hpp>
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
 #include <input_file.hpp>
-#include <srcml_logger.hpp>
+#include <input_archive.hpp>
+#include <SRCMLStatus.hpp>
 
 class srcMLReadArchive {
 public:
@@ -42,11 +40,11 @@ public:
 
         int status = SRCML_STATUS_OK;
 
-        if(revision)
+        if (revision) {
             status = srcml_archive_set_srcdiff_revision(arch, *revision);
-
-        if (status != SRCML_STATUS_OK)
-            throw status;
+            if (status != SRCML_STATUS_OK)
+                throw status;
+        }
 
         // may need to modify input source based on url and compressions
         srcml_input_src curinput = input_source;
@@ -54,26 +52,32 @@ public:
         // urls
         if (curinput.protocol != "file" && curl_supported(curinput.protocol)) {
             srcml_input_src uninput = curinput;
-            input_curl(uninput);
+            if (!input_curl(uninput))
+                throw -1;
+
             curinput.fd = *uninput.fd;
         }
 
         // compressed files
-        if (!curinput.compressions.empty()) {
+        if (!curinput.compressions.empty() && curinput.archives.empty()) {
             srcml_input_src uninput = curinput;
             input_file(uninput);
             curinput.fd = *uninput.fd;
         }
 
-        // open in put source
+        // archives (and possibly compressions)
+        if (!curinput.archives.empty()) {
+            curinput.fd = input_archive(curinput);
+        }
+
+        // open input source
         if (curinput.fd) {
             status = srcml_archive_read_open_fd(arch, *curinput.fd);
         } else {
             status = srcml_archive_read_open(arch, input_source);
         }
-
         if (status != SRCML_STATUS_OK) {
-            SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(input_source.filename));
+            SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(input_source.filename));
             throw status;
         }
     }
@@ -94,21 +98,23 @@ private:
 void create_src(const srcml_request_t& srcml_request,
                 const srcml_input_t& input_sources,
                 const srcml_output_dest& destination) {
+
     try {
 
-        if (srcml_request.command & SRCML_COMMAND_TO_DIRECTORY) {
+        if (option(SRCML_COMMAND_TO_DIRECTORY)) {
 
             // srcml->src extract all archives to the filesystem
 
-            TraceLog log(SRCMLOptions::get());
+            TraceLog log;
 
-            BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
+            for (const auto& input_source : input_sources) {
                 srcMLReadArchive arch(input_source, srcml_request.revision);
 
                 src_output_filesystem(arch, destination, log);
             }
 
-        } else if (input_sources.size() == 1 && (srcml_request.command & SRCML_COMMAND_XML)) {
+        } else if (input_sources.size() == 1 && option(SRCML_COMMAND_XML)) {
+
             // srcml->src extract individual unit in XML
 
             srcMLReadArchive arch(input_sources[0], srcml_request.revision);
@@ -119,14 +125,7 @@ void create_src(const srcml_request_t& srcml_request,
                 srcml_unit_free(unit);
             }
 
-            srcml_unit* unit = srcml_archive_read_unit_header(arch);
-
-            if (!unit) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
-                exit(4);
-            }
-
-            // SETUP OUTPUT ARCHIVE
+            // setup output archive
             srcml_archive* oarch = srcml_archive_create();
 
             // set options for the output srcml archive
@@ -166,7 +165,8 @@ void create_src(const srcml_request_t& srcml_request,
             //   no cli request to make it an archive
             //   not a directory (if local file)
             // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
-            if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
+            if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" && (srcml_request.unit > 0
+                || !srcml_archive_is_full_archive(arch)) &&
                 !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_ARCHIVE)) &&
                 !input_sources[0].isdirectory) {
 
@@ -179,40 +179,43 @@ void create_src(const srcml_request_t& srcml_request,
             }
 
             // register file extensions
-            BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {
+            for (const auto& ext : srcml_request.language_ext) {
                 size_t pos = ext.find('=');
                 srcml_archive_register_file_extension(oarch, ext.substr(0, pos).c_str(), ext.substr(pos+1).c_str());
             }
 
             // register xml namespaces
-            std::map<std::string, std::string>::const_iterator itr;
-            for(itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr){
-                srcml_archive_register_namespace(oarch, (*itr).first.c_str(), (*itr).second.c_str());
+            for (const auto& ns : srcml_request.xmlns_namespaces) {
+                srcml_archive_register_namespace(oarch, ns.first.c_str(), ns.second.c_str());
             }
 
-            /**** SHOULD THIS GO
-            if (srcml_request.markup_options)
-                srcml_archive_set_options(oarch, srcml_archive_get_options(oarch) | *srcml_request.markup_options);
-
-            if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
-                    srcml_archive_disable_option(oarch, SRCML_OPTION_XML_DECL);
-
-            srcml_archive_disable_full_archive(oarch);
-            *****/
-
+            // TODO: Not sure we will be using this anymore
             unsigned short compression = 0;
             if (!destination.compressions.empty() && destination.compressions.front() == ".gz")
                 compression = 9;
 
+            // open the srcml output file
             if (contains<int>(destination))
                 srcml_archive_write_open_fd(oarch, destination);
             else
                 srcml_archive_write_open_filename(oarch, destination.c_str(), compression);
 
+            // read the current unit
+            while (1) {
+                srcml_unit* unit = srcml_archive_read_unit_header(arch);
+                if (!unit && srcml_request.unit > 0) {
+                    SRCMLstatus(ERROR_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
+                    exit(4);
+                }
+                if (!unit)
+                    break;
 
-            srcml_archive_write_unit(oarch, unit);
+                srcml_archive_write_unit(oarch, unit);
+                srcml_unit_free(unit);
 
-            srcml_unit_free(unit);
+                if (srcml_request.unit)
+                    break;
+            }
 
             srcml_archive_close(oarch);
             srcml_archive_free(oarch);
@@ -233,7 +236,7 @@ void create_src(const srcml_request_t& srcml_request,
             while (srcml_unit* unit = srcml_archive_read_unit_header(arch)) {
 
                 if (srcml_request.unit && !unit) {
-                    SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
+                    SRCMLstatus(ERROR_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
                     exit(4);
                 }
 
@@ -242,11 +245,12 @@ void create_src(const srcml_request_t& srcml_request,
                 if (srcml_request.src_encoding)
                     srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
 
+                // null separator before every unit (except the first)
                 if (count) {
-                    char c = 0;
-                    write(1, &c, 1);
+                    write(1, "", 1);
                 }
 
+                // unaparse directly to the destintation
                 srcml_unit_unparse_fd(unit, destination);
 
                 srcml_unit_free(unit);
@@ -261,12 +265,6 @@ void create_src(const srcml_request_t& srcml_request,
         } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
             srcMLReadArchive arch(input_sources[0], srcml_request.revision);
 
-            if (destination.protocol == "file") {
-                boost::filesystem::path dir(destination.resource);
-                if (dir.has_parent_path() && !is_directory(dir.parent_path()))
-                    boost::filesystem::create_directories(dir.parent_path());
-            }
-
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_archive_read_unit_header(arch);
@@ -276,7 +274,7 @@ void create_src(const srcml_request_t& srcml_request,
             srcml_unit* unit = srcml_archive_read_unit_header(arch);
 
             if (!unit) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
+                SRCMLstatus(ERROR_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
                 exit(4);
             }
 
@@ -285,25 +283,30 @@ void create_src(const srcml_request_t& srcml_request,
             if (srcml_request.src_encoding)
                 srcml_archive_set_src_encoding(arch, srcml_request.src_encoding->c_str());
 
-            srcml_unit_unparse_filename(unit, destination.c_str(), 0);
+            int status = srcml_unit_unparse_filename(unit, destination.c_str(), 0);
+            if (status) {
+                SRCMLstatus(ERROR_MSG, "srcml: unable to open output file " + destination.resource);
+                exit(4);
+            }
 
             srcml_unit_free(unit);
 
         } else {
+
             // srcml->src extract to libarchive file
             if (destination.archives.size() == 0) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: source output requires an archive format (tar, zip, etc.)");
+                SRCMLstatus(ERROR_MSG, "srcml: source output requires an archive format (tar, zip, etc.)");
                 exit(1); //TODO: Need an error code
             }
 
             archive* ar = archive_write_new();
 
             // setup format
-            BOOST_FOREACH(const std::string& ext, destination.archives)
+            for (const auto& ext : destination.archives)
                 archive_write_set_format_by_extension(ar, ext.c_str());
 
             // setup compressions
-            BOOST_FOREACH(const std::string& ext, destination.compressions)
+            for (const auto& ext : destination.compressions)
                 archive_write_set_compression_by_extension(ar, ext.c_str());
 
             int status = ARCHIVE_OK;
@@ -313,12 +316,12 @@ void create_src(const srcml_request_t& srcml_request,
                 status = archive_write_open_filename(ar, destination.resource.c_str());
             }
             if (status != ARCHIVE_OK) {
-                SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, std::to_string(status));
+                SRCMLstatus(ERROR_MSG, std::to_string(status));
                 exit(1);
             }
 
             // extract all the srcml archives to this libarchive
-            BOOST_FOREACH(const srcml_input_src& input_source, input_sources) {
+            for (const auto& input_source : input_sources) {
 
                 srcMLReadArchive arch(input_source, srcml_request.revision);
 
@@ -327,11 +330,15 @@ void create_src(const srcml_request_t& srcml_request,
             }
 
             archive_write_close(ar);
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+            archive_write_free(ar);
+#else
             archive_write_finish(ar);
+#endif
         }
 
     } catch (srcMLReadArchiveError e) {
-        SRCMLLogger::log(SRCMLLogger::ERROR_MSG, "Error " + std::to_string(e.status) + " with " + e.errmsg);
+        SRCMLstatus(ERROR_MSG, "Error " + std::to_string(e.status) + " with " + e.errmsg);
     } catch (...) {
         exit(1);
     }

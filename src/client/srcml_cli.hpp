@@ -60,14 +60,14 @@ const int SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP   = 1<<19;
 const int SRCML_COMMAND_DISPLAY_SRCML_HASH        = 1<<20;
 const int SRCML_COMMAND_DISPLAY_SRCML_ENCODING    = 1<<21;
 
-const int SRCML_COMMAND_OUTPUT_ORDERED            = 1<<22;
+const int SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER     = 1<<22;
 const int SRCML_COMMAND_UPDATE                    = 1<<23;
 
 const int SRCML_COMMAND_NOARCHIVE                 = 1<<24;
 
 const int SRCML_DEBUG_MODE                        = 1<<25;
 
-const int SRCML_COMPRESS                          = 1<<26;
+//const int SRCML_COMPRESS                          = 1<<26;
 
 const int SRCML_ARCHIVE                           = 1<<27;
 
@@ -148,7 +148,7 @@ struct srcml_request_t {
     std::vector<std::string> transformations;
     std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;
 
-    int unit;
+    int unit = 0;
     int max_threads;
 
     boost::optional<std::string> pretty_format;

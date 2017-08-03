@@ -24,38 +24,43 @@
 #include <src_input_libarchive.hpp>
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <create_srcml.hpp>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <archive.h>
 #include <archive_entry.h>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
-void src_input_filelist(ParseQueue& queue,
+int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
                         const srcml_request_t& srcml_request,
-                        const std::string& input_file) {
+                        const std::string& input_file,
+                        const srcml_output_dest& destination) {
 
     archive* arch = libarchive_input_file(input_file);
+    if (!arch)
+        return 0;
 
     archive_entry *entry = 0;
     int status = archive_read_next_header(arch, &entry);
+    if (status == ARCHIVE_EOF) {
+        return 1;
+    }
     if (status != ARCHIVE_OK) {
-    	SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "srcml: Invalid filelist " + input_file);
-    	exit(1);
+    	SRCMLstatus(ERROR_MSG, "srcml: Invalid filelist " + input_file);
+        return 1;
     }
 
     // ARE THE LAST TWO NECESSARY?
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: filelist requires a non-directory file format");
-    	return;
+        SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-directory file format");
+    	return 1;
     }
 
     if (strcmp(archive_entry_pathname(entry), "data") != 0) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: filelist requires a non-archived file format");
-    	return;
+        SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-archived file format");
+    	return 1;
     }
 
     // if we know the size, create the right sized data_buffer
@@ -100,7 +105,9 @@ void src_input_filelist(ParseQueue& queue,
         // process this file
         // everything in a filelist is assumed to be source, including srcML files, so change the state
         srcml_input_src input(sline);
-        input.state = SRC;
-        srcml_handler_dispatch(queue, srcml_arch, srcml_request, input);
+     //   input.state = SRC;e
+        srcml_handler_dispatch(queue, srcml_arch, srcml_request, input, destination);
     }
+
+    return 1;
 }

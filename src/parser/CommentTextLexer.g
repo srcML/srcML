@@ -60,6 +60,9 @@ tokens {
     STRING_END;
     CHAR_END;
     CONTROL_CHAR;
+    LINE_DOXYGEN_COMMENT_END;
+    JAVADOC_COMMENT_END;
+    DOXYGEN_COMMENT_END;
 }
 
 {
@@ -150,7 +153,6 @@ COMMENT_TEXT {
 
             prevLA = prevprevLA;
             prevprevLA = LA(1);
-
          }
          (
         '\000'..'\010'
@@ -159,13 +161,16 @@ COMMENT_TEXT {
 
         '\011' /* '\t' */ |
 
-        { if(rawstring && first && LA(1) == '\012') {
+        { 
+            /*
+            if(rawstring && first && LA(1) == '\012') {
 
                 rawstring = false;
                 $setType(mode);
                 selector->pop();
                 goto newline_break;
             } 
+            */
         }
         '\012' /* '\n' */ { 
 
@@ -175,7 +180,7 @@ COMMENT_TEXT {
                   setLine(getLine() + (1 << 16));
 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-              if (mode == LINECOMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))) {
+              if (mode == LINECOMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
 
                   rawstring = false;
                   $setType(mode); selector->pop();
@@ -223,6 +228,8 @@ COMMENT_TEXT {
 
         '\051' /* ')' */ { if(rawstring) {
 
+                // compare the stored delimiter to what is here, stopping at the end 
+                // of a line (delimiter cannot span lines)
                 std::string::size_type pos = 0;
                 while(pos < delimiter.size() && LA(1) == delimiter[pos] && LA(1) != '\n') {
                     ++pos;
@@ -239,7 +246,7 @@ COMMENT_TEXT {
         '\052'..'\056' |
 
         '\057' /* '/' */
-                { if (prevLA == '*' && mode == COMMENT_END) { $setType(mode); selector->pop(); } } |
+                { if (prevLA == '*' && ((mode == COMMENT_END) || (mode == JAVADOC_COMMENT_END) || (mode == DOXYGEN_COMMENT_END) ) ) { $setType(mode); selector->pop(); } } |
 
         '\060'..';' | 
 
@@ -287,7 +294,7 @@ COMMENT_TEXT {
         ']'..'\377'
         )
         {
-         newline_break:
+/*         newline_break: */
 
             ++realbegin;
 
@@ -296,9 +303,9 @@ COMMENT_TEXT {
 
             // about to read a newline, or the end of the files.  Line comments need to end before the newline is consumed.
             // strings and characters on a preprocessor line also need to end, even if unterminated
-            if (_ttype == COMMENT_TEXT && (LA(1) == '\n' || LA(1) == EOF_CHAR) &&
+            if (_ttype == COMMENT_TEXT && ((LA(1) == '\n' && !rawstring) || LA(1) == EOF_CHAR) &&
                 (((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))
-                 || (mode == LINECOMMENT_END))) {
+                 || (mode == LINECOMMENT_END || mode == LINE_DOXYGEN_COMMENT_END))) {
                 rawstring = false;
                 $setType(mode);
                 selector->pop();

@@ -30,7 +30,7 @@ class ParseQueue;
 class srcml_input_src;
 struct srcml_archive;
 
-void srcml_input_srcml(ParseQueue& queue,
+int srcml_input_srcml(ParseQueue& queue,
 					   srcml_archive* srcml_output_archive,
 					   const srcml_input_src& srcml_input_source,
                        const boost::optional<size_t> & revision);
