@@ -25,7 +25,7 @@
 
 #include <functional>
 #include <parse_request.hpp>
-#include <write_queue.hpp>
+#include <WriteQueue.hpp>
 #include <ctpl_stl.h>
 #include <mutex>
 #include <srcml_consume.hpp>

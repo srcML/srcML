@@ -1,5 +1,5 @@
 /**
- * @file srcml_logger.cpp
+ * @file SRCMLStatus.cpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *

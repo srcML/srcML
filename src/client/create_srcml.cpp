@@ -25,7 +25,7 @@
 #include <srcml.h>
 #include <srcml_options.hpp>
 #include <parse_queue.hpp>
-#include <write_queue.hpp>
+#include <WriteQueue.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>

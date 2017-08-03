@@ -1,5 +1,5 @@
 /**
- * @file write_queue.hpp
+ * @file WriteQueue.hpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *

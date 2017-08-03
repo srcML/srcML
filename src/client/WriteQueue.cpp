@@ -1,5 +1,5 @@
 /**
- * @file write_queue.cpp
+ * @file WriteQueue.cpp
  *
  * @copyright Copyright (C) 2017 srcML, LLC. (www.srcML.org)
  *
@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <write_queue.hpp>
+#include <WriteQueue.hpp>
 #include <srcml_write.hpp>
 
 WriteQueue::WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool ordered)
