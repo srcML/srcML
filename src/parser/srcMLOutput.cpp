@@ -30,6 +30,7 @@
 #include <srcml.h>
 #include <cstring>
 #include <sstream>
+#include <stack>
 #ifdef _MSC_BUILD
 #include <io.h>
 #define snprintf _snprintf
@@ -122,7 +123,9 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
     if (isoption(options, SRCML_OPTION_POSITION)) {
 
         lineAttribute = namespaces[POS].prefix + ":line";
+        elineAttribute = namespaces[POS].prefix + ":endline";
         columnAttribute = namespaces[POS].prefix + ":column";
+        ecolumnAttribute = namespaces[POS].prefix + ":endcolumn";
     }
 }
 
@@ -198,10 +201,54 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
     unit_hash = hash;
     unit_encoding = encoding;
 
+    int open = 0;
+    unsigned long maxqsize = 0;
+    std::stack<const antlr::RefToken> ends;
     if (!isoption(options, SRCML_OPTION_INTERACTIVE)) {
 
-        // consume all input until EOF
-        while (consume_next() != antlr::Token::EOF_TYPE) {}
+        while (1) {
+            const antlr::RefToken& token = input->nextToken();
+            if (token->getType() == antlr::Token::EOF_TYPE)
+                break;
+
+            tokenlist.emplace(token);
+
+            // end tokens are put on queue, then all tokens on down are output
+            if (isend(token)) {
+                --open;
+
+                ends.emplace(token);
+
+                if (open == 0) {
+                    while (!tokenlist.empty()) {
+                        const antlr::RefToken& qtoken = tokenlist.front();
+
+                        // need to transfer line/column from end token to start token
+                        if (ispurestart(qtoken)) {
+                            const antlr::RefToken& qetoken = ends.top();
+                            static_cast<srcMLToken*>(&(*qtoken))->endline = qetoken->getLine();
+                            static_cast<srcMLToken*>(&(*qtoken))->endcolumn = qetoken->getColumn();
+                            ends.pop();
+                        }
+
+                        outputToken(qtoken);
+                        tokenlist.pop();
+                    }
+                }
+
+            } else if (ispurestart(token)) {
+
+                ++open;
+            }
+
+            maxqsize = std::max(tokenlist.size(), maxqsize);
+        }
+
+        // may be tokens left in the queue
+        while (!tokenlist.empty()) {
+            outputToken(tokenlist.front());
+            tokenlist.pop();
+        }
 
     } else {
 
@@ -561,9 +608,14 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
+
     xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(token->getLine()).c_str());
 
     xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(token->getColumn()).c_str());
+
+    xmlTextWriterWriteAttribute(xout, BAD_CAST elineAttribute.c_str(), BAD_CAST std::to_string(static_cast<srcMLToken*>(&(*token))->endline).c_str());
+
+    xmlTextWriterWriteAttribute(xout, BAD_CAST ecolumnAttribute.c_str(), BAD_CAST std::to_string(static_cast<srcMLToken*>(&(*token))->endcolumn).c_str());
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
