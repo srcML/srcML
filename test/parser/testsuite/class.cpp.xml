@@ -138,4 +138,9 @@
 <class>class <name>foobar</name> <super_list>: <super><specifier>public</specifier> <name>foo</name></super>, <super><specifier>private</specifier> <name>bar</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
+<unit>
+<class>class <name>foo</name> <super_list>: <super><attribute>[[<expr><name>bar</name></expr>]]</attribute> <specifier>virtual</specifier> <specifier>public</specifier> <name>bar</name></super></super_list>  <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+
 </unit>
