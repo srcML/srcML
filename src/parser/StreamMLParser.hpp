@@ -313,7 +313,7 @@ private:
             } catch(...) {}
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.insert(pretb.end(), skippretb.begin(), skippretb.end());
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
             skippretb.clear();
 
             // move back to normal buffer
@@ -321,7 +321,7 @@ private:
             pouttb = &tb;
 
             // put preprocessor buffer into skipped buffer
-            skiptb.insert(skiptb.end(), pretb.begin(), pretb.end());
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
             pretb.clear();
 
             // stop preprocessor handling
@@ -343,7 +343,7 @@ private:
             srcMLParser::macro_pattern_call();
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.insert(pretb.end(), skippretb.begin(), skippretb.end());
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
             skippretb.clear();
 
             // move back to normal buffer
@@ -351,7 +351,7 @@ private:
             pouttb = &tb;
 
             // put preprocessor buffer into skipped buffer
-            skiptb.insert(skiptb.end(), pretb.begin(), pretb.end());
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
             pretb.clear();
 
             inskip = false;
@@ -376,7 +376,7 @@ private:
             } catch(...) {}
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.insert(pretb.end(), skippretb.begin(), skippretb.end());
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
             skippretb.clear();
 
             // move back to normal buffer
@@ -384,7 +384,7 @@ private:
             pouttb = &tb;
 
             // put preprocessor buffer into skipped buffer
-            skiptb.insert(skiptb.end(), pretb.begin(), pretb.end());
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
             pretb.clear();
 
             // stop preprocessor handling
@@ -539,7 +539,7 @@ private:
      */
     inline void flushSkip(std::deque<antlr::RefToken>& rf) {
 
-        rf.insert(rf.end(), skip().begin(), skip().end());
+        rf.insert(rf.end(), std::make_move_iterator(skip().begin()), std::make_move_iterator(skip().end()));
         skip().clear();
     }
 
