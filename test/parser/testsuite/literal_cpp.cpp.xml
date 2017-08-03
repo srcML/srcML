@@ -47,7 +47,8 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="string">R"(The String Data \ Stuff)"</literal></expr>
+<expr_stmt><expr><literal type="string">R"(The String Data
+ \ Stuff)"</literal></expr>
 ;</expr_stmt>
 </unit>
 
@@ -56,11 +57,18 @@
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="string">uR"*(This is a "raw UTF-16" string.)*"</literal></expr>;</expr_stmt> 
+<expr_stmt><expr><literal type="string">u8R"XXX(I'm a "raw UTF-8
+" string.)XXX"</literal></expr>;</expr_stmt> 
 </unit>
 
 <unit>
-<expr_stmt><expr><literal type="string">UR"(This is a "raw UTF-32" string.)"</literal></expr>;</expr_stmt> 
+<expr_stmt><expr><literal type="string">uR"*(This is a "
+raw UTF-16" string.)*"</literal></expr>;</expr_stmt> 
+</unit>
+
+<unit>
+<expr_stmt><expr><literal type="string">UR"(This is a "raw UTF
+-32" string.)"</literal></expr>;</expr_stmt> 
 </unit>
 
 <unit>
