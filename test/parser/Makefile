@@ -15,32 +15,32 @@ SRCENCODING=
 ALLINALLCUTOFF=35
 
 all : testbase
-	./testsuite.py
+	./runtest.py
 
 gen : testbase
 
 PHONY : testbase
 testbase :
-	cd suite && make
+	cd testsuite && make
 	cd ..
 
 PHONY : short
 short : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all|macro"
+	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./runtest.py ".*\.all|macro"
 
 PHONY : shortc
 shortc : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all|macro" C
+	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./runtest.py ".*\.all|macro" C
 
 PHONY : shortcpp
 shortcpp : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all|macro" C++
+	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./runtest.py ".*\.all|macro" C++
 
 PHONY : shortjava
 shortjava : testbase
-	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./testsuite.py ".*\.all" Java
+	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./runtest.py ".*\.all" Java
 
 clean :
-	cd suite && make clean
+	cd testsuite && make clean
 	cd ..
 	rm -f srcMLTestReport*
