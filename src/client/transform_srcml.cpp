@@ -153,7 +153,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
     else
         status = srcml_archive_write_open_filename(out_arch, output.c_str(), 0);
     if (status != SRCML_STATUS_OK) {
-        SRCMLlog(CRITICAL_MSG, "srcml: error with output archive for transformation");
+        SRCMLlog(ERROR_MSG, "srcml: error with output archive for transformation");
         exit(-1);
     }
 
@@ -172,7 +172,7 @@ void transform_srcml(const srcml_request_t& srcml_request,
         else
             status = srcml_archive_read_open_filename(in_arch, input.c_str());
         if (status != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml: error with input archive for transformation");
+            SRCMLlog(ERROR_MSG, "srcml: error with input archive for transformation");
             exit(-1);
         }
 
@@ -217,19 +217,19 @@ void transform_srcml(const srcml_request_t& srcml_request,
             if (protocol == "xpath") {
                 // TODO: FIX BUG
                 if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
-                  SRCMLlog(CRITICAL_MSG, "srcml: error with xpath transformation");
+                  SRCMLlog(ERROR_MSG, "srcml: error with xpath transformation");
                   exit(-1);
             }
         } else if (protocol == "xslt") {
               if (apply_xslt(in_arch, resource) != SRCML_STATUS_OK) {
-                SRCMLlog(CRITICAL_MSG, "srcml: error with xslt transformation");
+                SRCMLlog(ERROR_MSG, "srcml: error with xslt transformation");
                 exit(-1);
             }
         } else if (protocol == "xpathparam") {
 				//std::cerr << protocol << " : " << resource << "\n"; // Stub
         } else if (protocol == "relaxng") {
           if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml: error with relaxng transformation");
+            SRCMLlog(ERROR_MSG, "srcml: error with relaxng transformation");
             exit(-1);
         }
     }

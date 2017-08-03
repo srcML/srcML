@@ -47,7 +47,7 @@ int src_input_filelist(ParseQueue& queue,
         return 1;
     }
     if (status != ARCHIVE_OK) {
-    	SRCMLlog(CRITICAL_MSG, "srcml: Invalid filelist " + input_file);
+    	SRCMLlog(ERROR_MSG, "srcml: Invalid filelist " + input_file);
         return 1;
     }
 

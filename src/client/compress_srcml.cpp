@@ -47,7 +47,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
         status = archive_write_open_filename(ar, destination.resource.c_str());
     }
     if (status != ARCHIVE_OK) {
-        SRCMLlog(CRITICAL_MSG, std::to_string(status));
+        SRCMLlog(ERROR_MSG, std::to_string(status));
         exit(1);
     }
 
@@ -59,7 +59,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     // create the header for our single entry
     // since this is output, and there is only a single output, any error is fatal
     if ((status = archive_write_header(ar, entry)) != ARCHIVE_OK) {
-        SRCMLlog(CRITICAL_MSG, std::to_string(status));
+        SRCMLlog(ERROR_MSG, std::to_string(status));
         exit(1);
     }
 

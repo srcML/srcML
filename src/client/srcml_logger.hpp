@@ -29,8 +29,7 @@
 #include <srcml_cli.hpp>
 #include <srcml_options.hpp>
 
-enum { CRITICAL_MSG = 1<<4,
-       ERROR_MSG    = 1<<3,
+enum { ERROR_MSG    = 1<<3,
        WARNING_MSG  = 1<<2,
        INFO_MSG     = 1<<1,
        DEBUG_MSG    = 1<<0  
@@ -45,7 +44,7 @@ public:
 
     static void startlog(int msg_type) {
 
-      if ((msg_type == CRITICAL_MSG) || (msg_type == ERROR_MSG) || (msg_type == WARNING_MSG))
+      if ((msg_type == ERROR_MSG) || (msg_type == WARNING_MSG))
         ++error_count;
 
       // Only print debug messages if the debug mode is enabled
@@ -53,13 +52,10 @@ public:
         return;
 
       // If we are in quiet mode only output a message that results in an exit
-      if (option(SRCML_COMMAND_QUIET) && !(msg_type == CRITICAL_MSG))
+      if (option(SRCML_COMMAND_QUIET) && !(msg_type == ERROR_MSG))
         return;
 
       switch (msg_type) {
-      case CRITICAL_MSG:
-        std::cerr << "CRITICAL ";
-        break;
       case ERROR_MSG:
         std::cerr << "ERROR ";
         break;

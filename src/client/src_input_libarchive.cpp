@@ -160,7 +160,7 @@ int src_input_libarchive(ParseQueue& queue,
 
         // stdin, single files require a explicit filename
         if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
-            SRCMLlog(CRITICAL_MSG, "Language required for stdin single files");
+            SRCMLlog(ERROR_MSG, "Language required for stdin single files");
             exit(1);
         }
 

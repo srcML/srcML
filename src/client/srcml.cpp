@@ -112,7 +112,7 @@ int main(int argc, char * argv[]) {
         // stdin accessed as FILE*
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
         if (!pstdin->fileptr) {
-            SRCMLlog(CRITICAL_MSG, "srcml: Unable to open stdin");
+            SRCMLlog(ERROR_MSG, "srcml: Unable to open stdin");
             exit(1);
         }
         pstdin->fd = boost::none;
@@ -160,14 +160,14 @@ int main(int argc, char * argv[]) {
 #if ARCHIVE_VERSION_NUMBER > 3001002
         pipeline.push_back(compress_srcml);
 #else
-        SRCMLlog(CRITICAL_MSG, "srcml: Unsupported output compression");
+        SRCMLlog(ERROR_MSG, "srcml: Unsupported output compression");
         exit(1);
 #endif
     }
 
     // should always have something to do
     if (pipeline.empty()) {
-        SRCMLlog(CRITICAL_MSG, "srcml: Internal error, cannot decide what processing needed");
+        SRCMLlog(ERROR_MSG, "srcml: Internal error, cannot decide what processing needed");
         exit(1);
     }
 
