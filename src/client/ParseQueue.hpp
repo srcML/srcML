@@ -24,7 +24,7 @@
 #define PARSE_QUEUE_HPP
 
 #include <functional>
-#include <parse_request.hpp>
+#include <ParseRequest.hpp>
 #include <WriteQueue.hpp>
 #include <ctpl_stl.h>
 #include <mutex>
