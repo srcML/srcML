@@ -1,1 +1,0 @@
-IdentifierType::methodName;

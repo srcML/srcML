@@ -1,1 +1,0 @@
-extern struct Z X;

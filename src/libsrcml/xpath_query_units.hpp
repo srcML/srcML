@@ -80,11 +80,11 @@ public :
      *
      * Constructor.
      */
-    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr compiled_xpath, srcml_archive* out_archive, 
+    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr /* compiled_xpath */, srcml_archive* out_archive, 
                       const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0)
-        : unit_dom(options), options(options), compiled_xpath(compiled_xpath),
+        : unit_dom(options), options(options), /* compiled_xpath(compiled_xpath) ,*/
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), context(0), result_count(0), output_archive(out_archive) {
+          total(0), context(0), /* result_count(0),*/ output_archive(out_archive) {
     }
 
     /**
@@ -209,13 +209,12 @@ public :
         // TODO:  Detect error
 
         // register standard prefixes for standard namespaces
+        // @todo Can this be put in srcmlns.hpp and shared
+        // @todo Why isn't OPENMP here?
         const char* prefixes[] = {
-            SRCML_SRC_NS_URI, "src",
+            SRCML_SRC_NS_URI, "src", // @todo state why
             SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
             SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
-            SRCML_EXT_LITERAL_NS_URI, SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT,
-            SRCML_EXT_OPERATOR_NS_URI, SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT,
-            SRCML_EXT_MODIFIER_NS_URI, SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT,
             SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
             SRCML_DIFF_NS_URI, SRCML_DIFF_NS_PREFIX_DEFAULT,
             0, 0
@@ -519,6 +518,18 @@ public :
 
             // index into results
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
+            xmlNodePtr save_onode = 0;
+            if (onode->type == 2) {
+                std::string attr = (const char*) onode->name;
+                attr += "=";
+                attr += "\"";
+                attr += (const char*) onode->children->content;
+                attr += "\"";
+
+                save_onode = onode;
+
+                onode = xmlNewText((const xmlChar*) attr.c_str());
+            }
 
             // unlink this result node and link to the master parent
             xmlNodePtr onode_parent = onode->parent;
@@ -537,12 +548,19 @@ public :
             onode->next = onode_next;
             onode->prev = onode_prev;
             a_node->children = 0;
+
+            if (save_onode) {
+                xmlFreeNode(onode);
+                onode = save_onode;
+                save_onode = 0;
+            }
         }
 
         a_node->children = a_node_children;
 
-        if (hashprop)
+        if (hashprop) {
             ;
+        }
         //xmlFreeProp(itemprop);
     }
 
@@ -731,7 +749,7 @@ public :
         if ((int)result_nodes->floatval == result_nodes->floatval) {
             sprintf(buffer, "%d\n", (int)result_nodes->floatval);
         } else {
-            sprintf(buffer, "%lf\n", result_nodes->floatval);
+            sprintf(buffer, "%f\n", result_nodes->floatval);
         }
         xmlOutputBufferWriteString(buf, buffer);
     }
@@ -843,7 +861,7 @@ public :
 private :
 
     OPTION_TYPE options;
-    xmlXPathCompExprPtr compiled_xpath;
+ //   xmlXPathCompExprPtr compiled_xpath;
     const char * prefix;
     const char * uri;
     const char * element;
@@ -856,7 +874,7 @@ private :
     int nodetype;
     xmlOutputBufferPtr buf;
     xmlXPathContextPtr context;
-    int result_count;
+//    int result_count;
     srcml_archive* output_archive;
 
     static const char * const simple_xpath_attribute_name;

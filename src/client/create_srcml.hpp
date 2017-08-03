@@ -25,7 +25,7 @@
 
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
-#include <parse_queue.hpp>
+#include <ParseQueue.hpp>
 
 // create srcml from the current request
 void create_srcml(const srcml_request_t& srcml_request,
@@ -33,10 +33,11 @@ void create_srcml(const srcml_request_t& srcml_request,
                   const srcml_output_dest& destination);
 
 // call appropriate handler based on input source
-void srcml_handler_dispatch(ParseQueue& queue, 
+int srcml_handler_dispatch(ParseQueue& queue, 
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
-                          const srcml_input_src& input);
+                          const srcml_input_src& input,
+                          const srcml_output_dest& destination);
 
 #endif
 

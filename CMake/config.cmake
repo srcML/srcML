@@ -51,11 +51,8 @@ if(NOT DYNAMIC_LOAD_ENABLED)
 endif()
 
 # Turn ON/OFF tests
-option(BUILD_TIMING_TESTS "Run timing tests with ctest" ON)
-option(BUILD_UNIT_TESTS "Build unit tests for srcML/libsrcml" ON)
-option(BUILD_CLI_TESTS "Build cli tests" ON)
-option(BUILD_LARGE_SYSTEMS_TESTS "Build tests run on large systems" OFF)
-
+option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
+option(BUILD_UNIT_TESTS "Build unit tests for libsrcml" OFF)
 
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 option(BUILD_PYTHON_BINDINGS "Build Python language bindings/wrapper" OFF)
@@ -94,16 +91,19 @@ else()
 
     set(WINDOWS_DEP_PATH "")
     
+    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
     # Locating packages.
     find_package(LibArchive REQUIRED)
     find_package(LibXml2 REQUIRED)
     find_package(CURL REQUIRED)
+    find_package(Iconv REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
-    find_package(Boost COMPONENTS program_options filesystem system thread regex date_time REQUIRED)
+    find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
 
     # add include directories
-    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR})
+    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
 
     if(DYNAMIC_LOAD_ENABLED)
         find_package(LibXslt)
@@ -123,7 +123,7 @@ endif()
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 if(DYNAMIC_LOAD_ENABLED)
-    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl pthread
+    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${ICONV_LIBRARIES} dl pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
 elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC" AND NOT WIN32)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} pthread
@@ -141,7 +141,9 @@ if(NOT WIN32 AND NOT APPLE)
 list(APPEND LIBSRCML_LIBRARIES rt crypto)
 endif()
 
-if(NOT WIN32)
+if(NOT WIN32 AND APPLE)
+    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} pthread CACHE INTERNAL "Libraries needed to build srcml")
+elseif(NOT WIN32)
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} crypto pthread CACHE INTERNAL "Libraries needed to build srcml")
 elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 crypto CACHE INTERNAL "Libraries needed to build srcml")

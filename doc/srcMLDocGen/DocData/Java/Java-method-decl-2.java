@@ -1,1 +1,0 @@
-Polygon polygonFrom(Point... corners) { }

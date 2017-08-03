@@ -30,9 +30,10 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <algorithm>
-#include <timer.hpp>
+#include <Timer.hpp>
 #include <input_curl.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
+#include <cstring>
 
 #include <curl_input_file.hpp>
 
@@ -82,7 +83,9 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input_file;
-        input_curl(uninput);
+        if (!input_curl(uninput))
+            return 0;
+        
         status = archive_read_open_fd(arch, uninput, buffer_size);
 
     } else {
@@ -91,7 +94,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     }
 
     if (status != ARCHIVE_OK) {
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to open file " + src_prefix_resource(input_file.filename));
+        SRCMLstatus(WARNING_MSG, "srcml: Unable to open file " + src_prefix_resource(input_file.filename));
         return 0;
     }
 
@@ -99,7 +102,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue,
+int src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input_file) {
@@ -110,8 +113,8 @@ void src_input_libarchive(ParseQueue& queue,
     // Note: may need to fix in libsrcml
     if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) | input_file.skip) {
         // if we are not verbose, then just end this attemp
-        if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
-            return;
+        if (!(option(SRCML_COMMAND_VERBOSE))) {
+            return 0;
         }
 
         // form the parsing request
@@ -127,12 +130,12 @@ void src_input_libarchive(ParseQueue& queue,
         // schedule for parsing
         queue.schedule(prequest);
 
-        return;
+        return 1;
     }
 
     archive* arch = libarchive_input_file(input_file);
     if (!arch) {
-        return;
+        return 0;
     }
 
     /* In general, go through this once for each time the header can be read
@@ -145,6 +148,9 @@ void src_input_libarchive(ParseQueue& queue,
            (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
             (status == ARCHIVE_EOF && !count))) {
 
+        if (status == ARCHIVE_EOF && getCurlErrors())
+            return 0;
+
         // skip any directories
         if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
             continue;
@@ -154,7 +160,7 @@ void src_input_libarchive(ParseQueue& queue,
 
         // stdin, single files require a explicit filename
         if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
-            SRCMLLogger::log(SRCMLLogger::CRITICAL_MSG, "Language required for stdin single files");
+            SRCMLstatus(ERROR_MSG, "Language required for stdin single files");
             exit(1);
         }
 
@@ -193,7 +199,7 @@ void src_input_libarchive(ParseQueue& queue,
                 language = l;
 
         // if we don't have a language, and are not verbose, then just end this attemp
-        if (language.empty() && !(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
+        if (language.empty() && !(option(SRCML_COMMAND_VERBOSE))) {
             ++count;
             continue;
         }
@@ -201,7 +207,7 @@ void src_input_libarchive(ParseQueue& queue,
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
 
-        if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
+        if (option(SRCML_COMMAND_NOARCHIVE))
             prequest->disk_dir = srcml_request.output_filename;
 
         if (srcml_request.att_filename || (filename != "-"))
@@ -214,7 +220,7 @@ void src_input_libarchive(ParseQueue& queue,
         prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
         prequest->total_num_inputs = srcml_request.input_sources.size();
 
-        if (SRCML_COMMAND_TIMESTAMP & SRCMLOptions::get()) {
+        if (option(SRCML_COMMAND_TIMESTAMP)) {
 
             //Long time provided by libarchive needs to be time_t
             time_t mod_time(archive_entry_mtime(entry));
@@ -254,5 +260,11 @@ void src_input_libarchive(ParseQueue& queue,
 
         ++count;
     }
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+    archive_read_free(arch);
+#else
     archive_read_finish(arch);
+#endif
+
+    return count;
 }

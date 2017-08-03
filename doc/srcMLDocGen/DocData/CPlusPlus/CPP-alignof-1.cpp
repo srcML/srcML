@@ -1,1 +1,0 @@
-alignof(T);

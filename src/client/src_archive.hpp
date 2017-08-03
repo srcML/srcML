@@ -32,4 +32,6 @@ int archive_write_set_compression_by_extension(struct archive*, const char* exte
 bool is_archive(const std::string& input_file_extension);
 bool is_compressed(const std::string& input_file_extension);
 
+std::string language_to_std_extension(const char* extension);
+
 #endif

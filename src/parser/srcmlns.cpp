@@ -10,38 +10,28 @@
  *
  * @returns if the two uris are equal.
  */
-bool is_srcml_namespace(const std::string & uri, const std::string & srcml_uri) {
+bool is_srcml_namespace(const std::string& uri, const std::string& srcml_uri) {
 
-	if(uri == srcml_uri) return true;
+	if (uri == srcml_uri)
+		return true;
 
-	std::string uri_suffix = uri, srcml_uri_suffix = srcml_uri;
-
-	for(int pos = 0; SRCML_URI_PREFIX[pos][0]; ++pos) {
-
-		std::string::size_type str_pos = uri.find(SRCML_URI_PREFIX[pos]);
-		if(str_pos == 0) {
-
-			uri_suffix = uri.substr(SRCML_URI_PREFIX[pos].size());
+	auto uri_suffix = uri;
+	for (auto& prefix : SRCML_URI_PREFIX) {
+		if (uri.substr(0, prefix.size()) == prefix) {
+			uri_suffix = uri.substr(prefix.size());
 			break;
-
 		}
-
 	}
 
-	for(int pos = 0; SRCML_URI_PREFIX[pos][0]; ++pos) {
-
-		std::string::size_type str_pos = srcml_uri.find(SRCML_URI_PREFIX[pos]);
-		if(str_pos == 0) {
-
-			srcml_uri_suffix = srcml_uri.substr(SRCML_URI_PREFIX[pos].size());
+	auto srcml_uri_suffix = srcml_uri;
+	for (auto& prefix : SRCML_URI_PREFIX) {
+		if (srcml_uri.substr(0, prefix.size()) == prefix) {
+			srcml_uri_suffix = srcml_uri.substr(prefix.size());
 			break;
-
 		}
-
 	}
 
 	return uri_suffix == srcml_uri_suffix;
-
 }
 
 /**
@@ -52,20 +42,10 @@ bool is_srcml_namespace(const std::string & uri, const std::string & srcml_uri) 
  * 
  * @returns the normalized uri.
  */
-std::string & srcml_uri_normalize(std::string & uri) {
+std::string& srcml_uri_normalize(std::string& uri) {
 
-	for(int pos = 1; SRCML_URI_PREFIX[pos][0]; ++pos) {
-
-		std::string::size_type str_pos = uri.find(SRCML_URI_PREFIX[pos]);
-		if(str_pos == 0) {
-
-			uri.replace(str_pos, SRCML_URI_PREFIX[pos].size(), SRCML_URI_PREFIX[0]);
-			break;
-
-		}
-
-	}
+	if (uri.substr(0, SRCML_URI_PREFIX[1].size()) == SRCML_URI_PREFIX[1])
+		uri = SRCML_URI_PREFIX[0] + uri.substr(SRCML_URI_PREFIX[1].size());
 
 	return uri;
-
 }

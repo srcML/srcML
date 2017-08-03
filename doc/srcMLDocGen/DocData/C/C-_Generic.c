@@ -1,1 +1,0 @@
-_Generic ( AnyExpression , int:5, double:5.0, default:0);

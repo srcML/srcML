@@ -20,65 +20,67 @@
 file(GLOB PARSER_HEADERS *.hpp)
 file(GLOB PARSER_SOURCE *.cpp)
 
+set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
+
 # Running ANTLR on CommentTextLexer.g
 set(CommentTextLexerOutputFiles
-    ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexerTokenTypes.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexerTokenTypes.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/expandedCommentTextLexer.g
+    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexerTokenTypes.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexerTokenTypes.txt
+    ${CMAKE_GENERATED_SOURCE_DIR}/expandedCommentTextLexer.g
 )
 RunAntlr("${CommentTextLexerOutputFiles}" CommentTextLexer.g "" "")
 
 # Running ANTLR on TextLexer.g
 set(TextLexerOutputFiles
-    ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TextLexer.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TextLexerTokenTypes.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/TextLexerTokenTypes.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/expandedTextLexer.g
+    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexer.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexerTokenTypes.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexerTokenTypes.txt
+    ${CMAKE_GENERATED_SOURCE_DIR}/expandedTextLexer.g
 )
-RunAntlr("${TextLexerOutputFiles}" TextLexer.g CommentTextLexer.cpp "")
+RunAntlr("${TextLexerOutputFiles}" TextLexer.g ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp "")
 
 # Running ANTLR on OperatorLexer.g
 set(OperatorLexerOutputFiles
-    ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexer.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexerTokenTypes.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/OperatorLexerTokenTypes.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/expandedOperatorLexer.g
+    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexerTokenTypes.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexerTokenTypes.txt
+    ${CMAKE_GENERATED_SOURCE_DIR}/expandedOperatorLexer.g
 )
 RunAntlr("${OperatorLexerOutputFiles}"
     OperatorLexer.g
-    TextLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexer.cpp
     TextLexer.g
 )
 
 # Running ANTLR on KeywordLexer.g
 set(KeywordLexerOutputFiles
-    ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexerTokenTypes.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexerTokenTypes.txt
-    ${CMAKE_CURRENT_SOURCE_DIR}/expandedKeywordLexer.g
+    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexerTokenTypes.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexerTokenTypes.txt
+    ${CMAKE_GENERATED_SOURCE_DIR}/expandedKeywordLexer.g
 )
 
 RunAntlr("${KeywordLexerOutputFiles}"
     KeywordLexer.g
-    OperatorLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.cpp
     "OperatorLexer.g\;TextLexer.g"
 )
 
 # Running ANTLR on srcMLParser.g
 set(srcMLParserOutputFiles
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypes.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypes.txt	
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.txt	
 )
 RunAntlr("${srcMLParserOutputFiles}"
     srcMLParser.g
-    "srcMLParser.g;KeywordLexer.cpp"
+    "srcMLParser.g;${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp"
     "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
 
@@ -86,17 +88,17 @@ RunAntlr("${srcMLParserOutputFiles}"
 # @todo this breaks mingw32 build.
 if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        DEPENDS srcMLParserTokenTypes.hpp
-        COMMAND ${GREP_EXE} -e "=" srcMLParserTokenTypes.hpp > PhaseOne.txt
-        COMMAND ${SED_EXE} -e "s/,//g" -e "s/= //g" -e "s/^[ \\t]*//" -e "s/^/\#define TOKEN_/g" PhaseOne.txt > srcMLParserTokenTypesMacro.hpp 
+        OUTPUT ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
+        WORKING_DIRECTORY ${CMAKE_GENERATED_SOURCE_DIR}
+        DEPENDS ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
+        COMMAND ${GREP_EXE} -e "=" ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp > PhaseOne.txt
+        COMMAND ${SED_EXE} -e "s/,//g" -e "s/= //g" -e "s/^[ \\t]*//" -e "s/^/\#define TOKEN_/g" PhaseOne.txt > ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp 
     )
 else()
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
-        DEPENDS srcMLParserTokenTypes.hpp
-        COMMAND ${GREP_EXE} '=' ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypes.hpp | ${SED_EXE} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e "s/^/\#define TOKEN_/g" > ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp)
+        OUTPUT ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
+        DEPENDS ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
+        COMMAND ${GREP_EXE} '=' ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp | ${SED_EXE} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e "s/^/\#define TOKEN_/g" > ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp)
 
 endif()
 
@@ -114,19 +116,19 @@ list(REMOVE_ITEM PARSER_SOURCE ${updatedRemoveList})
 
 if(WIN32)
 add_library(parser OBJECT
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}
 )
 else()
 add_library(parser OBJECT
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParser.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/KeywordLexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/CommentTextLexer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}
 )

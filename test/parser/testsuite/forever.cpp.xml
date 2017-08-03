@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="forever" filename="forever">
+
+<unit>
+<forever>forever <expr_stmt><expr><name>b</name></expr>;</expr_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <empty_stmt>;</empty_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <expr_stmt><expr><literal type="number">2</literal></expr>;</expr_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <expr_stmt><expr><name>c</name></expr>;</expr_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <block>{ <expr_stmt><expr><name>b</name> <operator>=</operator> <name>c</name></expr>;</expr_stmt> }</block></forever>
+</unit>
+
+<unit>
+<forever>forever <expr_stmt><expr><name>a</name></expr><operator>,</operator> <expr><name>b</name></expr>;</expr_stmt></forever>
+</unit>
+
+<unit>
+<forever>forever <block>{}</block></forever>
+</unit>
+
+<unit>
+<forever>forever  
+  <forever>forever 
+    <empty_stmt>;</empty_stmt></forever></forever>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>forever</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>forever</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>void</name></type> <name>forever</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<class_decl>class <name>forever</name>;</class_decl>
+</unit>
+
+<unit>
+<class>class <name>forever</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+</unit>

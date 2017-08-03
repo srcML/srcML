@@ -1,1 +1,0 @@
-ClsName.super::<T> MethodName;

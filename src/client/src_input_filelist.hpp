@@ -23,15 +23,17 @@
 #ifndef SRC_INPUT_FILELIST_HPP
 #define SRC_INPUT_FILELIST_HPP
 
-#include <parse_queue.hpp>
+#include <ParseQueue.hpp>
 #include <srcml_cli.hpp>
 #include <srcml.h>
 #include <string>
 #include <boost/optional.hpp>
+#include <srcml_input_src.hpp>
 
-void src_input_filelist(ParseQueue& queue,
+int src_input_filelist(ParseQueue& queue,
  						srcml_archive* srcml_arch,
 						const srcml_request_t& srcml_request,
-						const std::string& input_filename);
+						const std::string& input_filename,
+						const srcml_output_dest& destination);
 
 #endif

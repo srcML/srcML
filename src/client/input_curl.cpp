@@ -20,32 +20,44 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <pipe.hpp>
 #include <input_curl.hpp>
-#include <decompress_srcml.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread.hpp>
-#pragma GCC diagnostic pop
-
 #include <curl/curl.h>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
+#include <mutex>
+#include <condition_variable>
 
-#if defined(_MSC_BUILD) || defined(__MINGW32__)
-#include <io.h>
-#include <fcntl.h>
-#include <windows.h>
-#endif
+namespace {
 
-// global request
-extern srcml_request_t global_srcml_request;
+    bool go = false;
+    std::condition_variable cv;
+    std::mutex d;
 
-struct curl_write_info {
-    int outfd;
-    size_t currentsize;
-    std::string buffer;
-};
+    int waitCurl() {
+        std::unique_lock<std::mutex> l(d);
+        cv.wait(l);
+        return go;
+    }
 
-static const int CURL_MAX_ERROR_SIZE = 100;
+    void goCurl(bool flag) {
+        std::unique_lock<std::mutex> l(d);
+        go = flag;
+        cv.notify_one();
+    }
+
+    struct curl_write_info {
+        int outfd;
+        size_t currentsize;
+        std::string buffer;
+    };
+
+    const size_t CURL_MAX_ERROR_SIZE = 100;
+
+    std::mutex c;
+
+    bool curl_errors = false;
+}
+
 
 /*
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
@@ -76,7 +88,7 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 }
 
 // downloads URL into file descriptor
-void curl_download_url(const srcml_request_t& srcml_request,
+void curl_download_url(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
 
@@ -117,15 +129,14 @@ void curl_download_url(const srcml_request_t& srcml_request,
     long http_code = 0;
     curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
     if(response != CURLE_OK || http_code != 200) {
-
-        SRCMLLogger::log(SRCMLLogger::WARNING_MSG, "srcml: Unable to access URL " + url);
-
-        // if there is only a single input source, and we have an error, then just error out here
-        if (global_srcml_request.input_sources.size() == 1)
-            exit(1);
+        SRCMLstatus(WARNING_MSG, "srcml: Unable to access URL " + url);
+        setCurlErrors();
+        goCurl(false);
 
     } else {
 
+        goCurl(true);
+        
         // ok, no errors, but may have cached data in the buffer, especially for small files
         if (!write_info.buffer.empty()) {
             write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size());
@@ -142,32 +153,25 @@ void curl_download_url(const srcml_request_t& srcml_request,
     curl_global_cleanup();
 }
 
-void input_curl(srcml_input_src& input) {
+int input_curl(srcml_input_src& input) {
 
-    	// setup the pipes
-	    int fds[2] = { -1, -1 };
-#if !defined(_MSC_BUILD) && !defined(__MINGW32__)
-        pipe(fds);
-#else
-        HANDLE read_pipe;
-        HANDLE write_pipe;
-        CreatePipe(&read_pipe,&write_pipe, NULL, 0);
+    input_pipe(input, curl_download_url);
 
-        fds[1] = _open_osfhandle((intptr_t)write_pipe, 0);
-        fds[0] = _open_osfhandle((intptr_t)read_pipe, _O_RDONLY);
-#endif
+    // wait to see if curl is able to download the url at all
+    return waitCurl();
+}
 
-   	    // create a single thread to prefix decompression
-        boost::thread input_thread(
-            boost::bind(
-                curl_download_url,
-                srcml_request_t(),
-                srcml_input_t(1, input),
-                srcml_output_dest("-", fds[1])
-            )
-        );
+void setCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    curl_errors = true;
+}
 
-        // the thread will write to fds[1], and the following input can read
-        // from fds[0]
-        input.fd = fds[0];
+void clearCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    curl_errors = false;
+}
+
+bool getCurlErrors() {
+    std::unique_lock<std::mutex> l(c);
+    return curl_errors;
 }

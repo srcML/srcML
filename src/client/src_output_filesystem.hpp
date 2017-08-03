@@ -25,7 +25,7 @@
 
 #include <srcml.h>
 #include <string>
-#include <trace_log.hpp>
+#include <TraceLog.hpp>
 
 void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log);
 

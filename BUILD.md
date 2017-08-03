@@ -24,11 +24,11 @@ Out of source builds (builds outside the source directory) are recommended, howe
 
     Tests are enabled by default, but can be disabled by editing the file `CMake/config.cmake`. Search for the section "Turn ON/OFF Tests", which contains a list of all test categories. For example, the CLI tests can be turned off by changing the line
     ```bash
-    option(BUILD_CLI_TESTS "Build cli tests" ON)
+    option(BUILD_CLIENT_TESTS "Build cli tests" ON)
     ```
     to
     ```bash
-    option(BUILD_CLI_TESTS "Build cli tests" OFF)
+    option(BUILD_CLIENT_TESTS "Build cli tests" OFF)
     ```
 * You may need to run `ldconfig` to get the link to the libsrcml shared library path up to date
 
@@ -197,7 +197,7 @@ to download and install the lastest version of cmake.
 
 ##### Notes
 
-* The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC). Download boost at http://www.boost.org. The commands to build boost (written for boost 1.55.0) are:
+* The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC). Download boost at http://www.boost.org. The commands to build boost are:
 
 	`./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave`
 

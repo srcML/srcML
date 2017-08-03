@@ -1,1 +1,0 @@
-byte[] urlContents = await getContentsTask;

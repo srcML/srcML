@@ -27,11 +27,10 @@
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/foreach.hpp>
 #include <list>
 #include <vector>
 
-void src_input_filesystem(ParseQueue& queue,
+int src_input_filesystem(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const std::string& input) {
@@ -48,7 +47,12 @@ void src_input_filesystem(ParseQueue& queue,
         dirs.pop_back();
 
         // process the files from the top directory
-        BOOST_FOREACH(boost::filesystem::path& file, files) {
+        for (const auto& file : files) {
+            
+            // TODO: Are we ignoring other types? symlinks? Should state so here.
+            // Skip ALL symlinks (files or directories)
+            if (is_symlink(file))
+                continue;
 
             // regular files are passed to the handler
             if (is_regular_file(file)) {
@@ -67,8 +71,8 @@ void src_input_filesystem(ParseQueue& queue,
 
                 dirs.push_back(file);
             }
-
-              // TODO: Are we ignoring other types? symlinks? Should state so here.
         }
     }
+
+    return 1;
 }

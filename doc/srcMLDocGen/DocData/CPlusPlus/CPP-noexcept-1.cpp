@@ -1,1 +1,0 @@
-noexcept (foo(x));
