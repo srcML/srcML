@@ -93,7 +93,7 @@ int main(int argc, char * argv[]) {
     }
 
     if (srcml_request.command & SRCML_DEBUG_MODE) {
-        SRCMLlog(DEBUG_MSG) << "Library Versions: " << '\n'
+        SRCMLstatus(DEBUG_MSG) << "Library Versions: " << '\n'
                             << "libsrcml " << srcml_version_string() << '\n'
                             << "srcml " << srcml_version_string() << '\n'
                             <<  archive_version_string() << '\n'
@@ -112,7 +112,7 @@ int main(int argc, char * argv[]) {
         // stdin accessed as FILE*
         pstdin->fileptr = fdopen(STDIN_FILENO, "r");
         if (!pstdin->fileptr) {
-            SRCMLlog(ERROR_MSG, "srcml: Unable to open stdin");
+            SRCMLstatus(ERROR_MSG, "srcml: Unable to open stdin");
             exit(1);
         }
         pstdin->fd = boost::none;
@@ -160,14 +160,14 @@ int main(int argc, char * argv[]) {
 #if ARCHIVE_VERSION_NUMBER > 3001002
         pipeline.push_back(compress_srcml);
 #else
-        SRCMLlog(ERROR_MSG, "srcml: Unsupported output compression");
+        SRCMLstatus(ERROR_MSG, "srcml: Unsupported output compression");
         exit(1);
 #endif
     }
 
     // should always have something to do
     if (pipeline.empty()) {
-        SRCMLlog(ERROR_MSG, "srcml: Internal error, cannot decide what processing needed");
+        SRCMLstatus(ERROR_MSG, "srcml: Internal error, cannot decide what processing needed");
         exit(1);
     }
 
@@ -177,11 +177,11 @@ int main(int argc, char * argv[]) {
     srcml_cleanup_globals();
 
     // debugging information
-    SRCMLlog(DEBUG_MSG, "CPU Time: %l ms", runtime.cpu_time_elapsed());
+    SRCMLstatus(DEBUG_MSG, "CPU Time: %l ms", runtime.cpu_time_elapsed());
     auto realtime = runtime.real_world_elapsed();
-    SRCMLlog(DEBUG_MSG, "Real Time: %l ms", realtime);
-    SRCMLlog(DEBUG_MSG, "LOC: %l", TraceLog::totalLOC());
-    SRCMLlog(DEBUG_MSG, "KLOC/s: %l", realtime > 0 ? (TraceLog::totalLOC() / realtime) : 0);
+    SRCMLstatus(DEBUG_MSG, "Real Time: %l ms", realtime);
+    SRCMLstatus(DEBUG_MSG, "LOC: %l", TraceLog::totalLOC());
+    SRCMLstatus(DEBUG_MSG, "KLOC/s: %l", realtime > 0 ? (TraceLog::totalLOC() / realtime) : 0);
 
     // error status is 0 unless a critical, error, or warning
     return SRCMLStatus::errors() ? 1 : 0;

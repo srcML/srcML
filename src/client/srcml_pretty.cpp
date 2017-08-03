@@ -40,7 +40,7 @@ std::string expand_namespace(const std::string& separator, size_t ns_size) {
 
 void show_carret_error(size_t pos) {
     std::string spacing(pos, ' ');
-    SRCMLlog(WARNING_MSG, spacing + "^");
+    SRCMLstatus(WARNING_MSG, spacing + "^");
 }
 
 void pretty_print(const std::string& format_string, const std::vector<std::string>& args)
@@ -73,12 +73,12 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
 
 	// Errors: you must have matching { and }.
 	if (header_pos == std::string::npos && footer_pos != std::string::npos) {
-        SRCMLlog(WARNING_MSG, "srcml: Pretty format is missing \"{\"");
+        SRCMLstatus(WARNING_MSG, "srcml: Pretty format is missing \"{\"");
 		output_template.error_location = (size_t)0;
 		return output_template;
 	}
 	if (header_pos != std::string::npos && footer_pos == std::string::npos) {
-        SRCMLlog(WARNING_MSG, "srcml: Pretty format is missing \"}\"");
+        SRCMLstatus(WARNING_MSG, "srcml: Pretty format is missing \"}\"");
 		output_template.error_location = (size_t)input_template.length();
 		return output_template;
 	}
@@ -344,7 +344,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, con
 	if (output_template.header) {
         output_template.error_location = parse_templates(*output_template.header, output_template.header_args, valid_header_args, ns_size);
         if (output_template.error_location) {
-            SRCMLlog(WARNING_MSG, "srcml: header format error:\n" +
+            SRCMLstatus(WARNING_MSG, "srcml: header format error:\n" +
                              *output_template.header);
             show_carret_error(*output_template.error_location);
             return -1;
@@ -354,7 +354,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, con
     if (output_template.body) {
         output_template.error_location = parse_templates(*output_template.body, output_template.body_args, valid_body_args, ns_size);
         if (output_template.error_location) {
-            SRCMLlog(WARNING_MSG, "srcml: body format error:\n" +
+            SRCMLstatus(WARNING_MSG, "srcml: body format error:\n" +
                              *output_template.body);
             show_carret_error(*output_template.error_location);
             return -1;
@@ -364,7 +364,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, con
 	if (output_template.footer) {
         output_template.error_location = parse_templates(*output_template.footer, output_template.footer_args, valid_footer_args, ns_size);
         if (output_template.error_location) {
-            SRCMLlog(WARNING_MSG, "srcml: footer format error:\n" +
+            SRCMLstatus(WARNING_MSG, "srcml: footer format error:\n" +
                              *output_template.footer);
             show_carret_error(*output_template.error_location);
             return -1;

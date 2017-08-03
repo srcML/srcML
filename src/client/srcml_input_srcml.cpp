@@ -37,7 +37,7 @@ int srcml_input_srcml(ParseQueue& queue,
     // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_archive_create();
     if (!srcml_input_archive) {
-        SRCMLlog(WARNING_MSG, "srcml: Internal libsrcml error");
+        SRCMLstatus(WARNING_MSG, "srcml: Internal libsrcml error");
         return 0;
     }
 
@@ -48,9 +48,9 @@ int srcml_input_srcml(ParseQueue& queue,
     open_status = srcml_archive_read_open(srcml_input_archive, srcml_input);
     if (open_status != SRCML_STATUS_OK) {
         if (srcml_input.protocol == "file" )
-            SRCMLlog(WARNING_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
+            SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
         else
-            SRCMLlog(WARNING_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
+            SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
         srcml_archive_close(srcml_input_archive);
         return 0;
     }
@@ -105,7 +105,7 @@ int srcml_input_srcml(ParseQueue& queue,
     }
 
     if (!unitFound) {
-        SRCMLlog(ERROR_MSG, "Requested unit %d out of range.", srcml_input.unit);
+        SRCMLstatus(ERROR_MSG, "Requested unit %d out of range.", srcml_input.unit);
         exit(4);
     }
 

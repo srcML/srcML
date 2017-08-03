@@ -133,7 +133,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     // create the output srcml archive
     srcml_archive* srcml_arch = srcml_archive_create();
     if (!srcml_arch) {
-        SRCMLlog(ERROR_MSG, "srcml: allocation error for srcml archive");
+        SRCMLstatus(ERROR_MSG, "srcml: allocation error for srcml archive");
         exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
 
@@ -143,7 +143,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (srcml_request.att_xml_encoding) {
         if (srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str()) != SRCML_STATUS_OK) {
             // while stored as an attribute, xml encoding is an XML attribute, not a srcML attribute
-            SRCMLlog(ERROR_MSG, "srcml: invalid xml encoding '%s'for srcml archive", *srcml_request.att_xml_encoding);
+            SRCMLstatus(ERROR_MSG, "srcml: invalid xml encoding '%s'for srcml archive", *srcml_request.att_xml_encoding);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
@@ -151,7 +151,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     // source encoding
     if (srcml_request.src_encoding) {
         if (srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(ERROR_MSG, "srcml: invalid source encoding '%s' for srcml archive", *srcml_request.src_encoding);
+            SRCMLstatus(ERROR_MSG, "srcml: invalid source encoding '%s' for srcml archive", *srcml_request.src_encoding);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
@@ -160,7 +160,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (srcml_request.att_url) {
         std::string url = src_prefix_resource(*srcml_request.att_url);
         if (srcml_archive_set_url(srcml_arch, url.c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(ERROR_MSG, "srcml: invalid url attribute value '%s' for srcml archive", url);
+            SRCMLstatus(ERROR_MSG, "srcml: invalid url attribute value '%s' for srcml archive", url);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
@@ -172,7 +172,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
         
         if (srcml_archive_set_url(srcml_arch, url_name.c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(ERROR_MSG, "srcml: invalid url '%s' for srcml archive", url_name);
+            SRCMLstatus(ERROR_MSG, "srcml: invalid url '%s' for srcml archive", url_name);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
@@ -180,14 +180,14 @@ void create_srcml(const srcml_request_t& srcml_request,
     // version
     if (srcml_request.att_version)
         if (srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(ERROR_MSG, "srcml: invalid version attribute value for srcml archive");
+            SRCMLstatus(ERROR_MSG, "srcml: invalid version attribute value for srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
 
     // markup options
     if (srcml_request.markup_options)
         if (srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options) != SRCML_STATUS_OK) {
-            SRCMLlog(ERROR_MSG, "srcml: invalid options for srcml archive");
+            SRCMLstatus(ERROR_MSG, "srcml: invalid options for srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
 
@@ -201,13 +201,13 @@ void create_srcml(const srcml_request_t& srcml_request,
     // language
     auto language = srcml_request.att_language ? srcml_request.att_language->c_str() : SRCML_LANGUAGE_NONE;
     if (srcml_archive_set_language(srcml_arch, language) != SRCML_STATUS_OK) {
-        SRCMLlog(ERROR_MSG, "srcml: invalid language '%s' for srcml archive", language);
+        SRCMLstatus(ERROR_MSG, "srcml: invalid language '%s' for srcml archive", language);
         exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     // tabstop
     if (srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs) != SRCML_STATUS_OK) {
-        SRCMLlog(ERROR_MSG, "srcml: invalid tab stop for srcml archive", srcml_request.tabs);
+        SRCMLstatus(ERROR_MSG, "srcml: invalid tab stop for srcml archive", srcml_request.tabs);
         exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
 
@@ -224,12 +224,12 @@ void create_srcml(const srcml_request_t& srcml_request,
         // If --hash is used, force hash for single input
         if (*srcml_request.markup_options & SRCML_HASH) {
             if (srcml_archive_enable_hash(srcml_arch) != SRCML_STATUS_OK) {
-                SRCMLlog(ERROR_MSG, "srcml: unable to enable hash for srcml archive");
+                SRCMLstatus(ERROR_MSG, "srcml: unable to enable hash for srcml archive");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
             }
         } else {
             if (srcml_archive_disable_hash(srcml_arch) != SRCML_STATUS_OK) {
-                SRCMLlog(ERROR_MSG, "srcml: unable to disable hash for srcml archive");
+                SRCMLstatus(ERROR_MSG, "srcml: unable to disable hash for srcml archive");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
             }
         }
@@ -242,12 +242,12 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
 
         if (srcml_archive_enable_full_archive(srcml_arch) != SRCML_STATUS_OK) {
-            SRCMLlog(ERROR_MSG, "srcml: unable to enable full srcml archive");
+            SRCMLstatus(ERROR_MSG, "srcml: unable to enable full srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
 
         if (srcml_archive_enable_hash(srcml_arch) != SRCML_STATUS_OK) {
-            SRCMLlog(ERROR_MSG, "srcml: unable to enable hash for srcml archive");
+            SRCMLstatus(ERROR_MSG, "srcml: unable to enable hash for srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
@@ -258,7 +258,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         const auto& extension = ext.substr(0, pos);
         const auto& language = ext.substr(pos+1);
         if (srcml_archive_register_file_extension(srcml_arch, extension.c_str(), language.c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(ERROR_MSG, "srcml: unable to register file extension '%s' for language '%s' for srcml archive", extension, language);
+            SRCMLstatus(ERROR_MSG, "srcml: unable to register file extension '%s' for language '%s' for srcml archive", extension, language);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
@@ -268,7 +268,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         const auto& prefix = ns.first;
         const auto& uri = ns.second;
         if (srcml_archive_register_namespace(srcml_arch, prefix.c_str(), uri.c_str()) != SRCML_STATUS_OK) {
-            SRCMLlog(ERROR_MSG, "srcml: unable to register namespace '%s:%s' for srcml archive", prefix, uri);
+            SRCMLstatus(ERROR_MSG, "srcml: unable to register namespace '%s:%s' for srcml archive", prefix, uri);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }

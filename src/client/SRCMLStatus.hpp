@@ -100,20 +100,20 @@ inline SRCMLStatus operator<<(SRCMLStatus status, T value) {
 // convenience functions for logging
 // allows for a format string with multiple types of arguments
 
-inline SRCMLStatus SRCMLlog(int msg_type) {
+inline SRCMLStatus SRCMLstatus(int msg_type) {
 
   SRCMLStatus::startlog(msg_type);
 
   return SRCMLStatus();
 }
 
-inline void SRCMLlog(int msg_type, const std::string& msg_text) {
+inline void SRCMLstatus(int msg_type, const std::string& msg_text) {
 
   SRCMLStatus::log(msg_type, msg_text);
 }
 
 template<typename T, typename... Args>
-inline void SRCMLlog(int msg_type, const std::string& format, T value, Args... args) {
+inline void SRCMLstatus(int msg_type, const std::string& format, T value, Args... args) {
 
   // replace the first argument in the format with the value
   // note: Ignoring the format type
@@ -131,7 +131,7 @@ inline void SRCMLlog(int msg_type, const std::string& format, T value, Args... a
   msg_text << s;
 
   // handle the rest of the arguments
-  SRCMLlog(msg_type, msg_text.str(), args...);
+  SRCMLstatus(msg_type, msg_text.str(), args...);
 }
 
 #endif
