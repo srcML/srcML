@@ -134,4 +134,8 @@
 <class>class <name>D</name> <super_list>: <super><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super></super_list> <block>{<private type="default"> </private>}</block>;</class>
 </unit>
 
+<unit>
+<class>class <name>foobar</name> <super_list>: <super><specifier>public</specifier> <name>foo</name></super>, <super><specifier>private</specifier> <name>bar</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
 </unit>
