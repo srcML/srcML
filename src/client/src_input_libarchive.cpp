@@ -30,7 +30,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <algorithm>
-#include <timer.hpp>
+#include <Timer.hpp>
 #include <input_curl.hpp>
 #include <SRCMLStatus.hpp>
 #include <cstring>

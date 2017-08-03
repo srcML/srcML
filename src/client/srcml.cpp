@@ -30,7 +30,7 @@
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
-#include <timer.hpp>
+#include <Timer.hpp>
 #include <SRCMLStatus.hpp>
 #include <curl/curl.h>
 #include <boost/version.hpp>

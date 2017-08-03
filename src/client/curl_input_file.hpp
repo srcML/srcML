@@ -26,7 +26,7 @@
 
 #include <curl/curl.h>
 #include <archive.h>
-#include <timer.hpp>
+#include <Timer.hpp>
 #include <string>
 
  struct curl {

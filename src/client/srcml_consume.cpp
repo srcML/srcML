@@ -32,7 +32,7 @@
 #include <srcml_cli.hpp>
 #include <string>
 #include <SRCMLStatus.hpp>
-#include <timer.hpp>
+#include <Timer.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {

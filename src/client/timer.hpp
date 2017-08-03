@@ -1,5 +1,5 @@
 /**
- * @timer.hpp
+ * @Timer.hpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
