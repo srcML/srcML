@@ -35,7 +35,7 @@
 #include <srcml.h>
 */
  
-#include <list>
+#include <deque>
 #include <cassert>
 
 #include "srcMLToken.hpp"
@@ -313,14 +313,16 @@ private:
             } catch(...) {}
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.splice(pretb.end(), skippretb);
+            pretb.insert(pretb.end(), skippretb.begin(), skippretb.end());
+            skippretb.clear();
 
             // move back to normal buffer
             pskiptb = &skiptb;
             pouttb = &tb;
 
             // put preprocessor buffer into skipped buffer
-            skiptb.splice(skiptb.end(), pretb);
+            skiptb.insert(skiptb.end(), pretb.begin(), pretb.end());
+            pretb.clear();
 
             // stop preprocessor handling
             inskip = false;
@@ -341,14 +343,16 @@ private:
             srcMLParser::macro_pattern_call();
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.splice(pretb.end(), skippretb);
+            pretb.insert(pretb.end(), skippretb.begin(), skippretb.end());
+            skippretb.clear();
 
             // move back to normal buffer
             pskiptb = &skiptb;
             pouttb = &tb;
 
             // put preprocessor buffer into skipped buffer
-            skiptb.splice(skiptb.end(), pretb);
+            skiptb.insert(skiptb.end(), pretb.begin(), pretb.end());
+            pretb.clear();
 
             inskip = false;
             return true;
@@ -372,14 +376,16 @@ private:
             } catch(...) {}
 
             // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.splice(pretb.end(), skippretb);
+            pretb.insert(pretb.end(), skippretb.begin(), skippretb.end());
+            skippretb.clear();
 
             // move back to normal buffer
             pskiptb = &skiptb;
             pouttb = &tb;
 
             // put preprocessor buffer into skipped buffer
-            skiptb.splice(skiptb.end(), pretb);
+            skiptb.insert(skiptb.end(), pretb.begin(), pretb.end());
+            pretb.clear();
 
             // stop preprocessor handling
             inskip = false;
@@ -531,9 +537,10 @@ private:
      *
      * Flush any skipped tokens to the output token stream.
      */
-    inline void flushSkip(std::list<antlr::RefToken>& rf) {
+    inline void flushSkip(std::deque<antlr::RefToken>& rf) {
 
-        rf.splice(rf.end(), skip());
+        rf.insert(rf.end(), skip().begin(), skip().end());
+        skip().clear();
     }
 
     /*
@@ -581,7 +588,7 @@ private:
             return;
 
         // push the new token into the token buffer
-        output().push_back(rtoken);
+        output().emplace_back(rtoken);
     }
 
 
@@ -601,7 +608,7 @@ private:
         flushSkip(output());
 
         // push the new token into the token buffer
-        output().push_back(rtoken);
+        output().emplace_back(rtoken);
     }
 
     /**
@@ -611,7 +618,7 @@ private:
      *
      * @returns the output buffer.
      */
-    inline std::list<antlr::RefToken>& output() {
+    inline std::deque<antlr::RefToken>& output() {
         return *pouttb;
     }
 
@@ -622,7 +629,7 @@ private:
      *
      * @returns the skip buffer.
      */
-    inline std::list<antlr::RefToken>& skip() {
+    inline std::deque<antlr::RefToken>& skip() {
         return *pskiptb;
     }
 
@@ -639,7 +646,7 @@ private:
             return;
 
         // push the new token into the token buffer
-        skip().push_back(rtoken);
+        skip().emplace_back(rtoken);
     }
 
     /**
@@ -743,22 +750,22 @@ private:
     bool inskip;
 
     /** token buffer */
-    std::list<antlr::RefToken> tb;
+    std::deque<antlr::RefToken> tb;
 
     /** skipped token buffer */
-    std::list<antlr::RefToken> skiptb;
+    std::deque<antlr::RefToken> skiptb;
 
     /** preprocessor buffer */
-    std::list<antlr::RefToken> pretb;
+    std::deque<antlr::RefToken> pretb;
 
     /** preprocessor skipped token buffer */
-    std::list<antlr::RefToken> skippretb;
+    std::deque<antlr::RefToken> skippretb;
 
     /** current token buffer */
-    std::list<antlr::RefToken>* pouttb;
+    std::deque<antlr::RefToken>* pouttb;
 
     /** current skipped token buffer */
-    std::list<antlr::RefToken>* pskiptb;
+    std::deque<antlr::RefToken>* pskiptb;
 
     /** any output is paused */
     bool paused;
