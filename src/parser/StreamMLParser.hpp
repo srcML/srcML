@@ -753,7 +753,8 @@ private:
 
     /** abstract method for replacing start of stream with a NOP */
     void nopStreamStart() {
-        auto& loc = *tb.begin();
+
+        auto& loc = *std::next(tb.begin());
         if (loc->getType() == SEXPRESSION_STATEMENT || loc->getType() == SDECLARATION_STATEMENT)
             loc->setType(SNOP);
 
