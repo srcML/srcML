@@ -201,62 +201,16 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
     unit_hash = hash;
     unit_encoding = encoding;
 
-    bool isposition = isoption(options, SRCML_OPTION_POSITION);
     bool isinteractive = isoption(options, SRCML_OPTION_INTERACTIVE);
 
-    int open = 0;
-    std::stack<const antlr::RefToken> ends;
     while (1) {
         const antlr::RefToken& token = input->nextToken();
         if (token->getType() == antlr::Token::EOF_TYPE)
             break;
 
-        // if we aren't determining position, then just output and go on
-        if (!isposition) {
-            outputToken(token);
-            if (isinteractive) 
-                xmlTextWriterFlush(xout);
-            continue;
-        }
-
-        // since we are determining position, need to queue up until
-        // back at top document level (i.e., directly inside of <unit>)
-        tokenlist.emplace(token);
-
-        // end tokens are put on queue, then all tokens on down are output
-        if (ispurestart(token)) {
-            ++open;
-
-        } else if (isend(token)) {
-            --open;
-            ends.emplace(token);
-
-            if (open == 0) {
-                while (!tokenlist.empty()) {
-                    const antlr::RefToken qtoken = std::move(tokenlist.front());
-                    tokenlist.pop();
-
-                    // need to transfer line/column from end token to start token
-                    if (ispurestart(qtoken)) {
-                        const antlr::RefToken qetoken = std::move(ends.top());
-                        static_cast<srcMLToken*>(&(*qtoken))->endline = qetoken->getLine();
-                        static_cast<srcMLToken*>(&(*qtoken))->endcolumn = qetoken->getColumn();
-                        ends.pop();
-                    }
-
-                    outputToken(qtoken);
-                    if (isinteractive) 
-                        xmlTextWriterFlush(xout);
-                }
-            }
-        }
-    }
-
-    // may be tokens left in the queue
-    while (!tokenlist.empty()) {
-        const antlr::RefToken qtoken = std::move(tokenlist.front());
-        outputToken(qtoken);
-        tokenlist.pop();
+        outputToken(token);
+        if (isinteractive) 
+            xmlTextWriterFlush(xout);
     }
 }
 

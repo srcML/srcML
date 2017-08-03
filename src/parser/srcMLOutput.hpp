@@ -37,9 +37,6 @@
 #include <unordered_map>
 #include "srcmlns.hpp"
 #include <libxml/xmlwriter.h>
-#include <queue>
-#include <deque>
-#include <boost/circular_buffer.hpp>
 
 /** 
  * anonymous enum for prefix positions
@@ -233,8 +230,6 @@ private:
     int consume_next();
 
     void outputToken(const antlr::RefToken& token);
-
-    std::queue<const antlr::RefToken> tokenlist;
 
     static const std::unordered_map<int, Element> process;
 };
