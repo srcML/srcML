@@ -240,6 +240,16 @@ private:
         pushToken(ntoken);
     }
 
+    inline void pushSSkipToken(int token) {
+
+        // push a new start token
+        auto ntoken = antlr::RefToken(StartTokenFactory(token));
+        ntoken->setLine(LT(1)->getLine());
+        ntoken->setColumn(LT(1)->getColumn());
+
+        pushSkipToken(ntoken);
+    }
+
     inline void pushSTokenFlush(int token) {
 
         // push a new start token
@@ -266,6 +276,17 @@ private:
 
         // push a new end token
         pushToken(ntoken);
+    }
+
+    inline void pushESkipToken(int token) {
+
+        // push a new start token
+        auto ntoken = antlr::RefToken(EndTokenFactory(token));
+        ntoken->setLine(LT(1)->getLine());
+        ntoken->setColumn(LT(1)->getColumn());
+
+        // push a new end token
+        pushSkipToken(ntoken);
     }
 
     /**
@@ -411,7 +432,7 @@ private:
             }
             case srcMLParser::COMMENT_START:
 
-                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SCOMMENT)));
+                pushSSkipToken(srcMLParser::SCOMMENT);
                 pushSkipToken();
 
                 break;
@@ -419,13 +440,13 @@ private:
             case srcMLParser::COMMENT_END:
 
                 pushSkipToken();
-                pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SCOMMENT)));
+                pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
 
             case srcMLParser::LINE_DOXYGEN_COMMENT_START:
 
-                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SLINE_DOXYGEN_COMMENT)));
+                pushSSkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 pushSkipToken();
 
                 break;
@@ -436,9 +457,9 @@ private:
 
                 if (s.back() != '\n') {
                     pushSkipToken();
-                    pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SLINE_DOXYGEN_COMMENT)));
+                    pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
-                    pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SLINE_DOXYGEN_COMMENT)));
+                    pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
                 }
 
@@ -446,7 +467,7 @@ private:
 
             case srcMLParser::DOXYGEN_COMMENT_START:
 
-                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SDOXYGEN_COMMENT)));
+                pushSSkipToken(srcMLParser::SDOXYGEN_COMMENT);
                 pushSkipToken();
 
                 break;
@@ -454,13 +475,13 @@ private:
             case srcMLParser::DOXYGEN_COMMENT_END:
 
                 pushSkipToken();
-                pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SDOXYGEN_COMMENT)));
+                pushESkipToken(srcMLParser::SDOXYGEN_COMMENT);
 
                 break;
 
             case srcMLParser::JAVADOC_COMMENT_START:
 
-                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SJAVADOC_COMMENT)));
+                pushSSkipToken(srcMLParser::SJAVADOC_COMMENT);
                 pushSkipToken();
 
                 break;
@@ -468,13 +489,13 @@ private:
             case srcMLParser::JAVADOC_COMMENT_END:
 
                 pushSkipToken();
-                pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SJAVADOC_COMMENT)));
+                pushESkipToken(srcMLParser::SJAVADOC_COMMENT);
 
                 break;
 
             case srcMLParser::LINECOMMENT_START:
 
-                pushSkipToken(antlr::RefToken(StartTokenFactory(srcMLParser::SLINECOMMENT)));
+                pushSSkipToken(srcMLParser::SLINECOMMENT);
                 pushSkipToken();
 
                 break;
@@ -485,9 +506,9 @@ private:
 
                 if (s.back() != '\n') {
                     pushSkipToken();
-                    pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SLINECOMMENT)));
+                    pushESkipToken(srcMLParser::SLINECOMMENT);
                 } else {
-                    pushSkipToken(antlr::RefToken(EndTokenFactory(srcMLParser::SLINECOMMENT)));
+                    pushESkipToken(srcMLParser::SLINECOMMENT);
                     pushSkipToken();
                 }
 
