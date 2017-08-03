@@ -31,7 +31,7 @@
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
 #include <timer.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 #include <curl/curl.h>
 #include <boost/version.hpp>
 #include <archive.h>
@@ -184,7 +184,7 @@ int main(int argc, char * argv[]) {
     SRCMLlog(DEBUG_MSG, "KLOC/s: %l", realtime > 0 ? (TraceLog::totalLOC() / realtime) : 0);
 
     // error status is 0 unless a critical, error, or warning
-    return SRCMLLogger::errors() ? 1 : 0;
+    return SRCMLStatus::errors() ? 1 : 0;
 }
 
 namespace {

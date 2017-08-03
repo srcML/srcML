@@ -24,7 +24,7 @@
 #include <src_prefix.hpp>
 #include <boost/program_options.hpp>
 #include <stdlib.h>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 namespace prog_opts = boost::program_options;
 

@@ -41,7 +41,7 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <input_archive.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 bool createdsrcml = false;
 

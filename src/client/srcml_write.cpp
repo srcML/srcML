@@ -28,7 +28,7 @@
 #include <TraceLog.hpp>
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 static bool createdsrcml = false;
 

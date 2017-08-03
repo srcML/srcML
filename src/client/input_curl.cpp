@@ -23,7 +23,7 @@
 #include <pipe.hpp>
 #include <input_curl.hpp>
 #include <curl/curl.h>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 #include <mutex>
 #include <condition_variable>
 

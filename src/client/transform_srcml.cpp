@@ -25,7 +25,7 @@
 #include <input_file.hpp>
 #include <srcml.h>
 #include <string>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
 

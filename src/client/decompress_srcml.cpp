@@ -24,7 +24,7 @@
 #include <curl/curl.h>
 #include <archive.h>
 #include <input_curl.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 namespace {
 

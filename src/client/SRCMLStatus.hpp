@@ -20,8 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SRCML_LOGGER_HPP
-#define SRCML_LOGGER_HPP
+#ifndef SRCML_STATUS_HPP
+#define SRCML_STATUS_HPP
 
 #include <string>
 #include <iostream>
@@ -35,7 +35,7 @@ enum { ERROR_MSG    = 1<<3,
        DEBUG_MSG    = 1<<0  
 };
 
-class SRCMLLogger {
+class SRCMLStatus {
 public:
 
     static bool errors() {
@@ -90,7 +90,7 @@ public:
 };
 
 template <typename T>
-inline SRCMLLogger operator<<(SRCMLLogger status, T value) {
+inline SRCMLStatus operator<<(SRCMLStatus status, T value) {
 
   std::cerr << value;
 
@@ -100,16 +100,16 @@ inline SRCMLLogger operator<<(SRCMLLogger status, T value) {
 // convenience functions for logging
 // allows for a format string with multiple types of arguments
 
-inline SRCMLLogger SRCMLlog(int msg_type) {
+inline SRCMLStatus SRCMLlog(int msg_type) {
 
-  SRCMLLogger::startlog(msg_type);
+  SRCMLStatus::startlog(msg_type);
 
-  return SRCMLLogger();
+  return SRCMLStatus();
 }
 
 inline void SRCMLlog(int msg_type, const std::string& msg_text) {
 
-  SRCMLLogger::log(msg_type, msg_text);
+  SRCMLStatus::log(msg_type, msg_text);
 }
 
 template<typename T, typename... Args>

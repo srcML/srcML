@@ -24,7 +24,7 @@
 
 #include <thread>
 
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 #if defined(_MSC_BUILD) || defined(__MINGW32__)
 #include <io.h>

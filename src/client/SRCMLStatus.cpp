@@ -20,6 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
-int SRCMLLogger::error_count = 0;
+int SRCMLStatus::error_count = 0;

@@ -25,7 +25,7 @@
 #include <vector>
 #include <boost/format.hpp>
 #include <boost/algorithm/string.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 std::string expand_namespace(const std::string& separator, size_t ns_size) {
     std::string ns = "";

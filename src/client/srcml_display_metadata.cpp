@@ -24,7 +24,7 @@
 #include <srcml_pretty.hpp>
 #include <src_prefix.hpp>
 #include <srcml.h>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 #include <srcml_options.hpp>
 #include <iostream>
 #include <iomanip>

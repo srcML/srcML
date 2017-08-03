@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <cstdio>
 #include <string>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 

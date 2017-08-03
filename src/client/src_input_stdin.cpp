@@ -21,7 +21,7 @@
  */
 
 #include <src_input_stdin.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 #include <stdio.h>
 

@@ -23,7 +23,7 @@
 #include <compress_srcml.hpp>
 #include <archive.h>
 #include <archive_entry.h>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
 void compress_srcml(const srcml_request_t& /* srcml_request */,

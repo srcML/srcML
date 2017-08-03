@@ -29,7 +29,7 @@
 #include <input_curl.hpp>
 #include <input_file.hpp>
 #include <input_archive.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 class srcMLReadArchive {
 public:

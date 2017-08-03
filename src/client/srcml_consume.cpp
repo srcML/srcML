@@ -31,7 +31,7 @@
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <string>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 #include <timer.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue

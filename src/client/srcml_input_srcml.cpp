@@ -27,7 +27,7 @@
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <srcmlns.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,

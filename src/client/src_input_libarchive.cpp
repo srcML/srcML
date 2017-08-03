@@ -32,7 +32,7 @@
 #include <algorithm>
 #include <timer.hpp>
 #include <input_curl.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 #include <cstring>
 
 #include <curl_input_file.hpp>

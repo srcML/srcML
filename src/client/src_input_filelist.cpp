@@ -29,7 +29,7 @@
 #include <boost/algorithm/string.hpp>
 #include <archive.h>
 #include <archive_entry.h>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
