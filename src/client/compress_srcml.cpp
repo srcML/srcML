@@ -23,21 +23,23 @@
 #include <compress_srcml.hpp>
 #include <archive.h>
 #include <archive_entry.h>
-#include <boost/foreach.hpp>
+#include <SRCMLStatus.hpp>
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
 void compress_srcml(const srcml_request_t& /* srcml_request */,
                     const srcml_input_t& input_sources,
                     const srcml_output_dest& destination) {
 
+    // create a new archive for output that will handle all 
+    // types, including source-code files
     archive* ar = archive_write_new();
-
     archive_write_set_format_raw(ar);
 
     // setup compressions
-    BOOST_FOREACH(const std::string& ext, destination.compressions)
+    for (const auto& ext : destination.compressions)
         archive_write_set_compression_by_extension(ar, ext.c_str());
 
+    // open the new archive based on input source
     int status = ARCHIVE_OK;
     if (contains<int>(destination)) {
         status = archive_write_open_fd(ar, destination);
@@ -45,21 +47,24 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
         status = archive_write_open_filename(ar, destination.resource.c_str());
     }
     if (status != ARCHIVE_OK) {
-        std::cerr << status;
+        SRCMLstatus(ERROR_MSG, std::to_string(status));
         exit(1);
     }
 
+    // create a new entry. Note that the pathname doesn't matter
     archive_entry* entry = archive_entry_new();
-
     archive_entry_set_pathname(entry, "test");
     archive_entry_set_filetype(entry, AE_IFREG);
 
+    // create the header for our single entry
+    // since this is output, and there is only a single output, any error is fatal
     if ((status = archive_write_header(ar, entry)) != ARCHIVE_OK) {
-        std::cerr << status;
+        SRCMLstatus(ERROR_MSG, std::to_string(status));
         exit(1);
     }
 
     // write the data into the archive
+    // Note: Assumes input source is a fd, not a filename
     std::vector<char> buffer(4092);
     while (ssize_t s = read(*input_sources[0].fd, &buffer.front(), buffer.size())) {
 

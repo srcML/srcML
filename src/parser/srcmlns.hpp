@@ -27,10 +27,14 @@
 #ifndef INCLUDED_SRCMLNS_HPP
 #define INCLUDED_SRCMLNS_HPP
 
-#include <vector>
 #include <string>
+#include <array>
 
-#include <boost/optional.hpp>
+struct Namespace {
+    std::string prefix;
+    std::string uri;
+    bool used;
+};
 
 /** xml declaration standalone attribute */
 const char* const XML_DECLARATION_STANDALONE = "yes";
@@ -128,7 +132,7 @@ const char* const UNIT_ATTRIBUTE_ITEM = "item";
 /** item (XPath) attribute */
 const char* const UNIT_ATTRIBUTE_PATH = "item";
 
-const std::string SRCML_URI_PREFIX[] = { "http://www.srcML.org/", "http://www.sdml.info/", "" };
+const std::array<std::string, 2> SRCML_URI_PREFIX = {{ "http://www.srcML.org/", "http://www.sdml.info/" }};
 
 // check if uri is same as srcML uri regardless of uri prefix
 bool is_srcml_namespace(const std::string & uri, const std::string & srcml_uri);

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="foreach" filename="qt_foreach">
+
+<unit>
+<foreach>foreach <control>(<init><expr><name>i</name></expr>,<range> <expr><name>b</name></expr></range></init>)</control><block type="pseudo">
+<empty_stmt>;</empty_stmt></block></foreach>
+</unit>
+
+<unit>
+<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control><block type="pseudo">
+<empty_stmt>;</empty_stmt></block></foreach>
+</unit>
+
+<unit>
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>element</name>,<range> <expr><call><name><name>fibarray</name><operator>.</operator><name>array</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></foreach>
+</unit>
+
+<unit>
+<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control><block type="pseudo">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></foreach>
+</unit>
+
+<unit>
+<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control>
+<block>{
+}</block></foreach>
+</unit>
+
+<unit>
+<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control>
+<block>{
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+}</block></foreach>
+</unit>
+
+<unit>
+<function_decl><type><name>void</name></type> <name>foreach</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit>
+<function><type><name>void</name></type> <name>foreach</name><parameter_list>()</parameter_list> <block>{}</block></function>
+</unit>
+
+<unit>
+<decl_stmt><decl><type><name>void</name></type> <name>foreach</name></decl>;</decl_stmt>
+</unit>
+
+<unit>
+<class_decl>class <name>foreach</name>;</class_decl>
+</unit>
+
+<unit>
+<class>class <name>foreach</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+</unit>

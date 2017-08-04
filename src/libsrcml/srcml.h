@@ -40,6 +40,7 @@
 #define INCLUDED_SRCML_H
 
 #include <stddef.h> /* size_t */
+#include <sys/types.h> /* ssize_t */
 #include <stdio.h> /* FILE * */
 
 #ifdef __cplusplus
@@ -577,7 +578,7 @@ LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archi
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_write_unit(struct srcml_archive* archive, const struct srcml_unit* unit);
+LIBSRCML_DECL int srcml_archive_write_unit(struct srcml_archive* archive, const struct srcml_unit* unit);
 
 /** Close a srcml_archive opened using srcml_archive_read_open_*() or srcml_archive_write_open_*().
  * The archive can be reopened.
@@ -685,7 +686,7 @@ LIBSRCML_DECL int srcml_archive_read_open_fd (struct srcml_archive* archive, int
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_IO_ERROR
  */
-LIBSRCML_DECL int srcml_archive_read_open_io (struct srcml_archive* archive, void * context, int (*read_callback)(void * context, char * buffer, size_t len), int (*close_callback)(void * context));
+LIBSRCML_DECL int srcml_archive_read_open_io (struct srcml_archive* archive, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context));
 /**@}*/
 
 
@@ -852,6 +853,29 @@ LIBSRCML_DECL int srcml_archive_set_url (struct srcml_archive* archive, const ch
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_archive_set_version(struct srcml_archive* archive, const char* version);
+
+/** Whether the archive is an xml fragment, i.e., does not contain <unit> element
+ * @param archive A srcml_archive opened for reading or writing
+ * @retval 1 Is a full archive
+ * @retval 0 Is just a single unit
+ */
+LIBSRCML_DECL int srcml_archive_is_fragment(const struct srcml_archive* archive);
+
+/** Enable the output xml as a fragment, i.e., does not contain <unit> element
+ * @param archive A srcml_archive opened for writing
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+LIBSRCML_DECL int srcml_archive_enable_fragment(struct srcml_archive* archive);
+
+/** Disable the output xml as a fragment, i.e., will contain a <unit> element
+	This is the default
+ * @param archive A srcml_archive opened for writing
+ * @retval SRCML_STATUS_OK on success
+ * @retval SRCML_STATUS_INVALID_ARGUMENT
+ */
+LIBSRCML_DECL int srcml_archive_disable_fragment(struct srcml_archive* archive);
+
 /**@}*/
 
 /**@{ @name Get Configuration */
@@ -1381,7 +1405,7 @@ LIBSRCML_DECL int srcml_unit_parse_fd (struct srcml_unit* unit, int src_fd);
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure.
  */
-LIBSRCML_DECL int srcml_unit_parse_io (struct srcml_unit* unit, void * context, int (*read_callback)(void * context, char * buffer, size_t len), int (*close_callback)(void * context));
+LIBSRCML_DECL int srcml_unit_parse_io (struct srcml_unit* unit, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context));
 /**@}*/
 
 

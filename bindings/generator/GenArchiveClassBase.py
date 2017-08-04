@@ -111,7 +111,7 @@ class GenArchiveClassBase(object):
 
 
 # /* Append unit to an archive */
-# __LIBSRCML_DECL int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
+# __LIBSRCML_DECL int srcml_archive_write_unit(struct srcml_archive*, const struct srcml_unit*);
 
 # /* Iteratively build a unit */
 # __LIBSRCML_DECL int srcml_write_start_unit(struct srcml_unit*);

@@ -82,7 +82,7 @@ int main(int argc, char* argv[]) {
 
         /* copy the files from the input archive to the output archive */
         /* Translate to srcml and append to the archive */
-        srcml_write_unit(oarchive, units[i]);
+        srcml_archive_write_unit(oarchive, units[i]);
 
         srcml_unit_free(units[i]);
 

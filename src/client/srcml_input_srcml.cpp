@@ -21,50 +21,54 @@
  */
 
 #include <srcml_input_srcml.hpp>
-#include <parse_queue.hpp>
+#include <ParseQueue.hpp>
 #include <srcml_input_src.hpp>
 #include <srcml.h>
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <srcmlns.hpp>
+#include <SRCMLStatus.hpp>
 
-void srcml_input_srcml(ParseQueue& queue,
+int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_input_src& srcml_input,
                        const boost::optional<size_t> & revision) {
 
     // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_archive_create();
-
-    if(revision)
-        srcml_archive_set_srcdiff_revision(srcml_input_archive, *revision);
-
-    int open_status = SRCML_STATUS_OK;
-
-    if (contains<int>(srcml_input))
-        open_status = srcml_archive_read_open_fd(srcml_input_archive, srcml_input);
-    else if (contains<FILE*>(srcml_input))
-        open_status = srcml_archive_read_open_FILE(srcml_input_archive, srcml_input);
-    else
-        open_status = srcml_archive_read_open_filename(srcml_input_archive, srcml_input.c_str());
-
-    if (open_status != SRCML_STATUS_OK) {
-        std::cerr << "srcml: Unable to open file " << src_prefix_resource(srcml_input.filename) << '\n';
-        exit(1);
+    if (!srcml_input_archive) {
+        SRCMLstatus(WARNING_MSG, "srcml: Internal libsrcml error");
+        return 0;
     }
 
-    if (SRCML_COMMAND_XML & SRCMLOptions::get()) {
-        if (srcml_archive_is_full_archive(srcml_input_archive) && srcml_input.unit == 0) {
+    int open_status = SRCML_STATUS_OK;
+    if (revision)
+        open_status = srcml_archive_set_srcdiff_revision(srcml_input_archive, *revision);
+
+    open_status = srcml_archive_read_open(srcml_input_archive, srcml_input);
+    if (open_status != SRCML_STATUS_OK) {
+        if (srcml_input.protocol == "file" )
+            SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
+        else
+            SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
+        srcml_archive_close(srcml_input_archive);
+        return 0;
+    }
+
+    // output is in srcML
+    if (option(SRCML_COMMAND_XML)) {
+
+        if (srcml_archive_is_full_archive(srcml_input_archive) && srcml_input.unit == 0)
             srcml_archive_enable_full_archive(srcml_output_archive);
-        }
 
         size_t nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
-
         for (size_t i = 0; i < nsSize; ++i) {
 
-            if(revision && srcml_archive_get_namespace_uri(srcml_input_archive, i) == std::string(SRCML_DIFF_NS_URI))
+            // ignore srcDiff URL, since it will not be on the output
+            if (revision && srcml_archive_get_namespace_uri(srcml_input_archive, i) == std::string(SRCML_DIFF_NS_URI))
                 continue;
 
+            // register the input srcml archive namespace
             srcml_archive_register_namespace(srcml_output_archive,
                 srcml_archive_get_namespace_prefix(srcml_input_archive, i),
                 srcml_archive_get_namespace_uri(srcml_input_archive, i));
@@ -77,7 +81,8 @@ void srcml_input_srcml(ParseQueue& queue,
         srcml_unit_free(unit);
     }
 
-    bool unitPresent = false;
+    // if we found a valid unit
+    bool unitFound = false;
 
     // process each entry in the input srcml archive
     while (srcml_unit* unit =  srcml_archive_read_unit_header(srcml_input_archive)) {
@@ -85,7 +90,7 @@ void srcml_input_srcml(ParseQueue& queue,
         // must cache the body of the unit before we read the next one
         srcml_unit_read_body(unit);
 
-        unitPresent = true;
+        unitFound = true;
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
         prequest->srcml_arch = srcml_output_archive;
@@ -99,9 +104,10 @@ void srcml_input_srcml(ParseQueue& queue,
             break;
     }
 
-    if (!unitPresent) {
-        std::cerr << "Requested unit " << srcml_input.unit << " out of range.\n";
+    if (!unitFound) {
+        SRCMLstatus(ERROR_MSG, "Requested unit %d out of range.", srcml_input.unit);
         exit(4);
     }
 
+    return 1;
 }

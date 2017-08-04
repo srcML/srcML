@@ -25,26 +25,26 @@
 #include <src_input_libarchive.hpp>
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_file(ParseQueue& queue,
+int src_input_file(ParseQueue& queue,
                     srcml_archive* srcml_arch,
                     const srcml_request_t& srcml_request,
-                    const std::string& input_file) {
+                    const srcml_input_src& input) {
 
-    if (SRCML_COMMAND_VERBOSE & SRCMLOptions::get()) {
-        src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
-        return;
+    if (option(SRCML_COMMAND_VERBOSE)) {
+        return src_input_libarchive(queue, srcml_arch, srcml_request, input);
     }
 
     // form the parsing request
     ParseRequest* prequest = new ParseRequest;
    
-    if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
+    if (option(SRCML_COMMAND_NOARCHIVE)) {
         prequest->disk_dir = srcml_request.output_filename;
+    }
 
     if (srcml_request.att_filename)
         prequest->filename = *srcml_request.att_filename;
-    else if (input_file != "_")
-        prequest->filename = input_file;
+    else if (input.resource != "_")
+        prequest->filename = input.resource;
 
     prequest->url = srcml_request.att_url;
     prequest->version = srcml_request.att_version;
@@ -56,8 +56,10 @@ void src_input_file(ParseQueue& queue,
             if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
                 prequest->language = l;
     
-    prequest->disk_filename = input_file;
+    prequest->disk_filename = input.resource;
 
     // Hand request off to the processing queue
     queue.schedule(prequest);
+
+    return 1;
 }

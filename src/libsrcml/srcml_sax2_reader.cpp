@@ -59,6 +59,7 @@ void * start_routine(void * arguments) {
     try {
 
         args->control->parse(args->handler);
+
     } catch(SAXError error) {
 
         if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END)) {
@@ -67,8 +68,11 @@ void * start_routine(void * arguments) {
             // See #1218
             fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
-            // I do not think this is needed as it needs to be stopped to even get here
-            args->handler->done();
+            // This is not necessary on certain errors (such as missing '>'), as
+            // the thread will finish on its own. But if the document is empty it will
+            // freeze up until it is shut down here.
+            if (error.error_code == XML_ERR_DOCUMENT_EMPTY)
+                args->handler->done();
         }
 
         // might have to release a lock here or set is_done;
@@ -178,7 +182,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
     version.swap(handler.archive->version);
     attributes.swap(handler.archive->attributes);
     prefixes.swap(handler.archive->prefixes);
-    namespaces.swap(handler.archive->namespaces);
+    namespaces.swap(handler.archive->uris);
     processing_instruction.swap(handler.archive->processing_instruction);
     options = handler.archive->options;
     tabstop = handler.archive->tabstop;

@@ -24,17 +24,42 @@
 #include <srcml_options.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_prefix.hpp>
+#include <ctype.h>
+#include <cstring>
+
+static int hex2decimal(unsigned char c) {
+
+    switch (c) {
+        case 'a':
+        case 'A': return 10;
+        case 'b':
+        case 'B': return 11;
+        case 'c':
+        case 'C': return 12;
+        case 'd':
+        case 'D': return 13;
+        case 'e':
+        case 'E': return 14;
+        case 'f':
+        case 'F': return 15;
+        default: return c - '0';
+    }
+}
+
+static bool isodigit(char c) {
+    return c >= '0' && c <= '7';
+}
 
 // Convert input to a ParseRequest and assign request to the processing queue
- void src_input_text(ParseQueue& queue,
+ int src_input_text(ParseQueue& queue,
  	srcml_archive* srcml_arch,
  	const srcml_request_t& srcml_request,
- 	const std::string& input_file) {
+ 	const srcml_input_src& input) {
 
     // form the parsing request
  	ParseRequest* prequest = new ParseRequest;
 
- 	if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
+ 	if (option(SRCML_COMMAND_NOARCHIVE))
  		prequest->disk_dir = srcml_request.output_filename;
 
     prequest->filename = srcml_request.att_filename;
@@ -46,55 +71,121 @@
 
     prequest->status = 0; //!language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
-    std::string raw_text = src_prefix_resource(input_file);
+    std::string raw_text = src_prefix_resource(input.resource);
+    prequest->loc = 0;
 
     // fill up the parse request buffer
     if (!prequest->status) {
     	// copy from the text directly into a buffer
     	// perform newline and tab expansion
-    	// TODO: Do this more efficiently
     	// TODO: Make test cases for each part
     	// TODO: Support \nnn, \xnnn, \unnn, \Unnnnnnnn
-    	bool startescape = false;
-    	for (std::string::const_iterator p = raw_text.begin(); p != raw_text.end(); ++p) {
 
-    		if (!startescape && *p == '\\') {
+        const char* ptext = raw_text.c_str();
+        while (ptext) {
 
-    			startescape = true;
+            // find up to an escape
+            const char* epos = strchr(ptext, '\\');
+            if (!epos) {
+                break;
+            }
+            // append up to the special char
+            prequest->buffer.insert(prequest->buffer.end(), ptext, epos);
 
-    		} else if (startescape) {
+            // append the special character
+            ++epos;
+            switch (*epos) {
+            case 'n':
+                prequest->buffer.push_back('\n');
+                ++prequest->loc;
+                break;
+            case 't':
+                prequest->buffer.push_back('\t');
+                break;
+            case 'f':
+                prequest->buffer.push_back('\f');
+                break;
+            case 'a':
+                prequest->buffer.push_back('\a');
+                break;
+            case 'b':
+                prequest->buffer.push_back('\b');
+                break;
+            /* \e not directly supported in C, but echo command does */
+            case 'e':
+                prequest->buffer.push_back('\x1B');
+                break;
+            case 'r':
+                prequest->buffer.push_back('\r');
+                break;
+            case 'v':
+                prequest->buffer.push_back('\v');
+                break;
+            // byte with hex value from 1 to 2 charcters
+            case 'x':
+            {
+                int value = 0;
+                int offset = 0;
+                while (offset < 2 && isxdigit(*(epos + offset + 1))) {
+                    value = hex2decimal(*(epos + offset + 1)) + 16 * value;
+                    ++offset;
+                }
+                if (offset == 0) {
+                    prequest->buffer.push_back('\\');
+                    prequest->buffer.push_back('x');
+                    break;
+                }
 
-    			if (*p == 'n') {
-    				prequest->buffer.push_back('\n');
-    			} else if (*p == 't') {
-    				prequest->buffer.push_back('\t');
-    			} else if (*p == 'f') {
-    				prequest->buffer.push_back('\f');
-    			} else if (*p == 'a') {
-    				prequest->buffer.push_back('\a');
-    			} else if (*p == 'b') {
-    				prequest->buffer.push_back('\b');
-    			} else if (*p == 'e') {
-    				prequest->buffer.push_back('\e');
-    			} else if (*p == 'r') {
-    				prequest->buffer.push_back('\r');
-    			} else if (*p == 'v') {
-    				prequest->buffer.push_back('\v');
-    			} else {
-    				prequest->buffer.push_back('\\');
-    				prequest->buffer.push_back(*p);
-    			}
+                prequest->buffer.push_back(value);
+                if (value == '\n')
+                    ++prequest->loc;
+                epos += offset;
+                break;
+            }
+            // byte with octal value from 1 to 3 characters
+            // Note: GNU echo documentation says that the \0 is required, but
+            // the actual implementation accepts \1, \2, ..., \7
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            {
+                int value = 0;
+                int offset = *epos == '0' ? 1 : 0;
+                int maxlength = *epos == '0' ? 4 : 3;
+                while (offset < maxlength && isodigit(*(epos + offset))) {
+                    value = (*(epos + offset) - '0') + 8 * value;
+                    ++offset;
+                }
+                if (offset == 0) {
+                    prequest->buffer.push_back('\\');
+                    prequest->buffer.push_back('0');
+                    break;
+                }
 
-   				startescape = false;
-    		} else {
+                prequest->buffer.push_back(value);
+                if (value == '\n')
+                    ++prequest->loc;
+                epos += offset - 1;
+                break;
+            }
+            default:
+                prequest->buffer.push_back('\\');
+                prequest->buffer.push_back(*(epos));
+            }
+            ptext = epos + 1;
+        }
 
-    			prequest->buffer.push_back(*p);
-    		}
-    	}
-    	++prequest->loc;
+        // finished with no '\\' remaining, so flush buffer
+        prequest->buffer.insert(prequest->buffer.end(), ptext, ptext + strlen(ptext));
     }
 
     // schedule for parsing
     queue.schedule(prequest);
 
+    return 1;
 }

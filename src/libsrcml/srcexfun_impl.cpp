@@ -58,7 +58,7 @@ namespace {
     xmlChar const* const destructor_tag = BAD_CAST "destructor";
     xmlChar const* const destructor_decl_tag = BAD_CAST "destructor_decl";
     xmlChar const* const throw_tag = BAD_CAST "throw";
-    xmlChar const* const type_tag = BAD_CAST "type";
+//    xmlChar const* const type_tag = BAD_CAST "type";
 
     // Compound statements
     xmlChar const* const block_tag = BAD_CAST "block";

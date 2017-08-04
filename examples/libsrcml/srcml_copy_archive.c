@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     while ((unit = srcml_archive_read_unit_header(iarchive))) {
 
         /* Translate to srcml and append to the archive */
-        srcml_write_unit(oarchive, unit);
+        srcml_archive_write_unit(oarchive, unit);
 
         srcml_unit_free(unit);
     }

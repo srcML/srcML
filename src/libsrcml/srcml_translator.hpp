@@ -56,12 +56,12 @@ class srcml_translator : public Language {
 public:
 
     // constructor
-    srcml_translator(char ** str_buf,
-                     size_t * size,
+    srcml_translator(char** str_buf,
+                     size_t* size,
                      const char* xml_encoding,
-                     OPTION_TYPE & op,
-                     std::vector<std::string> & prefix,
-                     std::vector<std::string> & uri,
+                     OPTION_TYPE& op,
+                     std::vector<std::string>& prefix,
+                     std::vector<std::string>& uri,
                      boost::optional<std::pair<std::string, std::string> > processing_instruction,
                      size_t tabsize,
                      int language,
@@ -69,7 +69,7 @@ public:
                      const char* url,
                      const char* filename,
                      const char* version,
-                     const std::vector<std::string> & attributes,
+                     const std::vector<std::string>& attributes,
                      const char* timestamp,
                      const char* hash,
                      const char* encoding);
@@ -78,8 +78,8 @@ public:
     srcml_translator(xmlOutputBuffer * output_buffer,
                      const char* xml_encoding,
                      OPTION_TYPE& op,
-                     std::vector<std::string> & prefix,
-                     std::vector<std::string> & uri,
+                     std::vector<std::string>& prefix,
+                     std::vector<std::string>& uri,
                      boost::optional<std::pair<std::string, std::string> > processing_instruction,
                      size_t tabsize,
                      int language,
@@ -87,7 +87,7 @@ public:
                      const char* url,
                      const char* filename,
                      const char* version,
-                     const std::vector<std::string> & attributes,
+                     const std::vector<std::string>& attributes,
                      const char* timestamp, 
                      const char* hash,
                      const char* encoding);
@@ -98,17 +98,17 @@ public:
 
     void translate(UTF8CharBuffer* parser_input);
 
-    bool add_unit(const srcml_unit * unit, const char * xml);
-    bool add_unit_content(const srcml_unit * unit, const char * xml, int size);
-    bool add_unit_raw(const char * xml, int size);
+    bool add_unit(const srcml_unit* unit, const char* xml);
+    bool add_unit_content(const srcml_unit* unit, const char* xml, int size);
+    bool add_unit_raw(const char* xml, int size);
     bool add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc);
-    bool add_start_unit(const srcml_unit * unit);
+    bool add_start_unit(const srcml_unit* unit);
     bool add_end_unit();
-    bool add_start_element(const char * prefix, const char * name, const char * uri);
+    bool add_start_element(const char* prefix, const char* name, const char* uri);
     bool add_end_element();
-    bool add_namespace(const char * prefix, const char * uri);
-    bool add_attribute(const char * prefix, const char * name, const char * uri, const char * content);
-    bool add_string(const char * content);
+    bool add_namespace(const char* prefix, const char* uri);
+    bool add_attribute(const char* prefix, const char* name, const char* uri, const char* content);
+    bool add_string(const char* content);
 
     xmlOutputBufferPtr output_buffer() { return out.output_buffer; }
 
@@ -122,46 +122,51 @@ public:
 private:
 
     /** is this the first unit */
-    bool first;
+    bool first = true;
 
     /** the unit revision attribute */
-    const char* revision;
+    const char* revision = nullptr;
 
     /** the unit url attribute */
-    const char* url;
+    const char* url = nullptr;
 
     /** the unit filename attribute */
-    const char* filename;
+    const char* filename = nullptr;
 
     /** the unit version attribute */
-    const char* version;
+    const char* version = nullptr;
 
     /** the unit timestamp attribute */
-    const char* timestamp;
+    const char* timestamp = nullptr;
 
     /** the unit hash attribute */
-    const char* hash;
+    const char* hash = nullptr;
 
     /** the unit encoding attribute */
-    const char* encoding;
+    const char* encoding = nullptr;
 
     /** an array of name-value attribute pairs */
-    const std::vector<std::string> & attributes;
+    const std::vector<std::string>& attributes;
 
-    std::vector<std::string> & prefix;
-    std::vector<std::string> & uri;
+    std::vector<std::string> prefix;
+    std::vector<std::string> uri;
+
+    std::vector<Namespace> namespaces;
 
     /** translation options */
     OPTION_TYPE& options;
 
     /** buffer to hold output to memory */
-    xmlBuffer * buffer;
+    xmlBuffer* buffer = nullptr;
 
 public:
     /** member for handling output */
     srcMLOutput out;
 
 private:
+
+    void prepareOutput();
+
     /** size of tabstop */
     size_t tabsize;
 
@@ -169,19 +174,19 @@ private:
     std::vector<std::string> user_macro_list;
 
     /** location to store output when output is to memory */
-    char ** str_buffer;
+    char** str_buffer = nullptr;
     
     /** location to store size of output when output is to memory */
-    size_t * size;
+    size_t* size = nullptr;
 
     /** mark if have outputted starting unit tag for by element writing */
-    bool is_outputting_unit;
+    bool is_outputting_unit = false;
 
     /** track depth for by element writing */
-    int output_unit_depth;
+    int output_unit_depth = 0;
 
     /** text-only mode (no XML) */
-    bool text_only;
+    bool text_only = false;
 
 };
 

@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
         srcml_unit_parse_fd(unit, srcml_input);
 
         /* Append to the archive */
-        srcml_write_unit(archive, unit);
+        srcml_archive_write_unit(archive, unit);
 
         srcml_unit_free(unit);
         CLOSE(srcml_input);

@@ -1,1 +1,0 @@
-_Alignas(struct X) struct X y;

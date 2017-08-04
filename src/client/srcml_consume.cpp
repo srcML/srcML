@@ -25,14 +25,14 @@
 
 #include <srcml_consume.hpp>
 #include <srcml.h>
-#include <parse_request.hpp>
-#include <write_queue.hpp>
+#include <ParseRequest.hpp>
+#include <WriteQueue.hpp>
 #include <boost/static_assert.hpp>
-#include <sha1utilities.hpp>
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <string>
-#include <boost/filesystem.hpp>
+#include <SRCMLStatus.hpp>
+#include <Timer.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
@@ -46,51 +46,33 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
     // NOTE: thread task cannot throw exception
 
-    // global access to options
-    bool isseparatearchive = SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get();
+    // a clone of the intended srcML archive is created
+    // the only purpose is to allow files to be parsed, without opening
+    // the real destination archive
+    srcml_archive* srcml_arch = srcml_archive_clone(request->srcml_arch);
 
-    // current output archive
-    srcml_archive* srcml_arch = request->srcml_arch;
-    if (isseparatearchive) {
-        srcml_arch = srcml_archive_clone(request->srcml_arch);
+    if (option(SRCML_COMMAND_NOARCHIVE)) {
+        request->srcml_arch = srcml_arch;
+
         srcml_archive_disable_full_archive(srcml_arch);
         srcml_archive_enable_hash(srcml_arch);
 
-
-        //Ensure that the directory path has a final "/" when appended to filename
-        //Build the output filename        
-        //Mirror input filesystem
-        std::string xml_filename = "";
-        
-        if (request->disk_dir->back() != '/') {
-            if (request->total_num_inputs == 1) {
-                xml_filename = *request->filename + ".xml";
-            }
-            else {
-                xml_filename = *request->disk_dir + '/' + *request->filename + ".xml";    
-            }
+        // build the output filename mirroring input filesystem
+        // ensure that the directory path has a final "/" when appended to filename
+        std::string xml_filename;
+        if (request->disk_dir) {
+            xml_filename += *request->disk_dir;
+            if (request->disk_dir->back() != '/')
+                xml_filename += '/';
         }
-        else {
-            xml_filename = *request->disk_dir + *request->filename + ".xml";
-        }
-
-        /*Flat filesystem
-        size_t pos = request->filename->find_last_of("/\\");
-
-        if (pos != std::string::npos) {
-            ++pos;
-        }
-        else {
-            pos = 0;
-        }
-        std::string xml_filename = *request->disk_dir + request->filename->substr(pos) + ".xml";*/
-
-        boost::filesystem::path dir(xml_filename);
-        if (dir.has_parent_path() && !is_directory(dir.parent_path()))
-            boost::filesystem::create_directories(dir.parent_path());
+        xml_filename += *request->filename + ".xml";
 
         srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str(), 0);
-        request->srcml_arch = srcml_arch;
+
+    } else {
+        char buffer[100];
+        size_t size;
+        srcml_archive_write_open_memory(srcml_arch, (char**) &buffer, &size);
     }
 
     std::string original_filename;
@@ -101,9 +83,10 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     try {
 
         // create the unit start tag
-        if (!unit)
+        if (!unit) {
             if (!(unit = srcml_unit_create(srcml_arch)))
                 throw SRCML_STATUS_ERROR;
+        }
 
         // language attribute, required if from memory
         if ((status = srcml_unit_set_language(unit, request->language.c_str())) != SRCML_STATUS_OK)
@@ -115,7 +98,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
             original_filename = *request->filename;
             
             // Cleanup filename
-            while (request->filename->at(0) == '.' || request->filename->at(0) == '/') {
+            while ((*request->filename)[0] == '.' || (*request->filename)[0] == '/') {
                 request->filename->erase(0,1);
             }
             
@@ -130,60 +113,24 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         if (request->time_stamp)
             srcml_unit_set_timestamp(unit, request->time_stamp->c_str());
 
-#if 0
-        // sha1 attribute, if hash is on
-        // sha1 value based on the code as encoded (source text encoding) in the original file
-        if (!request->disk_filename && (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get())) {
-        
-#ifdef _MSC_BUILD
-            unsigned char md[20];
-            /** msvc hash provider object */
-            HCRYPTPROV   crypt_provider;
-            BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-            if(! success && GetLastError() == NTE_BAD_KEYSET)
-                success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-            /** msvc hash object */
-            HCRYPTHASH   crypt_hash;
-            CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-            CryptHashData(crypt_hash, (BYTE *)&request->buffer.front(), request->buffer.size(), 0);
-            DWORD        SHA_DIGEST_LENGTH;
-            DWORD        hash_length_size = sizeof(DWORD);
-            CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
-            CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
-            CryptDestroyHash(crypt_hash);
-            CryptReleaseContext(crypt_provider, 0);
-#else
-            unsigned char md[SHA_DIGEST_LENGTH];
-            if (SHA1((const unsigned char*)&request->buffer.front(), (SHA_LONG)request->buffer.size(), md) == 0)
-                throw SRCML_STATUS_ERROR;
-#endif
-
-            const char outmd[] = { HEXCHARASCII(md), '\0' };
-
-#ifndef _MSC_BUILD
-            BOOST_STATIC_ASSERT_MSG(sizeof(outmd)/sizeof(outmd[0]) == (SHA_DIGEST_LENGTH * 2 + 1),
-                "Wrong size for SHA_DIGEST_LENGTH conversion");
-#endif
-
-//            fprintf(stderr, "DEBUG:  %s %s %d DATA: %s\n", __FILE__,  __FUNCTION__, __LINE__, outmd);
-            
-            srcml_unit_set_hash(unit, outmd);
-        }
-#endif
-
-        // parse the buffer/file (unless it is already form a srcml archive)
+        // parse the buffer/file
+        Timer parsetime;
         if (request->disk_filename)
             status = srcml_unit_parse_filename(unit, request->disk_filename->c_str());
         else if (!request->unit)
             status = srcml_unit_parse_memory(unit, &request->buffer.front(), request->buffer.size());
-
-        if (status != SRCML_STATUS_OK)
-            // FIXME: Cannot throw exception from thread
+        if (status != SRCML_STATUS_OK) {
             throw status;
+        }
+
+        request->runtime = parsetime.cpu_time_elapsed();
 
     } catch (...) {
 
-        fprintf(stderr, "srcml: Unable to open file %s\n", original_filename.c_str());
+        request->errormsg = "srcml: Unable to open file " + original_filename;
+
+        SRCMLstatus(WARNING_MSG, *request->errormsg);
+
         if (unit)
             srcml_unit_free(unit);
         unit = 0;

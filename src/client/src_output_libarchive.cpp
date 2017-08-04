@@ -25,22 +25,43 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <stdlib.h>
+#include <cstdio>
+#include <string>
+#include <SRCMLStatus.hpp>
 
 void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
     long arch_status = ARCHIVE_OK;
+    int unitcounter = 0;
     while (srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch)) {
+
+        ++unitcounter;
+
+        // have to make sure we have a valid filename
+        // TODO: Counter must span input sources
+        std::string newfilename = srcml_unit_get_filename(unit) ? srcml_unit_get_filename(unit) : "";
+        if (newfilename.empty()) {
+            newfilename = "srcml_unit_";
+            char s[10];
+            sprintf(s, "%d", unitcounter);
+            newfilename += s;
+            if (language_to_std_extension(srcml_unit_get_language(unit)) != "")
+                newfilename += language_to_std_extension(srcml_unit_get_language(unit));
+            SRCMLstatus(WARNING_MSG, "A srcML unit without a filename saved as " + newfilename);
+        }
 
         // setup the entry header
         archive_entry* entry = archive_entry_new();
         if (!entry)
             break;
 
+        // go from srcml back to source in the buffer
         char* buffer;
         size_t buffer_size;
         srcml_unit_unparse_memory(unit, &buffer, &buffer_size);
 
-        archive_entry_set_pathname(entry, srcml_unit_get_filename(unit));
+        // setup the entry
+        archive_entry_set_pathname(entry, newfilename.c_str());
         archive_entry_set_size(entry, buffer_size);
         archive_entry_set_filetype(entry, AE_IFREG);
         archive_entry_set_perm(entry, 0644);
@@ -53,10 +74,12 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         if ((arch_status = archive_write_header(src_archive, entry)) != ARCHIVE_OK)
             break;
 
-        // write the data into the archive (-1 is error)
+        // write the data into the archive
         arch_status = archive_write_data(src_archive, buffer, (size_t) buffer_size);
-        if (arch_status == -1 /* || arch_status != buffer_size */)
+        if (arch_status == -1 /* || arch_status != buffer_size */) {
+            SRCMLstatus(WARNING_MSG, "Unable to save " + newfilename + " to source archive");
             break;
+        }
 
         free(buffer);
 

@@ -30,7 +30,10 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <algorithm>
-#include <timer.hpp>
+#include <Timer.hpp>
+#include <input_curl.hpp>
+#include <SRCMLStatus.hpp>
+#include <cstring>
 
 #include <curl_input_file.hpp>
 
@@ -42,7 +45,6 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     archive_read_support_format_cpio(arch);
     archive_read_support_format_gnutar(arch);
     archive_read_support_format_iso9660(arch);
-    archive_read_support_format_mtree(arch);
     archive_read_support_format_tar(arch);
     archive_read_support_format_xar(arch);
     archive_read_support_format_zip(arch);
@@ -67,10 +69,11 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 #endif
 
     int status;
-    curl curling;
+    const int buffer_size = 16384;
+
     if (contains<int>(input_file)) {
 
-        status = archive_read_open_fd(arch, input_file, 16384);
+        status = archive_read_open_fd(arch, input_file, buffer_size);
 
     } else if (contains<FILE*>(input_file)) {
 
@@ -78,24 +81,28 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     } else if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
 
-        curling.source = input_file.filename;
-        status = archive_read_open(arch, &curling, archive_curl_open, archive_curl_read, archive_curl_close);
+        // input must go through libcurl pipe
+        srcml_input_src uninput = input_file;
+        if (!input_curl(uninput))
+            return 0;
+        
+        status = archive_read_open_fd(arch, uninput, buffer_size);
 
     } else {
 
-        status = archive_read_open_filename(arch, input_file.c_str(), 16384);
+        status = archive_read_open_filename(arch, input_file.c_str(), buffer_size);
     }
 
     if (status != ARCHIVE_OK) {
-        std::cerr << "srcml: Unable to open file " << input_file.filename << '\n';
-        exit(1);
+        SRCMLstatus(WARNING_MSG, "srcml: Unable to open file " + src_prefix_resource(input_file.filename));
+        return 0;
     }
 
     return arch;
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
-void src_input_libarchive(ParseQueue& queue,
+int src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const srcml_input_src& input_file) {
@@ -104,10 +111,10 @@ void src_input_libarchive(ParseQueue& queue,
     // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
     // which then hangs
     // Note: may need to fix in libsrcml
-    if (!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) {
+    if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) | input_file.skip) {
         // if we are not verbose, then just end this attemp
-        if (!(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
-            return;
+        if (!(option(SRCML_COMMAND_VERBOSE))) {
+            return 0;
         }
 
         // form the parsing request
@@ -123,19 +130,26 @@ void src_input_libarchive(ParseQueue& queue,
         // schedule for parsing
         queue.schedule(prequest);
 
-        return;
+        return 1;
     }
 
     archive* arch = libarchive_input_file(input_file);
+    if (!arch) {
+        return 0;
+    }
 
     /* In general, go through this once for each time the header can be read
        Exception: if empty, go through the loop exactly once */
     int count = 0;
     archive_entry *entry;
+
     int status = ARCHIVE_OK;
     while (status == ARCHIVE_OK &&
            (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
             (status == ARCHIVE_EOF && !count))) {
+
+        if (status == ARCHIVE_EOF && getCurlErrors())
+            return 0;
 
         // skip any directories
         if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
@@ -146,7 +160,7 @@ void src_input_libarchive(ParseQueue& queue,
 
         // stdin, single files require a explicit filename
         if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
-            std::cerr << "Language required for stdin single files" << '\n';
+            SRCMLstatus(ERROR_MSG, "Language required for stdin single files");
             exit(1);
         }
 
@@ -185,7 +199,7 @@ void src_input_libarchive(ParseQueue& queue,
                 language = l;
 
         // if we don't have a language, and are not verbose, then just end this attemp
-        if (language.empty() && !(SRCML_COMMAND_VERBOSE & SRCMLOptions::get())) {
+        if (language.empty() && !(option(SRCML_COMMAND_VERBOSE))) {
             ++count;
             continue;
         }
@@ -193,12 +207,11 @@ void src_input_libarchive(ParseQueue& queue,
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;
 
-        if (srcml_request.command & SRCML_COMMAND_NOARCHIVE)
+        if (option(SRCML_COMMAND_NOARCHIVE))
             prequest->disk_dir = srcml_request.output_filename;
 
         if (srcml_request.att_filename || (filename != "-"))
             prequest->filename = filename;
-
 
         prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
@@ -207,7 +220,7 @@ void src_input_libarchive(ParseQueue& queue,
         prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
         prequest->total_num_inputs = srcml_request.input_sources.size();
 
-        if (SRCML_COMMAND_TIMESTAMP & SRCMLOptions::get()) {
+        if (option(SRCML_COMMAND_TIMESTAMP)) {
 
             //Long time provided by libarchive needs to be time_t
             time_t mod_time(archive_entry_mtime(entry));
@@ -232,8 +245,9 @@ void src_input_libarchive(ParseQueue& queue,
 #else
             int64_t offset;
 #endif
-            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
+            }
 
             // LOC count
             prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
@@ -246,5 +260,11 @@ void src_input_libarchive(ParseQueue& queue,
 
         ++count;
     }
+#if ARCHIVE_VERSION_NUMBER >= 3000000
+    archive_read_free(arch);
+#else
     archive_read_finish(arch);
+#endif
+
+    return count;
 }

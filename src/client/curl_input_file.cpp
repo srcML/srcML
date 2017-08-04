@@ -20,18 +20,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifdef _MSC_BUILD 
-#define ssize_t __int64
-#endif
-
 #include <curl_input_file.hpp>
 #include <archive.h>
-#include <timer.hpp>
+#include <Timer.hpp>
+#include <string>
 
 bool curl_supported(const std::string& input_protocol) {
     const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
     for (int i = 0; curl_types[i] != NULL; ++i) {
-        if (strcmp(curl_types[i], input_protocol.c_str()) == 0)
+        if (std::string(curl_types[i]) == input_protocol)
             return true;
     }
     return false;
@@ -64,10 +61,10 @@ int archive_curl_open(archive*, void* client_data) {
     curl_easy_setopt(curldata->handle, CURLOPT_WRITEDATA, curldata);
     curl_easy_setopt(curldata->handle, CURLOPT_URL, curldata->source.c_str());
 
-        // Quick check to see if the remote location exists or is available
+    // Quick check to see if the remote location exists or is available
     CURL* ping = curl_easy_duphandle(curldata->handle);
     curl_easy_setopt(ping, CURLOPT_NOBODY, 1L);
-        //curl_easy_setopt(ping, CURLOPT_HEADER, 1L);
+    //curl_easy_setopt(ping, CURLOPT_HEADER, 1L);
     curl_easy_perform(ping);
 
     long http_code = 0;
@@ -77,47 +74,46 @@ int archive_curl_open(archive*, void* client_data) {
 
     curl_easy_cleanup(ping);
     if (http_code != 200)
-    {   
+    {
         return -1;
     }
 
-        // The resource is there, so lets go get it!
+    // The resource is there, so lets go get it!
     curldata->multi_handle = curl_multi_init();
     curl_multi_add_handle(curldata->multi_handle, curldata->handle);
     curl_multi_perform(curldata->multi_handle, &curldata->still_running);
-        curldata->stopwatch = Timer(10); // 10 second timeout
+    curldata->stopwatch = Timer(10); // 10 second timeout
 
-        return ARCHIVE_OK;
-    }
+    return ARCHIVE_OK;
+}
 
 __LA_SSIZE_T archive_curl_read(archive*, void* client_data, const void** buff) {
 
-        curl* curldata = (curl*) client_data;
+    curl* curldata = (curl*) client_data;
 
-        curldata->data_len = 0;
-        curldata->stopwatch.start();
-        while (curldata->data_len == 0 && curldata->still_running) {
-            curl_multi_perform(curldata->multi_handle, &curldata->still_running);
+    curldata->data_len = 0;
+    curldata->stopwatch.start();
+    while (curldata->data_len == 0 && curldata->still_running) {
+        curl_multi_perform(curldata->multi_handle, &curldata->still_running);
 
            // Connection lost mid-transfer time to give up
-            if (curldata->stopwatch.is_expired()) {
-                curldata->data_len = 0;
-                curldata->data_buffer = 0;
-                break;
-            }
+        if (curldata->stopwatch.is_expired()) {
+            curldata->data_len = 0;
+            curldata->data_buffer = 0;
+            break;
         }
-
-        *buff = curldata->data_buffer;
-
-        return curldata->data_len;
     }
 
-    int archive_curl_close(archive*, void* client_data) {
+    *buff = curldata->data_buffer;
 
-        curl* curldata = (curl*) client_data;
-        curl_multi_cleanup(curldata->multi_handle);
-        curl_easy_cleanup(curldata->handle);
+    return curldata->data_len;
+}
 
-        return 0;
-    }
+int archive_curl_close(archive*, void* client_data) {
 
+    curl* curldata = (curl*) client_data;
+    curl_multi_cleanup(curldata->multi_handle);
+    curl_easy_cleanup(curldata->handle);
+
+    return 0;
+}

@@ -211,9 +211,9 @@ libsrcml.srcml_archive_get_srcdiff_revision.argtypes = [c_void_p]
 libsrcml.srcml_archive_check_extension.restype = c_char_p
 libsrcml.srcml_archive_check_extension.argtypes = [c_void_p, c_char_p]
 
-# int srcml_write_unit(struct srcml_archive*, const struct srcml_unit*);
-libsrcml.srcml_write_unit.restype = c_int
-libsrcml.srcml_write_unit.argtypes = [c_void_p, c_void_p]
+# int srcml_archive_write_unit(struct srcml_archive*, const struct srcml_unit*);
+libsrcml.srcml_archive_write_unit.restype = c_int
+libsrcml.srcml_archive_write_unit.argtypes = [c_void_p, c_void_p]
 
 # struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive*);
 libsrcml.srcml_archive_read_unit_header.restype = c_void_p
@@ -414,7 +414,7 @@ class srcml_archive :
         return self.buffer.value
 
     def write_unit(self, unit) :
-        check_return(libsrcml.srcml_write_unit(self.archive, unit.unit))
+        check_return(libsrcml.srcml_archive_write_unit(self.archive, unit.unit))
 
     def read_unit_header(self) :
         unit = libsrcml.srcml_archive_read_unit_header(self.archive)

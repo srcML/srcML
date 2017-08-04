@@ -28,13 +28,13 @@
 #include <srcml.h>
 #include <srcml_cli.hpp>
 #include <string>
-#include <parse_queue.hpp>
+#include <ParseQueue.hpp>
 #include <srcml_input_src.hpp>
 #include <src_archive.hpp>
 
 archive* libarchive_input_file(const srcml_input_src& input_file);
 
-void src_input_libarchive(ParseQueue& queue,
+int src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
 						  const srcml_request_t& srcml_request,
                           const srcml_input_src& input);

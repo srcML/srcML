@@ -54,9 +54,9 @@ int main(int argc, char* argv[]) {
         /* Get the filename */
         const char* filename = srcml_unit_get_filename(unit);
         if (strcmp(".h", filename + strlen(filename) - 2) == 0)
-            srcml_write_unit(includearchive, unit);
+            srcml_archive_write_unit(includearchive, unit);
         else
-            srcml_write_unit(otherarchive, unit);
+            srcml_archive_write_unit(otherarchive, unit);
 
         srcml_unit_free(unit);
     }

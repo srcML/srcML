@@ -54,7 +54,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
-set(CPACK_PACKAGE_CONTACT "Software Developement Laboratories <bugs@srcML.org>")
+set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <bugs@srcML.org>")
  
 # package version
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
@@ -72,8 +72,8 @@ set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
 set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/CMake/welcome.txt)
 
 
-install(FILES ${CMAKE_SOURCE_DIR}/README.md RENAME README.txt DESTINATION .)
-install(FILES ${CMAKE_SOURCE_DIR}/COPYING.txt DESTINATION .)
+#install(FILES ${CMAKE_SOURCE_DIR}/README.md RENAME README.txt DESTINATION .)
+#install(FILES ${CMAKE_SOURCE_DIR}/COPYING.txt DESTINATION .)
 
 
 if(WIN32)

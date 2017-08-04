@@ -51,7 +51,8 @@ bool get_language_extension(const char * const inpath, std::string & extension)
     std::string path(inpath);
 
     // remove any .gz extension
-    if (path.substr(path.size() - 3) == ".gz")
+    // FIXME: Why are we doing this? Could be many types of these kind of extensions
+    if ((path.size() > 3) && (path.substr(path.size() - 3) == ".gz"))
         path.resize(path.size() - 3);
 
     // get the proper extension, not including the '.'

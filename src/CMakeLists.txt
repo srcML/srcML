@@ -56,6 +56,8 @@ set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_B
 
 buildLib(srcml_shared SHARED)
 set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set_property(TARGET srcml_shared PROPERTY VERSION "0.9.5")
+set_property(TARGET srcml_shared PROPERTY SOVERSION "0.9.5")
 
 if(APPLE)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")
@@ -63,9 +65,11 @@ elseif(NOT ("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC") AND NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.so\")")
 endif()
 
-if(OS_NAME STREQUAL "Fedora" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-	install(TARGETS srcml_shared srcml_static RUNTIME DESTINATION bin LIBRARY DESTINATION lib64 ARCHIVE DESTINATION lib64)
-elseif(OS_NAME STREQUAL "openSUSE" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+#if(OS_NAME STREQUAL "Fedora" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
+#	install(TARGETS srcml_shared srcml_static RUNTIME DESTINATION bin LIBRARY 
+# DESTINATION lib64 ARCHIVE DESTINATION lib64)
+#else
+if(OS_NAME STREQUAL "openSUSE" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
 	install(TARGETS srcml_shared srcml_static RUNTIME DESTINATION bin LIBRARY DESTINATION lib64 ARCHIVE DESTINATION lib64)
 else()
 	install(TARGETS srcml_shared srcml_static RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)

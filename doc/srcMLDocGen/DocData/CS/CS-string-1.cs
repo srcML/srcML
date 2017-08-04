@@ -1,1 +1,0 @@
-string x = "banana";

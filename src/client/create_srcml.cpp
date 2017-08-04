@@ -20,13 +20,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <functional>
 #include <create_srcml.hpp>
 #include <srcml.h>
-#include <boost/foreach.hpp>
-#include <parse_queue.hpp>
-#include <write_queue.hpp>
-#include <srcml_consume.hpp>
-#include <srcml_write.hpp>
+#include <srcml_options.hpp>
+#include <ParseQueue.hpp>
+#include <WriteQueue.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
@@ -35,42 +34,94 @@
 #include <src_input_text.hpp>
 #include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
-#include <trace_log.hpp>
-#include <srcml_options.hpp>
+#include <TraceLog.hpp>
 #include <input_file.hpp>
+#include <curl_input_file.hpp>
+#include <input_curl.hpp>
+#include <boost/filesystem.hpp>
+#include <iostream>
+#include <input_archive.hpp>
+#include <SRCMLStatus.hpp>
 
-void srcml_handler_dispatch(ParseQueue& queue,
+bool createdsrcml = false;
+
+int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
-                          const srcml_input_src& input) {
+                          const srcml_input_src& input,
+                          const srcml_output_dest& destination) {
 
     // call appropriate handler
     if (input.state == SRCML) {
-        // libsrcml can apply gz decompression
-        // all other srcml compressions require a per-input decompression stage
+
+       // input must go through libcurl pipe
         srcml_input_src uninput = input;
-        input_file(uninput);
-        srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+        if (!input_curl(uninput))
+            return 0;
+
+        // may have some compressions/archives
+        uninput.fd = input_archive(uninput);
+
+        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol == "text") {
 
-        src_input_text(queue, srcml_arch, srcml_request, input.filename);
+        return src_input_text(queue, srcml_arch, srcml_request, input);
 
     } else if (input.protocol == "filelist") {
 
-        src_input_filelist(queue, srcml_arch, srcml_request, input);
+        // always create the archive
+        int status = 0;
+        if (contains<int>(destination)) {
+
+            status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
+
+        } else {
+
+            status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
+        }
+        if (status != SRCML_STATUS_OK)
+            return 0;
+        createdsrcml = true;
+
+        srcml_archive_enable_full_archive(srcml_arch);
+
+        int num = src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
+
+        return num;
 
     } else if (input.protocol == "file" && input.isdirectory) {
 
-        src_input_filesystem(queue, srcml_arch, srcml_request, input);
+        return src_input_filesystem(queue, srcml_arch, srcml_request, input);
 
     } else if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
        
-        src_input_file(queue, srcml_arch, srcml_request, input);
+        return src_input_file(queue, srcml_arch, srcml_request, input);
+
+    } else if (input.protocol != "file" && curl_supported(input.protocol) && input.extension == ".xml") { 
+
+        // input must go through libcurl pipe
+        srcml_input_src uninput = input;
+        if (!input_curl(uninput))
+            return 0;
+
+        // may have some compressions/archives
+        uninput.fd = input_archive(uninput);
+
+        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+
+    } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
+
+        // input must go through libcurl pipe
+        srcml_input_src uninput = input;
+        if (!input_curl(uninput))
+            return 0;
+
+        return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
 
     } else {
-       
-        src_input_libarchive(queue, srcml_arch, srcml_request, input);
+
+        return src_input_libarchive(queue, srcml_arch, srcml_request, input);
     }
 }
 
@@ -81,157 +132,179 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // create the output srcml archive
     srcml_archive* srcml_arch = srcml_archive_create();
+    if (!srcml_arch) {
+        SRCMLstatus(ERROR_MSG, "srcml: allocation error for srcml archive");
+        exit(SRCML_STATUS_INVALID_ARGUMENT);
+    }
 
     // set options for the output srcml archive
-    if (srcml_request.att_xml_encoding)
-        srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str());
 
-    if (srcml_request.src_encoding)
-        srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str());
+    // xml encoding
+    if (srcml_request.att_xml_encoding) {
+        if (srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str()) != SRCML_STATUS_OK) {
+            // while stored as an attribute, xml encoding is an XML attribute, not a srcML attribute
+            SRCMLstatus(ERROR_MSG, "srcml: invalid xml encoding '%s'for srcml archive", *srcml_request.att_xml_encoding);
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
+    }
 
-    // for single input src archives (e.g., .tar), filename attribute is the source filename (if not already given)
+    // source encoding
+    if (srcml_request.src_encoding) {
+        if (srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str()) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: invalid source encoding '%s' for srcml archive", *srcml_request.src_encoding);
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
+    }
+
+    // for single input src archives (e.g., .tar), url attribute is the source url (if not already given)
     if (srcml_request.att_url) {
-        srcml_archive_set_url(srcml_arch, src_prefix_resource(*srcml_request.att_url).c_str());
+        std::string url = src_prefix_resource(*srcml_request.att_url);
+        if (srcml_archive_set_url(srcml_arch, url.c_str()) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: invalid url attribute value '%s' for srcml archive", url);
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
     } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
 
         // Cleanup filename
         std::string url_name = src_prefix_resource(input_sources[0].filename);
-        while (url_name.at(0) == '.' || url_name.at(0) == '/') {
+        while (url_name[0] == '.' || url_name[0] == '/') {
             url_name.erase(0,1);
         }
         
-        srcml_archive_set_url(srcml_arch, url_name.c_str());
+        if (srcml_archive_set_url(srcml_arch, url_name.c_str()) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: invalid url '%s' for srcml archive", url_name);
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
     }
 
+    // version
     if (srcml_request.att_version)
-        srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str());
+        if (srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str()) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: invalid version attribute value for srcml archive");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
 
+    // markup options
     if (srcml_request.markup_options)
-        srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options);
+        if (srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: invalid options for srcml archive");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
 
-    if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
+    // xml declaration
+    if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL) {
         srcml_archive_disable_option(srcml_arch, SRCML_OPTION_XML_DECL);
-    else
+    } else {
         srcml_archive_enable_option(srcml_arch, SRCML_OPTION_XML_DECL);
+    }
 
-    if (srcml_request.att_language)
-        srcml_archive_set_language(srcml_arch, srcml_request.att_language->c_str());
-    else
-        srcml_archive_set_language(srcml_arch, SRCML_LANGUAGE_NONE);
+    // language
+    auto language = srcml_request.att_language ? srcml_request.att_language->c_str() : SRCML_LANGUAGE_NONE;
+    if (srcml_archive_set_language(srcml_arch, language) != SRCML_STATUS_OK) {
+        SRCMLstatus(ERROR_MSG, "srcml: invalid language '%s' for srcml archive", language);
+        exit(SRCML_STATUS_INVALID_ARGUMENT);
+    }
 
-    srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs);
+    // tabstop
+    if (srcml_archive_set_tabstop(srcml_arch, srcml_request.tabs) != SRCML_STATUS_OK) {
+        SRCMLstatus(ERROR_MSG, "srcml: invalid tab stop for srcml archive", srcml_request.tabs);
+        exit(SRCML_STATUS_INVALID_ARGUMENT);
+    }
 
     // non-archive when:
     //   only one input
     //   no cli request to make it an archive
     //   not a directory (if local file)
-    // TODO: check if a plain file. Source archives, i.e., .tar.gz, always produce srcml archives
     if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_ARCHIVE)) &&
-        !input_sources[0].isdirectory && input_sources[0].archives.size() < 1) {
+        !input_sources[0].isdirectory && input_sources[0].archives.empty()) {
 
         srcml_archive_disable_full_archive(srcml_arch);
         
         // If --hash is used, force hash for single input
         if (*srcml_request.markup_options & SRCML_HASH) {
-            srcml_archive_enable_hash(srcml_arch);
+            if (srcml_archive_enable_hash(srcml_arch) != SRCML_STATUS_OK) {
+                SRCMLstatus(ERROR_MSG, "srcml: unable to enable hash for srcml archive");
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+            }
+        } else {
+            if (srcml_archive_disable_hash(srcml_arch) != SRCML_STATUS_OK) {
+                SRCMLstatus(ERROR_MSG, "srcml: unable to disable hash for srcml archive");
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+            }
         }
-        else {
-            srcml_archive_disable_hash(srcml_arch);
-        }
-
     } else {
 
         // if this is an archive, then no filename attribute is allowed
         if (srcml_request.att_filename) {
-            fprintf(stderr, "Attribute filename cannot be set for a srcML archive\n");
+            fprintf(stderr, "Attribute filename cannot be set for a srcML archive. Use attribute uri instead.\n");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
 
-        srcml_archive_enable_full_archive(srcml_arch);
-        srcml_archive_enable_hash(srcml_arch);
-    }
+        if (srcml_archive_enable_full_archive(srcml_arch) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: unable to enable full srcml archive");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
 
-    // rns
-    BOOST_FOREACH(const std::string& ext, srcml_request.language_ext) {
-        size_t pos = ext.find('=');
-        srcml_archive_register_file_extension(srcml_arch, ext.substr(0, pos).c_str(), ext.substr(pos+1).c_str());
-    }
-
-    // register xml namespaces
-    std::map<std::string, std::string>::const_iterator itr;
-    for(itr = srcml_request.xmlns_namespaces.begin(); itr != srcml_request.xmlns_namespaces.end(); ++itr) {
-        srcml_archive_register_namespace(srcml_arch, itr->first.c_str(), itr->second.c_str());
-    }
-
-    // create the srcML output file
-
-    unsigned short compression = 0;
-    // If you enabled compression
-    if (srcml_request.command & SRCML_COMPRESS) {
-        compression = 9;
-    }
-
-    // If you didn't enable compression, but the output extension is gz
-    if (compression == 0) {
-        BOOST_FOREACH( std::string extension, destination.compressions) {
-            if (extension == ".gz") {
-                compression = 9;
-                break;
-            }
+        if (srcml_archive_enable_hash(srcml_arch) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: unable to enable hash for srcml archive");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
 
-    if (destination.protocol == "file") {
-        boost::filesystem::path dir(destination.resource);
-        if (dir.has_parent_path() && !is_directory(dir.parent_path()))
-            boost::filesystem::create_directories(dir.parent_path());
+    // rns
+    for (const auto& ext : srcml_request.language_ext) {
+        auto pos = ext.find('=');
+        const auto& extension = ext.substr(0, pos);
+        const auto& language = ext.substr(pos+1);
+        if (srcml_archive_register_file_extension(srcml_arch, extension.c_str(), language.c_str()) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: unable to register file extension '%s' for language '%s' for srcml archive", extension, language);
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
     }
 
+    // register xml namespaces
+    for (const auto& ns : srcml_request.xmlns_namespaces) {
+        const auto& prefix = ns.first;
+        const auto& uri = ns.second;
+        if (srcml_archive_register_namespace(srcml_arch, prefix.c_str(), uri.c_str()) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: unable to register namespace '%s:%s' for srcml archive", prefix, uri);
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
+    }
+
+    // start tracing
+    TraceLog log;
+
+    // write queue for output of parsing
+    WriteQueue write_queue(log, destination, !option(SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER));
+    write_queue.start();
+
+    // parsing queue
+    ParseQueue parse_queue(srcml_request.max_threads, &write_queue);
+
+    // convert input sources to srcml
     int status = 0;
-    if (SRCML_COMMAND_NOARCHIVE & SRCMLOptions::get()) {
+    for (const auto& input : input_sources) {
 
-        /* when no archive, this one is just used as a clone, so just don't open it */
-
-    } else if (contains<int>(destination)) {
-
-        status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
-    } else {
-        status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), compression);
+        int numhandled = srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input, destination);
+        if (!numhandled)
+            status = 1;
     }
 
-    // gzip compression available directly from libsrcml
-
-    // setup the parsing queue
-    TraceLog log(SRCMLOptions::get());
-    log.header();
-    WriteQueue write_queue(boost::bind(srcml_write_request, _1, boost::ref(log)), srcml_request.command & SRCML_COMMAND_OUTPUT_ORDERED);
-    ParseQueue parse_queue(srcml_request.max_threads, boost::bind(srcml_consume, _1, &write_queue), write_queue);
-
-    // process input sources
-    BOOST_FOREACH(const srcml_input_src& input, input_sources) {
-/*
-// if stdin, then there has to be data
-// TODO: Safe to remove this? We already read data.
-if (!contains<FILE*>(input) && (input.protocol == "stdin") && (srcml_request.command & SRCML_COMMAND_INTERACTIVE) &&
-!src_input_stdin()) {
-return; // stdin was requested, but no data was received
-}
-*/
-        srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input);
-    }
-
-    // wait for the parsing and writing queues to finish
+    // wait for the parsing queue to finish
     parse_queue.wait();
-    write_queue.wait();
 
-    log.report();
-    
-    // close the created srcML archive
-    srcml_archive_close(srcml_arch);
-    srcml_archive_free(srcml_arch);
+    // wait for the writing queue to finish
+    write_queue.stop();
 
-    // if we were writing to a file descriptor, then close it
-    if (contains<int>(destination))
-        close(*destination.fd);
+    // close any created srcML archive
+    if (createdsrcml || write_queue.numWritten()) {
+        srcml_archive_close(srcml_arch);
+        srcml_archive_free(srcml_arch);
+
+        // if we were writing to a file descriptor, then close it
+        if (contains<int>(destination))
+            close(*destination.fd);
+    }
 }

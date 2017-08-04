@@ -1,7 +1,7 @@
 /**
  * @file srcMLOutput.hpp
  *
- * @copyright Copyright (C) 2003-2014 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2003-2017 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -27,7 +27,6 @@
 #ifndef SRCMLOUTPUT_HPP
 #define SRCMLOUTPUT_HPP
 
-#include <iostream>
 #include "antlr/Token.hpp"
 #include "srcMLParserTokenTypes.hpp"
 #include <antlr/TokenStream.hpp>
@@ -35,26 +34,38 @@
 #include "TokenStream.hpp"
 #include "srcMLException.hpp"
 #include <string>
-#include <vector>
-#include <srcml_types.hpp>
-#include <srcml_macros.hpp>
-#include <srcml.h>
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/date_time/posix_time/posix_time.hpp>
-#pragma GCC diagnostic pop
-
+#include <unordered_map>
+#include "srcmlns.hpp"
 #include <libxml/xmlwriter.h>
+
+/** 
+ * anonymous enum for prefix positions
+ */
+enum PREFIXES { SRC,
+       CPP,
+       ERR,
+       POS,
+       OMP
+};
+
+class srcMLOutput;
+
+struct Element {
+    char const * const name;
+    const PREFIXES prefix;
+    char const * const attr_name;
+    char const * const attr_value;
+    char const * const attr2_name;
+    char const * const attr2_value;
+};
 
 /**
  * srcMLOutput
  *
- * Class for outputting of srcML. Consumes produced tokens.
+ * Class for output of srcML. Consumes produced tokens.
  * progressively running the srcML parser and consuming tokens i.e. like a pull parser.
  */
 class srcMLOutput : public srcMLParserTokenTypes {
-
 public:
     // constructor
     srcMLOutput(TokenStream* ints,
@@ -62,14 +73,23 @@ public:
                 const char* language,
                 const char* encoding,
                 OPTION_TYPE& option,
-                const std::vector<std::string> & attributes,
-                boost::optional<std::pair<std::string, std::string> > processing_instruction,
+                const std::vector<std::string>& attributes,
+                const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
                 size_t tabsize);
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
     int initWriter();
     void initNamespaces(const std::vector<std::string> & prefix, const std::vector<std::string> & uri);
-    xmlTextWriter * getWriter();
+
+     /**
+     * getWriter
+     *
+     * Get the current writer
+     */
+    inline xmlTextWriter * getWriter() {
+        return xout;
+    }
+
     void setDepth(int thedepth);
 
     // same srcml file can be generated from multiple input token streams
@@ -77,10 +97,12 @@ public:
 
     void outputXMLDecl();
 
-    void outputPreRootProcessingInstruction();
+    void outputProcessingInstruction();
+
+    void outputUnitSeparator();
 
     // start a unit element with the passed metadata
-    void startUnit(const char* unit_language, const char * revision,
+    void startUnit(const char* unit_language, const char* revision,
                    const char* unit_url, const char* unit_filename,
                    const char* unit_version, const char* unit_timestamp,
                    const char* unit_hash,
@@ -89,117 +111,89 @@ public:
                    bool output_macrolist);
 
     // consume the entire tokenstream with output of srcml
-    void consume(const char* language, const char * unit_revision, const char* unit_url, const char* unit_filename,
+    void consume(const char* language, const char* unit_revision, const char* unit_url, const char* unit_filename,
                  const char* unit_version, const char* unit_timestamp, const char* unit_hash, const char* encoding);
 
     // close the output
     void close();
 
+    // destructor
+    ~srcMLOutput();
+
+private:
     // standard processing of text
     void processText(const antlr::RefToken& token);
     void processText(const std::string&);
     void processText(const char* s, int size);
 
-    void processTextPosition(const antlr::RefToken& token);
-    void processTextPositionLine(const antlr::RefToken& token);
-
-
-    const char * lineAttributeValue(const antlr::RefToken& token);
-    const char * columnAttributeValue(const antlr::RefToken& token);
-    const char * lineAttributeValue(int aline);
-    const char * columnAttributeValue(int acolumn);
-
-    int last_line, last_line2, last_column;
-    bool end_position_output;
-    void outputPosition();
-
-    // destructor
-    ~srcMLOutput();
+    // adds the position attributes to a token
+    void addPosition(const antlr::RefToken& token);
 
 public:
     /** token stream input */
-    TokenStream* input;
+    TokenStream* input = nullptr;
 
     /** output xml writer */
-    xmlTextWriter* xout;
+    xmlTextWriter* xout = nullptr;
     
     /** output buffer */
-    xmlOutputBuffer * output_buffer;
+    xmlOutputBuffer* output_buffer = nullptr;
 
     /** unit attribute language */
-    const char* unit_language;
+    const char* unit_language = nullptr;
 
     /** unit attribute revision */
-    const char* unit_revision;
+    const char* unit_revision = nullptr;
 
     /** unit attribute url */
-    const char* unit_url;
+    const char* unit_url = nullptr;
 
     /** unit attribute filename */
-    const char* unit_filename;
+    const char* unit_filename = nullptr;
 
     /** unit attribute version */
-    const char* unit_version;
+    const char* unit_version = nullptr;
 
     /** unit attribute timestamp */
-    const char* unit_timestamp;
+    const char* unit_timestamp = nullptr;
 
     /** unit attribute hash */
-    const char* unit_hash;
+    const char* unit_hash = nullptr;
 
     /** unit attribute encoding */
-    const char* unit_encoding;
+    const char* unit_encoding = nullptr;
 
     /** output options */
+    // @todo Bad design, but making it a value breaks cpp namespace
+    // have to figure out why the options are being changed later
     OPTION_TYPE& options;
 
     /** xml encoding */
-    const char* xml_encoding;
+    const char* xml_encoding = nullptr;
 
-    /** array for a number to prefix */
-    std::vector<std::string> num2prefix;
-
-    /** array for a number to uri */
-    std::vector<std::string> num2uri;
-
-    /** array for number of uri's used */
-    std::vector<bool> num2used;
+    /* namespaces declared and used */
+    std::vector<Namespace> namespaces;
 
     /** an array of name-value attribute pairs */
-    const std::vector<std::string> & unit_attributes;
+    const std::vector<std::string> unit_attributes;
 
     /** pre-root processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
 
     /** number of open elements */
-    int openelementcount;
-
-    /** current line @todo is this used */
-    int curline;
-
-    /** current column @todo is this used */
-    int curcolumn;
+    int openelementcount = 0;
 
     /** the tabstop size */
-    size_t tabsize;
+    size_t tabsize = 0;
 
     /** number of units output or depth into archive */
-    int depth;
-
-    /** starting time for debug stopwatch */
-    boost::posix_time::ptime debug_time_start;
+    int depth = 0;
 
     /** line attribute content */
     std::string lineAttribute;
 
-    /** line attribute content for second line */
-    std::string line2Attribute;
-
     /** column attribute content */
     std::string columnAttribute;
-
-    /** output array for line/column temporary storage */
-    char out[21];
 
     /** user defined macro list */
     std::vector<std::string> user_macro_list;
@@ -225,70 +219,17 @@ public:
     void setMacroList(std::vector<std::string> & list);
     void outputMacroList();
 
-    void srcMLTextWriterStartElement(xmlTextWriter*, const xmlChar* s);
-    void srcMLTextWriterEndElement(xmlTextWriter*);
-
-    // handler for optional literal tokens
-    void processOptional(const antlr::RefToken& token, const char* attr_name, const char* attr_value);
-
-    // token handlers
-    void processAccess(const antlr::RefToken& token);
-    void processPseudoBlock(const antlr::RefToken& token);
-    void processToken(const antlr::RefToken& token);
-    void processTypePrevious(const antlr::RefToken& token);
-    void processBlockCommentStart(const antlr::RefToken& token);
-    void processJavadocCommentStart(const antlr::RefToken& token);
-    void processDoxygenCommentStart(const antlr::RefToken& token);
-    void processLineDoxygenCommentStart(const antlr::RefToken& token);
-    void processLineCommentStart(const antlr::RefToken& token);
-    void processEndBlockToken(const antlr::RefToken& token);
-    void processEndLineToken(const antlr::RefToken& token);
-#if DEBUG
-    void processMarker(const antlr::RefToken& token);
-#endif
-    void processString(const antlr::RefToken& token);
-    void processChar(const antlr::RefToken& token);
-    void processLiteral(const antlr::RefToken& token);
-    void processBoolean(const antlr::RefToken& token);
-    void processNull(const antlr::RefToken& token);
-    void processNil(const antlr::RefToken& token);
-    void processComplex(const antlr::RefToken& token);
-    void processEscape(const antlr::RefToken& token);
-    void processStaticAssert(const antlr::RefToken& token);
-    void processClassInterface(const antlr::RefToken& token);
-    void processClassImplementation(const antlr::RefToken& token);
-    void processGenericArgumentList(const antlr::RefToken& token);
-    void processCast(const antlr::RefToken& token);
-    void processEnumClass(const antlr::RefToken& token);
-    void processOperatorFunction(const antlr::RefToken& token);
-    void processPseudoParameterList(const antlr::RefToken& token);
-    void processIndexerParameterList(const antlr::RefToken& token);
-    void processSizeofPack(const antlr::RefToken& token);
-    void processCudaArgumentList(const antlr::RefToken& token);
-    void processGenericParameterList(const antlr::RefToken& token);
-    void processElseIf(const antlr::RefToken& token);
-
-    /** method pointer for token processing dispatch */
-    typedef void (srcMLOutput::*PROCESS_PTR)(const antlr::RefToken & );
-
 private:
+
+    // token handler
+    void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
+                                const char* attr_name2, const char* attr_value2);
 
     int consume_next();
 
     void outputToken(const antlr::RefToken& token);
 
-    /** list of element names */
-    static const char* const ElementNames[];
-
-    /** list of element prefixes */
-    static int ElementPrefix[];
-
-    /* table of method pointers for token processing dispatch */
-    static char process_table[];
-
-    /** table for conversion from number to process */
-    static srcMLOutput::PROCESS_PTR num2process[];
-
+    static const std::unordered_map<int, Element> process;
 };
 
 #endif

@@ -1,1 +1,0 @@
-operator Foo() const { return x->foo; }

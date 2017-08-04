@@ -54,7 +54,10 @@ tokens {
     COMMENT_START;
     JAVADOC_COMMENT_START;
     DOXYGEN_COMMENT_START;
+    JAVADOC_COMMENT_END;
+    DOXYGEN_COMMENT_END;
     LINE_DOXYGEN_COMMENT_START;
+    LINE_DOXYGEN_COMMENT_END;
     CHAR_START;
     MACRO_NAME;
     COMPLEX_NUMBER;
@@ -66,6 +69,7 @@ public:
 bool onpreprocline;
 bool rawstring;
 std::string delimiter;
+int currentmode;
 
 }
 
@@ -91,7 +95,6 @@ STRING_START :
                     } else {
                         match('(');
                     }
-
                 }
                 changetotextlexer(STRING_END); } |
 
@@ -159,14 +162,19 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
         )
 ;
 
+/*
+                if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!')) {
+                    $setType(LINE_DOXYGEN_COMMENT_START);
+                    mode = LINE_DOXYGEN_COMMENT_END;
+                }
+*/                
+
 // Single-line comments (no EOL)
 LINECOMMENT_START
-    :   '/' ('/' { 
-
-                if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!'))
-                    $setType(LINE_DOXYGEN_COMMENT_START);
-                
-                changetotextlexer(LINECOMMENT_END);
+    :   '/' ('/' { currentmode = LINECOMMENT_END; }
+                (('/' | '!') { $setType(LINE_DOXYGEN_COMMENT_START); currentmode = LINE_DOXYGEN_COMMENT_END; })?
+            {
+                changetotextlexer(currentmode);
 
                 // when we return, we may have eaten the EOL, so we will turn back on startline
                 startline = true;
@@ -175,27 +183,22 @@ LINECOMMENT_START
             } |
             '*'
             { 
-                if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*') {
+                $setType(COMMENT_START);
+                int mode = COMMENT_END;
 
-                    if(next_char()  != '/')
+                // have "/*" followed by anything except "/", e.g., "/*/"
+                if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*' && next_char() != '/') {
+
                         $setType(JAVADOC_COMMENT_START);
-                    else
-                        $setType(COMMENT_START);
+                        mode = JAVADOC_COMMENT_END;
 
-                } else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!')) {
+                } else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!') && next_char() != '/') {
 
-                    if(next_char() != '/')
                         $setType(DOXYGEN_COMMENT_START);
-                    else
-                        $setType(COMMENT_START);
-
-                } else {
-
-                    $setType(COMMENT_START);
-
+                        mode = DOXYGEN_COMMENT_END;
                 }
 
-                changetotextlexer(COMMENT_END);
+                changetotextlexer(mode);
 
                 // comment are removed before includes are processed, so we are at the start of a line
                 startline = true;

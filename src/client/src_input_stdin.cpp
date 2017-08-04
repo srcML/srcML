@@ -21,6 +21,7 @@
  */
 
 #include <src_input_stdin.hpp>
+#include <SRCMLStatus.hpp>
 
 #include <stdio.h>
 
@@ -38,7 +39,7 @@
 #include <iostream>
 
 // check stdin for data
-bool src_input_stdin() {
+int src_input_stdin() {
 
     // init file descriptor with stdin
     fd_set fds;
@@ -55,14 +56,15 @@ bool src_input_stdin() {
 
     // use select to see if stdin has data
     int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
-
     if (selectRetVal == -1) {
-        std::cerr << "SELECT FAILED!\n";
+
+        SRCMLstatus(WARNING_MSG, "SELECT FAILED!");
         return false;
     }
     if (selectRetVal == 0) {
-        std::cerr << "NO DATA TO FETCH!\n";
+        SRCMLstatus(WARNING_MSG, "NO DATA TO FETCH!");
         return false;
     }
-    return true;
+    
+    return 1;
 }
