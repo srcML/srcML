@@ -40,7 +40,7 @@
 #include <csignal>
 #include <TraceLog.hpp>
 
-// decide if each step is needed
+// decide if a step is needed
 namespace {
     bool request_create_srcml      (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
     bool request_transform_srcml   (const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
@@ -74,6 +74,10 @@ See `srcml --help` for more information.
     exit(1);
 }
 
+namespace {
+    void set_state_stdin(srcml_request_t& srcml_request);
+}
+
 int main(int argc, char * argv[]) {
 
     Timer runtime = Timer();
@@ -94,38 +98,20 @@ int main(int argc, char * argv[]) {
 
     if (srcml_request.command & SRCML_DEBUG_MODE) {
         SRCMLstatus(DEBUG_MSG) << "Library Versions: " << '\n'
-                            << "libsrcml " << srcml_version_string() << '\n'
-                            << "srcml " << srcml_version_string() << '\n'
-                            <<  archive_version_string() << '\n'
-                            << "libcurl " << curl_version_info(CURLVERSION_NOW)->version << '\n'
-                            << "libboost " << BOOST_LIB_VERSION << '\n';
+                               << "libsrcml " << srcml_version_string() << '\n'
+                               << "srcml " << srcml_version_string() << '\n'
+                               <<  archive_version_string() << '\n'
+                               << "libcurl " << curl_version_info(CURLVERSION_NOW)->version << '\n'
+                               << "libboost " << BOOST_LIB_VERSION << '\n';
     }
 
+    // for a single file request, copy the unit number to that input source
     if (srcml_request.input_sources.size() == 1 && srcml_request.unit != 0)
         srcml_request.input_sources[0].unit = srcml_request.unit;
 
-    // standard input handled as FILE* to determine if srcML or src
-    if (srcml_request.stdindex) {
-
-        auto* pstdin = &srcml_request.input_sources[*srcml_request.stdindex];
-
-        // stdin accessed as FILE*
-        pstdin->fileptr = fdopen(STDIN_FILENO, "r");
-        if (!pstdin->fileptr) {
-            SRCMLstatus(ERROR_MSG, "srcml: Unable to open stdin");
-            exit(1);
-        }
-        pstdin->fd = boost::none;
-
-        // setup a 5 second timeout for stdin from the terminal
-        if (isatty(0)) {
-            alarm(5);
-            signal(SIGALRM, timeout);
-        }
-
-        // determine if the input is srcML or src
-        pstdin->state = isxml(*(pstdin->fileptr)) ? SRCML : SRC;
-    }
+    // determine if stdin is srcML or src
+    if (srcml_request.stdindex)
+        set_state_stdin(srcml_request);
 
     // steps in the internal pipeline
     processing_steps_t pipeline;
@@ -258,5 +244,28 @@ namespace {
             !request_transform_srcml(srcml_request, input_sources, destination))) ||
             (input_sources.size() == 1 && input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
         ;
+    }
+
+    void set_state_stdin(srcml_request_t& srcml_request) {
+
+        // stdin input source
+        auto& rstdin = srcml_request.input_sources[*srcml_request.stdindex];
+
+        // stdin accessed as FILE*
+        rstdin.fileptr = fdopen(STDIN_FILENO, "r");
+        if (!rstdin.fileptr) {
+            SRCMLstatus(ERROR_MSG, "srcml: Unable to open stdin");
+            exit(1);
+        }
+        rstdin.fd = boost::none;
+
+        // setup a 5 second timeout for stdin from the terminal
+        if (isatty(0)) {
+            alarm(5);
+            signal(SIGALRM, timeout);
+        }
+
+        // determine if the input is srcML or src
+        rstdin.state = isxml(*(rstdin.fileptr)) ? SRCML : SRC;
     }
 }
