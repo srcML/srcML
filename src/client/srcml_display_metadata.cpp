@@ -24,7 +24,7 @@
 #include <srcml_pretty.hpp>
 #include <src_prefix.hpp>
 #include <srcml.h>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 #include <srcml_options.hpp>
 #include <iostream>
 #include <iomanip>
@@ -169,7 +169,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
             status = srcml_archive_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str()));
         }
         if (status != SRCML_STATUS_OK) {
-            SRCMLlog(CRITICAL_MSG, "srcml input cannot not be opened.");
+            SRCMLstatus(ERROR_MSG, "srcml input cannot not be opened.");
             return;
         }
 

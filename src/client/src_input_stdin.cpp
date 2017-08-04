@@ -21,7 +21,7 @@
  */
 
 #include <src_input_stdin.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 #include <stdio.h>
 
@@ -58,11 +58,11 @@ int src_input_stdin() {
     int selectRetVal = select(sizeof(fds)*8, &fds, NULL, NULL, &timeout);
     if (selectRetVal == -1) {
 
-        SRCMLlog(WARNING_MSG, "SELECT FAILED!");
+        SRCMLstatus(WARNING_MSG, "SELECT FAILED!");
         return false;
     }
     if (selectRetVal == 0) {
-        SRCMLlog(WARNING_MSG, "NO DATA TO FETCH!");
+        SRCMLstatus(WARNING_MSG, "NO DATA TO FETCH!");
         return false;
     }
     

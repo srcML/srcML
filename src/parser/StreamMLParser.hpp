@@ -171,6 +171,8 @@ private:
         case srcMLParser::LINE_DOXYGEN_COMMENT_START:
         case srcMLParser::LINE_DOXYGEN_COMMENT_END:
         case srcMLParser::COMMENT_TEXT:
+        case srcMLParser::JAVADOC_COMMENT_START:
+        case srcMLParser::DOXYGEN_COMMENT_START:
             return true;
             break;
 
@@ -179,8 +181,6 @@ private:
             // where the detection of the end of the preprocessing line
             // is needed (preprocessing lines end at EOL, or the start of
             // a line comment)
-        case srcMLParser::JAVADOC_COMMENT_START:
-        case srcMLParser::DOXYGEN_COMMENT_START:
         case srcMLParser::EOL:
 
             return !inskip;
@@ -778,9 +778,16 @@ private:
 
     /** abstract method for replacing start of stream with a NOP */
     void nopStreamStart() {
-        auto& loc = *tb.begin();
-        if (loc->getType() == SEXPRESSION_STATEMENT || loc->getType() == SDECLARATION_STATEMENT)
-            loc->setType(SNOP);
+
+        // find the first element token
+        // may have some text/spaces before
+        auto loc = tb.begin();
+        while (!isstart(*loc)) {
+            ++loc;
+        }
+
+        if ((*loc)->getType() == SEXPRESSION_STATEMENT || (*loc)->getType() == SDECLARATION_STATEMENT)
+            (*loc)->setType(SNOP);
 
         auto& locend = tb.back();
         if (locend->getType() == SEXPRESSION_STATEMENT || locend->getType() == SDECLARATION_STATEMENT)

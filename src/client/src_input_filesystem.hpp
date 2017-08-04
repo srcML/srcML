@@ -25,7 +25,7 @@
 
 #include <srcml.h>
 #include <srcml_cli.hpp>
-#include <parse_queue.hpp>
+#include <ParseQueue.hpp>
 
 int src_input_filesystem(ParseQueue& queue,
   						  srcml_archive* srcml_arch,

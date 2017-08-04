@@ -1,1 +1,0 @@
-bool operator==(Foo const&, Foo const& ) { }

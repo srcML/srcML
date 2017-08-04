@@ -1,1 +1,0 @@
-bar::bar(bar const& other) { }

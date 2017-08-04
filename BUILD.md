@@ -197,7 +197,7 @@ to download and install the lastest version of cmake.
 
 ##### Notes
 
-* The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC). Download boost at http://www.boost.org. The commands to build boost (written for boost 1.55.0) are:
+* The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC). Download boost at http://www.boost.org. The commands to build boost are:
 
 	`./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave`
 

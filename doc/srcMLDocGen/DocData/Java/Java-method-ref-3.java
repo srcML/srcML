@@ -1,1 +1,0 @@
-ClsName::<T> new;

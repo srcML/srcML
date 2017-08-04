@@ -1,5 +1,5 @@
 /**
- * @file src_input_file.hpp
+ * @file SRCMLStatus.cpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
@@ -20,17 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SRC_INPUT_FILE_HPP
-#define SRC_INPUT_FILE_HPP
+#include <SRCMLStatus.hpp>
 
-#include <srcml.h>
-#include <srcml_cli.hpp>
-#include <string>
-#include <ParseQueue.hpp>
-
-int src_input_file(ParseQueue& queue,
-                    srcml_archive* srcml_arch,
-                    const srcml_request_t& srcml_request,
-                    const srcml_input_src& input);
-
-#endif
+int SRCMLStatus::error_count = 0;

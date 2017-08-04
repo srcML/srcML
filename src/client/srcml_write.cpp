@@ -22,13 +22,13 @@
 
 #include <srcml_write.hpp>
 #include <srcml.h>
-#include <parse_request.hpp>
+#include <ParseRequest.hpp>
 #include <iostream>
 #include <srcml_options.hpp>
 #include <TraceLog.hpp>
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 static bool createdsrcml = false;
 
@@ -82,13 +82,13 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
 
         log << '-' << (request->filename ? *request->filename : "");
 
-//            SRCMLlog(WARNING_MSG, "Extension not supported");
+//            SRCMLstatus(WARNING_MSG, "Extension not supported");
 
     } else if (request->errormsg) {
-        SRCMLlog(WARNING_MSG, *(request->errormsg));
+        SRCMLstatus(WARNING_MSG, *(request->errormsg));
 
     } else {
-        SRCMLlog(WARNING_MSG, "Internal eror " + std::to_string(request->status));
+        SRCMLstatus(WARNING_MSG, "Internal eror " + std::to_string(request->status));
     }
 
     // free the unit

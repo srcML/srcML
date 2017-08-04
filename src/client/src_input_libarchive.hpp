@@ -28,7 +28,7 @@
 #include <srcml.h>
 #include <srcml_cli.hpp>
 #include <string>
-#include <parse_queue.hpp>
+#include <ParseQueue.hpp>
 #include <srcml_input_src.hpp>
 #include <src_archive.hpp>
 

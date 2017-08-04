@@ -1,5 +1,5 @@
 /**
- * @file src_input_file.hpp
+ * @file ParseRequest.hpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
@@ -20,17 +20,35 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SRC_INPUT_FILE_HPP
-#define SRC_INPUT_FILE_HPP
+#ifndef PARSE_REQUEST_HPP
+#define PARSE_REQUEST_HPP
 
 #include <srcml.h>
-#include <srcml_cli.hpp>
 #include <string>
-#include <ParseQueue.hpp>
+#include <vector>
 
-int src_input_file(ParseQueue& queue,
-                    srcml_archive* srcml_arch,
-                    const srcml_request_t& srcml_request,
-                    const srcml_input_src& input);
+#include <boost/optional.hpp>
+
+struct ParseRequest {
+    ParseRequest(int size = 0) : buffer(size) {}
+
+    // Fields required by thread to process a unit
+    std::string language;
+    boost::optional<std::string> filename;
+    boost::optional<std::string> url;
+    boost::optional<std::string> version;
+    std::vector<char> buffer;
+    srcml_archive* srcml_arch = nullptr;
+    srcml_unit* unit = nullptr;
+    boost::optional<std::string> disk_filename;
+    boost::optional<std::string> disk_dir;
+    int position = 0;
+    int status = 0;
+    long loc = 0;
+    long runtime = 0;
+    boost::optional<std::string> time_stamp;
+    unsigned long total_num_inputs = 0;
+    boost::optional<std::string> errormsg;
+};
 
 #endif

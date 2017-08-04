@@ -25,14 +25,14 @@
 
 #include <srcml_consume.hpp>
 #include <srcml.h>
-#include <parse_request.hpp>
-#include <write_queue.hpp>
+#include <ParseRequest.hpp>
+#include <WriteQueue.hpp>
 #include <boost/static_assert.hpp>
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <string>
-#include <srcml_logger.hpp>
-#include <timer.hpp>
+#include <SRCMLStatus.hpp>
+#include <Timer.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
 void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
@@ -129,7 +129,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         request->errormsg = "srcml: Unable to open file " + original_filename;
 
-        SRCMLlog(WARNING_MSG, *request->errormsg);
+        SRCMLstatus(WARNING_MSG, *request->errormsg);
 
         if (unit)
             srcml_unit_free(unit);

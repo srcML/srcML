@@ -24,7 +24,7 @@
 #include <curl/curl.h>
 #include <archive.h>
 #include <input_curl.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 
 namespace {
 
@@ -87,7 +87,7 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
         status = archive_read_open_filename(libarchive_srcml, input_sources[0].resource.c_str(), buffer_size);
     }
     if (status != ARCHIVE_OK) {
-        SRCMLlog(CRITICAL_MSG, std::to_string(status));
+        SRCMLstatus(ERROR_MSG, std::to_string(status));
         exit(1);
     }
 

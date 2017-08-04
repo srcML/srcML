@@ -30,9 +30,9 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <algorithm>
-#include <timer.hpp>
+#include <Timer.hpp>
 #include <input_curl.hpp>
-#include <srcml_logger.hpp>
+#include <SRCMLStatus.hpp>
 #include <cstring>
 
 #include <curl_input_file.hpp>
@@ -94,7 +94,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     }
 
     if (status != ARCHIVE_OK) {
-        SRCMLlog(WARNING_MSG, "srcml: Unable to open file " + src_prefix_resource(input_file.filename));
+        SRCMLstatus(WARNING_MSG, "srcml: Unable to open file " + src_prefix_resource(input_file.filename));
         return 0;
     }
 
@@ -160,7 +160,7 @@ int src_input_libarchive(ParseQueue& queue,
 
         // stdin, single files require a explicit filename
         if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
-            SRCMLlog(CRITICAL_MSG, "Language required for stdin single files");
+            SRCMLstatus(ERROR_MSG, "Language required for stdin single files");
             exit(1);
         }
 

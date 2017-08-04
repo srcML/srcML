@@ -1,1 +1,0 @@
-class Conversion<out A> { }

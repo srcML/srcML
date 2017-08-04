@@ -22,7 +22,7 @@
 
 #include <curl_input_file.hpp>
 #include <archive.h>
-#include <timer.hpp>
+#include <Timer.hpp>
 #include <string>
 
 bool curl_supported(const std::string& input_protocol) {

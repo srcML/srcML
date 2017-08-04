@@ -1,1 +1,0 @@
-yield return result;

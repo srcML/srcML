@@ -25,7 +25,7 @@
 
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
-#include <parse_queue.hpp>
+#include <ParseQueue.hpp>
 
 // create srcml from the current request
 void create_srcml(const srcml_request_t& srcml_request,

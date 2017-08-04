@@ -1,5 +1,5 @@
 /**
- * @file srcml_consume.hpp
+ * @file parse_queue.hpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
@@ -20,12 +20,52 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef SRCML_CONSUME_HPP
-#define SRCML_CONSUME_HPP
-#include <ParseRequest.hpp>
-  
-class WriteQueue;
+#ifndef PARSE_QUEUE_HPP
+#define PARSE_QUEUE_HPP
 
-void srcml_consume(ParseRequest*, WriteQueue*);
+#include <functional>
+#include <ParseRequest.hpp>
+#include <WriteQueue.hpp>
+#include <ctpl_stl.h>
+#include <mutex>
+#include <srcml_consume.hpp>
+
+class ParseQueue {
+public:
+
+	ParseQueue(int max_threads, WriteQueue* write_queue)
+	    : pool(max_threads), wqueue(write_queue) {}
+
+	inline void schedule(ParseRequest* pvalue) {
+
+		int next;
+		{
+			std::unique_lock<std::mutex> l(e);
+
+	    	next = ++counter;
+		}
+		pvalue->position = next;
+
+	    // error passthrough to output for proper output in trace
+	    if (pvalue->status) {
+	        pvalue->unit = 0;
+	        wqueue->schedule(pvalue);
+	        return;
+	    }
+
+        pool.push(std::bind(srcml_consume, pvalue, wqueue));
+	}
+
+	inline void wait() {
+
+        pool.stop(true);
+	}
+
+private:
+    ctpl::thread_pool pool;
+    WriteQueue* wqueue;
+    int counter = 0;
+    std::mutex e;
+};
 
 #endif
