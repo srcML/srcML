@@ -390,6 +390,7 @@ tokens {
 	SCONDITION;
 	SBLOCK;
     SPSEUDO_BLOCK;
+    SCONTENT;
     SINDEX;
 
     // statements
