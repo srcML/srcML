@@ -130,6 +130,7 @@ header "post_include_hpp" {
 
 #include <string>
 #include <deque>
+#include <array>
 #include <stack>
 #include "Language.hpp"
 #include "ModeStack.hpp"
@@ -673,7 +674,7 @@ public:
     int cpp_ifcount = 0;
     bool isdestructor = false;
     const OPTION_TYPE parser_options = 0;
-    std::string namestack[2];
+    std::array<std::string, 2> namestack;
     int ifcount = 0;
 #ifdef ENTRY_DEBUG
     int ruledepth = 0;
@@ -4352,7 +4353,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                     (specifier_count > 0 && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
 
                     // outside of a class definition in C++, but with properly prefixed name
-                    (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[0] == namestack[1])
+                    (inLanguage(LANGUAGE_CXX_FAMILY) && !namestack[0].empty() && namestack[0] == namestack[1])
                 )
         ]
 
@@ -5366,7 +5367,7 @@ multops_star[] { ENTRY_DEBUG } :
 ;
 
 // C++ compound name handling
-compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
         (options { greedy = true; } : { !in_template_param }? typename_keyword { iscompound = true; })*
         (dcolon { iscompound = true; })*
@@ -5391,7 +5392,7 @@ catch[antlr::RecognitionException] {
 }
 
 // compound name for C#
-compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_csharp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
         (modifiers_csharp)*
         (dcolon { iscompound = true; })*
@@ -5478,7 +5479,7 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
 ;
 
 // C++ compound name handling
-keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
         //( options { greedy = true; } : dcolon)*
         //(DESTOP set_bool[isdestructor] { iscompound = true; })*
@@ -5697,10 +5698,10 @@ member_init[] { ENTRY_DEBUG } :
 ;
 
 // push name onto namestack
-push_namestack[] { namestack[1].swap(namestack[0]); namestack[0] = LT(1)->getText(); } :;
+push_namestack[] { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
 
 // identifier stack
-identifier_stack[std::string s[]] { s[1].swap(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
+identifier_stack[std::array<std::string, 2>& s] { s[1] = s[0]; s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier
 ;
 
@@ -8249,7 +8250,7 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
 ;
 
 // generic argument list
-generic_argument_list[] { CompleteElement element(this); std::string namestack_save[2];  bool in_function_type = false; ENTRY_DEBUG } :
+generic_argument_list[] { CompleteElement element(this); std::array<std::string, 2> namestack_save;  bool in_function_type = false; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -8270,7 +8271,7 @@ generic_argument_list[] { CompleteElement element(this); std::string namestack_s
 ;
 
 // generic parameter list
-generic_parameter_list[] { CompleteElement element(this); std::string namestack_save[2];  ENTRY_DEBUG } :
+generic_parameter_list[] { CompleteElement element(this); std::array<std::string, 2> namestack_save;  ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -8313,7 +8314,7 @@ generic_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // CUDA argument list
-cuda_argument_list[] { CompleteElement element(this); std::string namestack_save[2]; ENTRY_DEBUG } :
+cuda_argument_list[] { CompleteElement element(this); std::array<std::string, 2> namestack_save; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -8413,10 +8414,10 @@ category[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // save the namestack
-savenamestack[std::string namestack_save[]] { namestack_save[0].swap(namestack[0]); namestack_save[1].swap(namestack[1]); ENTRY_DEBUG } :;
+savenamestack[std::array<std::string, 2>& namestack_save] { namestack_save.swap(namestack); ENTRY_DEBUG } :;
 
 // restore the namestack
-restorenamestack[std::string namestack_save[]] { namestack[0].swap(namestack_save[0]); namestack[1].swap(namestack_save[1]); ENTRY_DEBUG } :;
+restorenamestack[std::array<std::string, 2>& namestack_save] { namestack.swap(namestack_save); ENTRY_DEBUG } :;
 
 // template argument
 template_argument[bool in_function_type = false] { CompleteElement element(this); ENTRY_DEBUG } :
