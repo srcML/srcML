@@ -83,11 +83,12 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SENUM,                       { "enum",              SRC,      0,         0,     0,      0 }},
     { SENUM_DECLARATION,           { "enum_decl",         SRC,      0,         0,     0,      0 }},
 
-    { SIF_STATEMENT,               { "if",                SRC,      0,         0,     0,      0 }},
+    { SIF_STATEMENT,               { "if_stmt",           SRC,      0,         0,     0,      0 }},
+    { SIF,                         { "if",                SRC,      0,         0,     0,      0 }},
     { STERNARY,                    { "ternary",           SRC,      0,         0,     0,      0 }},
     { STHEN,                       { "then",              SRC,      0,         0,     0,      0 }},
     { SELSE,                       { "else",              SRC,      0,         0,     0,      0 }},
-    { SELSEIF,                     { "elseif",            SRC,      0,         0,     0,      0 }},
+    { SELSEIF,                     { "if",                SRC, "type",  "elseif",     0,      0 }},
 
     { SWHILE_STATEMENT,            { "while",             SRC,      0,         0,     0,      0 }},
     { STYPEOF,                     { "typeof",            SRC,      0,         0,     0,      0 }},

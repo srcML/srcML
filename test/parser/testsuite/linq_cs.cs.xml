@@ -154,9 +154,9 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr><name>select</name></expr>)</condition><then><block>{
+<if_stmt><if>if<condition>(<expr><name>select</name></expr>)</condition><block>{
         <expr_stmt><expr><name>PostConfig</name> <operator>=</operator> <name>PostConfig</name> <operator>|</operator> <name>ep</name></expr>;</expr_stmt>
-}</block></then></if>
+}</block></if></if_stmt>
 </unit>
 
 <unit>
@@ -428,7 +428,7 @@
                             <where>where <expr><name><name>app</name><operator>.</operator><name>MonitoredId</name></name> <operator>&gt;</operator> <literal type="number">0</literal></expr></where>
                             <select>select <expr><name>app</name></expr></select></linq></expr></range></decl></init>)</control>
 <block>{
-    <if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then><block>{ }</block></then></if>
+    <if_stmt><if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition><block>{ }</block></if></if_stmt>
 }</block></foreach>
 </unit>
 

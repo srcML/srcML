@@ -24,17 +24,17 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo">
+<if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
 	<try>try <init>(<decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;
- 		 <decl><type><name>int</name></type> <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>)</init> <block>{}</block></try></block></then></if>
+ 		 <decl><type><name>int</name></type> <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>)</init> <block>{}</block></try></block></if></if_stmt>
 </unit>
 
 <unit>
-<if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo">
-	<empty_stmt>;</empty_stmt></block></then>
+<if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
+	<empty_stmt>;</empty_stmt></block></if>
 <else>else<block type="pseudo">
 	<try>try <init>(<decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;
- 		 <decl><type><name>int</name></type> <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>)</init> <block>{}</block></try></block></else></if>
+ 		 <decl><type><name>int</name></type> <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>)</init> <block>{}</block></try></block></else></if_stmt>
 </unit>
 
 </unit>

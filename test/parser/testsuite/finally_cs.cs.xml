@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="finally">
 
 <unit>
@@ -76,10 +76,10 @@
 </unit>
 
 <unit>
-    <if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo">
+    <if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
         <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
           <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
-          <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></block></then></if>
+          <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></block></if></if_stmt>
 </unit>
 
 </unit>

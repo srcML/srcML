@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="synchronized_statement" filename="synchronzied_statement_java">
 
 <unit>
@@ -13,10 +13,10 @@
 <synchronized>synchronized<init>(<expr><name>factories</name></expr>)</init> <block>{
     <for>for <control>(<init><decl><type><name>ExtensionFactory</name></type> <name>factory</name> <range>: <expr><name>factories</name></expr></range></decl></init>)</control> <block>{
         <expr_stmt><expr><name>t</name> <operator>=</operator> <operator>(</operator><name>T</name><operator>)</operator> <call><name><name>factory</name><operator>.</operator><name>getElementWrapper</name></name><argument_list>(<argument><expr><name>internal</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-        <if>if <condition>(<expr><name>t</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>t</name> <operator>!=</operator> <name>internal</name></expr>)</condition><then> <block>{
+        <if_stmt><if>if <condition>(<expr><name>t</name> <operator>!=</operator> <literal type="null">null</literal> <operator>&amp;&amp;</operator> <name>t</name> <operator>!=</operator> <name>internal</name></expr>)</condition> <block>{
             <expr_stmt><expr><call><name>setElementWrapper</name><argument_list>(<argument><expr><name>internal</name></expr></argument>,<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
             <return>return <expr><name>t</name></expr>;</return>
-        }</block></then></if>
+        }</block></if></if_stmt>
     }</block></for>
 }</block></synchronized>
 </unit>

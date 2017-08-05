@@ -7,7 +7,7 @@
 
 <!--
 <unit>
-<macro><name>D</name><argument_list>(<argument> <if>if <condition>(<expr><name>a</name></expr>)</condition> <then><expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if></argument>)</argument_list></macro>
+<macro><name>D</name><argument_list>(<argument> <if>if <condition>(<expr><name>a</name></expr>)</condition> <then><expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if></if></argument>)</argument_list></macro>
 </unit>
 -->
 
@@ -76,7 +76,7 @@
 </unit>
 
 <unit>
-<macro><name>D</name><argument_list>(<argument>a</argument>)</argument_list></macro><if>if<empty_stmt>;</empty_stmt></if>
+<macro><name>D</name><argument_list>(<argument>a</argument>)</argument_list></macro><if_stmt><if>if<empty_stmt>;</empty_stmt></if></if_stmt>
 </unit>
 
 <unit>
@@ -101,7 +101,7 @@
 </unit>
 
 <unit>
-<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <if>if<empty_stmt>;</empty_stmt></if>
+<macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <if_stmt><if>if<empty_stmt>;</empty_stmt></if></if_stmt>
 </unit>
 
 <unit>
