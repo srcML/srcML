@@ -3884,8 +3884,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
 // marking comma operator
 comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup_comma && ((true)
-                 && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)))
+            if (markup_comma && (!inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)))
                 && !inMode(MODE_ENUM) && !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INITIALIZATION_LIST))
                 startElement(SOPERATOR);
         }
@@ -3928,7 +3927,6 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
             }
 
             if (markup_colon && !(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY))
-                && (true)
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
@@ -4713,7 +4711,7 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
 qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITION); LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (true))
+            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)))
                 startElement(SOPERATOR);
         }
         QMARK ({ SkipBufferSize() == 0 }? QMARK)?
@@ -7364,8 +7362,7 @@ pure_expression_block[] { ENTRY_DEBUG } :
 // All possible operators
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if ((true)
-                && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)))
+            if ((LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)))
                 startElement(SOPERATOR);
         }
         (
@@ -7405,8 +7402,7 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 // mark up )
 rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup && (true)
-                 && !inMode(MODE_END_ONLY_AT_RPAREN))
+            if (markup && !inMode(MODE_END_ONLY_AT_RPAREN))
                 startElement(SOPERATOR);
         }
         RPAREN
