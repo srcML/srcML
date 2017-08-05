@@ -754,9 +754,15 @@ private:
     /** abstract method for replacing start of stream with a NOP */
     void nopStreamStart() {
 
-        auto& loc = *std::next(tb.begin());
-        if (loc->getType() == SEXPRESSION_STATEMENT || loc->getType() == SDECLARATION_STATEMENT)
-            loc->setType(SNOP);
+        // find the first element token
+        // may have some text/spaces before
+        auto loc = tb.begin();
+        while (!isstart(*loc)) {
+            ++loc;
+        }
+
+        if ((*loc)->getType() == SEXPRESSION_STATEMENT || (*loc)->getType() == SDECLARATION_STATEMENT)
+            (*loc)->setType(SNOP);
 
         auto& locend = tb.back();
         if (locend->getType() == SEXPRESSION_STATEMENT || locend->getType() == SDECLARATION_STATEMENT)

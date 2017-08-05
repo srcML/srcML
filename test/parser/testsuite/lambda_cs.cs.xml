@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="lambda" filename="lambda_cs">
 
 <unit>
@@ -43,9 +43,9 @@
 
 <unit>
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> =&gt;<block type="pseudo"> <expr><literal type="boolean">true</literal></expr></block></lambda></expr></argument>, <argument><expr><delegate><name>delegate</name> <block>{
-    <if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then> <block>{
+    <if_stmt><if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{
 
-    }</block></then></if>
+    }</block></if></if_stmt>
 }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 

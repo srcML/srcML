@@ -29,10 +29,10 @@
 
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit/src:unit"><unit><xsl:text>
-</xsl:text><if>if <condition>(<expr><name>cond</name></expr>)</condition><then> <block>{
-    <xsl:copy-of select="*|text()"/>}</block></then>
+</xsl:text><if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition> <block>{
+    <xsl:copy-of select="*|text()"/>}</block></if>
 <else>else <block>{
-    <xsl:copy-of select="*|text()"/>}</block></else></if><xsl:text>
+    <xsl:copy-of select="*|text()"/>}</block></else></if_stmt><xsl:text>
 </xsl:text></unit>
 </xsl:template>
 

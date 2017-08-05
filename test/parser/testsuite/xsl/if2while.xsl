@@ -31,10 +31,10 @@
 </xsl:template>
 
 <!-- filter out any if statements with an else -->
-<xsl:template match="src:unit[src:if//src:else]"/>
+<xsl:template match="src:unit[src:if_stmt//src:else]"/>
 
-<!-- filter the then elements, but not the contents of the then -->
-<xsl:template match="src:if/src:then">
+<!-- filter the if_stmt elements, but not the contents of the then -->
+<xsl:template match="src:if_stmt">
 	<xsl:apply-templates/>
 </xsl:template>
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="operator" filename="operator_cs">
 
 <unit>
@@ -6,8 +6,8 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr><name>a</name> <operator>is</operator> <name>int</name></expr>)</condition><then><block type="pseudo">
-<empty_stmt>;</empty_stmt></block></then></if>
+<if_stmt><if>if<condition>(<expr><name>a</name> <operator>is</operator> <name>int</name></expr>)</condition><block type="pseudo">
+<empty_stmt>;</empty_stmt></block></if></if_stmt>
 </unit>
 
 <unit>
@@ -103,10 +103,10 @@
 </unit>
 
 <unit>
-<if>if <condition>(<expr><operator>(</operator><operator>(</operator><name><name>this</name><operator>.</operator><name>Adapter</name><operator>.</operator><name>DeleteCommand</name><operator>.</operator><name>Connection</name><operator>.</operator><name>State</name></name> <operator>&amp;</operator> <name><name>global</name><operator>::</operator><name>System</name><operator>.</operator><name>Data</name><operator>.</operator><name>ConnectionState</name><operator>.</operator><name>Open</name></name><operator>)</operator>
-        <operator>!=</operator> <name><name>global</name><operator>::</operator><name>System</name><operator>.</operator><name>Data</name><operator>.</operator><name>ConnectionState</name><operator>.</operator><name>Open</name></name><operator>)</operator></expr>)</condition><then> <block>{
+<if_stmt><if>if <condition>(<expr><operator>(</operator><operator>(</operator><name><name>this</name><operator>.</operator><name>Adapter</name><operator>.</operator><name>DeleteCommand</name><operator>.</operator><name>Connection</name><operator>.</operator><name>State</name></name> <operator>&amp;</operator> <name><name>global</name><operator>::</operator><name>System</name><operator>.</operator><name>Data</name><operator>.</operator><name>ConnectionState</name><operator>.</operator><name>Open</name></name><operator>)</operator>
+        <operator>!=</operator> <name><name>global</name><operator>::</operator><name>System</name><operator>.</operator><name>Data</name><operator>.</operator><name>ConnectionState</name><operator>.</operator><name>Open</name></name><operator>)</operator></expr>)</condition> <block>{
     <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>Adapter</name><operator>.</operator><name>DeleteCommand</name><operator>.</operator><name>Connection</name><operator>.</operator><name>Open</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-}</block></then></if>
+}</block></if></if_stmt>
 </unit>
 
 </unit>

@@ -397,6 +397,7 @@ tokens {
     SENUM_DECLARATION;
 
 	SIF_STATEMENT;
+    SIF;
     STERNARY;
 	STHEN;
 	SELSE;
@@ -2274,15 +2275,20 @@ for_increment[] { ENTRY_DEBUG } :
  condition will setup for the then part of the statement.  The end of the then looks
  ahead for an else.  If so, it ends the then part.  If not, it ends the entire statement.*/
 if_statement[] { ENTRY_DEBUG } :
-        {
+        {           
             // statement with nested statement
             // detection of else
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_IF_STATEMENT);
+
+            // start if sequence container
+            startElement(SIF_STATEMENT);
 
             ++ifcount;
 
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
+
             // start the if statement
-            startElement(SIF_STATEMENT);
+            startElement(SIF);
 
             // expect a condition
             // start THEN after condition
@@ -2326,8 +2332,6 @@ elseif_statement[] { ENTRY_DEBUG } :
             // treat as a statement with a nested statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
 
-            ++ifcount;
-
             // start the else part of the if statement
             startElement(SELSEIF);
         }
@@ -2336,7 +2340,7 @@ elseif_statement[] { ENTRY_DEBUG } :
         {
 
             // start the if statement
-            startElement(SIF_STATEMENT);
+            // startElement(SIF_STATEMENT);
 
             // expect a condition
             // start THEN after condition
@@ -3285,7 +3289,7 @@ lcurly[] { ENTRY_DEBUG } :
                 startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
                 // start the then element
-                startNoSkipElement(STHEN);
+                //startNoSkipElement(STHEN);
             }
 
             // special end for constructor member initialization list
@@ -3545,9 +3549,14 @@ else_handling[] { ENTRY_DEBUG } :
 
                         // ending an else means ending an if
                         if (inMode(MODE_IF)) {
+
+                            if(inMode(MODE_IF_STATEMENT))
+                                --ifcount;
+
                             endMode();
-                            --ifcount;
+
                         }
+
                     }
 
                     // following ELSE indicates end of outer then
@@ -3556,8 +3565,9 @@ else_handling[] { ENTRY_DEBUG } :
 
                     // if in elseif then end it
                     if(inMode(MODE_IF | MODE_ELSE)) {
+                        if(inMode(MODE_IF_STATEMENT))
+                            --ifcount;
                         endMode();
-                        --ifcount;
                     }
 
                 }
@@ -7449,7 +7459,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
                     // start the then element
-                    startNoSkipElement(STHEN);
+                    //startNoSkipElement(STHEN);
 
                     if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
@@ -7458,7 +7468,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     if(cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        open_elements.push(STHEN);
+                        //open_elements.push(STHEN);
                         if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
