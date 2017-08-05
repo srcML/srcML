@@ -8058,7 +8058,7 @@ kr_parameter_type[int type_count] { ENTRY_DEBUG} :
 
 // k& r C parameter name
 kr_parameter_name[] { ENTRY_DEBUG } :
-        ((comma)* variable_declaration_nameinit)*
+        ((comma)* (multops)* variable_declaration_nameinit)*
 ;
 
 // k& r C terminate

@@ -47,4 +47,10 @@
 <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <decl_stmt><decl><type><name>override</name></type> <name>final</name></decl>;</decl_stmt> <block>{}</block></function>
 </unit>
 
+<unit>
+<function><type><name>int</name></type> <name>k_and_r</name><parameter_list>(<parameter><decl><type><name>string1</name></type></decl></parameter>, <parameter><decl><type><name>string2</name></type></decl></parameter>)</parameter_list>
+    <decl_stmt><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>string1</name></decl>, <modifier>*</modifier><decl><type ref="prev"/><name>string2</name></decl>;</decl_stmt>
+<block>{}</block></function>
+</unit>
+
 </unit>
