@@ -7921,6 +7921,8 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the derivation list
             startElement(SDERIVATION);
         }
+
+        ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         (derive_virtual | derive_access)*
 
         ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? identifier | variable_identifier)
