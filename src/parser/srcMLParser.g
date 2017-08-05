@@ -887,7 +887,6 @@ keyword_statements[] { ENTRY_DEBUG } :
 
         // Qt
         forever_statement | emit_statement
-
 ;
 
 /*
@@ -1279,7 +1278,6 @@ annotation_default[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     DEFAULT annotation_default_initialization
-
 ;
 
 // Java annotation default value initialization
@@ -1292,7 +1290,6 @@ annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 
     }
     complete_expression
-
 ;
 
 // Ref qualifiers in function tail
@@ -1438,7 +1435,6 @@ lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 
         (options { greedy = true; } : specifier)*
         (parameter_list | lambda_single_parameter) lambda_csharp (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
-
 ;
 
 // handle a C++11 lambda expression
@@ -1507,7 +1503,6 @@ lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     // suppress warning of another case where REFOPS or something is in both alts.
     EQUAL complete_expression
-
 ;
 
 // completely match a C# lambda expression
@@ -1650,7 +1645,6 @@ noexcept_list[] { ENTRY_DEBUG } :
         } 
 
         (options { greedy = true;} : LPAREN)*
-
 ;
 
 // match a thow list completely
@@ -1696,7 +1690,6 @@ objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
 
     }
     objective_c_method_specifier (options { greedy = true; } : objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
-
 ;
 
 objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -1706,7 +1699,6 @@ objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
     }
     (CSPEC | MSPEC)
-
 ;
 
 // either Objective-C method return type or parameter type
@@ -1736,7 +1728,6 @@ objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 
         RPAREN
-
 ;
 
 objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1750,7 +1741,6 @@ objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
     }
 
     objective_c_parameter (objective_c_parameter)*
-
 ;
 
 // method parameter name:value pair for Objective_C
@@ -1776,7 +1766,6 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
 
     )*
-
 ;
 
 // Objective-C property declaration
@@ -1791,7 +1780,6 @@ property_declaration[] { int type_count = 0;  int secondtoken = 0; int after_tok
     PROPERTY (property_attribute_list)*
     { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
     variable_declaration[type_count]
-
 ;
 
 property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1805,7 +1793,6 @@ property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
     LPAREN
     (property_attribute | COMMA)*
     RPAREN
-
 ;
 
 property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1817,7 +1804,6 @@ property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     identifier (property_attribute_initialization)* 
-
 ;
 
 property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1829,7 +1815,6 @@ property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 
     }
     EQUAL identifier
-
 ;
 
 synthesize_statement[] { ENTRY_DEBUG } :
@@ -1841,7 +1826,6 @@ synthesize_statement[] { ENTRY_DEBUG } :
 
     }
     SYNTHESIZE property_implementation_inner
-
 ;
 
 dynamic_statement[] { ENTRY_DEBUG } :
@@ -1853,13 +1837,11 @@ dynamic_statement[] { ENTRY_DEBUG } :
         
     }
     DYNAMIC property_implementation_inner
-
 ;
 
 property_implementation_inner[] { ENTRY_DEBUG } :
 
     property_implementation_name (COMMA property_implementation_name)*
-
 ;
 
 property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1871,7 +1853,6 @@ property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     identifier (property_implementation_initialization)*
-
 ;
 
 property_implementation_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1883,7 +1864,6 @@ property_implementation_initialization[] { CompleteElement element(this); ENTRY_
 
     }
     EQUAL identifier
-
 ;
 
 // Check and see if this is a call and what type
@@ -2062,7 +2042,6 @@ ternary_check[] { ENTRY_DEBUG } :
     // ends are catch alls ok if overlap
     ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : {identifier_list_tokens_set.member(LA(1)) }? compound_name_inner[false] | paren_pair | bracket_pair (options { greedy = true; } : paren_pair | curly_pair)*
          | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))* 
-
 ;
 
 
@@ -2473,7 +2452,6 @@ static_block  { ENTRY_DEBUG } :
     }
 
     STATIC lcurly
-
 ;
 
 // C _Static_assert statement
@@ -2590,7 +2568,6 @@ goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
 
     }
     CASE (literals | ~TERMINATE)*
-
 ;
 
 // complete assembly declaration statement
@@ -2621,7 +2598,6 @@ visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
 visual_cxx_asm_declaration_curly_pair[] { ENTRY_DEBUG } :
 
     LCURLY (options { generateAmbigWarnings = false; } : visual_cxx_asm_declaration | visual_cxx_block_inner | ~(RCURLY))* RCURLY
-
 ;
 
 visual_cxx_block_inner[] { CompleteElement element(this);  ENTRY_DEBUG } :
@@ -2633,13 +2609,11 @@ visual_cxx_block_inner[] { CompleteElement element(this);  ENTRY_DEBUG } :
             startElement(SASM);
         }
         ({ LA(1) == LCURLY}? visual_cxx_asm_declaration_curly_pair | (visual_cxx_asm_inner (options { greedy = true; } : visual_cxx_asm_inner)*)) (options { greedy = true; } : TERMINATE)*
-
 ;
 
 visual_cxx_asm_inner[] { ENTRY_DEBUG } :
 
      (~(EOL | TERMINATE | RCURLY | VISUAL_CXX_ASM))
-
 ;
 
 extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -2647,7 +2621,6 @@ extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         ALIAS
-
 ;
 
 // extern definition
@@ -2676,7 +2649,6 @@ namespace_inline_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         INLINE
-
 ;
 
 // namespaces
@@ -2743,7 +2715,6 @@ using_aliasing[]  { int type_count;  int secondtoken = 0; int after_token = 0; S
 
             set_int[type_count, type_count + 1] variable_declaration_type[type_count]
             )*
-
 ;
 
 //  Objectice-C compatibility alias
@@ -2758,7 +2729,6 @@ compatibility_alias[] { ENTRY_DEBUG } :
 
     }
     COMPATIBILITY_ALIAS
-
 ;
 
 //  Objectice-C @class directive
@@ -2773,7 +2743,6 @@ class_directive[] { ENTRY_DEBUG } :
 
     }
     ATCLASS (identifier | COMMA)*
-
 ;
 
 protocol_declaration[] { ENTRY_DEBUG } :
@@ -2786,7 +2755,6 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
     }
    ATPROTOCOL (variable_identifier | COMMA)*
-
 ;
 
 emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG 
@@ -2808,7 +2776,6 @@ emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG
     rewind(state);
 
 } :
-
 ;
 
 // Qt emit statement
@@ -2834,7 +2801,6 @@ friend_statement[] { ENTRY_DEBUG } :
 
     }
     FRIEND
-
 ;
 
 /* Declarations Definitions CFG */
@@ -2905,7 +2871,6 @@ class_definition[] { ENTRY_DEBUG } :
 class_post[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         (options { greedy = true; } : { LA(1) != CRESTRICT && LA(1) != MUTABLE }? specifier)*
-
 ;
 
 objective_c_class[] { bool first = true; ENTRY_DEBUG } :
@@ -2938,7 +2903,6 @@ protocol[] { ENTRY_DEBUG } :
 
     { look_past_rule(&srcMLParser::protocol_declaration) == TERMINATE }? protocol_declaration |
     protocol_definition
-
 ;
 
 
@@ -2962,7 +2926,6 @@ protocol_definition[] { bool first = true; ENTRY_DEBUG } :
         class_default_access_action(SREQUIRED_DEFAULT);
 
     }
-
 ;
 
 // handle class header
@@ -2989,7 +2952,6 @@ objective_c_class_header_base[] { ENTRY_DEBUG } :
 
         // suppressed ()* warning
         (protocol_list)*
-
 ;
 
 objective_c_class_end[] { ENTRY_DEBUG } :
@@ -3018,7 +2980,6 @@ objective_c_class_end[] { ENTRY_DEBUG } :
     {
         endDownOverMode(MODE_CLASS);
     }
-
 ;
 
 // Handle an enum class
@@ -3028,7 +2989,6 @@ enum_class_definition[] { ENTRY_DEBUG } :
         { setMode(MODE_ENUM); }
 
         class_preamble ENUM (class_header enum_block | enum_block)
-
 ;
 
 // Handle an enum class
@@ -3491,7 +3451,6 @@ terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_
             wait_terminate_post = false;
 
         }
-
 ;
 
 /*
@@ -3822,7 +3781,6 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
 
         // markup namespace tag in using namespace
         namespace_definition
-
 ;
 
 // mark ( operator
@@ -3878,7 +3836,6 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
 
             }
         }
-
 ;
 
 // marking comma operator
@@ -3979,7 +3936,6 @@ condition[] { ENTRY_DEBUG } :
             }
 
         }
-
 ;
 
 // perform an arbitrary look ahead looking for a pattern
@@ -4522,7 +4478,6 @@ type_identifier_count_check returns [int type_count] {
 type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
 
         (type_identifier_count[type_count])*
-
 ;
 
 /*
@@ -4538,7 +4493,6 @@ eat_type[int& count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
         set_int[count, count - 1]
         eat_type[count]
-
 ;
 
 // type identifier
@@ -4585,7 +4539,6 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         { LA(1) == DECLTYPE }? type_specifier_call | atomic
 
         )
-
 ;
 
 // more lead type identifier
@@ -4641,7 +4594,6 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 type_specifier_call[] { ENTRY_DEBUG } :
 
     { inputState->guessing }? (decltype_call_full) | decltype_call
-
 ;
 
 // C++11 markup decltype 
@@ -4668,7 +4620,6 @@ decltype_call_full[] { ENTRY_DEBUG } :
 atomic[] { ENTRY_DEBUG } :
 
     { next_token() == LPAREN }? ({ inputState->guessing }? atomic_call_full | atomic_call) | atomic_specifier
-
 ;
 
 // C11 markup _Atomic as specifier
@@ -4677,7 +4628,6 @@ atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         ATOMIC
-
 ;
 
 // C11 markup _Atomic as call
@@ -4693,7 +4643,6 @@ atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCou
         }
         ATOMIC (options { greedy = true; } : complete_argument_list)?
         { setTypeCount(save_type_count); }
-
 ;
 
 // C++ completely match without markup _Atomic
@@ -4715,7 +4664,6 @@ qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITI
                 startElement(SOPERATOR);
         }
         QMARK ({ SkipBufferSize() == 0 }? QMARK)?
-
 ;
 
 qmark[] { is_qmark = true; ENTRY_DEBUG } :
@@ -4723,7 +4671,6 @@ qmark[] { is_qmark = true; ENTRY_DEBUG } :
             if (inTransparentMode(MODE_TERNARY | MODE_CONDITION))
                 endDownToMode(MODE_CONDITION);
         }
-
         qmark_marked
         {
             if (inTransparentMode(MODE_TERNARY | MODE_CONDITION)) {
@@ -4947,7 +4894,6 @@ attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
 attribute_inner_list[] { ENTRY_DEBUG } :
 
     complete_expression (COMMA complete_expression)*
-
 ;
 
 // C++11 attributes
@@ -5004,7 +4950,6 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
                 }
             )
         )*
-
 ;
 
 // Full, complete expression matched all at once (no stream).
@@ -5031,7 +4976,6 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
         expression | comma
 
         ))*
-
 ;
 
 
@@ -5081,7 +5025,6 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
             colon_marked
 
     )*
-
 ;
 
 // match a complete expression no stream
@@ -5174,7 +5117,6 @@ linq_expression_complete_inner[int& count_paren, bool update = false] { CALL_TYP
         && LA(1) != EQUALS && LA(1) != INTO && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression_setup_linq |
 
     COLON
-
 ;
 
 // variable name in an expression.  Includes array names, but not function calls
@@ -5232,7 +5174,6 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
                 tp.setType(SNOP);
         }
     )
-
 ;
 
 // an identifier
@@ -5268,7 +5209,6 @@ identifier_list[] { ENTRY_DEBUG } :
 
             //Qt
             EMIT | FOREACH | SIGNAL | FOREVER
-
 ;
 
 // most basic name
@@ -5354,7 +5294,6 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
     )
 
     rparen[true]
-
 ;
 
 // Markup names
@@ -5362,7 +5301,6 @@ compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_
         compound_name_inner[true]
         (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-
 ;
 
 // name markup internals
@@ -5425,7 +5363,6 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 multops_star[] { ENTRY_DEBUG } :
 
     (options { greedy = true; } : multops)*
-
 ;
 
 // C++ compound name handling
@@ -5448,7 +5385,6 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
         )*
 
         { notdestructor = LA(1) == DESTOP; }
-
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -5472,7 +5408,6 @@ compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
             //(options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
-
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -5488,7 +5423,6 @@ compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
             ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
             identifier
         )*
-
 ;
 
 // compound name for C
@@ -5501,7 +5435,6 @@ compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
             ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
             simple_name_optional_template
         )*
-
 ;
 
 // compound name for Java
@@ -5510,7 +5443,6 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
         generic_argument_list |
         simple_name_optional_template
         (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template | { next_token() == TERMINATE }? multop_name)))*
-
 ;
 
 
@@ -5543,7 +5475,6 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
                 // set the token to NOP
                 tp.setType(SNOP);
         }
-
 ;
 
 // C++ compound name handling
@@ -5565,7 +5496,6 @@ keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_D
         )*
 
         { notdestructor = LA(1) == DESTOP; }
-
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -5603,13 +5533,11 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
             DEFAULT | DELETE
 
         )
-
 ;
 
 // mark specifiers
 specifier[] { ENTRY_DEBUG } :
         single_keyword_specifier | alignas_specifier | macro_specifier_call | atomic
-
 ;
 
 // match a single word specifier
@@ -5661,7 +5589,6 @@ template_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         TEMPLATE
-
 ;
 
 // C++11 specifier
@@ -5676,7 +5603,6 @@ alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         ({ inputState->guessing }? paren_pair | 
 
         complete_argument_list)
-
 ;
 
 // default specifier (Java Methods)
@@ -5685,7 +5611,6 @@ default_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         DEFAULT
-
 ;
 
 this_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -5693,7 +5618,6 @@ this_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         THIS
-
 ;
 
 // A constructor declaration
@@ -5792,7 +5716,6 @@ destructor_definition[] { ENTRY_DEBUG } :
         destructor_header
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
-
 ;
 
 // destructor declaration
@@ -5898,7 +5821,6 @@ objective_c_call[] { ENTRY_DEBUG } :
 
     LBRACKET
     objective_c_call_receiver
-
 ;
 
 // function call object for Objective_C
@@ -5912,7 +5834,6 @@ objective_c_call_receiver[] { ENTRY_DEBUG } :
     
     }
     expression
-
 ;
 
 // function call message for Objective_C
@@ -5927,7 +5848,6 @@ objective_c_call_message[] { ENTRY_DEBUG } :
 
     }
     objective_c_call_argument
-
 ;
 
 // function call argument name:value pair for Objective_C
@@ -5951,7 +5871,6 @@ objective_c_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
         startElement(SSELECTOR);
     }
     (function_identifier (options { greedy = true; } : COLON)* | COLON)
-
 ;
 
 ternary_expression[] { ENTRY_DEBUG } :
@@ -6119,7 +6038,6 @@ keyword_calls[] { ENTRY_DEBUG } :
 
     // C#
     typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call | checked_call | unchecked_call
-
 ;
 
 
@@ -6133,7 +6051,6 @@ keyword_call_tokens[] { ENTRY_DEBUG } :
 
     // C#
     TYPEOF | DEFAULT | CHECKED | UNCHECKED
-
 ;
 
 // sizeof unary_expression
@@ -6425,7 +6342,6 @@ macro_pattern_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_NAME
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 // do a macro call.
@@ -6445,7 +6361,6 @@ macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_TYPE_NAME
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 
@@ -6466,7 +6381,6 @@ macro_case_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_CASE
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 // do a macro call.
@@ -6486,7 +6400,6 @@ macro_label_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_LABEL
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 // do a macro call.
@@ -6507,7 +6420,6 @@ macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_SPECIFIER
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 // handle the actual macro call
@@ -6649,7 +6561,6 @@ try_statement_with_resource[] { ENTRY_DEBUG } :
         TRY
 
         for_like_statement_post 
-
 ;
 
 // a checked statement
@@ -6695,7 +6606,6 @@ using_statement[] { ENTRY_DEBUG } :
         USING 
 
         for_like_statement_post
-
 ;
 
 for_like_statement_pre[int tag] { ENTRY_DEBUG } :
@@ -6708,7 +6618,6 @@ for_like_statement_pre[int tag] { ENTRY_DEBUG } :
             startElement(tag);
 
         }
-
 ;
 
 for_like_statement_post[] { ENTRY_DEBUG } :
@@ -6730,7 +6639,6 @@ for_like_statement_post[] { ENTRY_DEBUG } :
         //startElement(SFOR_INITIALIZATION);
     }
     for_like_list_item
-
 ;
 
 for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
@@ -6750,7 +6658,6 @@ for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token 
     // explicitly check for non-terminate so that a large switch statement
     // isn't needed
     expression
-
 ;
 
 // lock statement
@@ -6761,7 +6668,6 @@ lock_statement[] { ENTRY_DEBUG } :
         LOCK
 
         for_like_statement_post
-
 ;
 
 // fix the statement
@@ -6795,7 +6701,6 @@ unchecked_statement[] { ENTRY_DEBUG } :
         }
 
         UNCHECKED
-
 ;
 
 // a synchonized statement
@@ -6809,7 +6714,6 @@ autoreleasepool_block[] { ENTRY_DEBUG } :
 
         }
         AUTORELEASEPOOL lcurly
-
 ;
 
 // the catch statement
@@ -6979,7 +6883,6 @@ generic_selection_association[] { CompleteElement element(this); ENTRY_DEBUG } :
     }
 
     generic_selection_association_type COLON generic_selection_complete_expression
-
 ;
 
 generic_selection_association_type[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
@@ -7569,7 +7472,6 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             if (!isempty)
                 decCurly();
         }
-
 ;
 
 rbracket[] { ENTRY_DEBUG } :
@@ -7590,7 +7492,6 @@ rbracket[] { ENTRY_DEBUG } :
         }
 
     }
-
 ; 
 
 // Dot (period) operator
@@ -7920,7 +7821,6 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
         (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? generic_argument_list)*
-
 ;
 
 // super list
@@ -8084,7 +7984,6 @@ argument[] { ENTRY_DEBUG } :
 
         (type_identifier) => expression_process type_identifier
         )
-
 ;
 
 argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
@@ -8092,13 +7991,11 @@ argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
             startElement(SMODIFIER);
         }
         (OUT | REF)
-
 ;
 
 argument_named_csharp[] { ENTRY_DEBUG } :
 
         identifier COLON
-
 ;
 
 // annotation argument
@@ -8116,7 +8013,6 @@ annotation_argument[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
         { inputState->guessing }? RCURLY | 
         { !(LA(1) == RPAREN) }? expression | type_identifier)*
-
 ;
 
 // a parameter
@@ -8174,7 +8070,6 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
         }
         ( options { greedy = true; } : variable_declaration_nameinit)*
         )
-
 ;
 
 // count types in parameter
@@ -8320,7 +8215,6 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; int
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
         (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)*
-
 ;
 
 // entire template parameter list
@@ -8335,13 +8229,11 @@ template_in_parameter_list_full[] { ENTRY_DEBUG } :
         }
 
         template_declaration_full
-
 ;
 
 template_declaration_full[] { ENTRY_DEBUG } :
 
     template_declaration template_param_list (template_param (template_declaration_initialization)* (comma)*)* tempope { if (inMode(MODE_TEMPLATE)) endMode();}
-
 ;
 
 // template initialization
@@ -8469,7 +8361,6 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SWHERE);
         }
         WHERE compound_name_inner[false] COLON type_constraint (options { greedy = true; } : COMMA type_constraint)*
-
 ;
 
 type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -8486,7 +8377,6 @@ type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
 new_constraint[] { ENTRY_DEBUG } :
 
     new_name LPAREN RPAREN
-
 ;
 
 
@@ -8496,7 +8386,6 @@ new_name[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         NEW
-
 ;
 
 protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -8509,7 +8398,6 @@ protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     TEMPOPS identifier (COMMA identifier)* TEMPOPE
-
 ;
 
 category[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -8522,7 +8410,6 @@ category[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     LPAREN (identifier)* RPAREN
-
 ;
 
 // save the namestack
@@ -8571,7 +8458,6 @@ template_argument_expression[] { ENTRY_DEBUG } :
         // qmark matches before template argument expression is fine
         ({ LA(1) != RPAREN }? (options { generateAmbigWarnings = false; } : general_operators | qmark | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression | COMMA))*
        rparen_operator[true]
-
 ;
 
 // All possible operators
@@ -8799,7 +8685,6 @@ enum_csharp_definition[] { ENTRY_DEBUG } :
 
     // may need to modifiy to work with enum_decl
     enum_preprocessing[false] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
-
 ;
 
 enum_csharp_declaration[] { ENTRY_DEBUG } :
@@ -8807,7 +8692,6 @@ enum_csharp_declaration[] { ENTRY_DEBUG } :
     // may need to modifiy to work with enum_decl
     enum_preprocessing[true] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
     (COMMA (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*)*
-
 ;
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
@@ -9400,7 +9284,6 @@ cpp_expression[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
         (expression_process
             expression_part_plus_linq[type]
         ) | cpp_garbage
-
 ;
 exception
 catch[...] {
@@ -9460,7 +9343,6 @@ cpp_symbol[] { ENTRY_DEBUG } :
 
         }
     )
-
 ;
 
 cpp_define_name[] { CompleteElement element(this);
@@ -9550,7 +9432,6 @@ omp_directive[] { CompleteElement element(this); ENTRY_DEBUG} :
     }
 
     OMP_OMP (options { generateAmbigWarnings = false; } : COMMA | { next_token() == LPAREN }? omp_clause | omp_name)*
-
 ;
 
 omp_name[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -9558,7 +9439,6 @@ omp_name[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SOMP_NAME);
         }
         cpp_garbage
-
 ;
 
 
@@ -9570,7 +9450,6 @@ omp_clause[] { CompleteElement element(this); ENTRY_DEBUG} :
     }
 
     omp_name omp_argument_list
-
 ;
 
 omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
@@ -9586,7 +9465,6 @@ omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
     LPAREN RPAREN
 
     )
-
 ;
 
 omp_argument[] { CompleteElement element(this); ENTRY_DEBUG} :
@@ -9598,5 +9476,4 @@ omp_argument[] { CompleteElement element(this); ENTRY_DEBUG} :
     }
 
     (~(RPAREN | COMMA))*
-
 ;
