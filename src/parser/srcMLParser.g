@@ -5698,10 +5698,10 @@ member_init[] { ENTRY_DEBUG } :
 ;
 
 // push name onto namestack
-push_namestack[] { namestack[1] = namestack[0]; namestack[0] = LT(1)->getText(); } :;
+push_namestack[] { namestack[1] = std::move(namestack[0]); namestack[0] = LT(1)->getText(); } :;
 
 // identifier stack
-identifier_stack[std::array<std::string, 2>& s] { s[1] = s[0]; s[0] = LT(1)->getText(); ENTRY_DEBUG } :
+identifier_stack[std::array<std::string, 2>& s] { s[1] = std::move(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier
 ;
 
