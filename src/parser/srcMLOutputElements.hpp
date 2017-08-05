@@ -150,7 +150,8 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SCONSTRUCTOR_DECLARATION,    { "constructor_decl",  SRC,      0,         0,     0,      0 }},
     { SDESTRUCTOR_DEFINITION,      { "destructor",        SRC,      0,         0,     0,      0 }},
     { SDESTRUCTOR_DECLARATION,     { "destructor_decl",   SRC,      0,         0,     0,      0 }},
-    { SDERIVATION_LIST,            { "super",             SRC,      0,         0,     0,      0 }},
+    { SDERIVATION_LIST,            { "super_list",        SRC,      0,         0,     0,      0 }},
+    { SDERIVATION,                 { "super",             SRC,      0,         0,     0,      0 }},
     { SFRIEND,                     { "friend",            SRC,      0,         0,     0,      0 }},
     { SCLASS_SPECIFIER,            { "specifier",         SRC,      0,         0,     0,      0 }},
 

@@ -62,7 +62,7 @@
 </unit>
 
 <unit>
-<interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <super><extends>extends <name><name>Collection</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></extends></super> <block>{}</block></interface>
+<interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <super_list><extends>extends <super><name><name>Collection</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></super></extends></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>

@@ -64,7 +64,7 @@
 </unit>
 
 <unit>
-<enum><specifier>private</specifier> <specifier>static</specifier> enum <name>RelTypes</name> <super><implements>implements <name>RelationshipType</name></implements></super> <block>{}</block></enum>
+<enum><specifier>private</specifier> <specifier>static</specifier> enum <name>RelTypes</name> <super_list><implements>implements <super><name>RelationshipType</name></super></implements></super_list> <block>{}</block></enum>
 
 <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>main</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{}</block></function></unit>
 

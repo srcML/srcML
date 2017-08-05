@@ -14,51 +14,51 @@
 </unit>
 
 <unit>
-<interface>interface <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends></super> <block>{}</block></interface>
+<interface>interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface><specifier>public</specifier> interface <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends></super> <block>{}</block></interface>
+<interface><specifier>public</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends></super> <block>{}</block></interface>
+<interface><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface>interface <name>A</name> <super><implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></interface>
+<interface>interface <name>A</name> <super_list><implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface><specifier>public</specifier> interface <name>A</name> <super><implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></interface>
+<interface><specifier>public</specifier> interface <name>A</name> <super_list><implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super><implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></interface>
+<interface><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super_list><implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface>interface <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></interface>
+<interface>interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends> <implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface><specifier>public</specifier> interface <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></interface>
+<interface><specifier>public</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends> <implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super><extends>extends <name>B</name>, <name>C</name></extends> <implements>implements <name>D</name>, <name>E</name></implements></super> <block>{}</block></interface>
+<interface><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends> <implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface>interface <name>test</name> <super><extends>extends <name>Object</name></extends> <implements>implements <name>Cloneable</name></implements></super> <block>{}</block></interface>
+<interface>interface <name>test</name> <super_list><extends>extends <super><name>Object</name></super></extends> <implements>implements <super><name>Cloneable</name></super></implements></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface>interface <name>test</name> <super><implements>implements <name>Cloneable</name></implements> <extends>extends <name>Object</name></extends></super> <block>{}</block></interface>
+<interface>interface <name>test</name> <super_list><implements>implements <super><name>Cloneable</name></super></implements> <extends>extends <super><name>Object</name></super></extends></super_list> <block>{}</block></interface>
 </unit>
 
 <unit>
-<interface>interface <name>D</name> <super><implements>implements <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></implements></super> <block>{ }</block></interface>
+<interface>interface <name>D</name> <super_list><implements>implements <super><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super></implements></super_list> <block>{ }</block></interface>
 </unit>
 
 </unit>

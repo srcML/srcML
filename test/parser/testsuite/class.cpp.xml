@@ -52,39 +52,39 @@
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <specifier>public</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+<class>class <name>A</name> <super_list>: <super><specifier>public</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <specifier>private</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+<class>class <name>A</name> <super_list>: <super><specifier>private</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <specifier>protected</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+<class>class <name>A</name> <super_list>: <super><specifier>protected</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <specifier>virtual public</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+<class>class <name>A</name> <super_list>: <super><specifier>virtual</specifier> <specifier>public</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <specifier>public virtual</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+<class>class <name>A</name> <super_list>: <super><specifier>public</specifier> <specifier>virtual</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <specifier>virtual private</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+<class>class <name>A</name> <super_list>: <super><specifier>virtual</specifier> <specifier>private</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <specifier>private virtual</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+<class>class <name>A</name> <super_list>: <super><specifier>private</specifier> <specifier>virtual</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <specifier>virtual protected</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+<class>class <name>A</name> <super_list>: <super><specifier>virtual</specifier> <specifier>protected</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <specifier>protected virtual</specifier> <name>B</name></super> <block>{<private type="default"/>}</block>;</class>
+<class>class <name>A</name> <super_list>: <super><specifier>protected</specifier> <specifier>virtual</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 <unit>
@@ -131,7 +131,11 @@
 </unit>
 
 <unit>
-<class>class <name>D</name> <super>: <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super> <block>{<private type="default"> </private>}</block>;</class>
+<class>class <name>D</name> <super_list>: <super><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super></super_list> <block>{<private type="default"> </private>}</block>;</class>
+</unit>
+
+<unit>
+<class>class <name>foobar</name> <super_list>: <super><specifier>public</specifier> <name>foo</name></super>, <super><specifier>private</specifier> <name>bar</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
 </unit>

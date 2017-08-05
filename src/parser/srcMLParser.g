@@ -453,7 +453,8 @@ tokens {
 	SSTRUCT_DECLARATION;
 	SUNION;
 	SUNION_DECLARATION;
-	SDERIVATION_LIST;
+    SDERIVATION_LIST;
+    SDERIVATION;
 	SPUBLIC_ACCESS;
 	SPUBLIC_ACCESS_DEFAULT;
 	SPRIVATE_ACCESS;
@@ -2976,7 +2977,7 @@ objective_c_class_header_base[] { ENTRY_DEBUG } :
         identifier
 
         // suppressed ()* warning
-        (options { greedy = true; } : derived)*
+        (options { greedy = true; } : derived_list)*
 
         // suppressed ()* warning
         (category)*
@@ -3063,7 +3064,7 @@ anonymous_class_super[] { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
 
             // start the super name of an anonymous class
-            startElement(SDERIVATION_LIST);
+            startElement(SDERIVATION);
         }
         compound_name_inner[false]
 ;
@@ -3208,7 +3209,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         (options { greedy = true; } : { LA(1) == FINAL }? specifier)*
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
+        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
 
         // move suppressed ()* warning to begin
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
@@ -4243,7 +4244,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 set_bool[lcurly, LA(1) == LCURLY]
                 (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
                 ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
-                ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier (derived)* | enum_class_header | LCURLY)
+                ({ inLanguage(LANGUAGE_JAVA) }? class_header | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier (derived_list)* | enum_class_header | LCURLY)
                 set_type[type, ENUM_DEFN, type == ENUM_DECL && (LA(1) == LCURLY || lcurly)]
                 set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
                 throw_exception[type != NONE]
@@ -7881,8 +7882,8 @@ boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
         (LITERAL_TRUE | LITERAL_FALSE)
 ;
 
-// a derived class
-derived[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
+// a derived_list class
+derived_list[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
         {
             // end all elements at end of rule automatically
             startNewMode(MODE_LOCAL);
@@ -7893,18 +7894,30 @@ derived[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
         COLON
         (options { greedy = true; } :
             { LA(1) != WHERE && (!inLanguage(LANGUAGE_OBJECTIVE_C) || first) }? (
-            (derive_access)*
-
-            ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? identifier | variable_identifier)
-            ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
-
-            (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? generic_argument_list)*
+            derived
 
             set_bool[first, false]
             )
         |
             COMMA
         )*
+;
+
+derived[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // end all elements at end of rule automatically
+            startNewMode(MODE_LOCAL);
+
+            // start the derivation list
+            startElement(SDERIVATION);
+        }
+        (derive_virtual | derive_access)*
+
+        ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? identifier | variable_identifier)
+        ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
+
+        (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? generic_argument_list)*
+
 ;
 
 // super list
@@ -7947,9 +7960,7 @@ implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 // super list
 super_list[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
-            (derive_access)*
-
-            variable_identifier
+            derived
         |
             COMMA
         )*
@@ -7960,7 +7971,14 @@ derive_access[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCLASS_SPECIFIER);
         }
-        (VIRTUAL)* (PUBLIC | PRIVATE | PROTECTED) (options { greedy = true; } : VIRTUAL)*
+        (PUBLIC | PRIVATE | PROTECTED)
+;
+
+derive_virtual[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SCLASS_SPECIFIER);
+        }
+        VIRTUAL
 ;
 
 // do a parameter list
@@ -8587,7 +8605,7 @@ template_super_java[] { CompleteElement element(this); bool is_compound = false;
         {
             startNewMode(MODE_LOCAL);
 
-            startElement(SDERIVATION_LIST);
+            startElement(SDERIVATION);
         }
         SUPER
         compound_name_java[is_compound]
@@ -8777,15 +8795,15 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
 enum_csharp_definition[] { ENTRY_DEBUG } :
 
     // may need to modifiy to work with enum_decl
-    enum_preprocessing[false] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
+    enum_preprocessing[false] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
 
 ;
 
 enum_csharp_declaration[] { ENTRY_DEBUG } :
 
     // may need to modifiy to work with enum_decl
-    enum_preprocessing[true] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*
-    (COMMA (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived))*)*
+    enum_preprocessing[true] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
+    (COMMA (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*)*
 
 ;
 
