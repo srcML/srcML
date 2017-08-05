@@ -5701,7 +5701,7 @@ member_init[] { ENTRY_DEBUG } :
 push_namestack[] { namestack[1] = std::move(namestack[0]); namestack[0] = LT(1)->getText(); } :;
 
 // identifier stack
-identifier_stack[std::array<std::string, 2>& s] { s[1] = std::move(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
+identifier_stack[decltype(namestack)& s] { s[1] = std::move(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier
 ;
 
@@ -8250,7 +8250,7 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
 ;
 
 // generic argument list
-generic_argument_list[] { CompleteElement element(this); std::array<std::string, 2> namestack_save;  bool in_function_type = false; ENTRY_DEBUG } :
+generic_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save;  bool in_function_type = false; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -8271,7 +8271,7 @@ generic_argument_list[] { CompleteElement element(this); std::array<std::string,
 ;
 
 // generic parameter list
-generic_parameter_list[] { CompleteElement element(this); std::array<std::string, 2> namestack_save;  ENTRY_DEBUG } :
+generic_parameter_list[] { CompleteElement element(this); decltype(namestack) namestack_save;  ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -8314,7 +8314,7 @@ generic_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // CUDA argument list
-cuda_argument_list[] { CompleteElement element(this); std::array<std::string, 2> namestack_save; ENTRY_DEBUG } :
+cuda_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -8414,10 +8414,10 @@ category[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // save the namestack
-savenamestack[std::array<std::string, 2>& namestack_save] { namestack_save.swap(namestack); ENTRY_DEBUG } :;
+savenamestack[decltype(namestack)& namestack_save] { namestack_save.swap(namestack); ENTRY_DEBUG } :;
 
 // restore the namestack
-restorenamestack[std::array<std::string, 2>& namestack_save] { namestack.swap(namestack_save); ENTRY_DEBUG } :;
+restorenamestack[decltype(namestack)& namestack_save] { namestack.swap(namestack_save); ENTRY_DEBUG } :;
 
 // template argument
 template_argument[bool in_function_type = false] { CompleteElement element(this); ENTRY_DEBUG } :
