@@ -1037,7 +1037,6 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
 
-
         { inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN }? annotation |
 
         expression_statement[type, call_count]
@@ -1046,112 +1045,105 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
 // efficient way to view the token after the current LA(1)
 next_token[] returns [int token] {
 
-    antlr::RefToken rtoken = LT(1);
+        antlr::RefToken rtoken = LT(1);
 
-    if (rtoken->getColumn() == current_column && rtoken->getLine() == current_line) {
+        if (rtoken->getColumn() == current_column && rtoken->getLine() == current_line) {
 
-        token = nxt_token;
+            token = nxt_token;
 
-    } else {
+        } else {
 
-        current_column = rtoken->getColumn();
-        current_line = rtoken->getLine();
+            current_column = rtoken->getColumn();
+            current_line = rtoken->getLine();
+
+            int place = mark();
+            inputState->guessing++;
+
+            // consume current token
+            consume();
+
+            token = LA(1);
+
+            inputState->guessing--;
+            rewind(place);
+
+            nxt_token = token;
+
+        }
+} :;
+
+// efficient way to view the token after the current next_token
+next_token_two[] returns [int token] {
 
         int place = mark();
         inputState->guessing++;
 
         // consume current token
         consume();
+        consume();
 
         token = LA(1);
 
         inputState->guessing--;
         rewind(place);
-
-        nxt_token = token;
-
-    }
-
-} :;
-
-// efficient way to view the token after the current next_token
-next_token_two[] returns [int token] {
-
-    int place = mark();
-    inputState->guessing++;
-
-    // consume current token
-    consume();
-    consume();
-
-    token = LA(1);
-
-    inputState->guessing--;
-    rewind(place);
-
 } :;
 
 // is the next token one of the parameters
 next_token_check[int token1, int token2] returns [bool result] {
 
-    int token = next_token();
+        int token = next_token();
 
-    result = token == token1 || token == token2;
-
-} :;
+        result = token == token1 || token == token2;
+}:;
 
 // skips past any skiptokens to get the one after
 look_past[int skiptoken] returns [int token] {
 
-    int place = mark();
-    inputState->guessing++;
+        int place = mark();
+        inputState->guessing++;
 
-    while (LA(1) == skiptoken)
-        consume();
+        while (LA(1) == skiptoken)
+            consume();
 
-    token = LA(1);
+        token = LA(1);
 
-    inputState->guessing--;
-    rewind(place);
-
+        inputState->guessing--;
+        rewind(place);
 } :;
 
 // skip past all of the skiptoken1 and skiptoken2 and return the one after
 look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
 
-    int place = mark();
-    inputState->guessing++;
+        int place = mark();
+        inputState->guessing++;
 
-    while (LA(1) == skiptoken1 || LA(1) == skiptoken2)
-        consume();
+        while (LA(1) == skiptoken1 || LA(1) == skiptoken2)
+            consume();
 
-    token = LA(1);
+        token = LA(1);
 
-    inputState->guessing--;
-    rewind(place);
-
+        inputState->guessing--;
+        rewind(place);
 } :;
 
 // give the next token as if rule was applied.  If rule can not be applied return -1
 look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 
-    int place = mark();
-    inputState->guessing++;
+        int place = mark();
+        inputState->guessing++;
 
-    try {
+        try {
 
-        (this->*rule)();
-        token = LA(1);
+            (this->*rule)();
+            token = LA(1);
 
-    } catch(...) {
+        } catch(...) {
 
-        token = -1;
+            token = -1;
+        }
 
-    }
-
-    inputState->guessing--;
-    rewind(place);
-
+        inputState->guessing--;
+        rewind(place);
 } :;
 
 /* functions */
@@ -1190,22 +1182,22 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
 decl_pre_type[int& type_count] { ENTRY_DEBUG } :
 
-    (
+        (
 
-    { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) |
+        { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) |
 
-    // special case only for functions.  Should only reach here for funciton in Java
-    { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
+        // special case only for functions.  Should only reach here for funciton in Java
+        { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
 
-    { inLanguage(LANGUAGE_JAVA) }? annotation |
+        { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-    { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+        { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-    { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-    )
+        )
 
-    set_int[type_count, type_count - 1]
+        set_int[type_count, type_count - 1]
 ;
 
 // header of a function
@@ -1271,26 +1263,26 @@ function_tail[] { ENTRY_DEBUG } :
 
 // Java annotation default values
 annotation_default[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
+        {
 
-        startNewMode(MODE_LOCAL);
+            startNewMode(MODE_LOCAL);
 
-        startElement(SDEFAULT);
+            startElement(SDEFAULT);
 
-    }
-    DEFAULT annotation_default_initialization
+        }
+        DEFAULT annotation_default_initialization
 ;
 
 // Java annotation default value initialization
 annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
+        {
 
-        startNewMode(MODE_LOCAL);
+            startNewMode(MODE_LOCAL);
 
-        startElement(SDECLARATION_INITIALIZATION);
+            startElement(SDECLARATION_INITIALIZATION);
 
-    }
-    complete_expression
+        }
+        complete_expression
 ;
 
 // Ref qualifiers in function tail
@@ -1496,14 +1488,14 @@ lambda_capture_argument[] { bool first = true; CompleteElement element(this); EN
 ;
 
 lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
-   {
-        startNewMode(MODE_LOCAL | MODE_END_AT_COMMA);
+        {
+            startNewMode(MODE_LOCAL | MODE_END_AT_COMMA);
 
-        startElement(SDECLARATION_INITIALIZATION);
-    }
+            startElement(SDECLARATION_INITIALIZATION);
+        }
 
-    // suppress warning of another case where REFOPS or something is in both alts.
-    EQUAL complete_expression
+        // suppress warning of another case where REFOPS or something is in both alts.
+        EQUAL complete_expression
 ;
 
 // completely match a C# lambda expression
@@ -1583,12 +1575,12 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
 
 // lambda character
 lambda_java[] { ENTRY_DEBUG } :
-        
-    TRETURN
-    {
-        if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
-            startNoSkipElement(SPSEUDO_BLOCK);
-    }
+            
+        TRETURN
+        {
+            if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                startNoSkipElement(SPSEUDO_BLOCK);
+        }
 ;
 
 // handle the beginning of a function definition
@@ -1683,14 +1675,14 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
 // Objective-C method declaration
 objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
-    {
+        {
 
-        startNewMode(MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT);
 
-        startElement(token);
+            startElement(token);
 
-    }
-    objective_c_method_specifier (options { greedy = true; } : objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
+        }
+        objective_c_method_specifier (options { greedy = true; } : objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
 ;
 
 objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
