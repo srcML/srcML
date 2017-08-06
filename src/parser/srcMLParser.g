@@ -2006,25 +2006,13 @@ perform_ternary_check[] returns [bool is_ternary] {
     try {
 
         ternary_check();
-        if (LA(1) == QMARK) is_ternary = true;
+        if (LA(1) == QMARK)
+            is_ternary = true;
 
-        if (!is_qmark) {
+    } catch(...) {}
 
-            if (LA(1) == TERMINATE) skip_ternary = true;
-            if (LA(1) == LCURLY) skip_ternary = true;
-
-        }
-
-    } catch(...) { 
-
-        if (!is_qmark) {
-
-            if (LA(1) == TERMINATE) skip_ternary = true;
-            if (LA(1) == LCURLY) skip_ternary = true;
-
-        }
-
-    }
+    if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY))
+        skip_ternary = true;
 
     inputState->guessing--;
     rewind(start);
