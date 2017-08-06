@@ -1037,7 +1037,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
 
-        { inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN }? annotation |
+        { inLanguage(LANGUAGE_JAVA) }? annotation |
 
         expression_statement[type, call_count]
 ;
