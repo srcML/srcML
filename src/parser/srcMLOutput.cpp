@@ -122,10 +122,8 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
     // setup attributes names for line/column position if used
     if (isoption(options, SRCML_OPTION_POSITION)) {
 
-        lineAttribute = namespaces[POS].prefix + ":line";
-        elineAttribute = namespaces[POS].prefix + ":endline";
-        columnAttribute = namespaces[POS].prefix + ":column";
-        ecolumnAttribute = namespaces[POS].prefix + ":endcolumn";
+        startAttribute = namespaces[POS].prefix + ":start";
+        endAttribute = namespaces[POS].prefix + ":end";
     }
 }
 
@@ -561,14 +559,12 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
+	std::string startattrvalue = std::to_string(token->getLine()) + ":" + std::to_string(token->getColumn());
+	std::string endattrvalue = std::to_string(static_cast<srcMLToken*>(&(*token))->endline) + ":" + std::to_string(static_cast<srcMLToken*>(&(*token))->endcolumn);
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(token->getLine()).c_str());
+    xmlTextWriterWriteAttribute(xout, BAD_CAST startAttribute.c_str(), BAD_CAST startattrvalue.c_str());
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(token->getColumn()).c_str());
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST elineAttribute.c_str(), BAD_CAST std::to_string(static_cast<srcMLToken*>(&(*token))->endline).c_str());
-
-    xmlTextWriterWriteAttribute(xout, BAD_CAST ecolumnAttribute.c_str(), BAD_CAST std::to_string(static_cast<srcMLToken*>(&(*token))->endcolumn).c_str());
+    xmlTextWriterWriteAttribute(xout, BAD_CAST endAttribute.c_str(), BAD_CAST endattrvalue.c_str());
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
