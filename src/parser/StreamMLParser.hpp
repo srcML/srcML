@@ -28,12 +28,6 @@
 
 #include <antlr/TokenStream.hpp>
 #include "TokenStream.hpp"
-
-/*
-#include <srcml_types.hpp>
-#include <srcml_macros.hpp>
-#include <srcml.h>
-*/
  
 #include <deque>
 #include <stack>
@@ -86,7 +80,7 @@ public:
      *
      * Starts an element id (xml tag).
     */
-    void startElement(int id) {
+    void startElement(int id) final {
 
         srcMLParser::currentState().push(id);
         pushSTokenFlush(id);
@@ -99,7 +93,7 @@ public:
      * Starts an element id (xml tag).  Do not output after skip tokens
      * (usually whitespace).
      */
-    void startNoSkipElement(int id) {
+    void startNoSkipElement(int id) final {
 
         srcMLParser::currentState().push(id);
         pushSToken(id);
@@ -111,7 +105,7 @@ public:
      *
      * End an element id (xml tag).
      */
-    void endElement(int id) {
+    void endElement(int id) final {
 
         if((srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP).any()) 
             pushSToken(id);
@@ -126,7 +120,7 @@ public:
      *
      * Issue an empty element id (xml tag).
      */
-    void emptyElement(int id) {
+    void emptyElement(int id) final {
 
         // push a empty element token
         pushTokenFlush(antlr::RefToken(EmptyTokenFactory(id)));
@@ -138,7 +132,7 @@ public:
      *
      * Starts an element id that is output when mode ends.
      */
-    void addElement(int id) {
+    void addElement(int id) final {
 
         srcMLParser::currentState().push(id);
     }
@@ -549,7 +543,7 @@ private:
      *
      * Flush any skipped tokens to the output token stream.
      */
-    inline void flushSkip() {
+    inline void flushSkip() final {
         flushSkip(output());
     }
 
@@ -560,7 +554,7 @@ private:
      *
      * @returns the number of skipped elements 
      */
-    inline int SkipBufferSize() {
+    inline int SkipBufferSize() final {
         return (int)skiptb.size();
     }
 
@@ -756,28 +750,28 @@ private:
      *
      * @returns the current token (last added).
      */
-    inline antlr::RefToken* CurrentToken() {
+    inline antlr::RefToken* CurrentToken() final {
 
         return &(output().back());
     }
 
     /** abstract method for pausing the output of tokens */
-    void pauseStream() {
+    void pauseStream() final {
         paused = true;
     }
 
     /** abstract method for resuming the output of tokens */
-    void resumeStream() {
+    void resumeStream() final {
         paused = false;
     }
 
     /** abstract method for indicating if the stream is paused */
-    virtual bool isPaused() { 
+    virtual bool isPaused() final { 
         return paused;
     }
 
     /** abstract method for replacing start of stream with a NOP */
-    void nopStreamStart() {
+    void nopStreamStart() final {
 
         // find the first element token
         // may have some text/spaces before

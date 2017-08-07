@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="class_cs">
 
 <unit>
@@ -6,11 +6,11 @@
 </unit>
 
 <unit>
-<class>class <name>A</name> <super>: <name>B</name>, <name>C</name></super> <block>{}</block></class>
+<class>class <name>A</name> <super_list>: <super><name>B</name></super>, <super><name>C</name></super></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
-<class><specifier>public</specifier> class <name>A</name> <super>: <name>B</name>, <name>C</name></super> <block>{}</block></class>
+<class><specifier>public</specifier> class <name>A</name> <super_list>: <super><name>B</name></super>, <super><name>C</name></super></super_list> <block>{}</block></class>
 </unit>
 
 <unit>
@@ -26,7 +26,7 @@
 </unit>
 
 <unit>
-<class>class <name>D</name> <super>: <name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super> <block>{ }</block></class><empty_stmt>;</empty_stmt>
+<class>class <name>D</name> <super_list>: <super><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super></super_list> <block>{ }</block></class><empty_stmt>;</empty_stmt>
 </unit>
 
 </unit>

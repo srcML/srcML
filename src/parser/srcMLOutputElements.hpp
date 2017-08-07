@@ -52,6 +52,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { STYPEPREV,                   { "type",              SRC,  "ref",    "prev",     0,      0 }},
     { SCONDITION,                  { "condition",         SRC,      0,         0,     0,      0 }},
     { SBLOCK,                      { "block",             SRC,      0,         0,     0,      0 }},
+    { SCONTENT,                    { "content",           SRC,      0,         0,     0,      0 }},
     { SPSEUDO_BLOCK,               { "block",             SRC, "type",  "pseudo",     0,      0 }},
     { SINDEX,                      { "index",             SRC,      0,         0,     0,      0 }},
     { SDECLTYPE,                   { "decltype",          SRC,      0,         0,     0,      0 }},
@@ -83,11 +84,12 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SENUM,                       { "enum",              SRC,      0,         0,     0,      0 }},
     { SENUM_DECLARATION,           { "enum_decl",         SRC,      0,         0,     0,      0 }},
 
-    { SIF_STATEMENT,               { "if",                SRC,      0,         0,     0,      0 }},
+    { SIF_STATEMENT,               { "if_stmt",           SRC,      0,         0,     0,      0 }},
+    { SIF,                         { "if",                SRC,      0,         0,     0,      0 }},
     { STERNARY,                    { "ternary",           SRC,      0,         0,     0,      0 }},
     { STHEN,                       { "then",              SRC,      0,         0,     0,      0 }},
     { SELSE,                       { "else",              SRC,      0,         0,     0,      0 }},
-    { SELSEIF,                     { "elseif",            SRC,      0,         0,     0,      0 }},
+    { SELSEIF,                     { "if",                SRC, "type",  "elseif",     0,      0 }},
 
     { SWHILE_STATEMENT,            { "while",             SRC,      0,         0,     0,      0 }},
     { STYPEOF,                     { "typeof",            SRC,      0,         0,     0,      0 }},
@@ -150,7 +152,8 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SCONSTRUCTOR_DECLARATION,    { "constructor_decl",  SRC,      0,         0,     0,      0 }},
     { SDESTRUCTOR_DEFINITION,      { "destructor",        SRC,      0,         0,     0,      0 }},
     { SDESTRUCTOR_DECLARATION,     { "destructor_decl",   SRC,      0,         0,     0,      0 }},
-    { SDERIVATION_LIST,            { "super",             SRC,      0,         0,     0,      0 }},
+    { SDERIVATION_LIST,            { "super_list",        SRC,      0,         0,     0,      0 }},
+    { SDERIVATION,                 { "super",             SRC,      0,         0,     0,      0 }},
     { SFRIEND,                     { "friend",            SRC,      0,         0,     0,      0 }},
     { SCLASS_SPECIFIER,            { "specifier",         SRC,      0,         0,     0,      0 }},
 

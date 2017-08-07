@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="annotation" filename="annotation_java">
 
 <unit>
@@ -36,7 +36,7 @@
 <unit>
 <class><annotation>@<name>Entity</name></annotation>
 <annotation>@<name>Table</name><argument_list>(<argument><expr><name>name</name> <operator>=</operator> <literal type="string">"people"</literal></expr></argument>)</argument_list></annotation>
-class <name>Person</name> <super><implements>implements <name>Serializable</name></implements></super> <block>{}</block></class>
+class <name>Person</name> <super_list><implements>implements <super><name>Serializable</name></super></implements></super_list> <block>{}</block></class>
 </unit>
 
 <unit>

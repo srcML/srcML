@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="anonymous_class" filename="anonymous_class_java">
 
 <unit>
@@ -56,9 +56,9 @@
 
     <function><specifier>public</specifier> <type><name>boolean</name></type> <name>init</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Shell</name></type> <name>aMainShell</name></decl></parameter>)</parameter_list> <block>{ 
 
-        <if>if<condition>(<expr><literal type="boolean">true</literal></expr>)</condition><then><block>{ 
+        <if_stmt><if>if<condition>(<expr><literal type="boolean">true</literal></expr>)</condition><block>{ 
               <return>return <expr><literal type="boolean">false</literal></expr>;</return> 
-        }</block></then><else>else<block>{ 
+        }</block></if><else>else<block>{ 
               
               <expr_stmt><expr><call><name><name>trayItem</name><operator>.</operator><name>addSelectionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>SelectionAdapter</name></super> <argument_list>()</argument_list> <block>{ 
                               
@@ -68,7 +68,7 @@
 
               <return>return <expr><literal type="boolean">true</literal></expr>;</return>
 
-        }</block></else></if>
+        }</block></else></if_stmt>
 
     }</block></function>
     

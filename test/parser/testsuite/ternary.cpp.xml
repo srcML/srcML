@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="ternary" filename="ternary">
 
 <unit>
@@ -63,11 +63,11 @@
 </unit>
 
 <unit>
-<if>if<condition>(<expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>)</condition><then><block type="pseudo"><empty_stmt>;</empty_stmt></block></then></if>
+<if_stmt><if>if<condition>(<expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>)</condition><block type="pseudo"><empty_stmt>;</empty_stmt></block></if></if_stmt>
 </unit>
 
 <unit>
-<if>if<condition>(<decl><type><name>int</name></type> <name>i</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>)</condition><then><block type="pseudo"><empty_stmt>;</empty_stmt></block></then></if>
+<if_stmt><if>if<condition>(<decl><type><name>int</name></type> <name>i</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>)</condition><block type="pseudo"><empty_stmt>;</empty_stmt></block></if></if_stmt>
 </unit>
 
 <unit>
