@@ -195,12 +195,6 @@ public:
     /** number of units output or depth into archive */
     int depth = 0;
 
-    /** line attribute content */
-    std::string lineAttribute;
-
-    /** column attribute content */
-    std::string columnAttribute;
-
     /** user defined macro list */
     std::vector<std::string> user_macro_list;
 

@@ -77,14 +77,11 @@
  *
  * Helpers:
  *
- * - The class StreamParser provides stream processing.  The class StreamMLParser
- * provides markup language stream processing.  These are template classes which
- * use this parser as a template parameter base.
+ * - The class StreamMLParser provides markup language stream processing.  These are
+ * template classes which use this parser as a template parameter base.
  *
- * - The class TokenParser provides the virtual table for methods in StreamParser
+ * - The class TokenParser provides the virtual table for methods in StreamMLParser
  * that are called in this parser.
- *
- * - Obviously this needs to be untangled but is not as easy as it should be.
  *
  * - Additional methods for the parser are declared in class Mode.  These methods
  * only provide general support for the parser.  They do not, repeat, do not, contain

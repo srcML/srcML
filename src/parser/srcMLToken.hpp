@@ -95,6 +95,7 @@ public:
      * @returns the line number.
      */
     virtual int getLine() const final { return line; }
+    virtual int getEndLine() const final { return endline; }
 
     /**
      * setColumn
@@ -103,6 +104,7 @@ public:
      * Set the column number to c.
      */
     virtual void setColumn(int c) final { column = c; }
+    virtual int getEndColumn() const final { return endcolumn; }
 
     /**
      * getColumn
@@ -138,13 +140,16 @@ public:
     virtual ~srcMLToken() {}
 
     /** tokens categeory */
-    int category;
+    int category = -1;
 
     /** The current line number */
-    int line;
+    int line = 0;
 
     /** the current column */
-    int column;
+    int column = 0;
+
+    int endline = 0;
+    int endcolumn = 0;
 
     /** the tokens text */
     std::string text;
@@ -195,7 +200,13 @@ inline srcMLToken* StartTokenFactory(int token) {
  */
 inline bool isstart(const antlr::RefToken& token) {
 
-    return static_cast<const srcMLToken*>(&(*token))->category != ENDTOKEN;
+    return static_cast<const srcMLToken*>(&(*token))->category == STARTTOKEN ||
+           static_cast<const srcMLToken*>(&(*token))->category == EMPTYTOKEN;
+}
+
+inline bool ispurestart(const antlr::RefToken& token) {
+
+    return static_cast<const srcMLToken*>(&(*token))->category == STARTTOKEN;
 }
 
 /**
@@ -208,6 +219,11 @@ inline bool isstart(const antlr::RefToken& token) {
 inline bool isempty(const antlr::RefToken& token) {
 
     return static_cast<const srcMLToken*>(&(*token))->category == EMPTYTOKEN;
+}
+
+inline bool isend(const antlr::RefToken& token) {
+
+    return static_cast<const srcMLToken*>(&(*token))->category == ENDTOKEN;
 }
 
 #endif

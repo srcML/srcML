@@ -215,19 +215,16 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
     unit_hash = hash;
     unit_encoding = encoding;
 
-    if (!isoption(options, SRCML_OPTION_INTERACTIVE)) {
+    bool isinteractive = isoption(options, SRCML_OPTION_INTERACTIVE);
 
-        // consume all input until EOF
-        while (consume_next() != antlr::Token::EOF_TYPE) {}
+    while (1) {
+        const antlr::RefToken& token = input->nextToken();
+        if (token->getType() == antlr::Token::EOF_TYPE)
+            break;
 
-    } else {
-
-        // consume all input until EOF
-        while (consume_next() != antlr::Token::EOF_TYPE) {
-
-            // in interactive mode flush after each token is discovered
+        outputToken(token);
+        if (isinteractive) 
             xmlTextWriterFlush(xout);
-        }
     }
 }
 
@@ -540,6 +537,24 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
     processText(token->getText());
 }
 
+// itoa-type function
+static inline const char* positoa(int n) {
+
+	// enough space to store int as string
+	static constexpr int SIZE = sizeof(int) * 4;
+	static char s[SIZE] = { 0 };
+
+	// create string backwards from 1's place
+	char* p = s + SIZE - 1;
+	do {
+		*--p = '0' + (n % 10);
+		n /= 10;
+	} while (n);
+
+	// end of string that we are using
+	return p;
+}
+
 /**
  * processTextPosition
  * @param token token to output as text
@@ -548,9 +563,29 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST lineAttribute.c_str(), BAD_CAST std::to_string(token->getLine()).c_str());
+	// highly optimized code as this is output for every start tag
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST columnAttribute.c_str(), BAD_CAST std::to_string(token->getColumn()).c_str());
+	static std::string startAttribute = " " + namespaces[POS].prefix + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "start=\"";
+	static std::string endAttribute   = " " + namespaces[POS].prefix + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "end=\"";
+
+    const char* s = 0;
+
+	xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.c_str());
+    s = positoa(token->getLine());
+	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWrite(output_buffer, 1, ":");
+    s = positoa(token->getColumn());
+	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWrite(output_buffer, 1, "\"");
+
+	srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
+	xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
+    s = positoa(stoken->endline);
+	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWrite(output_buffer, 1, ":");
+    s = positoa(stoken->endcolumn);
+	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWrite(output_buffer, 1, "\"");
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
@@ -559,6 +594,8 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 	if (name[0] == 0)
 		return;
 	
+	static bool isposition = isoption(options, SRCML_OPTION_POSITION);
+
     if (isstart(token) || isempty(token)) {
 
         if (prefix[0] == 0)
@@ -574,7 +611,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         if (attr_name2)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
 
-        if (isoption(options, SRCML_OPTION_POSITION))
+        if (isposition)
             addPosition(token);
     } 
 
