@@ -544,19 +544,21 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
     processText(token->getText());
 }
 
-// highly optimized itoa-type function
-static const char* positoa(int n) {
-	static constexpr int size = sizeof(int) * 4;
-	static char s[size] = { 0 };
+// itoa-type function
+static inline const char* positoa(int n) {
 
-	s[size -2] = '0';
-	char* p = &s[size - 1];
-	while (n) {
-		--p;
-		*p = '0' + (n % 10);
+	// enough space to store int as string
+	static constexpr int SIZE = sizeof(int) * 4;
+	static char s[SIZE] = { 0 };
+
+	// create string backwards from 1's place
+	char* p = s + SIZE - 1;
+	do {
+		*--p = '0' + (n % 10);
 		n /= 10;
-	}
+	} while (n);
 
+	// end of string that we are using
 	return p;
 }
 
@@ -583,11 +585,12 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
 	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
 	xmlOutputBufferWrite(output_buffer, 1, "\"");
 
+	srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
 	xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
-    s = positoa(static_cast<srcMLToken*>(&(*token))->endline);
+    s = positoa(stoken->endline);
 	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
 	xmlOutputBufferWrite(output_buffer, 1, ":");
-    s = positoa(static_cast<srcMLToken*>(&(*token))->endcolumn);
+    s = positoa(stoken->endcolumn);
 	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
 	xmlOutputBufferWrite(output_buffer, 1, "\"");
 }
