@@ -174,6 +174,12 @@ public:
     /* namespaces declared and used */
     std::vector<Namespace> namespaces;
 
+    std::string maintag;
+
+    std::string soptions;
+
+    std::string tabattribute;
+
     /** an array of name-value attribute pairs */
     const std::vector<std::string> unit_attributes;
 
