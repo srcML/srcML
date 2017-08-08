@@ -85,7 +85,7 @@ public:
      *
      * Set the line number to l.
      */
-    virtual void setLine(int l) { line = l; }        
+    virtual void setLine(int l) final { line = l; }        
 
     /**
      * getLine
@@ -113,7 +113,7 @@ public:
      *
      * @returns the column number.
      */    
-    virtual int getColumn() const { return column; }
+    virtual int getColumn() const final { return column; }
 
     /**
      * getText
@@ -122,7 +122,7 @@ public:
      *
      * @returns the current text of the token.
      */
-    virtual std::string getText() const { return text; }
+    virtual std::string getText() const final { return text; }
 
     /**
      * setText
@@ -130,7 +130,7 @@ public:
      *
      * Set the current text of the token.
      */
-    virtual void setText(const std::string& s) { text = s; }
+    virtual void setText(const std::string& s) final { text = s; }
 
     /**
      * ~srcMLToken

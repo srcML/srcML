@@ -5318,7 +5318,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { inLanguage(LANGUAGE_C) }?
         compound_name_c[iscompound] |
 
-        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_CXX) }?
         compound_name_cpp[iscompound] |
 
         macro_type_name_call 
@@ -5394,11 +5394,12 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
+        (simple_name_optional_template | generic_selection)
+        (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multopblockop)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
-            ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
+            (multopblockop)*
             identifier
         )*
 ;
@@ -5406,11 +5407,12 @@ compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 // compound name for C
 compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
+        (simple_name_optional_template | generic_selection)
+        (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multopblockop)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
-            ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
+            (multopblockop)*
             simple_name_optional_template
         )*
 ;
@@ -7740,17 +7742,15 @@ complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 // literal numbers
 literal[bool markup = true] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
-            // only markup literals in literal option
             if (markup) {
 
                 startElement(SLITERAL);
 
                 setTokenPosition(tp);
-
             }
 
         }
-        CONSTANTS ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER {  tp.setType(SCOMPLEX); })?
+        CONSTANTS ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER {  if (markup) tp.setType(SCOMPLEX); })?
 ;
 
 
@@ -8081,6 +8081,14 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
             startElement(SMODIFIER);
         }
         (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true] | BLOCKOP)
+;
+
+// Modifier ops
+multopblockop[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SMODIFIER);
+        }
+        (MULTOPS | BLOCKOP)
 ;
 
 modifiers_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
