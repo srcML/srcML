@@ -546,10 +546,11 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
 
 // highly optimized itoa-type function
 static const char* positoa(int n) {
-	static char s[sizeof(int) * 4] = { 0 };
+	static constexpr int size = sizeof(int) * 4;
+	static char s[size] = { 0 };
 
-	s[14] = '0';
-	char* p = &s[15];
+	s[size -2] = '0';
+	char* p = &s[size - 1];
 	while (n) {
 		--p;
 		*p = '0' + (n % 10);
