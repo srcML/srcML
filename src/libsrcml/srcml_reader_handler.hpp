@@ -461,9 +461,6 @@ public :
                         archive->options |= SRCML_OPTION_NESTIF;
                     else if(option == "CPPIF_CHECK")
                         archive->options |= SRCML_OPTION_CPPIF_CHECK;
-                    else if(option == "WRAP_TEMPLATE")
-                        archive->options |= SRCML_OPTION_WRAP_TEMPLATE;
-
                 }
 
             } else if(attribute == "hash") 

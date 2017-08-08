@@ -32,8 +32,6 @@
 const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<5;
 /** Markup preprocessor elements (default for C, C++, C#) */
 const unsigned int SRCML_OPTION_CPP_NOMACRO       = 1<<2;
-/** Wrap function/classes/etc with templates (default: on) */
-const unsigned int SRCML_OPTION_WRAP_TEMPLATE     = 1<<11;
 /** output is interactive (good for editing applications) */
 const unsigned int SRCML_OPTION_INTERACTIVE       = 1<<12;
 /** Not sure what this used for */
