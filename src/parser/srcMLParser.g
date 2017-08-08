@@ -3858,7 +3858,7 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
 
             }
 
-            if (markup_colon && !(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY))
+            if (markup_colon && !(in_ternary && true)
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
@@ -4635,7 +4635,7 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
 qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITION); LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)))
+            if (!(in_ternary && true))
                 startElement(SOPERATOR);
         }
         QMARK ({ SkipBufferSize() == 0 }? QMARK)?
@@ -7558,7 +7558,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 // the expression part
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_for_incr = false; ENTRY_DEBUG } :
 
-       { isoption(parser_options, SRCML_OPTION_TERNARY) && !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
+       { true && !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
 
@@ -7631,7 +7631,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         }
 
         // can have (ternary) in a ternary condition
-        (options { greedy = true; } : { isoption(parser_options, SRCML_OPTION_TERNARY) && !skip_ternary && inMode(MODE_TERNARY_CONDITION)
+        (options { greedy = true; } : { true && !skip_ternary && inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression)* |
 
