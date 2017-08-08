@@ -94,8 +94,8 @@ public:
      *
      * @returns the line number.
      */
-    virtual int getLine() const { return line; }
-    virtual int getEndLine() const { return endline; }
+    virtual int getLine() const final { return line; }
+    virtual int getEndLine() const final { return endline; }
 
     /**
      * setColumn
@@ -103,8 +103,8 @@ public:
      *
      * Set the column number to c.
      */
-    virtual void setColumn(int c) { column = c; }
-    virtual int getEndColumn() const { return endcolumn; }
+    virtual void setColumn(int c) final { column = c; }
+    virtual int getEndColumn() const final { return endcolumn; }
 
     /**
      * getColumn
