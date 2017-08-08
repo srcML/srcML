@@ -176,7 +176,8 @@ COMMENT_TEXT {
 
               // make sure to count newlines even when inside of comments
               newline();
-              setLine(getLine() + (1 << 16));
+              if(isoption(options, SRCML_OPTION_LINE))
+                  setLine(getLine() + (1 << 16));
 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
               if (mode == LINECOMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
@@ -280,7 +281,8 @@ COMMENT_TEXT {
 
                             consume();
                             newline();
-                            setLine(getLine() + (1 << 16));
+                            if(isoption(options, SRCML_OPTION_LINE))
+                                setLine(getLine() + (1 << 16));
                             prevLA = 0;
                             prevprevLA = 0;
                         }

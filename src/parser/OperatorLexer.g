@@ -119,16 +119,18 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
                 // a preprocessor line will end at the right spot
                 onpreprocline = true; 
 
-                if (LA(1) == 'l') {
+                if(isoption(options, SRCML_OPTION_LINE)) {
                     int start = mark();
                     ++inputState->guessing;
-                    consume();  
-                    if(LA(1) == 'i') {
-                        consume();
-                        if(LA(1) ==  'n') {
+                    if(LA(1) == 'l') {
+                        consume();  
+                        if(LA(1) == 'i') {
                             consume();
-                            if(LA(1) ==  'e')
-                                isline = true;
+                            if(LA(1) ==  'n') {
+                                consume();
+                                if(LA(1) ==  'e')
+                                    isline = true;
+                            }
                         }
                     }
                     --inputState->guessing;

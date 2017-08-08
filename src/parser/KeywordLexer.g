@@ -354,7 +354,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
     : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true),
     atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1), lastpos(0), prev(0)
 {
-    setLine(getLine() + (1 << 16));
+    if(isoption(options, SRCML_OPTION_LINE))
+       setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
 
 #define ADD_MACRO_LITERAL(token, type) \

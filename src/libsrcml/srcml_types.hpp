@@ -46,6 +46,8 @@ const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
 const unsigned int SRCML_OPTION_NESTIF            = 1<<9;
 /** Additional cpp:if/cpp:endif checking */
 const unsigned int SRCML_OPTION_CPPIF_CHECK       = 1<<16;
+/** Extra processing of @code#line@endcode for position information */
+const unsigned int SRCML_OPTION_LINE              = 1<<15;
 /** Markups OpenMP in special namespace */
 const unsigned int SRCML_OPTION_OPENMP            = 1<<25;
 /** Apply transformations to the entire srcML file (default: each unit */
