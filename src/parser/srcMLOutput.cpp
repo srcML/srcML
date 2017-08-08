@@ -28,17 +28,12 @@
 #include "srcMLToken.hpp"
 #include "srcmlns.hpp"
 #include <srcml.h>
-#include <cstring>
-#include <sstream>
-#ifdef _MSC_BUILD
-#include <io.h>
-#define snprintf _snprintf
-#endif
 
 // Definition of elements, including name, URI, attributes, and special processing
 // Included to take advantage of inlined methods
 #include <srcMLOutputElements.hpp>
 
+// @todo Why is this here?
 #define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
 
 /**
@@ -65,6 +60,16 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
+    std::string SEP;
+    //if(isoption(options, SRCML_OPTION_XML_DECL))        { soptions = "XMLDECL"; }
+    //if(isoption(options, SRCML_OPTION_NAMESPACE_DECL))  { if(soptions != "") SEP = ","; soptions += SEP + "NAMESPACEDECL"; }
+    if(isoption(options, SRCML_OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_TEXT_ELSE"; }
+    if(isoption(options, SRCML_OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_MARKUP_IF0"; }
+    if(isoption(options, SRCML_OPTION_LINE))           { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "LINE"; }
+    if(isoption(options, SRCML_OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
+    if(isoption(options, SRCML_OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
+    if(isoption(options, SRCML_OPTION_WRAP_TEMPLATE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "WRAP_TEMPLATE"; }
+    if(!isoption(options, SRCML_OPTION_TERNARY))       { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "OPERATOR_TERNARY"; }
 }
 
 /**
@@ -124,6 +129,18 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
         lineAttribute = namespaces[POS].prefix + ":line";
         columnAttribute = namespaces[POS].prefix + ":column";
     }
+
+    // now that we have the prefixes, can setup the main tag
+    maintag = !namespaces[0].prefix.empty() ? namespaces[0].prefix : "";
+    if (!maintag.empty())
+        maintag += ":";
+    maintag += "unit";
+
+    // setting up for tabs, even if not used
+    tabattribute = namespaces[POS].prefix;
+    if (!tabattribute.empty())
+    	tabattribute.append(":");
+    tabattribute.append("tabs");
 }
 
 /**
@@ -353,14 +370,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     for (auto& ns : namespaces)
         ns.used = false;
 
-    const char* prefix = namespaces[0].prefix.c_str();
-    std::string maintag = prefix ? prefix : "";
-    if (!maintag.empty())
-        maintag += ":";
-    maintag += "unit";
-
     // start of main tag
-    xmlTextWriterStartElement(xout, BAD_CAST /* type2name(SUNIT) */ maintag.c_str());
+    xmlTextWriterStartElement(xout, BAD_CAST maintag.c_str());
     ++openelementcount;
 
     // record where unit start tag name ends
@@ -370,29 +381,6 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     if (/* outer && */ isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
         outputNamespaces(xout, options, depth);
     }
-
-    // setting up for tabs, even if not used
-    std::ostringstream stabs;
-    std::string tabattribute;
-    if (isoption(options, SRCML_OPTION_POSITION)) {
-        stabs << tabsize;
-        tabattribute = namespaces[POS].prefix;
-        tabattribute.append(":tabs");
-    }
-
-    std::string soptions;
-    std::string SEP;
-    //if(isoption(options, SRCML_OPTION_XML_DECL))        { soptions = "XMLDECL"; }
-    //if(isoption(options, SRCML_OPTION_NAMESPACE_DECL))  { if(soptions != "") SEP = ","; soptions += SEP + "NAMESPACEDECL"; }
-    if(isoption(options, SRCML_OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_TEXT_ELSE"; }
-    if(isoption(options, SRCML_OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_MARKUP_IF0"; }
-    if(isoption(options, SRCML_OPTION_LINE))           { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "LINE"; }
-    if(isoption(options, SRCML_OPTION_NESTIF))         { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "NESTIF"; }
-    if(isoption(options, SRCML_OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
-    if(isoption(options, SRCML_OPTION_WRAP_TEMPLATE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "WRAP_TEMPLATE"; }
-    if(!isoption(options, SRCML_OPTION_TERNARY))       { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "OPERATOR_TERNARY"; }
-
-    std::string stab = stabs.str();
 
     // list of attributes
     const char* const attrs[][2] = {
@@ -412,7 +400,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         { UNIT_ATTRIBUTE_VERSION, version },
 
         // position tab setting
-        { tabattribute.c_str(), isoption(options, SRCML_OPTION_POSITION) ? stab.c_str() : 0 },
+        { tabattribute.c_str(), isoption(options, SRCML_OPTION_POSITION) ? std::to_string(tabsize).c_str() : 0 },
 
         // timestamp attribute
         { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
@@ -437,7 +425,6 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     }
 
     for(std::vector<std::string>::size_type pos = 0; pos < attributes.size(); pos += 2) {
-
         xmlTextWriterWriteAttribute(xout, BAD_CAST attributes[pos].c_str(), BAD_CAST attributes[pos + 1].c_str());
     }
 
