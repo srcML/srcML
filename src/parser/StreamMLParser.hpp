@@ -335,107 +335,7 @@ private:
      */
     bool consumeSkippedToken() {
 
-        // preprocessor (unless we already are in one)
-        if (isoption(options, SRCML_OPTION_CPP) && !inskip && srcMLParser::LA(1) == srcMLParser::PREPROC) {
-
-            // start preprocessor handling
-            inskip = true;
-
-            // use preprocessor token buffers
-            pouttb = &pretb;
-            pskiptb = &skippretb;
-
-            // parse preprocessor statement stopping at EOL
-            try {
-
-                srcMLParser::preprocessor();
-
-            } catch(...) {}
-
-            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
-            skippretb.clear();
-
-            // move back to normal buffer
-            pskiptb = &skiptb;
-            pouttb = &tb;
-
-            // put preprocessor buffer into skipped buffer
-            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
-            pretb.clear();
-
-            // stop preprocessor handling
-            inskip = false;
-
-            return true;
-        }
-
-        // macro call
-        if (srcMLParser::LA(1) == srcMLParser::MACRO_NAME && !inskip) {
-
-            inskip = true;
-
-            // use preprocessor token buffers
-            pouttb = &pretb;
-            pskiptb = &skippretb;
-
-            // parse macro_call
-            srcMLParser::macro_pattern_call();
-
-            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
-            skippretb.clear();
-
-            // move back to normal buffer
-            pskiptb = &skiptb;
-            pouttb = &tb;
-
-            // put preprocessor buffer into skipped buffer
-            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
-            pretb.clear();
-
-            inskip = false;
-            return true;
-
-        }
-
-        if (!inskip && srcMLParser::LA(1) == srcMLParser::VISUAL_CXX_ASM) {
-
-            // start preprocessor handling
-            inskip = true;
-
-            // use preprocessor token buffers
-            pouttb = &pretb;
-            pskiptb = &skippretb;
-
-            // parse preprocessor statement stopping at EOL
-            try {
-
-                srcMLParser::visual_cxx_asm_declaration();
-
-            } catch(...) {}
-
-            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
-            skippretb.clear();
-
-            // move back to normal buffer
-            pskiptb = &skiptb;
-            pouttb = &tb;
-
-            // put preprocessor buffer into skipped buffer
-            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
-            pretb.clear();
-
-            // stop preprocessor handling
-            inskip = false;
-
-            return true;
-        }
-
         if (isSkipToken(srcMLParser::LA(1))) {
-
-            std::string s;
 
             switch (srcMLParser::LA(1)) {
             case srcMLParser::CONTROL_CHAR:
@@ -472,9 +372,7 @@ private:
 
             case srcMLParser::LINE_DOXYGEN_COMMENT_END:
 
-                s = srcMLParser::LT(1)->getText();
-
-                if (s.back() != '\n') {
+                if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
@@ -521,9 +419,7 @@ private:
 
             case srcMLParser::LINECOMMENT_END:
 
-                s = srcMLParser::LT(1)->getText();
-
-                if (s.back() != '\n') {
+                if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                 } else {
@@ -537,12 +433,112 @@ private:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
 
-
                 break;
             }
 
             // rest of consume process
             srcMLParser::consume();
+
+            return true;
+        }
+
+        if (inskip)
+            return false;
+
+        // preprocessor (unless we already are in one)
+        if (isoption(options, SRCML_OPTION_CPP) && srcMLParser::LA(1) == srcMLParser::PREPROC) {
+
+            // start preprocessor handling
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse preprocessor statement stopping at EOL
+            try {
+
+                srcMLParser::preprocessor();
+
+            } catch(...) {}
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
+            skippretb.clear();
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
+            pretb.clear();
+
+            // stop preprocessor handling
+            inskip = false;
+
+            return true;
+        }
+
+        // macro call
+        if (srcMLParser::LA(1) == srcMLParser::MACRO_NAME) {
+
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse macro_call
+            srcMLParser::macro_pattern_call();
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
+            skippretb.clear();
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
+            pretb.clear();
+
+            inskip = false;
+            return true;
+
+        }
+
+        if (srcMLParser::LA(1) == srcMLParser::VISUAL_CXX_ASM) {
+
+            // start preprocessor handling
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse preprocessor statement stopping at EOL
+            try {
+
+                srcMLParser::visual_cxx_asm_declaration();
+
+            } catch(...) {}
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
+            skippretb.clear();
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
+            pretb.clear();
+
+            // stop preprocessor handling
+            inskip = false;
 
             return true;
         }
