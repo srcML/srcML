@@ -375,7 +375,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
 #undef ADD_MACRO_LITERAL
 
-    keyword keyword_map[] = {
+    constexpr const keyword keyword_map[] = {
         // common keywords
         { "if"           , IF            , LANGUAGE_ALL }, 
         { "else"         , ELSE          , LANGUAGE_ALL }, 
