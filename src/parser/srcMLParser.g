@@ -1572,7 +1572,7 @@ lambda_java[] { ENTRY_DEBUG } :
             
         TRETURN
         {
-            if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+            if (LA(1) != LCURLY)
                 startNoSkipElement(SPSEUDO_BLOCK);
         }
 ;
@@ -2073,7 +2073,7 @@ do_statement[] { ENTRY_DEBUG } :
 
         {
 
-            if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+            if (LA(1) != LCURLY)
                 startNoSkipElement(SPSEUDO_BLOCK);
 
         }
@@ -2270,7 +2270,7 @@ else_statement[] { ENTRY_DEBUG } :
 
         {
 
-            if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+            if (LA(1) != LCURLY)
                 startNoSkipElement(SPSEUDO_BLOCK);
 
         }
@@ -6757,7 +6757,7 @@ lambda_csharp[] { ENTRY_DEBUG } :
 
     LAMBDA
     {
-        if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY) {
+        if (LA(1) != LCURLY) {
 
             startNoSkipElement(SPSEUDO_BLOCK);
 
@@ -7332,7 +7332,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     // start the then element
                     //startNoSkipElement(STHEN);
 
-                    if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                    if (LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
 
 
@@ -7340,7 +7340,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 
                         std::stack<int> open_elements;
                         //open_elements.push(STHEN);
-                        if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                        if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
@@ -7355,13 +7355,13 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                 if (inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
 
                     endMode(MODE_LIST);
-                    if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                    if (LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
 
                     if (cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                        if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
@@ -7377,13 +7377,13 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     if (inMode(MODE_LIST))
                         endMode(MODE_LIST);
     
-                    if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                    if (LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
 
                     if (cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                        if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
@@ -7395,13 +7395,13 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                 } else if (inMode(MODE_LIST | MODE_FOR_CONDITION)) {
 
                     endMode(MODE_FOR_CONDITION);
-                    if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                    if (LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
 
                     if (cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        if (isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)                        
+                        if (LA(1) != LCURLY)                        
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
