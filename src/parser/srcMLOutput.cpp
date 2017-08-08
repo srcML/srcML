@@ -118,13 +118,6 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
             namespaces.push_back({ prefix[outer_pos], uri[outer_pos], false });
         }
     }
-
-    // setup attributes names for line/column position if used
-    if (isoption(options, SRCML_OPTION_POSITION)) {
-
-        startAttribute = namespaces[POS].prefix + ":start";
-        endAttribute = namespaces[POS].prefix + ":end";
-    }
 }
 
 /**
@@ -553,7 +546,7 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
 
 // highly optimized itoa-type function
 static const char* positoa(int n) {
-	static char s[16] = { 0 };
+	static char s[sizeof(int) * 4] = { 0 };
 
 	s[14] = '0';
 	char* p = &s[15];
@@ -575,23 +568,27 @@ static const char* positoa(int n) {
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
 	// highly optimized code as this is output for every start tag
+
+	static std::string startAttribute = " " + namespaces[POS].prefix + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "start=\"";
+	static std::string endAttribute   = " " + namespaces[POS].prefix + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "end=\"";
+
     const char* s = 0;
 
-    xmlTextWriterStartAttribute(xout, BAD_CAST startAttribute.c_str());
+	xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.c_str());
     s = positoa(token->getLine());
 	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
 	xmlOutputBufferWrite(output_buffer, 1, ":");
     s = positoa(token->getColumn());
 	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
-	xmlTextWriterEndAttribute(xout);
+	xmlOutputBufferWrite(output_buffer, 1, "\"");
 
-    xmlTextWriterStartAttribute(xout, BAD_CAST endAttribute.c_str());
+	xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
     s = positoa(static_cast<srcMLToken*>(&(*token))->endline);
 	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
 	xmlOutputBufferWrite(output_buffer, 1, ":");
     s = positoa(static_cast<srcMLToken*>(&(*token))->endcolumn);
 	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
-	xmlTextWriterEndAttribute(xout);
+	xmlOutputBufferWrite(output_buffer, 1, "\"");
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
@@ -600,6 +597,8 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 	if (name[0] == 0)
 		return;
 	
+	static bool isposition = isoption(options, SRCML_OPTION_POSITION);
+
     if (isstart(token) || isempty(token)) {
 
         if (prefix[0] == 0)
@@ -615,7 +614,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         if (attr_name2)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
 
-        if (isoption(options, SRCML_OPTION_POSITION))
+        if (isposition)
             addPosition(token);
     } 
 
