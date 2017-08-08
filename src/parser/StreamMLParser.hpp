@@ -282,9 +282,9 @@ private:
         // end position info is needed from the matching last end token
         // that was enqueued
         if (isoption(options, SRCML_OPTION_POSITION)) {
-            const antlr::RefToken qetoken = std::move(ends.top());
-            static_cast<srcMLToken*>(&(*qetoken))->endline = LT(1)->getLine();
-            static_cast<srcMLToken*>(&(*qetoken))->endcolumn = LT(1)->getColumn();
+            srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
+            qetoken->endline = lastline;
+            qetoken->endcolumn = lastcolumn;
             ends.pop();
         }
     }
@@ -297,12 +297,12 @@ private:
         // end position info is needed from the matching last end token
         // that was enqueued
         if (isoption(options, SRCML_OPTION_POSITION)) {
-            const antlr::RefToken qetoken = std::move(ends.top());
-            static_cast<srcMLToken*>(&(*qetoken))->endline = LT(1)->getLine();
-            static_cast<srcMLToken*>(&(*qetoken))->endcolumn = LT(1)->getColumn();
+            srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
+            qetoken->endline = lastline;
+            qetoken->endcolumn = lastcolumn;
             ends.pop();
         }
-    }
+     }
 
     /**
      * consume
@@ -316,6 +316,10 @@ private:
 
         // rest of consume process
         srcMLParser::consume();
+
+        // record for end position of start elements
+        lastline = LT(1)->getLine();
+        lastcolumn = LT(1)->getColumn() - 1;
 
         // consume any skipped tokens
         while (consumeSkippedToken())
@@ -789,6 +793,9 @@ private:
     }
 
 private:
+
+    int lastline = 0;
+    int lastcolumn = 0;
 
     /** parser options */
     OPTION_TYPE & options;
