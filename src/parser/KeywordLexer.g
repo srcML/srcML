@@ -486,8 +486,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "forever"      , FOREVER       , LANGUAGE_CXX },
         { "emit"         , EMIT          , LANGUAGE_CXX },  
 
-        // add all C++ specific keywords to the literals table
-        // class
+        // C++ specific keywords
         { "virtual"      , VIRTUAL       , LANGUAGE_CXX_FAMILY }, 
         { "friend"       , FRIEND        , LANGUAGE_CXX }, 
         { "operator"     , OPERATOR      , LANGUAGE_CXX_FAMILY }, 
@@ -514,7 +513,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "final"         , FINAL          , LANGUAGE_CXX },
         { "override"      , OVERRIDE       , LANGUAGE_CXX },
  
-        // add all C++ specific keywords to the literals table
+        // C++ specific keywords
         { "constexpr"        , CONSTEXPR        , LANGUAGE_CXX }, 
         { "noexcept"         , NOEXCEPT         , LANGUAGE_CXX }, 
         { "thread_local"     , THREAD_LOCAL     , LANGUAGE_CXX }, 
@@ -530,7 +529,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "static_cast"      , STATIC_CAST      , LANGUAGE_CXX },
         { "static_assert"    , STATIC_ASSERT    , LANGUAGE_CXX },
 
-        // Add alternative operators
+        // C++ alternative operators
         { "and"           , OPERATORS        , LANGUAGE_CXX }, 
         { "and_eq"        , OPERATORS        , LANGUAGE_CXX }, 
         { "bitand"        , OPERATORS        , LANGUAGE_CXX }, 
@@ -543,8 +542,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "xor"           , OPERATORS        , LANGUAGE_CXX }, 
         { "xor_eq"        , OPERATORS        , LANGUAGE_CXX }, 
 
-        // add all Java specific keywords to the literals table
-        // exception handling
+        // Java specific keywords
         { "throws"        , THROWS        , LANGUAGE_JAVA }, 
         { "finally"       , FINALLY       , LANGUAGE_JAVA }, 
         { "interface"     , INTERFACE     , LANGUAGE_JAVA }, 
@@ -566,7 +564,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 	    { "assert"        , ASSERT        , LANGUAGE_JAVA }, 
 
 
-        // add all C# specific keywords to the literals table
+        // C# specific keywords
         { "foreach"       , FOREACH       , LANGUAGE_CSHARP }, 
         { "ref"           , REF           , LANGUAGE_CSHARP }, 
         { "out"           , OUT           , LANGUAGE_CSHARP }, 
