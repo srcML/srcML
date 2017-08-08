@@ -231,7 +231,10 @@ private:
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
-        ++openelements;
+
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            ends.emplace(ntoken);
+        }
 
         pushToken(ntoken);
     }
@@ -242,7 +245,10 @@ private:
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
-        ++openelements;
+
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            ends.emplace(ntoken);
+        }
 
         pushSkipToken(ntoken);
     }
@@ -253,7 +259,10 @@ private:
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
-        ++openelements;
+
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            ends.emplace(ntoken);
+        }
 
         pushTokenFlush(ntoken);
     }
@@ -267,32 +276,32 @@ private:
      */
     inline void pushEToken(int token) {
 
-        // push a new start token
-        auto ntoken = antlr::RefToken(EndTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
-        --openelements;
-
         // push a new end token
-        pushToken(ntoken);
+        pushToken(antlr::RefToken(EndTokenFactory(token)));
 
-        if (isoption(options, SRCML_OPTION_POSITION))
-            ends.emplace(ntoken);
+        // end position info is needed from the matching last end token
+        // that was enqueued
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            const antlr::RefToken qetoken = std::move(ends.top());
+            static_cast<srcMLToken*>(&(*qetoken))->endline = LT(1)->getLine();
+            static_cast<srcMLToken*>(&(*qetoken))->endcolumn = LT(1)->getColumn();
+            ends.pop();
+        }
     }
 
     inline void pushESkipToken(int token) {
 
-        // push a new start token
-        auto ntoken = antlr::RefToken(EndTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
-        --openelements;
-
         // push a new end token
-        pushSkipToken(ntoken);
+        pushSkipToken(antlr::RefToken(EndTokenFactory(token)));
 
-        if (isoption(options, SRCML_OPTION_POSITION))
-            ends.emplace(ntoken);
+        // end position info is needed from the matching last end token
+        // that was enqueued
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            const antlr::RefToken qetoken = std::move(ends.top());
+            static_cast<srcMLToken*>(&(*qetoken))->endline = LT(1)->getLine();
+            static_cast<srcMLToken*>(&(*qetoken))->endcolumn = LT(1)->getColumn();
+            ends.pop();
+        }
     }
 
     /**
@@ -596,21 +605,12 @@ private:
         while (paused)
             fillTokenBuffer();
 
-        while (isoption(options, SRCML_OPTION_POSITION) && openelements > 1) {
+        while (isoption(options, SRCML_OPTION_POSITION) && ends.size() > 1) {
             fillTokenBuffer();
         }
 
         // pop and send back the top token
         const antlr::RefToken& tok = std::move(tb.front());
-
-        // end position info is needed from the matching last end token
-        // that was enqueued. This is at the top of the endtoken stack
-        if (isoption(options, SRCML_OPTION_POSITION) && ispurestart(tok)) {
-            const antlr::RefToken qetoken = std::move(ends.top());
-            static_cast<srcMLToken*>(&(*tok))->endline = qetoken->getLine();
-            static_cast<srcMLToken*>(&(*tok))->endcolumn = qetoken->getColumn();
-            ends.pop();
-        }
 
         return tok;
     }
@@ -789,8 +789,6 @@ private:
     }
 
 private:
-
-    int openelements = 0;
 
     /** parser options */
     OPTION_TYPE & options;
