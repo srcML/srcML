@@ -36,8 +36,6 @@ const unsigned int SRCML_OPTION_CPP_NOMACRO       = 1<<2;
 const unsigned int SRCML_OPTION_INTERACTIVE       = 1<<12;
 /** Not sure what this used for */
 const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
-/** Nest if in else if intead of elseif tag */
-const unsigned int SRCML_OPTION_NESTIF            = 1<<9;
 /** Additional cpp:if/cpp:endif checking */
 const unsigned int SRCML_OPTION_CPPIF_CHECK       = 1<<16;
 /** Extra processing of @code#line@endcode for position information */
