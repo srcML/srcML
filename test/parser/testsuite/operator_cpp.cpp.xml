@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="operator" filename="operator_cpp" options="WRAP_TEMPLATE">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="operator" filename="operator_cpp">
 
 <unit>
 <expr_stmt><expr><name><name>a</name><operator>-&gt;*</operator><name>b</name></name></expr>;</expr_stmt>
@@ -190,7 +190,7 @@
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>A</name></type></parameter>, <parameter><type><name>B</name></type></parameter>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+<class_decl><template>template<parameter_list>&lt;<parameter><type><name>A</name></type></parameter>, <parameter><type><name>B</name></type></parameter>&gt;</parameter_list></template> class <name>A</name>;</class_decl>
 </unit>
 
 <unit>
