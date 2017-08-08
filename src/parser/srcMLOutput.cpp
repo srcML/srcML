@@ -205,16 +205,12 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
     unit_hash = hash;
     unit_encoding = encoding;
 
-    bool isinteractive = isoption(options, SRCML_OPTION_INTERACTIVE);
-
     while (1) {
         const antlr::RefToken& token = input->nextToken();
         if (token->getType() == antlr::Token::EOF_TYPE)
             break;
 
         outputToken(token);
-        if (isinteractive) 
-            xmlTextWriterFlush(xout);
     }
 }
 
