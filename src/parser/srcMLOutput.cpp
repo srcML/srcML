@@ -551,6 +551,21 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
     processText(token->getText());
 }
 
+// highly optimized itoa-type function
+static const char* positoa(int n) {
+	static char s[16] = { 0 };
+
+	s[14] = '0';
+	char* p = &s[15];
+	while (n) {
+		--p;
+		*p = '0' + (n % 10);
+		n /= 10;
+	}
+
+	return p;
+}
+
 /**
  * processTextPosition
  * @param token token to output as text
@@ -559,12 +574,24 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
-	std::string startattrvalue = std::to_string(token->getLine()) + ":" + std::to_string(token->getColumn());
-	std::string endattrvalue = std::to_string(static_cast<srcMLToken*>(&(*token))->endline) + ":" + std::to_string(static_cast<srcMLToken*>(&(*token))->endcolumn);
+	// highly optimized code as this is output for every start tag
+    const char* s = 0;
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST startAttribute.c_str(), BAD_CAST startattrvalue.c_str());
+    xmlTextWriterStartAttribute(xout, BAD_CAST startAttribute.c_str());
+    s = positoa(token->getLine());
+	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWrite(output_buffer, 1, ":");
+    s = positoa(token->getColumn());
+	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlTextWriterEndAttribute(xout);
 
-    xmlTextWriterWriteAttribute(xout, BAD_CAST endAttribute.c_str(), BAD_CAST endattrvalue.c_str());
+    xmlTextWriterStartAttribute(xout, BAD_CAST endAttribute.c_str());
+    s = positoa(static_cast<srcMLToken*>(&(*token))->endline);
+	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWrite(output_buffer, 1, ":");
+    s = positoa(static_cast<srcMLToken*>(&(*token))->endcolumn);
+	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlTextWriterEndAttribute(xout);
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
