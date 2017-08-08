@@ -123,13 +123,6 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
         }
     }
 
-    // setup attributes names for line/column position if used
-    if (isoption(options, SRCML_OPTION_POSITION)) {
-
-        lineAttribute = namespaces[POS].prefix + ":line";
-        columnAttribute = namespaces[POS].prefix + ":column";
-    }
-
     // now that we have the prefixes, can setup the main tag
     maintag = !namespaces[0].prefix.empty() ? namespaces[0].prefix : "";
     if (!maintag.empty())
