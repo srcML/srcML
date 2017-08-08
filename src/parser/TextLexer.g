@@ -218,7 +218,7 @@ WS :
             ' '  |
 
             // horizontal tab
-            '\t' { tabs(); }
+            '\t'
         )+
 
     ;
