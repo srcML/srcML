@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="union_cpp" options="WRAP_TEMPLATE">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="union_cpp">
 
 <unit>
 <union>union <name>A</name> <block>{<public type="default">
@@ -30,13 +30,12 @@
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>B</name></parameter>&gt;</parameter_list>
-<union>union <name>A</name> <block>{<public type="default">
+<union><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>B</name></parameter>&gt;</parameter_list></template>union <name>A</name> <block>{<public type="default">
 
-  <template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>C</name></parameter>&gt;</parameter_list>
-  <constructor_decl><name>A</name><parameter_list>()</parameter_list>;</constructor_decl></template>
+  <constructor_decl><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>C</name></parameter>&gt;</parameter_list></template>
+  <name>A</name><parameter_list>()</parameter_list>;</constructor_decl>
 
-</public>}</block>;</union></template>
+</public>}</block>;</union>
 </unit>
 
 <unit>

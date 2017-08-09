@@ -77,14 +77,11 @@
  *
  * Helpers:
  *
- * - The class StreamParser provides stream processing.  The class StreamMLParser
- * provides markup language stream processing.  These are template classes which
- * use this parser as a template parameter base.
+ * - The class StreamMLParser provides markup language stream processing.  These are
+ * template classes which use this parser as a template parameter base.
  *
- * - The class TokenParser provides the virtual table for methods in StreamParser
+ * - The class TokenParser provides the virtual table for methods in StreamMLParser
  * that are called in this parser.
- *
- * - Obviously this needs to be untangled but is not as easy as it should be.
  *
  * - Additional methods for the parser are declared in class Mode.  These methods
  * only provide general support for the parser.  They do not, repeat, do not, contain
@@ -130,6 +127,7 @@ header "post_include_hpp" {
 
 #include <string>
 #include <deque>
+#include <array>
 #include <stack>
 #include "Language.hpp"
 #include "ModeStack.hpp"
@@ -390,6 +388,7 @@ tokens {
 	SCONDITION;
 	SBLOCK;
     SPSEUDO_BLOCK;
+    SCONTENT;
     SINDEX;
 
     // statements
@@ -672,7 +671,7 @@ public:
     int cpp_ifcount = 0;
     bool isdestructor = false;
     const OPTION_TYPE parser_options = 0;
-    std::string namestack[2];
+    std::array<std::string, 2> namestack;
     int ifcount = 0;
 #ifdef ENTRY_DEBUG
     int ruledepth = 0;
@@ -744,7 +743,7 @@ public:
 
     virtual void consume() {
 
-        if(!skip_tokens_set.member(LA(1))) last_consumed = LA(1);
+        if (!skip_tokens_set.member(LA(1))) last_consumed = LA(1);
         LLkParser::consume();
 
 
@@ -804,7 +803,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         // { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
-        { (isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) || (LA(1) != TEMPLATE || next_token() != TEMPOPS))
+        { ((LA(1) != TEMPLATE || next_token() != TEMPOPS))
          && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
          && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
          && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
@@ -847,7 +846,7 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | { !isoption(parser_options, SRCML_OPTION_NESTIF) && next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
@@ -886,7 +885,6 @@ keyword_statements[] { ENTRY_DEBUG } :
 
         // Qt
         forever_statement | emit_statement
-
 ;
 
 /*
@@ -1036,8 +1034,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
 
-
-        { inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN }? annotation |
+        { inLanguage(LANGUAGE_JAVA) }? annotation |
 
         expression_statement[type, call_count]
 ;
@@ -1045,112 +1042,102 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
 // efficient way to view the token after the current LA(1)
 next_token[] returns [int token] {
 
-    antlr::RefToken rtoken = LT(1);
+        if (LT(1)->getColumn() == current_column && LT(1)->getLine() == current_line) {
 
-    if(rtoken->getColumn() == current_column && rtoken->getLine() == current_line) {
+            token = nxt_token;
 
-        token = nxt_token;
+        } else {
 
-    } else {
+            current_column = LT(1)->getColumn();
+            current_line = LT(1)->getLine();
 
-        current_column = rtoken->getColumn();
-        current_line = rtoken->getLine();
+            int place = mark();
+            inputState->guessing++;
+
+            // consume current token
+            consume();
+
+            token = LA(1);
+
+            inputState->guessing--;
+            rewind(place);
+
+            nxt_token = token;
+        }
+} :;
+
+// efficient way to view the token after the current next_token
+next_token_two[] returns [int token] {
 
         int place = mark();
         inputState->guessing++;
 
         // consume current token
         consume();
+        consume();
 
         token = LA(1);
 
         inputState->guessing--;
         rewind(place);
-
-        nxt_token = token;
-
-    }
-
-} :;
-
-// efficient way to view the token after the current next_token
-next_token_two[] returns [int token] {
-
-    int place = mark();
-    inputState->guessing++;
-
-    // consume current token
-    consume();
-    consume();
-
-    token = LA(1);
-
-    inputState->guessing--;
-    rewind(place);
-
 } :;
 
 // is the next token one of the parameters
 next_token_check[int token1, int token2] returns [bool result] {
 
-    int token = next_token();
+        int token = next_token();
 
-    result = token == token1 || token == token2;
-
-} :;
+        result = token == token1 || token == token2;
+}:;
 
 // skips past any skiptokens to get the one after
 look_past[int skiptoken] returns [int token] {
 
-    int place = mark();
-    inputState->guessing++;
+        int place = mark();
+        inputState->guessing++;
 
-    while (LA(1) == skiptoken)
-        consume();
+        while (LA(1) == skiptoken)
+            consume();
 
-    token = LA(1);
+        token = LA(1);
 
-    inputState->guessing--;
-    rewind(place);
-
+        inputState->guessing--;
+        rewind(place);
 } :;
 
 // skip past all of the skiptoken1 and skiptoken2 and return the one after
 look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
 
-    int place = mark();
-    inputState->guessing++;
+        int place = mark();
+        inputState->guessing++;
 
-    while (LA(1) == skiptoken1 || LA(1) == skiptoken2)
-        consume();
+        while (LA(1) == skiptoken1 || LA(1) == skiptoken2)
+            consume();
 
-    token = LA(1);
+        token = LA(1);
 
-    inputState->guessing--;
-    rewind(place);
-
+        inputState->guessing--;
+        rewind(place);
 } :;
 
 // give the next token as if rule was applied.  If rule can not be applied return -1
 look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 
-    int place = mark();
-    inputState->guessing++;
+        int place = mark();
+        inputState->guessing++;
 
-    try {
+        try {
 
-        (this->*rule)();
-        token = LA(1);
+            (this->*rule)();
+            token = LA(1);
 
-    } catch(...) {
+        } catch(...) {
 
-        token = -1;
+            token = -1;
+        }
 
-    }
-
-    inputState->guessing--;
-    rewind(place);
-
+        inputState->guessing--;
+        rewind(place);
 } :;
 
 /* functions */
@@ -1189,22 +1176,22 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
 
 decl_pre_type[int& type_count] { ENTRY_DEBUG } :
 
-    (
+        (
 
-    { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) |
+        { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) |
 
-    // special case only for functions.  Should only reach here for funciton in Java
-    { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
+        // special case only for functions.  Should only reach here for funciton in Java
+        { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
 
-    { inLanguage(LANGUAGE_JAVA) }? annotation |
+        { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-    { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+        { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-    { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
 
-    )
+        )
 
-    set_int[type_count, type_count - 1]
+        set_int[type_count, type_count - 1]
 ;
 
 // header of a function
@@ -1213,7 +1200,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         // no return value functions:  casting operator method and main
         { type_count == 0 }? function_identifier
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
-        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
         (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1))
             || (inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN || LA(1) == FINAL))
@@ -1270,28 +1257,26 @@ function_tail[] { ENTRY_DEBUG } :
 
 // Java annotation default values
 annotation_default[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
+        {
 
-        startNewMode(MODE_LOCAL);
+            startNewMode(MODE_LOCAL);
 
-        startElement(SDEFAULT);
+            startElement(SDEFAULT);
 
-    }
-    DEFAULT annotation_default_initialization
-
+        }
+        DEFAULT annotation_default_initialization
 ;
 
 // Java annotation default value initialization
 annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
+        {
 
-        startNewMode(MODE_LOCAL);
+            startNewMode(MODE_LOCAL);
 
-        startElement(SDECLARATION_INITIALIZATION);
+            startElement(SDECLARATION_INITIALIZATION);
 
-    }
-    complete_expression
-
+        }
+        complete_expression
 ;
 
 // Ref qualifiers in function tail
@@ -1326,7 +1311,7 @@ function_rest[int& fla] { ENTRY_DEBUG } :
 function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         {
 
-            if(type_count == 0) {
+            if (type_count == 0) {
 
                 setMode(MODE_FUNCTION_NAME);
                 return;
@@ -1354,7 +1339,7 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         { 
 
             decTypeCount();
-            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
+            if (inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
         }
 
@@ -1437,7 +1422,6 @@ lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 
         (options { greedy = true; } : specifier)*
         (parameter_list | lambda_single_parameter) lambda_csharp (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
-
 ;
 
 // handle a C++11 lambda expression
@@ -1445,7 +1429,7 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
 		{
 
             bool iscall = look_past_rule(&srcMLParser::lambda_expression_full_cpp) == LPAREN;
-            if(iscall) {
+            if (iscall) {
 
                 // start a new mode that will end after the argument list
                 startNewMode(MODE_ARGUMENT | MODE_LIST);
@@ -1498,15 +1482,14 @@ lambda_capture_argument[] { bool first = true; CompleteElement element(this); EN
 ;
 
 lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
-   {
-        startNewMode(MODE_LOCAL | MODE_END_AT_COMMA);
+        {
+            startNewMode(MODE_LOCAL | MODE_END_AT_COMMA);
 
-        startElement(SDECLARATION_INITIALIZATION);
-    }
+            startElement(SDECLARATION_INITIALIZATION);
+        }
 
-    // suppress warning of another case where REFOPS or something is in both alts.
-    EQUAL complete_expression
-
+        // suppress warning of another case where REFOPS or something is in both alts.
+        EQUAL complete_expression
 ;
 
 // completely match a C# lambda expression
@@ -1534,7 +1517,7 @@ lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
 block_lambda_expression[] { ENTRY_DEBUG } :
         {
             bool iscall = look_past_rule(&srcMLParser::block_lambda_expression_full) == LPAREN;
-            if(iscall) {
+            if (iscall) {
 
                 // start a new mode that will end after the argument list
                 startNewMode(MODE_ARGUMENT | MODE_LIST);
@@ -1586,12 +1569,12 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
 
 // lambda character
 lambda_java[] { ENTRY_DEBUG } :
-        
-    TRETURN
-    {
-        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
-            startNoSkipElement(SPSEUDO_BLOCK);
-    }
+            
+        TRETURN
+        {
+            if (LA(1) != LCURLY)
+                startNoSkipElement(SPSEUDO_BLOCK);
+        }
 ;
 
 // handle the beginning of a function definition
@@ -1643,13 +1626,12 @@ noexcept_list[] { ENTRY_DEBUG } :
 
         { 
 
-            if(LA(1) != LPAREN) endMode(); 
+            if (LA(1) != LPAREN) endMode(); 
             else startElement(SARGUMENT_LIST); 
 
         } 
 
         (options { greedy = true;} : LPAREN)*
-
 ;
 
 // match a thow list completely
@@ -1687,15 +1669,14 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
 // Objective-C method declaration
 objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
-    {
+        {
 
-        startNewMode(MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT);
 
-        startElement(token);
+            startElement(token);
 
-    }
-    objective_c_method_specifier (options { greedy = true; } : objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
-
+        }
+        objective_c_method_specifier (options { greedy = true; } : objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
 ;
 
 objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -1705,7 +1686,6 @@ objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
     }
     (CSPEC | MSPEC)
-
 ;
 
 // either Objective-C method return type or parameter type
@@ -1735,7 +1715,6 @@ objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 
         RPAREN
-
 ;
 
 objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1749,14 +1728,13 @@ objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
     }
 
     objective_c_parameter (objective_c_parameter)*
-
 ;
 
 // method parameter name:value pair for Objective_C
 objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
 
-        if(inTransparentMode(MODE_LIST))
+        if (inTransparentMode(MODE_LIST))
             endDownToMode(MODE_LIST);
 
         startNewMode(MODE_PARAMETER);
@@ -1775,7 +1753,6 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
 
     )*
-
 ;
 
 // Objective-C property declaration
@@ -1790,7 +1767,6 @@ property_declaration[] { int type_count = 0;  int secondtoken = 0; int after_tok
     PROPERTY (property_attribute_list)*
     { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
     variable_declaration[type_count]
-
 ;
 
 property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1804,7 +1780,6 @@ property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
     LPAREN
     (property_attribute | COMMA)*
     RPAREN
-
 ;
 
 property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1816,7 +1791,6 @@ property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     identifier (property_attribute_initialization)* 
-
 ;
 
 property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1828,7 +1802,6 @@ property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 
     }
     EQUAL identifier
-
 ;
 
 synthesize_statement[] { ENTRY_DEBUG } :
@@ -1840,7 +1813,6 @@ synthesize_statement[] { ENTRY_DEBUG } :
 
     }
     SYNTHESIZE property_implementation_inner
-
 ;
 
 dynamic_statement[] { ENTRY_DEBUG } :
@@ -1852,13 +1824,11 @@ dynamic_statement[] { ENTRY_DEBUG } :
         
     }
     DYNAMIC property_implementation_inner
-
 ;
 
 property_implementation_inner[] { ENTRY_DEBUG } :
 
     property_implementation_name (COMMA property_implementation_name)*
-
 ;
 
 property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1870,7 +1840,6 @@ property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     identifier (property_implementation_initialization)*
-
 ;
 
 property_implementation_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -1882,7 +1851,6 @@ property_implementation_initialization[] { CompleteElement element(this); ENTRY_
 
     }
     EQUAL identifier
-
 ;
 
 // Check and see if this is a call and what type
@@ -1922,7 +1890,7 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
             && (save_first != DECLTYPE))
 
             type = MACRO;
-        if(inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
+        if (inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
             type = NOCALL;
 
     } catch (...) {
@@ -2024,25 +1992,13 @@ perform_ternary_check[] returns [bool is_ternary] {
     try {
 
         ternary_check();
-        if(LA(1) == QMARK) is_ternary = true;
+        if (LA(1) == QMARK)
+            is_ternary = true;
 
-        if(!is_qmark) {
+    } catch(...) {}
 
-            if(LA(1) == TERMINATE) skip_ternary = true;
-            if(LA(1) == LCURLY) skip_ternary = true;
-
-        }
-
-    } catch(...) { 
-
-        if(!is_qmark) {
-
-            if(LA(1) == TERMINATE) skip_ternary = true;
-            if(LA(1) == LCURLY) skip_ternary = true;
-
-        }
-
-    }
+    if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY))
+        skip_ternary = true;
 
     inputState->guessing--;
     rewind(start);
@@ -2061,7 +2017,6 @@ ternary_check[] { ENTRY_DEBUG } :
     // ends are catch alls ok if overlap
     ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : {identifier_list_tokens_set.member(LA(1)) }? compound_name_inner[false] | paren_pair | bracket_pair (options { greedy = true; } : paren_pair | curly_pair)*
          | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))* 
-
 ;
 
 
@@ -2118,7 +2073,7 @@ do_statement[] { ENTRY_DEBUG } :
 
         {
 
-            if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+            if (LA(1) != LCURLY)
                 startNoSkipElement(SPSEUDO_BLOCK);
 
         }
@@ -2165,7 +2120,7 @@ foreach_statement[] { ENTRY_DEBUG } :
         FOREACH
         {
             // statement with nested statement after the for group
-            if(inLanguage(LANGUAGE_CSHARP))
+            if (inLanguage(LANGUAGE_CSHARP))
                 startNewMode(MODE_EXPECT | MODE_FOR_CONTROL);
             else
                 startNewMode(MODE_EXPECT | MODE_FOR_CONTROL | MODE_END_AT_COMMA);
@@ -2210,7 +2165,7 @@ for_initialization[] { int type_count = 0;  int secondtoken = 0; int after_token
             { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
             for_initialization_variable_declaration[type_count] |
 
-            { if(secondtoken == COLON) setMode(MODE_RANGED_FOR); } expression
+            { if (secondtoken == COLON) setMode(MODE_RANGED_FOR); } expression
         )
 ;
 
@@ -2315,7 +2270,7 @@ else_statement[] { ENTRY_DEBUG } :
 
         {
 
-            if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+            if (LA(1) != LCURLY)
                 startNoSkipElement(SPSEUDO_BLOCK);
 
         }
@@ -2472,7 +2427,6 @@ static_block  { ENTRY_DEBUG } :
     }
 
     STATIC lcurly
-
 ;
 
 // C _Static_assert statement
@@ -2589,7 +2543,6 @@ goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
 
     }
     CASE (literals | ~TERMINATE)*
-
 ;
 
 // complete assembly declaration statement
@@ -2620,7 +2573,6 @@ visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
 visual_cxx_asm_declaration_curly_pair[] { ENTRY_DEBUG } :
 
     LCURLY (options { generateAmbigWarnings = false; } : visual_cxx_asm_declaration | visual_cxx_block_inner | ~(RCURLY))* RCURLY
-
 ;
 
 visual_cxx_block_inner[] { CompleteElement element(this);  ENTRY_DEBUG } :
@@ -2632,13 +2584,11 @@ visual_cxx_block_inner[] { CompleteElement element(this);  ENTRY_DEBUG } :
             startElement(SASM);
         }
         ({ LA(1) == LCURLY}? visual_cxx_asm_declaration_curly_pair | (visual_cxx_asm_inner (options { greedy = true; } : visual_cxx_asm_inner)*)) (options { greedy = true; } : TERMINATE)*
-
 ;
 
 visual_cxx_asm_inner[] { ENTRY_DEBUG } :
 
      (~(EOL | TERMINATE | RCURLY | VISUAL_CXX_ASM))
-
 ;
 
 extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -2646,7 +2596,6 @@ extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         ALIAS
-
 ;
 
 // extern definition
@@ -2675,7 +2624,6 @@ namespace_inline_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         INLINE
-
 ;
 
 // namespaces
@@ -2718,7 +2666,7 @@ namespace_directive[] { ENTRY_DEBUG } :
             // start the using directive
             startElement(SUSING_DIRECTIVE);
         }
-        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full)*
+        (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full)*
         USING
 ;
 
@@ -2742,7 +2690,6 @@ using_aliasing[]  { int type_count;  int secondtoken = 0; int after_token = 0; S
 
             set_int[type_count, type_count + 1] variable_declaration_type[type_count]
             )*
-
 ;
 
 //  Objectice-C compatibility alias
@@ -2757,7 +2704,6 @@ compatibility_alias[] { ENTRY_DEBUG } :
 
     }
     COMPATIBILITY_ALIAS
-
 ;
 
 //  Objectice-C @class directive
@@ -2772,7 +2718,6 @@ class_directive[] { ENTRY_DEBUG } :
 
     }
     ATCLASS (identifier | COMMA)*
-
 ;
 
 protocol_declaration[] { ENTRY_DEBUG } :
@@ -2785,12 +2730,11 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
     }
    ATPROTOCOL (variable_identifier | COMMA)*
-
 ;
 
 emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG 
 
-    if(LA(1) != EMIT) return false;
+    if (LA(1) != EMIT) return false;
 
     is_emit_stmt = false;
 
@@ -2800,14 +2744,13 @@ emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG
     consume();
 
     CALL_TYPE type = NOCALL;  bool isempty = false; int call_count = 0;
-    if(perform_call_check(type, isempty, call_count, -1) && type == CALL)
+    if (perform_call_check(type, isempty, call_count, -1) && type == CALL)
         is_emit_stmt = true;
 
     --inputState->guessing;
     rewind(state);
 
 } :
-
 ;
 
 // Qt emit statement
@@ -2833,7 +2776,6 @@ friend_statement[] { ENTRY_DEBUG } :
 
     }
     FRIEND
-
 ;
 
 /* Declarations Definitions CFG */
@@ -2862,13 +2804,13 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
 
-            if(intypedef)
+            if (intypedef)
                 startElement(STYPE);
 
             // statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS | MODE_DECL);
 
-            if(intypedef)
+            if (intypedef)
                 setMode(MODE_INNER_DECL);
 
             // start the class definition
@@ -2885,7 +2827,7 @@ class_preamble[] { ENTRY_DEBUG } :
         // suppress warning probably do to only having ()*
         (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) && next_token() != INTERFACE }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        (specifier | { LA(1) != TEMPLATE || next_token() != TEMPOPS }? template_specifier | { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) }? template_declaration_full)*
+        (specifier | { LA(1) != TEMPLATE || next_token() != TEMPOPS }? template_specifier | { true }? template_declaration_full)*
 ;
 
 // a class definition
@@ -2904,7 +2846,6 @@ class_definition[] { ENTRY_DEBUG } :
 class_post[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
         (options { greedy = true; } : { LA(1) != CRESTRICT && LA(1) != MUTABLE }? specifier)*
-
 ;
 
 objective_c_class[] { bool first = true; ENTRY_DEBUG } :
@@ -2913,7 +2854,7 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
         startNewMode(MODE_STATEMENT | MODE_CLASS);
 
-        if(LA(1) == ATINTERFACE)
+        if (LA(1) == ATINTERFACE)
             startElement(SCLASS_INTERFACE);
         else
             startElement(SCLASS_IMPLEMENTATION);
@@ -2937,7 +2878,6 @@ protocol[] { ENTRY_DEBUG } :
 
     { look_past_rule(&srcMLParser::protocol_declaration) == TERMINATE }? protocol_declaration |
     protocol_definition
-
 ;
 
 
@@ -2961,7 +2901,6 @@ protocol_definition[] { bool first = true; ENTRY_DEBUG } :
         class_default_access_action(SREQUIRED_DEFAULT);
 
     }
-
 ;
 
 // handle class header
@@ -2988,14 +2927,13 @@ objective_c_class_header_base[] { ENTRY_DEBUG } :
 
         // suppressed ()* warning
         (protocol_list)*
-
 ;
 
 objective_c_class_end[] { ENTRY_DEBUG } :
 
     {
 
-        if(inTransparentMode(MODE_ACCESS_REGION)) {
+        if (inTransparentMode(MODE_ACCESS_REGION)) {
 
             endDownToMode(MODE_TOP);
 
@@ -3017,7 +2955,6 @@ objective_c_class_end[] { ENTRY_DEBUG } :
     {
         endDownOverMode(MODE_CLASS);
     }
-
 ;
 
 // Handle an enum class
@@ -3027,7 +2964,6 @@ enum_class_definition[] { ENTRY_DEBUG } :
         { setMode(MODE_ENUM); }
 
         class_preamble ENUM (class_header enum_block | enum_block)
-
 ;
 
 // Handle an enum class
@@ -3278,7 +3214,7 @@ lcurly[] { ENTRY_DEBUG } :
                 endMode(MODE_CONDITION);
             }
 
-            if(inTransparentMode(MODE_TRAILING_RETURN)) {
+            if (inTransparentMode(MODE_TRAILING_RETURN)) {
                 endDownToMode(MODE_TRAILING_RETURN);
                 endMode(MODE_TRAILING_RETURN);
             }
@@ -3326,7 +3262,7 @@ lcurly_base[] { ENTRY_DEBUG } :
             if (inclassmode)
                 setMode(MODE_CLASS);
 
-            if(in_function_body)
+            if (in_function_body)
                 setMode(MODE_FUNCTION_BODY);
 
             startElement(SBLOCK);
@@ -3344,7 +3280,7 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
         {
             if (inMode(MODE_ANONYMOUS)) {
                 endMode();
-                if(LA(1) == LPAREN) { call_argument_list(); }
+                if (LA(1) == LPAREN) { call_argument_list(); }
                 return;
             }
 
@@ -3378,7 +3314,7 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
 
-            if(!in_issue_empty && inMode(MODE_END_AT_ENDIF | MODE_TOP | MODE_STATEMENT))
+            if (!in_issue_empty && inMode(MODE_END_AT_ENDIF | MODE_TOP | MODE_STATEMENT))
                 endMode();
 
         }
@@ -3398,7 +3334,7 @@ rcurly[] { ENTRY_DEBUG } :
             // end any sections inside the mode
             endWhileMode(MODE_TOP_SECTION);
 
-            if(getCurly() != 0)
+            if (getCurly() != 0)
                 decCurly();
         }
         RCURLY
@@ -3448,7 +3384,7 @@ terminate_pre[] { ENTRY_DEBUG } :
                 endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
                                    MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
 
-            if(inTransparentMode(MODE_TRAILING_RETURN)) {
+            if (inTransparentMode(MODE_TRAILING_RETURN)) {
                 endDownToMode(MODE_TRAILING_RETURN);
                 endMode(MODE_TRAILING_RETURN);
             }
@@ -3478,19 +3414,18 @@ terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_
 
         {
 
-            if(inMode(MODE_SWITCH))
+            if (inMode(MODE_SWITCH))
                 endMode();
 
-            if(inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP))
+            if (inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP))
                 endMode();
 
-            if(!in_issue_empty && inMode(MODE_END_AT_ENDIF))
+            if (!in_issue_empty && inMode(MODE_END_AT_ENDIF))
                 endMode();
 
             wait_terminate_post = false;
 
         }
-
 ;
 
 /*
@@ -3530,7 +3465,7 @@ else_handling[] { ENTRY_DEBUG } :
                     endDownToMode(MODE_TOP);
 
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
-                } else if (LA(1) == ELSE && inMode(MODE_ELSE)) {
+                } else if (inMode(MODE_ELSE)) {
 
                     // when an else but not elseif
                     while (inMode(MODE_ELSE) && !inMode(MODE_IF)) {
@@ -3550,7 +3485,7 @@ else_handling[] { ENTRY_DEBUG } :
                         // ending an else means ending an if
                         if (inMode(MODE_IF)) {
 
-                            if(inMode(MODE_IF_STATEMENT))
+                            if (inMode(MODE_IF_STATEMENT))
                                 --ifcount;
 
                             endMode();
@@ -3564,8 +3499,8 @@ else_handling[] { ENTRY_DEBUG } :
                         endMode();
 
                     // if in elseif then end it
-                    if(inMode(MODE_IF | MODE_ELSE)) {
-                        if(inMode(MODE_IF_STATEMENT))
+                    if (inMode(MODE_IF | MODE_ELSE)) {
+                        if (inMode(MODE_IF_STATEMENT))
                             --ifcount;
                         endMode();
                     }
@@ -3821,7 +3756,6 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
 
         // markup namespace tag in using namespace
         namespace_definition
-
 ;
 
 // mark ( operator
@@ -3858,33 +3792,31 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
 
-            if(inMode(MODE_LOCAL | MODE_VARIABLE_NAME) && !inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
+            if (inMode(MODE_LOCAL | MODE_VARIABLE_NAME) && !inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
                 endMode();
 
-            if(inMode(MODE_INIT | MODE_EXPECT | MODE_ENUM))
+            if (inMode(MODE_INIT | MODE_EXPECT | MODE_ENUM))
                 endDownToModeSet(MODE_ENUM | MODE_TOP);
 
-            if(inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
+            if (inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
                 markup_comma = false;
 
         }
         comma_marked[markup_comma]
         {
-            if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA)) {
+            if (inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA)) {
 
                 startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
                 startNoSkipElement(SDECLARATION_RANGE);
 
             }
         }
-
 ;
 
 // marking comma operator
 comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup_comma && ((true)
-                 && !inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)))
+            if (markup_comma && (!inMode(MODE_PARAMETER) && !inMode(MODE_ARGUMENT) && !(inTransparentMode(MODE_IN_INIT) && inMode(MODE_EXPRESSION | MODE_LIST)))
                 && !inMode(MODE_ENUM) && !inMode(MODE_INTERNAL_END_CURLY) && !inMode(MODE_INITIALIZATION_LIST))
                 startElement(SOPERATOR);
         }
@@ -3895,7 +3827,7 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
 colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); bool markup_colon = true; LightweightElement element(this); ENTRY_DEBUG } :
         {
 
-            if(in_ternary) {
+            if (in_ternary) {
 
                 endDownToMode(MODE_THEN);
                 flushSkip();
@@ -3908,7 +3840,7 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
             }
 
             // only needed when ranged for and not a declaration
-            if(inTransparentMode(MODE_RANGED_FOR)) {
+            if (inTransparentMode(MODE_RANGED_FOR)) {
 
                 // start a new mode that will end after the argument list
                 startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
@@ -3920,14 +3852,13 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
 
             }
 
-            if(inLanguage(LANGUAGE_OBJECTIVE_C) && inTransparentMode(MODE_INTERNAL_END_CURLY)) {
+            if (inLanguage(LANGUAGE_OBJECTIVE_C) && inTransparentMode(MODE_INTERNAL_END_CURLY)) {
 
                 endDownToMode(MODE_INTERNAL_END_CURLY);
 
             }
 
-            if (markup_colon && !(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY))
-                && (true)
+            if (markup_colon && !(in_ternary && true)
                 && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
 
@@ -3946,7 +3877,7 @@ colon[] { ENTRY_DEBUG } :
         }
         COLON
         {
-            if(inMode(MODE_DETECT_COLON))
+            if (inMode(MODE_DETECT_COLON))
                 endMode(MODE_DETECT_COLON);
         }
 ;
@@ -3974,13 +3905,12 @@ condition[] { ENTRY_DEBUG } :
         {
             int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; 
             pattern_check(stmt_type, secondtoken, type_count, after_token);
-            if(stmt_type == VARIABLE) {
+            if (stmt_type == VARIABLE) {
                 startNewMode(MODE_INTERNAL_END_PAREN);
                 for_initialization_variable_declaration(type_count);
             }
 
         }
-
 ;
 
 // perform an arbitrary look ahead looking for a pattern
@@ -4014,10 +3944,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
 
     }
 
-    if(type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
+    if (type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
 
-    if(type == NONE && (sawtemplate || (sawcontextual && type_count > 0))
+    if (type == NONE && (sawtemplate || (sawcontextual && type_count > 0))
      && (!keyword_name_token_set.member(LA(1)) || LA(1) == MULTOPS || LA(1) == REFOPS || LA(1) == RVALUEREF || LA(1) == TERMINATE))
         type = VARIABLE;
     
@@ -4029,12 +3959,12 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
     else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
         type = SINGLE_MACRO;
 
-    else if(type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION)) {
+    else if (type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION)) {
 
         pattern_check(type, token, type_count, after_token, inparam);
         type_count += 1;
 
-        if(type == CLASS_DECL || type == CLASS_DEFN || type == UNION_DECL || type == UNION_DEFN || type == STRUCT_DECL || type == STRUCT_DEFN || type == ENUM_DECL || type == ENUM_DEFN || type == 0) {
+        if (type == CLASS_DECL || type == CLASS_DEFN || type == UNION_DECL || type == UNION_DEFN || type == STRUCT_DECL || type == STRUCT_DEFN || type == ENUM_DECL || type == ENUM_DEFN || type == 0) {
 
             type = SINGLE_MACRO;
             type_count = 1;
@@ -4064,14 +3994,14 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
         type = OPERATOR_FUNCTION_DECL;
 
     // we actually have a macro and then a constructor
-    else if(type == FUNCTION && fla == COLON)
+    else if (type == FUNCTION && fla == COLON)
         type = SINGLE_MACRO;
 
     // not really a destructor
     if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
         type = EXPRESSION;
 
-    if((type == FUNCTION || type == FUNCTION_DECL) && fla == COMMA && !inparam)
+    if ((type == FUNCTION || type == FUNCTION_DECL) && fla == COMMA && !inparam)
         type = VARIABLE;
 
     after_token = LA(1);
@@ -4079,10 +4009,10 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
     inputState->guessing--;
     rewind(start);
 
-    if(type == VARIABLE && type_count == (specifier_count + attribute_count + template_count))
+    if (type == VARIABLE && type_count == (specifier_count + attribute_count + template_count))
         ++type_count;
 
-    if(!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
+    if (!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
        && (enum_preprocessing_token_set.member(LA(1)) || LA(1) == DECLTYPE) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
        && after_token == TERMINATE) {
 
@@ -4091,7 +4021,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
 
     }
 
-    if(type == NONE && LA(1) == TEMPLATE)
+    if (type == NONE && LA(1) == TEMPLATE)
         type = GLOBAL_TEMPLATE;
 
 } :;
@@ -4190,7 +4120,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                         ((inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON) || inLanguage(LANGUAGE_OBJECTIVE_C)) 
                         && (token == PUBLIC || token == PRIVATE || token == PROTECTED || token == SIGNAL || token == ATREQUIRED || token == ATOPTIONAL)]
                 throw_exception[type == ACCESS_REGION] |
-                { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) }? template_declaration_full set_int[template_count, template_count + 1] | 
+                { true }? template_declaration_full set_int[template_count, template_count + 1] | 
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 LBRACKET
@@ -4397,7 +4327,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                     (specifier_count > 0 && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
 
                     // outside of a class definition in C++, but with properly prefixed name
-                    (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[0] == namestack[1])
+                    (inLanguage(LANGUAGE_CXX_FAMILY) && !namestack[0].empty() && namestack[0] == namestack[1])
                 )
         ]
 
@@ -4486,7 +4416,7 @@ marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement
 update_typecount[srcMLState::MODE_TYPE mode] {} :
         {
             decTypeCount();
-            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
+            if (inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
 
             if (getTypeCount() <= 0) {
@@ -4523,7 +4453,6 @@ type_identifier_count_check returns [int type_count] {
 type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
 
         (type_identifier_count[type_count])*
-
 ;
 
 /*
@@ -4539,7 +4468,6 @@ eat_type[int& count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
 
         set_int[count, count - 1]
         eat_type[count]
-
 ;
 
 // type identifier
@@ -4586,14 +4514,13 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         { LA(1) == DECLTYPE }? type_specifier_call | atomic
 
         )
-
 ;
 
 // more lead type identifier
 class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
         {
 
-            if(inTransparentMode(MODE_TEMPLATE))
+            if (inTransparentMode(MODE_TEMPLATE))
                 startElement(SNAME);
             else
                 startElement(SNOP);
@@ -4642,7 +4569,6 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 type_specifier_call[] { ENTRY_DEBUG } :
 
     { inputState->guessing }? (decltype_call_full) | decltype_call
-
 ;
 
 // C++11 markup decltype 
@@ -4669,7 +4595,6 @@ decltype_call_full[] { ENTRY_DEBUG } :
 atomic[] { ENTRY_DEBUG } :
 
     { next_token() == LPAREN }? ({ inputState->guessing }? atomic_call_full | atomic_call) | atomic_specifier
-
 ;
 
 // C11 markup _Atomic as specifier
@@ -4678,7 +4603,6 @@ atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         ATOMIC
-
 ;
 
 // C11 markup _Atomic as call
@@ -4694,7 +4618,6 @@ atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCou
         }
         ATOMIC (options { greedy = true; } : complete_argument_list)?
         { setTypeCount(save_type_count); }
-
 ;
 
 // C++ completely match without markup _Atomic
@@ -4712,22 +4635,20 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
 qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITION); LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (!(in_ternary && isoption(parser_options, SRCML_OPTION_TERNARY)) && (true))
+            if (!(in_ternary && true))
                 startElement(SOPERATOR);
         }
         QMARK ({ SkipBufferSize() == 0 }? QMARK)?
-
 ;
 
 qmark[] { is_qmark = true; ENTRY_DEBUG } :
         {
-            if(inTransparentMode(MODE_TERNARY | MODE_CONDITION))
+            if (inTransparentMode(MODE_TERNARY | MODE_CONDITION))
                 endDownToMode(MODE_CONDITION);
         }
-
         qmark_marked
         {
-            if(inTransparentMode(MODE_TERNARY | MODE_CONDITION)) {
+            if (inTransparentMode(MODE_TERNARY | MODE_CONDITION)) {
 
                 endMode(MODE_CONDITION);
                 startNewMode(MODE_THEN | MODE_EXPRESSION | MODE_EXPECT);
@@ -4948,7 +4869,6 @@ attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
 attribute_inner_list[] { ENTRY_DEBUG } :
 
     complete_expression (COMMA complete_expression)*
-
 ;
 
 // C++11 attributes
@@ -4990,7 +4910,7 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
 
                 { LA(1) == RPAREN }? expression { --count_paren; } |
 
-                { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; }
+                { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if (!isempty) ++count_paren; }
                     expression_process (call[call_count] | keyword_calls) complete_arguments |
 
                 expression | (type_identifier) => expression_process type_identifier |
@@ -5005,7 +4925,6 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
                 }
             )
         )*
-
 ;
 
 // Full, complete expression matched all at once (no stream).
@@ -5032,7 +4951,6 @@ complete_default_parameter[] { CompleteElement element(this); int count_paren = 
         expression | comma
 
         ))*
-
 ;
 
 
@@ -5043,7 +4961,7 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
 
     {
         // start a mode to end at right bracket with expressions inside
-        if(!inMode(MODE_EXPRESSION) || inMode(MODE_EXPRESSION | MODE_EXPECT))
+        if (!inMode(MODE_EXPRESSION) || inMode(MODE_EXPRESSION | MODE_EXPECT))
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         else 
             startNewMode(MODE_TOP);
@@ -5082,7 +5000,6 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
             colon_marked
 
     )*
-
 ;
 
 // match a complete expression no stream
@@ -5175,7 +5092,6 @@ linq_expression_complete_inner[int& count_paren, bool update = false] { CALL_TYP
         && LA(1) != EQUALS && LA(1) != INTO && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression_setup_linq |
 
     COLON
-
 ;
 
 // variable name in an expression.  Includes array names, but not function calls
@@ -5229,11 +5145,10 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
 
         {
             // set the token to NOP since we did not find a template argument list
-            if(is_nop)
+            if (is_nop)
                 tp.setType(SNOP);
         }
     )
-
 ;
 
 // an identifier
@@ -5269,7 +5184,6 @@ identifier_list[] { ENTRY_DEBUG } :
 
             //Qt
             EMIT | FOREACH | SIGNAL | FOREVER
-
 ;
 
 // most basic name
@@ -5284,7 +5198,7 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
 typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            if(!inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
+            if (!inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
                 startElement(STYPENAME);
             else
                 startElement(SNAME);
@@ -5294,7 +5208,7 @@ typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
 
 function_pointer_name_check[] returns[bool is_fp_name = false] {
 
-    if(LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
+    if (LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
 
         ++inputState->guessing;
         int start = mark();
@@ -5355,7 +5269,6 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
     )
 
     rparen[true]
-
 ;
 
 // Markup names
@@ -5363,7 +5276,6 @@ compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_
         compound_name_inner[true]
         (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
         { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-
 ;
 
 // name markup internals
@@ -5403,7 +5315,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { inLanguage(LANGUAGE_C) }?
         compound_name_c[iscompound] |
 
-        { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        { inLanguage(LANGUAGE_CXX) }?
         compound_name_cpp[iscompound] |
 
         macro_type_name_call 
@@ -5426,11 +5338,10 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 multops_star[] { ENTRY_DEBUG } :
 
     (options { greedy = true; } : multops)*
-
 ;
 
 // C++ compound name handling
-compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
         (options { greedy = true; } : { !in_template_param }? typename_keyword { iscompound = true; })*
         (dcolon { iscompound = true; })*
@@ -5449,14 +5360,13 @@ compound_name_cpp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DE
         )*
 
         { notdestructor = LA(1) == DESTOP; }
-
 ;
 exception
 catch[antlr::RecognitionException] {
 }
 
 // compound name for C#
-compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+compound_name_csharp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
         (modifiers_csharp)*
         (dcolon { iscompound = true; })*
@@ -5473,7 +5383,6 @@ compound_name_csharp[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY
             (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
             //(options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
-
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -5482,27 +5391,27 @@ catch[antlr::RecognitionException] {
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
+        (simple_name_optional_template | generic_selection)
+        (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multopblockop)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
-            ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
+            (multopblockop)*
             identifier
         )*
-
 ;
 
 // compound name for C
 compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
 
-        (simple_name_optional_template | generic_selection) (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) && (LA(1) == MULTOPS || LA(1) == BLOCKOP) }? multops)*
+        (simple_name_optional_template | generic_selection)
+        (options { greedy = true; }: { !inTransparentMode(MODE_EXPRESSION) }? multopblockop)*
 
         ( options { greedy = true; } :
             (period | member_pointer) { iscompound = true; }
-            ({ LA(1) == MULTOPS || LA(1) == BLOCKOP }? multops)*
+            (multopblockop)*
             simple_name_optional_template
         )*
-
 ;
 
 // compound name for Java
@@ -5511,7 +5420,6 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
         generic_argument_list |
         simple_name_optional_template
         (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template | { next_token() == TERMINATE }? multop_name)))*
-
 ;
 
 
@@ -5544,11 +5452,10 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
                 // set the token to NOP
                 tp.setType(SNOP);
         }
-
 ;
 
 // C++ compound name handling
-keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_DEBUG } :
+keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
         //( options { greedy = true; } : dcolon)*
         //(DESTOP set_bool[isdestructor] { iscompound = true; })*
@@ -5566,7 +5473,6 @@ keyword_name_inner[bool& iscompound] { namestack[0] = namestack[1] = ""; ENTRY_D
         )*
 
         { notdestructor = LA(1) == DESTOP; }
-
 ;
 exception
 catch[antlr::RecognitionException] {
@@ -5604,13 +5510,11 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
             DEFAULT | DELETE
 
         )
-
 ;
 
 // mark specifiers
 specifier[] { ENTRY_DEBUG } :
         single_keyword_specifier | alignas_specifier | macro_specifier_call | atomic
-
 ;
 
 // match a single word specifier
@@ -5648,7 +5552,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 // C/C++ auto specifier (as either type name or specifier)
 auto_keyword[bool is_specifier] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            if(is_specifier)
+            if (is_specifier)
                 startElement(SFUNCTION_SPECIFIER);
             else
                 startElement(SNAME);
@@ -5662,7 +5566,6 @@ template_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         TEMPLATE
-
 ;
 
 // C++11 specifier
@@ -5677,7 +5580,6 @@ alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         ({ inputState->guessing }? paren_pair | 
 
         complete_argument_list)
-
 ;
 
 // default specifier (Java Methods)
@@ -5686,7 +5588,6 @@ default_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         DEFAULT
-
 ;
 
 this_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -5694,7 +5595,6 @@ this_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         THIS
-
 ;
 
 // A constructor declaration
@@ -5774,10 +5674,10 @@ member_init[] { ENTRY_DEBUG } :
 ;
 
 // push name onto namestack
-push_namestack[] { namestack[1].swap(namestack[0]); namestack[0] = LT(1)->getText(); } :;
+push_namestack[] { namestack[1] = std::move(namestack[0]); namestack[0] = LT(1)->getText(); } :;
 
 // identifier stack
-identifier_stack[std::string s[]] { s[1].swap(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
+identifier_stack[decltype(namestack)& s] { s[1] = std::move(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier
 ;
 
@@ -5793,7 +5693,6 @@ destructor_definition[] { ENTRY_DEBUG } :
         destructor_header
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
-
 ;
 
 // destructor declaration
@@ -5899,7 +5798,6 @@ objective_c_call[] { ENTRY_DEBUG } :
 
     LBRACKET
     objective_c_call_receiver
-
 ;
 
 // function call object for Objective_C
@@ -5913,7 +5811,6 @@ objective_c_call_receiver[] { ENTRY_DEBUG } :
     
     }
     expression
-
 ;
 
 // function call message for Objective_C
@@ -5928,14 +5825,13 @@ objective_c_call_message[] { ENTRY_DEBUG } :
 
     }
     objective_c_call_argument
-
 ;
 
 // function call argument name:value pair for Objective_C
 objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
     {
 
-        if(inTransparentMode(MODE_LIST))
+        if (inTransparentMode(MODE_LIST))
             endDownToMode(MODE_LIST);
 
         startNewMode(MODE_ARGUMENT);
@@ -5952,7 +5848,6 @@ objective_c_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
         startElement(SSELECTOR);
     }
     (function_identifier (options { greedy = true; } : COLON)* | COLON)
-
 ;
 
 ternary_expression[] { ENTRY_DEBUG } :
@@ -6091,7 +5986,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
         {
 
-            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
+            if (!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
 
                 endDownToMode(MODE_INTERNAL_END_CURLY);
 
@@ -6120,7 +6015,6 @@ keyword_calls[] { ENTRY_DEBUG } :
 
     // C#
     typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call | checked_call | unchecked_call
-
 ;
 
 
@@ -6134,7 +6028,6 @@ keyword_call_tokens[] { ENTRY_DEBUG } :
 
     // C#
     TYPEOF | DEFAULT | CHECKED | UNCHECKED
-
 ;
 
 // sizeof unary_expression
@@ -6156,7 +6049,7 @@ sizeof_call[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the function call element
-            if(next_token() != DOTDOTDOT)
+            if (next_token() != DOTDOTDOT)
                 startElement(SSIZEOF_CALL);
             else
                 startElement(SSIZEOF_PACK);
@@ -6339,7 +6232,7 @@ eat_optional_macro_call[] {
 
     try {
         // check for the name
-        if(LA(1) == NAME)
+        if (LA(1) == NAME)
             match(NAME);
         else 
             match(VOID);
@@ -6426,7 +6319,6 @@ macro_pattern_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_NAME
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 // do a macro call.
@@ -6446,7 +6338,6 @@ macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_TYPE_NAME
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 
@@ -6467,7 +6358,6 @@ macro_case_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_CASE
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 // do a macro call.
@@ -6487,7 +6377,6 @@ macro_label_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_LABEL
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 // do a macro call.
@@ -6508,7 +6397,6 @@ macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
         MACRO_SPECIFIER
         { endMode(); }
         macro_call_argument_list
-
 ;
 
 // handle the actual macro call
@@ -6622,7 +6510,7 @@ macro_call_contents[] {
             start = true;
         }
 
-        if(literal_tokens_set.member(LA(1)))
+        if (literal_tokens_set.member(LA(1)))
             literals();
         else
             consume();
@@ -6650,7 +6538,6 @@ try_statement_with_resource[] { ENTRY_DEBUG } :
         TRY
 
         for_like_statement_post 
-
 ;
 
 // a checked statement
@@ -6696,7 +6583,6 @@ using_statement[] { ENTRY_DEBUG } :
         USING 
 
         for_like_statement_post
-
 ;
 
 for_like_statement_pre[int tag] { ENTRY_DEBUG } :
@@ -6709,7 +6595,6 @@ for_like_statement_pre[int tag] { ENTRY_DEBUG } :
             startElement(tag);
 
         }
-
 ;
 
 for_like_statement_post[] { ENTRY_DEBUG } :
@@ -6731,7 +6616,6 @@ for_like_statement_post[] { ENTRY_DEBUG } :
         //startElement(SFOR_INITIALIZATION);
     }
     for_like_list_item
-
 ;
 
 for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
@@ -6751,7 +6635,6 @@ for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token 
     // explicitly check for non-terminate so that a large switch statement
     // isn't needed
     expression
-
 ;
 
 // lock statement
@@ -6762,7 +6645,6 @@ lock_statement[] { ENTRY_DEBUG } :
         LOCK
 
         for_like_statement_post
-
 ;
 
 // fix the statement
@@ -6796,7 +6678,6 @@ unchecked_statement[] { ENTRY_DEBUG } :
         }
 
         UNCHECKED
-
 ;
 
 // a synchonized statement
@@ -6810,7 +6691,6 @@ autoreleasepool_block[] { ENTRY_DEBUG } :
 
         }
         AUTORELEASEPOOL lcurly
-
 ;
 
 // the catch statement
@@ -6877,11 +6757,11 @@ lambda_csharp[] { ENTRY_DEBUG } :
 
     LAMBDA
     {
-        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY) {
+        if (LA(1) != LCURLY) {
 
             startNoSkipElement(SPSEUDO_BLOCK);
 
-        } else if(LA(1) == LCURLY) {
+        } else if (LA(1) == LCURLY) {
 
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
         }
@@ -6961,7 +6841,7 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
 
         { LA(1) == RPAREN }? expression { --count_paren; } |
 
-        { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if(!isempty) ++count_paren; } 
+        { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if (!isempty) ++count_paren; } 
             expression_process (call[call_count] | keyword_calls) complete_arguments  |
 
         expression
@@ -6980,7 +6860,6 @@ generic_selection_association[] { CompleteElement element(this); ENTRY_DEBUG } :
     }
 
     generic_selection_association_type COLON generic_selection_complete_expression
-
 ;
 
 generic_selection_association_type[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
@@ -7017,7 +6896,7 @@ expression_statement_process[] { ENTRY_DEBUG } :
         startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
         // start the element which will end after the terminate
-        if(!inenumclass)
+        if (!inenumclass)
             startElement(SEXPRESSION_STATEMENT);
     }
 ;
@@ -7041,7 +6920,7 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT);
 
-            if(!inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL)) {
+            if (!inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL)) {
                 // start the declaration statement
                 startElement(SDECLARATION_STATEMENT);
 
@@ -7079,17 +6958,17 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
             // declaration
             startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
-            if(inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
+            if (inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
                 setMode(MODE_LIST);
 
-            if(output_decl)
+            if (output_decl)
 
                 // start the declaration
                 startElement(SDECLARATION);
 
         }
 
-        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
         (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
@@ -7101,9 +6980,9 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
 // declaration type
 variable_declaration_type[int type_count] {  bool is_compound = false; ENTRY_DEBUG } :
     {
-        if(type_count == 0) {
+        if (type_count == 0) {
 
-            if(inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
+            if (inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
 
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
@@ -7128,7 +7007,7 @@ variable_declaration_type[int type_count] {  bool is_compound = false; ENTRY_DEB
                 (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) { decTypeCount(); })*
                 class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
         lead_type_identifier | EVENT)
-    { if(!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+    { if (!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
 
     (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
     (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
@@ -7146,12 +7025,12 @@ specifiers_or_macro[] { bool first = true; ENTRY_DEBUG } :
 
 is_class_type_identifier[] returns[bool is_class_type = false] { ENTRY_DEBUG 
 
-    if(inputState->guessing || inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) || inTransparentMode(MODE_ASSOCIATION_TYPE))
+    if (inputState->guessing || inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) || inTransparentMode(MODE_ASSOCIATION_TYPE))
         return is_class_type;
 
     int token = look_past_rule(&srcMLParser::specifiers_or_macro);
 
-    if(class_tokens_set.member(token))
+    if (class_tokens_set.member(token))
         is_class_type = true;
 } :;
 
@@ -7208,7 +7087,7 @@ class_type_identifier_keyword[]  { SingleElement element(this); ENTRY_DEBUG } :
 variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
         ENTRY_DEBUG } :
         {
-            if(!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
+            if (!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
               && inMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
               && !inTransparentMode(MODE_TYPEDEF)
               && !inTransparentMode(MODE_USING)) {
@@ -7257,7 +7136,7 @@ property_statement[int type_count] { ENTRY_DEBUG } :
 
         }
 
-        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
         (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
@@ -7282,7 +7161,7 @@ event_statement[int type_count] { ENTRY_DEBUG } :
 
         }
 
-        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) && next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
         (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
@@ -7363,8 +7242,7 @@ pure_expression_block[] { ENTRY_DEBUG } :
 // All possible operators
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if ((true)
-                && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)))
+            if ((LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)))
                 startElement(SOPERATOR);
         }
         (
@@ -7401,17 +7279,10 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         DESTOP
 ;
 
-/** list of operators @todo is this still needed */
-general_operators_list[] { ENTRY_DEBUG } :
-        OPERATORS | ASSIGNMENT  | TEMPOPS | TEMPOPE | EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS |
-        DOTDOT | RVALUEREF | QMARK | CSPEC | MSPEC | BLOCKOP | REF | OUT | DOTDOTDOT
-;
-
 // mark up )
 rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup && (true)
-                 && !inMode(MODE_END_ONLY_AT_RPAREN))
+            if (markup && !inMode(MODE_END_ONLY_AT_RPAREN))
                 startElement(SOPERATOR);
         }
         RPAREN
@@ -7437,10 +7308,10 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 
                 decParen();
 
-            if(inMode(MODE_ASSOCIATION_LIST))
+            if (inMode(MODE_ASSOCIATION_LIST))
                 endMode(MODE_ASSOCIATION_LIST);
 
-            if(end_for_incr || inMode(MODE_LIST | MODE_FOR_CONDITION))
+            if (end_for_incr || inMode(MODE_LIST | MODE_FOR_CONDITION))
                 setMode(MODE_END_FOR_CONTROL);
 
         }
@@ -7461,15 +7332,15 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     // start the then element
                     //startNoSkipElement(STHEN);
 
-                    if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                    if (LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
 
 
-                    if(cppif_duplicate) {
+                    if (cppif_duplicate) {
 
                         std::stack<int> open_elements;
                         //open_elements.push(STHEN);
-                        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                        if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
@@ -7481,16 +7352,16 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                 }
 
                 // end while condition, etc. and output pseudo block  @todo may need to have a MODE_WHILE
-                if(inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
+                if (inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
 
                     endMode(MODE_LIST);
-                    if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                    if (LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
 
-                    if(cppif_duplicate) {
+                    if (cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                        if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
@@ -7501,18 +7372,18 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 
 
                 // end for group and output pseudo block @todo make sure does not hid other things that use for grammar
-                } else if(end_for_incr) {
+                } else if (end_for_incr) {
 
-                    if(inMode(MODE_LIST))
+                    if (inMode(MODE_LIST))
                         endMode(MODE_LIST);
     
-                    if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                    if (LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
 
-                    if(cppif_duplicate) {
+                    if (cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                        if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
@@ -7521,16 +7392,16 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 
                     cppif_duplicate = false;
 
-                } else if(inMode(MODE_LIST | MODE_FOR_CONDITION)) {
+                } else if (inMode(MODE_LIST | MODE_FOR_CONDITION)) {
 
                     endMode(MODE_FOR_CONDITION);
-                    if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)
+                    if (LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
 
-                    if(cppif_duplicate) {
+                    if (cppif_duplicate) {
 
                         std::stack<int> open_elements;
-                        if(isoption(parser_options, SRCML_OPTION_PSEUDO_BLOCK) && LA(1) != LCURLY)                        
+                        if (LA(1) != LCURLY)                        
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
@@ -7555,10 +7426,10 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         {
 
-            if(isempty) {
+            if (isempty) {
 
                 // additional right parentheses indicates end of non-list modes
-                if(inTransparentMode(MODE_LIST))
+                if (inTransparentMode(MODE_LIST))
                     endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
             }
 
@@ -7572,13 +7443,12 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
                 while(inMode(MODE_LIST) && (!inMode(MODE_INTERNAL_END_PAREN) || inMode(MODE_END_ONLY_AT_RPAREN)))
                     endMode(MODE_LIST);
             
-            else if(inTransparentMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP))
+            else if (inTransparentMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP))
                 endWhileMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
-            if(!isempty)
+            if (!isempty)
                 decCurly();
         }
-
 ;
 
 rbracket[] { ENTRY_DEBUG } :
@@ -7592,14 +7462,13 @@ rbracket[] { ENTRY_DEBUG } :
 
     {
 
-        if(inMode(MODE_OBJECTIVE_C_CALL)) {
+        if (inMode(MODE_OBJECTIVE_C_CALL)) {
 
             endDownOverMode(MODE_OBJECTIVE_C_CALL);
 
         }
 
     }
-
 ; 
 
 // Dot (period) operator
@@ -7652,7 +7521,7 @@ expression_process[] { ENTRY_DEBUG } :
                 // use a new mode without the expect so we don't nest expression parts
                 startNewMode(MODE_EXPRESSION);
 
-                if(inPrevMode(MODE_TERNARY_CONDITION))
+                if (inPrevMode(MODE_TERNARY_CONDITION))
                    setMode(MODE_TERNARY_CONDITION);
 
                 // start the expression element
@@ -7689,7 +7558,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 // the expression part
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_for_incr = false; ENTRY_DEBUG } :
 
-       { isoption(parser_options, SRCML_OPTION_TERNARY) && !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
+       { !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
 
@@ -7762,7 +7631,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         }
 
         // can have (ternary) in a ternary condition
-        (options { greedy = true; } : { isoption(parser_options, SRCML_OPTION_TERNARY) && !skip_ternary && inMode(MODE_TERNARY_CONDITION)
+        (options { greedy = true; } : { !skip_ternary && inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression)* |
 
@@ -7799,7 +7668,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
         {
 
-            if(!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
+            if (!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
 
                 endDownToMode(MODE_INTERNAL_END_CURLY);
 
@@ -7870,17 +7739,15 @@ complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
 // literal numbers
 literal[bool markup = true] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
-            // only markup literals in literal option
             if (markup) {
 
                 startElement(SLITERAL);
 
                 setTokenPosition(tp);
-
             }
 
         }
-        CONSTANTS ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER {  tp.setType(SCOMPLEX); })?
+        CONSTANTS ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER {  if (markup) tp.setType(SCOMPLEX); })?
 ;
 
 
@@ -7929,7 +7796,6 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
         (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? generic_argument_list)*
-
 ;
 
 // super list
@@ -8093,7 +7959,6 @@ argument[] { ENTRY_DEBUG } :
 
         (type_identifier) => expression_process type_identifier
         )
-
 ;
 
 argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
@@ -8101,13 +7966,11 @@ argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
             startElement(SMODIFIER);
         }
         (OUT | REF)
-
 ;
 
 argument_named_csharp[] { ENTRY_DEBUG } :
 
         identifier COLON
-
 ;
 
 // annotation argument
@@ -8125,7 +7988,6 @@ annotation_argument[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
         { inputState->guessing }? RCURLY | 
         { !(LA(1) == RPAREN) }? expression | type_identifier)*
-
 ;
 
 // a parameter
@@ -8183,7 +8045,6 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
         }
         ( options { greedy = true; } : variable_declaration_nameinit)*
         )
-
 ;
 
 // count types in parameter
@@ -8193,7 +8054,7 @@ parameter_type_count[int& type_count, bool output_type = true] { CompleteElement
             startNewMode(MODE_LOCAL);
 
             // start of type
-            if(output_type)
+            if (output_type)
                 startElement(STYPE);
         }
 
@@ -8217,6 +8078,14 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
             startElement(SMODIFIER);
         }
         (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true] | BLOCKOP)
+;
+
+// Modifier ops
+multopblockop[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SMODIFIER);
+        }
+        (MULTOPS | BLOCKOP)
 ;
 
 modifiers_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
@@ -8266,7 +8135,7 @@ template_declaration[] { ENTRY_DEBUG } :
         }
         TEMPLATE
         {
-            if(LA(1) == CLASS || LA(1) == CXX_CLASS)
+            if (LA(1) == CLASS || LA(1) == CXX_CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
             else
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT | MODE_TEMPLATE_PARAMETER_LIST);
@@ -8302,7 +8171,7 @@ template_param[] { in_template_param = true; ENTRY_DEBUG } :
 
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }  
-        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)* |
+        (options { greedy = true; } : { true }? variable_declaration_nameinit)* |
 
         template_inner_full
     )
@@ -8328,8 +8197,7 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; int
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
-        (options { greedy = true; } : { !isoption(parser_options, SRCML_OPTION_WRAP_TEMPLATE) }? variable_declaration_nameinit)*
-
+        (options { greedy = true; } : { true }? variable_declaration_nameinit)*
 ;
 
 // entire template parameter list
@@ -8344,13 +8212,11 @@ template_in_parameter_list_full[] { ENTRY_DEBUG } :
         }
 
         template_declaration_full
-
 ;
 
 template_declaration_full[] { ENTRY_DEBUG } :
 
-    template_declaration template_param_list (template_param (template_declaration_initialization)* (comma)*)* tempope { if(inMode(MODE_TEMPLATE)) endMode();}
-
+    template_declaration template_param_list (template_param (template_declaration_initialization)* (comma)*)* tempope { if (inMode(MODE_TEMPLATE)) endMode();}
 ;
 
 // template initialization
@@ -8366,14 +8232,14 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
 ;
 
 // generic argument list
-generic_argument_list[] { CompleteElement element(this); std::string namestack_save[2];  bool in_function_type = false; ENTRY_DEBUG } :
+generic_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save;  bool in_function_type = false; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
 
             in_function_type = inPrevMode(MODE_FUNCTION_TYPE);
 
-            if(!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
+            if (!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
                 startElement(SGENERIC_ARGUMENT_LIST);
             else
                 startElement(STEMPLATE_PARAMETER_LIST);
@@ -8387,7 +8253,7 @@ generic_argument_list[] { CompleteElement element(this); std::string namestack_s
 ;
 
 // generic parameter list
-generic_parameter_list[] { CompleteElement element(this); std::string namestack_save[2];  ENTRY_DEBUG } :
+generic_parameter_list[] { CompleteElement element(this); decltype(namestack) namestack_save;  ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -8430,7 +8296,7 @@ generic_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // CUDA argument list
-cuda_argument_list[] { CompleteElement element(this); std::string namestack_save[2]; ENTRY_DEBUG } :
+cuda_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -8478,7 +8344,6 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SWHERE);
         }
         WHERE compound_name_inner[false] COLON type_constraint (options { greedy = true; } : COMMA type_constraint)*
-
 ;
 
 type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -8495,7 +8360,6 @@ type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
 new_constraint[] { ENTRY_DEBUG } :
 
     new_name LPAREN RPAREN
-
 ;
 
 
@@ -8505,7 +8369,6 @@ new_name[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         NEW
-
 ;
 
 protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -8518,7 +8381,6 @@ protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     TEMPOPS identifier (COMMA identifier)* TEMPOPE
-
 ;
 
 category[] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -8531,14 +8393,13 @@ category[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     }
     LPAREN (identifier)* RPAREN
-
 ;
 
 // save the namestack
-savenamestack[std::string namestack_save[]] { namestack_save[0].swap(namestack[0]); namestack_save[1].swap(namestack[1]); ENTRY_DEBUG } :;
+savenamestack[decltype(namestack)& namestack_save] { namestack_save.swap(namestack); ENTRY_DEBUG } :;
 
 // restore the namestack
-restorenamestack[std::string namestack_save[]] { namestack[0].swap(namestack_save[0]); namestack[1].swap(namestack_save[1]); ENTRY_DEBUG } :;
+restorenamestack[decltype(namestack)& namestack_save] { namestack.swap(namestack_save); ENTRY_DEBUG } :;
 
 // template argument
 template_argument[bool in_function_type = false] { CompleteElement element(this); ENTRY_DEBUG } :
@@ -8547,12 +8408,12 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
             // local mode
             startNewMode(MODE_LOCAL);
 
-            if(!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
+            if (!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
                startElement(SGENERIC_ARGUMENT);
             else
                startElement(STEMPLATE_PARAMETER);
 
-            if(inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C))
+            if (inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C))
                startElement(SEXPRESSION);
         }
         (options { greedy = true; } :
@@ -8580,7 +8441,6 @@ template_argument_expression[] { ENTRY_DEBUG } :
         // qmark matches before template argument expression is fine
         ({ LA(1) != RPAREN }? (options { generateAmbigWarnings = false; } : general_operators | qmark | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression | COMMA))*
        rparen_operator[true]
-
 ;
 
 // All possible operators
@@ -8742,14 +8602,14 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG} :
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL);
 
             // start the enum definition
-            if(inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {
+            if (inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {
 
-                if(decl)
+                if (decl)
                     startElement(SENUM_CLASS_DECLARATION);
                 else
                     startElement(SENUM_CLASS);
 
-            } else if(decl) {
+            } else if (decl) {
 
                 startElement(SENUM_DECLARATION);
 
@@ -8808,7 +8668,6 @@ enum_csharp_definition[] { ENTRY_DEBUG } :
 
     // may need to modifiy to work with enum_decl
     enum_preprocessing[false] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
-
 ;
 
 enum_csharp_declaration[] { ENTRY_DEBUG } :
@@ -8816,7 +8675,6 @@ enum_csharp_declaration[] { ENTRY_DEBUG } :
     // may need to modifiy to work with enum_decl
     enum_preprocessing[true] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
     (COMMA (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*)*
-
 ;
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
@@ -9066,7 +8924,7 @@ cpp_garbage[] :
 
 cpp_check_end[] returns[bool is_end = false] {
 
- if(LA(1) == EOL || LA(1) == LINECOMMENT_START || LA(1) == COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF || LA(1) == 1)  /* EOF */
+ if (LA(1) == EOL || LA(1) == LINECOMMENT_START || LA(1) == COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF || LA(1) == 1)  /* EOF */
      return true;
 
  return false;
@@ -9105,19 +8963,19 @@ eol[int directive_token, bool markblockzero] {
 ENTRY_DEBUG } :
 
         {
-            if(directive_token == ENDIF) {
+            if (directive_token == ENDIF) {
 
                 bool end_statement = inMode(MODE_END_AT_ENDIF);
                 while(inMode(MODE_END_AT_ENDIF))
                     endMode();
 
-                if(end_statement)
+                if (end_statement)
                     else_handling();
 
 
             }
 
-            if(LA(1) == 1) {
+            if (LA(1) == 1) {
 
                 eol_post(directive_token, markblockzero);
                 return;
@@ -9136,10 +8994,10 @@ cppendif_skip[] {
 
     while(endif_count && LA(1) != 1 /* EOF */) {
 
-        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF)
+        if ((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF)
             ++endif_count;
 
-        if(LA(1) == ENDIF)
+        if (LA(1) == ENDIF)
             --endif_count;
 
         prev = LA(1);
@@ -9159,26 +9017,26 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
     int prev = -1;
     while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
 
-        if((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
+        if ((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
             cppendif_skip();
             continue;
         }
 
-        if(LA(1) == ELIF) save_size = end_order.size();
+        if (LA(1) == ELIF) save_size = end_order.size();
 
-        if(LA(1) == LPAREN) op_stack.push_back(LPAREN);
-        if(LA(1) == RPAREN) {
-            if(!op_stack.empty() && op_stack.back() == LPAREN) op_stack.pop_back();
+        if (LA(1) == LPAREN) op_stack.push_back(LPAREN);
+        if (LA(1) == RPAREN) {
+            if (!op_stack.empty() && op_stack.back() == LPAREN) op_stack.pop_back();
             else end_order.push_back(RPAREN);
         }
 
-        if(LA(1) == LCURLY) op_stack.push_back(LCURLY);
-        if(LA(1) == RCURLY) {
-            if(!op_stack.empty() && op_stack.back() == LCURLY) op_stack.pop_back();
+        if (LA(1) == LCURLY) op_stack.push_back(LCURLY);
+        if (LA(1) == RCURLY) {
+            if (!op_stack.empty() && op_stack.back() == LCURLY) op_stack.pop_back();
             else end_order.push_back(RCURLY);
         }
 
-        if(LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_FOR_CONTROL))) {
+        if (LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_FOR_CONTROL))) {
             end_order.push_back(TERMINATE);
 
         }
@@ -9188,13 +9046,13 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
 
     }
 
-    if(LA(1) == 1 /* EOF */) {
+    if (LA(1) == 1 /* EOF */) {
 
         end_order.clear();
 
     }
 
-    if(LA(1) == ENDIF) end_order.resize(save_size);
+    if (LA(1) == ENDIF) end_order.resize(save_size);
 
     while(!op_stack.empty() && !end_order.empty()) {
 
@@ -9409,7 +9267,6 @@ cpp_expression[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
         (expression_process
             expression_part_plus_linq[type]
         ) | cpp_garbage
-
 ;
 exception
 catch[...] {
@@ -9469,7 +9326,6 @@ cpp_symbol[] { ENTRY_DEBUG } :
 
         }
     )
-
 ;
 
 cpp_define_name[] { CompleteElement element(this);
@@ -9540,7 +9396,7 @@ cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
 
 // linenumber in cpp
 cpp_linenumber[] { SingleElement element(this); bool first = true; ENTRY_DEBUG } :
-        (options { greedy = true; } : { if(first) { startElement(SCPP_NUMBER); first = false; } } literal[false])*
+        (options { greedy = true; } : { if (first) { startElement(SCPP_NUMBER); first = false; } } literal[false])*
 ;
 
 // literal in cpp
@@ -9559,7 +9415,6 @@ omp_directive[] { CompleteElement element(this); ENTRY_DEBUG} :
     }
 
     OMP_OMP (options { generateAmbigWarnings = false; } : COMMA | { next_token() == LPAREN }? omp_clause | omp_name)*
-
 ;
 
 omp_name[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -9567,7 +9422,6 @@ omp_name[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SOMP_NAME);
         }
         cpp_garbage
-
 ;
 
 
@@ -9579,7 +9433,6 @@ omp_clause[] { CompleteElement element(this); ENTRY_DEBUG} :
     }
 
     omp_name omp_argument_list
-
 ;
 
 omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
@@ -9595,7 +9448,6 @@ omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
     LPAREN RPAREN
 
     )
-
 ;
 
 omp_argument[] { CompleteElement element(this); ENTRY_DEBUG} :
@@ -9607,5 +9459,4 @@ omp_argument[] { CompleteElement element(this); ENTRY_DEBUG} :
     }
 
     (~(RPAREN | COMMA))*
-
 ;

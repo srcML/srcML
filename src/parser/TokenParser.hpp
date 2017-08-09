@@ -61,40 +61,40 @@ class TokenParser {
 public:
 
     /** abstract method for starting an element */
-    virtual void startElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+    virtual void startElement(int) = 0;
 
     /** abstract method for starting an element that starts before skipped tokens */
-    virtual void startNoSkipElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+    virtual void startNoSkipElement(int) = 0;
 
     /** abstract method for ending an element */
-    virtual void endElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+    virtual void endElement(int) = 0;
 
     /** abstract method for starting an empty element */
-    virtual void emptyElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+    virtual void emptyElement(int) = 0;
 
     /** abstract method for starting adding an element */
-    virtual void addElement(int) { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+    virtual void addElement(int) = 0;
 
     /** abstract method for flushing skipped */
-    virtual void flushSkip() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+    virtual void flushSkip() = 0;
 
     /** abstract method for SkipBufferSize */
-    virtual int SkipBufferSize() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; return 0; }
+    virtual int SkipBufferSize() = 0;
 
     /** abstract method for Current token */
-    virtual antlr::RefToken* CurrentToken() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; return 0; }
+    virtual antlr::RefToken* CurrentToken() = 0;
 
     /** abstract method for pausing the output of tokens */
-    virtual void pauseStream() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+    virtual void pauseStream() = 0;
 
     /** abstract method for resuming the output of tokens */
-    virtual void resumeStream() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+    virtual void resumeStream() = 0;
 
     /** abstract method for indicating if the stream is paused */
-    virtual bool isPaused() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; return false; }
+    virtual bool isPaused() = 0;
 
     /** abstract method for replacing start of stream with a NOP */
-    virtual void nopStreamStart() { std::cerr << "VIRTUAL FUNCTION CALLED: " << __FUNCTION__ << '\n'; }
+    virtual void nopStreamStart() = 0;
 
     /**
      * ~TokenParser

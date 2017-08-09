@@ -32,18 +32,8 @@
 const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<5;
 /** Markup preprocessor elements (default for C, C++, C#) */
 const unsigned int SRCML_OPTION_CPP_NOMACRO       = 1<<2;
-/** Wrap function/classes/etc with templates (default: on) */
-const unsigned int SRCML_OPTION_WRAP_TEMPLATE     = 1<<11;
-/** output is interactive (good for editing applications) */
-const unsigned int SRCML_OPTION_INTERACTIVE       = 1<<12;
-/** Turn on optional ternary operator markup */
-const unsigned int SRCML_OPTION_TERNARY           = 1<<18;
-/** Marks up one-line implicit blocks as psuedoblocks (default: on) */
-const unsigned int SRCML_OPTION_PSEUDO_BLOCK      = 1<<19;
 /** Not sure what this used for */
 const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
-/** Nest if in else if intead of elseif tag */
-const unsigned int SRCML_OPTION_NESTIF            = 1<<9;
 /** Additional cpp:if/cpp:endif checking */
 const unsigned int SRCML_OPTION_CPPIF_CHECK       = 1<<16;
 /** Extra processing of @code#line@endcode for position information */
@@ -68,7 +58,7 @@ const unsigned int SRCML_OPTION_HASH              = 1<<10;
 const unsigned int SRCML_OPTION_DEFAULT           = (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH);
  
 /** All default enabled options */
-const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY /* | SRCML_OPTION_OPENMP*/);
+const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL /* | SRCML_OPTION_OPENMP*/);
 
 #include <libxml/xmlwriter.h>
 

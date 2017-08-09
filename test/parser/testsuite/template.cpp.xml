@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="template" options="WRAP_TEMPLATE">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="template">
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>n</name></parameter>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>n</name></parameter>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>class</name></type> <name>n</name></parameter>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<parameter><type><name>class</name></type> <name>n</name></parameter>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>n</name></parameter>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>n</name></parameter>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>n</name></parameter>, <parameter><type><name>double</name></type> <name>m</name></parameter>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>n</name></parameter>, <parameter><type><name>double</name></type> <name>m</name></parameter>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>n</name> <init>= <expr><name>b</name></expr></init></parameter>&gt;</parameter_list> <function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl></template>
+<function_decl><template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>n</name> <init>= <expr><name>b</name></expr></init></parameter>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
 <unit>
@@ -38,17 +38,17 @@
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>at_Type</name></parameter>&gt;</parameter_list>
-<struct>struct <name><name>CTest1</name><argument_list type="generic">&lt;<argument><expr><name>at_Type</name></expr></argument> , <argument><expr><name>int</name></expr></argument>&gt;</argument_list></name>
+<struct><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>at_Type</name></parameter>&gt;</parameter_list></template>
+struct <name><name>CTest1</name><argument_list type="generic">&lt;<argument><expr><name>at_Type</name></expr></argument> , <argument><expr><name>int</name></expr></argument>&gt;</argument_list></name>
 <block>{<public type="default">
-</public>}</block>;</struct></template>
+</public>}</block>;</struct>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>at_Type</name></parameter>&gt;</parameter_list>
-<struct>struct <name><name>CTest1</name><argument_list type="generic">&lt;<argument><expr><name>at_Type</name></expr></argument> , <argument><expr><literal type="number">0</literal></expr></argument>&gt;</argument_list></name>
+<struct><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>at_Type</name></parameter>&gt;</parameter_list></template>
+struct <name><name>CTest1</name><argument_list type="generic">&lt;<argument><expr><name>at_Type</name></expr></argument> , <argument><expr><literal type="number">0</literal></expr></argument>&gt;</argument_list></name>
 <block>{<public type="default">
-</public>}</block>;</struct></template>
+</public>}</block>;</struct>
 </unit>
 
 <unit>
@@ -116,45 +116,45 @@
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>bool</name> <modifier>...</modifier></type> <name>Types</name></parameter>&gt;</parameter_list> <struct_decl>struct <name>B</name>;</struct_decl></template>
+<struct_decl><template>template<parameter_list>&lt;<parameter><type><name>bool</name> <modifier>...</modifier></type> <name>Types</name></parameter>&gt;</parameter_list></template> struct <name>B</name>;</struct_decl>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>class</name> <modifier>...</modifier></type> <name>Types</name></parameter>&gt;</parameter_list> <struct_decl>struct <name>Tuple</name>;</struct_decl></template>
+<struct_decl><template>template<parameter_list>&lt;<parameter><type><name>class</name> <modifier>...</modifier></type> <name>Types</name></parameter>&gt;</parameter_list></template> struct <name>Tuple</name>;</struct_decl>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type> <name>Values</name></parameter>&gt;</parameter_list> <class_decl>class <name>tuple</name>;</class_decl></template>
+<class_decl><template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type> <name>Values</name></parameter>&gt;</parameter_list></template> class <name>tuple</name>;</class_decl>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>typename</name></type> <name>First</name></parameter>, <parameter><type><name>typename</name><modifier>...</modifier></type> <name>Rest</name></parameter>&gt;</parameter_list> <class_decl>class <name>tuple</name>;</class_decl></template>
+<class_decl><template>template<parameter_list>&lt;<parameter><type><name>typename</name></type> <name>First</name></parameter>, <parameter><type><name>typename</name><modifier>...</modifier></type> <name>Rest</name></parameter>&gt;</parameter_list></template> class <name>tuple</name>;</class_decl>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><template>template<parameter_list>&lt;<parameter><type><name>typename</name></type></parameter>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></parameter>&gt;</parameter_list> <struct_decl>struct <name>C</name>;</struct_decl></template>
+<struct_decl><template>template<parameter_list>&lt;<parameter><type><template>template<parameter_list>&lt;<parameter><type><name>typename</name></type></parameter>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></parameter>&gt;</parameter_list></template> struct <name>C</name>;</struct_decl>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><template>template<parameter_list>&lt;<parameter><type><name>typename</name></type></parameter>&gt;</parameter_list></template> <name>class</name></type> <name>T</name> <init>= <expr><name>b</name></expr></init></parameter>&gt;</parameter_list> <struct_decl>struct <name>C</name>;</struct_decl></template>
+<struct_decl><template>template<parameter_list>&lt;<parameter><type><template>template<parameter_list>&lt;<parameter><type><name>typename</name></type></parameter>&gt;</parameter_list></template> <name>class</name></type> <name>T</name> <init>= <expr><name>b</name></expr></init></parameter>&gt;</parameter_list></template> struct <name>C</name>;</struct_decl>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><template>template<parameter_list>&lt;<parameter><type><name>typename</name></type></parameter>&gt;</parameter_list></template> <name>class</name> <modifier>...</modifier></type> <name>T</name></parameter>&gt;</parameter_list> <struct_decl>struct <name>C</name>;</struct_decl></template>
+<struct_decl><template>template<parameter_list>&lt;<parameter><type><template>template<parameter_list>&lt;<parameter><type><name>typename</name></type></parameter>&gt;</parameter_list></template> <name>class</name> <modifier>...</modifier></type> <name>T</name></parameter>&gt;</parameter_list></template> struct <name>C</name>;</struct_decl>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>class</name> <modifier>...</modifier></type> <name>Types</name></parameter>&gt;</parameter_list> <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>Types</name> <modifier>...</modifier></type> <name>args</name></decl></parameter>)</parameter_list>;</function_decl></template>
+<function_decl><template>template<parameter_list>&lt;<parameter><type><name>class</name> <modifier>...</modifier></type> <name>Types</name></parameter>&gt;</parameter_list></template> <type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>Types</name> <modifier>...</modifier></type> <name>args</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type> <name>Args</name></parameter>&gt;</parameter_list> <function><specifier>inline</specifier> <type><name>void</name></type> <name>expand</name><parameter_list>(<parameter><decl><type><name>Args</name><modifier>&amp;&amp;</modifier><modifier>...</modifier></type> <name>args</name></decl></parameter>)</parameter_list> <block>{
+<function><template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type> <name>Args</name></parameter>&gt;</parameter_list></template> <specifier>inline</specifier> <type><name>void</name></type> <name>expand</name><parameter_list>(<parameter><decl><type><name>Args</name><modifier>&amp;&amp;</modifier><modifier>...</modifier></type> <name>args</name></decl></parameter>)</parameter_list> <block>{
   <expr_stmt><expr><call><name>pass</name><argument_list>( <argument><expr><call><name>g</name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call><operator>...</operator></expr></argument> )</argument_list></call></expr>;</expr_stmt>
-}</block></function></template>
+}</block></function>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><template>template <parameter_list>&lt;<parameter><type><name>class</name></type> <init>= <expr><name>float</name></expr></init></parameter>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></parameter>&gt;</parameter_list> <class_decl>class <name>A</name>;</class_decl></template>
+<class_decl><template>template <parameter_list>&lt;<parameter><type><template>template <parameter_list>&lt;<parameter><type><name>class</name></type> <init>= <expr><name>float</name></expr></init></parameter>&gt;</parameter_list></template> <name>class</name></type> <name>T</name></parameter>&gt;</parameter_list></template> class <name>A</name>;</class_decl>
 </unit>
 
 <unit>
@@ -166,17 +166,17 @@
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list>
-<decl_stmt><decl><type><name>T</name></type> <name>pi</name></decl>;</decl_stmt></template>
+<decl_stmt><decl><template>template<parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list></template>
+<type><name>T</name></type> <name>pi</name></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list>
-<decl_stmt><decl><specifier>constexpr</specifier> <type><name>T</name></type> <name>pi</name> <init>= <expr><call><name>T</name><argument_list>(<argument><expr><literal type="number">3.1415926535897932385</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt></template>
+<decl_stmt><decl><template>template<parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list></template>
+<specifier>constexpr</specifier> <type><name>T</name></type> <name>pi</name> <init>= <expr><call><name>T</name><argument_list>(<argument><expr><literal type="number">3.1415926535897932385</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit>
-<template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type></parameter>&gt;</parameter_list> <struct>struct <name>Tuple</name> <block>{<public type="default"/>}</block>;</struct></template>
+<struct><template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type></parameter>&gt;</parameter_list></template> struct <name>Tuple</name> <block>{<public type="default"/>}</block>;</struct>
 </unit>
 
 <unit>

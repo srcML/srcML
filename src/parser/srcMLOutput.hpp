@@ -174,6 +174,12 @@ public:
     /* namespaces declared and used */
     std::vector<Namespace> namespaces;
 
+    std::string maintag;
+
+    std::string soptions;
+
+    std::string tabattribute;
+
     /** an array of name-value attribute pairs */
     const std::vector<std::string> unit_attributes;
 
@@ -188,12 +194,6 @@ public:
 
     /** number of units output or depth into archive */
     int depth = 0;
-
-    /** line attribute content */
-    std::string lineAttribute;
-
-    /** column attribute content */
-    std::string columnAttribute;
 
     /** user defined macro list */
     std::vector<std::string> user_macro_list;

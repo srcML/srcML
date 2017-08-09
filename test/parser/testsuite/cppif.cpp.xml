@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="cppif" options="NESTIF,CPPIF_CHECK">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="cppif" options="CPPIF_CHECK">
 
 <unit>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">1</literal></expr></cpp:if>

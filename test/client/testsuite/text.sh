@@ -65,6 +65,12 @@ define asrcml <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 	STDOUT
 
+# input with ?
+define srcml_question <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt></unit>
+	STDOUT
+
 xmlcheck "$asrcml"
 
 message "FIXME: Why is this message required?"
@@ -80,6 +86,18 @@ check "$asrcml"
 
 echo -n "a;" | srcml -l "C++"
 check "$asrcml"
+
+srcml -t "a ? b : c;" -l "C++"
+check "$srcml_question"
+
+srcml --text "a ? b : c;" -l "C++"
+check "$srcml_question"
+
+srcml --text="a ? b : c;" -l "C++"
+check "$srcml_question"
+
+echo -n "a ? b : c;" | srcml -l "C++"
+check "$srcml_question"
 
 srcml -t "a;" -l "C++" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$asrcml"

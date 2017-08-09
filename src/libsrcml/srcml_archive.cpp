@@ -454,6 +454,32 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
         archive->uris.push_back(uri);
     }
 
+    // namespaces for options enable the options automatically
+    std::string suri = uri;
+    if (suri == SRCML_CPP_NS_URI) {
+
+        // @todo this is for the whole archive, but C# is special. Need to fix this part elsewhere
+        if(archive->language) {
+
+            if(*archive->language == "C++" || *archive->language == "C" || *archive->language == "Objective-C")
+                archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+            else if(*archive->language == "C#")
+                archive->options |= SRCML_OPTION_CPP_NOMACRO;
+        }
+
+    } else if(suri == SRCML_ERR_NS_URI) {
+        archive->options |= SRCML_OPTION_DEBUG;
+    } else if(suri == SRCML_EXT_POSITION_NS_URI) {
+        archive->options |= SRCML_OPTION_POSITION;
+    } else if(suri == SRCML_EXT_OPENMP_NS_URI) {
+        archive->options |= SRCML_OPTION_OPENMP;
+    }
+/*
+    // @todo could this be set elsewhere?
+    else if(uri == SRCML_DIFF_NS_URI)
+        issrcdiff = true;
+*/
+
     return SRCML_STATUS_OK;
 }
 

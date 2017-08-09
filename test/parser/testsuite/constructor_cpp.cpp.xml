@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="constructor" options="WRAP_TEMPLATE">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="constructor">
 
 <unit>
 <class>class <name>A</name> <block>{<private type="default"> <constructor_decl><specifier>virtual</specifier> <name>A</name><parameter_list>()</parameter_list> = <literal type="number">0</literal>;</constructor_decl> </private>}</block>;</class>
@@ -38,11 +38,11 @@
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>T</name></type></parameter>&gt;</parameter_list> <constructor><name><name><name>K</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>K</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor></template>
+<constructor><template>template <parameter_list>&lt;<parameter><type><name>T</name></type></parameter>&gt;</parameter_list></template> <name><name><name>K</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>K</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor>
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>T</name></type></parameter>&gt;</parameter_list> <constructor><name><name><name>K</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>K</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor></template>
+<constructor><template>template <parameter_list>&lt;<parameter><type><name>T</name></type></parameter>&gt;</parameter_list></template> <name><name><name>K</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>K</name></name><parameter_list>()</parameter_list> <block>{}</block></constructor>
 </unit>
 
 <unit>

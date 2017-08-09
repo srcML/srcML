@@ -457,15 +457,8 @@ public :
                         archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
                     else if(option == "LINE")
                         archive->options |= SRCML_OPTION_LINE;
-                    else if(option == "NESTIF")
-                        archive->options |= SRCML_OPTION_NESTIF;
                     else if(option == "CPPIF_CHECK")
                         archive->options |= SRCML_OPTION_CPPIF_CHECK;
-                    else if(option == "WRAP_TEMPLATE")
-                        archive->options |= SRCML_OPTION_WRAP_TEMPLATE;
-                    else if(option == "OPERATOR_TERNARY")
-                        archive->options &= ~SRCML_OPTION_TERNARY;
-
                 }
 
             } else if(attribute == "hash") 
@@ -487,24 +480,7 @@ public :
 
             srcml_uri_normalize(uri);
 
-            if(uri == SRCML_CPP_NS_URI) {
-
-                if(archive->language) {
-
-                    if(*archive->language == "C++" || *archive->language == "C" || *archive->language == "Objective-C")
-                        archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
-                    else if(*archive->language == "C#")
-                        archive->options |= SRCML_OPTION_CPP_NOMACRO;
-
-                }
-
-            } else if(uri == SRCML_ERR_NS_URI)
-                archive->options |= SRCML_OPTION_DEBUG;
-            else if(uri == SRCML_EXT_POSITION_NS_URI)
-                archive->options |= SRCML_OPTION_POSITION;
-            else if(uri == SRCML_EXT_OPENMP_NS_URI)
-                archive->options |= SRCML_OPTION_OPENMP;
-            else if(uri == SRCML_DIFF_NS_URI)
+            if(uri == SRCML_DIFF_NS_URI)
                 issrcdiff = true;
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());

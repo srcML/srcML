@@ -28,14 +28,9 @@
 
 #include <antlr/TokenStream.hpp>
 #include "TokenStream.hpp"
-
-/*
-#include <srcml_types.hpp>
-#include <srcml_macros.hpp>
-#include <srcml.h>
-*/
  
 #include <deque>
+#include <stack>
 #include <cassert>
 
 #include "srcMLToken.hpp"
@@ -85,7 +80,7 @@ public:
      *
      * Starts an element id (xml tag).
     */
-    void startElement(int id) {
+    void startElement(int id) final {
 
         srcMLParser::currentState().push(id);
         pushSTokenFlush(id);
@@ -98,7 +93,7 @@ public:
      * Starts an element id (xml tag).  Do not output after skip tokens
      * (usually whitespace).
      */
-    void startNoSkipElement(int id) {
+    void startNoSkipElement(int id) final {
 
         srcMLParser::currentState().push(id);
         pushSToken(id);
@@ -110,7 +105,7 @@ public:
      *
      * End an element id (xml tag).
      */
-    void endElement(int id) {
+    void endElement(int id) final {
 
         if((srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP).any()) 
             pushSToken(id);
@@ -125,7 +120,7 @@ public:
      *
      * Issue an empty element id (xml tag).
      */
-    void emptyElement(int id) {
+    void emptyElement(int id) final {
 
         // push a empty element token
         pushTokenFlush(antlr::RefToken(EmptyTokenFactory(id)));
@@ -137,7 +132,7 @@ public:
      *
      * Starts an element id that is output when mode ends.
      */
-    void addElement(int id) {
+    void addElement(int id) final {
 
         srcMLParser::currentState().push(id);
     }
@@ -237,6 +232,10 @@ private:
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
 
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            ends.emplace(ntoken);
+        }
+
         pushToken(ntoken);
     }
 
@@ -247,6 +246,10 @@ private:
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
 
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            ends.emplace(ntoken);
+        }
+
         pushSkipToken(ntoken);
     }
 
@@ -256,6 +259,10 @@ private:
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
+
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            ends.emplace(ntoken);
+        }
 
         pushTokenFlush(ntoken);
     }
@@ -269,25 +276,33 @@ private:
      */
     inline void pushEToken(int token) {
 
-        // push a new start token
-        auto ntoken = antlr::RefToken(EndTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
-
         // push a new end token
-        pushToken(ntoken);
+        pushToken(antlr::RefToken(EndTokenFactory(token)));
+
+        // end position info is needed from the matching last end token
+        // that was enqueued
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
+            qetoken->endline = lastline;
+            qetoken->endcolumn = lastcolumn;
+            ends.pop();
+        }
     }
 
     inline void pushESkipToken(int token) {
 
-        // push a new start token
-        auto ntoken = antlr::RefToken(EndTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
-
         // push a new end token
-        pushSkipToken(ntoken);
-    }
+        pushSkipToken(antlr::RefToken(EndTokenFactory(token)));
+
+        // end position info is needed from the matching last end token
+        // that was enqueued
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
+            qetoken->endline = lastline;
+            qetoken->endcolumn = lastcolumn;
+            ends.pop();
+        }
+     }
 
     /**
      * consume
@@ -301,6 +316,10 @@ private:
 
         // rest of consume process
         srcMLParser::consume();
+
+        // record for end position of start elements
+        lastline = LT(1)->getLine();
+        lastcolumn = LT(1)->getColumn() - 1;
 
         // consume any skipped tokens
         while (consumeSkippedToken())
@@ -316,107 +335,7 @@ private:
      */
     bool consumeSkippedToken() {
 
-        // preprocessor (unless we already are in one)
-        if (isoption(options, SRCML_OPTION_CPP) && !inskip && srcMLParser::LA(1) == srcMLParser::PREPROC) {
-
-            // start preprocessor handling
-            inskip = true;
-
-            // use preprocessor token buffers
-            pouttb = &pretb;
-            pskiptb = &skippretb;
-
-            // parse preprocessor statement stopping at EOL
-            try {
-
-                srcMLParser::preprocessor();
-
-            } catch(...) {}
-
-            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
-            skippretb.clear();
-
-            // move back to normal buffer
-            pskiptb = &skiptb;
-            pouttb = &tb;
-
-            // put preprocessor buffer into skipped buffer
-            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
-            pretb.clear();
-
-            // stop preprocessor handling
-            inskip = false;
-
-            return true;
-        }
-
-        // macro call
-        if (srcMLParser::LA(1) == srcMLParser::MACRO_NAME && !inskip) {
-
-            inskip = true;
-
-            // use preprocessor token buffers
-            pouttb = &pretb;
-            pskiptb = &skippretb;
-
-            // parse macro_call
-            srcMLParser::macro_pattern_call();
-
-            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
-            skippretb.clear();
-
-            // move back to normal buffer
-            pskiptb = &skiptb;
-            pouttb = &tb;
-
-            // put preprocessor buffer into skipped buffer
-            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
-            pretb.clear();
-
-            inskip = false;
-            return true;
-
-        }
-
-        if (!inskip && srcMLParser::LA(1) == srcMLParser::VISUAL_CXX_ASM) {
-
-            // start preprocessor handling
-            inskip = true;
-
-            // use preprocessor token buffers
-            pouttb = &pretb;
-            pskiptb = &skippretb;
-
-            // parse preprocessor statement stopping at EOL
-            try {
-
-                srcMLParser::visual_cxx_asm_declaration();
-
-            } catch(...) {}
-
-            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
-            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
-            skippretb.clear();
-
-            // move back to normal buffer
-            pskiptb = &skiptb;
-            pouttb = &tb;
-
-            // put preprocessor buffer into skipped buffer
-            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
-            pretb.clear();
-
-            // stop preprocessor handling
-            inskip = false;
-
-            return true;
-        }
-
         if (isSkipToken(srcMLParser::LA(1))) {
-
-            std::string s;
 
             switch (srcMLParser::LA(1)) {
             case srcMLParser::CONTROL_CHAR:
@@ -453,9 +372,7 @@ private:
 
             case srcMLParser::LINE_DOXYGEN_COMMENT_END:
 
-                s = srcMLParser::LT(1)->getText();
-
-                if (s.back() != '\n') {
+                if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
@@ -502,9 +419,7 @@ private:
 
             case srcMLParser::LINECOMMENT_END:
 
-                s = srcMLParser::LT(1)->getText();
-
-                if (s.back() != '\n') {
+                if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                 } else {
@@ -518,12 +433,112 @@ private:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
 
-
                 break;
             }
 
             // rest of consume process
             srcMLParser::consume();
+
+            return true;
+        }
+
+        if (inskip)
+            return false;
+
+        // preprocessor (unless we already are in one)
+        if (isoption(options, SRCML_OPTION_CPP) && srcMLParser::LA(1) == srcMLParser::PREPROC) {
+
+            // start preprocessor handling
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse preprocessor statement stopping at EOL
+            try {
+
+                srcMLParser::preprocessor();
+
+            } catch(...) {}
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
+            skippretb.clear();
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
+            pretb.clear();
+
+            // stop preprocessor handling
+            inskip = false;
+
+            return true;
+        }
+
+        // macro call
+        if (srcMLParser::LA(1) == srcMLParser::MACRO_NAME) {
+
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse macro_call
+            srcMLParser::macro_pattern_call();
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
+            skippretb.clear();
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
+            pretb.clear();
+
+            inskip = false;
+            return true;
+
+        }
+
+        if (srcMLParser::LA(1) == srcMLParser::VISUAL_CXX_ASM) {
+
+            // start preprocessor handling
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse preprocessor statement stopping at EOL
+            try {
+
+                srcMLParser::visual_cxx_asm_declaration();
+
+            } catch(...) {}
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
+            skippretb.clear();
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
+            pretb.clear();
+
+            // stop preprocessor handling
+            inskip = false;
 
             return true;
         }
@@ -537,7 +552,7 @@ private:
      *
      * Flush any skipped tokens to the output token stream.
      */
-    inline void flushSkip() {
+    inline void flushSkip() final {
         flushSkip(output());
     }
 
@@ -548,7 +563,7 @@ private:
      *
      * @returns the number of skipped elements 
      */
-    inline int SkipBufferSize() {
+    inline int SkipBufferSize() final {
         return (int)skiptb.size();
     }
 
@@ -584,14 +599,18 @@ private:
         if (tb.empty())
             fillTokenBuffer();
 
-        if(tb.empty())
+        if (tb.empty())
             consume();
 
         while (paused)
             fillTokenBuffer();
 
+        while (isoption(options, SRCML_OPTION_POSITION) && ends.size() > 1) {
+            fillTokenBuffer();
+        }
+
         // pop and send back the top token
-        const antlr::RefToken& tok = tb.front();
+        const antlr::RefToken& tok = std::move(tb.front());
 
         return tok;
     }
@@ -731,28 +750,28 @@ private:
      *
      * @returns the current token (last added).
      */
-    inline antlr::RefToken* CurrentToken() {
+    inline antlr::RefToken* CurrentToken() final {
 
         return &(output().back());
     }
 
     /** abstract method for pausing the output of tokens */
-    void pauseStream() {
+    void pauseStream() final {
         paused = true;
     }
 
     /** abstract method for resuming the output of tokens */
-    void resumeStream() {
+    void resumeStream() final {
         paused = false;
     }
 
     /** abstract method for indicating if the stream is paused */
-    virtual bool isPaused() { 
+    virtual bool isPaused() final { 
         return paused;
     }
 
     /** abstract method for replacing start of stream with a NOP */
-    void nopStreamStart() {
+    void nopStreamStart() final {
 
         // find the first element token
         // may have some text/spaces before
@@ -771,11 +790,16 @@ private:
 
 private:
 
+    int lastline = 0;
+    int lastcolumn = 0;
+
     /** parser options */
     OPTION_TYPE & options;
 
     /** if in a skip */
     bool inskip;
+
+    std::stack<antlr::RefToken> ends;
 
     /** token buffer */
     std::deque<antlr::RefToken> tb;

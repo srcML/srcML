@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="function" filename="function_cpp" options="WRAP_TEMPLATE">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="function" filename="function_cpp">
 
 <unit>
 <function><specifier>static</specifier> <specifier>inline</specifier> <type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
@@ -110,9 +110,9 @@
 </unit>
 
 <unit>
-<template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>F</name></parameter>&gt;</parameter_list>
-<function><type><name>auto</name></type> <name>run</name><parameter_list>(<parameter><decl><type><name>F</name></type> <name>f</name></decl></parameter>)</parameter_list> -&gt; <type><name><typename>typename</typename> <name>Q</name><operator>::</operator><name><name>Q</name><argument_list type="generic">&lt;<argument><expr><operator>!</operator><name><name>Q</name><operator>::</operator><name><name>H</name><argument_list type="generic">&lt;<argument><expr><name>Functor</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>V</name></name></expr></argument>, <argument><expr><name><name>Q</name><argument_list type="generic">&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>f</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name><operator>::</operator><name>T</name></name></type>
-            <block>{}</block></function></template>
+<function><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>F</name></parameter>&gt;</parameter_list></template>
+<type><name>auto</name></type> <name>run</name><parameter_list>(<parameter><decl><type><name>F</name></type> <name>f</name></decl></parameter>)</parameter_list> -&gt; <type><name><typename>typename</typename> <name>Q</name><operator>::</operator><name><name>Q</name><argument_list type="generic">&lt;<argument><expr><operator>!</operator><name><name>Q</name><operator>::</operator><name><name>H</name><argument_list type="generic">&lt;<argument><expr><name>Functor</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>V</name></name></expr></argument>, <argument><expr><name><name>Q</name><argument_list type="generic">&lt;<argument><expr><decltype>decltype<argument_list>(<argument><expr><call><name>f</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decltype></expr></argument>&gt;</argument_list></name></expr></argument> &gt;</argument_list></name><operator>::</operator><name>T</name></name></type>
+            <block>{}</block></function>
 </unit>
 
 <unit>
