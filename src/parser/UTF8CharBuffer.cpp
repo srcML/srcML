@@ -442,7 +442,7 @@ int UTF8CharBuffer::getChar() {
     // so start over
     if (lastcr && c == '\n') {
         lastcr = false;
-        getChar();
+        c = getChar();
     }
 
     // convert carriage returns to a line feed
