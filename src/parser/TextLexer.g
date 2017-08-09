@@ -209,15 +209,23 @@ LINECOMMENT_START
 ;
 
 // whitespace (except for newline)
-WS :
+WS { int lastcolumn = getColumn(); } :
         (
             // single space
-            ' '  |
+            ' ' |
 
             // horizontal tab
             '\t'
         )+
+        {
+            // expand tabs
+            if(isoption(options, SRCML_OPTION_EXPAND_TABS)) {
 
+                // basically, set the text to what the column says it should be
+                std::string spaces(getColumn() - lastcolumn, ' ');
+                $setText(std::string(spaces));
+            }
+        }
     ;
 
 // end of line

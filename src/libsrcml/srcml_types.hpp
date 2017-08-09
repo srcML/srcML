@@ -30,6 +30,8 @@
 
 /** Include any XML namespace declarations */
 const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<5;
+/** Expand tabs for src input */
+const unsigned int SRCML_OPTION_EXPAND_TABS       = 1<<6;
 /** Markup preprocessor elements (default for C, C++, C#) */
 const unsigned int SRCML_OPTION_CPP_NOMACRO       = 1<<2;
 /** Not sure what this used for */
