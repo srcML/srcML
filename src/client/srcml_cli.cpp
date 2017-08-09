@@ -561,16 +561,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             option_command<SRCML_COMMAND_INTERACTIVE>(true);
 #endif
 
-        // Ideally get this from libsrcml
-        const std::vector<std::string> reserved_namespaces = {
-        "=http://www.srcML.org/srcML/src",
-        "cpp=http://www.srcML.org/srcML/cpp",
-        "java=http://www.srcML.org/srcML/java",};
-
-        for (const auto& ns : reserved_namespaces) {
-          size_t delim = ns.find('=');
-          std::string prefix = ns.substr(0, delim);
-          std::string uri = ns.substr(delim + 1);
+        // check namespaces
+        for (size_t i = 0; i < srcml_get_namespace_size(); ++i) {
+          std::string prefix = srcml_get_namespace_prefix(i);
+          std::string uri = srcml_get_namespace_uri(i);
 
           // A reserved prefix wasn't used or it was set to the same uri
           if (srcml_request.xmlns_namespaces.find(prefix) == srcml_request.xmlns_namespaces.end() || srcml_request.xmlns_namespaces[prefix] == uri) {
