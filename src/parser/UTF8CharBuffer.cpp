@@ -420,7 +420,8 @@ ssize_t UTF8CharBuffer::readChars() {
  */
 int UTF8CharBuffer::getChar() {
 
-    unsigned char c = 0;
+    // has to be int to handle -1 return value
+    int c = 0;
 
     // may need more characters
     if (insize == 0 || pos >= insize) {
