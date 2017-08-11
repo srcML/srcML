@@ -174,6 +174,11 @@ def unix2dos(srctext):
 
     return str.replace(srctext, '\n', '\r\n')
 
+# insert BOM into start of text
+def insertbom(srctext):
+
+    return '\357\273\277' + srctext
+
 # find differences of two files
 def xmldiff(xml_filename1, xml_filename2):
 
@@ -360,10 +365,13 @@ print
 
 # Handle optional dos line endings
 doseol = False
+bom = False
 use_exec = False
-while len(sys.argv) > 1 and ( sys.argv[1] == "--dos" or sys.argv[1] == "--exec" ) :
+while len(sys.argv) > 1 and ( sys.argv[1] == "--dos" or sys.argv[1] == "--exec" or sys.argv[1] == "--bom") :
     if sys.argv[1] == "--dos" :
         doseol = True
+    elif sys.argv[1] == "--bom" :
+        bom = True
     else :
         use_exec = True
     sys.argv.pop(0)
@@ -530,6 +538,10 @@ try:
                         # convert the unit in xml to text (if needed)
                         if doseol:
                             unittext = unix2dos(unittext)
+
+                        # insert BOM for UTF-8
+                        if bom:
+                            unittext = insertbom(unittext)
 
                         # convert the text to srcML
                         if use_exec :
