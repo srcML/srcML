@@ -428,7 +428,7 @@ int UTF8CharBuffer::getChar() {
 
         insize = readChars();
         if (insize == 0) {
-                // EOF
+            // EOF
             return -1;
         }
     }
@@ -442,9 +442,9 @@ int UTF8CharBuffer::getChar() {
     // has already been converted to a '\n' so we need to skip over this '\n'
     // so start over
     if (lastcr && c == '\n') {
-        lastcr = false;
         c = getChar();
     }
+    lastcr = false;
 
     // convert carriage returns to a line feed
     if (c == '\r') {
