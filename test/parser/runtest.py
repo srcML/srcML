@@ -172,10 +172,7 @@ def srcml2src(srctext, encoding):
 # converts from unix to dos line endings
 def unix2dos(srctext):
 
-    # run the srcml processor
-    command = ['unix2dos']
-
-    return safe_communicate(command, srctext)
+    return str.replace(srctext, '\n', '\r\n')
 
 # find differences of two files
 def xmldiff(xml_filename1, xml_filename2):
