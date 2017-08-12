@@ -442,9 +442,11 @@ int UTF8CharBuffer::getChar() {
     // has already been converted to a '\n' so we need to skip over this '\n'
     // so start over
     if (lastcr && c == '\n') {
+        lastcr = false;
         c = getChar();
+    } else {
+        lastcr = false;
     }
-    lastcr = false;
 
     // convert carriage returns to a line feed
     if (c == '\r') {
