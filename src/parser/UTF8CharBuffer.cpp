@@ -421,7 +421,7 @@ ssize_t UTF8CharBuffer::readChars() {
 int UTF8CharBuffer::getChar() {
 
     // has to be int to handle -1 return value
-    int c = 0;
+    unsigned char c = 0;
 
     // may need more characters
     if (insize == 0 || pos >= insize) {
@@ -443,10 +443,9 @@ int UTF8CharBuffer::getChar() {
     // so start over
     if (lastcr && c == '\n') {
         lastcr = false;
-        c = getChar();
-    } else {
-        lastcr = false;
+        return getChar();
     }
+    lastcr = false;
 
     // convert carriage returns to a line feed
     if (c == '\r') {
