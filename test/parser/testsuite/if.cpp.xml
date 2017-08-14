@@ -82,72 +82,72 @@
       <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt></block></if>
     <else>else<block type="pseudo">
       <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">2</literal></expr>;</expr_stmt></block></else></if_stmt></block></if>
-  <else>else<block type="pseudo">
-    <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo"> 
+  <if type="elseif">else
+    if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo"> 
       <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">3</literal></expr>;</expr_stmt></block></if>
     <else>else<block type="pseudo">
-      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block></else></if_stmt></block></else></if_stmt>
+      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block></else></if_stmt>
 </unit>
 
 <unit>
   <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
     <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
       <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt></block></if>
-  <else>else<block type="pseudo">
-    <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo"> 
+  <if type="elseif">else
+    if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo"> 
       <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">3</literal></expr>;</expr_stmt></block></if>
     <else>else<block type="pseudo">
-      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block></else></if_stmt></block></else></if_stmt></block></if></if_stmt>
+      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block></else></if_stmt></block></if></if_stmt>
 </unit>
 
 <unit>
   <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
     <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
       <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo">
-	<break>break;</break></block></if>
+  <break>break;</break></block></if>
       <else>else<block type="pseudo">
-	<break>break;</break></block></else></if_stmt></block></if>
-    <else>else<block type="pseudo">
-      <if_stmt><if>if <condition>(<expr><literal type="number">4</literal></expr>)</condition><block type="pseudo">
-	<break>break;</break></block></if>
+  <break>break;</break></block></else></if_stmt></block></if>
+    <if type="elseif">else
+      if <condition>(<expr><literal type="number">4</literal></expr>)</condition><block type="pseudo">
+  <break>break;</break></block></if>
       <else>else<block type="pseudo">
-	<break>break;</break></block></else></if_stmt></block></else></if_stmt></block></if>
-  <else>else<block type="pseudo">
-    <if_stmt><if>if <condition>(<expr><literal type="number">5</literal></expr>)</condition><block type="pseudo">
+  <break>break;</break></block></else></if_stmt></block></if>
+  <if type="elseif">else
+    if <condition>(<expr><literal type="number">5</literal></expr>)</condition><block type="pseudo">
       <if_stmt><if>if <condition>(<expr><literal type="number">6</literal></expr>)</condition><block type="pseudo">
-	<break>break;</break></block></if>
+  <break>break;</break></block></if>
       <else>else<block type="pseudo">
-	<break>break;</break></block></else></if_stmt></block></if>
-    <else>else<block type="pseudo">
-      <if_stmt><if>if <condition>(<expr><literal type="number">7</literal></expr>)</condition><block type="pseudo">
-	<break>break;</break></block></if>
+  <break>break;</break></block></else></if_stmt></block></if>
+    <if type="elseif">else
+      if <condition>(<expr><literal type="number">7</literal></expr>)</condition><block type="pseudo">
+  <break>break;</break></block></if>
       <else>else<block type="pseudo">
-	<break>break;</break></block></else></if_stmt></block></else></if_stmt></block></else></if_stmt>
+  <break>break;</break></block></else></if_stmt>
 </unit>
 
 <unit>
   <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
     <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
       <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo">
-	<continue>continue;</continue></block></if>
+  <continue>continue;</continue></block></if>
       <else>else<block type="pseudo">
-	<continue>continue;</continue></block></else></if_stmt></block></if>
-    <else>else<block type="pseudo">
-      <if_stmt><if>if <condition>(<expr><literal type="number">4</literal></expr>)</condition><block type="pseudo">
-	<continue>continue;</continue></block></if>
+  <continue>continue;</continue></block></else></if_stmt></block></if>
+    <if type="elseif">else
+      if <condition>(<expr><literal type="number">4</literal></expr>)</condition><block type="pseudo">
+  <continue>continue;</continue></block></if>
       <else>else<block type="pseudo">
-	<continue>continue;</continue></block></else></if_stmt></block></else></if_stmt></block></if>
-  <else>else<block type="pseudo">
-    <if_stmt><if>if <condition>(<expr><literal type="number">5</literal></expr>)</condition><block type="pseudo">
+  <continue>continue;</continue></block></else></if_stmt></block></if>
+  <if type="elseif">else
+    if <condition>(<expr><literal type="number">5</literal></expr>)</condition><block type="pseudo">
       <if_stmt><if>if <condition>(<expr><literal type="number">6</literal></expr>)</condition><block type="pseudo">
-	<continue>continue;</continue></block></if>
+  <continue>continue;</continue></block></if>
       <else>else<block type="pseudo">
-	<continue>continue;</continue></block></else></if_stmt></block></if>
-    <else>else<block type="pseudo">
-      <if_stmt><if>if <condition>(<expr><literal type="number">7</literal></expr>)</condition><block type="pseudo">
-	<continue>continue;</continue></block></if>
+  <continue>continue;</continue></block></else></if_stmt></block></if>
+    <if type="elseif">else
+      if <condition>(<expr><literal type="number">7</literal></expr>)</condition><block type="pseudo">
+  <continue>continue;</continue></block></if>
       <else>else<block type="pseudo">
-	<continue>continue;</continue></block></else></if_stmt></block></else></if_stmt></block></else></if_stmt>
+  <continue>continue;</continue></block></else></if_stmt>
 </unit>
 
 <unit>
