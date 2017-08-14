@@ -267,6 +267,31 @@ check_exit() {
     true
 }
 
+##
+# checks the exit status of a command
+#   $1 expected number in stdout
+check_lines() {
+
+    # return stdout and stderr to standard streams
+    uncapture_output
+
+    # trace the command
+    firsthistoryentry
+
+    local stdcount=$(wc -l $STDOUT | cut -d'.' -f1 | sed 's/^ *//;s/ *$//')
+
+    # verify expected stderr to the captured stdout
+    if [ "$stdcount" != "$1" ]; then
+        echo "error: expected $1 lines, got $stdcount"
+        exit 9
+    fi
+
+    # return to capturing stdout and stderr
+    capture_output
+
+    true
+}
+
 # Check the validity of the xml
 # Currently only checks for well-formed xml, not DTD validity
 xmlcheck() {
