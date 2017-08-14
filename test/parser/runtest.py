@@ -540,7 +540,7 @@ try:
                             unittext = unix2dos(unittext)
 
                         # insert BOM for UTF-8
-                        if bom:
+                        if bom and encoding == "UTF-8" :
                             unittext = insertbom(unittext)
 
                         # convert the text to srcML
