@@ -46,5 +46,19 @@ check_lines 3
 echo -en "\r\n\n\r" | srcml -l C | srcml
 check_lines 3
 
+echo -en "\n\r\n\n" | srcml -l C | srcml
+check_lines 3
+
+echo -en "\n\r\n\r" | srcml -l C | srcml
+check_lines 3
+
+echo -en "\r\r\n\n" | srcml -l C | srcml
+check_lines 3
+
+echo -en "\r\r\n\r" | srcml -l C | srcml
+check_lines 3
+
+
+
 
 
