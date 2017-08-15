@@ -122,6 +122,10 @@ void create_src(const srcml_request_t& srcml_request,
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_archive_read_unit_header(arch);
+                if (!unit) {
+                    SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
+                    exit(1);
+                }
                 srcml_unit_free(unit);
             }
 
@@ -204,8 +208,8 @@ void create_src(const srcml_request_t& srcml_request,
             while (1) {
                 srcml_unit* unit = srcml_archive_read_unit_header(arch);
                 if (!unit && srcml_request.unit > 0) {
-                    SRCMLstatus(ERROR_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
-                    exit(4);
+                    SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
+                    exit(1);
                 }
                 if (!unit)
                     break;
@@ -229,16 +233,22 @@ void create_src(const srcml_request_t& srcml_request,
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_archive_read_unit_header(arch);
+                if (!unit) {
+                    SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
+                    exit(1);
+                }
                 srcml_unit_free(unit);
             }
 
             int count = 0;
-            while (srcml_unit* unit = srcml_archive_read_unit_header(arch)) {
-
+            while (1) {
+                srcml_unit* unit = srcml_archive_read_unit_header(arch);
                 if (srcml_request.unit && !unit) {
-                    SRCMLstatus(ERROR_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
-                    exit(4);
+                    SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
+                    exit(1);
                 }
+                if (!unit)
+                    break;
 
                 // set encoding for source output
                 // NOTE: How this is done may change in the future
@@ -260,7 +270,7 @@ void create_src(const srcml_request_t& srcml_request,
                     break;
 
                 ++count;
-        }
+            }
 
         } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
             srcMLReadArchive arch(input_sources[0], srcml_request.revision);
@@ -268,13 +278,16 @@ void create_src(const srcml_request_t& srcml_request,
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
                 srcml_unit* unit = srcml_archive_read_unit_header(arch);
+                if (!unit) {
+                    SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
+                    exit(1);
+                }
                 srcml_unit_free(unit);
             }
 
             srcml_unit* unit = srcml_archive_read_unit_header(arch);
-
             if (!unit) {
-                SRCMLstatus(ERROR_MSG, "Requested unit " + std::to_string(srcml_request.unit) + " out of range.");
+                SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
                 exit(4);
             }
 
