@@ -156,12 +156,12 @@ private:
         case srcMLParser::WS:
         case srcMLParser::CONTROL_CHAR:
         case srcMLParser::EOL_BACKSLASH:
-        case srcMLParser::COMMENT_START:
-        case srcMLParser::COMMENT_END:
+        case srcMLParser::BLOCK_COMMENT_START:
+        case srcMLParser::BLOCK_COMMENT_END:
         case srcMLParser::JAVADOC_COMMENT_END:
         case srcMLParser::DOXYGEN_COMMENT_END:
-        case srcMLParser::LINECOMMENT_START:
-        case srcMLParser::LINECOMMENT_END:
+        case srcMLParser::LINE_COMMENT_START:
+        case srcMLParser::LINE_COMMENT_END:
         case srcMLParser::LINE_DOXYGEN_COMMENT_START:
         case srcMLParser::LINE_DOXYGEN_COMMENT_END:
         case srcMLParser::COMMENT_TEXT:
@@ -350,7 +350,7 @@ private:
 
                 break;
             }
-            case srcMLParser::COMMENT_START:
+            case srcMLParser::BLOCK_COMMENT_START:
 
                 pushSSkipToken(srcMLParser::SCOMMENT);
                 pushSkipToken();
@@ -392,7 +392,7 @@ private:
 
                 break;
 
-            case srcMLParser::COMMENT_END:
+            case srcMLParser::BLOCK_COMMENT_END:
 
                 pushSkipToken();
                 srcMLParser::consume();
@@ -430,7 +430,7 @@ private:
 
                 break;
 
-            case srcMLParser::LINECOMMENT_START:
+            case srcMLParser::LINE_COMMENT_START:
 
                 pushSSkipToken(srcMLParser::SLINECOMMENT);
                 pushSkipToken();
@@ -438,7 +438,7 @@ private:
 
                 break;
 
-            case srcMLParser::LINECOMMENT_END:
+            case srcMLParser::LINE_COMMENT_END:
 
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();

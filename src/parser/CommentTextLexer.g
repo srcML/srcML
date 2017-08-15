@@ -55,8 +55,8 @@ tokens {
 
     // never explicitly given (only set to)
     // so must be declared
-    COMMENT_END;
-    LINECOMMENT_END;
+    BLOCK_COMMENT_END;
+    LINE_COMMENT_END;
     STRING_END;
     CHAR_END;
     CONTROL_CHAR;
@@ -180,7 +180,7 @@ COMMENT_TEXT {
                   setLine(getLine() + (1 << 16));
 
               // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-              if (mode == LINECOMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+              if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
 
                   rawstring = false;
                   $setType(mode); selector->pop();
@@ -246,7 +246,7 @@ COMMENT_TEXT {
         '\052'..'\056' |
 
         '\057' /* '/' */
-                { if (prevLA == '*' && ((mode == COMMENT_END) || (mode == JAVADOC_COMMENT_END) || (mode == DOXYGEN_COMMENT_END) ) ) { $setType(mode); selector->pop(); } } |
+                { if (prevLA == '*' && ((mode == BLOCK_COMMENT_END) || (mode == JAVADOC_COMMENT_END) || (mode == DOXYGEN_COMMENT_END) ) ) { $setType(mode); selector->pop(); } } |
 
         '\060'..';' | 
 
@@ -305,7 +305,7 @@ COMMENT_TEXT {
             // strings and characters on a preprocessor line also need to end, even if unterminated
             if (_ttype == COMMENT_TEXT && ((LA(1) == '\n' && !rawstring) || LA(1) == EOF_CHAR) &&
                 (((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))
-                 || (mode == LINECOMMENT_END || mode == LINE_DOXYGEN_COMMENT_END))) {
+                 || (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END))) {
                 rawstring = false;
                 $setType(mode);
                 selector->pop();

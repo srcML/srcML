@@ -51,7 +51,7 @@ options {
 }
 
 tokens {
-    COMMENT_START;
+    BLOCK_COMMENT_START;
     JAVADOC_COMMENT_START;
     DOXYGEN_COMMENT_START;
     LINE_DOXYGEN_COMMENT_START;
@@ -167,8 +167,8 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
 */                
 
 // Single-line comments (no EOL)
-LINECOMMENT_START
-    :   '/' ('/' { currentmode = LINECOMMENT_END; }
+LINE_COMMENT_START
+    :   '/' ('/' { currentmode = LINE_COMMENT_END; }
                 (('/' | '!') { $setType(LINE_DOXYGEN_COMMENT_START); currentmode = LINE_DOXYGEN_COMMENT_END; })?
             {
                 changetotextlexer(currentmode);
@@ -180,8 +180,8 @@ LINECOMMENT_START
             } |
             '*'
             { 
-                $setType(COMMENT_START);
-                int mode = COMMENT_END;
+                $setType(BLOCK_COMMENT_START);
+                int mode = BLOCK_COMMENT_END;
 
                 // have "/*" followed by anything except "/", e.g., "/*/"
                 if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*' && next_char() != '/') {
