@@ -50,7 +50,7 @@ const char* const SRCML_SRC_NS_URI = "http://www.srcML.org/srcML/src";
 const char* const SRCML_CPP_NS_URI = "http://www.srcML.org/srcML/cpp";
 
 /** srcML error namespace uri */
-const char* const SRCML_ERR_NS_URI = "http://www.srcML.org/srcML/srcerr";
+const char* const SRCML_ERR_NS_URI = "http://www.srcML.org/srcML/error";
 
 /** srcDiff namespace uri */
 const char* const SRCML_DIFF_NS_URI = "http://www.srcML.org/srcDiff";
