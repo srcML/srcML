@@ -478,9 +478,9 @@ int srcml_unit_parse_filename(srcml_unit* unit, const char* src_filename) {
     OPTION_TYPE translation_options = unit->archive->options;
 
     if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C )
-        translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
     else if (lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
     const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
@@ -523,9 +523,9 @@ int srcml_unit_parse_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     OPTION_TYPE translation_options = unit->archive->options;
 
     if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C)
-        translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
     else if (lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
     const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
@@ -567,9 +567,9 @@ int srcml_unit_parse_FILE(srcml_unit* unit, FILE* src_file) {
     OPTION_TYPE translation_options = unit->archive->options;
 
     if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C)
-        translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
     else if (lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
     const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
@@ -611,9 +611,9 @@ int srcml_unit_parse_fd(srcml_unit* unit, int src_fd) {
     OPTION_TYPE translation_options = unit->archive->options;
 
     if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C)
-        translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
     else if (lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
     const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
@@ -657,9 +657,9 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, ssize_t (*read_callbac
     OPTION_TYPE translation_options = unit->archive->options;
 
     if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C)
-        translation_options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
     else if (lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP_NOMACRO;
+        translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
     const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);

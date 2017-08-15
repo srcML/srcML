@@ -462,9 +462,9 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
         if(archive->language) {
 
             if(*archive->language == "C++" || *archive->language == "C" || *archive->language == "Objective-C")
-                archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;
+                archive->options |= SRCML_OPTION_CPP;
             else if(*archive->language == "C#")
-                archive->options |= SRCML_OPTION_CPP_NOMACRO;
+                archive->options |= SRCML_OPTION_CPP;
         }
 
     } else if(suri == SRCML_ERR_NS_URI) {

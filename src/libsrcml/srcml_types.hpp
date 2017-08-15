@@ -30,8 +30,6 @@
 
 /** Include any XML namespace declarations */
 const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<5;
-/** Markup preprocessor elements (default for C, C++, C#) */
-const unsigned int SRCML_OPTION_CPP_NOMACRO       = 1<<2;
 /** Not sure what this used for */
 const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
 /** Additional cpp:if/cpp:endif checking */
