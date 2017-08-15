@@ -45,7 +45,7 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
             boost::filesystem::create_directories(out.parent_path());
 
         // unparse directory to filename
-        log << ++count << (const char *)out.c_str();
+        log << ++count << out.c_str();
 
         srcml_unit_unparse_filename(unit, (const char *)out.c_str(), 0);
 
