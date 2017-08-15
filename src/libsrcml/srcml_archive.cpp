@@ -1321,7 +1321,7 @@ srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
  */
 int srcml_unit_read_body(srcml_unit* unit) {
 
-    if (unit == NULL || unit->archive)
+    if (unit == NULL || unit->archive == NULL)
         return 0;
 
     if(unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
