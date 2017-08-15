@@ -60,7 +60,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
         return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
-    } else if (input.state == SRCML && input.protocol == "file") {
+    } else if (input.state == SRCML && (input.protocol == "file" || input.protocol == "stdin")) {
 
         return srcml_input_srcml(queue, srcml_arch, input, srcml_request.revision);
 
