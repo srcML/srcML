@@ -16,6 +16,10 @@ define srcml <<- 'STDOUT'
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
+# no options
+srcml sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml "$srcml"
+
 # file before options
 srcml sub/a.cpp.xml -X -o sub/b.cpp.xml
 check sub/b.cpp.xml "$srcml"
