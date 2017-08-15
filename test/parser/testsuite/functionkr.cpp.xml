@@ -53,4 +53,22 @@
 <block>{}</block></function>
 </unit>
 
+<unit>
+<function><type><name>int</name></type> <name>k_and_r</name><parameter_list>(<parameter><decl><type><name>n1</name></type></decl></parameter>, <parameter><decl><type><name>n2</name></type></decl></parameter>)</parameter_list>
+    <decl_stmt><decl><type><name>int</name> <modifier>*</modifier></type><name>n1</name></decl>, <decl><type ref="prev"><modifier>*</modifier></type><name>n2</name></decl>;</decl_stmt>
+<block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>k_and_r</name><parameter_list>(<parameter><decl><type><name>n1</name></type></decl></parameter>, <parameter><decl><type><name>n2</name></type></decl></parameter>)</parameter_list>
+    <decl_stmt><decl><type><name>int</name></type> <name>n1</name></decl>, <decl><type ref="prev"><modifier>*</modifier></type><name>n2</name></decl>;</decl_stmt>
+<block>{}</block></function>
+</unit>
+
+<unit>
+<function><type><name>int</name></type> <name>k_and_r</name><parameter_list>(<parameter><decl><type><name>n1</name></type></decl></parameter>, <parameter><decl><type><name>n2</name></type></decl></parameter>)</parameter_list>
+    <decl_stmt><decl><type><name>int</name><modifier>*</modifier></type> <name>n1</name></decl>, <decl><type ref="prev"/><name>n2</name></decl>;</decl_stmt>
+<block>{}</block></function>
+</unit>
+
 </unit>
