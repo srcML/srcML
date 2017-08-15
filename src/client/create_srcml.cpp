@@ -319,4 +319,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         if (contains<int>(destination))
             close(*destination.fd);
     }
+
+    if (status)
+    	;
 }
