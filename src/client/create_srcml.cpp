@@ -52,7 +52,19 @@ int srcml_handler_dispatch(ParseQueue& queue,
                           const srcml_output_dest& destination) {
 
     // call appropriate handler
-    if (input.state == SRCML) {
+    if (input.state == SRCML && input.protocol == "file" && !input.compressions.empty()) {
+
+        // may have some compressions/archives
+        srcml_input_src uninput = input;
+        uninput.fd = input_archive(uninput);
+
+        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+
+    } else if (input.state == SRCML && input.protocol == "file") {
+
+        return srcml_input_srcml(queue, srcml_arch, input, srcml_request.revision);
+
+    } else if (input.state == SRCML) {
 
        // input must go through libcurl pipe
         srcml_input_src uninput = input;
