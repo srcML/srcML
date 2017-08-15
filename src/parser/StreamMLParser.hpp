@@ -346,6 +346,7 @@ private:
                 snprintf(outar, 22, "0x%02x", n);
                 controlElement->setText(outar);
                 pushSkipToken(controlElement);
+                srcMLParser::consume();
 
                 break;
             }
@@ -353,13 +354,7 @@ private:
 
                 pushSSkipToken(srcMLParser::SCOMMENT);
                 pushSkipToken();
-
-                break;
-
-            case srcMLParser::COMMENT_END:
-
-                pushSkipToken();
-                pushESkipToken(srcMLParser::SCOMMENT);
+                srcMLParser::consume();
 
                 break;
 
@@ -367,6 +362,7 @@ private:
 
                 pushSSkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 pushSkipToken();
+                srcMLParser::consume();
 
                 break;
 
@@ -374,10 +370,16 @@ private:
 
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
+                    srcMLParser::consume();
+                    lastcolumn = LT(1)->getColumn() - 1;
+                    lastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
+                    srcMLParser::consume();
+                    lastcolumn = LT(1)->getColumn() - 1;
+                    lastline = LT(1)->getLine();
                 }
 
                 break;
@@ -386,13 +388,37 @@ private:
 
                 pushSSkipToken(srcMLParser::SDOXYGEN_COMMENT);
                 pushSkipToken();
+                srcMLParser::consume();
+
+                break;
+
+            case srcMLParser::COMMENT_END:
+
+                pushSkipToken();
+                srcMLParser::consume();
+                lastcolumn = LT(1)->getColumn() - 1;
+                lastline = LT(1)->getLine();
+                pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
 
             case srcMLParser::DOXYGEN_COMMENT_END:
 
                 pushSkipToken();
+                srcMLParser::consume();
+                lastcolumn = LT(1)->getColumn() - 1;
+                lastline = LT(1)->getLine();
                 pushESkipToken(srcMLParser::SDOXYGEN_COMMENT);
+
+                break;
+
+            case srcMLParser::JAVADOC_COMMENT_END:
+
+                pushSkipToken();
+                srcMLParser::consume();
+                lastcolumn = LT(1)->getColumn() - 1;
+                lastline = LT(1)->getLine();
+                pushESkipToken(srcMLParser::SJAVADOC_COMMENT);
 
                 break;
 
@@ -400,13 +426,7 @@ private:
 
                 pushSSkipToken(srcMLParser::SJAVADOC_COMMENT);
                 pushSkipToken();
-
-                break;
-
-            case srcMLParser::JAVADOC_COMMENT_END:
-
-                pushSkipToken();
-                pushESkipToken(srcMLParser::SJAVADOC_COMMENT);
+                srcMLParser::consume();
 
                 break;
 
@@ -414,6 +434,7 @@ private:
 
                 pushSSkipToken(srcMLParser::SLINECOMMENT);
                 pushSkipToken();
+                srcMLParser::consume();
 
                 break;
 
@@ -421,10 +442,16 @@ private:
 
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
+                    srcMLParser::consume();
+                    lastcolumn = LT(1)->getColumn() - 1;
+                    lastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                 } else {
+                    lastcolumn = LT(1)->getColumn() - 1;
+                    lastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                     pushSkipToken();
+                    srcMLParser::consume();
                 }
 
                 break;
@@ -432,13 +459,18 @@ private:
             default:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
+                srcMLParser::consume();
 
                 break;
             }
-
+/*
             // rest of consume process
             srcMLParser::consume();
 
+            srcMLToken* qetoken = static_cast<srcMLToken*>(&(skiptb->front()));
+            qetoken->endline = LT(1)->getLine();
+            qetoken->endcolumn = LT(1)->getColumn();
+*/
             return true;
         }
 
