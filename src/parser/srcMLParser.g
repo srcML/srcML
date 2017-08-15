@@ -3649,11 +3649,6 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         /*
           MODE_VARIABLE_NAME
         */
-
-        // special case for type modifiers
-        { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
-        multops |
-
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
         tripledotop |
 
@@ -7084,7 +7079,7 @@ class_type_identifier_keyword[]  { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // Variable declaration name and optional initialization
-variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
+variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev = false;
         ENTRY_DEBUG } :
         {
             if (!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
@@ -7096,10 +7091,19 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
                 // start the declaration
                 startElement(SDECLARATION);
-                emptyElement(STYPEPREV);
+
+                startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+                startElement(STYPEPREV);
+
+                instypeprev = true;
             }
         }
-
+        (multops)*
+        {
+            if (instypeprev)
+                endMode();
+        }
         // Mark as name before mark without name
         (options { generateAmbigWarnings = false;} :  { inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[!isthis] | compound_name | keyword_name)
         {
@@ -7924,7 +7928,7 @@ kr_parameter_type[int type_count] { ENTRY_DEBUG} :
 
 // k& r C parameter name
 kr_parameter_name[] { ENTRY_DEBUG } :
-        ((comma)* (multops)* variable_declaration_nameinit)*
+        ((comma)* variable_declaration_nameinit)*
 ;
 
 // k& r C terminate
