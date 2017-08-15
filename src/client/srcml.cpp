@@ -180,14 +180,12 @@ namespace {
         Create srcML
 
         * One of the input sources is source code
-        * More than one input, and the destination is srcML
-        * One input, a specific unit, and the output is srcML
+        * Destination is srcML
     */
     bool request_create_srcml(const srcml_request_t& request) {
 
         return std::find_if(request.input_sources.begin(), request.input_sources.end(), is_src) != request.input_sources.end() ||
-        (request.input_sources.size() > 1 && request.output_filename.state == SRCML) /*||
-        (input_sources.size() == 1 && input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML)) */;
+        (request.output_filename.state == SRCML);
     }
 
     /*
