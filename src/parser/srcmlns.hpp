@@ -67,30 +67,11 @@ const char* const SRCML_ERR_NS_PREFIX_DEFAULT = "err";
 /** srcDiff namespace prefix */
 const char* const SRCML_DIFF_NS_PREFIX_DEFAULT = "diff";
 
-// srcML extension namespace URI's
-/** srcML literal namespace uri */
-const char* const SRCML_EXT_LITERAL_NS_URI = "http://www.srcML.org/srcML/literal";
-
-/** srcML operator namespace uri */
-const char* const SRCML_EXT_OPERATOR_NS_URI = "http://www.srcML.org/srcML/operator";
-
-/** srcML modifier namespace uri */
-const char* const SRCML_EXT_MODIFIER_NS_URI = "http://www.srcML.org/srcML/modifier";
-
 /** srcML position namespace uri */
 const char* const SRCML_EXT_POSITION_NS_URI = "http://www.srcML.org/srcML/position";
 
 /** srcML OpenMP namespace uri */
 const char* const SRCML_EXT_OPENMP_NS_URI = "http://www.srcML.org/srcML/openmp";
-
-/** srcML literal namespace prefix */
-const char* const SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT = "lit";
-
-/** srcML operator namespace prefix */
-const char* const SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT = "op";
-
-/** srcML operator namespace prefix */
-const char* const SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT = "type";
 
 /** srcML operator namespace prefix */
 const char* const SRCML_EXT_POSITION_NS_PREFIX_DEFAULT = "pos";
