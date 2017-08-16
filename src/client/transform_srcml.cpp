@@ -27,7 +27,7 @@
 #include <string>
 #include <SRCMLStatus.hpp>
 
-int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
+int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
 
     auto element = xpath_support.first;
     auto attribute = xpath_support.second;
@@ -37,7 +37,7 @@ int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, cons
     if (element){
 
         // check first if namespace is already declared
-        element_uri = srcml_archive_get_uri_from_prefix(in_arch, element->prefix->c_str());
+        element_uri = srcml_archive_get_uri_from_prefix(out_arch, element->prefix->c_str());
 
         // if not declared, check for xmlns from cli
         if (!element_uri) {
@@ -56,7 +56,7 @@ int apply_xpath(srcml_archive* in_arch, const std::string& transform_input, cons
     // Check attribute namespace
     char const * attribute_uri = 0;
     if (attribute) {
-        attribute_uri = srcml_archive_get_uri_from_prefix(in_arch, attribute->prefix->c_str());
+        attribute_uri = srcml_archive_get_uri_from_prefix(out_arch, attribute->prefix->c_str());
 
         // if not declared, check for xmlns from cli
         if (!attribute_uri) {
@@ -143,26 +143,12 @@ void transform_srcml(const srcml_request_t& srcml_request,
     const srcml_input_t& input_sources,
     const srcml_output_dest& output) {
 
-	// Convert output into srcml archive
+	// create output archive
 	int status;
 	srcml_archive* out_arch = srcml_archive_create();
-    if (contains<int>(output))
-        status = srcml_archive_write_open_fd(out_arch, output);
-    else if (contains<FILE*>(output))
-        status = srcml_archive_write_open_FILE(out_arch, output);
-    else
-        status = srcml_archive_write_open_filename(out_arch, output.c_str(), 0);
-    if (status != SRCML_STATUS_OK) {
-        SRCMLstatus(ERROR_MSG, "srcml: error with output archive for transformation");
-        exit(-1);
-    }
 
-    // register xml namespaces
-    for (const auto& itr : srcml_request.xmlns_namespaces) {
-        srcml_archive_register_namespace(out_arch, itr.first.c_str(), itr.second.c_str());
-    }
-
-    // Convert inputs into srcml archive
+    // open all input sources early so xml namespaces can be setup for the output archive
+    std::vector<srcml_archive*> inarchives;
     for (const auto& input : input_sources) {
         srcml_archive* in_arch = srcml_archive_create();
         if (contains<int>(input))
@@ -175,6 +161,38 @@ void transform_srcml(const srcml_request_t& srcml_request,
             SRCMLstatus(ERROR_MSG, "srcml: error with input archive for transformation");
             exit(-1);
         }
+
+        inarchives.push_back(in_arch);
+    }
+
+    // register xml namespaces from the input sources onto the output
+    for (const auto in_arch : inarchives) {
+        // register the xml namespaces on the output from this input source
+        for (int i = 0; i < (int)srcml_archive_get_namespace_size(in_arch); ++i) {
+            srcml_archive_register_namespace(out_arch, srcml_archive_get_namespace_prefix(in_arch, i), srcml_archive_get_namespace_uri(in_arch, i));
+        }
+    }
+
+    // register xml namespaces directly from the user
+    for (const auto& itr : srcml_request.xmlns_namespaces) {
+        srcml_archive_register_namespace(out_arch, itr.first.c_str(), itr.second.c_str());
+    }
+
+    // open the output source. perform this after namespace registration so it appears
+    // correctly in the output xml
+    if (contains<int>(output))
+        status = srcml_archive_write_open_fd(out_arch, output);
+    else if (contains<FILE*>(output))
+        status = srcml_archive_write_open_FILE(out_arch, output);
+    else
+        status = srcml_archive_write_open_filename(out_arch, output.c_str(), 0);
+    if (status != SRCML_STATUS_OK) {
+        SRCMLstatus(ERROR_MSG, "srcml: error with output archive for transformation");
+        exit(-1);
+    }
+
+    // process the content of the input sources
+    for (const auto in_arch : inarchives) {
 
         // see if we have any XPath output
         bool isxpath = false;
@@ -190,16 +208,8 @@ void transform_srcml(const srcml_request_t& srcml_request,
         }
 
         // for non-archive input, then we want non-archive output, fool
-        if (!isxpath && !srcml_archive_is_full_archive(in_arch)) {
+        if ((inarchives.size() == 1) && !isxpath && !srcml_archive_is_full_archive(in_arch)) {
             srcml_archive_disable_full_archive(out_arch);
-        }
-
-        // copy input xml namespaces
-        // TODO: This assumes namespaces on first input. Need to open all, figure out
-        // output namespaces, then process
-        //if (srcml_archive_is_full_archive(in_arch)) {
-        for (int i = 0; i < (int)srcml_archive_get_namespace_size(in_arch); ++i) {
-            srcml_archive_register_namespace(out_arch, srcml_archive_get_namespace_prefix(in_arch, i), srcml_archive_get_namespace_uri(in_arch, i));
         }
 
 		// iterate through all transformations added during cli parsing
@@ -211,39 +221,41 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
             if (protocol == "xpath") {
                 // TODO: FIX BUG
-                if (apply_xpath(in_arch, resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
-                  SRCMLstatus(ERROR_MSG, "srcml: error with xpath transformation");
-                  exit(-1);
-            }
-        } else if (protocol == "xslt") {
-              if (apply_xslt(in_arch, resource) != SRCML_STATUS_OK) {
-                SRCMLstatus(ERROR_MSG, "srcml: error with xslt transformation");
-                exit(-1);
-            }
-        } else if (protocol == "xpathparam") {
+                if (apply_xpath(in_arch, out_arch, resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
+                    SRCMLstatus(ERROR_MSG, "srcml: error with xpath transformation");
+                    exit(-1);
+                }
+
+            } else if (protocol == "xslt") {
+                if (apply_xslt(in_arch, resource) != SRCML_STATUS_OK) {
+                    SRCMLstatus(ERROR_MSG, "srcml: error with xslt transformation");
+                    exit(-1);
+                }
+
+            } else if (protocol == "xpathparam") {
 				//std::cerr << protocol << " : " << resource << "\n"; // Stub
-        } else if (protocol == "relaxng") {
-          if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
-            SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");
-            exit(-1);
+
+            } else if (protocol == "relaxng") {
+                if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
+                    SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");
+                    exit(-1);
+                }
+            }
         }
+
+        int status = srcml_apply_transforms(in_arch, out_arch);
+
+        srcml_archive_close(in_arch);
+        srcml_archive_free(in_arch);
+
+        if (status != SRCML_STATUS_OK)
+            exit(1);
     }
+
+    srcml_archive_close(out_arch);
+    srcml_archive_free(out_arch);
+
+    if (contains<int>(output)) {
+        close(*(output.fd));
     }
-
-int status = srcml_apply_transforms(in_arch, out_arch);
-
-srcml_archive_close(in_arch);
-srcml_archive_free(in_arch);
-
-if (status != SRCML_STATUS_OK)
-    exit(1);
-}
-
-srcml_archive_close(out_arch);
-srcml_archive_free(out_arch);
-
-if (contains<int>(output)) {
-    close(*(output.fd));
-}
-
 }
