@@ -82,7 +82,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
 
         log << '-' << (request->filename ? *request->filename : "");
 
-//            SRCMLstatus(WARNING_MSG, "Extension not supported");
+         SRCMLstatus(ERROR_MSG, "Extension not supported");
 
     } else if (request->errormsg) {
         SRCMLstatus(WARNING_MSG, *(request->errormsg));
