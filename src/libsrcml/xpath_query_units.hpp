@@ -223,12 +223,18 @@ public :
         for (unsigned int i = 0; prefixes[i] != 0; i += 2){
 
             if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
-
                 fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
                 return 0; //SRCML_STATUS_ERROR;
-
             }
+        }
 
+        // register namespaces from input archive, which have been setup on the output archive
+        for (unsigned int i = 1; i < srcml_archive_get_namespace_size(output_archive); ++i) {
+
+            if (xmlXPathRegisterNs(context, BAD_CAST srcml_archive_get_namespace_prefix(output_archive, i),BAD_CAST srcml_archive_get_namespace_uri(output_archive, i)) == -1) {
+                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
+                return 0; //SRCML_STATUS_ERROR;
+            }
         }
 
 #if LIBEXSLT_VERSION > 813
