@@ -151,12 +151,13 @@ void transform_srcml(const srcml_request_t& srcml_request,
     std::vector<srcml_archive*> inarchives;
     for (const auto& input : input_sources) {
         srcml_archive* in_arch = srcml_archive_create();
-        if (contains<int>(input))
+        if (contains<int>(input)) {
             status = srcml_archive_read_open_fd(in_arch, input);
-        else if (contains<FILE*>(input))
+        } else if (contains<FILE*>(input)) {
             status = srcml_archive_read_open_FILE(in_arch, input);
-        else
+        } else {
             status = srcml_archive_read_open_filename(in_arch, input.c_str());
+        }
         if (status != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: error with input archive for transformation");
             exit(-1);
@@ -220,7 +221,6 @@ void transform_srcml(const srcml_request_t& srcml_request,
             src_prefix_split_uri(trans, protocol, resource);
 
             if (protocol == "xpath") {
-                // TODO: FIX BUG
                 if (apply_xpath(in_arch, out_arch, resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
                     SRCMLstatus(ERROR_MSG, "srcml: error with xpath transformation");
                     exit(-1);
