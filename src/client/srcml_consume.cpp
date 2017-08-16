@@ -120,6 +120,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         else if (!request->unit)
             status = srcml_unit_parse_memory(unit, &request->buffer.front(), request->buffer.size());
         if (status != SRCML_STATUS_OK) {
+            request->status = status;
             throw status;
         }
 
@@ -128,16 +129,9 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     } catch (...) {
 
         request->errormsg = "srcml: Unable to open file " + original_filename;
-
-        SRCMLstatus(WARNING_MSG, *request->errormsg);
-
         if (unit)
             srcml_unit_free(unit);
         unit = 0;
-        if (request)
-            delete request;
-        request = 0;
-        return;
     }
 
     // schedule unit for output

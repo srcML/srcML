@@ -312,6 +312,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // close any created srcML archive
     if (createdsrcml || write_queue.numWritten()) {
+
         srcml_archive_close(srcml_arch);
         srcml_archive_free(srcml_arch);
 
@@ -319,6 +320,10 @@ void create_srcml(const srcml_request_t& srcml_request,
         if (contains<int>(destination))
             close(*destination.fd);
     }
+
+    // have to wait to exit
+    if (SRCMLStatus::errors())
+        exit(1);
 
     if (status)
     	;
