@@ -393,6 +393,7 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
     if (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;
 
+    // figure out the language based on unit, archive, registered languages
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
 
@@ -404,14 +405,15 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
 
     OPTION_TYPE translation_options = unit->archive->options;
 
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C )
-        translation_options |= SRCML_OPTION_CPP;
-    else if (lang == Language::LANGUAGE_CSHARP)
+    // make sure cpp processing is done for C-based languages
+    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX ||
+        lang == Language::LANGUAGE_OBJECTIVE_C || lang == Language::LANGUAGE_CSHARP)
         translation_options |= SRCML_OPTION_CPP;
 
-    UTF8CharBuffer * input = 0;
     const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+
+    UTF8CharBuffer* input = 0;
     try {
 
         input = createUTF8CharBuffer(src_encoding, output_hash, unit->hash);
