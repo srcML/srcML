@@ -451,14 +451,14 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
     // @todo Why are we saving the options then restoring them?
     OPTION_TYPE save_options = options;
 
-    out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0),
+    out.startUnit(optional_to_c_str(unit->language, optional_to_c_str(unit->archive->language)),
                   revision,
-                  unit->url ? unit->url->c_str() : 0,
-                  unit->filename ? unit->filename->c_str() : 0,
-                  unit->version ? unit->version->c_str() : 0,
-                  unit->timestamp ? unit->timestamp->c_str() : 0,
-                  unit->hash ? unit->hash->c_str() : 0,
-                  unit->encoding ? unit->encoding->c_str() : 0,
+                  optional_to_c_str(unit->url),
+                  optional_to_c_str(unit->filename),
+                  optional_to_c_str(unit->version),
+                  optional_to_c_str(unit->timestamp),
+                  optional_to_c_str(unit->hash),
+                  optional_to_c_str(unit->encoding),
                   unit->attributes,
                   false);
 
