@@ -804,7 +804,7 @@ private:
 
     /** abstract method for replacing start of stream with a NOP */
     void nopStreamStart() final {
-
+        
         // find the first element token
         // may have some text/spaces before
         auto loc = tb.begin();

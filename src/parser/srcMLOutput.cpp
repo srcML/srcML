@@ -353,6 +353,9 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     for (auto& ns : namespaces)
         ns.used = false;
 
+    if (isoption(options, SRCML_OPTION_NOUNIT))
+        return;
+
     // start of main tag
     xmlTextWriterStartElement(xout, BAD_CAST maintag.c_str());
     ++openelementcount;
@@ -455,6 +458,10 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
+
+        if (isoption(options, SRCML_OPTION_NOUNIT))
+            return;
+        
         startUnit(unit_language, unit_revision, unit_url, unit_filename, unit_version, unit_timestamp, unit_hash, unit_encoding, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
 
     } else {

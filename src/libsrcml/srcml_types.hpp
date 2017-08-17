@@ -42,6 +42,8 @@ const unsigned int SRCML_OPTION_OPENMP            = 1<<25;
 const unsigned int SRCML_OPTION_APPLY_ROOT        = 1<<8;
 /** Debug time attribute */
 const unsigned int SRCML_OPTION_DEBUG_TIMER       = 1<<17;
+/** Parser does not construct unit tags */
+const unsigned int SRCML_OPTION_NOUNIT            = 1<<23;
 /** Parser output special tokens for debugging the parser */
 const unsigned int SRCML_OPTION_DEBUG             = 1<<24;
 /** Is a fragment, i.e., no unit element */
@@ -263,6 +265,8 @@ struct srcml_unit {
     std::vector<std::string> attributes;
     /** the type of eol to output with source code */
     size_t eol;
+
+    int derived_language;
 
     /** output buffer to hold streaming creation of unit */
     xmlBuffer * output_buffer;

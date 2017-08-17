@@ -403,12 +403,9 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
     if (lang == SRCML_LANGUAGE_NONE)
         return SRCML_STATUS_UNSET_LANGUAGE;
 
-    OPTION_TYPE translation_options = unit->archive->options;
+    unit->derived_language = lang;
 
-    // make sure cpp processing is done for C-based languages
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX ||
-        lang == Language::LANGUAGE_OBJECTIVE_C || lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP;
+    OPTION_TYPE translation_options = unit->archive->options;
 
     const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
@@ -420,77 +417,33 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
-    xmlBuffer * output_buffer = xmlBufferCreate();
-    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
-    if (!obuffer) {
-        xmlBufferFree(output_buffer);
-        return SRCML_STATUS_IO_ERROR;
-    }
-
     unit->encoding = input->getEncoding();
 
+    // if this is just a solitary unit (i.e., no archive), the url attribute is on the unit
     if (!srcml_archive_is_full_archive(unit->archive))
         unit->url = unit->archive->url;
 
-    int ns_pos_start;
-    int ns_list_size;
-    std::string reduced_ns;
-    try {
+    // create the unit start tag
+    int status = srcml_write_start_unit(unit);
+    if (status != SRCML_STATUS_OK)
+        return status;
 
-        srcml_translator translator(
-            obuffer,
-            optional_to_c_str(unit->archive->encoding, "UTF-8"),
-            translation_options,
-            unit->archive->prefixes,
-            unit->archive->uris,
-            boost::none,
-            unit->archive->tabstop,
-            lang,
-            optional_to_c_str(unit->revision),
-            optional_to_c_str(unit->url),
-            optional_to_c_str(unit->filename),
-            optional_to_c_str(unit->version),
-            unit->attributes,
-            optional_to_c_str(unit->timestamp),
-            optional_to_c_str(unit->hash, (translation_options & SRCML_OPTION_HASH ? "" : 0)),
-            optional_to_c_str(unit->encoding));
+    // parse the input
+    unit->archive->options |= SRCML_OPTION_NOUNIT;
+    unit->unit_translator->translate(input);
+    unit->archive->options &= !SRCML_OPTION_NOUNIT;
 
-        translator.set_macro_list(unit->archive->user_macro_list);
+    int ns_pos_start = unit->unit_translator->out.start_ns_pos;
+    std::string reduced_ns = unit->unit_translator->out.reduced_ns;
+    int ns_list_size = unit->unit_translator->out.ns_list_size;
 
-        translator.translate(input);
+    // create the unit end tag
+    status = srcml_write_end_unit(unit);
+    if (status != SRCML_STATUS_OK)
+        return status;
 
-        ns_pos_start = translator.out.start_ns_pos;
-        reduced_ns = translator.out.reduced_ns;
-        ns_list_size = translator.out.ns_list_size;
-
-    } catch(...) {
-
-        xmlBufferFree(output_buffer);
-        return SRCML_STATUS_IO_ERROR;
-
-    }
-
-    size_t length = strlen((const char *)output_buffer->content);
-
-    // Note: Not sure why this is needed, but causes problems if not
-    while(length > 0 && output_buffer->content[length - 1] == '\n')
-        --length;
-
-    int status = SRCML_STATUS_OK;
-
-    bool reduce = false;
-
-    if (reduce) {
-
-        unit->unit = std::string((const char *)output_buffer->content, ns_pos_start);
-        unit->unit->append(reduced_ns);
-        unit->unit->append((const char*)output_buffer->content + ns_pos_start + ns_list_size, length - ns_pos_start - ns_list_size);
-    } else {
-
-        unit->unit = std::string((const char *)output_buffer->content, length);
-    }
-
-    xmlBufferFree(output_buffer);
+    // restore archive options back
+    unit->archive->options = translation_options;
 
     return status;
 }
@@ -811,7 +764,7 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
             unit->archive->uris,
             boost::none,
             unit->archive->tabstop,
-            SRCML_LANGUAGE_NONE,
+            unit->derived_language,
             optional_to_c_str(unit->revision),
             optional_to_c_str(unit->url),
             optional_to_c_str(unit->filename),
