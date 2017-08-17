@@ -448,19 +448,6 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
     if (archive == NULL || prefix == NULL || uri == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    // find if the namespace is already in
-    auto urientry = std::find(archive->uris.begin(), archive->uris.end(), uri);
-    if (urientry != archive->uris.end()) {
-
-        auto pos = std::distance(archive->uris.begin(), urientry);
-        archive->prefixes[pos] = prefix;
-
-    } else {
-
-        archive->prefixes.push_back(prefix);
-        archive->uris.push_back(uri);
-    }
-
     const auto& nsentry = std::find_if(archive->namespaces.begin(), archive->namespaces.end(),
         [uri](Namespace& item)->bool { return item.uri == uri; });
     if (nsentry != std::end(archive->namespaces)) {
@@ -887,21 +874,27 @@ int srcml_archive_write_open_internal(srcml_archive * archive, xmlOutputBufferPt
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
+    archive->prefixes.clear();
+    archive->uris.clear();
+    for (const auto& ns : archive->namespaces) {
+        archive->prefixes.push_back(ns.prefix);
+        archive->uris.push_back(ns.uri);
+    }
     try {
 
         archive->translator = new srcml_translator(
                                                 output_buffer,
-                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                optional_to_c_str(archive->encoding, "UTF-8"),
                                                 archive->options,
                                                 archive->prefixes,
                                                 archive->uris,
                                                 archive->processing_instruction,
                                                 archive->tabstop,
-                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                archive->revision ? archive->revision->c_str() : 0,
-                                                archive->url ? archive->url->c_str() : 0,
+                                                srcml_check_language(optional_to_c_str(archive->language)),
+                                                optional_to_c_str(archive->revision),
+                                                optional_to_c_str(archive->url),
                                                 0,
-                                                archive->version ? archive->version->c_str() : 0,
+                                                optional_to_c_str(archive->version),
                                                 archive->attributes, 0, 0, 0);
         archive->translator->set_macro_list(archive->user_macro_list);
 
@@ -957,22 +950,29 @@ int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
+    archive->prefixes.clear();
+    archive->uris.clear();
+    for (const auto& ns : archive->namespaces) {
+        archive->prefixes.push_back(ns.prefix);
+        archive->uris.push_back(ns.uri);
+    }
+
     try {
 
         archive->translator = new srcml_translator(
                                                 buffer,
                                                 size,
-                                                archive->encoding ? archive->encoding->c_str() : "UTF-8",
+                                                optional_to_c_str(archive->encoding, "UTF-8"),
                                                 archive->options,
                                                 archive->prefixes,
                                                 archive->uris,
                                                 archive->processing_instruction,
                                                 archive->tabstop,
-                                                srcml_check_language(archive->language ? archive->language->c_str() : 0),
-                                                archive->revision ? archive->revision->c_str() : 0,
-                                                archive->url ? archive->url->c_str() : 0,
+                                                srcml_check_language(optional_to_c_str(archive->language)),
+                                                optional_to_c_str(archive->revision),
+                                                optional_to_c_str(archive->url),
                                                 0,
-                                                archive->version ? archive->version->c_str() : 0,
+                                                optional_to_c_str(archive->version),
                                                 archive->attributes, 0, 0, 0);
 
         archive->translator->set_macro_list(archive->user_macro_list);
@@ -1077,6 +1077,13 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
     }
 
     archive->type = SRCML_ARCHIVE_READ;
+
+    archive->prefixes.clear();
+    archive->uris.clear();
+    for (const auto& ns : archive->namespaces) {
+        archive->prefixes.push_back(ns.prefix);
+        archive->uris.push_back(ns.uri);
+    }
 
     boost::optional<std::string> encoding, language, url, version;
     bool done = !archive->reader->read_root_unit_attributes(encoding, language, url, version,
