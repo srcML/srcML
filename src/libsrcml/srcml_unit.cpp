@@ -27,14 +27,6 @@
 
 #include <UTF8CharBuffer.hpp>
 
-inline const char* optional_to_c_str(const boost::optional<std::string>& s) {
-    return s ? s->c_str() : 0;
-}
-
-inline const char* optional_to_c_str(const boost::optional<std::string>& s, const char* value) {
-    return s ? s->c_str() : value;
-}
-
 /******************************************************************************
  *                                                                            *
  *                           Set up functions                                 *

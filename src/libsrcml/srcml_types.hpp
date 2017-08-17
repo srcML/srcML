@@ -293,5 +293,14 @@ struct srcml_unit {
  */
 int srcml_unit_set_hash (struct srcml_unit* unit, const char* hash);
 
+// helper conversions for boost::optional<std::string>
+inline const char* optional_to_c_str(const boost::optional<std::string>& s) {
+    return s ? s->c_str() : 0;
+}
+
+inline const char* optional_to_c_str(const boost::optional<std::string>& s, const char* value) {
+    return s ? s->c_str() : value;
+}
+
 
 #endif

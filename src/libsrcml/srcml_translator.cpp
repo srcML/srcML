@@ -277,7 +277,7 @@ void srcml_translator::prepareOutput() {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_unit(const srcml_unit * unit, const char* xml) {
+bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
 
     if (is_outputting_unit)
         return false;
@@ -286,102 +286,54 @@ bool srcml_translator::add_unit(const srcml_unit * unit, const char* xml) {
         prepareOutput();
     first = false;
 
+    // find out where the end of the unit start tag is so
+    // we can replace it on output with updated namespaces, etc.
+    // @todo record this in the unit
     const char* end_start_unit = (char *)strchr(xml, '>');
     if (!end_start_unit)
         return false;
 
-    /** extract language */
-    const char* lang = "language";
-    const char* language_start_name = std::search(xml, end_start_unit, lang, lang + strlen(lang));
+    OPTION_TYPE save_options = options;
 
-    char* language_start_value = 0;
-    char* language_end_value = 0;
-    if (language_start_name) {
-
-        language_start_value = (char *)strchr(language_start_name, '"');
-        language_end_value = (char *)strchr(language_start_value + 1, '"');
-        (*language_end_value) = '\0';
-
-    } 
-
-    /** is there a cpp namespace */
+    // is there a cpp namespace? 
+    // @todo Get this from set of used namespaces from the unit
     bool is_cpp = false;
     for (auto& prefix : SRCML_URI_PREFIX) {
-
         std::string cpp_uri = prefix + "srcML/cpp";
-
         is_cpp = std::search(xml, end_start_unit, cpp_uri.begin(), cpp_uri.end()) != end_start_unit;
         if (is_cpp)
             break;
     }
-
-    OPTION_TYPE save_options = options;
     if (is_cpp)
         options |= SRCML_OPTION_CPP;
 
+    std::string language = Language(unit->derived_language).getLanguageString();
+
     bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
-    out.startUnit(language_start_value ? language_start_value + 1 : 0, is_archive && unit->revision ? unit->revision->c_str() : revision, unit->url ? unit->url->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                       unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, 
-                       unit->encoding ? unit->encoding->c_str() : 0, unit->attributes, false);
-
-    if (language_start_name)
-        (*language_end_value) = '"';
+    out.startUnit(language.c_str(),
+            is_archive && unit->revision ? unit->revision->c_str() : revision,
+            optional_to_c_str(unit->url),
+            optional_to_c_str(unit->filename),
+            optional_to_c_str(unit->version),
+            optional_to_c_str(unit->timestamp),
+            optional_to_c_str(unit->hash),
+            optional_to_c_str(unit->encoding),
+            unit->attributes,
+            false);
 
     options = save_options;
 
     size_t size = strlen(end_start_unit);
+    if (size > 1) {
 
-    if(size > 1) {
-
-        while(end_start_unit[--size] != '<')
+        // find the start of the end tag
+        // also corrects any data beyond unit end tag
+        while (end_start_unit[--size] != '<')
             ;
 
-        xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
+        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST end_start_unit + 1, (int)size - 1);
     }
-
-    xmlTextWriterEndElement(out.getWriter());
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-        out.outputUnitSeparator();
-
-    return true;
-}
-
-/**
- * add_unit
- * @param unit srcML to add to archive/non-archive with configuration options
- * @param xml the xml to output
- *
- * Add a unit as string directly to the archive.  If not an archive
- * and supplied unit does not have src namespace add it.  Also, write out
- * a supplied hash as part of output unit if specified.
- * Can not be in by element mode.
- *
- * @returns if succesfully added.
- */
-bool srcml_translator::add_unit_content(const srcml_unit * unit, const char* xml, int size) {
-
-    if (is_outputting_unit)
-        return false;
-
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
-
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-      : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
-        options |= SRCML_OPTION_CPP;
-
-    if (first)
-        prepareOutput();
-    first = false;
-
-    out.startUnit(unit->language->c_str(), is_archive && unit->revision ? unit->revision->c_str() : revision, unit->url ? unit->url->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                       unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, 
-                       unit->encoding ? unit->encoding->c_str() : 0, unit->attributes, false);
-
-    if (size)
-        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
 
     xmlTextWriterEndElement(out.getWriter());
 
@@ -405,7 +357,8 @@ bool srcml_translator::add_unit_content(const srcml_unit * unit, const char* xml
  */
 bool srcml_translator::add_unit_raw(const char* xml, int size) {
 
-    if(is_outputting_unit) return false;
+    if (is_outputting_unit)
+        return false;
 
     if (first)
         prepareOutput();
@@ -473,7 +426,7 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-    if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
+    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
       lang == Language::LANGUAGE_OBJECTIVE_C)
         options |= SRCML_OPTION_CPP;
 
