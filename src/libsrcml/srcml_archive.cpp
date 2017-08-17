@@ -461,6 +461,14 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
         archive->uris.push_back(uri);
     }
 
+    const auto& nsentry = std::find_if(archive->namespaces.begin(), archive->namespaces.end(),
+        [uri](Namespace& item)->bool { return item.uri == uri; });
+    if (nsentry != std::end(archive->namespaces)) {
+        nsentry->prefix = prefix;
+    } else {
+        archive->namespaces.push_back({ prefix, uri, false });
+    }
+
     // namespaces for options enable the options automatically
     std::string suri = uri;
     if (suri == SRCML_CPP_NS_URI) {
@@ -674,7 +682,7 @@ size_t srcml_archive_get_tabstop(const struct srcml_archive* archive) {
 size_t srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
 
     /** @todo may want to make ssize_t so can return -1 */
-    return archive ? archive->uris.size() : 0;
+    return archive ? archive->namespaces.size() : 0;
 }
 
 /**
@@ -690,10 +698,10 @@ const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archi
     if (archive == NULL)
         return 0;
 
-    if (pos > archive->prefixes.size())
+    if (pos > archive->namespaces.size())
         return 0;
 
-    return archive->prefixes[pos].c_str();
+    return archive->namespaces[pos].prefix.c_str();
 }
 
 /**
@@ -704,20 +712,15 @@ const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archi
  * @returns Get the registered prefix for the given namespace
  * on success and NULL on failure.
  */
-const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archive, const char* namespace_uri) {
+const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archive, const char* uri) {
 
-    if (archive == NULL || namespace_uri == NULL)
+    if (archive == NULL || uri == NULL)
         return 0;
 
-    // find if the namespace is already in
-    auto urientry = std::find(archive->uris.begin(), archive->uris.end(), namespace_uri);
-    if (urientry != archive->uris.end()) {
+    const auto& nsentry = std::find_if(archive->namespaces.begin(), archive->namespaces.end(),
+        [uri](const Namespace& item)->bool { return item.uri == std::string(uri); });
 
-        auto pos = std::distance(archive->uris.begin(), urientry);
-        return archive->prefixes[pos].c_str();
-    }
-
-    return 0;
+    return nsentry != archive->namespaces.end() ? nsentry->prefix.c_str() : 0;
 }
 
 /**
@@ -733,10 +736,10 @@ const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive,
     if (archive == NULL)
         return 0;
 
-    if (pos >= archive->uris.size())
+    if (pos >= archive->namespaces.size())
         return 0;
 
-    return archive->uris[pos].c_str();
+    return archive->namespaces[pos].uri.c_str();
 }
 
 /**
@@ -752,15 +755,10 @@ const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archiv
     if (archive == NULL || prefix == NULL)
         return 0;
 
-    // find if the namespace is already in
-    auto prefixentry = std::find(archive->prefixes.begin(), archive->prefixes.end(), prefix);
-    if (prefixentry != archive->prefixes.end()) {
+    const auto& nsentry = std::find_if(archive->namespaces.begin(), archive->namespaces.end(),
+        [prefix](const Namespace& item)->bool { return item.prefix == std::string(prefix); });
 
-        auto pos = std::distance(archive->prefixes.begin(), prefixentry);
-        return archive->uris[pos].c_str();
-    }
-
-    return 0;
+    return nsentry != archive->namespaces.end() ? nsentry->uri.c_str() : 0;
 }
 
 /**
