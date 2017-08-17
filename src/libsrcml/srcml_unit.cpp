@@ -374,7 +374,6 @@ int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encod
  *                                                                            *
  ******************************************************************************/
 
-
 /**
  * srcml_unit_parse_internal
  * @param unit a srcml unit
@@ -430,13 +429,11 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
         return status;
 
     // parse the input
+    // SRCML_OPTION_NOUNIT turns off creation of unit start and end tags
+    // @todo Perhaps remove this from the translate() code?
     unit->archive->options |= SRCML_OPTION_NOUNIT;
     unit->unit_translator->translate(input);
     unit->archive->options &= !SRCML_OPTION_NOUNIT;
-
-    int ns_pos_start = unit->unit_translator->out.start_ns_pos;
-    std::string reduced_ns = unit->unit_translator->out.reduced_ns;
-    int ns_list_size = unit->unit_translator->out.ns_list_size;
 
     // create the unit end tag
     status = srcml_write_end_unit(unit);
@@ -748,6 +745,7 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
     if (unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    // setup the output buffer where the srcML will be created
     unit->output_buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(unit->output_buffer, xmlFindCharEncodingHandler("UTF-8"));
     if (!obuffer) {
@@ -755,6 +753,7 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
         return SRCML_STATUS_IO_ERROR;
     }
 
+    // setup the translator (srcML parser + srcML output)
     try {
 
         unit->unit_translator = new srcml_translator(
@@ -784,6 +783,7 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
 
     }
 
+    // create the unit start tag
     if (!unit->unit_translator->add_start_unit(unit))
         return SRCML_STATUS_INVALID_INPUT;
 
@@ -801,18 +801,23 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
  */
 int srcml_write_end_unit(struct srcml_unit* unit) {
 
-    if (unit == NULL)  return SRCML_STATUS_INVALID_ARGUMENT;
+    if (unit == NULL)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
         return SRCML_STATUS_INVALID_INPUT;
 
+    // finished with any parsing
     delete unit->unit_translator;
     unit->unit_translator = 0;
 
+    // appears to be a problem with extra newlines
     size_t length = unit->output_buffer->use;
     while(length > 0 && unit->output_buffer->content[length - 1] == '\n')
         --length;
 
+    // store the output in a buffer
+    // @todo check into xmlBufferDetach()
     unit->unit = std::string((const char *)unit->output_buffer->content, length);
 
     xmlBufferFree(unit->output_buffer);
