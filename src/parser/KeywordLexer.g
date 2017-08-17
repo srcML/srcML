@@ -498,7 +498,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "using"        , USING         , LANGUAGE_CXX_FAMILY }, 
         
         // templates
-        { "template"     , TEMPLATE      , LANGUAGE_CXX_FAMILY }, 
+        { "template"     , TEMPLATE      , LANGUAGE_CXX }, 
         
         { "delete"       , DELETE        , LANGUAGE_CXX }, 
         
