@@ -27,6 +27,14 @@
 
 #include <UTF8CharBuffer.hpp>
 
+inline const char* optional_to_c_str(const boost::optional<std::string>& s) {
+    return s ? s->c_str() : 0;
+}
+
+inline const char* optional_to_c_str(const boost::optional<std::string>& s, const char* value) {
+    return s ? s->c_str() : value;
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Set up functions                                 *
@@ -330,7 +338,7 @@ const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit) {
  *
  * @returns the formatted unit srcML on success and NULL on failure.
  */
-int srcml_unit_get_xml_standalone(struct srcml_unit * unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size) {
+int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size) {
 
     if (unit == NULL || xml_buffer == NULL || buffer_size == NULL || (!unit->unit && !unit->read_header))
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -338,10 +346,11 @@ int srcml_unit_get_xml_standalone(struct srcml_unit * unit, const char* xml_enco
     if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_srcml(unit->unit);
 
-    *xml_buffer = 0;
-    *buffer_size = 0;
     if (!unit->unit)
         return SRCML_STATUS_ERROR;
+
+    *xml_buffer = 0;
+    *buffer_size = 0;
 
     srcml_archive* formatting_archive = srcml_archive_clone(unit->archive);
     srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE);
@@ -377,7 +386,7 @@ int srcml_unit_get_xml_standalone(struct srcml_unit * unit, const char* xml_enco
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_IO_ERROR on failure.
  */
-static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
+static int srcml_unit_parse_internal(srcml_unit* unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
 
     xmlBuffer * output_buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
@@ -398,21 +407,21 @@ static int srcml_unit_parse_internal(srcml_unit * unit, int lang, UTF8CharBuffer
 
         srcml_translator translator(
             obuffer,
-            unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8",
+            optional_to_c_str(unit->archive->encoding, "UTF-8"),
             translation_options,
             unit->archive->prefixes,
             unit->archive->uris,
-            boost::optional<std::pair<std::string, std::string> >(),
+            boost::none,
             unit->archive->tabstop,
             lang,
-            unit->revision ? unit->revision->c_str() : 0,
-            unit->url ? unit->url->c_str() : 0,
-            unit->filename ? unit->filename->c_str() : 0,
-            unit->version ? unit->version->c_str() : 0,
+            optional_to_c_str(unit->revision),
+            optional_to_c_str(unit->url),
+            optional_to_c_str(unit->filename),
+            optional_to_c_str(unit->version),
             unit->attributes,
-            unit->timestamp ? unit->timestamp->c_str() : 0,
-            unit->hash ? unit->hash->c_str() : (translation_options & SRCML_OPTION_HASH ? "" : 0),
-            unit->encoding ? unit->encoding->c_str() : 0);
+            optional_to_c_str(unit->timestamp),
+            optional_to_c_str(unit->hash, (translation_options & SRCML_OPTION_HASH ? "" : 0)),
+            optional_to_c_str(unit->encoding));
 
         translator.set_macro_list(unit->archive->user_macro_list);
 
@@ -488,7 +497,7 @@ int srcml_unit_parse_filename(srcml_unit* unit, const char* src_filename) {
         translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
+    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
@@ -530,7 +539,7 @@ int srcml_unit_parse_memory(srcml_unit* unit, const char* src_buffer, size_t buf
         translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
+    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
@@ -571,7 +580,7 @@ int srcml_unit_parse_FILE(srcml_unit* unit, FILE* src_file) {
         translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
+    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
@@ -612,7 +621,7 @@ int srcml_unit_parse_fd(srcml_unit* unit, int src_fd) {
         translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
+    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
@@ -656,7 +665,7 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, ssize_t (*read_callbac
         translation_options |= SRCML_OPTION_CPP;
 
     UTF8CharBuffer * input = 0;
-    const char * src_encoding = unit->encoding ? unit->encoding->c_str() : (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : 0);
+    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
     try {
 
@@ -684,8 +693,7 @@ static int srcml_unit_unparse_internal(srcml_unit* unit, std::function<xmlOutput
     if (!unit->unit && !unit->read_header)
         return SRCML_STATUS_UNINITIALIZED_UNIT;
 
-    const char* encoding = unit->encoding ? unit->encoding->c_str() :
-        (unit->archive->src_encoding ? unit->archive->src_encoding->c_str() : "ISO-8859-1");
+    const char* encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding, "ISO-8859-1"));
 
     xmlOutputBufferPtr output_handler = createbuffer(encoding ? xmlFindCharEncodingHandler(encoding) : 0);
     if (!output_handler) {
@@ -853,7 +861,7 @@ int srcml_unit_unparse_io(srcml_unit* unit, void* context, int (*write_callback)
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_write_start_unit(struct srcml_unit * unit) {
+int srcml_write_start_unit(struct srcml_unit* unit) {
 
     if (unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -869,21 +877,21 @@ int srcml_write_start_unit(struct srcml_unit * unit) {
 
         unit->unit_translator = new srcml_translator(
             obuffer,
-            unit->archive->encoding ? unit->archive->encoding->c_str() : "UTF-8",
+            optional_to_c_str(unit->archive->encoding, "UTF-8"),
             unit->archive->options,
             unit->archive->prefixes,
             unit->archive->uris,
-            boost::optional<std::pair<std::string, std::string> >(),
+            boost::none,
             unit->archive->tabstop,
             SRCML_LANGUAGE_NONE,
-            unit->revision ? unit->revision->c_str() : 0,
-            unit->url ? unit->url->c_str() : 0,
-            unit->filename ? unit->filename->c_str() : 0,
-            unit->version ? unit->version->c_str() : 0,
+            optional_to_c_str(unit->revision),
+            optional_to_c_str(unit->url),
+            optional_to_c_str(unit->filename),
+            optional_to_c_str(unit->version),
             unit->attributes,
-            unit->timestamp ? unit->timestamp->c_str() : 0,
-            unit->hash ? unit->hash->c_str() : (unit->archive->options & SRCML_OPTION_HASH ? "" : 0),
-            unit->encoding ? unit->encoding->c_str() : 0);
+            optional_to_c_str(unit->timestamp),
+            optional_to_c_str(unit->hash, (unit->archive->options & SRCML_OPTION_HASH ? "" : 0)),
+            optional_to_c_str(unit->encoding));
 
         unit->unit_translator->set_macro_list(unit->archive->user_macro_list);
 
@@ -909,7 +917,7 @@ int srcml_write_start_unit(struct srcml_unit * unit) {
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_write_end_unit(struct srcml_unit * unit) {
+int srcml_write_end_unit(struct srcml_unit* unit) {
 
     if (unit == NULL)  return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -943,7 +951,7 @@ int srcml_write_end_unit(struct srcml_unit * unit) {
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_write_start_element(struct srcml_unit * unit, const char * prefix, const char * name, const char * uri) {
+int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri) {
 
     if (unit == NULL || name == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -963,7 +971,7 @@ int srcml_write_start_element(struct srcml_unit * unit, const char * prefix, con
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_write_end_element(struct srcml_unit * unit) {
+int srcml_write_end_element(struct srcml_unit* unit) {
 
     if (unit == NULL)  return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -986,7 +994,7 @@ int srcml_write_end_element(struct srcml_unit * unit) {
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 
-int srcml_write_namespace(struct srcml_unit * unit, const char * prefix, const char * uri) {
+int srcml_write_namespace(struct srcml_unit* unit, const char* prefix, const char* uri) {
 
     if (unit == NULL || uri == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -1011,7 +1019,7 @@ int srcml_write_namespace(struct srcml_unit * unit, const char * prefix, const c
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_write_attribute(struct srcml_unit * unit, const char * prefix, const char * name, const char * uri, const char * content) {
+int srcml_write_attribute(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri, const char* content) {
 
     if (unit == NULL || name == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -1033,7 +1041,7 @@ int srcml_write_attribute(struct srcml_unit * unit, const char * prefix, const c
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_write_string(struct srcml_unit * unit, const char * content) {
+int srcml_write_string(struct srcml_unit* unit, const char* content) {
 
     if (unit == NULL || content == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -1058,12 +1066,12 @@ int srcml_write_string(struct srcml_unit * unit, const char * content) {
  *
  * @returns unit on success and on failure returns NULL
  */
-srcml_unit * srcml_unit_create(srcml_archive * archive) {
+srcml_unit* srcml_unit_create(srcml_archive * archive) {
 
     if (archive == NULL)
         return 0;
 
-    srcml_unit * unit;
+    srcml_unit* unit;
     try {
 
         unit = new srcml_unit;
