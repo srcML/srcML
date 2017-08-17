@@ -373,6 +373,7 @@ int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encod
  *                                                                            *
  ******************************************************************************/
 
+
 /**
  * srcml_unit_parse_internal
  * @param unit a srcml unit
@@ -386,7 +387,36 @@ int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encod
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_IO_ERROR on failure.
  */
-static int srcml_unit_parse_internal(srcml_unit* unit, int lang, UTF8CharBuffer * input, OPTION_TYPE translation_options) {
+static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
+    std::function<UTF8CharBuffer*(const char* src_encoding, bool output_hash, boost::optional<std::string>& hash)> createUTF8CharBuffer) {
+
+    if (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
+        return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    int lang = unit->language ? srcml_check_language(unit->language->c_str())
+        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
+
+    if (lang == SRCML_LANGUAGE_NONE && filename)
+        lang = unit->archive->registered_languages.get_language_from_filename(filename);
+
+    if (lang == SRCML_LANGUAGE_NONE)
+        return SRCML_STATUS_UNSET_LANGUAGE;
+
+    OPTION_TYPE translation_options = unit->archive->options;
+
+    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C )
+        translation_options |= SRCML_OPTION_CPP;
+    else if (lang == Language::LANGUAGE_CSHARP)
+        translation_options |= SRCML_OPTION_CPP;
+
+    UTF8CharBuffer * input = 0;
+    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
+    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    try {
+
+        input = createUTF8CharBuffer(src_encoding, output_hash, unit->hash);
+
+    } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
     xmlBuffer * output_buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer, xmlFindCharEncodingHandler("UTF-8"));
@@ -450,12 +480,12 @@ static int srcml_unit_parse_internal(srcml_unit* unit, int lang, UTF8CharBuffer 
 
     if (reduce) {
 
-	    unit->unit = std::string((const char *)output_buffer->content, ns_pos_start);
-	    unit->unit->append(reduced_ns);
-	    unit->unit->append((const char*)output_buffer->content + ns_pos_start + ns_list_size, length - ns_pos_start - ns_list_size);
+        unit->unit = std::string((const char *)output_buffer->content, ns_pos_start);
+        unit->unit->append(reduced_ns);
+        unit->unit->append((const char*)output_buffer->content + ns_pos_start + ns_list_size, length - ns_pos_start - ns_list_size);
     } else {
 
-	    unit->unit = std::string((const char *)output_buffer->content, length);
+        unit->unit = std::string((const char *)output_buffer->content, length);
     }
 
     xmlBufferFree(output_buffer);
@@ -478,34 +508,10 @@ int srcml_unit_parse_filename(srcml_unit* unit, const char* src_filename) {
     if (unit == NULL || src_filename == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
-        return SRCML_STATUS_INVALID_IO_OPERATION;
+    return srcml_unit_parse_internal(unit, src_filename, [src_filename](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
 
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-
-    if (lang == SRCML_LANGUAGE_NONE) lang = unit->archive->registered_languages.get_language_from_filename(src_filename);
-
-    if (lang == SRCML_LANGUAGE_NONE)
-        return SRCML_STATUS_UNSET_LANGUAGE;
-
-    OPTION_TYPE translation_options = unit->archive->options;
-
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang & Language::LANGUAGE_OBJECTIVE_C )
-        translation_options |= SRCML_OPTION_CPP;
-    else if (lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP;
-
-    UTF8CharBuffer * input = 0;
-    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
-    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    try {
-
-        input = new UTF8CharBuffer(src_filename, src_encoding, output_hash, unit->hash);
-
-    } catch(...) { return SRCML_STATUS_IO_ERROR; }
-
-    return srcml_unit_parse_internal(unit, lang, input, translation_options);
+        return new UTF8CharBuffer(src_filename, encoding, output_hash, hash);
+    });
 }
 
 /**
@@ -524,30 +530,10 @@ int srcml_unit_parse_memory(srcml_unit* unit, const char* src_buffer, size_t buf
     if (unit == NULL || (buffer_size && src_buffer == NULL))
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
-        return SRCML_STATUS_INVALID_IO_OPERATION;
+    return srcml_unit_parse_internal(unit, 0, [src_buffer, buffer_size](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
 
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-
-    if (lang == SRCML_LANGUAGE_NONE)
-        return SRCML_STATUS_UNSET_LANGUAGE;
-
-    OPTION_TYPE translation_options = unit->archive->options;
-
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_OBJECTIVE_C || lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP;
-
-    UTF8CharBuffer * input = 0;
-    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
-    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    try {
-
-        input = new UTF8CharBuffer(src_buffer ? src_buffer : "", buffer_size, src_encoding, output_hash, unit->hash);
-
-    } catch(...) { return SRCML_STATUS_IO_ERROR; }
-
-    return srcml_unit_parse_internal(unit, lang, input, translation_options);
+        return new UTF8CharBuffer(src_buffer ? src_buffer : "", buffer_size, encoding, output_hash, hash);
+    });
 }
 
 /**
@@ -565,30 +551,10 @@ int srcml_unit_parse_FILE(srcml_unit* unit, FILE* src_file) {
     if (unit == NULL || src_file == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
-        return SRCML_STATUS_INVALID_IO_OPERATION;
+    return srcml_unit_parse_internal(unit, 0, [src_file](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
 
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-
-    if (lang == SRCML_LANGUAGE_NONE)
-        return SRCML_STATUS_UNSET_LANGUAGE;
-
-    OPTION_TYPE translation_options = unit->archive->options;
-
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_OBJECTIVE_C || lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP;
-
-    UTF8CharBuffer * input = 0;
-    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
-    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    try {
-
-        input = new UTF8CharBuffer(src_file, src_encoding, output_hash, unit->hash);
-
-    } catch(...) { return SRCML_STATUS_IO_ERROR; }
-
-    return srcml_unit_parse_internal(unit, lang, input, translation_options);
+        return new UTF8CharBuffer(src_file, encoding, output_hash, hash);
+    });
 }
 
 /**
@@ -606,30 +572,10 @@ int srcml_unit_parse_fd(srcml_unit* unit, int src_fd) {
     if (unit == NULL || src_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
-        return SRCML_STATUS_INVALID_IO_OPERATION;
+    return srcml_unit_parse_internal(unit, 0, [src_fd](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
 
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-
-    if (lang == SRCML_LANGUAGE_NONE)
-        return SRCML_STATUS_UNSET_LANGUAGE;
-
-    OPTION_TYPE translation_options = unit->archive->options;
-
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_OBJECTIVE_C || lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP;
-
-    UTF8CharBuffer * input = 0;
-    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
-    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    try {
-
-        input = new UTF8CharBuffer(src_fd, src_encoding, output_hash, unit->hash);
-
-    } catch(...) { return SRCML_STATUS_IO_ERROR; }
-
-    return srcml_unit_parse_internal(unit, lang, input, translation_options);
+        return new UTF8CharBuffer(src_fd, encoding, output_hash, hash);
+    });
 }
 
 /**
@@ -650,30 +596,10 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, ssize_t (*read_callbac
     if (unit == NULL || context == NULL || read_callback == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
-        return SRCML_STATUS_INVALID_IO_OPERATION;
+    return srcml_unit_parse_internal(unit, 0, [context, read_callback, close_callback](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
 
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-
-    if (lang == SRCML_LANGUAGE_NONE)
-        return SRCML_STATUS_UNSET_LANGUAGE;
-
-    OPTION_TYPE translation_options = unit->archive->options;
-
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_OBJECTIVE_C || lang == Language::LANGUAGE_CSHARP)
-        translation_options |= SRCML_OPTION_CPP;
-
-    UTF8CharBuffer * input = 0;
-    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
-    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
-    try {
-
-        input = new UTF8CharBuffer(context, read_callback, close_callback, src_encoding, output_hash, unit->hash);
-
-    } catch(...) { return SRCML_STATUS_IO_ERROR; }
-
-    return srcml_unit_parse_internal(unit, lang, input, translation_options);
+        return new UTF8CharBuffer(context, read_callback, close_callback, encoding, output_hash, hash);
+    });
 }
 
 /******************************************************************************
