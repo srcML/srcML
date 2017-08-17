@@ -148,8 +148,7 @@ int srcml_archive_set_src_encoding(srcml_archive* archive, const char* src_encod
     if (archive == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (src_encoding)
-        archive->src_encoding = src_encoding;
+    archive->src_encoding = src_encoding ? std::string(src_encoding) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 }
@@ -168,8 +167,7 @@ int srcml_archive_set_xml_encoding(srcml_archive* archive, const char* encoding)
     if (archive == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (encoding)
-        archive->encoding = encoding;
+    archive->encoding = encoding ? std::string(encoding) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 }
@@ -188,8 +186,7 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
     if (archive == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (language)
-        archive->language = language;
+    archive->language = language ? std::string(language) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 }
@@ -208,8 +205,7 @@ int srcml_archive_set_url (srcml_archive* archive, const char* url) {
     if (archive == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (url)
-        archive->url = url;
+    archive->url = url ? std::string(url) : boost::optional<std::string>();
 
     return SRCML_STATUS_OK;
 }
