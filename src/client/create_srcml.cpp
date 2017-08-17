@@ -325,6 +325,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (SRCMLStatus::errors())
         exit(1);
 
-    if (status)
-    	;
+    if (status) {
+
+    }
 }
