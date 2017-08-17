@@ -200,7 +200,7 @@ const char* srcml_unit_get_src_encoding(const struct srcml_unit* unit) {
     if (unit == NULL)
         return 0;
 
-    return unit->encoding ? unit->encoding->c_str() : 0;
+    return optional_to_c_str(unit->encoding);
 }
 
 /**
@@ -216,7 +216,7 @@ const char* srcml_unit_get_revision(const struct srcml_unit* unit) {
     if (unit == NULL)
         return 0;
 
-    return unit->revision ? unit->revision->c_str() : 0;
+    return optional_to_c_str(unit->revision);
 }
 
 /**
@@ -232,7 +232,7 @@ const char* srcml_unit_get_language(const struct srcml_unit* unit) {
     if (unit == NULL)
         return 0;
 
-    return unit->language ? unit->language->c_str() : 0;
+    return optional_to_c_str(unit->language);
 }
 
 /**
@@ -248,7 +248,7 @@ const char* srcml_unit_get_filename(const struct srcml_unit* unit) {
     if (unit == NULL)
         return 0;
 
-    return unit->filename ? unit->filename->c_str() : 0;
+    return optional_to_c_str(unit->filename);
 }
 
 /**
@@ -264,7 +264,7 @@ const char* srcml_unit_get_version(const struct srcml_unit* unit) {
     if (unit == NULL)
         return 0;
 
-    return unit->version ? unit->version->c_str() : 0;
+    return optional_to_c_str(unit->version);
 }
 
 /**
@@ -280,7 +280,7 @@ const char* srcml_unit_get_timestamp(const struct srcml_unit* unit) {
     if (unit == NULL)
         return 0;
 
-    return unit->timestamp ? unit->timestamp->c_str() : 0;
+    return optional_to_c_str(unit->timestamp);
 }
 
 /**
@@ -296,7 +296,7 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
     if (unit == NULL)
         return 0;
 
-    return unit->hash ? unit->hash->c_str() : 0;
+    return optional_to_c_str(unit->hash);
 }
 
 /**
@@ -319,7 +319,7 @@ const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit) {
     if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_srcml(unit->unit);
 
-    return unit->unit ? unit->unit->c_str() : 0;
+    return optional_to_c_str(unit->unit);
 }
 
 /**
@@ -361,6 +361,7 @@ int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encod
     srcml_archive_close(formatting_archive);
     srcml_archive_free(formatting_archive);
 
+    // @todo Don't think this is necessary
     while (*buffer_size > 0 && (*xml_buffer)[*buffer_size - 1] == '\n')
         (*xml_buffer)[--(*buffer_size)] = '\0';
 

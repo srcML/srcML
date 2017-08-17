@@ -473,7 +473,8 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-    if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
+    if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
+      lang == Language::LANGUAGE_OBJECTIVE_C)
         options |= SRCML_OPTION_CPP;
 
     if (isoption(options, SRCML_OPTION_ARCHIVE))
