@@ -22,6 +22,7 @@
 #define INCLUDED_SRCML_TYPES_HPP
 
 #include <srcml.h>
+#include <srcmlns.hpp>
 
 /** string for language Objective-C */
 #define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
@@ -205,6 +206,9 @@ struct srcml_archive {
 
     /** namespaces an array of XML namespaces */
     std::vector<std::string> uris;
+
+    /**  new namespace structure */
+    std::vector<Namespace> namespaces;
 
     /** target/data pair for processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
