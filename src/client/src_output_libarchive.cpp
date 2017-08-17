@@ -42,9 +42,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         std::string newfilename = srcml_unit_get_filename(unit) ? srcml_unit_get_filename(unit) : "";
         if (newfilename.empty()) {
             newfilename = "srcml_unit_";
-            char s[10];
-            sprintf(s, "%d", unitcounter);
-            newfilename += s;
+            newfilename += std::to_string(unitcounter);
             if (language_to_std_extension(srcml_unit_get_language(unit)) != "")
                 newfilename += language_to_std_extension(srcml_unit_get_language(unit));
             SRCMLstatus(WARNING_MSG, "A srcML unit without a filename saved as " + newfilename);
