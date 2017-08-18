@@ -160,14 +160,7 @@ void srcml_translator::close() {
     // is always created?
     if (first && !text_only && (options & SRCML_OPTION_ARCHIVE) > 0) {
 
-        // Open for write;
-        out.initWriter();
-
-        out.outputXMLDecl();
-        out.outputProcessingInstruction();
-
-        // root unit for compound srcML documents
-        out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
+        prepareOutput();
     }
     first = false;
 
