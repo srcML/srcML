@@ -289,7 +289,6 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
 
     // output the namespaces
     // record length of namespaces list
-    ns_list_size = 0;
     for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
 
         if (i == 0 && depth > 0)
@@ -303,10 +302,6 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
             prefix += ':';
             prefix += namespaces[i].prefix;
         }
-
-        ns_list_size += prefix.size();
-        ns_list_size += strlen(ns[i]);
-        ns_list_size += 4;
 
         xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
     }
@@ -357,7 +352,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     ++openelementcount;
 
     // record where unit start tag name ends
-    start_ns_pos = 1 + (int) maintag.size() + 1;
+    //start_ns_pos = 1 + (int) maintag.size() + 1;
 
     // outer units have namespaces
     if (/* outer && */ isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
@@ -439,52 +434,6 @@ void srcMLOutput::outputMacroList() {
         xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
         xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST user_macro_list[i + 1].c_str());
         xmlTextWriterEndElement(xout);
-    }
-}
-
-/**
- * processUnit
- * @param token token to output
- *
- * Callback to process/output unit token.
- */
-void srcMLOutput::processUnit(const antlr::RefToken& token) {
-
-    if (isstart(token)) {
-
-        // keep track of number of open elements
-        openelementcount = 0;
-        
-        startUnit(unit_language, unit_revision, unit_url, unit_filename, unit_version, unit_timestamp, unit_hash, unit_encoding, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
-
-    } else {
-
-        // end anything still open, including the unit
-        while (openelementcount > 0) {
-            xmlTextWriterEndElement(xout);
-            --openelementcount;
-        }
-
-        // output the namespaces
-        // record length of namespaces list
-        reduced_ns = "";
-        // Note: Skipping first namespace (srcML)
-        for (unsigned int i = 1; i < namespaces.size(); ++i) {
-
-            if (!namespaces[i].used)
-                continue;
-
-            std::string prefix = "xmlns";
-            if (namespaces[i].prefix[SRC] != '\0') {
-                prefix += ':';
-                prefix += namespaces[i].prefix;
-            }
-
-            reduced_ns += prefix;
-            reduced_ns += "=\"";
-            reduced_ns += namespaces[i].uri;
-            reduced_ns += "\" ";
-        }
     }
 }
 
