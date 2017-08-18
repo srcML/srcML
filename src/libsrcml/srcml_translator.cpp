@@ -135,7 +135,6 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       options(op),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize)
 {
-
     out.initNamespaces(namespaces);
 }
 
@@ -266,6 +265,7 @@ void srcml_translator::prepareOutput() {
         out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
         out.outputUnitSeparator();
     }
+    first = false;
 }
 
 /**
