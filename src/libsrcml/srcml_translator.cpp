@@ -153,6 +153,9 @@ void srcml_translator::set_macro_list(std::vector<std::string>& list) {
  */
 void srcml_translator::close() {
 
+    if (!first && (options & SRCML_OPTION_ARCHIVE) > 0)
+        out.outputUnitSeparator();
+
     // @todo Is this needed? Is this why we have to clone the archive, because this
     // is always created?
     if (first && !text_only && (options & SRCML_OPTION_ARCHIVE) > 0) {
@@ -245,10 +248,11 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
 void srcml_translator::prepareOutput() {
 
+    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
+
     if (!first)
         return;
-
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
+    first = false;
 
     // Open for write;
     out.initWriter();
@@ -262,9 +266,7 @@ void srcml_translator::prepareOutput() {
 
     if (is_archive) {
         out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
-        out.outputUnitSeparator();
     }
-    first = false;
 }
 
 /**
@@ -285,6 +287,10 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
         return false;
 
     prepareOutput();
+
+    if ((options & SRCML_OPTION_ARCHIVE) > 0) {
+        out.outputUnitSeparator();
+    }
 
     // find out where the end of the unit start tag is so
     // we can replace it on output with updated namespaces, etc.
@@ -352,9 +358,6 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
 
     xmlTextWriterEndElement(out.getWriter());
 
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-        out.outputUnitSeparator();
-
     return true;
 }
 
@@ -377,11 +380,12 @@ bool srcml_translator::add_unit_raw(const char* xml, int size) {
 
     prepareOutput();
 
+    if ((options & SRCML_OPTION_ARCHIVE) > 0) {
+        out.outputUnitSeparator();
+    }
+
     if (size)
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-          out.outputUnitSeparator();
 
     return true;
 }
@@ -405,10 +409,11 @@ bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
 
     prepareOutput();
 
-    xmlNodeDumpOutput(out.output_buffer, doc, node, 0, 0, 0);
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
+    if ((options & SRCML_OPTION_ARCHIVE) > 0) {
         out.outputUnitSeparator();
+    }
+
+    xmlNodeDumpOutput(out.output_buffer, doc, node, 0, 0, 0);
 
     return true;
 }
