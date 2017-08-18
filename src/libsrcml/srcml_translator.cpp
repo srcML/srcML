@@ -57,8 +57,6 @@ srcml_translator::srcml_translator(char** str_buf,
                                  size_t* size,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-//                                 const std::vector<std::string>& prefix,
-//                                 const std::vector<std::string>& uri,
                                  const std::vector<Namespace>& namespaces,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
@@ -116,8 +114,6 @@ srcml_translator::srcml_translator(char** str_buf,
 srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-//                                 const std::vector<std::string>& prefix,
-//                                 const std::vector<std::string>& uri,
                                  const std::vector<Namespace>& namespaces,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
@@ -249,6 +245,9 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
 void srcml_translator::prepareOutput() {
 
+    if (!first)
+        return;
+
     bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
     // Open for write;
@@ -285,9 +284,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
     if (is_outputting_unit)
         return false;
 
-    if (first)
-        prepareOutput();
-    first = false;
+    prepareOutput();
 
     // find out where the end of the unit start tag is so
     // we can replace it on output with updated namespaces, etc.
@@ -378,9 +375,7 @@ bool srcml_translator::add_unit_raw(const char* xml, int size) {
     if (is_outputting_unit)
         return false;
 
-    if (first)
-        prepareOutput();
-    first = false;
+    prepareOutput();
 
     if (size)
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
@@ -408,9 +403,7 @@ bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
     if (is_outputting_unit)
         return false;
 
-    if (first)
-        prepareOutput();
-    first = false;
+    prepareOutput();
 
     xmlNodeDumpOutput(out.output_buffer, doc, node, 0, 0, 0);
 
