@@ -90,6 +90,7 @@ srcml_translator::srcml_translator(char** str_buf,
     }
 
     out.setOutputBuffer(obuffer);
+    out.initNamespaces(namespaces);
 }
 
 /** 
@@ -134,6 +135,8 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       options(op),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize)
 {
+
+    out.initNamespaces(namespaces);
 }
 
 /**
@@ -161,7 +164,6 @@ void srcml_translator::close() {
 
         // Open for write;
         out.initWriter();
-        out.initNamespaces(namespaces);
 
         out.outputXMLDecl();
         out.outputProcessingInstruction();
@@ -197,7 +199,6 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
   
         // Open for write;
         out.initWriter();
-        out.initNamespaces(namespaces);
     }
     first = false;
 
@@ -253,7 +254,6 @@ void srcml_translator::prepareOutput() {
 
     // Open for write;
     out.initWriter();
-    out.initNamespaces(namespaces);
 
     if ((options & SRCML_OPTION_XML_DECL) > 0)
       out.outputXMLDecl();
@@ -434,10 +434,9 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     if (first) {
         out.initWriter();
-        out.initNamespaces(namespaces);
     }
     first = false;
-
+ 
     if (is_outputting_unit)
         return false;
     is_outputting_unit = true;
