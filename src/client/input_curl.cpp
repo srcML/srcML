@@ -52,8 +52,6 @@ namespace {
         CURL* curlhandle;
     };
 
-    const size_t CURL_MAX_ERROR_SIZE = 100;
-
     std::mutex c;
 
     bool curl_errors = false;
@@ -68,9 +66,13 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 
     curl_write_info* data = (curl_write_info*) userdata;
 
-       // check for download errors
+    // have to check for download errors before we write anything into the pipe
+    // you may expect that if there were errors, you could check for that before data
+    // is written. But that is not the case
     long http_code = 0;
     curl_easy_getinfo (data->curlhandle, CURLINFO_RESPONSE_CODE, &http_code);
+
+    // @todo are there any other http codes we should allow here?
     goCurl(http_code == 200);
 
     return write(data->outfd, ptr, size * nmemb);
