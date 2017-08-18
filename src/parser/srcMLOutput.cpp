@@ -352,9 +352,6 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     for (auto& ns : namespaces)
         ns.used = false;
 
-    if (isoption(options, SRCML_OPTION_NOUNIT))
-        return;
-
     // start of main tag
     xmlTextWriterStartElement(xout, BAD_CAST maintag.c_str());
     ++openelementcount;
@@ -457,9 +454,6 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
 
         // keep track of number of open elements
         openelementcount = 0;
-
-        if (isoption(options, SRCML_OPTION_NOUNIT))
-            return;
         
         startUnit(unit_language, unit_revision, unit_url, unit_filename, unit_version, unit_timestamp, unit_hash, unit_encoding, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
 
@@ -622,10 +616,8 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
     // unit element is handled specially
-    if (SUNIT == token->getType()) {
-        processUnit(token);
+    if (SUNIT == token->getType())
         return;
-    }
 
     // find the token in the element map. If found and it has a name, then process the token
     auto search = process.find(token->getType());

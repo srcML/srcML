@@ -57,8 +57,6 @@ srcml_translator::srcml_translator(char** str_buf,
                                  size_t* size,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-//                                 const std::vector<std::string>& prefix,
-//                                 const std::vector<std::string>& uri,
                                  const std::vector<Namespace>& namespaces,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
@@ -90,6 +88,7 @@ srcml_translator::srcml_translator(char** str_buf,
     }
 
     out.setOutputBuffer(obuffer);
+    out.initNamespaces(namespaces);
 }
 
 /** 
@@ -115,8 +114,6 @@ srcml_translator::srcml_translator(char** str_buf,
 srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-//                                 const std::vector<std::string>& prefix,
-//                                 const std::vector<std::string>& uri,
                                  const std::vector<Namespace>& namespaces,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
@@ -134,6 +131,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       options(op),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize)
 {
+    out.initNamespaces(namespaces);
 }
 
 /**
@@ -155,19 +153,14 @@ void srcml_translator::set_macro_list(std::vector<std::string>& list) {
  */
 void srcml_translator::close() {
 
+    if (!first && (options & SRCML_OPTION_ARCHIVE) > 0)
+        out.outputUnitSeparator();
+
     // @todo Is this needed? Is this why we have to clone the archive, because this
     // is always created?
     if (first && !text_only && (options & SRCML_OPTION_ARCHIVE) > 0) {
 
-        // Open for write;
-        out.initWriter();
-        out.initNamespaces(namespaces);
-
-        out.outputXMLDecl();
-        out.outputProcessingInstruction();
-
-        // root unit for compound srcML documents
-        out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
+        prepareOutput();
     }
     first = false;
 
@@ -197,7 +190,6 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
   
         // Open for write;
         out.initWriter();
-        out.initNamespaces(namespaces);
     }
     first = false;
 
@@ -251,9 +243,12 @@ void srcml_translator::prepareOutput() {
 
     bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
+    if (!first)
+        return;
+    first = false;
+
     // Open for write;
     out.initWriter();
-    out.initNamespaces(namespaces);
 
     if ((options & SRCML_OPTION_XML_DECL) > 0)
       out.outputXMLDecl();
@@ -264,7 +259,6 @@ void srcml_translator::prepareOutput() {
 
     if (is_archive) {
         out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
-        out.outputUnitSeparator();
     }
 }
 
@@ -285,9 +279,11 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
     if (is_outputting_unit)
         return false;
 
-    if (first)
-        prepareOutput();
-    first = false;
+    prepareOutput();
+
+    if ((options & SRCML_OPTION_ARCHIVE) > 0) {
+        out.outputUnitSeparator();
+    }
 
     // find out where the end of the unit start tag is so
     // we can replace it on output with updated namespaces, etc.
@@ -355,9 +351,6 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
 
     xmlTextWriterEndElement(out.getWriter());
 
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-        out.outputUnitSeparator();
-
     return true;
 }
 
@@ -378,15 +371,14 @@ bool srcml_translator::add_unit_raw(const char* xml, int size) {
     if (is_outputting_unit)
         return false;
 
-    if (first)
-        prepareOutput();
-    first = false;
+    prepareOutput();
+
+    if ((options & SRCML_OPTION_ARCHIVE) > 0) {
+        out.outputUnitSeparator();
+    }
 
     if (size)
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-          out.outputUnitSeparator();
 
     return true;
 }
@@ -408,14 +400,13 @@ bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
     if (is_outputting_unit)
         return false;
 
-    if (first)
-        prepareOutput();
-    first = false;
+    prepareOutput();
+
+    if ((options & SRCML_OPTION_ARCHIVE) > 0) {
+        out.outputUnitSeparator();
+    }
 
     xmlNodeDumpOutput(out.output_buffer, doc, node, 0, 0, 0);
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-        out.outputUnitSeparator();
 
     return true;
 }
@@ -434,10 +425,9 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     if (first) {
         out.initWriter();
-        out.initNamespaces(namespaces);
     }
     first = false;
-
+ 
     if (is_outputting_unit)
         return false;
     is_outputting_unit = true;

@@ -421,11 +421,7 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
         return status;
 
     // parse the input
-    // SRCML_OPTION_NOUNIT turns off creation of unit start and end tags
-    // @todo Perhaps remove this from the translate() code?
-    unit->archive->options |= SRCML_OPTION_NOUNIT;
     unit->unit_translator->translate(input);
-    unit->archive->options &= !SRCML_OPTION_NOUNIT;
 
     // create the unit end tag
     status = srcml_write_end_unit(unit);
