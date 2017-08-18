@@ -76,7 +76,7 @@ endmacro()
 macro(addBashTest TEST_FILE)
     get_filename_component(TEST_NAME ${TEST_FILE} NAME)
     add_test(NAME ${TEST_NAME} COMMAND ${TEST_FILE})
-    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 60)
+    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 10)
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
@@ -89,41 +89,6 @@ foreach(FILE ${ARGN})
 endforeach()
 
 endif()
-
-endmacro()
-
-#
-# addLargeSystemTest
-# - TEST_NAME the name of the test
-# - BASH_SCRIPT the name of the bash script that will be executed
-# - ARGN any arguments that are passed on to the bash test script
-# Adds a large systems test which executes on the provided bash script, passing
-# in arguments for the script which determine what large system to use. It
-# takes at least 30 minutes to time out, as the systems can get huge
-#
-macro(addLargeSystemTest TEST_NAME BASH_SCRIPT)
-    add_test(NAME ${TEST_NAME} COMMAND bash ${BASH_SCRIPT} ${SCRIPT_ARGS} ${ARGN})
-    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 1800) # default is 1500
-
-    if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
-        copyDependentFile(${BASH_SCRIPT})
-    endif()
-
-endmacro()
-
-#
-# addTimingTest
-# Creates a unit test from a given file with a given name.
-# - TEST_NAME the name of the test.
-# - FILE_NAME the name of the unit test file.
-# All arguments after the file name are considered to be linker arguments.
-# By default all tests are linked against the srcml_static library.
-#
-#
-macro(addTimingTest TEST_NAME FILE_NAME LOG_FILE_NAME)
-
-    add_test(NAME ${TEST_NAME} COMMAND timing_driver ${CMAKE_CURRENT_BINARY_DIR}/${FILE_NAME} ${CMAKE_CURRENT_BINARY_DIR}/${LOG_FILE_NAME})
-    copyDependentFile(${FILE_NAME})
 
 endmacro()
 
