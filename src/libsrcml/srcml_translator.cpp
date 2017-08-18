@@ -135,7 +135,11 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
       options(op),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize)
-{}
+{
+    for (size_t i = 0; i < uri.size(); ++i) {
+        namespaces.push_back(Namespace(prefix[i], uri[i], false));
+    }
+}
 
 /**
  * set_macro_list

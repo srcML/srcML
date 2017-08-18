@@ -1078,18 +1078,10 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
 
     archive->type = SRCML_ARCHIVE_READ;
 
-    std::vector<std::string> prefixes;
-    std::vector<std::string> uris;
-    for (const auto& ns : archive->namespaces) {
-        prefixes.push_back(ns.prefix);
-        uris.push_back(ns.uri);
-    }
-
     boost::optional<std::string> encoding, language, url, version;
     bool done = !archive->reader->read_root_unit_attributes(encoding, language, url, version,
                                                             archive->attributes,
-                                                            prefixes,
-                                                            uris,
+                                                            archive->namespaces,
                                                             archive->processing_instruction,
                                                             archive->options,
                                                             archive->tabstop,
@@ -1101,12 +1093,12 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
         archive->url = url;
         archive->version = version;
     }
-
+/*
     archive->namespaces.clear();
     for (size_t i = 0; i < uris.size(); ++i) {
         archive->namespaces.push_back(Namespace(prefixes[i], uris[i], false));
     }
-
+*/
     return SRCML_STATUS_OK;
 }
 
