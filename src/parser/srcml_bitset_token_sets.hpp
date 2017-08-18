@@ -23,7 +23,18 @@
 #ifndef SRCML_BITSET_TOKEN_SETS_HPP
 #define SRCML_BITSET_TOKEN_SETS_HPP
 
-#include <bitset_bucket_sorter.hpp>
+template <typename T>
+constexpr unsigned long convert(const T /* base */) {
+    return 0;
+}
+
+template<typename T, typename... Args>
+constexpr unsigned long convert(const int pos, T value, Args... args) {
+    return ((value < 32 * (pos + 1)) && (value >= 32 * pos) ? (1 << (value - 32 * pos)) : 0UL) | convert(pos, args...);
+}
+
+#define token_set(CLASS, MEMBER, ...) const unsigned long MEMBER ## _foo[] = { convert(0, __VA_ARGS__), convert(1, __VA_ARGS__), convert(2, __VA_ARGS__), convert(3, __VA_ARGS__), convert(4, __VA_ARGS__), convert(5, __VA_ARGS__), convert(6, __VA_ARGS__), convert(7, __VA_ARGS__), \
+convert(8, __VA_ARGS__), convert(9, __VA_ARGS__), convert(10, __VA_ARGS__), convert(11, __VA_ARGS__), convert(12, __VA_ARGS__), convert(13, __VA_ARGS__), convert(14, __VA_ARGS__), convert(15, __VA_ARGS__) }; const antlr::BitSet CLASS::MEMBER(MEMBER ## _foo, 16);
 
 token_set(srcMLParser, keyword_name_token_set, 
     srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
