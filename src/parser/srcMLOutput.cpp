@@ -92,7 +92,7 @@ int srcMLOutput::initWriter() {
  *
  * Initialize the output namespaces.
  */
-void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const std::vector<std::string>& uri) {
+void srcMLOutput::initNamespaces(const std::vector<Namespace>& otherns) {
 
     namespaces = {
         { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,                     false },
@@ -102,21 +102,20 @@ void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const s
         { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_URI,              false },
     };
 
-    for (std::vector<std::string>::size_type outer_pos = 0; outer_pos < uri.size(); ++outer_pos) {
-
-        const std::string& value = uri[outer_pos];
+    for (const auto& ns : otherns) {
+        const std::string& value = ns.uri;
 
         // find where the new URI is in the default URI list, or not
         auto posit = std::find_if(namespaces.begin(), namespaces.end(), [value](const Namespace& n) { return n.uri == value; });
         if (posit != namespaces.end()) {
 
             // update the default prefix
-            posit->prefix = prefix[outer_pos];
+            posit->prefix = ns.prefix;
 
         } else {
 
             // create a new entry for this URI
-            namespaces.push_back({ prefix[outer_pos], uri[outer_pos], false });
+            namespaces.push_back({ ns.prefix, ns.uri, false });
         }
     }
 

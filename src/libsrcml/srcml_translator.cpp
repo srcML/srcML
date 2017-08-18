@@ -76,6 +76,10 @@ srcml_translator::srcml_translator(char** str_buf,
        out(0, 0, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
        str_buffer(str_buf), size(size) {
 
+    for (size_t i = 0; i < uri.size(); ++i) {
+        namespaces.push_back(Namespace(prefix[i], uri[i], false));
+    }
+
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
 
@@ -158,7 +162,7 @@ void srcml_translator::close() {
 
         // Open for write;
         out.initWriter();
-        out.initNamespaces(prefix, uri);
+        out.initNamespaces(namespaces);
 
         out.outputXMLDecl();
         out.outputProcessingInstruction();
@@ -194,7 +198,7 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
   
         // Open for write;
         out.initWriter();
-        out.initNamespaces(prefix, uri);
+        out.initNamespaces(namespaces);
     }
     first = false;
 
@@ -250,7 +254,7 @@ void srcml_translator::prepareOutput() {
 
     // Open for write;
     out.initWriter();
-    out.initNamespaces(prefix, uri);
+    out.initNamespaces(namespaces);
 
     if ((options & SRCML_OPTION_XML_DECL) > 0)
       out.outputXMLDecl();
@@ -431,7 +435,7 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
     if (first) {
         out.initWriter();
-        out.initNamespaces(prefix, uri);
+        out.initNamespaces(namespaces);
     }
     first = false;
 
