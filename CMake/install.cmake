@@ -20,6 +20,8 @@
 
 if(OS_NAME STREQUAL "Fedora")
     set(CMAKE_INSTALL_PREFIX "/usr")
+elseif(EXISTS "/etc/redhat-release")
+    set(CMAKE_INSTALL_PREFIX "/usr")
 elseif(NOT WIN32)
     set(CMAKE_INSTALL_PREFIX "/usr/local")
 elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
