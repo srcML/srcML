@@ -67,24 +67,9 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 
     curl_write_info* data = (curl_write_info*) userdata;
 
-    // we may have previously buffered data to output
-    if (data->buffer.size() >= CURL_MAX_ERROR_SIZE) {
-        write(data->outfd, data->buffer.c_str(), data->buffer.size());
-        data->buffer.clear();
-    }
+    goCurl(true);
 
-    size_t total_size = size * nmemb;
-    data->currentsize += total_size;
-
-    // cache any data until we make sure we do not have a 404 error
-    // prevent the 404 or other error pages from getting into the pipe
-    // previously handled by latch in libarchive
-    if (data->currentsize < CURL_MAX_ERROR_SIZE) {
-        data->buffer.append(ptr, size * nmemb);
-        return total_size;
-    }
-
-	return write(data->outfd, ptr, total_size);
+    return write(data->outfd, ptr, size * nmemb);
 }
 
 // downloads URL into file descriptor
