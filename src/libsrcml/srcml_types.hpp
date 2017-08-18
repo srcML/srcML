@@ -201,12 +201,6 @@ struct srcml_archive {
     /** size of tabstop */
     size_t tabstop;
 
-    /** an array of XML namespace prefixes */
-    std::vector<std::string> prefixes;
-
-    /** namespaces an array of XML namespaces */
-    std::vector<std::string> uris;
-
     /**  new namespace structure */
     std::vector<Namespace> namespaces;
 

@@ -66,7 +66,7 @@ srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(
                                  std::string(SRCML_VERSION_STRING), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
                                  std::vector<std::string>(),
                                  SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH,
-                                 8, std::vector<std::string>(), std::vector<std::string>(), std::vector<Namespace>(), boost::optional<std::pair<std::string, std::string> >(),
+                                 8, std::vector<Namespace>(), boost::optional<std::pair<std::string, std::string> >(),
                                  language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any(), boost::optional<size_t>() };
 
 /**
@@ -175,19 +175,13 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         global_archive.registered_languages.append(registry);
 
-        std::vector<std::string> save_prefix = global_archive.prefixes;
-        std::vector<std::string> save_ns = global_archive.uris;
+        decltype(global_archive.namespaces) save_namespaces = global_archive.namespaces;
 
         srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
 
-        for(decltype(save_prefix)::size_type i = 0; i < save_prefix.size(); ++i) {
-            try {
-                srcml_archive_register_namespace(&global_archive, save_prefix.at(i).c_str(), save_ns.at(i).c_str());
-            } catch(...) {
-                return SRCML_STATUS_ERROR;
-            }
+        for (const auto& ns : save_namespaces) {
+            srcml_archive_register_namespace(&global_archive, ns.prefix.c_str(), ns.uri.c_str());
         }
-
     }
 
     if(srcml_check_extension(input_filename)) {

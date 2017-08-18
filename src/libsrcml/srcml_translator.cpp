@@ -57,8 +57,9 @@ srcml_translator::srcml_translator(char** str_buf,
                                  size_t* size,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-                                 std::vector<std::string>& prefix,
-                                 std::vector<std::string>& uri,
+//                                 const std::vector<std::string>& prefix,
+//                                 const std::vector<std::string>& uri,
+                                 const std::vector<Namespace>& namespaces,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
                                  int language,
@@ -71,14 +72,10 @@ srcml_translator::srcml_translator(char** str_buf,
                                  const char* hash,
                                  const char* encoding)
     :  Language(language),
-       revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
+       revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), namespaces(namespaces),
        options(op),
        out(0, 0, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
        str_buffer(str_buf), size(size) {
-
-    for (size_t i = 0; i < uri.size(); ++i) {
-        namespaces.push_back(Namespace(prefix[i], uri[i], false));
-    }
 
     buffer = xmlBufferCreate();
     xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
@@ -118,8 +115,9 @@ srcml_translator::srcml_translator(char** str_buf,
 srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-                                 std::vector<std::string>& prefix,
-                                 std::vector<std::string>& uri,
+//                                 const std::vector<std::string>& prefix,
+//                                 const std::vector<std::string>& uri,
+                                 const std::vector<Namespace>& namespaces,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
                                  int language,
@@ -132,13 +130,10 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* hash,
                                  const char* encoding)
     : Language(language),
-      revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
+      revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), namespaces(namespaces),
       options(op),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize)
 {
-    for (size_t i = 0; i < uri.size(); ++i) {
-        namespaces.push_back(Namespace(prefix[i], uri[i], false));
-    }
 }
 
 /**
