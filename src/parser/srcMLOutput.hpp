@@ -206,19 +206,10 @@ public:
         since the string produced here is copied to a std::string in libsrcml
     */
 
-    /** first position of namespaces on unit */
-    int start_ns_pos;
-
-    int ns_list_size;
-
-    /** reduced set of namespace declarations to those actually used */
-    std::string reduced_ns;
-
-    void processUnit(const antlr::RefToken& token);
-
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth);
 
     void setMacroList(std::vector<std::string> & list);
+
     void outputMacroList();
 
 private:
