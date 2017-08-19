@@ -36,6 +36,12 @@
 // @todo Why is this here?
 #define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
 
+static std::string getPrefix(std::vector<Namespace>& ns, int pos) {
+
+    ns[pos].used = true;
+    return ns[pos].prefix;
+}
+
 /**
  * srcMLOutput
  * @param ints a token stream
@@ -120,6 +126,7 @@ void srcMLOutput::initNamespaces(const std::vector<Namespace>& otherns) {
     }
 
     // now that we have the prefixes, can setup the main tag
+    getPrefix(namespaces, SRC);
     maintag = !namespaces[0].prefix.empty() ? namespaces[0].prefix : "";
     if (!maintag.empty())
         maintag += ":";
@@ -550,7 +557,7 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
 	// highly optimized code as this is output for every start tag
 
-	static std::string startAttribute = " " + namespaces[POS].prefix + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "start=\"";
+	static std::string startAttribute = " " + getPrefix(namespaces, POS) + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "start=\"";
 	static std::string endAttribute   = " " + namespaces[POS].prefix + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "end=\"";
 
     const char* s = 0;
@@ -623,7 +630,7 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
     auto search = process.find(token->getType());
     if (search != process.end() && search->second.name) {
         const Element& eparts = search->second;
-        processToken(token, eparts.name, namespaces[eparts.prefix].prefix.c_str(), eparts.attr_name, 
+        processToken(token, eparts.name, getPrefix(namespaces, eparts.prefix).c_str(), eparts.attr_name, 
             eparts.attr_name && !eparts.attr_value ? token->getText().c_str() : eparts.attr_value,
             eparts.attr2_name, eparts.attr2_value);
 

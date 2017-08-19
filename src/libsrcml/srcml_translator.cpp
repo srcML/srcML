@@ -234,7 +234,14 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
     catch (...) {
         fprintf(stderr, "srcML translator error\n");
     }
-
+#if 0
+    std::vector<Namespace> otherns = out.getNamespaces();
+    for (const auto& ns : otherns) {
+        fprintf(stderr, "DEBUG:  %s %s %d ns.prefix: %s\n", __FILE__,  __FUNCTION__, __LINE__,  ns.prefix.c_str());
+        fprintf(stderr, "DEBUG:  %s %s %d ns.uri: %s\n", __FILE__,  __FUNCTION__, __LINE__,  ns.uri.c_str());
+        fprintf(stderr, "DEBUG:  %s %s %d ns.used: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ns.used);
+    }
+#endif
     // set back to root
     out.setDepth(0);
 }
@@ -423,15 +430,15 @@ bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
  */
 bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
+    if (is_outputting_unit)
+        return false;
+    is_outputting_unit = true;
+
     if (first) {
         out.initWriter();
     }
     first = false;
  
-    if (is_outputting_unit)
-        return false;
-    is_outputting_unit = true;
-
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
     if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
