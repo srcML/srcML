@@ -94,13 +94,7 @@ int srcMLOutput::initWriter() {
  */
 void srcMLOutput::initNamespaces(const Namespaces& otherns) {
 
-    namespaces = {
-        { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,           0 },
-        { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_URI,           0 },
-        { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_URI,           0 },
-        { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI,  0 },
-        { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_URI,    0 },
-    };
+    namespaces = default_namespaces;
 
     for (const auto& ns : otherns) {
 

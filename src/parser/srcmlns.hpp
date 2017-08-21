@@ -116,6 +116,15 @@ const char* const SRCML_EXT_POSITION_NS_PREFIX_DEFAULT = "pos";
 /** srcML OpenMP namespace prefix */
 const char* const SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT = "omp";
 
+/** default namespaces */
+const Namespaces default_namespaces = {
+        { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,           0 },
+        { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_URI,           0 },
+        { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_URI,           0 },
+        { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI,  0 },
+        { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_URI,    0 },
+};
+
 // srcML standard attributes
 /** revision attribute @todo see if still needed */
 const char* const UNIT_ATTRIBUTE_REVISION = "revision";
