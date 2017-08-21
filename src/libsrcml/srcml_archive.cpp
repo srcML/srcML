@@ -80,7 +80,7 @@ srcml_archive* srcml_archive_create() {
     archive->input = 0;
 
     // default prefixes
-    srcml_archive_register_namespace(archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
+    srcml_archive_register_namespace(archive, SRCML_SRC_NS_DEFAULT_PREFIX, SRCML_SRC_NS_URI);
 
     archive->registered_languages.register_standard_file_extensions();
 
@@ -470,11 +470,11 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
                 archive->options |= SRCML_OPTION_CPP;
         }
 
-    } else if (suri == SRCML_ERR_NS_URI) {
+    } else if (suri == SRCML_ERROR_NS_URI) {
         archive->options |= SRCML_OPTION_DEBUG;
-    } else if (suri == SRCML_EXT_POSITION_NS_URI) {
+    } else if (suri == SRCML_POSITION_NS_URI) {
         archive->options |= SRCML_OPTION_POSITION;
-    } else if (suri == SRCML_EXT_OPENMP_NS_URI) {
+    } else if (suri == SRCML_OPENMP_NS_URI) {
         archive->options |= SRCML_OPTION_OPENMP;
     }
 /*

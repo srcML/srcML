@@ -49,22 +49,16 @@ int main() {
     file.close();
 
     std::vector<std::string> namespace_prefix;
-    namespace_prefix.push_back(SRCML_SRC_NS_PREFIX_DEFAULT);
-    namespace_prefix.push_back(SRCML_CPP_NS_PREFIX_DEFAULT);
-    namespace_prefix.push_back(SRCML_ERR_NS_PREFIX_DEFAULT);
-    namespace_prefix.push_back(SRCML_EXT_LITERAL_NS_PREFIX_DEFAULT);
-    namespace_prefix.push_back(SRCML_EXT_OPERATOR_NS_PREFIX_DEFAULT);
-    namespace_prefix.push_back(SRCML_EXT_MODIFIER_NS_PREFIX_DEFAULT);
-    namespace_prefix.push_back(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT);
+    namespace_prefix.push_back(SRCML_SRC_NS_DEFAULT_PREFIX);
+    namespace_prefix.push_back(SRCML_CPP_NS_DEFAULT_PREFIX);
+    namespace_prefix.push_back(SRCML_ERROR_NS_DEFAULT_PREFIX);
+    namespace_prefix.push_back(SRCML_POSITION_NS_DEFAULT_PREFIX);
 
     std::vector<std::string> namespace_uri;
     namespace_uri.push_back(SRCML_SRC_NS_URI);
     namespace_uri.push_back(SRCML_CPP_NS_URI);
-    namespace_uri.push_back(SRCML_ERR_NS_URI);
-    namespace_uri.push_back(SRCML_EXT_LITERAL_NS_URI);
-    namespace_uri.push_back(SRCML_EXT_OPERATOR_NS_URI);
-    namespace_uri.push_back(SRCML_EXT_MODIFIER_NS_URI);
-    namespace_uri.push_back(SRCML_EXT_POSITION_NS_URI);
+    namespace_uri.push_back(SRCML_ERROR_NS_URI);
+    namespace_uri.push_back(SRCML_POSITION_NS_URI);
 
     std::vector<std::string> attributes;
     attributes.push_back("foo");

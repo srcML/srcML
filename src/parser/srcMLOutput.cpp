@@ -272,13 +272,13 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         isoption(options, SRCML_OPTION_CPP) && (isoption(options, SRCML_OPTION_ARCHIVE) == !(depth == 0)) ? SRCML_CPP_NS_URI : 0,
 
         // optional debugging xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
+        (depth == 0) && isoption(options, SRCML_OPTION_DEBUG)    ? SRCML_ERROR_NS_URI : 0,
 
         // optional position xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
+        (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_POSITION_NS_URI : 0,
 
         // optional position xml namespace
-        (namespaces[OMP].flags & NS_USED) && (isoption(options, SRCML_OPTION_ARCHIVE) == !(depth == 0)) ? SRCML_EXT_OPENMP_NS_URI : 0,
+        (namespaces[OMP].flags & NS_USED) && (isoption(options, SRCML_OPTION_ARCHIVE) == !(depth == 0)) ? SRCML_OPENMP_NS_URI : 0,
     };
 
     // output the namespaces

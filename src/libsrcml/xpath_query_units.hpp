@@ -213,10 +213,10 @@ public :
         // @todo Why isn't OPENMP here?
         const char* prefixes[] = {
             SRCML_SRC_NS_URI, "src", // @todo state why
-            SRCML_CPP_NS_URI, SRCML_CPP_NS_PREFIX_DEFAULT,
-            SRCML_ERR_NS_URI, SRCML_ERR_NS_PREFIX_DEFAULT,
-            SRCML_EXT_POSITION_NS_URI, SRCML_EXT_POSITION_NS_PREFIX_DEFAULT,
-            SRCML_DIFF_NS_URI, SRCML_DIFF_NS_PREFIX_DEFAULT,
+            SRCML_CPP_NS_URI, SRCML_CPP_NS_DEFAULT_PREFIX,
+            SRCML_ERROR_NS_URI, SRCML_ERROR_NS_DEFAULT_PREFIX,
+            SRCML_POSITION_NS_URI, SRCML_POSITION_NS_DEFAULT_PREFIX,
+            SRCML_DIFF_NS_URI, SRCML_DIFF_NS_DEFAULT_PREFIX,
             0, 0
         };
 

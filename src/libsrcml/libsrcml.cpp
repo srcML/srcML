@@ -178,7 +178,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         decltype(global_archive.namespaces) save_namespaces = global_archive.namespaces;
 
-        srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
+        srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_DEFAULT_PREFIX, SRCML_SRC_NS_URI);
 
         for (const auto& ns : save_namespaces) {
             srcml_archive_register_namespace(&global_archive, ns.prefix.c_str(), ns.uri.c_str());

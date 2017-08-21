@@ -80,49 +80,43 @@ const char* const XML_DECLARATION_STANDALONE = "yes";
 const char* const XML_VERSION = "1.0";
 
 // srcML namespace URIs
-/** Default srcML namespace uri */
+/** Default srcML namespace uri and default prefix */
 const char* const SRCML_SRC_NS_URI = "http://www.srcML.org/srcML/src";
 
-/** srcML preprocessor namespace uri */
+const char* const SRCML_SRC_NS_DEFAULT_PREFIX = "";
+
+/** srcML preprocessor namespace uri and default prefix */
 const char* const SRCML_CPP_NS_URI = "http://www.srcML.org/srcML/cpp";
 
-/** srcML error namespace uri */
-const char* const SRCML_ERR_NS_URI = "http://www.srcML.org/srcML/error";
+const char* const SRCML_CPP_NS_DEFAULT_PREFIX = "cpp";
 
-/** srcDiff namespace uri */
+/** srcML error namespace uri and default prefix */
+const char* const SRCML_ERROR_NS_URI = "http://www.srcML.org/srcML/error";
+
+const char* const SRCML_ERROR_NS_DEFAULT_PREFIX = "err";
+
+/** srcML position namespace uri and default prefix */
+const char* const SRCML_POSITION_NS_URI = "http://www.srcML.org/srcML/position";
+
+const char* const SRCML_POSITION_NS_DEFAULT_PREFIX = "pos";
+
+/** srcML OpenMP namespace uri and default prefix */
+const char* const SRCML_OPENMP_NS_URI = "http://www.srcML.org/srcML/openmp";
+
+const char* const SRCML_OPENMP_NS_DEFAULT_PREFIX = "omp";
+
+/** srcDiff namespace uri and default prefix */
 const char* const SRCML_DIFF_NS_URI = "http://www.srcML.org/srcDiff";
 
-/** Default srcML namespace prefix */
-const char* const SRCML_SRC_NS_PREFIX_DEFAULT = "";
-
-/** srcML preprocessor namespace prefix */
-const char* const SRCML_CPP_NS_PREFIX_DEFAULT = "cpp";
-
-/** srcML error namespace prefix */
-const char* const SRCML_ERR_NS_PREFIX_DEFAULT = "err";
-
-/** srcDiff namespace prefix */
-const char* const SRCML_DIFF_NS_PREFIX_DEFAULT = "diff";
-
-/** srcML position namespace uri */
-const char* const SRCML_EXT_POSITION_NS_URI = "http://www.srcML.org/srcML/position";
-
-/** srcML OpenMP namespace uri */
-const char* const SRCML_EXT_OPENMP_NS_URI = "http://www.srcML.org/srcML/openmp";
-
-/** srcML operator namespace prefix */
-const char* const SRCML_EXT_POSITION_NS_PREFIX_DEFAULT = "pos";
-
-/** srcML OpenMP namespace prefix */
-const char* const SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT = "omp";
+const char* const SRCML_DIFF_NS_DEFAULT_PREFIX = "diff";
 
 /** default namespaces */
 const Namespaces default_namespaces = {
-        { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,           0 },
-        { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_URI,           0 },
-        { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_URI,           0 },
-        { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI,  0 },
-        { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_URI,    0 },
+        { SRCML_SRC_NS_DEFAULT_PREFIX,          SRCML_SRC_NS_URI,           0 },
+        { SRCML_CPP_NS_DEFAULT_PREFIX,          SRCML_CPP_NS_URI,           0 },
+        { SRCML_ERROR_NS_DEFAULT_PREFIX,          SRCML_ERROR_NS_URI,           0 },
+        { SRCML_POSITION_NS_DEFAULT_PREFIX, SRCML_POSITION_NS_URI,  0 },
+        { SRCML_OPENMP_NS_DEFAULT_PREFIX,   SRCML_OPENMP_NS_URI,    0 },
 };
 
 // srcML standard attributes
