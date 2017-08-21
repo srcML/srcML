@@ -165,7 +165,7 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
                                                  boost::optional<std::string> & language,
                                                  boost::optional<std::string> & url, boost::optional<std::string> & version,
                                                  std::vector<std::string> & attributes,
-                                                 std::vector<Namespace>& namespaces,
+                                                 Namespaces& namespaces,
                                                  boost::optional<std::pair<std::string, std::string> > & processing_instruction,
                                                  OPTION_TYPE & options,
                                                  size_t & tabstop,

@@ -36,9 +36,11 @@
 // @todo Why is this here?
 #define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
 
-static std::string getPrefix(std::vector<Namespace>& ns, int pos) {
+static std::string getPrefix(Namespaces& ns, int pos) {
 
-    ns[pos].used = true;
+    // used is not an indexed field, so can just throw away const
+    const_cast<Namespace&>(ns[pos]).used = true;
+
     return ns[pos].prefix;
 }
 
@@ -98,7 +100,7 @@ int srcMLOutput::initWriter() {
  *
  * Initialize the output namespaces.
  */
-void srcMLOutput::initNamespaces(const std::vector<Namespace>& otherns) {
+void srcMLOutput::initNamespaces(const Namespaces& otherns) {
 
     namespaces = {
         { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,                     false },
@@ -109,20 +111,19 @@ void srcMLOutput::initNamespaces(const std::vector<Namespace>& otherns) {
     };
 
     for (const auto& ns : otherns) {
-        const std::string& value = ns.uri;
 
         // find where the new URI is in the default URI list, or not
-        auto posit = std::find_if(namespaces.begin(), namespaces.end(), [value](const Namespace& n) { return n.uri == value; });
-        if (posit != namespaces.end()) {
+        auto&& view = namespaces.get<nstags::uri>();
+        auto it = view.find(ns.uri);
+        if (it != view.end()) {
 
             // update the default prefix
-            posit->prefix = ns.prefix;
-            posit->used = ns.used;
+            view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.uri = ns.uri; });
 
         } else {
 
             // create a new entry for this URI
-            namespaces.push_back({ ns.prefix, ns.uri, false });
+            namespaces.push_back({ .prefix = ns.prefix, .uri = ns.uri, .used = false });
         }
     }
 

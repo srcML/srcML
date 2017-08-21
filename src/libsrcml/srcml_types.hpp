@@ -200,7 +200,7 @@ struct srcml_archive {
     size_t tabstop;
 
     /**  new namespace structure */
-    std::vector<Namespace> namespaces;
+    Namespaces namespaces;
 
     /** target/data pair for processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
@@ -228,7 +228,6 @@ struct srcml_archive {
 
     /** srcDiff revision number */
     boost::optional<size_t> revision_number;
-
 };
 
 /**
@@ -270,7 +269,7 @@ struct srcml_unit {
     /** a unit srcMLTranslator for writing and parsing as a stream */
     srcml_translator * unit_translator;
 
-    boost::optional<std::vector<Namespace>> namespaces;
+    boost::optional<Namespaces> namespaces;
 
     /** store if attributes have been read */
     bool read_header;

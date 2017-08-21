@@ -60,7 +60,7 @@ public:
                      size_t* size,
                      const char* xml_encoding,
                      OPTION_TYPE& op,
-                     const std::vector<Namespace>& namespaces,
+                     const Namespaces& namespaces,
                      boost::optional<std::pair<std::string, std::string> > processing_instruction,
                      size_t tabsize,
                      int language,
@@ -77,7 +77,7 @@ public:
     srcml_translator(xmlOutputBuffer * output_buffer,
                      const char* xml_encoding,
                      OPTION_TYPE& op,
-                     const std::vector<Namespace>& namespaces,
+                     const Namespaces& namespaces,
                      boost::optional<std::pair<std::string, std::string> > processing_instruction,
                      size_t tabsize,
                      int language,
@@ -146,7 +146,7 @@ private:
     /** an array of name-value attribute pairs */
     const std::vector<std::string>& attributes;
 
-    std::vector<Namespace> namespaces;
+    Namespaces namespaces;
 
     /** translation options */
     OPTION_TYPE& options;

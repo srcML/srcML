@@ -448,10 +448,11 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
     if (archive == NULL || prefix == NULL || uri == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    const auto& nsentry = std::find_if(archive->namespaces.begin(), archive->namespaces.end(),
-        [uri](Namespace& item)->bool { return item.uri == uri; });
-    if (nsentry != std::end(archive->namespaces)) {
-        nsentry->prefix = prefix;
+    // lookup by uri, if it already exists, update the prefix. If it doesn't exist, add it
+    auto& view = archive->namespaces.get<nstags::uri>();
+    auto it = view.find(uri);
+    if (it != view.end()) {
+        view.modify(it, [prefix](Namespace& ns) { ns.prefix = prefix; });
     } else {
         archive->namespaces.push_back({ .prefix = prefix, .uri = uri, .used = false });
     }
@@ -704,10 +705,10 @@ const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archiv
     if (archive == NULL || uri == NULL)
         return 0;
 
-    const auto& nsentry = std::find_if(archive->namespaces.begin(), archive->namespaces.end(),
-        [uri](const Namespace& item)->bool { return item.uri == std::string(uri); });
+    const auto& view = archive->namespaces.get<nstags::uri>();
+    const auto it = view.find(uri);
 
-    return nsentry != archive->namespaces.end() ? nsentry->prefix.c_str() : 0;
+    return it != view.end() ? it->prefix.c_str() : 0;
 }
 
 /**
@@ -742,10 +743,10 @@ const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archiv
     if (archive == NULL || prefix == NULL)
         return 0;
 
-    const auto& nsentry = std::find_if(archive->namespaces.begin(), archive->namespaces.end(),
-        [prefix](const Namespace& item)->bool { return item.prefix == std::string(prefix); });
+    const auto& view = archive->namespaces.get<nstags::prefix>();
+    const auto& it = view.find(prefix);
 
-    return nsentry != archive->namespaces.end() ? nsentry->uri.c_str() : 0;
+    return it != view.end() ? it->uri.c_str() : 0;
 }
 
 /**

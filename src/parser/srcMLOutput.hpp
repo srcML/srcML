@@ -79,7 +79,7 @@ public:
 
     void setOutputBuffer(xmlOutputBufferPtr output_buffer);
     int initWriter();
-    void initNamespaces(const std::vector<Namespace>& namespaces);
+    void initNamespaces(const Namespaces& namespaces);
 
      /**
      * getWriter
@@ -101,7 +101,7 @@ public:
 
     void outputUnitSeparator();
 
-    const std::vector<Namespace>& getNamespaces() const { return namespaces; }
+    const Namespaces& getNamespaces() const { return namespaces; }
 
     // start a unit element with the passed metadata
     void startUnit(const char* unit_language, const char* revision,
@@ -174,7 +174,7 @@ public:
     const char* xml_encoding = nullptr;
 
     /* namespaces declared and used */
-    std::vector<Namespace> namespaces;
+    Namespaces namespaces;
 
     std::string maintag;
 
