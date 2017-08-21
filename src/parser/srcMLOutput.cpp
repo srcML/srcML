@@ -36,16 +36,6 @@
 // @todo Why is this here?
 #define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
 
-static std::string getPrefix(Namespaces& ns, int pos) {
-
-    auto& tns = ns[pos];
-
-    // used is not an indexed field, so can just throw away const
-    const_cast<Namespace&>(tns).flags |= NS_USED;
-
-    return tns.prefix;
-}
-
 /**
  * srcMLOutput
  * @param ints a token stream
@@ -130,8 +120,7 @@ void srcMLOutput::initNamespaces(const Namespaces& otherns) {
     }
 
     // now that we have the prefixes, can setup the main tag
-    getPrefix(namespaces, SRC);
-    maintag = !namespaces[0].prefix.empty() ? namespaces[0].prefix : "";
+    maintag = namespaces[SRC].getPrefix();
     if (!maintag.empty())
         maintag += ":";
     maintag += "unit";
@@ -139,8 +128,8 @@ void srcMLOutput::initNamespaces(const Namespaces& otherns) {
     // setting up for tabs, even if not used
     tabattribute = namespaces[POS].prefix;
     if (!tabattribute.empty())
-    	tabattribute.append(":");
-    tabattribute.append("tabs");
+    	tabattribute += ":";
+    tabattribute += "tabs";
 }
 
 /**
@@ -505,9 +494,9 @@ static inline const char* positoa(int n) {
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
 	// highly optimized code as this is output for every start tag
-
-	static std::string startAttribute = " " + getPrefix(namespaces, POS) + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "start=\"";
-	static std::string endAttribute   = " " + namespaces[POS].prefix + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "end=\"";
+    static const std::string& position_prefix = namespaces[POS].getPrefix();
+	static std::string startAttribute = " " + position_prefix + (!position_prefix.empty() ? ":" : "") + "start=\"";
+	static std::string endAttribute   = " " + position_prefix + (!position_prefix.empty() ? ":" : "") + "end=\"";
 
     const char* s = 0;
 
@@ -579,9 +568,14 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
     auto search = process.find(token->getType());
     if (search != process.end() && search->second.name) {
         const Element& eparts = search->second;
-        processToken(token, eparts.name, getPrefix(namespaces, eparts.prefix).c_str(), eparts.attr_name, 
-            eparts.attr_name && !eparts.attr_value ? token->getText().c_str() : eparts.attr_value,
-            eparts.attr2_name, eparts.attr2_value);
+
+        // process the token using the fields in the element
+        processToken(token, eparts.name,
+                    namespaces[eparts.prefix].getPrefix().c_str(),
+                    eparts.attr_name, 
+                    eparts.attr_name && eparts.attr_value ? eparts.attr_value : token->getText().c_str(),
+                    eparts.attr2_name,
+                    eparts.attr2_value);
 
         return;
     }

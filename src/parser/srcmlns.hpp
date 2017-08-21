@@ -37,13 +37,14 @@
 #include <string>
 
 enum {
-  NS_USED = 1 << 0,
+  NS_USED = 1 << 0, // was the namespace used
 };
 
 struct Namespace {
     std::string prefix;
     std::string uri;
-    int flags;
+    mutable int flags;
+    const std::string& getPrefix() const { flags |= NS_USED; return prefix; }
 };
 
 namespace nstags
