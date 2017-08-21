@@ -234,14 +234,7 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
     catch (...) {
         fprintf(stderr, "srcML translator error\n");
     }
-#if 0
-    std::vector<Namespace> otherns = out.getNamespaces();
-    for (const auto& ns : otherns) {
-        fprintf(stderr, "DEBUG:  %s %s %d ns.prefix: %s\n", __FILE__,  __FUNCTION__, __LINE__,  ns.prefix.c_str());
-        fprintf(stderr, "DEBUG:  %s %s %d ns.uri: %s\n", __FILE__,  __FUNCTION__, __LINE__,  ns.uri.c_str());
-        fprintf(stderr, "DEBUG:  %s %s %d ns.used: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ns.used);
-    }
-#endif
+
     // set back to root
     out.setDepth(0);
 }
@@ -313,6 +306,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
     if (is_cpp)
         options |= SRCML_OPTION_CPP;
 
+
     std::string language = Language(unit->derived_language).getLanguageString();
     if (language == "") {
 
@@ -331,6 +325,10 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
     }
 
     bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
+
+    // if the unit has namespaces, then use those
+    if (unit->namespaces)
+        out.initNamespaces(*unit->namespaces);
 
     out.startUnit(language.c_str(),
             is_archive && unit->revision ? unit->revision->c_str() : revision,
@@ -442,7 +440,7 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
     if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
-      lang == Language::LANGUAGE_OBJECTIVE_C)
+      lang & Language::LANGUAGE_OBJECTIVE_C)
         options |= SRCML_OPTION_CPP;
 
     if (isoption(options, SRCML_OPTION_ARCHIVE))

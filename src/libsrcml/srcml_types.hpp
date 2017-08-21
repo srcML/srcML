@@ -57,7 +57,7 @@ const unsigned int SRCML_OPTION_HASH              = 1<<10;
 const unsigned int SRCML_OPTION_DEFAULT           = (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH);
  
 /** All default enabled options */
-const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL /* | SRCML_OPTION_OPENMP*/);
+const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPENMP);
 
 #include <libxml/xmlwriter.h>
 
@@ -269,6 +269,8 @@ struct srcml_unit {
 
     /** a unit srcMLTranslator for writing and parsing as a stream */
     srcml_translator * unit_translator;
+
+    boost::optional<std::vector<Namespace>> namespaces;
 
     /** store if attributes have been read */
     bool read_header;

@@ -423,6 +423,8 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
     // parse the input
     unit->unit_translator->translate(input);
 
+    unit->namespaces = unit->unit_translator->out.getNamespaces();
+
     // create the unit end tag
     status = srcml_write_end_unit(unit);
     if (status != SRCML_STATUS_OK)

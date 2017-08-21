@@ -117,6 +117,7 @@ void srcMLOutput::initNamespaces(const std::vector<Namespace>& otherns) {
 
             // update the default prefix
             posit->prefix = ns.prefix;
+            posit->used = ns.used;
 
         } else {
 
@@ -291,7 +292,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
 
         // optional position xml namespace
-        (false && depth == 0) && isoption(options, SRCML_OPTION_OPENMP) ? SRCML_EXT_OPENMP_NS_URI : 0,
+        namespaces[OMP].used && (isoption(options, SRCML_OPTION_ARCHIVE) == !(depth == 0)) ? SRCML_EXT_OPENMP_NS_URI : 0,
     };
 
     // output the namespaces
@@ -349,10 +350,6 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const char* encoding,
                             const std::vector<std::string> & attributes,
                             bool output_macrolist) {
-
-    // recording which namespaces are used on this unit
-    for (auto& ns : namespaces)
-        ns.used = false;
 
     // start of main tag
     xmlTextWriterStartElement(xout, BAD_CAST maintag.c_str());
