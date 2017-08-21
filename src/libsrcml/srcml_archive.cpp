@@ -453,7 +453,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
     if (nsentry != std::end(archive->namespaces)) {
         nsentry->prefix = prefix;
     } else {
-        archive->namespaces.push_back({ prefix, uri, false });
+        archive->namespaces.push_back({ .prefix = prefix, .uri = uri, .used = false });
     }
 
     // namespaces for options enable the options automatically
