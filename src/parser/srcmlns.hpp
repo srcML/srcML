@@ -31,9 +31,6 @@
 #include <array>
 
 struct Namespace {
-	Namespace(const std::string& prefix, const std::string& uri, bool used)
-		: prefix(prefix), uri(uri), used(used) {}
-
     std::string prefix;
     std::string uri;
     bool used;
