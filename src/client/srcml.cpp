@@ -38,6 +38,7 @@
 #include <iostream>
 #include <unistd.h>
 #include <csignal>
+#include <cmath>
 #include <TraceLog.hpp>
 
 // decide if a step is needed
@@ -168,7 +169,7 @@ int main(int argc, char * argv[]) {
     auto realtime = runtime.real_world_elapsed();
     SRCMLstatus(DEBUG_MSG, "Real Time: %l ms", realtime);
     SRCMLstatus(DEBUG_MSG, "LOC: %l", TraceLog::totalLOC());
-    SRCMLstatus(DEBUG_MSG, "KLOC/s: %l", realtime > 0 ? (TraceLog::totalLOC() / realtime) : 0);
+    SRCMLstatus(DEBUG_MSG, "KLOC/s: %l", realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0);
 
     // error status is 0 unless a critical, error, or warning
     return SRCMLStatus::errors() ? 1 : 0;
