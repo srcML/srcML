@@ -454,7 +454,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
     if (it != view.end()) {
         view.modify(it, [prefix](Namespace& ns) { ns.prefix = prefix; });
     } else {
-        archive->namespaces.push_back({ .prefix = prefix, .uri = uri, .used = false });
+        archive->namespaces.push_back({ .prefix = prefix, .uri = uri, .flags = 0 });
     }
 
     // namespaces for options enable the options automatically

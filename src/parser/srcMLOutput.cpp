@@ -38,10 +38,12 @@
 
 static std::string getPrefix(Namespaces& ns, int pos) {
 
-    // used is not an indexed field, so can just throw away const
-    const_cast<Namespace&>(ns[pos]).used = true;
+    auto& tns = ns[pos];
 
-    return ns[pos].prefix;
+    // used is not an indexed field, so can just throw away const
+    const_cast<Namespace&>(tns).flags |= NS_USED;
+
+    return tns.prefix;
 }
 
 /**
@@ -103,11 +105,11 @@ int srcMLOutput::initWriter() {
 void srcMLOutput::initNamespaces(const Namespaces& otherns) {
 
     namespaces = {
-        { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,                     false },
-        { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_URI,                     false },
-        { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_URI,                     false },
-        { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI,            false },
-        { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_URI,              false },
+        { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,           0 },
+        { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_URI,           0 },
+        { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_URI,           0 },
+        { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI,  0 },
+        { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_URI,    0 },
     };
 
     for (const auto& ns : otherns) {
@@ -118,12 +120,12 @@ void srcMLOutput::initNamespaces(const Namespaces& otherns) {
         if (it != view.end()) {
 
             // update the default prefix
-            view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.uri = ns.uri; });
+            view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.flags = ns.flags; });
 
         } else {
 
             // create a new entry for this URI
-            namespaces.push_back({ .prefix = ns.prefix, .uri = ns.uri, .used = false });
+            namespaces.push_back({ .prefix = ns.prefix, .uri = ns.uri, .flags = ns.flags });
         }
     }
 
@@ -293,7 +295,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
 
         // optional position xml namespace
-        namespaces[OMP].used && (isoption(options, SRCML_OPTION_ARCHIVE) == !(depth == 0)) ? SRCML_EXT_OPENMP_NS_URI : 0,
+        (namespaces[OMP].flags & NS_USED) && (isoption(options, SRCML_OPTION_ARCHIVE) == !(depth == 0)) ? SRCML_EXT_OPENMP_NS_URI : 0,
     };
 
     // output the namespaces

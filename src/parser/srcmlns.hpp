@@ -36,10 +36,14 @@
 #include <boost/multi_index/member.hpp>
 #include <string>
 
+enum {
+  NS_USED = 1 << 0,
+};
+
 struct Namespace {
     std::string prefix;
     std::string uri;
-    bool used;
+    int flags;
 };
 
 namespace nstags
