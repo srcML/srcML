@@ -36,6 +36,19 @@
 // @todo Why is this here?
 #define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
 
+namespace {
+    void srcMLTextWriterWriteNamespace(xmlTextWriterPtr xout, const Namespace& ns) {
+
+        std::string prefix = "xmlns";
+        if (!ns.prefix.empty()) {
+            prefix += ':';
+            prefix += ns.prefix;
+        }
+
+        xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns.uri.c_str());
+    }
+}
+
 /**
  * srcMLOutput
  * @param ints a token stream
@@ -282,13 +295,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
             if (!(ns.flags & NS_REQUIRED) && (!(ns.flags & NS_ROOT) || !(ns.flags & NS_USED)))
                 continue;
 
-            std::string prefix = "xmlns";
-            if (!ns.prefix.empty()) {
-                prefix += ':';
-                prefix += ns.prefix;
-            }
-
-            xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns.uri.c_str());
+            srcMLTextWriterWriteNamespace(xout, ns);
         }
     }
 
@@ -299,13 +306,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
             if ((ns.flags & NS_REQUIRED) || (ns.flags & NS_ROOT) || !(ns.flags & NS_USED))
                 continue;
 
-            std::string prefix = "xmlns";
-            if (!ns.prefix.empty()) {
-                prefix += ':';
-                prefix += ns.prefix;
-            }
-
-            xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns.uri.c_str());
+            srcMLTextWriterWriteNamespace(xout, ns);
         }
     }
 }
