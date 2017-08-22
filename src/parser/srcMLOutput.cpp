@@ -135,24 +135,11 @@ int srcMLOutput::initWriter() {
  */
 void srcMLOutput::initNamespaces(const Namespaces& otherns) {
 
+    // start with the default
     namespaces = default_namespaces;
 
-    for (const auto& ns : otherns) {
-
-        // find where the new URI is in the default URI list, or not
-        auto&& view = namespaces.get<nstags::uri>();
-        auto it = view.find(ns.uri);
-        if (it != view.end()) {
-
-            // update the default prefix
-            view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.flags |= ns.flags; });
-
-        } else {
-
-            // create a new entry for this URI
-            namespaces.push_back({ .prefix = ns.prefix, .uri = ns.uri, .flags = ns.flags });
-        }
-    }
+    // merge in the other namespaces
+    namespaces += otherns;
 
     // now that we have the prefixes, can setup the main tag
     maintag = namespaces[SRC].getPrefix();

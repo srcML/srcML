@@ -56,6 +56,7 @@ namespace nstags
     struct position {};
 }
 
+// data structure for namespaces, prefixes and uri's
 typedef boost::multi_index::multi_index_container<Namespace,
   	boost::multi_index::indexed_by<
   		// default access, indexing
@@ -162,5 +163,8 @@ bool is_srcml_namespace(const std::string& uri, const std::string& srcml_uri);
 
 // normalize the uri prefix to http://www.srcML.org/
 std::string& srcml_uri_normalize(std::string & uri);
+
+// merge in the other namespace
+Namespaces& operator +=(Namespaces& ns, const Namespaces& otherns);
 
 #endif
