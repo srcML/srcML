@@ -278,7 +278,8 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     if (depth == 0 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
         for (const auto& ns : namespaces) {
 
-            if (!(ns.flags & NS_ROOT) || !(ns.flags & NS_USED))
+            // must be required, or on the root and used
+            if (!(ns.flags & NS_REQUIRED) && (!(ns.flags & NS_ROOT) || !(ns.flags & NS_USED)))
                 continue;
 
             std::string prefix = "xmlns";
@@ -295,7 +296,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     if (depth == 1 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
         for (const auto& ns : namespaces) {
 
-            if ((ns.flags & NS_ROOT) || !(ns.flags & NS_USED))
+            if ((ns.flags & NS_REQUIRED) || (ns.flags & NS_ROOT) || !(ns.flags & NS_USED))
                 continue;
 
             std::string prefix = "xmlns";
