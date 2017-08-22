@@ -543,6 +543,7 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
         // process the token using the fields in the element
         processToken(token, eparts.name,
+                    // use getPrefix() to record that this prefix was used
                     namespaces[eparts.prefix].getPrefix().c_str(),
                     eparts.attr_name, 
                     // if attribute name and no value, then take text from token
