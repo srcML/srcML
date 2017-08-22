@@ -47,6 +47,24 @@ namespace {
 
         xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns.uri.c_str());
     }
+
+    // itoa-type function
+    inline const char* positoa(int n) {
+
+        // enough space to store int as string
+        static constexpr int SIZE = sizeof(int) * 4;
+        static char s[SIZE] = { 0 };
+
+        // create string backwards from 1's place
+        char* p = s + SIZE - 1;
+        do {
+            *--p = '0' + (n % 10);
+            n /= 10;
+        } while (n);
+
+        // end of string that we are using
+        return p;
+    }
 }
 
 /**
@@ -73,13 +91,23 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
+    // prepare for storing options in output
+    // @todo how much of this do we test, or need?
+    std::array<std::pair<int, const char*>, 4> sep = {{
+        { SRCML_OPTION_CPP_TEXT_ELSE,  "CPP_TEXT_ELSE" },
+        { SRCML_OPTION_CPP_MARKUP_IF0, "CPP_MARKUP_IF0" },
+        { SRCML_OPTION_LINE,           "LINE" },
+        { SRCML_OPTION_CPPIF_CHECK,    "CPPIF_CHECK" },
+    }};
+
     std::string SEP;
-    //if(isoption(options, SRCML_OPTION_XML_DECL))        { soptions = "XMLDECL"; }
-    //if(isoption(options, SRCML_OPTION_NAMESPACE_DECL))  { if(soptions != "") SEP = ","; soptions += SEP + "NAMESPACEDECL"; }
-    if(isoption(options, SRCML_OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_TEXT_ELSE"; }
-    if(isoption(options, SRCML_OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_MARKUP_IF0"; }
-    if(isoption(options, SRCML_OPTION_LINE))           { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "LINE"; }
-    if(isoption(options, SRCML_OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
+    for (const auto& pair : sep) {
+        if (isoption(options, pair.first)) {
+            if (SEP.empty() && soptions != "")
+                SEP = ",";
+            soptions += SEP + pair.second;
+        }
+    }
 }
 
 /**
@@ -340,8 +368,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     // record where unit start tag name ends
     //start_ns_pos = 1 + (int) maintag.size() + 1;
 
-    // outer units have namespaces
-    if (/* outer && */ isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
+    // output namespaces for root and nested units
+    if (isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
         outputNamespaces(xout, options, depth);
     }
 
@@ -457,24 +485,6 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
     processText(token->getText());
 }
 
-// itoa-type function
-static inline const char* positoa(int n) {
-
-	// enough space to store int as string
-	static constexpr int SIZE = sizeof(int) * 4;
-	static char s[SIZE] = { 0 };
-
-	// create string backwards from 1's place
-	char* p = s + SIZE - 1;
-	do {
-		*--p = '0' + (n % 10);
-		n /= 10;
-	} while (n);
-
-	// end of string that we are using
-	return p;
-}
-
 /**
  * processTextPosition
  * @param token token to output as text
@@ -483,17 +493,20 @@ static inline const char* positoa(int n) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
-	// highly optimized code as this is output for every start tag
-    static const std::string& position_prefix = namespaces[POS].getPrefix();
-	static std::string startAttribute = " " + position_prefix + (!position_prefix.empty() ? ":" : "") + "start=\"";
-	static std::string endAttribute   = " " + position_prefix + (!position_prefix.empty() ? ":" : "") + "end=\"";
+    static const std::string& prefix = namespaces[POS].getPrefix();
+	static const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
+	static const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
 
+    // highly optimized as this is output for every start tag
+
+    // position start attribute, e.g. pos:start="1:4"
 	xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.c_str());
 	xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
 	xmlOutputBufferWrite(output_buffer, 1, ":");
 	xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
 	xmlOutputBufferWrite(output_buffer, 1, "\"");
 
+    // position end attribute, e.g. pos:end="2:1"
 	srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
 	xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
 	xmlOutputBufferWriteString(output_buffer, positoa(stoken->endline));
@@ -505,9 +518,6 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2) {
 
-	if (name[0] == 0)
-		return;
-	
 	static bool isposition = isoption(options, SRCML_OPTION_POSITION);
 
     if (isstart(token) || isempty(token)) {
@@ -557,6 +567,7 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
         processToken(token, eparts.name,
                     namespaces[eparts.prefix].getPrefix().c_str(),
                     eparts.attr_name, 
+                    // if attribute name and no value, then take text from token
                     eparts.attr_name && eparts.attr_value ? eparts.attr_value : token->getText().c_str(),
                     eparts.attr2_name,
                     eparts.attr2_value);
