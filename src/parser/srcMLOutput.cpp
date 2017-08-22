@@ -140,18 +140,6 @@ void srcMLOutput::initNamespaces(const Namespaces& otherns) {
 
     // merge in the other namespaces
     namespaces += otherns;
-
-    // now that we have the prefixes, can setup the main tag
-    maintag = namespaces[SRC].getPrefix();
-    if (!maintag.empty())
-        maintag += ":";
-    maintag += "unit";
-
-    // setting up for tabs, even if not used
-    tabattribute = namespaces[POS].prefix;
-    if (!tabattribute.empty())
-    	tabattribute += ":";
-    tabattribute += "tabs";
 }
 
 /**
@@ -349,15 +337,22 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             bool output_macrolist) {
 
     // start of main tag
+    std::string maintag = namespaces[SRC].getPrefix() + (!namespaces[SRC].prefix.empty() ? ":" : "") + "unit";
     xmlTextWriterStartElement(xout, BAD_CAST maintag.c_str());
     ++openelementcount;
-
-    // record where unit start tag name ends
-    //start_ns_pos = 1 + (int) maintag.size() + 1;
 
     // output namespaces for root and nested units
     if (isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
         outputNamespaces(xout, options, depth);
+    }
+
+    // setting up for tabs if used
+    std::string tabattribute;
+    if (isoption(options, SRCML_OPTION_POSITION)) {
+        tabattribute = namespaces[POS].getPrefix();
+        if (!tabattribute.empty())
+            tabattribute += ":";
+        tabattribute += "tabs";
     }
 
     // list of attributes
@@ -480,7 +475,7 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
-    static const std::string& prefix = namespaces[POS].getPrefix();
+    static const std::string& prefix = namespaces[POS].prefix;
 	static const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
 	static const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
 
