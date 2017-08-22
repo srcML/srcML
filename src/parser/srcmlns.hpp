@@ -37,7 +37,9 @@
 #include <string>
 
 enum {
-  NS_USED = 1 << 0, // was the namespace used
+  NS_REQUIRED = 1 << 0, // required for all srcML, and must be on the root
+  NS_ROOT     = 1 << 1, // belongs on root tag only
+  NS_USED     = 1 << 2, // was the namespace used
 };
 
 struct Namespace {
@@ -112,11 +114,11 @@ const char* const SRCML_DIFF_NS_DEFAULT_PREFIX = "diff";
 
 /** default namespaces */
 const Namespaces default_namespaces = {
-        { SRCML_SRC_NS_DEFAULT_PREFIX,          SRCML_SRC_NS_URI,           0 },
-        { SRCML_CPP_NS_DEFAULT_PREFIX,          SRCML_CPP_NS_URI,           0 },
-        { SRCML_ERROR_NS_DEFAULT_PREFIX,          SRCML_ERROR_NS_URI,           0 },
-        { SRCML_POSITION_NS_DEFAULT_PREFIX, SRCML_POSITION_NS_URI,  0 },
-        { SRCML_OPENMP_NS_DEFAULT_PREFIX,   SRCML_OPENMP_NS_URI,    0 },
+    { SRCML_SRC_NS_DEFAULT_PREFIX,      SRCML_SRC_NS_URI,      NS_ROOT | NS_REQUIRED | NS_USED },
+    { SRCML_CPP_NS_DEFAULT_PREFIX,      SRCML_CPP_NS_URI,      0 },
+    { SRCML_ERROR_NS_DEFAULT_PREFIX,    SRCML_ERROR_NS_URI,    0 },
+    { SRCML_POSITION_NS_DEFAULT_PREFIX, SRCML_POSITION_NS_URI, NS_ROOT },
+    { SRCML_OPENMP_NS_DEFAULT_PREFIX,   SRCML_OPENMP_NS_URI,   0 },
 };
 
 // srcML standard attributes
@@ -156,9 +158,9 @@ const char* const UNIT_ATTRIBUTE_PATH = "item";
 const std::array<std::string, 2> SRCML_URI_PREFIX = {{ "http://www.srcML.org/", "http://www.sdml.info/" }};
 
 // check if uri is same as srcML uri regardless of uri prefix
-bool is_srcml_namespace(const std::string & uri, const std::string & srcml_uri);
+bool is_srcml_namespace(const std::string& uri, const std::string& srcml_uri);
 
 // normalize the uri prefix to http://www.srcML.org/
-std::string & srcml_uri_normalize(std::string & uri);
+std::string& srcml_uri_normalize(std::string & uri);
 
 #endif

@@ -104,7 +104,7 @@ void srcMLOutput::initNamespaces(const Namespaces& otherns) {
         if (it != view.end()) {
 
             // update the default prefix
-            view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.flags = ns.flags; });
+            view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.flags |= ns.flags; });
 
         } else {
 
@@ -262,55 +262,49 @@ void srcMLOutput::outputProcessingInstruction() {
  */
 void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth) {
 
-    // figure out which namespaces are needed
-    char const * const ns[] = {
+    // based on options, turn on specific namespaces (i.e., mark as used)
+    auto& view = namespaces.get<nstags::uri>();
 
-        // main srcML namespace declaration always used
-        (depth == 0) ? SRCML_SRC_NS_URI : 0,
+    if (isoption(options, SRCML_OPTION_CPP))
+        view.find(SRCML_CPP_NS_URI)->flags |= NS_USED;
 
-        // main cpp namespace declaration
-        isoption(options, SRCML_OPTION_CPP) && (isoption(options, SRCML_OPTION_ARCHIVE) == !(depth == 0)) ? SRCML_CPP_NS_URI : 0,
+    if (isoption(options, SRCML_OPTION_POSITION))
+        view.find(SRCML_POSITION_NS_URI)->flags |= NS_USED;
 
-        // optional debugging xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_DEBUG)    ? SRCML_ERROR_NS_URI : 0,
+    if (isoption(options, SRCML_OPTION_DEBUG))
+        view.find(SRCML_ERROR_NS_URI)->flags |= NS_USED;
 
-        // optional position xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_POSITION_NS_URI : 0,
+    // output namespaces for outer unit or non-archive unit
+    if (depth == 0 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
+        for (const auto& ns : namespaces) {
 
-        // optional position xml namespace
-        (namespaces[OMP].flags & NS_USED) && (isoption(options, SRCML_OPTION_ARCHIVE) == !(depth == 0)) ? SRCML_OPENMP_NS_URI : 0,
-    };
-
-    // output the namespaces
-    // record length of namespaces list
-    for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
-
-        if (i == 0 && depth > 0)
-            continue;
-
-        if (!ns[i])
-            continue;
-
-        std::string prefix = "xmlns";
-        if (namespaces[i].prefix[0] != '\0') {
-            prefix += ':';
-            prefix += namespaces[i].prefix;
-        }
-
-        xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
-    }
-
-    if(depth == 0) {
-
-        for(std::vector<std::string>::size_type pos =  OMP + 1; pos < namespaces.size(); ++pos) {
+            if (!(ns.flags & NS_ROOT) || !(ns.flags & NS_USED))
+                continue;
 
             std::string prefix = "xmlns";
-            if (namespaces[pos].prefix[SRC] != '\0') {
+            if (!ns.prefix.empty()) {
                 prefix += ':';
-                prefix += namespaces[pos].prefix;
-         }
+                prefix += ns.prefix;
+            }
 
-            xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST namespaces[pos].uri.c_str());
+            xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns.uri.c_str());
+        }
+    }
+
+    // output namespaces for inner unit or non-archive unit
+    if (depth == 1 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
+        for (const auto& ns : namespaces) {
+
+            if ((ns.flags & NS_ROOT) || !(ns.flags & NS_USED))
+                continue;
+
+            std::string prefix = "xmlns";
+            if (!ns.prefix.empty()) {
+                prefix += ':';
+                prefix += ns.prefix;
+            }
+
+            xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns.uri.c_str());
         }
     }
 }
