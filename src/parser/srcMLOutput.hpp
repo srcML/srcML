@@ -196,12 +196,6 @@ public:
     /** user defined macro list */
     std::vector<std::string> user_macro_list;
 
-    /**
-        Info needed to rewrite srcML so that only the actually-used
-        namespaces are listed. This is done external to the translator
-        since the string produced here is copied to a std::string in libsrcml
-    */
-
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth);
 
     void setMacroList(std::vector<std::string> & list);
