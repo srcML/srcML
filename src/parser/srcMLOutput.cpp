@@ -488,23 +488,17 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
 	static std::string startAttribute = " " + position_prefix + (!position_prefix.empty() ? ":" : "") + "start=\"";
 	static std::string endAttribute   = " " + position_prefix + (!position_prefix.empty() ? ":" : "") + "end=\"";
 
-    const char* s = 0;
-
 	xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.c_str());
-    s = positoa(token->getLine());
-	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
 	xmlOutputBufferWrite(output_buffer, 1, ":");
-    s = positoa(token->getColumn());
-	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
 	xmlOutputBufferWrite(output_buffer, 1, "\"");
 
 	srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
 	xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
-    s = positoa(stoken->endline);
-	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWriteString(output_buffer, positoa(stoken->endline));
 	xmlOutputBufferWrite(output_buffer, 1, ":");
-    s = positoa(stoken->endcolumn);
-	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
+	xmlOutputBufferWriteString(output_buffer, positoa(stoken->endcolumn));
 	xmlOutputBufferWrite(output_buffer, 1, "\"");
 }
 
