@@ -176,8 +176,6 @@ public:
     /* namespaces declared and used */
     Namespaces namespaces;
 
-    std::string soptions;
-
     /** an array of name-value attribute pairs */
     const std::vector<std::string> unit_attributes;
 

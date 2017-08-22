@@ -91,23 +91,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
-    // prepare for storing options in output
-    // @todo how much of this do we test, or need?
-    std::array<std::pair<int, const char*>, 4> sep = {{
-        { SRCML_OPTION_CPP_TEXT_ELSE,  "CPP_TEXT_ELSE" },
-        { SRCML_OPTION_CPP_MARKUP_IF0, "CPP_MARKUP_IF0" },
-        { SRCML_OPTION_LINE,           "LINE" },
-        { SRCML_OPTION_CPPIF_CHECK,    "CPPIF_CHECK" },
-    }};
 
-    std::string SEP;
-    for (const auto& pair : sep) {
-        if (isoption(options, pair.first)) {
-            if (SEP.empty() && soptions != "")
-                SEP = ",";
-            soptions += SEP + pair.second;
-        }
-    }
 }
 
 /**
@@ -346,13 +330,30 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         outputNamespaces(xout, options, depth);
     }
 
-    // setting up for tabs if used
+    // setup for tabs if used
     std::string tabattribute;
     if (isoption(options, SRCML_OPTION_POSITION)) {
         tabattribute = namespaces[POS].getPrefix();
         if (!tabattribute.empty())
             tabattribute += ":";
         tabattribute += "tabs";
+    }
+
+    // setup for storing options in output
+    // @todo how much of this do we test, or need?
+    std::array<std::pair<int, const char*>, 4> sep = {{
+        { SRCML_OPTION_CPP_TEXT_ELSE,  "CPP_TEXT_ELSE" },
+        { SRCML_OPTION_CPP_MARKUP_IF0, "CPP_MARKUP_IF0" },
+        { SRCML_OPTION_LINE,           "LINE" },
+        { SRCML_OPTION_CPPIF_CHECK,    "CPPIF_CHECK" },
+    }};
+    std::string soptions;
+    for (const auto& pair : sep) {
+        if (isoption(options, pair.first)) {
+            if (!soptions.empty())
+                soptions += ",";
+            soptions += pair.second;
+        }
     }
 
     // list of attributes
