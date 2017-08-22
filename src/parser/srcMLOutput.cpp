@@ -321,7 +321,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             bool output_macrolist) {
 
     // start of main tag
-    xmlTextWriterStartElementNS(xout, BAD_CAST namespaces[SRC].getPrefix().c_str(), BAD_CAST "unit", 0);
+    std::string unitprefix = namespaces[SRC].getPrefix();
+    xmlTextWriterStartElementNS(xout, BAD_CAST (!unitprefix.empty() ? unitprefix.c_str() : 0), BAD_CAST "unit", 0);
     ++openelementcount;
 
     // output namespaces for root and nested units
@@ -503,6 +504,9 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 	static bool isposition = isoption(options, SRCML_OPTION_POSITION);
 
     if (isstart(token) || isempty(token)) {
+
+        if (prefix[0] == '\0')
+            prefix = 0;
 
         xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST name, 0);
         ++openelementcount;
