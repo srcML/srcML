@@ -501,6 +501,9 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2) {
 
+    if (name[0] == 0)
+        return;
+
 	static bool isposition = isoption(options, SRCML_OPTION_POSITION);
 
     if (isstart(token) || isempty(token)) {
