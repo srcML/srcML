@@ -114,7 +114,15 @@ int main(int argc, char * argv[]) {
     // determine if stdin is srcML or src
     if (srcml_request.stdindex)
         set_state_stdin(srcml_request);
-
+ 
+    /*
+        Setup the internal pipeline of possible steps:
+        * creating srcml from src files and input srcml files
+        * transforming srcml to srcml
+        * displaying metadata about a srcml file
+        * creating src from srcml
+        * compressing output (compressing input performed on an individual input source)
+    */
     // steps in the internal pipeline
     processing_steps_t pipeline;
 
