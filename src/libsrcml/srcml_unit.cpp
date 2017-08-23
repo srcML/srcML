@@ -810,14 +810,9 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     delete unit->unit_translator;
     unit->unit_translator = 0;
 
-    // appears to be a problem with extra newlines
-    size_t length = unit->output_buffer->use;
-    while(length > 0 && unit->output_buffer->content[length - 1] == '\n')
-        --length;
-
     // store the output in a buffer
     // @todo check into xmlBufferDetach()
-    unit->unit = std::string((const char *)unit->output_buffer->content, length);
+    unit->unit = std::string((const char *)unit->output_buffer->content, unit->output_buffer->use);
 
     xmlBufferFree(unit->output_buffer);
 
