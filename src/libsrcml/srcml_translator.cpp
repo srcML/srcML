@@ -303,7 +303,8 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
             false);
 
     // write out the contents, excluding the start and end unit tags
-    xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (xml + unit->content_begin), unit->content_end - unit->content_begin - 1);
+    if ((unit->content_end - unit->content_begin - 1) > 0)
+        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (xml + unit->content_begin), unit->content_end - unit->content_begin - 1);
 
     // end the unit 
     xmlTextWriterEndElement(out.getWriter());
