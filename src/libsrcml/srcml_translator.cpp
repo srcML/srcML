@@ -306,23 +306,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
     if (is_cpp)
         options |= SRCML_OPTION_CPP;
 
-
     std::string language = Language(unit->derived_language).getLanguageString();
-    if (language == "") {
-
-        /** extract language */ 
-        const char* lang = "language";    
-        const char* language_start_name = std::search(xml, end_start_unit, lang, lang + strlen(lang));    
-
-        char* language_start_value = 0;   
-        char* language_end_value = 0;   
-        if (language_start_name) {    
-        
-            language_start_value = (char *)strchr(language_start_name, '"');    
-            language_end_value = (char *)strchr(language_start_value + 1, '"');   
-            language = std::string(language_start_value + 1, language_end_value - language_start_value - 1);
-        } 
-    }
 
     bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
