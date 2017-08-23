@@ -37,9 +37,11 @@
 #include <string>
 
 enum {
-  NS_REQUIRED = 1 << 0, // required for all srcML, and must be on the root
-  NS_ROOT     = 1 << 1, // belongs on root tag only
-  NS_USED     = 1 << 2, // was the namespace used
+  NS_REQUIRED   = 1 << 0, // required for all srcML, and must be on the root
+  NS_ROOT       = 1 << 1, // belongs on root tag only
+  NS_USED       = 1 << 2, // was the namespace used
+  NS_REGISTERED = 1 << 3, // registered by the user
+  NS_STANDARD   = 1 << 4, // standard uri for srcML
 };
 
 struct Namespace {
@@ -115,11 +117,15 @@ const char* const SRCML_DIFF_NS_DEFAULT_PREFIX = "diff";
 
 /** default namespaces */
 const Namespaces default_namespaces = {
-    { SRCML_SRC_NS_DEFAULT_PREFIX,      SRCML_SRC_NS_URI,      NS_REQUIRED },
-    { SRCML_CPP_NS_DEFAULT_PREFIX,      SRCML_CPP_NS_URI,      0 },
-    { SRCML_ERROR_NS_DEFAULT_PREFIX,    SRCML_ERROR_NS_URI,    NS_ROOT },
-    { SRCML_POSITION_NS_DEFAULT_PREFIX, SRCML_POSITION_NS_URI, NS_ROOT },
-    { SRCML_OPENMP_NS_DEFAULT_PREFIX,   SRCML_OPENMP_NS_URI,   0 },
+    { SRCML_SRC_NS_DEFAULT_PREFIX,      SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED },
+    { SRCML_CPP_NS_DEFAULT_PREFIX,      SRCML_CPP_NS_URI,      NS_STANDARD },
+    { SRCML_ERROR_NS_DEFAULT_PREFIX,    SRCML_ERROR_NS_URI,    NS_STANDARD | NS_ROOT },
+    { SRCML_POSITION_NS_DEFAULT_PREFIX, SRCML_POSITION_NS_URI, NS_STANDARD | NS_ROOT },
+    { SRCML_OPENMP_NS_DEFAULT_PREFIX,   SRCML_OPENMP_NS_URI,   NS_STANDARD },
+};
+
+const Namespaces starting_namespaces = {
+    { SRCML_SRC_NS_DEFAULT_PREFIX,      SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED },
 };
 
 // srcML standard attributes

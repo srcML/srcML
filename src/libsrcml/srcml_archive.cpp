@@ -79,7 +79,7 @@ srcml_archive* srcml_archive_create() {
     archive->reader = 0;
     archive->input = 0;
 
-    archive->namespaces = default_namespaces;
+    archive->namespaces = starting_namespaces;
 
     archive->registered_languages.register_standard_file_extensions();
 
@@ -454,7 +454,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
         // @todo could easily make these on the root by setting the flags to NS_ROOT
         view.modify(it, [prefix](Namespace& ns) { ns.prefix = prefix; });
     } else {
-        archive->namespaces.push_back({ .prefix = prefix, .uri = uri, .flags = NS_REQUIRED });
+        archive->namespaces.push_back({ .prefix = prefix, .uri = uri, .flags = NS_REQUIRED | NS_REGISTERED });
     }
 
     // namespaces for options enable the options automatically
