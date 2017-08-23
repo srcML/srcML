@@ -281,34 +281,18 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
 
     prepareOutput();
 
+    // space between the previous unit and this one
     if ((options & SRCML_OPTION_ARCHIVE) > 0) {
         out.outputUnitSeparator();
     }
-
-    OPTION_TYPE save_options = options;
-
-    // is there a cpp namespace? 
-    // @todo Get this from set of used namespaces from the unit
-    bool is_cpp = false;
-    for (auto& prefix : SRCML_URI_PREFIX) {
-        std::string cpp_uri = prefix + "srcML/cpp";
-        is_cpp = std::search(xml, xml + unit->content_begin, cpp_uri.begin(), cpp_uri.end()) != xml + unit->content_begin;
-        if (is_cpp)
-            break;
-    }
-    if (is_cpp)
-        options |= SRCML_OPTION_CPP;
-
-    std::string language = Language(unit->derived_language).getLanguageString();
-
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
     // if the unit has namespaces, then use those
     if (unit->namespaces)
         out.initNamespaces(*unit->namespaces);
 
-    out.startUnit(language.c_str(),
-            is_archive && unit->revision ? unit->revision->c_str() : revision,
+    // create a new unit with all new info (hash value, namespaces actually used, etc.)
+    out.startUnit(Language(unit->derived_language).getLanguageString(),
+            (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->c_str() : revision,
             optional_to_c_str(unit->url),
             optional_to_c_str(unit->filename),
             optional_to_c_str(unit->version),
@@ -318,10 +302,10 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
             unit->attributes,
             false);
 
-    options = save_options;
-
+    // write out the contents, excluding the start and end unit tags
     xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (xml + unit->content_begin), unit->content_end - unit->content_begin - 1);
 
+    // end the unit 
     xmlTextWriterEndElement(out.getWriter());
 
     return true;
