@@ -420,8 +420,16 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
     if (status != SRCML_STATUS_OK)
         return status;
 
+    // record start of content (after the unit start tag)
+    xmlTextWriterFlush(unit->unit_translator->output_textwriter());
+    unit->content_begin = unit->unit_translator->output_buffer()->written + 1;
+
     // parse the input
     unit->unit_translator->translate(input);
+
+    // record end of content (before the unit end tag)
+    xmlTextWriterFlush(unit->unit_translator->output_textwriter());
+    unit->content_end = unit->unit_translator->output_buffer()->written + 1;
 
     // namespaces were updated during translation, may now include 
     // namespaces that were optional

@@ -285,13 +285,6 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
         out.outputUnitSeparator();
     }
 
-    // find out where the end of the unit start tag is so
-    // we can replace it on output with updated namespaces, etc.
-    // @todo record this in the unit
-    const char* end_start_unit = (char *)strchr(xml, '>');
-    if (!end_start_unit)
-        return false;
-
     OPTION_TYPE save_options = options;
 
     // is there a cpp namespace? 
@@ -299,7 +292,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
     bool is_cpp = false;
     for (auto& prefix : SRCML_URI_PREFIX) {
         std::string cpp_uri = prefix + "srcML/cpp";
-        is_cpp = std::search(xml, end_start_unit, cpp_uri.begin(), cpp_uri.end()) != end_start_unit;
+        is_cpp = std::search(xml, xml + unit->content_begin, cpp_uri.begin(), cpp_uri.end()) != xml + unit->content_begin;
         if (is_cpp)
             break;
     }
@@ -327,16 +320,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit, const char* xml) {
 
     options = save_options;
 
-    size_t size = strlen(end_start_unit);
-    if (size > 1) {
-
-        // find the start of the end tag
-        // also corrects any data beyond unit end tag
-        while (end_start_unit[--size] != '<')
-            ;
-
-        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST end_start_unit + 1, (int)size - 1);
-    }
+    xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (xml + unit->content_begin), unit->content_end - unit->content_begin - 1);
 
     xmlTextWriterEndElement(out.getWriter());
 

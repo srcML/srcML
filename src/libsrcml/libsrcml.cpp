@@ -80,7 +80,7 @@ static
 #endif
 srcml_unit global_unit = { &global_archive, boost::optional<std::string>(), std::string(SRCML_VERSION_STRING), boost::optional<std::string>(),
                            boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
-                           boost::optional<std::string>(), std::vector<std::string>(), 0, SRCML_LANGUAGE_NONE, 0, 0, boost::optional<Namespaces>(), 0, boost::optional<std::string>(), boost::any() };
+                           boost::optional<std::string>(), std::vector<std::string>(), 0, SRCML_LANGUAGE_NONE, 0, 0, boost::optional<Namespaces>(), 0, boost::optional<std::string>(), 0, 0, boost::any() };
 
 /**
  * @var register_languages
