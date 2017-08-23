@@ -96,8 +96,7 @@ public:
 
     void translate(UTF8CharBuffer* parser_input);
 
-    bool add_unit(const srcml_unit* unit, const char* xml);
-    bool add_unit_content(const srcml_unit* unit, const char* xml, int size);
+    bool add_unit(const srcml_unit* unit);
     bool add_unit_raw(const char* xml, int size);
     bool add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc);
     bool add_start_unit(const srcml_unit* unit);

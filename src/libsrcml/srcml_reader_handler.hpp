@@ -631,6 +631,7 @@ public :
 
             }
 
+            unit->content_begin = unit->unit->size() + 1;
         }
 
         // number of newlines reset
@@ -808,6 +809,8 @@ public :
 
             if(collect_srcml) {
 
+                unit->content_end = unit->unit->size();
+                
                 write_endTag(localname, prefix, is_empty);
 
             }

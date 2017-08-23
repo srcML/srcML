@@ -261,6 +261,7 @@ struct srcml_unit {
     /** the type of eol to output with source code */
     size_t eol;
 
+    /** language decided for the unit */
     int derived_language;
 
     /** output buffer to hold streaming creation of unit */
