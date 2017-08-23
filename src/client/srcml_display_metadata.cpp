@@ -147,13 +147,13 @@ namespace {
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {
 
-    int display_commands =  SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
-                            SRCML_COMMAND_DISPLAY_SRCML_URL |
-                            SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
-                            SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
-                            SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
-                            SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP |
-                            SRCML_COMMAND_DISPLAY_SRCML_HASH;
+    static const int display_commands =  SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE |
+                                         SRCML_COMMAND_DISPLAY_SRCML_URL |
+                                         SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
+                                         SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
+                                         SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
+                                         SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP |
+                                         SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
     for (const auto& input : src_input) {
         // create the output srcml archive
