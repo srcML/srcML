@@ -404,7 +404,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     if (output_macrolist)
         outputMacroList();
 
-    ++depth;
+    if (depth == 0)
+        depth = 1;
 }
 
 /**
@@ -501,6 +502,7 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2) {
 
+    // no name, no token
     if (name[0] == 0)
         return;
 
@@ -508,6 +510,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 
     if (isstart(token) || isempty(token)) {
 
+        // empty prefixes have to be null for output
         if (prefix[0] == '\0')
             prefix = 0;
 
