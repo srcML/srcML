@@ -632,6 +632,9 @@ public :
             }
 
             unit->content_begin = unit->unit->size() + 1;
+            fprintf(stderr, "DEBUG:  %s %s %d unit->content_begin: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  unit->content_begin);
+
+
         }
 
         // number of newlines reset

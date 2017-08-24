@@ -224,6 +224,10 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
     timestamp.swap(handler.unit->timestamp);
     attributes.swap(handler.unit->attributes);
 
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+fprintf(stderr, "DEBUG:  %s %s %d handler.unit->content_begin: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  handler.unit->content_begin);
+
+
     return 1;
 
 }
@@ -238,7 +242,7 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
  *
  * @returns 1 on success and 0 if done
  */
-int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
+int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit, size_t& content_begin, size_t& content_end) {
 
     if(thread == nullptr) return 0;
 
@@ -249,6 +253,9 @@ int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
     handler.resume_and_wait();
     handler.collect_srcml = false;
     if(handler.is_done) return 0;
+
+    content_begin = handler.unit->content_begin;
+    content_end = handler.unit->content_end;
 
     unit.swap(handler.unit->unit);
 

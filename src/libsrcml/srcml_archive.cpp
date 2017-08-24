@@ -1242,8 +1242,10 @@ int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
 
     // if we haven't read a unit yet, go ahead and try
     boost::optional<std::string> read_unit;
+    size_t content_begin = 0;
+    size_t content_end = 0;
     if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_srcml(read_unit);
+        unit->archive->reader->read_srcml(read_unit, content_begin, content_end);
     if (!unit->unit && !read_unit)
         return SRCML_STATUS_UNINITIALIZED_UNIT;
 
@@ -1310,7 +1312,7 @@ int srcml_unit_read_body(srcml_unit* unit) {
         return 0;
 
     if (!unit->unit)
-        unit->archive->reader->read_srcml(unit->unit);
+        unit->archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
 
     // @todo Isn't this backwards?
     return !unit->unit;
@@ -1338,7 +1340,7 @@ srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
     int not_done = 0;
     if (!unit->read_header)
         not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
-    archive->reader->read_srcml(unit->unit);
+    archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
 
     if (!not_done || !unit->unit) {
         srcml_unit_free(unit);
@@ -1371,7 +1373,7 @@ srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
     int not_done = 0;
     if (!unit->read_header)
         not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
-    archive->reader->read_srcml(unit->unit);
+    archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
 
     if (!not_done || !unit->unit) {
         srcml_unit_free(unit);

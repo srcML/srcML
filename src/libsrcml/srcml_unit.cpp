@@ -309,7 +309,7 @@ const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit) {
         return 0;
 
     if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_srcml(unit->unit);
+        unit->archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
 
     return optional_to_c_str(unit->unit);
 }
@@ -336,7 +336,7 @@ int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encod
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_srcml(unit->unit);
+        unit->archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
 
     if (!unit->unit)
         return SRCML_STATUS_ERROR;
