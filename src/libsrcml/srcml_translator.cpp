@@ -294,7 +294,13 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     std::string language = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
 
-    // create a new unit with all new info (hash value, namespaces actually used, etc.)
+    // @todo have to set this up here, not sure why
+    if (language == "C" || language == "C++" || language == "C#" || language == "Objective-C")
+        options |= SRCML_OPTION_CPP;
+    else
+        options &= ~SRCML_OPTION_CPP;
+
+    // create a new unit start tag with all new info (hash value, namespaces actually used, etc.)
     out.initNamespaces(mergedns);
     out.startUnit(language.c_str(),
             (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->c_str() : revision,
@@ -308,8 +314,10 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
             false);
 
     // write out the contents, excluding the start and end unit tags
-    if ((unit->content_end - unit->content_begin - 1) > 0)
-        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->unit->c_str() + unit->content_begin), unit->content_end - unit->content_begin - 1);
+    int size = unit->content_end - unit->content_begin - 1;
+    if (size > 0) {
+        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->unit->c_str() + unit->content_begin), size);
+    }
 
     // end the unit 
     xmlTextWriterEndElement(out.getWriter());
@@ -331,6 +339,8 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
  */
 bool srcml_translator::add_unit_raw(const char* xml, int size) {
 
+    // @todo should not let size be 0
+
     if (is_outputting_unit)
         return false;
 
@@ -340,7 +350,7 @@ bool srcml_translator::add_unit_raw(const char* xml, int size) {
         out.outputUnitSeparator();
     }
 
-    if (size)
+    if (size > 0)
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
 
     return true;

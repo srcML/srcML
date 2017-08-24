@@ -810,7 +810,7 @@ public :
 
             if(collect_srcml) {
 
-                unit->content_end = unit->unit->size();
+                unit->content_end = unit->unit->size() + 1;
                 
                 write_endTag(localname, prefix, is_empty);
 
