@@ -224,10 +224,6 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
     timestamp.swap(handler.unit->timestamp);
     attributes.swap(handler.unit->attributes);
 
-fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-fprintf(stderr, "DEBUG:  %s %s %d handler.unit->content_begin: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  handler.unit->content_begin);
-
-
     return 1;
 
 }
