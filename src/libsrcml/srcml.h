@@ -578,7 +578,7 @@ LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archi
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_archive_write_unit(struct srcml_archive* archive, const struct srcml_unit* unit);
+LIBSRCML_DECL int srcml_archive_write_unit(struct srcml_archive* archive, struct srcml_unit* unit);
 
 /** Close a srcml_archive opened using srcml_archive_read_open_*() or srcml_archive_write_open_*().
  * The archive can be reopened.
