@@ -1241,22 +1241,15 @@ int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
         return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     // if we haven't read a unit yet, go ahead and try
-    boost::optional<std::string> read_unit;
-    size_t content_begin = 0;
-    size_t content_end = 0;
     if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_srcml(read_unit, content_begin, content_end);
-    if (!unit->unit && !read_unit)
+        unit->archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
+    if (!unit->unit)
         return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     if (archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    if (read_unit)
-        // @todo change from int to size_t
-        archive->translator->add_unit_raw(read_unit->c_str(), (int) read_unit->size());
-    else
-        archive->translator->add_unit(unit);
+    archive->translator->add_unit(unit);
 
     return SRCML_STATUS_OK;
 }

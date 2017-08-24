@@ -290,8 +290,10 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
     if (unit->namespaces)
         out.initNamespaces(*unit->namespaces);
 
+    std::string language = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
+
     // create a new unit with all new info (hash value, namespaces actually used, etc.)
-    out.startUnit(Language(unit->derived_language).getLanguageString(),
+    out.startUnit(language.c_str(),
             (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->c_str() : revision,
             optional_to_c_str(unit->url),
             optional_to_c_str(unit->filename),
