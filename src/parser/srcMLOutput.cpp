@@ -274,26 +274,33 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     if (isoption(options, SRCML_OPTION_DEBUG))
         view.find(SRCML_ERROR_NS_URI)->flags |= NS_USED;
 
-    // output namespaces for outer unit or non-archive unit
+    // output standard namespaces for outer unit or non-archive unit
     if (depth == 0 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
         for (const auto& ns : namespaces) {
 
             // must be required, or on the root and used
-            if (!(ns.flags & NS_REQUIRED) && (!(ns.flags & NS_ROOT) || !(ns.flags & NS_USED)))
-                continue;
-
-            srcMLTextWriterWriteNamespace(xout, ns);
+            if ((ns.flags & NS_STANDARD) && ((ns.flags & NS_REQUIRED) || ((ns.flags & NS_ROOT) && (ns.flags & NS_USED))))
+                srcMLTextWriterWriteNamespace(xout, ns);
         }
     }
 
-    // output namespaces for inner unit or non-archive unit
+    // output standard namespaces for inner unit or non-archive unit
     if (depth == 1 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
         for (const auto& ns : namespaces) {
 
-            if ((ns.flags & NS_REQUIRED) || (ns.flags & NS_ROOT) || !(ns.flags & NS_USED))
-                continue;
+            // must be required, must not be on the root, and must be used
+            if ((ns.flags & NS_STANDARD) && !(ns.flags & NS_ROOT) && !(ns.flags & NS_REQUIRED) && (ns.flags & NS_USED))
+                srcMLTextWriterWriteNamespace(xout, ns);
+        }
+    }
 
-            srcMLTextWriterWriteNamespace(xout, ns);
+    // output registered namespaces for outer unit or non-archive unit
+    if (depth == 0 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
+        for (const auto& ns : namespaces) {
+
+            // must be required, or on the root and used
+            if (ns.flags & NS_REGISTERED)
+                srcMLTextWriterWriteNamespace(xout, ns);
         }
     }
 }

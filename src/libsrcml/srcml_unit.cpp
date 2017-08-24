@@ -399,6 +399,9 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
 
     OPTION_TYPE translation_options = unit->archive->options;
 
+    if (*unit->language == "C++" || *unit->language == "C" || *unit->language == "Objective-C" || *unit->language == "C#")
+        unit->archive->options |= SRCML_OPTION_CPP;
+
     const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
     bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
 
