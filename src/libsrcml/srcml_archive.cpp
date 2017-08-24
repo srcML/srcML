@@ -1232,7 +1232,7 @@ int srcml_archive_read_open_io(srcml_archive* archive, void * context, ssize_t (
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_archive_write_unit(srcml_archive* archive, const struct srcml_unit* unit) {
+int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
 
     if (archive == NULL || unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
