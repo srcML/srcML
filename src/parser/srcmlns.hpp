@@ -66,7 +66,7 @@ typedef boost::multi_index::multi_index_container<Namespace,
       		boost::multi_index::tag<nstags::position>
     	>,
     	// view based on prefix
-	    boost::multi_index::hashed_unique<
+	    boost::multi_index::hashed_non_unique<
 	      boost::multi_index::tag<nstags::prefix>,
 	      boost::multi_index::member<Namespace, std::string, &Namespace::prefix>
 	    >,
