@@ -90,6 +90,8 @@ int srcml_input_srcml(ParseQueue& queue,
         // must cache the body of the unit before we read the next one
         srcml_unit_read_body(unit);
 
+//        srcml_unit_get_language(unit)
+
         unitFound = true;
         // form the parsing request
         ParseRequest* prequest = new ParseRequest;

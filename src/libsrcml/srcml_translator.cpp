@@ -193,6 +193,11 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
     }
     first = false;
 
+    const int lang = getLanguage();
+    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
+      lang & Language::LANGUAGE_OBJECTIVE_C)
+        options |= SRCML_OPTION_CPP;
+
     // output as inner unit
     if (isoption(options, SRCML_OPTION_ARCHIVE))
         out.setDepth(1);

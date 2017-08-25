@@ -250,6 +250,8 @@ int src_input_libarchive(ParseQueue& queue,
             }
 
             // LOC count
+            // @todo can't we get this from parsing?
+            // or at least only do for verbose?
             prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
             if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
                 ++prequest->loc;

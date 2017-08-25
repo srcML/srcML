@@ -286,7 +286,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
             }
 
             // must be user registered
-            if (ns.flags & NS_REGISTERED) {
+            if (ns.flags & NS_REGISTERED && !(ns.flags & NS_STANDARD)) {
                 srcMLTextWriterWriteNamespace(xout, ns);
                 continue;
             }
