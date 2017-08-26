@@ -111,10 +111,6 @@ int main(int argc, char * argv[]) {
     if (srcml_request.input_sources.size() == 1 && srcml_request.unit != 0)
         srcml_request.input_sources[0].unit = srcml_request.unit;
 
-    // if the output has an XML extension, set the -X command
-    if (srcml_request.output_filename.state == SRCML)
-        enable(SRCML_COMMAND_XML);
-
     // determine if stdin is srcML or src
     if (srcml_request.stdindex)
         set_state_stdin(srcml_request);
