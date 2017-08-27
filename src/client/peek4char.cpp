@@ -32,7 +32,7 @@ int peek4char(FILE* fp, unsigned char data[]) {
     int c;
     if ((c = getc(fp)) != EOF) {
 		#ifndef _MSC_BUILD
-		c(SIGALRM, SIG_DFL);
+		signal(SIGALRM, SIG_DFL);
 		#endif	
         data[0] = c;
         ++size;
