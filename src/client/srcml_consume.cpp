@@ -90,8 +90,9 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // language attribute, required if from memory
         // @todo if request has a language different from input, need to srcml->src->srcml 
-        if ((status = srcml_unit_set_language(unit, request->language.c_str())) != SRCML_STATUS_OK)
-            throw status;
+        if (srcml_unit_get_language(unit) == 0 || srcml_unit_get_language(unit)[0] == '\0')
+            if ((status = srcml_unit_set_language(unit, request->language.c_str())) != SRCML_STATUS_OK)
+                throw status;
 
         // (optional) filename attribute
         if (request->filename) {
@@ -117,11 +118,14 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // parse the buffer/file, timing as we go
         Timer parsetime;
-        
-        if (request->disk_filename)
+
+        if (request->disk_filename) {
             status = srcml_unit_parse_filename(unit, request->disk_filename->c_str());
-        else if (!request->unit)
+        }
+        else if (!request->unit) {
+
             status = srcml_unit_parse_memory(unit, &request->buffer.front(), request->buffer.size());
+        }
         if (status != SRCML_STATUS_OK) {
             request->status = status;
             throw status;
