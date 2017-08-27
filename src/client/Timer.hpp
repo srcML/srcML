@@ -23,6 +23,10 @@
 #ifndef TIMER_HPP
 #define TIMER_HPP
 
+#ifdef _MSC_BUILD
+#include <time.h>
+#endif
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <chrono>
@@ -39,7 +43,11 @@ public:
 
 	inline void start() {
 		real_world_time = std::chrono::high_resolution_clock::now();
-		cpu_time = std::clock();
+		#ifdef _MSC_BUILD
+			cpu_time = clock();
+		#else
+			cpu_time = std::clock();
+		#endif
 	}
 
 	// time in milliseconds
@@ -49,7 +57,11 @@ public:
 
 	// time in milliseconds
 	inline double cpu_time_elapsed() {
-		return  1000.0 * (std::clock() - cpu_time) / CLOCKS_PER_SEC;
+		#ifdef _MSC_BUILD
+			return  1000.0 * (clock() - cpu_time) / CLOCKS_PER_SEC;
+		#else
+			return  1000.0 * (std::clock() - cpu_time) / CLOCKS_PER_SEC;
+		#endif
 	}
 
 	inline bool is_expired() {
@@ -62,7 +74,11 @@ public:
 
 private:
 	std::chrono::time_point<std::chrono::high_resolution_clock> real_world_time;
-	std::clock_t cpu_time;
+	#ifdef _MSC_BUILD
+		clock_t cpu_time;
+	#else
+		std::clock_t cpu_time;
+	#endif
     unsigned int time_limit = 0; // in seconds
 };
 

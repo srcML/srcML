@@ -21,7 +21,9 @@
  */
 
 #include <peek4char.hpp>
+#ifndef _MSC_BUILD
 #include <unistd.h>
+#endif
 #include <csignal>
 #include <cstdlib>
 
@@ -29,7 +31,9 @@ int peek4char(FILE* fp, unsigned char data[]) {
     int size = 0;
     int c;
     if ((c = getc(fp)) != EOF) {
-        signal(SIGALRM, SIG_DFL);
+		#ifndef _MSC_BUILD
+		c(SIGALRM, SIG_DFL);
+		#endif	
         data[0] = c;
         ++size;
         if ((c = getc(fp)) != EOF) {
@@ -49,7 +53,8 @@ int peek4char(FILE* fp, unsigned char data[]) {
         }
         ungetc(data[0], fp);
     }
-    signal(SIGALRM, SIG_DFL);
-
+	#ifndef _MSC_BUILD
+	signal(SIGALRM, SIG_DFL);
+	#endif
     return size;
 }

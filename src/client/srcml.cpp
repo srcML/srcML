@@ -36,10 +36,13 @@
 #include <boost/version.hpp>
 #include <archive.h>
 #include <iostream>
-#include <unistd.h>
 #include <csignal>
 #include <cmath>
 #include <TraceLog.hpp>
+
+#ifndef _MSC_BUILD
+#include <unistd.h>
+#endif
 
 // decide if a step is needed
 namespace {
@@ -251,8 +254,10 @@ namespace {
 
         // setup a 5 second timeout for stdin from the terminal
         if (isatty(0)) {
-            alarm(5);
-            signal(SIGALRM, timeout);
+			#ifndef _MSC_BUILD
+			alarm(5);
+			signal(SIGALRM, timeout);
+			#endif
         }
 
         // determine if the input is srcML or src
