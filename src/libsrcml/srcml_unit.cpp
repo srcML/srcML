@@ -397,13 +397,11 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
 
     unit->derived_language = lang;
 
-    OPTION_TYPE translation_options = unit->archive->options;
-
     if (*unit->language == "C++" || *unit->language == "C" || *unit->language == "Objective-C" || *unit->language == "C#")
         unit->archive->options |= SRCML_OPTION_CPP;
 
     const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
-    bool output_hash = !unit->hash && translation_options & SRCML_OPTION_HASH;
+    bool output_hash = !unit->hash && unit->archive->options & SRCML_OPTION_HASH;
 
     UTF8CharBuffer* input = 0;
     try {
@@ -442,9 +440,6 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
     status = srcml_write_end_unit(unit);
     if (status != SRCML_STATUS_OK)
         return status;
-
-    // restore archive options back
-    unit->archive->options = translation_options;
 
     return status;
 }
