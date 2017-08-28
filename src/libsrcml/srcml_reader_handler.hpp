@@ -631,7 +631,7 @@ public :
 
             }
 
-            unit->content_begin = unit->unit->size() + 1;
+            unit->content_begin = (int) unit->unit->size() + 1;
 
         }
 
@@ -810,7 +810,7 @@ public :
 
             if(collect_srcml) {
 
-                unit->content_end = unit->unit->size() + 1;
+                unit->content_end = (int) unit->unit->size() + 1;
                 
                 write_endTag(localname, prefix, is_empty);
 

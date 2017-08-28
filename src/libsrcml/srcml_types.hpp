@@ -279,8 +279,9 @@ struct srcml_unit {
     boost::optional<std::string> unit;
 
     /** record the begin and end of the actual content */
-    size_t content_begin;
-    size_t content_end;
+    // int instead of size_t since used with libxml2
+    int content_begin;
+    int content_end;
 
     /** libxml2 callback wrapper context.  Only needed for IO functions */
     boost::any context;

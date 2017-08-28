@@ -238,7 +238,7 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & langu
  *
  * @returns 1 on success and 0 if done
  */
-int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit, size_t& content_begin, size_t& content_end) {
+int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit, int& content_begin, int& content_end) {
 
     if(thread == nullptr) return 0;
 
