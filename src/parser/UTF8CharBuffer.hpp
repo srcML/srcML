@@ -37,8 +37,10 @@
 #include <sha1utilities.hpp>
 
 #ifdef _MSC_BUILD
-#include <windows.h>
-#include <Wincrypt.h>
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#include <wincrypt.h>
+#include <Windows.h>
 #elif defined(__MACH__)
 #include <CommonCrypto/CommonDigest.h>
 

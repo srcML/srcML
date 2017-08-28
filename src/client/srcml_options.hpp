@@ -25,6 +25,8 @@
 
 class SRCMLOptions {
 public:
+	friend void enable(int option);
+
     static void set(int options) { 
 
     	opt = options; 
@@ -42,6 +44,11 @@ public:
 inline bool option(int option) {
 
 	return SRCMLOptions::get() & option;
+}
+
+inline void enable(int option) {
+
+	SRCMLOptions::opt &= option;
 }
 
 #endif

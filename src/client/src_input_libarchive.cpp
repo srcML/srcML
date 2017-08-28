@@ -21,7 +21,8 @@
  */
 
 #ifdef _MSC_BUILD
-#define ssize_t __int64
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
 #endif
 
 #include <src_input_libarchive.hpp>

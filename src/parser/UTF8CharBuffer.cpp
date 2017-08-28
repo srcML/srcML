@@ -376,7 +376,12 @@ ssize_t UTF8CharBuffer::readChars() {
         // raw input characters
         // after call to iconv(), linbuf will point to start of any 
         // incomplete multibyte sequences that were not cooked
-        char* linbuf = raw.data();
+        #ifndef _MSC_BUILD
+            char* linbuf = raw.data();
+        #else
+            // Current windows build required linbuf to be const
+            const char* linbuf = raw.data();
+        #endif
         inbytesleft = raw.size();
 
         // cooked (encoded in UTF-8) input characters
@@ -484,8 +489,8 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
 #ifdef _MSC_BUILD
         DWORD        SHA_DIGEST_LENGTH;
-        DWORD        hash_length_size = insizeof(DWORD);
-        CryptGetHashParam(crypt_hash, HP_HASHinSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
+        DWORD        hash_length_size = sizeof(DWORD);
+        CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
         CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
         CryptDestroyHash(crypt_hash);
         CryptReleaseContext(crypt_provider, 0);

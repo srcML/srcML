@@ -22,6 +22,13 @@
 
 #include <srcml_input_src.hpp>
 
+#if defined(WIN32) || defined(WIN64)
+#include <sys/stat.h>
+ // Copied from linux libc sys/stat.h:
+#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
+
 namespace {
     std::string cur_extension(const std::string& filename) {
 

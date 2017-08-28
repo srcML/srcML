@@ -42,9 +42,11 @@
 #define STDOUT_FILENO   1       /* standard output file descriptor */
 #define STDERR_FILENO   2       /* standard error file descriptor */
 #endif
-#ifdef _MSC_BUILD
-#define ssize_t long
-#endif
+
+//#ifdef _MSC_BUILD
+//#include <BaseTsd.h>
+//typedef SSIZE_T ssize_t;
+//#endif
 
 class srcml_input_src;
 
