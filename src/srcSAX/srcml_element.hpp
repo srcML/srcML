@@ -47,20 +47,12 @@
 struct srcml_element {
 
     /** Default constructor to Zero out srcml_element */
-    srcml_element() : context(0), localname(0), prefix(0), URI(0),
-                     nb_namespaces(0), namespaces(0),
-                     nb_attributes(0), nb_defaulted(0),
-                     attributes(0)
-    {}
+    srcml_element() {}
 
     /** Constructor to initialize using start element items */
-    srcml_element(srcsax_context * context, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                 int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar ** attributes)
-        : context(context), localname(0), prefix(0), URI(0),
-          nb_namespaces(0), namespaces(0),
-          nb_attributes(0), nb_defaulted(0),
-          attributes(0) {
+    srcml_element(srcsax_context * context, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                 int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                 const xmlChar** attributes) {
 
         // save all the info in case this is not a srcML archive
         this->localname = localname ? (xmlChar*) STRDUP((const char*) localname) : 0;
@@ -235,31 +227,31 @@ struct srcml_element {
     }
 
     /** parser context */
-    srcsax_context * context;
+    srcsax_context* context = nullptr;
 
     /** local name of an element*/
-    const xmlChar* localname;
+    const xmlChar* localname = nullptr;
 
     /** prefix of an element*/
-    const xmlChar* prefix;
+    const xmlChar* prefix = nullptr;
 
     /** URI of an element*/
-    const xmlChar* URI;
+    const xmlChar* URI = nullptr;
 
     /** number of namespaces on an element*/
-    int nb_namespaces;
+    int nb_namespaces = 0;
 
     /** namespaces on an element*/
-    const xmlChar** namespaces;
+    const xmlChar** namespaces = nullptr;
 
     /** number of attributes on an element*/
-    int nb_attributes;
+    int nb_attributes = 0;
 
     /** number of defaulted on an element*/
-    int nb_defaulted;
+    int nb_defaulted = 0;
 
     /** attributes of an element*/
-    const xmlChar** attributes;
+    const xmlChar** attributes = 0;
 
 };
 
