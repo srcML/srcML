@@ -65,10 +65,10 @@ private :
     boost::condition_variable cond;
 
     /** collected root language */
-    srcml_archive * archive;
+    srcml_archive* archive;
 
     /** collected unit language */
-    srcml_unit * unit;
+    srcml_unit* unit;
 
     /** output buffer for direct src write */
     xmlOutputBufferPtr output_buffer;
@@ -113,16 +113,16 @@ private :
      struct meta_tag {
 
         /** metatags localname */
-        const char * localname;
+        const char* localname;
 
         /** metatags prefix */
-        const char * prefix;
+        const char* prefix;
 
         /** metatags number of attributes */
         int num_attributes;
 
         /** meta tags attributes */
-        struct srcsax_attribute * attributes;
+        struct srcsax_attribute* attributes;
 
         /**
          * meta_tag
@@ -133,21 +133,19 @@ private :
          *
          * Construct meta_tag from SAX data.
          */
-        meta_tag(const char * localname, const char * prefix, int num_attributes, const struct srcsax_attribute * attributes) {
+        meta_tag(const char* localname, const char* prefix, int num_attributes, const struct srcsax_attribute * attributes) {
 
             this->localname = localname ? strdup(localname) : 0;
             this->prefix = prefix ? strdup(prefix) : 0;
             this->num_attributes = num_attributes;
             this->attributes = (struct srcsax_attribute *)calloc(num_attributes, sizeof(struct srcsax_attribute));
-            for(int pos = 0; pos < num_attributes; ++pos) {
+            for (int pos = 0; pos < num_attributes; ++pos) {
 
                 this->attributes[pos].localname = attributes[pos].localname ? strdup(attributes[pos].localname) : 0;
                 this->attributes[pos].prefix = attributes[pos].prefix ? strdup(attributes[pos].prefix) : 0;
                 this->attributes[pos].uri = attributes[pos].uri ? strdup(attributes[pos].uri) : 0;
                 this->attributes[pos].value = attributes[pos].value ? strdup(attributes[pos].value) : 0;
-
             }
-
         }
 
         /**
@@ -162,17 +160,14 @@ private :
             this->prefix = other.prefix ? strdup(other.prefix) : 0;
             this->num_attributes = other.num_attributes;
             this->attributes = (struct srcsax_attribute *)calloc(other.num_attributes, sizeof(struct srcsax_attribute));
-            for(int pos = 0; pos < other.num_attributes; ++pos) {
+            for (int pos = 0; pos < other.num_attributes; ++pos) {
 
                 this->attributes[pos].localname = other.attributes[pos].localname ? strdup(other.attributes[pos].localname) : 0;
                 this->attributes[pos].prefix = other.attributes[pos].prefix ? strdup(other.attributes[pos].prefix) : 0;
                 this->attributes[pos].uri = other.attributes[pos].uri ? strdup(other.attributes[pos].uri) : 0;
                 this->attributes[pos].value = other.attributes[pos].value ? strdup(other.attributes[pos].value) : 0;
-
             }
-
         }
-
 
         /**
          * operator=
@@ -183,10 +178,8 @@ private :
          */
         meta_tag & operator=(meta_tag other) {
 
-
             this->swap(other);
             return *this;
-
         }
 
         /**
@@ -201,7 +194,6 @@ private :
             std::swap(prefix, other.prefix);
             std::swap(num_attributes, other.num_attributes);
             std::swap(attributes, other.attributes);
-
         }
 
         /**
@@ -216,21 +208,17 @@ private :
 
             if(attributes) {
 
-                for(int pos = 0; pos < num_attributes; ++pos) {
+                for (int pos = 0; pos < num_attributes; ++pos) {
 
                     if(attributes[pos].localname) free((void *)attributes[pos].localname);
                     if(attributes[pos].prefix) free((void *)attributes[pos].prefix);
                     if(attributes[pos].uri) free((void *)attributes[pos].uri);
                     if(attributes[pos].value) free((void *)attributes[pos].value);
-
                 }
 
                 free(attributes), attributes = 0;
-
             }
-
         }
-
      };
 
     /** save meta tags to use when non-archive write unit */
@@ -257,7 +245,6 @@ private :
         return attribute.substr(pos + 1, std::string::npos);
 
     }
-
 
 public :
 
@@ -398,7 +385,7 @@ public :
      *
      * Overidden startRoot to handle collection of root attributes. Stop before continue
      */
-    virtual void startRoot(const char * localname, const char * prefix, const char * URI,
+    virtual void startRoot(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
                            const struct srcsax_attribute * /* attributes */) {
 
@@ -412,7 +399,7 @@ public :
         if(!is_archive) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
 
         // collect attributes
-        for(int pos = 0; pos < num_attributes; ++pos) {
+        for (int pos = 0; pos < num_attributes; ++pos) {
 
             std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
             std::string value;
@@ -473,7 +460,7 @@ public :
         }
 
         // collect namespaces
-        for(int pos = 0; pos < num_namespaces; ++pos) {
+        for (int pos = 0; pos < num_namespaces; ++pos) {
 
             std::string prefix = (const char*) handler->libxml2_namespaces[pos * 2] ? (const char*) handler->libxml2_namespaces[pos * 2] : "";
             std::string uri = (const char*) handler->libxml2_namespaces[pos * 2 + 1] ? (const char*) handler->libxml2_namespaces[pos * 2 + 1] : "";
@@ -486,7 +473,6 @@ public :
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
 
         }
-
 
 
 #ifdef SRCSAX_DEBUG
@@ -508,7 +494,7 @@ public :
      * Overidden startUnit to handle collection of Unit attributes and tag. Stop before continue
      * if collecting attributes.
      */
-    virtual void startUnit(const char * localname, const char * prefix, const char * URI,
+    virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
                            const struct srcsax_attribute * /* attributes */) {
 
@@ -552,7 +538,7 @@ public :
         is_empty = true;
 
         // collect attributes
-        for(int pos = 0; pos < num_attributes; ++pos) {
+        for (int pos = 0; pos < num_attributes; ++pos) {
 
             std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
             std::string value;
@@ -616,8 +602,7 @@ public :
 
                 }
 
-                for(std::vector<meta_tag>::size_type i = 0; i < meta_tags.size(); ++i) {
-
+                for (std::vector<meta_tag>::size_type i = 0; i < meta_tags.size(); ++i) {
 
                     try {
 
@@ -659,7 +644,7 @@ public :
      *
      * Overidden startElementNs to handle collection of srcML elements.
      */
-    virtual void startElement(const char * localname, const char * prefix, const char * URI,
+    virtual void startElement(const char* localname, const char* prefix, const char* URI,
                                 int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
                                 const struct srcsax_attribute * /* attributes */) {
 
@@ -704,7 +689,6 @@ public :
 
             charactersUnit(&value, 1);
 
-
         }
 
         if(is_empty && collect_srcml) *unit->unit += ">";
@@ -732,7 +716,7 @@ public :
      *
      * Overidden endRoot to indicate done with parsing and free any waiting process.
      */
-    virtual void endRoot(const char * localname, const char * prefix, const char * URI) {
+    virtual void endRoot(const char* localname, const char* prefix, const char* URI) {
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -782,7 +766,7 @@ public :
      *
      * Overidden endUnit to collect srcml and stop parsing.  Clear collect srcML after pause.
      */
-    virtual void endUnit(const char * localname, const char * prefix, const char * URI) {
+    virtual void endUnit(const char* localname, const char* prefix, const char* URI) {
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -803,7 +787,6 @@ public :
             get_controller().enable_cdataBlock(true);
 
         }
-
 
         //if(is_empty) *unit->unit += ">";
         if(collect_srcml || collect_src) {
@@ -845,7 +828,7 @@ public :
      *
      * Overidden endElementNs to collect srcML.
      */
-    virtual void endElement(const char * localname, const char * prefix, const char * URI) {
+    virtual void endElement(const char* localname, const char* prefix, const char* URI) {
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -892,7 +875,7 @@ public :
      *
      * Overidden charactersUnit to collect srcML.
      */
-    virtual void charactersUnit(const char * ch, int len) {
+    virtual void charactersUnit(const char* ch, int len) {
 
 #ifdef SRCSAX_DEBUG
         std::string chars;
@@ -923,7 +906,7 @@ public :
 
         } else {
 
-            for(int i = 0; i < len; ++i) {
+            for (int i = 0; i < len; ++i) {
                 char character = (char)ch[i];
 
                 if(character == '&')
@@ -959,7 +942,7 @@ public :
      * SAX handler function for a meta tags.
      * Overide for desired behaviour.
      */
-    virtual void metaTag(const char * localname, const char * prefix, const char * URI,
+    virtual void metaTag(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                            const struct srcsax_attribute * attributes) {
 
@@ -968,13 +951,12 @@ public :
             std::string token("");
             std::string type("");
 
-            for(int pos = 0; pos < num_attributes; ++pos) {
+            for (int pos = 0; pos < num_attributes; ++pos) {
 
                 if(strcmp(attributes[pos].localname, "token") == 0)
                     token = attributes[pos].value;
                 else if(strcmp(attributes[pos].localname, "type") == 0)
                     type = attributes[pos].value;
-
 
             }
 
@@ -1002,7 +984,7 @@ public :
      *
      * Overrident processingInstruction to collect srcML.
      */
-    virtual void processingInstruction(const char * target, const char * data) {
+    virtual void processingInstruction(const char* target, const char* data) {
         
         srcml_archive_set_processing_instruction(archive, (const char*)target, (const char *)data);
 
@@ -1024,7 +1006,7 @@ private :
      *
      * Write out the start tag to the unit string.
      */
-    void write_startTag(const char * localname, const char * prefix,
+    void write_startTag(const char* localname, const char* prefix,
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                            const struct srcsax_attribute * attributes) {
 
@@ -1035,7 +1017,7 @@ private :
         }
         *unit->unit += localname;
 
-        for(int pos = 0; pos < num_namespaces; ++pos) {
+        for (int pos = 0; pos < num_namespaces; ++pos) {
 
             if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace(namespaces[pos].uri, SRCML_CPP_NS_URI))
                 continue;
@@ -1057,7 +1039,7 @@ private :
 
         }
 
-        for(int pos = 0; pos < num_attributes; ++pos) {
+        for (int pos = 0; pos < num_attributes; ++pos) {
 
             std::string value = attribute_revision(attributes[pos].value);
             if(std::string(attributes[pos].value) != "" && value == "") continue;
@@ -1087,7 +1069,6 @@ private :
 #define ATTR_PREFIX(pos) (pos * 5 + 1)
 #define ATTR_URI(pos) (pos * 5 + 2)
 
-
    /**
      * write_startTag
      * @param localname the name of the element tag
@@ -1100,7 +1081,7 @@ private :
      *
      * Write out the start tag to the unit string.
      */
-    void write_startTag(const char * localname, const char * prefix,
+    void write_startTag(const char* localname, const char* prefix,
                            int num_namespaces, const xmlChar ** namespaces, int num_attributes,
                            const xmlChar ** attributes) {
 
@@ -1111,7 +1092,7 @@ private :
         }
         *unit->unit += localname;
 
-        for(int pos = 0; pos < num_namespaces; ++pos) {
+        for (int pos = 0; pos < num_namespaces; ++pos) {
 
             if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_CPP_NS_URI))
                 continue;
@@ -1133,7 +1114,7 @@ private :
 
         }
 
-        for(int pos = 0; pos < num_attributes; ++pos) {
+        for (int pos = 0; pos < num_attributes; ++pos) {
 
             std::string revision;
             revision.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
@@ -1165,7 +1146,7 @@ private :
      *
      * Write out the end tag to the unit string.
      */
-    void write_endTag(const char * localname, const char * prefix, bool is_empty) {
+    void write_endTag(const char* localname, const char* prefix, bool is_empty) {
 
         if(is_empty) {
 
@@ -1187,9 +1168,7 @@ private :
 
     }
 
-
 };
-
 
 
 #endif
