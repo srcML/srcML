@@ -35,8 +35,7 @@
 int main() {
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(archive->type, SRCML_ARCHIVE_INVALID);
         dassert(archive->encoding, boost::none);
         dassert(archive->src_encoding, boost::none);
@@ -46,15 +45,15 @@ int main() {
         dassert(archive->attributes.size(), 0);
 
         dassert(archive->options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL 
-                                   | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY | SRCML_OPTION_HASH));
+                                   | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH));
 
         dassert(archive->tabstop, 8);
-        dassert(archive->prefixes.size(), 1);
         dassert(archive->namespaces.size(), 1);
         dassert(!archive->registered_languages.size(), 0);
 
-        dassert(archive->prefixes.at(0), SRCML_SRC_NS_PREFIX_DEFAULT);
-        dassert(archive->namespaces.at(0), SRCML_SRC_NS_URI);
+        dassert(archive->namespaces[0].uri, SRCML_SRC_NS_URI);
+        dassert(archive->namespaces[0].prefix, SRCML_SRC_NS_DEFAULT_PREFIX);
+//        dassert(archive->namespaces[0].flags, NS_REQUIRED | NS_ROOT);
 
         dassert(archive->user_macro_list.size(), 0);
 

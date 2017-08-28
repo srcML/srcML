@@ -387,10 +387,9 @@ int main() {
 
         srcml_archive_register_namespace(archive, "foo", "bar");
 
-        dassert(archive->prefixes.back(), "foo");
-        dassert(archive->namespaces.back(), "bar");
+        dassert(archive->namespaces.back().prefix, "foo");
+        dassert(archive->namespaces.back().uri, "bar");
         srcml_archive_free(archive);
-
     }
 
     {
