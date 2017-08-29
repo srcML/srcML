@@ -28,8 +28,6 @@
 
 const std::unordered_map<int, Element> srcMLOutput::process = {
 
-//    { SUNIT, { "unit",SRC, 0, 0, 0, 0, [](params) { pout->processUnit(token); }}},
-
     { SCOMMENT,                    { "comment",           SRC, "type",   "block",        0,      0 }},
     { SLINECOMMENT,                { "comment",           SRC, "type",    "line",        0,      0 }},
     { SLINE_DOXYGEN_COMMENT,       { "comment",           SRC, "type",    "line", "format", "doxygen" }},
@@ -326,5 +324,4 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     //
     { SEMPTY,                      { "empty_stmt",        SRC,      0,         0,     0,      0 }},
-
 };
