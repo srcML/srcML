@@ -19,7 +19,7 @@ Namespaces& operator +=(Namespaces& namespaces, const Namespaces& otherns) {
         } else {
 
             // create a new entry for this URI
-            namespaces.push_back({ .prefix = ns.prefix, .uri = ns.uri, .flags = ns.flags });
+            namespaces.push_back({ ns.prefix, ns.uri, ns.flags });
         }
     }
 
