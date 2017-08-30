@@ -149,43 +149,21 @@ private:
      */
     bool isSkipToken(int token_type) {
 
-        switch (token_type) {
-
-            // Always handled as white space and hidden from
-            // parsing
-        case srcMLParser::WS:
-        case srcMLParser::CONTROL_CHAR:
-        case srcMLParser::EOL_BACKSLASH:
-        case srcMLParser::BLOCK_COMMENT_START:
-        case srcMLParser::BLOCK_COMMENT_END:
-        case srcMLParser::JAVADOC_COMMENT_END:
-        case srcMLParser::DOXYGEN_COMMENT_END:
-        case srcMLParser::LINE_COMMENT_START:
-        case srcMLParser::LINE_COMMENT_END:
-        case srcMLParser::LINE_DOXYGEN_COMMENT_START:
-        case srcMLParser::LINE_DOXYGEN_COMMENT_END:
-        case srcMLParser::COMMENT_TEXT:
-        case srcMLParser::JAVADOC_COMMENT_START:
-        case srcMLParser::DOXYGEN_COMMENT_START:
+        // Always handled as white space and hidden from
+        // parsing
+        if (srcMLParser::whitespace_token_set.member(token_type))
             return true;
-            break;
 
-            // whether to handle a line comment start or an EOL
-            // depends on whether we are in preprocssing handling or not
-            // where the detection of the end of the preprocessing line
-            // is needed (preprocessing lines end at EOL, or the start of
-            // a line comment)
-        case srcMLParser::EOL:
-
+        // whether to handle a line comment start or an EOL
+        // depends on whether we are in preprocssing handling or not
+        // where the detection of the end of the preprocessing line
+        // is needed (preprocessing lines end at EOL, or the start of
+        // a line comment)
+        if (token_type == srcMLParser::EOL)
             return !inskip;
-            break;
 
-            // anything else is passed to the parser
-        default:
-
-            return false;
-            break;
-        }
+        // anything else is passed to the parser
+        return false;
     }
 
     /**
