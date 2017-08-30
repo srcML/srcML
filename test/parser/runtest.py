@@ -232,6 +232,9 @@ def src2srcML(text_file, encoding, language, url, filename, read_archive):
 
     srcml = "<unit>" + srcml[srcml.find(">") + 1:]
 
+    if srcml.endswith("\n"):
+        srcml = srcml[:-1]
+
     return srcml
 
 
