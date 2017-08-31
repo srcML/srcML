@@ -22,13 +22,7 @@
 
   Test cases for srcml_archive_check_extension
 */
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
-
 #include <srcml.h>
-#include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
 

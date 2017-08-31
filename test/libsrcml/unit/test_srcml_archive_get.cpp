@@ -43,7 +43,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->src_encoding = boost::optional<std::string>();
+        srcml_archive_set_src_encoding(archive, 0);
         dassert(srcml_archive_get_src_encoding(archive), 0);
         srcml_archive_free(archive);
     }
@@ -52,15 +52,13 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_src_encoding(0), 0);
     }
 
-
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->src_encoding = "foo";
+        srcml_archive_set_src_encoding(archive, "foo");
         dassert(srcml_archive_get_src_encoding(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
-
 
     /*
       srcml_archive_get_xml_encoding
@@ -69,7 +67,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->encoding = boost::optional<std::string>();
+        srcml_archive_set_src_encoding(archive, 0);
         dassert(srcml_archive_get_xml_encoding(archive), 0);
         srcml_archive_free(archive);
     }
@@ -82,7 +80,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->encoding = "foo";
+        srcml_archive_set_src_encoding(archive, "foo");
         dassert(srcml_archive_get_xml_encoding(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
@@ -112,9 +110,8 @@ int main(int, char* argv[]) {
 
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
-        archive->revision = "foo";
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_set_version(archive, "foo");
         dassert(srcml_archive_get_revision(archive), std::string("foo"));
         srcml_archive_free(archive);
     }

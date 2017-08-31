@@ -33,11 +33,11 @@
 
 #include <unit_tests.hpp>
 
-extern srcml_archive global_archive;
-extern srcml_unit global_unit;
+//extern srcml_archive global_archive;
+//extern srcml_unit global_unit;
 
 int main(int, char* argv[]) {
-
+#if 0
     /*
       srcml_set_src_encoding
     */
@@ -643,7 +643,7 @@ int main(int, char* argv[]) {
         dassert(srcml_get_srcdiff_revision(), SRCDIFF_REVISION_ORIGINAL);
         global_archive.revision_number = boost::optional<size_t>();
     }
-
+#endif
 
     return 0;
 
