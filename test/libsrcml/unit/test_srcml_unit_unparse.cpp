@@ -55,7 +55,7 @@ int close_callback(void * context UNUSED) {
 
 }
 
-int main() {
+int main(int, char* argv[]) {
 
     const std::string src = "a;\n";
     const std::string src_macro = "MACRO1;\nMACRO2;\n";

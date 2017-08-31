@@ -36,7 +36,7 @@
 extern srcml_archive global_archive;
 extern srcml_unit global_unit;
 
-int main() {
+int main(int, char* argv[]) {
 
     /*
       srcml_set_src_encoding
@@ -238,14 +238,14 @@ int main() {
 
     {
         srcml_register_namespace("foo", "bar");
-        dassert(global_archive.prefixes.back(), "foo");
-        dassert(global_archive.namespaces.back(), "bar");
+        dassert(srcml_get_namespace_prefix(srcml_get_namespace_size() - 1), "foo");
+        dassert(srcml_get_namespace_uri(srcml_get_namespace_size() - 1), "bar");
     }
 
     {
         srcml_register_namespace("foo2", "bar");
-        dassert(global_archive.prefixes.at(0), "foo2");
-        dassert(global_archive.namespaces.at(0), "bar");
+        dassert(srcml_get_namespace_prefix(0), "foo2");
+        dassert(srcml_get_namespace_uri(0), "bar");
     }
 
     {

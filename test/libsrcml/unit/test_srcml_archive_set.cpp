@@ -32,7 +32,7 @@
 
 #include <unit_tests.hpp>
 
-int main() {
+int main(int, char* argv[]) {
 
     /*
       srcml_archive_set_src_encoding
@@ -398,8 +398,8 @@ int main() {
 
         srcml_archive_register_namespace(archive, "foo", "http://www.srcML.org/srcML/src");
 
-        dassert(archive->prefixes.at(0), "foo");
-        dassert(archive->namespaces.at(0) , "http://www.srcML.org/srcML/src");
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), "foo");
+        dassert(srcml_archive_get_namespace_uri(archive, 0) , "http://www.srcML.org/srcML/src");
         srcml_archive_free(archive);
 
     }

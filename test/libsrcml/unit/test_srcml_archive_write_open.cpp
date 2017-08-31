@@ -55,7 +55,7 @@ int close_callback(void * context UNUSED) {
 
 }
 
-int main() {
+int main(int, char* argv[]) {
 
     /*
       srcml_archive_write_open_filename

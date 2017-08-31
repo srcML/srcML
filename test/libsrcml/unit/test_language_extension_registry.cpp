@@ -25,7 +25,7 @@
 #include <iostream>
 #include <dassert.hpp>
 
-int main() {
+int main(int, char* argv[]) {
 
     /*
         at

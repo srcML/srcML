@@ -42,8 +42,8 @@
 
 #include <srcml_types.hpp>
 
-int main() {
-
+int main(int, char* argv[]) {
+#if 0
     std::ofstream file("a.cpp");
     file << "a;";
     file.close();
@@ -873,6 +873,6 @@ int main() {
     }
 
     unlink("a.cpp");
-
+#endif
     return 0;
 }

@@ -21,14 +21,14 @@
 #ifndef INCLUDED_DASSERT_HPP
 #define INCLUDED_DASSERT_HPP
 
-#include <iostream>
-#include <cassert>
+#include <stdio.h>
+#include <stdlib.h>
 
- /** Wrap C assertion to print out difference @todo use auto keyword so only run left/righthand side once and avoid side affects. */
+/** Wrap C assertion to print out difference @todo use auto keyword so only run left/righthand side once and avoid side affects. */
 #define dassert(LEFT, RIGHT) if(!((LEFT) == (RIGHT))) { \
         std::cerr << "'" << LEFT << "'" << "\n";        \
         std::cerr << "'" << RIGHT << "'" << "\n";       \
-        assert((LEFT) == (RIGHT));                      \
-    }
+		std::cerr << argv[0] << ": " __FILE__ << ":" << __LINE__ << ": " << __FUNCTION__ << " Check '" << #LEFT << "' == '" << #RIGHT << "' failed.\n"; \
+		exit(1); }
 
 #endif

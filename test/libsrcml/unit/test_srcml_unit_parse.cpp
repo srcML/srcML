@@ -62,7 +62,7 @@ std::string version(const std::string& s) {
     return boost::replace_all_copy(s, "SRCML_VERSION_STRING", SRCML_VERSION_STRING);
 }
 
-int main() {
+int main(int, char* argv[]) {
 
     const std::string src = "a;\n";
     const std::string src_bom = "\xEF\xBB\xBF""a;\n";

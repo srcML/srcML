@@ -35,7 +35,7 @@
 
 #include <unit_tests.hpp>
 
-int main() {
+int main(int, char* argv[]) {
     const std::string srcml_a = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
 
     const std::string srcml_b = "<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>";

@@ -44,7 +44,7 @@
 
 #include <unit_tests.hpp>
 
-int main() {
+int main(int, char* argv[]) {
 
     std::string copy;
     {

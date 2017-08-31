@@ -295,7 +295,7 @@ int summaryAndResultsDisplay() {
     return 0;
 }
 
-int main() {
+int main(int, char* argv[]) {
     cout << "---------------------------------------------------" << endl;
     cout << "                   Running XPath Tests" << endl;
     cout << "---------------------------------------------------" << endl;

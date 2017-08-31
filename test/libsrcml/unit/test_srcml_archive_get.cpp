@@ -34,7 +34,7 @@
 
 #include <boost/optional.hpp>
 
-int main() {
+int main(int, char* argv[]) {
 
     /*
       srcml_archive_get_src_encoding

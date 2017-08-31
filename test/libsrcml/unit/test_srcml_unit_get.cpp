@@ -32,7 +32,7 @@
 
 #include <unit_tests.hpp>
 
-int main() {
+int main(int, char* argv[]) {
 
     srcml_archive * archive = srcml_archive_create();
 
