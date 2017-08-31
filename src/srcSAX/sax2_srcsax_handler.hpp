@@ -63,32 +63,6 @@ struct declaration {
 };
 
 /**
- * function_prototype
- *
- * Data structure to hold a function prototype.
- */
-struct function_prototype {
-
-    /**constructor */
-    function_prototype(bool is_decl = false) : is_decl(is_decl) {}
-
-    /** function name */
-    std::string name;
-
-    /** function return type */
-    std::string return_type;
-
-    /** function parameter list */
-    std::vector<declaration> parameter_list;
-
-    /** function prototype parsing modes */
-    enum { RETURN_TYPE, NAME, PARAMETER_LIST, PARAMETER } mode = RETURN_TYPE;
-
-    /** bool to indicate if function_decl or function */
-    bool is_decl;
-};
-
-/**
  * sax2_srcsax_handler
  *
  * Data structure to hold process during
@@ -122,9 +96,6 @@ struct sax2_srcsax_handler {
 
     /** bool to indicate if in funciton for special function parsing */
     bool in_function_header = false;
-
-    /** store data for special function parsing */
-    function_prototype current_function;
 
     // current libxml2 namespaces and attributes to get around conversion
     const xmlChar** libxml2_namespaces;
