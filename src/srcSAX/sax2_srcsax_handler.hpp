@@ -85,17 +85,8 @@ struct sax2_srcsax_handler {
     /** used to detect root unit */
     bool is_archive = false;
 
-    /** open srcMLElement stack */
-    std::vector<const char *> srcml_element_stack;
-
     /** the current parsing mode */
     srcMLMode mode = START;
-
-    /** bool to indicate if should do special function parsing */
-    bool parse_function = false;
-
-    /** bool to indicate if in funciton for special function parsing */
-    bool in_function_header = false;
 
     // current libxml2 namespaces and attributes to get around conversion
     const xmlChar** libxml2_namespaces;
