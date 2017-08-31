@@ -43,7 +43,6 @@ enum srcMLMode {
     UNIT,
     END_UNIT,
     END_ROOT
-
 };
 
 /**
@@ -53,9 +52,6 @@ enum srcMLMode {
  */
 struct declaration {
 
-    /** default constructor */
-    declaration() : type(), name(), mode(TYPE) {}
-
     /** declaration type */
     std::string type;
 
@@ -63,8 +59,7 @@ struct declaration {
     std::string name;
 
     /** declaration parsing modes */
-    enum { TYPE, NAME, INIT } mode;
-
+    enum { TYPE, NAME, INIT } mode = TYPE;
 };
 
 /**
@@ -75,7 +70,7 @@ struct declaration {
 struct function_prototype {
 
     /**constructor */
-    function_prototype(bool is_decl = false) : name(), return_type(), parameter_list(), mode(RETURN_TYPE), is_decl(is_decl) {}
+    function_prototype(bool is_decl = false) : is_decl(is_decl) {}
 
     /** function name */
     std::string name;
@@ -87,11 +82,10 @@ struct function_prototype {
     std::vector<declaration> parameter_list;
 
     /** function prototype parsing modes */
-    enum { RETURN_TYPE, NAME, PARAMETER_LIST, PARAMETER } mode;
+    enum { RETURN_TYPE, NAME, PARAMETER_LIST, PARAMETER } mode = RETURN_TYPE;
 
     /** bool to indicate if function_decl or function */
     bool is_decl;
-
 };
 
 /**
@@ -102,11 +96,8 @@ struct function_prototype {
  */
 struct sax2_srcsax_handler {
 
-    /** default constructor */
-    sax2_srcsax_handler() : context(0), root(), meta_tags(), characters(), is_archive(false), mode(START), parse_function(false), in_function_header(false), current_function() {}
-
     /** hooks for processing */
-    srcsax_context * context;
+    srcsax_context* context = nullptr;
 
     /** temporary storage for root unit */
     srcml_element root;
@@ -114,31 +105,30 @@ struct sax2_srcsax_handler {
     /** temporary storage of meta-tags */
     std::vector<srcml_element> meta_tags;
 
-    /** temporary storate of root characters */
+    /** temporary storage of root characters */
     std::string characters;
 
     /** used to detect root unit */
-    bool is_archive;
+    bool is_archive = false;
 
     /** open srcMLElement stack */
     std::vector<const char *> srcml_element_stack;
 
     /** the current parsing mode */
-    srcMLMode mode;
+    srcMLMode mode = START;
 
     /** bool to indicate if should do special function parsing */
-    bool parse_function;
+    bool parse_function = false;
 
     /** bool to indicate if in funciton for special function parsing */
-    bool in_function_header;
+    bool in_function_header = false;
 
     /** store data for special function parsing */
     function_prototype current_function;
 
     // current libxml2 namespaces and attributes to get around conversion
-const xmlChar ** libxml2_namespaces;
-const xmlChar ** libxml2_attributes;
-
+    const xmlChar** libxml2_namespaces;
+    const xmlChar** libxml2_attributes;
 };
 
 /**
@@ -155,7 +145,7 @@ xmlSAXHandler srcsax_sax2_factory();
  * SAX handler function for start of document.
  * Immediately calls supplied handlers function.
  */
-void start_document(void * ctx);
+void start_document(void* ctx);
 
 /**
  * end_document
@@ -165,7 +155,7 @@ void start_document(void * ctx);
  * Calls endRoot if needed then
  * immediately calls supplied handlers function.
  */
-void end_document(void * ctx);
+void end_document(void* ctx);
 
 /**
  * start_root
@@ -182,9 +172,9 @@ void end_document(void * ctx);
  * SAX handler function for start of root element.
  * Caches root info and immediately calls supplied handlers function.
  */
-void start_root(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-               const xmlChar ** attributes);
+void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+               const xmlChar** attributes);
 
 
 /**
@@ -202,9 +192,9 @@ void start_root(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
  * SAX handler function for start of first element after root
  * Detects archive and acts accordingly.
  */
-void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                         int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar ** attributes);
+void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                         int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                         const xmlChar** attributes);
 /**
  * start_unit
  * @param ctx an xmlParserCtxtPtr
@@ -220,9 +210,9 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
  * SAX handler function for start of an unit.
  * Immediately calls supplied handlers function.
  */
-void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-               int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-               const xmlChar ** attributes);
+void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+               const xmlChar** attributes);
 
 /**
  * start_element_ns
@@ -239,9 +229,9 @@ void start_unit(void * ctx, const xmlChar * localname, const xmlChar * prefix, c
  * SAX handler function for start of an element.
  * Immediately calls supplied handlers function.
  */
-void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI,
-                    int nb_namespaces, const xmlChar ** namespaces, int nb_attributes, int nb_defaulted,
-                    const xmlChar ** attributes);
+void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                    const xmlChar** attributes);
 
 /**
  * end_element_ns
@@ -254,7 +244,7 @@ void start_element_ns(void * ctx, const xmlChar * localname, const xmlChar * pre
  * Detects end of unit and calls correct functions
  * for either end_root end_unit or end_element_ns.
  */
-void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefix, const xmlChar * URI);
+void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
 
 /**
  * characters_first
@@ -266,7 +256,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
  * know if we have an archive or not.
  * Immediately calls supplied handlers function.
  */
-void characters_first(void * ctx, const xmlChar * ch, int len);
+void characters_first(void* ctx, const xmlChar* ch, int len);
 
 /**
  * characters_root
@@ -277,7 +267,7 @@ void characters_first(void * ctx, const xmlChar * ch, int len);
  * SAX handler function for character handling at the root level.
  * Immediately calls supplied handlers function.
  */
-void characters_root(void * ctx, const xmlChar * ch, int len);
+void characters_root(void* ctx, const xmlChar* ch, int len);
 
 /**
  * characters_unit
@@ -288,7 +278,7 @@ void characters_root(void * ctx, const xmlChar * ch, int len);
  * SAX handler function for character handling within a unit.
  * Immediately calls supplied handlers function.
  */
-void characters_unit(void * ctx, const xmlChar * ch, int len);
+void characters_unit(void* ctx, const xmlChar* ch, int len);
 
 /**
  * comment
@@ -298,7 +288,7 @@ void characters_unit(void * ctx, const xmlChar * ch, int len);
  * A comment has been parsed.
  * Immediately calls supplied handlers function.
  */
-void comment(void * ctx, const xmlChar * value);
+void comment(void* ctx, const xmlChar* value);
 
 /**
  * cdata_block
@@ -309,7 +299,7 @@ void comment(void * ctx, const xmlChar * value);
  * Called when a pcdata block has been parsed.
  * Immediately calls supplied handlers function.
  */
-void cdata_block(void * ctx, const xmlChar * value, int len);
+void cdata_block(void* ctx, const xmlChar* value, int len);
 
 /**
  * processing_instruction
@@ -320,6 +310,6 @@ void cdata_block(void * ctx, const xmlChar * value, int len);
  * Called when a processing instruction has been parsed.
  * Immediately calls supplied handlers function.
  */
-void processing_instruction(void * ctx, const xmlChar * target, const xmlChar * data);
+void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* data);
 
 #endif

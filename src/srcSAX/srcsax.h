@@ -32,13 +32,13 @@
 struct srcsax_context {
 
     /** user provided data */
-    void * data;
+    void* data;
 
     /** srcSAX handler callbacks */
-    struct srcsax_handler * handler;
+    struct srcsax_handler* handler;
 
     /** error callback need to figure this one out probably message and errorcode. or struct.  Might not need, but might be nice to avoid libxml2 stuff */
-    void (*srcsax_error)(const char * message, int error_code);
+    void (*srcsax_error)(const char* message, int error_code);
 
     /** is the document an archive */
     int is_archive;
@@ -68,25 +68,24 @@ struct srcsax_context {
 
     /** indicate stop parser */
     int terminate;
-
 };
 
 /* srcSAX context creation/open functions */
-struct srcsax_context * srcsax_create_context_filename(const char * filename, const char * encoding);
-struct srcsax_context * srcsax_create_context_memory(const char * buffer, size_t buffer_size, const char * encoding);
-struct srcsax_context * srcsax_create_context_FILE(FILE * srcml_file, const char * encoding);
-struct srcsax_context * srcsax_create_context_fd(int srcml_fd, const char * encoding);
-struct srcsax_context * srcsax_create_context_io(void * srcml_context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context), const char * encoding);
-struct srcsax_context * srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
+struct srcsax_context* srcsax_create_context_filename(const char* filename, const char* encoding);
+struct srcsax_context* srcsax_create_context_memory(const char* buffer, size_t buffer_size, const char* encoding);
+struct srcsax_context* srcsax_create_context_FILE(FILE* srcml_file, const char* encoding);
+struct srcsax_context* srcsax_create_context_fd(int srcml_fd, const char* encoding);
+struct srcsax_context* srcsax_create_context_io(void* srcml_context, int (*read_callback)(void* context, char* buffer, int len), int (*close_callback)(void* context), const char* encoding);
+struct srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
 
 /* srcSAX free function */
 void srcsax_free_context(struct srcsax_context * context);
 
 /* srcSAX parse function */
 int srcsax_parse(struct srcsax_context * context);
-int srcsax_parse_handler(struct srcsax_context * context, struct srcsax_handler * handler);
+int srcsax_parse_handler(struct srcsax_context* context, struct srcsax_handler* handler);
 
 /* srcSAX terminate parse function */
-void srcsax_stop_parser(struct srcsax_context * context);
+void srcsax_stop_parser(struct srcsax_context* context);
 
 #endif
