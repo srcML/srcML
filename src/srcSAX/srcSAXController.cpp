@@ -35,13 +35,11 @@
  *
  * Constructor
  */
-srcSAXController::srcSAXController(const char * filename, const char * encoding) {
+srcSAXController::srcSAXController(const char* filename, const char* encoding) {
 
     context = srcsax_create_context_filename(filename, encoding);
-
-    if(context == NULL) throw std::string("File does not exist");
-
-
+    if (context == NULL)
+        throw std::string("File does not exist");
 }
 
 /**
@@ -50,12 +48,11 @@ srcSAXController::srcSAXController(const char * filename, const char * encoding)
  *
  * Constructor
  */
-srcSAXController::srcSAXController(std::string srcml_buffer, const char * encoding) {
+srcSAXController::srcSAXController(std::string srcml_buffer, const char* encoding) {
 
     context = srcsax_create_context_memory(srcml_buffer.c_str(), srcml_buffer.size(), encoding);
-
-    if(context == NULL) throw std::string("File does not exist");
-
+    if (context == NULL)
+        throw std::string("File does not exist");
 }
 
 /**
@@ -64,12 +61,11 @@ srcSAXController::srcSAXController(std::string srcml_buffer, const char * encodi
  *
  * Constructor
  */
-srcSAXController::srcSAXController(FILE * srcml_file, const char * encoding) {
+srcSAXController::srcSAXController(FILE* srcml_file, const char* encoding) {
 
     context = srcsax_create_context_FILE(srcml_file, encoding);
-
-    if(context == NULL) throw std::string("File does not exist");
-
+    if (context == NULL)
+        throw std::string("File does not exist");
 }
 
 /**
@@ -78,12 +74,11 @@ srcSAXController::srcSAXController(FILE * srcml_file, const char * encoding) {
  *
  * Constructor
  */
-srcSAXController::srcSAXController(int srcml_fd, const char * encoding) {
+srcSAXController::srcSAXController(int srcml_fd, const char* encoding) {
 
     context = srcsax_create_context_fd(srcml_fd, encoding);
-
-    if(context == NULL) throw std::string("File does not exist");
-
+    if (context == NULL)
+        throw std::string("File does not exist");
 }
 
 /**
@@ -94,14 +89,12 @@ srcSAXController::srcSAXController(int srcml_fd, const char * encoding) {
  *
  * Constructor
  */
-srcSAXController::srcSAXController(void * srcml_context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context), const char * encoding) {
+srcSAXController::srcSAXController(void * srcml_context, int (*read_callback)(void * context, char* buffer, int len), int (*close_callback)(void * context), const char* encoding) {
 
     context = srcsax_create_context_io(srcml_context, read_callback, close_callback, encoding);
-
-    if(context == NULL) throw std::string("File does not exist");
-
+    if (context == NULL)
+        throw std::string("File does not exist");
 }
-
 
 /**
  * srcSAXController
@@ -112,9 +105,8 @@ srcSAXController::srcSAXController(void * srcml_context, int (*read_callback)(vo
 srcSAXController::srcSAXController(xmlParserInputBufferPtr input) {
 
     context = srcsax_create_context_parser_input_buffer(input);
-
-    if(context == NULL) throw std::string("File does not exist");
-
+    if (context == NULL)
+        throw std::string("File does not exist");
 }
 
 /**
@@ -124,8 +116,8 @@ srcSAXController::srcSAXController(xmlParserInputBufferPtr input) {
  */
 srcSAXController::~srcSAXController() {
 
-    if(context) srcsax_free_context(context);
-
+    if (context)
+        srcsax_free_context(context);
 }
 
 /**
@@ -136,7 +128,6 @@ srcSAXController::~srcSAXController() {
 srcsax_context * srcSAXController::getContext() {
 
     return context;
-
 }
 
 /**
@@ -147,9 +138,7 @@ srcsax_context * srcSAXController::getContext() {
  */
 void srcSAXController::enable_startDocument(bool enable) {
 
-    if(enable) context->handler->start_document = cppCallbackAdapter::start_document;
-    else context->handler->start_document = 0;
-
+    context->handler->start_document = enable ? cppCallbackAdapter::start_document : 0;
 }
 
 /**
@@ -160,9 +149,7 @@ void srcSAXController::enable_startDocument(bool enable) {
  */
 void srcSAXController::enable_endDocument(bool enable) {
 
-    if(enable) context->handler->end_document = cppCallbackAdapter::end_document;
-    else context->handler->end_document = 0;
-
+    context->handler->end_document = enable ? cppCallbackAdapter::end_document : 0;
 }
 
 /**
@@ -173,9 +160,7 @@ void srcSAXController::enable_endDocument(bool enable) {
  */
 void srcSAXController::enable_startRoot(bool enable) {
 
-    if(enable) context->handler->start_root = cppCallbackAdapter::start_root;
-    else context->handler->start_root = 0;
-
+    context->handler->start_root = enable ? cppCallbackAdapter::start_root : 0;
 }
 
 /**
@@ -186,9 +171,7 @@ void srcSAXController::enable_startRoot(bool enable) {
  */
 void srcSAXController::enable_startUnit(bool enable) {
 
-    if(enable) context->handler->start_unit = cppCallbackAdapter::start_unit;
-    else context->handler->start_unit = 0;
-
+    context->handler->start_unit = enable ? cppCallbackAdapter::start_unit : 0;
 }
 
 /**
@@ -199,9 +182,7 @@ void srcSAXController::enable_startUnit(bool enable) {
  */
 void srcSAXController::enable_startElement(bool enable) {
 
-    if(enable) context->handler->start_element = cppCallbackAdapter::start_element;
-    else context->handler->start_element = 0;
-
+    context->handler->start_element = enable ? cppCallbackAdapter::start_element : 0;
 }
 
 /**
@@ -212,9 +193,7 @@ void srcSAXController::enable_startElement(bool enable) {
  */
 void srcSAXController::enable_endRoot(bool enable) {
 
-    if(enable) context->handler->end_root = cppCallbackAdapter::end_root;
-    else context->handler->end_root = 0;
-
+    context->handler->end_root = enable ? cppCallbackAdapter::end_root : 0;
 }
 
 /**
@@ -225,9 +204,7 @@ void srcSAXController::enable_endRoot(bool enable) {
  */
 void srcSAXController::enable_endUnit(bool enable) {
 
-    if(enable) context->handler->end_unit = cppCallbackAdapter::end_unit;
-    else context->handler->end_unit = 0;
-
+    context->handler->end_unit = enable ? cppCallbackAdapter::end_unit : 0;
 }
 
 /**
@@ -238,9 +215,7 @@ void srcSAXController::enable_endUnit(bool enable) {
  */
 void srcSAXController::enable_endElement(bool enable) {
 
-    if(enable) context->handler->end_element = cppCallbackAdapter::end_element;
-    else context->handler->end_element = 0;
-
+    context->handler->end_element = enable ? cppCallbackAdapter::end_element : 0;
 }
 
 /**
@@ -251,16 +226,7 @@ void srcSAXController::enable_endElement(bool enable) {
  */
 void srcSAXController::enable_charactersRoot(bool enable) {
 
-    if(enable) {
-
-        context->handler->characters_root = cppCallbackAdapter::characters_root;
-
-    } else {
-
-        context->handler->characters_root = 0;
-
-    }
-
+    context->handler->characters_root = enable ? cppCallbackAdapter::characters_root : 0;
 }
 
 /**
@@ -271,16 +237,7 @@ void srcSAXController::enable_charactersRoot(bool enable) {
  */
 void srcSAXController::enable_charactersUnit(bool enable) {
 
-    if(enable) {
-
-        context->handler->characters_unit = cppCallbackAdapter::characters_unit;
-
-    } else {
-
-        context->handler->characters_unit = 0;
-
-    }
-
+    context->handler->characters_unit = enable ? cppCallbackAdapter::characters_unit : 0;
 }
 
 /**
@@ -291,16 +248,7 @@ void srcSAXController::enable_charactersUnit(bool enable) {
  */
 void srcSAXController::enable_metaTag(bool enable) {
 
-    if(enable) {
-
-        context->handler->meta_tag = cppCallbackAdapter::meta_tag;
-
-    } else {
-
-        context->handler->meta_tag = 0;
-
-    }
-
+    context->handler->meta_tag = enable ? cppCallbackAdapter::meta_tag : 0;
 }
 
 /**
@@ -311,9 +259,7 @@ void srcSAXController::enable_metaTag(bool enable) {
  */
 void srcSAXController::enable_comment(bool enable) {
 
-    if(enable) context->handler->comment = cppCallbackAdapter::comment;
-    else context->handler->comment = 0;
-
+    context->handler->comment = enable ? cppCallbackAdapter::comment : 0;
 }
 
 /**
@@ -324,9 +270,7 @@ void srcSAXController::enable_comment(bool enable) {
  */
 void srcSAXController::enable_cdataBlock(bool enable) {
 
-    if(enable) context->handler->cdata_block = cppCallbackAdapter::cdata_block;
-    else context->handler->cdata_block = 0;
-
+    context->handler->cdata_block = enable ? cppCallbackAdapter::cdata_block : 0;
 }
 
 /**
@@ -337,21 +281,7 @@ void srcSAXController::enable_cdataBlock(bool enable) {
  */
 void srcSAXController::enable_processingInstruction(bool enable) {
 
-    if(enable) context->handler->processing_instruction = cppCallbackAdapter::processing_instruction;
-    else context->handler->processing_instruction = 0;
-
-}
-
-/**
-* enable_function
-* @param enable bool indicate enable or disable special function parsing.
-*
-* Enables or disables special function parsing.
-*/
-void srcSAXController::enable_function(bool enable) {
-
-    //sax2_handler.parse_function = enable;
-
+    context->handler->processing_instruction = enable ? cppCallbackAdapter::processing_instruction : 0;
 }
 
 /**
@@ -373,13 +303,12 @@ void srcSAXController::parse(srcSAXHandler * handler) {
 
     context->data = 0;
 
-    if(status != 0) {
+    if (status != 0) {
 
         xmlErrorPtr ep = xmlCtxtGetLastError(context->libxml2_context);
         SAXError error = { std::string(ep->message), ep->code };
 
         throw error;
     }
-
 }
 
