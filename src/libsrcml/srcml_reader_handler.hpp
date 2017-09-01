@@ -203,19 +203,26 @@ private :
          */
         ~meta_tag() {
 
-            if(localname) free((void *)localname), localname = 0;
-            if(prefix) free((void *)prefix), prefix = 0;
+            if (localname)
+                free((void *)localname), localname = 0;
+            if (prefix)
+                free((void *)prefix), prefix = 0;
 
-            if(attributes) {
+            if (attributes) {
 
                 for (int pos = 0; pos < num_attributes; ++pos) {
 
-                    if(attributes[pos].localname) free((void *)attributes[pos].localname);
-                    if(attributes[pos].prefix) free((void *)attributes[pos].prefix);
-                    if(attributes[pos].uri) free((void *)attributes[pos].uri);
-                    if(attributes[pos].value) free((void *)attributes[pos].value);
+                    if (attributes[pos].localname)
+                        free((void *)attributes[pos].localname);
+                    if (attributes[pos].prefix)
+                        free((void *)attributes[pos].prefix);
+                    if (attributes[pos].uri)
+                        free((void *)attributes[pos].uri);
+                    if (attributes[pos].value)
+                        free((void *)attributes[pos].value);
                 }
 
+               
                 free(attributes), attributes = 0;
             }
         }
@@ -235,12 +242,12 @@ private :
 
     std::string attribute_revision(const std::string & attribute) {
 
-        if(!revision_number) return attribute;
+        if (!revision_number) return attribute;
 
         std::string::size_type pos = attribute.find('|');
-        if(pos == std::string::npos) return attribute;
+        if (pos == std::string::npos) return attribute;
 
-        if(*revision_number == SRCDIFF_REVISION_ORIGINAL) return attribute.substr(0, pos);
+        if (*revision_number == SRCDIFF_REVISION_ORIGINAL) return attribute.substr(0, pos);
 
         return attribute.substr(pos + 1, std::string::npos);
 
@@ -263,7 +270,6 @@ public :
         archive = srcml_archive_create();
 
         srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
-
     }
 
     /**
@@ -274,8 +280,7 @@ public :
     ~srcml_reader_handler() {
 
         srcml_archive_free(archive);
-        if(unit) srcml_unit_free(unit);
-
+        if (unit) srcml_unit_free(unit);
     }
 
     /**
@@ -300,9 +305,9 @@ public :
 
         boost::unique_lock<boost::mutex> lock(mutex);
 
-        if(is_done) return;
+        if (is_done) return;
 
-        if(wait_root) cond.wait(lock);
+        if (wait_root) cond.wait(lock);
 
     }
 
@@ -327,7 +332,7 @@ public :
 
         boost::unique_lock<boost::mutex> lock(mutex);
         cond.notify_all();
-        if(is_done) return;
+        if (is_done) return;
 
         cond.wait(lock);
 
@@ -396,7 +401,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(!is_archive) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        if (!is_archive) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
@@ -407,48 +412,48 @@ public :
             value = attribute_revision(value);
 
             // Note: these are ignore instead of placing in attributes.
-            if(attribute == "timestamp")
+            if (attribute == "timestamp")
                 ;
-            else if(attribute == "hash")
+            else if (attribute == "hash")
                 ;
-            else if(attribute == "language")
+            else if (attribute == "language")
                 ;
-            else if(attribute == "revision")
+            else if (attribute == "revision")
                 archive->revision = value;
-            else if(attribute == "filename")
+            else if (attribute == "filename")
                 ;
-            else if(attribute == "url")
+            else if (attribute == "url")
                 srcml_archive_set_url(archive, value.c_str());
-            else if(attribute == "version")
+            else if (attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
-            else if(attribute == "tabs")
+            else if (attribute == "tabs")
                 archive->tabstop = atoi(value.c_str());
-            else if(attribute == "options") {
+            else if (attribute == "options") {
 
                 while(!value.empty()) {
 
                     std::string::size_type pos = value.find(",");
                     std::string option = value.substr(0, pos);
-                    if(pos == std::string::npos)
+                    if (pos == std::string::npos)
                         value = "";
                     else
                         value = value.substr(value.find(",") + 1);
 
-                    if(option == "XMLDECL")
+                    if (option == "XMLDECL")
                         archive->options |= SRCML_OPTION_XML_DECL;
-                    else if(option == "NAMESPACEDECL")
+                    else if (option == "NAMESPACEDECL")
                         archive->options |= SRCML_OPTION_NAMESPACE_DECL;
-                    else if(option == "CPP_TEXT_ELSE")
+                    else if (option == "CPP_TEXT_ELSE")
                         archive->options |= SRCML_OPTION_CPP_TEXT_ELSE;
-                    else if(option == "CPP_MARKUP_IF0")
+                    else if (option == "CPP_MARKUP_IF0")
                         archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
-                    else if(option == "LINE")
+                    else if (option == "LINE")
                         archive->options |= SRCML_OPTION_LINE;
-                    else if(option == "CPPIF_CHECK")
+                    else if (option == "CPPIF_CHECK")
                         archive->options |= SRCML_OPTION_CPPIF_CHECK;
                 }
 
-            } else if(attribute == "hash") 
+            } else if (attribute == "hash") 
                 ;
             else {
 
@@ -467,7 +472,7 @@ public :
 
             srcml_uri_normalize(uri);
 
-            if(uri == SRCML_DIFF_NS_URI)
+            if (uri == SRCML_DIFF_NS_URI)
                 issrcdiff = true;
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
@@ -510,12 +515,12 @@ public :
 
         // pause
         // @todo this may need to change because, meta tags have separate call now
-        if(!read_root) {
+        if (!read_root) {
 
             {
                 
                 boost::unique_lock<boost::mutex> lock(mutex);
-                if(terminate) stop_parser();
+                if (terminate) stop_parser();
                 wait_root = false;
                 cond.notify_all();
                 cond.wait(lock);
@@ -523,7 +528,7 @@ public :
         
             }
 
-            if(terminate) {
+            if (terminate) {
 
                 stop_parser();
                 return;
@@ -545,21 +550,21 @@ public :
             value.append((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
             value = attribute_revision(value);
             
-            if(attribute == "timestamp")
+            if (attribute == "timestamp")
                 srcml_unit_set_timestamp(unit, value.c_str());
-            else if(attribute == "hash")
+            else if (attribute == "hash")
                 srcml_unit_set_hash(unit, value.c_str());
-            else if(attribute == "language")
+            else if (attribute == "language")
                 srcml_unit_set_language(unit, value.c_str());
-            else if(attribute == "revision")
+            else if (attribute == "revision")
                 unit->revision = value;
-            else if(attribute == "filename")
+            else if (attribute == "filename")
                 srcml_unit_set_filename(unit, value.c_str());
-            else if(attribute == "version")
+            else if (attribute == "version")
                 srcml_unit_set_version(unit, value.c_str());
-            else if(attribute == "tabs" || attribute == "options" || attribute == "hash")
+            else if (attribute == "tabs" || attribute == "options" || attribute == "hash")
                 ;
-            else if(attribute == "src-encoding")
+            else if (attribute == "src-encoding")
                 archive->options |= SRCML_OPTION_STORE_ENCODING, srcml_unit_set_src_encoding(unit, value.c_str());
             else {
 
@@ -570,17 +575,17 @@ public :
 
         }
 
-        if(collect_unit_attributes) {
+        if (collect_unit_attributes) {
 
             // pause
             boost::unique_lock<boost::mutex> lock(mutex);
-            if(terminate) stop_parser();
+            if (terminate) stop_parser();
             cond.notify_all();
             cond.wait(lock);
 
         }
 
-        if(skip) {
+        if (skip) {
 
             get_controller().enable_startElement(false);
             get_controller().enable_charactersUnit(false);
@@ -589,13 +594,13 @@ public :
 
         }
 
-        if(collect_srcml) {
+        if (collect_srcml) {
 
             write_startTag(localname, prefix, num_namespaces, handler->libxml2_namespaces, num_attributes, handler->libxml2_attributes);
 
-            if(!is_archive) {
+            if (!is_archive) {
 
-                if(meta_tags.size()) {
+                if (meta_tags.size()) {
 
                     *unit->unit += ">";
                     is_empty = false;
@@ -624,7 +629,7 @@ public :
         loc = 0;
         lastchar = 0;
 
-        if(terminate) stop_parser();
+        if (terminate) stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -655,31 +660,31 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if(issrcdiff) {
+        if (issrcdiff) {
 
-            if(issrcdiff && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
+            if (issrcdiff && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
 
                 std::string local_name(localname);
 
-                if(local_name == "common")
+                if (local_name == "common")
                     srcdiff_stack.push(COMMON);
-                else if(local_name == "delete")
+                else if (local_name == "delete")
                     srcdiff_stack.push(DELETE);
-                else if(local_name == "insert")
+                else if (local_name == "insert")
                     srcdiff_stack.push(INSERT);
 
             }
 
-            if(issrcdiff && revision_number) {
+            if (issrcdiff && revision_number) {
 
-                if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-                if(*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
-                if(*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
+                if (is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
+                if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
+                if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
 
             }
         }
 
-        if(collect_src && localname[0] == 'e' && localname[1] == 's'
+        if (collect_src && localname[0] == 'e' && localname[1] == 's'
            && strcmp((const char *)localname, "escape") == 0) {
 
             std::string svalue;
@@ -691,16 +696,16 @@ public :
 
         }
 
-        if(is_empty && collect_srcml) *unit->unit += ">";
+        if (is_empty && collect_srcml) *unit->unit += ">";
         is_empty = true;
 
-        if(collect_srcml) {
+        if (collect_srcml) {
 
             write_startTag(localname, prefix, num_namespaces, handler->libxml2_namespaces, num_attributes, handler->libxml2_attributes);
 
         }
 
-        if(terminate) stop_parser();
+        if (terminate) stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -714,19 +719,20 @@ public :
      * @param prefix prefix for the tag
      * @param URI uri for tag
      *
-     * Overidden endRoot to indicate done with parsing and free any waiting process.
+     * Overidden endRoot to indicate done with parsing and
+        free any waiting process.
      */
     virtual void endRoot(const char* localname, const char* prefix, const char* URI) {
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-        if(!read_root) {
+        if (!read_root) {
 
             {
                 
                 boost::unique_lock<boost::mutex> lock(mutex);
-                if(terminate) stop_parser();
+                if (terminate) stop_parser();
                 wait_root = false;
                 cond.notify_all();
                 cond.wait(lock);
@@ -734,7 +740,7 @@ public :
         
             }
 
-            if(terminate) {
+            if (terminate) {
 
                 stop_parser();
                 return;
@@ -745,12 +751,12 @@ public :
 
         {
             boost::unique_lock<boost::mutex> lock(mutex);
-            if(terminate) stop_parser();
+            if (terminate) stop_parser();
             is_done = true;
             cond.notify_all();
         }
 
-        if(terminate) stop_parser();
+        if (terminate) stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -779,7 +785,7 @@ public :
         if (issrcdiff)
             srcdiff_stack.pop();
 
-        if(skip) {
+        if (skip) {
 
             get_controller().enable_startElement(true);
             get_controller().enable_charactersUnit(true);
@@ -788,10 +794,10 @@ public :
 
         }
 
-        //if(is_empty) *unit->unit += ">";
-        if(collect_srcml || collect_src) {
+        //if (is_empty) *unit->unit += ">";
+        if (collect_srcml || collect_src) {
 
-            if(collect_srcml) {
+            if (collect_srcml) {
 
                 unit->content_end = (int) unit->unit->size() + 1;
                 
@@ -801,7 +807,7 @@ public :
 
             // pause
             boost::unique_lock<boost::mutex> lock(mutex);
-            if(terminate) stop_parser();
+            if (terminate) stop_parser();
             cond.notify_all();
             cond.wait(lock);
 
@@ -812,7 +818,7 @@ public :
         srcml_unit_free(unit);
         unit = 0;
 
-        if(terminate) stop_parser();
+        if (terminate) stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -836,31 +842,31 @@ public :
 
         if (issrcdiff) {
             
-            if(!skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
+            if (!skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
 
                 std::string local_name(localname);
-                if(local_name != "ws")
+                if (local_name != "ws")
                     srcdiff_stack.pop();
 
             }
 
-            if(revision_number) {
+            if (revision_number) {
 
-                if(is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-                if(*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
-                if(*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
+                if (is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
+                if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
+                if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
 
             }
         }
 
-        if(collect_srcml) {
+        if (collect_srcml) {
 
             write_endTag(localname, prefix, is_empty);
         }
 
         is_empty = false;
 
-        if(terminate) stop_parser();
+        if (terminate) stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -883,14 +889,14 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
-        if(issrcdiff && revision_number) {
+        if (issrcdiff && revision_number) {
 
-            if(*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
-            if(*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
+            if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
+            if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
 
         }        
 
-        if(is_empty && collect_srcml) *unit->unit += ">";
+        if (is_empty && collect_srcml) *unit->unit += ">";
         is_empty = false;
 
         // update LOC
@@ -900,7 +906,7 @@ public :
         if (len)
             lastchar = ch[len - 1];
 
-        if(collect_src) {
+        if (collect_src) {
 
             xmlOutputBufferWrite(output_buffer, len, (const char *)ch);
 
@@ -909,11 +915,11 @@ public :
             for (int i = 0; i < len; ++i) {
                 char character = (char)ch[i];
 
-                if(character == '&')
+                if (character == '&')
                     (*unit->unit) += "&amp;";
-                else if(character == '<')
+                else if (character == '<')
                     (*unit->unit) += "&lt;";
-                else if(character == '>')
+                else if (character == '>')
                     (*unit->unit) += "&gt;";
                 else
                     (*unit->unit) += character;
@@ -921,7 +927,7 @@ public :
 
         }
 
-        if(terminate) stop_parser();
+        if (terminate) stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
@@ -946,21 +952,21 @@ public :
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                            const struct srcsax_attribute * attributes) {
 
-        if(strcmp(localname, "macro-list") == 0) {
+        if (strcmp(localname, "macro-list") == 0) {
 
             std::string token("");
             std::string type("");
 
             for (int pos = 0; pos < num_attributes; ++pos) {
 
-                if(strcmp(attributes[pos].localname, "token") == 0)
+                if (strcmp(attributes[pos].localname, "token") == 0)
                     token = attributes[pos].value;
-                else if(strcmp(attributes[pos].localname, "type") == 0)
+                else if (strcmp(attributes[pos].localname, "type") == 0)
                     type = attributes[pos].value;
 
             }
 
-            if(token != "" && type != "") {
+            if (token != "" && type != "") {
 
                 archive->user_macro_list.push_back(token);
                 archive->user_macro_list.push_back(type);
@@ -969,7 +975,7 @@ public :
 
         }
 
-        if(!is_archive) {
+        if (!is_archive) {
 
             meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
 
@@ -1011,7 +1017,7 @@ private :
                            const struct srcsax_attribute * attributes) {
 
         *unit->unit += "<";
-        if(prefix) {
+        if (prefix) {
             *unit->unit += prefix;
             *unit->unit += ":";
         }
@@ -1019,14 +1025,14 @@ private :
 
         for (int pos = 0; pos < num_namespaces; ++pos) {
 
-            if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace(namespaces[pos].uri, SRCML_CPP_NS_URI))
+            if (is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace(namespaces[pos].uri, SRCML_CPP_NS_URI))
                 continue;
 
-            if(revision_number && is_srcml_namespace(namespaces[pos].uri, SRCML_DIFF_NS_URI))
+            if (revision_number && is_srcml_namespace(namespaces[pos].uri, SRCML_DIFF_NS_URI))
                 continue;
 
             *unit->unit += " xmlns";
-            if(namespaces[pos].prefix) {
+            if (namespaces[pos].prefix) {
 
                 *unit->unit += ":";
                 *unit->unit += namespaces[pos].prefix;
@@ -1042,10 +1048,10 @@ private :
         for (int pos = 0; pos < num_attributes; ++pos) {
 
             std::string value = attribute_revision(attributes[pos].value);
-            if(std::string(attributes[pos].value) != "" && value == "") continue;
+            if (std::string(attributes[pos].value) != "" && value == "") continue;
 
             *unit->unit += " ";
-            if(attributes[pos].prefix) {
+            if (attributes[pos].prefix) {
 
                 *unit->unit += attributes[pos].prefix;
                 *unit->unit += ":";
@@ -1086,7 +1092,7 @@ private :
                            const xmlChar ** attributes) {
 
         *unit->unit += "<";
-        if(prefix) {
+        if (prefix) {
             *unit->unit += prefix;
             *unit->unit += ":";
         }
@@ -1094,14 +1100,14 @@ private :
 
         for (int pos = 0; pos < num_namespaces; ++pos) {
 
-            if(is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_CPP_NS_URI))
+            if (is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_CPP_NS_URI))
                 continue;
 
-            if(revision_number && is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_DIFF_NS_URI))
+            if (revision_number && is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_DIFF_NS_URI))
                 continue;
 
             *unit->unit += " xmlns";
-            if(namespaces[NS_PREFIX(pos)]) {
+            if (namespaces[NS_PREFIX(pos)]) {
 
                 *unit->unit += ":";
                 *unit->unit += (const char*) namespaces[NS_PREFIX(pos)];
@@ -1119,10 +1125,10 @@ private :
             std::string revision;
             revision.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
             std::string value = attribute_revision(revision);
-            if(revision != "" && value == "") continue;
+            if (revision != "" && value == "") continue;
 
             *unit->unit += " ";
-            if(attributes[ATTR_PREFIX(pos)]) {
+            if (attributes[ATTR_PREFIX(pos)]) {
 
                 *unit->unit += (const char*) attributes[ATTR_PREFIX(pos)];
                 *unit->unit += ":";
@@ -1148,7 +1154,7 @@ private :
      */
     void write_endTag(const char* localname, const char* prefix, bool is_empty) {
 
-        if(is_empty) {
+        if (is_empty) {
 
             *unit->unit += "/>";
             return;
@@ -1156,7 +1162,7 @@ private :
         }
 
         *unit->unit += "</";
-        if(prefix) {
+        if (prefix) {
 
             *unit->unit += (const char *)prefix;
             *unit->unit += ":";

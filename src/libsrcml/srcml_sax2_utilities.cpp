@@ -52,20 +52,20 @@
  */
 int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, const boost::optional<size_t> & revision_number, int unit) {
 
-    if(input_buffer == NULL || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (input_buffer == NULL || size == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, XML_CHAR_ENCODING_NONE);
-
-    if(input == NULL) return SRCML_STATUS_IO_ERROR;
+    if (input == NULL)
+        return SRCML_STATUS_IO_ERROR;
 
     srcml_sax2_reader reader(input, revision_number);
-    reader.read_src(output_buffer);
 
+    reader.read_src(output_buffer);
     
     xmlFreeParserInputBuffer(input);
 
     return SRCML_STATUS_OK;
-
 }
 
 /**
@@ -82,17 +82,19 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
  */
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, const boost::optional<size_t> & revision_number, int unit) {
 
-    if(compression > 9) compression = 9;
+    // @todo remove libxml2 compression
+    if (compression > 9)
+        compression = 9;
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding), compression);
 
     srcml_sax2_reader reader(ifilename, 0, revision_number);
+
     reader.read_src(output_buffer);
 
     xmlOutputBufferClose(output_buffer);
 
     return SRCML_STATUS_OK;
-
 }
 
 /**
@@ -118,7 +120,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
                 const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
                 OPTION_TYPE options, srcml_archive* oarchive) {
 
-    if(input_buffer == NULL || context_element == NULL ||
+    if (input_buffer == NULL || context_element == NULL ||
        xpath == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     // relative xpath changed to at any level
@@ -146,6 +148,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
 
     } catch(SAXError error) {
 
+        // @todo incorporate error messages into return value
         //        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
         status = 1;
     }
@@ -153,7 +156,6 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
     xmlXPathFreeCompExpr(compiled_xpath);
 
     return status;
-
 }
 
 
@@ -181,7 +183,6 @@ void dlexsltRegisterAll(void * handle) {
     exsltRegisterAll();
 
 #endif
-
 }
 
 #ifdef WITH_LIBXSLT
@@ -201,7 +202,7 @@ void dlexsltRegisterAll(void * handle) {
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, OPTION_TYPE options,
                 srcml_archive* out_archive) {
 
-    if(input_buffer == NULL || context_element == NULL ||
+    if (input_buffer == NULL || context_element == NULL ||
        xslt == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlInitParser();
@@ -272,7 +273,6 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     } catch(SAXError error) {
 
         fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
-
     }
 
     stylesheet->doc = 0;
@@ -284,7 +284,6 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
 #endif
 
     return 0;//status;
-
 }
 #endif
 
@@ -301,7 +300,8 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
  */
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* oarchive) {
 
-    if(input_buffer == NULL || relaxng == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (input_buffer == NULL || relaxng == NULL)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlRelaxNGParserCtxtPtr relaxng_parser_ctxt = xmlRelaxNGNewDocParserCtxt(relaxng);
     xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng_parser_ctxt);
@@ -317,13 +317,11 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTIO
     } catch(SAXError error) {
 
         fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
-
     }
 
     xmlRelaxNGFreeValidCtxt(rngctx);
     xmlRelaxNGFree(rng);
     xmlRelaxNGFreeParserCtxt(relaxng_parser_ctxt);
 
-    return 0;//status;
-
+    return 0;
 }

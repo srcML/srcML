@@ -47,7 +47,7 @@ public :
      *
      * Constructor.
      */
-    unit_dom(OPTION_TYPE options) : rootsize(0), found(false), options(options), error(false) {}
+    unit_dom(OPTION_TYPE options) : options(options) {}
 
     /**
      * ~unit_dom
@@ -113,7 +113,6 @@ private:
         start_output();
 
         xmlSAX2StartDocument(ctxt);
-
     }
  
     /**
@@ -142,7 +141,6 @@ private:
 
             data.push_back((const xmlChar *)handler->libxml2_namespaces[i]);
             data.push_back((const xmlChar *)handler->libxml2_namespaces[i + 1]);
-
         }
         rootsize = data.size();
 
@@ -152,7 +150,6 @@ private:
             xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes,
                                   0, handler->libxml2_attributes);
         }
-
     }
 
     /**
@@ -218,7 +215,6 @@ private:
         // start the unit (element) at the root using the merged namespaces
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, (int)(data.size() / 2),
                               &data[0], num_attributes, 0, handler->libxml2_attributes);
-
     }
 
     /**
@@ -241,7 +237,6 @@ private:
         sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
 
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes, 0, handler->libxml2_attributes);
-
     }
 
     /**
@@ -308,7 +303,6 @@ private:
     virtual void comment(const char * value) {
 
         xmlSAX2Comment(ctxt, (const xmlChar *)value);
-
     }
 
     /**
@@ -323,7 +317,6 @@ private:
 
         processing_instruction = std::pair<std::string, std::string>(target ? target : "", data ? data : "");
         //xmlSAX2ProcessingInstruction(ctxt, target, data);
-
     }
 
     /**
@@ -342,6 +335,7 @@ private:
 
         // End the document and free it if applied to unit individually
         if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
+
             xmlSAX2EndDocument(ctxt);
 
             // apply the necessary processing
@@ -353,9 +347,7 @@ private:
             xmlUnlinkNode(ctxt->myDoc->children);
             xmlFreeNodeList(aroot);
             ctxt->myDoc->children = 0;
-
         }
-
     }
 
     /**
@@ -386,9 +378,7 @@ private:
             xmlUnlinkNode(ctxt->myDoc->children);
             xmlFreeNodeList(aroot);
             ctxt->myDoc->children = 0;
-
         }
-
     }
 
     /**
@@ -420,7 +410,6 @@ private:
 
         // end the output
         end_output();
-
     }
 
 protected:
@@ -432,26 +421,25 @@ protected:
     std::vector<const xmlChar*>::size_type rootsize;
 
     /** we have started processing */
-    bool found;
+    bool found = false;
 
     /** srcML options */
     OPTION_TYPE options;
 
     /** found an error */
-    bool error;
+    bool error = false;
 
     /** the current parser ctxt */
     xmlParserCtxtPtr ctxt;
 
     /**  The root element */
-    srcml_element * root;
+    srcml_element* root = nullptr;
 
     /**  The meta tags for the root element */
     std::vector<srcml_element> meta_tags;
 
     /** The pre-root processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
-
 };
 
 #endif
