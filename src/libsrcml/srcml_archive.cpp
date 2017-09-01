@@ -1113,6 +1113,7 @@ int srcml_archive_read_open_memory(srcml_archive* archive, const char* buffer, s
     xmlCharEncoding encoding = archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE;
     archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding);
 
+    // @todo Really do not think this is needed. xmlAllocParserInputBuffer() is called inside of xmlParserInputBufferCreateMem()
     if (encoding != XML_CHAR_ENCODING_NONE && archive->input && archive->input->encoder) {
 
 #ifdef LIBXML2_NEW_BUFFER
