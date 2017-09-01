@@ -37,42 +37,34 @@ class srcSAXHandler {
 private :
 
     /** Controller for parser */
-    srcSAXController * controller;
+    srcSAXController* controller = nullptr;
 
 protected:
 
     /** is the document an archive */
-    bool is_archive;
+    bool is_archive = false;
 
     /** the current unit count */
-    int unit_count;
+    int unit_count = 0;
 
     /** open srcML element stack */
     std::vector<std::string> srcml_element_stack;
 
     /** the xml documents encoding */
-    const char * encoding;
+    const char* encoding = 0;
 
 public :
-
-    /**
-     * srcSAXHandler
-     *
-     * Default constructor default values to everything
-     */
-    srcSAXHandler() : controller(0), is_archive(false), unit_count(0), encoding(0) {}
 
     /**
      * set_controller
      * @param controller pointer to control class
      *
      * Used by srcSAXController to provide access to self
-     * for such things as disabeling sax parsing.
+     * for such things as disabling sax parsing.
      */
     void set_controller(srcSAXController * controller) {
 
         this->controller = controller;
-
     }
 
     /**
@@ -83,7 +75,6 @@ public :
     void increment_unit_count() {
 
         ++unit_count;
-
     }
 
     /**
@@ -91,10 +82,9 @@ public :
      *
      * Used internally to update the stack.
      */
-    std::vector<std::string> & get_stack() {
+    std::vector<std::string>& get_stack() {
 
         return srcml_element_stack;
-
     }
 
     /**
@@ -102,10 +92,9 @@ public :
      *
      * Get the control handler.
      */
-    srcSAXController & get_controller() {
+    srcSAXController& get_controller() {
 
         return *controller;
-
     }
 
     /**
@@ -116,7 +105,6 @@ public :
     void stop_parser() {
 
         srcsax_stop_parser(controller->getContext());
-
     } 
 
     /**
@@ -126,7 +114,7 @@ public :
      * Used by SAX2srcSAXHandler when determined
      * encoding.  Set the input encoding if any.
      */
-    void set_encoding(const char * encoding) {
+    void set_encoding(const char* encoding) {
 
         this->encoding = encoding;
     }
@@ -141,7 +129,6 @@ public :
     void set_is_archive(bool is_archive) {
 
         this->is_archive = is_archive;
-
     }
 
 #pragma GCC diagnostic push
@@ -176,9 +163,9 @@ public :
      * SAX handler function for start of the root element.
      * Overide for desired behaviour.
      */
-    virtual void startRoot(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {}
+    virtual void startRoot(const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
+                           const struct srcsax_attribute* attributes) {}
 
     /**
      * startUnit
@@ -193,24 +180,10 @@ public :
      * SAX handler function for start of an unit.
      * Overide for desired behaviour.
      */
-    virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {}
-#if 0
-    /**
-     * startFunction
-     * @param name the function's name
-     * @param return_type the function return type
-     * @param parameter_list a list of the function parameters in struct containing (declaration.type/declaration.name)
-     * @param is_decl indicates if the call is a function declaration (true) or definition (false)
-     *
-     * SAX handler function for start of function with prototype.
-     * Accessing references after callback termination is undefined.
-     *
-     * Overide for desired behaviour.
-     */
-    virtual void startFunction(const std::string & name, const std::string & return_type, const std::vector<declaration> & parameter_list, bool is_decl) {}
-#endif
+    virtual void startUnit(const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
+                           const struct srcsax_attribute* attributes) {}
+
     /**
      * startElement
      * @param localname the name of the element tag
@@ -224,9 +197,9 @@ public :
      * SAX handler function for start of an element.
      * Overide for desired behaviour.
      */
-    virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                                int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                                const struct srcsax_attribute * attributes) {}
+    virtual void startElement(const char* localname, const char* prefix, const char* URI,
+                                int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
+                                const struct srcsax_attribute* attributes) {}
 
     /**
      * endRoot
@@ -237,7 +210,7 @@ public :
      * SAX handler function for end of the root element.
      * Overide for desired behaviour.
      */
-    virtual void endRoot(const char * localname, const char * prefix, const char * URI) {}
+    virtual void endRoot(const char* localname, const char* prefix, const char* URI) {}
 
     /**
      * endUnit
@@ -248,16 +221,8 @@ public :
      * SAX handler function for end of an unit.
      * Overide for desired behaviour.
      */
-    virtual void endUnit(const char * localname, const char * prefix, const char * URI) {}
-#if 0
-    /**
-     * endFunction
-     *
-     * SAX handler function for end of a function.
-     * Overide for desired behaviour.
-     */
-    virtual void endFunction() {}
-#endif
+    virtual void endUnit(const char* localname, const char* prefix, const char* URI) {}
+
     /**
      * endElement
      * @param localname the name of the element tag
@@ -267,7 +232,7 @@ public :
      * SAX handler function for end of an element.
      * Overide for desired behaviour.
      */
-    virtual void endElement(const char * localname, const char * prefix, const char * URI) {}
+    virtual void endElement(const char* localname, const char* prefix, const char* URI) {}
 
     /**
      * charactersRoot
@@ -277,7 +242,7 @@ public :
      * SAX handler function for character handling at the root level.
      * Overide for desired behaviour.
      */
-    virtual void charactersRoot(const char * ch, int len) {}
+    virtual void charactersRoot(const char* ch, int len) {}
 
     /**
      * charactersUnit
@@ -287,7 +252,7 @@ public :
      * SAX handler function for character handling within a unit.
      * Overide for desired behaviour.
      */
-    virtual void charactersUnit(const char * ch, int len) {}
+    virtual void charactersUnit(const char* ch, int len) {}
 
     /**
      * metaTag
@@ -302,9 +267,9 @@ public :
      * SAX handler function for a meta tags.
      * Overide for desired behaviour.
      */
-    virtual void metaTag(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {}
+    virtual void metaTag(const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
+                           const struct srcsax_attribute* attributes) {}
 
     /**
      * comment
@@ -313,7 +278,7 @@ public :
      * A comment has been parsed.
      * Overide for desired behaviour.
      */
-    virtual void comment(const char * value) {}
+    virtual void comment(const char* value) {}
 
     /**
      * cdataBlock
@@ -323,7 +288,7 @@ public :
      * Called when a pcdata block has been parsed.
      * Overide for desired behaviour.
      */
-    virtual void cdataBlock(const char * value, int len) {}
+    virtual void cdataBlock(const char* value, int len) {}
 
     /**
      * processingInstruction
@@ -333,8 +298,7 @@ public :
      * Called when a processing instruction has been parsed.
      * Overide for desired behaviour.
      */
-    virtual void processingInstruction(const char * target, const char * data) {}
-
+    virtual void processingInstruction(const char* target, const char* data) {}
 
 #pragma GCC diagnostic pop
 

@@ -41,7 +41,6 @@ struct SAXError {
 
     /** error code */
     int error_code;
-
 };
 
 /**
@@ -55,7 +54,7 @@ class srcSAXController {
 private :
 
     // xmlParserCtxt
-    srcsax_context * context;
+    srcsax_context* context = nullptr;
 
 public :
 
@@ -66,7 +65,7 @@ public :
      *
      * Constructor
      */
-    srcSAXController(const char * filename, const char * encoding = 0);
+    srcSAXController(const char* filename, const char* encoding = 0);
 
     /**
      * srcSAXController
@@ -74,7 +73,7 @@ public :
      *
      * Constructor
      */
-    srcSAXController(std::string srcml_buffer, const char * encoding = 0);
+    srcSAXController(std::string srcml_buffer, const char* encoding = 0);
 
     /**
      * srcSAXController
@@ -82,7 +81,7 @@ public :
      *
      * Constructor
      */
-    srcSAXController(FILE * srcml_file, const char * encoding = 0);
+    srcSAXController(FILE * srcml_file, const char* encoding = 0);
 
     /**
      * srcSAXController
@@ -90,8 +89,7 @@ public :
      *
      * Constructor
      */
-    srcSAXController(int srcml_fd, const char * encoding = 0);
-
+    srcSAXController(int srcml_fd, const char* encoding = 0);
 
     /**
      * srcSAXController
@@ -101,7 +99,7 @@ public :
      *
      * Constructor
      */
-    srcSAXController(void * srcml_context, int (*read_callback)(void * context, char * buffer, int len), int (*close_callback)(void * context), const char * encoding = 0);
+    srcSAXController(void * srcml_context, int (*read_callback)(void * context, char* buffer, int len), int (*close_callback)(void * context), const char* encoding = 0);
 
     /**
      * srcSAXController
@@ -124,7 +122,6 @@ public :
      * Destructor
      */
     ~srcSAXController();
-
 
     /**
      * enable_startDocument
@@ -181,7 +178,6 @@ public :
      * Enables or disables endUnit parsing.
      */
     void enable_endUnit(bool enable);
-
 
     /**
      * enable_endElement
@@ -261,7 +257,6 @@ public :
      * Stop parsing.
      */
     void stop_parser();
-
 };
 
 #endif

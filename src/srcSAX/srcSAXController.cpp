@@ -376,7 +376,7 @@ void srcSAXController::parse(srcSAXHandler * handler) {
     if(status != 0) {
 
         xmlErrorPtr ep = xmlCtxtGetLastError(context->libxml2_context);
-        SAXError error = { std::string((const char *)ep->message), ep->code };
+        SAXError error = { std::string(ep->message), ep->code };
 
         throw error;
     }

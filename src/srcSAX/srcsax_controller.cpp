@@ -126,7 +126,7 @@ static struct srcsax_context * srcsax_create_context_inner(xmlParserInputBufferP
 
     if(input == 0) return 0;
 
-    struct srcsax_context * context = (struct srcsax_context *)malloc(sizeof(struct srcsax_context));
+    struct srcsax_context* context = (struct srcsax_context*)malloc(sizeof(struct srcsax_context));
 
     if(context == 0) {
 
