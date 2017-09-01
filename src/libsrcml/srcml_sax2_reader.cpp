@@ -85,7 +85,7 @@ void srcml_sax2_reader::init_constructor() {
 
     thread_args args = { &control, &handler };
 
-    thread = new boost::thread(start_routine, &args);
+    thread = new std::thread(start_routine, &args);
     handler.wait();
 }
 

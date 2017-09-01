@@ -34,8 +34,7 @@
 
 #include <string>
 #include <vector>
-
-#include <boost/thread/thread.hpp>
+#include <thread>
 #include <boost/optional.hpp>
 
 /**
@@ -57,7 +56,7 @@ private :
     srcml_reader_handler handler;
 
     /** thread running execution */
-    boost::thread * thread;
+    std::thread * thread;
 
     void init_constructor();
 
