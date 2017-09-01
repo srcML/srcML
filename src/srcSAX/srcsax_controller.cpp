@@ -386,17 +386,14 @@ int srcsax_parse_handler(srcsax_context* context, struct srcsax_handler * handle
  */
 xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buffer_input) {
 
+    if (buffer_input == 0)
+        return 0;
+
     xmlParserCtxtPtr ctxt = xmlNewParserCtxt();
     if (ctxt == 0)
         return 0;
 
     xmlCtxtUseOptions(ctxt, XML_PARSE_COMPACT | XML_PARSE_HUGE | XML_PARSE_NODICT);
-
-    xmlParserInputBufferPtr buf = buffer_input;
-    if (buf == 0) {
-        xmlFreeParserCtxt(ctxt);
-        return 0;
-    }
 
     xmlParserInputPtr input = xmlNewInputStream(ctxt);
     if (input == 0) {
@@ -405,12 +402,12 @@ xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buffer_inp
     }
 
     input->filename = 0;
-    input->buf = buf;
+    input->buf = buffer_input;
     _xmlBufResetInput(input->buf->buffer, input);
 
     inputPush(ctxt, input);
 
-    return(ctxt);
+    return ctxt;
 }
 
 /**
