@@ -81,7 +81,7 @@ public :
      *
      * Constructor
      */
-    srcSAXController(FILE * srcml_file, const char* encoding = 0);
+    srcSAXController(FILE* srcml_file, const char* encoding = 0);
 
     /**
      * srcSAXController
