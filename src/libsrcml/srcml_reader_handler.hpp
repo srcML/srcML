@@ -113,10 +113,10 @@ private :
      struct meta_tag {
 
         /** metatags localname */
-        const char* localname;
+        char* localname;
 
         /** metatags prefix */
-        const char* prefix;
+        char* prefix;
 
         /** metatags number of attributes */
         int num_attributes;
@@ -203,10 +203,14 @@ private :
          */
         ~meta_tag() {
 
-            if (localname)
-                free((void *)localname), localname = 0;
-            if (prefix)
-                free((void *)prefix), prefix = 0;
+            if (localname) {
+                free(localname);
+                localname = 0;
+            }
+            if (prefix) {
+                free(prefix);
+                prefix = 0;
+            }
 
             if (attributes) {
 
@@ -221,9 +225,9 @@ private :
                     if (attributes[pos].value)
                         free((void *)attributes[pos].value);
                 }
-
                
-                free(attributes), attributes = 0;
+                free(attributes);
+                attributes = 0;
             }
         }
      };
@@ -238,19 +242,21 @@ private :
     std::stack<srcdiff_operation> srcdiff_stack;
 
     /** the srcdiff revision to extract */
-    const boost::optional<size_t> & revision_number;
+    const boost::optional<size_t>& revision_number;
 
     std::string attribute_revision(const std::string & attribute) {
 
-        if (!revision_number) return attribute;
+        if (!revision_number)
+            return attribute;
 
-        std::string::size_type pos = attribute.find('|');
-        if (pos == std::string::npos) return attribute;
+        auto pos = attribute.find('|');
+        if (pos == std::string::npos)
+            return attribute;
 
-        if (*revision_number == SRCDIFF_REVISION_ORIGINAL) return attribute.substr(0, pos);
+        if (*revision_number == SRCDIFF_REVISION_ORIGINAL)
+            return attribute.substr(0, pos);
 
-        return attribute.substr(pos + 1, std::string::npos);
-
+        return attribute.substr(pos + 1);
     }
 
 public :
@@ -280,7 +286,8 @@ public :
     ~srcml_reader_handler() {
 
         srcml_archive_free(archive);
-        if (unit) srcml_unit_free(unit);
+        if (unit)
+            srcml_unit_free(unit);
     }
 
     /**
@@ -292,7 +299,6 @@ public :
 
         is_done = true;
         srcSAXHandler::stop_parser();
-
     }
 
     /**
@@ -595,7 +601,6 @@ public :
 
                     *unit->unit += ">";
                     is_empty = false;
-
                 }
 
                 for (std::vector<meta_tag>::size_type i = 0; i < meta_tags.size(); ++i) {
@@ -607,13 +612,10 @@ public :
                         write_endTag(meta_tag.localname, meta_tag.prefix, true);
 
                     } catch(...) { /** @todo handle */ continue; }
-
                 }
-
             }
 
             unit->content_begin = (int) unit->unit->size() + 1;
-
         }
 
         // number of newlines reset
@@ -789,7 +791,6 @@ public :
                 unit->content_end = (int) unit->unit->size() + 1;
                 
                 write_endTag(localname, prefix, is_empty);
-
             }
 
             // pause
