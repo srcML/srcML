@@ -41,10 +41,7 @@
 
 #include <mutex>
 #include <condition_variable>
-
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <boost/optional.hpp>
-#pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
 /**
  * srcml_reader_handler
@@ -65,45 +62,45 @@ private :
     std::condition_variable cond;
 
     /** collected root language */
-    srcml_archive* archive;
+    srcml_archive* archive = nullptr;
 
     /** collected unit language */
-    srcml_unit* unit;
+    srcml_unit* unit = nullptr;
 
     /** output buffer for direct src write */
-    xmlOutputBufferPtr output_buffer;
+    xmlOutputBufferPtr output_buffer = nullptr;
 
     /** has reached end of parsing*/
-    bool is_done;
+    bool is_done = false;
     /** has passed root*/
-    bool read_root;
+    bool read_root = false;
     /** stop after collecting unit attribute*/
-    bool collect_unit_attributes;
+    bool collect_unit_attributes = false;
     /** collect srcML as parse*/
-    bool collect_srcml;
+    bool collect_srcml = false;
     /** bool collect src */
-    bool collect_src;
+    bool collect_src = false;
 
     /** terminate */
-    bool terminate;
+    bool terminate = false;
 
     /** track if empty unit */
-    bool is_empty;
+    bool is_empty = false;
 
     /** indicate if we need to wait on the root */
-    bool wait_root;
+    bool wait_root = true;
 
     /** skip internal unit elements */
-    bool skip;
+    bool skip = false;
 
     /** srcDiff namespace */
-    bool issrcdiff;
+    bool issrcdiff = false;
 
     /** number of newlines in unit */
-    int loc;
+    int loc = 0;
 
     /** last character read in */
-    char lastchar;
+    char lastchar = 0;
 
     /**
      * meta_tag
@@ -122,7 +119,7 @@ private :
         int num_attributes;
 
         /** meta tags attributes */
-        struct srcsax_attribute* attributes;
+        srcsax_attribute* attributes;
 
         /**
          * meta_tag
@@ -133,12 +130,12 @@ private :
          *
          * Construct meta_tag from SAX data.
          */
-        meta_tag(const char* localname, const char* prefix, int num_attributes, const struct srcsax_attribute * attributes) {
+        meta_tag(const char* localname, const char* prefix, int num_attributes, const srcsax_attribute * attributes) {
 
             this->localname = localname ? strdup(localname) : 0;
             this->prefix = prefix ? strdup(prefix) : 0;
             this->num_attributes = num_attributes;
-            this->attributes = (struct srcsax_attribute *)calloc(num_attributes, sizeof(struct srcsax_attribute));
+            this->attributes = (srcsax_attribute *)calloc(num_attributes, sizeof(srcsax_attribute));
             for (int pos = 0; pos < num_attributes; ++pos) {
 
                 this->attributes[pos].localname = attributes[pos].localname ? strdup(attributes[pos].localname) : 0;
@@ -159,7 +156,7 @@ private :
             this->localname = other.localname ? strdup(other.localname) : 0;
             this->prefix = other.prefix ? strdup(other.prefix) : 0;
             this->num_attributes = other.num_attributes;
-            this->attributes = (struct srcsax_attribute *)calloc(other.num_attributes, sizeof(struct srcsax_attribute));
+            this->attributes = (srcsax_attribute *)calloc(other.num_attributes, sizeof(srcsax_attribute));
             for (int pos = 0; pos < other.num_attributes; ++pos) {
 
                 this->attributes[pos].localname = other.attributes[pos].localname ? strdup(other.attributes[pos].localname) : 0;
@@ -244,7 +241,7 @@ private :
     /** the srcdiff revision to extract */
     const boost::optional<size_t>& revision_number;
 
-    std::string attribute_revision(const std::string & attribute) {
+    std::string attribute_revision(const std::string& attribute) {
 
         if (!revision_number)
             return attribute;
@@ -269,9 +266,8 @@ public :
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-    srcml_reader_handler(const boost::optional<size_t> & revision_number) : unit(0), output_buffer(0), is_done(false), read_root(false),
-         collect_unit_attributes(false), collect_srcml(false), collect_src(false),
-         terminate(false), is_empty(false), wait_root(true), skip(false), issrcdiff(false), loc(0), lastchar(0), revision_number(revision_number) {
+    srcml_reader_handler(const boost::optional<size_t>& revision_number)
+        : revision_number(revision_number) {
 
         archive = srcml_archive_create();
 
@@ -398,7 +394,7 @@ public :
      */
     virtual void startRoot(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
+                           const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
@@ -503,7 +499,7 @@ public :
      */
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
+                           const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
@@ -644,7 +640,7 @@ public :
      */
     virtual void startElement(const char* localname, const char* prefix, const char* URI,
                                 int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
-                                const struct srcsax_attribute * /* attributes */) {
+                                const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
@@ -936,7 +932,7 @@ public :
      */
     virtual void metaTag(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           const srcsax_attribute * attributes) {
 
         if (strcmp(localname, "macro-list") == 0) {
 
@@ -995,7 +991,7 @@ private :
      */
     void write_startTag(const char* localname, const char* prefix,
                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           const srcsax_attribute * attributes) {
 
         *unit->unit += "<";
         if (prefix) {
