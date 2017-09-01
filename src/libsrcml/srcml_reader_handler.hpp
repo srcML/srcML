@@ -39,10 +39,10 @@
 
 #include <cstring>
 
+#include <mutex>
+#include <condition_variable>
+
 #pragma GCC diagnostic ignored "-Wshorten-64-to-32"
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/locks.hpp>
 #include <boost/optional.hpp>
 #pragma GCC diagnostic warning "-Wshorten-64-to-32"
 
@@ -59,10 +59,10 @@ class srcml_reader_handler : public srcSAXHandler {
 private :
 
     /** mutex to halt both threads on */
-    boost::mutex mutex;
+    std::mutex mutex;
 
     /** sax stop/start condition */
-    boost::condition_variable cond;
+    std::condition_variable cond;
 
     /** collected root language */
     srcml_archive* archive;
@@ -303,12 +303,13 @@ public :
      */
     void wait() {
 
-        boost::unique_lock<boost::mutex> lock(mutex);
+        std::unique_lock<std::mutex> lock(mutex);
 
-        if (is_done) return;
+        if (is_done)
+            return;
 
-        if (wait_root) cond.wait(lock);
-
+        if (wait_root)
+            cond.wait(lock);
     }
 
     /**
@@ -318,9 +319,9 @@ public :
      */
     void resume() {
 
-        boost::unique_lock<boost::mutex> lock(mutex);
-        cond.notify_all();
+        std::unique_lock<std::mutex> lock(mutex);
 
+        cond.notify_all();
     }
 
     /**
@@ -330,12 +331,12 @@ public :
      */
     void resume_and_wait() {
 
-        boost::unique_lock<boost::mutex> lock(mutex);
+        std::unique_lock<std::mutex> lock(mutex);
         cond.notify_all();
-        if (is_done) return;
+        if (is_done)
+            return;
 
         cond.wait(lock);
-
     }
 
     /**
@@ -346,8 +347,8 @@ public :
     void done() {
 
         is_done = true;
+        
         cond.notify_all();
-
     }
 
     /**
@@ -359,8 +360,8 @@ public :
     void stop() {
 
         terminate = true;
-        resume();
 
+        resume();
     }
 
 #pragma GCC diagnostic push
@@ -375,7 +376,6 @@ public :
     virtual void startDocument() {
 
         srcml_archive_set_xml_encoding(archive, encoding ? encoding : "UTF-8");
-
     }
 
     /**
@@ -401,7 +401,8 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if (!is_archive) srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        if (!is_archive)
+            srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
@@ -459,9 +460,7 @@ public :
 
                 archive->attributes.push_back(attribute);
                 archive->attributes.push_back(value);
-
             }
-
         }
 
         // collect namespaces
@@ -476,14 +475,11 @@ public :
                 issrcdiff = true;
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
-
         }
-
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-
     }
 
     /**
@@ -517,24 +513,22 @@ public :
         // @todo this may need to change because, meta tags have separate call now
         if (!read_root) {
 
-            {
-                
-                boost::unique_lock<boost::mutex> lock(mutex);
-                if (terminate) stop_parser();
+            {                
+                std::unique_lock<std::mutex> lock(mutex);
+
+                if (terminate)
+                    stop_parser();
                 wait_root = false;
                 cond.notify_all();
                 cond.wait(lock);
-                read_root = true;
-        
+                read_root = true;        
             }
 
             if (terminate) {
 
                 stop_parser();
                 return;
-
             }
-
         }
 
         unit = srcml_unit_create(archive);
@@ -570,28 +564,25 @@ public :
 
                 unit->attributes.push_back(attribute);
                 unit->attributes.push_back(value);
-
             }
-
         }
 
         if (collect_unit_attributes) {
 
             // pause
-            boost::unique_lock<boost::mutex> lock(mutex);
-            if (terminate) stop_parser();
+            std::unique_lock<std::mutex> lock(mutex);
+            if (terminate)
+                stop_parser();
+
             cond.notify_all();
             cond.wait(lock);
-
         }
 
         if (skip) {
-
             get_controller().enable_startElement(false);
             get_controller().enable_charactersUnit(false);
             get_controller().enable_comment(false);
             get_controller().enable_cdataBlock(false);
-
         }
 
         if (collect_srcml) {
@@ -629,12 +620,12 @@ public :
         loc = 0;
         lastchar = 0;
 
-        if (terminate) stop_parser();
+        if (terminate)
+            stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-
     }
 
     /**
@@ -672,15 +663,16 @@ public :
                     srcdiff_stack.push(DELETE);
                 else if (local_name == "insert")
                     srcdiff_stack.push(INSERT);
-
             }
 
             if (issrcdiff && revision_number) {
 
-                if (is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-                if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
-                if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
-
+                if (is_srcml_namespace(URI, SRCML_DIFF_NS_URI))
+                    return;
+                if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT)
+                    return;
+                if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE)
+                    return;
             }
         }
 
@@ -693,24 +685,22 @@ public :
             char value = (int)strtol(svalue.c_str(), NULL, 0);
 
             charactersUnit(&value, 1);
-
         }
 
-        if (is_empty && collect_srcml) *unit->unit += ">";
+        if (is_empty && collect_srcml)
+            *unit->unit += ">";
         is_empty = true;
 
         if (collect_srcml) {
-
             write_startTag(localname, prefix, num_namespaces, handler->libxml2_namespaces, num_attributes, handler->libxml2_attributes);
-
         }
 
-        if (terminate) stop_parser();
+        if (terminate)
+            stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-
     }
 
     /**
@@ -729,39 +719,37 @@ public :
 #endif
         if (!read_root) {
 
-            {
-                
-                boost::unique_lock<boost::mutex> lock(mutex);
-                if (terminate) stop_parser();
+            {            
+                std::unique_lock<std::mutex> lock(mutex);
+                if (terminate)
+                    stop_parser();
                 wait_root = false;
                 cond.notify_all();
                 cond.wait(lock);
                 read_root = true;
-        
             }
 
             if (terminate) {
 
                 stop_parser();
                 return;
-
             }
-
         }
 
         {
-            boost::unique_lock<boost::mutex> lock(mutex);
-            if (terminate) stop_parser();
+            std::unique_lock<std::mutex> lock(mutex);
+            if (terminate)
+                stop_parser();
             is_done = true;
             cond.notify_all();
         }
 
-        if (terminate) stop_parser();
+        if (terminate)
+            stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-
     }
 
     /**
@@ -791,7 +779,6 @@ public :
             get_controller().enable_charactersUnit(true);
             get_controller().enable_comment(true);
             get_controller().enable_cdataBlock(true);
-
         }
 
         //if (is_empty) *unit->unit += ">";
@@ -806,11 +793,10 @@ public :
             }
 
             // pause
-            boost::unique_lock<boost::mutex> lock(mutex);
+            std::unique_lock<std::mutex> lock(mutex);
             if (terminate) stop_parser();
             cond.notify_all();
             cond.wait(lock);
-
         }
 
         is_empty = false;
@@ -818,12 +804,12 @@ public :
         srcml_unit_free(unit);
         unit = 0;
 
-        if (terminate) stop_parser();
+        if (terminate)
+            stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-
     }
 
     /**
@@ -855,23 +841,21 @@ public :
                 if (is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
                 if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
                 if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
-
             }
         }
 
         if (collect_srcml) {
-
             write_endTag(localname, prefix, is_empty);
         }
 
         is_empty = false;
 
-        if (terminate) stop_parser();
+        if (terminate)
+            stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-
     }
 
     /**
@@ -891,12 +875,14 @@ public :
 
         if (issrcdiff && revision_number) {
 
-            if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
-            if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
-
+            if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT)
+                return;
+            if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE)
+                return;
         }        
 
-        if (is_empty && collect_srcml) *unit->unit += ">";
+        if (is_empty && collect_srcml)
+            *unit->unit += ">";
         is_empty = false;
 
         // update LOC
@@ -924,15 +910,14 @@ public :
                 else
                     (*unit->unit) += character;
             }
-
         }
 
-        if (terminate) stop_parser();
+        if (terminate)
+            stop_parser();
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
-
     }
 
     /**
@@ -954,8 +939,8 @@ public :
 
         if (strcmp(localname, "macro-list") == 0) {
 
-            std::string token("");
-            std::string type("");
+            std::string token;
+            std::string type;
 
             for (int pos = 0; pos < num_attributes; ++pos) {
 
@@ -963,24 +948,19 @@ public :
                     token = attributes[pos].value;
                 else if (strcmp(attributes[pos].localname, "type") == 0)
                     type = attributes[pos].value;
-
             }
 
             if (token != "" && type != "") {
 
                 archive->user_macro_list.push_back(token);
                 archive->user_macro_list.push_back(type);
-
             }
-
         }
 
         if (!is_archive) {
 
             meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
-
         }
-
     }
 
     /**
@@ -1036,36 +1016,32 @@ private :
 
                 *unit->unit += ":";
                 *unit->unit += namespaces[pos].prefix;
-
             }
 
             *unit->unit += "=\"";
             *unit->unit += namespaces[pos].uri;
             *unit->unit += "\"";
-
         }
 
         for (int pos = 0; pos < num_attributes; ++pos) {
 
             std::string value = attribute_revision(attributes[pos].value);
-            if (std::string(attributes[pos].value) != "" && value == "") continue;
+            if (std::string(attributes[pos].value) != "" && value == "")
+                continue;
 
             *unit->unit += " ";
             if (attributes[pos].prefix) {
 
                 *unit->unit += attributes[pos].prefix;
                 *unit->unit += ":";
-
             }
             *unit->unit += attributes[pos].localname;
 
             *unit->unit += "=\"";
             *unit->unit += value;
             *unit->unit += "\"";
-
         }
         //*unit->unit += ">";
-
     }
 
 #define NS_URI(pos) (pos * 2 + 1)
@@ -1111,13 +1087,11 @@ private :
 
                 *unit->unit += ":";
                 *unit->unit += (const char*) namespaces[NS_PREFIX(pos)];
-
             }
 
             *unit->unit += "=\"";
             *unit->unit += (const char*) namespaces[NS_URI(pos)];
             *unit->unit += "\"";
-
         }
 
         for (int pos = 0; pos < num_attributes; ++pos) {
@@ -1132,7 +1106,6 @@ private :
 
                 *unit->unit += (const char*) attributes[ATTR_PREFIX(pos)];
                 *unit->unit += ":";
-
             }
             *unit->unit += (const char*) attributes[ATTR_LOCALNAME(pos)];
 
@@ -1141,7 +1114,6 @@ private :
             *unit->unit += "\"";
         }
         //*unit->unit += ">";
-
     }
 
     /**
@@ -1158,7 +1130,6 @@ private :
 
             *unit->unit += "/>";
             return;
-
         }
 
         *unit->unit += "</";
@@ -1166,15 +1137,11 @@ private :
 
             *unit->unit += (const char *)prefix;
             *unit->unit += ":";
-
         }
         *unit->unit += (const char *)localname;
 
         *unit->unit += ">";
-
     }
-
 };
-
 
 #endif
