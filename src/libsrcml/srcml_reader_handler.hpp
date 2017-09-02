@@ -115,11 +115,8 @@ private :
         /** metatags prefix */
         std::string prefix;
 
-        /** metatags number of attributes */
-        int num_attributes = 0;
-
         /** meta tags attributes */
-        srcsax_attribute* attributes = nullptr;
+        std::vector<srcsax_attribute> attributes;
 
         /**
          * meta_tag
@@ -130,12 +127,10 @@ private :
          *
          * Construct meta_tag from SAX data.
          */
-        meta_tag(const char* localname, const char* prefix, int num_attributes, const srcsax_attribute* attributes) {
+        meta_tag(const char* localname, const char* prefix, int num_attributes, const srcsax_attribute* attributes)
+            : localname(localname), prefix(prefix) {
 
-            this->localname = localname;
-            this->prefix = prefix;
-            this->num_attributes = num_attributes;
-            this->attributes = (srcsax_attribute *)calloc(num_attributes, sizeof(srcsax_attribute));
+            this->attributes.reserve(num_attributes);
             for (int pos = 0; pos < num_attributes; ++pos) {
 
                 this->attributes[pos].localname = attributes[pos].localname ? strdup(attributes[pos].localname) : 0;
@@ -153,17 +148,9 @@ private :
          */
         meta_tag(const meta_tag& other) {
 
-            this->localname = other.localname;
-            this->prefix = other.prefix;
-            this->num_attributes = other.num_attributes;
-            this->attributes = (srcsax_attribute *)calloc(other.num_attributes, sizeof(srcsax_attribute));
-            for (int pos = 0; pos < other.num_attributes; ++pos) {
-
-                this->attributes[pos].localname = other.attributes[pos].localname ? strdup(other.attributes[pos].localname) : 0;
-                this->attributes[pos].prefix = other.attributes[pos].prefix ? strdup(other.attributes[pos].prefix) : 0;
-                this->attributes[pos].uri = other.attributes[pos].uri ? strdup(other.attributes[pos].uri) : 0;
-                this->attributes[pos].value = other.attributes[pos].value ? strdup(other.attributes[pos].value) : 0;
-            }
+            localname = other.localname;
+            prefix = other.prefix;
+            attributes = other.attributes;
         }
 
         /**
@@ -190,7 +177,6 @@ private :
 
             std::swap(localname, other.localname);
             std::swap(prefix, other.prefix);
-            std::swap(num_attributes, other.num_attributes);
             std::swap(attributes, other.attributes);
         }
 
@@ -201,22 +187,16 @@ private :
          */
         ~meta_tag() {
 
-            if (attributes) {
+            for (size_t pos = 0; pos < attributes.size(); ++pos) {
 
-                for (int pos = 0; pos < num_attributes; ++pos) {
-
-                    if (attributes[pos].localname)
-                        free((void *)attributes[pos].localname);
-                    if (attributes[pos].prefix)
-                        free((void *)attributes[pos].prefix);
-                    if (attributes[pos].uri)
-                        free((void *)attributes[pos].uri);
-                    if (attributes[pos].value)
-                        free((void *)attributes[pos].value);
-                }
-               
-                free(attributes);
-                attributes = 0;
+                if (attributes[pos].localname)
+                    free((void *)attributes[pos].localname);
+                if (attributes[pos].prefix)
+                    free((void *)attributes[pos].prefix);
+                if (attributes[pos].uri)
+                    free((void *)attributes[pos].uri);
+                if (attributes[pos].value)
+                    free((void *)attributes[pos].value);
             }
         }
      };
@@ -534,8 +514,7 @@ public :
         for (int pos = 0; pos < num_attributes; ++pos) {
 
             std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
-            std::string value;
-            value.append((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
+            std::string value((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
             value = attribute_revision(value);
             
             if (attribute == "timestamp")
@@ -596,7 +575,7 @@ public :
                     try {
 
                         meta_tag & meta_tag = meta_tags.at(i);
-                        write_startTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), 0, 0, meta_tag.num_attributes, meta_tag.attributes);
+                        write_startTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), 0, 0, (int)meta_tag.attributes.size(), meta_tag.attributes);
                         write_endTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), true);
 
                     } catch(...) { /** @todo handle */ continue; }
@@ -982,8 +961,8 @@ private :
      * Write out the start tag to the unit string.
      */
     void write_startTag(const char* localname, const char* prefix,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const srcsax_attribute * attributes) {
+                           int num_namespaces, const struct srcsax_namespace * namespaces, int /* num_attributes */,
+                           const std::vector<srcsax_attribute> attributes) {
 
         *unit->unit += "<";
         if (prefix) {
@@ -1012,7 +991,7 @@ private :
             *unit->unit += "\"";
         }
 
-        for (int pos = 0; pos < num_attributes; ++pos) {
+        for (size_t pos = 0; pos < attributes.size(); ++pos) {
 
             std::string value = attribute_revision(attributes[pos].value);
             if (std::string(attributes[pos].value) != "" && value == "")
