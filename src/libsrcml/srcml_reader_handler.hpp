@@ -44,6 +44,26 @@
 #include <boost/optional.hpp>
 
 /**
+ * srcsax_attribute
+ *
+ * Data structure for a srcML/xml attribute
+ */
+struct attribute_t {
+
+    /** attribute name */
+    boost::optional<std::string> localname;
+
+    /** attribute namespace prefix */
+    boost::optional<std::string> prefix;
+
+    /** attribute namespace uri */
+    boost::optional<std::string> uri;
+
+    /** attribute value */
+    boost::optional<std::string> value;
+};
+
+/**
  * srcml_reader_handler
  *
  * Inherits from srcMLHandler to provide hooks into
@@ -116,7 +136,7 @@ private :
         std::string prefix;
 
         /** meta tags attributes */
-        std::vector<srcsax_attribute> attributes;
+        std::vector<attribute_t> attributes;
 
         /**
          * meta_tag
@@ -133,10 +153,10 @@ private :
             this->attributes.reserve(num_attributes);
             for (int pos = 0; pos < num_attributes; ++pos) {
 
-                this->attributes[pos].localname = attributes[pos].localname ? strdup(attributes[pos].localname) : 0;
-                this->attributes[pos].prefix = attributes[pos].prefix ? strdup(attributes[pos].prefix) : 0;
-                this->attributes[pos].uri = attributes[pos].uri ? strdup(attributes[pos].uri) : 0;
-                this->attributes[pos].value = attributes[pos].value ? strdup(attributes[pos].value) : 0;
+                this->attributes[pos].localname = attributes[pos].localname;
+                this->attributes[pos].prefix = attributes[pos].prefix;
+                this->attributes[pos].uri = attributes[pos].uri;
+                this->attributes[pos].value = attributes[pos].value;
             }
         }
 
@@ -185,20 +205,7 @@ private :
          *
          * Destructor
          */
-        ~meta_tag() {
-
-            for (size_t pos = 0; pos < attributes.size(); ++pos) {
-
-                if (attributes[pos].localname)
-                    free((void *)attributes[pos].localname);
-                if (attributes[pos].prefix)
-                    free((void *)attributes[pos].prefix);
-                if (attributes[pos].uri)
-                    free((void *)attributes[pos].uri);
-                if (attributes[pos].value)
-                    free((void *)attributes[pos].value);
-            }
-        }
+        ~meta_tag() {}
      };
 
     /** save meta tags to use when non-archive write unit */
@@ -962,7 +969,7 @@ private :
      */
     void write_startTag(const char* localname, const char* prefix,
                            int num_namespaces, const struct srcsax_namespace * namespaces, int /* num_attributes */,
-                           const std::vector<srcsax_attribute> attributes) {
+                           const std::vector<attribute_t> attributes) {
 
         *unit->unit += "<";
         if (prefix) {
@@ -993,17 +1000,17 @@ private :
 
         for (size_t pos = 0; pos < attributes.size(); ++pos) {
 
-            std::string value = attribute_revision(attributes[pos].value);
-            if (std::string(attributes[pos].value) != "" && value == "")
+            std::string value = attribute_revision(*attributes[pos].value);
+            if (attributes[pos].value && *attributes[pos].value != "" && value == "")
                 continue;
 
             *unit->unit += " ";
             if (attributes[pos].prefix) {
 
-                *unit->unit += attributes[pos].prefix;
+                *unit->unit += *attributes[pos].prefix;
                 *unit->unit += ":";
             }
-            *unit->unit += attributes[pos].localname;
+            *unit->unit += *attributes[pos].localname;
 
             *unit->unit += "=\"";
             *unit->unit += value;
