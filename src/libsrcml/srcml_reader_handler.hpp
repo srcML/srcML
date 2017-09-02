@@ -110,16 +110,16 @@ private :
      struct meta_tag {
 
         /** metatags localname */
-        char* localname;
+        char* localname = nullptr;
 
         /** metatags prefix */
-        char* prefix;
+        char* prefix = nullptr;
 
         /** metatags number of attributes */
-        int num_attributes;
+        int num_attributes = 0;
 
         /** meta tags attributes */
-        srcsax_attribute* attributes;
+        srcsax_attribute* attributes = nullptr;
 
         /**
          * meta_tag
@@ -130,7 +130,7 @@ private :
          *
          * Construct meta_tag from SAX data.
          */
-        meta_tag(const char* localname, const char* prefix, int num_attributes, const srcsax_attribute * attributes) {
+        meta_tag(const char* localname, const char* prefix, int num_attributes, const srcsax_attribute* attributes) {
 
             this->localname = localname ? strdup(localname) : 0;
             this->prefix = prefix ? strdup(prefix) : 0;
@@ -151,7 +151,7 @@ private :
          *
          * Copy constructor.
          */
-        meta_tag(const meta_tag & other) {
+        meta_tag(const meta_tag& other) {
 
             this->localname = other.localname ? strdup(other.localname) : 0;
             this->prefix = other.prefix ? strdup(other.prefix) : 0;
@@ -173,9 +173,10 @@ private :
          * Overloaded assignment operator
          * Returns the assigned to meta_tag
          */
-        meta_tag & operator=(meta_tag other) {
+        meta_tag& operator=(meta_tag& other) {
 
-            this->swap(other);
+            swap(other);
+            
             return *this;
         }
 
@@ -397,7 +398,7 @@ public :
                            const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
-        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+        sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -502,7 +503,7 @@ public :
                            const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
-        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+        sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -643,7 +644,7 @@ public :
                                 const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
-        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+        sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
