@@ -374,7 +374,6 @@ public :
     virtual void startRoot(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
                            const srcsax_attribute * /* attributes */) {
-
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
 
@@ -998,19 +997,19 @@ private :
             *unit->unit += "\"";
         }
 
-        for (size_t pos = 0; pos < attributes.size(); ++pos) {
+        for (const auto& attr : attributes) {
 
-            std::string value = attribute_revision(*attributes[pos].value);
-            if (attributes[pos].value && *attributes[pos].value != "" && value == "")
+            std::string value = attribute_revision(*attr.value);
+            if (attr.value && *attr.value != "" && value == "")
                 continue;
 
             *unit->unit += " ";
-            if (attributes[pos].prefix) {
+            if (attr.prefix) {
 
-                *unit->unit += *attributes[pos].prefix;
+                *unit->unit += *attr.prefix;
                 *unit->unit += ":";
             }
-            *unit->unit += *attributes[pos].localname;
+            *unit->unit += *attr.localname;
 
             *unit->unit += "=\"";
             *unit->unit += value;
