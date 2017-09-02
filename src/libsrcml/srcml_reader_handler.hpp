@@ -110,10 +110,10 @@ private :
      struct meta_tag {
 
         /** metatags localname */
-        char* localname = nullptr;
+        std::string localname;
 
         /** metatags prefix */
-        char* prefix = nullptr;
+        std::string prefix;
 
         /** metatags number of attributes */
         int num_attributes = 0;
@@ -132,8 +132,8 @@ private :
          */
         meta_tag(const char* localname, const char* prefix, int num_attributes, const srcsax_attribute* attributes) {
 
-            this->localname = localname ? strdup(localname) : 0;
-            this->prefix = prefix ? strdup(prefix) : 0;
+            this->localname = localname;
+            this->prefix = prefix;
             this->num_attributes = num_attributes;
             this->attributes = (srcsax_attribute *)calloc(num_attributes, sizeof(srcsax_attribute));
             for (int pos = 0; pos < num_attributes; ++pos) {
@@ -153,8 +153,8 @@ private :
          */
         meta_tag(const meta_tag& other) {
 
-            this->localname = other.localname ? strdup(other.localname) : 0;
-            this->prefix = other.prefix ? strdup(other.prefix) : 0;
+            this->localname = other.localname;
+            this->prefix = other.prefix;
             this->num_attributes = other.num_attributes;
             this->attributes = (srcsax_attribute *)calloc(other.num_attributes, sizeof(srcsax_attribute));
             for (int pos = 0; pos < other.num_attributes; ++pos) {
@@ -176,7 +176,7 @@ private :
         meta_tag& operator=(meta_tag& other) {
 
             swap(other);
-            
+
             return *this;
         }
 
@@ -200,15 +200,6 @@ private :
          * Destructor
          */
         ~meta_tag() {
-
-            if (localname) {
-                free(localname);
-                localname = 0;
-            }
-            if (prefix) {
-                free(prefix);
-                prefix = 0;
-            }
 
             if (attributes) {
 
@@ -605,8 +596,8 @@ public :
                     try {
 
                         meta_tag & meta_tag = meta_tags.at(i);
-                        write_startTag(meta_tag.localname, meta_tag.prefix, 0, 0, meta_tag.num_attributes, meta_tag.attributes);
-                        write_endTag(meta_tag.localname, meta_tag.prefix, true);
+                        write_startTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), 0, 0, meta_tag.num_attributes, meta_tag.attributes);
+                        write_endTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), true);
 
                     } catch(...) { /** @todo handle */ continue; }
                 }
