@@ -46,11 +46,6 @@
 #include <dlfcn.h>
 #endif
 
-#ifdef _MSC_BUILD
-#include <io.h>
-#define snprintf _snprintf
-#endif
-
 #include <srcml_translator.hpp>
 
 extern std::vector<transform> global_transformations;
@@ -683,13 +678,9 @@ public :
         if (isoption(options, SRCML_OPTION_XPATH_TOTAL))
             return;
 
-        char buffer[200];
-        if ((int)result_nodes->floatval == result_nodes->floatval) {
-            sprintf(buffer, "%d\n", (int)result_nodes->floatval);
-        } else {
-            sprintf(buffer, "%f\n", result_nodes->floatval);
-        }
-        xmlOutputBufferWriteString(buf, buffer);
+        xmlOutputBufferWriteString(buf, (int)result_nodes->floatval == result_nodes->floatval ?
+            std::to_string((int)result_nodes->floatval).c_str() : std::to_string(result_nodes->floatval).c_str());
+        xmlOutputBufferWriteString(buf, "\n");
     }
 
     virtual void outputXPathResultsBoolean(xmlXPathObjectPtr result_nodes) {
