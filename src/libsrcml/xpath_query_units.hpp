@@ -212,21 +212,15 @@ public :
         // TODO:  Detect error
 
         // register standard prefixes for standard namespaces
-        // @todo Can this be put in srcmlns.hpp and shared
-        // @todo Why isn't OPENMP here?
-        const char* prefixes[] = {
-            SRCML_SRC_NS_URI, "src", // @todo state why
-            SRCML_CPP_NS_URI, SRCML_CPP_NS_DEFAULT_PREFIX,
-            SRCML_ERROR_NS_URI, SRCML_ERROR_NS_DEFAULT_PREFIX,
-            SRCML_POSITION_NS_URI, SRCML_POSITION_NS_DEFAULT_PREFIX,
-            SRCML_DIFF_NS_URI, SRCML_DIFF_NS_DEFAULT_PREFIX,
-            0, 0
-        };
+        for (const auto& ns : default_namespaces) {
 
-        for (unsigned int i = 0; prefixes[i] != 0; i += 2){
+            const char* uri = ns.uri.c_str();
+            const char* prefix = ns.prefix.c_str();
+            if (ns.uri == SRCML_SRC_NS_URI)
+                prefix = "src";
 
-            if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
-                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
+            if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
+                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
                 return 0; //SRCML_STATUS_ERROR;
             }
         }
@@ -234,8 +228,11 @@ public :
         // register namespaces from input archive, which have been setup on the output archive
         for (unsigned int i = 1; i < srcml_archive_get_namespace_size(output_archive); ++i) {
 
-            if (xmlXPathRegisterNs(context, BAD_CAST srcml_archive_get_namespace_prefix(output_archive, i),BAD_CAST srcml_archive_get_namespace_uri(output_archive, i)) == -1) {
-                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
+            const char* uri = srcml_archive_get_namespace_uri(output_archive, i);
+            const char* prefix = srcml_archive_get_namespace_prefix(output_archive, i);
+
+            if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
+                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
                 return 0; //SRCML_STATUS_ERROR;
             }
         }
