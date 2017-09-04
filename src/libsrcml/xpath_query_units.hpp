@@ -55,6 +55,22 @@
 
 extern std::vector<transform> global_transformations;
 
+template<typename T>
+class save_restore {
+public:
+    save_restore(T& item) : saved_item(&item), saved_value(item) {}
+    save_restore(bool save, T& item) {
+        saved_item = save ? &item : 0;
+        if (save)
+            saved_value = item;
+    }
+    ~save_restore() { if (saved_item) *saved_item = saved_value; }
+    operator T() { return saved_value; }
+private:
+    T* saved_item;
+    T saved_value;
+};
+
 /**
  * xpath_query_units
  *
@@ -79,7 +95,7 @@ public :
      * Constructor.
      */
     xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr /* compiled_xpath */, srcml_archive* out_archive, 
-                      const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0)
+                      const char* prefix = 0, const char* uri = 0, const char* element = 0, const char* attr_prefix = 0, const char* attr_uri = 0, const char* attr_name = 0, const char* attr_value = 0)
         : unit_dom(options), options(options), /* compiled_xpath(compiled_xpath) ,*/
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
           total(0), context(0), /* result_count(0),*/ output_archive(out_archive) {
@@ -152,7 +168,7 @@ public :
      * Append an attribute to the given node.  Only the prefix and uri can vary.  The
      * rest are the same throughout all calls and are part of the class.
      */
-    void append_attribute_to_node(xmlNodePtr node, const char * attr_prefix, const char * attr_uri) {
+    void append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) {
 
         // grab current value
         const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name, BAD_CAST attr_uri);
@@ -390,7 +406,7 @@ public :
             return true;
         }
 
-        xmlNodePtr savectxt = ctxt->node;
+        save_restore<xmlNodePtr> savectxt = ctxt->node;
 
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
@@ -402,10 +418,8 @@ public :
 
             applyxpath(++tr, end, result_nodes2);
 
-            //xmlXPathFreeObject(result_nodes2);
+            xmlXPathFreeObject(result_nodes2);
         }
-
-        ctxt->node = savectxt;
 
         return true;
     }
@@ -482,7 +496,7 @@ public :
         }
 
         // save the children
-        xmlNodePtr a_node_children = a_node->children;
+        save_restore<xmlNodePtr> a_node_children(a_node->children);
         a_node->children = 0;
 
         // create the item property
@@ -560,8 +574,6 @@ public :
             }
         }
 
-        a_node->children = a_node_children;
-
         if (hashprop) {
             ;
         }
@@ -575,8 +587,8 @@ public :
         // remove src namespace
         xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_CPP_NS_URI);
 
-        xmlNsPtr save = a_node->nsDef; //skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
-        xmlNsPtr nextsave = hrefptr ? hrefptr->next : 0;
+        save_restore<xmlNsPtr> save(a_node->nsDef); //skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
+        save_restore<xmlNsPtr> nextsave(hrefptr, hrefptr->next);
         if (is_archive) {
             if (!hrefptr)
                 a_node->nsDef = 0;
@@ -587,13 +599,6 @@ public :
         }
 
         output_archive->translator->add_unit_raw_node(a_node, ctxt->myDoc);
-
-        // restore manipulated namespaces
-        if (save)
-            a_node->nsDef = save;
-
-        if (nextsave)
-            hrefptr->next = nextsave;
     }
 
     // process the resulting nodes
@@ -621,7 +626,8 @@ public :
             // set up node to insert
             xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) thisarguments.element->c_str());
 
-            if(attr_name) append_attribute_to_node(element_node, thisarguments.attr_uri ? thisarguments.attr_prefix->c_str() : thisarguments.prefix->c_str(), thisarguments.attr_uri->c_str() ? thisarguments.attr_uri->c_str() : thisarguments.uri->c_str());
+            if (attr_name)
+                append_attribute_to_node(element_node, thisarguments.attr_uri ? thisarguments.attr_prefix->c_str() : thisarguments.prefix->c_str(), thisarguments.attr_uri->c_str() ? thisarguments.attr_uri->c_str() : thisarguments.uri->c_str());
 
             // result node is not a unit
             if (a_node != onode) {
@@ -656,8 +662,7 @@ public :
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
         // remove src namespace
-        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
-        xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
+        xmlRemoveNs(a_node, xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI));
 
         // output all the found nodes
         for (int i = 0; result_nodes->nodesetval && i < result_nodes->nodesetval->nodeNr; ++i) {
@@ -669,9 +674,6 @@ public :
 
         // output the result
         outputResult(a_node);
-
-        if (skip)
-            *skip = hrefptr;
     }
 /*
     virtual void outputRoot(xmlNodePtr a_node) {
@@ -866,13 +868,13 @@ private :
 
     OPTION_TYPE options;
  //   xmlXPathCompExprPtr compiled_xpath;
-    const char * prefix;
-    const char * uri;
-    const char * element;
-    const char * attr_prefix;
-    const char * attr_uri;
-    const char * attr_name;
-    const char * attr_value;
+    const char* prefix;
+    const char* uri;
+    const char* element;
+    const char* attr_prefix;
+    const char* attr_uri;
+    const char* attr_name;
+    const char* attr_value;
     double total;
     bool result_bool;
     int nodetype;
@@ -881,11 +883,11 @@ private :
 //    int result_count;
     srcml_archive* output_archive;
 
-    static const char * const simple_xpath_attribute_name;
+    static const char* const simple_xpath_attribute_name;
 
 };
 
 
-const char * const xpath_query_units::simple_xpath_attribute_name = "location";
+const char* const xpath_query_units::simple_xpath_attribute_name = "location";
 
 #endif
