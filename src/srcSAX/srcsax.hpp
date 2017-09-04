@@ -1,5 +1,5 @@
 /**
- * @file srcsax.h
+ * @file srcsax.hpp
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -17,8 +17,8 @@
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef INCLUDED_SRCSAX_H
-#define INCLUDED_SRCSAX_H
+#ifndef INCLUDED_SRCSAX_HPP
+#define INCLUDED_SRCSAX_HPP
 
 #include <srcsax_handler.hpp>
 
@@ -35,7 +35,7 @@ struct srcsax_context {
     void* data;
 
     /** srcSAX handler callbacks */
-    struct srcsax_handler* handler;
+    srcsax_handler* handler;
 
     /** error callback need to figure this one out probably message and errorcode. or struct.  Might not need, but might be nice to avoid libxml2 stuff */
     void (*srcsax_error)(const char* message, int error_code);
@@ -50,10 +50,10 @@ struct srcsax_context {
     size_t stack_size;
 
     /** stack of open srcML elements */
-    const char ** srcml_element_stack;
+    const char** srcml_element_stack;
 
     /** the xml documents encoding */
-    const char * encoding;
+    const char* encoding;
 
     /* Internal context handling NOT FOR PUBLIC USE */
 
@@ -71,21 +71,21 @@ struct srcsax_context {
 };
 
 /* srcSAX context creation/open functions */
-struct srcsax_context* srcsax_create_context_filename(const char* filename, const char* encoding);
-struct srcsax_context* srcsax_create_context_memory(const char* buffer, size_t buffer_size, const char* encoding);
-struct srcsax_context* srcsax_create_context_FILE(FILE* srcml_file, const char* encoding);
-struct srcsax_context* srcsax_create_context_fd(int srcml_fd, const char* encoding);
-struct srcsax_context* srcsax_create_context_io(void* srcml_context, int (*read_callback)(void* context, char* buffer, int len), int (*close_callback)(void* context), const char* encoding);
-struct srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
+srcsax_context* srcsax_create_context_filename(const char* filename, const char* encoding);
+srcsax_context* srcsax_create_context_memory(const char* buffer, size_t buffer_size, const char* encoding);
+srcsax_context* srcsax_create_context_FILE(FILE* srcml_file, const char* encoding);
+srcsax_context* srcsax_create_context_fd(int srcml_fd, const char* encoding);
+srcsax_context* srcsax_create_context_io(void* srcml_context, int (*read_callback)(void* context, char* buffer, int len), int (*close_callback)(void* context), const char* encoding);
+srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
 
 /* srcSAX free function */
-void srcsax_free_context(struct srcsax_context * context);
+void srcsax_free_context(srcsax_context * context);
 
 /* srcSAX parse function */
-int srcsax_parse(struct srcsax_context * context);
-int srcsax_parse_handler(struct srcsax_context* context, struct srcsax_handler* handler);
+int srcsax_parse(srcsax_context * context);
+int srcsax_parse_handler(srcsax_context* context, srcsax_handler* handler);
 
 /* srcSAX terminate parse function */
-void srcsax_stop_parser(struct srcsax_context* context);
+void srcsax_stop_parser(srcsax_context* context);
 
 #endif
