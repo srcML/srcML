@@ -115,10 +115,7 @@ struct srcml_element {
 
     /** Copy constructor */
     srcml_element(const srcml_element & element)
-        : context(element.context), localname(0), prefix(0), URI(0),
-          nb_namespaces(0), namespaces(0),
-          nb_attributes(0), nb_defaulted(0),
-          attributes(0) {
+        : context(element.context) {
 
         // save all the info in case this is not a srcML archive
         this->localname = element.localname ? (xmlChar*) STRDUP((const char*) element.localname) : 0;
