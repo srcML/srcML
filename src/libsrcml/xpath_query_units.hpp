@@ -191,11 +191,8 @@ public :
      // TODO: start_output needs an error return value
     virtual void start_output() {
 
+        // @todo detect error
         buf = output_archive->translator->output_buffer();
-
-      //  bufwriter = xmlNewTextWriter(buf);
-
-        // TODO:  Detect error
 
 #ifdef _MSC_BUILD
         buf->writecallback = (xmlOutputWriteCallback)_write;
@@ -205,11 +202,8 @@ public :
     virtual xmlXPathContextPtr set_context() {
 
         // compile all the inner transformations
-        for (unsigned long i = 0; i < global_transformations.size(); ++i) {
-
-            transform& thistransform = global_transformations[i];
+        for (auto& thistransform : global_transformations)
             thistransform.compiled_xpath = xmlXPathCompile(BAD_CAST thistransform.arguments.str->c_str());
-        }
 
         xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
         // TODO:  Detect error
