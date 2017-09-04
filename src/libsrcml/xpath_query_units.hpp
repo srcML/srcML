@@ -325,7 +325,7 @@ public :
         // handle new elements and individual results the previous way
         if (element || !attr_name) {
 
-            std::vector<transform>::const_iterator tr = global_transformations.begin();
+            auto tr = global_transformations.begin();
             // evaluate the xpath
             xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(tr->compiled_xpath, context);
             if (result_nodes == 0) {
@@ -412,6 +412,7 @@ public :
 
     virtual bool apply(xmlXPathObjectPtr result_nodes) {
 
+        // record the node type here because it will be needed at the end
         nodetype = result_nodes->type;
 
         switch (nodetype) {
@@ -475,8 +476,7 @@ public :
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
         // special case for a single result for a unit, and the result is the entire unit
-        bool singleunit = (result_nodes->nodesetval->nodeNr == 1) && (strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0);
-        if (singleunit) {
+        if ((result_nodes->nodesetval->nodeNr == 1) && (strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0)) {
             outputResult(a_node);
             return;
         }
@@ -498,16 +498,11 @@ public :
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
             // item attribute on wrapping node
-            static char s[100];
-            sprintf(s, "%d", i + 1);
-
-            // set the item propery
-            if (xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s) == 0)
+            if (xmlSetProp(a_node, BAD_CAST "item", BAD_CAST std::to_string(i + 1).c_str()) == 0)
                 return;
 
             // one of the multiple query results is an entire unit, then output directly
-            bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[i]->name, "unit") == 0;
-            if (isunit) {
+            if (strcmp((const char*) result_nodes->nodesetval->nodeTab[i]->name, "unit") == 0) {
                 a_node->children = a_node_children;
                 outputResult(a_node);
                 a_node->children = 0;
@@ -645,12 +640,13 @@ public :
     // process the resulting nodes
     virtual void outputXPathResultsAttribute(xmlXPathObjectPtr result_nodes) {
 
+        // use the root element to wrap the result ?
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
         // remove src namespace
         xmlRemoveNs(a_node, xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI));
 
-        // output all the found nodes
+        // append the attribute to the nodes
         for (int i = 0; result_nodes->nodesetval && i < result_nodes->nodesetval->nodeNr; ++i) {
 
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
@@ -753,13 +749,8 @@ public :
 
         case XPATH_NUMBER:
             if (isoption(options, SRCML_OPTION_XPATH_TOTAL)) {
-                std::ostringstream out;
-                if ((int)total == total)
-                    out << (int)total;
-                else
-                    out << total;
-
-                xmlOutputBufferWriteString(buf, out.str().c_str());
+                xmlOutputBufferWriteString(buf, (int) total == total ? std::to_string((int)total).c_str() :
+                        std::to_string(total).c_str());
                 xmlOutputBufferWriteString(buf, "\n");
             }
             break;
@@ -774,14 +765,14 @@ public :
             break;
         }
 
-        if(context) xmlXPathFreeContext(context);
+        if (context)
+            xmlXPathFreeContext(context);
         context = 0;
     }
 
 private :
 
     OPTION_TYPE options;
- //   xmlXPathCompExprPtr compiled_xpath;
     const char* prefix;
     const char* uri;
     const char* element;
@@ -794,7 +785,6 @@ private :
     int nodetype;
     xmlOutputBufferPtr buf;
     xmlXPathContextPtr context;
-//    int result_count;
     srcml_archive* output_archive;
 
     static const char* const simple_xpath_attribute_name;
