@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_SRCSAX_HANDLER_HPP
-#define INCLUDED_SRCSAX_HANDLER_HPP
+#ifndef INCLUDED_SRCSAXHANDLER_HPP
+#define INCLUDED_SRCSAXHANDLER_HPP
 
 #include <srcSAXController.hpp>
 
