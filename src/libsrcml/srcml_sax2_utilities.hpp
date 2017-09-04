@@ -34,7 +34,7 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
 				const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
 				OPTION_TYPE options, srcml_archive* out_archive);
 #ifdef WITH_LIBXSLT
-int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, OPTION_TYPE options, srcml_archive* out_archive);
+int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const std::vector<std::string>& params, int paramcount, OPTION_TYPE options, srcml_archive* out_archive);
 #endif
 int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* out_archive);
 
