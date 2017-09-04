@@ -38,8 +38,6 @@
 /** literal followed by its size */
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
-#include <boost/foreach.hpp>
-
 #include <srcexfun.hpp>
 #include <unit_dom.hpp>
 #include <srcmlns.hpp>
@@ -337,7 +335,7 @@ public :
         }
 
         // apply all XPath transformations on the same base code, and save all the results
-        BOOST_FOREACH(transform& tr, global_transformations) {
+        for (auto& tr : global_transformations) {
 
             // evaluate the xpath
             tr.result_nodes = xmlXPathCompiledEval(tr.compiled_xpath, context);
@@ -348,7 +346,7 @@ public :
         }
 
         // process all the xpath transform results for everything except the last
-        BOOST_FOREACH(transform& tr, global_transformations) {
+        for (auto& tr : global_transformations) {
 
             if (&tr == &global_transformations.back())
                 break;
