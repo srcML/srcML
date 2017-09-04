@@ -59,7 +59,7 @@ static void srcsax_controller_init() {
  * 
  * @returns srcsax_context context to be used for srcML parsing.
  */
-static srcsax_context* srcsax_create_context_inner(xmlParserInputBufferPtr input, int free_input, const char* encoding) {
+static srcsax_context* srcsax_create_context_inner(xmlParserInputBufferPtr input, bool free_input, const char* encoding) {
 
     if (input == 0)
         return 0;
@@ -90,8 +90,6 @@ static srcsax_context* srcsax_create_context_inner(xmlParserInputBufferPtr input
 
     context->libxml2_context = libxml2_context;
 
-    context->terminate = 0;
-
     return context;
 
 }
@@ -115,7 +113,7 @@ srcsax_context* srcsax_create_context_filename(const char* filename, const char*
     xmlParserInputBufferPtr input =
         xmlParserInputBufferCreateFilename(filename, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
-    return srcsax_create_context_inner(input, 1, encoding);
+    return srcsax_create_context_inner(input, true, encoding);
 }
 
 /**
@@ -138,7 +136,7 @@ srcsax_context* srcsax_create_context_memory(const char* buffer, size_t buffer_s
     xmlParserInputBufferPtr input =
         xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
-    return srcsax_create_context_inner(input, 1, encoding);
+    return srcsax_create_context_inner(input, true, encoding);
 }
 
 /**
@@ -160,7 +158,7 @@ srcsax_context* srcsax_create_context_FILE(FILE * srcml_file, const char* encodi
     xmlParserInputBufferPtr input =
         xmlParserInputBufferCreateFile(srcml_file, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
-    return srcsax_create_context_inner(input, 1, encoding);
+    return srcsax_create_context_inner(input, true, encoding);
 }
 
 /**
@@ -182,7 +180,7 @@ srcsax_context* srcsax_create_context_fd(int srcml_fd, const char* encoding) {
     xmlParserInputBufferPtr input =
         xmlParserInputBufferCreateFd(srcml_fd, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
-    return srcsax_create_context_inner(input, 1, encoding);
+    return srcsax_create_context_inner(input, true, encoding);
 }
 
 /**
@@ -206,7 +204,7 @@ srcsax_context* srcsax_create_context_io(void * srcml_context, int (*read_callba
     xmlParserInputBufferPtr input =
         xmlParserInputBufferCreateIO(read_callback, close_callback, srcml_context, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
-    return srcsax_create_context_inner(input, 1, 0);
+    return srcsax_create_context_inner(input, true, 0);
 }
 
 /**
@@ -227,7 +225,7 @@ srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPt
 
     srcsax_controller_init();
 
-    return srcsax_create_context_inner(input, 0, 0);
+    return srcsax_create_context_inner(input, false, 0);
 }
 
 /**
@@ -352,7 +350,7 @@ xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buffer_inp
  */
 void srcsax_stop_parser(srcsax_context* context) {
 
-    context->terminate = 1;
+    context->terminate = true;
 
     xmlParserCtxtPtr ctxt = context->libxml2_context;
 
