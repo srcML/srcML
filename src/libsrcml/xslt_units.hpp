@@ -79,7 +79,7 @@ public :
           stylesheet(stylesheet), params(params), cparams(params.size() + 1), oarchive(oarchive) {
 
 
-        // copy from vector of std:string into const char* for parameter passing to libxslt c-calls
+        // cparams must be null terminated
         for (size_t i = 0; i < params.size(); ++i) {
             cparams[i] = params[i].c_str();
         }
@@ -162,7 +162,6 @@ public :
 
             fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
             return SRCML_STATUS_ERROR;
-
         }
 
         // output the transformed result
@@ -178,7 +177,6 @@ public :
         xmlFreeDoc(res);
 
         return true;
-
     }
 
     virtual void outputResult(xmlNodePtr a_node) {
@@ -235,7 +233,7 @@ private :
     xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
     xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 #endif
-    void * handle;
+    void* handle;
     srcml_archive* oarchive;
 };
 
