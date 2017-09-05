@@ -26,10 +26,6 @@
 #include <stdlib.h>
 #include <cstring>
 
-#ifdef _MSC_BUILD
-#define strdup _strdup
-#endif
-
 /**
  * thread_args
  *

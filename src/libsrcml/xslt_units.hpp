@@ -74,9 +74,16 @@ public :
      * Constructor.  Dynamically loads XSLT functions.
      */
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
-               const char** params, srcml_archive* oarchive)
+               const std::vector<std::string>& params, srcml_archive* oarchive)
         : unit_dom(options),
-          stylesheet(stylesheet), params(params), oarchive(oarchive) {
+          stylesheet(stylesheet), params(params), cparams(params.size() + 1), oarchive(oarchive) {
+
+
+        // cparams must be null terminated
+        for (size_t i = 0; i < params.size(); ++i) {
+            cparams[i] = params[i].c_str();
+        }
+        cparams.back() = 0;
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
         handle = dlopen("libxslt.so", RTLD_LAZY);
@@ -147,15 +154,14 @@ public :
 
         // apply the style sheet to the document, which is the individual unit
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-        xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, ctxt->myDoc, params, 0, 0, 0);
+        xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, ctxt->myDoc, cparams.data(), 0, 0, 0);
 #else
-        xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, ctxt->myDoc, params, 0, 0, 0);
+        xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, ctxt->myDoc, cparams.data(), 0, 0, 0);
 #endif
         if (!res) {
 
             fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
             return SRCML_STATUS_ERROR;
-
         }
 
         // output the transformed result
@@ -171,7 +177,6 @@ public :
         xmlFreeDoc(res);
 
         return true;
-
     }
 
     virtual void outputResult(xmlNodePtr a_node) {
@@ -222,12 +227,13 @@ public :
 private :
 
     xsltStylesheetPtr stylesheet;
-    const char** params;
+    std::vector<std::string> params;
+    std::vector<const char*> cparams;
 #ifndef WIN32
     xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
     xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 #endif
-    void * handle;
+    void* handle;
     srcml_archive* oarchive;
 };
 

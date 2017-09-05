@@ -22,7 +22,7 @@
 #define INCLUDED_SRCSAX_CONTROLLER_HPP
 
 class srcSAXHandler;
-#include <srcsax.h>
+#include <srcsax.hpp>
 
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>

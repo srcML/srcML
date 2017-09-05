@@ -1,5 +1,5 @@
 /**
- * @file srcsax_handler.h
+ * @file srcsax_handler.hpp
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_SRCSAX_HANDLER_H
-#define INCLUDED_SRCSAX_HANDLER_H
+#ifndef INCLUDED_SRCSAX_HANDLER_HPP
+#define INCLUDED_SRCSAX_HANDLER_HPP
 
 #include <libxml/parser.h>
 
@@ -44,7 +44,7 @@ struct srcsax_namespace {
  *
  * Data structure for a srcML/xml attribute
  */
- struct srcsax_attribute {
+struct srcsax_attribute {
 
     /** attribute name */
     const char* localname;
@@ -72,7 +72,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for start of document.
      */
-    void (*start_document)(struct srcsax_context* context);
+    void (*start_document)(srcsax_context* context);
 
     /**
      * end_document
@@ -80,7 +80,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for end of document.
      */
-    void (*end_document)(struct srcsax_context* context);
+    void (*end_document)(srcsax_context* context);
 
     /**
      * start_root
@@ -95,9 +95,9 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for start of the root element.
      */
-    void (*start_root)(struct srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes);
+    void (*start_root)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
+                           const srcsax_attribute* attributes);
 
     /**
      * start_unit
@@ -112,9 +112,9 @@ struct srcsax_handler {
      *
      * Signature srcSAX handler function for start of an unit.
      */
-    void (*start_unit)(struct srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes);
+    void (*start_unit)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
+                           const srcsax_attribute* attributes);
 
     /**
      * start_element
@@ -129,9 +129,9 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for start of an element.
      */
-    void (*start_element)(struct srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
-                                const struct srcsax_attribute* attributes);
+    void (*start_element)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
+                                int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
+                                const srcsax_attribute* attributes);
 
     /**
      * end_root
@@ -142,7 +142,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for end of the root element.
      */
-    void (*end_root)(struct srcsax_context* context, const char* localname, const char* prefix, const char* URI);
+    void (*end_root)(srcsax_context* context, const char* localname, const char* prefix, const char* URI);
 
     /**
      * end_unit
@@ -153,7 +153,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for end of an unit.
      */
-    void (*end_unit)(struct srcsax_context* context, const char* localname, const char* prefix, const char* URI);
+    void (*end_unit)(srcsax_context* context, const char* localname, const char* prefix, const char* URI);
 
     /**
      * end_element
@@ -164,7 +164,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for end of an element.
      */
-    void (*end_element)(struct srcsax_context* context, const char* localname, const char* prefix, const char* URI);
+    void (*end_element)(srcsax_context* context, const char* localname, const char* prefix, const char* URI);
 
     /**
      * characters_root
@@ -174,7 +174,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for character handling at the root level.
      */
-    void (*characters_root)(struct srcsax_context* context, const char* ch, int len);
+    void (*characters_root)(srcsax_context* context, const char* ch, int len);
 
     /**
      * characters_unit
@@ -183,7 +183,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for character handling within a unit.
      */
-    void (*characters_unit)(struct srcsax_context* context, const char* ch, int len);
+    void (*characters_unit)(srcsax_context* context, const char* ch, int len);
 
     /**
      * meta_tag
@@ -198,9 +198,9 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for meta tags.
      */
-    void (*meta_tag)(struct srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes);
+    void (*meta_tag)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
+                           const srcsax_attribute* attributes);
 
     /**
      * comment
@@ -209,7 +209,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for a XML comment.
      */
-    void (*comment)(struct srcsax_context* context, const char* value);
+    void (*comment)(srcsax_context* context, const char* value);
 
     /**
      * cdata_block
@@ -219,7 +219,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for pcdata block.
      */
-    void (*cdata_block)(struct srcsax_context* context, const char* value, int len);
+    void (*cdata_block)(srcsax_context* context, const char* value, int len);
 
     /**
      * processing_instruction
@@ -229,7 +229,7 @@ struct srcsax_handler {
      *
      * Signature for srcSAX handler function for processing instruction.
      */
-    void (*processing_instruction)(struct srcsax_context* context, const char* target, const char* data);
+    void (*processing_instruction)(srcsax_context* context, const char* target, const char* data);
 
 };
 

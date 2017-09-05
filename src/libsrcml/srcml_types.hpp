@@ -147,7 +147,7 @@ struct transform {
     SRCML_TRANSFORM_TYPE type;
 
     /** XSLT parameters */
-    std::vector<const char *> xsl_parameters;
+    std::vector<std::string> xsl_parameters;
 
     /** the transformation to perform for XPath */
     struct xpath_arguments arguments;

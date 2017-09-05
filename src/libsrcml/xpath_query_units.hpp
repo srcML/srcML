@@ -38,8 +38,6 @@
 /** literal followed by its size */
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
-#include <boost/foreach.hpp>
-
 #include <srcexfun.hpp>
 #include <unit_dom.hpp>
 #include <srcmlns.hpp>
@@ -48,14 +46,25 @@
 #include <dlfcn.h>
 #endif
 
-#ifdef _MSC_BUILD
-#include <io.h>
-#define snprintf _snprintf
-#endif
-
 #include <srcml_translator.hpp>
 
 extern std::vector<transform> global_transformations;
+
+template<typename T>
+class save_restore {
+public:
+    save_restore(T& item) : saved_item(&item), saved_value(item) {}
+    save_restore(bool save, T& item) {
+        saved_item = save ? &item : 0;
+        if (save)
+            saved_value = item;
+    }
+    ~save_restore() { if (saved_item) *saved_item = saved_value; }
+    operator T() { return saved_value; }
+private:
+    T* saved_item;
+    T saved_value;
+};
 
 /**
  * xpath_query_units
@@ -81,7 +90,7 @@ public :
      * Constructor.
      */
     xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr /* compiled_xpath */, srcml_archive* out_archive, 
-                      const char * prefix = 0, const char * uri = 0, const char * element = 0, const char * attr_prefix = 0, const char * attr_uri = 0, const char * attr_name = 0, const char * attr_value = 0)
+                      const char* prefix = 0, const char* uri = 0, const char* element = 0, const char* attr_prefix = 0, const char* attr_uri = 0, const char* attr_name = 0, const char* attr_value = 0)
         : unit_dom(options), options(options), /* compiled_xpath(compiled_xpath) ,*/
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
           total(0), context(0), /* result_count(0),*/ output_archive(out_archive) {
@@ -154,7 +163,7 @@ public :
      * Append an attribute to the given node.  Only the prefix and uri can vary.  The
      * rest are the same throughout all calls and are part of the class.
      */
-    void append_attribute_to_node(xmlNodePtr node, const char * attr_prefix, const char * attr_uri) {
+    void append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) {
 
         // grab current value
         const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name, BAD_CAST attr_uri);
@@ -182,11 +191,8 @@ public :
      // TODO: start_output needs an error return value
     virtual void start_output() {
 
+        // @todo detect error
         buf = output_archive->translator->output_buffer();
-
-      //  bufwriter = xmlNewTextWriter(buf);
-
-        // TODO:  Detect error
 
 #ifdef _MSC_BUILD
         buf->writecallback = (xmlOutputWriteCallback)_write;
@@ -196,11 +202,8 @@ public :
     virtual xmlXPathContextPtr set_context() {
 
         // compile all the inner transformations
-        for (unsigned long i = 0; i < global_transformations.size(); ++i) {
-
-            transform& thistransform = global_transformations[i];
+        for (auto& thistransform : global_transformations)
             thistransform.compiled_xpath = xmlXPathCompile(BAD_CAST thistransform.arguments.str->c_str());
-        }
 
         xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
         // TODO:  Detect error
@@ -209,21 +212,15 @@ public :
         // TODO:  Detect error
 
         // register standard prefixes for standard namespaces
-        // @todo Can this be put in srcmlns.hpp and shared
-        // @todo Why isn't OPENMP here?
-        const char* prefixes[] = {
-            SRCML_SRC_NS_URI, "src", // @todo state why
-            SRCML_CPP_NS_URI, SRCML_CPP_NS_DEFAULT_PREFIX,
-            SRCML_ERROR_NS_URI, SRCML_ERROR_NS_DEFAULT_PREFIX,
-            SRCML_POSITION_NS_URI, SRCML_POSITION_NS_DEFAULT_PREFIX,
-            SRCML_DIFF_NS_URI, SRCML_DIFF_NS_DEFAULT_PREFIX,
-            0, 0
-        };
+        for (const auto& ns : default_namespaces) {
 
-        for (unsigned int i = 0; prefixes[i] != 0; i += 2){
+            const char* uri = ns.uri.c_str();
+            const char* prefix = ns.prefix.c_str();
+            if (ns.uri == SRCML_SRC_NS_URI)
+                prefix = "src";
 
-            if (xmlXPathRegisterNs(context, BAD_CAST prefixes[i + 1], BAD_CAST prefixes[i]) == -1) {
-                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
+            if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
+                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
                 return 0; //SRCML_STATUS_ERROR;
             }
         }
@@ -231,8 +228,11 @@ public :
         // register namespaces from input archive, which have been setup on the output archive
         for (unsigned int i = 1; i < srcml_archive_get_namespace_size(output_archive); ++i) {
 
-            if (xmlXPathRegisterNs(context, BAD_CAST srcml_archive_get_namespace_prefix(output_archive, i),BAD_CAST srcml_archive_get_namespace_uri(output_archive, i)) == -1) {
-                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefixes[i + 1], prefixes[i]);
+            const char* uri = srcml_archive_get_namespace_uri(output_archive, i);
+            const char* prefix = srcml_archive_get_namespace_prefix(output_archive, i);
+
+            if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
+                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
                 return 0; //SRCML_STATUS_ERROR;
             }
         }
@@ -325,7 +325,7 @@ public :
         // handle new elements and individual results the previous way
         if (element || !attr_name) {
 
-            std::vector<transform>::const_iterator tr = global_transformations.begin();
+            auto tr = global_transformations.begin();
             // evaluate the xpath
             xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(tr->compiled_xpath, context);
             if (result_nodes == 0) {
@@ -337,7 +337,7 @@ public :
         }
 
         // apply all XPath transformations on the same base code, and save all the results
-        BOOST_FOREACH(transform& tr, global_transformations) {
+        for (auto& tr : global_transformations) {
 
             // evaluate the xpath
             tr.result_nodes = xmlXPathCompiledEval(tr.compiled_xpath, context);
@@ -348,7 +348,7 @@ public :
         }
 
         // process all the xpath transform results for everything except the last
-        BOOST_FOREACH(transform& tr, global_transformations) {
+        for (auto& tr : global_transformations) {
 
             if (&tr == &global_transformations.back())
                 break;
@@ -392,7 +392,7 @@ public :
             return true;
         }
 
-        xmlNodePtr savectxt = ctxt->node;
+        save_restore<xmlNodePtr> savectxt = ctxt->node;
 
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
@@ -404,16 +404,15 @@ public :
 
             applyxpath(++tr, end, result_nodes2);
 
-            //xmlXPathFreeObject(result_nodes2);
+            xmlXPathFreeObject(result_nodes2);
         }
-
-        ctxt->node = savectxt;
 
         return true;
     }
 
     virtual bool apply(xmlXPathObjectPtr result_nodes) {
 
+        // record the node type here because it will be needed at the end
         nodetype = result_nodes->type;
 
         switch (nodetype) {
@@ -477,14 +476,13 @@ public :
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
         // special case for a single result for a unit, and the result is the entire unit
-        bool singleunit = (result_nodes->nodesetval->nodeNr == 1) && (strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0);
-        if (singleunit) {
+        if ((result_nodes->nodesetval->nodeNr == 1) && (strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0)) {
             outputResult(a_node);
             return;
         }
 
         // save the children
-        xmlNodePtr a_node_children = a_node->children;
+        save_restore<xmlNodePtr> a_node_children(a_node->children);
         a_node->children = 0;
 
         // create the item property
@@ -500,16 +498,11 @@ public :
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
             // item attribute on wrapping node
-            static char s[100];
-            sprintf(s, "%d", i + 1);
-
-            // set the item propery
-            if (xmlSetProp(a_node, BAD_CAST "item", BAD_CAST s) == 0)
+            if (xmlSetProp(a_node, BAD_CAST "item", BAD_CAST std::to_string(i + 1).c_str()) == 0)
                 return;
 
             // one of the multiple query results is an entire unit, then output directly
-            bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[i]->name, "unit") == 0;
-            if (isunit) {
+            if (strcmp((const char*) result_nodes->nodesetval->nodeTab[i]->name, "unit") == 0) {
                 a_node->children = a_node_children;
                 outputResult(a_node);
                 a_node->children = 0;
@@ -562,8 +555,6 @@ public :
             }
         }
 
-        a_node->children = a_node_children;
-
         if (hashprop) {
             ;
         }
@@ -577,8 +568,8 @@ public :
         // remove src namespace
         xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_CPP_NS_URI);
 
-        xmlNsPtr save = a_node->nsDef; //skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
-        xmlNsPtr nextsave = hrefptr ? hrefptr->next : 0;
+        save_restore<xmlNsPtr> save(a_node->nsDef); //skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
+        save_restore<xmlNsPtr> nextsave(hrefptr, hrefptr->next);
         if (is_archive) {
             if (!hrefptr)
                 a_node->nsDef = 0;
@@ -589,13 +580,6 @@ public :
         }
 
         output_archive->translator->add_unit_raw_node(a_node, ctxt->myDoc);
-
-        // restore manipulated namespaces
-        if (save)
-            a_node->nsDef = save;
-
-        if (nextsave)
-            hrefptr->next = nextsave;
     }
 
     // process the resulting nodes
@@ -623,7 +607,8 @@ public :
             // set up node to insert
             xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) thisarguments.element->c_str());
 
-            if(attr_name) append_attribute_to_node(element_node, thisarguments.attr_uri ? thisarguments.attr_prefix->c_str() : thisarguments.prefix->c_str(), thisarguments.attr_uri->c_str() ? thisarguments.attr_uri->c_str() : thisarguments.uri->c_str());
+            if (attr_name)
+                append_attribute_to_node(element_node, thisarguments.attr_uri ? thisarguments.attr_prefix->c_str() : thisarguments.prefix->c_str(), thisarguments.attr_uri->c_str() ? thisarguments.attr_uri->c_str() : thisarguments.uri->c_str());
 
             // result node is not a unit
             if (a_node != onode) {
@@ -655,13 +640,13 @@ public :
     // process the resulting nodes
     virtual void outputXPathResultsAttribute(xmlXPathObjectPtr result_nodes) {
 
+        // use the root element to wrap the result ?
         xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
 
         // remove src namespace
-        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
-        xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
+        xmlRemoveNs(a_node, xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI));
 
-        // output all the found nodes
+        // append the attribute to the nodes
         for (int i = 0; result_nodes->nodesetval && i < result_nodes->nodesetval->nodeNr; ++i) {
 
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
@@ -671,79 +656,8 @@ public :
 
         // output the result
         outputResult(a_node);
-
-        if (skip)
-            *skip = hrefptr;
     }
-/*
-    virtual void outputRoot(xmlNodePtr a_node) {
 
-        // xml declaration
-        if (isoption(options, SRCML_OPTION_XML_DECL))
-            xmlTextWriterStartDocument(bufwriter,
-                                       (const char*) ctxt->version,
-                                       (const char*) (ctxt->encoding ? ctxt->encoding : ctxt->input->encoding), 
-                                       ctxt->standalone ? "yes" : "no");
-
-        // processing instruction
-        if (processing_instruction)
-            xmlTextWriterWritePI(bufwriter, BAD_CAST processing_instruction->first.c_str(), BAD_CAST processing_instruction->second.c_str());
-
-        // output a root element, just like the one read in
-        // note that this has to be ended somewhere
-        xmlTextWriterStartElementNS(bufwriter, NULL, root->localname, root->URI);
-
-        // copy all namespaces from the current unit
-        for (size_t pos = 0; pos < (size_t)context->nsNr; ++pos) {
-            //                    xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST namespaces[i], BAD_CAST "", BAD_CAST namespaces[i+1]);
-        }
-
-        // add in the element namespace if needed
-        bool found_element_ns = false;
-        if (uri) {
-
-            for (size_t pos = 0; pos < (size_t)context->nsNr; ++pos)
-                if (strcmp((const char *)context->namespaces[pos], uri) == 0) {
-                    found_element_ns = true;
-                    break;
-                }
-
-            if (!found_element_ns)
-                xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST prefix, BAD_CAST "", BAD_CAST uri);
-        }
-
-        // add in the attribute namespace if needed
-        bool found_attribute_ns = attr_uri && found_element_ns && (strcmp(uri, attr_uri) == 0);
-        if (attr_uri && !found_attribute_ns) {
-
-            for (size_t pos = 0; pos < (size_t)context->nsNr; ++pos)
-                if (strcmp((const char *)context->namespaces[pos], uri) == 0) {
-                    found_attribute_ns = true;
-                    break;
-                }
-            if (!found_attribute_ns)
-                xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST attr_prefix, BAD_CAST "", BAD_CAST attr_uri);
-        }
-
-        // copy all the attributes from the current unit
-        for (xmlAttrPtr pAttr = a_node->properties; pAttr; pAttr = pAttr->next)
-            xmlTextWriterWriteAttribute(bufwriter, pAttr->name, pAttr->children->content);
-
-        // meta tags
-        for(std::vector<std::string>::size_type i = 0; i < meta_tags.size(); ++i) {
-
-            xmlTextWriterStartElementNS(bufwriter, meta_tags[i].localname, meta_tags[i].prefix, meta_tags[i].URI);
-
-            for (int j = 0; j < meta_tags[i].nb_namespaces; j += 2)
-                xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST meta_tags[i].namespaces[j], BAD_CAST "", BAD_CAST meta_tags[i].namespaces[j+1]);
-
-            for (int j = 0; j < meta_tags[i].nb_attributes; j += 2)
-                xmlTextWriterWriteAttributeNS(bufwriter, BAD_CAST "xmlns", BAD_CAST meta_tags[i].attributes[j], BAD_CAST "", BAD_CAST meta_tags[i].attributes[j+1]);
-
-            xmlTextWriterEndElement(bufwriter);
-        }
-    }
-*/
     virtual void outputXPathResultsNumber(xmlXPathObjectPtr result_nodes) {
 
         total += result_nodes->floatval;
@@ -751,13 +665,9 @@ public :
         if (isoption(options, SRCML_OPTION_XPATH_TOTAL))
             return;
 
-        char buffer[200];
-        if ((int)result_nodes->floatval == result_nodes->floatval) {
-            sprintf(buffer, "%d\n", (int)result_nodes->floatval);
-        } else {
-            sprintf(buffer, "%f\n", result_nodes->floatval);
-        }
-        xmlOutputBufferWriteString(buf, buffer);
+        xmlOutputBufferWriteString(buf, (int)result_nodes->floatval == result_nodes->floatval ?
+            std::to_string((int)result_nodes->floatval).c_str() : std::to_string(result_nodes->floatval).c_str());
+        xmlOutputBufferWriteString(buf, "\n");
     }
 
     virtual void outputXPathResultsBoolean(xmlXPathObjectPtr result_nodes) {
@@ -839,13 +749,8 @@ public :
 
         case XPATH_NUMBER:
             if (isoption(options, SRCML_OPTION_XPATH_TOTAL)) {
-                std::ostringstream out;
-                if ((int)total == total)
-                    out << (int)total;
-                else
-                    out << total;
-
-                xmlOutputBufferWriteString(buf, out.str().c_str());
+                xmlOutputBufferWriteString(buf, (int) total == total ? std::to_string((int)total).c_str() :
+                        std::to_string(total).c_str());
                 xmlOutputBufferWriteString(buf, "\n");
             }
             break;
@@ -860,34 +765,33 @@ public :
             break;
         }
 
-        if(context) xmlXPathFreeContext(context);
+        if (context)
+            xmlXPathFreeContext(context);
         context = 0;
     }
 
 private :
 
     OPTION_TYPE options;
- //   xmlXPathCompExprPtr compiled_xpath;
-    const char * prefix;
-    const char * uri;
-    const char * element;
-    const char * attr_prefix;
-    const char * attr_uri;
-    const char * attr_name;
-    const char * attr_value;
+    const char* prefix;
+    const char* uri;
+    const char* element;
+    const char* attr_prefix;
+    const char* attr_uri;
+    const char* attr_name;
+    const char* attr_value;
     double total;
     bool result_bool;
     int nodetype;
     xmlOutputBufferPtr buf;
     xmlXPathContextPtr context;
-//    int result_count;
     srcml_archive* output_archive;
 
-    static const char * const simple_xpath_attribute_name;
+    static const char* const simple_xpath_attribute_name;
 
 };
 
 
-const char * const xpath_query_units::simple_xpath_attribute_name = "location";
+const char* const xpath_query_units::simple_xpath_attribute_name = "location";
 
 #endif
