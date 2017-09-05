@@ -34,6 +34,7 @@
 
 #include <string.h>
 #include <string>
+#include <list>
 
 /** Check if a copy was actually allocated */
 #define CHECK_COPY(ORIGINAL, COPY) if(ORIGINAL && !COPY) { fprintf(stderr, "ERROR allocating memory"); srcsax_stop_parser(context); return; }
@@ -115,59 +116,10 @@ struct srcml_element {
 
     /** Copy constructor */
     srcml_element(const srcml_element & element)
-        : context(element.context), localname(0), prefix(0), URI(0),
-          nb_namespaces(0), namespaces(0),
-          nb_attributes(0), nb_defaulted(0),
-          attributes(0) {
-
-        // save all the info in case this is not a srcML archive
-        this->localname = element.localname ? (xmlChar*) STRDUP((const char*) element.localname) : 0;
-        CHECK_COPY(element.localname, this->localname);
-
-        this->prefix = element.prefix ? (xmlChar*) STRDUP((const char*) element.prefix) : 0;
-        CHECK_COPY(element.prefix, this->prefix);
-
-        this->URI = element.URI ? (xmlChar*) STRDUP((const char*) element.URI) : 0;
-        CHECK_COPY(element.URI, this->URI);
-
-        this->nb_namespaces = element.nb_namespaces;
-        int ns_length = element.nb_namespaces * 2;
-        this->namespaces = (const xmlChar**) malloc(ns_length * sizeof(element.namespaces[0]));
-        CHECK_COPY(element.namespaces, this->namespaces);
-        memset(this->namespaces, 0, ns_length * sizeof(element.namespaces[0]));
-
-        for (int i = 0; i < ns_length; ++i) {
-            this->namespaces[i] = element.namespaces[i] ? (xmlChar*) STRDUP((const char*) element.namespaces[i]) : 0;
-            CHECK_COPY(element.namespaces[i], this->namespaces[i]);
-        }
-
-        this->nb_attributes = element.nb_attributes;
-        this->nb_defaulted = element.nb_defaulted;
-
-        int nb_length = element.nb_attributes * 5;
-        this->attributes = (const xmlChar**) malloc(nb_length * sizeof(element.attributes[0]));
-        CHECK_COPY(element.attributes, this->attributes);
-
-        memset(this->attributes, 0, nb_length * sizeof(element.attributes[0]));
-
-        for (int i = 0, index = 0; i < element.nb_attributes; ++i, index += 5) {
-            this->attributes[index] = element.attributes[index] ? (xmlChar*) STRDUP((const char*) element.attributes[index]) : 0;
-            CHECK_COPY(element.attributes[index], this->attributes[index]);
-            this->attributes[index + 1] = element.attributes[index + 1] ? (xmlChar*) STRDUP((const char*) element.attributes[index + 1]) : 0;
-            CHECK_COPY(element.attributes[index + 1], this->attributes[index + 1]);
-            this->attributes[index + 2] = element.attributes[index + 2] ? (xmlChar*) STRDUP((const char*) element.attributes[index + 2]) : 0;
-            CHECK_COPY(element.attributes[index + 2], this->attributes[index + 2]);
-
-            int vallength = (int)(element.attributes[index + 4] - element.attributes[index + 3]);
-            this->attributes[index + 3] = (const xmlChar*) malloc(vallength + 1);
-            CHECK_COPY(element.attributes[index + 3], this->attributes[index + 3]);
-
-            strncpy((char *) this->attributes[index + 3], (const char*) element.attributes[index + 3], vallength);
-            ((char *)this->attributes[index + 3])[vallength] = 0;
-            this->attributes[index + 4] = this->attributes[index + 3] + vallength;
-
-        }
-
+        : srcml_element(element.context, element.localname, element.prefix, element.URI,
+          element.nb_namespaces, element.namespaces,
+          element.nb_attributes, element.nb_defaulted,
+          element.attributes) {
     }
 
     /** Overloaded assignment operator */
@@ -226,6 +178,11 @@ struct srcml_element {
 
     }
 
+    xmlChar* stralloc(const char* s) {
+    	salloc.push_back(s);
+    	return (xmlChar*) salloc.back().c_str();
+    }
+
     /** parser context */
     srcsax_context* context = nullptr;
 
@@ -253,6 +210,7 @@ struct srcml_element {
     /** attributes of an element*/
     const xmlChar** attributes = 0;
 
+    std::list<std::string> salloc;
 };
 
 #endif
