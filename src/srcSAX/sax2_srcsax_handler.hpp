@@ -89,7 +89,6 @@ struct sax2_srcsax_handler {
     srcMLMode mode = START;
 
     // current libxml2 namespaces and attributes to get around conversion
-    const xmlChar** libxml2_namespaces;
     const xmlChar** libxml2_attributes;
 };
 
