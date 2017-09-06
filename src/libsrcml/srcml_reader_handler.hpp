@@ -372,7 +372,7 @@ public :
      * Overidden startRoot to handle collection of root attributes. Stop before continue
      */
     virtual void startRoot(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                           int num_namespaces, const xmlChar** /* namespaces */, int num_attributes,
                            const srcsax_attribute * /* attributes */) {
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
@@ -476,7 +476,7 @@ public :
      * if collecting attributes.
      */
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                           int num_namespaces, const xmlChar** /* namespaces */, int num_attributes,
                            const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
@@ -616,7 +616,7 @@ public :
      * Overidden startElementNs to handle collection of srcML elements.
      */
     virtual void startElement(const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
+                                int num_namespaces, const xmlChar** /* namespaces */, int num_attributes,
                                 const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
@@ -908,7 +908,7 @@ public :
      * Overide for desired behaviour.
      */
     virtual void metaTag(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const srcsax_attribute * attributes) {
 
         if (strcmp(localname, "macro-list") == 0) {
@@ -954,6 +954,9 @@ public :
 
 private :
 
+#define NS_URI(pos) (pos * 2 + 1)
+#define NS_PREFIX(pos) (pos * 2)
+
     /**
      * write_startTag
      * @param localname the name of the element tag
@@ -967,7 +970,7 @@ private :
      * Write out the start tag to the unit string.
      */
     void write_startTag(const char* localname, const char* prefix,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int /* num_attributes */,
+                           int num_namespaces, const xmlChar** namespaces, int /* num_attributes */,
                            const std::vector<attribute_t> attributes) {
 
         *unit->unit += "<";
@@ -979,21 +982,21 @@ private :
 
         for (int pos = 0; pos < num_namespaces; ++pos) {
 
-            if (is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace(namespaces[pos].uri, SRCML_CPP_NS_URI))
+            if (is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_CPP_NS_URI))
                 continue;
 
-            if (revision_number && is_srcml_namespace(namespaces[pos].uri, SRCML_DIFF_NS_URI))
+            if (revision_number && is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_DIFF_NS_URI))
                 continue;
 
             *unit->unit += " xmlns";
-            if (namespaces[pos].prefix) {
+            if (namespaces[NS_PREFIX(pos)]) {
 
                 *unit->unit += ":";
-                *unit->unit += namespaces[pos].prefix;
+                *unit->unit += (const char*) namespaces[NS_PREFIX(pos)];
             }
 
             *unit->unit += "=\"";
-            *unit->unit += namespaces[pos].uri;
+            *unit->unit += (const char*) namespaces[NS_URI(pos)];
             *unit->unit += "\"";
         }
 
@@ -1017,9 +1020,6 @@ private :
         }
         //*unit->unit += ">";
     }
-
-#define NS_URI(pos) (pos * 2 + 1)
-#define NS_PREFIX(pos) (pos * 2)
 
 #define ATTR_LOCALNAME(pos) (pos * 5)
 #define ATTR_PREFIX(pos) (pos * 5 + 1)

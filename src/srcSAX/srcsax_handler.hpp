@@ -96,7 +96,7 @@ struct srcsax_handler {
      * Signature for srcSAX handler function for start of the root element.
      */
     void (*start_root)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const srcsax_attribute* attributes);
 
     /**
@@ -113,7 +113,7 @@ struct srcsax_handler {
      * Signature srcSAX handler function for start of an unit.
      */
     void (*start_unit)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const srcsax_attribute* attributes);
 
     /**
@@ -130,7 +130,7 @@ struct srcsax_handler {
      * Signature for srcSAX handler function for start of an element.
      */
     void (*start_element)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
+                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
                                 const srcsax_attribute* attributes);
 
     /**
@@ -199,7 +199,7 @@ struct srcsax_handler {
      * Signature for srcSAX handler function for meta tags.
      */
     void (*meta_tag)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const srcsax_attribute* attributes);
 
     /**
