@@ -90,9 +90,7 @@ struct srcml_element {
         this->nb_defaulted = nb_defaulted;
 
         int nb_length = nb_attributes * 5;
-        this->attributes = (const xmlChar**) malloc(nb_length * sizeof(attributes[0]));
-
-        memset(this->attributes, 0, nb_length * sizeof(attributes[0]));
+        this->attributes.reserve(nb_length);
 
         for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
             this->attributes[index] = attributes[index] ? (xmlChar*) STRDUP((const char*) attributes[index]) : 0;
@@ -116,7 +114,7 @@ struct srcml_element {
         	(const xmlChar*) optional_to_c_str2(element.URI),
           element.nb_namespaces, (const xmlChar**) element.namespaces.data(),
           element.nb_attributes, element.nb_defaulted,
-          element.attributes) {
+          (const xmlChar**) element.attributes.data()) {
     }
 
     /** Overloaded assignment operator */
@@ -144,22 +142,15 @@ struct srcml_element {
     /** destructor */
     ~srcml_element() {
 
-        if(attributes) {
-
-            for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-                if(attributes[index])
-                    free((void *)attributes[index]);
-                if(attributes[index + 1])
-                    free((void *)attributes[index + 1]);
-                if(attributes[index + 2])
-                    free((void *)attributes[index + 2]);
-                free((void *)attributes[index + 3]);
-            }
-
-            free((void *)attributes);
-
+        for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+            if(attributes[index])
+                free((void *)attributes[index]);
+            if(attributes[index + 1])
+                free((void *)attributes[index + 1]);
+            if(attributes[index + 2])
+                free((void *)attributes[index + 2]);
+            free((void *)attributes[index + 3]);
         }
-
     }
 
     /** parser context */
@@ -187,7 +178,7 @@ struct srcml_element {
     int nb_defaulted = 0;
 
     /** attributes of an element*/
-    const xmlChar** attributes = 0;
+    std::vector<const xmlChar*> attributes;
 };
 
 #endif

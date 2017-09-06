@@ -328,7 +328,7 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
     if(state->context->handler->start_root) {
 
         state->libxml2_namespaces = state->root.namespaces.data();
-        state->libxml2_attributes = state->root.attributes;
+        state->libxml2_attributes = state->root.attributes.data();
         state->context->handler->start_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                             state->root.nb_namespaces, 0, state->root.nb_attributes,
                                             0);
@@ -345,10 +345,10 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
             if(state->context->terminate) return;
 
             srcsax_namespace * srcsax_namespaces_meta_tag = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(citr->nb_namespaces, (const xmlChar**) citr->namespaces.data());
-            srcsax_attribute * srcsax_attributes_meta_tag = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(citr->nb_attributes, citr->attributes);
+            srcsax_attribute * srcsax_attributes_meta_tag = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(citr->nb_attributes, (const xmlChar**) citr->attributes.data());
 
             state->libxml2_namespaces = (const xmlChar**) citr->namespaces.data();
-            state->libxml2_attributes = citr->attributes;
+            state->libxml2_attributes = (const xmlChar**) citr->attributes.data();
             state->context->handler->meta_tag(state->context, optional_to_c_str(citr->localname), optional_to_c_str(citr->prefix), optional_to_c_str(citr->URI),
                                                 citr->nb_namespaces, srcsax_namespaces_meta_tag, citr->nb_attributes,
                                                 srcsax_attributes_meta_tag);
@@ -374,7 +374,7 @@ void start_element_ns_first(void * ctx, const xmlChar * localname, const xmlChar
         if(state->context->handler->start_unit) {
 
             state->libxml2_namespaces = state->root.namespaces.data();
-            state->libxml2_attributes = state->root.attributes;
+            state->libxml2_attributes = state->root.attributes.data();
             state->context->handler->start_unit(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                 state->root.nb_namespaces, (const struct srcsax_namespace *) state->root.namespaces.data(), state->root.nb_attributes,
                                                 0);
@@ -607,7 +607,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
             if(state->context->handler->start_root) {
 
                 state->libxml2_namespaces = state->root.namespaces.data();
-                state->libxml2_attributes = state->root.attributes;
+                state->libxml2_attributes = state->root.attributes.data();
                 state->context->handler->start_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                     state->root.nb_namespaces, 0, state->root.nb_attributes,
                                                     0);
@@ -622,13 +622,13 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
                 for(std::vector<srcml_element>::const_iterator citr = state->meta_tags.begin(); citr < state->meta_tags.end(); ++citr) {
 
                     srcsax_namespace * srcsax_namespaces_meta_tag = (srcsax_namespace *)libxml2_namespaces2srcsax_namespaces(citr->nb_namespaces, (const xmlChar**) citr->namespaces.data());
-                    srcsax_attribute * srcsax_attributes_meta_tag = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(citr->nb_attributes, citr->attributes);  
+                    srcsax_attribute * srcsax_attributes_meta_tag = (srcsax_attribute *)libxml2_attributes2srcsax_attributes(citr->nb_attributes, (const xmlChar**) citr->attributes.data());  
 
                     if(state->context->terminate)
                         return;
 
                     state->libxml2_namespaces = (const xmlChar **) citr->namespaces.data();
-                    state->libxml2_attributes = citr->attributes;
+                    state->libxml2_attributes = (const xmlChar **) citr->attributes.data();
 
                     state->context->handler->meta_tag(state->context, citr->localname->c_str(), (const char *)optional_to_c_str(citr->prefix), optional_to_c_str(citr->URI),
                                                         citr->nb_namespaces, srcsax_namespaces_meta_tag, citr->nb_attributes,
@@ -652,7 +652,7 @@ void end_element_ns(void * ctx, const xmlChar * localname, const xmlChar * prefi
 
             if(state->context->handler->start_unit) {
                 state->libxml2_namespaces = state->root.namespaces.data();
-                state->libxml2_attributes = state->root.attributes;
+                state->libxml2_attributes = state->root.attributes.data();
                 state->context->handler->start_unit(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                     state->root.nb_namespaces, (const struct srcsax_namespace *) state->root.namespaces.data(), state->root.nb_attributes,
                                                     0);
