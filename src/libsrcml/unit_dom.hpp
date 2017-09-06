@@ -129,7 +129,7 @@ private:
      * Collect namespaces from root unit.  Start to build the tree if SRCML_OPTION_APPLY_ROOT.
      */
     virtual void startRoot(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const xmlChar** /* namespaces */, int num_attributes,
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const struct srcsax_attribute * /* attributes */) {
 
         sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
@@ -139,15 +139,15 @@ private:
         int ns_length = num_namespaces * 2;
         for (int i = 0; i < ns_length; i += 2) {
 
-            data.push_back((const xmlChar *)handler->libxml2_namespaces[i]);
-            data.push_back((const xmlChar *)handler->libxml2_namespaces[i + 1]);
+            data.push_back((const xmlChar *)namespaces[i]);
+            data.push_back((const xmlChar *)namespaces[i + 1]);
         }
         rootsize = data.size();
 
         // if we are building the entire tree, start now
         if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
 
-            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes,
+            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
                                   0, handler->libxml2_attributes);
         }
     }
@@ -180,7 +180,7 @@ private:
             // make sure not already in
             bool found = false;
             for (unsigned int j = 0; j < data.size() / 2; ++j) {
-                if (xmlStrEqual(data[j * 2], (const xmlChar *)handler->libxml2_namespaces[i * 2])) {
+                if (xmlStrEqual(data[j * 2], (const xmlChar *)namespaces[i * 2])) {
                     found = true;
                     break;
                 }
@@ -188,8 +188,8 @@ private:
             if (found)
                 continue;
 
-            data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2]);
-            data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2 + 1]);
+            data.push_back((const xmlChar *)namespaces[i * 2]);
+            data.push_back((const xmlChar *)namespaces[i * 2 + 1]);
         }
 
         // start the unit (element) at the root using the merged namespaces
@@ -211,12 +211,12 @@ private:
      * Build start element nodes in unit tree.
      */
     virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                                int num_namespaces, const xmlChar** /* namespaces */, int num_attributes,
+                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
                                 const struct srcsax_attribute * /* attributes */) {
 
         sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
 
-        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes, 0, handler->libxml2_attributes);
+        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes, 0, handler->libxml2_attributes);
     }
 
     /**

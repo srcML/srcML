@@ -372,7 +372,7 @@ public :
      * Overidden startRoot to handle collection of root attributes. Stop before continue
      */
     virtual void startRoot(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const xmlChar** /* namespaces */, int num_attributes,
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const srcsax_attribute * /* attributes */) {
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
@@ -446,8 +446,8 @@ public :
         // collect namespaces
         for (int pos = 0; pos < num_namespaces; ++pos) {
 
-            std::string prefix = (const char*) handler->libxml2_namespaces[pos * 2] ? (const char*) handler->libxml2_namespaces[pos * 2] : "";
-            std::string uri = (const char*) handler->libxml2_namespaces[pos * 2 + 1] ? (const char*) handler->libxml2_namespaces[pos * 2 + 1] : "";
+            std::string prefix = (const char*) namespaces[pos * 2] ? (const char*) namespaces[pos * 2] : "";
+            std::string uri = (const char*) namespaces[pos * 2 + 1] ? (const char*) namespaces[pos * 2 + 1] : "";
 
             srcml_uri_normalize(uri);
 
@@ -476,7 +476,7 @@ public :
      * if collecting attributes.
      */
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const xmlChar** /* namespaces */, int num_attributes,
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
@@ -566,7 +566,7 @@ public :
 
         if (collect_srcml) {
 
-            write_startTag(localname, prefix, num_namespaces, handler->libxml2_namespaces, num_attributes, handler->libxml2_attributes);
+            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, handler->libxml2_attributes);
 
             if (!is_archive) {
 
@@ -616,7 +616,7 @@ public :
      * Overidden startElementNs to handle collection of srcML elements.
      */
     virtual void startElement(const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const xmlChar** /* namespaces */, int num_attributes,
+                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
                                 const srcsax_attribute * /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
@@ -667,7 +667,7 @@ public :
         is_empty = true;
 
         if (collect_srcml) {
-            write_startTag(localname, prefix, num_namespaces, handler->libxml2_namespaces, num_attributes, handler->libxml2_attributes);
+            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, handler->libxml2_attributes);
         }
 
         if (terminate)

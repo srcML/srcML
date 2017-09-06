@@ -127,7 +127,7 @@ public:
 
         cpp_adapter->handler->set_is_archive(context->is_archive);
 
-        cpp_adapter->handler->startRoot(localname, prefix, URI, num_namespaces, 0, num_attributes, 0);
+        cpp_adapter->handler->startRoot(localname, prefix, URI, num_namespaces, namespaces, num_attributes, 0);
 
     }
 
@@ -151,7 +151,7 @@ public:
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->handler->startUnit(localname, prefix, URI, num_namespaces, 0, num_attributes, 0);
+        cpp_adapter->handler->startUnit(localname, prefix, URI, num_namespaces, namespaces, num_attributes, 0);
 
     }
 #if 0
@@ -193,7 +193,7 @@ public:
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->handler->startElement(localname, prefix, URI, num_namespaces, 0, num_attributes, 0);
+        cpp_adapter->handler->startElement(localname, prefix, URI, num_namespaces, namespaces, num_attributes, 0);
 
     }
 
