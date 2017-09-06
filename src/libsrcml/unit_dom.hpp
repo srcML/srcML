@@ -132,7 +132,7 @@ private:
                            int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
                            const struct srcsax_attribute * /* attributes */) {
 
-        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+        sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
         root = &handler->root;
 
         // record namespaces in an extensible list so we can add the per unit
@@ -169,7 +169,7 @@ private:
                            int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
                            const struct srcsax_attribute * /* attributes */) {
 
-        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+        sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
 
         // remove per-unit namespaces
         data.resize(rootsize);
@@ -191,26 +191,6 @@ private:
             data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2]);
             data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2 + 1]);
         }
-
-        /*
-
-          This should not be needed since start root should always be called.
-          // if applying to entire archive, then just build this node
-          if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
-
-          // if apply root and not archive then startRootUnit may not have been called
-          static bool started = false;
-          if(!is_archive && !started) xmlSAX2StartDocument(ctxt);
-          started = true;
-          xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
-          0, attributes);
-
-          return;
-          }
-        */
-
-        // start the document for this unit
-        //xmlSAX2StartDocument(ctxt);
 
         // start the unit (element) at the root using the merged namespaces
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, (int)(data.size() / 2),
@@ -234,7 +214,7 @@ private:
                                 int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
                                 const struct srcsax_attribute * /* attributes */) {
 
-        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+        sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
 
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes, 0, handler->libxml2_attributes);
     }
@@ -276,7 +256,7 @@ private:
      */
     virtual void charactersRoot(const char * ch, int len) {
 
-        if(isoption(options, SRCML_OPTION_APPLY_ROOT))
+        if (isoption(options, SRCML_OPTION_APPLY_ROOT))
             xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
     }
 
@@ -330,24 +310,7 @@ private:
      */
     virtual void endUnit(const char * localname, const char * prefix, const char * URI) {
 
-        // finish building the unit tree
-        xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
-
-        // End the document and free it if applied to unit individually
-        if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
-
-            xmlSAX2EndDocument(ctxt);
-
-            // apply the necessary processing
-            if ((error = !apply()))
-                stop_parser();
-
-            // free up the document that has this particular unit
-            xmlNodePtr aroot = ctxt->myDoc->children;
-            xmlUnlinkNode(ctxt->myDoc->children);
-            xmlFreeNodeList(aroot);
-            ctxt->myDoc->children = 0;
-        }
+        endCommon(localname, prefix, URI, !isoption(options, SRCML_OPTION_APPLY_ROOT));
     }
 
     /**
@@ -361,10 +324,24 @@ private:
      */
     virtual void endRoot(const char * localname, const char * prefix, const char * URI) {
 
-        if(isoption(options, SRCML_OPTION_APPLY_ROOT)) {
+        endCommon(localname, prefix, URI, isoption(options, SRCML_OPTION_APPLY_ROOT));
+    }
 
-            // finish building the unit tree
-            xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
+    /**
+     * endCommon
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     *
+     * SAX handler function for end of the root element.
+     * End the construction of the unit tree, apply processing, and delete.
+     */
+    virtual void endCommon(const char * localname, const char * prefix, const char * URI, bool realend) {
+
+        // finish building the unit tree
+        xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
+
+        if (realend) {
 
             // End the document and free it if applied to unit individually
             xmlSAX2EndDocument(ctxt);
@@ -380,6 +357,7 @@ private:
             ctxt->myDoc->children = 0;
         }
     }
+
 
     /**
      * endDocument
