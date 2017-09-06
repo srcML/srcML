@@ -28,16 +28,20 @@
 #define STRDUP _strdup
 #endif
 
-#include <srcsax.hpp>
+struct srcsax_context;
 
 #include <libxml/parser.h>
 
+#include <boost/optional.hpp>
+
 #include <string.h>
 #include <string>
-#include <list>
+#include <vector>
 
-/** Check if a copy was actually allocated */
-#define CHECK_COPY(ORIGINAL, COPY) if(ORIGINAL && !COPY) { fprintf(stderr, "ERROR allocating memory"); srcsax_stop_parser(context); return; }
+// helper conversions for boost::optional<std::string>
+static inline const char* optional_to_c_str2(const boost::optional<std::string>& s) {
+    return s ? s->c_str() : 0;
+}
 
 /**
  * srcml_element
@@ -51,36 +55,33 @@ struct srcml_element {
     srcml_element() {}
 
     /** Constructor to initialize using start element items */
-    srcml_element(srcsax_context * context, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+    srcml_element(srcsax_context* context, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                  int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar** attributes) {
+                 const xmlChar** attributes) : context(context) {
 
         // save all the info in case this is not a srcML archive
-        this->localname = localname ? (xmlChar*) STRDUP((const char*) localname) : 0;
-        CHECK_COPY(localname, this->localname);
+        if (localname)
+        	this->localname = (const char*) localname;
 
-        this->prefix = prefix ? (xmlChar*) STRDUP((const char*) prefix) : 0;
-        CHECK_COPY(prefix, this->prefix);
+        if (prefix)
+	        this->prefix = (const char*) prefix;
 
-        this->URI = URI ? (xmlChar*) STRDUP((const char*) URI) : 0;
-        CHECK_COPY(URI, this->URI);
+	    if (URI)
+	        this->URI = (const char*) URI;
 
         this->nb_namespaces = nb_namespaces;
         int ns_length = nb_namespaces * 2;
-        this->namespaces = (const xmlChar**) malloc(ns_length * sizeof(namespaces[0]));
-        CHECK_COPY(namespaces, this->namespaces);
-        memset(this->namespaces, 0, ns_length * sizeof(namespaces[0]));
+        this->namespaces.reserve(ns_length);
 
         for (int i = 0; i < ns_length; ++i) {
 
             if(prefix && namespaces[i] && strcmp((const char *)prefix, (const char *)namespaces[i]) == 0)
-                this->namespaces[i] = this->prefix;
+                this->namespaces[i] = (const xmlChar*) optional_to_c_str2(this->prefix);
             else if(URI && namespaces[i] && strcmp((const char *)URI, (const char *)namespaces[i]) == 0)
-                this->namespaces[i] = this->URI;
+                this->namespaces[i] = (const xmlChar*) optional_to_c_str2(this->URI);
             else {
 
                 this->namespaces[i] = namespaces[i] ? (xmlChar*) STRDUP((const char*) namespaces[i]) : 0;
-                CHECK_COPY(namespaces[i], this->namespaces[i]);
             }
 
         }
@@ -90,21 +91,16 @@ struct srcml_element {
 
         int nb_length = nb_attributes * 5;
         this->attributes = (const xmlChar**) malloc(nb_length * sizeof(attributes[0]));
-        CHECK_COPY(attributes, this->attributes);
 
         memset(this->attributes, 0, nb_length * sizeof(attributes[0]));
 
         for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
             this->attributes[index] = attributes[index] ? (xmlChar*) STRDUP((const char*) attributes[index]) : 0;
-            CHECK_COPY(attributes[index], this->attributes[index]);
             this->attributes[index + 1] = attributes[index + 1] ? (xmlChar*) STRDUP((const char*) attributes[index + 1]) : 0;
-            CHECK_COPY(attributes[index + 1], this->attributes[index + 1]);
             this->attributes[index + 2] = attributes[index + 2] ? (xmlChar*) STRDUP((const char*) attributes[index + 2]) : 0;
-            CHECK_COPY(attributes[index + 2], this->attributes[index + 2]);
 
             int vallength = (int)(attributes[index + 4] - attributes[index + 3]);
             this->attributes[index + 3] = (const xmlChar*) malloc(vallength + 1);
-            CHECK_COPY(attributes[index + 3], this->attributes[index + 3]);
 
             strncpy((char *) this->attributes[index + 3], (const char*) attributes[index + 3], vallength);
             ((char *)this->attributes[index + 3])[vallength] = 0;
@@ -115,9 +111,10 @@ struct srcml_element {
     }
 
     /** Copy constructor */
-    srcml_element(const srcml_element & element)
-        : srcml_element(element.context, element.localname, element.prefix, element.URI,
-          element.nb_namespaces, element.namespaces,
+    srcml_element(const srcml_element& element)
+        : srcml_element(element.context, (const xmlChar*) optional_to_c_str2(element.localname), (const xmlChar*) optional_to_c_str2(element.prefix),
+        	(const xmlChar*) optional_to_c_str2(element.URI),
+          element.nb_namespaces, (const xmlChar**) element.namespaces.data(),
           element.nb_attributes, element.nb_defaulted,
           element.attributes) {
     }
@@ -147,19 +144,6 @@ struct srcml_element {
     /** destructor */
     ~srcml_element() {
 
-        if(namespaces) {
-
-            for(int i = 0; i < nb_namespaces * 2; ++i)
-                if(namespaces[i] && namespaces[i] != prefix && namespaces[i] != URI)
-                    free((void *)namespaces[i]);
-
-            free((void *)namespaces);
-        }
-
-        if(localname) free((void *)localname);
-        if(prefix) free((void *)prefix);
-        if(URI) free((void *)URI);
-
         if(attributes) {
 
             for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
@@ -178,28 +162,23 @@ struct srcml_element {
 
     }
 
-    xmlChar* stralloc(const char* s) {
-    	salloc.push_back(s);
-    	return (xmlChar*) salloc.back().c_str();
-    }
-
     /** parser context */
     srcsax_context* context = nullptr;
 
     /** local name of an element*/
-    const xmlChar* localname = nullptr;
+    boost::optional<std::string> localname;
 
     /** prefix of an element*/
-    const xmlChar* prefix = nullptr;
+    boost::optional<std::string> prefix;
 
     /** URI of an element*/
-    const xmlChar* URI = nullptr;
+    boost::optional<std::string> URI;
 
     /** number of namespaces on an element*/
     int nb_namespaces = 0;
 
     /** namespaces on an element*/
-    const xmlChar** namespaces = nullptr;
+    std::vector<const xmlChar*> namespaces;
 
     /** number of attributes on an element*/
     int nb_attributes = 0;
@@ -209,8 +188,6 @@ struct srcml_element {
 
     /** attributes of an element*/
     const xmlChar** attributes = 0;
-
-    std::list<std::string> salloc;
 };
 
 #endif

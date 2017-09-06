@@ -305,5 +305,4 @@ inline const char* optional_to_c_str(const boost::optional<std::string>& s, cons
     return s ? s->c_str() : value;
 }
 
-
 #endif
