@@ -46,7 +46,7 @@ public :
      *
      * Constructor.
      */
-    unit_dom(OPTION_TYPE options) : options(options) {}
+    unit_dom(OPTION_TYPE options) : apply_root(isoption(options, SRCML_OPTION_APPLY_ROOT)) {}
 
     /**
      * ~unit_dom
@@ -56,15 +56,6 @@ public :
     virtual ~unit_dom() {}
 
 protected:
-
-    /**
-     * get_options
-     *
-     * Get method providing access to options.
-     *
-     * @returns the srcML options
-     */
- //   virtual OPTION_TYPE get_options() const { return options; }
 
     /**
      * start_output
@@ -132,7 +123,6 @@ private:
                            const struct srcsax_attribute * /* attributes */) {
 
         sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
-        root = &handler->root;
 
         // record namespaces in an extensible list so we can add the per unit
         int ns_length = num_namespaces * 2;
@@ -144,7 +134,7 @@ private:
         rootsize = data.size();
 
         // if we are building the entire tree, start now
-        if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
+        if (apply_root) {
 
             xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
                                   0, handler->libxml2_attributes);
@@ -255,7 +245,7 @@ private:
      */
     virtual void charactersRoot(const char * ch, int len) {
 
-        if (isoption(options, SRCML_OPTION_APPLY_ROOT))
+        if (apply_root)
             xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
     }
 
@@ -309,7 +299,7 @@ private:
      */
     virtual void endUnit(const char * localname, const char * prefix, const char * URI) {
 
-        endCommon(localname, prefix, URI, !isoption(options, SRCML_OPTION_APPLY_ROOT));
+        endCommon(localname, prefix, URI, !apply_root);
     }
 
     /**
@@ -323,7 +313,7 @@ private:
      */
     virtual void endRoot(const char * localname, const char * prefix, const char * URI) {
 
-        endCommon(localname, prefix, URI, isoption(options, SRCML_OPTION_APPLY_ROOT));
+        endCommon(localname, prefix, URI, apply_root);
     }
 
     /**
@@ -383,25 +373,19 @@ protected:
     std::vector<const xmlChar*> data;
 
     /** Size of data */
-    std::vector<const xmlChar*>::size_type rootsize;
+    decltype(data)::size_type rootsize;
 
     /** we have started processing */
     bool found = false;
 
     /** srcML options */
-    OPTION_TYPE options;
+    bool apply_root = false;
 
     /** found an error */
     bool error = false;
 
     /** the current parser ctxt */
     xmlParserCtxtPtr ctxt;
-
-    /**  The root element */
-    srcml_element* root = nullptr;
-
-    /**  The meta tags for the root element */
-    std::vector<srcml_element> meta_tags;
 
     /** The pre-root processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
