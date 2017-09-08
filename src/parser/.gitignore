@@ -23,5 +23,4 @@ srcMLParser.cpp
 srcMLParser.hpp
 srcMLParserTokenTypes.hpp
 srcMLParserTokenTypes.txt
-srcMLParserTokenTypesMacro.hpp
 token_set_check.txt

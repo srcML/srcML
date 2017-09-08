@@ -84,27 +84,8 @@ RunAntlr("${srcMLParserOutputFiles}"
     "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
 
-# Running SED/GREP macro for token extraction.
-# @todo this breaks mingw32 build.
-if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-    add_custom_command(
-        OUTPUT ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
-        WORKING_DIRECTORY ${CMAKE_GENERATED_SOURCE_DIR}
-        DEPENDS ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
-        COMMAND ${GREP_EXE} -e "=" ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp > PhaseOne.txt
-        COMMAND ${SED_EXE} -e "s/,//g" -e "s/= //g" -e "s/^[ \\t]*//" -e "s/^/\#define TOKEN_/g" PhaseOne.txt > ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp 
-    )
-else()
-    add_custom_command(
-        OUTPUT ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
-        DEPENDS ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
-        COMMAND ${GREP_EXE} '=' ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp | ${SED_EXE} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e "s/^/\#define TOKEN_/g" > ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp)
-
-endif()
-
-
 set(updatedRemoveList "")
-foreach(itemToRemove ${KeywordLexerOutputFiles} ${srcMLParserOutputFiles} ${OperatorLexerOutputFiles} ${TextLexerOutputFiles} ${CommentTextLexerOutputFiles} srcMLParserTokenTypesMacro.hpp)
+foreach(itemToRemove ${KeywordLexerOutputFiles} ${srcMLParserOutputFiles} ${OperatorLexerOutputFiles} ${TextLexerOutputFiles} ${CommentTextLexerOutputFiles})
     get_filename_component(absPath ${itemToRemove} ABSOLUTE)
     list(APPEND updatedRemoveList ${absPath})
 endforeach()
@@ -119,7 +100,6 @@ add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}
 )
@@ -128,7 +108,6 @@ add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
     ${PARSER_HEADERS}
     ${PARSER_SOURCE}
 )
