@@ -368,18 +368,6 @@ private:
         // endDocument can be called, even if startDocument was not for empty input
         if (!found || error)
             return;
-        /*
-        // end the entire input document and run apply if applied to root.
-        if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
-        xmlSAX2EndDocument(ctxt);
-
-        if ((error = !apply()))
-        stop_parser();
-
-        xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-        onode->name = NULL;
-
-        }*/
 
         // free up the document that has this particular unit
         xmlFreeDoc(ctxt->myDoc);
