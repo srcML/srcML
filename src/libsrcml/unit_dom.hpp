@@ -120,9 +120,7 @@ private:
      */
     virtual void startRoot(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** /* attributes */) {
-
-        sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
+                           const xmlChar** attributes) {
 
         // record namespaces in an extensible list so we can add the per unit
         int ns_length = num_namespaces * 2;
@@ -137,7 +135,7 @@ private:
         if (apply_root) {
 
             xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
-                                  0, handler->libxml2_attributes);
+                                  0, attributes);
         }
     }
 

@@ -501,10 +501,8 @@ void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix
                 URI = state->root.namespaces[i];
         }
 
-        state->libxml2_attributes = attributes;
         state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
             nb_namespaces, 0, nb_attributes, attributes);
-        state->libxml2_attributes = 0;
     }
 
 #ifdef SRCSAX_DEBUG
@@ -555,7 +553,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
                 state->libxml2_attributes = state->root.attributes.data();
                 state->context->handler->start_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                     state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
-                                                    0);
+                                                    state->root.attributes.data());
                 state->libxml2_attributes = 0;    
             }
 
@@ -592,7 +590,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
                 state->context->handler->start_unit(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                     state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
-                                                    0);
+                                                    state->root.attributes.data());
                 state->libxml2_attributes = 0;    
             }
 
