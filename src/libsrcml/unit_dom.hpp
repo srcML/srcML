@@ -154,9 +154,7 @@ private:
      */
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** /* attributes */) {
-
-        sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
+                           const xmlChar** attributes) {
 
         // remove per-unit namespaces
         data.resize(rootsize);
@@ -181,7 +179,7 @@ private:
 
         // start the unit (element) at the root using the merged namespaces
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, (int)(data.size() / 2),
-                              &data[0], num_attributes, 0, handler->libxml2_attributes);
+                              &data[0], num_attributes, 0, attributes);
     }
 
     /**
