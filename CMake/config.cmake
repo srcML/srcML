@@ -66,32 +66,34 @@ endif()
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
 if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-    set (ANTLR_INSTALL_DIR "C:/antlr/277/")
+
+    if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
+        set(BUILD_ARCH "x86")
+    else()
+        set(BUILD_ARCH "x64")
+    endif()
+
     add_definitions(-DWITH_LIBXSLT)
-    
-    set(WINDOWS_DEP_PATH "")
+    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
 
-    set(VCPKG_PATH "C:/Users/srcML/Desktop/vcpkg-export/installed")
-
-    include_directories(${VCPKG_PATH}/x86-windows/include)
-    include_directories(${ANTLR_INSTALL_DIR}/include)
-    link_directories(${VCPKG_PATH}/x86-windows/lib)
+    include_directories(${WINDOWS_DEP_PATH}/include)
+    link_directories(${WINDOWS_DEP_PATH}/${BUILD_ARCH}/$(ConfigurationName))
     
     if(ENABLE_SVN_INTEGRATION)
         message(FATAL_ERROR "SVN integration not tested on windows.")
     endif()
     
-    # FIXME
     set(LIBXSLT_LIBRARIES libxslt.lib)
     set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)
     set(LibArchive_LIBRARIES archive.lib)
     set(LIBXML2_LIBRARIES libxml2.lib libiconv.lib)
     set(CURL_LIBRARIES libcurl.lib)
+    set(ANTLR_LIBRARY antlr.lib)
 
+    set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
+    set(BOOST_LIBRARYDIR ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug)
     find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
-    message([STATUS] ${Boost_LIBRARIES})
-    message([STATUS] ${Boost_INCLUDE_DIR})
-
+    message([STATUS] BOOST!!! ${Boost_LIBRARIES})
 else()
 
     set(WINDOWS_DEP_PATH "")
@@ -121,11 +123,10 @@ else()
         add_definitions(-DWITH_LIBXSLT)
     endif()
 
+    # Locating the antlr library.
+    find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
 
 endif()
-
-# Locating the antlr library.
-find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib C:/Users/srcML/Desktop/BUILD)
 
 if(DYNAMIC_LOAD_ENABLED)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${ICONV_LIBRARIES} dl pthread
@@ -158,7 +159,7 @@ endif()
 
 
 # Finding antlr binary.
-find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/bin ${ANTLR_INSTALL_DIR}/bin)
+find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
 
 find_package(PythonInterp REQUIRED)
 
