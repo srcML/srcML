@@ -43,6 +43,12 @@
 #include <condition_variable>
 #include <boost/optional.hpp>
 
+#define ATTR_LOCALNAME(pos) (pos * 5)
+#define ATTR_PREFIX(pos) (pos * 5 + 1)
+#define ATTR_URI(pos) (pos * 5 + 2)
+#define ATTR_VALUE_START(pos) (pos * 5 + 3)
+#define ATTR_VALUE_END(pos) (pos * 5 + 4)
+
 /**
  * srcsax_attribute
  *
@@ -136,7 +142,7 @@ private :
         std::string prefix;
 
         /** meta tags attributes */
-        std::vector<attribute_t> attributes;
+        std::vector<const xmlChar*> attributes;
 
         /**
          * meta_tag
@@ -147,16 +153,12 @@ private :
          *
          * Construct meta_tag from SAX data.
          */
-        meta_tag(const char* localname, const char* prefix, int num_attributes, const srcsax_attribute* attributes)
+        meta_tag(const char* localname, const char* prefix, int num_attributes, const xmlChar** attributes)
             : localname(localname), prefix(prefix) {
 
-            this->attributes.reserve(num_attributes);
-            for (int pos = 0; pos < num_attributes; ++pos) {
-
-                this->attributes[pos].localname = attributes[pos].localname;
-                this->attributes[pos].prefix = attributes[pos].prefix;
-                this->attributes[pos].uri = attributes[pos].uri;
-                this->attributes[pos].value = attributes[pos].value;
+            this->attributes.reserve(num_attributes * 5);
+            for (int pos = 0; pos < num_attributes * 5; ++pos) {
+                this->attributes[pos] = attributes[pos];
             }
         }
 
@@ -373,7 +375,7 @@ public :
      */
     virtual void startRoot(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const srcsax_attribute * /* attributes */) {
+                           const xmlChar** /* attributes */) {
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
 
@@ -477,7 +479,7 @@ public :
      */
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const srcsax_attribute * /* attributes */) {
+                           const xmlChar** /* attributes */) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
@@ -581,7 +583,7 @@ public :
                     try {
 
                         meta_tag & meta_tag = meta_tags.at(i);
-                        write_startTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), 0, 0, (int)meta_tag.attributes.size(), meta_tag.attributes);
+                        write_startTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), 0, 0, (int)meta_tag.attributes.size(), meta_tag.attributes.data());
                         write_endTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), true);
 
                     } catch(...) { /** @todo handle */ continue; }
@@ -617,7 +619,7 @@ public :
      */
     virtual void startElement(const char* localname, const char* prefix, const char* URI,
                                 int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const srcsax_attribute * /* attributes */) {
+                                const xmlChar** attributes) {
 
         xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
         sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
@@ -909,7 +911,7 @@ public :
      */
     virtual void metaTag(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const srcsax_attribute * attributes) {
+                           const xmlChar** attributes) {
 
         if (strcmp(localname, "macro-list") == 0) {
 
@@ -918,10 +920,10 @@ public :
 
             for (int pos = 0; pos < num_attributes; ++pos) {
 
-                if (strcmp(attributes[pos].localname, "token") == 0)
-                    token = attributes[pos].value;
-                else if (strcmp(attributes[pos].localname, "type") == 0)
-                    type = attributes[pos].value;
+                if (strcmp((const char*) attributes[ATTR_LOCALNAME(pos)], "token") == 0)
+                    token.append((const char*) attributes[ATTR_VALUE_START(pos)], attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]);
+                else if (strcmp((const char*) attributes[ATTR_LOCALNAME(pos)], "type") == 0)
+                    type.append((const char*) attributes[ATTR_VALUE_START(pos)], attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]);
             }
 
             if (token != "" && type != "") {
@@ -1021,10 +1023,6 @@ private :
         //*unit->unit += ">";
     }
 
-#define ATTR_LOCALNAME(pos) (pos * 5)
-#define ATTR_PREFIX(pos) (pos * 5 + 1)
-#define ATTR_URI(pos) (pos * 5 + 2)
-
    /**
      * write_startTag
      * @param localname the name of the element tag
@@ -1038,8 +1036,8 @@ private :
      * Write out the start tag to the unit string.
      */
     void write_startTag(const char* localname, const char* prefix,
-                           int num_namespaces, const xmlChar ** namespaces, int num_attributes,
-                           const xmlChar ** attributes) {
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes) {
 
         *unit->unit += "<";
         if (prefix) {

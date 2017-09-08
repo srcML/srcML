@@ -121,13 +121,13 @@ public:
      */
     static void start_root(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
+                           const xmlChar** attributes) {
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->set_is_archive(context->is_archive);
 
-        cpp_adapter->handler->startRoot(localname, prefix, URI, num_namespaces, namespaces, num_attributes, 0);
+        cpp_adapter->handler->startRoot(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
 
     }
 
@@ -147,12 +147,11 @@ public:
      */
     static void start_unit(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
+                           const xmlChar** attributes) {
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->handler->startUnit(localname, prefix, URI, num_namespaces, namespaces, num_attributes, 0);
-
+        cpp_adapter->handler->startUnit(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
     }
 #if 0
     /**
@@ -189,11 +188,11 @@ public:
      */
     static void start_element(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
                                 int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const struct srcsax_attribute * /* attributes */) {
+                                const xmlChar** attributes) {
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->handler->startElement(localname, prefix, URI, num_namespaces, namespaces, num_attributes, 0);
+        cpp_adapter->handler->startElement(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
 
     }
 
@@ -309,7 +308,7 @@ public:
      */
     static void meta_tag(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           const xmlChar** attributes) {
 
         cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
 

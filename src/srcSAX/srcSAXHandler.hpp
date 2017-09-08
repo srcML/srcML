@@ -165,7 +165,7 @@ public :
      */
     virtual void startRoot(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes) {}
+                           const xmlChar** attributes) {}
 
     /**
      * startUnit
@@ -182,7 +182,7 @@ public :
      */
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes) {}
+                           const xmlChar** attributes) {}
 
     /**
      * startElement
@@ -199,7 +199,7 @@ public :
      */
     virtual void startElement(const char* localname, const char* prefix, const char* URI,
                                 int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const struct srcsax_attribute* attributes) {}
+                                const xmlChar** attributes) {}
 
     /**
      * endRoot
@@ -269,7 +269,7 @@ public :
      */
     virtual void metaTag(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes) {}
+                           const xmlChar** attributes) {}
 
     /**
      * comment

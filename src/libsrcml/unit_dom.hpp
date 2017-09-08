@@ -120,7 +120,7 @@ private:
      */
     virtual void startRoot(const char * localname, const char * prefix, const char * URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
+                           const xmlChar** /* attributes */) {
 
         sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
 
@@ -156,7 +156,7 @@ private:
      */
     virtual void startUnit(const char * localname, const char * prefix, const char * URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
+                           const xmlChar** /* attributes */) {
 
         sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
 
@@ -201,7 +201,7 @@ private:
      */
     virtual void startElement(const char * localname, const char * prefix, const char * URI,
                                 int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const struct srcsax_attribute * /* attributes */) {
+                                const xmlChar** /* attributes */) {
 
         sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
 
