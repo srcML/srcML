@@ -26,7 +26,6 @@
 #include <libxml/SAX2.h>
 
 #include <srcSAXHandler.hpp>
-#include <sax2_srcsax_handler.hpp>
 
 #include <string>
 #include <vector>
