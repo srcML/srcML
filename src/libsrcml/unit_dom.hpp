@@ -118,7 +118,7 @@ private:
      * SAX handler function for start of the root element.
      * Collect namespaces from root unit.  Start to build the tree if SRCML_OPTION_APPLY_ROOT.
      */
-    virtual void startRoot(const char * localname, const char * prefix, const char * URI,
+    virtual void startRoot(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** /* attributes */) {
 
@@ -154,7 +154,7 @@ private:
      * SAX handler function for start of an unit.
      * Start to create an individual unit, merging namespace details from the root (if it exists).
      */
-    virtual void startUnit(const char * localname, const char * prefix, const char * URI,
+    virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** /* attributes */) {
 
@@ -199,13 +199,11 @@ private:
      * SAX handler function for start of an element.
      * Build start element nodes in unit tree.
      */
-    virtual void startElement(const char * localname, const char * prefix, const char * URI,
+    virtual void startElement(const char* localname, const char* prefix, const char* URI,
                                 int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const xmlChar** /* attributes */) {
+                                const xmlChar** attributes) {
 
-        sax2_srcsax_handler* handler = (sax2_srcsax_handler *)ctxt->_private;
-
-        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes, 0, handler->libxml2_attributes);
+        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes, 0, attributes);
     }
 
     /**
@@ -217,7 +215,7 @@ private:
      * SAX handler function for end of an element.
      * Build end element nodes in unit tree.
      */
-    virtual void endElement(const char * localname, const char * prefix, const char * URI) {
+    virtual void endElement(const char* localname, const char* prefix, const char* URI) {
 
         xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
     }
@@ -230,7 +228,7 @@ private:
      * SAX handler function for character handling within a unit.
      * Characters in unit tree.
      */
-    virtual void charactersUnit(const char * ch, int len) {
+    virtual void charactersUnit(const char* ch, int len) {
 
         xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
     }
@@ -243,7 +241,7 @@ private:
      * SAX handler function for character handling at the root level.
      * Characters in unit tree.
      */
-    virtual void charactersRoot(const char * ch, int len) {
+    virtual void charactersRoot(const char* ch, int len) {
 
         if (apply_root)
             xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
@@ -257,7 +255,7 @@ private:
      * Called when a pcdata block has been parsed.
      * CDATA block in unit tree.
      */
-    virtual void cdatablock(const char * value, int len) {
+    virtual void cdatablock(const char* value, int len) {
 
         xmlSAX2CDataBlock(ctxt, (const xmlChar *)value, len);
     }
@@ -269,7 +267,7 @@ private:
      * A comment has been parsed.
      * Comments in unit tree.
      */
-    virtual void comment(const char * value) {
+    virtual void comment(const char* value) {
 
         xmlSAX2Comment(ctxt, (const xmlChar *)value);
     }
@@ -282,7 +280,7 @@ private:
      * A processing instruction has been parsed.
      * processing instruction in unit tree.
      */
-    virtual void processingInstruction(const char * target, const char * data) {
+    virtual void processingInstruction(const char* target, const char* data) {
 
         processing_instruction = std::pair<std::string, std::string>(target ? target : "", data ? data : "");
         //xmlSAX2ProcessingInstruction(ctxt, target, data);
@@ -297,7 +295,7 @@ private:
      * SAX handler function for end of an unit.
      * End the construction of the unit tree, apply processing, and delete.
      */
-    virtual void endUnit(const char * localname, const char * prefix, const char * URI) {
+    virtual void endUnit(const char* localname, const char* prefix, const char* URI) {
 
         endCommon(localname, prefix, URI, !apply_root);
     }
@@ -311,7 +309,7 @@ private:
      * SAX handler function for end of the root element.
      * End the construction of the unit tree, apply processing, and delete.
      */
-    virtual void endRoot(const char * localname, const char * prefix, const char * URI) {
+    virtual void endRoot(const char* localname, const char* prefix, const char* URI) {
 
         endCommon(localname, prefix, URI, apply_root);
     }
@@ -325,7 +323,7 @@ private:
      * SAX handler function for end of the root element.
      * End the construction of the unit tree, apply processing, and delete.
      */
-    virtual void endCommon(const char * localname, const char * prefix, const char * URI, bool realend) {
+    virtual void endCommon(const char* localname, const char* prefix, const char* URI, bool realend) {
 
         // finish building the unit tree
         xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);

@@ -503,7 +503,7 @@ void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix
 
         state->libxml2_attributes = attributes;
         state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-            nb_namespaces, 0, nb_attributes, 0);
+            nb_namespaces, 0, nb_attributes, attributes);
         state->libxml2_attributes = 0;
     }
 
