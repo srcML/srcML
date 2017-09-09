@@ -375,9 +375,7 @@ public :
      */
     virtual void startRoot(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** /* attributes */) {
-        xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
-        sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
+                           const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -389,9 +387,9 @@ public :
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
 
-            std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
+            std::string attribute = (const char*) attributes[pos * 5];
             std::string value;
-            value.append((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
+            value.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
             value = attribute_revision(value);
 
             // Note: these are ignore instead of placing in attributes.
@@ -479,10 +477,7 @@ public :
      */
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** /* attributes */) {
-
-        xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
-        sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
+                           const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -521,8 +516,8 @@ public :
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
 
-            std::string attribute = (const char*) handler->libxml2_attributes[pos * 5];
-            std::string value((const char *)handler->libxml2_attributes[pos * 5 + 3], handler->libxml2_attributes[pos * 5 + 4] - handler->libxml2_attributes[pos * 5 + 3]);
+            std::string attribute = (const char*) attributes[pos * 5];
+            std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
             value = attribute_revision(value);
             
             if (attribute == "timestamp")
@@ -568,7 +563,7 @@ public :
 
         if (collect_srcml) {
 
-            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, handler->libxml2_attributes);
+            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
 
             if (!is_archive) {
 
@@ -621,9 +616,6 @@ public :
                                 int num_namespaces, const xmlChar** namespaces, int num_attributes,
                                 const xmlChar** attributes) {
 
-        xmlParserCtxtPtr ctxt = get_controller().getContext()->libxml2_context;
-        sax2_srcsax_handler* handler = static_cast<sax2_srcsax_handler *>(ctxt->_private);
-
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -657,7 +649,7 @@ public :
            && strcmp((const char *)localname, "escape") == 0) {
 
             std::string svalue;
-            svalue.append((const char *)handler->libxml2_attributes[0 * 5 + 3], handler->libxml2_attributes[0 * 5 + 4] - handler->libxml2_attributes[0 * 5 + 3]);
+            svalue.append((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
 
             char value = (int)strtol(svalue.c_str(), NULL, 0);
 
@@ -669,7 +661,7 @@ public :
         is_empty = true;
 
         if (collect_srcml) {
-            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, handler->libxml2_attributes);
+            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
         }
 
         if (terminate)
