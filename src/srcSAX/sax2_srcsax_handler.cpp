@@ -247,17 +247,13 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
         for (auto citr : state->meta_tags) {
 
-            if (state->context->terminate)
-                return;
-
             state->context->handler->meta_tag(state->context, optional_to_c_str(citr.localname), optional_to_c_str(citr.prefix), optional_to_c_str(citr.URI),
                                                 citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
                                                 citr.attributes.data()); // @todo fix so can pass
+            if (state->context->terminate)
+                return;
         }
     }
-
-    if (state->context->terminate)
-        return;
 
     if (!state->is_archive) {
 
@@ -440,9 +436,6 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
     if (ctxt->nameNr <= 2 && strcmp((const char *)localname, "unit") == 0) {
 
-        if (localname[0] == 'm' && localname[1] == 'a' && strcmp((const char *)localname, "macro-list") == 0)
-            return;
-
         if (state->mode == ROOT) {
 
             state->context->is_archive = state->is_archive = false;
@@ -458,21 +451,17 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
             if (state->context->terminate)
                 return;
 
-            if (state->context->handler->meta_tag && !state->meta_tags.empty()) {
+            if (state->context->handler->meta_tag) {
 
                 for (auto citr : state->meta_tags) {
-
-                    if (state->context->terminate)
-                        return;
 
                     state->context->handler->meta_tag(state->context, citr.localname->c_str(), (const char *)optional_to_c_str(citr.prefix), optional_to_c_str(citr.URI),
                                                         citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
                                                         citr.attributes.data()); // @todo fix so can pass
+                    if (state->context->terminate)
+                        return;
                 }
             }
-
-            if (state->context->terminate)
-                return;
 
             if (state->context->handler->start_unit)
                 state->context->handler->start_unit(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
@@ -482,7 +471,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
             if (state->context->terminate)
                 return;
 
-            if (state->characters.size() != 0 && state->context->handler->characters_unit)
+            if (!state->characters.empty() && state->context->handler->characters_unit)
                 state->context->handler->characters_unit(state->context, state->characters.c_str(), (int)state->characters.size());
 
         }
@@ -493,6 +482,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
         if (ctxt->sax->startElementNs == &start_unit) {
 
             state->mode = END_ROOT;
+
             if (state->context->handler->end_root)
                 state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
