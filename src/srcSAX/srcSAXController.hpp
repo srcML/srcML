@@ -1,4 +1,4 @@
-/**
+    /**
  * @file srcSAXController.hpp
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
@@ -234,14 +234,6 @@ public :
      * Enables or disables processingInstruction parsing.
      */
     void enable_processingInstruction(bool enable);
-
-    /**
-     * enable_function
-     * @param enable bool indicate enable or disable special function parsing.
-     *
-     * Enables or disables special function parsing.
-     */
-    void enable_function(bool enable);
 
     /**
      * parse

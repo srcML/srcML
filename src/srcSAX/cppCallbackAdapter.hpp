@@ -203,20 +203,7 @@ public:
 
         cpp_adapter->handler->endUnit(localname, prefix, URI);
     }
-#if 0
-    /**
-     * end_function
-     * @param context a srcSAX context
-     *
-     * Callback. Forwards C API end_function to C++ API srcSAXHandler endFunction.
-     */
-    static void end_function(struct srcsax_context * context) {
 
-        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
-
-
-    }
-#endif
     /**
      * end_element
      * @param context a srcSAX context
@@ -246,8 +233,6 @@ public:
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->charactersRoot(ch, len);
-
-
     }
 
     /**
