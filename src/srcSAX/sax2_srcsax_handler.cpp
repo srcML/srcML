@@ -246,11 +246,9 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
     if (state->context->handler->start_root) {
 
-        state->libxml2_attributes = state->root.attributes.data();
         state->context->handler->start_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                             state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                             state->root.attributes.data());
-        state->libxml2_attributes = 0;
     }
 
     if (state->context->terminate)
@@ -279,11 +277,9 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
         if (state->context->handler->start_unit) {
 
-            state->libxml2_attributes = state->root.attributes.data();
             state->context->handler->start_unit(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                 state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                                 state->root.attributes.data());
-            state->libxml2_attributes = 0;
         }
 
         if (state->context->terminate)
@@ -493,11 +489,9 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
             if (state->context->handler->start_root) {
 
-                state->libxml2_attributes = state->root.attributes.data();
                 state->context->handler->start_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                     state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                                     state->root.attributes.data());
-                state->libxml2_attributes = 0;    
             }
 
             if (state->context->terminate)

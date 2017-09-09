@@ -26,40 +26,6 @@
 struct srcsax_context;
 
 /**
- * srcsax_namespace
- *
- * Data structure for a srcML/xml namespace
- */
-struct srcsax_namespace {
-
-    /** a namespace prefix */
-    const char* prefix;
-
-    /** a namespace uri */
-    const char* uri;
-};
-
-/**
- * srcsax_attribute
- *
- * Data structure for a srcML/xml attribute
- */
-struct srcsax_attribute {
-
-    /** attribute name */
-    const char* localname;
-
-    /** attribute namespace prefix */
-    const char* prefix;
-
-    /** attribute namespace uri */
-    const char* uri;
-
-    /** attribute value */
-    const char* value;
-};
-
-/**
  * srcsax_handler
  *
  * Struct of srcSAX callback functions i.e. srcSAX handler.
