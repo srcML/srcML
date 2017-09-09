@@ -222,15 +222,6 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
-    int ns_length = state->root.nb_namespaces * 2;
-    for (int i = 0; i < ns_length; i += 2)
-        if (prefix && i < state->root.namespaces.size() && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
-            prefix = state->root.namespaces[i];
-
-    for (int i = 1; i < ns_length; i += 2)
-        if (URI && i < state->root.namespaces.size() && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
-            URI = state->root.namespaces[i];
-
     if (strcmp((const char *)localname, "macro-list") == 0) {
 
         if (state->context->handler->meta_tag)
@@ -244,21 +235,20 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
     if (state->context->terminate)
         return;
 
-    if (state->context->handler->start_root) {
-
+    if (state->context->handler->start_root)
         state->context->handler->start_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                             state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                             state->root.attributes.data());
-    }
 
     if (state->context->terminate)
         return;
 
     if (state->context->handler->meta_tag) {
 
-        for(auto citr : state->meta_tags) {
+        for (auto citr : state->meta_tags) {
 
-            if (state->context->terminate) return;
+            if (state->context->terminate)
+                return;
 
             state->context->handler->meta_tag(state->context, optional_to_c_str(citr.localname), optional_to_c_str(citr.prefix), optional_to_c_str(citr.URI),
                                                 citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
@@ -275,12 +265,10 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
         state->mode = UNIT;
 
-        if (state->context->handler->start_unit) {
-
+        if (state->context->handler->start_unit)
             state->context->handler->start_unit(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                 state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                                 state->root.attributes.data());
-        }
 
         if (state->context->terminate)
             return;
@@ -291,11 +279,9 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
         if (state->context->terminate)
             return;
 
-        if (state->context->handler->start_element) {
-
+        if (state->context->handler->start_element)
             state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                 nb_namespaces, namespaces, nb_attributes, attributes);
-        }
 
     } else {
         
@@ -367,27 +353,17 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->mode = UNIT;
 
-    if (state->context->handler->start_unit) {
-
-        int ns_length = state->root.nb_namespaces * 2;
-        for (int i = 0; i < ns_length; i += 2)
-            if (prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
-                prefix = state->root.namespaces[i];
-
-        for (int i = 1; i < ns_length; i += 2)
-            if (URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
-                URI = state->root.namespaces[i];
-
+    if (state->context->handler->start_unit)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
             nb_namespaces, namespaces, nb_attributes, attributes);
-    }
 
-    if (ctxt->sax->startElementNs) ctxt->sax->startElementNs = &start_element_ns;
+    if (ctxt->sax->startElementNs)
+        ctxt->sax->startElementNs = &start_element_ns;
+
     if (ctxt->sax->characters) {
 
         ctxt->sax->characters = &characters_unit;
         ctxt->sax->ignorableWhitespace = &characters_unit;
-
     }
 
 #ifdef SRCSAX_DEBUG
@@ -427,22 +403,9 @@ void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix
     if (state->context->terminate)
         return;
 
-    if (state->context->handler->start_element) {
-
-        int ns_length = state->root.nb_namespaces * 2;
-        for (int i = 0; i < ns_length; i += 2) {
-            if (prefix && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)prefix) == 0)
-                prefix = state->root.namespaces[i];
-        }
-
-        for (int i = 1; i < ns_length; i += 2) {
-            if (URI && state->root.namespaces[i] && strcmp((const char *)state->root.namespaces[i], (const char *)URI) == 0)
-                URI = state->root.namespaces[i];
-        }
-
+    if (state->context->handler->start_element)
         state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
             nb_namespaces, 0, nb_attributes, attributes);
-    }
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -487,12 +450,10 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
             if (state->context->terminate)
                 return;
 
-            if (state->context->handler->start_root) {
-
+            if (state->context->handler->start_root)
                 state->context->handler->start_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                     state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                                     state->root.attributes.data());
-            }
 
             if (state->context->terminate)
                 return;
@@ -513,12 +474,10 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
             if (state->context->terminate)
                 return;
 
-            if (state->context->handler->start_unit) {
-
+            if (state->context->handler->start_unit)
                 state->context->handler->start_unit(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                     state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                                     state->root.attributes.data());
-            }
 
             if (state->context->terminate)
                 return;
@@ -540,9 +499,13 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
         } else {
 
             state->mode = END_UNIT;
+
             if (state->context->handler->end_unit)
                 state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
-            if (ctxt->sax->startElementNs) ctxt->sax->startElementNs = &start_unit;
+
+            if (ctxt->sax->startElementNs)
+                ctxt->sax->startElementNs = &start_unit;
+
             if (ctxt->sax->characters) {
 
                 ctxt->sax->characters = &characters_root;
