@@ -141,7 +141,8 @@ void end_document(void* ctx) {
     if (state->mode != END_ROOT && state->mode != START && state->context->handler->end_root)
         state->context->handler->end_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI));
 
-    if (state->context->terminate) return;
+    if (state->context->terminate)
+        return;
 
     if (state->context->handler->end_document)
         state->context->handler->end_document(state->context);
@@ -175,7 +176,8 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if (ctx == NULL) return;
+    if (ctx == NULL)
+        return;
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
