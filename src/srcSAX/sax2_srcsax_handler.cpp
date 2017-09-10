@@ -81,9 +81,6 @@ void start_document(void* ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
-    state->context->stack_size = 0;
-    state->context->srcml_element_stack = 0;
-
     state->context->encoding = "UTF-8";
     if (ctxt->encoding && ctxt->encoding[0] != '\0')
         state->context->encoding = (const char *)ctxt->encoding;
@@ -132,9 +129,6 @@ void end_document(void* ctx) {
     if (errmsg) {
         fprintf(stderr, "srcml: %s\n", errmsg);
     }
-
-    state->context->stack_size = 0;
-    state->context->srcml_element_stack = 0;
 
     if (state->context->terminate) return;
 

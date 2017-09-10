@@ -97,8 +97,6 @@ public:
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->handler->get_stack().clear();
-
         cpp_adapter->handler->endDocument();
     }
 

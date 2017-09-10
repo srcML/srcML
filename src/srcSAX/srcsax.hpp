@@ -46,12 +46,6 @@ struct srcsax_context {
     /** the current unit count */
     int unit_count = 0;
 
-    /** size of the srcml_element stack */
-    size_t stack_size;
-
-    /** stack of open srcML elements */
-    const char** srcml_element_stack;
-
     /** the xml documents encoding */
     const char* encoding;
 
