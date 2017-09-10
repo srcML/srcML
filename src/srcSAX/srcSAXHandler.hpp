@@ -23,10 +23,6 @@
 
 #include <srcSAXController.hpp>
 
-#include <libxml/parser.h>
-
-#include <vector>
-
 /**
  * srcSAXHandler
  *
@@ -62,16 +58,6 @@ public :
     void set_controller(srcSAXController * controller) {
 
         this->controller = controller;
-    }
-
-    /**
-     * increment_unit_count
-     *
-     * Internally used to increment the count in SAX2srcSAXHandler.
-     */
-    void increment_unit_count() {
-
-        ++unit_count;
     }
 
     /**
