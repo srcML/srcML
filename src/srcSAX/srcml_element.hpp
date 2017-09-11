@@ -25,15 +25,7 @@ struct srcsax_context;
 
 #include <libxml/parser.h>
 
-#include <boost/optional.hpp>
-
-#include <string>
 #include <vector>
-
-// helper conversions for boost::optional<std::string>
-static inline const char* optional_to_c_str2(const boost::optional<std::string>& s) {
-    return s ? s->c_str() : 0;
-}
 
 /**
  * srcml_element
@@ -52,14 +44,9 @@ struct srcml_element {
                  const xmlChar** attributes) : context(context) {
 
         // save all the info in case this is not a srcML archive
-        if (localname)
-        	this->localname = xmlStrdup(localname);
-
-        if (prefix)
-	        this->prefix = (const char*) prefix;
-
-	    if (URI)
-	        this->URI = (const char*) URI;
+       	this->localname = xmlStrdup(localname);
+        this->prefix = xmlStrdup(prefix);
+        this->URI = xmlStrdup(URI);
 
         this->nb_namespaces = nb_namespaces;
         int ns_length = nb_namespaces * 2;
@@ -88,8 +75,7 @@ struct srcml_element {
 
     /** Copy constructor */
     srcml_element(const srcml_element& element)
-        : srcml_element(element.context, element.localname, (const xmlChar*) optional_to_c_str2(element.prefix),
-        	(const xmlChar*) optional_to_c_str2(element.URI),
+        : srcml_element(element.context, element.localname, element.prefix, element.URI,
           element.nb_namespaces, (const xmlChar**) element.namespaces.data(),
           element.nb_attributes, element.nb_defaulted,
           (const xmlChar**) element.attributes.data()) {
@@ -120,6 +106,15 @@ struct srcml_element {
     /** destructor */
     ~srcml_element() {
 
+        if (localname)
+           xmlFree(localname);
+
+        if (prefix)
+            xmlFree(prefix);
+
+        if (URI)
+            xmlFree(URI);
+
         for (auto p : namespaces) {
             xmlFree((xmlChar*) p);
         }
@@ -136,13 +131,13 @@ struct srcml_element {
     srcsax_context* context = nullptr;
 
     /** local name of an element*/
-    xmlChar* localname;
+    xmlChar* localname = nullptr;
 
     /** prefix of an element*/
-    boost::optional<std::string> prefix;
+    xmlChar* prefix = nullptr;
 
     /** URI of an element*/
-    boost::optional<std::string> URI;
+    xmlChar* URI = nullptr;
 
     /** number of namespaces on an element*/
     int nb_namespaces = 0;
