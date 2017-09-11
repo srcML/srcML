@@ -22,9 +22,6 @@
 
 #include <sax2_srcsax_handler.hpp>
 
-/** Static sax handler for zero initializing in factory */
-xmlSAXHandler sax2_srcml_handler_init;
-
 /**
  * factory
  *
@@ -32,7 +29,8 @@ xmlSAXHandler sax2_srcml_handler_init;
  */
 xmlSAXHandler srcsax_sax2_factory() {
 
-    xmlSAXHandler sax = sax2_srcml_handler_init;
+    xmlSAXHandler sax;
+    memset(&sax, 0, sizeof(sax));
 
     sax.initialized    = XML_SAX2_MAGIC;
 
@@ -68,7 +66,8 @@ void start_document(void* ctx) {
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
-    if (ctx == NULL) return;
+    if (ctx == NULL)
+        return;
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
@@ -79,7 +78,8 @@ void start_document(void* ctx) {
     else if (ctxt->input)
         state->context->encoding = (const char *)ctxt->input->encoding;
 
-    if (state->context->terminate) return;
+    if (state->context->terminate)
+        return;
 
     if (state->context->handler->start_document)
         state->context->handler->start_document(state->context);
@@ -87,7 +87,6 @@ void start_document(void* ctx) {
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-
 }
 
 /**
@@ -122,7 +121,8 @@ void end_document(void* ctx) {
         fprintf(stderr, "srcml: %s\n", errmsg);
     }
 
-    if (state->context->terminate) return;
+    if (state->context->terminate)
+        return;
 
     if (state->mode != END_ROOT && state->mode != START && state->context->handler->end_root)
         state->context->handler->end_root(state->context, (const char*) state->root.localname, (const char*) state->root.prefix, (const char*) state->root.URI);
@@ -168,6 +168,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
+    // cache the root data because we don't know if we are in an archive or not
     state->root = srcml_element(state->context, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
 
     state->mode = ROOT;
@@ -178,7 +179,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-
 }
 
 /**
@@ -218,11 +218,12 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
         return;
     }
 
-    state->context->is_archive = state->is_archive = strcmp((const char *)localname, "unit") == 0;
-
     if (state->context->terminate)
         return;
 
+    state->context->is_archive = state->is_archive = strcmp((const char *)localname, "unit") == 0;
+
+    // have to call this here because we need to first know if we are in an archive
     if (state->context->handler->start_root)
         state->context->handler->start_root(state->context, (const char*) state->root.localname, (const char*) state->root.prefix, (const char*) state->root.URI,
                                             state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
@@ -237,7 +238,7 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
             state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char*) citr.prefix, (const char*) citr.URI,
                                                 citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
-                                                citr.attributes.data()); // @todo fix so can pass
+                                                citr.attributes.data());
             if (state->context->terminate)
                 return;
         }
@@ -245,15 +246,9 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
     if (!state->is_archive) {
 
-        ++state->context->unit_count;
-
-        state->mode = UNIT;
-
-        if (state->context->handler->start_unit)
-            state->context->handler->start_unit(state->context, (const char*) state->root.localname, (const char*) state->root.prefix, (const char*) state->root.URI,
-                                                state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
+        start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
+                                                state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
                                                 state->root.attributes.data());
-
         if (state->context->terminate)
             return;
 
@@ -272,29 +267,14 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
         if (state->context->handler->characters_root)
             state->context->handler->characters_root(state->context, state->characters.c_str(), (int)state->characters.size());
 
-        ++state->context->unit_count;
-
         if (state->context->terminate)
             return;
 
-        state->mode = UNIT;
-
-        if (state->context->handler->start_unit)
-            state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                                                nb_namespaces, namespaces, nb_attributes, attributes);
+        start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
 
     if (state->context->terminate)
         return;
-
-    if (ctxt->sax->startElementNs)
-        ctxt->sax->startElementNs = &start_element_ns;
-
-    if (ctxt->sax->characters) {
-
-        ctxt->sax->characters = &characters_unit;
-        ctxt->sax->ignorableWhitespace = &characters_unit;
-    }
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
