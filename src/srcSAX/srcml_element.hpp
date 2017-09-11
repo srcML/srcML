@@ -27,7 +27,6 @@ struct srcsax_context;
 
 #include <boost/optional.hpp>
 
-#include <string.h>
 #include <string>
 #include <vector>
 
