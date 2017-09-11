@@ -133,7 +133,7 @@ void end_document(void* ctx) {
     if (state->context->terminate) return;
 
     if (state->mode != END_ROOT && state->mode != START && state->context->handler->end_root)
-        state->context->handler->end_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI));
+        state->context->handler->end_root(state->context, (const char*) state->root.localname, optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI));
 
     if (state->context->terminate)
         return;
@@ -232,7 +232,7 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
         return;
 
     if (state->context->handler->start_root)
-        state->context->handler->start_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
+        state->context->handler->start_root(state->context, (const char*) state->root.localname, optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                             state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                             state->root.attributes.data());
 
@@ -243,7 +243,7 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
         for (auto citr : state->meta_tags) {
 
-            state->context->handler->meta_tag(state->context, optional_to_c_str(citr.localname), optional_to_c_str(citr.prefix), optional_to_c_str(citr.URI),
+            state->context->handler->meta_tag(state->context, (const char*) citr.localname, optional_to_c_str(citr.prefix), optional_to_c_str(citr.URI),
                                                 citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
                                                 citr.attributes.data()); // @todo fix so can pass
             if (state->context->terminate)
@@ -258,7 +258,7 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
         state->mode = UNIT;
 
         if (state->context->handler->start_unit)
-            state->context->handler->start_unit(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
+            state->context->handler->start_unit(state->context, (const char*) state->root.localname, optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                 state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                                 state->root.attributes.data());
 
@@ -440,7 +440,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
                 return;
 
             if (state->context->handler->start_root)
-                state->context->handler->start_root(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
+                state->context->handler->start_root(state->context, (const char*) state->root.localname, optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                     state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                                     state->root.attributes.data());
 
@@ -451,7 +451,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
                 for (auto citr : state->meta_tags) {
 
-                    state->context->handler->meta_tag(state->context, citr.localname->c_str(), (const char *)optional_to_c_str(citr.prefix), optional_to_c_str(citr.URI),
+                    state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char *)optional_to_c_str(citr.prefix), optional_to_c_str(citr.URI),
                                                         citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
                                                         citr.attributes.data()); // @todo fix so can pass
                     if (state->context->terminate)
@@ -460,7 +460,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
             }
 
             if (state->context->handler->start_unit)
-                state->context->handler->start_unit(state->context, optional_to_c_str(state->root.localname), optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
+                state->context->handler->start_unit(state->context, (const char*) state->root.localname, optional_to_c_str(state->root.prefix), optional_to_c_str(state->root.URI),
                                                     state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
                                                     state->root.attributes.data());
 

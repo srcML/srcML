@@ -53,7 +53,7 @@ struct srcml_element {
 
         // save all the info in case this is not a srcML archive
         if (localname)
-        	this->localname = (const char*) localname;
+        	this->localname = xmlStrdup(localname);
 
         if (prefix)
 	        this->prefix = (const char*) prefix;
@@ -88,7 +88,7 @@ struct srcml_element {
 
     /** Copy constructor */
     srcml_element(const srcml_element& element)
-        : srcml_element(element.context, (const xmlChar*) optional_to_c_str2(element.localname), (const xmlChar*) optional_to_c_str2(element.prefix),
+        : srcml_element(element.context, element.localname, (const xmlChar*) optional_to_c_str2(element.prefix),
         	(const xmlChar*) optional_to_c_str2(element.URI),
           element.nb_namespaces, (const xmlChar**) element.namespaces.data(),
           element.nb_attributes, element.nb_defaulted,
@@ -136,7 +136,7 @@ struct srcml_element {
     srcsax_context* context = nullptr;
 
     /** local name of an element*/
-    boost::optional<std::string> localname;
+    xmlChar* localname;
 
     /** prefix of an element*/
     boost::optional<std::string> prefix;
