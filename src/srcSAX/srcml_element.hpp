@@ -91,21 +91,10 @@ struct srcml_element {
 
         int nb_length = nb_attributes * 5;
         this->attributes.reserve(nb_length);
-
-        for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-            this->attributes[index] = attributes[index] ? (xmlChar*) STRDUP((const char*) attributes[index]) : 0;
-            this->attributes[index + 1] = attributes[index + 1] ? (xmlChar*) STRDUP((const char*) attributes[index + 1]) : 0;
-            this->attributes[index + 2] = attributes[index + 2] ? (xmlChar*) STRDUP((const char*) attributes[index + 2]) : 0;
-
-            int vallength = (int)(attributes[index + 4] - attributes[index + 3]);
-            this->attributes[index + 3] = (const xmlChar*) malloc(vallength + 1);
-
-            strncpy((char *) this->attributes[index + 3], (const char*) attributes[index + 3], vallength);
-            ((char *)this->attributes[index + 3])[vallength] = 0;
-            this->attributes[index + 4] = this->attributes[index + 3] + vallength;
-
+        for (int i = 0; i < nb_length; ++i) {
+            this->attributes[i] = attributes[i];
+            attributes[i] = 0;
         }
-
     }
 
     /** Copy constructor */
@@ -142,15 +131,8 @@ struct srcml_element {
     /** destructor */
     ~srcml_element() {
 
-        for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
-            if(attributes[index])
-                free((void *)attributes[index]);
-            if(attributes[index + 1])
-                free((void *)attributes[index + 1]);
-            if(attributes[index + 2])
-                free((void *)attributes[index + 2]);
-            free((void *)attributes[index + 3]);
-        }
+        for (auto p : attributes)
+            xmlFree((xmlChar*) p);
     }
 
     /** parser context */
