@@ -21,13 +21,6 @@
 #ifndef INCLUDED_SRCML_ELEMENT_HPP
 #define INCLUDED_SRCML_ELEMENT_HPP
 
-#ifndef _MSC_BUILD
-/** Macro to define the correct name of strdup on unix/windows */
-#define STRDUP strdup
-#else
-#define STRDUP _strdup
-#endif
-
 struct srcsax_context;
 
 #include <libxml/parser.h>
@@ -74,16 +67,7 @@ struct srcml_element {
         this->namespaces.reserve(ns_length);
 
         for (int i = 0; i < ns_length; ++i) {
-
-            if(prefix && namespaces[i] && strcmp((const char *)prefix, (const char *)namespaces[i]) == 0)
-                this->namespaces[i] = (const xmlChar*) optional_to_c_str2(this->prefix);
-            else if(URI && namespaces[i] && strcmp((const char *)URI, (const char *)namespaces[i]) == 0)
-                this->namespaces[i] = (const xmlChar*) optional_to_c_str2(this->URI);
-            else {
-
-                this->namespaces[i] = namespaces[i] ? (xmlChar*) STRDUP((const char*) namespaces[i]) : 0;
-            }
-
+            this->namespaces[i] = xmlStrdup(namespaces[i]);
         }
 
         this->nb_attributes = nb_attributes;
@@ -91,9 +75,15 @@ struct srcml_element {
 
         int nb_length = nb_attributes * 5;
         this->attributes.reserve(nb_length);
-        for (int i = 0; i < nb_length; ++i) {
-            this->attributes[i] = attributes[i];
-            attributes[i] = 0;
+
+        for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+            this->attributes[index] = xmlStrdup(attributes[index]);
+            this->attributes[index + 1] = xmlStrdup(attributes[index + 1]);
+            this->attributes[index + 2] = xmlStrdup(attributes[index + 2]);
+
+            int vallength = (int)(attributes[index + 4] - attributes[index + 3]);
+            this->attributes[index + 3] = (const xmlChar*) xmlStrndup(attributes[index + 3], vallength);
+            this->attributes[index + 4] = this->attributes[index + 3] + vallength;
         }
     }
 
@@ -131,8 +121,16 @@ struct srcml_element {
     /** destructor */
     ~srcml_element() {
 
-        for (auto p : attributes)
+        for (auto p : namespaces) {
             xmlFree((xmlChar*) p);
+        }
+
+        for (int i = 0, index = 0; i < nb_attributes; ++i, index += 5) {
+            xmlFree((xmlChar*) attributes[index]);
+            xmlFree((xmlChar*) attributes[index + 1]);
+            xmlFree((xmlChar*) attributes[index + 2]);
+            xmlFree((xmlChar*) attributes[index + 3]);
+        }
     }
 
     /** parser context */
