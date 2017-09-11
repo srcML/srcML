@@ -26,40 +26,6 @@
 struct srcsax_context;
 
 /**
- * srcsax_namespace
- *
- * Data structure for a srcML/xml namespace
- */
-struct srcsax_namespace {
-
-    /** a namespace prefix */
-    const char* prefix;
-
-    /** a namespace uri */
-    const char* uri;
-};
-
-/**
- * srcsax_attribute
- *
- * Data structure for a srcML/xml attribute
- */
-struct srcsax_attribute {
-
-    /** attribute name */
-    const char* localname;
-
-    /** attribute namespace prefix */
-    const char* prefix;
-
-    /** attribute namespace uri */
-    const char* uri;
-
-    /** attribute value */
-    const char* value;
-};
-
-/**
  * srcsax_handler
  *
  * Struct of srcSAX callback functions i.e. srcSAX handler.
@@ -96,8 +62,8 @@ struct srcsax_handler {
      * Signature for srcSAX handler function for start of the root element.
      */
     void (*start_root)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
-                           const srcsax_attribute* attributes);
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes);
 
     /**
      * start_unit
@@ -113,8 +79,8 @@ struct srcsax_handler {
      * Signature srcSAX handler function for start of an unit.
      */
     void (*start_unit)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
-                           const srcsax_attribute* attributes);
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes);
 
     /**
      * start_element
@@ -130,8 +96,8 @@ struct srcsax_handler {
      * Signature for srcSAX handler function for start of an element.
      */
     void (*start_element)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
-                                const srcsax_attribute* attributes);
+                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                                const xmlChar** attributes);
 
     /**
      * end_root
@@ -199,8 +165,8 @@ struct srcsax_handler {
      * Signature for srcSAX handler function for meta tags.
      */
     void (*meta_tag)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const srcsax_namespace* namespaces, int num_attributes,
-                           const srcsax_attribute* attributes);
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes);
 
     /**
      * comment

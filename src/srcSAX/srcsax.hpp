@@ -32,10 +32,10 @@
 struct srcsax_context {
 
     /** user provided data */
-    void* data;
+    void* data = nullptr;
 
     /** srcSAX handler callbacks */
-    srcsax_handler* handler;
+    srcsax_handler* handler = nullptr;
 
     /** error callback need to figure this one out probably message and errorcode. or struct.  Might not need, but might be nice to avoid libxml2 stuff */
     void (*srcsax_error)(const char* message, int error_code);
@@ -44,13 +44,7 @@ struct srcsax_context {
     int is_archive;
 
     /** the current unit count */
-    int unit_count;
-
-    /** size of the srcml_element stack */
-    size_t stack_size;
-
-    /** stack of open srcML elements */
-    const char** srcml_element_stack;
+    int unit_count = 0;
 
     /** the xml documents encoding */
     const char* encoding;
@@ -58,16 +52,16 @@ struct srcsax_context {
     /* Internal context handling NOT FOR PUBLIC USE */
 
     /** xml parser input buffer */
-    xmlParserInputBufferPtr input;
+    xmlParserInputBufferPtr input = nullptr;
 
     /** boolean to indicate need to free input buffer */
-    int free_input;
+    bool free_input = false;
 
     /** internally used libxml2 context */
     xmlParserCtxtPtr libxml2_context;
 
     /** indicate stop parser */
-    int terminate;
+    bool terminate = false;
 };
 
 /* srcSAX context creation/open functions */

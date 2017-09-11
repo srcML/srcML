@@ -23,10 +23,6 @@
 
 #include <srcSAXController.hpp>
 
-#include <libxml/parser.h>
-
-#include <vector>
-
 /**
  * srcSAXHandler
  *
@@ -47,9 +43,6 @@ protected:
     /** the current unit count */
     int unit_count = 0;
 
-    /** open srcML element stack */
-    std::vector<std::string> srcml_element_stack;
-
     /** the xml documents encoding */
     const char* encoding = 0;
 
@@ -65,26 +58,6 @@ public :
     void set_controller(srcSAXController * controller) {
 
         this->controller = controller;
-    }
-
-    /**
-     * increment_unit_count
-     *
-     * Internally used to increment the count in SAX2srcSAXHandler.
-     */
-    void increment_unit_count() {
-
-        ++unit_count;
-    }
-
-    /**
-     * get_stack
-     *
-     * Used internally to update the stack.
-     */
-    std::vector<std::string>& get_stack() {
-
-        return srcml_element_stack;
     }
 
     /**
@@ -164,8 +137,8 @@ public :
      * Overide for desired behaviour.
      */
     virtual void startRoot(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes) {}
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes) {}
 
     /**
      * startUnit
@@ -181,8 +154,8 @@ public :
      * Overide for desired behaviour.
      */
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes) {}
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes) {}
 
     /**
      * startElement
@@ -198,8 +171,8 @@ public :
      * Overide for desired behaviour.
      */
     virtual void startElement(const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
-                                const struct srcsax_attribute* attributes) {}
+                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                                const xmlChar** attributes) {}
 
     /**
      * endRoot
@@ -268,8 +241,8 @@ public :
      * Overide for desired behaviour.
      */
     virtual void metaTag(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes) {}
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes) {}
 
     /**
      * comment

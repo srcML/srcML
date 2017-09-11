@@ -26,7 +26,6 @@
 #include <libxml/SAX2.h>
 
 #include <srcSAXHandler.hpp>
-#include <sax2_srcsax_handler.hpp>
 
 #include <string>
 #include <vector>
@@ -47,7 +46,7 @@ public :
      *
      * Constructor.
      */
-    unit_dom(OPTION_TYPE options) : options(options) {}
+    unit_dom(OPTION_TYPE options) : apply_root(isoption(options, SRCML_OPTION_APPLY_ROOT)) {}
 
     /**
      * ~unit_dom
@@ -57,15 +56,6 @@ public :
     virtual ~unit_dom() {}
 
 protected:
-
-    /**
-     * get_options
-     *
-     * Get method providing access to options.
-     *
-     * @returns the srcML options
-     */
- //   virtual OPTION_TYPE get_options() const { return options; }
 
     /**
      * start_output
@@ -128,27 +118,24 @@ private:
      * SAX handler function for start of the root element.
      * Collect namespaces from root unit.  Start to build the tree if SRCML_OPTION_APPLY_ROOT.
      */
-    virtual void startRoot(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
-
-        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
-        root = &handler->root;
+    virtual void startRoot(const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes) {
 
         // record namespaces in an extensible list so we can add the per unit
         int ns_length = num_namespaces * 2;
         for (int i = 0; i < ns_length; i += 2) {
 
-            data.push_back((const xmlChar *)handler->libxml2_namespaces[i]);
-            data.push_back((const xmlChar *)handler->libxml2_namespaces[i + 1]);
+            data.push_back((const xmlChar *)namespaces[i]);
+            data.push_back((const xmlChar *)namespaces[i + 1]);
         }
         rootsize = data.size();
 
         // if we are building the entire tree, start now
-        if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
+        if (apply_root) {
 
-            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes,
-                                  0, handler->libxml2_attributes);
+            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
+                                  0, attributes);
         }
     }
 
@@ -165,11 +152,9 @@ private:
      * SAX handler function for start of an unit.
      * Start to create an individual unit, merging namespace details from the root (if it exists).
      */
-    virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
-
-        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
+    virtual void startUnit(const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes) {
 
         // remove per-unit namespaces
         data.resize(rootsize);
@@ -180,7 +165,7 @@ private:
             // make sure not already in
             bool found = false;
             for (unsigned int j = 0; j < data.size() / 2; ++j) {
-                if (xmlStrEqual(data[j * 2], (const xmlChar *)handler->libxml2_namespaces[i * 2])) {
+                if (xmlStrEqual(data[j * 2], (const xmlChar *)namespaces[i * 2])) {
                     found = true;
                     break;
                 }
@@ -188,33 +173,13 @@ private:
             if (found)
                 continue;
 
-            data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2]);
-            data.push_back((const xmlChar *)handler->libxml2_namespaces[i * 2 + 1]);
+            data.push_back((const xmlChar *)namespaces[i * 2]);
+            data.push_back((const xmlChar *)namespaces[i * 2 + 1]);
         }
-
-        /*
-
-          This should not be needed since start root should always be called.
-          // if applying to entire archive, then just build this node
-          if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
-
-          // if apply root and not archive then startRootUnit may not have been called
-          static bool started = false;
-          if(!is_archive && !started) xmlSAX2StartDocument(ctxt);
-          started = true;
-          xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
-          0, attributes);
-
-          return;
-          }
-        */
-
-        // start the document for this unit
-        //xmlSAX2StartDocument(ctxt);
 
         // start the unit (element) at the root using the merged namespaces
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, (int)(data.size() / 2),
-                              &data[0], num_attributes, 0, handler->libxml2_attributes);
+                              &data[0], num_attributes, 0, attributes);
     }
 
     /**
@@ -230,13 +195,11 @@ private:
      * SAX handler function for start of an element.
      * Build start element nodes in unit tree.
      */
-    virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                                int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
-                                const struct srcsax_attribute * /* attributes */) {
+    virtual void startElement(const char* localname, const char* prefix, const char* URI,
+                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                                const xmlChar** attributes) {
 
-        sax2_srcsax_handler * handler = (sax2_srcsax_handler *)ctxt->_private;
-
-        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, handler->libxml2_namespaces, num_attributes, 0, handler->libxml2_attributes);
+        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes, 0, attributes);
     }
 
     /**
@@ -248,7 +211,7 @@ private:
      * SAX handler function for end of an element.
      * Build end element nodes in unit tree.
      */
-    virtual void endElement(const char * localname, const char * prefix, const char * URI) {
+    virtual void endElement(const char* localname, const char* prefix, const char* URI) {
 
         xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
     }
@@ -261,7 +224,7 @@ private:
      * SAX handler function for character handling within a unit.
      * Characters in unit tree.
      */
-    virtual void charactersUnit(const char * ch, int len) {
+    virtual void charactersUnit(const char* ch, int len) {
 
         xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
     }
@@ -274,9 +237,9 @@ private:
      * SAX handler function for character handling at the root level.
      * Characters in unit tree.
      */
-    virtual void charactersRoot(const char * ch, int len) {
+    virtual void charactersRoot(const char* ch, int len) {
 
-        if(isoption(options, SRCML_OPTION_APPLY_ROOT))
+        if (apply_root)
             xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
     }
 
@@ -288,7 +251,7 @@ private:
      * Called when a pcdata block has been parsed.
      * CDATA block in unit tree.
      */
-    virtual void cdatablock(const char * value, int len) {
+    virtual void cdatablock(const char* value, int len) {
 
         xmlSAX2CDataBlock(ctxt, (const xmlChar *)value, len);
     }
@@ -300,7 +263,7 @@ private:
      * A comment has been parsed.
      * Comments in unit tree.
      */
-    virtual void comment(const char * value) {
+    virtual void comment(const char* value) {
 
         xmlSAX2Comment(ctxt, (const xmlChar *)value);
     }
@@ -313,7 +276,7 @@ private:
      * A processing instruction has been parsed.
      * processing instruction in unit tree.
      */
-    virtual void processingInstruction(const char * target, const char * data) {
+    virtual void processingInstruction(const char* target, const char* data) {
 
         processing_instruction = std::pair<std::string, std::string>(target ? target : "", data ? data : "");
         //xmlSAX2ProcessingInstruction(ctxt, target, data);
@@ -328,26 +291,9 @@ private:
      * SAX handler function for end of an unit.
      * End the construction of the unit tree, apply processing, and delete.
      */
-    virtual void endUnit(const char * localname, const char * prefix, const char * URI) {
+    virtual void endUnit(const char* localname, const char* prefix, const char* URI) {
 
-        // finish building the unit tree
-        xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
-
-        // End the document and free it if applied to unit individually
-        if(!isoption(options, SRCML_OPTION_APPLY_ROOT)) {
-
-            xmlSAX2EndDocument(ctxt);
-
-            // apply the necessary processing
-            if ((error = !apply()))
-                stop_parser();
-
-            // free up the document that has this particular unit
-            xmlNodePtr aroot = ctxt->myDoc->children;
-            xmlUnlinkNode(ctxt->myDoc->children);
-            xmlFreeNodeList(aroot);
-            ctxt->myDoc->children = 0;
-        }
+        endCommon(localname, prefix, URI, !apply_root);
     }
 
     /**
@@ -359,12 +305,26 @@ private:
      * SAX handler function for end of the root element.
      * End the construction of the unit tree, apply processing, and delete.
      */
-    virtual void endRoot(const char * localname, const char * prefix, const char * URI) {
+    virtual void endRoot(const char* localname, const char* prefix, const char* URI) {
 
-        if(isoption(options, SRCML_OPTION_APPLY_ROOT)) {
+        endCommon(localname, prefix, URI, apply_root);
+    }
 
-            // finish building the unit tree
-            xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
+    /**
+     * endCommon
+     * @param localname the name of the element tag
+     * @param prefix the tag prefix
+     * @param URI the namespace of tag
+     *
+     * SAX handler function for end of the root element.
+     * End the construction of the unit tree, apply processing, and delete.
+     */
+    virtual void endCommon(const char* localname, const char* prefix, const char* URI, bool realend) {
+
+        // finish building the unit tree
+        xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
+
+        if (realend) {
 
             // End the document and free it if applied to unit individually
             xmlSAX2EndDocument(ctxt);
@@ -381,6 +341,7 @@ private:
         }
     }
 
+
     /**
      * endDocument
      *
@@ -391,18 +352,6 @@ private:
         // endDocument can be called, even if startDocument was not for empty input
         if (!found || error)
             return;
-        /*
-        // end the entire input document and run apply if applied to root.
-        if (isoption(options, SRCML_OPTION_APPLY_ROOT)) {
-        xmlSAX2EndDocument(ctxt);
-
-        if ((error = !apply()))
-        stop_parser();
-
-        xmlNodePtr onode = xmlDocGetRootElement(ctxt->myDoc);
-        onode->name = NULL;
-
-        }*/
 
         // free up the document that has this particular unit
         xmlFreeDoc(ctxt->myDoc);
@@ -418,25 +367,19 @@ protected:
     std::vector<const xmlChar*> data;
 
     /** Size of data */
-    std::vector<const xmlChar*>::size_type rootsize;
+    decltype(data)::size_type rootsize;
 
     /** we have started processing */
     bool found = false;
 
     /** srcML options */
-    OPTION_TYPE options;
+    bool apply_root = false;
 
     /** found an error */
     bool error = false;
 
     /** the current parser ctxt */
     xmlParserCtxtPtr ctxt;
-
-    /**  The root element */
-    srcml_element* root = nullptr;
-
-    /**  The meta tags for the root element */
-    std::vector<srcml_element> meta_tags;
 
     /** The pre-root processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;

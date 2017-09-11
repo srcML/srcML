@@ -39,7 +39,7 @@ public:
      *
      * Constructor.  Initialize the handler
      */
-    cppCallbackAdapter(srcSAXHandler * handler) : handler(handler) {}
+    cppCallbackAdapter(srcSAXHandler* handler) : handler(handler) {}
 
     /**
      * factory
@@ -69,7 +69,6 @@ public:
         handler.processing_instruction = processing_instruction;
 
         return handler;
-
     }
 
 
@@ -81,12 +80,11 @@ public:
      */
     static void start_document(struct srcsax_context * context) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->set_encoding(context->encoding);
 
         cpp_adapter->handler->startDocument();
-
     }
 
     /**
@@ -97,13 +95,9 @@ public:
      */
     static void end_document(struct srcsax_context * context) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->handler->get_stack().clear();
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->endDocument();
-
-
     }
 
     /**
@@ -120,15 +114,14 @@ public:
      * Callback. Forwards C API start_root to C++ API srcSAXHandler startRoot.
      */
     static void start_root(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->set_is_archive(context->is_archive);
 
-        cpp_adapter->handler->startRoot(localname, prefix, URI, num_namespaces, 0, num_attributes, 0);
-
+        cpp_adapter->handler->startRoot(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
     }
 
     /**
@@ -146,32 +139,13 @@ public:
      * Callback. Forwards C API start_unit to C++ API srcSAXHandler startUnit.
      */
     static void start_unit(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
-                           const struct srcsax_attribute * /* attributes */) {
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->handler->startUnit(localname, prefix, URI, num_namespaces, 0, num_attributes, 0);
-
+        cpp_adapter->handler->startUnit(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
     }
-#if 0
-    /**
-     * start_function
-     * @param context a srcSAX context
-     * @param name the function's name
-     * @param return_type the function return type
-     * @param parameter_list a list of the function parameters in struct containing (declaration.type/declaration.name)
-     * @param is_decl indicates if the call is a function declaration (true) or definition (false)
-     *
-     * Callback. Forwards C API start_function to C++ API srcSAXHandler startFunction.
-     */ 
-     static void start_function(struct srcsax_context * context, const char * name, const char * return_type, const struct declaration * parameter_list, _Bool is_decl) {
-
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
-
-
-     }
-#endif
 
     /**
      * start_element
@@ -188,13 +162,12 @@ public:
      * Callback. Forwards C API start_element to C++ API srcSAXHandler startElement.
      */
     static void start_element(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
-                                int num_namespaces, const struct srcsax_namespace * /* namespaces */, int num_attributes,
-                                const struct srcsax_attribute * /* attributes */) {
+                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                                const xmlChar** attributes) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
-        cpp_adapter->handler->startElement(localname, prefix, URI, num_namespaces, 0, num_attributes, 0);
-
+        cpp_adapter->handler->startElement(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
     }
 
     /**
@@ -208,10 +181,9 @@ public:
      */
     static void end_root(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->endRoot(localname, prefix, URI);
-
     }
 
     /**
@@ -225,25 +197,11 @@ public:
      */
     static void end_unit(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->endUnit(localname, prefix, URI);
-
     }
-#if 0
-    /**
-     * end_function
-     * @param context a srcSAX context
-     *
-     * Callback. Forwards C API end_function to C++ API srcSAXHandler endFunction.
-     */
-    static void end_function(struct srcsax_context * context) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
-
-
-    }
-#endif
     /**
      * end_element
      * @param context a srcSAX context
@@ -255,10 +213,9 @@ public:
      */
     static void end_element(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->endElement(localname, prefix, URI);
-
     }
 
     /**
@@ -271,11 +228,9 @@ public:
      */
     static void characters_root(struct srcsax_context * context, const char * ch, int len) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->charactersRoot(ch, len);
-
-
     }
 
     /**
@@ -288,10 +243,9 @@ public:
      */
     static void characters_unit(struct srcsax_context * context, const char * ch, int len) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->charactersUnit(ch, len);
-
     }
 
     /**
@@ -308,13 +262,12 @@ public:
      * Callback. Forwards C API meta_tag to C++ API srcSAXHandler metaTag.
      */
     static void meta_tag(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+                           const xmlChar** attributes) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->metaTag(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
-
     }
 
     /**
@@ -326,10 +279,9 @@ public:
      */
     static void comment(struct srcsax_context * context, const char * value) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->comment(value);
-
     }
 
     /**
@@ -342,10 +294,9 @@ public:
      */
     static void cdata_block(struct srcsax_context * context, const char * value, int len) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->cdataBlock(value, len);
-
     }
 
     /**
@@ -358,10 +309,9 @@ public:
      */
     static void processing_instruction(struct srcsax_context * context, const char * target, const char * data) {
 
-        cppCallbackAdapter * cpp_adapter = (cppCallbackAdapter *)context->data;
+        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->processingInstruction(target, data);
-
     }
 
 };
