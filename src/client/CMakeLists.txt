@@ -27,6 +27,10 @@ if(WIN32)
     target_link_libraries(srcml  srcml_shared ${SRCML_LIBRARIES})
     if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
         set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+        add_custom_command(TARGET srcml POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/deps/${BUILD_ARCH}/$<CONFIGURATION>/bin"
+        $<TARGET_FILE_DIR:srcml>)
     elseif(WIN32)
         set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
     endif()
