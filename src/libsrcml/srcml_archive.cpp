@@ -23,7 +23,6 @@
 #include <srcmlns.hpp>
 #include <srcml_translator.hpp>
 #include <srcml_sax2_reader.hpp>
-#include <libxml2_callback_wrappers.hpp>
 #include <libxml/encoding.h>
 
 /**
@@ -1019,10 +1018,9 @@ int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*wr
 
     xmlOutputBufferPtr output_buffer = 0;
 
-    libxml2_write_context libxml2_context = {context, write_callback, close_callback};
-    archive->context = libxml2_context;
+    archive->context = context;
 
-    output_buffer = xmlOutputBufferCreateIO(write_callback_wrapper, write_close_callback_wrapper, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+    output_buffer = xmlOutputBufferCreateIO((int (*)(void *, const char *, int)) write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
 
     return srcml_archive_write_open_internal(archive, output_buffer);
 }
