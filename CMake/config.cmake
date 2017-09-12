@@ -77,7 +77,7 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
 
     include_directories(${WINDOWS_DEP_PATH}/include)
-    link_directories(${WINDOWS_DEP_PATH}/${BUILD_ARCH}/$(ConfigurationName))
+    link_directories(${WINDOWS_DEP_PATH}/${BUILD_ARCH}/$(ConfigurationName)/lib)
     
     if(ENABLE_SVN_INTEGRATION)
         message(FATAL_ERROR "SVN integration not tested on windows.")
@@ -90,10 +90,12 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(CURL_LIBRARIES libcurl.lib)
     set(ANTLR_LIBRARY antlr.lib)
 
-    set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
-    set(BOOST_LIBRARYDIR ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug)
+    set(Boost_NO_SYSTEM_PATHS ON)
+    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release/lib)
+    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug/lib)
+    set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
     find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
-    message([STATUS] BOOST!!! ${Boost_LIBRARIES})
+
 else()
 
     set(WINDOWS_DEP_PATH "")
