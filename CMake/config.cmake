@@ -94,6 +94,7 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release/lib)
     set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug/lib)
     set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
+    set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
     find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
 
 else()
