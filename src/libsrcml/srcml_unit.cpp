@@ -23,8 +23,6 @@
 #include <srcml_sax2_utilities.hpp>
 #include <srcml_translator.hpp>
 #include <srcml_sax2_reader.hpp>
-#include <libxml2_callback_wrappers.hpp>
-
 #include <UTF8CharBuffer.hpp>
 
 /******************************************************************************
