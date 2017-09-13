@@ -750,15 +750,15 @@ public :
             get_controller().enable_cdataBlock(true);
         }
 
+        if (collect_srcml) {
+
+            unit->content_end = (int) unit->unit->size() + 1;
+            
+            write_endTag(localname, prefix, is_empty);
+        }
+
         //if (is_empty) *unit->unit += ">";
         if (collect_srcml || collect_src) {
-
-            if (collect_srcml) {
-
-                unit->content_end = (int) unit->unit->size() + 1;
-                
-                write_endTag(localname, prefix, is_empty);
-            }
 
             // pause
             std::unique_lock<std::mutex> lock(mutex);
