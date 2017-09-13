@@ -573,15 +573,10 @@ public :
                     is_empty = false;
                 }
 
-                for (std::vector<meta_tag>::size_type i = 0; i < meta_tags.size(); ++i) {
+                for (auto& meta_tag : meta_tags) {
 
-                    try {
-
-                        meta_tag & meta_tag = meta_tags.at(i);
-                        write_startTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), 0, 0, (int)meta_tag.attributes.size(), meta_tag.attributes.data());
-                        write_endTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), true);
-
-                    } catch(...) { /** @todo handle */ continue; }
+                    write_startTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), 0, 0, (int)meta_tag.attributes.size(), meta_tag.attributes.data());
+                    write_endTag(meta_tag.localname.c_str(), meta_tag.prefix.c_str(), true);
                 }
             }
 
