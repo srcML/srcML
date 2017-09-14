@@ -1232,9 +1232,10 @@ int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
 
     // if we haven't read a unit yet, go ahead and try
     if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
-    if (!unit->unit)
+        unit->archive->reader->read_srcml(*unit, unit->content_begin, unit->content_end);
+    if (!unit->unit) {
         return SRCML_STATUS_UNINITIALIZED_UNIT;
+    }
 
     if (archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;
@@ -1295,7 +1296,7 @@ int srcml_unit_read_body(srcml_unit* unit) {
         return 0;
 
     if (!unit->unit)
-        unit->archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
+        unit->archive->reader->read_srcml(*unit, unit->content_begin, unit->content_end);
 
     // @todo Isn't this backwards?
     return !unit->unit;
@@ -1323,7 +1324,7 @@ srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
     int not_done = 0;
     if (!unit->read_header)
         not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
-    archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
+    archive->reader->read_srcml(*unit, unit->content_begin, unit->content_end);
 
     if (!not_done || !unit->unit) {
         srcml_unit_free(unit);
@@ -1356,7 +1357,7 @@ srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
     int not_done = 0;
     if (!unit->read_header)
         not_done = archive->reader->read_unit_attributes(unit->language, unit->filename, unit->url, unit->version, unit->timestamp, unit->hash, unit->attributes);
-    archive->reader->read_srcml(unit->unit, unit->content_begin, unit->content_end);
+    archive->reader->read_srcml(*unit, unit->content_begin, unit->content_end);
 
     if (!not_done || !unit->unit) {
         srcml_unit_free(unit);

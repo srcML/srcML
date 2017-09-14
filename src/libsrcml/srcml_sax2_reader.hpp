@@ -95,7 +95,7 @@ public :
                              std::vector<std::string>& attributes);
 
     // reads the next unit and returns it in parameter as srcML
-    int read_srcml(boost::optional<std::string>& unit, int& content_begin, int& content_end);
+    int read_srcml(srcml_unit& unit, int& content_begin, int& content_end);
 
     // reads the next unit and returns it in parameter as src
     int read_src(xmlOutputBufferPtr output_buffer);

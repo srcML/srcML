@@ -318,6 +318,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
             unit->attributes,
             false);
 
+
     // write out the contents, excluding the start and end unit tags
     int size = unit->content_end - unit->content_begin - 1;
     if (size > 0) {
