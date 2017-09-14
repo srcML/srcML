@@ -228,7 +228,7 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string>& langua
  *
  * @returns 1 on success and 0 if done
  */
-int srcml_sax2_reader::read_srcml(srcml_unit& mainunit, int& content_begin, int& content_end) {
+int srcml_sax2_reader::read_srcml(srcml_unit& mainunit) {
 
     if (thread == nullptr)
         return 0;
@@ -244,9 +244,6 @@ int srcml_sax2_reader::read_srcml(srcml_unit& mainunit, int& content_begin, int&
     handler.resume_and_wait();
     handler.collect_srcml = false;
     if (handler.is_done) return 0;
-
-    content_begin = handler.unit->content_begin;
-    content_end = handler.unit->content_end;
 
     handler.unit = save;
 
