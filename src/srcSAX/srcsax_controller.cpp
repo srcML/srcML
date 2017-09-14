@@ -23,6 +23,7 @@
 #include <libxml/parserInternals.h>
 
 #include <cstring>
+#include <functional>
 
 /** 
  * libxml_error
@@ -35,22 +36,6 @@ static void libxml_error(void * /*ctx*/, const char* /*msg*/, ...) {}
 static xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buffer_input, xmlCharEncoding enc);
 
 /**
- * srcsax_controller_init
- *
- * Internal method to initialize the controller module.
- */
-static void srcsax_controller_init() {
-
-    static bool initialized = false;
-    if (initialized)
-        return;
-    initialized = true;
-
-    xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
-    initGenericErrorDefaultFunc(&error_handler);
-}
-
-/**
  * srcsax_create_context_inner
  * @param input a libxml2 parser input buffer
  *
@@ -59,8 +44,14 @@ static void srcsax_controller_init() {
  * 
  * @returns srcsax_context context to be used for srcML parsing.
  */
-static srcsax_context* srcsax_create_context_inner(xmlParserInputBufferPtr input, bool free_input, const char* encoding) {
+static srcsax_context* srcsax_create_context_inner(bool free_input, const char* encoding,
+    std::function<xmlParserInputBufferPtr(xmlCharEncoding)> createxmlParserInputBuffer) {
 
+    xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
+    initGenericErrorDefaultFunc(&error_handler);
+
+    auto enc = encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE;
+    xmlParserInputBufferPtr input = createxmlParserInputBuffer(enc);
     if (input == 0)
         return 0;
 
@@ -108,12 +99,10 @@ srcsax_context* srcsax_create_context_filename(const char* filename, const char*
     if (filename == 0)
         return 0;
 
-    srcsax_controller_init();
+    return srcsax_create_context_inner(true, encoding, [filename](xmlCharEncoding enc) {
 
-    xmlParserInputBufferPtr input =
-        xmlParserInputBufferCreateFilename(filename, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    return srcsax_create_context_inner(input, true, encoding);
+        return xmlParserInputBufferCreateFilename(filename, enc);
+    });
 }
 
 /**
@@ -131,12 +120,10 @@ srcsax_context* srcsax_create_context_memory(const char* buffer, size_t buffer_s
     if (buffer == 0 || buffer_size == 0)
         return 0;
 
-    srcsax_controller_init();
+    return srcsax_create_context_inner(true, encoding, [buffer,buffer_size](xmlCharEncoding enc) {
 
-    xmlParserInputBufferPtr input =
-        xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    return srcsax_create_context_inner(input, true, encoding);
+        return xmlParserInputBufferCreateMem(buffer, (int)buffer_size, enc);
+    });
 }
 
 /**
@@ -153,12 +140,10 @@ srcsax_context* srcsax_create_context_FILE(FILE * srcml_file, const char* encodi
     if (srcml_file == 0)
         return 0;
 
-    srcsax_controller_init();
+    return srcsax_create_context_inner(true, encoding, [srcml_file](xmlCharEncoding enc) {
 
-    xmlParserInputBufferPtr input =
-        xmlParserInputBufferCreateFile(srcml_file, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    return srcsax_create_context_inner(input, true, encoding);
+        return xmlParserInputBufferCreateFile(srcml_file, enc);
+    });
 }
 
 /**
@@ -175,12 +160,10 @@ srcsax_context* srcsax_create_context_fd(int srcml_fd, const char* encoding) {
     if (srcml_fd < 0)
         return 0;
 
-    srcsax_controller_init();
+    return srcsax_create_context_inner(true, encoding, [srcml_fd](xmlCharEncoding enc) {
 
-    xmlParserInputBufferPtr input =
-        xmlParserInputBufferCreateFd(srcml_fd, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    return srcsax_create_context_inner(input, true, encoding);
+        return xmlParserInputBufferCreateFd(srcml_fd, enc);
+    });
 }
 
 /**
@@ -199,12 +182,10 @@ srcsax_context* srcsax_create_context_io(void * srcml_context, int (*read_callba
     if (srcml_context == 0 || read_callback == 0)
         return 0;
 
-    srcsax_controller_init();
+    return srcsax_create_context_inner(true, encoding, [srcml_context,read_callback,close_callback](xmlCharEncoding enc) {
 
-    xmlParserInputBufferPtr input =
-        xmlParserInputBufferCreateIO(read_callback, close_callback, srcml_context, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    return srcsax_create_context_inner(input, true, 0);
+        return xmlParserInputBufferCreateIO(read_callback, close_callback, srcml_context, enc);
+    });
 }
 
 /**
@@ -223,9 +204,10 @@ srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPt
     if (input == 0)
         return 0;
 
-    srcsax_controller_init();
+    return srcsax_create_context_inner(false, 0, [input](xmlCharEncoding) {
 
-    return srcsax_create_context_inner(input, false, 0);
+        return input;
+    });
 }
 
 /**
