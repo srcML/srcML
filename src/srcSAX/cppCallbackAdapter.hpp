@@ -29,7 +29,7 @@ class cppCallbackAdapter {
 private:
 
     /** the srcSAXHandler to forward the callbacks */
-    srcSAXHandler * handler;
+    srcSAXHandler* handler = nullptr;
 
 public:
 
@@ -71,14 +71,13 @@ public:
         return handler;
     }
 
-
     /**
      * start_document
      * @param context a srcSAX context
      *
      * Callback. Forwards C API start_document to C++ API srcSAXHandler startDocument.
      */
-    static void start_document(struct srcsax_context * context) {
+    static void start_document(srcsax_context* context) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
@@ -93,7 +92,7 @@ public:
      *
      * Callback. Forwards C API end_document to C++ API srcSAXHandler endDocument.
      */
-    static void end_document(struct srcsax_context * context) {
+    static void end_document(srcsax_context* context) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
@@ -113,7 +112,7 @@ public:
      *
      * Callback. Forwards C API start_root to C++ API srcSAXHandler startRoot.
      */
-    static void start_root(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
+    static void start_root(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** attributes) {
 
@@ -138,7 +137,7 @@ public:
      * Signature srcSAX handler function for start of an unit.
      * Callback. Forwards C API start_unit to C++ API srcSAXHandler startUnit.
      */
-    static void start_unit(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
+    static void start_unit(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** attributes) {
 
@@ -161,7 +160,7 @@ public:
      * Signature for srcSAX handler function for start of an element.
      * Callback. Forwards C API start_element to C++ API srcSAXHandler startElement.
      */
-    static void start_element(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
+    static void start_element(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
                                 int num_namespaces, const xmlChar** namespaces, int num_attributes,
                                 const xmlChar** attributes) {
 
@@ -179,7 +178,7 @@ public:
      *
      * Callback. Forwards C API end_root to C++ API srcSAXHandler endRoot.
      */
-    static void end_root(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI) {
+    static void end_root(srcsax_context* context, const char* localname, const char* prefix, const char* URI) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
@@ -195,7 +194,7 @@ public:
      *
      * Callback. Forwards C API end_unit to C++ API srcSAXHandler endUnit.
      */
-    static void end_unit(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI) {
+    static void end_unit(srcsax_context* context, const char* localname, const char* prefix, const char* URI) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
@@ -211,7 +210,7 @@ public:
      *
      * Callback. Forwards C API end_element to C++ API srcSAXHandler endElement.
      */
-    static void end_element(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI) {
+    static void end_element(srcsax_context* context, const char* localname, const char* prefix, const char* URI) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
@@ -226,7 +225,7 @@ public:
      *
      * Callback. Forwards C API characters_root to C++ API srcSAXHandler charactersRoot.
      */
-    static void characters_root(struct srcsax_context * context, const char * ch, int len) {
+    static void characters_root(srcsax_context* context, const char* ch, int len) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
@@ -241,7 +240,7 @@ public:
      *
      * Callback. Forwards C API characters_unit to C++ API srcSAXHandler charactersUnit.
      */
-    static void characters_unit(struct srcsax_context * context, const char * ch, int len) {
+    static void characters_unit(srcsax_context* context, const char* ch, int len) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
@@ -261,7 +260,7 @@ public:
      *
      * Callback. Forwards C API meta_tag to C++ API srcSAXHandler metaTag.
      */
-    static void meta_tag(struct srcsax_context * context, const char * localname, const char * prefix, const char * URI,
+    static void meta_tag(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** attributes) {
 
@@ -277,7 +276,7 @@ public:
      *
      * Callback. Forwards C API comment to C++ API srcSAXHandler comment.
      */
-    static void comment(struct srcsax_context * context, const char * value) {
+    static void comment(srcsax_context* context, const char* value) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
@@ -292,7 +291,7 @@ public:
      *
      * Callback. Forwards C API cdata_block to C++ API srcSAXHandler cdata_block.
      */
-    static void cdata_block(struct srcsax_context * context, const char * value, int len) {
+    static void cdata_block(srcsax_context* context, const char* value, int len) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
@@ -307,7 +306,7 @@ public:
      *
      * Callback. Forwards C API processing_instruction to C++ API srcSAXHandler processingInstruction.
      */
-    static void processing_instruction(struct srcsax_context * context, const char * target, const char * data) {
+    static void processing_instruction(srcsax_context* context, const char* target, const char * data) {
 
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 

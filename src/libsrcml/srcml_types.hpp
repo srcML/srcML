@@ -200,7 +200,7 @@ struct srcml_archive {
     size_t tabstop = 8;
 
     /**  new namespace structure */
-    Namespaces namespaces;
+    Namespaces namespaces = starting_namespaces;
 
     /** target/data pair for processing instruction */
     boost::optional<std::pair<std::string, std::string> > processing_instruction;

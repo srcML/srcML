@@ -70,16 +70,6 @@ srcml_archive* srcml_archive_create() {
 
     xmlInitParser();
 
-    archive->type = SRCML_ARCHIVE_INVALID;
-    archive->options = SRCML_OPTION_DEFAULT_INTERNAL;
-    archive->revision = srcml_version_string();
-    archive->tabstop = 8;
-    archive->translator = nullptr;
-    archive->reader = nullptr;
-    archive->input = nullptr;
-
-    archive->namespaces = starting_namespaces;
-
     archive->registered_languages.register_standard_file_extensions();
 
     return archive;
@@ -93,12 +83,10 @@ srcml_archive* srcml_archive_create() {
  * allocated by srcml_archive_create().
  * archive must be reallocated/re-created to use again.
  */
-void srcml_archive_free(srcml_archive * archive) {
+void srcml_archive_free(srcml_archive* archive) {
 
     if (archive == NULL)
         return;
-
-    srcml_clear_transforms(archive);
 
     delete archive;
 }
