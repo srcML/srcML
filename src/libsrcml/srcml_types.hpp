@@ -238,7 +238,7 @@ struct srcml_archive {
  */
 struct srcml_unit {
     /** the archive the unit is created from */
-    srcml_archive* archive;
+    srcml_archive* archive = nullptr;
 
     /** source encoding */
     boost::optional<std::string> encoding;
@@ -259,29 +259,29 @@ struct srcml_unit {
     /** an array of name-value attribute pairs */
     std::vector<std::string> attributes;
     /** the type of eol to output with source code */
-    size_t eol;
+    size_t eol = 0;
 
     /** language decided for the unit */
-    int derived_language;
+    int derived_language = SRCML_LANGUAGE_NONE;
 
     /** output buffer to hold streaming creation of unit */
-    xmlBuffer * output_buffer;
+    xmlBuffer* output_buffer = nullptr;
 
     /** a unit srcMLTranslator for writing and parsing as a stream */
-    srcml_translator * unit_translator;
+    srcml_translator* unit_translator = nullptr;
 
     boost::optional<Namespaces> namespaces;
 
     /** store if attributes have been read */
-    bool read_header;
+    bool read_header = false;
 
     /** a buffer to store srcml from read and after parsing */
     boost::optional<std::string> unit;
 
     /** record the begin and end of the actual content */
     // int instead of size_t since used with libxml2
-    int content_begin;
-    int content_end;
+    int content_begin = 0;
+    int content_end = 0;
 
     /** libxml2 callback wrapper context.  Only needed for IO functions */
     boost::any context;
