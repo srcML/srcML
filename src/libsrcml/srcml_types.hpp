@@ -175,7 +175,7 @@ enum SRCML_ARCHIVE_TYPE { SRCML_ARCHIVE_INVALID, SRCML_ARCHIVE_RW, SRCML_ARCHIVE
 struct srcml_archive {
 
     /** type archive type read/write */
-    SRCML_ARCHIVE_TYPE type;
+    SRCML_ARCHIVE_TYPE type = SRCML_ARCHIVE_INVALID;
 
     /** @todo rename to xml_encoding */
     /** an attribute for the xml encoding */
@@ -183,7 +183,7 @@ struct srcml_archive {
     /** source encoding */
     boost::optional<std::string> src_encoding;
     /** an attribute for a revision */
-    boost::optional<std::string> revision;
+    boost::optional<std::string> revision = std::string(srcml_version_string());
     /** an attribute for a language */
     boost::optional<std::string> language;
     /** an attribute for a url path */
@@ -194,10 +194,10 @@ struct srcml_archive {
     std::vector<std::string> attributes;
 
     /** srcml options */
-    OPTION_TYPE options;
+    OPTION_TYPE options = SRCML_OPTION_DEFAULT_INTERNAL;
 
     /** size of tabstop */
-    size_t tabstop;
+    size_t tabstop = 8;
 
     /**  new namespace structure */
     Namespaces namespaces;
@@ -206,19 +206,19 @@ struct srcml_archive {
     boost::optional<std::pair<std::string, std::string> > processing_instruction;
 
     /** an array of registered extension language pairs */
-    language_extension_registry registered_languages;
+    language_extension_registry registered_languages = language_extension_registry();
 
     /** an array of user defined macros and their types */
     std::vector<std::string> user_macro_list;
 
     /** a srcMLTranslator for writing and parsing */
-    srcml_translator * translator;
+    srcml_translator* translator = nullptr;
 
     /** a srcMLReader for reading */
-    srcml_sax2_reader * reader;
+    srcml_sax2_reader* reader = nullptr;
 
     /** xmlParserInputBuffer for reading */
-    xmlParserInputBufferPtr input;
+    xmlParserInputBufferPtr input = nullptr;
  
     /** an array of transformations to apply */
     std::vector<transform> transformations;

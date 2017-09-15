@@ -62,13 +62,7 @@ std::string srcml_error;
 #ifdef STATIC_GLOBALS
 static
 #endif
-srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(), boost::optional<std::string>(),
-                                 std::string(SRCML_VERSION_STRING), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
-                                 std::vector<std::string>(),
-                                 SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH,
-                                 8, Namespaces(), boost::optional<std::pair<std::string, std::string> >(),
-                                 language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any(), boost::optional<size_t>() };
-
+srcml_archive global_archive;
 
 /**
  * @var global_unit
