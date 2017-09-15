@@ -95,65 +95,9 @@ srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, xmlParserInputBuffe
  */
 srcml_sax2_reader::~srcml_sax2_reader() {
 
-    stop();
-}
-
-void srcml_sax2_reader::stop() {
-
     handler.stop();
     
     thread.join();
-}
-
-/**
- * read_root_unit_attributes
- * @param language a location to store the language attribute
- * @param url a location to store the url attribute
- * @param version a location to store the version attribute
- * @param attributes array to store other attributes gathered
- * @param prefixes an array to store gathered XML namespace prefixes
- * @param namespaces an array to store gathered XML naamespaces
- * @param processing_instruction a location to store the pre-root processing-instruction
- * @param options a variable to set used options
- * @param tabstop a variable to set the tabstop
- * @param user_macro_list a variable to set the list of user defined macros
- *
- * Read attributes and namespace information fromt the root unit,
- * setting the necessary options.
- *
- * @returns 1 on success and 0 on failure.
- */
-int srcml_sax2_reader::read_root_unit_attributes(srcml_archive* archive, boost::optional<std::string>& encoding,
-                                                 boost::optional<std::string>& language,
-                                                 boost::optional<std::string>& url,
-                                                 boost::optional<std::string>& version,
-                                                 std::vector<std::string>& attributes,
-                                                 Namespaces& namespaces,
-                                                 boost::optional<std::pair<std::string, std::string> >& processing_instruction,
-                                                 OPTION_TYPE& options,
-                                                 size_t& tabstop,
-                                                 std::vector<std::string>& user_macro_list) {
-
-    if (read_root || handler.read_root) return 0;
-
-    handler.archive = archive;
-
-    encoding = std::move(handler.archive->encoding);
-    language = std::move(handler.archive->language);
-    url = std::move(handler.archive->url);
-    version = std::move(handler.archive->version);
-    attributes = std::move(handler.archive->attributes);
-    namespaces = std::move(handler.archive->namespaces);
-    processing_instruction = std::move(handler.archive->processing_instruction);
-    options = std::move(handler.archive->options);
-    tabstop = std::move(handler.archive->tabstop);
-    user_macro_list = std::move(handler.archive->user_macro_list);
-
-    handler.archive = 0;
-
-    read_root = true;
-
-    return 1;
 }
 
 /**
@@ -171,13 +115,17 @@ int srcml_sax2_reader::read_unit_attributes(srcml_unit* unit) {
 
     handler.unit = unit;
 
-    if (handler.is_done) return 0;
+    if (handler.is_done)
+        return 0;
+
     handler.skip = true;
     handler.collect_unit_attributes = true;
     handler.resume_and_wait();
     handler.collect_unit_attributes = false;
     handler.skip = false;
-    if (handler.is_done) return 0;
+
+    if (handler.is_done)
+        return 0;
 
     handler.unit = 0;
 
@@ -199,11 +147,15 @@ int srcml_sax2_reader::read_srcml(srcml_unit* unit) {
 
     handler.unit = unit;
 
-    if (handler.is_done) return 0;
+    if (handler.is_done)
+        return 0;
+
     handler.collect_srcml = true;
     handler.resume_and_wait();
     handler.collect_srcml = false;
-    if (handler.is_done) return 0;
+
+    if (handler.is_done)
+        return 0;
 
     handler.unit = 0;
 
@@ -221,7 +173,9 @@ int srcml_sax2_reader::read_srcml(srcml_unit* unit) {
  */
 int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
 
-    if (handler.is_done) return 0;
+    if (handler.is_done)
+        return 0;
+
     control.enable_comment(false);
     control.enable_cdataBlock(false);
     handler.output_buffer = output_buffer;
@@ -231,7 +185,9 @@ int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
     handler.output_buffer = 0;
     control.enable_comment(true);
     control.enable_cdataBlock(true);
-    if (handler.is_done) return 0;
+
+    if (handler.is_done)
+        return 0;
 
     return 1;
 }
