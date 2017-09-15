@@ -74,9 +74,9 @@ srcml_archive* srcml_archive_create() {
     archive->options = SRCML_OPTION_DEFAULT_INTERNAL;
     archive->revision = srcml_version_string();
     archive->tabstop = 8;
-    archive->translator = 0;
-    archive->reader = 0;
-    archive->input = 0;
+    archive->translator = nullptr;
+    archive->reader = nullptr;
+    archive->input = nullptr;
 
     archive->namespaces = starting_namespaces;
 
@@ -1016,11 +1016,9 @@ int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*wr
     if (archive == NULL || context == NULL || write_callback == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlOutputBufferPtr output_buffer = 0;
-
     archive->context = context;
 
-    output_buffer = xmlOutputBufferCreateIO((int (*)(void *, const char *, int)) write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateIO((int (*)(void *, const char *, int)) write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
 
     return srcml_archive_write_open_internal(archive, output_buffer);
 }
@@ -1155,7 +1153,7 @@ int srcml_archive_read_open_fd(srcml_archive* archive, int srcml_fd) {
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFd(srcml_fd, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
-    archive->input->closecallback = 0;
+    archive->input->closecallback = nullptr;
 
     return srcml_archive_read_open_internal(archive);
 }
@@ -1312,7 +1310,7 @@ srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
 
     if (!not_done || !unit->unit) {
         srcml_unit_free(unit);
-        unit = 0;
+        unit = nullptr;
     }
 
     return unit;
@@ -1345,7 +1343,7 @@ srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
 
     if (!not_done || !unit->unit) {
         srcml_unit_free(unit);
-        unit = 0;
+        unit = nullptr;
     }
 
     return unit;
@@ -1373,17 +1371,17 @@ void srcml_archive_close(srcml_archive * archive) {
     if (archive->translator) {
         archive->translator->close();
         delete archive->translator;
-        archive->translator = 0;
+        archive->translator = nullptr;
     }
 
     if (archive->reader) {
         delete archive->reader;
-        archive->reader = 0;
+        archive->reader = nullptr;
     }
 
     if (archive->input) {
         xmlFreeParserInputBuffer(archive->input);
-        archive->input = 0;
+        archive->input = nullptr;
     }
 
     archive->type = SRCML_ARCHIVE_INVALID;
