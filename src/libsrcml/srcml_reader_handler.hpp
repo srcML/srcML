@@ -263,8 +263,6 @@ public :
     ~srcml_reader_handler() {
 
         srcml_archive_free(archive);
-        if (unit)
-            srcml_unit_free(unit);
     }
 
     /**
@@ -507,9 +505,6 @@ public :
                 return;
             }
         }
-
-        unit = srcml_unit_create(archive);
-        unit->unit = "";
 
         is_empty = true;
 
@@ -763,9 +758,6 @@ public :
         }
 
         is_empty = false;
-
-        srcml_unit_free(unit);
-        unit = 0;
 
         if (terminate)
             stop_parser();

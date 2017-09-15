@@ -191,13 +191,9 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string>& e
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string>& language,
-                                            boost::optional<std::string>& filename,
-                                            boost::optional<std::string>& url,
-                                            boost::optional<std::string>& version,
-                                            boost::optional<std::string>& timestamp,
-                                            boost::optional<std::string>& hash,
-                                            std::vector<std::string>& attributes) {
+int srcml_sax2_reader::read_unit_attributes(srcml_unit& unit) {
+
+    handler.unit = &unit;
 
     if (thread == nullptr) return 0;
     if (handler.is_done) return 0;
@@ -208,13 +204,7 @@ int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string>& langua
     handler.skip = false;
     if (handler.is_done) return 0;
 
-    language = std::move(handler.unit->language);
-    filename = std::move(handler.unit->filename);
-    url = std::move(handler.unit->url);
-    version = std::move(handler.unit->version);
-    hash = std::move(handler.unit->hash);
-    timestamp = std::move(handler.unit->timestamp);
-    attributes = std::move(handler.unit->attributes);
+    handler.unit = 0;
 
     return 1;
 }
@@ -235,8 +225,6 @@ int srcml_sax2_reader::read_srcml(srcml_unit& mainunit) {
 
     mainunit.unit = "";
 
-    auto save = handler.unit;
-
     handler.unit = &mainunit;
 
     if (handler.is_done) return 0;
@@ -245,7 +233,7 @@ int srcml_sax2_reader::read_srcml(srcml_unit& mainunit) {
     handler.collect_srcml = false;
     if (handler.is_done) return 0;
 
-    handler.unit = save;
+    handler.unit = 0;
 
     return 1;
 }
