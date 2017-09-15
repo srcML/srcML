@@ -38,6 +38,21 @@
 #include <boost/optional.hpp>
 
 /**
+ * thread_args
+ *
+ * Structure to hold information to pass
+ * to thread function.
+ */
+struct thread_args {
+
+    /** control for sax processing */
+    srcSAXController* control;
+
+    /** handler with hooks for sax processing */
+    srcml_reader_handler* handler;
+};
+
+/**
  * srcml_sax2_reader
  *
  * Extend XML Text Reader interface to
@@ -50,15 +65,17 @@ private :
 
     /** control for sax parsing */
     srcSAXController control;
-    /** boolean for marking if read root */
+
+    /** if read root */
     bool read_root = false;
-    /** handler with hooks for sax parsing */
+
+    /** hooks for sax parsing */
     srcml_reader_handler handler;
 
     /** thread running execution */
-    std::thread * thread;
+    std::thread thread;
 
-    void init_constructor();
+    thread_args args = { &control, &handler };
 
 public :
 

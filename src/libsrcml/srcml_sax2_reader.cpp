@@ -27,29 +27,12 @@
 #include <cstring>
 
 /**
- * thread_args
- *
- * Structure to hold information to pass
- * to thread function.
- */
-struct thread_args {
-
-    /** control for sax processing */
-    srcSAXController * control;
-
-    /** handler with hooks for sax processing */
-    srcml_reader_handler * handler;
-};
-
-/**
  * start_routine
  * @param arguments thread_args structure with control and handler
  *
  * Starts the parsing of the document.
  */
-void* start_routine(void * arguments) {
-
-    thread_args * args = (thread_args *)arguments;
+static void* start_routine(thread_args* args) {
 
     try {
 
@@ -74,15 +57,6 @@ void* start_routine(void * arguments) {
     }
 
     return 0;
-
-}
-
-void srcml_sax2_reader::init_constructor() {
-
-    thread_args args = { &control, &handler };
-
-    thread = new std::thread(start_routine, &args);
-    handler.wait();
 }
 
 /**
@@ -93,11 +67,11 @@ void srcml_sax2_reader::init_constructor() {
  * Construct a srcml_sax2_reader using a filename
  */
 srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, const char* filename, const char* encoding, const boost::optional<size_t>& revision_number)
-    : control(filename, encoding), handler(revision_number) {
+    : control(filename, encoding), handler(revision_number), thread(start_routine, &args) {
 
     handler.archive = archive;
 
-    init_constructor();
+    handler.wait();
 }
 
 /**
@@ -107,11 +81,11 @@ srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, const char* filenam
  * Construct a srcml_sax2_reader using a parser input buffer
  */
 srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number)
-    : control(input), handler(revision_number) {
+    : control(input), handler(revision_number), thread(start_routine, &args) {
 
     handler.archive = archive;
 
-    init_constructor();
+    handler.wait();
 }
 
 /**
@@ -126,13 +100,9 @@ srcml_sax2_reader::~srcml_sax2_reader() {
 
 void srcml_sax2_reader::stop() {
 
-    if (thread != nullptr) {
-
-        handler.stop();
-        thread->join();
-        delete thread;
-        thread = nullptr;
-    }
+    handler.stop();
+    
+    thread.join();
 }
 
 /**
@@ -163,8 +133,6 @@ int srcml_sax2_reader::read_root_unit_attributes(srcml_archive* archive, boost::
                                                  OPTION_TYPE& options,
                                                  size_t& tabstop,
                                                  std::vector<std::string>& user_macro_list) {
-
-    if (thread == nullptr) return 0;
 
     if (read_root || handler.read_root) return 0;
 
@@ -203,7 +171,6 @@ int srcml_sax2_reader::read_unit_attributes(srcml_unit* unit) {
 
     handler.unit = unit;
 
-    if (thread == nullptr) return 0;
     if (handler.is_done) return 0;
     handler.skip = true;
     handler.collect_unit_attributes = true;
@@ -227,9 +194,6 @@ int srcml_sax2_reader::read_unit_attributes(srcml_unit* unit) {
  * @returns 1 on success and 0 if done
  */
 int srcml_sax2_reader::read_srcml(srcml_unit* unit) {
-
-    if (thread == nullptr)
-        return 0;
 
     unit->unit = "";
 
@@ -257,7 +221,6 @@ int srcml_sax2_reader::read_srcml(srcml_unit* unit) {
  */
 int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
 
-    if (thread == nullptr) return 0;
     if (handler.is_done) return 0;
     control.enable_comment(false);
     control.enable_cdataBlock(false);
