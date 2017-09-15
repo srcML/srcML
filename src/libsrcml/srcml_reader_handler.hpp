@@ -250,9 +250,7 @@ public :
     srcml_reader_handler(const boost::optional<size_t>& revision_number)
         : revision_number(revision_number) {
 
-        archive = srcml_archive_create();
-
-        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+//        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
     }
 
     /**
@@ -261,9 +259,7 @@ public :
      * Destructor, deletes mutex and conditions.
      */
     ~srcml_reader_handler() {
-
-        srcml_archive_free(archive);
-    }
+     }
 
     /**
      * stop_parser

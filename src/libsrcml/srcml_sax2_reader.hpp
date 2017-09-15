@@ -63,8 +63,8 @@ private :
 public :
 
     // constructors
-    srcml_sax2_reader(const char * filename, const char * encoding = 0, const boost::optional<size_t>& revision_number = boost::optional<size_t>());
-    srcml_sax2_reader(xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number);
+    srcml_sax2_reader(srcml_archive* archive, const char * filename, const char * encoding = 0, const boost::optional<size_t>& revision_number = boost::optional<size_t>());
+    srcml_sax2_reader(srcml_archive* archive, xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number);
 
     // destructors
     ~srcml_sax2_reader();
@@ -72,7 +72,7 @@ public :
     void stop();
 
     // read attribute and namespace information from root unit.  Does not advance read.
-    int read_root_unit_attributes(boost::optional<std::string>& encoding, 
+    int read_root_unit_attributes(srcml_archive* archive, boost::optional<std::string>& encoding, 
                                   boost::optional<std::string>& language,
                                   boost::optional<std::string>& url,
                                   boost::optional<std::string>& version,
@@ -86,10 +86,10 @@ public :
     /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
        Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
     */
-    int read_unit_attributes(srcml_unit& unit);
+    int read_unit_attributes(srcml_unit* unit);
 
     // reads the next unit and returns it in parameter as srcML
-    int read_srcml(srcml_unit& unit);
+    int read_srcml(srcml_unit* unit);
 
     // reads the next unit and returns it in parameter as src
     int read_src(xmlOutputBufferPtr output_buffer);

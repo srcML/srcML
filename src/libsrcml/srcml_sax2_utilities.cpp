@@ -59,11 +59,15 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
     if (input == NULL)
         return SRCML_STATUS_IO_ERROR;
 
-    srcml_sax2_reader reader(input, revision_number);
+    srcml_archive* archive = srcml_archive_create();
+
+    srcml_sax2_reader reader(archive, input, revision_number);
 
     reader.read_src(output_buffer);
     
     xmlFreeParserInputBuffer(input);
+
+    srcml_archive_free(archive);
 
     return SRCML_STATUS_OK;
 }
@@ -88,11 +92,15 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding), compression);
 
-    srcml_sax2_reader reader(ifilename, 0, revision_number);
+    srcml_archive* archive = srcml_archive_create();
+
+    srcml_sax2_reader reader(archive, ifilename, 0, revision_number);
 
     reader.read_src(output_buffer);
 
     xmlOutputBufferClose(output_buffer);
+
+    srcml_archive_free(archive);
 
     return SRCML_STATUS_OK;
 }

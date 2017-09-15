@@ -92,8 +92,10 @@ void srcml_sax2_reader::init_constructor() {
  *
  * Construct a srcml_sax2_reader using a filename
  */
-srcml_sax2_reader::srcml_sax2_reader(const char* filename, const char* encoding, const boost::optional<size_t>& revision_number)
+srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, const char* filename, const char* encoding, const boost::optional<size_t>& revision_number)
     : control(filename, encoding), handler(revision_number) {
+
+    handler.archive = archive;
 
     init_constructor();
 }
@@ -104,8 +106,10 @@ srcml_sax2_reader::srcml_sax2_reader(const char* filename, const char* encoding,
  *
  * Construct a srcml_sax2_reader using a parser input buffer
  */
-srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number)
+srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number)
     : control(input), handler(revision_number) {
+
+    handler.archive = archive;
 
     init_constructor();
 }
@@ -149,7 +153,7 @@ void srcml_sax2_reader::stop() {
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string>& encoding,
+int srcml_sax2_reader::read_root_unit_attributes(srcml_archive* archive, boost::optional<std::string>& encoding,
                                                  boost::optional<std::string>& language,
                                                  boost::optional<std::string>& url,
                                                  boost::optional<std::string>& version,
@@ -164,6 +168,8 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string>& e
 
     if (read_root || handler.read_root) return 0;
 
+    handler.archive = archive;
+
     encoding = std::move(handler.archive->encoding);
     language = std::move(handler.archive->language);
     url = std::move(handler.archive->url);
@@ -174,6 +180,8 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string>& e
     options = std::move(handler.archive->options);
     tabstop = std::move(handler.archive->tabstop);
     user_macro_list = std::move(handler.archive->user_macro_list);
+
+    handler.archive = 0;
 
     read_root = true;
 
@@ -191,9 +199,9 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string>& e
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcml_sax2_reader::read_unit_attributes(srcml_unit& unit) {
+int srcml_sax2_reader::read_unit_attributes(srcml_unit* unit) {
 
-    handler.unit = &unit;
+    handler.unit = unit;
 
     if (thread == nullptr) return 0;
     if (handler.is_done) return 0;
@@ -218,14 +226,14 @@ int srcml_sax2_reader::read_unit_attributes(srcml_unit& unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcml_sax2_reader::read_srcml(srcml_unit& mainunit) {
+int srcml_sax2_reader::read_srcml(srcml_unit* unit) {
 
     if (thread == nullptr)
         return 0;
 
-    mainunit.unit = "";
+    unit->unit = "";
 
-    handler.unit = &mainunit;
+    handler.unit = unit;
 
     if (handler.is_done) return 0;
     handler.collect_srcml = true;

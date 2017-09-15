@@ -1043,7 +1043,7 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
 
     try {
 
-        archive->reader = new srcml_sax2_reader(archive->input, archive->revision_number);
+        archive->reader = new srcml_sax2_reader(archive, archive->input, archive->revision_number);
 
     } catch(...) {
 
@@ -1052,22 +1052,6 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
     }
 
     archive->type = SRCML_ARCHIVE_READ;
-
-    boost::optional<std::string> encoding, language, url, version;
-    bool done = !archive->reader->read_root_unit_attributes(encoding, language, url, version,
-                                                            archive->attributes,
-                                                            archive->namespaces,
-                                                            archive->processing_instruction,
-                                                            archive->options,
-                                                            archive->tabstop,
-                                                            archive->user_macro_list);
-    if (!done) {
-
-        if (!archive->encoding) archive->encoding = encoding;
-        archive->language = language;
-        archive->url = url;
-        archive->version = version;
-    }
 
     return SRCML_STATUS_OK;
 }
@@ -1232,7 +1216,7 @@ int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
 
     // if we haven't read a unit yet, go ahead and try
     if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_srcml(*unit);
+        unit->archive->reader->read_srcml(unit);
     if (!unit->unit) {
         return SRCML_STATUS_UNINITIALIZED_UNIT;
     }
@@ -1266,7 +1250,7 @@ srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
 
     srcml_unit* unit = srcml_unit_create(archive);
 
-    int not_done = archive->reader->read_unit_attributes(*unit);
+    int not_done = archive->reader->read_unit_attributes(unit);
     if (!not_done) {
         srcml_unit_free(unit);
         return 0;
@@ -1296,7 +1280,7 @@ int srcml_unit_read_body(srcml_unit* unit) {
         return 0;
 
     if (!unit->unit)
-        unit->archive->reader->read_srcml(*unit);
+        unit->archive->reader->read_srcml(unit);
 
     // @todo Isn't this backwards?
     return !unit->unit;
@@ -1323,8 +1307,8 @@ srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
     if (!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(*unit);
-    archive->reader->read_srcml(*unit);
+        not_done = archive->reader->read_unit_attributes(unit);
+    archive->reader->read_srcml(unit);
 
     if (!not_done || !unit->unit) {
         srcml_unit_free(unit);
@@ -1356,8 +1340,8 @@ srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
     if (!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(*unit);
-    archive->reader->read_srcml(*unit);
+        not_done = archive->reader->read_unit_attributes(unit);
+    archive->reader->read_srcml(unit);
 
     if (!not_done || !unit->unit) {
         srcml_unit_free(unit);
