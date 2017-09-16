@@ -69,40 +69,6 @@ public :
 
     /**
      * srcSAXController
-     * @param srcml_buffer a string buffer
-     *
-     * Constructor
-     */
-    srcSAXController(std::string srcml_buffer, const char* encoding = 0);
-
-    /**
-     * srcSAXController
-     * @param srcml_file a FILE for a srcML document
-     *
-     * Constructor
-     */
-    srcSAXController(FILE* srcml_file, const char* encoding = 0);
-
-    /**
-     * srcSAXController
-     * @param srcml_fd a file descriptor for a srcML document
-     *
-     * Constructor
-     */
-    srcSAXController(int srcml_fd, const char* encoding = 0);
-
-    /**
-     * srcSAXController
-     * @param srcml_context a general context for a srcML document
-     * @param read_callback a read callback function
-     * @param close_callback a close callback function
-     *
-     * Constructor
-     */
-    srcSAXController(void * srcml_context, int (*read_callback)(void * context, char* buffer, int len), int (*close_callback)(void * context), const char* encoding = 0);
-
-    /**
-     * srcSAXController
      * @param input a parser input buffer
      *
      * Constructor
@@ -114,7 +80,7 @@ public :
      *
      * Return the used parser context.
      */
-    srcsax_context * getContext();
+    srcsax_context* getContext();
 
     /**
      * ~srcSAXController

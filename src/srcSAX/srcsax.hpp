@@ -66,10 +66,6 @@ struct srcsax_context {
 
 /* srcSAX context creation/open functions */
 srcsax_context* srcsax_create_context_filename(const char* filename, const char* encoding);
-srcsax_context* srcsax_create_context_memory(const char* buffer, size_t buffer_size, const char* encoding);
-srcsax_context* srcsax_create_context_FILE(FILE* srcml_file, const char* encoding);
-srcsax_context* srcsax_create_context_fd(int srcml_fd, const char* encoding);
-srcsax_context* srcsax_create_context_io(void* srcml_context, int (*read_callback)(void* context, char* buffer, int len), int (*close_callback)(void* context), const char* encoding);
 srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
 
 /* srcSAX free function */
