@@ -71,13 +71,12 @@ private :
 
     /** thread running execution */
     std::thread thread;
-
     thread_args args = { &control, &handler };
 
 public :
 
     // constructors
-    srcml_sax2_reader(srcml_archive* archive, const char * filename, const char * encoding = 0, const boost::optional<size_t>& revision_number = boost::optional<size_t>());
+    srcml_sax2_reader(srcml_archive* archive, const char* filename, const char * encoding = 0, const boost::optional<size_t>& revision_number = boost::optional<size_t>());
     srcml_sax2_reader(srcml_archive* archive, xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number);
 
     // destructors
