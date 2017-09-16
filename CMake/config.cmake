@@ -67,25 +67,37 @@ endif()
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    
+    if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
+        set(BUILD_ARCH "x86")
+    else()
+        set(BUILD_ARCH "x64")
+    endif()
+
     add_definitions(-DWITH_LIBXSLT)
-    # Adding suspected windows include directory for ANTRL
-    include_directories("C:/antlr/277/include/antlr")
-    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/dep)
+    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
+
     include_directories(${WINDOWS_DEP_PATH}/include)
-    link_directories(${WINDOWS_DEP_PATH}/lib)
+    link_directories(${WINDOWS_DEP_PATH}/${BUILD_ARCH}/$(ConfigurationName)/lib)
+
     if(ENABLE_SVN_INTEGRATION)
         message(FATAL_ERROR "SVN integration not tested on windows.")
     endif()
-    # FIXME
+
     set(LIBXSLT_LIBRARIES libxslt.lib)
     set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)
     set(LibArchive_LIBRARIES archive.lib)
-    set(LIBXML2_LIBRARIES libxml2.lib iconv.lib)
+    set(LIBXML2_LIBRARIES libxml2.lib libiconv.lib)
     set(CURL_LIBRARIES libcurl.lib)
-    include_directories(C:/antlr/277/include)
-    set(BOOST_DIR $ENV{BOOST_ROOT})
-    include_directories(${BOOST_DIR})
-    link_directories(${BOOST_DIR}/stage/lib)
+    set(ANTLR_LIBRARY antlr.lib)
+
+    set(Boost_NO_SYSTEM_PATHS ON)
+    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release/lib)
+    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug/lib)
+    set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
+    set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
+    find_package(Boost COMPONENTS program_options filesystem system thread regex date_time REQUIRED)
+    
 else()
 
     set(WINDOWS_DEP_PATH "")
@@ -112,11 +124,10 @@ else()
         add_definitions(-DWITH_LIBXSLT)
     endif()
 
+    # Locating the antlr library.
+    find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
 
 endif()
-
-# Locating the antlr library.
-find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 if(DYNAMIC_LOAD_ENABLED)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} dl crypto pthread
@@ -146,14 +157,14 @@ else()
 endif()
 
 
-# Finding antlr library.
-find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin C:/antlr/277/bin)
+# Finding antlr executable.
+find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
 
-# Finding SED
-find_program(SED_EXE NAMES gsed sed PATHS /opt/local/bin /usr/local /bin ${WINDOWS_DEP_PATH}/bin)
-
-# Finding GREP
-find_program(GREP_EXE grep PATHS /bin /usr/bin ${WINDOWS_DEP_PATH}/bin)
+# Finding SED		
+find_program(SED_EXE NAMES gsed sed PATHS /opt/local/bin /usr/local /bin ${WINDOWS_DEP_PATH}/tools/sed)		
+		
+# Finding GREP		
+find_program(GREP_EXE grep PATHS /bin /usr/bin ${WINDOWS_DEP_PATH}/tools/grep)		
 
 find_package(PythonInterp REQUIRED)
 
