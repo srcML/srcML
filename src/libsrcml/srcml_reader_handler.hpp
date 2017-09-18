@@ -731,9 +731,9 @@ public :
         if (skip) {
 
             get_controller().enable_startElement(true);
-            get_controller().enable_charactersUnit(false);
-            get_controller().enable_comment(false);
-            get_controller().enable_cdataBlock(false);
+            get_controller().enable_charactersUnit(true);
+            get_controller().enable_comment(true);
+            get_controller().enable_cdataBlock(true);
         }
 
         if (collect_srcml) {
