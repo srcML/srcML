@@ -253,24 +253,14 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                                                 state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
                                                 state->root.attributes.data());
-        if (state->context->terminate)
-            return;
 
         characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
 
-        if (state->context->terminate)
-            return;
-
-        start_element_ns(ctx, localname, prefix, URI,
-                nb_namespaces, namespaces, nb_attributes, 0, attributes);
+        start_element_ns(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     } else {
         
-        if (state->context->handler->characters_root)
-            state->context->handler->characters_root(state->context, state->characters.c_str(), (int)state->characters.size());
-
-        if (state->context->terminate)
-            return;
+        characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
 
         state->mode = UNIT;
 
