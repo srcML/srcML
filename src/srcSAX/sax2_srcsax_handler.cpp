@@ -489,7 +489,8 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
         if (state->context->terminate)
             return;
 
-        if (ctxt->sax->startElementNs == &start_unit) {
+        // end of something, but already ended unit
+        if (state->mode == END_UNIT) {
 
             state->mode = END_ROOT;
 
