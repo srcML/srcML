@@ -248,6 +248,8 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
     if (!state->is_archive) {
 
+        state->mode = UNIT;
+
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                                                 state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
                                                 state->root.attributes.data());
@@ -271,6 +273,8 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
         if (state->context->terminate)
             return;
+
+        state->mode = UNIT;
 
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
@@ -317,7 +321,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     ++state->context->unit_count;
 
-    state->mode = UNIT;
+  //  state->mode = UNIT;
 
     if (state->context->handler->start_unit)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
@@ -469,9 +473,9 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
                 }
             }
 
-            if (state->context->handler->start_unit)
-                state->context->handler->start_unit(state->context, (const char*) state->root.localname, (const char*) state->root.prefix, (const char*) state->root.URI,
-                                                    state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
+            // @todo note that setting state->mode to UNIT causes problems
+            start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
+                                                    state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
                                                     state->root.attributes.data());
 
             if (state->context->terminate)
