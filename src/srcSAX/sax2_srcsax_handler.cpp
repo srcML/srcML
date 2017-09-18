@@ -39,7 +39,7 @@ xmlSAXHandler srcsax_sax2_factory() {
     sax.startDocument = &start_document;
     sax.endDocument = &end_document;
 
-    sax.startElementNs = &start_root;
+    sax.startElementNs = &start_root_first;
     sax.endElementNs = &end_element_ns;
 
     sax.characters = &characters_first;
@@ -126,8 +126,8 @@ void end_document(void* ctx) {
     if (state->context->terminate)
         return;
 
-    if (state->mode != END_ROOT && state->mode != START && state->context->handler->end_root)
-        state->context->handler->end_root(state->context, (const char*) state->root.localname, (const char*) state->root.prefix, (const char*) state->root.URI);
+    if (state->mode != END_ROOT && state->mode != START)
+        end_root(ctx, state->root.localname, state->root.prefix, state->root.URI);
 
     if (state->context->terminate)
         return;
@@ -156,7 +156,7 @@ void end_document(void* ctx) {
  * SAX handler function for start of root element.
  * Caches root info and immediately calls supplied handlers function.
  */
-void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar** attributes) {
 
@@ -366,6 +366,31 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 }
 
 /**
+ * end_root
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of a unit
+ */
+void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
+
+#ifdef SRCSAX_DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
+    if (ctx == NULL)
+        return;
+
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+
+    if (state->context->handler->end_root)
+        state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+}
+
+/**
  * start_element_ns
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
@@ -482,8 +507,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
             state->mode = END_ROOT;
 
-            if (state->context->handler->end_root)
-                state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+            end_root(ctx, localname, prefix, URI);
 
         } else {
 
