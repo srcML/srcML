@@ -338,6 +338,42 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 }
 
 /**
+ * end_unit
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of a unit
+ */
+void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
+
+#ifdef SRCSAX_DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
+    if (ctx == NULL)
+        return;
+
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+
+    state->mode = END_UNIT;
+
+    if (state->context->handler->end_unit)
+        state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+
+    if (ctxt->sax->startElementNs)
+        ctxt->sax->startElementNs = &start_unit;
+
+    if (ctxt->sax->characters) {
+
+        ctxt->sax->characters = &characters_root;
+        ctxt->sax->ignorableWhitespace = &characters_root;
+    }
+}
+
+/**
  * start_element_ns
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
@@ -458,19 +494,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 
         } else {
 
-            state->mode = END_UNIT;
-
-            if (state->context->handler->end_unit)
-                state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
-
-            if (ctxt->sax->startElementNs)
-                ctxt->sax->startElementNs = &start_unit;
-
-            if (ctxt->sax->characters) {
-
-                ctxt->sax->characters = &characters_root;
-                ctxt->sax->ignorableWhitespace = &characters_root;
-            }
+            end_unit(ctx, localname, prefix, URI);
         }
 
     } else {

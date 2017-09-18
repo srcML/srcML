@@ -173,6 +173,17 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
                const xmlChar** attributes);
 
 /**
+ * end_unit
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of a unit
+ */
+void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
+
+/**
  * start_element_ns
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
