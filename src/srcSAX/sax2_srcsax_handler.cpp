@@ -256,15 +256,13 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
         if (state->context->terminate)
             return;
 
-        if (state->context->handler->characters_unit)
-            state->context->handler->characters_unit(state->context, state->characters.c_str(), (int)state->characters.size());
+        characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
 
         if (state->context->terminate)
             return;
 
-        if (state->context->handler->start_element)
-            state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                nb_namespaces, namespaces, nb_attributes, attributes);
+        start_element_ns(ctx, localname, prefix, URI,
+                nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     } else {
         
