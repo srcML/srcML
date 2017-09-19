@@ -39,7 +39,7 @@ xmlSAXHandler srcsax_sax2_factory() {
     sax.startDocument = &start_document;
     sax.endDocument = &end_document;
 
-    sax.startElementNs = &start_root;
+    sax.startElementNs = &start_root_first;
     sax.endElementNs = &end_element_ns;
 
     sax.characters = &characters_first;
@@ -73,6 +73,9 @@ void start_document(void* ctx) {
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+
+    if (state->context->handler->character)
+        state->process = COLLECT_SRC;
 
     state->context->encoding = "UTF-8";
     if (ctxt->encoding && ctxt->encoding[0] != '\0')
@@ -126,8 +129,8 @@ void end_document(void* ctx) {
     if (state->context->terminate)
         return;
 
-    if (state->mode != END_ROOT && state->mode != START && state->context->handler->end_root)
-        state->context->handler->end_root(state->context, (const char*) state->root.localname, (const char*) state->root.prefix, (const char*) state->root.URI);
+    if (state->mode != END_ROOT && state->mode != START)
+        end_root(ctx, state->root.localname, state->root.prefix, state->root.URI);
 
     if (state->context->terminate)
         return;
@@ -156,7 +159,7 @@ void end_document(void* ctx) {
  * SAX handler function for start of root element.
  * Caches root info and immediately calls supplied handlers function.
  */
-void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar** attributes) {
 
@@ -248,29 +251,21 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 
     if (!state->is_archive) {
 
+        state->mode = UNIT;
+
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                                                 state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
                                                 state->root.attributes.data());
-        if (state->context->terminate)
-            return;
 
-        if (state->context->handler->characters_unit)
-            state->context->handler->characters_unit(state->context, state->characters.c_str(), (int)state->characters.size());
+        characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
 
-        if (state->context->terminate)
-            return;
-
-        if (state->context->handler->start_element)
-            state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                nb_namespaces, namespaces, nb_attributes, attributes);
+        start_element_ns(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     } else {
         
-        if (state->context->handler->characters_root)
-            state->context->handler->characters_root(state->context, state->characters.c_str(), (int)state->characters.size());
+        characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
 
-        if (state->context->terminate)
-            return;
+        state->mode = UNIT;
 
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
@@ -317,17 +312,18 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     ++state->context->unit_count;
 
-    state->mode = UNIT;
+  //  state->mode = UNIT;
 
     if (state->context->handler->start_unit)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
             nb_namespaces, namespaces, nb_attributes, attributes);
 
+    // next start tag will be for a non-unit element
     if (ctxt->sax->startElementNs)
         ctxt->sax->startElementNs = &start_element_ns;
 
+    // characters are for the unit
     if (ctxt->sax->characters) {
-
         ctxt->sax->characters = &characters_unit;
         ctxt->sax->ignorableWhitespace = &characters_unit;
     }
@@ -335,6 +331,67 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+}
+
+/**
+ * end_unit
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of a unit
+ */
+void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
+
+#ifdef SRCSAX_DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
+    if (ctx == NULL)
+        return;
+
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+
+    state->mode = END_UNIT;
+
+    if (state->context->handler->end_unit)
+        state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+
+    if (ctxt->sax->startElementNs)
+        ctxt->sax->startElementNs = &start_unit;
+
+    if (ctxt->sax->characters) {
+
+        ctxt->sax->characters = &characters_root;
+        ctxt->sax->ignorableWhitespace = &characters_root;
+    }
+}
+
+/**
+ * end_root
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of a unit
+ */
+void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
+
+#ifdef SRCSAX_DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
+    if (ctx == NULL)
+        return;
+
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+
+    if (state->context->handler->end_root)
+        state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 }
 
 /**
@@ -433,9 +490,9 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
                 }
             }
 
-            if (state->context->handler->start_unit)
-                state->context->handler->start_unit(state->context, (const char*) state->root.localname, (const char*) state->root.prefix, (const char*) state->root.URI,
-                                                    state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
+            // @todo note that setting state->mode to UNIT causes problems
+            start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
+                                                    state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
                                                     state->root.attributes.data());
 
             if (state->context->terminate)
@@ -449,28 +506,16 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
         if (state->context->terminate)
             return;
 
-        if (ctxt->sax->startElementNs == &start_unit) {
+        // end of something, but already ended unit
+        if (state->mode == END_UNIT) {
 
             state->mode = END_ROOT;
 
-            if (state->context->handler->end_root)
-                state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+            end_root(ctx, localname, prefix, URI);
 
         } else {
 
-            state->mode = END_UNIT;
-
-            if (state->context->handler->end_unit)
-                state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
-
-            if (ctxt->sax->startElementNs)
-                ctxt->sax->startElementNs = &start_unit;
-
-            if (ctxt->sax->characters) {
-
-                ctxt->sax->characters = &characters_root;
-                ctxt->sax->ignorableWhitespace = &characters_root;
-            }
+            end_unit(ctx, localname, prefix, URI);
         }
 
     } else {

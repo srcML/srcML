@@ -45,6 +45,12 @@ enum srcMLMode {
     END_ROOT
 };
 
+enum PROCESS {
+    UNKNOWN,
+    COLLECT_SRC,
+    COLLECT_SRCML,
+};
+
 /**
  * declaration
  *
@@ -87,6 +93,8 @@ struct sax2_srcsax_handler {
 
     /** the current parsing mode */
     srcMLMode mode = START;
+
+    PROCESS process = UNKNOWN;
 };
 
 /**
@@ -130,7 +138,7 @@ void end_document(void* ctx);
  * SAX handler function for start of root element.
  * Caches root info and immediately calls supplied handlers function.
  */
-void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar** attributes);
 
@@ -171,6 +179,28 @@ void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* 
 void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar** attributes);
+
+/**
+ * end_unit
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of a unit
+ */
+void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
+
+/**
+ * end_root
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of a unit
+ */
+void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
 
 /**
  * start_element_ns
