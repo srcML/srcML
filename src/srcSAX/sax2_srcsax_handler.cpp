@@ -42,8 +42,8 @@ xmlSAXHandler srcsax_sax2_factory() {
     sax.startElementNs = &start_root_first;
     sax.endElementNs = &end_element_ns;
 
-    sax.characters = &characters_first;
-    sax.ignorableWhitespace = &characters_first;
+    sax.characters = &characters_start;
+    sax.ignorableWhitespace = &characters_start;
 
     sax.comment = &comment;
     sax.cdataBlock = &cdata_block;
@@ -74,9 +74,13 @@ void start_document(void* ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
-    if (state->context->handler->character)
+    if (state->context->handler->characters_unit)
         state->process = COLLECT_SRC;
 
+    if (state->context->handler->start_element)
+        state->process = COLLECT_SRCML;
+
+    // get encoding from the input
     state->context->encoding = "UTF-8";
     if (ctxt->encoding && ctxt->encoding[0] != '\0')
         state->context->encoding = (const char *)ctxt->encoding;
@@ -108,7 +112,8 @@ void end_document(void* ctx) {
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
-    if (ctx == NULL) return;
+    if (ctx == NULL)
+        return;
 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
@@ -129,6 +134,7 @@ void end_document(void* ctx) {
     if (state->context->terminate)
         return;
 
+    // never found any content, so end the root
     if (state->mode != END_ROOT && state->mode != START)
         end_root(ctx, state->root.localname, state->root.prefix, state->root.URI);
 
@@ -141,7 +147,6 @@ void end_document(void* ctx) {
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
-
 }
 
 /**
@@ -179,7 +184,7 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     state->mode = ROOT;
 
     // handle nested units
-    ctxt->sax->startElementNs = &start_element_ns_first;
+    ctxt->sax->startElementNs = &start_element_start;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -187,7 +192,7 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
 }
 
 /**
- * start_element_ns_first
+ * start_element_start
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -201,7 +206,7 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
  * SAX handler function for start of first element after root
  * Detects archive and acts accordingly.
  */
-void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes) {
 
@@ -323,10 +328,8 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         ctxt->sax->startElementNs = &start_element_ns;
 
     // characters are for the unit
-    if (ctxt->sax->characters) {
-        ctxt->sax->characters = &characters_unit;
-        ctxt->sax->ignorableWhitespace = &characters_unit;
-    }
+    if (state->process == COLLECT_SRC || state->process == COLLECT_SRCML)
+        ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -362,11 +365,8 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (ctxt->sax->startElementNs)
         ctxt->sax->startElementNs = &start_unit;
 
-    if (ctxt->sax->characters) {
-
-        ctxt->sax->characters = &characters_root;
-        ctxt->sax->ignorableWhitespace = &characters_root;
-    }
+    if (state->process == COLLECT_SRC || state->process == COLLECT_SRCML)
+        ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 }
 
 /**
@@ -536,7 +536,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
 }
 
 /**
- * characters_first
+ * characters_start
  * @param ctx an xmlParserCtxtPtr
  * @param ch the characers
  * @param len number of characters
@@ -545,7 +545,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
  * know if we have an archive or not.
  * Immediately calls supplied handlers function.
  */
-void characters_first(void* ctx, const xmlChar* ch, int len) {
+void characters_start(void* ctx, const xmlChar* ch, int len) {
 
 #ifdef SRCSAX_DEBUG
     std::string chars;
