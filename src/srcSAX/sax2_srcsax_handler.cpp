@@ -192,6 +192,56 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
 }
 
 /**
+ * start_root
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ * @param nb_namespaces number of namespaces definitions
+ * @param namespaces the defined namespaces
+ * @param nb_attributes the number of attributes on the tag
+ * @param nb_defaulted the number of defaulted attributes
+ * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
+ *
+ * SAX handler function for start of root element.
+ * Caches root info and immediately calls supplied handlers function.
+ */
+void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+               const xmlChar** attributes) {
+
+#ifdef SRCSAX_DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+
+    if (ctx == NULL)
+        return;
+
+    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
+    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+
+    // have to call this here because we need to first know if we are in an archive
+    if (state->context->handler->start_root)
+        state->context->handler->start_root(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
+                                            nb_namespaces, namespaces, nb_attributes, attributes);
+
+    if (state->context->terminate)
+        return;
+
+    for (auto citr : state->meta_tags) {
+
+        state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char*) citr.prefix, (const char*) citr.URI,
+                                            citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
+                                            citr.attributes.data());
+        if (state->context->terminate)
+            return;
+    }
+
+#ifdef SRCSAX_DEBUG
+    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
+}
+/**
  * start_element_start
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
@@ -220,6 +270,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
+    // if macros are found, then must return, but first save them if necessary
     if (strcmp((const char *)localname, "macro-list") == 0) {
 
         if (state->context->handler->meta_tag)
@@ -234,26 +285,9 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     state->context->is_archive = state->is_archive = strcmp((const char *)localname, "unit") == 0;
 
     // have to call this here because we need to first know if we are in an archive
-    if (state->context->handler->start_root)
-        state->context->handler->start_root(state->context, (const char*) state->root.localname, (const char*) state->root.prefix, (const char*) state->root.URI,
-                                            state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
+    start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
+                                            state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
                                             state->root.attributes.data());
-
-    if (state->context->terminate)
-        return;
-
-    if (state->context->handler->meta_tag) {
-
-        for (auto citr : state->meta_tags) {
-
-            state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char*) citr.prefix, (const char*) citr.URI,
-                                                citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
-                                                citr.attributes.data());
-            if (state->context->terminate)
-                return;
-        }
-    }
-
     if (!state->is_archive) {
 
         state->mode = UNIT;
@@ -470,37 +504,15 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
             if (state->context->terminate)
                 return;
 
-            if (state->context->handler->start_root)
-                state->context->handler->start_root(state->context, (const char*) state->root.localname, (const char*) state->root.prefix, (const char*) state->root.URI,
-                                                    state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes,
+            start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
+                                                    state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
                                                     state->root.attributes.data());
 
-            if (state->context->terminate)
-                return;
-
-            if (state->context->handler->meta_tag) {
-
-                for (auto citr : state->meta_tags) {
-
-                    state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char *) citr.prefix, (const char*) citr.URI,
-                                                        citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
-                                                        citr.attributes.data()); // @todo fix so can pass
-                    if (state->context->terminate)
-                        return;
-                }
-            }
-
-            // @todo note that setting state->mode to UNIT causes problems
             start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                                                     state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
                                                     state->root.attributes.data());
 
-            if (state->context->terminate)
-                return;
-
-            if (!state->characters.empty() && state->context->handler->characters_unit)
-                state->context->handler->characters_unit(state->context, state->characters.c_str(), (int)state->characters.size());
-
+            characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
         }
 
         if (state->context->terminate)
@@ -518,17 +530,18 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
             end_unit(ctx, localname, prefix, URI);
         }
 
-    } else {
-
-        if (state->context->terminate)
-            return;
-
-        if (localname[0] == 'm' && localname[1] == 'a' && strcmp((const char *)localname, "macro-list") == 0)
-            return;
-
-        if (state->context->handler->end_element)
-            state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+        return;
     }
+
+    if (state->context->terminate)
+        return;
+
+    if (localname[0] == 'm' && localname[1] == 'a' && strcmp((const char *)localname, "macro-list") == 0)
+        return;
+
+    // plain end element
+    if (state->context->handler->end_element)
+        state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -559,6 +572,7 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
+    // cache the characters since we don't know if in unit or outer archive
     state->characters.append((const char *)ch, len);
 
 #ifdef SRCSAX_DEBUG
@@ -623,10 +637,13 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
+    if (state->process == COLLECT_SRC || state->process == COLLECT_SRCML)
+        return;
+
     if (state->context->terminate)
         return;
 
-    if (state->context->handler->characters_unit)
+    if (len > 0 && state->context->handler->characters_unit)
         state->context->handler->characters_unit(state->context, (const char *)ch, len);
 
 #ifdef SRCSAX_DEBUG
