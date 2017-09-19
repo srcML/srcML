@@ -45,6 +45,12 @@ enum srcMLMode {
     END_ROOT
 };
 
+enum PROCESS {
+    UNKNOWN,
+    COLLECT_SRC,
+    COLLECT_SRCML,
+};
+
 /**
  * declaration
  *
@@ -87,6 +93,8 @@ struct sax2_srcsax_handler {
 
     /** the current parsing mode */
     srcMLMode mode = START;
+
+    PROCESS process = UNKNOWN;
 };
 
 /**

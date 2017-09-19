@@ -74,6 +74,9 @@ void start_document(void* ctx) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
+    if (state->context->handler->character)
+        state->process = COLLECT_SRC;
+
     state->context->encoding = "UTF-8";
     if (ctxt->encoding && ctxt->encoding[0] != '\0')
         state->context->encoding = (const char *)ctxt->encoding;
@@ -315,11 +318,12 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
             nb_namespaces, namespaces, nb_attributes, attributes);
 
+    // next start tag will be for a non-unit element
     if (ctxt->sax->startElementNs)
         ctxt->sax->startElementNs = &start_element_ns;
 
+    // characters are for the unit
     if (ctxt->sax->characters) {
-
         ctxt->sax->characters = &characters_unit;
         ctxt->sax->ignorableWhitespace = &characters_unit;
     }
