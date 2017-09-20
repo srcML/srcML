@@ -492,56 +492,45 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;  
 
-    if (!state->context->handler->end_element && ctxt->nameNr > 2)
-        return;
-
-    if (ctxt->nameNr <= 2 && strcmp((const char *)localname, "unit") == 0) {
-
-        if (state->mode == ROOT) {
-
-            state->context->is_archive = state->is_archive = false;
-
-            if (state->context->terminate)
-                return;
-
-            start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                                                    state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
-                                                    state->root.attributes.data());
-
-            start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                                                    state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
-                                                    state->root.attributes.data());
-
-            characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
-        }
-
-        if (state->context->terminate)
-            return;
-
-        // end of something, but already ended unit
-        if (ctxt->nameNr == 1) {
-
-            state->mode = END_ROOT;
-
-            end_root(ctx, localname, prefix, URI);
-
-        } else {
-
-            end_unit(ctx, localname, prefix, URI);
-        }
-
-        return;
-    }
-
-    if (state->context->terminate)
-        return;
-
     if (localname[0] == 'm' && localname[1] == 'a' && strcmp((const char *)localname, "macro-list") == 0)
         return;
 
     // plain end element
-    if (state->context->handler->end_element)
-        state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+    if (strcmp((const char *)localname, "unit") != 0) {
+        if (state->context->handler->end_element)
+            state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+        return;
+    }
+
+    // never found a start element, except for root
+    if (state->mode == ROOT) {
+
+        state->context->is_archive = state->is_archive = false;
+
+        start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
+                                                state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
+                                                state->root.attributes.data());
+
+        start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
+                                                state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
+                                                state->root.attributes.data());
+
+        characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
+    }
+
+    if (ctxt->nameNr == 1) {
+
+        state->mode = END_ROOT;
+
+        end_root(ctx, localname, prefix, URI);
+
+    } else {
+
+        end_unit(ctx, localname, prefix, URI);
+    }
+
+    if (state->context->terminate)
+        return;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
