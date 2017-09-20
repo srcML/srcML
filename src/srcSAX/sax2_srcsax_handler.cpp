@@ -519,7 +519,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
             return;
 
         // end of something, but already ended unit
-        if (state->mode == END_UNIT) {
+        if (ctxt->nameNr == 1) {
 
             state->mode = END_ROOT;
 
@@ -637,7 +637,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
-    if (state->process == COLLECT_SRC || state->process == COLLECT_SRCML)
+    if (state->process != COLLECT_SRC && state->process != COLLECT_SRCML)
         return;
 
     if (state->context->terminate)
