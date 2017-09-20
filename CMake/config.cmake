@@ -100,7 +100,7 @@ else()
     find_package(Iconv REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
-    find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
+    find_package(Boost COMPONENTS program_options filesystem system date_time REQUIRED)
 
     # add include directories
     include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
