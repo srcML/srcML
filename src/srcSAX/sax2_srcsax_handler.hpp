@@ -217,7 +217,7 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
  * SAX handler function for start of an element.
  * Immediately calls supplied handlers function.
  */
-void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                     const xmlChar** attributes);
 
@@ -232,7 +232,7 @@ void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix
  * Detects end of unit and calls correct functions
  * for either end_root end_unit or end_element_ns.
  */
-void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
+void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
 
 /**
  * characters_start

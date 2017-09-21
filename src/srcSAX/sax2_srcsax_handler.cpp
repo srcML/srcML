@@ -38,7 +38,7 @@ xmlSAXHandler srcsax_sax2_factory() {
     sax.endDocument = &end_document;
 
     sax.startElementNs = &start_root_first;
-    sax.endElementNs = &end_element_ns;
+    sax.endElementNs = &end_element;
 
     sax.characters = &characters_start;
     sax.ignorableWhitespace = &characters_start;
@@ -306,7 +306,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
         characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
         state->characters.clear();
 
-        start_element_ns(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
+        start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     } else {
         
@@ -368,7 +368,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     // next start tag will be for a non-unit element
     if (ctxt->sax->startElementNs)
-        ctxt->sax->startElementNs = &start_element_ns;
+        ctxt->sax->startElementNs = &start_element;
 
     // characters are for the unit
     if (state->process == COLLECT_SRC || state->process == COLLECT_SRCML)
@@ -438,7 +438,7 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 }
 
 /**
- * start_element_ns
+ * start_element
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -452,7 +452,7 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
  * SAX handler function for start of an element.
  * Immediately calls supplied handlers function.
  */
-void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int /* nb_defaulted */,
                     const xmlChar** attributes) {
 
@@ -479,7 +479,7 @@ void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix
 }
 
 /**
- * end_element_ns
+ * end_element
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -487,9 +487,9 @@ void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix
  *
  * SAX handler function for end of an element.
  * Detects end of unit and calls correct functions
- * for either end_root end_unit or end_element_ns.
+ * for either end_root end_unit or end_element.
  */
-void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
+void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
