@@ -167,8 +167,8 @@ void end_document(void* ctx) {
  * Caches root info and immediately calls supplied handlers function.
  */
 void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-               const xmlChar** attributes) {
+               int nb_namespaces, const xmlChar** namespaces,
+               int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -181,9 +181,9 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     // cache the root data because we don't know if we are in an archive or not
-    state->root = srcml_element(state->context, localname, prefix, URI,
+    state->root = std::move(srcml_element(state->context, localname, prefix, URI,
                                                 nb_namespaces, namespaces,
-                                                nb_attributes, nb_defaulted, attributes);
+                                                nb_attributes, nb_defaulted, attributes));
 
     state->mode = ROOT;
 
@@ -211,8 +211,8 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
  * Caches root info and immediately calls supplied handlers function.
  */
 void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int /* nb_defaulted */,
-               const xmlChar** attributes) {
+               int nb_namespaces, const xmlChar** namespaces,
+               int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -262,8 +262,8 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
  * Detects archive and acts accordingly.
  */
 void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                         int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                         const xmlChar** attributes) {
+                         int nb_namespaces, const xmlChar** namespaces,
+                         int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -279,7 +279,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (localname == MACRO_LIST_ENTRY) {
 
         if (state->context->handler->meta_tag)
-            state->meta_tags.push_back(srcml_element(state->context, localname, prefix, URI,
+            state->meta_tags.emplace_back(srcml_element(state->context, localname, prefix, URI,
                                                      nb_namespaces, namespaces,
                                                      nb_attributes, nb_defaulted, attributes));
         return;
@@ -342,8 +342,8 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
  * Immediately calls supplied handlers function.
  */
 void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int /* nb_defaulted */,
-               const xmlChar** attributes) {
+               int nb_namespaces, const xmlChar** namespaces,
+               int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -358,13 +358,14 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (state->context->terminate)
         return;
 
-    ++state->context->unit_count;
+    ++state->unit_count;
 
   //  state->mode = UNIT;
 
     if (state->context->handler->start_unit)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                                            nb_namespaces, namespaces, nb_attributes, attributes);
+                                            nb_namespaces, namespaces,
+                                            nb_attributes, attributes);
 
     // next start tag will be for a non-unit element
     if (ctxt->sax->startElementNs)
@@ -453,8 +454,8 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
  * Immediately calls supplied handlers function.
  */
 void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int /* nb_defaulted */,
-                    const xmlChar** attributes) {
+                    int nb_namespaces, const xmlChar** namespaces,
+                    int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);

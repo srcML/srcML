@@ -74,6 +74,8 @@ struct sax2_srcsax_handler {
     /** used to detect root unit */
     bool is_archive = false;
 
+    int unit_count = 0;
+
     /** the current parsing mode */
     srcMLMode mode = START;
 

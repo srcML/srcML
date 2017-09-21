@@ -43,9 +43,6 @@ struct srcsax_context {
     /** is the document an archive */
     int is_archive;
 
-    /** the current unit count */
-    int unit_count = 0;
-
     /** the xml documents encoding */
     const char* encoding;
 
