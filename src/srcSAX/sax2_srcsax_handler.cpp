@@ -52,8 +52,8 @@ xmlSAXHandler srcsax_sax2_factory() {
     return sax;
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
+//#pragma GCC diagnostic push
+//#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 /**
  * start_document
@@ -179,7 +179,9 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
 
     // cache the root data because we don't know if we are in an archive or not
-    state->root = srcml_element(state->context, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes);
+    state->root = srcml_element(state->context, localname, prefix, URI,
+                                                nb_namespaces, namespaces,
+                                                nb_attributes, nb_defaulted, attributes);
 
     state->mode = ROOT;
 
@@ -207,7 +209,7 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
  * Caches root info and immediately calls supplied handlers function.
  */
 void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int /* nb_defaulted */,
                const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
@@ -223,7 +225,8 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // have to call this here because we need to first know if we are in an archive
     if (state->context->handler->start_root)
         state->context->handler->start_root(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
-                                            nb_namespaces, namespaces, nb_attributes, attributes);
+                                                            nb_namespaces, namespaces, 
+                                                            nb_attributes, attributes);
 
     if (state->context->terminate)
         return;
@@ -231,8 +234,8 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     for (auto citr : state->meta_tags) {
 
         state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char*) citr.prefix, (const char*) citr.URI,
-                                            citr.nb_namespaces, citr.namespaces.data(), citr.nb_attributes,
-                                            citr.attributes.data());
+                                                          citr.nb_namespaces, citr.namespaces.data(),
+                                                          citr.nb_attributes, citr.attributes.data());
         if (state->context->terminate)
             return;
     }
@@ -274,8 +277,9 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (strcmp((const char *)localname, "macro-list") == 0) {
 
         if (state->context->handler->meta_tag)
-            state->meta_tags.push_back(srcml_element(state->context, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, nb_defaulted, attributes));
-
+            state->meta_tags.push_back(srcml_element(state->context, localname, prefix, URI,
+                                                     nb_namespaces, namespaces,
+                                                     nb_attributes, nb_defaulted, attributes));
         return;
     }
 
@@ -286,15 +290,16 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     // have to call this here because we need to first know if we are in an archive
     start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                                            state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
-                                            state->root.attributes.data());
+                    state->root.nb_namespaces, state->root.namespaces.data(),
+                    state->root.nb_attributes, 0, state->root.attributes.data());
+
     if (!state->is_archive) {
 
         state->mode = UNIT;
 
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                                                state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
-                                                state->root.attributes.data());
+                        state->root.nb_namespaces, state->root.namespaces.data(),
+                        state->root.nb_attributes, 0, state->root.attributes.data());
 
         characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
 
@@ -333,7 +338,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
  * Immediately calls supplied handlers function.
  */
 void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+               int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int /* nb_defaulted */,
                const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
@@ -355,7 +360,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     if (state->context->handler->start_unit)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-            nb_namespaces, namespaces, nb_attributes, attributes);
+                                            nb_namespaces, namespaces, nb_attributes, attributes);
 
     // next start tag will be for a non-unit element
     if (ctxt->sax->startElementNs)
@@ -444,7 +449,7 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
  * Immediately calls supplied handlers function.
  */
 void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
+                    int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int /* nb_defaulted */,
                     const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
@@ -462,7 +467,7 @@ void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix
 
     if (state->context->handler->start_element)
         state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-            nb_namespaces, 0, nb_attributes, attributes);
+                                               nb_namespaces, namespaces, nb_attributes, attributes);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -508,12 +513,12 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
         state->context->is_archive = state->is_archive = false;
 
         start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                                                state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
-                                                state->root.attributes.data());
+                        state->root.nb_namespaces, state->root.namespaces.data(),
+                        state->root.nb_attributes, 0, state->root.attributes.data());
 
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                                                state->root.nb_namespaces, state->root.namespaces.data(), state->root.nb_attributes, 0,
-                                                state->root.attributes.data());
+                        state->root.nb_namespaces, state->root.namespaces.data(),
+                        state->root.nb_attributes, 0, state->root.attributes.data());
 
         characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
     }
@@ -735,4 +740,4 @@ void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* dat
 #endif
 }
 
-#pragma GCC diagnostic pop
+//#pragma GCC diagnostic pop
