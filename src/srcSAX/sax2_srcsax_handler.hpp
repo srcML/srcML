@@ -52,23 +52,6 @@ enum PROCESS {
 };
 
 /**
- * declaration
- *
- * Data structure to hold a declaration.
- */
-struct declaration {
-
-    /** declaration type */
-    std::string type;
-
-    /** declaration name */
-    std::string name;
-
-    /** declaration parsing modes */
-    enum { TYPE, NAME, INIT } mode = TYPE;
-};
-
-/**
  * sax2_srcsax_handler
  *
  * Data structure to hold process during
