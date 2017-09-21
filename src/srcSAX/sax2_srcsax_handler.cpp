@@ -20,8 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <cstring>
-
 #include <sax2_srcsax_handler.hpp>
 
 /**
@@ -52,8 +50,8 @@ xmlSAXHandler srcsax_sax2_factory() {
     return sax;
 }
 
-//#pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wunused-parameter"
+static const xmlChar* UNIT_ENTRY = nullptr;
+static const xmlChar* MACRO_LIST_ENTRY = nullptr;
 
 /**
  * start_document
@@ -73,6 +71,10 @@ void start_document(void* ctx) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+
+    // setup dictionary lookup for common elements
+    UNIT_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", 4);
+    MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro_list", strlen("macro_list"));
 
     if (state->context->handler->characters_unit)
         state->process = COLLECT_SRC;
@@ -274,7 +276,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     // if macros are found, then must return, but first save them if necessary
-    if (strcmp((const char *)localname, "macro-list") == 0) {
+    if (localname == MACRO_LIST_ENTRY) {
 
         if (state->context->handler->meta_tag)
             state->meta_tags.push_back(srcml_element(state->context, localname, prefix, URI,
@@ -286,7 +288,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (state->context->terminate)
         return;
 
-    state->context->is_archive = state->is_archive = strcmp((const char *)localname, "unit") == 0;
+    state->context->is_archive = state->is_archive = (localname == UNIT_ENTRY);
 
     // have to call this here because we need to first know if we are in an archive
     start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
@@ -302,12 +304,14 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
                         state->root.nb_attributes, 0, state->root.attributes.data());
 
         characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
+        state->characters.clear();
 
         start_element_ns(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     } else {
         
         characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
+        state->characters.clear();
 
         state->mode = UNIT;
 
@@ -497,11 +501,11 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;  
 
-    if (localname[0] == 'm' && localname[1] == 'a' && strcmp((const char *)localname, "macro-list") == 0)
+    if (localname == MACRO_LIST_ENTRY)
         return;
 
     // plain end element
-    if (strcmp((const char *)localname, "unit") != 0) {
+    if (localname != UNIT_ENTRY) {
         if (state->context->handler->end_element)
             state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
         return;
@@ -521,6 +525,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
                         state->root.nb_attributes, 0, state->root.attributes.data());
 
         characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
+        state->characters.clear();
     }
 
     if (ctxt->nameNr == 2 || !state->is_archive) {
@@ -741,5 +746,3 @@ void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* dat
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 }
-
-//#pragma GCC diagnostic pop
