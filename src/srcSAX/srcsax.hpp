@@ -29,8 +29,8 @@
  *
  * Context data structure passed between callbacks.
  */
-struct srcsax_context {
-
+class srcsax_context {
+public:
     /** user provided data */
     void* data = nullptr;
 

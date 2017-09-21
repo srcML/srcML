@@ -21,7 +21,7 @@
 #ifndef INCLUDED_SRCML_ELEMENT_HPP
 #define INCLUDED_SRCML_ELEMENT_HPP
 
-struct srcsax_context;
+class srcsax_context;
 
 #include <libxml/parser.h>
 

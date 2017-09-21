@@ -201,7 +201,7 @@ int srcsax_parse(srcsax_context* context) {
  *
  * @returns 0 on success -1 on error.
  */
-int srcsax_parse_handler(srcsax_context* context, struct srcsax_handler * handler) {
+int srcsax_parse_handler(srcsax_context* context, srcsax_handler* handler) {
 
     if (context == 0)
         return -1;

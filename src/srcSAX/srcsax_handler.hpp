@@ -23,7 +23,7 @@
 
 #include <libxml/parser.h>
 
-struct srcsax_context;
+class srcsax_context;
 
 /**
  * srcsax_handler
