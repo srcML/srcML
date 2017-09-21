@@ -68,11 +68,11 @@ void start_document(void* ctx) {
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->context->handler->characters_unit)
         state->process = COLLECT_SRC;
@@ -112,11 +112,11 @@ void end_document(void* ctx) {
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     const char* errmsg = 0;
     switch (ctxt->errNo) {
@@ -172,11 +172,11 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     // cache the root data because we don't know if we are in an archive or not
     state->root = srcml_element(state->context, localname, prefix, URI,
@@ -216,11 +216,11 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     // have to call this here because we need to first know if we are in an archive
     if (state->context->handler->start_root)
@@ -267,11 +267,11 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     // if macros are found, then must return, but first save them if necessary
     if (strcmp((const char *)localname, "macro-list") == 0) {
@@ -345,11 +345,11 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->context->terminate)
         return;
@@ -390,11 +390,11 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     state->mode = END_UNIT;
 
@@ -423,11 +423,11 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->context->handler->end_root)
         state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
@@ -456,11 +456,11 @@ void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->context->terminate)
         return;
@@ -491,11 +491,11 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;  
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;  
 
     if (localname[0] == 'm' && localname[1] == 'a' && strcmp((const char *)localname, "macro-list") == 0)
         return;
@@ -507,7 +507,7 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
         return;
     }
 
-    // never found a start element, except for root
+    // the root is the only element so we never got this started
     if (state->mode == ROOT) {
 
         state->context->is_archive = state->is_archive = false;
@@ -523,15 +523,16 @@ void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, 
         characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
     }
 
+    if (ctxt->nameNr == 2 || !state->is_archive) {
+
+        end_unit(ctx, localname, prefix, URI);
+    }
+
     if (ctxt->nameNr == 1) {
 
         state->mode = END_ROOT;
 
         end_root(ctx, localname, prefix, URI);
-
-    } else {
-
-        end_unit(ctx, localname, prefix, URI);
     }
 
     if (state->context->terminate)
@@ -560,13 +561,14 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     // cache the characters since we don't know if in unit or outer archive
+    // note that characters() could be called more than once for a particular sequence of characters, so append
     state->characters.append((const char *)ch, len);
 
 #ifdef SRCSAX_DEBUG
@@ -591,11 +593,11 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->context->terminate)
         return;
@@ -625,11 +627,11 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->process != COLLECT_SRC && state->process != COLLECT_SRCML)
         return;
@@ -659,11 +661,11 @@ void comment(void* ctx, const xmlChar* value) {
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->context->terminate)
         return;
@@ -691,11 +693,11 @@ void cdata_block(void* ctx, const xmlChar* value, int len) {
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->context->terminate)
         return;
@@ -723,11 +725,11 @@ void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* dat
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
-    if (ctx == NULL)
+    if (ctx == nullptr)
         return;
 
-    xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
-    sax2_srcsax_handler* state = (sax2_srcsax_handler *) ctxt->_private;
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->context->terminate)
         return;
