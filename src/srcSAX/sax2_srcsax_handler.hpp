@@ -85,6 +85,12 @@ struct sax2_srcsax_handler {
     std::string unitstr;
 
     std::string unitsrcml;
+
+    const xmlChar* base = nullptr;
+
+    int offset = 0;
+
+    const xmlChar* endfirstelement = nullptr;
 };
 
 /**
