@@ -269,4 +269,4 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2015 or
         ex. cmake --build . --config release
     ```
 
-* Once built, locate the build folder. Within that folder there is now a folder named `release` or `debug` containing the srcML executable, library, and all other dependencies.
+* Once built, locate the build folder. Within that folder there is now a directory named `bin` containing the release or debug versions of srcML executable and library along with all other dependencies.
