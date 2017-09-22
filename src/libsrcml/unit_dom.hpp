@@ -95,14 +95,15 @@ private:
 
         ctxt = get_controller().getContext()->libxml2_context;
 
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
+        state->process = CREATE_DOM;
+
         // apparently endDocument() can be called without startDocument() for an
         // empty element
         found = true;
 
         // setup output
         start_output();
-
-        xmlSAX2StartDocument(ctxt);
     }
  
     /**
@@ -183,53 +184,6 @@ private:
     }
 
     /**
-     * startElement
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param num_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param num_attributes the number of attributes on the tag
-     * @param attributes list of attributes
-     *
-     * SAX handler function for start of an element.
-     * Build start element nodes in unit tree.
-     */
-    virtual void startElement(const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const xmlChar** attributes) {
-
-        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes, 0, attributes);
-    }
-
-    /**
-     * endElementNs
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     *
-     * SAX handler function for end of an element.
-     * Build end element nodes in unit tree.
-     */
-    virtual void endElement(const char* localname, const char* prefix, const char* URI) {
-
-        xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
-    }
-
-    /**
-     * charactersUnit
-     * @param ch the characers
-     * @param len number of characters
-     *
-     * SAX handler function for character handling within a unit.
-     * Characters in unit tree.
-     */
-    virtual void charactersUnit(const char* ch, int len) {
-
-        xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
-    }
-
-    /**
      * charactersRoot
      * @param ch the characers
      * @param len number of characters
@@ -241,31 +195,6 @@ private:
 
         if (apply_root)
             xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
-    }
-
-    /**
-     * cdataBlock
-     * @param value the pcdata content
-     * @param len the block length
-     *
-     * Called when a pcdata block has been parsed.
-     * CDATA block in unit tree.
-     */
-    virtual void cdatablock(const char* value, int len) {
-
-        xmlSAX2CDataBlock(ctxt, (const xmlChar *)value, len);
-    }
-
-     /**
-     * comment
-     * @param value the comment content
-     *
-     * A comment has been parsed.
-     * Comments in unit tree.
-     */
-    virtual void comment(const char* value) {
-
-        xmlSAX2Comment(ctxt, (const xmlChar *)value);
     }
 
     /**
@@ -320,9 +249,6 @@ private:
      * End the construction of the unit tree, apply processing, and delete.
      */
     virtual void endCommon(const char* localname, const char* prefix, const char* URI, bool realend) {
-
-        // finish building the unit tree
-        xmlSAX2EndElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI);
 
         if (realend) {
 

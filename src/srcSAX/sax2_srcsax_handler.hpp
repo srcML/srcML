@@ -49,6 +49,7 @@ enum PROCESS {
     UNKNOWN,
     COLLECT_SRC,
     COLLECT_SRCML,
+    CREATE_DOM,
 };
 
 /**
@@ -80,6 +81,10 @@ struct sax2_srcsax_handler {
     srcMLMode mode = START;
 
     PROCESS process = UNKNOWN;
+
+    std::string unitstr;
+
+    std::string unitsrcml;
 };
 
 /**

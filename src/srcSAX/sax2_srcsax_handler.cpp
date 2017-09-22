@@ -21,6 +21,7 @@
  */
 
 #include <sax2_srcsax_handler.hpp>
+#include <string>
 
 /**
  * factory
@@ -82,6 +83,9 @@ void start_document(void* ctx) {
     if (state->context->handler->start_element)
         state->process = COLLECT_SRCML;
 
+    if (state->context->handler->start_document)
+        state->context->handler->start_document(state->context);
+
     // get encoding from the input
     state->context->encoding = "UTF-8";
     if (ctxt->encoding && ctxt->encoding[0] != '\0')
@@ -92,8 +96,8 @@ void start_document(void* ctx) {
     if (state->context->terminate)
         return;
 
-    if (state->context->handler->start_document)
-        state->context->handler->start_document(state->context);
+    if (state->process == CREATE_DOM)
+        xmlSAX2StartDocument(ctxt);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -375,6 +379,17 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (state->process == COLLECT_SRC || state->process == COLLECT_SRCML)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
 
+    state->unitstr.clear();
+
+    state->unitsrcml.clear();
+
+    if (state->process == CREATE_DOM) {
+        ctxt->sax->characters = xmlSAX2Characters;
+        ctxt->sax->ignorableWhitespace = xmlSAX2Characters;
+        ctxt->sax->comment = xmlSAX2Comment;
+        ctxt->sax->cdataBlock = xmlSAX2CDataBlock;
+    }
+
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -411,6 +426,9 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     if (state->process == COLLECT_SRC || state->process == COLLECT_SRCML)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
+
+    if (state->process == CREATE_DOM)
+        xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
 }
 
 /**
@@ -470,6 +488,9 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
     if (state->context->terminate)
         return;
 
+    if (state->process == CREATE_DOM)
+        xmlSAX2StartElementNs(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
+
     if (state->context->handler->start_element)
         state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                                nb_namespaces, namespaces, nb_attributes, attributes);
@@ -507,7 +528,9 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     // plain end element
     if (localname != UNIT_ENTRY) {
-        if (state->context->handler->end_element)
+        if (state->process == CREATE_DOM)
+            xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
+        else if (state->context->handler->end_element)
             state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
         return;
     }
@@ -647,6 +670,8 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     if (len > 0 && state->context->handler->characters_unit)
         state->context->handler->characters_unit(state->context, (const char *)ch, len);
+
+    state->unitstr.append((const char*) ch, len);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
