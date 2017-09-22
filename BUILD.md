@@ -212,11 +212,11 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2015 or
 
 ## Packages
 
-* [Python 2.7.XX](https://www.python.org/downloads/release/python-2710/)
+* [Python 2.7.XX](https://www.python.org/downloads/)
 * [CMake](http://www.cmake.org)
 * [Visual Studio 2015 or later](https://www.visualstudio.com/downloads/)
-* Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.info/build/srcml_windows_build_dependencies.zip)
-* Zipped [Visual Studio 2015 Build Dependencies](http://www.sdml.info/build/srcml_windows_exe_dependencies.zip)
+* Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.info/build/deps-VS2017.zip)
+* Zipped [Visual Studio 2015 Build Dependencies](http://www.sdml.info/build/deps-VS2015.zip)
 
 ##### Instructions
 * Install Visual Studio 2015 or newer, CMake, and Python 2.7.XX
