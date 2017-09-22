@@ -62,7 +62,7 @@ Distribution of dmg/pkg:
 
 * OS X does not install header files for libarchive. You can download these from Apple's:
 
-    * [archive.h](http://www.opensource.apple.com/source/libarchive/libarchive-30/libarchive/libarchive/archive.h?txt)
+    * [archive.h](https://opensource.apple.com/source/libarchive/libarchive-41.70.1/libarchive/libarchive/archive.h)
     * [archive_entry.h](http://www.opensource.apple.com/source/libarchive/libarchive-30/libarchive/libarchive/archive_entry.h?txt)
 
 * PackageMaker is currently being used. However, it is deprecated and no longer available. A conversion to pkgbuild is in progress
