@@ -111,12 +111,13 @@ void start_document(void* ctx) {
     state->prevconsumed = ctxt->input->consumed;
     state->prevbase = ctxt->input->base;
 
+/*
     if (state->context->handler->characters_unit)
         state->process = COLLECT_SRC;
 
     if (state->context->handler->start_element)
         state->process = COLLECT_SRCML;
-
+*/
     if (state->context->handler->start_document)
         state->context->handler->start_document(state->context);
 
@@ -130,8 +131,9 @@ void start_document(void* ctx) {
     if (state->context->terminate)
         return;
 
-    if (state->process == CREATE_DOM)
+    if (state->create_dom) {
         xmlSAX2StartDocument(ctxt);
+    }
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -280,6 +282,17 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             return;
     }
 
+    // record namespaces in an extensible list so we can add the per unit
+    if (state->create_dom) {
+        int ns_length = nb_namespaces * 2;
+        for (int i = 0; i < ns_length; i += 2) {
+
+            state->data.push_back(namespaces[i]);
+            state->data.push_back(namespaces[i + 1]);
+        }
+        state->rootsize = state->data.size();
+    }
+
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -413,7 +426,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     ++state->unit_count;
 //fprintf(stderr, "COUNT:  %s %s %d state->unit_count: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->unit_count);
 
-
   //  state->mode = UNIT;
 
     if (state->context->handler->start_unit)
@@ -426,14 +438,43 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         ctxt->sax->startElementNs = &start_element;
 
     // characters are for the unit
-    if (state->process == COLLECT_SRC || state->process == COLLECT_SRCML)
+    if (state->collect_src || state->collect_srcml)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
 
     state->unitstr.clear();
 
 //    state->unitsrcml.clear();
 
-    if (state->process == CREATE_DOM) {
+
+    if (state->create_dom) {
+
+        // remove per-unit namespaces
+        state->data.resize(state->rootsize);
+
+        // combine namespaces from root and local to this unit (if an archive)
+        for (int i = 0; i < nb_namespaces; ++i) {
+
+            // make sure not already in
+            bool found = false;
+            for (unsigned int j = 0; j < state->data.size() / 2; ++j) {
+                if (xmlStrEqual(state->data[j * 2], namespaces[i * 2])) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found)
+                continue;
+
+            state->data.push_back(namespaces[i * 2]);
+            state->data.push_back(namespaces[i * 2 + 1]);
+        }
+
+        xmlSAX2StartElementNs(ctxt, localname, prefix, URI,
+                                    (int)(state->data.size() / 2), &(state->data[0]),
+                                    nb_attributes, 0, attributes);
+    }
+
+    if (state->create_dom) {
         ctxt->sax->characters = xmlSAX2Characters;
         ctxt->sax->ignorableWhitespace = xmlSAX2Characters;
         ctxt->sax->comment = xmlSAX2Comment;
@@ -465,8 +506,13 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
- //   fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: %s\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
+
     state->mode = END_UNIT;
+
+    if (state->create_dom) {
+        xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
+        xmlSAX2EndDocument(ctxt);
+    }
 
     if (state->context->handler->end_unit)
         state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
@@ -474,11 +520,14 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (ctxt->sax->startElementNs)
         ctxt->sax->startElementNs = &start_unit;
 
-    if (state->process == COLLECT_SRC || state->process == COLLECT_SRCML)
+    if (state->collect_src || state->collect_srcml)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
-    if (state->process == CREATE_DOM)
-        xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
+    // free up the document that has this particular unit
+    xmlNodePtr aroot = ctxt->myDoc->children;
+    xmlUnlinkNode(ctxt->myDoc->children);
+    xmlFreeNodeList(aroot);
+    ctxt->myDoc->children = 0;
 }
 
 /**
@@ -551,7 +600,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
     if (state->context->terminate)
         return;
 
-    if (state->process == CREATE_DOM)
+    if (state->create_dom)
         xmlSAX2StartElementNs(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     if (false && state->context->handler->start_element)
@@ -602,10 +651,12 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     // plain end element
     if (localname != UNIT_ENTRY) {
-        if (state->process == CREATE_DOM)
+        if (state->create_dom)
             xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
-        else if (false && state->context->handler->end_element)
+
+        if (false && state->context->handler->end_element)
             state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+
         return;
     }
 
@@ -709,7 +760,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     if (state->context->terminate)
         return;
 
-    if (state->context->handler->characters_root)
+    if (false && state->context->handler->characters_root)
         state->context->handler->characters_root(state->context, (const char *)ch, len);
 
 #ifdef SRCSAX_DEBUG
@@ -751,14 +802,14 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         state->base = ctxt->input->cur;
     }
 
-    if (state->process != COLLECT_SRC && state->process != COLLECT_SRCML)
-        return;
-
     if (state->context->terminate)
         return;
 
-    if (len > 0 && state->context->handler->characters_unit)
+    if (false && len > 0 && state->context->handler->characters_unit)
         state->context->handler->characters_unit(state->context, (const char *)ch, len);
+
+    if (!state->collect_src && !state->collect_srcml)
+        return;
 
     state->unitstr.append((const char*) ch, len);
 

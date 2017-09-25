@@ -80,8 +80,6 @@ struct sax2_srcsax_handler {
     /** the current parsing mode */
     srcMLMode mode = START;
 
-    PROCESS process = UNKNOWN;
-
     std::string unitstr;
 
     std::string unitsrcml;
@@ -93,6 +91,16 @@ struct sax2_srcsax_handler {
     long prevconsumed = 0;
 
     const xmlChar* prevbase = nullptr;
+
+    bool collect_src = true;
+    bool collect_srcml = true;
+    bool create_dom = true;
+
+    /** Root namespaces */
+    std::vector<const xmlChar*> data;
+
+    /** Size of data */
+    decltype(data)::size_type rootsize;
 };
 
 /**

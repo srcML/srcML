@@ -96,7 +96,7 @@ private:
         ctxt = get_controller().getContext()->libxml2_context;
 
         auto state = (sax2_srcsax_handler*) ctxt->_private;
-        state->process = CREATE_DOM;
+        state->create_dom = true;
 
         // apparently endDocument() can be called without startDocument() for an
         // empty element
@@ -178,9 +178,11 @@ private:
             data.push_back((const xmlChar *)namespaces[i * 2 + 1]);
         }
 
+/*
         // start the unit (element) at the root using the merged namespaces
         xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, (int)(data.size() / 2),
                               &data[0], num_attributes, 0, attributes);
+                              */
     }
 
     /**
@@ -253,17 +255,19 @@ private:
         if (realend) {
 
             // End the document and free it if applied to unit individually
-            xmlSAX2EndDocument(ctxt);
+//            xmlSAX2EndDocument(ctxt);
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
             // apply the necessary processing
             if ((error = !apply()))
                 stop_parser();
-
+/*
             // free up the document that has this particular unit
             xmlNodePtr aroot = ctxt->myDoc->children;
             xmlUnlinkNode(ctxt->myDoc->children);
             xmlFreeNodeList(aroot);
             ctxt->myDoc->children = 0;
+            */
         }
     }
 
