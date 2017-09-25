@@ -186,6 +186,12 @@ void end_document(void* ctx) {
     if (state->context->handler->end_document)
         state->context->handler->end_document(state->context);
 
+    if (state->create_dom) {
+        // free up the document that has this particular unit
+        xmlFreeDoc(ctxt->myDoc);
+        ctxt->myDoc = 0;
+    }
+
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
@@ -412,11 +418,15 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->unitsrcml = "";
     if (state->endfirstelement) {
-        state->unitsrcml.append((const char*) state->base, state->endfirstelement - state->base);
+        if (state->collect_srcml) {
+            state->unitsrcml.append((const char*) state->base, state->endfirstelement - state->base);
+        }
         state->base = state->endfirstelement;
         state->endfirstelement = 0;
     } else {
-        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base + 1);
+        if (state->collect_srcml) {
+            state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base + 1);
+        }
         state->base = ctxt->input->cur + 1;
     }
 
@@ -523,11 +533,13 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (state->collect_src || state->collect_srcml)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
-    // free up the document that has this particular unit
-    xmlNodePtr aroot = ctxt->myDoc->children;
-    xmlUnlinkNode(ctxt->myDoc->children);
-    xmlFreeNodeList(aroot);
-    ctxt->myDoc->children = 0;
+    if (state->create_dom) {
+        // free up the document that has this particular unit
+        xmlNodePtr aroot = ctxt->myDoc->children;
+        xmlUnlinkNode(ctxt->myDoc->children);
+        xmlFreeNodeList(aroot);
+        ctxt->myDoc->children = 0;
+    }
 }
 
 /**
@@ -553,7 +565,7 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     state->base = ctxt->input->cur;
 
-    if (state->context->handler->end_root)
+    if (false && state->context->handler->end_root)
         state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 }
 
@@ -594,7 +606,9 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
         exit(1);
     }
 
-    state->unitsrcml.append((const char*) state->base, srcmllen);
+    if (state->collect_srcml) {
+        state->unitsrcml.append((const char*) state->base, srcmllen);
+    }
     state->base = ctxt->input->cur + 1;
 
     if (state->context->terminate)
@@ -643,7 +657,9 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         exit(1);
     }
 
-    state->unitsrcml.append((const char*) state->base, srcmllen);
+    if (state->collect_srcml) {
+        state->unitsrcml.append((const char*) state->base, srcmllen);
+    }
     state->base = ctxt->input->cur;
 
     if (localname == MACRO_LIST_ENTRY)
@@ -795,17 +811,21 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     update_ctx(ctx);
 
     if (ctxt->input->cur - state->base == 0) {
-        state->unitsrcml.append((const char*) ctxt->input->cur, len);
+        if (state->collect_srcml) {
+            state->unitsrcml.append((const char*) ctxt->input->cur, len);
+        }
         state->base = ctxt->input->cur + len;
     } else {
-        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
+        if (state->collect_srcml) {
+            state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
+        }
         state->base = ctxt->input->cur;
     }
 
     if (state->context->terminate)
         return;
 
-    if (false && len > 0 && state->context->handler->characters_unit)
+    if (len > 0 && state->context->handler->characters_unit)
         state->context->handler->characters_unit(state->context, (const char *)ch, len);
 
     if (!state->collect_src && !state->collect_srcml)

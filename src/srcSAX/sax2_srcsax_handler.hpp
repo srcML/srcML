@@ -92,8 +92,8 @@ struct sax2_srcsax_handler {
 
     const xmlChar* prevbase = nullptr;
 
-    bool collect_src = true;
-    bool collect_srcml = true;
+    bool collect_src = false;
+    bool collect_srcml = false;
     bool create_dom = true;
 
     /** Root namespaces */

@@ -105,99 +105,6 @@ private:
         // setup output
         start_output();
     }
- 
-    /**
-     * startRoot
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param num_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param num_attributes the number of attributes on the tag
-     * @param attributes list of attributes
-     *
-     * SAX handler function for start of the root element.
-     * Collect namespaces from root unit.  Start to build the tree if SRCML_OPTION_APPLY_ROOT.
-     */
-    virtual void startRoot(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** attributes) {
-
-        // record namespaces in an extensible list so we can add the per unit
-        int ns_length = num_namespaces * 2;
-        for (int i = 0; i < ns_length; i += 2) {
-
-            data.push_back((const xmlChar *)namespaces[i]);
-            data.push_back((const xmlChar *)namespaces[i + 1]);
-        }
-        rootsize = data.size();
-
-        // if we are building the entire tree, start now
-        if (apply_root) {
-
-            xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, num_namespaces, namespaces, num_attributes,
-                                  0, attributes);
-        }
-    }
-
-    /**
-     * startUnit
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param num_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param num_attributes the number of attributes on the tag
-     * @param attributes list of attributes
-     *
-     * SAX handler function for start of an unit.
-     * Start to create an individual unit, merging namespace details from the root (if it exists).
-     */
-    virtual void startUnit(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** attributes) {
-
-        // remove per-unit namespaces
-        data.resize(rootsize);
-
-        // combine namespaces from root and local to this unit (if an archive)
-        for (int i = 0; i < num_namespaces; ++i) {
-
-            // make sure not already in
-            bool found = false;
-            for (unsigned int j = 0; j < data.size() / 2; ++j) {
-                if (xmlStrEqual(data[j * 2], (const xmlChar *)namespaces[i * 2])) {
-                    found = true;
-                    break;
-                }
-            }
-            if (found)
-                continue;
-
-            data.push_back((const xmlChar *)namespaces[i * 2]);
-            data.push_back((const xmlChar *)namespaces[i * 2 + 1]);
-        }
-
-/*
-        // start the unit (element) at the root using the merged namespaces
-        xmlSAX2StartElementNs(ctxt, (const xmlChar *)localname, (const xmlChar *)prefix, (const xmlChar *)URI, (int)(data.size() / 2),
-                              &data[0], num_attributes, 0, attributes);
-                              */
-    }
-
-    /**
-     * charactersRoot
-     * @param ch the characers
-     * @param len number of characters
-     *
-     * SAX handler function for character handling at the root level.
-     * Characters in unit tree.
-     */
-    virtual void charactersRoot(const char* ch, int len) {
-
-        if (apply_root)
-            xmlSAX2Characters(ctxt, (const xmlChar *)ch, len);
-    }
 
     /**
      * processingInstruction
@@ -254,22 +161,11 @@ private:
 
         if (realend) {
 
-            // End the document and free it if applied to unit individually
-//            xmlSAX2EndDocument(ctxt);
-
             // apply the necessary processing
             if ((error = !apply()))
                 stop_parser();
-/*
-            // free up the document that has this particular unit
-            xmlNodePtr aroot = ctxt->myDoc->children;
-            xmlUnlinkNode(ctxt->myDoc->children);
-            xmlFreeNodeList(aroot);
-            ctxt->myDoc->children = 0;
-            */
         }
     }
-
 
     /**
      * endDocument
@@ -282,21 +178,11 @@ private:
         if (!found || error)
             return;
 
-        // free up the document that has this particular unit
-        xmlFreeDoc(ctxt->myDoc);
-        ctxt->myDoc = 0;
-
         // end the output
         end_output();
     }
 
 protected:
-
-    /** Root namespaces */
-    std::vector<const xmlChar*> data;
-
-    /** Size of data */
-    decltype(data)::size_type rootsize;
 
     /** we have started processing */
     bool found = false;
