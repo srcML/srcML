@@ -631,17 +631,6 @@ public :
             }
         }
 
-        if (collect_src && localname[0] == 'e' && localname[1] == 's'
-           && strcmp((const char *)localname, "escape") == 0) {
-
-            std::string svalue;
-            svalue.append((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
-
-            char value = (int)strtol(svalue.c_str(), NULL, 0);
-
-            charactersUnit(&value, 1);
-        }
-
         if (is_empty && collect_srcml)
             *unit->unit += ">";
         is_empty = true;

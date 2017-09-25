@@ -53,6 +53,7 @@ xmlSAXHandler srcsax_sax2_factory() {
 
 static const xmlChar* UNIT_ENTRY = nullptr;
 static const xmlChar* MACRO_LIST_ENTRY = nullptr;
+static const xmlChar* ESCAPE_ENTRY = nullptr;
 
 static void update_ctx(void* ctx) {
 
@@ -106,6 +107,7 @@ void start_document(void* ctx) {
     // setup dictionary lookup for common elements
     UNIT_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", 4);
     MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro_list", strlen("macro_list"));
+    ESCAPE_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
 
     state->base = ctxt->input->cur;
     state->prevconsumed = ctxt->input->consumed;
@@ -565,7 +567,7 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     state->base = ctxt->input->cur;
 
-    if (false && state->context->handler->end_root)
+    if (state->context->handler->end_root)
         state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 }
 
@@ -610,6 +612,17 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
         state->unitsrcml.append((const char*) state->base, srcmllen);
     }
     state->base = ctxt->input->cur + 1;
+
+    if (state->collect_src && localname == ESCAPE_ENTRY) {
+
+        std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
+
+        char value = (int)strtol(svalue.c_str(), NULL, 0);
+
+        state->unitstr.append(1, value);
+
+        return;
+    }
 
     if (state->context->terminate)
         return;
