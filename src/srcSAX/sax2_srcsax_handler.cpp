@@ -416,22 +416,19 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    update_ctx(ctx);
+    if (state->collect_srcml) {
+        update_ctx(ctx);
 
-    state->unitsrcml = "";
-    if (state->endfirstelement) {
-        if (state->collect_srcml) {
+        state->unitsrcml = "";
+        if (state->endfirstelement) {
             state->unitsrcml.append((const char*) state->base, state->endfirstelement - state->base);
-        }
-        state->base = state->endfirstelement;
-        state->endfirstelement = 0;
-    } else {
-        if (state->collect_srcml) {
+            state->base = state->endfirstelement;
+            state->endfirstelement = 0;
+        } else {
             state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base + 1);
+            state->base = ctxt->input->cur + 1;
         }
-        state->base = ctxt->input->cur + 1;
     }
-
     if (state->context->terminate)
         return;
 
@@ -600,18 +597,17 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    update_ctx(ctx);
-
-    auto srcmllen = ctxt->input->cur + 1 - state->base;
-    if (srcmllen < 0) {
-        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-        exit(1);
-    }
-
     if (state->collect_srcml) {
+        update_ctx(ctx);
+
+        auto srcmllen = ctxt->input->cur + 1 - state->base;
+        if (srcmllen < 0) {
+            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+            exit(1);
+        }
         state->unitsrcml.append((const char*) state->base, srcmllen);
+        state->base = ctxt->input->cur + 1;
     }
-    state->base = ctxt->input->cur + 1;
 
     if (state->collect_src && localname == ESCAPE_ENTRY) {
 
@@ -662,18 +658,18 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;  
 
-    update_ctx(ctx);
-
-    auto srcmllen = ctxt->input->cur - state->base;
-    if (srcmllen < 0) {
-        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-        exit(1);
-    }
-
     if (state->collect_srcml) {
+        update_ctx(ctx);
+
+        auto srcmllen = ctxt->input->cur - state->base;
+        if (srcmllen < 0) {
+            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+            exit(1);
+        }
+
         state->unitsrcml.append((const char*) state->base, srcmllen);
+        state->base = ctxt->input->cur;
     }
-    state->base = ctxt->input->cur;
 
     if (localname == MACRO_LIST_ENTRY)
         return;
@@ -821,18 +817,16 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    update_ctx(ctx);
+    if (state->collect_srcml) {
+        update_ctx(ctx);
 
-    if (ctxt->input->cur - state->base == 0) {
-        if (state->collect_srcml) {
+        if (ctxt->input->cur - state->base == 0) {
             state->unitsrcml.append((const char*) ctxt->input->cur, len);
-        }
-        state->base = ctxt->input->cur + len;
-    } else {
-        if (state->collect_srcml) {
+            state->base = ctxt->input->cur + len;
+        } else {
             state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
+            state->base = ctxt->input->cur;
         }
-        state->base = ctxt->input->cur;
     }
 
     if (state->context->terminate)
