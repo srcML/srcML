@@ -256,7 +256,6 @@ private:
 
             // End the document and free it if applied to unit individually
 //            xmlSAX2EndDocument(ctxt);
-fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
             // apply the necessary processing
             if ((error = !apply()))
