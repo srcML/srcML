@@ -133,10 +133,6 @@ void start_document(void* ctx) {
     if (state->context->terminate)
         return;
 
-    if (state->create_dom) {
-        xmlSAX2StartDocument(ctxt);
-    }
-
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
@@ -187,13 +183,6 @@ void end_document(void* ctx) {
 
     if (state->context->handler->end_document)
         state->context->handler->end_document(state->context);
-//fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-
-    if (state->create_dom) {
-        // free up the document that has this particular unit
-        xmlFreeDoc(ctxt->myDoc);
-        ctxt->myDoc = 0;
-    }
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -479,15 +468,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->data.push_back(namespaces[i * 2]);
             state->data.push_back(namespaces[i * 2 + 1]);
         }
-
-        xmlSAX2StartElementNs(ctxt, localname, prefix, URI,
-                                    (int)(state->data.size() / 2), &(state->data[0]),
-                                    nb_attributes, 0, attributes);
-
-        ctxt->sax->characters = xmlSAX2Characters;
-        ctxt->sax->ignorableWhitespace = xmlSAX2Characters;
-        ctxt->sax->comment = xmlSAX2Comment;
-        ctxt->sax->cdataBlock = xmlSAX2CDataBlock;
     }
 
 #ifdef SRCSAX_DEBUG
@@ -518,25 +498,15 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     state->mode = END_UNIT;
 
-    if (state->create_dom) {
-        xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
-        xmlSAX2EndDocument(ctxt);
-    }
-
-//fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: %s\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
-
     xmlDocPtr savedoc = ctxt->myDoc;
 
     xmlDocPtr doc = xmlReadMemory(state->unitsrcml.c_str(), state->unitsrcml.size(), 0, 0, 0);
-//    fprintf(stderr, "DEBUG:  %s %s %d doc: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  doc);
     ctxt->myDoc = doc;
-//fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     if (state->context->handler->end_unit)
         state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
     ctxt->myDoc = savedoc;
-
     xmlFreeDoc(doc);
 
     if (ctxt->sax->startElementNs)
@@ -546,8 +516,8 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
     state->maxsize = state->maxsize < state->unitstr.size() ? state->unitstr.size() : state->maxsize;
-//fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
+#if 0
     if (state->create_dom) {
         // free up the document that has this particular unit
         xmlNodePtr aroot = ctxt->myDoc->children;
@@ -555,8 +525,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         xmlFreeNodeList(aroot);
         ctxt->myDoc->children = 0;
     }
-//        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-
+#endif
 }
 
 /**
@@ -641,9 +610,6 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
     if (state->context->terminate)
         return;
 
-    if (state->create_dom)
-        xmlSAX2StartElementNs(ctxt, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
-
     if (false && state->context->handler->start_element)
         state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                                nb_namespaces, namespaces, nb_attributes, attributes);
@@ -694,8 +660,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     // plain end element
     if (localname != UNIT_ENTRY) {
-        if (state->create_dom)
-            xmlSAX2EndElementNs(ctxt, localname, prefix, URI);
 
         if (false && state->context->handler->end_element)
             state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
