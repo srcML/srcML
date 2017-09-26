@@ -93,7 +93,7 @@ struct sax2_srcsax_handler {
     const xmlChar* prevbase = nullptr;
 
     bool collect_src = false;
-    bool collect_srcml = false;
+    bool collect_srcml = true;
     bool create_dom = false;
 
     /** Root namespaces */
@@ -101,6 +101,8 @@ struct sax2_srcsax_handler {
 
     /** Size of data */
     decltype(data)::size_type rootsize;
+
+    size_t maxsize = 0;
 };
 
 /**

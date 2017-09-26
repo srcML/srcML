@@ -96,7 +96,7 @@ private:
         ctxt = get_controller().getContext()->libxml2_context;
 
         auto state = (sax2_srcsax_handler*) ctxt->_private;
-        state->create_dom = true;
+       // state->create_dom = true;
 
         // apparently endDocument() can be called without startDocument() for an
         // empty element

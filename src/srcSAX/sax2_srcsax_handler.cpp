@@ -64,22 +64,22 @@ static void update_ctx(void* ctx) {
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
 #if 0
-    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->consumed: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->consumed);
-    fprintf(stderr, "DEBUG:  %s %s %d state->prevconsumed: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->prevconsumed);
-    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->base);
-    fprintf(stderr, "DEBUG:  %s %s %d state->prevbase: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->prevbase);
-    fprintf(stderr, "DEBUG:  %s %s %d state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->base);
-    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->cur);
-    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur - state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->cur - state->base);
+//    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->consumed: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->consumed);
+//    fprintf(stderr, "DEBUG:  %s %s %d state->prevconsumed: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->prevconsumed);
+//    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->base);
+//    fprintf(stderr, "DEBUG:  %s %s %d state->prevbase: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->prevbase);
+//    fprintf(stderr, "DEBUG:  %s %s %d state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->base);
+//    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->cur);
+//    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur - state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->cur - state->base);
 #endif
     if (state->prevconsumed != ctxt->input->consumed) {
         state->base -= ctxt->input->consumed - state->prevconsumed;
-//        fprintf(stderr, "DEBUG:  %s %s %d state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->base);
+////        fprintf(stderr, "DEBUG:  %s %s %d state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->base);
     }
     state->prevconsumed = ctxt->input->consumed;
 
     if (state->prevbase != ctxt->input->base) {
-//        fprintf(stderr, "DEBUG:  %s %s %d state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->base);
+////        fprintf(stderr, "DEBUG:  %s %s %d state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->base);
         state->base += ctxt->input->base - state->prevbase;
     }
     state->prevbase = ctxt->input->base;
@@ -187,6 +187,7 @@ void end_document(void* ctx) {
 
     if (state->context->handler->end_document)
         state->context->handler->end_document(state->context);
+//fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     if (state->create_dom) {
         // free up the document that has this particular unit
@@ -429,6 +430,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->base = ctxt->input->cur + 1;
         }
     }
+
     if (state->context->terminate)
         return;
 
@@ -481,9 +483,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         xmlSAX2StartElementNs(ctxt, localname, prefix, URI,
                                     (int)(state->data.size() / 2), &(state->data[0]),
                                     nb_attributes, 0, attributes);
-    }
 
-    if (state->create_dom) {
         ctxt->sax->characters = xmlSAX2Characters;
         ctxt->sax->ignorableWhitespace = xmlSAX2Characters;
         ctxt->sax->comment = xmlSAX2Comment;
@@ -523,14 +523,30 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         xmlSAX2EndDocument(ctxt);
     }
 
+//fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: %s\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
+
+    xmlDocPtr savedoc = ctxt->myDoc;
+
+    xmlDocPtr doc = xmlReadMemory(state->unitsrcml.c_str(), state->unitsrcml.size(), 0, 0, 0);
+//    fprintf(stderr, "DEBUG:  %s %s %d doc: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  doc);
+    ctxt->myDoc = doc;
+//fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
     if (state->context->handler->end_unit)
         state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+
+    ctxt->myDoc = savedoc;
+
+    xmlFreeDoc(doc);
 
     if (ctxt->sax->startElementNs)
         ctxt->sax->startElementNs = &start_unit;
 
     if (state->collect_src || state->collect_srcml)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
+
+    state->maxsize = state->maxsize < state->unitstr.size() ? state->unitstr.size() : state->maxsize;
+//fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     if (state->create_dom) {
         // free up the document that has this particular unit
@@ -539,6 +555,8 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         xmlFreeNodeList(aroot);
         ctxt->myDoc->children = 0;
     }
+//        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
 }
 
 /**
@@ -602,7 +620,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
 
         auto srcmllen = ctxt->input->cur + 1 - state->base;
         if (srcmllen < 0) {
-            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+//            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
             exit(1);
         }
         state->unitsrcml.append((const char*) state->base, srcmllen);
@@ -663,7 +681,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
-            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+//            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
             exit(1);
         }
 
@@ -746,7 +764,7 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
- //   state->base = ctxt->input->cur;
+    state->base = ctxt->input->cur;
 
     // cache the characters since we don't know if in unit or outer archive
     // note that characters() could be called more than once for a particular sequence of characters, so append
@@ -780,8 +798,6 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    state->base = ctxt->input->cur;
-
     if (state->context->terminate)
         return;
 
@@ -808,7 +824,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     std::string chars;
     chars.append((const char *)ch, len);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
-    fprintf(stderr, "DEBUG:  %s %s %d len: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  len);
+//    fprintf(stderr, "DEBUG:  %s %s %d len: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  len);
 #endif
 
     if (ctx == nullptr)
