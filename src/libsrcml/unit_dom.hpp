@@ -131,7 +131,12 @@ private:
      */
     virtual void endUnit(const char* localname, const char* prefix, const char* URI) {
 
-        endCommon(localname, prefix, URI, !apply_root);
+        if (!apply_root) {
+
+            // apply the necessary processing
+            if ((error = !apply()))
+                stop_parser();
+        }
     }
 
     /**
@@ -145,21 +150,7 @@ private:
      */
     virtual void endRoot(const char* localname, const char* prefix, const char* URI) {
 
-        endCommon(localname, prefix, URI, apply_root);
-    }
-
-    /**
-     * endCommon
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     *
-     * SAX handler function for end of the root element.
-     * End the construction of the unit tree, apply processing, and delete.
-     */
-    virtual void endCommon(const char* localname, const char* prefix, const char* URI, bool realend) {
-
-        if (realend) {
+        if (applyroot) {
 
             // apply the necessary processing
             if ((error = !apply()))
