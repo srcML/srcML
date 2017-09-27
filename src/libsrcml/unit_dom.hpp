@@ -150,7 +150,7 @@ private:
      */
     virtual void endRoot(const char* localname, const char* prefix, const char* URI) {
 
-        if (applyroot) {
+        if (apply_root) {
 
             // apply the necessary processing
             if ((error = !apply()))
