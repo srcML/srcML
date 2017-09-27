@@ -107,20 +107,6 @@ private:
     }
 
     /**
-     * processingInstruction
-     * @param target the processing instruction target.
-     * @param data the processing instruction data.
-     *
-     * A processing instruction has been parsed.
-     * processing instruction in unit tree.
-     */
-    virtual void processingInstruction(const char* target, const char* data) {
-
-        processing_instruction = std::pair<std::string, std::string>(target ? target : "", data ? data : "");
-        //xmlSAX2ProcessingInstruction(ctxt, target, data);
-    }
-
-    /**
      * endUnit
      * @param localname the name of the element tag
      * @param prefix the tag prefix
@@ -186,9 +172,6 @@ protected:
 
     /** the current parser ctxt */
     xmlParserCtxtPtr ctxt;
-
-    /** The pre-root processing instruction */
-    boost::optional<std::pair<std::string, std::string> > processing_instruction;
 };
 
 #endif
