@@ -36,6 +36,9 @@
 #include <io.h>
 #endif
 
+#include <sax2_srcsax_handler.hpp>
+#include <srcml_sax2_reader.hpp>
+
 #include <libxml/parser.h>
 #include <libxml/xmlIO.h>
 
@@ -481,6 +484,11 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
     for(std::vector<transform>::size_type i = 0; i < iarchive->transformations.size(); ++i) {
 
         xmlParserInputBufferPtr pinput = iarchive->input;
+
+        auto ctxt = iarchive->reader->control.getContext()->libxml2_context;
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
+        state->collect_src = false;
+        state->collect_srcml = false;
 
         try {
 

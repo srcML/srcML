@@ -61,10 +61,12 @@ struct thread_args {
  */
 class srcml_sax2_reader {
 
-private :
+public :
 
     /** control for sax parsing */
     srcSAXController control;
+
+private :
 
     /** hooks for sax parsing */
     srcml_reader_handler handler;

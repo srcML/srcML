@@ -95,9 +95,6 @@ private:
 
         ctxt = get_controller().getContext()->libxml2_context;
 
-        auto state = (sax2_srcsax_handler*) ctxt->_private;
-       // state->create_dom = true;
-
         // apparently endDocument() can be called without startDocument() for an
         // empty element
         found = true;
@@ -115,7 +112,7 @@ private:
      * SAX handler function for end of an unit.
      * End the construction of the unit tree, apply processing, and delete.
      */
-    virtual void endUnit(const char* localname, const char* prefix, const char* URI) {
+    virtual void endUnit(const char* /* localname */, const char* /* prefix */, const char* /* URI */) {
 
         if (!apply_root) {
 
@@ -134,7 +131,7 @@ private:
      * SAX handler function for end of the root element.
      * End the construction of the unit tree, apply processing, and delete.
      */
-    virtual void endRoot(const char* localname, const char* prefix, const char* URI) {
+    virtual void endRoot(const char* /* localname */, const char* /* prefix */, const char* /* URI */) {
 
         if (apply_root) {
 
