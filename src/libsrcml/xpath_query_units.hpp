@@ -205,7 +205,7 @@ public :
         for (auto& thistransform : global_transformations)
             thistransform.compiled_xpath = xmlXPathCompile(BAD_CAST thistransform.arguments.str->c_str());
 
-        xmlXPathContextPtr context = xmlXPathNewContext(ctxt->myDoc);
+        xmlXPathContextPtr context = xmlXPathNewContext(doc);
         // TODO:  Detect error
 
         xpathsrcMLRegister(context);
@@ -321,6 +321,7 @@ public :
 
         if (!context)
             context = set_context();
+        context->doc = doc;
 
         // handle new elements and individual results the previous way
         if (element || !attr_name) {
@@ -333,6 +334,7 @@ public :
                 return false;
             }
             applyxpath(++tr, global_transformations.end(), result_nodes);
+
             return true;
         }
 
@@ -473,7 +475,7 @@ public :
             return;
 
         // using the internal unit node to serve as the wrapper
-        xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
+        xmlNodePtr a_node = xmlDocGetRootElement(doc);
 
         // special case for a single result for a unit, and the result is the entire unit
         if ((result_nodes->nodesetval->nodeNr == 1) && (strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0)) {
@@ -579,7 +581,7 @@ public :
             }
         }
 
-        output_archive->translator->add_unit_raw_node(a_node, ctxt->myDoc);
+        output_archive->translator->add_unit_raw_node(a_node, doc);
     }
 
     // process the resulting nodes
@@ -588,7 +590,7 @@ public :
     	if (!result_nodes || !(result_nodes->type == 1) || !(result_nodes->nodesetval))
     		return;
 
-        xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
+        xmlNodePtr a_node = xmlDocGetRootElement(doc);
 
         // remove src namespace
         xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
@@ -641,7 +643,7 @@ public :
     virtual void outputXPathResultsAttribute(xmlXPathObjectPtr result_nodes) {
 
         // use the root element to wrap the result ?
-        xmlNodePtr a_node = xmlDocGetRootElement(ctxt->myDoc);
+        xmlNodePtr a_node = xmlDocGetRootElement(doc);
 
         // remove src namespace
         xmlRemoveNs(a_node, xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI));

@@ -116,9 +116,15 @@ private:
 
         if (!apply_root) {
 
+            auto state = (sax2_srcsax_handler*) ctxt->_private;
+
+            doc = xmlReadMemory(state->unitsrcml.c_str(), state->unitsrcml.size(), 0, 0, 0);
+
             // apply the necessary processing
             if ((error = !apply()))
                 stop_parser();
+
+            xmlFreeDoc(doc);
         }
     }
 
@@ -169,6 +175,8 @@ protected:
 
     /** the current parser ctxt */
     xmlParserCtxtPtr ctxt;
+
+    xmlDocPtr doc;
 };
 
 #endif

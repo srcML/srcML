@@ -94,7 +94,7 @@ struct sax2_srcsax_handler {
 
     bool collect_src = false;
     bool collect_srcml = true;
-    bool create_dom = false;
+    bool create_dom = true;
 
     /** Root namespaces */
     std::vector<const xmlChar*> data;
@@ -103,6 +103,10 @@ struct sax2_srcsax_handler {
     decltype(data)::size_type rootsize;
 
     size_t maxsize = 0;
+
+    std::string rootnsstr;
+
+    bool first_root_char = true;
 };
 
 /**

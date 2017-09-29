@@ -63,23 +63,12 @@ static void update_ctx(void* ctx) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-#if 0
-//    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->consumed: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->consumed);
-//    fprintf(stderr, "DEBUG:  %s %s %d state->prevconsumed: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->prevconsumed);
-//    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->base);
-//    fprintf(stderr, "DEBUG:  %s %s %d state->prevbase: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->prevbase);
-//    fprintf(stderr, "DEBUG:  %s %s %d state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->base);
-//    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->cur);
-//    fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur - state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->cur - state->base);
-#endif
     if (state->prevconsumed != ctxt->input->consumed) {
         state->base -= ctxt->input->consumed - state->prevconsumed;
-////        fprintf(stderr, "DEBUG:  %s %s %d state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->base);
     }
     state->prevconsumed = ctxt->input->consumed;
 
     if (state->prevbase != ctxt->input->base) {
-////        fprintf(stderr, "DEBUG:  %s %s %d state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->base);
         state->base += ctxt->input->base - state->prevbase;
     }
     state->prevbase = ctxt->input->base;
@@ -113,13 +102,6 @@ void start_document(void* ctx) {
     state->prevconsumed = ctxt->input->consumed;
     state->prevbase = ctxt->input->base;
 
-/*
-    if (state->context->handler->characters_unit)
-        state->process = COLLECT_SRC;
-
-    if (state->context->handler->start_element)
-        state->process = COLLECT_SRCML;
-*/
     if (state->context->handler->start_document)
         state->context->handler->start_document(state->context);
 
@@ -289,6 +271,24 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->data.push_back(namespaces[i + 1]);
         }
         state->rootsize = state->data.size();
+
+    }
+
+    if (state->collect_srcml) {
+        state->rootnsstr.clear();
+        for (int i = 0; i < state->data.size() / 2; ++i) {
+
+            auto& d = state->data;
+
+            state->rootnsstr += "xmlns";
+            if (d[i * 2]) {
+                state->rootnsstr += ":";
+                state->rootnsstr += (const char*) d[i * 2];
+            }
+            state->rootnsstr += "=\"";
+            state->rootnsstr += (const char*) d[i * 2 + 1];
+            state->rootnsstr += "\" ";
+        }
     }
 
 #ifdef SRCSAX_DEBUG
@@ -409,15 +409,21 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (state->collect_srcml) {
         update_ctx(ctx);
 
-        state->unitsrcml = "";
+        std::string starttag;
         if (state->endfirstelement) {
-            state->unitsrcml.append((const char*) state->base, state->endfirstelement - state->base);
+            starttag = std::string((const char*) state->base, state->endfirstelement - state->base);
             state->base = state->endfirstelement;
             state->endfirstelement = 0;
         } else {
-            state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base + 1);
+            starttag = std::string((const char*) state->base, ctxt->input->cur - state->base + 1);
             state->base = ctxt->input->cur + 1;
         }
+        // find end of unit tag
+        int pos = 1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1;
+
+        state->unitsrcml = starttag.substr(0, pos);
+        state->unitsrcml += state->rootnsstr;
+        state->unitsrcml += starttag.substr(pos);
     }
 
     if (state->context->terminate)
@@ -498,16 +504,8 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     state->mode = END_UNIT;
 
-    xmlDocPtr savedoc = ctxt->myDoc;
-
-    xmlDocPtr doc = xmlReadMemory(state->unitsrcml.c_str(), state->unitsrcml.size(), 0, 0, 0);
-    ctxt->myDoc = doc;
-
     if (state->context->handler->end_unit)
         state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
-
-    ctxt->myDoc = savedoc;
-    xmlFreeDoc(doc);
 
     if (ctxt->sax->startElementNs)
         ctxt->sax->startElementNs = &start_unit;
@@ -516,16 +514,6 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
     state->maxsize = state->maxsize < state->unitstr.size() ? state->unitstr.size() : state->maxsize;
-
-#if 0
-    if (state->create_dom) {
-        // free up the document that has this particular unit
-        xmlNodePtr aroot = ctxt->myDoc->children;
-        xmlUnlinkNode(ctxt->myDoc->children);
-        xmlFreeNodeList(aroot);
-        ctxt->myDoc->children = 0;
-    }
-#endif
 }
 
 /**
@@ -765,6 +753,14 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     if (state->context->terminate)
         return;
 
+    if (state->collect_srcml) {
+        update_ctx(ctx);
+
+		if (!state->first_root_char)
+	        state->base = ctxt->input->cur;
+    }
+    state->first_root_char = false;
+
     if (false && state->context->handler->characters_root)
         state->context->handler->characters_root(state->context, (const char *)ch, len);
 
@@ -788,7 +784,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     std::string chars;
     chars.append((const char *)ch, len);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
-//    fprintf(stderr, "DEBUG:  %s %s %d len: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  len);
+    fprintf(stderr, "DEBUG:  %s %s %d len: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  len);
 #endif
 
     if (ctx == nullptr)
