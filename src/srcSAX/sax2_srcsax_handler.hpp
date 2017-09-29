@@ -106,6 +106,9 @@ struct sax2_srcsax_handler {
 
     std::string rootnsstr;
 
+    int content_begin = 0;
+    int content_end = 0;
+
     bool first_root_char = true;
 };
 

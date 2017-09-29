@@ -424,6 +424,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         state->unitsrcml = starttag.substr(0, pos);
         state->unitsrcml += state->rootnsstr;
         state->unitsrcml += starttag.substr(pos);
+        state->content_begin = state->unitsrcml.size();
     }
 
     if (state->context->terminate)
@@ -639,6 +640,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
             exit(1);
         }
 
+        state->content_end = state->unitsrcml.size();
         state->unitsrcml.append((const char*) state->base, srcmllen);
         state->base = ctxt->input->cur;
     }
