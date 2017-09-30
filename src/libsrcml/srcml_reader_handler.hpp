@@ -690,7 +690,6 @@ public :
             srcdiff_stack.pop();
 
         if (skip) {
-
             get_controller().enable_startElement(true);
             get_controller().enable_charactersUnit(true);
             get_controller().enable_comment(true);
@@ -700,9 +699,10 @@ public :
         auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
 	    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-	    unit->unit = std::move(state->unitsrcml);
-	    unit->content_begin = state->content_begin;
-        unit->content_end = state->content_end;
+        if (collect_src) {
+
+            xmlOutputBufferWrite(output_buffer, state->unitstr.size(), state->unitstr.c_str());
+        }
 
         if (collect_srcml || collect_src) {
 
@@ -796,26 +796,6 @@ public :
         // record the last character so we can determine final line
         if (len)
             lastchar = ch[len - 1];
-
-        if (collect_src) {
-
-            xmlOutputBufferWrite(output_buffer, len, (const char *)ch);
-
-        } else {
-
-            for (int i = 0; i < len; ++i) {
-                char character = (char)ch[i];
-
-                if (character == '&')
-                    (*unit->unit) += "&amp;";
-                else if (character == '<')
-                    (*unit->unit) += "&lt;";
-                else if (character == '>')
-                    (*unit->unit) += "&gt;";
-                else
-                    (*unit->unit) += character;
-            }
-        }
 
         if (terminate)
             stop_parser();
