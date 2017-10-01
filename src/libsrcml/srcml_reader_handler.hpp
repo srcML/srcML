@@ -545,13 +545,6 @@ public :
             cond.wait(lock);
         }
 
-        if (skip) {
-            get_controller().enable_startElement(false);
-            get_controller().enable_charactersUnit(false);
-            get_controller().enable_comment(false);
-            get_controller().enable_cdataBlock(false);
-        }
-
         // number of newlines reset
         loc = 0;
         lastchar = 0;
@@ -563,7 +556,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
     }
-
+#if 0
     /**
      * startElement
      * @param localname the name of the element tag
@@ -618,6 +611,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
     }
+#endif
 
     /**
      * endRoot
@@ -689,13 +683,6 @@ public :
         if (issrcdiff)
             srcdiff_stack.pop();
 
-        if (skip) {
-            get_controller().enable_startElement(true);
-            get_controller().enable_charactersUnit(true);
-            get_controller().enable_comment(true);
-            get_controller().enable_cdataBlock(true);
-        }
-
         auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
 	    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
@@ -723,6 +710,7 @@ public :
 #endif
     }
 
+#if 0
     /**
      * endElementNs
      * @param localname tag name
@@ -764,7 +752,9 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
     }
+#endif
 
+#if 0
     /**
      * charactersUnit
      * @param ch the characters
@@ -804,7 +794,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
     }
-
+#endif
     /**
      * metaTag
      * @param localname the name of the element tag

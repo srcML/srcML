@@ -121,17 +121,6 @@ void srcSAXController::enable_startUnit(bool enable) {
 }
 
 /**
- * enable_startElement
- * @param enable bool indicate enable or disable SAX parsing.
- *
- * Enables or disables startElement parsing.
- */
-void srcSAXController::enable_startElement(bool enable) {
-
-    context->handler->start_element = enable ? cppCallbackAdapter::start_element : 0;
-}
-
-/**
  * enable_endRoot
  * @param enable bool indicate enable or disable SAX parsing.
  *
@@ -154,39 +143,6 @@ void srcSAXController::enable_endUnit(bool enable) {
 }
 
 /**
- * enable_endElement
- * @param enable bool indicate enable or disable SAX parsing.
- *
- * Enables or disables endElement parsing.
- */
-void srcSAXController::enable_endElement(bool enable) {
-
-    context->handler->end_element = enable ? cppCallbackAdapter::end_element : 0;
-}
-
-/**
- * enable_charactersRoot
- * @param enable bool indicate enable or disable SAX parsing.
- *
- * Enables or disables charactersRoot parsing.
- */
-void srcSAXController::enable_charactersRoot(bool enable) {
-
-    context->handler->characters_root = enable ? cppCallbackAdapter::characters_root : 0;
-}
-
-/**
- * enable_charactersUnit
- * @param enable bool indicate enable or disable SAX parsing.
- *
- * Enables or disables charactersUnit parsing.
- */
-void srcSAXController::enable_charactersUnit(bool enable) {
-
-    context->handler->characters_unit = enable ? cppCallbackAdapter::characters_unit : 0;
-}
-
-/**
  * enable_metaTag
  * @param enable bool indicate enable or disable SAX parsing.
  *
@@ -195,28 +151,6 @@ void srcSAXController::enable_charactersUnit(bool enable) {
 void srcSAXController::enable_metaTag(bool enable) {
 
     context->handler->meta_tag = enable ? cppCallbackAdapter::meta_tag : 0;
-}
-
-/**
- * enable_comment
- * @param enable bool indicate enable or disable SAX parsing.
- *
- * Enables or disables comment parsing.
- */
-void srcSAXController::enable_comment(bool enable) {
-
-    context->handler->comment = enable ? cppCallbackAdapter::comment : 0;
-}
-
-/**
- * enable_cdataBlock
- * @param enable bool indicate enable or disable SAX parsing.
- *
- * Enables or disables cdataBlock parsing.
- */
-void srcSAXController::enable_cdataBlock(bool enable) {
-
-    context->handler->cdata_block = enable ? cppCallbackAdapter::cdata_block : 0;
 }
 
 /**

@@ -122,14 +122,6 @@ public :
     void enable_startUnit(bool enable);
 
     /**
-     * enable_startElement
-     * @param enable bool indicate enable or disable SAX parsing.
-     *
-     * Enables or disables startElement parsing.
-     */
-    void enable_startElement(bool enable);
-
-    /**
      * enable_endRoot
      * @param enable bool indicate enable or disable SAX parsing.
      *
@@ -146,52 +138,12 @@ public :
     void enable_endUnit(bool enable);
 
     /**
-     * enable_endElement
-     * @param enable bool indicate enable or disable SAX parsing.
-     *
-     * Enables or disables endElement parsing.
-     */
-    void enable_endElement(bool enable);
-
-    /**
-     * enable_charactersRoot
-     * @param enable bool indicate enable or disable SAX parsing.
-     *
-     * Enables or disables charactersRoot parsing.
-     */
-    void enable_charactersRoot(bool enable);
-
-    /**
-     * enable_charactersUnit
-     * @param enable bool indicate enable or disable SAX parsing.
-     *
-     * Enables or disables charactersUnit parsing.
-     */
-    void enable_charactersUnit(bool enable);
-
-    /**
      * enable_metaTag
      * @param enable bool indicate enable or disable SAX parsing.
      *
      * Enables or disables metaTag parsing.
      */
     void enable_metaTag(bool enable);
-
-    /**
-     * enable_comment
-     * @param enable bool indicate enable or disable SAX parsing.
-     *
-     * Enables or disables comment parsing.
-     */
-    void enable_comment(bool enable);
-
-    /**
-     * enable_cdataBlock
-     * @param enable bool indicate enable or disable SAX parsing.
-     *
-     * Enables or disables cdataBlock parsing.
-     */
-    void enable_cdataBlock(bool enable);
 
     /**
      * enable_processingInstruction

@@ -57,15 +57,9 @@ public:
         handler.end_document = end_document;
         handler.start_root = start_root;
         handler.start_unit = start_unit;
-        handler.start_element = start_element;
         handler.end_root = end_root;
         handler.end_unit = end_unit;
-        handler.end_element = end_element;
-        handler.characters_root = characters_root;
-        handler.characters_unit = characters_unit;
         handler.meta_tag = meta_tag;
-        handler.comment = comment;
-        handler.cdata_block = cdata_block;
         handler.processing_instruction = processing_instruction;
 
         return handler;
@@ -147,29 +141,6 @@ public:
     }
 
     /**
-     * start_element
-     * @param context a srcSAX context
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param num_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param num_attributes the number of attributes on the tag
-     * @param attributes list of attributes
-     *
-     * Signature for srcSAX handler function for start of an element.
-     * Callback. Forwards C API start_element to C++ API srcSAXHandler startElement.
-     */
-    static void start_element(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const xmlChar** attributes) {
-
-        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->handler->startElement(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
-    }
-
-    /**
      * end_root
      * @param context a srcSAX context
      * @param localname the name of the element tag
@@ -202,52 +173,6 @@ public:
     }
 
     /**
-     * end_element
-     * @param context a srcSAX context
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     *
-     * Callback. Forwards C API end_element to C++ API srcSAXHandler endElement.
-     */
-    static void end_element(srcsax_context* context, const char* localname, const char* prefix, const char* URI) {
-
-        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->handler->endElement(localname, prefix, URI);
-    }
-
-    /**
-     * characters_root
-     * @param context a srcSAX context
-     * @param ch the characers
-     * @param len number of characters
-     *
-     * Callback. Forwards C API characters_root to C++ API srcSAXHandler charactersRoot.
-     */
-    static void characters_root(srcsax_context* context, const char* ch, int len) {
-
-        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->handler->charactersRoot(ch, len);
-    }
-
-    /**
-     * characters_unit
-     * @param context a srcSAX context
-     * @param ch the characers
-     * @param len number of characters
-     *
-     * Callback. Forwards C API characters_unit to C++ API srcSAXHandler charactersUnit.
-     */
-    static void characters_unit(srcsax_context* context, const char* ch, int len) {
-
-        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->handler->charactersUnit(ch, len);
-    }
-
-    /**
      * meta_tag
      * @param context a srcSAX context
      * @param localname the name of the element tag
@@ -267,35 +192,6 @@ public:
         cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
 
         cpp_adapter->handler->metaTag(localname, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
-    }
-
-    /**
-     * comment
-     * @param context a srcSAX context
-     * @param value the comment content
-     *
-     * Callback. Forwards C API comment to C++ API srcSAXHandler comment.
-     */
-    static void comment(srcsax_context* context, const char* value) {
-
-        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->handler->comment(value);
-    }
-
-    /**
-     * cdata_block
-     * @param context a srcSAX context
-     * @param value the pcdata content
-     * @param len the block length
-     *
-     * Callback. Forwards C API cdata_block to C++ API srcSAXHandler cdata_block.
-     */
-    static void cdata_block(srcsax_context* context, const char* value, int len) {
-
-        cppCallbackAdapter* cpp_adapter = (cppCallbackAdapter *)context->data;
-
-        cpp_adapter->handler->cdataBlock(value, len);
     }
 
     /**

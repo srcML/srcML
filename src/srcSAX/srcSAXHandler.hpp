@@ -156,24 +156,6 @@ public :
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** attributes) {}
-
-    /**
-     * startElement
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param num_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param num_attributes the number of attributes on the tag
-     * @param attributes list of attributes
-     *
-     * SAX handler function for start of an element.
-     * Overide for desired behaviour.
-     */
-    virtual void startElement(const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const xmlChar** attributes) {}
-
     /**
      * endRoot
      * @param localname the name of the element tag
@@ -197,37 +179,6 @@ public :
     virtual void endUnit(const char* localname, const char* prefix, const char* URI) {}
 
     /**
-     * endElement
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     *
-     * SAX handler function for end of an element.
-     * Overide for desired behaviour.
-     */
-    virtual void endElement(const char* localname, const char* prefix, const char* URI) {}
-
-    /**
-     * charactersRoot
-     * @param ch the characers
-     * @param len number of characters
-     *
-     * SAX handler function for character handling at the root level.
-     * Overide for desired behaviour.
-     */
-    virtual void charactersRoot(const char* ch, int len) {}
-
-    /**
-     * charactersUnit
-     * @param ch the characers
-     * @param len number of characters
-     *
-     * SAX handler function for character handling within a unit.
-     * Overide for desired behaviour.
-     */
-    virtual void charactersUnit(const char* ch, int len) {}
-
-    /**
      * metaTag
      * @param localname the name of the element tag
      * @param prefix the tag prefix
@@ -243,25 +194,6 @@ public :
     virtual void metaTag(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** attributes) {}
-
-    /**
-     * comment
-     * @param value the comment content
-     *
-     * A comment has been parsed.
-     * Overide for desired behaviour.
-     */
-    virtual void comment(const char* value) {}
-
-    /**
-     * cdataBlock
-     * @param value the pcdata content
-     * @param len the block length
-     *
-     * Called when a pcdata block has been parsed.
-     * Overide for desired behaviour.
-     */
-    virtual void cdataBlock(const char* value, int len) {}
 
     /**
      * processingInstruction
