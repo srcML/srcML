@@ -51,6 +51,26 @@ xmlSAXHandler srcsax_sax2_factory() {
     return sax;
 }
 
+static void skip_off(xmlParserCtxtPtr ctxt) {
+
+	ctxt->sax->startElementNs = &start_element;
+	ctxt->sax->characters = &characters_start;
+	ctxt->sax->ignorableWhitespace = &characters_start;
+	ctxt->sax->comment = &comment;
+	ctxt->sax->cdataBlock = &cdata_block;
+	ctxt->sax->processingInstruction = &processing_instruction;
+}
+
+static void skip_on(xmlParserCtxtPtr ctxt) {
+
+	ctxt->sax->startElementNs = 0;
+	ctxt->sax->characters = 0;
+	ctxt->sax->ignorableWhitespace = 0;
+	ctxt->sax->comment = 0;
+	ctxt->sax->cdataBlock = 0;
+	ctxt->sax->processingInstruction = 0;
+}
+
 static const xmlChar* UNIT_ENTRY = nullptr;
 static const xmlChar* MACRO_LIST_ENTRY = nullptr;
 static const xmlChar* ESCAPE_ENTRY = nullptr;
@@ -440,12 +460,15 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
                                             nb_namespaces, namespaces,
                                             nb_attributes, attributes);
 
+    state->skip = true;
+    skip_on(ctxt);
+
     // next start tag will be for a non-unit element
-    if (ctxt->sax->startElementNs)
+    if (!state->skip && ctxt->sax->startElementNs)
         ctxt->sax->startElementNs = &start_element;
 
     // characters are for the unit
-    if (state->collect_src || state->collect_srcml)
+    if (!state->skip && (state->collect_src || state->collect_srcml))
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
 
     state->unitstr.clear();
@@ -508,10 +531,9 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (state->context->handler->end_unit)
         state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
-    if (ctxt->sax->startElementNs)
-        ctxt->sax->startElementNs = &start_unit;
+    ctxt->sax->startElementNs = &start_unit;
 
-    if (state->collect_src || state->collect_srcml)
+    if (!state->skip && (state->collect_src || state->collect_srcml))
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
     state->maxsize = state->maxsize < state->unitstr.size() ? state->unitstr.size() : state->maxsize;
@@ -627,6 +649,9 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;  
 
+    if (state->skip && ctxt->nodeNr > 2)
+    	return;
+    
     if (state->collect_srcml) {
         update_ctx(ctx);
 
@@ -729,7 +754,7 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
  * SAX handler function for character handling at the root level.
  * Immediately calls supplied handlers function.
  */
-void characters_root(void* ctx, const xmlChar* /* ch */, int /* len */) {
+void characters_root(void* ctx, const xmlChar* ch, int len) {
 
 #ifdef SRCSAX_DEBUG
     std::string chars;

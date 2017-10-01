@@ -110,6 +110,8 @@ struct sax2_srcsax_handler {
     int content_end = 0;
 
     bool first_root_char = true;
+
+    bool skip = false;
 };
 
 /**
