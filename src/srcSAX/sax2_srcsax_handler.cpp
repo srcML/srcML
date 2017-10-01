@@ -63,7 +63,7 @@ static void update_ctx(void* ctx) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    if (state->prevconsumed != ctxt->input->consumed) {
+    if (state->prevconsumed != (long) ctxt->input->consumed) {
         state->base -= ctxt->input->consumed - state->prevconsumed;
     }
     state->prevconsumed = ctxt->input->consumed;
@@ -276,7 +276,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     if (state->collect_srcml) {
         state->rootnsstr.clear();
-        for (int i = 0; i < state->data.size() / 2; ++i) {
+        for (size_t i = 0; i < state->data.size() / 2; ++i) {
 
             auto& d = state->data;
 
@@ -419,12 +419,12 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->base = ctxt->input->cur + 1;
         }
         // find end of unit tag
-        int pos = 1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1;
+        int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
 
         state->unitsrcml = starttag.substr(0, pos);
         state->unitsrcml += state->rootnsstr;
         state->unitsrcml += starttag.substr(pos);
-        state->content_begin = state->unitsrcml.size();
+        state->content_begin = (int) state->unitsrcml.size();
     }
 
     if (state->context->terminate)
@@ -640,7 +640,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
             exit(1);
         }
 
-        state->content_end = state->unitsrcml.size();
+        state->content_end = (int) state->unitsrcml.size();
         state->unitsrcml.append((const char*) state->base, srcmllen);
         state->base = ctxt->input->cur;
     }
@@ -738,7 +738,7 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
  * SAX handler function for character handling at the root level.
  * Immediately calls supplied handlers function.
  */
-void characters_root(void* ctx, const xmlChar* ch, int len) {
+void characters_root(void* ctx, const xmlChar* /* ch */, int /* len */) {
 
 #ifdef SRCSAX_DEBUG
     std::string chars;
@@ -762,9 +762,6 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 	        state->base = ctxt->input->cur;
     }
     state->first_root_char = false;
-
-    if (false && state->context->handler->characters_root)
-        state->context->handler->characters_root(state->context, (const char *)ch, len);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
@@ -795,9 +792,13 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    if (!state->collect_src && !state->collect_srcml)
+        return;
+
     if (state->collect_srcml) {
         update_ctx(ctx);
 
+        // append the characters in their raw state (unescaped ?)
         if (ctxt->input->cur - state->base == 0) {
             state->unitsrcml.append((const char*) ctxt->input->cur, len);
             state->base = ctxt->input->cur + len;
@@ -808,12 +809,6 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     }
 
     if (state->context->terminate)
-        return;
-
-    if (len > 0 && state->context->handler->characters_unit)
-        state->context->handler->characters_unit(state->context, (const char *)ch, len);
-
-    if (!state->collect_src && !state->collect_srcml)
         return;
 
     state->unitstr.append((const char*) ch, len);
