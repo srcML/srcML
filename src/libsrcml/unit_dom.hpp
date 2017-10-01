@@ -118,7 +118,7 @@ private:
 
             auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-            doc = xmlReadMemory(state->unitsrcml.c_str(), state->unitsrcml.size(), 0, 0, 0);
+            doc = xmlReadMemory(state->unitsrcml.c_str(), (int) state->unitsrcml.size(), 0, 0, 0);
 
             // apply the necessary processing
             if ((error = !apply()))

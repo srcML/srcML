@@ -701,7 +701,7 @@ public :
 
         if (collect_src) {
 
-            xmlOutputBufferWrite(output_buffer, state->unitstr.size(), state->unitstr.c_str());
+            xmlOutputBufferWrite(output_buffer, (int) state->unitstr.size(), state->unitstr.c_str());
         }
 
         if (collect_srcml || collect_src) {
