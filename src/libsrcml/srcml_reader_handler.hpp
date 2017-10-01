@@ -686,6 +686,12 @@ public :
         auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
 	    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+	    unit->content_begin = state->content_begin;
+	    unit->content_end = state->content_end;
+
+//	    fprintf(stderr, "DEBUG:  %s %s %d unit->content_begin: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  unit->content_begin);
+//		fprintf(stderr, "DEBUG:  %s %s %d unit->content_end: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  unit->content_end);
+
         if (collect_src) {
 
             xmlOutputBufferWrite(output_buffer, (int) state->unitstr.size(), state->unitstr.c_str());

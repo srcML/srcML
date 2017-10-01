@@ -66,10 +66,10 @@ public :
     /** control for sax parsing */
     srcSAXController control;
 
-private :
-
     /** hooks for sax parsing */
     srcml_reader_handler handler;
+
+private :
 
     /** thread running execution */
     std::thread thread;

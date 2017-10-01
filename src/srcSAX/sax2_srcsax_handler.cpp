@@ -559,9 +559,9 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
  * SAX handler function for start of an element.
  * Immediately calls supplied handlers function.
  */
-void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                    int nb_namespaces, const xmlChar** namespaces,
-                    int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
+void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix */, const xmlChar* /* URI */,
+                    int /* nb_namespaces */, const xmlChar** /* namespaces */,
+                    int /* nb_attributes */, int /* nb_defaulted */, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -598,10 +598,6 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
 
     if (state->context->terminate)
         return;
-
-    if (false && state->context->handler->start_element)
-        state->context->handler->start_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
-                                               nb_namespaces, namespaces, nb_attributes, attributes);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -649,13 +645,8 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         return;
 
     // plain end element
-    if (localname != UNIT_ENTRY) {
-
-        if (false && state->context->handler->end_element)
-            state->context->handler->end_element(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
-
-        return;
-    }
+    if (localname != UNIT_ENTRY)
+    	return;
 
     // the root is the only element so we never got this started
     if (state->mode == ROOT) {
@@ -826,7 +817,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
  * A comment has been parsed.
  * Immediately calls supplied handlers function.
  */
-void comment(void* ctx, const xmlChar* value) {
+void comment(void* ctx, const xmlChar* /* value */) {
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -841,8 +832,7 @@ void comment(void* ctx, const xmlChar* value) {
     if (state->context->terminate)
         return;
 
-    if (state->context->handler->comment)
-        state->context->handler->comment(state->context, (const char *)value);
+    // @todo Make sure we capture this for srcml collection
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -858,7 +848,7 @@ void comment(void* ctx, const xmlChar* value) {
  * Called when a pcdata block has been parsed.
  * Immediately calls supplied handlers function.
  */
-void cdata_block(void* ctx, const xmlChar* value, int len) {
+void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -873,8 +863,7 @@ void cdata_block(void* ctx, const xmlChar* value, int len) {
     if (state->context->terminate)
         return;
 
-    if (state->context->handler->cdata_block)
-        state->context->handler->cdata_block(state->context, (const char *)value, len);
+    // @todo Make sure we capture this for srcml collection
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
@@ -904,6 +893,8 @@ void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* dat
 
     if (state->context->terminate)
         return;
+
+    // @todo Make sure we capture this for srcml collection
 
     if (state->context->handler->processing_instruction)
         state->context->handler->processing_instruction(state->context, (const char *)target, (const char *)data);
