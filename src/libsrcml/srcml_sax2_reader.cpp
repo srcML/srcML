@@ -120,7 +120,9 @@ int srcml_sax2_reader::read_header(srcml_unit* unit) {
 
     handler.skip = true;
     handler.collect_unit_header = true;
+    handler.collect_unit_body = false;
     handler.resume_and_wait();
+    handler.collect_unit_body = false;
     handler.collect_unit_header = false;
     handler.skip = false;
 

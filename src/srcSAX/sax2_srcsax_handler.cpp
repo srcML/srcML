@@ -83,7 +83,7 @@ static void update_ctx(void* ctx) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    if (state->prevconsumed != (long) ctxt->input->consumed) {
+    if (state->prevconsumed != ctxt->input->consumed) {
         state->base -= ctxt->input->consumed - state->prevconsumed;
     }
     state->prevconsumed = ctxt->input->consumed;
@@ -461,7 +461,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 //    state->skip = true;
 //    skip_on(ctxt);
 
-    if (state->skip)
+    if (!state->collect_unit_body)
     	return;
 
     // next start tag will be for a non-unit element
@@ -508,10 +508,10 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (!state->skip && state->context->handler->end_unit)
         state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
-    if (!state->skip)
+    if (state->collect_unit_body)
 	    ctxt->sax->startElementNs = &start_unit;
 
-    if (!state->skip && (state->collect_unit_body))
+    if (state->collect_unit_body)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
     state->maxsize = state->maxsize < state->unitsrc.size() ? state->unitsrc.size() : state->maxsize;
@@ -627,7 +627,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;  
 
-    if (state->skip && ctxt->nodeNr > 2)
+    if (!state->collect_unit_body && ctxt->nodeNr > 2)
     	return;
     
     if (state->collect_unit_body) {
