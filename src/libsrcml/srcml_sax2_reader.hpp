@@ -93,7 +93,7 @@ public :
     int read_srcml(srcml_unit* unit);
 
     // reads the next unit and returns it in parameter as src
-    int read_src(srcml_unit* unit, xmlOutputBufferPtr output_buffer);
+    int read_src(srcml_unit* unit);
 };
 
 #endif

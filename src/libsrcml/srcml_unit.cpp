@@ -578,20 +578,17 @@ static int srcml_unit_unparse_internal(srcml_unit* unit, std::function<xmlOutput
     int status = -1;
     try {
 
-        if (!unit->unit) {
+        if (!unit->src)
+            unit->archive->reader->read_src(unit);
 
-            unit->archive->reader->read_src(unit, output_handler);
-            xmlOutputBufferClose(output_handler);
-
-            return SRCML_STATUS_OK;
-        }
-
-        status = srcml_extract_text(unit->unit->c_str(), unit->unit->size(), output_handler, unit->archive->options, unit->archive->revision_number);
+        status = SRCML_STATUS_OK;
 
     } catch(...) {
 
         status = SRCML_STATUS_IO_ERROR;
     }
+
+    xmlOutputBufferWrite(output_handler, (int) unit->src->size(), unit->src->c_str());
 
     xmlOutputBufferClose(output_handler);
 

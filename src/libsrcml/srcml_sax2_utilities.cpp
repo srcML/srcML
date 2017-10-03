@@ -38,6 +38,7 @@
 #include <dlfcn.h>
 #endif
 
+#if 0
 /**
  * srcml_extract_text
  * @param input_buffer srcML to extract text
@@ -72,6 +73,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
 
     return SRCML_STATUS_OK;
 }
+#endif
 
 /**
  * srcml_extract_text_filename
@@ -98,8 +100,10 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
 
     srcml_sax2_reader reader(archive, ifilename, 0, revision_number);
 
-    reader.read_src(ounit, output_buffer);
+    reader.read_src(ounit);
 
+    // @todo If still used, write using unit
+    
     xmlOutputBufferClose(output_buffer);
 
     srcml_archive_free(archive);

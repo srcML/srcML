@@ -93,9 +93,6 @@ private :
     /** collected unit language */
     srcml_unit* unit = nullptr;
 
-    /** output buffer for direct src write */
-    xmlOutputBufferPtr output_buffer = nullptr;
-
     /** has reached end of parsing*/
     bool is_done = false;
     /** has passed root*/
@@ -691,11 +688,6 @@ public :
 	    unit->unit = state->unitsrcml;
 	    unit->srcml = state->unitsrcml;
 	    unit->src = state->unitstr;
-
-        if (collect_src) {
-
-            xmlOutputBufferWrite(output_buffer, (int) state->unitstr.size(), state->unitstr.c_str());
-        }
 
         if (collect_srcml || collect_src) {
 
