@@ -282,8 +282,8 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             return;
     }
 
-    // record namespaces in an extensible list so we can add the per unit
-    if (state->create_dom) {
+    // record namespace string in an extensible list so we can add the per unit
+    if (state->collect_unit_body) {
         int ns_length = nb_namespaces * 2;
         for (int i = 0; i < ns_length; i += 2) {
 
@@ -292,9 +292,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         }
         state->rootsize = state->data.size();
 
-    }
-
-    if (state->collect_srcml) {
         state->rootnsstr.clear();
         for (size_t i = 0; i < state->data.size() / 2; ++i) {
 
@@ -426,7 +423,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    if (state->collect_srcml) {
+    if (state->collect_unit_body) {
         update_ctx(ctx);
 
         std::string starttag;
@@ -472,37 +469,13 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         ctxt->sax->startElementNs = &start_element;
 
     // characters are for the unit
-    if (state->collect_src || state->collect_srcml)
+    if (state->collect_unit_body)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
 
     state->unitsrc.clear();
 
 //    state->unitsrcml.clear();
 
-
-    if (state->create_dom) {
-
-        // remove per-unit namespaces
-        state->data.resize(state->rootsize);
-
-        // combine namespaces from root and local to this unit (if an archive)
-        for (int i = 0; i < nb_namespaces; ++i) {
-
-            // make sure not already in
-            bool found = false;
-            for (unsigned int j = 0; j < state->data.size() / 2; ++j) {
-                if (xmlStrEqual(state->data[j * 2], namespaces[i * 2])) {
-                    found = true;
-                    break;
-                }
-            }
-            if (found)
-                continue;
-
-            state->data.push_back(namespaces[i * 2]);
-            state->data.push_back(namespaces[i * 2 + 1]);
-        }
-    }
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -538,7 +511,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (!state->skip)
 	    ctxt->sax->startElementNs = &start_unit;
 
-    if (!state->skip && (state->collect_src || state->collect_srcml))
+    if (!state->skip && (state->collect_unit_body))
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
     state->maxsize = state->maxsize < state->unitsrc.size() ? state->unitsrc.size() : state->maxsize;
@@ -600,7 +573,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    if (state->collect_srcml) {
+    if (state->collect_unit_body) {
         update_ctx(ctx);
 
         auto srcmllen = ctxt->input->cur + 1 - state->base;
@@ -612,7 +585,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
         state->base = ctxt->input->cur + 1;
     }
 
-    if (state->collect_src && localname == ESCAPE_ENTRY) {
+    if (state->collect_unit_body && localname == ESCAPE_ENTRY) {
 
         std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
 
@@ -657,7 +630,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     if (state->skip && ctxt->nodeNr > 2)
     	return;
     
-    if (state->collect_srcml) {
+    if (state->collect_unit_body) {
         update_ctx(ctx);
 
         auto srcmllen = ctxt->input->cur - state->base;
@@ -692,7 +665,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
                         state->root.nb_attributes, 0, state->root.attributes.data());
 
         characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
-      //  state->characters.clear();
     }
 
     if (ctxt->nameNr == 2 || !state->is_archive) {
@@ -776,7 +748,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     if (state->context->terminate)
         return;
 
-    if (state->collect_srcml) {
+    if (state->collect_unit_body) {
         update_ctx(ctx);
 
 		if (!state->first_root_char)
@@ -813,20 +785,18 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    if (!state->collect_src && !state->collect_srcml)
+    if (!state->collect_unit_body)
         return;
 
-    if (state->collect_srcml) {
-        update_ctx(ctx);
+    update_ctx(ctx);
 
-        // append the characters in their raw state (unescaped ?)
-        if (ctxt->input->cur - state->base == 0) {
-            state->unitsrcml.append((const char*) ctxt->input->cur, len);
-            state->base = ctxt->input->cur + len;
-        } else {
-            state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
-            state->base = ctxt->input->cur;
-        }
+    // append the characters in their raw state (unescaped ?)
+    if (ctxt->input->cur - state->base == 0) {
+        state->unitsrcml.append((const char*) ctxt->input->cur, len);
+        state->base = ctxt->input->cur + len;
+    } else {
+        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
+        state->base = ctxt->input->cur;
     }
 
     if (state->context->terminate)

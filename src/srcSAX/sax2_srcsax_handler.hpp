@@ -48,7 +48,7 @@ enum srcMLMode {
 enum PROCESS {
     UNKNOWN,
     COLLECT_SRC,
-    COLLECT_SRCML,
+    collect_unit_body,
     CREATE_DOM,
 };
 
@@ -93,8 +93,7 @@ struct sax2_srcsax_handler {
     const xmlChar* prevbase = nullptr;
 
     bool collect_src = false;
-    bool collect_srcml = true;
-    bool create_dom = true;
+    bool collect_unit_body = true;
 
     /** Root namespaces */
     std::vector<const xmlChar*> data;

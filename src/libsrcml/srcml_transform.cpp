@@ -487,8 +487,7 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
 
         auto ctxt = iarchive->reader->control.getContext()->libxml2_context;
         auto state = (sax2_srcsax_handler*) ctxt->_private;
-        state->collect_src = false;
-        state->collect_srcml = false;
+        state->collect_unit_body = false;
 
         try {
 

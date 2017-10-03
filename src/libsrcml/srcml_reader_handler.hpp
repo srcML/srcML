@@ -98,11 +98,9 @@ private :
     /** has passed root*/
     bool read_root = false;
     /** stop after collecting unit attribute*/
-    bool collect_unit_attributes = false;
+    bool collect_unit_header = false;
     /** collect srcML as parse*/
-    bool collect_srcml = false;
-    /** bool collect src */
-    bool collect_src = false;
+    bool collect_unit_body = false;
 
     /** terminate */
     bool terminate = false;
@@ -531,7 +529,7 @@ public :
             }
         }
 
-        if (collect_unit_attributes) {
+        if (collect_unit_header) {
 
             // pause
             std::unique_lock<std::mutex> lock(mutex);
@@ -689,7 +687,7 @@ public :
 	    unit->srcml = state->unitsrcml;
 	    unit->src = state->unitsrc;
 
-        if (collect_srcml || collect_src) {
+        if (collect_unit_body) {
 
             // pause
             std::unique_lock<std::mutex> lock(mutex);

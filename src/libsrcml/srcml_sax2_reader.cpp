@@ -119,9 +119,9 @@ int srcml_sax2_reader::read_header(srcml_unit* unit) {
         return 0;
 
     handler.skip = true;
-    handler.collect_unit_attributes = true;
+    handler.collect_unit_header = true;
     handler.resume_and_wait();
-    handler.collect_unit_attributes = false;
+    handler.collect_unit_header = false;
     handler.skip = false;
 
     if (handler.is_done)
@@ -147,11 +147,9 @@ int srcml_sax2_reader::read_body(srcml_unit* unit) {
         return 0;
 
     handler.unit = unit;
-    handler.collect_srcml = true;
-    handler.collect_src = true;
+    handler.collect_unit_body = true;
     handler.resume_and_wait();
-    handler.collect_src = false;
-    handler.collect_srcml = false;
+    handler.collect_unit_body = false;
 
     if (handler.is_done)
         return 0;
