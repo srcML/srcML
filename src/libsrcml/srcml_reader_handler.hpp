@@ -681,13 +681,12 @@ public :
         auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
 	    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-	    unit->content_begin = state->content_begin;
-	    unit->content_end = state->content_end;
-	    unit->unit = state->unitsrcml;
-	    unit->srcml = state->unitsrcml;
-	    unit->src = state->unitsrc;
-
         if (collect_unit_body) {
+
+		    unit->content_begin = state->content_begin;
+		    unit->content_end = state->content_end;
+		    unit->srcml = std::move(state->unitsrcml);
+		    unit->src = std::move(state->unitsrc);
 
             // pause
             std::unique_lock<std::mutex> lock(mutex);

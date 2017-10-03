@@ -303,13 +303,13 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
  */
 const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit) {
 
-    if (unit == NULL || (!unit->unit && !unit->read_header))
+    if (unit == NULL || (!unit->read_body && !unit->read_header))
         return 0;
 
-    if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    return optional_to_c_str(unit->unit);
+    return optional_to_c_str(unit->srcml);
 }
 
 /**
@@ -330,13 +330,13 @@ const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit) {
  */
 int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size) {
 
-    if (unit == NULL || xml_buffer == NULL || buffer_size == NULL || (!unit->unit && !unit->read_header))
+    if (unit == NULL || xml_buffer == NULL || buffer_size == NULL || (!unit->read_body && !unit->read_header))
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    if (!unit->unit)
+    if (!unit->read_body)
         return SRCML_STATUS_ERROR;
 
     *xml_buffer = 0;
@@ -565,7 +565,7 @@ static int srcml_unit_unparse_internal(srcml_unit* unit, std::function<xmlOutput
     if (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    if (!unit->unit && !unit->read_header)
+    if (!unit->read_body && !unit->read_header)
         return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     const char* encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding, "ISO-8859-1"));
@@ -805,7 +805,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
 
     // store the output in a buffer
     // @todo check into xmlBufferDetach()
-    unit->unit = std::string((const char *)unit->output_buffer->content, unit->output_buffer->use);
+//    unit->unit = std::string((const char *)unit->output_buffer->content, unit->output_buffer->use);
 
     xmlBufferFree(unit->output_buffer);
 

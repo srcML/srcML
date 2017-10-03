@@ -1197,13 +1197,13 @@ int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
     if (archive == NULL || unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (!unit->unit && !unit->read_header)
+    if (!unit->read_body && !unit->read_header)
         return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     // if we haven't read a unit yet, go ahead and try
-    if (!unit->unit && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
-    if (!unit->unit) {
+    if (!unit->read_body) {
         return SRCML_STATUS_UNINITIALIZED_UNIT;
     }
 
@@ -1265,11 +1265,11 @@ int srcml_unit_read_body(srcml_unit* unit) {
     if (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
         return 0;
 
-    if (!unit->unit)
+    if (!unit->read_body)
         unit->archive->reader->read_body(unit);
 
     // @todo Isn't this backwards?
-    return !unit->unit;
+    return !unit->read_body;
 }
 
 /**
@@ -1296,7 +1296,7 @@ srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
         not_done = archive->reader->read_header(unit);
     archive->reader->read_body(unit);
 
-    if (!not_done || !unit->unit) {
+    if (!not_done || !unit->read_body) {
         srcml_unit_free(unit);
         unit = nullptr;
     }
@@ -1329,7 +1329,7 @@ srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
         not_done = archive->reader->read_header(unit);
     archive->reader->read_body(unit);
 
-    if (!not_done || !unit->unit) {
+    if (!not_done || !unit->read_body) {
         srcml_unit_free(unit);
         unit = nullptr;
     }

@@ -118,10 +118,12 @@ void start_document(void* ctx) {
     MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro_list", strlen("macro_list"));
     ESCAPE_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
 
+    // initialize internal sax buffer char*'s and counts
     state->base = ctxt->input->cur;
     state->prevconsumed = ctxt->input->consumed;
     state->prevbase = ctxt->input->base;
 
+    // process any upper layer start document handling
     if (state->context->handler->start_document)
         state->context->handler->start_document(state->context);
 
@@ -160,6 +162,7 @@ void end_document(void* ctx) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    // handle libxml errors
     const char* errmsg = 0;
     switch (ctxt->errNo) {
     case XML_ERR_DOCUMENT_END:
@@ -183,6 +186,7 @@ void end_document(void* ctx) {
     if (state->context->terminate)
         return;
 
+    // process any upper layer end document handling
     if (state->context->handler->end_document)
         state->context->handler->end_document(state->context);
 

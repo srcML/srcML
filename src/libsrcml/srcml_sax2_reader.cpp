@@ -131,6 +131,8 @@ int srcml_sax2_reader::read_header(srcml_unit* unit) {
 
     handler.unit = 0;
 
+    unit->read_header = true;
+
     return 1;
 }
 
@@ -155,6 +157,8 @@ int srcml_sax2_reader::read_body(srcml_unit* unit) {
 
     if (handler.is_done)
         return 0;
+
+    unit->read_body = true;
 
     return 1;
 }

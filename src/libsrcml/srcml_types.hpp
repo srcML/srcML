@@ -272,8 +272,11 @@ struct srcml_unit {
 
     boost::optional<Namespaces> namespaces;
 
-    /** store if attributes have been read */
+    // if header attributes have been read
     bool read_header = false;
+
+    // if body has been read
+    bool read_body = false;
 
     /** a buffer to store srcml from read and after parsing */
     boost::optional<std::string> unit;
