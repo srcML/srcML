@@ -1236,7 +1236,7 @@ srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
 
     srcml_unit* unit = srcml_unit_create(archive);
 
-    int not_done = archive->reader->read_unit_attributes(unit);
+    int not_done = archive->reader->read_header(unit);
     if (!not_done) {
         srcml_unit_free(unit);
         return 0;
@@ -1293,7 +1293,7 @@ srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
     if (!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(unit);
+        not_done = archive->reader->read_header(unit);
     archive->reader->read_body(unit);
 
     if (!not_done || !unit->unit) {
@@ -1326,7 +1326,7 @@ srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
     if (!unit->read_header)
-        not_done = archive->reader->read_unit_attributes(unit);
+        not_done = archive->reader->read_header(unit);
     archive->reader->read_body(unit);
 
     if (!not_done || !unit->unit) {

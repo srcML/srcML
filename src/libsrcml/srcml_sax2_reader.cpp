@@ -101,7 +101,7 @@ srcml_sax2_reader::~srcml_sax2_reader() {
 }
 
 /**
- * read_unit_attributes
+ * read_header
  * @param language a location to store the language attribute
  * @param filename a location to store the filename attribute
  * @param url a location to store the url attribute
@@ -111,7 +111,7 @@ srcml_sax2_reader::~srcml_sax2_reader() {
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcml_sax2_reader::read_unit_attributes(srcml_unit* unit) {
+int srcml_sax2_reader::read_header(srcml_unit* unit) {
 
     handler.unit = unit;
 
