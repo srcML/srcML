@@ -578,7 +578,7 @@ static int srcml_unit_unparse_internal(srcml_unit* unit, std::function<xmlOutput
     int status = -1;
     try {
 
-        if (!unit->src)
+        if (!unit->read_body)
             unit->archive->reader->read_body(unit);
 
         status = SRCML_STATUS_OK;
@@ -588,7 +588,7 @@ static int srcml_unit_unparse_internal(srcml_unit* unit, std::function<xmlOutput
         status = SRCML_STATUS_IO_ERROR;
     }
 
-    xmlOutputBufferWrite(output_handler, (int) unit->src->size(), unit->src->c_str());
+    xmlOutputBufferWrite(output_handler, (int) unit->src.size(), unit->src.c_str());
 
     xmlOutputBufferClose(output_handler);
 
