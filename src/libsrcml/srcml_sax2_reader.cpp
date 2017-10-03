@@ -171,11 +171,12 @@ int srcml_sax2_reader::read_srcml(srcml_unit* unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
+int srcml_sax2_reader::read_src(srcml_unit* unit, xmlOutputBufferPtr output_buffer) {
 
     if (handler.is_done)
         return 0;
 
+    handler.unit = unit;
     handler.output_buffer = output_buffer;
     handler.collect_src = true;
     handler.resume_and_wait();

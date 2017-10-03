@@ -60,10 +60,11 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
         return SRCML_STATUS_IO_ERROR;
 
     srcml_archive* archive = srcml_archive_create();
+    srcml_unit* ounit = srcml_unit_create(archive);
 
     srcml_sax2_reader reader(archive, input, revision_number);
 
-    reader.read_src(output_buffer);
+    reader.read_src(ounit, output_buffer);
     
     xmlFreeParserInputBuffer(input);
 
@@ -93,10 +94,11 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding), compression);
 
     srcml_archive* archive = srcml_archive_create();
+    srcml_unit* ounit = srcml_unit_create(archive);
 
     srcml_sax2_reader reader(archive, ifilename, 0, revision_number);
 
-    reader.read_src(output_buffer);
+    reader.read_src(ounit, output_buffer);
 
     xmlOutputBufferClose(output_buffer);
 

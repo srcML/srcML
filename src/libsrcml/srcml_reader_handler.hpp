@@ -688,9 +688,9 @@ public :
 
 	    unit->content_begin = state->content_begin;
 	    unit->content_end = state->content_end;
-
-//	    fprintf(stderr, "DEBUG:  %s %s %d unit->content_begin: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  unit->content_begin);
-//		fprintf(stderr, "DEBUG:  %s %s %d unit->content_end: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  unit->content_end);
+	    unit->unit = state->unitsrcml;
+	    unit->srcml = state->unitsrcml;
+	    unit->src = state->unitstr;
 
         if (collect_src) {
 

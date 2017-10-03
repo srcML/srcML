@@ -278,6 +278,9 @@ struct srcml_unit {
     /** a buffer to store srcml from read and after parsing */
     boost::optional<std::string> unit;
 
+    boost::optional<std::string> src;
+    boost::optional<std::string> srcml;
+
     /** record the begin and end of the actual content */
     // int instead of size_t since used with libxml2
     int content_begin = 0;

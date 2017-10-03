@@ -455,20 +455,24 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
   //  state->mode = UNIT;
 
+
     if (state->context->handler->start_unit)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                             nb_namespaces, namespaces,
                                             nb_attributes, attributes);
 
-    state->skip = true;
-    skip_on(ctxt);
+//    state->skip = true;
+//    skip_on(ctxt);
+
+    if (state->skip)
+    	return;
 
     // next start tag will be for a non-unit element
-    if (!state->skip && ctxt->sax->startElementNs)
+    if (ctxt->sax->startElementNs)
         ctxt->sax->startElementNs = &start_element;
 
     // characters are for the unit
-    if (!state->skip && (state->collect_src || state->collect_srcml))
+    if (state->collect_src || state->collect_srcml)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
 
     state->unitstr.clear();
@@ -528,10 +532,11 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     state->mode = END_UNIT;
 
-    if (state->context->handler->end_unit)
+    if (!state->skip && state->context->handler->end_unit)
         state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
-    ctxt->sax->startElementNs = &start_unit;
+    if (!state->skip)
+	    ctxt->sax->startElementNs = &start_unit;
 
     if (!state->skip && (state->collect_src || state->collect_srcml))
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
@@ -661,7 +666,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
             exit(1);
         }
 
-        state->content_end = (int) state->unitsrcml.size();
+        state->content_end = (int) state->unitsrcml.size() + 1;
         state->unitsrcml.append((const char*) state->base, srcmllen);
         state->base = ctxt->input->cur;
     }

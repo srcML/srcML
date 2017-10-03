@@ -580,7 +580,7 @@ static int srcml_unit_unparse_internal(srcml_unit* unit, std::function<xmlOutput
 
         if (!unit->unit) {
 
-            unit->archive->reader->read_src(output_handler);
+            unit->archive->reader->read_src(unit, output_handler);
             xmlOutputBufferClose(output_handler);
 
             return SRCML_STATUS_OK;
