@@ -687,7 +687,7 @@ public :
 	    unit->content_end = state->content_end;
 	    unit->unit = state->unitsrcml;
 	    unit->srcml = state->unitsrcml;
-	    unit->src = state->unitstr;
+	    unit->src = state->unitsrc;
 
         if (collect_srcml || collect_src) {
 

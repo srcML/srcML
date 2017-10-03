@@ -475,7 +475,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (state->collect_src || state->collect_srcml)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
 
-    state->unitstr.clear();
+    state->unitsrc.clear();
 
 //    state->unitsrcml.clear();
 
@@ -541,7 +541,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (!state->skip && (state->collect_src || state->collect_srcml))
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
-    state->maxsize = state->maxsize < state->unitstr.size() ? state->unitstr.size() : state->maxsize;
+    state->maxsize = state->maxsize < state->unitsrc.size() ? state->unitsrc.size() : state->maxsize;
 }
 
 /**
@@ -618,7 +618,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
         char value = (int)strtol(svalue.c_str(), NULL, 0);
 
-        state->unitstr.append(1, value);
+        state->unitsrc.append(1, value);
 
         return;
     }
@@ -832,7 +832,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     if (state->context->terminate)
         return;
 
-    state->unitstr.append((const char*) ch, len);
+    state->unitsrc.append((const char*) ch, len);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());

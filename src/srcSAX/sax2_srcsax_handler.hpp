@@ -80,7 +80,7 @@ struct sax2_srcsax_handler {
     /** the current parsing mode */
     srcMLMode mode = START;
 
-    std::string unitstr;
+    std::string unitsrc;
 
     std::string unitsrcml;
 
