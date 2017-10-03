@@ -65,7 +65,7 @@ int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPt
 
     srcml_sax2_reader reader(archive, input, revision_number);
 
-    reader.read_src(ounit, output_buffer);
+    reader.read_body(ounit, output_buffer);
     
     xmlFreeParserInputBuffer(input);
 
@@ -100,7 +100,7 @@ int srcml_extract_text_filename(const char * ifilename, const char * ofilename, 
 
     srcml_sax2_reader reader(archive, ifilename, 0, revision_number);
 
-    reader.read_src(ounit);
+    reader.read_body(ounit);
 
     // @todo If still used, write using unit
     

@@ -133,37 +133,7 @@ int srcml_sax2_reader::read_unit_attributes(srcml_unit* unit) {
 }
 
 /**
- * read_srcml
- * @param unit location in which to read srcML unit.
- *
- * Read the next unit from a srcML Archive
- * and return in the passed string parameter.
- *
- * @returns 1 on success and 0 if done
- */
-int srcml_sax2_reader::read_srcml(srcml_unit* unit) {
-
-    unit->unit = "";
-
-    handler.unit = unit;
-
-    if (handler.is_done)
-        return 0;
-
-    handler.collect_srcml = true;
-    handler.resume_and_wait();
-    handler.collect_srcml = false;
-
-    if (handler.is_done)
-        return 0;
-
-    handler.unit = 0;
-
-    return 1;
-}
-
-/**
- * read_src
+ * read_body
  * @param output_buffer output buffer to write text
  *
  * Read the next unit from a srcML Archive
@@ -171,15 +141,17 @@ int srcml_sax2_reader::read_srcml(srcml_unit* unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcml_sax2_reader::read_src(srcml_unit* unit) {
+int srcml_sax2_reader::read_body(srcml_unit* unit) {
 
     if (handler.is_done)
         return 0;
 
     handler.unit = unit;
+    handler.collect_srcml = true;
     handler.collect_src = true;
     handler.resume_and_wait();
     handler.collect_src = false;
+    handler.collect_srcml = false;
 
     if (handler.is_done)
         return 0;

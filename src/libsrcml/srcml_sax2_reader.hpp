@@ -90,10 +90,7 @@ public :
     int read_unit_attributes(srcml_unit* unit);
 
     // reads the next unit and returns it in parameter as srcML
-    int read_srcml(srcml_unit* unit);
-
-    // reads the next unit and returns it in parameter as src
-    int read_src(srcml_unit* unit);
+    int read_body(srcml_unit* unit);
 };
 
 #endif
