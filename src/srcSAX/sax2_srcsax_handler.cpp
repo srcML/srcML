@@ -735,7 +735,7 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
  * SAX handler function for character handling at the root level.
  * Immediately calls supplied handlers function.
  */
-void characters_root(void* ctx, const xmlChar* ch, int len) {
+void characters_root(void* ctx, const xmlChar* /* ch */, int /* len */) {
 
 #ifdef SRCSAX_DEBUG
     std::string chars;
