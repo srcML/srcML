@@ -439,6 +439,8 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
     if (status != SRCML_STATUS_OK)
         return status;
 
+    unit->read_body = true;
+
     return status;
 }
 
@@ -805,7 +807,8 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
 
     // store the output in a buffer
     // @todo check into xmlBufferDetach()
-//    unit->unit = std::string((const char *)unit->output_buffer->content, unit->output_buffer->use);
+    unit->srcml.clear();
+    unit->srcml.append((const char *)unit->output_buffer->content, unit->output_buffer->use);
 
     xmlBufferFree(unit->output_buffer);
 
