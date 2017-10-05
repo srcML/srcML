@@ -234,6 +234,8 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     // handle nested units
     ctxt->sax->startElementNs = &start_element_start;
 
+    state->endfirstelement = ctxt->input->cur + 1;
+
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -368,8 +370,6 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (!state->is_archive) {
 
         state->mode = UNIT;
-
-        state->endfirstelement = ctxt->input->cur;
 
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                         state->root.nb_namespaces, state->root.namespaces.data(),
