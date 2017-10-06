@@ -314,6 +314,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         }
     }
 
+    state->base = ctxt->input->cur;
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -428,11 +429,13 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->collect_unit_body) {
+
         update_ctx(ctx);
 
         std::string starttag;
         if (state->endfirstelement) {
-            starttag = std::string((const char*) state->base, state->endfirstelement - state->base);
+            starttag = std::string((const char*) state->endfirstelement, state->base - state->endfirstelement);
+//            starttag = std::string((const char*) state->base, state->endfirstelement - state->base);
             state->base = state->endfirstelement;
             state->endfirstelement = 0;
         } else {
@@ -735,7 +738,7 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
  * SAX handler function for character handling at the root level.
  * Immediately calls supplied handlers function.
  */
-void characters_root(void* ctx, const xmlChar* /* ch */, int /* len */) {
+void characters_root(void* ctx, const xmlChar* ch, int len) {
 
 #ifdef SRCSAX_DEBUG
     std::string chars;
@@ -755,8 +758,10 @@ void characters_root(void* ctx, const xmlChar* /* ch */, int /* len */) {
     if (state->collect_unit_body) {
         update_ctx(ctx);
 
-		if (!state->first_root_char)
-	        state->base = ctxt->input->cur;
+//		if (!state->first_root_char)
+	      //  state->base = ctxt->input->cur;
+
+
     }
     state->first_root_char = false;
 
