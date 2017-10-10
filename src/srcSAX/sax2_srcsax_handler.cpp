@@ -428,6 +428,8 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+	state->collect_unit_body = false;
+
     if (state->collect_unit_body) {
 
         update_ctx(ctx);
@@ -466,7 +468,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
                                             nb_attributes, attributes);
 
 //    state->skip = true;
-//    skip_on(ctxt);
+    skip_on(ctxt);
 
     if (!state->collect_unit_body)
     	return;
