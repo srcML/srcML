@@ -476,8 +476,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         ctxt->sax->startElementNs = &start_element;
 
     // characters are for the unit
-    if (state->collect_unit_body)
-        ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
+    ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
 
     state->unitsrc.clear();
 
@@ -515,8 +514,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (!state->skip && state->context->handler->end_unit)
         state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
-    if (state->collect_unit_body)
-	    ctxt->sax->startElementNs = &start_unit;
+    ctxt->sax->startElementNs = &start_unit;
 
     if (state->collect_unit_body)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
