@@ -12,4 +12,4 @@ jobs:
         - run: cd build && cmake -DCMAKE_BUILD_TYPE=Debug ..
         - run: cd build && make
         - run: ln -s build/bin bin
-        - run: cd test/parser && make
+        - run: cd test/parser && ./runtest.py
