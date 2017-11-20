@@ -18,9 +18,9 @@ Out of source builds (builds outside the source directory) are recommended, howe
 
 * The following make commands are supported with their usual meaning
 
-	`make`  
-	`make clean`  
- 	`make test`
+    `make`  
+    `make clean`  
+    `make test`
 
     Tests are enabled by default, but can be disabled by editing the file `CMake/config.cmake`. Search for the section "Turn ON/OFF Tests", which contains a list of all test categories. For example, the CLI tests can be turned off by changing the line
     ```bash
@@ -62,7 +62,7 @@ Distribution of dmg/pkg:
 
 * OS X does not install header files for libarchive. You can download these from Apple's:
 
-    * [archive.h](http://www.opensource.apple.com/source/libarchive/libarchive-30/libarchive/libarchive/archive.h?txt)
+    * [archive.h](https://opensource.apple.com/source/libarchive/libarchive-41.70.1/libarchive/libarchive/archive.h)
     * [archive_entry.h](http://www.opensource.apple.com/source/libarchive/libarchive-30/libarchive/libarchive/archive_entry.h?txt)
 
 * PackageMaker is currently being used. However, it is deprecated and no longer available. A conversion to pkgbuild is in progress
@@ -151,12 +151,12 @@ install the lastest version of cmake.
 * There is no man2html package on OpenSUSE for srcML documentation
 generation. The url is:
 
-	`http://www.oit.uci.edu/indiv/ehood/tar/man2html3.0.1.tar.gz`
+    `http://www.oit.uci.edu/indiv/ehood/tar/man2html3.0.1.tar.gz`
 
 * Use the following to install as ./install.me does not appear to use
 the right location
 
-	perl install.me
+    perl install.me
 
 * libantlr was not compiled with -fPIC for 64-bit (at least for 13.2). To do so,
 change line 59 of scripts/cxx.sh.in to `cxxflags="-felide-constructors -pipe -fPIC"`.
@@ -199,56 +199,74 @@ to download and install the lastest version of cmake.
 
 * The boost libraries are statically compiled in, 64-bit machines do not provide adequate libraries for static compilation (require compilation with -fPIC). Download boost at http://www.boost.org. The commands to build boost are:
 
-	`./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave`
+    `./bootstrap.sh --without-libraries=atomic,chrono,context,coroutine,exception,graph,graph_parallel,iostreams,locale,log,math,mpi,python,random,serialization,signals,test,timer,wave`
 
 
-	`./b2 link=static cxxflags="-fPIC -static -Wl,--whole-archive" threading=multi install`
+    `./b2 link=static cxxflags="-fPIC -static -Wl,--whole-archive" threading=multi install`
 
 ---
 
 ## Windows Using MSVC
 
-Building in Windows requires that you have MSVC installed. Visual Studio 12.0 Express or newer is known to work, while older versions have not been tested.
+Building in Windows requires that you have MSVC installed. Visual Studio 2015 or newer is known to work, while older versions have not been tested.
 
 ## Packages
 
-* [Python 2.7.XX](https://www.python.org/downloads/release/python-2710/)
+* [Python 2.7.XX](https://www.python.org/downloads/)
 * [CMake](http://www.cmake.org)
-* [Visual Studio 12](http://www.microsoft.com/en-us/download/details.aspx?id=34673)
-* Zipped [Build Dependencies](http://www.sdml.info/build/srcml_windows_build_dependencies.zip)
-* Zipped [Executable Dependencies](http://www.sdml.info/build/srcml_windows_exe_dependencies.zip)
+* [Visual Studio 2015 or later](https://www.visualstudio.com/downloads/)
+* Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-VS2017.zip)
+* Zipped [Visual Studio 2015 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-VS2015.zip)
 
 ##### Instructions
-* Install Visual Studio 12.0 or newer, CMake, and Python
+* Install Visual Studio 2015 or newer, CMake, and Python 2.7.XX
 * Locate the source code for srcML
-* Extract the zipped [build dependencies](http://www.sdml.info/build/srcml_windows_build_dependencies.zip), srcml_windows_build_dependencies.zip, into the srcML folder.
-    * The extracted folder will be named dep, and its structure will look like the following:
+* Extract the zipped build dependencies
+    * The extracted folder will be named deps, and its structure will look like the following:
     ```
-        dep/
-            bin/
+        deps/
             include/
-            lib/
+            tools/
+            x64/
+            x86/
     ```        
     * When copied into the srcML source code directory the result should look like the following:
     ```
         srcML/
                 bindings/
-                cli/
+                BUILD.md
                 CMake/
-                dep/
-                    bin/
+                CMakeLists.txt
+                COPYING.txt
+                CTestConfig.cmake
+                deps/
                     include/
-                    lib/
+                    tools/
+                    x64/
+                    x86/
                 doc/
                 ...etc...
     ```
-* Run CMake on the project using the CMake GUI program. Select the appropriate Visual Studio as the target system. At this tyme, 64-it compilation under Windows is not supported. Note that it's best practice to have CMake output into a separate directory, as this can cause problems if you decide to rebuild later on. Configure and generate CMake.
+* NOTES:
+    * Building srcml should be done in a separate directory external to the source code to avoid issues
+    * If Python 2.7.XX is not in the windows PATH environment variable, you may need to provide CMake with the path to python.exe
+* Graphical Interface Build:
+    * Open the CMake GUI program.
+    * Browser for the srcML source code directory and your target build directory
+    * Hit configure and select the appropriate Visual Studio version and architecture (x86 or x64) as the target system.
+    * Click Generate
+    * Open srcML.sln with Visual Studio located in your the target build directory
+    * Right click Project "ALL_BUILD" and choose "build"
+* Command Line Buid:
+    * Generate the build files in your target build directory.
+    ```
+        cmake [path to srcML source directory] -G [target visual studio version and architecture]   
+        ex. cmake ..\srcML\ -G "Visual Studio 15 2017 Win64"
+    ```
+    * Execute the build.
+    ```
+        cmake --build . --config [build mode]
+        ex. cmake --build . --config release
+    ```
 
-* Locate the CMake build output directory and open the solution `srcML.sln`. When the solution loads, change the Solution Configuration from `Debug` to `Release`. A debug version of srcML under windows is not supported.
-
-* Build solution. Once built, locate the build folder. Within that folder there is now a folder named `bin/Release` containing the srcML executable and libraries. Extract the dlls from the zipped [executable dependencies](http://www.sdml.info/build/srcml_windows_exe_dependencies.zip) to `bin/Release` for dynamic linking.
-
-
-##### Notes
-
-* The boost and antlr libraries provided were built for Visual Studio 12. If you are using a different version of Visual Studio, these will need to be compiled separately and replace the libraries in the dependency folder.
+* Once built, locate the build folder. Within that folder there is now a directory named `bin` containing the release or debug versions of srcML executable and library along with all other dependencies.

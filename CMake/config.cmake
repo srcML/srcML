@@ -66,27 +66,37 @@ endif()
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
 if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+
+    if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
+        set(BUILD_ARCH "x86")
+    else()
+        set(BUILD_ARCH "x64")
+    endif()
+
     add_definitions(-DWITH_LIBXSLT)
-    # Adding suspected windows include directory for ANTRL
-    # include_directories("C:/antlr/277/include/antlr")
-    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/dep)
+    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
+
     include_directories(${WINDOWS_DEP_PATH}/include)
-    include_directories(${WINDOWS_DEP_PATH}/include/antlr)
-    link_directories(${WINDOWS_DEP_PATH}/lib)
+    link_directories(${WINDOWS_DEP_PATH}/${BUILD_ARCH}/$(ConfigurationName)/lib)
+    
     if(ENABLE_SVN_INTEGRATION)
         message(FATAL_ERROR "SVN integration not tested on windows.")
     endif()
-    # FIXME
+    
     set(LIBXSLT_LIBRARIES libxslt.lib)
     set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)
     set(LibArchive_LIBRARIES archive.lib)
-    set(LIBXML2_LIBRARIES libxml2.lib iconv.lib)
+    set(LIBXML2_LIBRARIES libxml2.lib libiconv.lib)
     set(CURL_LIBRARIES libcurl.lib)
-    # include_directories(C:/antlr/277/include)
-    # include_directories()
-    set(BOOST_DIR ${WINDOWS_DEP_PATH})
-    include_directories(${BOOST_DIR}/include)
-    link_directories(${BOOST_DIR}/lib/stage/lib)
+    set(ANTLR_LIBRARY antlr.lib)
+
+    set(Boost_NO_SYSTEM_PATHS ON)
+    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release/lib)
+    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug/lib)
+    set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
+    set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
+    find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
+
 else()
 
     set(WINDOWS_DEP_PATH "")
@@ -100,7 +110,7 @@ else()
     find_package(Iconv REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
-    find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
+    find_package(Boost COMPONENTS program_options filesystem system date_time REQUIRED)
 
     # add include directories
     include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
@@ -116,20 +126,19 @@ else()
         add_definitions(-DWITH_LIBXSLT)
     endif()
 
+    # Locating the antlr library.
+    find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
 
 endif()
-
-# Locating the antlr library.
-find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 if(DYNAMIC_LOAD_ENABLED)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${ICONV_LIBRARIES} dl pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
 elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC" AND NOT WIN32)
-    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} pthread
+    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${ICONV_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
 elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} pthread
+    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${ICONV_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
 else()
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} ${Boost_LIBRARIES} ${ANTLR_LIBRARY}
@@ -152,8 +161,8 @@ else()
 endif()
 
 
-# Finding antlr library.
-find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/bin)
+# Finding antlr binary.
+find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
 
 find_package(PythonInterp REQUIRED)
 

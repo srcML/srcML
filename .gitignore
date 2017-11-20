@@ -8,6 +8,7 @@
 bin
 dist
 dep
+deps
 src/parser/PhaseOne.txt
 
 
