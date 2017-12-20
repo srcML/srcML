@@ -215,13 +215,13 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2015 or
 * [Python 2.7.XX](https://www.python.org/downloads/release/python-2710/)
 * [CMake](http://www.cmake.org)
 * [Visual Studio 2015 or later](https://www.visualstudio.com/downloads/)
-* Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.info/build/srcml_windows_build_dependencies.zip)
-* Zipped [Visual Studio 2015 Build Dependencies](http://www.sdml.info/build/srcml_windows_exe_dependencies.zip)
+* Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-VS2017.zip)
+* Zipped [Visual Studio 2015 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-VS2015.zip)
 
 ##### Instructions
 * Install Visual Studio 2015 or newer, CMake, and Python 2.7.XX
 * Locate the source code for srcML
-* Extract the zipped build dependencies ([VS2017](), [VS2015]())
+* Extract the zipped build dependencies ([VS2017](http://www.sdml.cs.kent.edu/build/deps-VS2017.zip), [VS2015](http://www.sdml.cs.kent.edu/build/deps-VS2015.zip))
     * The extracted folder will be named deps, and its structure will look like the following:
     ```
         deps/
