@@ -400,12 +400,16 @@ specnum = 0
 speclang = ""
 if len(sys.argv) == 3:
     result = sys.argv[2]
+    if result == "CS":
+        result = "C#"
     if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" or result == "C++11" or result == "AspectJ":
         speclang = result
     else:
         specnum = int(sys.argv[2])
 elif len(sys.argv) == 2:
     result = sys.argv[1]
+    if result == "CS":
+        result = "C#"
     if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" or result == "C++11" or result == "AspectJ":
         speclang = result
         specname = ""

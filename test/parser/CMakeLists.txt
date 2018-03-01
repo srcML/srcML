@@ -20,3 +20,13 @@
 copyDependentFile("runtest.py")
 
 add_subdirectory(testsuite)
+
+# Collection of targest to manage parser testing, and parser test reports
+add_custom_target(runtest COMMAND time ./runtest.py)
+add_custom_target(runtest-c COMMAND time ./runtest.py C)
+add_custom_target(runtest-java COMMAND time ./runtest.py Java)
+add_custom_target(runtest-cpp COMMAND time ./runtest.py C++)
+add_custom_target(runtest-cs COMMAND time ./runtest.py CS)
+add_custom_target(cleantest COMMAND rm srcMLTestReport*.txt)
+add_custom_target(purgetest COMMAND ls -t srcMLTestReport*.txt | sed '1d' | xargs rm)
+add_custom_target(cattest COMMAND ls -t srcMLTestReport*.txt | head -1 | xargs cat)
