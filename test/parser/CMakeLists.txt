@@ -17,14 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB PARSER_TESTS *.xml)
+copyDependentFile("runtest.py")
 
-if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
-
-foreach(FILE ${PARSER_TESTS})
-
-    copyDependentFile(${FILE})
-
-endforeach()
-
-endif()
+add_subdirectory(testsuite)
