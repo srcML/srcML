@@ -21,12 +21,15 @@ copyDependentFile("runtest.py")
 
 add_subdirectory(testsuite)
 
+add_custom_target(gentest COMMAND cd testsuite && make -f Makefile.gen)
+add_custom_target(cleantest COMMAND cd testsuite && make -f Makefile.gen clean)
+
 # Collection of targest to manage parser testing, and parser test reports
-add_custom_target(runtest COMMAND time ./runtest.py)
+add_custom_target(run COMMAND time ./runtest.py)
 add_custom_target(c COMMAND time ./runtest.py C)
 add_custom_target(java COMMAND time ./runtest.py Java)
 add_custom_target(cpp COMMAND time ./runtest.py C++)
 add_custom_target(cs COMMAND time ./runtest.py CS)
-add_custom_target(cleantest COMMAND rm srcMLTestReport*.txt)
-add_custom_target(purgetest COMMAND ls -t srcMLTestReport*.txt | sed '1d' | xargs rm)
-add_custom_target(cattest COMMAND ls -t srcMLTestReport*.txt | head -1 | xargs cat)
+add_custom_target(cleanreport COMMAND rm srcMLTestReport*.txt)
+add_custom_target(purge COMMAND ls -t srcMLTestReport*.txt | sed '1d' | xargs rm)
+add_custom_target(report COMMAND ls -t srcMLTestReport*.txt | head -1 | xargs cat)
