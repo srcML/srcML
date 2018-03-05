@@ -169,12 +169,12 @@ find_package(PythonInterp REQUIRED)
 # Enforcing that the version of python being used must have a major version of 2.
 # and the minor version be greater than version 6 (this means version 2.7 of python 
 # version 2 or newer).
-if(NOT ${PYTHON_VERSION_MAJOR} EQUAL "2")
-    message(FATAL_ERROR "Version of python found is not 2.X.X")
-    if(${PYTHON_VERSION_MINOR} LESS EQUAL 6)
-        message(FATAL_ERROR "Version of python found is not 2.6.X")
-    endif()
-endif()
+#if(NOT ${PYTHON_VERSION_MAJOR} EQUAL "2")
+#    message(FATAL_ERROR "Version of python found is not 2.X.X")
+#    if(${PYTHON_VERSION_MINOR} LESS EQUAL 6)
+#        message(FATAL_ERROR "Version of python found is not 2.6.X")
+#    endif()
+#endif()
 
 if(EXISTS ${Boost_INCLUDE_DIR}/boost/mpl/vector/vector150_c.hpp)
     add_definitions(-DSRCML_BOOST_MPL_LARGE)
