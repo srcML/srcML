@@ -193,9 +193,10 @@ public :
 
         // @todo detect error
         buf = output_archive->translator->output_buffer();
-
+#if 0
 #ifdef _MSC_BUILD
         buf->writecallback = (xmlOutputWriteCallback)_write;
+#endif
 #endif
     }
     

@@ -17,26 +17,13 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB PARSER_TESTS *.xml)
+file(GLOB PYTHON_WRAPPER *.pyc)
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
-copyDependentFile("Makefile.gen")
-copyDependentFile("suite.txt")
-
-foreach(FILE ${PARSER_TESTS})
+foreach(FILE ${PYTHON_WRAPPER})
 
     copyDependentFile(${FILE})
-
-endforeach()
-
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl)
-
-file(GLOB XSL_TRANS ./xsl/*)
-
-foreach(FILE ${XSL_TRANS})
-
-	file(COPY ${FILE} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/xsl)
 
 endforeach()
 

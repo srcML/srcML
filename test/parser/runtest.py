@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 ##
 # @file testsuite.py
@@ -39,11 +39,11 @@ xml_filename = ""
 
 srcmltranslator = os.environ.get("SRC2SRCML")
 if srcmltranslator == "" or srcmltranslator == None:
-    srcmltranslator = "../../bin/src2srcml"
+    srcmltranslator = "../../bin/srcml"
 
 srcmlutility = os.environ.get("SRCML2SRC")
 if srcmlutility == "" or srcmlutility == None:
-    srcmlutility = "../../bin/srcml2src"
+    srcmlutility = "../../bin/srcml"
 
 # Walk into directories in filesystem
 # Ripped from os module and slightly modified
@@ -400,12 +400,16 @@ specnum = 0
 speclang = ""
 if len(sys.argv) == 3:
     result = sys.argv[2]
+    if result == "CS":
+        result = "C#"
     if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" or result == "C++11" or result == "AspectJ":
         speclang = result
     else:
         specnum = int(sys.argv[2])
 elif len(sys.argv) == 2:
     result = sys.argv[1]
+    if result == "CS":
+        result = "C#"
     if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java" or result == "C++11" or result == "AspectJ":
         speclang = result
         specname = ""

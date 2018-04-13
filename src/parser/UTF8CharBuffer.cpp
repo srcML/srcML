@@ -375,13 +375,8 @@ ssize_t UTF8CharBuffer::readChars() {
 
         // raw input characters
         // after call to iconv(), linbuf will point to start of any 
-        // incomplete multibyte sequences that were not cooked
-        #ifndef _MSC_BUILD
-            char* linbuf = raw.data();
-        #else
-            // Current windows build required linbuf to be const
-            const char* linbuf = raw.data();
-        #endif
+        // incomplete multibyte sequences that were not cooked     
+        char* linbuf = raw.data();
         inbytesleft = raw.size();
 
         // cooked (encoded in UTF-8) input characters
