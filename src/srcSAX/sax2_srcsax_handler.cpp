@@ -25,6 +25,8 @@
 #include <sax2_srcsax_handler.hpp>
 #include <string>
 
+#define SRCSAX_DEBUG
+
 /**
  * factory
  *
@@ -766,6 +768,10 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     }
     state->first_root_char = false;
+
+    // since there are root characters, the end of the first element has to be adjusted to
+    // include the whitespace
+    state->endfirstelement += 2;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
