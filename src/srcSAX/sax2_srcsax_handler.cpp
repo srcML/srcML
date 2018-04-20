@@ -445,17 +445,18 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->prev_start = false;
 
-	//state->collect_unit_body = false;
+    update_ctx(ctx);
+
+    // if not the first unit, need to extract the unit start tag
+    if (state->collect_unit_body && state->unit_start_tag.empty()) {
+        state->unit_start_tag = std::string((const char*) state->base, ctxt->input->cur - state->base + 1);
+    }
+
+    if (state->unit_start_tag.empty()) {
+        state->base = ctxt->input->cur + 1;
+    }
 
     if (state->collect_unit_body) {
-
-        update_ctx(ctx);
-
-        // if not the first unit, need to extract the unit start tag
-        if (state->unit_start_tag.empty()) {
-            state->unit_start_tag = std::string((const char*) state->base, ctxt->input->cur - state->base + 1);
-            state->base = ctxt->input->cur + 1;
-        }
 
         if (state->is_archive) {
             // find end of unit tag
@@ -620,11 +621,11 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
     state->base += 1;
 
+    update_ctx(ctx);
+
     if (state->collect_unit_body) {
 
         if (state->start_element_tag.empty()) {
-
-            update_ctx(ctx);
 
             auto srcmllen = ctxt->input->cur + 1 - state->base;
             if (srcmllen < 0) {
@@ -635,16 +636,15 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
             fprintf(stderr, "DEBUG:  %s %s %d curelement: %s\n", __FILE__,  __FUNCTION__, __LINE__,  curelement.c_str());
 #endif
             state->unitsrcml.append(curelement);
-            state->base = ctxt->input->cur + 1;
         } else {
             state->unitsrcml.append(state->start_element_tag);
-            state->base = ctxt->input->cur;
         }
 #ifdef UNITSRCML_DEBUG
         fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: \n|%s|\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
 #endif
     }
 
+///    state->base = ctxt->input->cur + (state->start_element_tag.empty() ? 1 : 0);
     // Special element <escape char="0x0c"/> used to embed non-XML characters
     // extract the value of the char attribute and add to the src (text)
     if (state->collect_unit_body && localname == ESCAPE_ENTRY) {
@@ -694,11 +694,13 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     if (!state->collect_unit_body && ctxt->nodeNr > 2)
     	return;
     
-    if (state->collect_unit_body) {
-        update_ctx(ctx);
+    update_ctx(ctx);
 
-        if (state->prev_start)
+    if (state->collect_unit_body) {
+
+        if (state->prev_start) {
             state->base += 1;
+        }
 
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
@@ -829,9 +831,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     if (state->context->terminate)
         return;
 
-    if (state->collect_unit_body) {
-        update_ctx(ctx);
-    }
+    update_ctx(ctx);
 
     state->first_root_char = false;
 
@@ -872,10 +872,10 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     state->prev_start = false;
 
+    update_ctx(ctx);
+
     if (!state->collect_unit_body)
         return;
-
-    update_ctx(ctx);
 
     // append the characters in their raw state (unescaped ?)
     if (ctxt->input->cur - state->base == 0) {
