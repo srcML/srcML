@@ -25,8 +25,6 @@
 #include <sax2_srcsax_handler.hpp>
 #include <string>
 
-#define SRCSAX_DEBUG
-
 /**
  * factory
  *
@@ -239,6 +237,8 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     ctxt->sax->startElementNs = &start_element_start;
 
     state->endfirstelement = ctxt->input->cur + 1;
+    state->root_start_tag = std::string((const char*) state->base, state->endfirstelement - state->base);
+    state->base = state->endfirstelement;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -352,6 +352,9 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    std::string start_element_tag((const char*) state->base, ctxt->input->cur + 1 - state->base);
+    state->base = ctxt->input->cur + 1;
+
     // if macros are found, then must return, but first save them if necessary
     if (localname == MACRO_LIST_ENTRY) {
 
@@ -375,7 +378,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (!state->is_archive) {
 
         state->mode = UNIT;
-
+        state->unit_start_tag = state->root_start_tag;
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                         state->root.nb_namespaces, state->root.namespaces.data(),
                         state->root.nb_attributes, 0, state->root.attributes.data());
@@ -383,7 +386,9 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
         characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
       //  state->characters.clear();
 
+        state->start_element_tag = start_element_tag;
         start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
+        state->start_element_tag.clear();
 
     } else {
         
@@ -391,9 +396,10 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
 //        state->characters.clear();
 
         state->mode = UNIT;
-
+        state->unit_start_tag = start_element_tag;
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
+    state->unit_start_tag.clear();
 
     if (state->context->terminate)
         return;
@@ -432,29 +438,35 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-	state->collect_unit_body = false;
+	//state->collect_unit_body = false;
 
     if (state->collect_unit_body) {
 
         update_ctx(ctx);
 
-        std::string starttag;
-        if (state->endfirstelement) {
-            starttag = std::string((const char*) state->endfirstelement, state->base - state->endfirstelement);
-//            starttag = std::string((const char*) state->base, state->endfirstelement - state->base);
-            state->base = state->endfirstelement;
-            state->endfirstelement = 0;
-        } else {
-            starttag = std::string((const char*) state->base, ctxt->input->cur - state->base + 1);
+        // if not the first unit, need to extract the unit start tag
+        if (state->unit_start_tag.empty()) {
+            state->unit_start_tag = std::string((const char*) state->base, ctxt->input->cur - state->base + 1);
             state->base = ctxt->input->cur + 1;
         }
-        // find end of unit tag
-        int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
 
-        state->unitsrcml = starttag.substr(0, pos);
-        state->unitsrcml += state->rootnsstr;
-        state->unitsrcml += starttag.substr(pos);
+        if (state->is_archive) {
+            // find end of unit tag
+            int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
+
+            // merge the namespaces from the root into this one
+            // TODO: Only necessary for archive
+            state->unitsrcml = state->unit_start_tag.substr(0, pos);
+            state->unitsrcml += state->rootnsstr;
+            state->unitsrcml += state->unit_start_tag.substr(pos);
+        } else {
+            state->unitsrcml = state->unit_start_tag;
+        }
+
         state->content_begin = (int) state->unitsrcml.size();
+
+        std::string current = state->unitsrcml.substr(0, state->content_begin - 1);
+
     }
 
     if (state->context->terminate)
@@ -585,15 +597,22 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     if (state->collect_unit_body) {
-        update_ctx(ctx);
 
-        auto srcmllen = ctxt->input->cur + 1 - state->base;
-        if (srcmllen < 0) {
-//            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-            exit(1);
+        if (state->start_element_tag.empty()) {
+
+            update_ctx(ctx);
+            auto srcmllen = ctxt->input->cur + 1 - state->base;
+            if (srcmllen < 0) {
+                exit(1);
+            }
+            state->unitsrcml.append((const char*) state->base, srcmllen);
+            std::string curelement = std::string((const char*) state->base, srcmllen);
+
+            state->base = ctxt->input->cur;
+        } else {
+            state->unitsrcml.append(state->start_element_tag);
+            state->base = ctxt->input->cur;
         }
-        state->unitsrcml.append((const char*) state->base, srcmllen);
-        state->base = ctxt->input->cur + 1;
     }
 
     if (state->collect_unit_body && localname == ESCAPE_ENTRY) {
@@ -606,6 +625,8 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
         return;
     }
+
+    state->base = ctxt->input->cur;
 
     if (state->context->terminate)
         return;
@@ -646,7 +667,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
-//            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
             exit(1);
         }
 
@@ -793,7 +813,6 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     std::string chars;
     chars.append((const char *)ch, len);
     fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
-    fprintf(stderr, "DEBUG:  %s %s %d len: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  len);
 #endif
 
     if (ctx == nullptr)
