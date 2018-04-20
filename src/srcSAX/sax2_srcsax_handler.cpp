@@ -77,6 +77,8 @@ static const xmlChar* UNIT_ENTRY = nullptr;
 static const xmlChar* MACRO_LIST_ENTRY = nullptr;
 static const xmlChar* ESCAPE_ENTRY = nullptr;
 
+// updates the state being used to extract XML directly from the context
+// necessary because as libxml buffers are full, data is moved
 static void update_ctx(void* ctx) {
 
     if (ctx == nullptr)
@@ -106,7 +108,7 @@ static void update_ctx(void* ctx) {
 void start_document(void* ctx) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "BEGIN: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
     if (ctx == nullptr)
@@ -117,6 +119,7 @@ void start_document(void* ctx) {
 
     // setup dictionary lookup for common elements
     UNIT_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", 4);
+
     MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro_list", strlen("macro_list"));
     ESCAPE_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
 
@@ -140,7 +143,7 @@ void start_document(void* ctx) {
         return;
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "END: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 }
 
@@ -155,7 +158,7 @@ void start_document(void* ctx) {
 void end_document(void* ctx) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "BEGIN: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
     if (ctx == nullptr)
@@ -193,7 +196,7 @@ void end_document(void* ctx) {
         state->context->handler->end_document(state->context);
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "END: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 }
 
@@ -217,7 +220,7 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
                int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
     if (ctx == nullptr)
@@ -241,7 +244,7 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     state->base = state->endfirstelement;
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
 
@@ -265,7 +268,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
                int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
     if (ctx == nullptr)
@@ -319,8 +322,9 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     }
 
     state->base = ctxt->input->cur;
+    state->prev_start = false;
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
 /**
@@ -343,7 +347,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
                          int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
     if (ctx == nullptr)
@@ -406,7 +410,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
         return;
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
 
@@ -430,7 +434,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
                int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
     if (ctx == nullptr)
@@ -438,6 +442,8 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+
+    state->prev_start = false;
 
 	//state->collect_unit_body = false;
 
@@ -463,11 +469,15 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         } else {
             state->unitsrcml = state->unit_start_tag;
         }
-
+#ifdef UNITSRCML_DEBUG
+        fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: \n|%s|\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
+#endif
         state->content_begin = (int) state->unitsrcml.size();
 
-        std::string current = state->unitsrcml.substr(0, state->content_begin - 1);
-
+        std::string rootstr = state->unitsrcml.substr(0, state->content_begin - 1);
+#ifdef UNITSRCML_DEBUG
+        fprintf(stderr, "DEBUG:  %s %s %d rootstr: |%s|\n", __FILE__,  __FUNCTION__, __LINE__,  rootstr.c_str());
+#endif
     }
 
     if (state->context->terminate)
@@ -491,7 +501,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     	return;
 
     // next start tag will be for a non-unit element
-    if (ctxt->sax->startElementNs)
+//    if (ctxt->sax->startElementNs)
         ctxt->sax->startElementNs = &start_element;
 
     // characters are for the unit
@@ -499,11 +509,8 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->unitsrc.clear();
 
-//    state->unitsrcml.clear();
-
-
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
 
@@ -519,7 +526,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
     if (ctx == nullptr)
@@ -527,6 +534,8 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+
+    state->prev_start = false;
 
     state->mode = END_UNIT;
 
@@ -539,6 +548,10 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
     state->maxsize = state->maxsize < state->unitsrc.size() ? state->unitsrc.size() : state->maxsize;
+
+#ifdef SRCSAX_DEBUG
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
 }
 
 /**
@@ -553,7 +566,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
     if (ctx == nullptr)
@@ -562,10 +575,16 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    state->prev_start = false;
+
     state->base = ctxt->input->cur;
 
     if (state->context->handler->end_root)
         state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+
+#ifdef SRCSAX_DEBUG
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
 }
 
 /**
@@ -588,7 +607,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
                     int /* nb_attributes */, int /* nb_defaulted */, const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
     if (ctx == nullptr)
@@ -597,25 +616,37 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    state->prev_start = true;
+
+    state->base += 1;
+
     if (state->collect_unit_body) {
 
         if (state->start_element_tag.empty()) {
 
             update_ctx(ctx);
+
             auto srcmllen = ctxt->input->cur + 1 - state->base;
             if (srcmllen < 0) {
                 exit(1);
             }
-            state->unitsrcml.append((const char*) state->base, srcmllen);
             std::string curelement = std::string((const char*) state->base, srcmllen);
-
-            state->base = ctxt->input->cur;
+#ifdef UNITSRCML_DEBUG
+            fprintf(stderr, "DEBUG:  %s %s %d curelement: %s\n", __FILE__,  __FUNCTION__, __LINE__,  curelement.c_str());
+#endif
+            state->unitsrcml.append(curelement);
+            state->base = ctxt->input->cur + 1;
         } else {
             state->unitsrcml.append(state->start_element_tag);
             state->base = ctxt->input->cur;
         }
+#ifdef UNITSRCML_DEBUG
+        fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: \n|%s|\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
+#endif
     }
 
+    // Special element <escape char="0x0c"/> used to embed non-XML characters
+    // extract the value of the char attribute and add to the src (text)
     if (state->collect_unit_body && localname == ESCAPE_ENTRY) {
 
         std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
@@ -633,7 +664,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
         return;
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
 
@@ -651,7 +682,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
     if (ctx == nullptr)
@@ -666,15 +697,29 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     if (state->collect_unit_body) {
         update_ctx(ctx);
 
+        if (state->prev_start)
+            state->base += 1;
+
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
             exit(1);
         }
 
         state->content_end = (int) state->unitsrcml.size() + 1;
-        state->unitsrcml.append((const char*) state->base, srcmllen);
+        std::string current((const char*) state->base, srcmllen);
+        state->unitsrcml.append(current);
+#ifdef UNITSRCML_DEBUG
+        fprintf(stderr, "DEBUG:  %s %s %d current: |%s|\n", __FILE__,  __FUNCTION__, __LINE__,  current.c_str());
+        fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: \n|%s|\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
+#endif
         state->base = ctxt->input->cur;
     }
+
+    state->prev_start = false;
+
+#ifdef SRCSAX_DEBUG
+    fprintf(stderr, "PARTIALEND: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+#endif
 
     if (localname == MACRO_LIST_ENTRY)
         return;
@@ -715,7 +760,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         return;
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
 
@@ -734,7 +779,7 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
 #ifdef SRCSAX_DEBUG
     std::string chars;
     chars.append((const char *)ch, len);
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
     if (ctx == nullptr)
@@ -743,6 +788,8 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    state->prev_start = false;
+
     state->base = ctxt->input->cur;
 
     // cache the characters since we don't know if in unit or outer archive
@@ -750,7 +797,7 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
     state->characters.append((const char *)ch, len);
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 }
 
@@ -768,7 +815,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 #ifdef SRCSAX_DEBUG
     std::string chars;
     chars.append((const char *)ch, len);
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
     if (ctx == nullptr)
@@ -777,17 +824,15 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    state->prev_start = false;
+
     if (state->context->terminate)
         return;
 
     if (state->collect_unit_body) {
         update_ctx(ctx);
-
-//		if (!state->first_root_char)
-	      //  state->base = ctxt->input->cur;
-
-
     }
+
     state->first_root_char = false;
 
     // since there are root characters, the end of the first element has to be adjusted to
@@ -795,7 +840,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     state->endfirstelement += 2;
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 }
 
@@ -813,7 +858,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 #ifdef SRCSAX_DEBUG
     std::string chars;
     chars.append((const char *)ch, len);
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
+    fprintf(stderr, "BEGIN: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 
     if (ctx == nullptr)
@@ -822,6 +867,11 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    if (state->prev_start)
+       state->base += 1;
+
+    state->prev_start = false;
+
     if (!state->collect_unit_body)
         return;
 
@@ -829,20 +879,24 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     // append the characters in their raw state (unescaped ?)
     if (ctxt->input->cur - state->base == 0) {
-        state->unitsrcml.append((const char*) ctxt->input->cur, len);
+        std::string current((const char*) ctxt->input->cur, len);
+        state->unitsrcml.append(current);
         state->base = ctxt->input->cur + len;
     } else {
-        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
+        std::string current((const char*) state->base, ctxt->input->cur - state->base);
+        state->unitsrcml.append(current);
         state->base = ctxt->input->cur;
     }
-
+#ifdef UNITSRCML_DEBUG
+    fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: \n|%s|\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
+#endif
     if (state->context->terminate)
         return;
 
     state->unitsrc.append((const char*) ch, len);
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
+    fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
 }
 
@@ -857,7 +911,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 void comment(void* ctx, const xmlChar* /* value */) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "BEGIN: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
     if (ctx == nullptr)
@@ -866,13 +920,15 @@ void comment(void* ctx, const xmlChar* /* value */) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    state->prev_start = false;
+
     if (state->context->terminate)
         return;
 
     // @todo Make sure we capture this for srcml collection
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "END: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 }
 
@@ -888,7 +944,7 @@ void comment(void* ctx, const xmlChar* /* value */) {
 void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "BEGIN: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
     if (ctx == nullptr)
@@ -897,13 +953,15 @@ void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    state->prev_start = false;
+
     if (state->context->terminate)
         return;
 
     // @todo Make sure we capture this for srcml collection
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "END: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 }
 
@@ -919,7 +977,7 @@ void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
 void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* data) {
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "BEGIN: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 
     if (ctx == nullptr)
@@ -927,6 +985,8 @@ void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* dat
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+
+    state->prev_start = false;
 
     if (state->context->terminate)
         return;
@@ -937,6 +997,6 @@ void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* dat
         state->context->handler->processing_instruction(state->context, (const char *)target, (const char *)data);
 
 #ifdef SRCSAX_DEBUG
-    fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    fprintf(stderr, "END: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 #endif
 }
