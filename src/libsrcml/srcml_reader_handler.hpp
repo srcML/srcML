@@ -134,7 +134,7 @@ private :
         std::string localname;
 
         /** metatags prefix */
-        std::string prefix;
+       boost::optional<std::string> prefix;
 
         /** meta tags attributes */
         std::vector<const xmlChar*> attributes;
@@ -149,7 +149,9 @@ private :
          * Construct meta_tag from SAX data.
          */
         meta_tag(const char* localname, const char* prefix, int num_attributes, const xmlChar** attributes)
-            : localname(localname), prefix(prefix) {
+            : localname(localname) {
+
+            if(prefix) this->prefix = std::string(prefix);
 
             this->attributes.reserve(num_attributes * 5);
             for (int pos = 0; pos < num_attributes * 5; ++pos) {
@@ -203,6 +205,19 @@ private :
          * Destructor
          */
         ~meta_tag() {}
+
+        /**
+         * get_prefix
+         *
+         * Return prefix as c string.
+         */
+       const char * get_prefix() const {
+	 if(prefix) return prefix->c_str();
+	 return 0;
+
+       }
+
+
      };
 
     /** save meta tags to use when non-archive write unit */
@@ -825,9 +840,7 @@ public :
                 archive->user_macro_list.push_back(token);
                 archive->user_macro_list.push_back(type);
             }
-        }
-
-        if (!is_archive) {
+        } else if (!is_archive) {
 
             meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
         }

@@ -37,8 +37,6 @@ set(CPACK_CREATE_DESKTOP_LINKS srcml)
 # Generator settings
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CPACK_PACKAGE_FILE_NAME "srcML-Win")
-    # set(CPACK_GENERATOR "ZIP")
-    # set(CPACK_BINARY_NS
 else()
     set(CPACK_PACKAGE_FILE_NAME "srcML")
     set(CPACK_GENERATOR "TGZ;TBZ2")
