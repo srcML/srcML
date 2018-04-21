@@ -320,6 +320,8 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     // write out the contents, excluding the start and end unit tags
     int size = unit->content_end - unit->content_begin - 1;
+    std::string inside(unit->srcml.c_str() + unit->content_begin, size);
+    fprintf(stderr, "DEBUG:  %s %s %d inside: \n|%s|\n", __FILE__,  __FUNCTION__, __LINE__,  inside.c_str());
     if (size > 0) {
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->srcml.c_str() + unit->content_begin), size);
     }

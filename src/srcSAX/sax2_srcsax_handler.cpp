@@ -619,13 +619,16 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
     state->prev_start = true;
 
-    state->base += 1;
+   // state->base += 1;
 
     update_ctx(ctx);
 
     if (state->collect_unit_body) {
 
         if (state->start_element_tag.empty()) {
+
+            if (state->base[0] == '>')
+                state->base += 1;
 
             auto srcmllen = ctxt->input->cur + 1 - state->base;
             if (srcmllen < 0) {
