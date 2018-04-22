@@ -382,7 +382,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (!state->is_archive) {
 
         state->mode = UNIT;
-        state->unit_start_tag = state->root_start_tag;
+        state->unit_start_tag = std::move(state->root_start_tag);
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                         state->root.nb_namespaces, state->root.namespaces.data(),
                         state->root.nb_attributes, 0, state->root.attributes.data());
@@ -392,7 +392,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
             characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
       //  state->characters.clear();
 
-        state->start_element_tag = start_element_tag;
+        state->start_element_tag = std::move(start_element_tag);
         start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
         state->start_element_tag.clear();
 
@@ -469,15 +469,15 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->unitsrcml += state->rootnsstr;
             state->unitsrcml += state->unit_start_tag.substr(pos);
         } else {
-            state->unitsrcml = state->unit_start_tag;
+            state->unitsrcml = std::move(state->unit_start_tag);
         }
 #ifdef UNITSRCML_DEBUG
         fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: \n|%s|\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
 #endif
         state->content_begin = (int) state->unitsrcml.size();
 
-        std::string rootstr = state->unitsrcml.substr(0, state->content_begin - 1);
 #ifdef UNITSRCML_DEBUG
+        std::string rootstr = state->unitsrcml.substr(0, state->content_begin - 1);
         fprintf(stderr, "DEBUG:  %s %s %d rootstr: |%s|\n", __FILE__,  __FUNCTION__, __LINE__,  rootstr.c_str());
 #endif
     }
@@ -639,11 +639,11 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
             if (srcmllen < 0) {
                 exit(1);
             }
-            std::string curelement = std::string((const char*) state->base, srcmllen);
 #ifdef UNITSRCML_DEBUG
+            std::string curelement = std::string((const char*) state->base, srcmllen);
             fprintf(stderr, "DEBUG:  %s %s %d curelement: %s\n", __FILE__,  __FUNCTION__, __LINE__,  curelement.c_str());
 #endif
-            state->unitsrcml.append(curelement);
+            state->unitsrcml.append((const char*) state->base, srcmllen);
         } else {
             state->unitsrcml.append(state->start_element_tag);
         }
@@ -716,9 +716,9 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         }
 
         state->content_end = (int) state->unitsrcml.size() + 1;
-        std::string current((const char*) state->base, srcmllen);
-        state->unitsrcml.append(current);
+        state->unitsrcml.append((const char*) state->base, srcmllen);
 #ifdef UNITSRCML_DEBUG
+        std::string current((const char*) state->base, srcmllen);
         fprintf(stderr, "DEBUG:  %s %s %d current: |%s|\n", __FILE__,  __FUNCTION__, __LINE__,  current.c_str());
         fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: \n|%s|\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
 #endif
@@ -888,12 +888,10 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     // append the characters in their raw state (unescaped ?)
     if (ctxt->input->cur - state->base == 0) {
-        std::string current((const char*) ctxt->input->cur, len);
-        state->unitsrcml.append(current);
+        state->unitsrcml.append((const char*) ctxt->input->cur, len);
         state->base = ctxt->input->cur + len;
     } else {
-        std::string current((const char*) state->base, ctxt->input->cur - state->base);
-        state->unitsrcml.append(current);
+        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
         state->base = ctxt->input->cur;
     }
 #ifdef UNITSRCML_DEBUG
