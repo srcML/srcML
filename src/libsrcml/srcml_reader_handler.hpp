@@ -544,6 +544,11 @@ public :
             }
         }
 
+        auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
+
+        state->collect_unit_body = collect_unit_body;
+
         if (collect_unit_header) {
 
             // pause
@@ -553,7 +558,10 @@ public :
 
             cond.notify_all();
             cond.wait(lock);
+
         }
+
+        state->collect_unit_body = collect_unit_body;
 
         // number of newlines reset
         loc = 0;
