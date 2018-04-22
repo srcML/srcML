@@ -486,10 +486,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         return;
 
     ++state->unit_count;
-//fprintf(stderr, "COUNT:  %s %s %d state->unit_count: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->unit_count);
-
-  //  state->mode = UNIT;
-
 
     if (state->context->handler->start_unit)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
@@ -503,8 +499,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     	return;
 
     // next start tag will be for a non-unit element
-//    if (ctxt->sax->startElementNs)
-        ctxt->sax->startElementNs = &start_element;
+    ctxt->sax->startElementNs = &start_element;
 
     // characters are for the unit
     ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
@@ -624,8 +619,6 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
     state->prev_start = true;
 
-   // state->base += 1;
-
     update_ctx(ctx);
 
     if (state->collect_unit_body) {
@@ -655,7 +648,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 ///    state->base = ctxt->input->cur + (state->start_element_tag.empty() ? 1 : 0);
     // Special element <escape char="0x0c"/> used to embed non-XML characters
     // extract the value of the char attribute and add to the src (text)
-    if (state->collect_unit_body && localname == ESCAPE_ENTRY) {
+    if (localname == ESCAPE_ENTRY) {
 
         std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
 
@@ -845,8 +838,8 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     // since there are root characters, the end of the first element has to be adjusted to
     // include the whitespace
-    state->endfirstelement += 2;
-    state->base += 2;
+    state->endfirstelement += len;
+    state->base += len;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
@@ -886,6 +879,8 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     if (!state->collect_unit_body)
         return;
 
+    state->unitsrc.append((const char*) ch, len);
+
     // append the characters in their raw state (unescaped ?)
     if (ctxt->input->cur - state->base == 0) {
         state->unitsrcml.append((const char*) ctxt->input->cur, len);
@@ -899,8 +894,6 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 #endif
     if (state->context->terminate)
         return;
-
-    state->unitsrc.append((const char*) ch, len);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
