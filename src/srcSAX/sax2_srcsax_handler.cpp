@@ -386,6 +386,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                         state->root.nb_namespaces, state->root.namespaces.data(),
                         state->root.nb_attributes, 0, state->root.attributes.data());
+        state->unit_start_tag.clear();
 
         if (!state->characters.empty())
             characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
@@ -510,6 +511,8 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->unitsrc.clear();
 
+    state->base = ctxt->input->cur + 1;
+
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
@@ -549,6 +552,8 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
     state->maxsize = state->maxsize < state->unitsrc.size() ? state->unitsrc.size() : state->maxsize;
+
+    state->base = ctxt->input->cur;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -841,6 +846,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     // since there are root characters, the end of the first element has to be adjusted to
     // include the whitespace
     state->endfirstelement += 2;
+    state->base += 2;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
