@@ -661,10 +661,13 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;  
 
-    if (!state->collect_unit_body && ctxt->nodeNr > 2)
+    if (!state->collect_unit_body && localname != UNIT_ENTRY)
     	return;
     
     update_ctx(ctx);
+
+ //   fprintf(stderr, "DEBUG:  %s %s %d state->collect_unit_body: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->collect_unit_body);
+//    fprintf(stderr, "DEBUG:  %s %s %d state->unit_count: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->unit_count);
 
     if (state->collect_unit_body) {
 
