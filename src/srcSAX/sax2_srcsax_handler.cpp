@@ -495,6 +495,9 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 //    state->skip = true;
     skip_on(ctxt);
 
+    ctxt->sax->startElementNs = 0;
+    ctxt->sax->ignorableWhitespace = ctxt->sax->characters = 0;
+
     if (!state->collect_unit_body)
     	return;
 
