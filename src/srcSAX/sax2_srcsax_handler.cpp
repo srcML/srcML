@@ -803,9 +803,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     update_ctx(ctx);
 
-    // since there are root characters, the end of the first element has to be adjusted to
-    // include the whitespace
-    state->base += len;
+    state->base = ctxt->input->cur;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
