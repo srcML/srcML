@@ -297,26 +297,18 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     // record namespace string in an extensible list so we can add the per unit
     if (state->collect_unit_body) {
+
+        state->rootnsstr.clear();
         int ns_length = nb_namespaces * 2;
         for (int i = 0; i < ns_length; i += 2) {
 
-            state->data.push_back(namespaces[i]);
-            state->data.push_back(namespaces[i + 1]);
-        }
-        state->rootsize = state->data.size();
-
-        state->rootnsstr.clear();
-        for (size_t i = 0; i < state->data.size() / 2; ++i) {
-
-            auto& d = state->data;
-
             state->rootnsstr += "xmlns";
-            if (d[i * 2]) {
+            if (namespaces[i]) {
                 state->rootnsstr += ":";
-                state->rootnsstr += (const char*) d[i * 2];
+                state->rootnsstr += (const char*) namespaces[i];
             }
             state->rootnsstr += "=\"";
-            state->rootnsstr += (const char*) d[i * 2 + 1];
+            state->rootnsstr += (const char*) namespaces[i + 1];
             state->rootnsstr += "\" ";
         }
     }
@@ -327,6 +319,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
+
 /**
  * start_element_start
  * @param ctx an xmlParserCtxtPtr

@@ -100,12 +100,6 @@ struct sax2_srcsax_handler {
     bool collect_src = false;
     bool collect_unit_body = true;
 
-    /** Root namespaces */
-    std::vector<const xmlChar*> data;
-
-    /** Size of data */
-    decltype(data)::size_type rootsize;
-
     size_t maxsize = 0;
 
     std::string rootnsstr;
