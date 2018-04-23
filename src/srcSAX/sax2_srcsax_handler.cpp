@@ -53,26 +53,6 @@ xmlSAXHandler srcsax_sax2_factory() {
     return sax;
 }
 
-static void skip_off(xmlParserCtxtPtr ctxt) {
-
-	ctxt->sax->startElementNs = &start_element;
-	ctxt->sax->characters = &characters_start;
-	ctxt->sax->ignorableWhitespace = &characters_start;
-	ctxt->sax->comment = &comment;
-	ctxt->sax->cdataBlock = &cdata_block;
-	ctxt->sax->processingInstruction = &processing_instruction;
-}
-
-static void skip_on(xmlParserCtxtPtr ctxt) {
-
-	ctxt->sax->startElementNs = 0;
-	ctxt->sax->characters = 0;
-	ctxt->sax->ignorableWhitespace = 0;
-	ctxt->sax->comment = 0;
-	ctxt->sax->cdataBlock = 0;
-	ctxt->sax->processingInstruction = 0;
-}
-
 static const xmlChar* UNIT_ENTRY = nullptr;
 static const xmlChar* MACRO_LIST_ENTRY = nullptr;
 static const xmlChar* ESCAPE_ENTRY = nullptr;
@@ -239,9 +219,8 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     // handle nested units
     ctxt->sax->startElementNs = &start_element_start;
 
-    state->endfirstelement = ctxt->input->cur + 1;
-    state->root_start_tag = std::string((const char*) state->base, state->endfirstelement - state->base);
-    state->base = state->endfirstelement;
+    state->root_start_tag = std::string((const char*) state->base, ctxt->input->cur + 1 - state->base);
+    state->base = ctxt->input->cur + 1;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -484,10 +463,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                             nb_namespaces, namespaces,
                                             nb_attributes, attributes);
-
-//    state->skip = true;
-    skip_on(ctxt);
-
     ctxt->sax->startElementNs = 0;
     ctxt->sax->ignorableWhitespace = ctxt->sax->characters = 0;
 
@@ -541,8 +516,6 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     if (state->collect_unit_body)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
-
-    state->maxsize = state->maxsize < state->unitsrc.size() ? state->unitsrc.size() : state->maxsize;
 
     state->base = ctxt->input->cur;
 
@@ -830,11 +803,8 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     update_ctx(ctx);
 
-    state->first_root_char = false;
-
     // since there are root characters, the end of the first element has to be adjusted to
     // include the whitespace
-    state->endfirstelement += len;
     state->base += len;
 
 #ifdef SRCSAX_DEBUG

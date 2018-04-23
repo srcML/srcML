@@ -86,8 +86,6 @@ struct sax2_srcsax_handler {
 
     const xmlChar* base = nullptr;
 
-    const xmlChar* endfirstelement = nullptr;
-
     std::string root_start_tag;
     std::string unit_start_tag;
     std::string start_element_tag;
@@ -100,14 +98,10 @@ struct sax2_srcsax_handler {
     bool collect_src = false;
     bool collect_unit_body = true;
 
-    size_t maxsize = 0;
-
     std::string rootnsstr;
 
     int content_begin = 0;
     int content_end = 0;
-
-    bool first_root_char = true;
 
     bool skip = false;
 };
