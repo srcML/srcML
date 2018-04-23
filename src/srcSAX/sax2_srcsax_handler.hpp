@@ -89,7 +89,6 @@ struct sax2_srcsax_handler {
     std::string root_start_tag;
     std::string unit_start_tag;
     std::string start_element_tag;
-    bool prev_start = false;
 
     unsigned long prevconsumed = 0;
 

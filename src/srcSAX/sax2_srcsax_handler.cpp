@@ -293,8 +293,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     }
 
     state->base = ctxt->input->cur;
-    state->prev_start = false;
-#ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
@@ -416,8 +414,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    state->prev_start = false;
-
     update_ctx(ctx);
 
     // if not the first unit, need to extract the unit start tag
@@ -512,8 +508,6 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    state->prev_start = false;
-
     state->mode = END_UNIT;
 
     if (!state->skip && state->context->handler->end_unit)
@@ -551,8 +545,6 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
-
-    state->prev_start = false;
 
     state->base = ctxt->input->cur;
 
@@ -592,8 +584,6 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
-
-    state->prev_start = true;
 
     update_ctx(ctx);
 
@@ -675,9 +665,8 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     if (state->collect_unit_body) {
 
-        if (state->prev_start) {
+        if (state->base[0] == '>')
             state->base += 1;
-        }
 
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
@@ -693,8 +682,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 #endif
         state->base = ctxt->input->cur;
     }
-
-    state->prev_start = false;
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "PARTIALEND: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -767,8 +754,6 @@ void characters_start(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    state->prev_start = false;
-
     state->base = ctxt->input->cur;
 
     // cache the characters since we don't know if in unit or outer archive
@@ -802,8 +787,6 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
-
-    state->prev_start = false;
 
     if (state->context->terminate)
         return;
@@ -840,10 +823,8 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    if (state->prev_start)
-       state->base += 1;
-
-    state->prev_start = false;
+    if (state->base[0] == '>')
+        state->base += 1;
 
     if (!state->collect_unit_body)
         return;
@@ -891,8 +872,6 @@ void comment(void* ctx, const xmlChar* /* value */) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    state->prev_start = false;
-
     if (state->context->terminate)
         return;
 
@@ -924,8 +903,6 @@ void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    state->prev_start = false;
-
     if (state->context->terminate)
         return;
 
@@ -956,8 +933,6 @@ void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* dat
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
-
-    state->prev_start = false;
 
     if (state->context->terminate)
         return;
