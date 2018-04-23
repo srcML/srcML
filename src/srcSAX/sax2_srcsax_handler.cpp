@@ -293,6 +293,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     }
 
     state->base = ctxt->input->cur;
+#if SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
