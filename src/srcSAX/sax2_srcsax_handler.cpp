@@ -465,6 +465,9 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
                                             nb_attributes, attributes);
     ctxt->sax->startElementNs = 0;
     ctxt->sax->ignorableWhitespace = ctxt->sax->characters = 0;
+    ctxt->sax->comment = 0;
+    ctxt->sax->cdataBlock = 0;
+    ctxt->sax->processingInstruction = 0;
 
     if (!state->collect_unit_body)
     	return;
@@ -474,6 +477,10 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     // characters are for the unit
     ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
+
+    ctxt->sax->comment = &comment;
+    ctxt->sax->cdataBlock = &cdata_block;
+    ctxt->sax->processingInstruction = &processing_instruction;
 
     state->unitsrc.clear();
 
@@ -838,12 +845,12 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     state->prev_start = false;
 
-    update_ctx(ctx);
-
     if (!state->collect_unit_body)
         return;
 
     state->unitsrc.append((const char*) ch, len);
+
+    update_ctx(ctx);
 
     // append the characters in their raw state (unescaped ?)
     if (ctxt->input->cur - state->base == 0) {
