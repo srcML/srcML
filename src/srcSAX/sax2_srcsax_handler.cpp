@@ -293,7 +293,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     }
 
     state->base = ctxt->input->cur;
-#if SRCSAX_DEBUG
+#ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 }
@@ -518,6 +518,8 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     if (state->collect_unit_body)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
+    else
+        ctxt->sax->ignorableWhitespace = ctxt->sax->characters = 0;
 
     state->base = ctxt->input->cur;
 
