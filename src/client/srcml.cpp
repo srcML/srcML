@@ -262,10 +262,11 @@ namespace {
 
         // setup a 5 second timeout for stdin from the terminal
         if (isatty(0)) {
-			#ifndef _MSC_BUILD
-			alarm(5);
-			signal(SIGALRM, timeout);
-			#endif
+//			#ifndef _MSC_BUILD
+//			alarm(5);
+//			signal(SIGALRM, timeout);
+//			#endif
+            timeout(0);
         }
 
         // determine if the input is srcML or src
