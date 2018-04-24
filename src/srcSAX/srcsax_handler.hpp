@@ -83,23 +83,6 @@ struct srcsax_handler {
                            const xmlChar** attributes);
 
     /**
-     * start_element
-     * @param context a srcSAX context
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param num_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param num_attributes the number of attributes on the tag
-     * @param attributes list of attributes
-     *
-     * Signature for srcSAX handler function for start of an element.
-     */
-    void (*start_element)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const xmlChar** attributes);
-
-    /**
      * end_root
      * @param context a srcSAX context
      * @param localname the name of the element tag
@@ -122,36 +105,6 @@ struct srcsax_handler {
     void (*end_unit)(srcsax_context* context, const char* localname, const char* prefix, const char* URI);
 
     /**
-     * end_element
-     * @param context a srcSAX context
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     *
-     * Signature for srcSAX handler function for end of an element.
-     */
-    void (*end_element)(srcsax_context* context, const char* localname, const char* prefix, const char* URI);
-
-    /**
-     * characters_root
-     * @param context a srcSAX context
-     * @param ch the characers
-     * @param len number of characters
-     *
-     * Signature for srcSAX handler function for character handling at the root level.
-     */
-    void (*characters_root)(srcsax_context* context, const char* ch, int len);
-
-    /**
-     * characters_unit
-     * @param ch the characers
-     * @param len number of characters
-     *
-     * Signature for srcSAX handler function for character handling within a unit.
-     */
-    void (*characters_unit)(srcsax_context* context, const char* ch, int len);
-
-    /**
      * meta_tag
      * @param context a srcSAX context
      * @param localname the name of the element tag
@@ -167,36 +120,6 @@ struct srcsax_handler {
     void (*meta_tag)(srcsax_context* context, const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** attributes);
-
-    /**
-     * comment
-     * @param context a srcSAX context
-     * @param value the comment content
-     *
-     * Signature for srcSAX handler function for a XML comment.
-     */
-    void (*comment)(srcsax_context* context, const char* value);
-
-    /**
-     * cdata_block
-     * @param context a srcSAX context
-     * @param value the pcdata content
-     * @param len the block length
-     *
-     * Signature for srcSAX handler function for pcdata block.
-     */
-    void (*cdata_block)(srcsax_context* context, const char* value, int len);
-
-    /**
-     * processing_instruction
-     * @param context a srcSAX context
-     * @param target the processing instruction target.
-     * @param data the processing instruction data.
-     *
-     * Signature for srcSAX handler function for processing instruction.
-     */
-    void (*processing_instruction)(srcsax_context* context, const char* target, const char* data);
-
 };
 
 #endif

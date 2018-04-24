@@ -333,8 +333,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     // if macros are found, then must return, but first save them if necessary
     if (localname == MACRO_LIST_ENTRY) {
 
-        if (state->context->handler->meta_tag)
-            state->meta_tags.emplace_back(srcml_element(state->context, localname, prefix, URI,
+        state->meta_tags.emplace_back(srcml_element(state->context, localname, prefix, URI,
                                                      nb_namespaces, namespaces,
                                                      nb_attributes, nb_defaulted, attributes));
         return;
@@ -944,9 +943,6 @@ void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* dat
         return;
 
     // @todo Make sure we capture this for srcml collection
-
-    if (state->context->handler->processing_instruction)
-        state->context->handler->processing_instruction(state->context, (const char *)target, (const char *)data);
 
 #ifdef SRCSAX_DEBUG
     fprintf(stderr, "END: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);

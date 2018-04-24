@@ -60,7 +60,6 @@ public:
         handler.end_root = end_root;
         handler.end_unit = end_unit;
         handler.meta_tag = meta_tag;
-        handler.processing_instruction = processing_instruction;
 
         return handler;
     }
