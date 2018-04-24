@@ -416,11 +416,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     update_ctx(ctx);
 
-    // if not the first unit, need to extract the unit start tag
-    if (state->collect_unit_body && state->unit_start_tag.empty()) {
-        state->unit_start_tag = std::string((const char*) state->base, ctxt->input->cur - state->base + 1);
-    }
-
+    // unit_start_tag is empty means that we did not come from start_element_start()
     if (state->unit_start_tag.empty()) {
         state->base = ctxt->input->cur + 1;
     }
@@ -431,11 +427,22 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             // find end of unit tag
             int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
 
-            // merge the namespaces from the root into this one
-            // TODO: Only necessary for archive
-            state->unitsrcml = state->unit_start_tag.substr(0, pos);
-            state->unitsrcml += state->rootnsstr;
-            state->unitsrcml += state->unit_start_tag.substr(pos);
+            if (state->unit_start_tag.empty()) {
+
+                // merge the namespaces from the root into this one
+                // TODO: Only necessary for archive
+                state->unitsrcml.assign((const char*) state->base, pos);
+                state->unitsrcml.append(state->rootnsstr);
+                state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
+
+            } else {
+
+                // merge the namespaces from the root into this one
+                // TODO: Only necessary for archive
+                state->unitsrcml = state->unit_start_tag.substr(0, pos);
+                state->unitsrcml += state->rootnsstr;
+                state->unitsrcml += state->unit_start_tag.substr(pos);
+            }
         } else {
             state->unitsrcml = std::move(state->unit_start_tag);
         }
