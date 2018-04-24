@@ -22,8 +22,6 @@
 #include <srcSAXHandler.hpp>
 #include <cppCallbackAdapter.hpp>
 
-#include <sax2_srcsax_handler.hpp>
-
 #include <string>
 
 #pragma GCC diagnostic push
