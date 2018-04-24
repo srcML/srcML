@@ -22,7 +22,6 @@
 
 #include <libxml/parserInternals.h>
 
-#include <cstring>
 #include <functional>
 
 /** 
