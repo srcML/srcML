@@ -372,7 +372,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
 //        state->characters.clear();
 
         state->mode = UNIT;
-        state->unit_start_tag = start_element_tag;
+        state->unit_start_tag = std::move(start_element_tag);
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
     state->unit_start_tag.clear();
