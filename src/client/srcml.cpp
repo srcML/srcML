@@ -79,6 +79,7 @@ See `srcml --help` for more information.
 }
 
 namespace {
+    void is_stdin_xml(srcml_request_t& srcml_request);
     void set_state_isxml(srcml_request_t& srcml_request);
 }
 
@@ -248,6 +249,32 @@ namespace {
     }
 
     void set_state_isxml(srcml_request_t& request) {
+
+        // stdin input source
+        auto& rstdin = request.input_sources[*request.stdindex];
+
+        // stdin accessed as FILE*
+        rstdin.fileptr = fdopen(STDIN_FILENO, "r");
+        if (!rstdin.fileptr) {
+            SRCMLstatus(ERROR_MSG, "srcml: Unable to open stdin");
+            exit(1);
+        }
+        rstdin.fd = boost::none;
+
+        // setup a 5 second timeout for stdin from the terminal
+        if (isatty(0)) {
+//          #ifndef _MSC_BUILD
+//          alarm(5);
+//          signal(SIGALRM, timeout);
+//          #endif
+            timeout(0);
+        }
+
+        // determine if the input is srcML or src
+        rstdin.state = isxml(*(rstdin.fileptr)) ? SRCML : SRC;
+    }
+
+    void is_stdin_xml(srcml_request_t& request) {
 
         // stdin input source
         auto& rstdin = request.input_sources[*request.stdindex];
