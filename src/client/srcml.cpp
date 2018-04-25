@@ -79,7 +79,7 @@ See `srcml --help` for more information.
 }
 
 namespace {
-    void set_state_stdin(srcml_request_t& srcml_request);
+    void set_state_isxml(srcml_request_t& srcml_request);
 }
 
 int main(int argc, char * argv[]) {
@@ -116,7 +116,7 @@ int main(int argc, char * argv[]) {
 
     // determine if stdin is srcML or src
     if (srcml_request.stdindex)
-        set_state_stdin(srcml_request);
+        set_state_isxml(srcml_request);
  
     /*
         Setup the internal pipeline of possible steps:
@@ -247,7 +247,7 @@ namespace {
         ;
     }
 
-    void set_state_stdin(srcml_request_t& request) {
+    void set_state_isxml(srcml_request_t& request) {
 
         // stdin input source
         auto& rstdin = request.input_sources[*request.stdindex];
@@ -262,14 +262,15 @@ namespace {
 
         // setup a 5 second timeout for stdin from the terminal
         if (isatty(0)) {
-//			#ifndef _MSC_BUILD
-//			alarm(5);
-//			signal(SIGALRM, timeout);
-//			#endif
+//          #ifndef _MSC_BUILD
+//          alarm(5);
+//          signal(SIGALRM, timeout);
+//          #endif
             timeout(0);
         }
 
         // determine if the input is srcML or src
         rstdin.state = isxml(*(rstdin.fileptr)) ? SRCML : SRC;
     }
+
 }
