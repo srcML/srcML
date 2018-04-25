@@ -79,7 +79,6 @@ See `srcml --help` for more information.
 }
 
 namespace {
-    void set_state_stdin(srcml_request_t& srcml_request);
     void set_state_isxml(srcml_request_t& srcml_request);
 }
 
@@ -246,11 +245,6 @@ namespace {
             !request_transform_srcml(request))) ||
             (request.input_sources.size() == 1 && request.input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
         ;
-    }
-
-    void set_state_stdin(srcml_request_t& request) {
-
-        set_state_isxml(request);
     }
 
     void set_state_isxml(srcml_request_t& request) {
