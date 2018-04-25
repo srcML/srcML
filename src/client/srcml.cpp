@@ -117,7 +117,7 @@ int main(int argc, char * argv[]) {
 
     // determine if stdin is srcML or src
     if (srcml_request.stdindex)
-        set_state_isxml(srcml_request);
+        is_stdin_xml(srcml_request);
  
     /*
         Setup the internal pipeline of possible steps:
