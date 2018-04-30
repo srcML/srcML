@@ -223,7 +223,7 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     // handle nested units
     ctxt->sax->startElementNs = &start_element_start;
 
-    state->root_start_tag = std::string((const char*) state->base, ctxt->input->cur + 1 - state->base);
+    state->root_start_tag.assign((const char*) state->base, ctxt->input->cur + 1 - state->base);
     state->base = ctxt->input->cur + 1;
 
     BASE_DEBUG
@@ -330,7 +330,10 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     BASE_DEBUG
 
-    std::string start_element_tag((const char*) state->base, ctxt->input->cur + 1 - state->base);
+    // record start element position and size
+    auto start_element_base = state->base;
+    auto start_element_len = ctxt->input->cur + 1 - state->base;
+    
     state->base = ctxt->input->cur + 1;
 
     // if macros are found, then must return, but first save them if necessary
@@ -365,7 +368,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
             characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
       //  state->characters.clear();
 
-        state->start_element_tag = std::move(start_element_tag);
+        state->start_element_tag.assign((const char*) start_element_base, start_element_len);
         start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
         state->start_element_tag.clear();
 
@@ -375,7 +378,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
 //        state->characters.clear();
 
         state->mode = UNIT;
-        state->unit_start_tag = std::move(start_element_tag);
+        state->unit_start_tag.assign((const char*) start_element_base, start_element_len);
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
     state->unit_start_tag.clear();
