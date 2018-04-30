@@ -25,8 +25,6 @@
 #include <sax2_srcsax_handler.hpp>
 #include <string>
 
-#define SRCSAX_DEBUG
-
 #ifdef SRCSAX_DEBUG
     #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase); 
     #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch); 
@@ -322,7 +320,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
  */
 void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces,
-                         int nb_attributes, int nb_defaulted, const xmlChar** attributes) {SRCSAX_DEBUG_START(localname);
+                         int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
     SRCSAX_DEBUG_START(localname);
 
@@ -548,7 +546,9 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
  *
  * SAX handler function for end of a unit
  */
-void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {SRCSAX_DEBUG_START(localname);
+void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
+
+    SRCSAX_DEBUG_START(localname);
 
     if (ctx == nullptr)
         return;
@@ -581,7 +581,9 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
  */
 void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix */, const xmlChar* /* URI */,
                     int /* nb_namespaces */, const xmlChar** /* namespaces */,
-                    int /* nb_attributes */, int /* nb_defaulted */, const xmlChar** attributes) {SRCSAX_DEBUG_START(localname);
+                    int /* nb_attributes */, int /* nb_defaulted */, const xmlChar** attributes) {
+
+    SRCSAX_DEBUG_START(localname);
 
     if (ctx == nullptr)
         return;
@@ -646,7 +648,9 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
  * Detects end of unit and calls correct functions
  * for either end_root end_unit or end_element.
  */
-void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {SRCSAX_DEBUG_START(localname);
+void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
+
+    SRCSAX_DEBUG_START(localname);
 
     if (ctx == nullptr)
         return;
