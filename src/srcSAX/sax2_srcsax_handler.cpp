@@ -23,6 +23,8 @@
 #include <sax2_srcsax_handler.hpp>
 #include <string>
 
+#define SRCSAX_DEBUG
+
 #ifdef SRCSAX_DEBUG
     #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase); 
     #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch); 
@@ -349,15 +351,19 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (state->context->terminate)
         return;
 
+    // we have an archive if the first element after the root is the <unit>
     state->context->is_archive = state->is_archive = (localname == UNIT_ENTRY);
 
     // have to call this here because we need to first know if we are in an archive
+    // TODO: Can't this be done right away? It happens regardless of archive or not
     start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
                     state->root.nb_namespaces, state->root.namespaces.data(),
                     state->root.nb_attributes, 0, state->root.attributes.data());
 
     if (!state->is_archive) {
 
+        // not an archive, so we end up calling both start_root() and start_unit()
+        // with the same data
         state->mode = UNIT;
         state->unit_start_tag = std::move(state->root_start_tag);
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
@@ -365,31 +371,37 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
                         state->root.nb_attributes, 0, state->root.attributes.data());
         state->unit_start_tag.clear();
 
+
         if (!state->characters.empty())
             characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
       //  state->characters.clear();
 
+        // use the parameters in this call to call the real start_element
         state->start_element_tag.assign((const char*) start_element_base, start_element_len);
         start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
         state->start_element_tag.clear();
 
     } else {
-        
-        characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
+
+        // since an archive, the characters found before this first nested element are
+        // root characters 
+        if (!state->characters.empty())
+            characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
 //        state->characters.clear();
 
+        // unit start tag with parameters
         state->mode = UNIT;
         state->unit_start_tag.assign((const char*) start_element_base, start_element_len);
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
     state->unit_start_tag.clear();
 
-    if (state->context->terminate)
-        return;
-
     BASE_DEBUG
 
     SRCSAX_DEBUG_END(localname);
+
+    if (state->context->terminate)
+        return;
 }
 
 /**
@@ -425,7 +437,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     // unit_start_tag is empty means that we did not come from start_element_start()
     if (state->unit_start_tag.empty()) {
-        state->base = ctxt->input->cur + 1;
+//        state->base = ctxt->input->cur + 1;
     }
 
     if (state->collect_unit_body) {
@@ -495,6 +507,9 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     BASE_DEBUG
 
     SRCSAX_DEBUG_END(localname);
+
+    if (state->context->terminate)
+        return;
 }
 
 /**
@@ -507,8 +522,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
  * SAX handler function for end of a unit
  */
 void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI) {
-
-    SRCSAX_DEBUG_START(localname);
 
     SRCSAX_DEBUG_START(localname);
 
@@ -537,6 +550,9 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     BASE_DEBUG
 
     SRCSAX_DEBUG_END(localname);
+
+    if (state->context->terminate)
+        return;
 }
 
 /**
@@ -633,10 +649,10 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
     state->base = ctxt->input->cur;
 
+    SRCSAX_DEBUG_END(localname);
+
     if (state->context->terminate)
         return;
-
-    SRCSAX_DEBUG_END(localname);
 }
 
 /**
@@ -727,12 +743,12 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         end_root(ctx, localname, prefix, URI);
     }
 
-    if (state->context->terminate)
-        return;
-
     BASE_DEBUG
 
     SRCSAX_DEBUG_END(localname);
+
+    if (state->context->terminate)
+        return;
 }
 
 /**
@@ -789,9 +805,6 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     BASE_DEBUG
 
-    if (state->context->terminate)
-        return;
-
     update_ctx(ctx);
 
     state->base = ctxt->input->cur;
@@ -799,6 +812,9 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     BASE_DEBUG
 
     SRCSAX_DEBUG_END_CHARS(ch, len);
+
+    if (state->context->terminate)
+        return;
 }
 
 /**
@@ -845,12 +861,12 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
 
-    if (state->context->terminate)
-        return;
-
     BASE_DEBUG
 
     SRCSAX_DEBUG_START_CHARS(ch, len);
+
+    if (state->context->terminate)
+        return;
 }
 
 /**
@@ -871,12 +887,12 @@ void comment(void* ctx, const xmlChar* /* value */) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    if (state->context->terminate)
-        return;
-
     // @todo Make sure we capture this for srcml collection
 
     SRCSAX_DEBUG_END();
+
+    if (state->context->terminate)
+        return;
 }
 
 /**
@@ -898,12 +914,12 @@ void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    if (state->context->terminate)
-        return;
-
     // @todo Make sure we capture this for srcml collection
 
     SRCSAX_DEBUG_END();
+
+    if (state->context->terminate)
+        return;
 }
 
 /**
@@ -925,10 +941,10 @@ void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* dat
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-    if (state->context->terminate)
-        return;
-
     // @todo Make sure we capture this for srcml collection
 
     SRCSAX_DEBUG_END();
+
+    if (state->context->terminate)
+        return;
 }
