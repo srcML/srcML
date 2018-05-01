@@ -325,8 +325,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     if (!state->is_archive) {
 
-        // not an archive, so we end up calling both start_root() and start_unit()
-        // with the same data
+        // not an archive, so we end up calling start_unit() with the data used for start_root()
         state->mode = UNIT;
         state->unit_start_tag = std::move(state->root_start_tag);
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
@@ -334,10 +333,9 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
                         state->root.nb_attributes, 0, state->root.attributes.data());
         state->unit_start_tag.clear();
 
-
         if (!state->characters.empty())
             characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
-      //  state->characters.clear();
+        state->characters.clear();
 
         // use the parameters in this call to call the real start_element
         state->start_element_tag.assign((const char*) start_element_base, start_element_len);
@@ -350,14 +348,14 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         // root characters 
         if (!state->characters.empty())
             characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
-//        state->characters.clear();
+        state->characters.clear();
 
         // unit start tag with parameters
         state->mode = UNIT;
         state->unit_start_tag.assign((const char*) start_element_base, start_element_len);
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
+        state->unit_start_tag.clear();
     }
-    state->unit_start_tag.clear();
 
     BASE_DEBUG
 
