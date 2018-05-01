@@ -26,13 +26,15 @@
 #ifdef SRCSAX_DEBUG
     #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase); 
     #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch); 
-    #define SRCSAX_DEBUG_START(m) fprintf(stderr, "BEGIN: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-    #define SRCSAX_DEBUG_END(m)   fprintf(stderr, "END  : %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-    #define SRCSAX_DEBUG_START_CHARS(ch,len) fprintf(stderr, "BEGIN: %s %s %d |%.*s|\n", __FILE__, __FUNCTION__, __LINE__, len, ch);
-    #define SRCSAX_DEBUG_END_CHARS(ch,len) fprintf(stderr, "END: %s %s %d |%.*s|\n", __FILE__, __FUNCTION__, __LINE__, len, ch);
+    #define SRCSAX_DEBUG_BASE(title,m) fprintf(stderr, "%s: %s %s %d\n", title, __FILE__, __FUNCTION__, __LINE__);
+    #define SRCSAX_DEBUG_START(m) SRCSAX_DEBUG_BASE("BEGIN",m)
+    #define SRCSAX_DEBUG_END(m)   SRCSAX_DEBUG_BASE("END  ",m)
+    #define SRCSAX_DEBUG_START_CHARS(ch,len) SRCML_DEBUG("BEGIN",ch,len);
+    #define SRCSAX_DEBUG_END_CHARS(ch,len)   SRCML_DEBUG("END  ",ch,len);
 #else
     #define BASE_DEBUG
     #define SRCML_DEBUG(title, ch, len)
+    #define SRCSAX_DEBUG(title,m) 
     #define SRCSAX_DEBUG_START(m)
     #define SRCSAX_DEBUG_END(m)
     #define SRCSAX_DEBUG_START_CHARS(ch,len)
@@ -333,7 +335,7 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
     // record start element position and size
     auto start_element_base = state->base;
     auto start_element_len = ctxt->input->cur + 1 - state->base;
-    
+
     state->base = ctxt->input->cur + 1;
 
     // if macros are found, then must return, but first save them if necessary
