@@ -242,7 +242,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
 void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
 
 /**
- * characters_start
+ * save_characters
  * @param ctx an xmlParserCtxtPtr
  * @param ch the characers
  * @param len number of characters
@@ -251,7 +251,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
  * know if we have an archive or not.
  * Immediately calls supplied handlers function.
  */
-void characters_start(void* ctx, const xmlChar* ch, int len);
+void save_characters(void* ctx, const xmlChar* ch, int len);
 
 /**
  * characters_root

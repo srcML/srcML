@@ -61,8 +61,8 @@ xmlSAXHandler srcsax_sax2_factory() {
     sax.startElementNs = &start_root;
     sax.endElementNs = &end_element;
 
-    sax.characters = &characters_start;
-    sax.ignorableWhitespace = &characters_start;
+    sax.characters = &save_characters;
+    sax.ignorableWhitespace = &save_characters;
 
     sax.comment = &comment;
     sax.cdataBlock = &cdata_block;
@@ -709,7 +709,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 }
 
 /**
- * characters_start
+ * save_characters
  * @param ctx an xmlParserCtxtPtr
  * @param ch the characers
  * @param len number of characters
@@ -718,7 +718,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
  * know if we have an archive or not.
  * Immediately calls supplied handlers function.
  */
-void characters_start(void* ctx, const xmlChar* ch, int len) {
+void save_characters(void* ctx, const xmlChar* ch, int len) {
 
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
