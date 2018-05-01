@@ -226,7 +226,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     state->mode = ROOT;
 
     // handle nested units
-    ctxt->sax->startElementNs = &start_element_start;
+    ctxt->sax->startElementNs = &first_start_element;
 
     state->root_start_tag.assign((const char*) state->base, ctxt->input->cur + 1 - state->base);
     state->base = ctxt->input->cur + 1;
@@ -274,7 +274,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 }
 
 /**
- * start_element_start
+ * first_start_element
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -288,7 +288,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
  * SAX handler function for start of first element after root
  * Detects archive and acts accordingly.
  */
-void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces,
                          int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
@@ -398,7 +398,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     update_ctx(ctx);
 
-    // unit_start_tag is empty means that we did not come from start_element_start()
+    // unit_start_tag is empty means that we did not come from first_start_element()
     if (state->unit_start_tag.empty()) {
 //        state->base = ctxt->input->cur + 1;
     }

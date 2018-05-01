@@ -151,7 +151,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
                const xmlChar** attributes);
 
 /**
- * start_element_start
+ * first_start_element
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -165,7 +165,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
  * SAX handler function for start of first element after root
  * Detects archive and acts accordingly.
  */
-void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes);
 /**
