@@ -58,7 +58,7 @@ xmlSAXHandler srcsax_sax2_factory() {
     sax.startDocument = &start_document;
     sax.endDocument = &end_document;
 
-    sax.startElementNs = &start_root_first;
+    sax.startElementNs = &start_root;
     sax.endElementNs = &end_element;
 
     sax.characters = &characters_start;
@@ -206,7 +206,7 @@ void end_document(void* ctx) {
  * SAX handler function for start of root element.
  * Caches root info and immediately calls supplied handlers function.
  */
-void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                int nb_namespaces, const xmlChar** namespaces,
                int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
 
@@ -231,44 +231,11 @@ void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix
     state->root_start_tag.assign((const char*) state->base, ctxt->input->cur + 1 - state->base);
     state->base = ctxt->input->cur + 1;
 
-    BASE_DEBUG
-
-    SRCSAX_DEBUG_END(localname);
-}
-
-/**
- * start_root
- * @param ctx an xmlParserCtxtPtr
- * @param localname the name of the element tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- * @param nb_namespaces number of namespaces definitions
- * @param namespaces the defined namespaces
- * @param nb_attributes the number of attributes on the tag
- * @param nb_defaulted the number of defaulted attributes
- * @param attributes list of attribute name value pairs (localname/prefix/URI/value/end)
- *
- * SAX handler function for start of root element.
- * Caches root info and immediately calls supplied handlers function.
- */
-void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-               int nb_namespaces, const xmlChar** namespaces,
-               int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
-
-    SRCSAX_DEBUG_START(localname);
-
-    if (ctx == nullptr)
-        return;
-
-    auto ctxt = (xmlParserCtxtPtr) ctx;
-    auto state = (sax2_srcsax_handler*) ctxt->_private;
-
     // have to call this here because we need to first know if we are in an archive
     if (state->context->handler->start_root)
         state->context->handler->start_root(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
                                                             nb_namespaces, namespaces, 
                                                             nb_attributes, attributes);
-
     if (state->context->terminate)
         return;
 
@@ -355,12 +322,6 @@ void start_element_start(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     // we have an archive if the first element after the root is the <unit>
     state->context->is_archive = state->is_archive = (localname == UNIT_ENTRY);
-
-    // have to call this here because we need to first know if we are in an archive
-    // TODO: Can't this be done right away? It happens regardless of archive or not
-    start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                    state->root.nb_namespaces, state->root.namespaces.data(),
-                    state->root.nb_attributes, 0, state->root.attributes.data());
 
     if (!state->is_archive) {
 
@@ -721,10 +682,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     if (state->mode == ROOT) {
 
         state->context->is_archive = state->is_archive = false;
-
-        start_root(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                        state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, 0, state->root.attributes.data());
 
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                         state->root.nb_namespaces, state->root.namespaces.data(),

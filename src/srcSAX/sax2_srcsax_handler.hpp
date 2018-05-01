@@ -146,10 +146,9 @@ void end_document(void* ctx);
  * SAX handler function for start of root element.
  * Caches root info and immediately calls supplied handlers function.
  */
-void start_root_first(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar** attributes);
-
 
 /**
  * start_element_start
