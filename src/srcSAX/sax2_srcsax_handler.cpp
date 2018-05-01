@@ -118,15 +118,6 @@ void start_document(void* ctx) {
     MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro_list", strlen("macro_list"));
     ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
 
-    // initialize internal sax buffer char*'s and counts
-    state->base = ctxt->input->cur;
-    state->prevconsumed = ctxt->input->consumed;
-    state->prevbase = ctxt->input->base;
-
-    // process any upper layer start document handling
-    if (state->context->handler->start_document)
-        state->context->handler->start_document(state->context);
-
     // get encoding from the input
     state->context->encoding = "UTF-8";
     if (ctxt->encoding && ctxt->encoding[0] != '\0')
@@ -134,10 +125,21 @@ void start_document(void* ctx) {
     else if (ctxt->input)
         state->context->encoding = (const char *)ctxt->input->encoding;
 
-    if (state->context->terminate)
-        return;
+    // process any upper layer start document handling
+    if (state->context->handler->start_document)
+        state->context->handler->start_document(state->context);
+
+    // initialize internal sax buffer char*'s and counts
+    state->base = ctxt->input->cur;
+    state->prevconsumed = ctxt->input->consumed;
+    state->prevbase = ctxt->input->base;
+
+    BASE_DEBUG;
 
     SRCSAX_DEBUG_END();
+
+    if (state->context->terminate)
+        return;
 }
 
 /**
