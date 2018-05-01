@@ -112,10 +112,9 @@ void start_document(void* ctx) {
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
     // setup dictionary lookup for common elements
-    UNIT_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", 4);
-
+    UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", strlen("unit"));
     MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro_list", strlen("macro_list"));
-    ESCAPE_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
+    ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
 
     // initialize internal sax buffer char*'s and counts
     state->base = ctxt->input->cur;
