@@ -931,7 +931,7 @@ void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
  * Called when a processing instruction has been parsed.
  * Immediately calls supplied handlers function.
  */
-void processing_instruction(void* ctx, const xmlChar* target, const xmlChar* data) {
+void processing_instruction(void* ctx, const xmlChar* /* target */, const xmlChar* /* data */) {
 
     SRCSAX_DEBUG_START();
 
