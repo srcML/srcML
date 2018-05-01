@@ -84,6 +84,8 @@ static void update_ctx(void* ctx) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     if (state->prevconsumed != ctxt->input->consumed) {
         state->base -= ctxt->input->consumed - state->prevconsumed;
@@ -110,6 +112,8 @@ void start_document(void* ctx) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     // initialize internal sax buffer char*'s and counts
     state->base = ctxt->input->cur;
@@ -155,6 +159,8 @@ void end_document(void* ctx) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START();
 
@@ -213,6 +219,8 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START(localname);
 
@@ -292,6 +300,8 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START(localname);
 
@@ -380,6 +390,8 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START(localname);
 
@@ -476,6 +488,8 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START(localname);
 
@@ -515,6 +529,8 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START(localname);
 
@@ -550,6 +566,8 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START(localname);
 
@@ -616,7 +634,9 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         return;
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
-    auto state = (sax2_srcsax_handler*) ctxt->_private;  
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)  
+        return;
 
     SRCSAX_DEBUG_START(localname);
 
@@ -705,6 +725,8 @@ void save_characters(void* ctx, const xmlChar* ch, int len) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
@@ -733,6 +755,8 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
@@ -762,6 +786,8 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
@@ -811,6 +837,8 @@ void comment(void* ctx, const xmlChar* /* value */) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START();
 
@@ -838,6 +866,8 @@ void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START();
 
@@ -865,6 +895,8 @@ void processing_instruction(void* ctx, const xmlChar* /* target */, const xmlCha
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return;
 
     SRCSAX_DEBUG_START();
 
