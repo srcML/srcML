@@ -111,14 +111,19 @@ void start_document(void* ctx) {
     auto ctxt = (xmlParserCtxtPtr) ctx;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
 
+    // initialize internal sax buffer char*'s and counts
+    state->base = ctxt->input->cur;
+    state->prevconsumed = ctxt->input->consumed;
+    state->prevbase = ctxt->input->base;
+
     SRCSAX_DEBUG_START();
 
-    // setup dictionary lookup for common elements
+    // save for dictionary lookup of common elements
     UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", strlen("unit"));
     MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro_list", strlen("macro_list"));
     ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
 
-    // get encoding from the input
+    // save the encoding from the input
     state->context->encoding = "UTF-8";
     if (ctxt->encoding && ctxt->encoding[0] != '\0')
         state->context->encoding = (const char *)ctxt->encoding;
@@ -128,11 +133,6 @@ void start_document(void* ctx) {
     // process any upper layer start document handling
     if (state->context->handler->start_document)
         state->context->handler->start_document(state->context);
-
-    // initialize internal sax buffer char*'s and counts
-    state->base = ctxt->input->cur;
-    state->prevconsumed = ctxt->input->consumed;
-    state->prevbase = ctxt->input->base;
 
     SRCSAX_DEBUG_END();
 
