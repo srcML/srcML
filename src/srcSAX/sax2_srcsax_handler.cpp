@@ -685,7 +685,8 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
                         state->root.nb_namespaces, state->root.namespaces.data(),
                         state->root.nb_attributes, 0, state->root.attributes.data());
 
-        characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
+        if (!state->characters.empty())
+            characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
     }
 
     if (ctxt->nameNr == 2 || !state->is_archive) {
