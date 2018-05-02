@@ -21,8 +21,6 @@
 #ifndef INCLUDED_SRCML_ELEMENT_HPP
 #define INCLUDED_SRCML_ELEMENT_HPP
 
-class srcsax_context;
-
 #include <libxml/parser.h>
 
 #include <vector>
@@ -39,9 +37,9 @@ struct srcml_element {
     srcml_element() {}
 
     /** Constructor to initialize using start element items */
-    srcml_element(srcsax_context* context, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+    srcml_element(const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                  int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
-                 const xmlChar** attributes) : context(context) {
+                 const xmlChar** attributes) {
 
         // save all the info in case this is not a srcML archive
        	this->localname = xmlStrdup(localname);
@@ -75,7 +73,7 @@ struct srcml_element {
 
     /** Copy constructor */
     srcml_element(const srcml_element& element)
-        : srcml_element(element.context, element.localname, element.prefix, element.URI,
+        : srcml_element(element.localname, element.prefix, element.URI,
           element.nb_namespaces, (const xmlChar**) element.namespaces.data(),
           element.nb_attributes, element.nb_defaulted,
           (const xmlChar**) element.attributes.data()) {
@@ -126,9 +124,6 @@ struct srcml_element {
             xmlFree((xmlChar*) attributes[index + 3]);
         }
     }
-
-    /** parser context */
-    srcsax_context* context = nullptr;
 
     /** local name of an element*/
     xmlChar* localname = nullptr;

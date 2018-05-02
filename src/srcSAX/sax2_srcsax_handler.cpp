@@ -226,9 +226,9 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     SRCSAX_DEBUG_START(localname);
 
     // cache the root data because we don't know if we are in an archive or not
-    state->root = std::move(srcml_element(state->context, localname, prefix, URI,
-                                                nb_namespaces, namespaces,
-                                                nb_attributes, nb_defaulted, attributes));
+    state->root = std::move(srcml_element(localname, prefix, URI,
+                                          nb_namespaces, namespaces,
+                                          nb_attributes, nb_defaulted, attributes));
 
     state->mode = ROOT;
 
@@ -309,9 +309,9 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     // if macros are found, then must return, but first save them if necessary
     if (localname == MACRO_LIST_ENTRY) {
 
-        state->meta_tags.emplace_back(srcml_element(state->context, localname, prefix, URI,
-                                                     nb_namespaces, namespaces,
-                                                     nb_attributes, nb_defaulted, attributes));
+        state->meta_tags.emplace_back(srcml_element(localname, prefix, URI,
+                                                    nb_namespaces, namespaces,
+                                                    nb_attributes, nb_defaulted, attributes));
         return;
     }
 
