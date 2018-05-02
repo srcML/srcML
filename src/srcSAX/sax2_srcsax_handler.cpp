@@ -232,7 +232,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // handle nested units
     ctxt->sax->startElementNs = &first_start_element;
 
-    state->root_start_tag.assign((const char*) state->base, ctxt->input->cur + 1 - state->base);
     state->base = ctxt->input->cur + 1;
 
     // have to call this here because we need to first know if we are in an archive
@@ -303,12 +302,6 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     SRCSAX_DEBUG_START(localname);
 
-    // record start element position and size
-    auto start_element_base = state->base;
-    auto start_element_len = ctxt->input->cur + 1 - state->base;
-
-    state->base = ctxt->input->cur + 1;
-
     // if macros are found, then must return, but first save them if necessary
     if (localname == MACRO_LIST_ENTRY) {
 
@@ -324,34 +317,32 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     // we have an archive if the first element after the root is the <unit>
     state->context->is_archive = state->is_archive = (localname == UNIT_ENTRY);
 
-    if (!state->is_archive) {
+    if (state->is_archive) {
+
+        // an archive, so the characters found before this first nested element are root characters 
+        if (!state->characters.empty())
+            characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
+        state->characters.clear();
+
+        // unit start tag with parameters
+       // state->mode = UNIT;
+        start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
+
+    } else {
 
         // not an archive, so we end up calling start_unit() with the data used for start_root()
-        state->mode = UNIT;
+       // state->mode = UNIT;
         start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
                         state->root.nb_namespaces, state->root.namespaces.data(),
                         state->root.nb_attributes, 0, state->root.attributes.data());
 
+        // not an archive, so the characters found before this first nested element are unit characters 
         if (!state->characters.empty())
             characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
         state->characters.clear();
 
         // use the parameters in this call to call the real start_element
         start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
-
-    } else {
-
-        // since an archive, the characters found before this first nested element are
-        // root characters 
-        if (!state->characters.empty())
-            characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
-        state->characters.clear();
-
-        // unit start tag with parameters
-        state->mode = UNIT;
-        state->unit_start_tag.assign((const char*) start_element_base, start_element_len);
-        start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
-        state->unit_start_tag.clear();
     }
 
     SRCSAX_DEBUG_END(localname);
@@ -391,39 +382,27 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     update_ctx(ctx);
 
-    // unit_start_tag is empty means that we did not come from first_start_element()
-    if (state->unit_start_tag.empty()) {
-//        state->base = ctxt->input->cur + 1;
-    }
-
     if (state->collect_unit_body) {
 
         if (state->is_archive) {
+
             // find end of unit tag
             int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
 
-            if (state->unit_start_tag.empty()) {
-    
-                // merge the namespaces from the root into this one
-                // TODO: Only necessary for archive
-                state->unitsrcml.assign((const char*) state->base, pos);
-                state->unitsrcml.append(state->rootnsstr);
-                state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
+            // merge the namespaces from the root into this one
+            // TODO: Only necessary for archive
+            state->unitsrcml.assign((const char*) state->base, pos);
+            state->unitsrcml.append(state->rootnsstr);
+            state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
 
-            } else {
-
-                // merge the namespaces from the root into this one
-                // TODO: Only necessary for archive
-                state->unitsrcml = state->unit_start_tag.substr(0, pos);
-                state->unitsrcml += state->rootnsstr;
-                state->unitsrcml += state->unit_start_tag.substr(pos);
-            }
         } else {
-            state->unitsrcml = std::move(state->unit_start_tag);
+
+            state->unitsrcml.assign((const char*) state->base, ctxt->input->cur - state->base + 1);
         }
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
 
+        // where the content begins, past the start unit tag
         state->content_begin = (int) state->unitsrcml.size();
     }
 
@@ -447,17 +426,19 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     // next start tag will be for a non-unit element
     ctxt->sax->startElementNs = &start_element;
-
-    // characters are for the unit
     ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_unit;
-
     ctxt->sax->comment = &comment;
     ctxt->sax->cdataBlock = &cdata_block;
     ctxt->sax->processingInstruction = &processing_instruction;
 
+    // start to collect source
     state->unitsrc.clear();
 
-    state->base = ctxt->input->cur + 1;
+    // update position
+//    if (state->mode == UNIT)
+//        state->base = ctxt->input->cur + 1;
+
+    state->mode = UNIT;
 
     SRCSAX_DEBUG_END(localname);
 
@@ -667,6 +648,8 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         return;
     }
 
+    // At this point, we have the end of a unit
+
     // the root is the only element so we never got this started
     if (state->mode == ROOT) {
 
@@ -750,9 +733,8 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
-    update_ctx(ctx);
-
-    state->base = ctxt->input->cur;
+    // pretty much a nop for now
+    // state->base not updated due to handling when called
 
     SRCSAX_DEBUG_END_CHARS(ch, len);
 
