@@ -638,9 +638,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     
     update_ctx(ctx);
 
- //   fprintf(stderr, "DEBUG:  %s %s %d state->collect_unit_body: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->collect_unit_body);
-//    fprintf(stderr, "DEBUG:  %s %s %d state->unit_count: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  state->unit_count);
-
     if (state->collect_unit_body) {
 
         if (state->base[0] == '>')
