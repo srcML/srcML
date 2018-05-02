@@ -481,8 +481,6 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     if (state->collect_unit_body)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
-    else
-        ctxt->sax->ignorableWhitespace = ctxt->sax->characters = 0;
 
     state->base = ctxt->input->cur;
 
@@ -778,6 +776,8 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     state->unitsrc.append((const char*) ch, len);
 
     // append the characters in their raw state (unescaped ?)
+    // TODO: Why is this called differently in different places? 
+    // Perhaps due to ignorableWhitespace() vs characters()?
     if (ctxt->input->cur - state->base == 0) {
         state->unitsrcml.append((const char*) ctxt->input->cur, len);
         state->base = ctxt->input->cur + len;
