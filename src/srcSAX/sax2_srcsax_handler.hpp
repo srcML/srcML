@@ -86,8 +86,6 @@ struct sax2_srcsax_handler {
 
     const xmlChar* base = nullptr;
 
-    std::string start_element_tag;
-
     unsigned long prevconsumed = 0;
 
     const xmlChar* prevbase = nullptr;

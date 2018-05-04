@@ -232,8 +232,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // handle nested units
     ctxt->sax->startElementNs = &first_start_element;
 
-    state->base = ctxt->input->cur + 1;
-
     // have to call this here because we need to first know if we are in an archive
     if (state->context->handler->start_root)
         state->context->handler->start_root(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
@@ -269,7 +267,12 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         }
     }
 
-    state->base = ctxt->input->cur;
+    // assume this is not an archive
+    state->unitsrcml.assign((const char*) ctxt->input->base, ctxt->input->cur + 1 - ctxt->input->base);
+
+    SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+
+    state->base = ctxt->input->cur + 1;
 
     SRCSAX_DEBUG_END(localname);
 }
@@ -325,7 +328,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         state->characters.clear();
 
         // unit start tag with parameters
-       // state->mode = UNIT;
+        state->unitsrcml.clear();
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     } else {
@@ -395,9 +398,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->unitsrcml.append(state->rootnsstr);
             state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
 
-        } else {
-
-            state->unitsrcml.assign((const char*) state->base, ctxt->input->cur - state->base + 1);
+            state->base = ctxt->input->cur + 1;
         }
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
@@ -549,27 +550,21 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
     if (state->collect_unit_body) {
 
-        if (state->start_element_tag.empty()) {
+        if (state->base[0] == '>')
+            state->base += 1;
 
-            if (state->base[0] == '>')
-                state->base += 1;
-
-            auto srcmllen = ctxt->input->cur + 1 - state->base;
-            if (srcmllen < 0) {
-                exit(1);
-            }
-
-            SRCML_DEBUG("BASE", (const char*) state->base, srcmllen);
-
-            state->unitsrcml.append((const char*) state->base, srcmllen);
-        } else {
-            state->unitsrcml.append(state->start_element_tag);
+        auto srcmllen = ctxt->input->cur + 1 - state->base;
+        if (srcmllen < 0) {
+            exit(1);
         }
+
+        SRCML_DEBUG("BASE", (const char*) state->base, srcmllen);
+
+        state->unitsrcml.append((const char*) state->base, srcmllen);
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
     }
 
-///    state->base = ctxt->input->cur + (state->start_element_tag.empty() ? 1 : 0);
     // Special element <escape char="0x0c"/> used to embed non-XML characters
     // extract the value of the char attribute and add to the src (text)
     if (localname == ESCAPE_ENTRY) {
@@ -583,7 +578,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
         return;
     }
 
-    state->base = ctxt->input->cur;
+    state->base = ctxt->input->cur + 1;
 
     SRCSAX_DEBUG_END(localname);
 
@@ -772,15 +767,15 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         return;
 
     state->unitsrc.append((const char*) ch, len);
-
+    state->unitsrcml.append((const char*) ch, len);
     update_ctx(ctx);
 
     // append the characters in their raw state (unescaped ?)
     if (ctxt->input->cur - state->base == 0) {
-        state->unitsrcml.append((const char*) ctxt->input->cur, len);
+//        state->unitsrcml.append((const char*) ctxt->input->cur, len);
         state->base = ctxt->input->cur + len;
     } else {
-        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
+//        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
         state->base = ctxt->input->cur;
     }
 
