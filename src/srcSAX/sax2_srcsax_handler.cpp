@@ -26,7 +26,7 @@
 #ifdef SRCSAX_DEBUG
     #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase); 
     #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch); 
-    #define SRCSAX_DEBUG_BASE(title,m) fprintf(stderr, "%s: %s %s %d BASE: pos %ld |%.*s| \n", title, __FILE__, __FUNCTION__, __LINE__, state->base - state->prevbase, 3, state->base);
+    #define SRCSAX_DEBUG_BASE(title,m) fprintf(stderr, "%s: %s %s %d %s BASE: pos %ld |%.*s| \n", title, __FILE__, __FUNCTION__, __LINE__, m, state->base - state->prevbase, 3, state->base);
     #define SRCSAX_DEBUG_START(m) SRCSAX_DEBUG_BASE("BEGIN",m)
     #define SRCSAX_DEBUG_END(m)   SRCSAX_DEBUG_BASE("END  ",m)
     #define SRCSAX_DEBUG_START_CHARS(ch,len) SRCML_DEBUG("BEGIN",ch,len);
@@ -116,7 +116,7 @@ void start_document(void* ctx) {
     state->prevconsumed = ctxt->input->consumed;
     state->prevbase = ctxt->input->base;
 
-    SRCSAX_DEBUG_START();
+    SRCSAX_DEBUG_START("");
 
     // save for dictionary lookup of common elements
     UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", strlen("unit"));
@@ -134,7 +134,7 @@ void start_document(void* ctx) {
     if (state->context->handler->start_document)
         state->context->handler->start_document(state->context);
 
-    SRCSAX_DEBUG_END();
+    SRCSAX_DEBUG_END("");
 
     if (state->context->terminate)
         return;
@@ -159,7 +159,7 @@ void end_document(void* ctx) {
 
     update_ctx(ctx);
 
-    SRCSAX_DEBUG_START();
+    SRCSAX_DEBUG_START("");
 
     // handle libxml errors
     const char* errmsg = 0;
@@ -189,7 +189,7 @@ void end_document(void* ctx) {
     if (state->context->handler->end_document)
         state->context->handler->end_document(state->context);
 
-    SRCSAX_DEBUG_END();
+    SRCSAX_DEBUG_END("");
 
     if (state->context->terminate)
         return;
@@ -235,8 +235,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // handle nested units
     ctxt->sax->startElementNs = &first_start_element;
 
-    state->base = ctxt->input->cur + 1;
-
     if (state->context->handler->start_root)
         state->context->handler->start_root(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
                                                             nb_namespaces, namespaces, 
@@ -271,7 +269,12 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         }
     }
 
-    state->base = ctxt->input->cur;
+    // assume this is not an archive
+    state->unitsrcml.assign((const char*) ctxt->input->base, ctxt->input->cur + 1 - ctxt->input->base);
+
+    SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+
+    state->base = ctxt->input->cur + 1;
 
     SRCSAX_DEBUG_END(localname);
 }
@@ -329,7 +332,6 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         state->characters.clear();
 
         // unit start tag with parameters
-        // state->mode = UNIT;
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     } else {
@@ -398,9 +400,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->unitsrcml.append(state->rootnsstr);
             state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
 
-        } else {
-
-            state->unitsrcml.assign((const char*) state->base, ctxt->input->cur - state->base + 1);
+            state->base = ctxt->input->cur + 1;
         }
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
@@ -580,7 +580,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
         return;
     }
 
-    state->base = ctxt->input->cur;
+    state->base = ctxt->input->cur + 1;
 
     SRCSAX_DEBUG_END(localname);
 
@@ -612,8 +612,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     SRCSAX_DEBUG_START(localname);
 
-    if (!state->collect_unit_body && localname != UNIT_ENTRY)
-        return;
+    update_ctx(ctx);
 
     if (state->collect_unit_body) {
 
@@ -629,25 +628,28 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         state->unitsrcml.append((const char*) state->base, srcmllen);
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
-
-        state->base = ctxt->input->cur;
     }
 
+    if (!state->collect_unit_body && localname != UNIT_ENTRY) {
+        state->base = ctxt->input->cur;
+        return;
+    }
+    
     if (localname == MACRO_LIST_ENTRY) {
-        SRCSAX_DEBUG_END();
+        SRCSAX_DEBUG_END("");
         return;
     }
 
     // plain end element
     if (localname != UNIT_ENTRY) {
-        SRCSAX_DEBUG_END();
+        SRCSAX_DEBUG_END("");
         return;
     }
 
     // At this point, we have the end of a unit
 
     // the root is the only element so we never got this started
-    if (state->mode == ROOT) {
+    if (false && state->mode == ROOT) {
 
         state->context->is_archive = state->is_archive = false;
 
@@ -774,23 +776,17 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         return;
 
     state->unitsrc.append((const char*) ch, len);
+    state->unitsrcml.append((const char*) ch, len);
 
-    // append the characters in their raw state (unescaped ?)
-    // TODO: Why is this called differently in different places? 
-    // Perhaps due to ignorableWhitespace() vs characters()?
-    if (ctxt->input->cur - state->base == 0) {
-        state->unitsrcml.append((const char*) ctxt->input->cur, len);
-        state->base = ctxt->input->cur + len;
-    } else {
-        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
-        state->base = ctxt->input->cur;
-    }
+    update_ctx(ctx);
+
+    state->base = ctxt->input->cur + len;
 
     SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
 
     BASE_DEBUG
 
-    SRCSAX_DEBUG_START_CHARS(ch, len);
+    SRCSAX_DEBUG_END_CHARS(ch, len);
 
     if (state->context->terminate)
         return;
@@ -815,13 +811,13 @@ void comment(void* ctx, const xmlChar* /* value */) {
 
     update_ctx(ctx);
 
-    SRCSAX_DEBUG_START();
-
-    // @todo Make sure we capture this for srcml collection
+    SRCSAX_DEBUG_START("");
 
     state->base = ctxt->input->cur;
 
-    SRCSAX_DEBUG_END();
+    // @todo Make sure we capture this for srcml collection
+
+    SRCSAX_DEBUG_END("");
 
     if (state->context->terminate)
         return;
@@ -847,13 +843,13 @@ void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
 
     update_ctx(ctx);
 
-    SRCSAX_DEBUG_START();
+    SRCSAX_DEBUG_START("");
 
     // @todo Make sure we capture this for srcml collection
 
     state->base = ctxt->input->cur;
 
-    SRCSAX_DEBUG_END();
+    SRCSAX_DEBUG_END("");
 
     if (state->context->terminate)
         return;
@@ -879,13 +875,12 @@ void processing_instruction(void* ctx, const xmlChar* /* target */, const xmlCha
 
     update_ctx(ctx);
 
-    SRCSAX_DEBUG_START();
+    SRCSAX_DEBUG_START("");
 
     // @todo Make sure we capture this for srcml collection
-
     state->base = ctxt->input->cur;
 
-    SRCSAX_DEBUG_END();
+    SRCSAX_DEBUG_END("");
 
     if (state->context->terminate)
         return;
