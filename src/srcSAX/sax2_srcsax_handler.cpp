@@ -23,6 +23,8 @@
 #include <sax2_srcsax_handler.hpp>
 #include <string>
 
+#define SRCSAX_DEBUG
+
 #ifdef SRCSAX_DEBUG
     #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase); 
     #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch); 
@@ -468,8 +470,6 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (state == nullptr)
         return;
 
-    update_ctx(ctx);
-
     SRCSAX_DEBUG_START(localname);
 
     state->mode = END_UNIT;
@@ -481,8 +481,6 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     if (state->collect_unit_body)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
-
-    state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END(localname);
 
@@ -508,11 +506,7 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     if (state == nullptr)
         return;
 
-    update_ctx(ctx);
-
     SRCSAX_DEBUG_START(localname);
-
-    state->base = ctxt->input->cur;
 
     if (state->context->handler->end_root)
         state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
@@ -612,14 +606,29 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     SRCSAX_DEBUG_START(localname);
 
-    update_ctx(ctx);
+    auto save_base = state->base;
+    auto save_cur = ctxt->input->cur;
 
+    // the root is the only element so we never got this started
+    if (state->mode == ROOT) {
+
+        state->context->is_archive = state->is_archive = false;
+
+        start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
+                        state->root.nb_namespaces, state->root.namespaces.data(),
+                        state->root.nb_attributes, 0, state->root.attributes.data());
+
+        if (!state->characters.empty())
+            characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
+    }
+
+    state->base = save_base;
     if (state->collect_unit_body) {
 
         if (state->base[0] == '>')
             state->base += 1;
 
-        auto srcmllen = ctxt->input->cur - state->base;
+        auto srcmllen = save_cur - state->base;
         if (srcmllen < 0) {
             exit(1);
         }
@@ -630,7 +639,12 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
     }
 
-    state->base = ctxt->input->cur;
+    state->base = save_cur;
+
+    if (ctxt->nameNr == 2 || !state->is_archive) {
+
+        end_unit(ctx, localname, prefix, URI);
+    }
 
     if (!state->collect_unit_body && localname != UNIT_ENTRY) {
 
@@ -652,24 +666,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     // At this point, we have the end of a unit
 
-    // the root is the only element so we never got this started
-    if (false && state->mode == ROOT) {
-
-        state->context->is_archive = state->is_archive = false;
-
-        start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                        state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, 0, state->root.attributes.data());
-
-        if (!state->characters.empty())
-            characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
-    }
-
-    if (ctxt->nameNr == 2 || !state->is_archive) {
-
-        end_unit(ctx, localname, prefix, URI);
-    }
-
+ 
     if (ctxt->nameNr == 1) {
 
         state->mode = END_ROOT;
