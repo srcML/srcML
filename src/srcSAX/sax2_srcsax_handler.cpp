@@ -608,7 +608,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     auto save_cur = ctxt->input->cur;
 
     // the root is the only element so we never got this started
-    if (state->mode == ROOT) {
+    if (localname == UNIT_ENTRY && state->mode == ROOT) {
 
         state->context->is_archive = state->is_archive = false;
 
