@@ -630,19 +630,23 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
     }
 
+    state->base = ctxt->input->cur;
+
     if (!state->collect_unit_body && localname != UNIT_ENTRY) {
-        state->base = ctxt->input->cur;
+
+        SRCSAX_DEBUG_END(localname);
+
         return;
     }
     
     if (localname == MACRO_LIST_ENTRY) {
-        SRCSAX_DEBUG_END("");
+        SRCSAX_DEBUG_END(localname);
         return;
     }
 
     // plain end element
     if (localname != UNIT_ENTRY) {
-        SRCSAX_DEBUG_END("");
+        SRCSAX_DEBUG_END(localname);
         return;
     }
 
@@ -780,7 +784,10 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     update_ctx(ctx);
 
-    state->base = ctxt->input->cur + len;
+    if (state->base == ctxt->input->cur)
+	    state->base = ctxt->input->cur + len;
+	else
+		state->base = ctxt->input->cur;
 
     SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
 
