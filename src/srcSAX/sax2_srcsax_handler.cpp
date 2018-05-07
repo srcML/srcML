@@ -639,25 +639,18 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     state->base = save_cur;
 
+    // plain end element
+    if (localname != UNIT_ENTRY) {
+        SRCSAX_DEBUG_END(localname);
+        return;
+    }
+
     if (ctxt->nameNr == 2 || !state->is_archive) {
 
         end_unit(ctx, localname, prefix, URI);
     }
 
-    if (!state->collect_unit_body && localname != UNIT_ENTRY) {
-
-        SRCSAX_DEBUG_END(localname);
-
-        return;
-    }
-    
     if (localname == MACRO_LIST_ENTRY) {
-        SRCSAX_DEBUG_END(localname);
-        return;
-    }
-
-    // plain end element
-    if (localname != UNIT_ENTRY) {
         SRCSAX_DEBUG_END(localname);
         return;
     }
