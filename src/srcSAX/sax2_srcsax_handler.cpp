@@ -327,10 +327,12 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (state->is_archive) {
 
         // an archive, so the characters found before this first nested element are root characters 
+        auto base_save = state->base;
         if (!state->characters.empty())
             characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
         state->characters.clear();
-
+        state->base = base_save;
+        
         // unit start tag with parameters
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
@@ -728,8 +730,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
-    // pretty much a nop for now
-    // state->base not updated due to handling when called
+	state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END_CHARS(ch, len);
 
