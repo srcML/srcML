@@ -387,6 +387,8 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     SRCSAX_DEBUG_START(localname);
 
+    state->mode = UNIT;
+
     if (state->collect_unit_body) {
 
         if (state->is_archive) {
@@ -441,8 +443,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (state->is_archive) {
         state->base = ctxt->input->cur + 1;
     }
-
-    state->mode = UNIT;
 
     SRCSAX_DEBUG_END(localname);
 
