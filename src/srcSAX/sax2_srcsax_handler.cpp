@@ -769,14 +769,25 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         return;
 
     state->unitsrc.append((const char*) ch, len);
-    state->unitsrcml.append((const char*) ch, len);
 
     update_ctx(ctx);
 
-    if (state->base == ctxt->input->cur)
+    std::string stuff((const char*) ch, len);
+
+    // libxml2 handles things in the background differently for whitespace and escaped characters
+    // using a different buffer. While for POS (Plain Old Strings), it uses the original buffer
+    if (state->base == ctxt->input->cur) {
+        // plain old strings
+//        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+        state->unitsrcml.append((const char*) ch, len);
 	    state->base = ctxt->input->cur + len;
-	else
+    } else {
+        // whitespace and escaped characters
+//        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+//        fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur - state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->cur - state->base);
+        state->unitsrcml.append((const char*) ctxt->input->cur - 1, ctxt->input->cur - state->base);
 		state->base = ctxt->input->cur;
+    }
 
     SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
 
