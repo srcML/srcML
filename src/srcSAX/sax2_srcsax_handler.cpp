@@ -352,6 +352,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         // pass on the parameters to the regular start element
         start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
+    state->mode = UNIT;
 }
 
 /**
