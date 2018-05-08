@@ -266,18 +266,19 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         }
     }
 
+    SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+
+    SRCSAX_DEBUG_END(localname);
+
     // assume this is not a solo unit, but delay calling the upper levels until we are sure
     auto save = state->context->handler->start_unit;
     state->context->handler->start_unit = 0;
     start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     state->context->handler->start_unit = save;
+    state->mode = ROOT;
 
     // handle nested units
     ctxt->sax->startElementNs = &first_start_element;
-
-    SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
-
-    SRCSAX_DEBUG_END(localname);
 }
 
 /**
@@ -419,6 +420,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                             nb_namespaces, namespaces,
                                             nb_attributes, attributes);
+
     // assuming not collecting the unit body
     ctxt->sax->startElementNs = 0;
     ctxt->sax->ignorableWhitespace = ctxt->sax->characters = 0;
@@ -625,9 +627,10 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     state->base = ctxt->input->cur;
 
+    SRCSAX_DEBUG_END(localname);
+
     // plain end element
     if (localname != UNIT_ENTRY) {
-        SRCSAX_DEBUG_END(localname);
         return;
     }
 
@@ -657,8 +660,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
         end_root(ctx, localname, prefix, URI);
     }
-
-    SRCSAX_DEBUG_END(localname);
 
     if (state->context->terminate)
         return;
