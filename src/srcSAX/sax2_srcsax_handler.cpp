@@ -394,11 +394,13 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         // find end of unit tag
         int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
 
-        // merge the namespaces from the root into this one
-        state->unitsrcml.assign((const char*) state->base, pos);
-        if (state->is_archive)
-            state->unitsrcml.append(state->rootnsstr);
-        state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
+        if (pos >= 0) {
+            // merge the namespaces from the root into this one
+            state->unitsrcml.assign((const char*) state->base, pos);
+            if (state->is_archive)
+                state->unitsrcml.append(state->rootnsstr);
+            state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
+        }
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
 
@@ -539,11 +541,15 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
     if (state->collect_unit_body) {
 
-        if (state->base[0] == '>')
+        // end previous start element
+        if (state->base[0] == '>') {
+            state->unitsrcml.append(1, '>');
             state->base += 1;
+        }
 
-        auto srcmllen = ctxt->input->cur + 1 - state->base;
+        auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
+            fprintf(stderr, "srcml: Internal error");
             exit(1);
         }
 
@@ -567,7 +573,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
         return;
     }
 
-    state->base = ctxt->input->cur + 1;
+    state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END(localname);
 
@@ -602,11 +608,12 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     // collect end element tag
     if (state->collect_unit_body) {
 
-        if (state->base[0] == '>')
-            state->base += 1;
+//        if (state->base[0] == '>')
+//            state->base += 1;
 
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
+            fprintf(stderr, "srcml: Internal error");
             exit(1);
         }
 
@@ -679,6 +686,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
+    // skip over
 	state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END_CHARS(ch, len);
@@ -709,9 +717,6 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
-    if (state->base[0] == '>')
-        state->base += 1;
-
     BASE_DEBUG;
 
     if (!state->collect_unit_body)
@@ -721,7 +726,13 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     update_ctx(ctx);
 
-    std::string stuff((const char*) ch, len);
+    // end previous start element
+    if (state->base[0] == '>') {
+        state->unitsrcml.append(1, '>');
+        state->base += 1;
+    }
+
+ //   std::string stuff((const char*) ch, len);
 
     // libxml2 handles things in the background differently for whitespace and escaped characters
     // using a different buffer. While for POS (Plain Old Strings), it uses the original buffer
