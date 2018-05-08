@@ -396,7 +396,8 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
         // merge the namespaces from the root into this one
         state->unitsrcml.assign((const char*) state->base, pos);
-        state->unitsrcml.append(state->rootnsstr);
+        if (state->is_archive)
+            state->unitsrcml.append(state->rootnsstr);
         state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
