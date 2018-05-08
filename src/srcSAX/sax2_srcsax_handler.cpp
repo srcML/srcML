@@ -41,6 +41,12 @@
     #define SRCSAX_DEBUG_END_CHARS(ch,len)
 #endif
 
+// libxml2 places elements into a dictionary
+// once initialized, can compare pointers instead of strings
+static const xmlChar* UNIT_ENTRY = nullptr;
+static const xmlChar* MACRO_LIST_ENTRY = nullptr;
+static const xmlChar* ESCAPE_ENTRY = nullptr;
+
 /**
  * factory
  *
@@ -59,8 +65,7 @@ xmlSAXHandler srcsax_sax2_factory() {
     sax.startElementNs = &start_root;
     sax.endElementNs = &end_element;
 
-    sax.characters = &characters_unit;
-    sax.ignorableWhitespace = &characters_unit;
+    sax.characters = sax.ignorableWhitespace = &characters_unit;
 
     sax.comment = &comment;
     sax.cdataBlock = &cdata_block;
@@ -68,10 +73,6 @@ xmlSAXHandler srcsax_sax2_factory() {
 
     return sax;
 }
-
-static const xmlChar* UNIT_ENTRY = nullptr;
-static const xmlChar* MACRO_LIST_ENTRY = nullptr;
-static const xmlChar* ESCAPE_ENTRY = nullptr;
 
 // updates the state being used to extract XML directly from the context
 // necessary because as libxml buffers are full, data is moved
@@ -733,19 +734,19 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         state->base += 1;
     }
 
- //   std::string stuff((const char*) ch, len);
-
     // libxml2 handles things in the background differently for whitespace and escaped characters
     // using a different buffer. While for POS (Plain Old Strings), it uses the original buffer
     if (state->base == ctxt->input->cur) {
+
         // plain old strings
-//        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
         state->unitsrcml.append((const char*) ch, len);
+
+        // libxml2 passes ctxt->input->cur as ch, so then must increment to len
 	    state->base = ctxt->input->cur + len;
+
     } else {
+
         // whitespace and escaped characters
-//        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-//        fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur - state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->cur - state->base);
         state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
 		state->base = ctxt->input->cur;
     }
