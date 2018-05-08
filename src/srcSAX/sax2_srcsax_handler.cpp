@@ -136,9 +136,6 @@ void start_document(void* ctx) {
         state->context->handler->start_document(state->context);
 
     SRCSAX_DEBUG_END("");
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -191,9 +188,6 @@ void end_document(void* ctx) {
         state->context->handler->end_document(state->context);
 
     SRCSAX_DEBUG_END("");
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -352,9 +346,6 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         // pass on the parameters to the regular start element
         start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -443,9 +434,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     state->unitsrc.clear();
 
     SRCSAX_DEBUG_END(localname);
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -481,9 +469,6 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
     SRCSAX_DEBUG_END(localname);
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -579,9 +564,6 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
     state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END(localname);
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -658,9 +640,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
         end_root(ctx, localname, prefix, URI);
     }
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -689,9 +668,6 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
 	state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END_CHARS(ch, len);
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -753,9 +729,6 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     BASE_DEBUG
 
     SRCSAX_DEBUG_END_CHARS(ch, len);
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -787,9 +760,6 @@ void comment(void* ctx, const xmlChar* /* value */) {
     }
 
     SRCSAX_DEBUG_END("");
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -827,9 +797,6 @@ void cdata_block(void* ctx, const xmlChar* value, int len) {
     }
 
     SRCSAX_DEBUG_END("");
-
-    if (state->context->terminate)
-        return;
 }
 
 /**
@@ -862,7 +829,4 @@ void processing_instruction(void* ctx, const xmlChar* /* target */, const xmlCha
     }
 
     SRCSAX_DEBUG_END("");
-
-    if (state->context->terminate)
-        return;
 }
