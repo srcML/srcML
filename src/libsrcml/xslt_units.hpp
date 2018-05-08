@@ -154,12 +154,11 @@ public :
 
         // apply the style sheet to the document, which is the individual unit
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-        xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, ctxt->myDoc, cparams.data(), 0, 0, 0);
+        xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, doc, cparams.data(), 0, 0, 0);
 #else
-        xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, ctxt->myDoc, cparams.data(), 0, 0, 0);
+        xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0);
 #endif
         if (!res) {
-
             fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
             return SRCML_STATUS_ERROR;
         }

@@ -83,14 +83,14 @@ public :
     virtual bool apply() {
 
         // validate
-        int n = xmlRelaxNGValidateDoc(rngctx, ctxt->myDoc);
+        int n = xmlRelaxNGValidateDoc(rngctx, doc);
         if (n != 0)
             return true;
 
         // output if it validates
 
         // get the root node of current unit
-        xmlNodePtr node = xmlDocGetRootElement(ctxt->myDoc);
+        xmlNodePtr node = xmlDocGetRootElement(doc);
         if (!node)
             return true;
 
