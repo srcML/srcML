@@ -611,9 +611,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     // collect end element tag
     if (state->collect_unit_body) {
 
-//        if (state->base[0] == '>')
-//            state->base += 1;
-
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
             fprintf(stderr, "srcml: Internal error");
@@ -782,9 +779,12 @@ void comment(void* ctx, const xmlChar* /* value */) {
 
     SRCSAX_DEBUG_START("");
 
-    state->base = ctxt->input->cur;
+    if (state->collect_unit_body) {
 
-    // @todo Make sure we capture this for srcml collection
+        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
+
+        state->base = ctxt->input->cur;
+    }
 
     SRCSAX_DEBUG_END("");
 
@@ -801,7 +801,7 @@ void comment(void* ctx, const xmlChar* /* value */) {
  * Called when a pcdata block has been parsed.
  * Immediately calls supplied handlers function.
  */
-void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
+void cdata_block(void* ctx, const xmlChar* value, int len) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     if (ctxt == nullptr)
@@ -815,8 +815,16 @@ void cdata_block(void* ctx, const xmlChar* /* value */, int /* len */) {
     SRCSAX_DEBUG_START("");
 
     // @todo Make sure we capture this for srcml collection
+    if (state->collect_unit_body) {
 
-    state->base = ctxt->input->cur;
+        // xml can get raw
+        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
+
+        // CDATA is character data
+        state->unitsrc.append((const char*) value, len);
+
+        state->base = ctxt->input->cur;
+    }
 
     SRCSAX_DEBUG_END("");
 
@@ -846,8 +854,12 @@ void processing_instruction(void* ctx, const xmlChar* /* target */, const xmlCha
 
     SRCSAX_DEBUG_START("");
 
-    // @todo Make sure we capture this for srcml collection
-    state->base = ctxt->input->cur;
+    if (state->collect_unit_body) {
+
+        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
+
+        state->base = ctxt->input->cur;
+    }
 
     SRCSAX_DEBUG_END("");
 
