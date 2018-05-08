@@ -227,10 +227,9 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->mode = ROOT;
 
-    if (state->context->handler->start_root)
-        state->context->handler->start_root(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
-                                                            nb_namespaces, namespaces, 
-                                                            nb_attributes, attributes);
+    // wait to call upper-level callbacks until we know whether this is an archive or not
+    // this is done in first_start_element()
+
     if (state->context->terminate)
         return;
 
@@ -323,6 +322,13 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     ctxt->sax->startElementNs = &start_element;
 
     SRCSAX_DEBUG_END(localname);
+
+    // call the upper-level callbacks know that we know if it is an archive or a solo unit
+    if (state->context->handler->start_root)
+        state->context->handler->start_root(state->context, (const char*) state->root.localname, 
+                        (const char*) state->root.prefix, (const char*) state->root.URI,
+                        state->root.nb_namespaces, state->root.namespaces.data(),
+                        state->root.nb_attributes, state->root.attributes.data());
 
     // decide if this start element is for a unit (archive), or just a regular element (solo unit)
     if (state->is_archive) {
@@ -620,6 +626,13 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     if (state->mode == ROOT) {
 
         state->context->is_archive = state->is_archive = false;
+
+        if (state->context->handler->start_root)
+            state->context->handler->start_root(state->context, (const char*) state->root.localname, 
+                        (const char*) state->root.prefix, (const char*) state->root.URI,
+                        state->root.nb_namespaces, state->root.namespaces.data(),
+                        state->root.nb_attributes, state->root.attributes.data());
+
 
         // solo unit, so we end up calling upper levels start_unit() with the data used for start_root()
         if (state->context->handler->start_unit)
