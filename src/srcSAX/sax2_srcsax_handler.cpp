@@ -59,8 +59,8 @@ xmlSAXHandler srcsax_sax2_factory() {
     sax.startElementNs = &start_root;
     sax.endElementNs = &end_element;
 
-    sax.characters = &save_characters;
-    sax.ignorableWhitespace = &save_characters;
+    sax.characters = &characters_unit;
+    sax.ignorableWhitespace = &characters_unit;
 
     sax.comment = &comment;
     sax.cdataBlock = &cdata_block;
@@ -225,15 +225,12 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     SRCSAX_DEBUG_START(localname);
 
-    // cache the root data because we don't know if we are in an archive or not
+    // cache the root data because we don't know if we are in an archive or solo unit
     state->root = std::move(srcml_element(localname, prefix, URI,
                                           nb_namespaces, namespaces,
                                           nb_attributes, nb_defaulted, attributes));
 
     state->mode = ROOT;
-
-    // handle nested units
-    ctxt->sax->startElementNs = &first_start_element;
 
     if (state->context->handler->start_root)
         state->context->handler->start_root(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
@@ -269,12 +266,16 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         }
     }
 
-    // assume this is not an archive
-    state->unitsrcml.assign((const char*) ctxt->input->base, ctxt->input->cur + 1 - ctxt->input->base);
+    // assume this is not a solo unit, but delay calling the upper levels until we are sure
+    auto save = state->context->handler->start_unit;
+    state->context->handler->start_unit = 0;
+    start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
+    state->context->handler->start_unit = save;
+
+    // handle nested units
+    ctxt->sax->startElementNs = &first_start_element;
 
     SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
-
-    state->base = ctxt->input->cur + 1;
 
     SRCSAX_DEBUG_END(localname);
 }
@@ -305,8 +306,6 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (state == nullptr)
         return;
 
-    update_ctx(ctx);
-
     SRCSAX_DEBUG_START(localname);
 
     // if macros are found, then must return, but first save them if necessary
@@ -321,39 +320,36 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     if (state->context->terminate)
         return;
 
-    // we have an archive if the first element after the root is the <unit>
+    // archive when the first element after the root is <unit>
     state->context->is_archive = state->is_archive = (localname == UNIT_ENTRY);
 
-    if (state->is_archive) {
+    // turn off first_start_element() handling
+    ctxt->sax->startElementNs = &start_element;
 
-        // an archive, so the characters found before this first nested element are root characters 
-        auto base_save = state->base;
-        if (!state->characters.empty())
-            characters_root(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
-        state->characters.clear();
-        state->base = base_save;
+    SRCSAX_DEBUG_END(localname);
+
+    // decide if this start element is for a unit (archive), or just a regular element (solo unit)
+    if (state->is_archive) {
         
-        // unit start tag with parameters
+        // restart unit count due to call of start_unit() in start_root() when we assumed a solo unit
+        state->unit_count = 0;
+
+        // unit starts for real, discarding previous start_unit() in start_root()
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     } else {
 
-        // not an archive, so we end up calling start_unit() with the data used for start_root()
-        // state->mode = UNIT;
-        start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
+        // solo unit, so we end up calling upper levels start_unit() with the data used for start_root()
+        if (state->context->handler->start_unit)
+            state->context->handler->start_unit(state->context, (const char*) state->root.localname, 
+                        (const char*) state->root.prefix, (const char*) state->root.URI,
                         state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, 0, state->root.attributes.data());
+                        state->root.nb_attributes, state->root.attributes.data());
 
-        // not an archive, so the characters found before this first nested element are unit characters 
-        if (!state->characters.empty())
-            characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
-        state->characters.clear();
 
-        // use the parameters in this call to call the real start_element
+        // pass on the parameters to the regular start element
         start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     }
-
-    SRCSAX_DEBUG_END(localname);
 
     if (state->context->terminate)
         return;
@@ -391,21 +387,17 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->mode = UNIT;
 
+    state->unit_count += 1;
+
     if (state->collect_unit_body) {
 
-        if (state->is_archive) {
+        // find end of unit tag
+        int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
 
-            // find end of unit tag
-            int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
-
-            // merge the namespaces from the root into this one
-            // TODO: Only necessary for archive
-            state->unitsrcml.assign((const char*) state->base, pos);
-            state->unitsrcml.append(state->rootnsstr);
-            state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
-
-            state->base = ctxt->input->cur + 1;
-        }
+        // merge the namespaces from the root into this one
+        state->unitsrcml.assign((const char*) state->base, pos);
+        state->unitsrcml.append(state->rootnsstr);
+        state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
 
@@ -413,15 +405,18 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         state->content_begin = (int) state->unitsrcml.size();
     }
 
+    // update position
+    state->base = ctxt->input->cur + 1;
+
     if (state->context->terminate)
         return;
 
-    ++state->unit_count;
-
+    // upper-level start unit handling
     if (state->context->handler->start_unit)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                             nb_namespaces, namespaces,
                                             nb_attributes, attributes);
+    // assuming not collecting the unit body
     ctxt->sax->startElementNs = 0;
     ctxt->sax->ignorableWhitespace = ctxt->sax->characters = 0;
     ctxt->sax->comment = 0;
@@ -440,11 +435,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     // start to collect source
     state->unitsrc.clear();
-
-    // update position
-    if (state->is_archive) {
-        state->base = ctxt->input->cur + 1;
-    }
 
     SRCSAX_DEBUG_END(localname);
 
@@ -471,6 +461,8 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         return;
 
     SRCSAX_DEBUG_START(localname);
+
+    SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
 
     state->mode = END_UNIT;
 
@@ -606,29 +598,13 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     SRCSAX_DEBUG_START(localname);
 
-    auto save_base = state->base;
-    auto save_cur = ctxt->input->cur;
-
-    // the root is the only element so we never got this started
-    if (localname == UNIT_ENTRY && state->mode == ROOT) {
-
-        state->context->is_archive = state->is_archive = false;
-
-        start_unit(ctx, state->root.localname, state->root.prefix, state->root.URI,
-                        state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, 0, state->root.attributes.data());
-
-        if (!state->characters.empty())
-            characters_unit(ctx, (const xmlChar*) state->characters.c_str(), (int)state->characters.size());
-    }
-
-    state->base = save_base;
+    // collect end element tag
     if (state->collect_unit_body) {
 
         if (state->base[0] == '>')
             state->base += 1;
 
-        auto srcmllen = save_cur - state->base;
+        auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
             exit(1);
         }
@@ -639,7 +615,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
     }
 
-    state->base = save_cur;
+    state->base = ctxt->input->cur;
 
     // plain end element
     if (localname != UNIT_ENTRY) {
@@ -647,18 +623,25 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         return;
     }
 
+    // At this point, we have the end of a unit
+
+    // the root is the only element so we never got this started
+    if (state->mode == ROOT) {
+
+        state->context->is_archive = state->is_archive = false;
+
+        // solo unit, so we end up calling upper levels start_unit() with the data used for start_root()
+        if (state->context->handler->start_unit)
+            state->context->handler->start_unit(state->context, (const char*) state->root.localname, 
+                        (const char*) state->root.prefix, (const char*) state->root.URI,
+                        state->root.nb_namespaces, state->root.namespaces.data(),
+                        state->root.nb_attributes, state->root.attributes.data());
+    }
+
     if (ctxt->nameNr == 2 || !state->is_archive) {
 
         end_unit(ctx, localname, prefix, URI);
     }
-
-    if (localname == MACRO_LIST_ENTRY) {
-        SRCSAX_DEBUG_END(localname);
-        return;
-    }
-
-    // At this point, we have the end of a unit
-
  
     if (ctxt->nameNr == 1) {
 
@@ -668,41 +651,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     }
 
     SRCSAX_DEBUG_END(localname);
-
-    if (state->context->terminate)
-        return;
-}
-
-/**
- * save_characters
- * @param ctx an xmlParserCtxtPtr
- * @param ch the characers
- * @param len number of characters
- *
- * SAX handler function for character handling before we
- * know if we have an archive or not.
- * Immediately calls supplied handlers function.
- */
-void save_characters(void* ctx, const xmlChar* ch, int len) {
-
-    auto ctxt = (xmlParserCtxtPtr) ctx;
-    if (ctxt == nullptr)
-        return;
-    auto state = (sax2_srcsax_handler*) ctxt->_private;
-    if (state == nullptr)
-        return;
-
-    update_ctx(ctx);
-
-    SRCSAX_DEBUG_START_CHARS(ch, len);
-
-    // cache the characters since we don't know if in unit or outer archive
-    // note that characters() could be called more than once for a particular sequence of characters, so append
-    state->characters.append((const char *)ch, len);
-
-    state->base = ctxt->input->cur;
-
-    SRCSAX_DEBUG_END_CHARS(ch, len);
 
     if (state->context->terminate)
         return;
@@ -785,7 +733,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         // whitespace and escaped characters
 //        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 //        fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur - state->base: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  ctxt->input->cur - state->base);
-        state->unitsrcml.append((const char*) ctxt->input->cur - 1, ctxt->input->cur - state->base);
+        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
 		state->base = ctxt->input->cur;
     }
 

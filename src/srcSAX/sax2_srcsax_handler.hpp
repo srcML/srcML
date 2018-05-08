@@ -69,9 +69,6 @@ struct sax2_srcsax_handler {
     /** temporary storage of meta-tags */
     std::vector<srcml_element> meta_tags;
 
-    /** temporary storage of root characters */
-    std::string characters;
-
     /** used to detect root unit */
     bool is_archive = false;
 
@@ -236,18 +233,6 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, c
  * for either end_root end_unit or end_element_ns.
  */
 void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
-
-/**
- * save_characters
- * @param ctx an xmlParserCtxtPtr
- * @param ch the characers
- * @param len number of characters
- *
- * SAX handler function for character handling before we
- * know if we have an archive or not.
- * Immediately calls supplied handlers function.
- */
-void save_characters(void* ctx, const xmlChar* ch, int len);
 
 /**
  * characters_root
