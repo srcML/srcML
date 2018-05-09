@@ -94,8 +94,6 @@ struct sax2_srcsax_handler {
 
     int content_begin = 0;
     int content_end = 0;
-
-    bool skip = false;
 };
 
 /**

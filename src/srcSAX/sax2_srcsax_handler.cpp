@@ -467,7 +467,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     state->mode = END_UNIT;
 
-    if (!state->skip && state->context->handler->end_unit)
+    if (state->context->handler->end_unit)
         state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
     ctxt->sax->startElementNs = &start_unit;
