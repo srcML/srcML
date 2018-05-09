@@ -35,7 +35,13 @@
 
 #include <unit_dom.hpp>
 
-#if defined(__GNUG__) && !defined(__MINGW32__)
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+#define DLLOAD
+#else
+#undef DLLOAD
+#endif
+
+#ifdef DLLOAD
 typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
 
 typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *,
@@ -84,7 +90,7 @@ public :
         }
         cparams.back() = 0;
 
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+#ifdef DLLOAD
         handle = dlopen("libxslt.so", RTLD_LAZY);
         if (!handle) {
             handle = dlopen("libxslt.so.1", RTLD_LAZY);
@@ -114,7 +120,7 @@ public :
      * Destructor.  Closes dynamically loaded library.
      */
     virtual ~xslt_units() {
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+#ifdef DLLOAD
         dlclose(handle);
 #endif
     }
@@ -187,8 +193,8 @@ private :
     xsltStylesheetPtr stylesheet;
     std::vector<std::string> params;
     std::vector<const char*> cparams;
-#ifndef WIN32
- //   xsltApplyStylesheetUser_function xsltApplyStylesheetUser;
+#ifdef DLLOAD
+    xsltApplyStylesheetUser_function xsltApplyStylesheetUser;
 #endif
     void* handle;
     srcml_archive* oarchive;
