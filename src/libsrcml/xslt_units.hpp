@@ -40,7 +40,6 @@ typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
 
 typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *,
                                                        xsltTransformContextPtr);
-typedef xmlDocPtr (*xsltApplyStylesheet_function) (xsltStylesheetPtr,xmlDocPtr,const char **);
 
 //typedef int (*xsltSaveResultTo_function) (xmlOutputBufferPtr, xmlDocPtr, xsltStylesheetPtr);
 //xsltSaveResultTo_function xsltSaveResultToDynamic;
@@ -99,10 +98,11 @@ public :
         }
 
         dlerror();
-        *(VOIDPTR *)(&xsltApplyStylesheetUserDynamic) = dlsym(handle, "xsltApplyStylesheetUser");
+        *(VOIDPTR *)(&xsltApplyStylesheetUser) = dlsym(handle, "xsltApplyStylesheetUser");
         char* error;
         if ((error = dlerror()) != NULL) {
             dlclose(handle);
+            handle = 0;
             return;
         }
 #endif
@@ -139,11 +139,7 @@ public :
         setPosition((int)unit_count);
 
         // apply the style sheet to the document, which is the individual unit
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-        xmlDocPtr res = xsltApplyStylesheetUserDynamic(stylesheet, doc, cparams.data(), 0, 0, 0);
-#else
         xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0);
-#endif
         if (!res) {
             fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
             return SRCML_STATUS_ERROR;
@@ -192,7 +188,7 @@ private :
     std::vector<std::string> params;
     std::vector<const char*> cparams;
 #ifndef WIN32
-    xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
+ //   xsltApplyStylesheetUser_function xsltApplyStylesheetUser;
 #endif
     void* handle;
     srcml_archive* oarchive;
