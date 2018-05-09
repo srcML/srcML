@@ -169,7 +169,21 @@ int src_input_text(ParseQueue& queue,
                 {
                     int value = 0;
                     int offset = *epos == '0' ? 1 : 0;
-                    int maxlength = 3;
+                    /* 
+                        Spec 6.4.4.4 Character constants:
+
+                        octal-escape-sequence:
+                        \ octal-digit
+                        \ octal-digit octal-digit
+                        \ octal-digit octal-digit octal-digit
+
+                        However, man echo (man gecho) states:
+
+                        \0NNN  byte with octal value NNN (1 to 3 digits)
+
+                        So, we will allow both
+                    */
+                    int maxlength = *epos == '0' ? 4 : 3;
                     while (offset < maxlength && isodigit(*(epos + offset))) {
                         value = (*(epos + offset) - '0') + 8 * value;
                         ++offset;
