@@ -132,8 +132,6 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
     boost::optional<std::string> attr_name;
     /** the optional attribute value */
     boost::optional<std::string> attr_value;
-
-
  };
 
 /**
