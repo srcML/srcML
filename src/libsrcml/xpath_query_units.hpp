@@ -582,7 +582,7 @@ public :
             }
         }
 
-        output_archive->translator->add_unit_raw_node(a_node, doc);
+        output_archive->translator->add_unit_node(a_node, doc);
     }
 
     // process the resulting nodes

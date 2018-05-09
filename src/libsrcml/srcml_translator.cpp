@@ -373,7 +373,7 @@ bool srcml_translator::add_unit_raw(const char* xml, int size) {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
+bool srcml_translator::add_unit_node(xmlNodePtr node, xmlDocPtr doc) {
 
     if (is_outputting_unit)
         return false;

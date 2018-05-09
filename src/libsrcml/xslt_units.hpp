@@ -186,14 +186,7 @@ public :
         xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
         xmlNsPtr* skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
 
-        static xmlBufferPtr lbuffer = xmlBufferCreate();
-        int size = xmlNodeDump(lbuffer, ctxt->myDoc, a_node, 0, 0);
-        if (size == 0)
-            return;
-
-        oarchive->translator->add_unit_raw((const char*) xmlBufferContent(lbuffer), size);
-
-        xmlBufferEmpty(lbuffer);
+        oarchive->translator->add_unit_node(a_node, ctxt->myDoc);
 
         if (skip)
             *skip = hrefptr;
