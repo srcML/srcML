@@ -278,9 +278,11 @@ struct srcml_unit {
     // if body has been read
     bool read_body = false;
 
-    /** a buffer to store srcml from read and after parsing */
-    std::string src;
+    /** srcml from read and after parsing */
     std::string srcml;
+
+    /** src from read */
+    std::string src;
 
     /** record the begin and end of the actual content */
     // int instead of size_t since used with libxml2
