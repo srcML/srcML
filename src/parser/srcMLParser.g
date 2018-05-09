@@ -8870,7 +8870,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } ({ isoption(parser_options, SRCML_OPTION_OPENMP) }? omp_directive | (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)*) |
+        } (omp_directive | (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)*) |
 
         ERRORPREC
         {

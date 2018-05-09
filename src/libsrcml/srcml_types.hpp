@@ -37,8 +37,6 @@ const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
 const unsigned int SRCML_OPTION_CPPIF_CHECK       = 1<<16;
 /** Extra processing of @code#line@endcode for position information */
 const unsigned int SRCML_OPTION_LINE              = 1<<15;
-/** Markups OpenMP in special namespace */
-const unsigned int SRCML_OPTION_OPENMP            = 1<<25;
 /** Apply transformations to the entire srcML file (default: each unit */
 const unsigned int SRCML_OPTION_APPLY_ROOT        = 1<<8;
 /** Debug time attribute */
@@ -57,7 +55,7 @@ const unsigned int SRCML_OPTION_HASH              = 1<<10;
 const unsigned int SRCML_OPTION_DEFAULT           = (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH);
  
 /** All default enabled options */
-const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_OPENMP);
+const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL);
 
 #include <libxml/xmlwriter.h>
 

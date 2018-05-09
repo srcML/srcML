@@ -452,8 +452,6 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
         archive->options |= SRCML_OPTION_DEBUG;
     } else if (suri == SRCML_POSITION_NS_URI) {
         archive->options |= SRCML_OPTION_POSITION;
-    } else if (suri == SRCML_OPENMP_NS_URI) {
-        archive->options |= SRCML_OPTION_OPENMP;
     }
 /*
     // @todo could this be set elsewhere?
