@@ -83,7 +83,7 @@ public :
 		    }
         }
 
-        oarchive->translator->add_unit_node(a_node, ctxt->myDoc);
+        oarchive->translator->add_unit(a_node, ctxt->myDoc);
 
         if (save)
 	        a_node->nsDef = save;
