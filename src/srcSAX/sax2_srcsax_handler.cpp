@@ -553,21 +553,20 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
         state->unitsrcml.append((const char*) state->base, srcmllen);
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+
+        // Special element <escape char="0x0c"/> used to embed non-XML characters
+        // extract the value of the char attribute and add to the src (text)
+        if (localname == ESCAPE_ENTRY) {
+
+            std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
+
+            char value = (int)strtol(svalue.c_str(), NULL, 0);
+
+            state->unitsrc.append(1, value);
+
+            return;
+        }
     }
-
-    // Special element <escape char="0x0c"/> used to embed non-XML characters
-    // extract the value of the char attribute and add to the src (text)
-    if (localname == ESCAPE_ENTRY) {
-
-        std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
-
-        char value = (int)strtol(svalue.c_str(), NULL, 0);
-
-        state->unitsrc.append(1, value);
-
-        return;
-    }
-
     state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END(localname);
