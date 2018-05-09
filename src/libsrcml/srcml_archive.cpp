@@ -1004,8 +1004,6 @@ int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*wr
     if (archive == NULL || context == NULL || write_callback == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->context = context;
-
     xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateIO((int (*)(void *, const char *, int)) write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
 
     return srcml_archive_write_open_internal(archive, output_buffer);
@@ -1165,8 +1163,6 @@ int srcml_archive_read_open_io(srcml_archive* archive, void * context, ssize_t (
 
     if (archive == NULL || context == NULL || read_callback == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
-
-    archive->context = context;
 
     archive->input = xmlParserInputBufferCreateIO((libxml2_read) read_callback, close_callback, context, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
