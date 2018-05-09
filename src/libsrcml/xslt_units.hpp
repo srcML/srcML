@@ -180,35 +180,19 @@ public :
 
     virtual void outputResult(xmlNodePtr a_node) {
 
-        bool is_archive = (oarchive->options & SRCML_OPTION_ARCHIVE) > 0;
-
-        // remove src namespace
-        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
-        xmlNsPtr* skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
-
-        oarchive->translator->add_unit(a_node, ctxt->myDoc);
-
-        if (skip)
-            *skip = hrefptr;
-    }
-
-        // removes the namespace from the element
-    xmlNsPtr* xmlRemoveNs(xmlNodePtr a_node, xmlNsPtr hrefptr) {
-
-        if (!hrefptr)
-            return 0;
-
-        xmlNsPtr* skip = 0;
-        for (xmlNsPtr* pns = &a_node->nsDef; pns; pns = &((*pns)->next)) {
-            if ((*pns) == hrefptr) {
-                skip = pns;
-                *skip = (*skip)->next;
-                break;
-            }
+        // remove src namespace, needed for performing XSLT transformation, but not
+        // needed for output of an embedded unit in an archive
+        if ((oarchive->options & SRCML_OPTION_ARCHIVE) > 0) {
+            // remove the first namespace, which is the srcML one
+            // @todo Generalize this
+            xmlNsPtr save = a_node->nsDef;
+            a_node->nsDef = a_node->nsDef->next;
+            xmlFreeNs(save);
         }
 
-        return skip;
+        oarchive->translator->add_unit(a_node, doc);
     }
+
     /**
      * end_output
      *
