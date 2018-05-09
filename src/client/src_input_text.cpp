@@ -169,7 +169,7 @@ int src_input_text(ParseQueue& queue,
                 {
                     int value = 0;
                     int offset = *epos == '0' ? 1 : 0;
-                    int maxlength = *epos == '0' ? 4 : 3;
+                    int maxlength = 3;
                     while (offset < maxlength && isodigit(*(epos + offset))) {
                         value = (*(epos + offset) - '0') + 8 * value;
                         ++offset;
@@ -181,7 +181,7 @@ int src_input_text(ParseQueue& queue,
                     }
 
                     if (value == 0) {
-                        ptext = epos + offset + 1;
+                        ptext = epos + offset;
 
                         srcml_archive_enable_full_archive(srcml_arch);
 
