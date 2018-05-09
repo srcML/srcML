@@ -37,8 +37,6 @@ const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
 const unsigned int SRCML_OPTION_LINE              = 1<<15;
 /** Apply transformations to the entire srcML file (default: each unit */
 const unsigned int SRCML_OPTION_APPLY_ROOT        = 1<<8;
-/** Debug time attribute */
-const unsigned int SRCML_OPTION_DEBUG_TIMER       = 1<<17;
 /** Parser output special tokens for debugging the parser */
 const unsigned int SRCML_OPTION_DEBUG             = 1<<24;
 /** Is a fragment, i.e., no unit element */
