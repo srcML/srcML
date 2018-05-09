@@ -351,7 +351,6 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         { SRCML_OPTION_CPP_TEXT_ELSE,  "CPP_TEXT_ELSE" },
         { SRCML_OPTION_CPP_MARKUP_IF0, "CPP_MARKUP_IF0" },
         { SRCML_OPTION_LINE,           "LINE" },
-        { SRCML_OPTION_CPPIF_CHECK,    "CPPIF_CHECK" },
     }};
     std::string soptions;
     for (const auto& pair : sep) {
@@ -391,7 +390,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         // source encoding attribute
         { UNIT_ATTRIBUTE_SOURCE_ENCODING, isoption(options, SRCML_OPTION_STORE_ENCODING) ? encoding : 0 },
 
-        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && isoption(options, SRCML_OPTION_CPPIF_CHECK) ? soptions.c_str() : 0 },
+        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && !soptions.empty() ? soptions.c_str() : 0 },
 
     };
 

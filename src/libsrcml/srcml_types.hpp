@@ -33,8 +33,6 @@
 const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<5;
 /** Not sure what this used for */
 const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
-/** Additional cpp:if/cpp:endif checking */
-const unsigned int SRCML_OPTION_CPPIF_CHECK       = 1<<16;
 /** Extra processing of @code#line@endcode for position information */
 const unsigned int SRCML_OPTION_LINE              = 1<<15;
 /** Apply transformations to the entire srcML file (default: each unit */

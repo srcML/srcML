@@ -434,8 +434,6 @@ public :
                         archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
                     else if (option == "LINE")
                         archive->options |= SRCML_OPTION_LINE;
-                    else if (option == "CPPIF_CHECK")
-                        archive->options |= SRCML_OPTION_CPPIF_CHECK;
                 }
 
             } else if (attribute == "hash") 

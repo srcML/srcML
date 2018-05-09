@@ -8870,7 +8870,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } (omp_directive | (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)*) |
+        } (omp_directive | (cpp_literal | cpp_symbol)*) |
 
         ERRORPREC
         {
@@ -9086,7 +9086,8 @@ eol_post[int directive_token, bool markblockzero] {
 
                 // should work unless also creates a dangling lcurly or lparen
                 // in which case may need to run on everthing except else.
-                if (isoption(parser_options, SRCML_OPTION_CPPIF_CHECK) && !inputState->guessing) {
+                // @todo Leaving off for now, with no option. Test thoroughly, and then turn on by default
+                if (false && !inputState->guessing) {
 
                     for (auto& item : cppif_end_count_check()) {
 
