@@ -105,20 +105,6 @@ public :
             dlclose(handle);
             return;
         }
-        dlerror();
-        *(VOIDPTR *)(&xsltApplyStylesheetDynamic) = dlsym(handle, "xsltApplyStylesheet");
-        if ((error = dlerror()) != NULL) {
-            dlclose(handle);
-            return;
-        }
-        /*
-          dlerror();
-          xsltSaveResultToDynamic = (xsltSaveResultTo_function)dlsym(handle, "xsltSaveResultTo");
-          if ((error = dlerror()) != NULL) {
-          dlclose(handle);
-          return;
-          }
-        */
 #endif
     }
 
@@ -207,7 +193,6 @@ private :
     std::vector<const char*> cparams;
 #ifndef WIN32
     xsltApplyStylesheetUser_function xsltApplyStylesheetUserDynamic;
-    xsltApplyStylesheet_function xsltApplyStylesheetDynamic;
 #endif
     void* handle;
     srcml_archive* oarchive;
