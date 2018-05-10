@@ -266,7 +266,6 @@ public :
                     fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
                             "libsrcml", "math");
                 }
-
             }
 
             dlerror();
@@ -277,7 +276,6 @@ public :
                     fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
                             "libsrcml", "set");
                 }
-
             }
 
             dlerror();
@@ -288,7 +286,6 @@ public :
                     fprintf(stderr, "%s: Unable to register prefix for exslt '%s' function\n",
                             "libsrcml", "str");
                 }
-
             }
         }
 
