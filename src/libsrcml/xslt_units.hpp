@@ -83,7 +83,6 @@ public :
                const std::vector<std::string>& params, srcml_archive* oarchive)
         : transform_units(options, oarchive), stylesheet(stylesheet), params(params), cparams(params.size() + 1) {
 
-
         // cparams must be null terminated
         for (size_t i = 0; i < params.size(); ++i) {
             cparams[i] = params[i].c_str();
@@ -154,14 +153,13 @@ public :
     }
 
 private :
-
     xsltStylesheetPtr stylesheet;
     std::vector<std::string> params;
     std::vector<const char*> cparams;
+    void* handle = nullptr;
 #ifdef DLLOAD
     xsltApplyStylesheetUser_function xsltApplyStylesheetUser;
 #endif
-    void* handle;
 };
 
 #endif
