@@ -39,6 +39,24 @@
 #endif
 
 /**
+ * dlopen_library
+ *
+ * Get a handle to libxslt dynamically loaded
+ *
+ * @returns Return handle on success and NULL on failure
+ */
+void* dlopen_library(std::vector<const char*> libnames) {
+
+    for (auto libname : libnames) {
+        void* handle = dlopen(libname, RTLD_LAZY);
+        if (handle)
+            return handle;
+    }
+
+    return 0;
+}
+
+/**
  * dlopen_libxslt
  *
  * Get a handle to libxslt dynamically loaded
@@ -47,18 +65,19 @@
  */
 void* dlopen_libxslt() {
 
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
-    if (!handle) {
-        handle = dlopen("libexslt.so.0", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libexslt.dylib", RTLD_LAZY);
-            if (!handle) {
-                fprintf(stderr, "Unable to open libexslt library\n");
-                return 0;;
-            }
-        }
-    }
-    return handle;
+    return dlopen_library({ "libxslt.so", "libxslt.so.0", "libxslt.dylib" });
+}
+
+/**
+ * dlopen_libexslt
+ *
+ * Get a handle to libexslt dynamically loaded
+ *
+ * @returns Return handle on success and NULL on failure
+ */
+void* dlopen_libexslt() {
+
+    return dlopen_library({ "libexslt.so", "libexslt.so.0", "libexslt.dylib" });
 }
 
 #if 0

@@ -876,22 +876,16 @@ int srcml_check_encoding(const char* encoding) {
  */
 int srcml_check_xslt() {
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    void * handle = dlopen("libxslt.so", RTLD_LAZY);
-    if (!handle) {
-        handle = dlopen("libxslt.so.1", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libxslt.dylib", RTLD_LAZY);
-            if (!handle) return 0;
-
-        }
-    }
+    void* handle = dlopen_libxslt();
+    if (!handle)
+        return 0;
 
     dlclose(handle);
+
     return 1;
 #else
     return 1;
 #endif
-
 }
 
 /**
@@ -902,16 +896,12 @@ int srcml_check_xslt() {
  */
 int srcml_check_exslt() {
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
-    if (!handle) {
-        handle = dlopen("libexslt.so.0", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libexslt.dylib", RTLD_LAZY);
-            if (!handle) return 0;
-        }
-    }
+    void* handle = dlopen_libexslt();
+    if (!handle)
+        return 0;
 
     dlclose(handle);
+
     return 1;
 #else
     return 1;

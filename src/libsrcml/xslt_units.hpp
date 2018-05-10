@@ -91,16 +91,10 @@ public :
         cparams.back() = 0;
 
 #ifdef DLLOAD
-        handle = dlopen("libxslt.so", RTLD_LAZY);
+        handle = dlopen_libxslt();
         if (!handle) {
-            handle = dlopen("libxslt.so.1", RTLD_LAZY);
-            if (!handle) {
-                handle = dlopen("libxslt.dylib", RTLD_LAZY);
-                if (!handle) {
-                    fprintf(stderr, "Unable to open libxslt library\n");
-                    return;
-                }
-            }
+            fprintf(stderr, "Unable to open libxslt library\n");
+            return;
         }
 
         dlerror();

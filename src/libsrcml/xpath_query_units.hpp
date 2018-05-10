@@ -246,17 +246,7 @@ public :
         typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
 #define dlsymvar(type, name) type name;  *(VOIDPTR *)(&name) = dlsym(handle, #name)
 
-
-        void* handle = dlopen("libexslt.so", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libexslt.so.0", RTLD_LAZY);
-            if (!handle) {
-                handle = dlopen("libexslt.dylib", RTLD_LAZY);
-                if (!handle)
-                    fprintf(stderr, "Unable to open libexslt library\n");
-            }
-        }
-
+        void* handle = dlopen_libexslt();
         if (handle) {
 
             dlerror();
