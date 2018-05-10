@@ -39,7 +39,6 @@
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include <srcexfun.hpp>
-#include <unit_dom.hpp>
 #include <transform_units.hpp>
 #include <srcmlns.hpp>
 
