@@ -438,24 +438,6 @@ public :
         return true;
     }
 
-    // removes the namespace from the element
-    xmlNsPtr* xmlRemoveNs(xmlNodePtr a_node, xmlNsPtr hrefptr) {
-
-        if (!hrefptr)
-            return 0;
-
-        xmlNsPtr* skip = 0;
-        for (xmlNsPtr* pns = &a_node->nsDef; pns; pns = &((*pns)->next)) {
-            if ((*pns) == hrefptr) {
-                skip = pns;
-                *skip = (*skip)->next;
-                break;
-            }
-        }
-
-        return skip;
-    }
-
     // process the resulting nodes
     virtual void outputXPathResultsWrap(xmlXPathObjectPtr result_nodes) {
 
@@ -580,10 +562,6 @@ public :
 
         xmlNodePtr a_node = xmlDocGetRootElement(doc);
 
-        // remove src namespace
-        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI);
-        xmlNsPtr* skip = xmlRemoveNs(a_node, hrefptr);
-
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
@@ -622,9 +600,6 @@ public :
 
         // output the result
         outputResult(a_node);
-
-        if (skip)
-            *skip = hrefptr;
     }
 
     // process the resulting nodes
@@ -632,9 +607,6 @@ public :
 
         // use the root element to wrap the result ?
         xmlNodePtr a_node = xmlDocGetRootElement(doc);
-
-        // remove src namespace
-        xmlRemoveNs(a_node, xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_SRC_NS_URI));
 
         // append the attribute to the nodes
         for (int i = 0; result_nodes->nodesetval && i < result_nodes->nodesetval->nodeNr; ++i) {
