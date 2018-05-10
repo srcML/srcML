@@ -32,14 +32,12 @@
 #include <fstream>
 
 #include <srcml.h>
-#include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
 
 extern srcml_archive global_archive;
 extern srcml_unit global_unit;
-
 
 std::string src = "int a;\n";
 
@@ -99,7 +97,6 @@ int main(int, char* argv[]) {
         }
 
         dassert(res_srcml, asrcml);
-
     }
 
     {
@@ -115,11 +112,9 @@ int main(int, char* argv[]) {
         dassert(res_srcml, srcml_c);
 
         srcml_set_language(SRCML_LANGUAGE_NONE);
-
     }
 
     {
-
         srcml_set_filename("file");
         srcml_set_url("url");
         srcml_set_version("1");
@@ -133,7 +128,6 @@ int main(int, char* argv[]) {
         }
 
         dassert(res_srcml, srcml_full);
-
     }
 
     {
@@ -146,7 +140,6 @@ int main(int, char* argv[]) {
         }
 
         dassert(res_src, src);
-
     }
 
     {
@@ -159,7 +152,6 @@ int main(int, char* argv[]) {
         }
 
         dassert(res_src, src);
-
     }
 
     {
@@ -175,7 +167,6 @@ int main(int, char* argv[]) {
         dassert(res_src, src);
 
         srcml_set_language(SRCML_LANGUAGE_NONE);
-
     }
 
     {
@@ -188,7 +179,6 @@ int main(int, char* argv[]) {
         }
 
         dassert(res_src, src);
-
     }
 
     {
@@ -201,7 +191,6 @@ int main(int, char* argv[]) {
         }
 
         dassert(res_src, src);
-
     }
 
     {
