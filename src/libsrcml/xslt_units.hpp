@@ -34,6 +34,7 @@
 #include <srcexfun.hpp>
 
 #include <unit_dom.hpp>
+#include <transform_units.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #define DLLOAD
@@ -66,7 +67,7 @@ typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocP
  *
  * Extends unit_dom to execute XSLT program and write results.
  */
-class xslt_units : public unit_dom {
+class xslt_units : public transform_units {
 public :
 
     /**
@@ -80,8 +81,7 @@ public :
      */
     xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
                const std::vector<std::string>& params, srcml_archive* oarchive)
-        : unit_dom(options),
-          stylesheet(stylesheet), params(params), cparams(params.size() + 1), oarchive(oarchive) {
+        : transform_units(options, oarchive), stylesheet(stylesheet), params(params), cparams(params.size() + 1) {
 
 
         // cparams must be null terminated
@@ -160,21 +160,6 @@ public :
         return true;
     }
 
-    virtual void outputResult(xmlNodePtr a_node) {
-
-        // remove src namespace, needed for performing XSLT transformation, but not
-        // needed for output of an embedded unit in an archive
-        if ((oarchive->options & SRCML_OPTION_ARCHIVE) > 0) {
-            // remove the first namespace, which is the srcML one
-            // @todo Generalize this
-            xmlNsPtr save = a_node->nsDef;
-            a_node->nsDef = a_node->nsDef->next;
-            xmlFreeNs(save);
-        }
-
-        oarchive->translator->add_unit(a_node, doc);
-    }
-
     /**
      * end_output
      *
@@ -191,7 +176,6 @@ private :
     xsltApplyStylesheetUser_function xsltApplyStylesheetUser;
 #endif
     void* handle;
-    srcml_archive* oarchive;
 };
 
 #endif
