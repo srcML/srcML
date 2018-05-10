@@ -45,9 +45,6 @@ void* dlopen_libxslt();
  */
 void* dlopen_libexslt();
 
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, const boost::optional<size_t> & revision_number, int unit = 0);
-/// @todo needs test cases
-int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, const boost::optional<size_t> & revision_number, int unit = 0);
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
 				const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
 				OPTION_TYPE options, srcml_archive* out_archive);

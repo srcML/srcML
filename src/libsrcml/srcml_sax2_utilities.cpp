@@ -81,42 +81,6 @@ void* dlopen_libexslt() {
 }
 
 /**
- * srcml_extract_text_filename
- * @param ifilename name of srcML file to extract text
- * @param ofilename name of output file to put source
- * @param encoding output encoding
- * @param compression amount of compression 0 none to 9 max
- * @param unit unit number to extract
- *
- * Extract a given unit from supplied srcML directly to file.
- *
- * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
- */
-int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, const boost::optional<size_t> & revision_number, int unit) {
-
-    // @todo remove libxml2 compression
-    if (compression > 9)
-        compression = 9;
-
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(ofilename, xmlFindCharEncodingHandler(encoding), compression);
-
-    srcml_archive* archive = srcml_archive_create();
-    srcml_unit* ounit = srcml_unit_create(archive);
-
-    srcml_sax2_reader reader(archive, ifilename, 0, revision_number);
-
-    reader.read_body(ounit);
-
-    // @todo If still used, write using unit
-    
-    xmlOutputBufferClose(output_buffer);
-
-    srcml_archive_free(archive);
-
-    return SRCML_STATUS_OK;
-}
-
-/**
  * srcml_xpath
  * @param input_buffer a parser input buffer
  * @param context_element a srcML element that is to be used as the context
