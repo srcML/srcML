@@ -46,6 +46,13 @@ typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
 typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *,
                                                        xsltTransformContextPtr);
 
+typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
+typedef xsltStylesheetPtr (*xsltParseStylesheetDoc_function) (xmlDocPtr);
+typedef void (*xsltCleanupGlobals_function)();
+typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
+
+void dlexsltRegisterAll(void * handle);
+
 //typedef int (*xsltSaveResultTo_function) (xmlOutputBufferPtr, xmlDocPtr, xsltStylesheetPtr);
 //xsltSaveResultTo_function xsltSaveResultToDynamic;
 #else
@@ -77,9 +84,9 @@ public :
      *
      * Constructor.  Dynamically loads XSLT functions.
      */
-    xslt_units(const char* a_context_element, OPTION_TYPE & options, xsltStylesheetPtr stylesheet,
+    xslt_units(const char* a_context_element, OPTION_TYPE & options, xmlDocPtr xslt,
                const std::vector<std::string>& params, srcml_archive* oarchive)
-        : transform_units(options, oarchive), stylesheet(stylesheet), params(params), cparams(params.size() + 1) {
+        : transform_units(options, oarchive), params(params), cparams(params.size() + 1), xslt(xslt) {
 
         // cparams must be null terminated
         for (size_t i = 0; i < params.size(); ++i) {
@@ -150,6 +157,68 @@ public :
         return true;
     }
 
+    virtual void start_output() {
+
+        xmlInitParser();
+
+    #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+        handle = dlopen("libexslt.so", RTLD_LAZY);
+        if (!handle) {
+            handle = dlopen("libexslt.so.0", RTLD_LAZY);
+            if (!handle) {
+                handle = dlopen("libexslt.dylib", RTLD_LAZY);
+                if (!handle) {
+                    fprintf(stderr, "Unable to open libexslt library\n");
+                    return; //SRCML_STATUS_ERROR;
+                }
+            }
+        }
+
+        // allow for all exstl functions
+        dlexsltRegisterAll(handle);
+
+        dlerror();
+        *(VOIDPTR *)(&xsltParseStylesheetDoc) = dlsym(handle, "xsltParseStylesheetDoc");
+        char* error;
+        if ((error = dlerror()) != NULL) {
+            dlclose(handle);
+            return; // SRCML_STATUS_ERROR;
+        }
+
+        dlerror();
+        *(VOIDPTR *)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
+        if ((error = dlerror()) != NULL) {
+            dlclose(handle);
+            return; // SRCML_STATUS_ERROR;
+        }
+
+        dlerror();
+        *(VOIDPTR *)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
+        if ((error = dlerror()) != NULL) {
+            dlclose(handle);
+            return; // SRCML_STATUS_ERROR;
+        }
+    #endif
+
+        // parse the stylesheet
+        stylesheet = xsltParseStylesheetDoc(xslt);
+        if (!stylesheet)
+            return; // SRCML_STATUS_ERROR;
+
+        xsltsrcMLRegister();
+    }
+
+    void end_output() {
+
+        stylesheet->doc = 0;
+        xsltFreeStylesheet(stylesheet);
+        xsltCleanupGlobals();
+
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+        dlclose(handle);
+#endif
+    }
+
 private :
     xsltStylesheetPtr stylesheet;
     std::vector<std::string> params;
@@ -157,6 +226,10 @@ private :
     void* handle = nullptr;
 #ifdef DLLOAD
     xsltApplyStylesheetUser_function xsltApplyStylesheetUser;
+    xsltParseStylesheetDoc_function xsltParseStylesheetDoc;
+    xsltCleanupGlobals_function xsltCleanupGlobals;
+    xsltFreeStylesheet_function xsltFreeStylesheet;
+    xmlDocPtr xslt;
 #endif
 };
 
@@ -206,65 +279,8 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     if (input_buffer == NULL || context_element == NULL ||
        xslt == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlInitParser();
-
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
-    typedef xsltStylesheetPtr (*xsltParseStylesheetDoc_function) (xmlDocPtr);
-    typedef void (*xsltCleanupGlobals_function)();
-    typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
-
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
-    if (!handle) {
-        handle = dlopen("libexslt.so.0", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libexslt.dylib", RTLD_LAZY);
-            if (!handle) {
-                fprintf(stderr, "Unable to open libexslt library\n");
-                return SRCML_STATUS_ERROR;
-            }
-        }
-    }
-
-    // allow for all exstl functions
-    dlexsltRegisterAll(handle);
-
-    dlerror();
-    xsltParseStylesheetDoc_function xsltParseStylesheetDoc;
-    *(VOIDPTR *)(&xsltParseStylesheetDoc) = dlsym(handle, "xsltParseStylesheetDoc");
-    char* error;
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return SRCML_STATUS_ERROR;
-    }
-
-    dlerror();
-    xsltCleanupGlobals_function xsltCleanupGlobals;
-    *(VOIDPTR *)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return SRCML_STATUS_ERROR;
-    }
-
-    dlerror();
-    xsltFreeStylesheet_function xsltFreeStylesheet;
-    *(VOIDPTR *)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return SRCML_STATUS_ERROR;
-    }
-#endif
-
-    // parse the stylesheet
-    xsltStylesheetPtr stylesheet = xsltParseStylesheetDoc(xslt);
-    if (!stylesheet)
-        return SRCML_STATUS_ERROR;
-
-
-    xsltsrcMLRegister();
-
     // setup process handling
-    xslt_units process(context_element, options, stylesheet, params, out_archive);
+    xslt_units process(context_element, options, xslt, params, out_archive);
     srcSAXController control(input_buffer);
 
     try {
@@ -276,15 +292,7 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
         fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
     }
 
-    stylesheet->doc = 0;
-    xsltFreeStylesheet(stylesheet);
-    xsltCleanupGlobals();
-
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    dlclose(handle);
-#endif
-
-    return 0;//status;
+    return 0;
 }
 #endif
 
