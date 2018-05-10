@@ -81,13 +81,6 @@ public :
           total(0), context(0) {
     }
 
-    /**
-     * ~xpath_query_units
-     *
-     * Destructor.
-     */
-    virtual ~xpath_query_units() {}
-
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 

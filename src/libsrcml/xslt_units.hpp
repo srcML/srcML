@@ -108,16 +108,16 @@ public :
 #endif
     }
 
+#ifdef DLLOAD
     /**
      * ~xslt_units
      *
      * Destructor.  Closes dynamically loaded library.
      */
     virtual ~xslt_units() {
-#ifdef DLLOAD
         dlclose(handle);
-#endif
     }
+#endif
 
     /**
      * apply

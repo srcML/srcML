@@ -54,13 +54,6 @@ public :
     }
 
     /**
-     * ~relaxng_units
-     *
-     * Destructor.
-     */
-    virtual ~relaxng_units() {}
-
-    /**
      * apply
      *
      * Apply RelaxNG grammar writing results.
