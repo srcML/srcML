@@ -49,8 +49,20 @@ public :
      *
      * Constructor.
      */
-    relaxng_units(OPTION_TYPE options, xmlRelaxNGValidCtxtPtr rngctx, srcml_archive* oarchive)
-        : transform_units(options, oarchive), rngctx(rngctx) {
+    relaxng_units(OPTION_TYPE options, xmlDocPtr relaxng, srcml_archive* oarchive)
+        : transform_units(options, oarchive), relaxng(relaxng) {
+    }
+
+    /**
+     * start_output
+     *
+     * Pure virtual that is called exactly once at beginnning of document  Override for intended behavior.
+     */
+    virtual void start_output() {
+
+        relaxng_parser_ctxt = xmlRelaxNGNewDocParserCtxt(relaxng);
+        rng = xmlRelaxNGParse(relaxng_parser_ctxt);
+        rngctx = xmlRelaxNGNewValidCtxt(rng);
     }
 
     /**
@@ -79,10 +91,24 @@ public :
         return true;
     }
 
+    /**
+     * end_output
+     *
+     * Pure virtual that is called exactly once at end of document.  Override for intended behavior.
+     */
+    virtual void end_output() {
+
+        xmlRelaxNGFreeValidCtxt(rngctx);
+        xmlRelaxNGFree(rng);
+        xmlRelaxNGFreeParserCtxt(relaxng_parser_ctxt);
+    }
+
 private :
 
     xmlRelaxNGValidCtxtPtr rngctx;
-
+    xmlDocPtr relaxng;
+    xmlRelaxNGParserCtxtPtr relaxng_parser_ctxt;
+    xmlRelaxNGPtr rng;
 };
 
 #endif

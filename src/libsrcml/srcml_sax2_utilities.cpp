@@ -359,11 +359,7 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTIO
     if (input_buffer == NULL || relaxng == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlRelaxNGParserCtxtPtr relaxng_parser_ctxt = xmlRelaxNGNewDocParserCtxt(relaxng);
-    xmlRelaxNGPtr rng = xmlRelaxNGParse(relaxng_parser_ctxt);
-    xmlRelaxNGValidCtxtPtr rngctx = xmlRelaxNGNewValidCtxt(rng);
-
-    relaxng_units process(options, rngctx, oarchive);
+    relaxng_units process(options, relaxng, oarchive);
     srcSAXController control(input_buffer);
 
     try {
@@ -374,10 +370,6 @@ int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTIO
 
         fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
     }
-
-    xmlRelaxNGFreeValidCtxt(rngctx);
-    xmlRelaxNGFree(rng);
-    xmlRelaxNGFreeParserCtxt(relaxng_parser_ctxt);
 
     return 0;
 }
