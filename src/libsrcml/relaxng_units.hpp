@@ -26,13 +26,7 @@
 #include <libxml/parser.h>
 #include <libxml/relaxng.h>
 
-/** size of string then the literal */
-#define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
- /** literal followed by its size */
-#define LITERALPLUSSIZE(s) s, sizeof(s) - 1
-
 #include <srcexfun.hpp>
-
 #include <transform_units.hpp>
 
 #ifdef _MSC_BUILD
