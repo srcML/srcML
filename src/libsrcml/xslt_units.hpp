@@ -52,9 +52,6 @@ typedef void (*xsltCleanupGlobals_function)();
 typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
 
 void dlexsltRegisterAll(void * handle);
-
-//typedef int (*xsltSaveResultTo_function) (xmlOutputBufferPtr, xmlDocPtr, xsltStylesheetPtr);
-//xsltSaveResultTo_function xsltSaveResultToDynamic;
 #else
 #include <libxslt/xslt.h>
 #include <libxslt/xsltInternals.h>
@@ -162,19 +159,9 @@ public :
         xmlInitParser();
 
     #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-        handle = dlopen("libexslt.so", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libexslt.so.0", RTLD_LAZY);
-            if (!handle) {
-                handle = dlopen("libexslt.dylib", RTLD_LAZY);
-                if (!handle) {
-                    fprintf(stderr, "Unable to open libexslt library\n");
-                    return; //SRCML_STATUS_ERROR;
-                }
-            }
-        }
+        handle = dlopen_libexslt();
 
-        // allow for all exstl functions
+        // allow for all exslt functions
         dlexsltRegisterAll(handle);
 
         dlerror();
@@ -224,12 +211,12 @@ private :
     std::vector<std::string> params;
     std::vector<const char*> cparams;
     void* handle = nullptr;
+    xmlDocPtr xslt;
 #ifdef DLLOAD
     xsltApplyStylesheetUser_function xsltApplyStylesheetUser;
     xsltParseStylesheetDoc_function xsltParseStylesheetDoc;
     xsltCleanupGlobals_function xsltCleanupGlobals;
     xsltFreeStylesheet_function xsltFreeStylesheet;
-    xmlDocPtr xslt;
 #endif
 };
 
@@ -276,8 +263,8 @@ void dlexsltRegisterAll(void * handle) {
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const std::vector<std::string>& params, int /* paramcount */, OPTION_TYPE options,
                 srcml_archive* out_archive) {
 
-    if (input_buffer == NULL || context_element == NULL ||
-       xslt == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (input_buffer == NULL || context_element == NULL || xslt == NULL)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     // setup process handling
     xslt_units process(context_element, options, xslt, params, out_archive);
@@ -290,9 +277,10 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     } catch(SAXError error) {
 
         fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+        return 1;
     }
 
-    return 0;
+    return SRCML_STATUS_OK;
 }
 #endif
 
