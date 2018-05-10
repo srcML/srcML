@@ -26,7 +26,6 @@
 #include <libxml/parser.h>
 #include <libxml/relaxng.h>
 
-#include <srcexfun.hpp>
 #include <transform_units.hpp>
 
 #ifdef _MSC_BUILD
