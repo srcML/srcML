@@ -62,7 +62,7 @@ protected:
      *
      * Pure virtual that is called exactly once at beginnning of document  Override for intended behavior.
      */
-    virtual void start_output() = 0;
+    virtual void start_output() {}
 
     /**
      * apply
@@ -74,14 +74,14 @@ protected:
      *
      * @returns true on success false on failure.
      */
-    virtual bool apply() = 0;
+    virtual bool apply() { return true; }
 
     /**
      * end_output
      *
      * Pure virtual that is called exactly once at end of document.  Override for intended behavior.
      */
-    virtual void end_output() = 0;
+    virtual void end_output() {}
 
 private:
 

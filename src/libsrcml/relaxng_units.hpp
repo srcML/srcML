@@ -67,13 +67,6 @@ public :
     virtual ~relaxng_units() {}
 
     /**
-     * start_output
-     *
-     * Create output buffer.
-     */
-    virtual void start_output() {}
-
-    /**
      * apply
      *
      * Apply RelaxNG grammar writing results.
@@ -98,13 +91,6 @@ public :
 
         return true;
     }
-
-    /**
-     * end_output
-     *
-     * Finish the archive and close buffer.
-     */
-    virtual void end_output() {}
 
 private :
 

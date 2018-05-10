@@ -120,13 +120,6 @@ public :
     }
 
     /**
-     * start_output
-     *
-     * Create output buffer.
-     */
-    virtual void start_output() {}
-
-    /**
      * apply
      *
      * Apply XSLT program, writing results.
@@ -159,13 +152,6 @@ public :
 
         return true;
     }
-
-    /**
-     * end_output
-     *
-     * Finish the archive and close buffer.
-     */
-    virtual void end_output() {}
 
 private :
 
