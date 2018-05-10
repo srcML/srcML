@@ -93,7 +93,7 @@ public :
                       const char* prefix = 0, const char* uri = 0, const char* element = 0, const char* attr_prefix = 0, const char* attr_uri = 0, const char* attr_name = 0, const char* attr_value = 0)
         : unit_dom(options), options(options), /* compiled_xpath(compiled_xpath) ,*/
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), context(0), /* result_count(0),*/ output_archive(out_archive) {
+          total(0), context(0), /* result_count(0),*/ oarchive(out_archive) {
     }
 
     /**
@@ -192,7 +192,7 @@ public :
     virtual void start_output() {
 
         // @todo detect error
-        buf = output_archive->translator->output_buffer();
+        buf = oarchive->translator->output_buffer();
 #if 0
 #ifdef _MSC_BUILD
         buf->writecallback = (xmlOutputWriteCallback)_write;
@@ -227,10 +227,10 @@ public :
         }
 
         // register namespaces from input archive, which have been setup on the output archive
-        for (unsigned int i = 1; i < srcml_archive_get_namespace_size(output_archive); ++i) {
+        for (unsigned int i = 1; i < srcml_archive_get_namespace_size(oarchive); ++i) {
 
-            const char* uri = srcml_archive_get_namespace_uri(output_archive, i);
-            const char* prefix = srcml_archive_get_namespace_prefix(output_archive, i);
+            const char* uri = srcml_archive_get_namespace_uri(oarchive, i);
+            const char* prefix = srcml_archive_get_namespace_prefix(oarchive, i);
 
             if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
                 fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
@@ -417,17 +417,17 @@ public :
             break;
 
         case XPATH_NUMBER:
-            output_archive->translator->set_text_only();
+            oarchive->translator->set_text_only();
             outputXPathResultsNumber(result_nodes);
             break;
 
         case XPATH_BOOLEAN:
-            output_archive->translator->set_text_only();
+            oarchive->translator->set_text_only();
             outputXPathResultsBoolean(result_nodes);
             break;
 
         case XPATH_STRING:
-            output_archive->translator->set_text_only();
+            oarchive->translator->set_text_only();
             outputXPathResultsString(result_nodes);
             break;
 
@@ -535,7 +535,7 @@ public :
 
     virtual void outputResult(xmlNodePtr a_node) {
 
-        bool is_archive = (output_archive->options & SRCML_OPTION_ARCHIVE) > 0;
+        bool is_archive = (oarchive->options & SRCML_OPTION_ARCHIVE) > 0;
 
         // remove src namespace
         xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_CPP_NS_URI);
@@ -551,7 +551,7 @@ public :
             }
         }
 
-        output_archive->translator->add_unit(a_node, doc);
+        oarchive->translator->add_unit(a_node, doc);
     }
 
     // process the resulting nodes
@@ -747,7 +747,7 @@ private :
     int nodetype;
     xmlOutputBufferPtr buf;
     xmlXPathContextPtr context;
-    srcml_archive* output_archive;
+    srcml_archive* oarchive;
 
     static const char* const simple_xpath_attribute_name;
 
