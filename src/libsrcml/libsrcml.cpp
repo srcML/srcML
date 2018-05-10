@@ -881,11 +881,9 @@ int srcml_check_xslt() {
         return 0;
 
     dlclose(handle);
+#endif
 
     return 1;
-#else
-    return 1;
-#endif
 }
 
 /**
@@ -901,11 +899,9 @@ int srcml_check_exslt() {
         return 0;
 
     dlclose(handle);
+#endif
 
     return 1;
-#else
-    return 1;
-#endif
 }
 
 /******************************************************************************
