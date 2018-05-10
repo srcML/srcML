@@ -562,13 +562,13 @@ public :
 
         xmlNodePtr a_node = xmlDocGetRootElement(doc);
 
+        // set up namespace
+        static xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar*) uri, (const xmlChar*) prefix);
+
         // output all the found nodes
         for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
             xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
-
-            // set up namespace
-            xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar*) uri, (const xmlChar*) prefix);
 
             xpath_arguments& thisarguments = global_transformations[0].arguments;
 
