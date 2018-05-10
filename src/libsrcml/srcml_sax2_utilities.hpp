@@ -46,11 +46,9 @@ void* dlopen_libxslt();
 void* dlopen_libexslt();
 
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
-				const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
-				OPTION_TYPE options, srcml_archive* out_archive);
-#ifdef WITH_LIBXSLT
-int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const std::vector<std::string>& params, int paramcount, OPTION_TYPE options, srcml_archive* out_archive);
-#endif
-int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* out_archive);
+                const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
+                OPTION_TYPE options, srcml_archive* oarchive);
+
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* oarchive);
 
 #endif

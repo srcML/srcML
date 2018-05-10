@@ -29,6 +29,7 @@
 #include <srcSAXHandler.hpp>
 #include <srcexfun.hpp>
 #include <srcml_translator.hpp>
+#include <sax2_srcsax_handler.hpp>
 
 #include <string>
 #include <vector>
@@ -203,19 +204,6 @@ protected:
         }
 
         oarchive->translator->add_unit(a_node, doc);
-/*        
-        // remove src namespace, needed for performing XSLT transformation, but not
-        // needed for output of an embedded unit in an archive
-        if ((oarchive->options & SRCML_OPTION_ARCHIVE) > 0) {
-            // remove the first namespace, which is the srcML one
-            // @todo Generalize this
-            xmlNsPtr save = a_node->nsDef;
-            a_node->nsDef = a_node->nsDef->next;
-            xmlFreeNs(save);
-        }
-
-        oarchive->translator->add_unit(a_node, doc);
-*/
     }
 
 protected:

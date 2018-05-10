@@ -23,6 +23,7 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
+#include <xslt_units.hpp>
 #include <srcml_translator.hpp>
 
 #include <stdio.h>
