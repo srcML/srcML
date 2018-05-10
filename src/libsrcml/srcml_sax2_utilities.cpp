@@ -80,43 +80,6 @@ void* dlopen_libexslt() {
     return dlopen_library({ "libexslt.so", "libexslt.so.0", "libexslt.dylib" });
 }
 
-#if 0
-/**
- * srcml_extract_text
- * @param input_buffer srcML to extract text
- * @param size size of input buffer
- * @param output_buffer output buffer to write text
- * @param options srcml options
- * @param unit unit number to extract
- *
- * Extract a given unit from supplied srcML input buffer.
- *
- * @returns Return SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
- */
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, const boost::optional<size_t> & revision_number, int unit) {
-
-    if (input_buffer == NULL || size == 0)
-        return SRCML_STATUS_INVALID_ARGUMENT;
-
-    xmlParserInputBufferPtr input = xmlParserInputBufferCreateMem(input_buffer, (int)size, XML_CHAR_ENCODING_NONE);
-    if (input == NULL)
-        return SRCML_STATUS_IO_ERROR;
-
-    srcml_archive* archive = srcml_archive_create();
-    srcml_unit* ounit = srcml_unit_create(archive);
-
-    srcml_sax2_reader reader(archive, input, revision_number);
-
-    reader.read_body(ounit, output_buffer);
-    
-    xmlFreeParserInputBuffer(input);
-
-    srcml_archive_free(archive);
-
-    return SRCML_STATUS_OK;
-}
-#endif
-
 /**
  * srcml_extract_text_filename
  * @param ifilename name of srcML file to extract text
