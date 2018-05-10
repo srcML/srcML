@@ -139,25 +139,11 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
                 const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
                 OPTION_TYPE options, srcml_archive* oarchive) {
 
-    if (input_buffer == NULL || context_element == NULL ||
-       xpath == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
-
-    // relative xpath changed to at any level
-    std::string s = xpath;
-    //  if (s[0] != '/')
-    //    s = "//" + s;
-
-    // compile the xpath that will be applied to each unit
-    xmlXPathCompExprPtr compiled_xpath = xmlXPathCompile(BAD_CAST s.c_str());
-    if (compiled_xpath == 0) {
-        fprintf(stderr, "libsrcml:  Unable to compile XPath '%s'\n", s.c_str());
-        return SRCML_STATUS_INVALID_INPUT;
-    }
-
-    xsltsrcMLRegister();
+    if (input_buffer == NULL || context_element == NULL || xpath == NULL)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     // setup process handling
-    xpath_query_units process(options, compiled_xpath, oarchive, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value);
+    xpath_query_units process(options, oarchive, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value);
     srcSAXController control(input_buffer);
 
     int status = 0;
@@ -171,8 +157,6 @@ int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_eleme
         //        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
         status = 1;
     }
-
-    xmlXPathFreeCompExpr(compiled_xpath);
 
     return status;
 }
