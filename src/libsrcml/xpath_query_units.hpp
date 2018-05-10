@@ -713,4 +713,49 @@ private :
 
 const char* const xpath_query_units::simple_xpath_attribute_name = "location";
 
+/**
+ * srcml_xpath
+ * @param input_buffer a parser input buffer
+ * @param context_element a srcML element that is to be used as the context
+ * @param xpath the xpath expression
+ * @param prefix an element namepace prefix
+ * @param uri an element namepace uri
+ * @param element the tag name
+ * @param attr_prefix an attribute namepace prefix
+ * @param attr_uri an attribute namepace uri
+ * @param attr_name the attribute name
+ * @param attr_value the attribute value
+ * @param options srcml options
+ * @param oarchive output srcML archive
+ *
+ * XPath evaluation of the nested units.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
+                const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
+                OPTION_TYPE options, srcml_archive* oarchive) {
+
+    if (input_buffer == NULL || context_element == NULL || xpath == NULL)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    // setup process handling
+    xpath_query_units process(options, oarchive, prefix, uri, element, attr_prefix, attr_uri, attr_name, attr_value);
+    srcSAXController control(input_buffer);
+
+    int status = 0;
+    try {
+
+        control.parse(&process);
+
+    } catch(SAXError error) {
+
+        // @todo incorporate error messages into return value
+        //        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+        status = 1;
+    }
+
+    return status;
+}
+
 #endif

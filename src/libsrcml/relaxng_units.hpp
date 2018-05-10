@@ -110,4 +110,34 @@ private :
     xmlRelaxNGPtr rng;
 };
 
+/**
+ * srcml_relaxng
+ * @param input_buffer a parser input buffer
+ * @param relaxng xmlDocPtr containing a RelaxNG schema
+ * @param fd output file descriptor
+ * @param options srcml options
+ *
+ * RelaxNG evaluation of the nested units.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* oarchive) {
+
+    if (input_buffer == NULL || relaxng == NULL)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    relaxng_units process(options, relaxng, oarchive);
+    srcSAXController control(input_buffer);
+
+    try {
+
+        control.parse(&process);
+
+    } catch(SAXError error) {
+
+        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
+    }
+
+    return 0;
+}
 #endif
