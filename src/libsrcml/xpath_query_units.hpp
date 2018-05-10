@@ -40,6 +40,7 @@
 
 #include <srcexfun.hpp>
 #include <unit_dom.hpp>
+#include <transform_units.hpp>
 #include <srcmlns.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
@@ -71,7 +72,7 @@ private:
  *
  * Extends unit_dom to execute XPath expression and write results.
  */
-class xpath_query_units : public unit_dom {
+class xpath_query_units : public transform_units {
 public :
 
     /**
@@ -89,11 +90,11 @@ public :
      *
      * Constructor.
      */
-    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr /* compiled_xpath */, srcml_archive* out_archive, 
+    xpath_query_units(OPTION_TYPE options, xmlXPathCompExprPtr /* compiled_xpath */, srcml_archive* oarchive, 
                       const char* prefix = 0, const char* uri = 0, const char* element = 0, const char* attr_prefix = 0, const char* attr_uri = 0, const char* attr_name = 0, const char* attr_value = 0)
-        : unit_dom(options), options(options), /* compiled_xpath(compiled_xpath) ,*/
+        : transform_units(options, oarchive), options(options), /* compiled_xpath(compiled_xpath) ,*/
           prefix(prefix), uri(uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value),
-          total(0), context(0), /* result_count(0),*/ oarchive(out_archive) {
+          total(0), context(0) {
     }
 
     /**
@@ -747,7 +748,6 @@ private :
     int nodetype;
     xmlOutputBufferPtr buf;
     xmlXPathContextPtr context;
-    srcml_archive* oarchive;
 
     static const char* const simple_xpath_attribute_name;
 

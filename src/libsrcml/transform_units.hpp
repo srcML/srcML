@@ -31,7 +31,7 @@
 #define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include <srcexfun.hpp>
-
+#include <srcml_translator.hpp>
 #include <unit_dom.hpp>
 
 #ifdef _MSC_BUILD
