@@ -27,6 +27,15 @@
 
 #include <libxml/parserInternals.h>
 
+/**
+ * dlopen_libxslt
+ *
+ * Get a handle to libxslt dynamically loaded
+ *
+ * @returns Return handle on success and NULL on failure
+ */
+void* dlopen_libxslt();
+
 int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, const boost::optional<size_t> & revision_number, int unit = 0);
 /// @todo needs test cases
 int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, const boost::optional<size_t> & revision_number, int unit = 0);
