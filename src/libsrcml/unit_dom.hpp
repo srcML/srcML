@@ -23,12 +23,31 @@
 #ifndef INCLUDED_UNIT_DOM_HPP
 #define INCLUDED_UNIT_DOM_HPP
 
+#include <libxml/parser.h>
 #include <libxml/SAX2.h>
 
 #include <srcSAXHandler.hpp>
+#include <srcexfun.hpp>
+#include <srcml_translator.hpp>
 
 #include <string>
 #include <vector>
+
+template<typename T>
+class save_restore {
+public:
+    save_restore(T& item) : saved_item(&item), saved_value(item) {}
+    save_restore(bool save, T& item) {
+        saved_item = save ? &item : 0;
+        if (save)
+            saved_value = item;
+    }
+    ~save_restore() { if (saved_item) *saved_item = saved_value; }
+    operator T() { return saved_value; }
+private:
+    T* saved_item;
+    T saved_value;
+};
 
 /**
  * unit_dom
@@ -46,7 +65,8 @@ public :
      *
      * Constructor.
      */
-    unit_dom(OPTION_TYPE options) : apply_root(isoption(options, SRCML_OPTION_APPLY_ROOT)) {}
+    unit_dom(OPTION_TYPE options, srcml_archive* oarchive)
+        : apply_root(isoption(options, SRCML_OPTION_APPLY_ROOT)), oarchive(oarchive) {}
 
     /**
      * ~unit_dom
@@ -164,6 +184,42 @@ private:
 
 protected:
 
+    void outputResult(xmlNodePtr a_node) {
+
+        bool is_archive = (oarchive->options & SRCML_OPTION_ARCHIVE) > 0;
+
+        // remove src namespace
+        xmlNsPtr hrefptr = xmlSearchNsByHref(a_node->doc, a_node, BAD_CAST SRCML_CPP_NS_URI);
+
+        save_restore<xmlNsPtr> save(a_node->nsDef); //skip = is_archive ? xmlRemoveNs(a_node, hrefptr) : 0;
+        save_restore<xmlNsPtr> nextsave(hrefptr, hrefptr->next);
+        if (is_archive) {
+            if (!hrefptr)
+                a_node->nsDef = 0;
+            else {
+                a_node->nsDef = hrefptr;
+                hrefptr->next = 0;
+            }
+        }
+
+        oarchive->translator->add_unit(a_node, doc);
+/*        
+        // remove src namespace, needed for performing XSLT transformation, but not
+        // needed for output of an embedded unit in an archive
+        if ((oarchive->options & SRCML_OPTION_ARCHIVE) > 0) {
+            // remove the first namespace, which is the srcML one
+            // @todo Generalize this
+            xmlNsPtr save = a_node->nsDef;
+            a_node->nsDef = a_node->nsDef->next;
+            xmlFreeNs(save);
+        }
+
+        oarchive->translator->add_unit(a_node, doc);
+*/
+    }
+
+protected:
+
     /** we have started processing */
     bool found = false;
 
@@ -177,6 +233,8 @@ protected:
     xmlParserCtxtPtr ctxt;
 
     xmlDocPtr doc;
+
+    srcml_archive* oarchive;
 };
 
 #endif
