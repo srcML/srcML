@@ -195,6 +195,13 @@ void transform_srcml(const srcml_request_t& srcml_request,
     // process the content of the input sources
     for (const auto in_arch : inarchives) {
 
+        // copy over any url that we find
+        // @todo Doesn't seem to work on the output archive
+        auto url = srcml_archive_get_url(in_arch);
+        if (url) {
+            srcml_archive_set_url(out_arch, url);
+        }
+
         // see if we have any XPath output
         bool isxpath = false;
         for (const auto& trans : srcml_request.transformations) {
