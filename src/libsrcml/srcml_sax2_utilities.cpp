@@ -63,7 +63,7 @@ void* dlopen_library(std::vector<const char*> libnames) {
  *
  * @returns Return handle on success and NULL on failure
  */
-inline void* dlopen_libxslt() {
+void* dlopen_libxslt() {
 
     return dlopen_library({ "libxslt.so", "libxslt.so.0", "libxslt.dylib" });
 }
@@ -75,7 +75,7 @@ inline void* dlopen_libxslt() {
  *
  * @returns Return handle on success and NULL on failure
  */
-inline void* dlopen_libexslt() {
+void* dlopen_libexslt() {
 
     return dlopen_library({ "libexslt.so", "libexslt.so.0", "libexslt.dylib" });
 }
