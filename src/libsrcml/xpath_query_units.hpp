@@ -181,24 +181,21 @@ public :
 private :
 
     OPTION_TYPE options;
-    const char* prefix;
-    const char* uri;
-    const char* element;
-    const char* attr_prefix;
-    const char* attr_uri;
-    const char* attr_name;
-    const char* attr_value;
-    double total;
-    bool result_bool;
-    int nodetype;
-    xmlOutputBufferPtr buf;
-    xmlXPathContextPtr context;
+    const char* prefix = nullptr;
+    const char* uri = nullptr;
+    const char* element = nullptr;
+    const char* attr_prefix = nullptr;
+    const char* attr_uri = nullptr;
+    const char* attr_name = nullptr;
+    const char* attr_value = nullptr;
+    double total = 0;
+    bool result_bool = false;
+    int nodetype = 0;
+    xmlOutputBufferPtr buf = nullptr;
+    xmlXPathContextPtr context = nullptr;
 
     static const char* const simple_xpath_attribute_name;
 
 };
-
-
-const char* const simple_xpath_attribute_name = "location";
 
 #endif
