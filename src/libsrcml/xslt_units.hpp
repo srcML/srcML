@@ -65,6 +65,25 @@ void dlexsltRegisterAll(void * handle);
 #include <io.h>
 #endif
 
+#ifdef WITH_LIBXSLT
+/**
+ * srcml_xslt
+ * @param input_buffer a parser input buffer
+ * @param context_element a srcml element to be used as the context
+ * @param xslt xmlDocPtr containing an XSLT program
+ * @param params NULL-terminated list of XSLT parameters
+ * @param paramcount number of XSLT parameters
+ * @param options srcml options
+ *
+ * XSLT evaluation of the nested units.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const std::vector<std::string>& params, int /* paramcount */, OPTION_TYPE options,
+                srcml_archive* out_archive);
+
+#endif
+
 /**
  * xslt_units
  *
@@ -128,24 +147,5 @@ private :
  * of exslt library.
  */
 void dlexsltRegisterAll(void * handle);
-
-#ifdef WITH_LIBXSLT
-/**
- * srcml_xslt
- * @param input_buffer a parser input buffer
- * @param context_element a srcml element to be used as the context
- * @param xslt xmlDocPtr containing an XSLT program
- * @param params NULL-terminated list of XSLT parameters
- * @param paramcount number of XSLT parameters
- * @param options srcml options
- *
- * XSLT evaluation of the nested units.
- *
- * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
- */
-int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const std::vector<std::string>& params, int /* paramcount */, OPTION_TYPE options,
-                srcml_archive* out_archive);
-
-#endif
 
 #endif

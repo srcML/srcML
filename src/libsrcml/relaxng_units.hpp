@@ -33,6 +33,19 @@
 #endif
 
 /**
+ * srcml_relaxng
+ * @param input_buffer a parser input buffer
+ * @param relaxng xmlDocPtr containing a RelaxNG schema
+ * @param fd output file descriptor
+ * @param options srcml options
+ *
+ * RelaxNG evaluation of the nested units.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* oarchive);
+
+/**
  * relaxng_units
  *
  * Extends unit_dom to execute RelaxNG grammar and write results.
@@ -80,18 +93,5 @@ private :
     xmlRelaxNGParserCtxtPtr relaxng_parser_ctxt;
     xmlRelaxNGPtr rng;
 };
-
-/**
- * srcml_relaxng
- * @param input_buffer a parser input buffer
- * @param relaxng xmlDocPtr containing a RelaxNG schema
- * @param fd output file descriptor
- * @param options srcml options
- *
- * RelaxNG evaluation of the nested units.
- *
- * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
- */
-int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* oarchive);
 
 #endif
