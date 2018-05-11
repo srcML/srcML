@@ -563,8 +563,6 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
             char value = (int)strtol(svalue.c_str(), NULL, 0);
 
             state->unitsrc.append(1, value);
-
-            return;
         }
     }
     state->base = ctxt->input->cur;
