@@ -48,21 +48,14 @@ public :
      *
      * Constructor.
      */
-    relaxng_units(OPTION_TYPE options, xmlDocPtr relaxng, srcml_archive* oarchive)
-        : transform_units(options, oarchive), relaxng(relaxng) {
-    }
+    relaxng_units(OPTION_TYPE options, xmlDocPtr relaxng, srcml_archive* oarchive);
 
     /**
      * start_output
      *
      * Pure virtual that is called exactly once at beginnning of document  Override for intended behavior.
      */
-    virtual void start_output() {
-
-        relaxng_parser_ctxt = xmlRelaxNGNewDocParserCtxt(relaxng);
-        rng = xmlRelaxNGParse(relaxng_parser_ctxt);
-        rngctx = xmlRelaxNGNewValidCtxt(rng);
-    }
+    virtual void start_output();
 
     /**
      * apply
@@ -71,36 +64,14 @@ public :
      * 
      * @returns true on success false on failure.
      */
-    virtual bool apply() {
-
-        // validate
-        int n = xmlRelaxNGValidateDoc(rngctx, doc);
-        if (n != 0)
-            return true;
-
-        // output if it validates
-
-        // get the root node of current unit
-        xmlNodePtr node = xmlDocGetRootElement(doc);
-        if (!node)
-            return true;
-
-        outputResult(node);
-
-        return true;
-    }
+    virtual bool apply();
 
     /**
      * end_output
      *
      * Pure virtual that is called exactly once at end of document.  Override for intended behavior.
      */
-    virtual void end_output() {
-
-        xmlRelaxNGFreeValidCtxt(rngctx);
-        xmlRelaxNGFree(rng);
-        xmlRelaxNGFreeParserCtxt(relaxng_parser_ctxt);
-    }
+    virtual void end_output();
 
 private :
 
@@ -121,23 +92,6 @@ private :
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* oarchive) {
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* oarchive);
 
-    if (input_buffer == NULL || relaxng == NULL)
-        return SRCML_STATUS_INVALID_ARGUMENT;
-
-    relaxng_units process(options, relaxng, oarchive);
-    srcSAXController control(input_buffer);
-
-    try {
-
-        control.parse(&process);
-
-    } catch(SAXError error) {
-
-        fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
-    }
-
-    return 0;
-}
 #endif
