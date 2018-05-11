@@ -104,101 +104,101 @@ xslt_units::xslt_units(const char* a_context_element, OPTION_TYPE & options, xml
 }
 
 #ifdef DLLOAD
-    /**
-     * ~xslt_units
-     *
-     * Destructor.  Closes dynamically loaded library.
-     */
-    xslt_units::~xslt_units() {
-        dlclose(handle);
-    }
+/**
+ * ~xslt_units
+ *
+ * Destructor.  Closes dynamically loaded library.
+ */
+xslt_units::~xslt_units() {
+    dlclose(handle);
+}
 #endif
 
-    /**
-     * apply
-     *
-     * Apply XSLT program, writing results.
-     * 
-     * @returns true on success false on failure.
-     */
-    bool xslt_units::apply() {
+/**
+ * apply
+ *
+ * Apply XSLT program, writing results.
+ * 
+ * @returns true on success false on failure.
+ */
+bool xslt_units::apply() {
 
-        // position passed to XSLT program
-        setPosition((int)unit_count);
+    // position passed to XSLT program
+    setPosition((int)unit_count);
 
-        // apply the style sheet to the document, which is the individual unit
-        xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0);
-        if (!res) {
-            fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
-            return SRCML_STATUS_ERROR;
-        }
-
-        // output the transformed result
-        for (xmlNodePtr child = res->children; child != NULL; child = child->next) {
-
-            if (child->type == XML_TEXT_NODE)
-                xmlOutputBufferWriteString(oarchive->translator->output_buffer(), (const char *) child->content);
-            else
-                outputResult(child);
-        }
-
-        // finished with the result of the transformation
-        xmlFreeDoc(res);
-
-        return true;
+    // apply the style sheet to the document, which is the individual unit
+    xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0);
+    if (!res) {
+        fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
+        return SRCML_STATUS_ERROR;
     }
 
-    void xslt_units::start_output() {
+    // output the transformed result
+    for (xmlNodePtr child = res->children; child != NULL; child = child->next) {
 
-        xmlInitParser();
-
-    #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-        handle = dlopen_libexslt();
-
-        // allow for all exslt functions
-        dlexsltRegisterAll(handle);
-
-        dlerror();
-        *(VOIDPTR *)(&xsltParseStylesheetDoc) = dlsym(handle, "xsltParseStylesheetDoc");
-        char* error;
-        if ((error = dlerror()) != NULL) {
-            dlclose(handle);
-            return; // SRCML_STATUS_ERROR;
-        }
-
-        dlerror();
-        *(VOIDPTR *)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
-        if ((error = dlerror()) != NULL) {
-            dlclose(handle);
-            return; // SRCML_STATUS_ERROR;
-        }
-
-        dlerror();
-        *(VOIDPTR *)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
-        if ((error = dlerror()) != NULL) {
-            dlclose(handle);
-            return; // SRCML_STATUS_ERROR;
-        }
-    #endif
-
-        // parse the stylesheet
-        stylesheet = xsltParseStylesheetDoc(xslt);
-        if (!stylesheet)
-            return; // SRCML_STATUS_ERROR;
-
-        xsltsrcMLRegister();
+        if (child->type == XML_TEXT_NODE)
+            xmlOutputBufferWriteString(oarchive->translator->output_buffer(), (const char *) child->content);
+        else
+            outputResult(child);
     }
 
-    void xslt_units::end_output() {
+    // finished with the result of the transformation
+    xmlFreeDoc(res);
 
-        stylesheet->doc = 0;
-        xsltFreeStylesheet(stylesheet);
-        xsltCleanupGlobals();
+    return true;
+}
+
+void xslt_units::start_output() {
+
+    xmlInitParser();
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+    handle = dlopen_libexslt();
+
+    // allow for all exslt functions
+    dlexsltRegisterAll(handle);
+
+    dlerror();
+    *(VOIDPTR *)(&xsltParseStylesheetDoc) = dlsym(handle, "xsltParseStylesheetDoc");
+    char* error;
+    if ((error = dlerror()) != NULL) {
         dlclose(handle);
-#endif
+        return; // SRCML_STATUS_ERROR;
     }
+
+    dlerror();
+    *(VOIDPTR *)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return; // SRCML_STATUS_ERROR;
+    }
+
+    dlerror();
+    *(VOIDPTR *)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
+    if ((error = dlerror()) != NULL) {
+        dlclose(handle);
+        return; // SRCML_STATUS_ERROR;
+    }
+#endif
+
+    // parse the stylesheet
+    stylesheet = xsltParseStylesheetDoc(xslt);
+    if (!stylesheet)
+        return; // SRCML_STATUS_ERROR;
+
+    xsltsrcMLRegister();
+}
+
+void xslt_units::end_output() {
+
+    stylesheet->doc = 0;
+    xsltFreeStylesheet(stylesheet);
+    xsltCleanupGlobals();
+
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+    dlclose(handle);
+#endif
+}
 
 /**
  * dlexsltRegisterAll
