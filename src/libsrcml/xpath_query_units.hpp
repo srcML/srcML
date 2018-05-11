@@ -137,7 +137,7 @@ public :
      * Create the output buffer and setup XPath.
      */
      // TODO: start_output needs an error return value
-    virtual void start_output();
+    virtual int start_output();
     
     virtual xmlXPathContextPtr set_context();
 
@@ -176,7 +176,7 @@ public :
      *
      * Finish the archive and close buffer.
      */
-    virtual void end_output();
+    virtual int end_output();
 
 private :
 

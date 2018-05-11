@@ -115,9 +115,9 @@ public :
      */
     virtual bool apply();
 
-    virtual void start_output();
+    virtual int start_output();
 
-    void end_output();
+    int end_output();
 
 private :
     xsltStylesheetPtr stylesheet;

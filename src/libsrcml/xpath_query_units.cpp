@@ -157,7 +157,7 @@ extern std::vector<transform> global_transformations;
      * Create the output buffer and setup XPath.
      */
      // TODO: start_output needs an error return value
-    void xpath_query_units::start_output() {
+    int xpath_query_units::start_output() {
 
         xsltsrcMLRegister();
 
@@ -168,6 +168,8 @@ extern std::vector<transform> global_transformations;
         buf->writecallback = (xmlOutputWriteCallback)_write;
 #endif
 #endif
+
+        return 0;
     }
     
     xmlXPathContextPtr xpath_query_units::set_context() {
@@ -653,7 +655,7 @@ extern std::vector<transform> global_transformations;
      *
      * Finish the archive and close buffer.
      */
-    void xpath_query_units::end_output() {
+    int xpath_query_units::end_output() {
 
         // finalize results
         switch (nodetype) {
@@ -679,6 +681,8 @@ extern std::vector<transform> global_transformations;
         if (context)
             xmlXPathFreeContext(context);
         context = 0;
+
+        return 0;
     }
 
 const char* const xpath_query_units::simple_xpath_attribute_name = "location";

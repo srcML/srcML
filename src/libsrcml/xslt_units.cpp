@@ -157,19 +157,23 @@ bool xslt_units::apply() {
     return true;
 }
 
-void xslt_units::start_output() {
+int xslt_units::start_output() {
 
     // parse the stylesheet
     stylesheet = xsltParseStylesheetDoc(xslt);
     if (!stylesheet)
-        return; // SRCML_STATUS_ERROR;
+        return SRCML_STATUS_ERROR;
+
+    return 0;
 }
 
-void xslt_units::end_output() {
+int xslt_units::end_output() {
 
     stylesheet->doc = 0;
     xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
+
+    return 0;
 }
 
 /**

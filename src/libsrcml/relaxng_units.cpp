@@ -47,11 +47,13 @@ relaxng_units::relaxng_units(OPTION_TYPE options, xmlDocPtr relaxng, srcml_archi
  *
  * Pure virtual that is called exactly once at beginnning of document  Override for intended behavior.
  */
-void relaxng_units::start_output() {
+int relaxng_units::start_output() {
 
     relaxng_parser_ctxt = xmlRelaxNGNewDocParserCtxt(relaxng);
     rng = xmlRelaxNGParse(relaxng_parser_ctxt);
     rngctx = xmlRelaxNGNewValidCtxt(rng);
+
+    return 0;
 }
 
 /**
@@ -85,11 +87,13 @@ bool relaxng_units::apply() {
  *
  * Pure virtual that is called exactly once at end of document.  Override for intended behavior.
  */
-void relaxng_units::end_output() {
+int relaxng_units::end_output() {
 
     xmlRelaxNGFreeValidCtxt(rngctx);
     xmlRelaxNGFree(rng);
     xmlRelaxNGFreeParserCtxt(relaxng_parser_ctxt);
+
+    return 0;
 }
 
 /**

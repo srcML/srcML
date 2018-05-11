@@ -83,7 +83,7 @@ protected:
      *
      * Pure virtual that is called exactly once at beginnning of document  Override for intended behavior.
      */
-    virtual void start_output() {}
+    virtual int start_output() { return 0; }
 
     /**
      * apply
@@ -102,7 +102,7 @@ protected:
      *
      * Pure virtual that is called exactly once at end of document.  Override for intended behavior.
      */
-    virtual void end_output() {}
+    virtual int end_output() { return 0; }
 
 private:
 
