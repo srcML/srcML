@@ -23,23 +23,16 @@
 #ifndef INCLUDED_XSLT_UNITS_HPP
 #define INCLUDED_XSLT_UNITS_HPP
 
-#include <libxml/parser.h>
-#include <libxml/parserInternals.h>
-#include <libxslt/transform.h>
-
-/** size of string then the literal */
-#define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
- /** literal followed by its size */
-#define LITERALPLUSSIZE(s) s, sizeof(s) - 1
-
-#include <srcexfun.hpp>
-#include <transform_units.hpp>
-
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #define DLLOAD
 #else
 #undef DLLOAD
 #endif
+
+#include <libxslt/transform.h>
+
+#include <srcexfun.hpp>
+#include <transform_units.hpp>
 
 #ifdef DLLOAD
 typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
@@ -65,7 +58,6 @@ void dlexsltRegisterAll(void * handle);
 #include <io.h>
 #endif
 
-#ifdef WITH_LIBXSLT
 /**
  * srcml_xslt
  * @param input_buffer a parser input buffer
@@ -81,8 +73,6 @@ void dlexsltRegisterAll(void * handle);
  */
 int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const std::vector<std::string>& params, int /* paramcount */, OPTION_TYPE options,
                 srcml_archive* out_archive);
-
-#endif
 
 /**
  * xslt_units
@@ -101,8 +91,11 @@ public :
      *
      * Constructor.  Dynamically loads XSLT functions.
      */
-    xslt_units(const char* a_context_element, OPTION_TYPE & options, xmlDocPtr xslt,
-               const std::vector<std::string>& params, srcml_archive* oarchive);
+    xslt_units(const char* a_context_element,
+               OPTION_TYPE& options,
+               xmlDocPtr xslt,
+               const std::vector<std::string>& params,
+               srcml_archive* oarchive);
 
 #ifdef DLLOAD
     /**
@@ -130,9 +123,10 @@ private :
     xsltStylesheetPtr stylesheet;
     std::vector<std::string> params;
     std::vector<const char*> cparams;
-    void* handle = nullptr;
     xmlDocPtr xslt;
 #ifdef DLLOAD
+    void* libxslt_handle = nullptr;
+    void* libexslt_handle = nullptr;
     xsltApplyStylesheetUser_function xsltApplyStylesheetUser;
     xsltParseStylesheetDoc_function xsltParseStylesheetDoc;
     xsltCleanupGlobals_function xsltCleanupGlobals;

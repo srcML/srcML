@@ -24,41 +24,15 @@
 
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
-#include <libxslt/transform.h>
 
-/** size of string then the literal */
-#define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
- /** literal followed by its size */
-#define LITERALPLUSSIZE(s) s, sizeof(s) - 1
-
-#include <srcexfun.hpp>
-#include <transform_units.hpp>
 #include <srcml_sax2_utilities.hpp>
-#include <dlfcn.h>
-
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-#define DLLOAD
-#else
-#undef DLLOAD
-#endif
 
 #ifdef DLLOAD
-typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
-
-typedef xmlDocPtr (*xsltApplyStylesheetUser_function) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *,
-                                                       xsltTransformContextPtr);
-
-typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
-typedef xsltStylesheetPtr (*xsltParseStylesheetDoc_function) (xmlDocPtr);
-typedef void (*xsltCleanupGlobals_function)();
-typedef void (*xsltFreeStylesheet_function)(xsltStylesheetPtr);
-
-void dlexsltRegisterAll(void * handle);
+#include <dlfcn.h>
 #else
 #include <libxslt/xslt.h>
 #include <libxslt/xsltInternals.h>
 #include <libxslt/xsltutils.h>
-
 #include <libexslt/exslt.h>
 #endif
 
@@ -76,7 +50,7 @@ void dlexsltRegisterAll(void * handle);
  * Constructor.  Dynamically loads XSLT functions.
  */
 xslt_units::xslt_units(const char* a_context_element, OPTION_TYPE & options, xmlDocPtr xslt,
-               const std::vector<std::string>& params, srcml_archive* oarchive)
+                       const std::vector<std::string>& params, srcml_archive* oarchive)
         : transform_units(options, oarchive), params(params), cparams(params.size() + 1), xslt(xslt) {
 
     // cparams must be null terminated
@@ -85,22 +59,56 @@ xslt_units::xslt_units(const char* a_context_element, OPTION_TYPE & options, xml
     }
     cparams.back() = 0;
 
+    xmlInitParser();
+
 #ifdef DLLOAD
-    handle = dlopen_libxslt();
-    if (!handle) {
+    libxslt_handle = dlopen_libxslt();
+    if (!libxslt_handle) {
         fprintf(stderr, "Unable to open libxslt library\n");
         return;
     }
 
-    dlerror();
-    *(VOIDPTR *)(&xsltApplyStylesheetUser) = dlsym(handle, "xsltApplyStylesheetUser");
     char* error;
+
+    dlerror();
+    *(VOIDPTR *)(&xsltApplyStylesheetUser) = dlsym(libxslt_handle, "xsltApplyStylesheetUser");
     if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        handle = 0;
-        return;
+        dlclose(libxslt_handle);
+        libxslt_handle = 0;
+        throw;
     }
+
+    dlerror();
+    *(VOIDPTR *)(&xsltParseStylesheetDoc) = dlsym(libxslt_handle, "xsltParseStylesheetDoc");
+    if ((error = dlerror()) != NULL) {
+        dlclose(libxslt_handle);
+        libxslt_handle = 0;
+        throw;
+    }
+
+    dlerror();
+    *(VOIDPTR *)(&xsltCleanupGlobals) = dlsym(libxslt_handle, "xsltCleanupGlobals");
+    if ((error = dlerror()) != NULL) {
+        dlclose(libxslt_handle);
+        libxslt_handle = 0;
+        throw;
+    }
+
+    dlerror();
+    *(VOIDPTR *)(&xsltFreeStylesheet) = dlsym(libxslt_handle, "xsltFreeStylesheet");
+    if ((error = dlerror()) != NULL) {
+        dlclose(libxslt_handle);
+        libxslt_handle = 0;
+        throw;
+    }
+
+    libexslt_handle = dlopen_libexslt();
+
+    // allow for all exslt functions
+    dlexsltRegisterAll(libexslt_handle);
 #endif
+
+    xsltsrcMLRegister();
 }
 
 #ifdef DLLOAD
@@ -110,7 +118,8 @@ xslt_units::xslt_units(const char* a_context_element, OPTION_TYPE & options, xml
  * Destructor.  Closes dynamically loaded library.
  */
 xslt_units::~xslt_units() {
-    dlclose(handle);
+    dlclose(libxslt_handle);
+    dlclose(libexslt_handle);
 }
 #endif
 
@@ -130,7 +139,7 @@ bool xslt_units::apply() {
     xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0);
     if (!res) {
         fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
-        return SRCML_STATUS_ERROR;
+        return false;
     }
 
     // output the transformed result
@@ -150,43 +159,10 @@ bool xslt_units::apply() {
 
 void xslt_units::start_output() {
 
-    xmlInitParser();
-
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    handle = dlopen_libexslt();
-
-    // allow for all exslt functions
-    dlexsltRegisterAll(handle);
-
-    dlerror();
-    *(VOIDPTR *)(&xsltParseStylesheetDoc) = dlsym(handle, "xsltParseStylesheetDoc");
-    char* error;
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return; // SRCML_STATUS_ERROR;
-    }
-
-    dlerror();
-    *(VOIDPTR *)(&xsltCleanupGlobals) = dlsym(handle, "xsltCleanupGlobals");
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return; // SRCML_STATUS_ERROR;
-    }
-
-    dlerror();
-    *(VOIDPTR *)(&xsltFreeStylesheet) = dlsym(handle, "xsltFreeStylesheet");
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return; // SRCML_STATUS_ERROR;
-    }
-#endif
-
     // parse the stylesheet
     stylesheet = xsltParseStylesheetDoc(xslt);
     if (!stylesheet)
         return; // SRCML_STATUS_ERROR;
-
-    xsltsrcMLRegister();
 }
 
 void xslt_units::end_output() {
@@ -194,10 +170,6 @@ void xslt_units::end_output() {
     stylesheet->doc = 0;
     xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
-
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    dlclose(handle);
-#endif
 }
 
 /**
@@ -206,13 +178,14 @@ void xslt_units::end_output() {
  * Allow for all exslt functions by dynamic load
  * of exslt library.
  */
-void dlexsltRegisterAll(void * handle) {
+void dlexsltRegisterAll(void* handle) {
 
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
+#ifdef DLLOAD
     typedef void (*exsltRegisterAll_function)();
-    dlerror();
+
     exsltRegisterAll_function exsltRegisterAll;
+
+    dlerror();
     *(VOIDPTR *)(&exsltRegisterAll) = dlsym(handle, "exsltRegisterAll");
     char* error;
     if ((error = dlerror()) != NULL) {
@@ -222,7 +195,6 @@ void dlexsltRegisterAll(void * handle) {
 
     // allow for all exslt functions
     exsltRegisterAll();
-
 #endif
 }
 
@@ -246,11 +218,11 @@ int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element
     if (input_buffer == NULL || context_element == NULL || xslt == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    // setup process handling
-    xslt_units process(context_element, options, xslt, params, out_archive);
-    srcSAXController control(input_buffer);
-
     try {
+
+        // setup process handling
+        xslt_units process(context_element, options, xslt, params, out_archive);
+        srcSAXController control(input_buffer);
 
         control.parse(&process);
 
