@@ -175,15 +175,15 @@ int xpath_query_units::start_output() {
 
 xmlXPathContextPtr xpath_query_units::set_context() {
 
-        // compile all the inner transformations
+    // compile all the inner transformations
     for (auto& thistransform : global_transformations)
         thistransform.compiled_xpath = xmlXPathCompile(BAD_CAST thistransform.arguments.str->c_str());
 
     xmlXPathContextPtr context = xmlXPathNewContext(doc);
-        // TODO:  Detect error
+    // TODO:  Detect error
 
     xpathsrcMLRegister(context);
-        // TODO:  Detect error
+    // TODO:  Detect error
 
         // register standard prefixes for standard namespaces
     for (const auto& ns : default_namespaces) {
@@ -209,14 +209,14 @@ xmlXPathContextPtr xpath_query_units::set_context() {
                 fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
                 return 0; //SRCML_STATUS_ERROR;
             }
-    }
+        }
 
 #if LIBEXSLT_VERSION > 813
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
+        typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
 
-    /** create a variable for dynamically load from library */
-    typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
+        /** create a variable for dynamically load from library */
+        typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
 #define dlsymvar(type, name) type name;  *(VOIDPTR *)(&name) = dlsym(handle, #name)
 
     void* handle = dlopen_libexslt();
