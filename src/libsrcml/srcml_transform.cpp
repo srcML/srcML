@@ -508,7 +508,7 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
 #ifdef WITH_LIBXSLT
             case SRCML_XSLT: {
 
-                status = srcml_xslt(pinput, "src:unit",
+                status = srcml_xslt(pinput,
                                    iarchive->transformations[i].doc,
                                    iarchive->transformations[i].xsl_parameters, 0, oarchive->options, oarchive);
                 break;

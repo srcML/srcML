@@ -61,7 +61,6 @@ void dlexsltRegisterAll(void * handle);
 /**
  * srcml_xslt
  * @param input_buffer a parser input buffer
- * @param context_element a srcml element to be used as the context
  * @param xslt xmlDocPtr containing an XSLT program
  * @param params NULL-terminated list of XSLT parameters
  * @param paramcount number of XSLT parameters
@@ -71,7 +70,7 @@ void dlexsltRegisterAll(void * handle);
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const std::vector<std::string>& params, int /* paramcount */, OPTION_TYPE options,
+int srcml_xslt(xmlParserInputBufferPtr input_buffer, xmlDocPtr xslt, const std::vector<std::string>& params, int /* paramcount */, OPTION_TYPE options,
                 srcml_archive* out_archive);
 
 /**
@@ -91,8 +90,7 @@ public :
      *
      * Constructor.  Dynamically loads XSLT functions.
      */
-    xslt_units(const char* a_context_element,
-               OPTION_TYPE& options,
+    xslt_units(OPTION_TYPE& options,
                xmlDocPtr xslt,
                const std::vector<std::string>& params,
                srcml_archive* oarchive);
