@@ -28,7 +28,6 @@
 #include <ctpl_stl.h>
 #include <mutex>
 #include <condition_variable>
-#include <functional>
 #include <queue>
 #include <deque>
 #include <thread>
@@ -64,7 +63,7 @@ public:
     bool ordered;
     std::thread write_thread;
     int maxposition;
-    std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, std::function<bool(ParseRequest*, ParseRequest*)>> q;
+    std::priority_queue<ParseRequest*, std::deque<ParseRequest*>, bool (*)(ParseRequest*, ParseRequest*)> q;
     std::mutex qmutex;
     std::condition_variable cv;
     int total = 0;
