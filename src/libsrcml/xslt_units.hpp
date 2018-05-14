@@ -113,6 +113,8 @@ public :
      */
     virtual bool apply();
 
+    static void apply_unit(srcml_unit* unit);
+
     virtual int start_output();
 
     int end_output();

@@ -473,6 +473,13 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     return srcml_apply_transforms_verbose(iarchive, oarchive, 0);
 }
 
+int srcml_unit_apply_transforms(struct srcml_unit* unit) {
+
+    xslt_units::apply_unit(unit);
+
+    return 1;
+}
+
 int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarchive, apply_transforms_callback* ) {
 
     if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;

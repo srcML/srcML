@@ -1197,6 +1197,8 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
  */
 LIBSRCML_DECL int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
 
+LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_unit* unit);
+
 /** Callback function for srcml_apply_transforms_verbose(). Called after each input unit in the archive is processed
  * @param filename The filename of the original unit
  * @param language The language of the original unit
