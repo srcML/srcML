@@ -18,34 +18,14 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # Build and add tests
-addUnitTest(test_srcml_append_transform test_srcml_append_transform.cpp)
-addUnitTest(test_srcml_apply_transforms test_srcml_apply_transforms.cpp)
-addUnitTest(test_srcml_archive_check_extension test_srcml_archive_check_extension.cpp)
-addUnitTest(test_srcml_archive_get test_srcml_archive_get.cpp)
-addUnitTest(test_srcml_archive_set test_srcml_archive_set.cpp)
-addUnitTest(test_srcml_clear_transforms test_srcml_clear_transforms.cpp)
-addUnitTest(test_srcml_archive_clone test_srcml_archive_clone.cpp)
-addUnitTest(test_srcml_archive_create test_srcml_archive_create.cpp)
-addUnitTest(test_srcml_unit_create test_srcml_unit_create.cpp)
-addUnitTest(test_srcml_convenience test_srcml_convenience.cpp)
-addUnitTest(test_srcml_extract_text test_srcml_extract_text.cpp ${LIBXML2_LIBRARIES})
-addUnitTest(test_srcml_global test_srcml_global.cpp)
-addUnitTest(test_srcml_global_access test_srcml_global_access.cpp)
-addUnitTest(test_srcml_unit_parse test_srcml_unit_parse.cpp)
-addUnitTest(test_srcml_archive_read_open test_srcml_archive_read_open.cpp)
-#addUnitTest(test_srcml_archive_read_unit test_srcml_archive_read_unit.cpp)
-addUnitTest(test_srcml_unit_get test_srcml_unit_get.cpp)
-addUnitTest(test_srcml_unit_set test_srcml_unit_set.cpp)
-addUnitTest(test_srcml_unit_unparse test_srcml_unit_unparse.cpp)
-addUnitTest(test_srcml_archive_write_open test_srcml_archive_write_open.cpp)
-addUnitTest(test_srcml_archive_write_unit test_srcml_archive_write_unit.cpp)
-addUnitTest(test_srcml_write_by_element test_srcml_write_by_element.cpp)
-addUnitTest(test_language_extension_registry test_language_extension_registry.cpp)
-addUnitTest(test_srcml_translator test_srcml_translator.cpp ${LIBXML2_LIBRARIES})
+file(GLOB LIB_TESTS test_*.cpp)
+foreach(LIB_TEST ${LIB_TESTS})
+	get_filename_component(TEST_NAME ${LIB_TEST} NAME_WE)
+  	addUnitTest(${TEST_NAME} ${TEST_NAME}.cpp)
+endforeach()
 
 add_definitions(-DSRCML_XPATH_EXFUN_TEST_DIR="${CMAKE_BINARY_DIR}/bin/xpath_test_data")
 file(COPY xpath_test_data DESTINATION "${CMAKE_BINARY_DIR}/bin")
-addUnitTest(test_srcexfun_impl test_srcexfun_impl.cpp)
 
 # Copying xpath test data into correct loction.
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
@@ -55,4 +35,3 @@ if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
     copyDependentFile(schema.rng)  
 
 endif()
-
