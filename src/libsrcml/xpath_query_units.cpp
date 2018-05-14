@@ -47,8 +47,6 @@
 #include <srcml_translator.hpp>
 #include <srcml_sax2_utilities.hpp>
 
-extern std::vector<transform> global_transformations;
-
 const char* const xpath_query_units::simple_xpath_attribute_name = "location";
 
 /**
@@ -176,7 +174,7 @@ int xpath_query_units::start_output() {
 xmlXPathContextPtr xpath_query_units::set_context() {
 
     // compile all the inner transformations
-    for (auto& thistransform : global_transformations)
+    for (auto& thistransform : oarchive->transformations)
         thistransform.compiled_xpath = xmlXPathCompile(BAD_CAST thistransform.arguments.str->c_str());
 
     xmlXPathContextPtr context = xmlXPathNewContext(doc);
@@ -287,20 +285,20 @@ bool xpath_query_units::apply() {
     // handle new elements and individual results the previous way
     if (element || !attr_name) {
 
-        auto tr = global_transformations.begin();
+        auto tr = oarchive->transformations.begin();
         // evaluate the xpath
         xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(tr->compiled_xpath, context);
         if (result_nodes == 0) {
             fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
             return false;
         }
-        applyxpath(++tr, global_transformations.end(), result_nodes);
+        applyxpath(++tr, oarchive->transformations.end(), result_nodes);
 
         return true;
     }
 
     // apply all XPath transformations on the same base code, and save all the results
-    for (auto& tr : global_transformations) {
+    for (auto& tr : oarchive->transformations) {
 
         // evaluate the xpath
         tr.result_nodes = xmlXPathCompiledEval(tr.compiled_xpath, context);
@@ -311,9 +309,9 @@ bool xpath_query_units::apply() {
     }
 
     // process all the xpath transform results for everything except the last
-    for (auto& tr : global_transformations) {
+    for (auto& tr : oarchive->transformations) {
 
-        if (&tr == &global_transformations.back())
+        if (&tr == &oarchive->transformations.back())
             break;
 
         if (!tr.result_nodes->nodesetval)
@@ -334,13 +332,13 @@ bool xpath_query_units::apply() {
     }
 
     // apply regularly to the last. Note this will be what outputs the node
-    attr_uri = global_transformations.back().arguments.attr_uri->c_str();
-    attr_prefix = global_transformations.back().arguments.attr_prefix->c_str();
-    attr_name = global_transformations.back().arguments.attr_name->c_str();
-    attr_value = global_transformations.back().arguments.attr_value->c_str();
-    apply(global_transformations.back().result_nodes);
+    attr_uri = oarchive->transformations.back().arguments.attr_uri->c_str();
+    attr_prefix = oarchive->transformations.back().arguments.attr_prefix->c_str();
+    attr_name = oarchive->transformations.back().arguments.attr_name->c_str();
+    attr_value = oarchive->transformations.back().arguments.attr_value->c_str();
+    apply(oarchive->transformations.back().result_nodes);
 
-//        applyxpath(++tr, global_transformations.end(), result_nodes);
+//        applyxpath(++tr, oarchive->transformations.end(), result_nodes);
 
     // finished with the result nodes
     //xmlXPathFreeObject(result_nodes);
@@ -522,7 +520,7 @@ void xpath_query_units::outputXPathResultsElement(xmlXPathObjectPtr result_nodes
 
         xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
-        xpath_arguments& thisarguments = global_transformations[0].arguments;
+        xpath_arguments& thisarguments = oarchive->transformations[0].arguments;
 
         // set up node to insert
         xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) thisarguments.element->c_str());

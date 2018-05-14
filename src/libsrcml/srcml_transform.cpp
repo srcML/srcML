@@ -466,8 +466,6 @@ int srcml_clear_transforms(srcml_archive* archive) {
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 
-std::vector<transform> global_transformations;
-
 int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
     return srcml_apply_transforms_verbose(iarchive, oarchive, 0);
@@ -486,8 +484,6 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
     if((iarchive->type != SRCML_ARCHIVE_READ && iarchive->type != SRCML_ARCHIVE_RW)
         || (oarchive->type != SRCML_ARCHIVE_WRITE && oarchive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    global_transformations = iarchive->transformations;
-
     int status = SRCML_STATUS_OK;
     for(std::vector<transform>::size_type i = 0; i < iarchive->transformations.size(); ++i) {
 
@@ -502,6 +498,8 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
             switch(iarchive->transformations[i].type) {
             case SRCML_XPATH: {
 
+                auto save = oarchive->transformations;
+                oarchive->transformations = iarchive->transformations;
                 status = srcml_xpath(pinput, "src:unit",
                                     optional_get_c_str(iarchive->transformations[i].arguments.str),
                                     optional_get_c_str(iarchive->transformations[i].arguments.prefix), optional_get_c_str(iarchive->transformations[i].arguments.uri),
@@ -509,6 +507,7 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
                                     optional_get_c_str(iarchive->transformations[i].arguments.attr_prefix), optional_get_c_str(iarchive->transformations[i].arguments.attr_uri),
                                     optional_get_c_str(iarchive->transformations[i].arguments.attr_name), optional_get_c_str(iarchive->transformations[i].arguments.attr_value),
                                     oarchive->options, oarchive);
+                oarchive->transformations = save;
                 break;
             }
 
