@@ -484,25 +484,29 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
     static const std::string& prefix = namespaces[POS].prefix;
-	static const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
-	static const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
+    static const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
+    static const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
 
     // highly optimized as this is output for every start tag
 
     // position start attribute, e.g. pos:start="1:4"
-	xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.c_str());
-	xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
-	xmlOutputBufferWrite(output_buffer, 1, ":");
-	xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
-	xmlOutputBufferWrite(output_buffer, 1, "\"");
+    xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.c_str());
+    xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
+    xmlOutputBufferWrite(output_buffer, 1, ":");
+    xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
+    xmlOutputBufferWrite(output_buffer, 1, "\"");
 
     // position end attribute, e.g. pos:end="2:1"
-	srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
-	xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
-	xmlOutputBufferWriteString(output_buffer, positoa(stoken->endline));
-	xmlOutputBufferWrite(output_buffer, 1, ":");
-	xmlOutputBufferWriteString(output_buffer, positoa(stoken->endcolumn));
-	xmlOutputBufferWrite(output_buffer, 1, "\"");
+    srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
+    xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
+    xmlOutputBufferWriteString(output_buffer, positoa(stoken->endline));
+    if (token->getLine() > stoken->endline) {
+        fprintf(stderr, "srcml: Internal position error\n");
+        xmlOutputBufferWriteString(output_buffer, "ERROR-");
+    }
+    xmlOutputBufferWrite(output_buffer, 1, ":");
+    xmlOutputBufferWriteString(output_buffer, positoa(stoken->endcolumn));
+    xmlOutputBufferWrite(output_buffer, 1, "\"");
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
@@ -512,7 +516,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
     if (name[0] == 0)
         return;
 
-	static bool isposition = isoption(options, SRCML_OPTION_POSITION);
+    static bool isposition = isoption(options, SRCML_OPTION_POSITION);
 
     if (isstart(token) || isempty(token)) {
 
