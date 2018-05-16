@@ -456,7 +456,7 @@ public :
 
             if(uri == SRCML_CPP_NS_URI) {
 
-                if(archive->language != 0) {
+                if(archive->language) {
 
                     if(*archive->language == "C++" || *archive->language == "C" || *archive->language == "Objective-C")
                         archive->options |= SRCML_OPTION_CPP | SRCML_OPTION_CPP_NOMACRO;

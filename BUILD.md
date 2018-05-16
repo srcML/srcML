@@ -52,7 +52,7 @@ In source (builds within the source directory) and out of source builds (builds 
 
 ##### Notes
 
-* OSX does not provide headers for libarchive. Visit http://www.libarchive.org` and download 2.8.5 for headers that are close to the versions distributed on OSX.  The files needed are:
+* OSX does not provide headers for libarchive. Visit http://www.libarchive.org and download 2.8.5 for headers that are close to the versions distributed on OSX.  The files needed are:
  * archive.h
  * archive_entry.h
 

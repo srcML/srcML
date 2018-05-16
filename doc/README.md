@@ -1,6 +1,9 @@
 Documentation
 -------------
 
+For information on how to generate the HTML documentation for srcml, see the README in the srcMLDocGen directory.
+
+
 To generate the man pages for srcml:
 
 1. Install `ronn` via:
