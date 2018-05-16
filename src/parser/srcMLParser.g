@@ -7095,7 +7095,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev 
 
                 startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
-                startElement(STYPEPREV);
+                emptyElement(STYPEPREV);
 
                 instypeprev = true;
             }
