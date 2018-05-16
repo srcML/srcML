@@ -276,8 +276,8 @@ private:
         // that was enqueued
         if (isoption(options, SRCML_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
-            qetoken->endline = lastline;
-            qetoken->endcolumn = lastcolumn;
+            qetoken->endline = slastline;
+            qetoken->endcolumn = slastcolumn;
             ends.pop();
         }
      }
@@ -349,15 +349,15 @@ private:
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     srcMLParser::consume();
-                    lastcolumn = LT(1)->getColumn() - 1;
-                    lastline = LT(1)->getLine();
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
-                    lastcolumn = LT(1)->getColumn() - 1;
-                    lastline = LT(1)->getLine();
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                 }
 
                 break;
@@ -371,11 +371,10 @@ private:
                 break;
 
             case srcMLParser::BLOCK_COMMENT_END:
-
                 pushSkipToken();
                 srcMLParser::consume();
-                lastcolumn = LT(1)->getColumn() - 1;
-                lastline = LT(1)->getLine();
+                slastcolumn = LT(1)->getColumn() - 1;
+                slastline = LT(1)->getLine();
                 pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
@@ -384,8 +383,8 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                lastcolumn = LT(1)->getColumn() - 1;
-                lastline = LT(1)->getLine();
+                slastcolumn = LT(1)->getColumn() - 1;
+                slastline = LT(1)->getLine();
                 pushESkipToken(srcMLParser::SDOXYGEN_COMMENT);
 
                 break;
@@ -394,8 +393,8 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                lastcolumn = LT(1)->getColumn() - 1;
-                lastline = LT(1)->getLine();
+                slastcolumn = LT(1)->getColumn() - 1;
+                slastline = LT(1)->getLine();
                 pushESkipToken(srcMLParser::SJAVADOC_COMMENT);
 
                 break;
@@ -421,12 +420,12 @@ private:
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     srcMLParser::consume();
-                    lastcolumn = LT(1)->getColumn() - 1;
-                    lastline = LT(1)->getLine();
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                 } else {
-                    lastcolumn = LT(1)->getColumn() - 1;
-                    lastline = LT(1)->getLine();
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
@@ -806,6 +805,9 @@ private:
 
     int lastline = 0;
     int lastcolumn = 0;
+
+    int slastline = 0;
+    int slastcolumn = 0;
 
     /** parser options */
     OPTION_TYPE & options;
