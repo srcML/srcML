@@ -529,7 +529,9 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         if (attr_name2)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
 
-        if (isposition)
+        // if position attributes for non-empty start elements
+        // @todo Should <escape../> have a position?
+        if (isposition && !isempty(token))
             addPosition(token);
     } 
 
