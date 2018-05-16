@@ -5109,7 +5109,7 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
         }
         push_namestack identifier (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
-            (generic_argument_list)=>
+            { generic_argument_list_check() }? (generic_argument_list)=>
                 generic_argument_list /* (options { greedy = true; } : generic_type_constraint)*  */ |
 
             (cuda_argument_list) => cuda_argument_list |
@@ -5135,7 +5135,8 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
         }
         push_namestack (template_specifier { is_nop = false; })* identifier
     (
-        (generic_argument_list)=> generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
+        { generic_argument_list_check() }? (generic_argument_list)=>
+            generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
 
         (cuda_argument_list) => cuda_argument_list |
 
@@ -8235,6 +8236,60 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
         }
         EQUAL expression
 ;
+
+// generic argument list
+generic_argument_list_check[] returns [bool is_generic_argument_list] {
+
+    is_generic_argument_list = false;
+
+    int start = mark();
+    inputState->guessing++;
+
+    int parencount = 0;
+    int bracecount = 0;
+    while (LA(1) != antlr::Token::EOF_TYPE) {
+
+        if (LA(1) == RPAREN)
+            --parencount;
+        else if (LA(1) == LPAREN)
+            ++parencount;
+
+        if (parencount < 0) {
+            break;
+        }
+
+        if (LA(1) == TEMPOPE) {
+            is_generic_argument_list = true;
+            break;
+        }
+
+        if (LA(1) == RCURLY)
+            --bracecount;
+        else if (LA(1) == LCURLY)
+            ++bracecount;
+
+        if (bracecount < 0)
+            break;
+
+        if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0)
+            break;
+
+        consume();
+    }
+
+    inputState->guessing--;
+    rewind(start);
+
+    ENTRY_DEBUG
+
+}:;
+/*
+        savenamestack[namestack_save]
+
+        tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])* tempope
+
+        restorenamestack[namestack_save]
+*/
 
 // generic argument list
 generic_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save;  bool in_function_type = false; ENTRY_DEBUG } :
