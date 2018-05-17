@@ -31,5 +31,6 @@ void transform_srcml(const srcml_request_t& srcml_request,
 				     const srcml_input_t& input_sources,
                      const srcml_output_dest& output);
 
-#endif
+int apply_xslt(srcml_archive* in_arch, const std::string& transform_input);
 
+#endif

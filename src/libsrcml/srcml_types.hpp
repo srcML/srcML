@@ -24,6 +24,11 @@
 #include <srcml.h>
 #include <srcmlns.hpp>
 
+#include <libxslt/xslt.h>
+#include <libxslt/xsltInternals.h>
+#include <libxslt/xsltutils.h>
+#include <libexslt/exslt.h>
+
 /** string for language Objective-C */
 #define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
 
@@ -150,6 +155,8 @@ struct transform {
     xmlXPathCompExprPtr compiled_xpath;
 
     xmlXPathObjectPtr result_nodes;
+
+    xsltStylesheetPtr compiled_stylesheet;
 };
 
 /**

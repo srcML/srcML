@@ -167,7 +167,7 @@ int xslt_units::start_output() {
     return 0;
 }
 
-void xslt_units::apply_unit(srcml_unit* unit) {
+xmlDocPtr xslt_units::apply_unit(xmlDocPtr doc, xsltStylesheetPtr xslt, const std::vector<std::string>& params, int /* paramcount */, OPTION_TYPE options) {
 
 	static void* libxslt_handle = nullptr;
     if (!libxslt_handle) {
@@ -175,7 +175,7 @@ void xslt_units::apply_unit(srcml_unit* unit) {
     libxslt_handle = dlopen_libxslt();
     if (!libxslt_handle) {
         fprintf(stderr, "Unable to open libxslt library\n");
-        return;
+        return 0;
     }
 	}
     char* error;
@@ -202,37 +202,18 @@ void xslt_units::apply_unit(srcml_unit* unit) {
     }
 	}
 
-    static xmlDocPtr xsltdoc = xmlReadFile("copy.xsl", 0, 0);
-    static auto stylesheet = xsltParseStylesheetDoc(xsltdoc);
+//    static xmlDocPtr xsltdoc = xmlReadFile("copy.xsl", 0, 0);
 
-    // create a DOM of the unit
-//    xmlDocPtr doc = xmlReadDoc(BAD_CAST unit->srcml.c_str(), 0, 0, 0);
-    xmlDocPtr doc = xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0);
+    // position passed to XSLT program
+    int unit_count = 1;
+    setPosition((int)unit_count);
+ 
+//    static auto stylesheet = xsltParseStylesheetDoc(xslt);
 
     // apply the style sheet to the document of this unit
-    xmlDocPtr res = xsltApplyStylesheet(stylesheet, doc, 0, 0, 0, 0);
+    xmlDocPtr res = xsltApplyStylesheet(xslt, doc, 0, 0, 0, 0);
 
-    // dump the result tree to the string using an output buffer that writes to a std::string
-    unit->srcml.clear();
-    xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
-
-		((std::string*) context)->append(buffer, len);
-
-		return len;
-
-    }, 0, &(unit->srcml), 0);
-    xmlNodeDumpOutput(output, res, res->children, 0, 0, 0);
-
-    // very important to flush to make sure the unit contents are all present
-    xmlOutputBufferClose(output);
-
-    // mark inside the units
-    // @todo Not being done right
-    unit->content_begin = unit->srcml.find('>') + 1;
-    unit->content_end = unit->srcml.rfind('<') + 1;
-
-    xmlFreeDoc(res);
-    xmlFreeDoc(doc);
+    return res;
 }
 
 int xslt_units::end_output() {

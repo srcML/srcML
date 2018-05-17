@@ -113,7 +113,7 @@ public :
      */
     virtual bool apply();
 
-    static void apply_unit(srcml_unit* unit);
+    static xmlDocPtr apply_unit(xmlDocPtr doc, xsltStylesheetPtr xslt, const std::vector<std::string>& params, int /* paramcount */, OPTION_TYPE options);
 
     virtual int start_output();
 

@@ -34,6 +34,7 @@
 #include <src_input_text.hpp>
 #include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
+#include <transform_srcml.hpp>
 #include <TraceLog.hpp>
 #include <input_file.hpp>
 #include <curl_input_file.hpp>
@@ -283,6 +284,40 @@ void create_srcml(const srcml_request_t& srcml_request,
             SRCMLstatus(ERROR_MSG, "srcml: unable to register namespace '%s:%s' for srcml archive", prefix, uri);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
+    }
+
+    // iterate through all transformations added during cli parsing
+    int xpath_index = -1;
+    for (const auto& trans : srcml_request.transformations) {
+        std::string protocol;
+        std::string resource;
+        src_prefix_split_uri(trans, protocol, resource);
+/*
+        if (protocol == "xpath") {
+            if (apply_xpath(in_arch, out_arch, resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
+                SRCMLstatus(ERROR_MSG, "srcml: error with xpath transformation");
+                exit(-1);
+            }
+
+        } else 
+*/
+        if (protocol == "xslt") {
+            if (apply_xslt(srcml_arch, resource) != SRCML_STATUS_OK) {
+                SRCMLstatus(ERROR_MSG, "srcml: error with xslt transformation");
+                exit(-1);
+            }
+        }
+/*
+        } else if (protocol == "xpathparam") {
+            //std::cerr << protocol << " : " << resource << "\n"; // Stub
+
+        } else if (protocol == "relaxng") {
+            if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
+                SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");
+                exit(-1);
+            }
+        }
+*/
     }
 
     // start tracing
