@@ -38,7 +38,7 @@ public :
      * 
      * @returns document on success, NULL on failure.
      */
-    virtual xmlDocPtr apply(xmlDocPtr /* doc */, int /* position */) { return nullptr; }
+    virtual xmlDocPtr apply(xmlDocPtr doc, int position) = 0;
 
     virtual ~Transformation() {}
 
