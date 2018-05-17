@@ -181,6 +181,62 @@ int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archiv
 
 #ifdef WITH_LIBXSLT
 /**
+ * srcml_append_transform_xslt_internal
+ * @param archive a srcml_archive
+ * @param doc XSLT xml document
+ *
+ * Append the XSLT program filename path to the list
+ * of transformation/queries.  As of yet no way to specify parameters or context
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
+static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPtr doc) {
+
+    if(archive == NULL || doc == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+  //  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    static void* libxslt_handle = []()-> void* {
+
+        auto libxslt_handle = dlopen_libxslt();
+        if (!libxslt_handle) {
+            fprintf(stderr, "Unable to open libxslt library\n");
+            return 0;
+        }
+
+        return libxslt_handle;
+    }();
+
+    static xsltParseStylesheetDoc_function xsltParseStylesheetDoc = []()->xsltParseStylesheetDoc_function {
+
+        char* error;
+        dlerror();
+        auto result = (xsltParseStylesheetDoc_function) dlsym(libxslt_handle, "xsltParseStylesheetDoc");
+        if ((error = dlerror()) != NULL) {
+            dlclose(libxslt_handle);
+            libxslt_handle = 0;
+            return 0;
+        }
+
+        return result;
+    }();
+
+    xsltStylesheetPtr xslt = xsltParseStylesheetDoc(doc);
+    if (!xslt) {
+        xmlFreeDoc(doc);
+        return -1;
+    }
+
+    // No need to free doc, free stylesheet instead
+    // @todo Make sure stylesheet is freed
+    transform tran = { SRCML_XSLT, std::vector<std::string>(), null_arguments, doc, 0, 0, xslt };
+
+    archive->transformations.push_back(tran);
+
+    return SRCML_STATUS_OK;
+
+}
+
+/**
  * srcml_append_transform_xslt_filename
  * @param archive a srcml_archive
  * @param xslt_filename an XSLT program filename path
@@ -195,50 +251,9 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
     if(archive == NULL || xslt_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
   //  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    static void* libxslt_handle = nullptr;
-    if (!libxslt_handle) {
-
-    libxslt_handle = dlopen_libxslt();
-    if (!libxslt_handle) {
-        fprintf(stderr, "Unable to open libxslt library\n");
-        return 0;
-    }
-    }
-    char* error;
-
-    static xsltApplyStylesheetUser_function xsltApplyStylesheet = nullptr;
-    if (!xsltApplyStylesheet) {
-    dlerror();
-    *(VOIDPTR *)(&xsltApplyStylesheet) = dlsym(libxslt_handle, "xsltApplyStylesheet");
-    if ((error = dlerror()) != NULL) {
-        dlclose(libxslt_handle);
-        libxslt_handle = 0;
-        throw;
-    }
-}
-
-    static xsltParseStylesheetDoc_function xsltParseStylesheetDoc = nullptr;
-    if (!xsltParseStylesheetDoc) {
-    dlerror();
-    *(VOIDPTR *)(&xsltParseStylesheetDoc) = dlsym(libxslt_handle, "xsltParseStylesheetDoc");
-    if ((error = dlerror()) != NULL) {
-        dlclose(libxslt_handle);
-        libxslt_handle = 0;
-        throw;
-    }
-    }
-
     xmlDocPtr doc = xmlReadFile(xslt_filename, 0, 0);
 
-    xsltStylesheetPtr xslt = xsltParseStylesheetDoc(doc);
-
-
-    transform tran = { SRCML_XSLT, std::vector<std::string>(), null_arguments, doc, 0, 0, xslt };
-
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
-
+    return srcml_append_transform_xslt_internal(archive, doc);
 }
 
 /**
@@ -259,12 +274,7 @@ int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_
 
     xmlDocPtr doc = xmlReadMemory(xslt_buffer, (int)size, 0, 0, 0);
 
-    transform tran = { SRCML_XSLT, std::vector<std::string>(), null_arguments, doc, 0, 0, 0 };
-
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
-
+    return srcml_append_transform_xslt_internal(archive, doc);
 }
 
 /**
@@ -285,12 +295,7 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, xslt_file, 0, 0, 0);
 
-    transform tran = { SRCML_XSLT, std::vector<std::string>(), null_arguments, doc, 0, 0, 0 };
-
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
-
+    return srcml_append_transform_xslt_internal(archive, doc);
 }
 
 /**
@@ -310,14 +315,31 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
 
     xmlDocPtr doc = xmlReadFd(xslt_fd, 0, 0, 0);
 
-    transform tran = { SRCML_XSLT, std::vector<std::string>(), null_arguments, doc, 0, 0, 0 };
+    return srcml_append_transform_xslt_internal(archive, doc);
+}
+#endif
+
+/**
+ * srcml_append_transform_internal
+ * @param archive a srcml archive
+ * @param relaxng_filename a RelaxNG schema filename path
+ *
+ * Append the RelaxNG schema filename path to the list
+ * of transformation/queries.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
+static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDocPtr doc) {
+
+    if(archive == NULL || doc == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+//    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    transform tran = { SRCML_RELAXNG, std::vector<std::string>(), null_arguments, doc, 0, 0, 0 };
 
     archive->transformations.push_back(tran);
 
     return SRCML_STATUS_OK;
-
 }
-#endif
 
 /**
  * srcml_append_transform_relaxng_filename
@@ -332,16 +354,10 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
 int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* relaxng_filename) {
 
     if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlDocPtr doc = xmlReadFile(relaxng_filename, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, std::vector<std::string>(), null_arguments, doc, 0, 0, 0 };
-
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
-
+    return srcml_append_transform_relaxng_internal(archive, doc);
 }
 
 /**
@@ -362,12 +378,7 @@ int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* re
 
     xmlDocPtr doc = xmlReadMemory(relaxng_buffer, (int)size, 0, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, std::vector<std::string>(), null_arguments, doc, 0, 0, 0 };
-
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
-
+    return srcml_append_transform_relaxng_internal(archive, doc);
 }
 
 /**
@@ -388,12 +399,7 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, relaxng_file, 0, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, std::vector<std::string>(), null_arguments, doc, 0, 0, 0 };
-
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
-
+    return srcml_append_transform_relaxng_internal(archive, doc);
 }
 
 /**
@@ -413,12 +419,7 @@ int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
 
     xmlDocPtr doc = xmlReadFd(relaxng_fd, 0, 0, 0);
 
-    transform tran = { SRCML_RELAXNG, std::vector<std::string>(), null_arguments, doc, 0, 0, 0 };
-
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
-
+    return srcml_append_transform_relaxng_internal(archive, doc);
 }
 
 /**
