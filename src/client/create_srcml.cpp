@@ -287,7 +287,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // iterate through all transformations added during cli parsing
-    int xpath_index = -1;
+//    int xpath_index = -1;
     for (const auto& trans : srcml_request.transformations) {
         std::string protocol;
         std::string resource;
