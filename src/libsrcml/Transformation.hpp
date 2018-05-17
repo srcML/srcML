@@ -28,7 +28,7 @@
  *
  * Base for all unit transformations
  */
-class Transformation : public transform {
+class Transformation {
 public :
 
     /**
