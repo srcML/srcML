@@ -594,55 +594,7 @@ void xpath_query_units::outputXPathResultsBoolean(xmlXPathObjectPtr result_nodes
 
 void xpath_query_units::outputXPathResultsString(xmlXPathObjectPtr result_nodes) {
 
-    char* pcur = (char*) result_nodes->stringval;
-    char* start = pcur;
-    while (*pcur) {
-
-        if (pcur[0] == '&') {
-            if (pcur[1] == 'l' && pcur[2] == 't' && pcur[3] == ';') {
-
-                xmlOutputBufferWrite(buf, (int)(pcur - start), start);
-                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("<"));
-                pcur += 4;
-                start = pcur;
-
-            } else if (pcur[1] == 'g' && pcur[2] == 't' && pcur[3] == ';') {
-
-                xmlOutputBufferWrite(buf, (int)(pcur - start), start);
-                xmlOutputBufferWrite(buf, SIZEPLUSLITERAL(">"));
-                pcur += 4;
-                start = pcur;
-
-            } else if (pcur[1] == '#' && isdigit(pcur[2]) && isdigit(pcur[3])) {
-
-                xmlOutputBufferWrite(buf, (int)(pcur - start), start);
-
-                int end = 4;
-                if(pcur[4] == ';')
-                end = 5;
-                else if (isdigit(pcur[4]) && pcur[5] == ';')
-                end = 6;
-
-                if(end > 4) {
-                    pcur[end - 1] = '\0';
-
-                    int c = atoi(pcur + 2);
-                    xmlOutputBufferWrite(buf, 1, (const char*) &c);
-
-                    pcur[end - 1] = ';';
-                } else
-                xmlOutputBufferWrite(buf, 4, (const char*) pcur);
-
-                pcur += end;
-                start = pcur;
-            } else {
-                ++pcur;
-            }
-        } else {
-            ++pcur;
-        }
-    }
-    xmlOutputBufferWrite(buf, (int)(pcur - start), start);
+     xmlOutputBufferWriteString(buf, (char*) result_nodes->stringval);
 
     // TODO: Is this a separator? Or just to get the code to end on a line?
     // If just to get the code to end on a line, then maybe not put in if the string already has it
