@@ -270,7 +270,6 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
 int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_buffer, size_t size) {
 
     if(archive == NULL || xslt_buffer == 0 || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlDocPtr doc = xmlReadMemory(xslt_buffer, (int)size, 0, 0, 0);
 
@@ -290,7 +289,6 @@ int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_
 int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
 
     if(archive == NULL || xslt_file == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, xslt_file, 0, 0, 0);
@@ -311,7 +309,6 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
 int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
 
     if(archive == NULL || xslt_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlDocPtr doc = xmlReadFd(xslt_fd, 0, 0, 0);
 
@@ -374,7 +371,6 @@ int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* 
 int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* relaxng_buffer, size_t size) {
 
     if(archive == NULL || relaxng_buffer == 0 || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlDocPtr doc = xmlReadMemory(relaxng_buffer, (int)size, 0, 0, 0);
 
@@ -394,7 +390,6 @@ int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* re
 int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_file) {
 
     if(archive == NULL || relaxng_file == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, relaxng_file, 0, 0, 0);
@@ -415,7 +410,6 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
 int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
 
     if(archive == NULL || relaxng_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlDocPtr doc = xmlReadFd(relaxng_fd, 0, 0, 0);
 
@@ -491,9 +485,37 @@ int srcml_clear_transforms(srcml_archive* archive) {
     if (archive == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    static void* libxslt_handle = []()-> void* {
+
+        auto libxslt_handle = dlopen_libxslt();
+        if (!libxslt_handle) {
+            fprintf(stderr, "Unable to open libxslt library\n");
+            return 0;
+        }
+
+        return libxslt_handle;
+    }();
+
+    static xsltFreeStylesheet_function xsltFreeStylesheet = []()->xsltFreeStylesheet_function {
+
+        char* error;
+        dlerror();
+        auto result = (xsltFreeStylesheet_function) dlsym(libxslt_handle, "xsltFreeStylesheet");
+        if ((error = dlerror()) != NULL) {
+            dlclose(libxslt_handle);
+            libxslt_handle = 0;
+            return 0;
+        }
+
+        return result;
+    }();
+
     for (const auto& itr : archive->transformations) {
 
-        if (itr.type == SRCML_XSLT || itr.type == SRCML_RELAXNG)
+        if (itr.compiled_stylesheet)
+            xsltFreeStylesheet(itr.compiled_stylesheet);
+
+        if (itr.type == SRCML_RELAXNG)
             xmlFreeDoc(itr.doc);
     }
 
