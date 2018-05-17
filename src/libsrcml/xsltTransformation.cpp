@@ -48,7 +48,7 @@
  *
  * Constructor.  Dynamically loads XSLT functions.
  */
-xsltTransformation::xsltTransformation(OPTION_TYPE& options, xmlDocPtr xslt, const std::vector<std::string>& params)
+xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xslt, const std::vector<std::string>& params)
         : params(params), cparams(params.size() + 1) {
 
     // cparams must be null terminated
@@ -144,10 +144,11 @@ xmlDocPtr xsltTransformation::apply(xmlDocPtr doc, int position) {
     xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0);
     if (!res) {
         fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
+
         return nullptr;
     }
 
-    return doc;
+    return res;
 }
 
 /**

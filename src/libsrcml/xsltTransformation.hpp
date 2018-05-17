@@ -69,7 +69,7 @@ public :
      *
      * Constructor.  Dynamically loads XSLT functions.
      */
-    xsltTransformation(OPTION_TYPE& options, xmlDocPtr xslt, const std::vector<std::string>& params);
+    xsltTransformation(/*OPTION_TYPE& options,*/ xmlDocPtr xslt, const std::vector<std::string>& params);
 
     /**
      * ~xsltTransformation

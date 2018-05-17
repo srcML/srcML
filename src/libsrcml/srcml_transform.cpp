@@ -54,6 +54,8 @@
 #include <libxml/parser.h>
 #include <libxml/xmlIO.h>
 
+#include <xsltTransformation.hpp>
+
 xpath_arguments null_arguments;
 
 
@@ -195,6 +197,12 @@ static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPt
     if(archive == NULL || doc == 0) return SRCML_STATUS_INVALID_ARGUMENT;
   //  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
+    xsltTransformation* trans = new xsltTransformation(doc, std::vector<std::string>());
+
+    archive->ntransformations.push_back(trans);
+
+    return SRCML_STATUS_OK;
+
     static void* libxslt_handle = []()-> void* {
 
         auto libxslt_handle = dlopen_libxslt();
@@ -228,7 +236,7 @@ static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPt
 
     // No need to free doc, free stylesheet instead
     // @todo Make sure stylesheet is freed
-    transform tran = { SRCML_XSLT, std::vector<std::string>(), null_arguments, doc, 0, 0, xslt };
+    struct transform tran = { SRCML_XSLT, std::vector<std::string>(), null_arguments, doc, 0, 0, xslt };
 
     archive->transformations.push_back(tran);
 
@@ -543,18 +551,17 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
 int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit) {
 
-    if (archive->transformations.empty())
+    if (archive->ntransformations.empty())
         return 0;
 
     // create a DOM of the unit
     xmlDocPtr doc = xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0);
 
     // apply the transformations
-    xmlDocPtr res = doc;
-    for (auto& trans : archive->transformations) {
-
-
-        res = xslt_units::apply_unit(res, trans.compiled_stylesheet, trans.xsl_parameters, 0, archive->options);
+    for (auto* trans : archive->ntransformations) {
+        auto prevdoc = doc;
+        doc = trans->apply(prevdoc, 0);
+        xmlFreeDoc(prevdoc);
     }
 
     // dump the result tree to the string using an output buffer that writes to a std::string
@@ -566,7 +573,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return len;
 
     }, 0, &(unit->srcml), 0);
-    xmlNodeDumpOutput(output, res, res->children, 0, 0, 0);
+    xmlNodeDumpOutput(output, doc, doc->children, 0, 0, 0);
 
     // very important to flush to make sure the unit contents are all present
     xmlOutputBufferClose(output);
@@ -576,7 +583,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     unit->content_begin = unit->srcml.find('>') + 1;
     unit->content_end = unit->srcml.rfind('<') + 1;
 
-    xmlFreeDoc(res);
     xmlFreeDoc(doc);
 
     return 1;

@@ -29,7 +29,7 @@
 #include <libxslt/xsltutils.h>
 #include <libexslt/exslt.h>
 
-#include <Transformation.hpp>
+class Transformation;
 
 /** string for language Objective-C */
 #define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
@@ -224,7 +224,7 @@ struct srcml_archive {
     /** an array of transformations to apply */
     std::vector<transform> transformations;
 
-    std::vector<Transformation> ntransformations;
+    std::vector<Transformation*> ntransformations;
 
     /** srcDiff revision number */
     boost::optional<size_t> revision_number;
