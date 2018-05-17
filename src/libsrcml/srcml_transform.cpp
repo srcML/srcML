@@ -562,6 +562,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         auto prevdoc = doc;
         doc = trans->apply(prevdoc, 0);
         xmlFreeDoc(prevdoc);
+        if (!doc)
+            return 0;
     }
 
     // dump the result tree to the string using an output buffer that writes to a std::string
