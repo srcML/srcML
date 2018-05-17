@@ -23,7 +23,6 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 #include <srcml_sax2_utilities.hpp>
-#include <xslt_units.hpp>
 #include <srcml_translator.hpp>
 
 #include <stdio.h>
@@ -202,46 +201,6 @@ static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPt
     archive->ntransformations.push_back(trans);
 
     return SRCML_STATUS_OK;
-
-    static void* libxslt_handle = []()-> void* {
-
-        auto libxslt_handle = dlopen_libxslt();
-        if (!libxslt_handle) {
-            fprintf(stderr, "Unable to open libxslt library\n");
-            return 0;
-        }
-
-        return libxslt_handle;
-    }();
-
-    static xsltParseStylesheetDoc_function xsltParseStylesheetDoc = []()->xsltParseStylesheetDoc_function {
-
-        char* error;
-        dlerror();
-        auto result = (xsltParseStylesheetDoc_function) dlsym(libxslt_handle, "xsltParseStylesheetDoc");
-        if ((error = dlerror()) != NULL) {
-            dlclose(libxslt_handle);
-            libxslt_handle = 0;
-            return 0;
-        }
-
-        return result;
-    }();
-
-    xsltStylesheetPtr xslt = xsltParseStylesheetDoc(doc);
-    if (!xslt) {
-        xmlFreeDoc(doc);
-        return -1;
-    }
-
-    // No need to free doc, free stylesheet instead
-    // @todo Make sure stylesheet is freed
-    struct transform tran = { SRCML_XSLT, std::vector<std::string>(), null_arguments, doc, 0, 0, xslt };
-
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
-
 }
 
 /**
@@ -493,41 +452,11 @@ int srcml_clear_transforms(srcml_archive* archive) {
     if (archive == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    static void* libxslt_handle = []()-> void* {
+    for (const auto* p : archive->ntransformations) {
 
-        auto libxslt_handle = dlopen_libxslt();
-        if (!libxslt_handle) {
-            fprintf(stderr, "Unable to open libxslt library\n");
-            return 0;
-        }
-
-        return libxslt_handle;
-    }();
-
-    static xsltFreeStylesheet_function xsltFreeStylesheet = []()->xsltFreeStylesheet_function {
-
-        char* error;
-        dlerror();
-        auto result = (xsltFreeStylesheet_function) dlsym(libxslt_handle, "xsltFreeStylesheet");
-        if ((error = dlerror()) != NULL) {
-            dlclose(libxslt_handle);
-            libxslt_handle = 0;
-            return 0;
-        }
-
-        return result;
-    }();
-
-    for (const auto& itr : archive->transformations) {
-
-        if (itr.compiled_stylesheet)
-            xsltFreeStylesheet(itr.compiled_stylesheet);
-
-        if (itr.type == SRCML_RELAXNG)
-            xmlFreeDoc(itr.doc);
+        delete p;
     }
-
-    archive->transformations.clear();
+    archive->ntransformations.clear();
 
     return SRCML_STATUS_OK;
 }
@@ -624,6 +553,7 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
             }
 
 #ifdef WITH_LIBXSLT
+            /*
             case SRCML_XSLT: {
 
                 status = srcml_xslt(pinput,
@@ -631,6 +561,7 @@ int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarch
                                    iarchive->transformations[i].xsl_parameters, 0, oarchive->options, oarchive);
                 break;
             }
+            */
 #endif
 
             case SRCML_RELAXNG: {

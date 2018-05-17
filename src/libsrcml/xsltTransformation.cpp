@@ -157,16 +157,13 @@ xmlDocPtr xsltTransformation::apply(xmlDocPtr doc, int position) {
  * Allow for all exslt functions by dynamic load
  * of exslt library.
  */
-/*
 void dlexsltRegisterAll(void* handle) {
 
 #ifdef DLLOAD
-    typedef void (*exsltRegisterAll_function)();
-
-    exsltRegisterAll_function exsltRegisterAll;
+    typedef void (*exsltRegisterAll_t)();
 
     dlerror();
-    *(VOIDPTR *)(&exsltRegisterAll) = dlsym(handle, "exsltRegisterAll");
+    auto exsltRegisterAll = (exsltRegisterAll_t) dlsym(handle, "exsltRegisterAll");
     char* error;
     if ((error = dlerror()) != NULL) {
         dlclose(handle);
@@ -177,4 +174,3 @@ void dlexsltRegisterAll(void* handle) {
     exsltRegisterAll();
 #endif
 }
-*/

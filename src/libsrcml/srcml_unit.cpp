@@ -23,8 +23,6 @@
 #include <srcml_translator.hpp>
 #include <srcml_sax2_reader.hpp>
 #include <UTF8CharBuffer.hpp>
-#include <xslt_units.hpp>
-
 
 /******************************************************************************
  *                                                                            *

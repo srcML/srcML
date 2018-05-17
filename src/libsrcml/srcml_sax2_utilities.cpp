@@ -23,9 +23,6 @@
 
 #include <sstream>
 #include <xpath_query_units.hpp>
-#ifdef WITH_LIBXSLT
-#include <xslt_units.hpp>
-#endif
 #include <relaxng_units.hpp>
 
 #include <srcexfun.hpp>
