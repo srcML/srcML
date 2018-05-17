@@ -133,7 +133,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         request->runtime = parsetime.cpu_time_elapsed();
 
-        srcml_unit_apply_transforms(unit);
+        srcml_unit_apply_transforms(request->srcml_arch, unit);
 
     } catch (...) {
 

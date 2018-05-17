@@ -518,22 +518,20 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     return srcml_apply_transforms_verbose(iarchive, oarchive, 0);
 }
 
-int srcml_unit_apply_transforms(struct srcml_unit* unit) {
+int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit) {
 
-
-    if (unit->archive->transformations.empty())
+    if (archive->transformations.empty())
         return 0;
-
 
     // create a DOM of the unit
     xmlDocPtr doc = xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0);
 
     // apply the transformations
     xmlDocPtr res = doc;
-    for (auto& trans : unit->archive->transformations) {
+    for (auto& trans : archive->transformations) {
 
 
-        res = xslt_units::apply_unit(res, trans.compiled_stylesheet, trans.xsl_parameters, 0, unit->archive->options);
+        res = xslt_units::apply_unit(res, trans.compiled_stylesheet, trans.xsl_parameters, 0, archive->options);
     }
 
     // dump the result tree to the string using an output buffer that writes to a std::string
