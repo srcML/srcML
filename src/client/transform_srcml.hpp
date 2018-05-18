@@ -33,4 +33,6 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
 int apply_xslt(srcml_archive* in_arch, const std::string& transform_input);
 
+int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces);
+
 #endif

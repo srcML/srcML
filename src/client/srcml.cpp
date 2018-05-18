@@ -138,7 +138,7 @@ int main(int argc, char * argv[]) {
     // step srcml->srcml
     if (request_transform_srcml(srcml_request)) {
 
- //       pipeline.push_back(transform_srcml);
+  //      pipeline.push_back(transform_srcml);
     }
 
     // step srcml->metadata

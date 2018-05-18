@@ -85,7 +85,7 @@ public :
      * 
      * @returns true on success false on failure.
      */
-    virtual xmlDocPtr apply(xmlDocPtr doc, int position);
+    virtual xmlNodeSetPtr apply(xmlDocPtr doc, int position);
 
 private :
     xsltStylesheetPtr stylesheet;

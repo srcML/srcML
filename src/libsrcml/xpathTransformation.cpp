@@ -73,19 +73,35 @@ xpathTransformation::xpathTransformation(const char* xpath,
 
     compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
 
+    context = xmlXPathNewContext(0);
 
+    xpathsrcMLRegister(context);
+    // TODO:  Detect error
+
+    // register standard prefixes for standard namespaces
+    for (const auto& ns : default_namespaces) {
+
+        const char* uri = ns.uri.c_str();
+        const char* prefix = ns.prefix.c_str();
+        if (ns.uri == SRCML_SRC_NS_URI)
+            prefix = "src";
+
+        if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
+            fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
+        }
+    }
 }
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
-    /**
-     * form_simple_xpath
-     * @param root_result_node the root node form xpath query result
-     *
-     * Form a simple xpath expression that marks the location of the result.
-     * @returns the simple xpath to the result node as a string.
-     */
+/**
+ * form_simple_xpath
+ * @param root_result_node the root node form xpath query result
+ *
+ * Form a simple xpath expression that marks the location of the result.
+ * @returns the simple xpath to the result node as a string.
+ */
 void xpathTransformation::form_simple_xpath(xmlTextWriterPtr bufwriter, xmlNodePtr root_result_node) {
 
     if ((!root_result_node) || (root_result_node->type != XML_ELEMENT_NODE) || (!root_result_node->name) || (strcmp((const char*) root_result_node->name, "unit") == 0)) {
@@ -102,13 +118,13 @@ void xpathTransformation::form_simple_xpath(xmlTextWriterPtr bufwriter, xmlNodeP
 
 }
 
-    /**
-     * child_offset
-     * @param root_result_node the root node form xpath query result
-     *
-     * Find the child offset.
-     * @returns the child offset number as a string.
-     */
+/**
+ * child_offset
+ * @param root_result_node the root node form xpath query result
+ *
+ * Find the child offset.
+ * @returns the child offset number as a string.
+ */
 int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
 
     int child_count = 1;
@@ -121,21 +137,21 @@ int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
             ((root_result_node->ns == NULL && sibling_node->ns == NULL) || (root_result_node->ns->prefix == sibling_node->ns->prefix))) {
             ++child_count;
 
+        }
     }
+
+    return child_count;
 }
 
-return child_count;
-}
-
-    /**
-     * append_attribute_to_node
-     * @param node an xmlNode to append the attribute
-     * @param attr_name the attribute name
-     * @param attr_value the attribute value
-     *
-     * Append an attribute to the given node.  Only the prefix and uri can vary.  The
-     * rest are the same throughout all calls and are part of the class.
-     */
+/**
+ * append_attribute_to_node
+ * @param node an xmlNode to append the attribute
+ * @param attr_name the attribute name
+ * @param attr_value the attribute value
+ *
+ * Append an attribute to the given node.  Only the prefix and uri can vary.  The
+ * rest are the same throughout all calls and are part of the class.
+ */
 void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) {
 
         // grab current value
@@ -263,10 +279,10 @@ xmlXPathContextPtr xpathTransformation::set_context() {
  * 
  * @returns true on success false on failure.
  */
+xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
-xmlDocPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
-
-    xmlXPathContextPtr context = xmlXPathNewContext(doc);
+    // generic context has to be set to proper doc
+    context->doc = doc;
 
     // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
@@ -275,7 +291,15 @@ xmlDocPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
         return nullptr;
     }
 
-    return nullptr;
+    // convert all the found nodes
+    for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+
+        xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
+
+        append_attribute_to_node(onode, "foo", "bar");
+    }
+
+    return xmlXPathNodeSetCreate(doc->children);
 }
 
 #if 0

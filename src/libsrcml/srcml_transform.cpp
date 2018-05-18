@@ -457,6 +457,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
 
 int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit) {
 
+    // unit stays the same for no transformation
     if (archive->ntransformations.empty())
         return 0;
 
@@ -464,12 +465,22 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     xmlDocPtr doc = xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0);
 
     // apply the transformations
+    xmlNodeSetPtr current = xmlXPathNodeSetCreate(doc->children);
     for (auto* trans : archive->ntransformations) {
-        auto prevdoc = doc;
-        doc = trans->apply(prevdoc, 0);
-        xmlFreeDoc(prevdoc);
-        if (!doc)
-            return 0;
+
+        for (int i = 0; i < current->nodeNr; ++i) {
+            doc->children = current->nodeTab[i];
+
+            xmlNodeSetPtr results = trans->apply(doc, 0);
+            xmlXPathFreeNodeSet(current);
+            current = results;
+        }
+
+        if (!current->nodeNr)
+            break;
+
+        // for now, only has first result
+        doc->children = current->nodeTab[0];
     }
 
     // dump the result tree to the string using an output buffer that writes to a std::string

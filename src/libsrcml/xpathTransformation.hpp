@@ -149,7 +149,9 @@ public :
 
 //    virtual bool apply(xmlXPathObjectPtr result_nodes);
 
-    virtual xmlDocPtr apply(xmlDocPtr doc, int position);
+//    virtual xmlDocPtr apply(xmlDocPtr doc, int position);
+
+    virtual xmlNodeSetPtr apply(xmlDocPtr doc, int position);
 
     // process the resulting nodes
     virtual void outputXPathResultsWrap(xmlXPathObjectPtr result_nodes);

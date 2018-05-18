@@ -135,7 +135,7 @@ xsltTransformation::~xsltTransformation() {
  * 
  * @returns true on success false on failure.
  */
-xmlDocPtr xsltTransformation::apply(xmlDocPtr doc, int position) {
+xmlNodeSetPtr xsltTransformation::apply(xmlDocPtr doc, int position) {
 
     // position passed to XSLT program
     setPosition(position);
@@ -148,7 +148,7 @@ xmlDocPtr xsltTransformation::apply(xmlDocPtr doc, int position) {
         return nullptr;
     }
 
-    return res;
+    return xmlXPathNodeSetCreate(res->children);
 }
 
 /**
