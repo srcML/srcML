@@ -54,9 +54,9 @@
 #include <libxml/xmlIO.h>
 
 #include <xsltTransformation.hpp>
+#include <xpathTransformation.hpp>
 
 xpath_arguments null_arguments;
-
 
 /**
  * srcml_append_transform_xpath
@@ -71,17 +71,13 @@ xpath_arguments null_arguments;
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
     if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+//    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { optional_string_create(xpath_string), boost::optional<std::string>(),
-        boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
-        boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>() };
+    xpathTransformation* trans = new xpathTransformation(xpath_string, 0, 0, 0, 0, 0, 0, 0);
 
-    transform tran = { SRCML_XPATH, std::vector<std::string>(), arguments, 0, 0, 0, 0 };
-    archive->transformations.push_back(tran);
+    archive->ntransformations.push_back(trans);
 
     return SRCML_STATUS_OK;
-
 }
 
 /**
@@ -104,16 +100,7 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* attr_name, const char* attr_value) {
 
-    if(archive == NULL || xpath_string == 0 || attr_name == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-
-    struct xpath_arguments arguments = { optional_string_create(xpath_string), boost::optional<std::string>(), boost::optional<std::string>(),
-        boost::optional<std::string>(), optional_string_create(prefix),optional_string_create(namespace_uri), optional_string_create(attr_name), optional_string_create(attr_value) };
-
-    transform tran = { SRCML_XPATH, std::vector<std::string>(), arguments, 0, 0, 0, 0 };
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
+    return srcml_append_transform_xpath_element_attribute(archive, xpath_string, 0, 0, 0, prefix, namespace_uri, attr_name, attr_value);
 }
 
 /**
@@ -135,16 +122,7 @@ int srcml_append_transform_xpath_element (struct srcml_archive* archive, const c
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element) {
 
-    if(archive == NULL || xpath_string == 0 || element == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-
-    struct xpath_arguments arguments = { optional_string_create(xpath_string), optional_string_create(prefix), optional_string_create(namespace_uri), optional_string_create(element), optional_string_create(0),
-     optional_string_create(0), optional_string_create(0), optional_string_create(0) };
-
-    transform tran = { SRCML_XPATH, std::vector<std::string>(), arguments, 0, 0, 0, 0 };
-    archive->transformations.push_back(tran);
-
-    return SRCML_STATUS_OK;
+    return srcml_append_transform_xpath_element_attribute(archive, xpath_string, prefix, namespace_uri, element, 0, 0, 0, 0);
 }
 
 /**
@@ -169,13 +147,12 @@ int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archiv
                                                             const char* attr_name, const char* attr_value) {
 
     if(archive == NULL || xpath_string == 0 || element == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+//    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    struct xpath_arguments arguments = { optional_string_create(xpath_string), optional_string_create(prefix), optional_string_create(namespace_uri), optional_string_create(element), optional_string_create(attr_prefix),
-     optional_string_create(attr_namespace_uri), optional_string_create(attr_name), optional_string_create(attr_value) };
+    xpathTransformation* trans = new xpathTransformation(xpath_string, prefix, namespace_uri, element,
+        attr_prefix, attr_namespace_uri, attr_name, attr_value);
 
-    transform tran = { SRCML_XPATH, std::vector<std::string>(), arguments, 0, 0, 0, 0 };
-    archive->transformations.push_back(tran);
+    archive->ntransformations.push_back(trans);
 
     return SRCML_STATUS_OK;
 }
