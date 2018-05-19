@@ -97,7 +97,7 @@ public :
      *
      * Constructor.
      */
-    xpathTransformation(const char* xpath, const char* element_prefix, const char* element_uri, const char* element,
+    xpathTransformation(srcml_archive* oarchive, const char* xpath, const char* element_prefix, const char* element_uri, const char* element,
                         const char* attr_prefix, const char* attr_uri, const char* attr_name, const char* attr_value);
 
 #pragma GCC diagnostic push
@@ -178,6 +178,7 @@ public :
 private :
 
     OPTION_TYPE options;
+    std::string xpath;
     const char* prefix = nullptr;
     const char* uri = nullptr;
     const char* element = nullptr;

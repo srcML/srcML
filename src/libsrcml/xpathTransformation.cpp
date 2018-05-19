@@ -64,32 +64,14 @@ const char* const xpathTransformation::simple_xpath_attribute_name = "location";
  *
  * Constructor.
  */
-xpathTransformation::xpathTransformation(const char* xpath, 
+xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xpath, 
                         const char* element_prefix, const char* element_uri, const char* element,
                         const char* attr_prefix, const char* attr_uri, const char* attr_name, const char* attr_value)
-    : prefix(element_prefix), uri(element_uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value) {
+    : xpath(xpath), prefix(element_prefix), uri(element_uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value) {
 
-    xsltsrcMLRegister();
+//    xsltsrcMLRegister();
 
     compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
-
-    context = xmlXPathNewContext(0);
-
-    xpathsrcMLRegister(context);
-    // TODO:  Detect error
-
-    // register standard prefixes for standard namespaces
-    for (const auto& ns : default_namespaces) {
-
-        const char* uri = ns.uri.c_str();
-        const char* prefix = ns.prefix.c_str();
-        if (ns.uri == SRCML_SRC_NS_URI)
-            prefix = "src";
-
-        if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
-            fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
-        }
-    }
 }
 
 #pragma GCC diagnostic push
@@ -174,43 +156,6 @@ void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* 
 
 xmlXPathContextPtr xpathTransformation::set_context() {
 
-    // compile all the inner transformations
-////    for (auto& thistransform : oarchive->transformations)
-//        thistransform.compiled_xpath = xmlXPathCompile(BAD_CAST thistransform.arguments.str->c_str());
-/*
-    xmlXPathContextPtr context = xmlXPathNewContext(doc);
-    // TODO:  Detect error
-
-    xpathsrcMLRegister(context);
-    // TODO:  Detect error
-
-        // register standard prefixes for standard namespaces
-    for (const auto& ns : default_namespaces) {
-
-        const char* uri = ns.uri.c_str();
-        const char* prefix = ns.prefix.c_str();
-        if (ns.uri == SRCML_SRC_NS_URI)
-            prefix = "src";
-
-        if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
-            fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
-                return 0; //SRCML_STATUS_ERROR;
-            }
-        }
-*/
-/*
-        // register namespaces from input archive, which have been setup on the output archive
-        for (unsigned int i = 1; i < srcml_archive_get_namespace_size(oarchive); ++i) {
-
-            const char* uri = srcml_archive_get_namespace_uri(oarchive, i);
-            const char* prefix = srcml_archive_get_namespace_prefix(oarchive, i);
-
-            if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
-                fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
-                return 0; //SRCML_STATUS_ERROR;
-            }
-        }
-*/
 
 #if LIBEXSLT_VERSION > 813
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
@@ -281,8 +226,36 @@ xmlXPathContextPtr xpathTransformation::set_context() {
  */
 xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
-    // generic context has to be set to proper doc
-    context->doc = doc;
+    xmlXPathContextPtr context = xmlXPathNewContext(doc);
+
+    xpathsrcMLRegister(context);
+    // TODO:  Detect error
+
+    // register standard prefixes for standard namespaces
+    for (const auto& ns : default_namespaces) {
+
+        const char* uri = ns.uri.c_str();
+        const char* prefix = ns.prefix.c_str();
+        if (ns.uri == SRCML_SRC_NS_URI)
+            prefix = "src";
+
+        if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
+            fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
+        }
+    }
+/*
+    // register namespaces from input archive, which have been setup on the output archive
+    for (unsigned int i = 1; i < srcml_archive_get_namespace_size(oarchive); ++i) {
+
+        const char* uri = srcml_archive_get_namespace_uri(oarchive, i);
+        const char* prefix = srcml_archive_get_namespace_prefix(oarchive, i);
+
+        if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
+            fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
+            throw; //SRCML_STATUS_ERROR;
+        }
+    }
+*/
 
     // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
@@ -291,15 +264,23 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
         return nullptr;
     }
 
+    if (!result_nodes->nodesetval)
+        return nullptr;
+
+    if (!result_nodes->nodesetval->nodeNr)
+        return nullptr;
+
+    return xmlXPathNodeSetCreate(result_nodes->nodesetval->nodeTab[0]);
+
     // convert all the found nodes
     for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
         xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         append_attribute_to_node(onode, "foo", "bar");
     }
 
-    return xmlXPathNodeSetCreate(doc->children);
 }
 
 #if 0

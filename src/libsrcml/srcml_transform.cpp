@@ -73,7 +73,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
     if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 //    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    xpathTransformation* trans = new xpathTransformation(xpath_string, 0, 0, 0, 0, 0, 0, 0);
+    xpathTransformation* trans = new xpathTransformation(archive, xpath_string, 0, 0, 0, 0, 0, 0, 0);
 
     archive->ntransformations.push_back(trans);
 
@@ -146,15 +146,8 @@ int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archiv
                                                             const char* attr_prefix, const char* attr_namespace_uri,
                                                             const char* attr_name, const char* attr_value) {
 
-    if(archive == NULL || xpath_string == 0 || element == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-//    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-
-    xpathTransformation* trans = new xpathTransformation(xpath_string, prefix, namespace_uri, element,
-        attr_prefix, attr_namespace_uri, attr_name, attr_value);
-
-    archive->ntransformations.push_back(trans);
-
-    return SRCML_STATUS_OK;
+    return srcml_append_transform_xpath_element_attribute(archive, xpath_string, prefix, namespace_uri, element,
+            attr_prefix, attr_namespace_uri, attr_name, attr_value);
 }
 
 #ifdef WITH_LIBXSLT
@@ -461,8 +454,12 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (archive->ntransformations.empty())
         return 0;
 
+    std::string nssrcml = unit->srcml.substr(0, 5);
+    nssrcml.append(" xmlns=\"http://www.srcML.org/srcML/src\"");
+    nssrcml.append(unit->srcml.substr(5));
+
     // create a DOM of the unit
-    xmlDocPtr doc = xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0);
+    xmlDocPtr doc = xmlReadMemory(nssrcml.c_str(), (int) nssrcml.size(), 0, 0, 0);
 
     // apply the transformations
     xmlNodeSetPtr current = xmlXPathNodeSetCreate(doc->children);
@@ -473,6 +470,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
             xmlNodeSetPtr results = trans->apply(doc, 0);
             xmlXPathFreeNodeSet(current);
+
             current = results;
         }
 
