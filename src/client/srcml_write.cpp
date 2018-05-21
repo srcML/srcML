@@ -65,6 +65,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
 
         // chance that a solo unit archive was the input, but transformation was
         // done, so output has to be a full archive
+        // @todo Make sure it is only an xpath transformation
         if (!request->units.empty())
             srcml_archive_enable_full_archive(request->srcml_arch);
 
@@ -79,6 +80,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
         }
 
         // logging
+        // @todo Do we want logging for each xpath result? Or only for main unit?
         std::ostringstream outs;
         outs << (request->filename ? *request->filename : "") << '\t' << request->language << '\t' << request->loc;
         const char* hash = srcml_unit_get_hash(request->unit);

@@ -87,6 +87,8 @@ public :
      */
     virtual xmlNodeSetPtr apply(xmlDocPtr doc, int position);
 
+    virtual bool hasUnitWrapper() { return true; }
+
 private :
     xsltStylesheetPtr stylesheet;
     std::vector<std::string> params;

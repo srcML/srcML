@@ -463,6 +463,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     xmlDocPtr doc = xmlReadMemory(nssrcml.c_str(), (int) nssrcml.size(), 0, 0, 0);
 
     // apply the transformations
+    bool hasUnitWrapper = false;
     xmlNodeSetPtr current = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
     for (auto* trans : archive->ntransformations) {
 
@@ -478,6 +479,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             for (int i = 0; i < results->nodeNr; ++i)
                 xmlXPathNodeSetAdd(current, results->nodeTab[i]);
         }
+
+        hasUnitWrapper = trans->hasUnitWrapper();
 
         if (!current->nodeNr)
             break;
@@ -511,8 +514,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
         // mark inside the units
         // @todo Not being done right
-        nunit->content_begin = 0;
-        nunit->content_end = nunit->srcml.size() + 1;
+        nunit->content_begin = hasUnitWrapper ? (int) nunit->srcml.find_first_of('>') + 1 : 0;
+        nunit->content_end =   hasUnitWrapper ? (int) nunit->srcml.find_last_of('<') + 1  : (int) nunit->srcml.size() + 1;
 
         all[i] = nunit;
     }

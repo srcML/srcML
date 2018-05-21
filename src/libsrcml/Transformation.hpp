@@ -42,6 +42,7 @@ public :
 
     virtual ~Transformation() {}
 
+    virtual bool hasUnitWrapper() { return false; }
 };
 
 #endif
