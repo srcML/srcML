@@ -281,6 +281,16 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
         return all;
     }
 
+    // convert all the found nodes
+    if (!attr_name.empty()) {
+        for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+
+            xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
+
+            append_attribute_to_node(onode, attr_prefix.c_str(), attr_value.c_str());
+        }
+    }
+
     auto all = xmlXPathNodeSetCreate(result_nodes->nodesetval->nodeTab[0]);
     for (int i = 1; i < result_nodes->nodesetval->nodeNr; ++i)
         xmlXPathNodeSetAdd(all, result_nodes->nodesetval->nodeTab[i]);
@@ -288,13 +298,6 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
     return all;
 
-    // convert all the found nodes
-    for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
-
-        xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
-
-        append_attribute_to_node(onode, "foo", "bar");
-    }
 
 }
 
@@ -454,8 +457,9 @@ void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPt
         // set up node to insert
         xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) element.c_str());
 
-//        if (attr_name)
-//            append_attribute_to_node(element_node, thisarguments.attr_uri ? thisarguments.attr_prefix->c_str() : thisarguments.prefix->c_str(), thisarguments.attr_uri->c_str() ? thisarguments.attr_uri->c_str() : thisarguments.uri->c_str());
+        if (!attr_name.empty())
+            append_attribute_to_node(element_node, !attr_uri.empty() ? attr_prefix.c_str() : prefix.c_str(), 
+                !attr_uri.empty() ? attr_uri.c_str() : uri.c_str());
 
         // result node is not a unit
         if (a_node != onode) {
