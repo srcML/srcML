@@ -1244,6 +1244,13 @@ LIBSRCML_DECL int srcml_clear_transforms(struct srcml_archive* archive);
  */
 LIBSRCML_DECL struct srcml_unit* srcml_unit_create(struct srcml_archive* archive);
 
+/** Clone the setup of an existing unit
+ * @note Unit must be freed using srcml_unit_free()
+ * @param unit A srcml_unit
+ * @return The cloned unit
+ */
+LIBSRCML_DECL struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit);
+
 /** Free an allocated unit
  * @param unit The srcml unit to free
  */

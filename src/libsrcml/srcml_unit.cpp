@@ -962,6 +962,36 @@ srcml_unit* srcml_unit_create(srcml_archive * archive) {
     return unit;
 }
 
+/** Clone the setup of an existing unit
+ * @note Only the setup, not the actual srcML contents, are cloned
+ * @note Unit must be freed using srcml_unit_free()
+ * @param unit A srcml_unit
+ * @return The cloned unit
+ */
+LIBSRCML_DECL struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit) {
+
+    if (unit == NULL)
+        return 0;
+
+    srcml_unit* new_unit = srcml_unit_create(unit->archive);
+    new_unit->filename = unit->filename;
+
+    new_unit->hash = unit->hash;
+    new_unit->timestamp = unit->timestamp;
+    new_unit->version = unit->version;
+    new_unit->url = unit->url;
+    new_unit->filename = unit->filename;
+    new_unit->language = unit->language;
+    new_unit->revision = unit->revision;
+    new_unit->encoding = unit->encoding;
+    new_unit->attributes = unit->attributes;
+    new_unit->eol = unit->eol;
+    new_unit->derived_language = unit->derived_language;
+    new_unit->namespaces = unit->namespaces;
+
+    return new_unit;
+}
+
 /**
  * srcml_unit_free
  * @param unit a srcml unit
