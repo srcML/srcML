@@ -136,8 +136,10 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         srcml_unit** results = nullptr;
         srcml_unit_apply_transforms(request->srcml_arch, unit, &results);
 
-        for (auto p = results; *p; ++p) {
-            request->units.push_back(*p);
+        if (results) {
+            for (auto p = results; *p; ++p) {
+                request->units.push_back(*p);
+            }
         }
 
     } catch (...) {
