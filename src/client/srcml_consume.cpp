@@ -133,9 +133,9 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         request->runtime = parsetime.cpu_time_elapsed();
 
+        // perform any transformations and add them to the request
         srcml_unit** results = nullptr;
         srcml_unit_apply_transforms(request->srcml_arch, unit, &results);
-
         if (results) {
             for (auto p = results; *p; ++p) {
                 request->units.push_back(*p);

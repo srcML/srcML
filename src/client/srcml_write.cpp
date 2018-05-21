@@ -63,10 +63,18 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
             createdsrcml = true;
         }
 
-        if (!request->units.empty()) {
-            for (const auto unit : request->units)
-                srcml_archive_write_unit(request->srcml_arch, unit);
-        } else {
+        // chance that a solo unit archive was the input, but transformation was
+        // done, so output has to be a full archive
+        if (!request->units.empty())
+            srcml_archive_enable_full_archive(request->srcml_arch);
+
+        // write out any transformed units
+        for (const auto unit : request->units) {
+            srcml_archive_write_unit(request->srcml_arch, unit);
+        }
+
+        // if no transformed units, write the main unit
+        if (request->units.empty()) {
             srcml_archive_write_unit(request->srcml_arch, request->unit);
         }
 

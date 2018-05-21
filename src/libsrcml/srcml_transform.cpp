@@ -455,7 +455,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return 0;
 
     std::string nssrcml = unit->srcml.substr(0, 5);
-    nssrcml.append(" xmlns=\"http://www.srcML.org/srcML/src\"");
+    if (unit->archive->options & SRCML_OPTION_ARCHIVE)
+        nssrcml.append(" xmlns=\"http://www.srcML.org/srcML/src\"");
     nssrcml.append(unit->srcml.substr(5));
 
     // create a DOM of the unit
