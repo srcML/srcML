@@ -49,6 +49,8 @@
 
 const char* const xpathTransformation::simple_xpath_attribute_name = "location";
 
+#define stringOrNull(m) (m ? m : "")
+
 /**
  * xpathTransformation
  * @param options list of srcML options
@@ -67,7 +69,7 @@ const char* const xpathTransformation::simple_xpath_attribute_name = "location";
 xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xpath, 
                         const char* element_prefix, const char* element_uri, const char* element,
                         const char* attr_prefix, const char* attr_uri, const char* attr_name, const char* attr_value)
-    : xpath(xpath), prefix(element_prefix), uri(element_uri), element(element), attr_prefix(attr_prefix), attr_uri(attr_uri), attr_name(attr_name), attr_value(attr_value) {
+    : xpath(xpath), prefix(stringOrNull(element_prefix)), uri(stringOrNull(element_uri)), element(stringOrNull(element)), attr_prefix(stringOrNull(attr_prefix)), attr_uri(stringOrNull(attr_uri)), attr_name(stringOrNull(attr_name)), attr_value(stringOrNull(attr_value)) {
 
 //    xsltsrcMLRegister();
 
@@ -137,8 +139,8 @@ int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
 void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) {
 
         // grab current value
-    const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name, BAD_CAST attr_uri);
-    const char* newvalue = attr_value;
+    const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name.c_str(), BAD_CAST attr_uri);
+    const char* newvalue = attr_value.c_str();
 
         // previous property
     std::string curvalue;
@@ -151,7 +153,7 @@ void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* 
     }
 
     static xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) attr_uri, (const xmlChar *) attr_prefix);
-    xmlSetNsProp(node, ns, (const xmlChar *) attr_name, (const xmlChar *) newvalue);
+    xmlSetNsProp(node, ns, (const xmlChar *) attr_name.c_str(), (const xmlChar *) newvalue);
 }
 
 xmlXPathContextPtr xpathTransformation::set_context() {
@@ -226,9 +228,10 @@ xmlXPathContextPtr xpathTransformation::set_context() {
  */
 xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
+
     xmlXPathContextPtr context = xmlXPathNewContext(doc);
 
-    xpathsrcMLRegister(context);
+//    xpathsrcMLRegister(context);
     // TODO:  Detect error
 
     // register standard prefixes for standard namespaces
@@ -270,9 +273,18 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
     if (!result_nodes->nodesetval->nodeNr)
         return nullptr;
 
+    if (!element.empty()) {
+
+        addElementXPathResults(doc, result_nodes);
+
+        auto all = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+        return all;
+    }
+
     auto all = xmlXPathNodeSetCreate(result_nodes->nodesetval->nodeTab[0]);
     for (int i = 1; i < result_nodes->nodesetval->nodeNr; ++i)
         xmlXPathNodeSetAdd(all, result_nodes->nodesetval->nodeTab[i]);
+
 
     return all;
 
@@ -419,99 +431,50 @@ bool xpathTransformation::apply(xmlXPathObjectPtr result_nodes) {
 }
 */
 // process the resulting nodes
-void xpathTransformation::outputXPathResultsWrap(xmlXPathObjectPtr result_nodes) {
-/*
-    if (xmlXPathNodeSetGetLength(result_nodes->nodesetval) == 0)
+void xpathTransformation::outputXPathResultsWrap(xmlXPathObjectPtr result_nodes) {}
+
+// process the resulting nodes
+void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) {
+
+    if (!result_nodes || !(result_nodes->type == 1) || !(result_nodes->nodesetval))
         return;
 
-    // using the internal unit node to serve as the wrapper
     xmlNodePtr a_node = xmlDocGetRootElement(doc);
 
-    // special case for a single result for a unit, and the result is the entire unit
-    if ((result_nodes->nodesetval->nodeNr == 1) && (strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0)) {
-        outputResult(a_node);
-        return;
-    }
+    // set up namespace
+    static xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar*) uri.c_str(), (const xmlChar*) prefix.c_str());
 
-    // save the children
-    save_restore<xmlNodePtr> a_node_children(a_node->children);
-    a_node->children = 0;
-
-    // create the item property
-    if (xmlNewProp(a_node, BAD_CAST "item", BAD_CAST "0") == 0)
-        return;
-
-    // save the hash attribute
-    xmlAttrPtr hashprop = xmlHasProp(a_node, BAD_CAST "hash");
-    if (hashprop)
-        xmlRemoveProp(hashprop);
-
-    // output all the found nodes
+    // add the element to all nodes
     for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
-        // item attribute on wrapping node
-        if (xmlSetProp(a_node, BAD_CAST "item", BAD_CAST std::to_string(i + 1).c_str()) == 0)
-            return;
-
-        // one of the multiple query results is an entire unit, then output directly
-        if (strcmp((const char*) result_nodes->nodesetval->nodeTab[i]->name, "unit") == 0) {
-            a_node->children = a_node_children;
-            outputResult(a_node);
-            a_node->children = 0;
-            continue;
-        }
-
-        // location attribute on wrapping node
-        if (false) {
-            const char* s = "/src:unit";
-            xmlSetProp(a_node, BAD_CAST "location", BAD_CAST s);
-        }
-
-        // index into results
         xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
-        xmlNodePtr save_onode = 0;
-        if (onode->type == 2) {
-            std::string attr = (const char*) onode->name;
-            attr += "=";
-            attr += "\"";
-            attr += (const char*) onode->children->content;
-            attr += "\"";
 
-            save_onode = onode;
+//        xpath_arguments& thisarguments = oarchive->transformations[0].arguments;
 
-            onode = xmlNewText((const xmlChar*) attr.c_str());
-        }
+        // set up node to insert
+        xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) element.c_str());
 
-        // unlink this result node and link to the master parent
-        xmlNodePtr onode_parent = onode->parent;
-        xmlNodePtr onode_next = onode->next;
-        xmlNodePtr onode_prev = onode->prev;
-        onode->parent = a_node;
-        onode->next = 0;
-        onode->prev = 0;
-        a_node->children = onode;
+//        if (attr_name)
+//            append_attribute_to_node(element_node, thisarguments.attr_uri ? thisarguments.attr_prefix->c_str() : thisarguments.prefix->c_str(), thisarguments.attr_uri->c_str() ? thisarguments.attr_uri->c_str() : thisarguments.uri->c_str());
 
-        // output the result
-        outputResult(a_node);
+        // result node is not a unit
+        if (a_node != onode) {
 
-        // unlink from the master parent back to where it came from
-        onode->parent = onode_parent;
-        onode->next = onode_next;
-        onode->prev = onode_prev;
-        a_node->children = 0;
+            xmlReplaceNode(onode, element_node);
+            xmlAddChild(element_node, onode);
 
-        if (save_onode) {
-            xmlFreeNode(onode);
-            onode = save_onode;
-            save_onode = 0;
+        // result node is a unit
+        } else {
+
+            element_node->children = onode->children;
+            element_node->last = onode->last;
+            element_node->parent = onode;
+            element_node->next = 0;
+            element_node->prev = 0;
+            onode->children = element_node;
+            onode->last = element_node;
         }
     }
-
-    if (hashprop) {
-        ;
-    }
-    //xmlFreeProp(itemprop);
-    */
 }
 
 // process the resulting nodes

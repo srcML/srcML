@@ -70,14 +70,7 @@ xpath_arguments null_arguments;
  */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
-    if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-//    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-
-    xpathTransformation* trans = new xpathTransformation(archive, xpath_string, 0, 0, 0, 0, 0, 0, 0);
-
-    archive->ntransformations.push_back(trans);
-
-    return SRCML_STATUS_OK;
+    return srcml_append_transform_xpath_element_attribute(archive, xpath_string, 0, 0, 0, 0, 0, 0, 0);
 }
 
 /**
@@ -145,9 +138,15 @@ int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archiv
                                                             const char* element,
                                                             const char* attr_prefix, const char* attr_namespace_uri,
                                                             const char* attr_name, const char* attr_value) {
+    if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+//    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    return srcml_append_transform_xpath_element_attribute(archive, xpath_string, prefix, namespace_uri, element,
+    xpathTransformation* trans = new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
             attr_prefix, attr_namespace_uri, attr_name, attr_value);
+
+    archive->ntransformations.push_back(trans);
+
+    return SRCML_STATUS_OK;
 }
 
 #ifdef WITH_LIBXSLT

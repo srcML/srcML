@@ -153,6 +153,8 @@ public :
 
     virtual xmlNodeSetPtr apply(xmlDocPtr doc, int position);
 
+    void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes);
+
     // process the resulting nodes
     virtual void outputXPathResultsWrap(xmlXPathObjectPtr result_nodes);
 
@@ -179,13 +181,13 @@ private :
 
     OPTION_TYPE options;
     std::string xpath;
-    const char* prefix = nullptr;
-    const char* uri = nullptr;
-    const char* element = nullptr;
-    const char* attr_prefix = nullptr;
-    const char* attr_uri = nullptr;
-    const char* attr_name = nullptr;
-    const char* attr_value = nullptr;
+    std::string prefix;
+    std::string uri;
+    std::string element;
+    std::string attr_prefix;
+    std::string attr_uri;
+    std::string attr_name;
+    std::string attr_value;
     double total = 0;
     bool result_bool = false;
     int nodetype = 0;
