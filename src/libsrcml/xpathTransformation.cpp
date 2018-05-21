@@ -219,6 +219,8 @@ xmlXPathContextPtr xpathTransformation::set_context() {
 
 #pragma GCC diagnostic push
 
+bool xpathTransformation::hasUnitWrapper() { return unitWrapped; }
+
 /**
  * apply
  *
@@ -277,6 +279,8 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
         addElementXPathResults(doc, result_nodes);
 
+        unitWrapped = true;
+
         auto all = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
         return all;
     }
@@ -289,6 +293,11 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
             append_attribute_to_node(onode, attr_prefix.c_str(), attr_value.c_str());
         }
+
+        unitWrapped = true;
+
+        auto all = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+        return all;
     }
 
     auto all = xmlXPathNodeSetCreate(result_nodes->nodesetval->nodeTab[0]);

@@ -496,7 +496,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
         doc->children = fullresults->nodeTab[i];
 
-        auto nunit = srcml_unit_create(archive);
+        auto nunit = srcml_unit_clone(unit);
         nunit->read_body = nunit->read_header = true;
         nunit->language = unit->language;
 

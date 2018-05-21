@@ -155,6 +155,9 @@ public :
 
     void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes);
 
+    virtual bool hasUnitWrapper();
+
+
     // process the resulting nodes
     virtual void outputXPathResultsWrap(xmlXPathObjectPtr result_nodes);
 
@@ -193,6 +196,7 @@ private :
     int nodetype = 0;
     xmlXPathContextPtr context = nullptr;
     xmlXPathCompExprPtr compiled_xpath = nullptr;
+    bool unitWrapped = false;
 
     static const char* const simple_xpath_attribute_name;
 
