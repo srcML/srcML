@@ -462,14 +462,17 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     // create a DOM of the unit
     xmlDocPtr doc = xmlReadMemory(nssrcml.c_str(), (int) nssrcml.size(), 0, 0, 0);
 
-    // apply the transformations
+    // apply transformations serially on the results from the previous transformation
     bool hasUnitWrapper = false;
-    xmlNodeSetPtr current = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+    xmlNodeSetPtr fullresults = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
     for (auto* trans : archive->ntransformations) {
 
-        xmlNodeSetPtr pr = current;
+        // preserve the fullresults to iterate through
+        xmlNodeSetPtr pr = fullresults;
 
-        current = xmlXPathNodeSetCreate(0);
+        // collect results from this transformation applied to the potentially multiple
+        // results of the previous transformation step
+        fullresults = xmlXPathNodeSetCreate(0);
 
         for (int i = 0; i < pr->nodeNr; ++i) {
             xmlDocSetRootElement(doc, pr->nodeTab[i]);
@@ -477,22 +480,22 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             xmlNodeSetPtr results = trans->apply(doc, 0);
 
             for (int i = 0; i < results->nodeNr; ++i)
-                xmlXPathNodeSetAdd(current, results->nodeTab[i]);
+                xmlXPathNodeSetAdd(fullresults, results->nodeTab[i]);
         }
 
         hasUnitWrapper = trans->hasUnitWrapper();
 
-        if (!current->nodeNr)
+        if (!fullresults->nodeNr)
             break;
     }
 
     // create units out of the transformation results
-    srcml_unit** all = new srcml_unit*[current->nodeNr + 1];
-    all[current->nodeNr] = 0;
+    srcml_unit** newunits = new srcml_unit*[fullresults->nodeNr + 1];
+    newunits[fullresults->nodeNr] = 0;
 
-    for (int i = 0; i < current->nodeNr; ++i) {
+    for (int i = 0; i < fullresults->nodeNr; ++i) {
 
-        doc->children = current->nodeTab[i];
+        doc->children = fullresults->nodeTab[i];
 
         auto nunit = srcml_unit_create(archive);
         nunit->read_body = nunit->read_header = true;
@@ -517,11 +520,11 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         nunit->content_begin = hasUnitWrapper ? (int) nunit->srcml.find_first_of('>') + 1 : 0;
         nunit->content_end =   hasUnitWrapper ? (int) nunit->srcml.find_last_of('<') + 1  : (int) nunit->srcml.size() + 1;
 
-        all[i] = nunit;
+        newunits[i] = nunit;
     }
 
     if (units) {
-        *units = all;
+        *units = newunits;
     }
 
     xmlFreeDoc(doc);
