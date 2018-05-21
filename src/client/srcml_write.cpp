@@ -63,7 +63,12 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
             createdsrcml = true;
         }
 
-        srcml_archive_write_unit(request->srcml_arch, request->unit);
+        if (!request->units.empty()) {
+            for (const auto unit : request->units)
+                srcml_archive_write_unit(request->srcml_arch, unit);
+        } else {
+            srcml_archive_write_unit(request->srcml_arch, request->unit);
+        }
 
         // logging
         std::ostringstream outs;

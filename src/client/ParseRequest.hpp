@@ -49,6 +49,10 @@ struct ParseRequest {
     boost::optional<std::string> time_stamp;
     unsigned long total_num_inputs = 0;
     boost::optional<std::string> errormsg;
+
+    // transformations can result in multiple units
+    // that must be kept together. So therefore, this is a collection
+    std::vector<srcml_unit*> units;
 };
 
 #endif
