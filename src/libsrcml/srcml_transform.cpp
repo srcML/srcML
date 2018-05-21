@@ -448,7 +448,7 @@ int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
     return srcml_apply_transforms_verbose(iarchive, oarchive, 0);
 }
 
-int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit) {
+int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units) {
 
     // unit stays the same for no transformation
     if (archive->ntransformations.empty())
@@ -462,43 +462,63 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     xmlDocPtr doc = xmlReadMemory(nssrcml.c_str(), (int) nssrcml.size(), 0, 0, 0);
 
     // apply the transformations
-    xmlNodeSetPtr current = xmlXPathNodeSetCreate(doc->children);
+    xmlNodeSetPtr current = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
     for (auto* trans : archive->ntransformations) {
 
-        for (int i = 0; i < current->nodeNr; ++i) {
-            doc->children = current->nodeTab[i];
+        xmlNodeSetPtr pr = current;
+
+        current = xmlXPathNodeSetCreate(0);
+
+        for (int i = 0; i < pr->nodeNr; ++i) {
+            xmlDocSetRootElement(doc, pr->nodeTab[i]);
 
             xmlNodeSetPtr results = trans->apply(doc, 0);
-            xmlXPathFreeNodeSet(current);
 
-            current = results;
+            for (int i = 0; i < results->nodeNr; ++i)
+                xmlXPathNodeSetAdd(current, results->nodeTab[i]);
         }
 
         if (!current->nodeNr)
             break;
-
-        // for now, only has first result
-        doc->children = current->nodeTab[0];
     }
 
-    // dump the result tree to the string using an output buffer that writes to a std::string
-    unit->srcml.clear();
-    xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
+    // create units out of the transformation results
+    srcml_unit** all = new srcml_unit*[current->nodeNr + 1];
+    all[current->nodeNr] = 0;
 
-        ((std::string*) context)->append(buffer, len);
+    for (int i = 0; i < current->nodeNr; ++i) {
 
-        return len;
+        doc->children = current->nodeTab[i];
 
-    }, 0, &(unit->srcml), 0);
-    xmlNodeDumpOutput(output, doc, doc->children, 0, 0, 0);
+        auto nunit = srcml_unit_create(archive);
+        nunit->read_body = nunit->read_header = true;
+        nunit->language = unit->language;
 
-    // very important to flush to make sure the unit contents are all present
-    xmlOutputBufferClose(output);
+        // dump the result tree to the string using an output buffer that writes to a std::string
+        nunit->srcml.clear();
+        xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
 
-    // mark inside the units
-    // @todo Not being done right
-    unit->content_begin = unit->srcml.find('>') + 1;
-    unit->content_end = unit->srcml.rfind('<') + 1;
+            ((std::string*) context)->append(buffer, len);
+
+            return len;
+
+        }, 0, &(nunit->srcml), 0);
+        xmlNodeDumpOutput(output, doc, xmlDocGetRootElement(doc), 0, 0, 0);
+
+        // very important to flush to make sure the unit contents are all present
+        xmlOutputBufferClose(output);
+
+        // mark inside the units
+        // @todo Not being done right
+        nunit->content_begin = 0;
+        nunit->content_end = nunit->srcml.size() + 1;
+
+        all[i] = nunit;
+    }
+
+    if (units) {
+        *units = all;
+    }
 
     xmlFreeDoc(doc);
 

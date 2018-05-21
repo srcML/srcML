@@ -270,13 +270,16 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
     if (!result_nodes->nodesetval->nodeNr)
         return nullptr;
 
-    return xmlXPathNodeSetCreate(result_nodes->nodesetval->nodeTab[0]);
+    auto all = xmlXPathNodeSetCreate(result_nodes->nodesetval->nodeTab[0]);
+    for (int i = 1; i < result_nodes->nodesetval->nodeNr; ++i)
+        xmlXPathNodeSetAdd(all, result_nodes->nodesetval->nodeTab[i]);
+
+    return all;
 
     // convert all the found nodes
     for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
         xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
-fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         append_attribute_to_node(onode, "foo", "bar");
     }
