@@ -809,6 +809,8 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     // store the output in a buffer
     // @todo check into xmlBufferDetach()
     unit->unit = std::string((const char *)unit->output_buffer->content, unit->output_buffer->use);
+    unit->content_begin = (int)unit->unit->find('>') + 1;
+    unit->content_end = unit->output_buffer->use;
 
     xmlBufferFree(unit->output_buffer);
 
