@@ -43,6 +43,15 @@ public :
     virtual ~Transformation() {}
 
     virtual bool hasUnitWrapper() { return false; }
+
+    virtual bool hasNumber() { return false; }
+    virtual double getNumber() { return 0; }
+
+    virtual bool hasBoolean() { return false; }
+    virtual bool getBoolean() { return false; }
+
+    virtual bool hasString() { return false; }
+    virtual std::string getString() { return ""; }
 };
 
 #endif

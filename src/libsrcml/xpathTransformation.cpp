@@ -268,6 +268,21 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
         return nullptr;
     }
 
+    nodetype = result_nodes->type;
+    switch (nodetype) {
+        case XPATH_NUMBER:
+            numberValue = result_nodes->floatval;
+            return nullptr;
+
+        case XPATH_BOOLEAN:
+            boolValue = result_nodes->boolval;
+            return nullptr;
+
+        case XPATH_STRING:
+            stringValue = (const char*) result_nodes->stringval;
+            return nullptr;
+    };
+
     if (result_nodes->type != XPATH_NODESET) {
         const char* s = (const char*) xmlXPathCastToString(result_nodes);
 
@@ -319,6 +334,15 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
     return all;
 }
+
+bool xpathTransformation::hasNumber() { return nodetype == XPATH_NUMBER; }
+double xpathTransformation::getNumber() { return numberValue; }
+
+bool xpathTransformation::hasBoolean() { return nodetype == XPATH_BOOLEAN; }
+bool xpathTransformation::getBoolean() { return boolValue; }
+
+bool xpathTransformation::hasString() { return nodetype == XPATH_STRING; }
+std::string xpathTransformation::getString() { return stringValue; }
 
 // process the resulting nodes
 void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) {

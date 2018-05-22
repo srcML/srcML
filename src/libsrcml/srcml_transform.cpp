@@ -463,7 +463,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return 0;
     }
 
+    Transformation* lasttrans = nullptr;
     for (auto* trans : archive->ntransformations) {
+
+        lasttrans = trans;
 
         // preserve the fullresults to iterate through
         xmlNodeSetPtr pr = fullresults;
@@ -488,6 +491,21 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         // if there are no results, then we can't apply further transformations
         if (fullresults->nodeNr == 0)
             break;
+    }
+
+    // handle non-nodeset results
+    if (lasttrans && lasttrans->hasNumber()) {
+
+        fprintf(stderr, "DEBUG:  %s %s %d lasttrans.getNumber(): %zd\n", __FILE__,  __FUNCTION__, __LINE__, lasttrans->getNumber());
+
+    } else if (lasttrans && lasttrans->hasBoolean()) {
+
+        fprintf(stderr, "DEBUG:  %s %s %d lasttrans->getBoolean(): %zd\n", __FILE__,  __FUNCTION__, __LINE__, lasttrans->getBoolean());
+
+    } else if (lasttrans && lasttrans->hasString()) {
+
+        fprintf(stderr, "DEBUG:  %s %s %d lasttrans->getString(): %s\n", __FILE__,  __FUNCTION__, __LINE__, lasttrans->getString().c_str());
+
     }
 
     // create units out of the transformation results

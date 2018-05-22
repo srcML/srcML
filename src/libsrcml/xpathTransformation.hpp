@@ -147,7 +147,16 @@ public :
 
     void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes);
 
-    virtual bool hasUnitWrapper();
+    bool hasNumber();
+    double getNumber();
+
+    bool hasBoolean();
+    bool getBoolean();
+
+    bool hasString();
+    std::string getString();
+
+    bool hasUnitWrapper();
 
 private :
     std::string xpath;
@@ -158,6 +167,10 @@ private :
     std::string attr_uri;
     std::string attr_name;
     std::string attr_value;
+    int nodetype = 0;
+    double numberValue = 0;
+    bool boolValue = false;
+    std::string stringValue;
     xmlXPathContextPtr context = nullptr;
     xmlXPathCompExprPtr compiled_xpath = nullptr;
     bool unitWrapped = false;
