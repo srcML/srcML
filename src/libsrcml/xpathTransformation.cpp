@@ -268,6 +268,14 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
         return nullptr;
     }
 
+    if (result_nodes->type != XPATH_NODESET) {
+        const char* s = (const char*) xmlXPathCastToString(result_nodes);
+
+        auto result = xmlXPathNodeSetCreate(xmlNewTextLen(BAD_CAST s, (int) strlen(s)));
+
+        return result;
+    }
+
     if (!result_nodes->nodesetval)
         return nullptr;
 
@@ -312,45 +320,6 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
     return all;
 }
 
-/*
-bool xpathTransformation::apply(xmlXPathObjectPtr result_nodes) {
-
-    // record the node type here because it will be needed at the end
-    nodetype = result_nodes->type;
-
-    switch (nodetype) {
-
-        case XPATH_NODESET:
-        if (element)
-            outputXPathResultsElement(result_nodes);
-        else if (attr_name)
-            outputXPathResultsAttribute(result_nodes);
-        else
-            outputXPathResultsWrap(result_nodes);
-        break;
-
-        case XPATH_NUMBER:
-//        oarchive->translator->set_text_only();
-        outputXPathResultsNumber(result_nodes);
-        break;
-
-        case XPATH_BOOLEAN:
-//        oarchive->translator->set_text_only();
-        outputXPathResultsBoolean(result_nodes);
-        break;
-
-        case XPATH_STRING:
-//        oarchive->translator->set_text_only();
-        outputXPathResultsString(result_nodes);
-        break;
-
-        default :
-        break;
-    }
-
-    return true;
-}
-*/
 // process the resulting nodes
 void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) {
 
@@ -394,72 +363,4 @@ void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPt
             onode->last = element_node;
         }
     }
-}
-
-
-
-void xpathTransformation::outputXPathResultsNumber(xmlXPathObjectPtr result_nodes) {
-
-    total += result_nodes->floatval;
-
-    if (isoption(options, SRCML_OPTION_XPATH_TOTAL))
-        return;
-
-//    xmlOutputBufferWriteString(buf, (int)result_nodes->floatval == result_nodes->floatval ?
-//        std::to_string((int)result_nodes->floatval).c_str() : std::to_string(result_nodes->floatval).c_str());
-//    xmlOutputBufferWriteString(buf, "\n");
-}
-
-void xpathTransformation::outputXPathResultsBoolean(xmlXPathObjectPtr result_nodes) {
-
-    result_bool |= (result_nodes->boolval != 0);
-
-    if (isoption(options, SRCML_OPTION_XPATH_TOTAL))
-        return;
-
-//    xmlOutputBufferWriteString(buf, result_nodes->boolval ? "true\n" : "false\n");
-}
-
-void xpathTransformation::outputXPathResultsString(xmlXPathObjectPtr result_nodes) {
-
-//     xmlOutputBufferWriteString(buf, (char*) result_nodes->stringval);
-
-    // TODO: Is this a separator? Or just to get the code to end on a line?
-    // If just to get the code to end on a line, then maybe not put in if the string already has it
-//    xmlOutputBufferWrite(buf, SIZEPLUSLITERAL("\n"));
-}
-
-/**
- * end_output
- *
- * Finish the archive and close buffer.
- */
-int xpathTransformation::end_output() {
-
-    // finalize results
-    switch (nodetype) {
-
-        case XPATH_NUMBER:
-        if (isoption(options, SRCML_OPTION_XPATH_TOTAL)) {
-//            xmlOutputBufferWriteString(buf, (int) total == total ? std::to_string((int)total).c_str() :
-//                std::to_string(total).c_str());
-//            xmlOutputBufferWriteString(buf, "\n");
-        }
-        break;
-
-        // boolean result
-        case XPATH_BOOLEAN:
-        if (isoption(options, SRCML_OPTION_XPATH_TOTAL))
-//            xmlOutputBufferWriteString(buf, result_bool ? "true\n" : "false\n");
-        break;
-
-        default:
-        break;
-    }
-
-    if (context)
-        xmlXPathFreeContext(context);
-    context = 0;
-
-    return 0;
 }

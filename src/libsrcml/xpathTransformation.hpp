@@ -143,36 +143,13 @@ public :
      * 
      * @returns true on success false on failure.
      */
- //   virtual bool apply();
-
-//    virtual bool applyxpath(std::vector<transform>::const_iterator tr, std::vector<transform>::const_iterator end, xmlXPathObjectPtr result_nodes);
-
-//    virtual bool apply(xmlXPathObjectPtr result_nodes);
-
-//    virtual xmlDocPtr apply(xmlDocPtr doc, int position);
-
     virtual xmlNodeSetPtr apply(xmlDocPtr doc, int position);
 
     void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes);
 
     virtual bool hasUnitWrapper();
 
-    virtual void outputXPathResultsNumber(xmlXPathObjectPtr result_nodes);
-
-    virtual void outputXPathResultsBoolean(xmlXPathObjectPtr result_nodes);
-
-    virtual void outputXPathResultsString(xmlXPathObjectPtr result_nodes);
-
-    /**
-     * end_output
-     *
-     * Finish the archive and close buffer.
-     */
-    virtual int end_output();
-
 private :
-
-    OPTION_TYPE options;
     std::string xpath;
     std::string prefix;
     std::string uri;
@@ -181,9 +158,6 @@ private :
     std::string attr_uri;
     std::string attr_name;
     std::string attr_value;
-    double total = 0;
-    bool result_bool = false;
-    int nodetype = 0;
     xmlXPathContextPtr context = nullptr;
     xmlXPathCompExprPtr compiled_xpath = nullptr;
     bool unitWrapped = false;
