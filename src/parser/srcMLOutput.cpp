@@ -499,10 +499,12 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     // position end attribute, e.g. pos:end="2:1"
     srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
     xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
+    if (token->getLine() > stoken->endline) {
+        xmlOutputBufferWriteString(output_buffer, "INVALID_POS(");
+    }
     xmlOutputBufferWriteString(output_buffer, positoa(stoken->endline));
     if (token->getLine() > stoken->endline) {
-        fprintf(stderr, "srcml: Internal position error\n");
-        xmlOutputBufferWriteString(output_buffer, "ERROR-");
+        xmlOutputBufferWriteString(output_buffer, ")");
     }
     xmlOutputBufferWrite(output_buffer, 1, ":");
     xmlOutputBufferWriteString(output_buffer, positoa(stoken->endcolumn));

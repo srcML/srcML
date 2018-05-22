@@ -123,7 +123,9 @@ public:
     void emptyElement(int id) final {
 
         // push a empty element token
-        pushTokenFlush(antlr::RefToken(EmptyTokenFactory(id)));
+        auto gentoken = antlr::RefToken(EmptyTokenFactory(id));
+
+        pushTokenFlush(gentoken);
     }
 
     /**
@@ -238,6 +240,18 @@ private:
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
 
+        // save the start position of a full type for any following previous types
+        if (token == srcMLParser::STYPE) {
+            lasttypestartline = LT(1)->getLine();
+            lasttypestartcolumn = LT(1)->getColumn();
+        }
+
+        // previous type get start positions from previous, well type
+        if (token == srcMLParser::STYPEPREV) {
+            ntoken->setLine(lasttypestartline);
+            ntoken->setColumn(lasttypestartcolumn);
+        }
+
         if (isoption(options, SRCML_OPTION_POSITION)) {
             ends.emplace(ntoken);
         }
@@ -263,6 +277,17 @@ private:
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
             qetoken->endline = lastline;
             qetoken->endcolumn = lastcolumn;
+
+            if (token == srcMLParser::STYPE) {
+                lasttypeendline = lastline;
+                lasttypeendcolumn = lastcolumn;
+            }
+
+            if (token == srcMLParser::STYPEPREV) {
+                qetoken->endline = lasttypeendline;
+                qetoken->endcolumn = lasttypeendcolumn;
+            }
+
             ends.pop();
         }
     }
@@ -803,11 +828,19 @@ private:
 
 private:
 
+    // record position of text elements
     int lastline = 0;
     int lastcolumn = 0;
 
+    // record position for comment elements
     int slastline = 0;
     int slastcolumn = 0;
+
+    // record position for <type prev=""/>
+    int lasttypeendline = 0;
+    int lasttypeendcolumn = 0;
+    int lasttypestartline = 0;
+    int lasttypestartcolumn = 0;
 
     /** parser options */
     OPTION_TYPE & options;
