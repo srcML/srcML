@@ -230,7 +230,6 @@ bool xpathTransformation::hasUnitWrapper() { return unitWrapped; }
  */
 xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
-
     xmlXPathContextPtr context = xmlXPathNewContext(doc);
 
 //    xpathsrcMLRegister(context);
@@ -300,9 +299,11 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
         return all;
     }
 
-
-    bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->children->name, "unit");
-    unitWrapped = isunit;
+    unitWrapped = false;
+    if (result_nodes && result_nodes->nodesetval && result_nodes->nodesetval->nodeTab[0] &&
+        result_nodes->nodesetval->nodeTab[0]->children && result_nodes->nodesetval->nodeTab[0]->children->name &&
+        strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->children->name, "unit"))
+        unitWrapped = true;
 
     auto all = xmlXPathNodeSetCreate(result_nodes->nodesetval->nodeTab[0]);
     for (int i = 1; i < result_nodes->nodesetval->nodeNr; ++i)
