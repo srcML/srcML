@@ -312,99 +312,6 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
     return all;
 }
 
-#if 0
-bool xpathTransformation::apply() {
-
-    // handle new elements and individual results the previous way
-    if (element || !attr_name) {
-
-//        auto tr = oarchive->transformations.begin();
-        // evaluate the xpath
-        xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(tr->compiled_xpath, context);
-        if (result_nodes == 0) {
-            fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
-            return false;
-        }
-//        applyxpath(++tr, oarchive->transformations.end(), result_nodes);
-
-        return true;
-    }
-
-    // apply all XPath transformations on the same base code, and save all the results
-//    for (auto& tr : oarchive->transformations) {
-
-        // evaluate the xpath
-        tr.result_nodes = xmlXPathCompiledEval(tr.compiled_xpath, context);
-        if (tr.result_nodes == 0) {
-            fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
-            return false;
-        }
-    }
-
-    // process all the xpath transform results for everything except the last
-//    for (auto& tr : oarchive->transformations) {
-
-//        if (&tr == &oarchive->transformations.back())
-            break;
-
-        if (!tr.result_nodes->nodesetval)
-            continue;
-
-        attr_uri = tr.arguments.attr_uri->c_str();
-        attr_prefix = tr.arguments.attr_prefix->c_str();
-        attr_name = tr.arguments.attr_name->c_str();
-        attr_value = tr.arguments.attr_value->c_str();
-
-        // convert all the found nodes
-        for (int i = 0; i < tr.result_nodes->nodesetval->nodeNr; ++i) {
-
-            xmlNodePtr onode = tr.result_nodes->nodesetval->nodeTab[i];
-
-            append_attribute_to_node(onode, attr_prefix, attr_uri);
-        }
-    }
-
-    // apply regularly to the last. Note this will be what outputs the node
-//    attr_uri = oarchive->transformations.back().arguments.attr_uri->c_str();
-//    attr_prefix = oarchive->transformations.back().arguments.attr_prefix->c_str();
-//    attr_name = oarchive->transformations.back().arguments.attr_name->c_str();
-//    attr_value = oarchive->transformations.back().arguments.attr_value->c_str();
-//    apply(oarchive->transformations.back().result_nodes);
-
-////        applyxpath(++tr, oarchive->transformations.end(), result_nodes);
-
-    // finished with the result nodes
-    //xmlXPathFreeObject(result_nodes);
-    return true;
-}
-#endif
-
-/*
-bool xpathTransformation::applyxpath(std::vector<transform>::const_iterator tr, std::vector<transform>::const_iterator end, xmlXPathObjectPtr result_nodes) {
-
-    if (tr == end || xmlXPathNodeSetGetLength(result_nodes->nodesetval) == 0) {
-        apply(result_nodes);
-        return true;
-    }
-
-    save_restore<xmlNodePtr> savectxt = ctxt->node;
-
-    for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
-
-        xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i]; 
-
-        ctxt->node = onode;
-
-        xmlXPathObjectPtr result_nodes2 = xmlXPathCompiledEval(tr->compiled_xpath, context);
-
-        applyxpath(++tr, end, result_nodes2);
-
-        xmlXPathFreeObject(result_nodes2);
-    }
-
-    return true;
-}
-*/
 /*
 bool xpathTransformation::apply(xmlXPathObjectPtr result_nodes) {
 
@@ -444,9 +351,6 @@ bool xpathTransformation::apply(xmlXPathObjectPtr result_nodes) {
     return true;
 }
 */
-// process the resulting nodes
-void xpathTransformation::outputXPathResultsWrap(xmlXPathObjectPtr result_nodes) {}
-
 // process the resulting nodes
 void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) {
 
@@ -492,74 +396,7 @@ void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPt
     }
 }
 
-// process the resulting nodes
-void xpathTransformation::outputXPathResultsElement(xmlXPathObjectPtr result_nodes) {
 
-#if 0
-	if (!result_nodes || !(result_nodes->type == 1) || !(result_nodes->nodesetval))
-		return;
-
-    xmlNodePtr a_node = xmlDocGetRootElement(doc);
-
-    // set up namespace
-    static xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar*) uri, (const xmlChar*) prefix);
-
-    // output all the found nodes
-    for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
-
-        xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
-
-//        xpath_arguments& thisarguments = oarchive->transformations[0].arguments;
-
-        // set up node to insert
-        xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) thisarguments.element->c_str());
-
-//        if (attr_name)
-//            append_attribute_to_node(element_node, thisarguments.attr_uri ? thisarguments.attr_prefix->c_str() : thisarguments.prefix->c_str(), thisarguments.attr_uri->c_str() ? thisarguments.attr_uri->c_str() : thisarguments.uri->c_str());
-
-        // result node is not a unit
-        if (a_node != onode) {
-
-            xmlReplaceNode(onode, element_node);
-            xmlAddChild(element_node, onode);
-
-        // result node is a unit
-        } else {
-
-            element_node->children = onode->children;
-            element_node->last = onode->last;
-            element_node->parent = onode;
-            element_node->next = 0;
-            element_node->prev = 0;
-            onode->children = element_node;
-            onode->last = element_node;
-        }
-
-    }
-
-    // output the result
-    outputResult(a_node);
-#endif
-}
-
-// process the resulting nodes
-void xpathTransformation::outputXPathResultsAttribute(xmlXPathObjectPtr result_nodes) {
-/*
-    // use the root element to wrap the result ?
-    xmlNodePtr a_node = xmlDocGetRootElement(doc);
-
-    // append the attribute to the nodes
-    for (int i = 0; result_nodes->nodesetval && i < result_nodes->nodesetval->nodeNr; ++i) {
-
-        xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
-
-        append_attribute_to_node(onode, attr_uri ? attr_prefix : prefix, attr_uri ? attr_uri : uri);
-    }
-
-    // output the result
-    outputResult(a_node);
-*/
-}
 
 void xpathTransformation::outputXPathResultsNumber(xmlXPathObjectPtr result_nodes) {
 

@@ -157,16 +157,6 @@ public :
 
     virtual bool hasUnitWrapper();
 
-
-    // process the resulting nodes
-    virtual void outputXPathResultsWrap(xmlXPathObjectPtr result_nodes);
-
-    // process the resulting nodes
-    virtual void outputXPathResultsElement(xmlXPathObjectPtr result_nodes);
-
-    // process the resulting nodes
-    virtual void outputXPathResultsAttribute(xmlXPathObjectPtr result_nodes);
-
     virtual void outputXPathResultsNumber(xmlXPathObjectPtr result_nodes);
 
     virtual void outputXPathResultsBoolean(xmlXPathObjectPtr result_nodes);
