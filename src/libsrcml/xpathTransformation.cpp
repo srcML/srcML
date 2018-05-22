@@ -300,14 +300,15 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
         return all;
     }
 
+
+    bool isunit = strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->children->name, "unit");
+    unitWrapped = isunit;
+
     auto all = xmlXPathNodeSetCreate(result_nodes->nodesetval->nodeTab[0]);
     for (int i = 1; i < result_nodes->nodesetval->nodeNr; ++i)
         xmlXPathNodeSetAdd(all, result_nodes->nodesetval->nodeTab[i]);
 
-
     return all;
-
-
 }
 
 #if 0

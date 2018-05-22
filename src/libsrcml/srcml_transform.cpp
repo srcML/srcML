@@ -496,10 +496,15 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
         doc->children = fullresults->nodeTab[i];
 
+        bool isunit = strcmp((const char*) doc->children->name, "unit") == 0;
+
         auto nunit = srcml_unit_clone(unit);
         nunit->read_body = nunit->read_header = true;
-        nunit->attributes.push_back("item");
-        nunit->attributes.push_back(std::to_string(i + 1));
+        if (!isunit) {
+            nunit->attributes.push_back("item");
+            nunit->attributes.push_back(std::to_string(i + 1));
+            nunit->hash = boost::optional<std::string>();
+        }
 
         // dump the result tree to the string using an output buffer that writes to a std::string
         nunit->srcml.clear();
