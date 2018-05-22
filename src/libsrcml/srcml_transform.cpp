@@ -453,17 +453,16 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (archive->ntransformations.empty())
         return 0;
 
-    std::string nssrcml = unit->srcml.substr(0, 5);
-    if (unit->archive->options & SRCML_OPTION_ARCHIVE)
-        nssrcml.append(" xmlns=\"http://www.srcML.org/srcML/src\"");
-    nssrcml.append(unit->srcml.substr(5));
-
     // create a DOM of the unit
-    xmlDocPtr doc = xmlReadMemory(nssrcml.c_str(), (int) nssrcml.size(), 0, 0, 0);
+    xmlDocPtr doc = xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0);
 
     // apply transformations serially on the results from the previous transformation
     bool hasUnitWrapper = false;
     xmlNodeSetPtr fullresults = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+    if (fullresults == nullptr) {
+        return 0;
+    }
+
     for (auto* trans : archive->ntransformations) {
 
         // preserve the fullresults to iterate through
@@ -477,14 +476,17 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             xmlDocSetRootElement(doc, pr->nodeTab[i]);
 
             xmlNodeSetPtr results = trans->apply(doc, 0);
-
-            for (int i = 0; i < results->nodeNr; ++i)
+            if (results == nullptr)
+                break;
+            for (int i = 0; i < results->nodeNr; ++i) {
                 xmlXPathNodeSetAdd(fullresults, results->nodeTab[i]);
+            }
         }
 
         hasUnitWrapper = trans->hasUnitWrapper();
 
-        if (!fullresults->nodeNr)
+        // if there are no results, then we can't apply further transformations
+        if (fullresults->nodeNr == 0)
             break;
     }
 
