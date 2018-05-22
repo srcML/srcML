@@ -22,7 +22,6 @@
 #include <srcml_sax2_reader.hpp>
 
 #include <sstream>
-#include <xpath_query_units.hpp>
 #include <relaxng_units.hpp>
 
 #include <srcexfun.hpp>

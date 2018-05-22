@@ -139,10 +139,10 @@ int apply_relaxng(srcml_archive* in_arch, const std::string& transform_input) {
 }
 
 // transform srcml with query or transformation
-void transform_srcml(const srcml_request_t& srcml_request,
-    const srcml_input_t& input_sources,
-    const srcml_output_dest& output) {
-
+void transform_srcml(const srcml_request_t& /* srcml_request */,
+    const srcml_input_t& /* input_sources */,
+    const srcml_output_dest& /* output */) {
+/*
 	// create output archive
 	int status;
 	srcml_archive* out_arch = srcml_archive_create();
@@ -265,4 +265,5 @@ void transform_srcml(const srcml_request_t& srcml_request,
     if (contains<int>(output)) {
         close(*(output.fd));
     }
+*/
 }

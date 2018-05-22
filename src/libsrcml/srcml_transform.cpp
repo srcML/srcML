@@ -441,12 +441,6 @@ int srcml_clear_transforms(srcml_archive* archive) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-
-int srcml_apply_transforms(srcml_archive* iarchive, srcml_archive* oarchive) {
-
-    return srcml_apply_transforms_verbose(iarchive, oarchive, 0);
-}
-
 int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units) {
 
     // unit stays the same for no transformation
@@ -556,73 +550,3 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     return 1;
 }
-
-int srcml_apply_transforms_verbose(srcml_archive* iarchive, srcml_archive* oarchive, apply_transforms_callback* ) {
-
-    if(iarchive == NULL || oarchive == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
-    if((iarchive->type != SRCML_ARCHIVE_READ && iarchive->type != SRCML_ARCHIVE_RW)
-        || (oarchive->type != SRCML_ARCHIVE_WRITE && oarchive->type != SRCML_ARCHIVE_RW)) return SRCML_STATUS_INVALID_IO_OPERATION;
-
-    int status = SRCML_STATUS_OK;
-    for(std::vector<transform>::size_type i = 0; i < iarchive->transformations.size(); ++i) {
-
-        xmlParserInputBufferPtr pinput = iarchive->input;
-
-        auto ctxt = iarchive->reader->control.getContext()->libxml2_context;
-        auto state = (sax2_srcsax_handler*) ctxt->_private;
-        state->collect_unit_body = false;
-
-        try {
-
-            switch(iarchive->transformations[i].type) {
-            case SRCML_XPATH: {
-
-                auto save = oarchive->transformations;
-                oarchive->transformations = iarchive->transformations;
-                status = srcml_xpath(pinput, "src:unit",
-                                    optional_get_c_str(iarchive->transformations[i].arguments.str),
-                                    optional_get_c_str(iarchive->transformations[i].arguments.prefix), optional_get_c_str(iarchive->transformations[i].arguments.uri),
-                                    optional_get_c_str(iarchive->transformations[i].arguments.element),
-                                    optional_get_c_str(iarchive->transformations[i].arguments.attr_prefix), optional_get_c_str(iarchive->transformations[i].arguments.attr_uri),
-                                    optional_get_c_str(iarchive->transformations[i].arguments.attr_name), optional_get_c_str(iarchive->transformations[i].arguments.attr_value),
-                                    oarchive->options, oarchive);
-                oarchive->transformations = save;
-                break;
-            }
-
-#ifdef WITH_LIBXSLT
-            /*
-            case SRCML_XSLT: {
-
-                status = srcml_xslt(pinput,
-                                   iarchive->transformations[i].doc,
-                                   iarchive->transformations[i].xsl_parameters, 0, oarchive->options, oarchive);
-                break;
-            }
-            */
-#endif
-
-            case SRCML_RELAXNG: {
-
-                status = srcml_relaxng(pinput,
-                                      iarchive->transformations[i].doc,
-                                      oarchive->options, oarchive);
-                break;
-            }
-
-            default : break;
-            }
-
-        } catch(...) {
-
-            return SRCML_STATUS_INVALID_INPUT;
-        }
-
-        break;
-    }
-
-    //srcml_clear_transforms(iarchive);
-
-    return status;
-}
-

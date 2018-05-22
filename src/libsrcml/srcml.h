@@ -1188,38 +1188,19 @@ LIBSRCML_DECL int srcml_append_transform_param (struct srcml_archive* archive, c
  */
 LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archive, const char* param_name, const char* param_value);
 
-/** Apply all appended transformations/queries in the order that they were added
- * Intermediate results are stored in a temporary file and transformations are cleared.
- * @param iarchive An input srcml_archive
- * @param oarchive An output srcml archive with the applied transformations/queries
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
+/**
+ * srcml_unit_apply_transforms
+ * @todo Fix up
+ * @param iarchive an input srcml archive
+ * @param oarchive and output srcml archive
+ *
+ * Apply appended transformations inorder added and consecutively.
+ * Intermediate results are stored in a temporary file.
+ * Transformations are cleared.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-LIBSRCML_DECL int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
-
 LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units);
-
-/** Callback function for srcml_apply_transforms_verbose(). Called after each input unit in the archive is processed
- * @param filename The filename of the original unit
- * @param language The language of the original unit
- * @param oldLOC The LOC (Lines of Code) of the original unit
- * @param newLOC The LOC (Lines of Code) of the transformed (output) unit
- * @param oldHASH The HASH of the source of the original unit
- * @param newHASH The HASH of the source of the transformed (output) unit
- * @retval 1 Continue transformations
- * @retval 0 Stop transformations
- */
-typedef int (*apply_transforms_callback)(const char* filename, const char* language, const char* oldLOC, const char* newLOC, const char* oldHASH, const char* newHASH);
-
-/** Apply all appended transformations/queries in the order that they were added with a verbose callback
- * Intermediate results are stored in a temporary file and transformations are cleared.
- * @param iarchive An input srcml_archive
- * @param oarchive An output srcml archive with the applied transformations/queries
- * @param transforms_callback  A callback after each result with data about the unit
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_apply_transforms_verbose (struct srcml_archive* iarchive, struct srcml_archive* oarchive, apply_transforms_callback* transforms_callback);
 
 /** Remove all appended transformations from the archive which have not been applied yet
  * @param archive A srcml_archive
