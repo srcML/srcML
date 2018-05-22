@@ -47,7 +47,6 @@
 // decide if a step is needed
 namespace {
     bool request_create_srcml      (const srcml_request_t&);
-    bool request_transform_srcml   (const srcml_request_t&);
     bool request_display_metadata  (const srcml_request_t&);
     bool request_output_compression(const srcml_request_t&);
     bool request_create_src        (const srcml_request_t&);
@@ -135,12 +134,6 @@ int main(int argc, char * argv[]) {
         pipeline.push_back(create_srcml);
     }
 
-    // step srcml->srcml
-    if (request_transform_srcml(srcml_request)) {
-
-  //      pipeline.push_back(transform_srcml);
-    }
-
     // step srcml->metadata
     if (request_display_metadata(srcml_request)) {
 
@@ -197,17 +190,8 @@ namespace {
     bool request_create_srcml(const srcml_request_t& request) {
 
         return std::find_if(request.input_sources.begin(), request.input_sources.end(), is_src) != request.input_sources.end() ||
-        (request.output_filename.state == SRCML && request.input_sources[0].unit == 0 && !option(SRCML_COMMAND_XML) && request.transformations.empty());
-    }
-
-    /*
-        Transform srcml
-
-        * Transformations requested
-    */
-    bool request_transform_srcml(const srcml_request_t& request) {
-
-        return !request.transformations.empty();
+        (request.output_filename.state == SRCML && request.input_sources[0].unit == 0 && !option(SRCML_COMMAND_XML)) ||
+        !request.transformations.empty();
     }
 
     /*
@@ -241,8 +225,7 @@ namespace {
 
         return (option(SRCML_COMMAND_SRC) || (request.output_filename.state != SRCML &&
             !request_create_srcml(request) &&
-            !request_display_metadata(request) &&
-            !request_transform_srcml(request))) ||
+            !request_display_metadata(request))) ||
             (request.input_sources.size() == 1 && request.input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
         ;
     }
