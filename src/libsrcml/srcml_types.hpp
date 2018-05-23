@@ -65,11 +65,7 @@ const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_DEFAULT  | SRC
 #include <Language.hpp>
 #include <language_extension_registry.hpp>
 
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
-
 #include <boost/optional.hpp>
-#include <boost/any.hpp>
 
 #include <string>
 #include <vector>
