@@ -30,9 +30,19 @@
 #endif
 
 #include <srcexfun.hpp>
-#include <transform_units.hpp>
 
 #include <Transformation.hpp>
+
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>
+
+#include <libxslt/xslt.h>
+#include <libxslt/xsltInternals.h>
+#include <libxslt/xsltutils.h>
+#include <libexslt/exslt.h>
 
 #ifdef DLLOAD
 typedef xmlDocPtr (*xsltApplyStylesheetUser_t) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *, xsltTransformContextPtr);
@@ -41,11 +51,6 @@ typedef void (*xsltCleanupGlobals_t)();
 typedef void (*xsltFreeStylesheet_t)(xsltStylesheetPtr);
 
 void dlexsltRegisterAll(void * handle);
-#else
-#include <libxslt/xslt.h>
-#include <libxslt/xsltInternals.h>
-#include <libxslt/xsltutils.h>
-#include <libexslt/exslt.h>
 #endif
 
 #ifdef _MSC_BUILD
