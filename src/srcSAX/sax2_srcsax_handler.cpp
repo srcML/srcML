@@ -22,6 +22,7 @@
 
 #include <sax2_srcsax_handler.hpp>
 #include <string>
+#include <algorithm>
 
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
@@ -371,6 +372,8 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         
         // restart unit count due to call of start_unit() in start_root() when we assumed a solo unit
         state->unit_count = 0;
+
+        state->loc = 0;
 
         // unit starts for real, discarding previous start_unit() in start_root()
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
@@ -738,6 +741,8 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         return;
 
     state->unitsrc.append((const char*) ch, len);
+
+    state->loc += std::count((const char*) ch, (const char*) ch + len, '\n');
 
     update_ctx(ctx);
 

@@ -704,6 +704,7 @@ public :
 		    unit->content_end = state->content_end;
 		    unit->srcml = std::move(state->unitsrcml);
 		    unit->src = std::move(state->unitsrc);
+            unit->loc = state->loc;
 
             // pause
             std::unique_lock<std::mutex> lock(mutex);
