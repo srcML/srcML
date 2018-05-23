@@ -45,17 +45,10 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
     }
 
     // NOTE: thread task cannot throw exception
-
-    // a clone of the intended srcML archive is created
-    // the only purpose is to allow files to be parsed, without opening
-    // the real destination archive
-    srcml_archive* srcml_arch = srcml_archive_clone(request->srcml_arch);
-
     if (option(SRCML_COMMAND_NOARCHIVE)) {
-        request->srcml_arch = srcml_arch;
 
-        srcml_archive_disable_full_archive(srcml_arch);
-        srcml_archive_enable_hash(srcml_arch);
+        srcml_archive_disable_full_archive(request->srcml_arch);
+        srcml_archive_enable_hash(request->srcml_arch);
 
         // build the output filename mirroring input filesystem
         // ensure that the directory path has a final "/" when appended to filename
@@ -67,12 +60,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         }
         xml_filename += *request->filename + ".xml";
 
-        srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str(), 0);
-
-    } else {
-        char buffer[100];
-        size_t size;
-        srcml_archive_write_open_memory(srcml_arch, (char**) &buffer, &size);
+        srcml_archive_write_open_filename(request->srcml_arch, xml_filename.c_str(), 0);
     }
 
     std::string original_filename;
@@ -84,8 +72,9 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
 
         // create the unit start tag
         if (!unit) {
-            if (!(unit = srcml_unit_create(srcml_arch)))
+            if (!(unit = srcml_unit_create(request->srcml_arch))) {
                 throw SRCML_STATUS_ERROR;
+            }
         }
 
         // language attribute, required if from memory
