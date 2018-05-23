@@ -19,9 +19,8 @@
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <libxml/parser.h>
-#include <libxml/xpath.h>
 
+#include <libxml/parser.h>
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>
 
@@ -30,11 +29,6 @@
 #endif
 
 #include <xpathTransformation.hpp>
-
-/** size of string then the literal */
-#define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
-/** literal followed by its size */
-#define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include <srcexfun.hpp>
 #include <srcmlns.hpp>
@@ -268,27 +262,15 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
     }
 
     nodetype = result_nodes->type;
-    switch (nodetype) {
-        case XPATH_NUMBER:
-            numberValue = result_nodes->floatval;
-            return nullptr;
 
-        case XPATH_BOOLEAN:
-            boolValue = result_nodes->boolval;
-            return nullptr;
+    // update scalar values, if the type is right
+    numberValue = nodetype == XPATH_NUMBER ? result_nodes->floatval : decltype(numberValue)();
+    boolValue = nodetype == XPATH_BOOLEAN ? result_nodes->boolval : decltype(boolValue)();
+    stringValue = nodetype == XPATH_STRING ? boost::optional<std::string>((const char*) result_nodes->stringval) : decltype(stringValue)();
 
-        case XPATH_STRING:
-            stringValue = (const char*) result_nodes->stringval;
-            return nullptr;
-    };
-
-    if (result_nodes->type != XPATH_NODESET) {
-        const char* s = (const char*) xmlXPathCastToString(result_nodes);
-
-        auto result = xmlXPathNodeSetCreate(xmlNewTextLen(BAD_CAST s, (int) strlen(s)));
-
-        return result;
-    }
+    // when result is not a nodeset, then return nullptr, and the calling code will check the other values
+    if (result_nodes->type != XPATH_NODESET)
+        return nullptr;
 
     if (!result_nodes->nodesetval)
         return nullptr;

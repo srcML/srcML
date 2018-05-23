@@ -49,11 +49,11 @@ public :
 
     virtual bool hasUnitWrapper() { return false; }
 
-    virtual boost::optional<double> getNumber() { return boost::optional<double>(); }
+    virtual boost::optional<double> getNumber() { return boost::none; }
 
-    virtual boost::optional<bool> getBoolean() { return boost::optional<bool>(); }
+    virtual boost::optional<bool> getBoolean() { return boost::none; }
 
-    virtual boost::optional<std::string> getString() { return boost::optional<std::string>(); }
+    virtual boost::optional<std::string> getString() { return boost::none; }
 };
 
 #endif

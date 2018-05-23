@@ -24,19 +24,6 @@
 #define INCLUDED_XPATHTRANSFORMATION_HPP
 
 #include <libxml/parser.h>
-#include <libxml/xpath.h>
-
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
-
-#ifdef WITH_LIBXSLT
-#include <libexslt/exslt.h>
-#endif
-
-/** size of string then the literal */
-#define SIZEPLUSLITERAL(s) sizeof(s) - 1, s
-/** literal followed by its size */
-#define LITERALPLUSSIZE(s) s, sizeof(s) - 1
 
 #include <srcexfun.hpp>
 #include <srcmlns.hpp>
@@ -164,9 +151,9 @@ private :
     std::string attr_name;
     std::string attr_value;
     int nodetype = 0;
-    double numberValue = 0;
-    bool boolValue = false;
-    std::string stringValue;
+    boost::optional<double> numberValue = 0;
+    boost::optional<bool> boolValue = false;
+    boost::optional<std::string> stringValue;
     xmlXPathContextPtr context = nullptr;
     xmlXPathCompExprPtr compiled_xpath = nullptr;
     bool unitWrapped = false;
