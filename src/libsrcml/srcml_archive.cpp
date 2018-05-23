@@ -172,7 +172,7 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
     if (archive == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->language = language ? std::string(language) : boost::optional<std::string>();
+    archive->language = language ? std::string(language) : decltype(archive->language)();
 
     return SRCML_STATUS_OK;
 }
@@ -191,7 +191,7 @@ int srcml_archive_set_url (srcml_archive* archive, const char* url) {
     if (archive == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->url = url ? std::string(url) : boost::optional<std::string>();
+    archive->url = url ? std::string(url) : decltype(archive->url)();
 
     return SRCML_STATUS_OK;
 }

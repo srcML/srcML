@@ -45,7 +45,7 @@ int srcml_unit_set_src_encoding(srcml_unit* unit, const char* encoding) {
     if (unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->encoding = encoding ? std::string(encoding) : boost::optional<std::string>();
+    unit->encoding = encoding ? std::string(encoding) : decltype(unit->encoding)();
 
     return SRCML_STATUS_OK;
 }
@@ -65,7 +65,7 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
     if (unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->language = language ? std::string(language) : boost::optional<std::string>();
+    unit->language = language ? std::string(language) : decltype(unit->language)();
 
     return SRCML_STATUS_OK;
 }
@@ -85,7 +85,7 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
     if (unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->filename = filename ? std::string(filename) : boost::optional<std::string>();
+    unit->filename = filename ? std::string(filename) : decltype(unit->filename)();
 
     return SRCML_STATUS_OK;
 }
@@ -105,7 +105,7 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
     if (unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->version = version ? std::string(version) : boost::optional<std::string>();
+    unit->version = version ? std::string(version) : decltype(unit->version)();
 
     return SRCML_STATUS_OK;
 }
@@ -125,7 +125,7 @@ int srcml_unit_set_timestamp(srcml_unit* unit, const char* timestamp) {
     if (unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->timestamp = timestamp ? std::string(timestamp) : boost::optional<std::string>();
+    unit->timestamp = timestamp ? std::string(timestamp) : decltype(unit->timestamp)();
 
     return SRCML_STATUS_OK;
 }
@@ -145,7 +145,7 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
     if (unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->hash = hash ? std::string(hash) : boost::optional<std::string>();
+    unit->hash = hash ? std::string(hash) : decltype(unit->hash)();
 
     return SRCML_STATUS_OK;
 }
