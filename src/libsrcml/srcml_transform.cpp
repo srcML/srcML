@@ -57,8 +57,6 @@
 #include <xpathTransformation.hpp>
 #include <relaxngTransformation.hpp>
 
-xpath_arguments null_arguments;
-
 /**
  * srcml_append_transform_xpath
  * @param archive a srcml archive

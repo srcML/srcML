@@ -98,33 +98,6 @@ class srcml_sax2_reader;
 class srcml_translator;
 
 /**
- * xpath_arguments
- *
- * Data structure to hold xpath arguments
- */
- struct xpath_arguments {
-
-    /** the xpath expression */
-    boost::optional<std::string> str;
-
-    /** the optional element prefix */
-    boost::optional<std::string> prefix;
-    /** the element uri */
-    boost::optional<std::string> uri;
-    /** the tag name */
-    boost::optional<std::string> element;
-
-    /** the optional attribute prefix */
-    boost::optional<std::string> attr_prefix;
-    /** the attribute uri */
-    boost::optional<std::string> attr_uri;
-    /** the attribute name */
-    boost::optional<std::string> attr_name;
-    /** the optional attribute value */
-    boost::optional<std::string> attr_value;
- };
-
-/**
  * SRCML_ARCHIVE_TYPE
  *
  * Archive type read, write, or read/write.
