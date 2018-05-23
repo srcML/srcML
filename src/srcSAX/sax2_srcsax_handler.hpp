@@ -23,7 +23,6 @@
 #ifndef INCLUDED_SAX2_SRCSAX_HANDLER_HPP
 #define INCLUDED_SAX2_SRCSAX_HANDLER_HPP
 
-#include <srcml_element.hpp>
 #include <srcsax.hpp>
 
 #include <libxml/parser.h>
@@ -63,11 +62,8 @@ struct sax2_srcsax_handler {
     /** hooks for processing */
     srcsax_context* context = nullptr;
 
-    /** temporary storage for root unit */
-    srcml_element root;
-
     /** temporary storage of meta-tags */
-    std::vector<srcml_element> meta_tags;
+//    std::vector<srcml_element> meta_tags;
 
     /** used to detect root unit */
     bool is_archive = false;
@@ -91,6 +87,7 @@ struct sax2_srcsax_handler {
     bool collect_unit_body = true;
 
     std::string rootnsstr;
+    std::string rootstarttag;
 
     int content_begin = 0;
     int content_end = 0;

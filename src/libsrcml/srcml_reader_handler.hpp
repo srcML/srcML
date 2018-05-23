@@ -24,7 +24,6 @@
 #include <srcSAXHandler.hpp>
 #include <sax2_srcsax_handler.hpp>
 
-#include <srcml_element.hpp>
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
 #include <srcml.h>

@@ -23,6 +23,10 @@
 #include <sax2_srcsax_handler.hpp>
 #include <string>
 
+#include <libxml/parser.h>
+#include <libxml/parserInternals.h>
+#include <libxml/tree.h>
+
 #ifdef SRCSAX_DEBUG
     #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase); 
     #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch); 
@@ -177,8 +181,8 @@ void end_document(void* ctx) {
         return;
 
     // never found any content, so end the root
-    if (state->mode != END_ROOT && state->mode != START)
-        end_root(ctx, state->root.localname, state->root.prefix, state->root.URI);
+//    if (state->mode != END_ROOT && state->mode != START)
+//        end_root(ctx, state->root.localname, state->root.prefix, state->root.URI);
 
     if (state->context->terminate)
         return;
@@ -207,7 +211,7 @@ void end_document(void* ctx) {
  */
 void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                int nb_namespaces, const xmlChar** namespaces,
-               int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+               int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     if (ctxt == nullptr)
@@ -220,11 +224,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     SRCSAX_DEBUG_START(localname);
 
-    // cache the root data because we don't know if we are in an archive or solo unit
-    state->root = std::move(srcml_element(localname, prefix, URI,
-                                          nb_namespaces, namespaces,
-                                          nb_attributes, nb_defaulted, attributes));
-
     state->mode = ROOT;
 
     // wait to call upper-level callbacks until we know whether this is an archive or not
@@ -232,7 +231,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     if (state->context->terminate)
         return;
-
+/*
     for (auto citr : state->meta_tags) {
 
         state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char*) citr.prefix, (const char*) citr.URI,
@@ -241,6 +240,11 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         if (state->context->terminate)
             return;
     }
+*/
+    // save the root start tag because we are going to parse it again to generate proper start_root() and start_unit()
+    // calls after we know whether this is an archive or not
+    state->rootstarttag.assign((const char*) state->base, ctxt->input->cur - state->base);
+    state->rootstarttag.append("/>");
 
     // record namespace string in an extensible list so we can add the per unit
     if (state->collect_unit_body) {
@@ -292,7 +296,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
  */
 void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces,
-                         int nb_attributes, int nb_defaulted, const xmlChar** attributes) {
+                         int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     if (ctxt == nullptr)
@@ -302,7 +306,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         return;
 
     SRCSAX_DEBUG_START(localname);
-
+/*
     // if macros are found, then must return, but first save them if necessary
     if (localname == MACRO_LIST_ENTRY) {
 
@@ -311,7 +315,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
                                                     nb_attributes, nb_defaulted, attributes));
         return;
     }
-
+*/
     if (state->context->terminate)
         return;
 
@@ -323,12 +327,44 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     SRCSAX_DEBUG_END(localname);
 
-    // call the upper-level callbacks know that we know if it is an archive or a solo unit
-    if (state->context->handler->start_root)
-        state->context->handler->start_root(state->context, (const char*) state->root.localname, 
-                        (const char*) state->root.prefix, (const char*) state->root.URI,
-                        state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, state->root.attributes.data());
+    // call the delayed upper-level callbacks for starting a root and a unit
+    // waited because we did not know yet if this was an archive
+    // Basically, reparse the root start tag, collected when first parsed
+    xmlSAXHandler roottagsax;
+    memset(&roottagsax, 0, sizeof(roottagsax));
+    roottagsax.initialized    = XML_SAX2_MAGIC;
+
+    roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                     int nb_namespaces, const xmlChar** namespaces,
+                     int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
+
+        auto ctxt = (xmlParserCtxtPtr) ctx;
+        if (ctxt == nullptr)
+            return;
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
+        if (state == nullptr)
+            return;
+
+        // call the upper-level start_root
+        if (state->context->handler->start_root)
+            state->context->handler->start_root(state->context, (const char*) localname, 
+                            (const char*) prefix, (const char*) URI,
+                            nb_namespaces, namespaces, nb_attributes, attributes);
+
+        // call the upper-level start_unit for non-archives
+        if (!state->is_archive && state->context->handler->start_unit) {
+            state->context->handler->start_unit(state->context, (const char*) localname, 
+                    (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
+        }
+    };
+
+    xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(state->rootstarttag.c_str(), (int) state->rootstarttag.size());
+    context->_private = state;
+    context->sax = &roottagsax;
+
+    int status = xmlParseDocument(context);
+    if (status == -1)
+        ;
 
     // decide if this start element is for a unit (archive), or just a regular element (solo unit)
     if (state->is_archive) {
@@ -340,14 +376,6 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
 
     } else {
-
-        // solo unit, so we end up calling upper levels start_unit() with the data used for start_root()
-        if (state->context->handler->start_unit)
-            state->context->handler->start_unit(state->context, (const char*) state->root.localname, 
-                        (const char*) state->root.prefix, (const char*) state->root.URI,
-                        state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, state->root.attributes.data());
-
 
         // pass on the parameters to the regular start element
         start_element(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
@@ -624,7 +652,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     if (state->mode == ROOT) {
 
         state->context->is_archive = state->is_archive = false;
-
+/*
         if (state->context->handler->start_root)
             state->context->handler->start_root(state->context, (const char*) state->root.localname, 
                         (const char*) state->root.prefix, (const char*) state->root.URI,
@@ -638,6 +666,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
                         (const char*) state->root.prefix, (const char*) state->root.URI,
                         state->root.nb_namespaces, state->root.namespaces.data(),
                         state->root.nb_attributes, state->root.attributes.data());
+*/
     }
 
     if (ctxt->nameNr == 2 || !state->is_archive) {
@@ -719,7 +748,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     }
 
     // libxml2 handles things in the background differently for whitespace and escaped characters
-    // using a different buffer. While for POS (Plain Old Strings), it uses the original buffer
+    // using a different buffer. For POS (Plain Old Strings), it uses the original buffer
     if (state->base == ctxt->input->cur) {
 
         // plain old strings
