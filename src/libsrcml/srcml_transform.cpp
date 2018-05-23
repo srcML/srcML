@@ -488,17 +488,17 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     }
 
     // handle non-nodeset results
-    if (lasttrans && lasttrans->hasNumber()) {
+    if (lasttrans && lasttrans->getNumber()) {
 
-        fprintf(stderr, "DEBUG:  %s %s %d lasttrans.getNumber(): %zd\n", __FILE__,  __FUNCTION__, __LINE__, lasttrans->getNumber());
+        fprintf(stderr, "DEBUG:  %s %s %d lasttrans.getNumber(): %zd\n", __FILE__,  __FUNCTION__, __LINE__, *lasttrans->getNumber());
 
-    } else if (lasttrans && lasttrans->hasBoolean()) {
+    } else if (lasttrans && lasttrans->getBoolean()) {
 
-        fprintf(stderr, "DEBUG:  %s %s %d lasttrans->getBoolean(): %zd\n", __FILE__,  __FUNCTION__, __LINE__, lasttrans->getBoolean());
+        fprintf(stderr, "DEBUG:  %s %s %d lasttrans->getBoolean(): %zd\n", __FILE__,  __FUNCTION__, __LINE__, *lasttrans->getBoolean());
 
-    } else if (lasttrans && lasttrans->hasString()) {
+    } else if (lasttrans && lasttrans->getString()) {
 
-        fprintf(stderr, "DEBUG:  %s %s %d lasttrans->getString(): %s\n", __FILE__,  __FUNCTION__, __LINE__, lasttrans->getString().c_str());
+        fprintf(stderr, "DEBUG:  %s %s %d lasttrans->getString(): %s\n", __FILE__,  __FUNCTION__, __LINE__, lasttrans->getString()->c_str());
 
     }
 

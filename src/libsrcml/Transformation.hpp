@@ -26,6 +26,8 @@
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 
+#include <boost/optional.hpp>
+
 /**
  * Transformation
  *
@@ -47,14 +49,11 @@ public :
 
     virtual bool hasUnitWrapper() { return false; }
 
-    virtual bool hasNumber() { return false; }
-    virtual double getNumber() { return 0; }
+    virtual boost::optional<double> getNumber() { return boost::optional<double>(); }
 
-    virtual bool hasBoolean() { return false; }
-    virtual bool getBoolean() { return false; }
+    virtual boost::optional<bool> getBoolean() { return boost::optional<bool>(); }
 
-    virtual bool hasString() { return false; }
-    virtual std::string getString() { return ""; }
+    virtual boost::optional<std::string> getString() { return boost::optional<std::string>(); }
 };
 
 #endif

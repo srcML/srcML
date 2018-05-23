@@ -147,14 +147,11 @@ public :
 
     void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes);
 
-    bool hasNumber();
-    double getNumber();
+    boost::optional<double> getNumber();
 
-    bool hasBoolean();
-    bool getBoolean();
+    boost::optional<bool> getBoolean();
 
-    bool hasString();
-    std::string getString();
+    boost::optional<std::string> getString();
 
     bool hasUnitWrapper();
 

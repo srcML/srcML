@@ -335,14 +335,11 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
     return all;
 }
 
-bool xpathTransformation::hasNumber() { return nodetype == XPATH_NUMBER; }
-double xpathTransformation::getNumber() { return numberValue; }
+boost::optional<double> xpathTransformation::getNumber() { return numberValue; }
 
-bool xpathTransformation::hasBoolean() { return nodetype == XPATH_BOOLEAN; }
-bool xpathTransformation::getBoolean() { return boolValue; }
+boost::optional<bool> xpathTransformation::getBoolean() { return boolValue; }
 
-bool xpathTransformation::hasString() { return nodetype == XPATH_STRING; }
-std::string xpathTransformation::getString() { return stringValue; }
+boost::optional<std::string> xpathTransformation::getString() { return stringValue; }
 
 // process the resulting nodes
 void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) {
