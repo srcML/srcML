@@ -55,6 +55,7 @@
 
 #include <xsltTransformation.hpp>
 #include <xpathTransformation.hpp>
+#include <relaxngTransformation.hpp>
 
 xpath_arguments null_arguments;
 
@@ -267,9 +268,9 @@ static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDo
     if(archive == NULL || doc == 0) return SRCML_STATUS_INVALID_ARGUMENT;
 //    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    transform tran = { SRCML_RELAXNG, std::vector<std::string>(), null_arguments, doc, 0, 0, 0 };
+    relaxngTransformation* trans = new relaxngTransformation(doc);
 
-    archive->transformations.push_back(tran);
+    archive->ntransformations.push_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -366,11 +367,11 @@ int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param
 
     if(archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-    if(archive->transformations.size() == 0) return SRCML_STATUS_NO_TRANSFORMATION;
+    if(archive->ntransformations.size() == 0) return SRCML_STATUS_NO_TRANSFORMATION;
 
-    archive->transformations.back().xsl_parameters.pop_back();
-    archive->transformations.back().xsl_parameters.push_back(xpath_param_name);
-    archive->transformations.back().xsl_parameters.push_back(xpath_param_value);
+    archive->ntransformations.back()->xsl_parameters.pop_back();
+    archive->ntransformations.back()->xsl_parameters.push_back(xpath_param_name);
+    archive->ntransformations.back()->xsl_parameters.push_back(xpath_param_value);
 
     return SRCML_STATUS_OK;
 
@@ -390,10 +391,10 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
 
     if(archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
     if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-    if(archive->transformations.size() == 0) return SRCML_STATUS_NO_TRANSFORMATION;
+    if(archive->ntransformations.size() == 0) return SRCML_STATUS_NO_TRANSFORMATION;
 
-    archive->transformations.back().xsl_parameters.pop_back();
-    archive->transformations.back().xsl_parameters.push_back(xpath_param_name);
+    archive->ntransformations.back()->xsl_parameters.pop_back();
+    archive->ntransformations.back()->xsl_parameters.push_back(xpath_param_name);
 
     size_t xpath_param_value_length = strlen(xpath_param_value);
     char * string_value = new char[xpath_param_value_length + 3];
@@ -402,7 +403,7 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
     string_value[xpath_param_value_length + 1] = '"';
     string_value[xpath_param_value_length + 2] = 0;
 
-    archive->transformations.back().xsl_parameters.push_back(string_value);
+    archive->ntransformations.back()->xsl_parameters.push_back(string_value);
 
     return SRCML_STATUS_OK;
 

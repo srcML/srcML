@@ -35,8 +35,6 @@
 #include <Transformation.hpp>
 #include <srcml_translator.hpp>
 
-extern std::vector<transform> global_transformations;
-
 /**
  * srcml_xpath
  * @param input_buffer a parser input buffer

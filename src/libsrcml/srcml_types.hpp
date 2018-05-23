@@ -102,13 +102,6 @@ class srcml_sax2_reader;
 class srcml_translator;
 
 /**
- * SRCML_TRANSORM_TYPE
- *
- * Transformation types, xpath, xslt, and relaxng
- */
-enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
-
-/**
  * xpath_arguments
  *
  * Data structure to hold xpath arguments
@@ -134,32 +127,6 @@ enum SRCML_TRANSFORM_TYPE { SRCML_XPATH, SRCML_XSLT, SRCML_RELAXNG };
     /** the optional attribute value */
     boost::optional<std::string> attr_value;
  };
-
-/**
- * transform
- *
- * Struct to hold transformation information for latter application.
- */
-struct transform {
-    
-    /** a transformation type */
-    SRCML_TRANSFORM_TYPE type;
-
-    /** XSLT parameters */
-    std::vector<std::string> xsl_parameters;
-
-    /** the transformation to perform for XPath */
-    struct xpath_arguments arguments;
-
-    /** the transformation to perform for XSLT and relaxng */
-    xmlDocPtr doc;
-
-    xmlXPathCompExprPtr compiled_xpath;
-
-    xmlXPathObjectPtr result_nodes;
-
-    xsltStylesheetPtr compiled_stylesheet;
-};
 
 /**
  * SRCML_ARCHIVE_TYPE
@@ -221,9 +188,6 @@ struct srcml_archive {
     /** xmlParserInputBuffer for reading */
     xmlParserInputBufferPtr input = nullptr;
  
-    /** an array of transformations to apply */
-    std::vector<transform> transformations;
-
     std::vector<Transformation*> ntransformations;
 
     /** srcDiff revision number */
