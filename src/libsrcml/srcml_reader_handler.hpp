@@ -391,14 +391,11 @@ public :
         for (int pos = 0; pos < num_attributes; ++pos) {
 
             std::string attribute = (const char*) attributes[pos * 5];
-            std::string value;
-            value.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
+            std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
             value = attribute_revision(value);
 
             // Note: these are ignore instead of placing in attributes.
             if (attribute == "timestamp")
-                ;
-            else if (attribute == "hash")
                 ;
             else if (attribute == "language")
                 ;
