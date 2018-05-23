@@ -23,6 +23,9 @@
 #ifndef INCLUDED_TRANSFORMATION_HPP
 #define INCLUDED_TRANSFORMATION_HPP
 
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+
 /**
  * Transformation
  *
