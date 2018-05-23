@@ -226,6 +226,7 @@ struct srcml_unit {
 };
 
 /** Set the hash attribute for the srcml unit
+ * Note: Not publicly available, so declared here instead of srcml.h
  * @param unit A srcml_unit
  * @param hash A hash string
  * @retval SRCML_STATUS_OK on success
