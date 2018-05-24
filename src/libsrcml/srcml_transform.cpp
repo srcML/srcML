@@ -465,22 +465,23 @@ namespace std {
 
 int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units) {
 
+    if (archive == nullptr || unit == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
     // unit stays the same for no transformation
     if (archive->ntransformations.empty())
-        return 0;
+        return SRCML_STATUS_OK;
 
-    // create a DOM of the unit, automatically freed upon return
+    // create a DOM of the unit
     std::unique_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0));
-    if (doc == nullptr) {
-        return SRCML_STATUS_INVALID_ARGUMENT;
-    }
+    if (doc == nullptr)
+        return SRCML_STATUS_ERROR;
 
-    // apply transformations serially on the results from the previous transformation
+    // apply transformations sequentially on the results from the previous transformation
     bool hasUnitWrapper = false;
     std::unique_ptr<xmlNodeSet> fullresults(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc.get())));
-    if (fullresults == nullptr) {
-        return 0;
-    }
+    if (fullresults == nullptr)
+        return SRCML_STATUS_ERROR;
 
     Transformation* lasttrans = nullptr;
     for (auto* trans : archive->ntransformations) {
@@ -493,18 +494,16 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         // results of the previous transformation step
         std::unique_ptr<xmlNodeSet> pr(xmlXPathNodeSetCreate(0));
         if (pr == nullptr)
-            return 0;
+            return SRCML_STATUS_ERROR;
         fullresults.swap(pr);
 
         for (int i = 0; i < pr->nodeNr; ++i) {
             xmlDocSetRootElement(doc.get(), pr->nodeTab[i]);
 
-            xmlNodeSetPtr results = trans->apply(doc.get(), 0);
+            std::unique_ptr<xmlNodeSet> results(trans->apply(doc.get(), 0));
             if (results == nullptr)
                 break;
-            for (int i = 0; i < results->nodeNr; ++i) {
-                xmlXPathNodeSetAdd(fullresults.get(), results->nodeTab[i]);
-            }
+            xmlXPathNodeSetMerge(fullresults.get(), results.get());
         }
 
         // capture whether the content has a unit element
@@ -576,5 +575,5 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         *units = newunits;
     }
 
-    return 1;
+    return SRCML_STATUS_OK;
 }
