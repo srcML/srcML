@@ -18,37 +18,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <srcml_macros.hpp>
-
 #include <srcml.h>
 #include <srcml_types.hpp>
-#include <srcml_sax2_utilities.hpp>
-#include <srcml_translator.hpp>
 
-#include <stdio.h>
-
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#ifndef _MSC_BUILD
-#include <unistd.h>
-#else
+#ifdef _MSC_BUILD
 #include <io.h>
 #endif
-
-#define DLLOAD
-
-#ifdef DLLOAD
-#include <dlfcn.h>
-#else
-#include <libxslt/xslt.h>
-#include <libxslt/xsltInternals.h>
-#include <libxslt/xsltutils.h>
-#include <libexslt/exslt.h>
-#endif
-
-#include <sax2_srcsax_handler.hpp>
-#include <srcml_sax2_reader.hpp>
 
 #include <libxml/parser.h>
 #include <libxml/xmlIO.h>
@@ -56,6 +31,39 @@
 #include <xsltTransformation.hpp>
 #include <xpathTransformation.hpp>
 #include <relaxngTransformation.hpp>
+
+/**
+ * srcml_append_transform_xpath_element_attribute
+ * @param archive a srcml archive
+ * @param xpath_string an XPath expression
+ * @param prefix the element prefix
+ * @param namespace_uri the element namespace
+ * @param element the element name
+ *
+ * Append the XPath expression to the list
+ * of transformation/queries.  As of yet no way to specify context.
+ * Instead of outputting the results each in a separte unit tag.  Output the complete
+ * archive marking the xpath results with a user provided element.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
+int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archive, const char* xpath_string,
+                                                    const char* prefix, const char* namespace_uri,
+                                                    const char* element,
+                                                    const char* attr_prefix, const char* attr_namespace_uri,
+                                                    const char* attr_name, const char* attr_value) {
+    if (archive == NULL || xpath_string == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+//    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
+//        return SRCML_STATUS_INVALID_IO_OPERATION;
+
+    xpathTransformation* trans = new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
+            attr_prefix, attr_namespace_uri, attr_name, attr_value);
+
+    archive->ntransformations.push_back(trans);
+
+    return SRCML_STATUS_OK;
+}
 
 /**
  * srcml_append_transform_xpath
@@ -89,8 +97,8 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const char* xpath_string,
-                                                            const char* prefix, const char* namespace_uri,
-                                                            const char* attr_name, const char* attr_value) {
+                                            const char* prefix, const char* namespace_uri,
+                                            const char* attr_name, const char* attr_value) {
 
     return srcml_append_transform_xpath_element_attribute(archive, xpath_string, 0, 0, 0, prefix, namespace_uri, attr_name, attr_value);
 }
@@ -110,42 +118,11 @@ int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-int srcml_append_transform_xpath_element (struct srcml_archive* archive, const char* xpath_string,
+int srcml_append_transform_xpath_element(struct srcml_archive* archive, const char* xpath_string,
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element) {
 
     return srcml_append_transform_xpath_element_attribute(archive, xpath_string, prefix, namespace_uri, element, 0, 0, 0, 0);
-}
-
-/**
- * srcml_append_transform_xpath_element_attribute
- * @param archive a srcml archive
- * @param xpath_string an XPath expression
- * @param prefix the element prefix
- * @param namespace_uri the element namespace
- * @param element the element name
- *
- * Append the XPath expression to the list
- * of transformation/queries.  As of yet no way to specify context.
- * Instead of outputting the results each in a separte unit tag.  Output the complete
- * archive marking the xpath results with a user provided element.
- *
- * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
- */
-int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archive, const char* xpath_string,
-                                                            const char* prefix, const char* namespace_uri,
-                                                            const char* element,
-                                                            const char* attr_prefix, const char* attr_namespace_uri,
-                                                            const char* attr_name, const char* attr_value) {
-    if(archive == NULL || xpath_string == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-//    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-
-    xpathTransformation* trans = new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
-            attr_prefix, attr_namespace_uri, attr_name, attr_value);
-
-    archive->ntransformations.push_back(trans);
-
-    return SRCML_STATUS_OK;
 }
 
 #ifdef WITH_LIBXSLT
@@ -161,8 +138,10 @@ int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archiv
  */
 static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPtr doc) {
 
-    if(archive == NULL || doc == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-  //  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+    if (archive == NULL || doc == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+  //  if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
+ //   return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xsltTransformation* trans = new xsltTransformation(doc, std::vector<std::string>());
 
@@ -183,10 +162,14 @@ static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPt
  */
 int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xslt_filename) {
 
-    if(archive == NULL || xslt_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-  //  if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+    if (archive == NULL || xslt_filename == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+  //  if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
+//    return SRCML_STATUS_INVALID_IO_OPERATION;
 
     xmlDocPtr doc = xmlReadFile(xslt_filename, 0, 0);
+    if (doc == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_xslt_internal(archive, doc);
 }
@@ -204,9 +187,12 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
  */
 int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_buffer, size_t size) {
 
-    if(archive == NULL || xslt_buffer == 0 || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (archive == NULL || xslt_buffer == 0 || size == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlDocPtr doc = xmlReadMemory(xslt_buffer, (int)size, 0, 0, 0);
+    if (doc == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_xslt_internal(archive, doc);
 }
@@ -223,10 +209,13 @@ int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_
  */
 int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
 
-    if(archive == NULL || xslt_file == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (archive == NULL || xslt_file == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, xslt_file, 0, 0, 0);
+    if (doc == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_xslt_internal(archive, doc);
 }
@@ -243,9 +232,12 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
  */
 int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
 
-    if(archive == NULL || xslt_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (archive == NULL || xslt_fd < 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlDocPtr doc = xmlReadFd(xslt_fd, 0, 0, 0);
+    if (doc == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_xslt_internal(archive, doc);
 }
@@ -263,8 +255,10 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
  */
 static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDocPtr doc) {
 
-    if(archive == NULL || doc == 0) return SRCML_STATUS_INVALID_ARGUMENT;
-//    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
+    if (archive == NULL || doc == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+//    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
+//    return SRCML_STATUS_INVALID_IO_OPERATION;
 
     relaxngTransformation* trans = new relaxngTransformation(doc);
 
@@ -285,9 +279,12 @@ static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDo
  */
 int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* relaxng_filename) {
 
-    if(archive == NULL || relaxng_filename == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (archive == NULL || relaxng_filename == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlDocPtr doc = xmlReadFile(relaxng_filename, 0, 0);
+    if (doc == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_relaxng_internal(archive, doc);
 }
@@ -305,9 +302,12 @@ int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* 
  */
 int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* relaxng_buffer, size_t size) {
 
-    if(archive == NULL || relaxng_buffer == 0 || size == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (archive == NULL || relaxng_buffer == 0 || size == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlDocPtr doc = xmlReadMemory(relaxng_buffer, (int)size, 0, 0, 0);
+    if (doc == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_relaxng_internal(archive, doc);
 }
@@ -324,10 +324,13 @@ int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* re
  */
 int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_file) {
 
-    if(archive == NULL || relaxng_file == 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (archive == NULL || relaxng_file == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlRegisterDefaultInputCallbacks();
     xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, relaxng_file, 0, 0, 0);
+    if (doc == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_relaxng_internal(archive, doc);
 }
@@ -344,9 +347,12 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
  */
 int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
 
-    if(archive == NULL || relaxng_fd < 0) return SRCML_STATUS_INVALID_ARGUMENT;
+    if (archive == NULL || relaxng_fd < 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlDocPtr doc = xmlReadFd(relaxng_fd, 0, 0, 0);
+    if (doc == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_relaxng_internal(archive, doc);
 }
@@ -363,16 +369,18 @@ int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
  */
 int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param_name, const char* xpath_param_value) {
 
-    if(archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-    if(archive->ntransformations.size() == 0) return SRCML_STATUS_NO_TRANSFORMATION;
+    if (archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
+        return SRCML_STATUS_INVALID_IO_OPERATION;
+    if (archive->ntransformations.size() == 0)
+        return SRCML_STATUS_NO_TRANSFORMATION;
 
     archive->ntransformations.back()->xsl_parameters.pop_back();
     archive->ntransformations.back()->xsl_parameters.push_back(xpath_param_name);
     archive->ntransformations.back()->xsl_parameters.push_back(xpath_param_value);
 
     return SRCML_STATUS_OK;
-
 }
 
 /**
@@ -387,9 +395,12 @@ int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param
  */
 int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath_param_name, const char* xpath_param_value) {
 
-    if(archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL) return SRCML_STATUS_INVALID_ARGUMENT;
-    if(archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW) return SRCML_STATUS_INVALID_IO_OPERATION;
-    if(archive->ntransformations.size() == 0) return SRCML_STATUS_NO_TRANSFORMATION;
+    if (archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
+        return SRCML_STATUS_INVALID_IO_OPERATION;
+    if (archive->ntransformations.size() == 0)
+        return SRCML_STATUS_NO_TRANSFORMATION;
 
     archive->ntransformations.back()->xsl_parameters.pop_back();
     archive->ntransformations.back()->xsl_parameters.push_back(xpath_param_name);
@@ -404,7 +415,6 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
     archive->ntransformations.back()->xsl_parameters.push_back(string_value);
 
     return SRCML_STATUS_OK;
-
 }
 
 /**
@@ -420,10 +430,9 @@ int srcml_clear_transforms(srcml_archive* archive) {
     if (archive == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    for (const auto* p : archive->ntransformations) {
-
+    // cleanup the transformations
+    for (const auto* p : archive->ntransformations)
         delete p;
-    }
     archive->ntransformations.clear();
 
     return SRCML_STATUS_OK;
@@ -448,6 +457,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     // create a DOM of the unit
     xmlDocPtr doc = xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0);
+    if (doc == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     // apply transformations serially on the results from the previous transformation
     bool hasUnitWrapper = false;
@@ -479,6 +490,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             }
         }
 
+        // capture whether the content has a unit element
         hasUnitWrapper = trans->hasUnitWrapper();
 
         // if there are no results, then we can't apply further transformations
@@ -487,6 +499,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     }
 
     // handle non-nodeset results
+    // @todo Implement these
     if (lasttrans && lasttrans->getNumber()) {
 
         fprintf(stderr, "DEBUG:  %s %s %d lasttrans.getNumber(): %zd\n", __FILE__,  __FUNCTION__, __LINE__, *lasttrans->getNumber());
