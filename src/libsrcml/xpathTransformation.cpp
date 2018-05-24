@@ -149,18 +149,18 @@ void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* 
     xmlSetNsProp(node, ns, (const xmlChar *) attr_name.c_str(), (const xmlChar *) newvalue);
 }
 
-xmlXPathContextPtr xpathTransformation::set_context() {
+xmlXPathContextPtr createContext(xmlDocPtr doc) {
 
-
+    auto context = xmlXPathNewContext(doc);
 #if LIBEXSLT_VERSION > 813
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-        typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
+    typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
 
-        /** create a variable for dynamically load from library */
-        typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
+    /** create a variable for dynamically load from library */
+    typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
 #define dlsymvar(type, name) type name;  *(VOIDPTR *)(&name) = dlsym(handle, #name)
 
-    void* handle = dlopen_libexslt();
+    static void* handle = dlopen_libexslt();
     if (handle) {
 
         dlerror();
@@ -209,7 +209,6 @@ xmlXPathContextPtr xpathTransformation::set_context() {
 
     return context;
 }
-
 #pragma GCC diagnostic push
 
 bool xpathTransformation::hasUnitWrapper() { return unitWrapped; }
@@ -223,7 +222,7 @@ bool xpathTransformation::hasUnitWrapper() { return unitWrapped; }
  */
 xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
-    xmlXPathContextPtr context = xmlXPathNewContext(doc);
+    xmlXPathContextPtr context = createContext(doc);
 
 //    xpathsrcMLRegister(context);
     // TODO:  Detect error

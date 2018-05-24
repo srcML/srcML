@@ -116,8 +116,6 @@ public :
      */
     void append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri);
 
-    virtual xmlXPathContextPtr set_context();
-
 #pragma GCC diagnostic push
 
     /**
@@ -151,7 +149,6 @@ private :
     boost::optional<double> numberValue = 0;
     boost::optional<bool> boolValue = false;
     boost::optional<std::string> stringValue;
-    xmlXPathContextPtr context = nullptr;
     xmlXPathCompExprPtr compiled_xpath = nullptr;
     bool unitWrapped = false;
 
