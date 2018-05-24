@@ -83,8 +83,14 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
     } else if (input.protocol == "filelist") {
 
+        srcml_archive_enable_full_archive(srcml_arch);
+
         // always create the archive
         int status = 0;
+        int num = src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
+        if (num == 0)
+            return 0;
+
         if (contains<int>(destination)) {
 
             status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
@@ -96,10 +102,6 @@ int srcml_handler_dispatch(ParseQueue& queue,
         if (status != SRCML_STATUS_OK)
             return 0;
         createdsrcml = true;
-
-        srcml_archive_enable_full_archive(srcml_arch);
-
-        int num = src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
 
         return num;
 
