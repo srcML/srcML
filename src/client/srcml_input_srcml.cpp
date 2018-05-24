@@ -97,6 +97,7 @@ int srcml_input_srcml(ParseQueue& queue,
         ParseRequest* prequest = new ParseRequest;
         prequest->srcml_arch = srcml_output_archive;
         prequest->unit = unit;
+        prequest->needsparsing = false;
 
         // hand request off to the processing queue
         queue.schedule(prequest);

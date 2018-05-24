@@ -111,7 +111,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         if (request->disk_filename) {
             status = srcml_unit_parse_filename(request->unit, request->disk_filename->c_str());
         }
-        else if (request->unit) {
+        else if (request->needsparsing) {
             status = srcml_unit_parse_memory(request->unit, &request->buffer.front(), request->buffer.size());
         }
         if (status != SRCML_STATUS_OK) {
