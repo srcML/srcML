@@ -428,8 +428,9 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         if (pos >= 0) {
             // merge the namespaces from the root into this one
             state->unitsrcml.assign((const char*) state->base, pos);
-            if (state->is_archive)
+            if (state->is_archive) {
                 state->unitsrcml.append(state->rootnsstr);
+            }
             state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
         }
 
