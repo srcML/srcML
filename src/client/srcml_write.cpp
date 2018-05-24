@@ -76,7 +76,10 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
 
         // if no transformed units, write the main unit
         if (request->units.empty()) {
-            srcml_archive_write_unit(request->srcml_arch, request->unit);
+            int status = srcml_archive_write_unit(request->srcml_arch, request->unit);
+            if (status != SRCML_STATUS_OK) {
+                SRCMLstatus(ERROR_MSG) << "Error in writing parsed unit to archive" << '\n';
+            }
         }
 
         // logging

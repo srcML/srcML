@@ -222,6 +222,7 @@ int src_input_text(ParseQueue& queue,
 
         // schedule for parsing
 end:    count += 1;
+
         queue.schedule(prequest);
     }
 
