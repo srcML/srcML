@@ -261,12 +261,10 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
         return nullptr;
     }
 
-    nodetype = result_nodes->type;
-
     // update scalar values, if the type is right
-    numberValue = nodetype == XPATH_NUMBER ? result_nodes->floatval : decltype(numberValue)();
-    boolValue = nodetype == XPATH_BOOLEAN ? result_nodes->boolval : decltype(boolValue)();
-    stringValue = nodetype == XPATH_STRING ? boost::optional<std::string>((const char*) result_nodes->stringval) : decltype(stringValue)();
+    numberValue = result_nodes->type == XPATH_NUMBER ? result_nodes->floatval : decltype(numberValue)();
+    boolValue = result_nodes->type == XPATH_BOOLEAN ? result_nodes->boolval : decltype(boolValue)();
+    stringValue = result_nodes->type == XPATH_STRING ? boost::optional<std::string>((const char*) result_nodes->stringval) : decltype(stringValue)();
 
     // when result is not a nodeset, then return nullptr, and the calling code will check the other values
     if (result_nodes->type != XPATH_NODESET)

@@ -148,7 +148,6 @@ private :
     std::string attr_uri;
     std::string attr_name;
     std::string attr_value;
-    int nodetype = 0;
     boost::optional<double> numberValue = 0;
     boost::optional<bool> boolValue = false;
     boost::optional<std::string> stringValue;
