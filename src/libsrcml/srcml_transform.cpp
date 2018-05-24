@@ -449,20 +449,35 @@ int srcml_clear_transforms(srcml_archive* archive) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
+
+// automatic deleter functions for std::unique_ptr
+namespace std {
+    template<>
+    struct default_delete<xmlDoc> {
+        void operator()(xmlDoc* doc) { xmlFreeDoc(doc); }
+    };
+
+    template<>
+    struct default_delete<xmlNodeSet> {
+        void operator()(xmlNodeSet* nodeSet) { xmlXPathFreeNodeSet(nodeSet); }
+    };
+}
+
 int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units) {
 
     // unit stays the same for no transformation
     if (archive->ntransformations.empty())
         return 0;
 
-    // create a DOM of the unit
-    xmlDocPtr doc = xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0);
-    if (doc == nullptr)
+    // create a DOM of the unit, automatically freed upon return
+    std::unique_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0));
+    if (doc == nullptr) {
         return SRCML_STATUS_INVALID_ARGUMENT;
+    }
 
     // apply transformations serially on the results from the previous transformation
     bool hasUnitWrapper = false;
-    xmlNodeSetPtr fullresults = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+    std::unique_ptr<xmlNodeSet> fullresults(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc.get())));
     if (fullresults == nullptr) {
         return 0;
     }
@@ -470,23 +485,25 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     Transformation* lasttrans = nullptr;
     for (auto* trans : archive->ntransformations) {
 
+        // keep track of the last transformation processed, which might not be the last one in the list
         lasttrans = trans;
 
         // preserve the fullresults to iterate through
-        xmlNodeSetPtr pr = fullresults;
-
         // collect results from this transformation applied to the potentially multiple
         // results of the previous transformation step
-        fullresults = xmlXPathNodeSetCreate(0);
+        std::unique_ptr<xmlNodeSet> pr(xmlXPathNodeSetCreate(0));
+        if (pr == nullptr)
+            return 0;
+        fullresults.swap(pr);
 
         for (int i = 0; i < pr->nodeNr; ++i) {
-            xmlDocSetRootElement(doc, pr->nodeTab[i]);
+            xmlDocSetRootElement(doc.get(), pr->nodeTab[i]);
 
-            xmlNodeSetPtr results = trans->apply(doc, 0);
+            xmlNodeSetPtr results = trans->apply(doc.get(), 0);
             if (results == nullptr)
                 break;
             for (int i = 0; i < results->nodeNr; ++i) {
-                xmlXPathNodeSetAdd(fullresults, results->nodeTab[i]);
+                xmlXPathNodeSetAdd(fullresults.get(), results->nodeTab[i]);
             }
         }
 
@@ -541,9 +558,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             return len;
 
         }, 0, &(nunit->srcml), 0);
-        xmlNodeDumpOutput(output, doc, xmlDocGetRootElement(doc), 0, 0, 0);
+        xmlNodeDumpOutput(output, doc.get(), xmlDocGetRootElement(doc.get()), 0, 0, 0);
 
         // very important to flush to make sure the unit contents are all present
+        // also performs a free of resources
         xmlOutputBufferClose(output);
 
         // mark inside the units
@@ -557,8 +575,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (units) {
         *units = newunits;
     }
-
-    xmlFreeDoc(doc);
 
     return 1;
 }
