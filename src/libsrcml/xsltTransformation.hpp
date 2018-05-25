@@ -93,7 +93,8 @@ public :
     virtual TransformationResult apply(xmlDocPtr doc, int position);
 
 private :
-    xsltStylesheetPtr stylesheet;
+    xmlDocPtr sdoc = nullptr;
+    xsltStylesheetPtr stylesheet = nullptr;
     std::vector<std::string> params;
     std::vector<const char*> cparams;
 #ifdef DLLOAD

@@ -106,8 +106,12 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     dlexsltRegisterAll(libexslt_handle);
 #endif
 
+    // the stylesheet contains a reference to this doc,
+    // so not copying appears to create a crash
+    sdoc = xmlCopyDoc(xslt, 1);
+
     // parse the stylesheet
-    stylesheet = xsltParseStylesheetDoc(xslt);
+    stylesheet = xsltParseStylesheetDoc(sdoc);
     if (!stylesheet)
         throw;
 
