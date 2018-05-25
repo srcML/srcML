@@ -306,11 +306,7 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
         strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->children->name, "unit"))
         unitWrapped = true;
 
-    auto all = xmlXPathNodeSetCreate(result_nodes->nodesetval->nodeTab[0]);
-    for (int i = 1; i < result_nodes->nodesetval->nodeNr; ++i)
-        xmlXPathNodeSetAdd(all, result_nodes->nodesetval->nodeTab[i]);
-
-    return all;
+    return result_nodes->nodesetval;
 }
 
 boost::optional<double> xpathTransformation::getNumber() { return numberValue; }
