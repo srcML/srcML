@@ -32,6 +32,8 @@
 #include <xpathTransformation.hpp>
 #include <relaxngTransformation.hpp>
 
+#include <libxml2_utilities.hpp>
+
 #include <algorithm>
 
 /**
@@ -451,20 +453,6 @@ int srcml_clear_transforms(srcml_archive* archive) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-
-// automatic deleter functions for std::unique_ptr
-namespace std {
-    template<>
-    struct default_delete<xmlDoc> {
-        void operator()(xmlDoc* doc) { xmlFreeDoc(doc); }
-    };
-
-    template<>
-    struct default_delete<xmlNodeSet> {
-        void operator()(xmlNodeSet* nodeSet) { xmlXPathFreeNodeSet(nodeSet); }
-    };
-}
-
 int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units) {
 
     if (archive == nullptr || unit == nullptr)
