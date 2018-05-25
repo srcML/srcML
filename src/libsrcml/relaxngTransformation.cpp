@@ -32,21 +32,17 @@
  */
 relaxngTransformation::relaxngTransformation(/* OPTION_TYPE& options, */ xmlDocPtr relaxng) {
 
-    relaxng_parser_ctxt = xmlRelaxNGNewDocParserCtxt(relaxng);
-    rng = xmlRelaxNGParse(relaxng_parser_ctxt);
-    rngctx = xmlRelaxNGNewValidCtxt(rng);
-}
+    relaxng_parser_ctxt = decltype(relaxng_parser_ctxt)(xmlRelaxNGNewDocParserCtxt(relaxng));
+    if (relaxng_parser_ctxt == nullptr)
+        throw;
 
-/**
- * ~relaxngTransformation
- *
- * Destructor.  Closes dynamically loaded library.
- */
-relaxngTransformation::~relaxngTransformation() {
+    rng = decltype(rng)(xmlRelaxNGParse(relaxng_parser_ctxt.get()));
+    if (rng == nullptr)
+        throw;
 
-    xmlRelaxNGFreeValidCtxt(rngctx);
-    xmlRelaxNGFree(rng);
-    xmlRelaxNGFreeParserCtxt(relaxng_parser_ctxt);
+    rngctx = decltype(rngctx)(xmlRelaxNGNewValidCtxt(rng.get()));
+    if (rngctx == nullptr)
+        throw;
 }
 
 /**
@@ -58,7 +54,7 @@ relaxngTransformation::~relaxngTransformation() {
  */
 TransformationResult relaxngTransformation::relaxngTransformation::apply(xmlDocPtr doc, int /* position */) {
 
-    int n = xmlRelaxNGValidateDoc(rngctx, doc);
+    int n = xmlRelaxNGValidateDoc(rngctx.get(), doc);
     if (n == 0)
         return TransformationResult();
 

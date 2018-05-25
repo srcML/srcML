@@ -21,9 +21,11 @@
 #ifndef INCLUDED_LIBXML2_UTILTIES_HPP
 #define INCLUDED_LIBXML2_UTILTIES_HPP
 
+#include <libxml/xpath.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xmlIO.h>
+#include <libxml/relaxng.h>
 #include <algorithm>
 
 // std::unique_ptr deleter functions for libxml2
@@ -51,6 +53,20 @@ namespace std {
         void operator()(xmlParserInputBuffer* buffer) { xmlFreeParserInputBuffer(buffer); }
     };
 
+    template<>
+    struct default_delete<xmlRelaxNGValidCtxt> {
+        void operator()(xmlRelaxNGValidCtxt* rngctx) { xmlRelaxNGFreeValidCtxt(rngctx); }
+    };
+
+    template<>
+    struct default_delete<xmlRelaxNGParserCtxt> {
+        void operator()(xmlRelaxNGParserCtxt* ctxt) { xmlRelaxNGFreeParserCtxt(ctxt); }
+    };
+
+    template<>
+    struct default_delete<xmlRelaxNG> {
+        void operator()(xmlRelaxNG* rng) { xmlRelaxNGFree(rng); }
+    };
 }
 
 #endif

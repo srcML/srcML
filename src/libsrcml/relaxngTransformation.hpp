@@ -26,6 +26,9 @@
 #include <libxml/parser.h>
 #include <libxml/relaxng.h>
 
+#include <libxml2_utilities.hpp>
+
+#include <memory>
 #include <vector>
 #include <string>
 
@@ -51,13 +54,6 @@ public :
     relaxngTransformation(/*OPTION_TYPE& options,*/ xmlDocPtr relaxng);
 
     /**
-     * ~relaxngTransformation
-     *
-     * Destructor.  Closes dynamically loaded library.
-     */
-    virtual ~relaxngTransformation();
-
-    /**
      * apply
      *
      * Apply relaxng program, writing results.
@@ -67,9 +63,9 @@ public :
     virtual TransformationResult apply(xmlDocPtr doc, int position);
 
 private :
-    xmlRelaxNGValidCtxtPtr rngctx;
-    xmlRelaxNGParserCtxtPtr relaxng_parser_ctxt;
-    xmlRelaxNGPtr rng;
+    std::unique_ptr<xmlRelaxNGValidCtxt> rngctx;
+    std::unique_ptr<xmlRelaxNGParserCtxt> relaxng_parser_ctxt;
+    std::unique_ptr<xmlRelaxNG> rng;
 };
 
 #endif
