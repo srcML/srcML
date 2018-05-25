@@ -281,8 +281,7 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
         unitWrapped = true;
 
-        auto all = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
-        return all;
+        return xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
     }
 
     // convert all the found nodes
@@ -296,8 +295,7 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
 
         unitWrapped = true;
 
-        auto all = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
-        return all;
+        return xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
     }
 
     unitWrapped = false;
