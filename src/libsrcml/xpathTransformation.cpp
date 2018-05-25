@@ -211,8 +211,6 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
 }
 #pragma GCC diagnostic push
 
-bool xpathTransformation::hasUnitWrapper() { return unitWrapped; }
-
 /**
  * apply
  *
@@ -220,7 +218,7 @@ bool xpathTransformation::hasUnitWrapper() { return unitWrapped; }
  * 
  * @returns true on success false on failure.
  */
-xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
+TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
 
     xmlXPathContextPtr context = createContext(doc);
 
@@ -257,31 +255,38 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
     if (result_nodes == 0) {
         fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
-        return nullptr;
+        return TransformationResult();
     }
 
+    TransformationResult tresult;
+    tresult.unitWrapped = false;
+
     // update scalar values, if the type is right
-    numberValue = result_nodes->type == XPATH_NUMBER ? result_nodes->floatval : decltype(numberValue)();
-    boolValue = result_nodes->type == XPATH_BOOLEAN ? result_nodes->boolval : decltype(boolValue)();
-    stringValue = result_nodes->type == XPATH_STRING ? boost::optional<std::string>((const char*) result_nodes->stringval) : decltype(stringValue)();
+    if (result_nodes->type == XPATH_NUMBER)
+        tresult.numberValue = result_nodes->floatval;
+    if (result_nodes->type == XPATH_BOOLEAN)
+        tresult.boolValue = result_nodes->boolval;
+    if (result_nodes->type == XPATH_STRING)
+        tresult.stringValue = boost::optional<std::string>((const char*) result_nodes->stringval);
 
     // when result is not a nodeset, then return nullptr, and the calling code will check the other values
     if (result_nodes->type != XPATH_NODESET)
-        return nullptr;
+        return tresult;
 
     if (!result_nodes->nodesetval)
-        return nullptr;
+        return tresult;
 
     if (!result_nodes->nodesetval->nodeNr)
-        return nullptr;
+        return tresult;
 
     if (!element.empty()) {
 
         addElementXPathResults(doc, result_nodes);
 
-        unitWrapped = true;
+        tresult.unitWrapped = true;
+        tresult.nodeset = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
 
-        return xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+        return tresult;
     }
 
     // convert all the found nodes
@@ -293,25 +298,20 @@ xmlNodeSetPtr xpathTransformation::apply(xmlDocPtr doc, int position) {
             append_attribute_to_node(onode, attr_prefix.c_str(), attr_value.c_str());
         }
 
-        unitWrapped = true;
+        tresult.unitWrapped = true;
+        tresult.nodeset = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
 
-        return xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+        return tresult;
     }
 
-    unitWrapped = false;
-    if (result_nodes && result_nodes->nodesetval && result_nodes->nodesetval->nodeTab[0] &&
-        result_nodes->nodesetval->nodeTab[0]->children && result_nodes->nodesetval->nodeTab[0]->children->name &&
+    if (result_nodes->nodesetval->nodeTab[0]->children && result_nodes->nodesetval->nodeTab[0]->children->name &&
         strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->children->name, "unit"))
-        unitWrapped = true;
+        tresult.unitWrapped = true;
 
-    return result_nodes->nodesetval;
+    tresult.nodeset = result_nodes->nodesetval;
+
+    return tresult;
 }
-
-boost::optional<double> xpathTransformation::getNumber() { return numberValue; }
-
-boost::optional<bool> xpathTransformation::getBoolean() { return boolValue; }
-
-boost::optional<std::string> xpathTransformation::getString() { return stringValue; }
 
 // process the resulting nodes
 void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) {

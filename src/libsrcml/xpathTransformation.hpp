@@ -125,17 +125,9 @@ public :
      * 
      * @returns true on success false on failure.
      */
-    virtual xmlNodeSetPtr apply(xmlDocPtr doc, int position);
+    virtual TransformationResult apply(xmlDocPtr doc, int position);
 
     void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes);
-
-    boost::optional<double> getNumber();
-
-    boost::optional<bool> getBoolean();
-
-    boost::optional<std::string> getString();
-
-    bool hasUnitWrapper();
 
 private :
     std::string xpath;
@@ -146,14 +138,9 @@ private :
     std::string attr_uri;
     std::string attr_name;
     std::string attr_value;
-    boost::optional<double> numberValue = 0;
-    boost::optional<bool> boolValue = false;
-    boost::optional<std::string> stringValue;
     xmlXPathCompExprPtr compiled_xpath = nullptr;
-    bool unitWrapped = false;
 
     static const char* const simple_xpath_attribute_name;
-
 };
 
 #endif

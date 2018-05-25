@@ -64,9 +64,7 @@ public :
      * 
      * @returns true on success false on failure.
      */
-    virtual xmlNodeSetPtr apply(xmlDocPtr doc, int position);
-
-    virtual bool hasUnitWrapper() { return true; }
+    virtual TransformationResult apply(xmlDocPtr doc, int position);
 
 private :
     xmlRelaxNGValidCtxtPtr rngctx;

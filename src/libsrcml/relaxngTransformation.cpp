@@ -56,11 +56,12 @@ relaxngTransformation::~relaxngTransformation() {
  * 
  * @returns true on success false on failure.
  */
-xmlNodeSetPtr relaxngTransformation::relaxngTransformation::apply(xmlDocPtr doc, int /* position */) {
+TransformationResult relaxngTransformation::relaxngTransformation::apply(xmlDocPtr doc, int /* position */) {
 
     int n = xmlRelaxNGValidateDoc(rngctx, doc);
     if (n == 0)
-        return nullptr;
+        return TransformationResult();
 
-    return xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+    // transformation result is nodeset with single unit, and the unit is wrapped
+    return TransformationResult(xmlXPathNodeSetCreate(doc->children), true);
 }

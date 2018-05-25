@@ -135,7 +135,7 @@ xsltTransformation::~xsltTransformation() {
  * 
  * @returns true on success false on failure.
  */
-xmlNodeSetPtr xsltTransformation::apply(xmlDocPtr doc, int position) {
+TransformationResult xsltTransformation::apply(xmlDocPtr doc, int position) {
 
     // position passed to XSLT program
     setPosition(position);
@@ -145,10 +145,11 @@ xmlNodeSetPtr xsltTransformation::apply(xmlDocPtr doc, int position) {
     if (!res) {
         fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
 
-        return nullptr;
+        return TransformationResult();
     }
 
-    return xmlXPathNodeSetCreate(res->children);
+    // transformation result is nodeset with single unit, and the unit is wrapped
+    return TransformationResult(xmlXPathNodeSetCreate(res->children), true);
 }
 
 /**

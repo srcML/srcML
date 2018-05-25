@@ -483,6 +483,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return SRCML_STATUS_ERROR;
 
     Transformation* lasttrans = nullptr;
+    TransformationResult lastresult;
     for (auto* trans : archive->ntransformations) {
 
         // keep track of the last transformation processed, which might not be the last one in the list
@@ -499,7 +500,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         for (int i = 0; i < pr->nodeNr; ++i) {
             xmlDocSetRootElement(doc.get(), pr->nodeTab[i]);
 
-            std::unique_ptr<xmlNodeSet> results(trans->apply(doc.get(), 0));
+            TransformationResult tresult = trans->apply(doc.get(), 0);
+            lastresult = tresult;
+            std::unique_ptr<xmlNodeSet> results(tresult.nodeset);
             if (results == nullptr)
                 break;
             xmlXPathNodeSetMerge(fullresults.get(), results.get());
@@ -515,19 +518,11 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     // handle non-nodeset results
     // @todo Implement these
-    if (lasttrans && lasttrans->getNumber()) {
+    lastresult.numberValue;
 
-        fprintf(stderr, "DEBUG:  %s %s %d lasttrans.getNumber(): %zd\n", __FILE__,  __FUNCTION__, __LINE__, *lasttrans->getNumber());
+    lastresult.boolValue;
 
-    } else if (lasttrans && lasttrans->getBoolean()) {
-
-        fprintf(stderr, "DEBUG:  %s %s %d lasttrans->getBoolean(): %zd\n", __FILE__,  __FUNCTION__, __LINE__, *lasttrans->getBoolean());
-
-    } else if (lasttrans && lasttrans->getString()) {
-
-        fprintf(stderr, "DEBUG:  %s %s %d lasttrans->getString(): %s\n", __FILE__,  __FUNCTION__, __LINE__, lasttrans->getString()->c_str());
-
-    }
+    lastresult.stringValue;
 
     // create units out of the transformation results
     srcml_unit** newunits = new srcml_unit*[fullresults->nodeNr + 1];
@@ -563,9 +558,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         xmlOutputBufferClose(output);
 
         // mark inside the units
-        // @todo Not being done right
-        nunit->content_begin = hasUnitWrapper ? (int) nunit->srcml.find_first_of('>') + 1 : 0;
-        nunit->content_end =   hasUnitWrapper ? (int) nunit->srcml.find_last_of('<') + 1  : (int) nunit->srcml.size() + 1;
+        bool unit_wrapped = true;
+        nunit->content_begin = unit_wrapped ? (int) nunit->srcml.find_first_of('>') + 1 : 0;
+        nunit->content_end =   unit_wrapped ? (int) nunit->srcml.find_last_of('<') + 1  : (int) nunit->srcml.size() + 1;
 
         newunits[i] = nunit;
     }

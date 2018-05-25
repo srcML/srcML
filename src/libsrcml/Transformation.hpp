@@ -28,6 +28,16 @@
 
 #include <boost/optional.hpp>
 
+struct TransformationResult {
+    TransformationResult(xmlNodeSetPtr nodeset = nullptr, bool wrapped = false)
+        : nodeset(nodeset), unitWrapped(wrapped) {}
+    xmlNodeSetPtr nodeset = nullptr;
+    boost::optional<double> numberValue = 0;
+    boost::optional<bool> boolValue = false;
+    boost::optional<std::string> stringValue;
+    bool unitWrapped = false;
+};
+
 /**
  * Transformation
  *
@@ -43,7 +53,7 @@ public :
      * 
      * @returns document on success, NULL on failure.
      */
-    virtual xmlNodeSetPtr apply(xmlDocPtr doc, int position) = 0;
+    virtual TransformationResult apply(xmlDocPtr doc, int position) = 0;
 
     virtual ~Transformation() {}
 
