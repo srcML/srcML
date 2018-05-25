@@ -171,11 +171,11 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
   //  if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
 //    return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    xmlDocPtr doc = xmlReadFile(xslt_filename, 0, 0);
+    std::unique_ptr<xmlDoc> doc(xmlReadFile(xslt_filename, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_xslt_internal(archive, doc);
+    return srcml_append_transform_xslt_internal(archive, doc.get());
 }
 
 /**
@@ -194,11 +194,11 @@ int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_
     if (archive == NULL || xslt_buffer == 0 || size == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlDocPtr doc = xmlReadMemory(xslt_buffer, (int)size, 0, 0, 0);
+    std::unique_ptr<xmlDoc> doc(xmlReadMemory(xslt_buffer, (int)size, 0, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_xslt_internal(archive, doc);
+    return srcml_append_transform_xslt_internal(archive, doc.get());
 }
 
 /**
@@ -217,11 +217,11 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlRegisterDefaultInputCallbacks();
-    xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, xslt_file, 0, 0, 0);
+    std::unique_ptr<xmlDoc> doc(xmlReadIO(xmlFileRead, 0, xslt_file, 0, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_xslt_internal(archive, doc);
+    return srcml_append_transform_xslt_internal(archive, doc.get());
 }
 
 /**
@@ -239,11 +239,11 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
     if (archive == NULL || xslt_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlDocPtr doc = xmlReadFd(xslt_fd, 0, 0, 0);
+    std::unique_ptr<xmlDoc> doc(xmlReadFd(xslt_fd, 0, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_xslt_internal(archive, doc);
+    return srcml_append_transform_xslt_internal(archive, doc.get());
 }
 #endif
 
@@ -286,11 +286,11 @@ int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* 
     if (archive == NULL || relaxng_filename == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlDocPtr doc = xmlReadFile(relaxng_filename, 0, 0);
+    std::unique_ptr<xmlDoc> doc(xmlReadFile(relaxng_filename, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_relaxng_internal(archive, doc);
+    return srcml_append_transform_relaxng_internal(archive, doc.get());
 }
 
 /**
@@ -309,11 +309,11 @@ int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* re
     if (archive == NULL || relaxng_buffer == 0 || size == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlDocPtr doc = xmlReadMemory(relaxng_buffer, (int)size, 0, 0, 0);
+    std::unique_ptr<xmlDoc> doc(xmlReadMemory(relaxng_buffer, (int)size, 0, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_relaxng_internal(archive, doc);
+    return srcml_append_transform_relaxng_internal(archive, doc.get());
 }
 
 /**
@@ -332,11 +332,11 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlRegisterDefaultInputCallbacks();
-    xmlDocPtr doc = xmlReadIO(xmlFileRead, 0, relaxng_file, 0, 0, 0);
+    std::unique_ptr<xmlDoc> doc(xmlReadIO(xmlFileRead, 0, relaxng_file, 0, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_relaxng_internal(archive, doc);
+    return srcml_append_transform_relaxng_internal(archive, doc.get());
 }
 
 /**
@@ -354,11 +354,11 @@ int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
     if (archive == NULL || relaxng_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlDocPtr doc = xmlReadFd(relaxng_fd, 0, 0, 0);
+    std::unique_ptr<xmlDoc> doc(xmlReadFd(relaxng_fd, 0, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_relaxng_internal(archive, doc);
+    return srcml_append_transform_relaxng_internal(archive, doc.get());
 }
 
 /**
