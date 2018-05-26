@@ -462,19 +462,15 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (archive->ntransformations.empty())
         return SRCML_STATUS_OK;
 
-    // insert the srcML namespace if not there
-    // @todo Get this inserted correctly when read in, or see if it can be added directly to the DOM
-    int pos = (int) (1 + strlen((const char*) "unit") + (false ? strlen((const char*) "src") + 1 : 0) + 1);
-    std::string adjsrcml(unit->srcml.substr(0, pos));
-    static const std::string nsuri = "http://www.srcML.org/srcML/src";
-    if (std::search(&unit->srcml[0], &unit->srcml[unit->content_end], nsuri.begin(), nsuri.end()) == &unit->srcml[unit->content_end])
-        adjsrcml.append(R"(xmlns="http://www.srcML.org/srcML/src" )");
-    adjsrcml.append(unit->srcml.substr(pos));
-
     // create a DOM of the unit
-    std::unique_ptr<xmlDoc> doc(xmlReadMemory(adjsrcml.c_str(), (int) adjsrcml.size(), 0, 0, 0));
+    std::unique_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_ERROR;
+
+    // insert the srcML namespace if not already there
+    // @todo Assumes default namespace, must get proper prefix
+    static xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) "http://www.srcML.org/srcML/src", nullptr);
+    xmlSetNs(xmlDocGetRootElement(doc.get()), ns);
 
     // apply transformations sequentially on the results from the previous transformation
     bool hasUnitWrapper = false;
