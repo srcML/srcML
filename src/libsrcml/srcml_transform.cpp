@@ -512,8 +512,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         hasUnitWrapper = trans->hasUnitWrapper();
 
         // if there are no results, then we can't apply further transformations
-        if (fullresults->nodeNr == 0)
-            break;
+        if (fullresults->nodeNr == 0) {
+            *units = 0;
+            return SRCML_STATUS_OK;
+        }
     }
 
     // handle non-nodeset results

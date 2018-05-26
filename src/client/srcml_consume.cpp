@@ -132,6 +132,9 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
                 srcml_unit_free(request->unit);
                 request->unit = 0;
             }
+        } else {
+            srcml_unit_free(request->unit);
+            request->unit = 0;
         }
 
     } catch (...) {
