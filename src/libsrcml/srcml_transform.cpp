@@ -529,14 +529,12 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
         doc->children = fullresults->nodeTab[i];
 
-        bool isunit = strcmp((const char*) doc->children->name, "unit") == 0;
-
         auto nunit = srcml_unit_clone(unit);
         nunit->read_body = nunit->read_header = true;
-        if (!isunit) {
+        if (!lastresult.unitWrapped) {
             nunit->attributes.push_back("item");
             nunit->attributes.push_back(std::to_string(i + 1));
-            nunit->hash = boost::optional<std::string>();
+            nunit->hash = boost::none;
         }
 
         // dump the result tree to the string using an output buffer that writes to a std::string
@@ -555,9 +553,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         xmlOutputBufferClose(output);
 
         // mark inside the units
-        bool unit_wrapped = true;
-        nunit->content_begin = unit_wrapped ? (int) nunit->srcml.find_first_of('>') + 1 : 0;
-        nunit->content_end =   unit_wrapped ? (int) nunit->srcml.find_last_of('<') + 1  : (int) nunit->srcml.size() + 1;
+        nunit->content_begin = lastresult.unitWrapped ? (int) nunit->srcml.find_first_of('>') + 1 : 0;
+        nunit->content_end =   lastresult.unitWrapped ? (int) nunit->srcml.find_last_of('<') + 1  : (int) nunit->srcml.size() + 1;
 
         newunits[i] = nunit;
     }
