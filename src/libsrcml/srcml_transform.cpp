@@ -512,11 +512,14 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     // handle non-nodeset results
     // @todo Implement these
-    lastresult.numberValue;
+    if (lastresult.stringValue)
+        fprintf(stderr, "DEBUG:  %s %s %d *lastresult.stringValue: %s\n", __FILE__,  __FUNCTION__, __LINE__,  lastresult.stringValue->c_str());
 
-    lastresult.boolValue;
+    if (lastresult.boolValue)
+        fprintf(stderr, "DEBUG:  %s %s %d *lastresult.boolValue: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  *lastresult.boolValue);
 
-    lastresult.stringValue;
+    if (lastresult.numberValue)
+        fprintf(stderr, "DEBUG:  %s %s %d *lastresult.numberValue: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  *lastresult.numberValue);
 
     // create units out of the transformation results
     srcml_unit** newunits = new srcml_unit*[fullresults->nodeNr + 1];
