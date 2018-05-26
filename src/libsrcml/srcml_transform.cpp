@@ -521,14 +521,18 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (lastresult.numberValue)
         fprintf(stderr, "DEBUG:  %s %s %d *lastresult.numberValue: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  *lastresult.numberValue);
 
+    if (units == nullptr)
+        return SRCML_STATUS_OK;
+
     // create units out of the transformation results
     srcml_unit** newunits = new srcml_unit*[fullresults->nodeNr + 1];
     newunits[fullresults->nodeNr] = 0;
+    *units = newunits;
 
     for (int i = 0; i < fullresults->nodeNr; ++i) {
 
-        doc->children = fullresults->nodeTab[i];
-
+        // create a new unit to store the results in
+        // @todo What happens for a single result?
         auto nunit = srcml_unit_clone(unit);
         nunit->read_body = nunit->read_header = true;
         if (!lastresult.unitWrapped) {
@@ -538,7 +542,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         }
 
         // dump the result tree to the string using an output buffer that writes to a std::string
-        nunit->srcml.clear();
+        doc->children = fullresults->nodeTab[i];
         xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
 
             ((std::string*) context)->append(buffer, len);
@@ -557,10 +561,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         nunit->content_end =   lastresult.unitWrapped ? (int) nunit->srcml.find_last_of('<') + 1  : (int) nunit->srcml.size() + 1;
 
         newunits[i] = nunit;
-    }
-
-    if (units) {
-        *units = newunits;
     }
 
     return SRCML_STATUS_OK;
