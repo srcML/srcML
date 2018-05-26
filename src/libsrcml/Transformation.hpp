@@ -57,14 +57,6 @@ public :
 
     virtual ~Transformation() {}
 
-    virtual bool hasUnitWrapper() { return false; }
-
-    virtual boost::optional<double> getNumber() { return boost::none; }
-
-    virtual boost::optional<bool> getBoolean() { return boost::none; }
-
-    virtual boost::optional<std::string> getString() { return boost::none; }
-
       /** XSLT parameters */
     std::vector<std::string> xsl_parameters;
 };

@@ -473,7 +473,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     xmlSetNs(xmlDocGetRootElement(doc.get()), ns);
 
     // apply transformations sequentially on the results from the previous transformation
-    bool hasUnitWrapper = false;
     std::unique_ptr<xmlNodeSet> fullresults(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc.get())));
     if (fullresults == nullptr)
         return SRCML_STATUS_ERROR;
@@ -503,9 +502,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 break;
             xmlXPathNodeSetMerge(fullresults.get(), results.get());
         }
-
-        // capture whether the content has a unit element
-        hasUnitWrapper = trans->hasUnitWrapper();
 
         // if there are no results, then we can't apply further transformations
         if (fullresults->nodeNr == 0) {
