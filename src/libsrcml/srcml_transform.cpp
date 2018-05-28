@@ -453,7 +453,8 @@ int srcml_clear_transforms(srcml_archive* archive) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units) {
+int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units, double* numberValue,
+        bool* boolValue, const char** stringValue) {
 
     if (archive == nullptr || unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -504,22 +505,29 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         }
 
         // if there are no results, then we can't apply further transformations
+        // but there still might be reults in the scalar values
         if (fullresults->nodeNr == 0) {
             *units = 0;
-            return SRCML_STATUS_OK;
+            break;
         }
     }
 
     // handle non-nodeset results
     // @todo Implement these
-    if (lastresult.stringValue)
-        fprintf(stderr, "DEBUG:  %s %s %d *lastresult.stringValue: %s\n", __FILE__,  __FUNCTION__, __LINE__,  lastresult.stringValue->c_str());
+    if (stringValue && lastresult.stringValue) {
+        *stringValue = lastresult.stringValue->c_str();
+        return SRCML_STATUS_OK;
+    }
 
-    if (lastresult.boolValue)
-        fprintf(stderr, "DEBUG:  %s %s %d *lastresult.boolValue: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  *lastresult.boolValue);
+    if (boolValue && lastresult.boolValue) {
+        *boolValue = *(lastresult.boolValue);
+        return SRCML_STATUS_OK;
+    }
 
-    if (lastresult.numberValue)
-        fprintf(stderr, "DEBUG:  %s %s %d *lastresult.numberValue: %zd\n", __FILE__,  __FUNCTION__, __LINE__,  *lastresult.numberValue);
+    if (numberValue && lastresult.numberValue) {
+        *numberValue = *(lastresult.numberValue);
+        return SRCML_STATUS_OK;
+    }
 
     if (units == nullptr)
         return SRCML_STATUS_OK;

@@ -1200,7 +1200,10 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units);
+//LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units);
+
+LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units, double* doubleValue,
+        bool* boolValue, const char** stringValue);
 
 /** Remove all appended transformations from the archive which have not been applied yet
  * @param archive A srcml_archive
