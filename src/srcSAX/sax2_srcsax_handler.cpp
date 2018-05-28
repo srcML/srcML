@@ -686,6 +686,9 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     }
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 /**
  * characters_root
  * @param ctx an xmlParserCtxtPtr
@@ -695,15 +698,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
  * SAX handler function for character handling at the root level.
  * Immediately calls supplied handlers function.
  */
-void characters_root(void* ctx, const xmlChar* 
-#ifdef SRCSAX_DEBUG
-    ch
-#endif
-    , int 
-#ifdef SRCSAX_DEBUG
-    len
-#endif
-    ) {
+void characters_root(void* ctx, const xmlChar* ch, int len) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     if (ctxt == nullptr)
@@ -721,6 +716,8 @@ void characters_root(void* ctx, const xmlChar*
 
     SRCSAX_DEBUG_END_CHARS(ch, len);
 }
+
+#pragma GCC diagnostic pop
 
 /**
  * characters_unit
