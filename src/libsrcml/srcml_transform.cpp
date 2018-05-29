@@ -453,8 +453,7 @@ int srcml_clear_transforms(srcml_archive* archive) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units, double* numberValue,
-        bool* boolValue, const char** stringValue) {
+int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_transformation_result_t* result) {
 
     if (archive == nullptr || unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -507,35 +506,43 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         // if there are no results, then we can't apply further transformations
         // but there still might be reults in the scalar values
         if (fullresults->nodeNr == 0) {
-            *units = 0;
+            result->units = 0;
             break;
         }
     }
 
     // handle non-nodeset results
     // @todo Implement these
-    if (stringValue && lastresult.stringValue) {
-        *stringValue = lastresult.stringValue->c_str();
-        return SRCML_STATUS_OK;
+    if (lastresult.stringValue) {
+        if (result != nullptr) {
+            result->stringValue = strdup(lastresult.stringValue->c_str());
+            return SRCML_STATUS_OK;
+        }
+        return SRCML_STATUS_ERROR;
     }
 
-    if (boolValue && lastresult.boolValue) {
-        *boolValue = *(lastresult.boolValue);
-        return SRCML_STATUS_OK;
+    if (lastresult.boolValue) {
+        if (result != nullptr) {
+            result->boolValue = *(lastresult.boolValue);
+            return SRCML_STATUS_OK;
+        }
+        return SRCML_STATUS_ERROR;
     }
 
-    if (numberValue && lastresult.numberValue) {
-        *numberValue = *(lastresult.numberValue);
-        return SRCML_STATUS_OK;
+    if (lastresult.numberValue) {
+        if (result != nullptr) {
+            result->numberValue = *(lastresult.numberValue);
+            return SRCML_STATUS_OK;
+        }
+        return SRCML_STATUS_ERROR;
     }
 
-    if (units == nullptr)
+    if (result == nullptr)
         return SRCML_STATUS_OK;
 
     // create units out of the transformation results
-    srcml_unit** newunits = new srcml_unit*[fullresults->nodeNr + 1];
-    newunits[fullresults->nodeNr] = 0;
-    *units = newunits;
+    result->units = new srcml_unit*[fullresults->nodeNr + 1];
+    result->units[fullresults->nodeNr] = 0;
 
     for (int i = 0; i < fullresults->nodeNr; ++i) {
 
@@ -568,7 +575,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         nunit->content_begin = lastresult.unitWrapped ? (int) nunit->srcml.find_first_of('>') + 1 : 0;
         nunit->content_end =   lastresult.unitWrapped ? (int) nunit->srcml.find_last_of('<') + 1  : (int) nunit->srcml.size() + 1;
 
-        newunits[i] = nunit;
+        result->units[i] = nunit;
     }
 
     return SRCML_STATUS_OK;

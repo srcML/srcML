@@ -1191,21 +1191,34 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
 /**
  * srcml_unit_apply_transforms
  * @todo Fix up
- * @param iarchive an input srcml archive
- * @param oarchive and output srcml archive
+ * @param archive Archive with the transformations declared
+ * @param unit Unit to perform the transformation on
+ * @param results Optional struct of different results types
  *
- * Apply appended transformations inorder added and consecutively.
- * Intermediate results are stored in a temporary file.
- * Transformations are cleared.
+ * Apply appended transformations from the archive to the unit consecutively in order. If parameter result is NULL,
+ * result replaces the unit that the transformation was performed on. If parameter result is not NULL, results
+ * are places in the proper field of the result, with the result_type parameter indicating which is appropriate.
+ * If the result of the transformation is not a single unit, and the parameter result is NULL, that is considered an error.
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-//LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units);
 
-LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_unit*** units, double* doubleValue,
-        bool* boolValue, const char** stringValue);
+#define SRCML_NODESET 1
+#define SRCML_BOOLEAN 2
+#define SRCML_NUMBER  3
+#define SRCML_STRING  4
 
-/** Remove all appended transformations from the archive which have not been applied yet
+struct srcml_transformation_result_t {
+    int type;
+    struct srcml_unit** units;
+    double numberValue;
+    bool boolValue;
+    char* stringValue;
+};
+
+LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_transformation_result_t* result);
+
+/** Remove all appended transformations from the archive
  * @param archive A srcml_archive
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT

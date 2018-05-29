@@ -269,7 +269,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
         tresult.boolValue = result_nodes->boolval;
     }
     if (result_nodes->type == XPATH_STRING) {
-        tresult.stringValue = boost::optional<std::string>((const char*) result_nodes->stringval);
+        tresult.stringValue = std::string((const char*) result_nodes->stringval);
     }
 
     // when result is not a nodeset, then return nullptr, and the calling code will check the other values
