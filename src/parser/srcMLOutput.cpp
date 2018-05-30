@@ -53,7 +53,7 @@ namespace {
 
         // enough space to store int as string
         static constexpr int SIZE = sizeof(int) * 4;
-        static char s[SIZE] = { 0 };
+        thread_local static char s[SIZE] = { 0 };
 
         // create string backwards from 1's place
         char* p = s + SIZE - 1;
