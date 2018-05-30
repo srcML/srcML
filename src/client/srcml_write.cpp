@@ -38,6 +38,30 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
     if (!request)
         return;
 
+    if (request->results.type == SRCML_STRING || request->results.type == SRCML_NUMBER || request->results.type == SRCML_BOOLEAN) {
+
+        const char * s = nullptr;
+        if (request->results.type == SRCML_BOOLEAN)
+            s = request->results.boolValue ? "true" : "false";
+        else if (request->results.type == SRCML_NUMBER)
+            s = request->results.numberValue != (int) request->results.numberValue ? std::to_string(request->results.numberValue).c_str()
+                : std::to_string((int) request->results.numberValue).c_str();
+        else if (request->results.type == SRCML_STRING)
+            s = (char*) request->results.stringValue;
+
+        if (contains<int>(destination)) {
+
+            write(*destination.fd, s, strlen(s));
+            write(*destination.fd, "\n", 1);
+
+//        } else {
+
+//            status = srcml_archive_write_open_filename(request->srcml_arch, destination.c_str(), 0);
+        }
+
+        return;
+    }
+
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
@@ -49,6 +73,7 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
         if (!createdsrcml && !option(SRCML_COMMAND_NOARCHIVE)) {
 
             int status = 0;
+            
             if (contains<int>(destination)) {
 
                 status = srcml_archive_write_open_fd(request->srcml_arch, *destination.fd);

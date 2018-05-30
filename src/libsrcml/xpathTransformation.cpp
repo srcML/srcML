@@ -260,6 +260,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
 
     TransformationResult tresult;
     tresult.unitWrapped = false;
+    tresult.nodeType = result_nodes->type;
 
     // update scalar values, if the type is right
     if (result_nodes->type == XPATH_NUMBER) {

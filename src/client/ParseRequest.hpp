@@ -54,6 +54,7 @@ struct ParseRequest {
     // transformations can result in multiple units
     // that must be kept together. So therefore, this is a collection
     std::vector<srcml_unit*> units;
+    srcml_transformation_result_t results;
 };
 
 #endif

@@ -511,6 +511,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         }
     }
 
+    if (result) {
+        result->type = lastresult.nodeType;
+    }
+    
     // handle non-nodeset results
     // @todo Implement these
     if (lastresult.stringValue) {

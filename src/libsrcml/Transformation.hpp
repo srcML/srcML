@@ -31,6 +31,7 @@
 struct TransformationResult {
     TransformationResult(xmlNodeSetPtr nodeset = nullptr, bool wrapped = false)
         : nodeset(nodeset), unitWrapped(wrapped) {}
+    int nodeType = 0;
     xmlNodeSetPtr nodeset = nullptr;
     boost::optional<double> numberValue;
     boost::optional<bool> boolValue;
