@@ -83,16 +83,16 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
         // chance that a solo unit archive was the input, but transformation was
         // done, so output has to be a full archive
         // @todo Make sure it is only an xpath transformation
-        if (request->results.units[0] != nullptr)
+        if (request->results.num_units > 1)
             srcml_archive_enable_full_archive(request->srcml_arch);
 
         // write out any transformed units
-        for (auto p = request->results.units; p && *p; ++p) {
-            srcml_archive_write_unit(request->srcml_arch, *p);
+        for (int i = 0; i < request->results.num_units; ++i) {
+            srcml_archive_write_unit(request->srcml_arch, request->results.units[i]);
         }
 
         // if no transformed units, write the main unit
-        if (request->results.units[0] == nullptr && request->unit) {
+        if (request->results.num_units == 0 && request->unit) {
             int status = srcml_archive_write_unit(request->srcml_arch, request->unit);
             if (status != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG) << "Error in writing parsed unit to archive" << '\n';

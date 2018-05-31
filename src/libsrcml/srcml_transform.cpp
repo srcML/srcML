@@ -545,6 +545,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return SRCML_STATUS_OK;
 
     // create units out of the transformation results
+    result->num_units = fullresults->nodeNr;
     result->units = new srcml_unit*[fullresults->nodeNr + 1];
     result->units[fullresults->nodeNr] = 0;
 
