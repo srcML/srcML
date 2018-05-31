@@ -40,23 +40,15 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
 
     if (request->results.type == SRCML_STRING || request->results.type == SRCML_NUMBER || request->results.type == SRCML_BOOLEAN) {
 
-        const char * s = nullptr;
-        if (request->results.type == SRCML_BOOLEAN)
-            s = request->results.boolValue ? "true" : "false";
-        else if (request->results.type == SRCML_NUMBER)
-            s = request->results.numberValue != (int) request->results.numberValue ? std::to_string(request->results.numberValue).c_str()
-                : std::to_string((int) request->results.numberValue).c_str();
-        else if (request->results.type == SRCML_STRING)
-            s = (char*) request->results.stringValue;
-
-        if (contains<int>(destination)) {
-
-            write(*destination.fd, s, strlen(s));
-            write(*destination.fd, "\n", 1);
-
-//        } else {
-
-//            status = srcml_archive_write_open_filename(request->srcml_arch, destination.c_str(), 0);
+        if (request->results.type == SRCML_BOOLEAN) {
+            dprintf(*destination.fd, request->results.boolValue ? "true\n" : "false\n");
+        } else if (request->results.type == SRCML_NUMBER) {
+            if (request->results.numberValue != (int) request->results.numberValue)
+                dprintf(*destination.fd, "%lf\n", request->results.numberValue);
+            else
+                dprintf(*destination.fd, "%d\n", (int) request->results.numberValue);
+        } else if (request->results.type == SRCML_STRING) {
+            dprintf(*destination.fd, "%s", (char*) request->results.stringValue);
         }
 
         return;
