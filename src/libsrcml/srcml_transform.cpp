@@ -443,7 +443,7 @@ int srcml_clear_transforms(srcml_archive* archive) {
 }
 
 /**
- * srcml_apply_transforms
+ * srcml_unit_apply_transforms
  * @param iarchive an input srcml archive
  * @param oarchive and output srcml archive
  *
