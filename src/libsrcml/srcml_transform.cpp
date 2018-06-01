@@ -473,11 +473,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (doc == nullptr)
         return SRCML_STATUS_ERROR;
 
-    // insert the srcML namespace if not already there
-    // @todo Assumes default namespace, must get proper prefix
-//    xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) "http://www.srcML.org/srcML/src", nullptr);
-//    xmlSetNs(xmlDocGetRootElement(doc.get()), ns);
-
     // apply transformations sequentially on the results from the previous transformation
     std::unique_ptr<xmlNodeSet> fullresults(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc.get())));
     if (fullresults == nullptr)
@@ -520,7 +515,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (result) {
         result->type = lastresult.nodeType;
     }
-    
+
     // handle non-nodeset results
     // @todo Implement these
     if (lastresult.stringValue) {
