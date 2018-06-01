@@ -161,7 +161,7 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
 #define dlsymvar(type, name) type name;  *(VOIDPTR *)(&name) = dlsym(handle, #name)
 
     static void* handle = dlopen_libexslt();
-    if (handle) {
+    if (false && handle) {
 
         dlerror();
         dlsymvar(exsltXpathCtxtRegister,exsltDateXpathCtxtRegister);
