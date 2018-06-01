@@ -33,9 +33,9 @@ struct TransformationResult {
         : nodeset(nodeset), unitWrapped(wrapped) {}
     int nodeType = 0;
     xmlNodeSetPtr nodeset = nullptr;
-    boost::optional<double> numberValue;
-    boost::optional<bool> boolValue;
-    boost::optional<std::string> stringValue;
+    double numberValue;
+    bool boolValue;
+    std::string stringValue;
     bool unitWrapped = false;
 };
 

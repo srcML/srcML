@@ -518,34 +518,34 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     // handle non-nodeset results
     // @todo Implement these
-    if (lastresult.stringValue) {
+    switch (lastresult.nodeType) {
+    case SRCML_STRING:
         if (result != nullptr) {
-            result->stringValue = strdup(lastresult.stringValue->c_str());
+            result->stringValue = strdup(lastresult.stringValue.c_str());
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
-    }
 
-    if (lastresult.boolValue) {
+    case SRCML_BOOLEAN:
         if (result != nullptr) {
-            result->boolValue = *(lastresult.boolValue);
+            result->boolValue = lastresult.boolValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
-    }
 
-    if (lastresult.numberValue) {
+    case SRCML_NUMBER:
         if (result != nullptr) {
-            result->numberValue = *(lastresult.numberValue);
+            result->numberValue = lastresult.numberValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
-    }
+    };
 
     if (result == nullptr)
         return SRCML_STATUS_OK;
 
     // create units out of the transformation results
+    result->type = lastresult.nodeType;
     result->num_units = fullresults->nodeNr;
     result->units = new srcml_unit*[fullresults->nodeNr + 1];
     result->units[fullresults->nodeNr] = 0;
