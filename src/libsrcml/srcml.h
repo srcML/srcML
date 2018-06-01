@@ -1210,6 +1210,7 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
 
 struct srcml_transformation_result_t {
     int type;
+    int num_units;
     struct srcml_unit** units;
     double numberValue;
     bool boolValue;

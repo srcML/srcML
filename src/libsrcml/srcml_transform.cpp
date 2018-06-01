@@ -458,6 +458,12 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (archive == nullptr || unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    if (result) {
+        result->num_units = 0;
+        result->units = nullptr;
+        result->stringValue = nullptr;
+    }
+
     // unit stays the same for no transformation
     if (archive->ntransformations.empty())
         return SRCML_STATUS_OK;
@@ -545,6 +551,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return SRCML_STATUS_OK;
 
     // create units out of the transformation results
+    result->num_units = fullresults->nodeNr;
     result->units = new srcml_unit*[fullresults->nodeNr + 1];
     result->units[fullresults->nodeNr] = 0;
 
