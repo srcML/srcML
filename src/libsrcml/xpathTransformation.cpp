@@ -308,8 +308,8 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
         return tresult;
     }
 
-    if (result_nodes->nodesetval->nodeTab[0]->children && result_nodes->nodesetval->nodeTab[0]->children->name &&
-        strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->children->name, "unit") == 0)
+    if (result_nodes->nodesetval->nodeTab[0] && result_nodes->nodesetval->nodeTab[0]->name &&
+        strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0)
         tresult.unitWrapped = true;
 
     tresult.nodeset = result_nodes->nodesetval;
