@@ -750,11 +750,14 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
 
     // setup the translator (srcML parser + srcML output)
     try {
-
+        // turn off option for archive so XML generated has full namespaces
+        auto options = unit->archive->options;
+        options &= ~(unsigned long long)(SRCML_OPTION_ARCHIVE);
+    
         unit->unit_translator = new srcml_translator(
             obuffer,
             optional_to_c_str(unit->archive->encoding, "UTF-8"),
-            unit->archive->options,
+            options,
             unit->archive->namespaces,
             boost::none,
             unit->archive->tabstop,
