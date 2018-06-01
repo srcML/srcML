@@ -129,7 +129,7 @@ int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
  * Append an attribute to the given node.  Only the prefix and uri can vary.  The
  * rest are the same throughout all calls and are part of the class.
  */
-void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) {
+void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) const {
 
         // grab current value
     const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name.c_str(), BAD_CAST attr_uri);
@@ -218,7 +218,7 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
  * 
  * @returns true on success false on failure.
  */
-TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
+TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
 
     xmlXPathContextPtr context = createContext(doc);
 
@@ -320,7 +320,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
 }
 
 // process the resulting nodes
-void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) {
+void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) const {
 
     if (!result_nodes || !(result_nodes->type == 1) || !(result_nodes->nodesetval))
         return;

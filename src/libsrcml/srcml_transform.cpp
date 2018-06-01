@@ -478,9 +478,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (fullresults == nullptr)
         return SRCML_STATUS_ERROR;
 
-    Transformation* lasttrans = nullptr;
+    const Transformation* lasttrans = nullptr;
     TransformationResult lastresult;
-    for (auto* trans : archive->ntransformations) {
+    for (const auto* trans : archive->ntransformations) {
 
         // keep track of the last transformation processed, which might not be the last one in the list
         lasttrans = trans;

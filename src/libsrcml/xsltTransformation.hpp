@@ -90,13 +90,12 @@ public :
      * 
      * @returns true on success false on failure.
      */
-    virtual TransformationResult apply(xmlDocPtr doc, int position);
+    virtual TransformationResult apply(xmlDocPtr doc, int position) const;
 
 private :
     xmlDocPtr sdoc = nullptr;
     xsltStylesheetPtr stylesheet = nullptr;
-    std::vector<std::string> params;
-    std::vector<const char*> cparams;
+    const std::vector<std::string> params;
 #ifdef DLLOAD
     void* libxslt_handle = nullptr;
     void* libexslt_handle = nullptr;

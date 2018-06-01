@@ -54,7 +54,7 @@ public :
      * 
      * @returns document on success, NULL on failure.
      */
-    virtual TransformationResult apply(xmlDocPtr doc, int position) = 0;
+    virtual TransformationResult apply(xmlDocPtr doc, int position) const = 0;
 
     virtual ~Transformation() {}
 
