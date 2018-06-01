@@ -237,19 +237,12 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
             fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
         }
     }
-/*
-    // register namespaces from input archive, which have been setup on the output archive
-    for (unsigned int i = 1; i < srcml_archive_get_namespace_size(oarchive); ++i) {
 
-        const char* uri = srcml_archive_get_namespace_uri(oarchive, i);
-        const char* prefix = srcml_archive_get_namespace_prefix(oarchive, i);
+    // register prefixes from the doc
+    for (auto p = doc->children->nsDef; p; p = p->next) {
 
-        if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
-            fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
-            throw; //SRCML_STATUS_ERROR;
-        }
+        xmlXPathRegisterNs(context, p->prefix, p->href);
     }
-*/
 
     // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
