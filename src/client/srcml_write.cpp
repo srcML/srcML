@@ -30,7 +30,6 @@
 #include <srcml_input_src.hpp>
 #include <SRCMLStatus.hpp>
 
-static bool createdsrcml = false;
 
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_output_dest& destination) {
@@ -38,26 +37,31 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
     if (!request)
         return;
 
-    if (request->results.type == SRCML_STRING || request->results.type == SRCML_NUMBER || request->results.type == SRCML_BOOLEAN) {
-
-        if (request->results.type == SRCML_BOOLEAN) {
-            dprintf(*destination.fd, request->results.boolValue ? "true\n" : "false\n");
-        } else if (request->results.type == SRCML_NUMBER) {
-            if (request->results.numberValue != (int) request->results.numberValue)
-                dprintf(*destination.fd, "%lf\n", request->results.numberValue);
-            else
-                dprintf(*destination.fd, "%d\n", (int) request->results.numberValue);
-        } else if (request->results.type == SRCML_STRING) {
-            dprintf(*destination.fd, "%s", (char*) request->results.stringValue);
-        }
-
+    // output scalar results
+    // @todo Make sure this works with filename output, not just file descriptor
+    switch (request->results.type) {
+    case SRCML_BOOLEAN:
+        dprintf(*destination.fd, request->results.boolValue ? "true\n" : "false\n");
         return;
-    }
+
+    case SRCML_NUMBER:
+        if (request->results.numberValue != (int) request->results.numberValue)
+            dprintf(*destination.fd, "%lf\n", request->results.numberValue);
+        else
+            dprintf(*destination.fd, "%d\n", (int) request->results.numberValue);
+        return;
+
+    case SRCML_STRING:
+        dprintf(*destination.fd, "%s", (char*) request->results.stringValue);
+        return;
+    };
 
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
         log.totalLOC(request->loc);
+
+        static bool createdsrcml = false;
 
         // we don't create the output srcml archive until we are going to write to it
         // Why? Well if we did, then we get an empty srcml archive, and that is not

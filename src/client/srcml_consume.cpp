@@ -120,6 +120,7 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         }
 
         request->runtime = parsetime.cpu_time_elapsed();
+        request->results.type = SRCML_NODESET;
 
         // perform any transformations and add them to the request
         srcml_unit_apply_transforms(request->srcml_arch, request->unit, &(request->results));
