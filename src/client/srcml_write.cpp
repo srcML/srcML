@@ -105,24 +105,25 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
         }
 
         // logging
-        // @todo Do we want logging for each xpath result? Or only for main unit?
-        std::ostringstream outs;
-        outs << (request->filename ? *request->filename : "") << '\t' << request->language << '\t' << request->loc;
-        const char* hash = srcml_unit_get_hash(request->unit);
-        if (hash)
-            outs << '\t' << hash;
-        if (option(SRCML_DEBUG_MODE)) {
-            outs << '\t' << request->runtime << " ms";
-            outs << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
-        }
+        if (option(SRCML_COMMAND_VERBOSE)) {
+            std::ostringstream outs;
+            outs << (request->filename ? *request->filename : "") << '\t' << request->language << '\t' << request->loc;
+            const char* hash = srcml_unit_get_hash(request->unit);
+            if (hash)
+                outs << '\t' << hash;
+            if (option(SRCML_DEBUG_MODE)) {
+                outs << '\t' << request->runtime << " ms";
+                outs << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
+            }
 
-        log << 'a' << outs.str();
+            log << 'a' << outs.str();
+        }
 
     } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
-        log << '-' << (request->filename ? *request->filename : "");
-
-        if (!option(SRCML_COMMAND_VERBOSE))
+        if (option(SRCML_COMMAND_VERBOSE))
+            log << '-' << (request->filename ? *request->filename : "");
+        else
             SRCMLstatus(ERROR_MSG, "Extension not supported");
 
     } else if (request->errormsg) {
