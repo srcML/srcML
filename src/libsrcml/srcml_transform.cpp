@@ -562,20 +562,30 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             nunit->hash = boost::none;
         }
 
-        // dump the result tree to the string using an output buffer that writes to a std::string
-        doc->children = fullresults->nodeTab[i];
-        xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
+        // special case for XML comment as it does not get written to the tree
+        if (fullresults->nodeNr == 1 && fullresults->nodeTab[0]->type == XML_COMMENT_NODE) {
 
-            ((std::string*) context)->append(buffer, len);
+            nunit->srcml.assign("<!--");
+            nunit->srcml.append((const char*) fullresults->nodeTab[0]->content);
+            nunit->srcml.append("-->");
 
-            return len;
+        } else {
 
-        }, 0, &(nunit->srcml), 0);
-        xmlNodeDumpOutput(output, doc.get(), xmlDocGetRootElement(doc.get()), 0, 0, 0);
+            // dump the result tree to the string using an output buffer that writes to a std::string
+            doc->children = fullresults->nodeTab[i];
+            xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
 
-        // very important to flush to make sure the unit contents are all present
-        // also performs a free of resources
-        xmlOutputBufferClose(output);
+                ((std::string*) context)->append(buffer, len);
+
+                return len;
+
+            }, 0, &(nunit->srcml), 0);
+            xmlNodeDumpOutput(output, doc.get(), xmlDocGetRootElement(doc.get()), 0, 0, 0);
+
+            // very important to flush to make sure the unit contents are all present
+            // also performs a free of resources
+            xmlOutputBufferClose(output);
+        }
 
         // mark inside the units
         nunit->content_begin = lastresult.unitWrapped ? (int) nunit->srcml.find_first_of('>') + 1 : 0;
