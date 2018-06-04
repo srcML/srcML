@@ -269,12 +269,26 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     SRCSAX_DEBUG_END(localname);
 
+    bool isempty = ctxt->input->cur[0] == '/';
+
+    // call the upper-level start_root when an empty element
+    if (isempty && state->context->handler->start_root)
+            state->context->handler->start_root(state->context, (const char*) localname, 
+                            (const char*) prefix, (const char*) URI,
+                            nb_namespaces, namespaces, nb_attributes, attributes);
+
     // assume this is not a solo unit, but delay calling the upper levels until we are sure
     auto save = state->context->handler->start_unit;
     state->context->handler->start_unit = 0;
     start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     state->context->handler->start_unit = save;
     state->mode = ROOT;
+
+    // call the upper-level start_unit for non-archives
+    if (isempty && !state->is_archive && state->context->handler->start_unit) {
+        state->context->handler->start_unit(state->context, (const char*) localname, 
+                (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
+    }
 
     // handle nested units
     ctxt->sax->startElementNs = &first_start_element;
