@@ -269,7 +269,11 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     SRCSAX_DEBUG_END(localname);
 
+    // for empty units we need to call the upper-level handling
+    // and not delay it
     bool isempty = ctxt->input->cur[0] == '/';
+    if (isempty)
+        state->context->is_archive = state->is_archive = false;
 
     // call the upper-level start_root when an empty element
     if (isempty && state->context->handler->start_root)
