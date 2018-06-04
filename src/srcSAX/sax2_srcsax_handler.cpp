@@ -666,27 +666,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     // At this point, we have the end of a unit
 
-    // the root is the only element so we never got this started
-    if (state->mode == ROOT) {
-
-        state->context->is_archive = state->is_archive = false;
-/*
-        if (state->context->handler->start_root)
-            state->context->handler->start_root(state->context, (const char*) state->root.localname, 
-                        (const char*) state->root.prefix, (const char*) state->root.URI,
-                        state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, state->root.attributes.data());
-
-
-        // solo unit, so we end up calling upper levels start_unit() with the data used for start_root()
-        if (state->context->handler->start_unit)
-            state->context->handler->start_unit(state->context, (const char*) state->root.localname, 
-                        (const char*) state->root.prefix, (const char*) state->root.URI,
-                        state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, state->root.attributes.data());
-*/
-    }
-
     if (ctxt->nameNr == 2 || !state->is_archive) {
 
         end_unit(ctx, localname, prefix, URI);
