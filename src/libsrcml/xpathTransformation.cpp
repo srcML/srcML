@@ -129,7 +129,7 @@ int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
  * Append an attribute to the given node.  Only the prefix and uri can vary.  The
  * rest are the same throughout all calls and are part of the class.
  */
-void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) {
+void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) const {
 
         // grab current value
     const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name.c_str(), BAD_CAST attr_uri);
@@ -161,7 +161,7 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
 #define dlsymvar(type, name) type name;  *(VOIDPTR *)(&name) = dlsym(handle, #name)
 
     static void* handle = dlopen_libexslt();
-    if (handle) {
+    if (false && handle) {
 
         dlerror();
         dlsymvar(exsltXpathCtxtRegister,exsltDateXpathCtxtRegister);
@@ -218,7 +218,7 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
  * 
  * @returns true on success false on failure.
  */
-TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
+TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
 
     xmlXPathContextPtr context = createContext(doc);
 
@@ -237,19 +237,12 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
             fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
         }
     }
-/*
-    // register namespaces from input archive, which have been setup on the output archive
-    for (unsigned int i = 1; i < srcml_archive_get_namespace_size(oarchive); ++i) {
 
-        const char* uri = srcml_archive_get_namespace_uri(oarchive, i);
-        const char* prefix = srcml_archive_get_namespace_prefix(oarchive, i);
+    // register prefixes from the doc
+    for (auto p = doc->children->nsDef; p; p = p->next) {
 
-        if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
-            fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
-            throw; //SRCML_STATUS_ERROR;
-        }
+        xmlXPathRegisterNs(context, p->prefix, p->href);
     }
-*/
 
     // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
@@ -260,7 +253,9 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
 
     TransformationResult tresult;
     tresult.unitWrapped = false;
-    tresult.nodeType = result_nodes->type;
+
+    // xpath evaluation produces a nodeset result, even if there are no results
+    tresult.nodeType = result_nodes->type == XPATH_NODESET && result_nodes->nodesetval->nodeNr == 0 ? 0 : result_nodes->type;
 
     // update scalar values, if the type is right
     if (result_nodes->type == XPATH_NUMBER) {
@@ -270,7 +265,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
         tresult.boolValue = result_nodes->boolval;
     }
     if (result_nodes->type == XPATH_STRING) {
-        tresult.stringValue = std::string((const char*) result_nodes->stringval);
+        tresult.stringValue = (const char*) result_nodes->stringval;
     }
 
     // when result is not a nodeset, then return nullptr, and the calling code will check the other values
@@ -308,8 +303,8 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
         return tresult;
     }
 
-    if (result_nodes->nodesetval->nodeTab[0]->children && result_nodes->nodesetval->nodeTab[0]->children->name &&
-        strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->children->name, "unit") == 0)
+    if (result_nodes->nodesetval->nodeTab[0] && result_nodes->nodesetval->nodeTab[0]->name &&
+        strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0)
         tresult.unitWrapped = true;
 
     tresult.nodeset = result_nodes->nodesetval;
@@ -318,7 +313,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) {
 }
 
 // process the resulting nodes
-void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) {
+void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) const {
 
     if (!result_nodes || !(result_nodes->type == 1) || !(result_nodes->nodesetval))
         return;

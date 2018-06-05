@@ -60,7 +60,7 @@ public :
      * 
      * @returns true on success false on failure.
      */
-    virtual TransformationResult apply(xmlDocPtr doc, int position);
+    virtual TransformationResult apply(xmlDocPtr doc, int position) const;
 
 private :
     std::unique_ptr<xmlRelaxNGValidCtxt> rngctx;

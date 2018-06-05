@@ -34,12 +34,16 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
     // Check element namespace
     char const * element_uri = 0;
-    if (element){
+    if (false && element){
 
-        // check first if namespace is already declared
+        // check first if namespace is already declared on the output archive
         element_uri = srcml_archive_get_uri_from_prefix(out_arch, element->prefix->c_str());
 
-        // if not declared, check for xmlns from cli
+        // if not, check on the input archive
+        if (!element_uri) {
+            element_uri = srcml_archive_get_uri_from_prefix(in_arch, element->prefix->c_str());
+        }
+
         if (!element_uri) {
             auto it = xmlns_namespaces.find(*(element->prefix));
             if (it != xmlns_namespaces.end())

@@ -49,13 +49,7 @@
  * Constructor.  Dynamically loads XSLT functions.
  */
 xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xslt, const std::vector<std::string>& params)
-        : params(params), cparams(params.size() + 1) {
-
-    // cparams must be null terminated
-    for (size_t i = 0; i < params.size(); ++i) {
-        cparams[i] = params[i].c_str();
-    }
-    cparams.back() = 0;
+        : params(params) {
 
     xmlInitParser();
 
@@ -139,10 +133,18 @@ xsltTransformation::~xsltTransformation() {
  * 
  * @returns true on success false on failure.
  */
-TransformationResult xsltTransformation::apply(xmlDocPtr doc, int position) {
+TransformationResult xsltTransformation::apply(xmlDocPtr doc, int position) const {
 
     // position passed to XSLT program
     setPosition(position);
+
+    // convert to c-array of c-strings, null terminated
+    // @todo Extract Function
+    std::vector<const char*> cparams(params.size() + 1);
+    for (size_t i = 0; i < params.size(); ++i) {
+        cparams[i] = params[i].c_str();
+    }
+    cparams.back() = 0;
 
     // apply the style sheet to the document, which is the individual unit
     xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0);

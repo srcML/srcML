@@ -458,6 +458,12 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (archive == nullptr || unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    if (result) {
+        result->num_units = 0;
+        result->units = nullptr;
+        result->stringValue = nullptr;
+    }
+
     // unit stays the same for no transformation
     if (archive->ntransformations.empty())
         return SRCML_STATUS_OK;
@@ -467,19 +473,14 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (doc == nullptr)
         return SRCML_STATUS_ERROR;
 
-    // insert the srcML namespace if not already there
-    // @todo Assumes default namespace, must get proper prefix
-    static xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) "http://www.srcML.org/srcML/src", nullptr);
-    xmlSetNs(xmlDocGetRootElement(doc.get()), ns);
-
     // apply transformations sequentially on the results from the previous transformation
     std::unique_ptr<xmlNodeSet> fullresults(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc.get())));
     if (fullresults == nullptr)
         return SRCML_STATUS_ERROR;
 
-    Transformation* lasttrans = nullptr;
+    const Transformation* lasttrans = nullptr;
     TransformationResult lastresult;
-    for (auto* trans : archive->ntransformations) {
+    for (const auto* trans : archive->ntransformations) {
 
         // keep track of the last transformation processed, which might not be the last one in the list
         lasttrans = trans;
@@ -514,37 +515,37 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (result) {
         result->type = lastresult.nodeType;
     }
-    
+
     // handle non-nodeset results
     // @todo Implement these
-    if (lastresult.stringValue) {
+    switch (lastresult.nodeType) {
+    case SRCML_STRING:
         if (result != nullptr) {
-            result->stringValue = strdup(lastresult.stringValue->c_str());
+            result->stringValue = strdup(lastresult.stringValue.c_str());
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
-    }
 
-    if (lastresult.boolValue) {
+    case SRCML_BOOLEAN:
         if (result != nullptr) {
-            result->boolValue = *(lastresult.boolValue);
+            result->boolValue = lastresult.boolValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
-    }
 
-    if (lastresult.numberValue) {
+    case SRCML_NUMBER:
         if (result != nullptr) {
-            result->numberValue = *(lastresult.numberValue);
+            result->numberValue = lastresult.numberValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
-    }
+    };
 
     if (result == nullptr)
         return SRCML_STATUS_OK;
 
     // create units out of the transformation results
+    result->type = lastresult.nodeType;
     result->num_units = fullresults->nodeNr;
     result->units = new srcml_unit*[fullresults->nodeNr + 1];
     result->units[fullresults->nodeNr] = 0;
@@ -561,20 +562,30 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             nunit->hash = boost::none;
         }
 
-        // dump the result tree to the string using an output buffer that writes to a std::string
-        doc->children = fullresults->nodeTab[i];
-        xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
+        // special case for XML comment as it does not get written to the tree
+        if (fullresults->nodeNr == 1 && fullresults->nodeTab[0]->type == XML_COMMENT_NODE) {
 
-            ((std::string*) context)->append(buffer, len);
+            nunit->srcml.assign("<!--");
+            nunit->srcml.append((const char*) fullresults->nodeTab[0]->content);
+            nunit->srcml.append("-->");
 
-            return len;
+        } else {
 
-        }, 0, &(nunit->srcml), 0);
-        xmlNodeDumpOutput(output, doc.get(), xmlDocGetRootElement(doc.get()), 0, 0, 0);
+            // dump the result tree to the string using an output buffer that writes to a std::string
+            doc->children = fullresults->nodeTab[i];
+            xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
 
-        // very important to flush to make sure the unit contents are all present
-        // also performs a free of resources
-        xmlOutputBufferClose(output);
+                ((std::string*) context)->append(buffer, len);
+
+                return len;
+
+            }, 0, &(nunit->srcml), 0);
+            xmlNodeDumpOutput(output, doc.get(), xmlDocGetRootElement(doc.get()), 0, 0, 0);
+
+            // very important to flush to make sure the unit contents are all present
+            // also performs a free of resources
+            xmlOutputBufferClose(output);
+        }
 
         // mark inside the units
         nunit->content_begin = lastresult.unitWrapped ? (int) nunit->srcml.find_first_of('>') + 1 : 0;

@@ -114,7 +114,7 @@ public :
      * Append an attribute to the given node.  Only the prefix and uri can vary.  The
      * rest are the same throughout all calls and are part of the class.
      */
-    void append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri);
+    void append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) const;
 
 #pragma GCC diagnostic push
 
@@ -125,9 +125,9 @@ public :
      * 
      * @returns true on success false on failure.
      */
-    virtual TransformationResult apply(xmlDocPtr doc, int position);
+    virtual TransformationResult apply(xmlDocPtr doc, int position) const;
 
-    void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes);
+    void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) const;
 
 private :
     std::string xpath;

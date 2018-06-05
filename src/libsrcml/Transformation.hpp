@@ -33,9 +33,9 @@ struct TransformationResult {
         : nodeset(nodeset), unitWrapped(wrapped) {}
     int nodeType = 0;
     xmlNodeSetPtr nodeset = nullptr;
-    boost::optional<double> numberValue;
-    boost::optional<bool> boolValue;
-    boost::optional<std::string> stringValue;
+    double numberValue;
+    bool boolValue;
+    std::string stringValue;
     bool unitWrapped = false;
 };
 
@@ -54,7 +54,7 @@ public :
      * 
      * @returns document on success, NULL on failure.
      */
-    virtual TransformationResult apply(xmlDocPtr doc, int position) = 0;
+    virtual TransformationResult apply(xmlDocPtr doc, int position) const = 0;
 
     virtual ~Transformation() {}
 

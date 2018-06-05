@@ -30,7 +30,6 @@
 #include <srcml_input_src.hpp>
 #include <SRCMLStatus.hpp>
 
-static bool createdsrcml = false;
 
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_output_dest& destination) {
@@ -38,26 +37,31 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
     if (!request)
         return;
 
-    if (request->results.type == SRCML_STRING || request->results.type == SRCML_NUMBER || request->results.type == SRCML_BOOLEAN) {
-
-        if (request->results.type == SRCML_BOOLEAN) {
-            dprintf(*destination.fd, request->results.boolValue ? "true\n" : "false\n");
-        } else if (request->results.type == SRCML_NUMBER) {
-            if (request->results.numberValue != (int) request->results.numberValue)
-                dprintf(*destination.fd, "%lf\n", request->results.numberValue);
-            else
-                dprintf(*destination.fd, "%d\n", (int) request->results.numberValue);
-        } else if (request->results.type == SRCML_STRING) {
-            dprintf(*destination.fd, "%s", (char*) request->results.stringValue);
-        }
-
+    // output scalar results
+    // @todo Make sure this works with filename output, not just file descriptor
+    switch (request->results.type) {
+    case SRCML_BOOLEAN:
+        dprintf(*destination.fd, request->results.boolValue ? "true\n" : "false\n");
         return;
-    }
+
+    case SRCML_NUMBER:
+        if (request->results.numberValue != (int) request->results.numberValue)
+            dprintf(*destination.fd, "%lf\n", request->results.numberValue);
+        else
+            dprintf(*destination.fd, "%d\n", (int) request->results.numberValue);
+        return;
+
+    case SRCML_STRING:
+        dprintf(*destination.fd, "%s", (char*) request->results.stringValue);
+        return;
+    };
 
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
         log.totalLOC(request->loc);
+
+        static bool createdsrcml = false;
 
         // we don't create the output srcml archive until we are going to write to it
         // Why? Well if we did, then we get an empty srcml archive, and that is not
@@ -83,8 +87,9 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
         // chance that a solo unit archive was the input, but transformation was
         // done, so output has to be a full archive
         // @todo Make sure it is only an xpath transformation
-        if (request->results.num_units > 1)
+        if (request->results.num_units > 1) {
             srcml_archive_enable_full_archive(request->srcml_arch);
+        }
 
         // write out any transformed units
         for (int i = 0; i < request->results.num_units; ++i) {
@@ -100,24 +105,25 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
         }
 
         // logging
-        // @todo Do we want logging for each xpath result? Or only for main unit?
-        std::ostringstream outs;
-        outs << (request->filename ? *request->filename : "") << '\t' << request->language << '\t' << request->loc;
-        const char* hash = srcml_unit_get_hash(request->unit);
-        if (hash)
-            outs << '\t' << hash;
-        if (option(SRCML_DEBUG_MODE)) {
-            outs << '\t' << request->runtime << " ms";
-            outs << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
-        }
+        if (option(SRCML_COMMAND_VERBOSE)) {
+            std::ostringstream outs;
+            outs << (request->filename ? *request->filename : "") << '\t' << request->language << '\t' << request->loc;
+            const char* hash = srcml_unit_get_hash(request->unit);
+            if (hash)
+                outs << '\t' << hash;
+            if (option(SRCML_DEBUG_MODE)) {
+                outs << '\t' << request->runtime << " ms";
+                outs << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
+            }
 
-        log << 'a' << outs.str();
+            log << 'a' << outs.str();
+        }
 
     } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
-        log << '-' << (request->filename ? *request->filename : "");
-
-        if (!option(SRCML_COMMAND_VERBOSE))
+        if (option(SRCML_COMMAND_VERBOSE))
+            log << '-' << (request->filename ? *request->filename : "");
+        else
             SRCMLstatus(ERROR_MSG, "Extension not supported");
 
     } else if (request->errormsg) {

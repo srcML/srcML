@@ -269,12 +269,30 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     SRCSAX_DEBUG_END(localname);
 
+    // for empty units we need to call the upper-level handling
+    // and not delay it
+    bool isempty = ctxt->input->cur[0] == '/';
+    if (isempty)
+        state->context->is_archive = state->is_archive = false;
+
+    // call the upper-level start_root when an empty element
+    if (isempty && state->context->handler->start_root)
+            state->context->handler->start_root(state->context, (const char*) localname, 
+                            (const char*) prefix, (const char*) URI,
+                            nb_namespaces, namespaces, nb_attributes, attributes);
+
     // assume this is not a solo unit, but delay calling the upper levels until we are sure
     auto save = state->context->handler->start_unit;
     state->context->handler->start_unit = 0;
     start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
     state->context->handler->start_unit = save;
     state->mode = ROOT;
+
+    // call the upper-level start_unit for non-archives
+    if (isempty && !state->is_archive && state->context->handler->start_unit) {
+        state->context->handler->start_unit(state->context, (const char*) localname, 
+                (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
+    }
 
     // handle nested units
     ctxt->sax->startElementNs = &first_start_element;
@@ -651,27 +669,6 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     }
 
     // At this point, we have the end of a unit
-
-    // the root is the only element so we never got this started
-    if (state->mode == ROOT) {
-
-        state->context->is_archive = state->is_archive = false;
-/*
-        if (state->context->handler->start_root)
-            state->context->handler->start_root(state->context, (const char*) state->root.localname, 
-                        (const char*) state->root.prefix, (const char*) state->root.URI,
-                        state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, state->root.attributes.data());
-
-
-        // solo unit, so we end up calling upper levels start_unit() with the data used for start_root()
-        if (state->context->handler->start_unit)
-            state->context->handler->start_unit(state->context, (const char*) state->root.localname, 
-                        (const char*) state->root.prefix, (const char*) state->root.URI,
-                        state->root.nb_namespaces, state->root.namespaces.data(),
-                        state->root.nb_attributes, state->root.attributes.data());
-*/
-    }
 
     if (ctxt->nameNr == 2 || !state->is_archive) {
 
