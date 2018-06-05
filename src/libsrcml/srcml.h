@@ -1213,7 +1213,6 @@ struct srcml_transformation_result_t {
     int type;
     int num_units;
     struct srcml_unit** units;
-    int num_units;
     double numberValue;
     bool boolValue;
     char* stringValue;
