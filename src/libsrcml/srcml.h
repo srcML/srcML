@@ -88,7 +88,6 @@ typedef SSIZE_T ssize_t;
 #define SRCML_STATUS_NO_TRANSFORMATION    8
 /**@}*/
 
-
 /**@{ @anchor Language @name Core Language Set */
 /** Language not set */
 #define SRCML_LANGUAGE_NONE   0
@@ -103,7 +102,6 @@ typedef SSIZE_T ssize_t;
 /** Language XML */
 #define SRCML_LANGUAGE_XML    "xml"
 /**@}*/ 
-
 
 /**@{ @name Options */
 /** Issue an XML declaration */
@@ -122,7 +120,6 @@ const unsigned int SRCML_OPTION_CPP_MARKUP_IF0    = 1<<7;
 const unsigned int SRCML_OPTION_STORE_ENCODING    = 1<<26;
 /**@}*/
 
-
 /**@{ @name Source Output EOL Options */
 /** Source-code end of line determined automatically */
 #define SOURCE_OUTPUT_EOL_AUTO      0
@@ -137,7 +134,6 @@ const unsigned int SRCML_OPTION_STORE_ENCODING    = 1<<26;
 /**@}*/ 
 /**@}*/
 /**@}*/
-
 
 /**
  * @struct srcml_archive Encapsulates multiple srcML units into one srcML archive
@@ -232,7 +228,6 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
 /**@}*/
 /**@}*/
 /**@}*/
-
 
 
 /** @defgroup convenience Convenience functions
@@ -487,7 +482,6 @@ LIBSRCML_DECL const char* srcml_get_processing_instruction_target();
 LIBSRCML_DECL const char* srcml_get_processing_instruction_data();
 /**@}*/
 
-
 /**@{ @name XML Namespaces */
 /**
  * @return Number of declared XML namespaces
@@ -523,7 +517,6 @@ LIBSRCML_DECL const char* srcml_get_namespace_uri(size_t pos);
 LIBSRCML_DECL const char* srcml_get_uri_from_prefix(const char* prefix);
 /**@}*/
 
-
 /**@{ @name Macro Handling */
 /**
  * @return The number of currently defined macros.
@@ -556,7 +549,6 @@ LIBSRCML_DECL const char* srcml_get_macro_type(size_t pos);
  */
 LIBSRCML_DECL void srcml_cleanup_globals();
 /**@}*/
-
 
 /** @defgroup archive Archive
     @{
@@ -645,7 +637,6 @@ LIBSRCML_DECL int srcml_archive_write_open_fd (struct srcml_archive* archive, in
 LIBSRCML_DECL int srcml_archive_write_open_io (struct srcml_archive* archive, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context));
 /**@}*/
 
-
 /**@{ @name Open for Read
       @brief Open a srcML archive for reading */
 /** Open a srcML archive for reading from a filename
@@ -691,7 +682,6 @@ LIBSRCML_DECL int srcml_archive_read_open_fd (struct srcml_archive* archive, int
  */
 LIBSRCML_DECL int srcml_archive_read_open_io (struct srcml_archive* archive, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context));
 /**@}*/
-
 
 /**@{ @name Archive Options */
 
@@ -1014,7 +1004,6 @@ LIBSRCML_DECL const char* srcml_archive_get_macro_type (const struct srcml_archi
 LIBSRCML_DECL const char* srcml_archive_check_extension(const struct srcml_archive* archive, const char* filename);
 /**@}*/
 
-
 /**@{ @name Read Unit
 */
 /** Read the next unit header from the archive
@@ -1032,7 +1021,6 @@ LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_header(struct srcml_arc
  */
 LIBSRCML_DECL int srcml_unit_read_body(struct srcml_unit* unit);
 /**@}*/
-
 
 /**@{ @name XPath query and XSLT transformations */
 
@@ -1243,7 +1231,6 @@ LIBSRCML_DECL int srcml_clear_transforms(struct srcml_archive* archive);
 /**@}*/
 
 
-
 /** @defgroup unit Unit
     @{
 */
@@ -1266,7 +1253,6 @@ LIBSRCML_DECL struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit)
  * @param unit The srcml unit to free
  */
 LIBSRCML_DECL void srcml_unit_free(struct srcml_unit* unit);
-
 
 /**@{ @name Setup options */
 /** Set the source-code encoding for the srcml unit
@@ -1308,7 +1294,6 @@ LIBSRCML_DECL int srcml_unit_set_version (struct srcml_unit* unit, const char* v
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_unit_set_timestamp (struct srcml_unit* unit, const char* timestamp);
-
 
 /** Set the type of end of line to be used for unparse
  * @param unit A srcml_unit
@@ -1382,7 +1367,6 @@ LIBSRCML_DECL const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit);
 LIBSRCML_DECL int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size);
 /**@}*/
 
-
 /**@{ @name Convert source code to srcML
       @brief Source code from a variety of input sources is converted into srcML, and stored in a unit
       @note Files/buffer can be compressed with gzip (i.e., .gz extension)
@@ -1430,7 +1414,6 @@ LIBSRCML_DECL int srcml_unit_parse_fd (struct srcml_unit* unit, int src_fd);
  */
 LIBSRCML_DECL int srcml_unit_parse_io (struct srcml_unit* unit, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context));
 /**@}*/
-
 
 /**@{ @name Convert srcML to source code 
       @brief srcML in a srcml unit is converted back to source code, and stored in a variety of output destinations
@@ -1484,7 +1467,6 @@ LIBSRCML_DECL int srcml_unit_unparse_fd (struct srcml_unit* unit, int fd);
 LIBSRCML_DECL int srcml_unit_unparse_io (struct srcml_unit* unit, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context));
 /**@}*/
 
-
 /**@{ @name Iteratively build a unit */
 /**
  * @todo Add documentation
@@ -1522,7 +1504,6 @@ LIBSRCML_DECL int srcml_write_attribute(struct srcml_unit* unit, const char * pr
 LIBSRCML_DECL int srcml_write_string(struct srcml_unit* unit, const char * content);
 /**@}*/
 /**@}*/
-
 
 
 /** @defgroup srcDiff srcDiff
