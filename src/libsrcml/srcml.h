@@ -1203,11 +1203,11 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 
-#define SRCML_NORESULT 0
-#define SRCML_NODESET  1
-#define SRCML_BOOLEAN  2
-#define SRCML_NUMBER   3
-#define SRCML_STRING   4
+#define SRCML_RESULTS_NONE 	  0
+#define SRCML_RESULTS_UNITS   1
+#define SRCML_RESULTS_BOOLEAN 2
+#define SRCML_RESULTS_NUMBER  3
+#define SRCML_RESULTS_STRING  4
 
 struct srcml_transformation_result_t {
     int type;

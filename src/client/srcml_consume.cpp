@@ -120,11 +120,11 @@ void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
         }
 
         request->runtime = parsetime.cpu_time_elapsed();
-        request->results.type = SRCML_NODESET;
+        request->results.type = SRCML_RESULTS_UNITS;
 
         // perform any transformations and add them to the request
         srcml_unit_apply_transforms(request->srcml_arch, request->unit, &(request->results));
-        if (request->results.type == SRCML_NORESULT) {
+        if (request->results.type == SRCML_RESULTS_NONE) {
             srcml_unit_free(request->unit);
             request->unit = 0;
         }

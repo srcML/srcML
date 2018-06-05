@@ -40,18 +40,18 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
     // output scalar results
     // @todo Make sure this works with filename output, not just file descriptor
     switch (request->results.type) {
-    case SRCML_BOOLEAN:
+    case SRCML_RESULTS_BOOLEAN:
         dprintf(*destination.fd, request->results.boolValue ? "true\n" : "false\n");
         return;
 
-    case SRCML_NUMBER:
+    case SRCML_RESULTS_NUMBER:
         if (request->results.numberValue != (int) request->results.numberValue)
             dprintf(*destination.fd, "%lf\n", request->results.numberValue);
         else
             dprintf(*destination.fd, "%d\n", (int) request->results.numberValue);
         return;
 
-    case SRCML_STRING:
+    case SRCML_RESULTS_STRING:
         dprintf(*destination.fd, "%s", (char*) request->results.stringValue);
         return;
     };

@@ -519,21 +519,21 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     // handle non-nodeset results
     // @todo Implement these
     switch (lastresult.nodeType) {
-    case SRCML_STRING:
+    case SRCML_RESULTS_STRING:
         if (result != nullptr) {
             result->stringValue = strdup(lastresult.stringValue.c_str());
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
 
-    case SRCML_BOOLEAN:
+    case SRCML_RESULTS_BOOLEAN:
         if (result != nullptr) {
             result->boolValue = lastresult.boolValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
 
-    case SRCML_NUMBER:
+    case SRCML_RESULTS_NUMBER:
         if (result != nullptr) {
             result->numberValue = lastresult.numberValue;
             return SRCML_STATUS_OK;
