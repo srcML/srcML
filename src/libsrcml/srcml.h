@@ -229,7 +229,6 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
 /**@}*/
 /**@}*/
 
-
 /** @defgroup convenience Convenience functions
 
   Straightforward functions for translating single source-code files to and from the srcML format. 
@@ -1230,7 +1229,6 @@ LIBSRCML_DECL int srcml_clear_transforms(struct srcml_archive* archive);
 /**@}*/
 /**@}*/
 
-
 /** @defgroup unit Unit
     @{
 */
@@ -1504,7 +1502,6 @@ LIBSRCML_DECL int srcml_write_attribute(struct srcml_unit* unit, const char * pr
 LIBSRCML_DECL int srcml_write_string(struct srcml_unit* unit, const char * content);
 /**@}*/
 /**@}*/
-
 
 /** @defgroup srcDiff srcDiff
     @{
