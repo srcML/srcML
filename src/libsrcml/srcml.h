@@ -607,7 +607,7 @@ LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive* archiv
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_archive_write_open_memory(struct srcml_archive* archive, char** buffer, size_t * size);
+LIBSRCML_DECL int srcml_archive_write_open_memory(struct srcml_archive* archive, char** buffer, size_t* size);
 
 /** Open up a srcml_archive for writing to a given FILE pointer
  * @param archive A srcml_archive
@@ -1436,7 +1436,7 @@ LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const cha
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_unit_unparse_memory(struct srcml_unit* unit, char** src_buffer, size_t * src_size);
+LIBSRCML_DECL int srcml_unit_unparse_memory(struct srcml_unit* unit, char** src_buffer, size_t* src_size);
 
 /** Convert the srcML in a unit into source code and output to the FILE*
  * @param unit A srcml unit opened for reading
