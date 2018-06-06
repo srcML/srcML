@@ -31,7 +31,7 @@ createfile sub/a.cpp.xml "$sxmlfile1"
 
 # Deprecated warning message
 define deprecated_warning <<- 'STDERR'
-	WARNING srcml: use of option --units or -n is deprecated
+	srcml: use of option --units or -n is deprecated
 STDERR
 
 srcml sub/a.cpp.xml --show-language
