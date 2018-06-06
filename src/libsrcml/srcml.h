@@ -149,7 +149,7 @@ struct srcml_unit;
     @{
  */
 
-/**@{ @name Version */        
+/**@{ @name Version */
 /** The current version of the library
  * @return Version of libsrcml as a number
  */
