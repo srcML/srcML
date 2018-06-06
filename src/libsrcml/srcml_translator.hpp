@@ -148,7 +148,7 @@ private:
     Namespaces namespaces;
 
     /** translation options */
-    OPTION_TYPE& options;
+    OPTION_TYPE options;
 
     /** buffer to hold output to memory */
     xmlBuffer* buffer = nullptr;
