@@ -255,7 +255,8 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     tresult.unitWrapped = false;
 
     // xpath evaluation produces a nodeset result, even if there are no results
-    tresult.nodeType = result_nodes->type == XPATH_NODESET && result_nodes->nodesetval->nodeNr == 0 ? 0 : result_nodes->type;
+    tresult.nodeType = result_nodes->type == XPATH_NODESET && result_nodes && result_nodes->nodesetval && result_nodes->nodesetval->nodeNr == 0 ? 0 : result_nodes->type;
+
 
     // update scalar values, if the type is right
     if (result_nodes->type == XPATH_NUMBER) {
