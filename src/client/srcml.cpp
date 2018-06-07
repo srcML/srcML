@@ -227,7 +227,7 @@ namespace {
     */
     bool request_create_src(const srcml_request_t& request) {
 
-        if (option(SRCML_COMMAND_XML))
+        if (!request.transformations.empty())
             return false;
 
         return (option(SRCML_COMMAND_SRC) || (request.output_filename.state != SRCML &&
