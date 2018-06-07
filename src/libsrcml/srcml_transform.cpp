@@ -563,18 +563,28 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         }
 
         // special case for XML comment as it does not get written to the tree
-        if (fullresults->nodeTab[i]->type == XML_COMMENT_NODE) {
+        switch (fullresults->nodeTab[i]->type) {
+        case XML_COMMENT_NODE:
 
             nunit->srcml.assign("<!--");
             nunit->srcml.append((const char*) fullresults->nodeTab[i]->content);
             nunit->srcml.append("-->");
+            break;
 
-        // special case for XML comment as it does not get written to the tree
-        } else if (fullresults->nodeTab[i]->type == XML_TEXT_NODE) {
+        case XML_TEXT_NODE:
 
             nunit->srcml.append((const char*) fullresults->nodeTab[i]->content);
+            break;
 
-        } else {
+        case XML_ATTRIBUTE_NODE:
+
+            nunit->srcml.append((const char*) fullresults->nodeTab[i]->name);
+            nunit->srcml.append("=\"");
+            nunit->srcml.append((const char*) fullresults->nodeTab[i]->children->content);
+            nunit->srcml.append("\"");
+            break;
+
+        default:
 
             // dump the result tree to the string using an output buffer that writes to a std::string
             doc->children = fullresults->nodeTab[i];
@@ -590,6 +600,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             // very important to flush to make sure the unit contents are all present
             // also performs a free of resources
             xmlOutputBufferClose(output);
+            break;
         }
 
         // mark inside the units
