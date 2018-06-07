@@ -161,6 +161,13 @@ struct srcml_archive {
 
     /** srcDiff revision number */
     boost::optional<size_t> revision_number;
+
+    /** output buffer for io, filename, FILE*, and fd */
+    xmlOutputBuffer* output_buffer = nullptr;
+
+    /** output for memory */
+    char** buffer = nullptr;
+    size_t* size = nullptr;
 };
 
 /**
