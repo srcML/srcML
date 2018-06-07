@@ -52,7 +52,13 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
         return;
 
     case SRCML_RESULTS_STRING:
-        dprintf(*destination.fd, "%s", (char*) request->results.stringValue);
+        const char* s = (const char*) request->results.stringValue;
+        dprintf(*destination.fd, "%s", s);
+
+        // if the string does not end in a newline, output one
+        if (s[strlen(s) - 1] != '\n')
+            dprintf(*destination.fd, "\n");
+        
         return;
     };
 
