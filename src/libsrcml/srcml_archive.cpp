@@ -878,7 +878,7 @@ static int srcml_archive_write_open_internal(srcml_archive * archive, xmlOutputB
  }
 
 /**
- * srcml_archive_open_filename
+ * srcml_archive_write_open_filename
  * @param archive a srcml_archive
  * @param srcml_filename name of an output file
  * @param compression amount of compression 0 none to 9 max
@@ -902,7 +902,7 @@ int srcml_archive_write_open_filename(srcml_archive* archive, const char* srcml_
 }
 
 /**
- * srcml_archive_open_memory
+ * srcml_archive_write_open_memory
  * @param archive a srcml_archive
  * @param buffer location to return output string
  * @param size the size of the resulting buffer
@@ -945,7 +945,7 @@ int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_
 }
 
 /**
- * srcml_archive_open_FILE
+ * srcml_archive_write_open_FILE
  * @param archive a srcml_archive
  * @param srcml_file FILE opened for writing
  *
@@ -965,7 +965,7 @@ int srcml_archive_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 }
 
 /**
- * srcml_archive_open_fd
+ * srcml_archive_write_open_fd
  * @param archive a srcml_archive
  * @param srcml_fd output file descriptor
  *
@@ -985,7 +985,7 @@ int srcml_archive_write_open_fd(srcml_archive* archive, int srcml_fd) {
 }
 
 /**
- * srcml_archive_open_io
+ * srcml_archive_write_open_io
  * @param archive a srcml_archive
  * @param context an io context
  * @param write_callback a write callback function
