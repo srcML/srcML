@@ -872,32 +872,6 @@ static int srcml_archive_write_create_translator_xml_buffer(srcml_archive* archi
     return SRCML_STATUS_OK;
 }
 
-static int srcml_archive_write_create_translator_char_buffer(srcml_archive* archive) {
-
-    try {
-
-        archive->translator = new srcml_translator(
-                                                archive->buffer,
-                                                archive->size,
-                                                optional_to_c_str(archive->encoding, "UTF-8"),
-                                                archive->options,
-                                                archive->namespaces,
-                                                archive->processing_instruction,
-                                                archive->tabstop,
-                                                srcml_check_language(optional_to_c_str(archive->language)),
-                                                optional_to_c_str(archive->revision),
-                                                optional_to_c_str(archive->url),
-                                                0,
-                                                optional_to_c_str(archive->version),
-                                                archive->attributes, 0, 0, 0);
-
-        archive->translator->set_macro_list(archive->user_macro_list);
-
-    } catch(...) { return SRCML_STATUS_IO_ERROR; }
-
-    return SRCML_STATUS_OK;
-}
-
 /**
  * srcml_archive_write_open_filename
  * @param archive a srcml_archive
@@ -1218,16 +1192,11 @@ int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
         return SRCML_STATUS_INVALID_IO_OPERATION;
 
     // if we haven't opened the translator yet, do so now
-    int status = SRCML_STATUS_OK;
     if (archive->translator == nullptr) {
-
-        if (archive->output_buffer)
-            status = srcml_archive_write_create_translator_xml_buffer(archive);
-        else
-            status = srcml_archive_write_create_translator_char_buffer(archive);
+        int status = srcml_archive_write_create_translator_xml_buffer(archive);
+        if (status != SRCML_STATUS_OK)
+            return status;
     } 
-    if (status != SRCML_STATUS_OK)
-        return status;
 
     archive->translator->add_unit(unit);
 
@@ -1254,13 +1223,8 @@ int srcml_archive_write_string(srcml_archive* archive, const char* s, int len) {
 
     if (archive->output_buffer)
         xmlOutputBufferWrite(archive->output_buffer, len, s);
-    else
-        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     archive->rawwrites = true;
-
-//    else
-//        status = srcml_archive_write_create_translator_char_buffer(archive);
 
     return SRCML_STATUS_OK;
 }
@@ -1407,13 +1371,8 @@ void srcml_archive_close(srcml_archive * archive) {
         return;
 
     // if we haven't opened the translator yet, do so now. This will create an empty unit/archive
-    int status = SRCML_STATUS_OK;
     if (!archive->rawwrites && archive->translator == nullptr) {
-
-        if (archive->output_buffer)
-            status = srcml_archive_write_create_translator_xml_buffer(archive);
-        else
-            status = srcml_archive_write_create_translator_char_buffer(archive);
+        srcml_archive_write_create_translator_xml_buffer(archive);
     } 
 
     if (archive->rawwrites && archive->output_buffer)

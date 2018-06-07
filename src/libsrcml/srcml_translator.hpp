@@ -56,24 +56,6 @@ class srcml_translator : public Language {
 public:
 
     // constructor
-    srcml_translator(char** str_buf,
-                     size_t* size,
-                     const char* xml_encoding,
-                     OPTION_TYPE& op,
-                     const Namespaces& namespaces,
-                     boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                     size_t tabsize,
-                     int language,
-                     const char* revision,
-                     const char* url,
-                     const char* filename,
-                     const char* version,
-                     const std::vector<std::string>& attributes,
-                     const char* timestamp,
-                     const char* hash,
-                     const char* encoding);
-
-    // constructor
     srcml_translator(xmlOutputBuffer * output_buffer,
                      const char* xml_encoding,
                      OPTION_TYPE& op,
