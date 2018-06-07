@@ -44,8 +44,6 @@
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
 
-bool createdsrcml = false;
-
 int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
@@ -85,25 +83,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
         srcml_archive_enable_full_archive(srcml_arch);
 
-        // always create the archive
-        int status = 0;
-        int num = src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
-        if (num == 0)
-            return 0;
-
-        if (contains<int>(destination)) {
-
-            status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
-
-        } else {
-
-            status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
-        }
-        if (status != SRCML_STATUS_OK)
-            return 0;
-        createdsrcml = true;
-
-        return num;
+        return src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
 
     } else if (input.protocol == "file" && input.isdirectory) {
 
@@ -151,6 +131,19 @@ void create_srcml(const srcml_request_t& srcml_request,
         SRCMLstatus(ERROR_MSG, "srcml: allocation error for srcml archive");
         exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
+
+    // open the output
+    int nstatus = SRCML_STATUS_OK;
+    if (contains<int>(destination)) {
+
+        nstatus = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
+
+    } else {
+
+        nstatus = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
+    }
+    if (nstatus != SRCML_STATUS_OK)
+        return;
 
     // set options for the output srcml archive
 
@@ -347,16 +340,12 @@ void create_srcml(const srcml_request_t& srcml_request,
     // wait for the writing queue to finish
     write_queue.stop();
 
-    // close any created srcML archive
-    if (createdsrcml || write_queue.numWritten()) {
+    srcml_archive_close(srcml_arch);
+    srcml_archive_free(srcml_arch);
 
-        srcml_archive_close(srcml_arch);
-        srcml_archive_free(srcml_arch);
-
-        // if we were writing to a file descriptor, then close it
-        if (contains<int>(destination))
-            close(*destination.fd);
-    }
+    // if we were writing to a file descriptor, then close it
+    if (contains<int>(destination))
+        close(*destination.fd);
 
     // have to wait to exit
     if (SRCMLStatus::errors())

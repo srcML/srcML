@@ -29,7 +29,7 @@
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
 #include <SRCMLStatus.hpp>
-
+#include <stdio.h>
 
 // Public consumption thread function
 void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_output_dest& destination) {
@@ -41,23 +41,31 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
     // @todo Make sure this works with filename output, not just file descriptor
     switch (request->results.type) {
     case SRCML_RESULTS_BOOLEAN:
-        dprintf(*destination.fd, request->results.boolValue ? "true\n" : "false\n");
+        {
+            const char* boolresult = request->results.boolValue ? "true\n" : "false\n";
+            srcml_archive_write_string(request->srcml_arch, boolresult, (int) strlen(boolresult));
+        }
         return;
 
     case SRCML_RESULTS_NUMBER:
-        if (request->results.numberValue != (int) request->results.numberValue)
-            dprintf(*destination.fd, "%lf\n", request->results.numberValue);
-        else
-            dprintf(*destination.fd, "%d\n", (int) request->results.numberValue);
+        {
+            char s[100] = { 0 };
+            if (request->results.numberValue != (int) request->results.numberValue)
+                snprintf(s, 100, "%lf\n", request->results.numberValue);
+            else
+                snprintf(s, 100, "%d\n", (int) request->results.numberValue);
+
+            srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+        }
         return;
 
     case SRCML_RESULTS_STRING:
         const char* s = (const char*) request->results.stringValue;
-        dprintf(*destination.fd, "%s", s);
+        srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
 
         // if the string does not end in a newline, output one
         if (s[strlen(s) - 1] != '\n')
-            dprintf(*destination.fd, "\n");
+            srcml_archive_write_string(request->srcml_arch, "\n", 1);
         
         return;
     };
@@ -66,29 +74,6 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
     if (request->status == SRCML_STATUS_OK) {
 
         log.totalLOC(request->loc);
-
-        static bool createdsrcml = false;
-
-        // we don't create the output srcml archive until we are going to write to it
-        // Why? Well if we did, then we get an empty srcml archive, and that is not
-        // what we want if there were errors along the way
-        if (!createdsrcml && !option(SRCML_COMMAND_NOARCHIVE)) {
-
-            int status = 0;
-            
-            if (contains<int>(destination)) {
-
-                status = srcml_archive_write_open_fd(request->srcml_arch, *destination.fd);
-
-            } else {
-
-                status = srcml_archive_write_open_filename(request->srcml_arch, destination.c_str(), 0);
-            }
-            if (status != SRCML_STATUS_OK)
-                return;
-
-            createdsrcml = true;
-        }
 
         // chance that a solo unit archive was the input, but transformation was
         // done, so output has to be a full archive

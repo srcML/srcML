@@ -164,10 +164,14 @@ struct srcml_archive {
 
     /** output buffer for io, filename, FILE*, and fd */
     xmlOutputBuffer* output_buffer = nullptr;
+    xmlBuffer* xbuffer = nullptr;
 
     /** output for memory */
     char** buffer = nullptr;
     size_t* size = nullptr;
+
+    /** raw writes were made */
+    bool rawwrites = false;
 };
 
 /**

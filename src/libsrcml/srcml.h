@@ -574,6 +574,15 @@ LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archi
  */
 LIBSRCML_DECL int srcml_archive_write_unit(struct srcml_archive* archive, struct srcml_unit* unit);
 
+/** Append the string to the srcml_archive archive
+ * @param archive A srcml_archive opened for writing
+ * @param unit A srcml_unit to output
+ * @note Can not mix with by element mode.
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
+ */
+LIBSRCML_DECL int srcml_archive_write_string(struct srcml_archive* archive, const char* s, int len);
+
 /** Close a srcml_archive opened using srcml_archive_read_open_*() or srcml_archive_write_open_*().
  * The archive can be reopened.
  * @param archive An open srcml_archive

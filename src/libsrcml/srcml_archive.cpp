@@ -956,7 +956,10 @@ int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_
     archive->buffer = buffer;
     archive->size = size;
 
-    return SRCML_STATUS_OK;
+    archive->xbuffer = xmlBufferCreate();
+    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(archive->xbuffer, 0);
+
+    return srcml_archive_write_open_internal(archive, output_buffer);
 }
 
 /**
@@ -1237,6 +1240,37 @@ int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
 }
 
 /**
+ * srcml_archive_write
+ * @param archive a srcml archive opened for writing
+ * @param unit a srcml_unit to output
+ *
+ * Append the srcml_unit unit to the srcml_archive archive.
+ * If copying from a read and only the attributes have been read
+ * read in the xml and output.
+ *
+ * Can not mix with by element mode.
+ *
+ * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_archive_write_string(srcml_archive* archive, const char* s, int len) {
+
+    if (archive == NULL || s == NULL || len < 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if (archive->output_buffer)
+        xmlOutputBufferWrite(archive->output_buffer, len, s);
+    else
+        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
+    archive->rawwrites = true;
+
+//    else
+//        status = srcml_archive_write_create_translator_char_buffer(archive);
+
+    return SRCML_STATUS_OK;
+}
+
+/**
  * srcml_archive_read_unit_header
  * @param archive a srcml archive open for reading
  *
@@ -1379,7 +1413,7 @@ void srcml_archive_close(srcml_archive * archive) {
 
     // if we haven't opened the translator yet, do so now. This will create an empty unit/archive
     int status = SRCML_STATUS_OK;
-    if (archive->translator == nullptr) {
+    if (!archive->rawwrites && archive->translator == nullptr) {
 
         if (archive->output_buffer)
             status = srcml_archive_write_create_translator_xml_buffer(archive);
@@ -1387,10 +1421,18 @@ void srcml_archive_close(srcml_archive * archive) {
             status = srcml_archive_write_create_translator_char_buffer(archive);
     } 
 
+    if (archive->rawwrites && archive->output_buffer)
+        xmlOutputBufferClose(archive->output_buffer);
+
     if (archive->translator) {
         archive->translator->close();
         delete archive->translator;
         archive->translator = nullptr;
+    }
+
+    if (archive->buffer && archive->size) {
+        (*archive->buffer) = (char *) xmlBufferDetach(archive->xbuffer);
+        *archive->size = (size_t) archive->xbuffer->use;
     }
 
     if (archive->reader) {
