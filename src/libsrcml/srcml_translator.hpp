@@ -149,12 +149,6 @@ private:
     /** list of user defined macros */
     std::vector<std::string> user_macro_list;
 
-    /** location to store output when output is to memory */
-    char** str_buffer = nullptr;
-    
-    /** location to store size of output when output is to memory */
-    size_t* size = nullptr;
-
     /** mark if have outputted starting unit tag for by element writing */
     bool is_outputting_unit = false;
 
