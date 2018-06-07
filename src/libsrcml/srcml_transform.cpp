@@ -563,11 +563,16 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         }
 
         // special case for XML comment as it does not get written to the tree
-        if (fullresults->nodeNr == 1 && fullresults->nodeTab[0]->type == XML_COMMENT_NODE) {
+        if (fullresults->nodeTab[i]->type == XML_COMMENT_NODE) {
 
             nunit->srcml.assign("<!--");
-            nunit->srcml.append((const char*) fullresults->nodeTab[0]->content);
+            nunit->srcml.append((const char*) fullresults->nodeTab[i]->content);
             nunit->srcml.append("-->");
+
+        // special case for XML comment as it does not get written to the tree
+        } else if (fullresults->nodeTab[i]->type == XML_TEXT_NODE) {
+
+            nunit->srcml.append((const char*) fullresults->nodeTab[i]->content);
 
         } else {
 
