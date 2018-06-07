@@ -898,18 +898,6 @@ static int srcml_archive_write_create_translator_char_buffer(srcml_archive* arch
     return SRCML_STATUS_OK;
 }
 
-
-static int srcml_archive_write_open_internal(srcml_archive* archive, xmlOutputBufferPtr output_buffer) {
-
-    if (output_buffer == NULL)
-        return SRCML_STATUS_IO_ERROR;
-
-    archive->type = SRCML_ARCHIVE_WRITE;
-    archive->output_buffer = output_buffer;
-
-    return SRCML_STATUS_OK;
-}
-
 /**
  * srcml_archive_write_open_filename
  * @param archive a srcml_archive
@@ -929,9 +917,10 @@ int srcml_archive_write_open_filename(srcml_archive* archive, const char* srcml_
     if (compression > 9)
         compression = 9;
 
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, compression);
+    archive->type = SRCML_ARCHIVE_WRITE;
+    archive->output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, compression);
 
-    return srcml_archive_write_open_internal(archive, output_buffer);
+    return SRCML_STATUS_OK;
 }
 
 /**
@@ -957,9 +946,9 @@ int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_
     archive->size = size;
 
     archive->xbuffer = xmlBufferCreate();
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateBuffer(archive->xbuffer, 0);
+    archive->output_buffer = xmlOutputBufferCreateBuffer(archive->xbuffer, 0);
 
-    return srcml_archive_write_open_internal(archive, output_buffer);
+    return SRCML_STATUS_OK;
 }
 
 /**
@@ -977,9 +966,11 @@ int srcml_archive_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
     if (archive == NULL || srcml_file == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+    archive->type = SRCML_ARCHIVE_WRITE;
 
-    return srcml_archive_write_open_internal(archive, output_buffer);
+    archive->output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+
+    return SRCML_STATUS_OK;
 }
 
 /**
@@ -997,9 +988,11 @@ int srcml_archive_write_open_fd(srcml_archive* archive, int srcml_fd) {
     if (archive == NULL || srcml_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+    archive->type = SRCML_ARCHIVE_WRITE;
 
-    return srcml_archive_write_open_internal(archive, output_buffer);
+    archive->output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+
+    return SRCML_STATUS_OK;
 }
 
 /**
@@ -1020,9 +1013,11 @@ int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*wr
     if (archive == NULL || context == NULL || write_callback == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    xmlOutputBufferPtr output_buffer = xmlOutputBufferCreateIO((int (*)(void *, const char *, int)) write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+    archive->type = SRCML_ARCHIVE_WRITE;
 
-    return srcml_archive_write_open_internal(archive, output_buffer);
+    archive->output_buffer = xmlOutputBufferCreateIO((int (*)(void *, const char *, int)) write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+
+    return SRCML_STATUS_OK;
 }
 
 /******************************************************************************
