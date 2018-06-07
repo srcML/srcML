@@ -844,7 +844,7 @@ size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive) {
  *                                                                            *
  ******************************************************************************/
 
-static int srcml_archive_write_open_internal(srcml_archive * archive, xmlOutputBufferPtr output_buffer) {
+static int srcml_archive_write_open_internal(srcml_archive* archive, xmlOutputBufferPtr output_buffer) {
 
     if (output_buffer == NULL)
         return SRCML_STATUS_IO_ERROR;
