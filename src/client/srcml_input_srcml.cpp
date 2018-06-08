@@ -38,7 +38,7 @@ int srcml_input_srcml(ParseQueue& queue,
     srcml_archive* srcml_input_archive = srcml_archive_create();
     if (!srcml_input_archive) {
         SRCMLstatus(WARNING_MSG, "srcml: Internal libsrcml error");
-        return 0;
+        return -1;
     }
 
     int open_status = SRCML_STATUS_OK;
@@ -48,11 +48,11 @@ int srcml_input_srcml(ParseQueue& queue,
     open_status = srcml_archive_read_open(srcml_input_archive, srcml_input);
     if (open_status != SRCML_STATUS_OK) {
         if (srcml_input.protocol == "file" )
-            SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
+            SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
         else
-            SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
-        srcml_archive_close(srcml_input_archive);
-        return 0;
+            SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
+
+        return -1;
     }
 
     // output is in srcML

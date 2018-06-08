@@ -332,6 +332,8 @@ void create_srcml(const srcml_request_t& srcml_request,
         int numhandled = srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input, destination);
         if (!numhandled)
             status = 1;
+        if (numhandled == -1)
+            status = -1;
     }
 
     // wait for the parsing queue to finish
@@ -340,7 +342,9 @@ void create_srcml(const srcml_request_t& srcml_request,
     // wait for the writing queue to finish
     write_queue.stop();
 
-    srcml_archive_close(srcml_arch);
+    if (status != -1) {
+        srcml_archive_close(srcml_arch);
+    }
     srcml_archive_free(srcml_arch);
 
     // if we were writing to a file descriptor, then close it
