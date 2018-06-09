@@ -93,6 +93,8 @@ struct sax2_srcsax_handler {
     int content_end = 0;
 
     int loc = 0;
+
+    bool rootcalled = false;
 };
 
 /**

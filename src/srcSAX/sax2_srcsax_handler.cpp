@@ -101,6 +101,55 @@ static void update_ctx(void* ctx) {
     state->prevbase = ctxt->input->base;
 }
 
+// unit and root delayed-start processing
+static int reparse_root(void* ctx) {
+
+    auto ctxt = (xmlParserCtxtPtr) ctx;
+    if (ctxt == nullptr)
+        return 0;
+    auto state = (sax2_srcsax_handler*) ctxt->_private;
+    if (state == nullptr)
+        return 0;
+
+    // Basically, reparse the root start tag, collected when first parsed
+    xmlSAXHandler roottagsax;
+    memset(&roottagsax, 0, sizeof(roottagsax));
+    roottagsax.initialized    = XML_SAX2_MAGIC;
+
+    roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                     int nb_namespaces, const xmlChar** namespaces,
+                     int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
+
+        auto ctxt = (xmlParserCtxtPtr) ctx;
+        if (ctxt == nullptr)
+            return;
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
+        if (state == nullptr)
+            return;
+
+        // call the upper-level start_root
+        if (state->context->handler->start_root)
+            state->context->handler->start_root(state->context, (const char*) localname, 
+                            (const char*) prefix, (const char*) URI,
+                            nb_namespaces, namespaces, nb_attributes, attributes);
+
+        // call the upper-level start_unit for non-archives
+        if (!state->is_archive && state->context->handler->start_unit)
+            state->context->handler->start_unit(state->context, (const char*) localname, 
+                    (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
+    };
+
+    xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(state->rootstarttag.c_str(), (int) state->rootstarttag.size());
+    context->_private = state;
+    context->sax = &roottagsax;
+
+    state->rootcalled = true;
+
+    int status = xmlParseDocument(context);
+
+    return status;
+}
+
 /**
  * start_document
  * @param ctx an xmlParserCtxtPtr
@@ -275,11 +324,14 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (isempty)
         state->context->is_archive = state->is_archive = false;
 
+
     // call the upper-level start_root when an empty element
-    if (isempty && state->context->handler->start_root)
-            state->context->handler->start_root(state->context, (const char*) localname, 
+    if (isempty && state->context->handler->start_root) {
+        state->rootcalled = true;
+        state->context->handler->start_root(state->context, (const char*) localname, 
                             (const char*) prefix, (const char*) URI,
                             nb_namespaces, namespaces, nb_attributes, attributes);
+    }
 
     // assume this is not a solo unit, but delay calling the upper levels until we are sure
     auto save = state->context->handler->start_unit;
@@ -349,41 +401,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     // call the delayed upper-level callbacks for starting a root and a unit
     // waited because we did not know yet if this was an archive
     // Basically, reparse the root start tag, collected when first parsed
-    xmlSAXHandler roottagsax;
-    memset(&roottagsax, 0, sizeof(roottagsax));
-    roottagsax.initialized    = XML_SAX2_MAGIC;
-
-    roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                     int nb_namespaces, const xmlChar** namespaces,
-                     int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
-
-        auto ctxt = (xmlParserCtxtPtr) ctx;
-        if (ctxt == nullptr)
-            return;
-        auto state = (sax2_srcsax_handler*) ctxt->_private;
-        if (state == nullptr)
-            return;
-
-        // call the upper-level start_root
-        if (state->context->handler->start_root)
-            state->context->handler->start_root(state->context, (const char*) localname, 
-                            (const char*) prefix, (const char*) URI,
-                            nb_namespaces, namespaces, nb_attributes, attributes);
-
-        // call the upper-level start_unit for non-archives
-        if (!state->is_archive && state->context->handler->start_unit) {
-            state->context->handler->start_unit(state->context, (const char*) localname, 
-                    (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
-        }
-    };
-
-    xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(state->rootstarttag.c_str(), (int) state->rootstarttag.size());
-    context->_private = state;
-    context->sax = &roottagsax;
-
-    int status = xmlParseDocument(context);
-    if (status == -1)
-        ;
+    reparse_root(ctx);
 
     // decide if this start element is for a unit (archive), or just a regular element (solo unit)
     if (state->is_archive) {
@@ -547,6 +565,15 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         return;
 
     SRCSAX_DEBUG_START(localname);
+
+    if (!state->rootcalled) {
+     //   fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
+        // call the delayed upper-level callbacks for starting a root and a unit
+        // waited because we did not know yet if this was an archive
+        // Basically, reparse the root start tag, collected when first parsed
+//        reparse_root(ctx);
+    }
 
     if (state->context->handler->end_root)
         state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
