@@ -567,12 +567,14 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
     SRCSAX_DEBUG_START(localname);
 
     if (!state->rootcalled) {
-     //   fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         // call the delayed upper-level callbacks for starting a root and a unit
         // waited because we did not know yet if this was an archive
         // Basically, reparse the root start tag, collected when first parsed
-//        reparse_root(ctx);
+        reparse_root(ctx);
+
+        if (state->context->handler->end_unit)
+            state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
     }
 
     if (state->context->handler->end_root)
