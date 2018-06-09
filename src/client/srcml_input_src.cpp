@@ -112,7 +112,7 @@ srcml_input_src::srcml_input_src(const std::string& other, int fds) : unit(0) {
     srcml_input_src s(other);
     s = fds;
 
-    swap(s);
+    *this = std::move(s);
 }
 
 srcml_input_src::srcml_input_src(int fds) : unit(0) {
@@ -120,31 +120,12 @@ srcml_input_src::srcml_input_src(int fds) : unit(0) {
     srcml_input_src s("-");
     s = fds;
 
-    swap(s);
+    *this = std::move(s);
 }
 
-srcml_input_src& srcml_input_src::operator=(const std::string& other) { srcml_input_src t(other); swap(t); return *this; }
+srcml_input_src& srcml_input_src::operator=(const std::string& other) { srcml_input_src t(other); *this = std::move(t); return *this; }
 srcml_input_src& srcml_input_src::operator=(FILE* other) { fileptr = other; return *this; }
 srcml_input_src& srcml_input_src::operator=(int other) { fd = other; return *this; }
-
-void srcml_input_src::swap(srcml_input_src& other) {
-
-    std::swap(filename, other.filename);
-    std::swap(protocol, other.protocol);
-    std::swap(resource, other.resource);
-    std::swap(plainfile, other.plainfile);
-    std::swap(extension, other.extension);
-    std::swap(fileptr, other.fileptr);
-    std::swap(fd, other.fd);
-    std::swap(arch, other.arch);
-    std::swap(state, other.state);
-    std::swap(compressions, other.compressions);
-    std::swap(archives, other.archives);
-    std::swap(isdirectory, other.isdirectory);
-    std::swap(exists, other.exists);
-    std::swap(isdirectoryform, other.isdirectoryform);
-    std::swap(unit, other.unit);
-}
 
 ssize_t srcml_read_callback(void* context, void * buffer, size_t len) {
     archive* libarchive_srcml = (archive*) context;

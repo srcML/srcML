@@ -76,8 +76,6 @@ public:
 
     const char* c_str() const { return resource.c_str(); }
 
-    void swap(srcml_input_src& other);
-
     std::string filename;
     std::string protocol;
     std::string resource;
