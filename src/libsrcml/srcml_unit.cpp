@@ -804,7 +804,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
+    if (unit->unit_translator == nullptr || !unit->unit_translator->add_end_unit())
         return SRCML_STATUS_INVALID_INPUT;
 
     // finished with any parsing
@@ -836,10 +836,11 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
  */
 int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri) {
 
-    if (unit == nullptr || name == 0)
+    // prefix can be default
+    if (unit == nullptr || name == nullptr || uri == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_start_element(prefix, name, uri))
+    if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, uri))
         return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
@@ -856,9 +857,10 @@ int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const
  */
 int srcml_write_end_element(struct srcml_unit* unit) {
 
-    if (unit == nullptr)  return SRCML_STATUS_INVALID_ARGUMENT;
+    if (unit == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_end_element())
+    if (unit->unit_translator == nullptr || !unit->unit_translator->add_end_element())
         return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
@@ -879,10 +881,11 @@ int srcml_write_end_element(struct srcml_unit* unit) {
 
 int srcml_write_namespace(struct srcml_unit* unit, const char* prefix, const char* uri) {
 
-    if (unit == nullptr || uri == 0)
+    // prefix allowed to be default (null)
+    if (unit == nullptr || uri == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_namespace(prefix, uri))
+    if (unit->unit_translator == nullptr || !unit->unit_translator->add_namespace(prefix, uri))
         return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
@@ -904,10 +907,10 @@ int srcml_write_namespace(struct srcml_unit* unit, const char* prefix, const cha
  */
 int srcml_write_attribute(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri, const char* content) {
 
-    if (unit == nullptr || name == 0)
+    if (unit == nullptr || name == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_attribute(prefix, name, uri, content))
+    if (unit->unit_translator == nullptr || !unit->unit_translator->add_attribute(prefix, name, uri, content))
         return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
@@ -926,10 +929,10 @@ int srcml_write_attribute(struct srcml_unit* unit, const char* prefix, const cha
  */
 int srcml_write_string(struct srcml_unit* unit, const char* content) {
 
-    if (unit == nullptr || content == 0)
+    if (unit == nullptr || content == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_string(content))
+    if (unit->unit_translator == nullptr || !unit->unit_translator->add_string(content))
         return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
