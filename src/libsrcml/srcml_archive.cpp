@@ -35,13 +35,13 @@
  *
  * @returns the language for extension or if 0 if no language.
  */
-const char * srcml_archive_check_extension(const srcml_archive * archive, const char* filename) {
+const char* srcml_archive_check_extension(const srcml_archive * archive, const char* filename) {
 
     if (archive == nullptr || filename == nullptr)
         return 0;
 
     Language language(archive->registered_languages.get_language_from_filename(filename));
-    const char * lang_string = language.getLanguageString();
+    const char* lang_string = language.getLanguageString();
     return strcmp(lang_string, "") == 0 ? 0 : lang_string;
 }
 
@@ -981,14 +981,14 @@ int srcml_archive_write_open_fd(srcml_archive* archive, int srcml_fd) {
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context)) {
+int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*write_callback)(void * context, const char* buffer, size_t len), int (*close_callback)(void * context)) {
 
     if (archive == nullptr || context == nullptr || write_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->type = SRCML_ARCHIVE_WRITE;
 
-    archive->output_buffer = xmlOutputBufferCreateIO((int (*)(void *, const char *, int)) write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
+    archive->output_buffer = xmlOutputBufferCreateIO((int (*)(void *, const char*, int)) write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->c_str() : 0));
 
     return SRCML_STATUS_OK;
 }
