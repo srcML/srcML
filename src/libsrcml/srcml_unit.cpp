@@ -568,31 +568,34 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
     if (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    if (!unit->read_header)
+    if (!unit->read_body && !unit->read_header)
         return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     const char* encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding, "ISO-8859-1"));
 
-    std::unique_ptr<xmlOutputBuffer> output_handler(createbuffer(encoding ? xmlFindCharEncodingHandler(encoding) : 0));
-    if (!output_handler)
+    xmlOutputBufferPtr output_handler = createbuffer(encoding ? xmlFindCharEncodingHandler(encoding) : 0);
+    if (!output_handler) {
         return SRCML_STATUS_IO_ERROR;
+    }
 
-    // make sure the body is read
+    int status = -1;
     try {
 
         if (!unit->read_body)
             unit->archive->reader->read_body(unit);
 
+        status = SRCML_STATUS_OK;
+
     } catch(...) {
 
-        return SRCML_STATUS_IO_ERROR;
+        status = SRCML_STATUS_IO_ERROR;
     }
 
-    // copy from the unit source to the xmlOutputBuffer
-    if (xmlOutputBufferWrite(output_handler.get(), (int) unit->src.size(), unit->src.c_str()) == -1)
-        return SRCML_STATUS_IO_ERROR;
+    xmlOutputBufferWrite(output_handler, (int) unit->src.size(), unit->src.c_str());
 
-    return SRCML_STATUS_OK;
+    xmlOutputBufferClose(output_handler);
+
+    return status;
 }
 
 /**
