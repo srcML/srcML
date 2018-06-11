@@ -23,6 +23,7 @@
 #include <srcml_translator.hpp>
 #include <srcml_sax2_reader.hpp>
 #include <UTF8CharBuffer.hpp>
+#include <memory>
 
 /******************************************************************************
  *                                                                            *
@@ -741,12 +742,13 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     // setup the output buffer where the srcML will be created
-    unit->output_buffer = xmlBufferCreate();
-    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(unit->output_buffer, xmlFindCharEncodingHandler("UTF-8"));
-    if (!obuffer) {
-        xmlBufferFree(unit->output_buffer);
+    std::unique_ptr<xmlBuffer> output_buffer(xmlBufferCreate());
+    if (!output_buffer)
         return SRCML_STATUS_IO_ERROR;
-    }
+
+    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(output_buffer.get(), xmlFindCharEncodingHandler("UTF-8"));
+    if (!obuffer)
+        return SRCML_STATUS_IO_ERROR;
 
     // setup the translator (srcML parser + srcML output)
     try {
@@ -775,14 +777,15 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
 
     } catch(...) {
 
-        xmlBufferFree(unit->output_buffer);
         return SRCML_STATUS_IO_ERROR;
-
     }
 
     // create the unit start tag
     if (!unit->unit_translator->add_start_unit(unit))
         return SRCML_STATUS_INVALID_INPUT;
+
+    // now that everything is ok, transfer the buffer to the unit
+    unit->output_buffer = output_buffer.release();
 
     return SRCML_STATUS_OK;
 }
