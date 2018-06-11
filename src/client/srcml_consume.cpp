@@ -35,7 +35,7 @@
 #include <Timer.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
-void srcml_consume(int /* n */, ParseRequest* request, WriteQueue* write_queue) {
+void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueue* write_queue) {
 
     // error passthrough to output for proper output in trace
     if (request->status) {

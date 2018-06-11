@@ -23,9 +23,10 @@
 #ifndef SRCML_CONSUME_HPP
 #define SRCML_CONSUME_HPP
 #include <ParseRequest.hpp>
+#include <memory>
   
 class WriteQueue;
 
-void srcml_consume(int n, ParseRequest*, WriteQueue*);
+void srcml_consume(int n, std::shared_ptr<ParseRequest>, WriteQueue*);
 
 #endif

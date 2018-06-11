@@ -94,7 +94,7 @@ int srcml_input_srcml(ParseQueue& queue,
 
         unitFound = true;
         // form the parsing request
-        ParseRequest* prequest = new ParseRequest;
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
         prequest->srcml_arch = srcml_output_archive;
         prequest->unit = unit;
         prequest->needsparsing = false;

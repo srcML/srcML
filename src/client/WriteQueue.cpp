@@ -25,13 +25,13 @@
 
 WriteQueue::WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool ordered)
        : log(log), destination(destination), ordered(ordered), maxposition(0), q(
-            [](ParseRequest* r1, ParseRequest* r2) {
+            [](std::shared_ptr<ParseRequest> r1, std::shared_ptr<ParseRequest> r2) {
                 return r1->position > r2->position;
             }) {
 }
 
 /* writes out the current srcml */
-void WriteQueue::schedule(ParseRequest* pvalue) {
+void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
 
     // push the value on the priority queue
 	{
@@ -52,7 +52,7 @@ void WriteQueue::schedule(ParseRequest* pvalue) {
 void WriteQueue::eos() {
 
 	// schedule the last one
-    ParseRequest* pvalue = new ParseRequest;
+    std::shared_ptr<ParseRequest> pvalue(new ParseRequest);
 	pvalue->position = maxposition + 1;
     pvalue->status = 1000;
     schedule(pvalue);
@@ -79,7 +79,7 @@ void WriteQueue::process() {
     while (1) {
 
         // get a parse request to handle
-        ParseRequest* pvalue = 0;
+        std::shared_ptr<ParseRequest> pvalue(0);
         {
             std::unique_lock<std::mutex> lock(qmutex);
 

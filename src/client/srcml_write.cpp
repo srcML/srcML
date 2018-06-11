@@ -32,7 +32,7 @@
 #include <stdio.h>
 
 // Public consumption thread function
-void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_output_dest& destination) {
+void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& destination) {
 
     if (!request)
         return;
@@ -134,7 +134,4 @@ void srcml_write_request(ParseRequest* request, TraceLog& log, const srcml_outpu
             srcml_archive_free(request->srcml_arch);
         }
     }
-
-    delete request;
-    request = 0;
 }
