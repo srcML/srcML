@@ -312,7 +312,6 @@ int srcml_archive_disable_full_archive(srcml_archive* archive) {
     return SRCML_STATUS_OK;
 }
 
-
 /**
  * @param archive a srcml_archive
  */
@@ -1317,7 +1316,6 @@ srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
 
     return unit;
 }
-
 
 /**
  * srcml_archive_read_unit
