@@ -41,7 +41,7 @@
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_src_encoding(srcml_unit* unit, const char* encoding) {
+int srcml_unit_set_src_encoding(struct srcml_unit* unit, const char* encoding) {
 
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -61,7 +61,7 @@ int srcml_unit_set_src_encoding(srcml_unit* unit, const char* encoding) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_language(srcml_unit* unit, const char* language) {
+int srcml_unit_set_language(struct srcml_unit* unit, const char* language) {
 
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -81,7 +81,7 @@ int srcml_unit_set_language(srcml_unit* unit, const char* language) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
+int srcml_unit_set_filename(struct srcml_unit* unit, const char* filename) {
 
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -101,7 +101,7 @@ int srcml_unit_set_filename(srcml_unit* unit, const char* filename) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_version(srcml_unit* unit, const char* version) {
+int srcml_unit_set_version(struct srcml_unit* unit, const char* version) {
 
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -121,7 +121,7 @@ int srcml_unit_set_version(srcml_unit* unit, const char* version) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_timestamp(srcml_unit* unit, const char* timestamp) {
+int srcml_unit_set_timestamp(struct srcml_unit* unit, const char* timestamp) {
 
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -141,7 +141,7 @@ int srcml_unit_set_timestamp(srcml_unit* unit, const char* timestamp) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
+int srcml_unit_set_hash(struct srcml_unit* unit, const char* hash) {
 
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -161,7 +161,7 @@ int srcml_unit_set_hash(srcml_unit* unit, const char* hash) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_unparse_set_eol(srcml_unit* unit, size_t eol) {
+int srcml_unit_unparse_set_eol(struct srcml_unit* unit, size_t eol) {
 
     if (unit == nullptr || eol > SOURCE_OUTPUT_EOL_CRLF)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -377,7 +377,7 @@ int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encod
  *
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_IO_ERROR on failure.
  */
-static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
+static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filename,
     std::function<UTF8CharBuffer*(const char* src_encoding, bool output_hash, boost::optional<std::string>& hash)> createUTF8CharBuffer) {
 
     // @todo Figure out what the state of the archive should be
@@ -455,7 +455,7 @@ static int srcml_unit_parse_internal(srcml_unit* unit, const char* filename,
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_parse_filename(srcml_unit* unit, const char* src_filename) {
+int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename) {
 
     if (unit == nullptr || src_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -477,7 +477,7 @@ int srcml_unit_parse_filename(srcml_unit* unit, const char* src_filename) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_parse_memory(srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
+int srcml_unit_parse_memory(struct srcml_unit* unit, const char* src_buffer, size_t buffer_size) {
 
     if (unit == nullptr || (buffer_size && src_buffer == nullptr))
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -498,7 +498,7 @@ int srcml_unit_parse_memory(srcml_unit* unit, const char* src_buffer, size_t buf
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_parse_FILE(srcml_unit* unit, FILE* src_file) {
+int srcml_unit_parse_FILE(struct srcml_unit* unit, FILE* src_file) {
 
     if (unit == nullptr || src_file == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -519,7 +519,7 @@ int srcml_unit_parse_FILE(srcml_unit* unit, FILE* src_file) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_parse_fd(srcml_unit* unit, int src_fd) {
+int srcml_unit_parse_fd(struct srcml_unit* unit, int src_fd) {
 
     if (unit == nullptr || src_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -543,7 +543,7 @@ int srcml_unit_parse_fd(srcml_unit* unit, int src_fd) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_parse_io(srcml_unit* unit, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context)) {
+int srcml_unit_parse_io(struct srcml_unit* unit, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context)) {
 
     if (unit == nullptr || context == nullptr || read_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -560,7 +560,7 @@ int srcml_unit_parse_io(srcml_unit* unit, void * context, ssize_t (*read_callbac
  *                                                                            *
  ******************************************************************************/
 
-static int srcml_unit_unparse_internal(srcml_unit* unit, std::function<xmlOutputBufferPtr(xmlCharEncodingHandlerPtr)> createbuffer) {
+static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xmlOutputBufferPtr(xmlCharEncodingHandlerPtr)> createbuffer) {
 
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -609,7 +609,7 @@ static int srcml_unit_unparse_internal(srcml_unit* unit, std::function<xmlOutput
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_filename(srcml_unit* unit, const char* src_filename, unsigned short /* compression */) {
+int srcml_unit_unparse_filename(struct srcml_unit* unit, const char* src_filename, unsigned short /* compression */) {
 
     if (unit == nullptr || src_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -633,7 +633,7 @@ int srcml_unit_unparse_filename(srcml_unit* unit, const char* src_filename, unsi
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_memory(srcml_unit* unit, char** src_buffer, size_t * src_size) {
+int srcml_unit_unparse_memory(struct srcml_unit* unit, char** src_buffer, size_t * src_size) {
 
     if (unit == nullptr || src_buffer == nullptr || src_size == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -667,7 +667,7 @@ int srcml_unit_unparse_memory(srcml_unit* unit, char** src_buffer, size_t * src_
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_FILE(srcml_unit* unit, FILE* srcml_file) {
+int srcml_unit_unparse_FILE(struct srcml_unit* unit, FILE* srcml_file) {
 
     if (unit == nullptr || srcml_file == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -689,7 +689,7 @@ int srcml_unit_unparse_FILE(srcml_unit* unit, FILE* srcml_file) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_fd(srcml_unit* unit, int srcml_fd) {
+int srcml_unit_unparse_fd(struct srcml_unit* unit, int srcml_fd) {
 
     if (unit == nullptr || srcml_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -713,7 +713,7 @@ int srcml_unit_unparse_fd(srcml_unit* unit, int srcml_fd) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_io(srcml_unit* unit, void* context, int (*write_callback)(void* context, const char* buffer, size_t len), int (*close_callback)(void* context)) {
+int srcml_unit_unparse_io(struct srcml_unit* unit, void* context, int (*write_callback)(void* context, const char* buffer, size_t len), int (*close_callback)(void* context)) {
 
     if (unit == nullptr || context == nullptr || write_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -949,7 +949,7 @@ int srcml_write_string(struct srcml_unit* unit, const char* content) {
  *
  * @returns unit on success and on failure returns NULL
  */
-srcml_unit* srcml_unit_create(srcml_archive * archive) {
+srcml_unit* srcml_unit_create(struct srcml_archive* archive) {
 
     if (archive == nullptr)
         return 0;
@@ -1005,7 +1005,7 @@ LIBSRCML_DECL struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit)
  *
  * Free the contents of a srcml_unit.
  */
-void srcml_unit_free(srcml_unit* unit) {
+void srcml_unit_free(struct srcml_unit* unit) {
 
     if (unit == nullptr)
         return;
