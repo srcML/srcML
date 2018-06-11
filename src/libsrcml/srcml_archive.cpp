@@ -35,7 +35,7 @@
  *
  * @returns the language for extension or if 0 if no language.
  */
-const char* srcml_archive_check_extension(const srcml_archive * archive, const char* filename) {
+const char* srcml_archive_check_extension(const srcml_archive* archive, const char* filename) {
 
     if (archive == nullptr || filename == nullptr)
         return 0;
@@ -105,7 +105,7 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
     if (archive == nullptr)
         return 0;
 
-    srcml_archive * new_archive = srcml_archive_create();
+    srcml_archive* new_archive = srcml_archive_create();
     if (!new_archive)
         return 0;
 
@@ -1007,7 +1007,7 @@ int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*wr
  * Reads and sets the open type as well as gathers the attributes
  * and sets the options from the opened srcML Archive.
  */
-static int srcml_archive_read_open_internal(srcml_archive * archive) {
+static int srcml_archive_read_open_internal(srcml_archive* archive) {
 
     try {
 
@@ -1363,7 +1363,7 @@ srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
  * or srcml_archive_write_open_*.
  * Archive can be reopened.
  */
-void srcml_archive_close(srcml_archive * archive) {
+void srcml_archive_close(srcml_archive* archive) {
 
     if (archive == nullptr)
         return;
