@@ -37,7 +37,7 @@
  */
 const char * srcml_archive_check_extension(const srcml_archive * archive, const char* filename) {
 
-    if (archive == NULL || filename == NULL)
+    if (archive == nullptr || filename == nullptr)
         return 0;
 
     Language language(archive->registered_languages.get_language_from_filename(filename));
@@ -85,7 +85,7 @@ srcml_archive* srcml_archive_create() {
  */
 void srcml_archive_free(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return;
 
     delete archive;
@@ -102,7 +102,7 @@ void srcml_archive_free(srcml_archive* archive) {
  */
 srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return 0;
 
     srcml_archive * new_archive = srcml_archive_create();
@@ -131,7 +131,7 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
  */
 int srcml_archive_set_src_encoding(srcml_archive* archive, const char* src_encoding) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->src_encoding = src_encoding ? std::string(src_encoding) : boost::optional<std::string>();
@@ -150,7 +150,7 @@ int srcml_archive_set_src_encoding(srcml_archive* archive, const char* src_encod
  */
 int srcml_archive_set_xml_encoding(srcml_archive* archive, const char* encoding) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->encoding = encoding ? std::string(encoding) : boost::optional<std::string>();
@@ -169,7 +169,7 @@ int srcml_archive_set_xml_encoding(srcml_archive* archive, const char* encoding)
  */
 int srcml_archive_set_language(srcml_archive* archive, const char* language) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->language = language ? std::string(language) : decltype(archive->language)();
@@ -188,7 +188,7 @@ int srcml_archive_set_language(srcml_archive* archive, const char* language) {
  */
 int srcml_archive_set_url (srcml_archive* archive, const char* url) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->url = url ? std::string(url) : decltype(archive->url)();
@@ -207,7 +207,7 @@ int srcml_archive_set_url (srcml_archive* archive, const char* url) {
  */
 int srcml_archive_set_version(srcml_archive* archive, const char* version) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (version)
@@ -227,7 +227,7 @@ int srcml_archive_set_version(srcml_archive* archive, const char* version) {
  */
 int srcml_archive_set_options(srcml_archive* archive, unsigned long long options) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options = options;
@@ -264,7 +264,7 @@ int srcml_archive_has_hash(const struct srcml_archive* archive) {
  */
 int srcml_archive_enable_full_archive(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options |= (unsigned long long)(SRCML_OPTION_ARCHIVE);
@@ -277,7 +277,7 @@ int srcml_archive_enable_full_archive(srcml_archive* archive) {
  */
 int srcml_archive_disable_fragment(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options &= ~(unsigned long long)(SRCML_OPTION_FRAGMENT);
@@ -290,7 +290,7 @@ int srcml_archive_disable_fragment(srcml_archive* archive) {
  */
 int srcml_archive_enable_fragment(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options |= (unsigned long long)(SRCML_OPTION_FRAGMENT);
@@ -304,7 +304,7 @@ int srcml_archive_enable_fragment(srcml_archive* archive) {
  */
 int srcml_archive_disable_full_archive(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options &= ~(unsigned long long)(SRCML_OPTION_ARCHIVE);
@@ -318,7 +318,7 @@ int srcml_archive_disable_full_archive(srcml_archive* archive) {
  */
 int srcml_archive_enable_hash(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options |= (unsigned long long)(SRCML_OPTION_HASH);
@@ -331,7 +331,7 @@ int srcml_archive_enable_hash(srcml_archive* archive) {
  */
 int srcml_archive_disable_hash(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options &= ~(unsigned long long)(SRCML_OPTION_HASH);
@@ -351,7 +351,7 @@ int srcml_archive_disable_hash(srcml_archive* archive) {
  */
 int srcml_archive_enable_option(srcml_archive* archive, unsigned long long option) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options |= option;
@@ -371,7 +371,7 @@ int srcml_archive_enable_option(srcml_archive* archive, unsigned long long optio
  */
 int srcml_archive_disable_option(srcml_archive* archive, unsigned long long option) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options &= ~option;
@@ -390,7 +390,7 @@ int srcml_archive_disable_option(srcml_archive* archive, unsigned long long opti
  */
 int srcml_archive_set_tabstop(srcml_archive* archive, size_t tabstop) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->tabstop = tabstop;
@@ -410,7 +410,7 @@ int srcml_archive_set_tabstop(srcml_archive* archive, size_t tabstop) {
  */
 int srcml_archive_register_file_extension(srcml_archive* archive, const char* extension, const char* language) {
 
-    if (archive == NULL || extension == NULL || language == NULL)
+    if (archive == nullptr || extension == nullptr || language == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (archive->registered_languages.register_user_ext(extension, language))
@@ -431,7 +431,7 @@ int srcml_archive_register_file_extension(srcml_archive* archive, const char* ex
  */
 int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix, const char* uri) {
 
-    if (archive == NULL || prefix == NULL || uri == NULL)
+    if (archive == nullptr || prefix == nullptr || uri == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     // lookup by uri, if it already exists, update the prefix. If it doesn't exist, add it
@@ -474,7 +474,7 @@ int srcml_archive_register_namespace(srcml_archive* archive, const char* prefix,
  */
 int srcml_archive_set_processing_instruction(srcml_archive* archive, const char* target, const char* data) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->processing_instruction = std::pair<std::string,std::string>(target, data);
@@ -502,7 +502,7 @@ int srcml_archive_set_processing_instruction(srcml_archive* archive, const char*
  */
 int srcml_archive_register_macro(srcml_archive* archive, const char* token, const char* type) {
 
-    if (archive == NULL || token == NULL || type == NULL)
+    if (archive == nullptr || token == nullptr || type == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     try {
@@ -534,7 +534,7 @@ int srcml_archive_register_macro(srcml_archive* archive, const char* token, cons
  */
 int srcml_archive_set_srcdiff_revision(srcml_archive* archive, size_t revision_number) {
 
-    if (archive == NULL
+    if (archive == nullptr
         || (revision_number != SRCDIFF_REVISION_ORIGINAL && revision_number != SRCDIFF_REVISION_MODIFIED))
             return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -659,7 +659,7 @@ size_t srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
  */
 const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, size_t pos) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return 0;
 
     if (pos > archive->namespaces.size())
@@ -678,7 +678,7 @@ const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archi
  */
 const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archive, const char* uri) {
 
-    if (archive == NULL || uri == NULL)
+    if (archive == nullptr || uri == nullptr)
         return 0;
 
     const auto& view = archive->namespaces.get<nstags::uri>();
@@ -697,7 +697,7 @@ const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archiv
  */
 const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive, size_t pos) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return 0;
 
     if (pos >= archive->namespaces.size())
@@ -716,7 +716,7 @@ const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive,
  */
 const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archive, const char* prefix) {
 
-    if (archive == NULL || prefix == NULL)
+    if (archive == nullptr || prefix == nullptr)
         return 0;
 
     const auto& view = archive->namespaces.get<nstags::prefix>();
@@ -769,7 +769,7 @@ size_t srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
  */
 const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, size_t pos) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return 0;
 
     if (pos * 2 >= archive->user_macro_list.size())
@@ -788,7 +788,7 @@ const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, s
  */
 const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archive, const char* token) {
 
-    if (archive == NULL || token == NULL)
+    if (archive == nullptr || token == nullptr)
         return 0;
 
     try {
@@ -813,7 +813,7 @@ const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archi
  */
 const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, size_t pos) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return 0;
 
     if (pos * 2 + 1 >= archive->user_macro_list.size())
@@ -832,7 +832,7 @@ const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, si
  */
 size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return SRCDIFF_REVISION_INVALID;
 
     return archive->revision_number ? *archive->revision_number : SRCDIFF_REVISION_INVALID;
@@ -885,7 +885,7 @@ static int srcml_archive_write_create_translator_xml_buffer(srcml_archive* archi
  */
 int srcml_archive_write_open_filename(srcml_archive* archive, const char* srcml_filename, unsigned short compression) {
 
-    if (archive == NULL || srcml_filename == NULL)
+    if (archive == nullptr || srcml_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (compression > 9)
@@ -911,7 +911,7 @@ int srcml_archive_write_open_filename(srcml_archive* archive, const char* srcml_
  */
 int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_t * size) {
 
-    if (archive == NULL || buffer == NULL || size == NULL)
+    if (archive == nullptr || buffer == nullptr || size == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->type = SRCML_ARCHIVE_WRITE;
@@ -937,7 +937,7 @@ int srcml_archive_write_open_memory(srcml_archive* archive, char** buffer, size_
  */
 int srcml_archive_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
-    if (archive == NULL || srcml_file == NULL)
+    if (archive == nullptr || srcml_file == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->type = SRCML_ARCHIVE_WRITE;
@@ -959,7 +959,7 @@ int srcml_archive_write_open_FILE(srcml_archive* archive, FILE* srcml_file) {
  */
 int srcml_archive_write_open_fd(srcml_archive* archive, int srcml_fd) {
 
-    if (archive == NULL || srcml_fd < 0)
+    if (archive == nullptr || srcml_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->type = SRCML_ARCHIVE_WRITE;
@@ -984,7 +984,7 @@ int srcml_archive_write_open_fd(srcml_archive* archive, int srcml_fd) {
  */
 int srcml_archive_write_open_io(srcml_archive* archive, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context)) {
 
-    if (archive == NULL || context == NULL || write_callback == NULL)
+    if (archive == nullptr || context == nullptr || write_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->type = SRCML_ARCHIVE_WRITE;
@@ -1037,7 +1037,7 @@ static int srcml_archive_read_open_internal(srcml_archive * archive) {
  */
 int srcml_archive_read_open_filename(srcml_archive* archive, const char* srcml_filename) {
 
-    if (archive == NULL || srcml_filename == NULL)
+    if (archive == nullptr || srcml_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFilename(srcml_filename, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
@@ -1058,7 +1058,7 @@ int srcml_archive_read_open_filename(srcml_archive* archive, const char* srcml_f
  */
 int srcml_archive_read_open_memory(srcml_archive* archive, const char* buffer, size_t buffer_size) {
 
-    if (archive == NULL || buffer == NULL || buffer_size <= 0)
+    if (archive == nullptr || buffer == nullptr || buffer_size <= 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlCharEncoding encoding = archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE;
@@ -1100,7 +1100,7 @@ int srcml_archive_read_open_memory(srcml_archive* archive, const char* buffer, s
  */
 int srcml_archive_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
 
-    if (archive == NULL || srcml_file == NULL)
+    if (archive == nullptr || srcml_file == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFile(srcml_file, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
@@ -1120,7 +1120,7 @@ int srcml_archive_read_open_FILE(srcml_archive* archive, FILE* srcml_file) {
  */
 int srcml_archive_read_open_fd(srcml_archive* archive, int srcml_fd) {
 
-    if (archive == NULL || srcml_fd < 0)
+    if (archive == nullptr || srcml_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateFd(srcml_fd, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
@@ -1146,7 +1146,7 @@ typedef int (*libxml2_read)(void * context, char* buffer, int len);
 
 int srcml_archive_read_open_io(srcml_archive* archive, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context)) {
 
-    if (archive == NULL || context == NULL || read_callback == NULL)
+    if (archive == nullptr || context == nullptr || read_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->input = xmlParserInputBufferCreateIO((libxml2_read) read_callback, close_callback, context, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
@@ -1175,7 +1175,7 @@ int srcml_archive_read_open_io(srcml_archive* archive, void * context, ssize_t (
  */
 int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
 
-    if (archive == NULL || unit == NULL)
+    if (archive == nullptr || unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (!unit->read_body && !unit->read_header)
@@ -1218,7 +1218,7 @@ int srcml_archive_write_unit(srcml_archive* archive, struct srcml_unit* unit) {
  */
 int srcml_archive_write_string(srcml_archive* archive, const char* s, int len) {
 
-    if (archive == NULL || s == NULL || len < 0)
+    if (archive == nullptr || s == nullptr || len < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (archive->output_buffer)
@@ -1242,7 +1242,7 @@ int srcml_archive_write_string(srcml_archive* archive, const char* s, int len) {
  */
 srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return 0;
 
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
@@ -1273,7 +1273,7 @@ srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
  */
 int srcml_unit_read_body(srcml_unit* unit) {
 
-    if (unit == NULL || unit->archive == NULL)
+    if (unit == nullptr || unit->archive == nullptr)
         return 0;
 
     if (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
@@ -1298,7 +1298,7 @@ int srcml_unit_read_body(srcml_unit* unit) {
  */
 srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return 0;
 
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
@@ -1331,7 +1331,7 @@ srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
  */
 srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return 0;
 
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
@@ -1367,7 +1367,7 @@ srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
  */
 void srcml_archive_close(srcml_archive * archive) {
 
-    if (archive == NULL)
+    if (archive == nullptr)
         return;
 
     // if we haven't opened the translator yet, do so now. This will create an empty unit/archive
