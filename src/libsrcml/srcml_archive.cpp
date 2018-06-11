@@ -66,7 +66,7 @@ srcml_archive* srcml_archive_create() {
 
         archive = new srcml_archive;
 
-    } catch(...) { return 0; }
+    } catch(...) { return nullptr; }
 
     xmlInitParser();
 
@@ -103,11 +103,11 @@ void srcml_archive_free(srcml_archive* archive) {
 srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
 
     if (archive == nullptr)
-        return 0;
+        return nullptr;
 
     srcml_archive* new_archive = srcml_archive_create();
     if (!new_archive)
-        return 0;
+        return nullptr;
 
     *new_archive = *archive;
 
@@ -659,10 +659,10 @@ size_t srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
 const char* srcml_archive_get_namespace_prefix(const struct srcml_archive* archive, size_t pos) {
 
     if (archive == nullptr)
-        return 0;
+        return nullptr;
 
     if (pos > archive->namespaces.size())
-        return 0;
+        return nullptr;
 
     return archive->namespaces[pos].prefix.c_str();
 }
@@ -697,10 +697,10 @@ const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archiv
 const char* srcml_archive_get_namespace_uri(const struct srcml_archive* archive, size_t pos) {
 
     if (archive == nullptr)
-        return 0;
+        return nullptr;
 
     if (pos >= archive->namespaces.size())
-        return 0;
+        return nullptr;
 
     return archive->namespaces[pos].uri.c_str();
 }
@@ -1239,20 +1239,20 @@ int srcml_archive_write_string(srcml_archive* archive, const char* s, int len) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_archive_read_unit_header(srcml_archive* archive) {
+srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive) {
 
     if (archive == nullptr)
-        return 0;
+        return nullptr;
 
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
-        return 0;
+        return nullptr;
 
     srcml_unit* unit = srcml_unit_create(archive);
 
     int not_done = archive->reader->read_header(unit);
     if (!not_done) {
         srcml_unit_free(unit);
-        return 0;
+        return nullptr;
     }
 
     unit->read_header = true;
@@ -1295,13 +1295,13 @@ int srcml_unit_read_body(srcml_unit* unit) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
+srcml_unit* srcml_archive_read_unit_xml(struct srcml_archive* archive) {
 
     if (archive == nullptr)
-        return 0;
+        return nullptr;
 
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
-        return 0;
+        return nullptr;
 
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
@@ -1327,13 +1327,13 @@ srcml_unit* srcml_archive_read_unit_xml(srcml_archive* archive) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_archive_read_unit(srcml_archive* archive) {
+srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
 
     if (archive == nullptr)
-        return 0;
+        return nullptr;
 
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
-        return 0;
+        return nullptr;
 
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
