@@ -496,9 +496,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         for (int i = 0; i < pr->nodeNr; ++i) {
             xmlDocSetRootElement(doc.get(), pr->nodeTab[i]);
 
-            TransformationResult tresult = trans->apply(doc.get(), 0);
-            lastresult = tresult;
-            std::unique_ptr<xmlNodeSet> results(tresult.nodeset);
+            lastresult = trans->apply(doc.get(), 0);
+            std::unique_ptr<xmlNodeSet> results(lastresult.nodeset);
             if (results == nullptr)
                 break;
             xmlXPathNodeSetMerge(fullresults.get(), results.get());
