@@ -1239,7 +1239,7 @@ int srcml_archive_write_string(struct srcml_archive* archive, const char* s, int
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive) {
+struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive) {
 
     if (archive == nullptr)
         return nullptr;
@@ -1270,7 +1270,7 @@ srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-int srcml_unit_read_body(srcml_unit* unit) {
+int srcml_unit_read_body(struct srcml_unit* unit) {
 
     if (unit == nullptr || unit->archive == nullptr)
         return 0;
@@ -1295,7 +1295,7 @@ int srcml_unit_read_body(srcml_unit* unit) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_archive_read_unit_xml(struct srcml_archive* archive) {
+struct srcml_unit* srcml_archive_read_unit_xml(struct srcml_archive* archive) {
 
     if (archive == nullptr)
         return nullptr;
@@ -1327,7 +1327,7 @@ srcml_unit* srcml_archive_read_unit_xml(struct srcml_archive* archive) {
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
  */
-srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
+struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
 
     if (archive == nullptr)
         return nullptr;
