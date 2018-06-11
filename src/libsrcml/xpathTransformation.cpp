@@ -131,11 +131,11 @@ int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
  */
 void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) const {
 
-        // grab current value
+    // grab current value
     const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name.c_str(), BAD_CAST attr_uri);
     const char* newvalue = attr_value.c_str();
 
-        // previous property
+    // previous property
     std::string curvalue;
     if (value && strcmp(value, newvalue)) {
 

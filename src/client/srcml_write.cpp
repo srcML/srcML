@@ -124,14 +124,9 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         SRCMLstatus(WARNING_MSG, "Internal eror " + std::to_string(request->status));
     }
 
-    // free the unit
-    if (request->unit) {
-        srcml_unit_free(request->unit);
-
-        // close the archive (if per-unit)
-        if (option(SRCML_COMMAND_NOARCHIVE)) {
+    // close the archive (if per-unit)
+    if (request->unit && option(SRCML_COMMAND_NOARCHIVE)) {
             srcml_archive_close(request->srcml_arch);
             srcml_archive_free(request->srcml_arch);
-        }
     }
 }
