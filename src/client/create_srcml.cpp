@@ -51,27 +51,17 @@ int srcml_handler_dispatch(ParseQueue& queue,
                           const srcml_output_dest& destination) {
 
     // call appropriate handler
-    if (input.state == SRCML && input.protocol == "file" && !input.compressions.empty()) {
+    if (input.state == SRCML) {
 
-        // may have some compressions/archives
         srcml_input_src uninput = input;
-        uninput.fd = input_archive(uninput);
 
-        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
-
-    } else if (input.state == SRCML && (input.protocol == "file" || input.protocol == "stdin")) {
-
-        return srcml_input_srcml(queue, srcml_arch, input, srcml_request.revision);
-
-    } else if (input.state == SRCML) {
-
-       // input must go through libcurl pipe
-        srcml_input_src uninput = input;
-        if (!input_curl(uninput))
+        // input must go through libcurl pipe
+        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
             return 0;
 
         // may have some compressions/archives
-        uninput.fd = input_archive(uninput);
+        if (!uninput.compressions.empty())
+            uninput.fd = input_archive(uninput);
 
         return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
@@ -92,18 +82,6 @@ int srcml_handler_dispatch(ParseQueue& queue,
     } else if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
        
         return src_input_file(queue, srcml_arch, srcml_request, input);
-
-    } else if (input.protocol != "file" && curl_supported(input.protocol) && input.extension == ".xml") { 
-
-        // input must go through libcurl pipe
-        srcml_input_src uninput = input;
-        if (!input_curl(uninput))
-            return 0;
-
-        // may have some compressions/archives
-        uninput.fd = input_archive(uninput);
-
-        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
     } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
 
