@@ -972,7 +972,7 @@ struct srcml_unit* srcml_unit_create(struct srcml_archive* archive) {
  * @param unit A srcml_unit
  * @return The cloned unit
  */
-LIBSRCML_DECL struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit) {
+struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit) {
 
     if (unit == nullptr)
         return 0;
