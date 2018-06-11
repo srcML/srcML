@@ -26,6 +26,6 @@
   
 class WriteQueue;
 
-void srcml_consume(ParseRequest*, WriteQueue*);
+void srcml_consume(int n, ParseRequest*, WriteQueue*);
 
 #endif

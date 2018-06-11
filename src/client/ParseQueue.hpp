@@ -53,7 +53,7 @@ public:
 	        return;
 	    }
 
-        pool.push(std::bind(srcml_consume, pvalue, wqueue));
+        pool.push(srcml_consume, pvalue, wqueue);
 	}
 
 	inline void wait() {
