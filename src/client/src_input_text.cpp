@@ -64,10 +64,7 @@ int src_input_text(ParseQueue& queue,
     while (ptext) {
 
         // form the parsing request
-        std::shared_ptr<ParseRequest> prequest(new ParseRequest, [](ParseRequest* p) {
-           fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-           delete p;
-        });
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
 
         if (option(SRCML_COMMAND_NOARCHIVE))
             prequest->disk_dir = srcml_request.output_filename;
