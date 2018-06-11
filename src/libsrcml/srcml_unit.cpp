@@ -945,11 +945,11 @@ int srcml_write_string(struct srcml_unit* unit, const char* content) {
  * srcml_unit_create
  * @param archive a srcml archvie
  *
- * Create a srcml_unit tied to the srcml_archive archive
+ * Create a srcml_unit tied to the srcml_archive archive. Internal function.
  *
  * @returns unit on success and on failure returns NULL
  */
-srcml_unit* srcml_unit_create(struct srcml_archive* archive) {
+struct srcml_unit* srcml_unit_create(struct srcml_archive* archive) {
 
     if (archive == nullptr)
         return 0;
@@ -959,12 +959,9 @@ srcml_unit* srcml_unit_create(struct srcml_archive* archive) {
 
         unit = new srcml_unit;
 
-    } catch(...) { return 0; }
-    unit->revision = srcml_version_string();
+    } catch(...) { return nullptr; }
+    
     unit->archive = archive;
-    unit->eol = SOURCE_OUTPUT_EOL_AUTO;
-    unit->read_header = false;
-    unit->unit_translator = 0;
 
     return unit;
 }

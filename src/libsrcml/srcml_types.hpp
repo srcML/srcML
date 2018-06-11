@@ -187,7 +187,7 @@ struct srcml_unit {
     /** source encoding */
     boost::optional<std::string> encoding;
     /** an attribute for a revision */
-    boost::optional<std::string> revision;
+    boost::optional<std::string> revision = std::string(srcml_version_string());
     /** an attribute for a language */
     boost::optional<std::string> language;
     /** an attribute name for a file */
@@ -203,7 +203,7 @@ struct srcml_unit {
     /** an array of name-value attribute pairs */
     std::vector<std::string> attributes;
     /** the type of eol to output with source code */
-    size_t eol = 0;
+    size_t eol = SOURCE_OUTPUT_EOL_AUTO;
 
     /** language decided for the unit */
     int derived_language = SRCML_LANGUAGE_NONE;
