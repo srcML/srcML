@@ -157,7 +157,7 @@ struct srcml_archive {
     /** xmlParserInputBuffer for reading */
     xmlParserInputBufferPtr input = nullptr;
  
-    std::vector<Transformation*> ntransformations;
+    std::vector<Transformation*> transformations;
 
     /** srcDiff revision number */
     boost::optional<size_t> revision_number;

@@ -64,7 +64,7 @@ int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archiv
     xpathTransformation* trans = new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
             attr_prefix, attr_namespace_uri, attr_name, attr_value);
 
-    archive->ntransformations.push_back(trans);
+    archive->transformations.push_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -149,7 +149,7 @@ static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPt
 
     xsltTransformation* trans = new xsltTransformation(doc, std::vector<std::string>());
 
-    archive->ntransformations.push_back(trans);
+    archive->transformations.push_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -266,7 +266,7 @@ static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDo
 
     relaxngTransformation* trans = new relaxngTransformation(doc);
 
-    archive->ntransformations.push_back(trans);
+    archive->transformations.push_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -377,12 +377,12 @@ int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param
         return SRCML_STATUS_INVALID_ARGUMENT;
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;
-    if (archive->ntransformations.size() == 0)
+    if (archive->transformations.size() == 0)
         return SRCML_STATUS_NO_TRANSFORMATION;
 
-    archive->ntransformations.back()->xsl_parameters.pop_back();
-    archive->ntransformations.back()->xsl_parameters.push_back(xpath_param_name);
-    archive->ntransformations.back()->xsl_parameters.push_back(xpath_param_value);
+    archive->transformations.back()->xsl_parameters.pop_back();
+    archive->transformations.back()->xsl_parameters.push_back(xpath_param_name);
+    archive->transformations.back()->xsl_parameters.push_back(xpath_param_value);
 
     return SRCML_STATUS_OK;
 }
@@ -403,11 +403,11 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
         return SRCML_STATUS_INVALID_ARGUMENT;
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
         return SRCML_STATUS_INVALID_IO_OPERATION;
-    if (archive->ntransformations.size() == 0)
+    if (archive->transformations.size() == 0)
         return SRCML_STATUS_NO_TRANSFORMATION;
 
-    archive->ntransformations.back()->xsl_parameters.pop_back();
-    archive->ntransformations.back()->xsl_parameters.push_back(xpath_param_name);
+    archive->transformations.back()->xsl_parameters.pop_back();
+    archive->transformations.back()->xsl_parameters.push_back(xpath_param_name);
 
     size_t xpath_param_value_length = strlen(xpath_param_value);
     char * string_value = new char[xpath_param_value_length + 3];
@@ -416,7 +416,7 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
     string_value[xpath_param_value_length + 1] = '"';
     string_value[xpath_param_value_length + 2] = 0;
 
-    archive->ntransformations.back()->xsl_parameters.push_back(string_value);
+    archive->transformations.back()->xsl_parameters.push_back(string_value);
 
     return SRCML_STATUS_OK;
 }
@@ -435,9 +435,9 @@ int srcml_clear_transforms(srcml_archive* archive) {
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     // cleanup the transformations
-    for (const auto* p : archive->ntransformations)
+    for (const auto* p : archive->transformations)
         delete p;
-    archive->ntransformations.clear();
+    archive->transformations.clear();
 
     return SRCML_STATUS_OK;
 }
@@ -465,7 +465,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     }
 
     // unit stays the same for no transformation
-    if (archive->ntransformations.empty())
+    if (archive->transformations.empty())
         return SRCML_STATUS_OK;
 
     // create a DOM of the unit
@@ -480,7 +480,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     const Transformation* lasttrans = nullptr;
     TransformationResult lastresult;
-    for (const auto* trans : archive->ntransformations) {
+    for (const auto* trans : archive->transformations) {
 
         // keep track of the last transformation processed, which might not be the last one in the list
         lasttrans = trans;
