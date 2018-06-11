@@ -49,6 +49,11 @@ namespace std {
     };
 
     template<>
+    struct default_delete<xmlOutputBuffer> {
+        void operator()(xmlOutputBuffer* buffer) { xmlOutputBufferClose(buffer); }
+    };
+
+    template<>
     struct default_delete<xmlParserInputBuffer> {
         void operator()(xmlParserInputBuffer* buffer) { xmlFreeParserInputBuffer(buffer); }
     };
