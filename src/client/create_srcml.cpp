@@ -186,7 +186,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
 
-    // non-archive when:
+    // solo unit when:
     //   only one input
     //   no cli request to make it an archive
     //   not a directory (if local file)
@@ -202,11 +202,9 @@ void create_srcml(const srcml_request_t& srcml_request,
                 SRCMLstatus(ERROR_MSG, "srcml: unable to enable hash for srcml archive");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
             }
-        } else {
-            if (srcml_archive_disable_hash(srcml_arch) != SRCML_STATUS_OK) {
+        } else if (srcml_archive_disable_hash(srcml_arch) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: unable to disable hash for srcml archive");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
-            }
         }
 
     } else {
@@ -228,7 +226,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
     }
 
-    // rns
+    // register file extension
     for (const auto& ext : srcml_request.language_ext) {
         auto pos = ext.find('=');
         const auto& extension = ext.substr(0, pos);
