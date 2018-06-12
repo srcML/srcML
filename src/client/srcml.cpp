@@ -194,7 +194,7 @@ namespace {
         }
 
         return std::find_if(request.input_sources.begin(), request.input_sources.end(), [](const srcml_input_src& input) { return input.state == SRC; }) != request.input_sources.end() ||
-        (request.output_filename.state == SRCML && request.input_sources[0].unit == 0 && !option(SRCML_COMMAND_XML)) ||
+        (request.output_filename.state == SRCML || option(SRCML_COMMAND_XML)) ||
         !request.transformations.empty();
     }
 
@@ -232,8 +232,7 @@ namespace {
 
         return (option(SRCML_COMMAND_SRC) || (request.output_filename.state != SRCML &&
             !request_create_srcml(request) &&
-            !request_display_metadata(request))) ||
-            (request.input_sources.size() == 1 && request.input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
+            !request_display_metadata(request)));
         ;
     }
 
