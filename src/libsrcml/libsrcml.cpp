@@ -98,7 +98,6 @@ void srcml_cleanup_globals() {
     xmlCleanupGlobals();
     xmlDictCleanup();
     xmlCleanupParser();
-
 }
 
 /******************************************************************************
@@ -115,7 +114,6 @@ void srcml_cleanup_globals() {
 const char * srcml_version_string() {
 
     return SRCML_VERSION_STRING;
-
 }
 
 /**
@@ -126,7 +124,6 @@ const char * srcml_version_string() {
 int srcml_version_number() {
 
     return SRCML_VERSION_NUMBER;
-
 }
 
 /******************************************************************************
@@ -264,7 +261,6 @@ int srcml(const char* input_filename, const char* output_filename) {
 int srcml_set_src_encoding(const char* encoding) {
 
     return srcml_archive_set_src_encoding(&global_archive, encoding);
-
 }
 
 /**
@@ -278,7 +274,6 @@ int srcml_set_src_encoding(const char* encoding) {
 int srcml_set_xml_encoding(const char* encoding) {
 
     return srcml_archive_set_xml_encoding(&global_archive, encoding);
-
 }
 
 /**
@@ -292,7 +287,6 @@ int srcml_set_xml_encoding(const char* encoding) {
 int srcml_set_language(const char* language) {
 
     return srcml_archive_set_language(&global_archive, language);
-
 }
 
 /**
@@ -306,7 +300,6 @@ int srcml_set_language(const char* language) {
 int srcml_set_filename(const char* filename) {
 
     return srcml_unit_set_filename(&global_unit, filename);
-
 }
 
 /**
@@ -320,7 +313,6 @@ int srcml_set_filename(const char* filename) {
 int srcml_set_url(const char* url) {
 
     return srcml_archive_set_url(&global_archive, url);
-
 }
 
 /**
@@ -334,7 +326,6 @@ int srcml_set_url(const char* url) {
 int srcml_set_version(const char* version) {
 
     return srcml_archive_set_version(&global_archive, version);
-
 }
 
 /**
@@ -348,7 +339,6 @@ int srcml_set_version(const char* version) {
 int srcml_set_timestamp(const char* timestamp) {
 
     return srcml_unit_set_timestamp(&global_unit, timestamp);
-
 }
 
 /**
@@ -362,7 +352,6 @@ int srcml_set_timestamp(const char* timestamp) {
 int srcml_set_options(unsigned long long option) {
 
     return srcml_archive_set_options(&global_archive, option);
-
 }
 
 /**
@@ -376,7 +365,6 @@ int srcml_set_options(unsigned long long option) {
 int srcml_enable_option(unsigned long long option) {
 
     return srcml_archive_enable_option(&global_archive, option);
-
 }
 
 /**
@@ -390,7 +378,6 @@ int srcml_enable_option(unsigned long long option) {
 int srcml_disable_option(unsigned long long option) {
 
     return srcml_archive_disable_option(&global_archive, option);
-
 }
 
 /**
@@ -404,7 +391,6 @@ int srcml_disable_option(unsigned long long option) {
 int srcml_set_tabstop(size_t tabstop) {
 
     return srcml_archive_set_tabstop(&global_archive, tabstop);
-
 }
 
 /**
@@ -419,7 +405,6 @@ int srcml_set_tabstop(size_t tabstop) {
 int srcml_register_file_extension(const char* extension, const char* language) {
 
     return srcml_archive_register_file_extension(&global_archive, extension, language);
-
 }
 
 /**
@@ -434,7 +419,6 @@ int srcml_register_file_extension(const char* extension, const char* language) {
 int srcml_register_namespace(const char* prefix, const char* ns) {
 
     return srcml_archive_register_namespace(&global_archive, prefix, ns);
-
 }
 
 /**
@@ -449,7 +433,6 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
 int srcml_set_processing_instruction(const char* target, const char* data) {
 
     return srcml_archive_set_processing_instruction(&global_archive, target, data);
-
 }
 
 /**
@@ -464,7 +447,6 @@ int srcml_set_processing_instruction(const char* target, const char* data) {
 int srcml_register_macro(const char* token, const char* type) {
 
     return srcml_archive_register_macro(&global_archive, token, type);
-
 }
 
 /**
@@ -479,7 +461,6 @@ int srcml_register_macro(const char* token, const char* type) {
 int srcml_unparse_set_eol(size_t eol) {
 
     return srcml_unit_unparse_set_eol(&global_unit, eol);
-
 }
 
 /**
@@ -493,7 +474,6 @@ int srcml_unparse_set_eol(size_t eol) {
 int srcml_set_srcdiff_revision(size_t revision_number) {
 
     return srcml_archive_set_srcdiff_revision(&global_archive, revision_number);
-
 }
 
 /******************************************************************************
@@ -510,7 +490,6 @@ int srcml_set_srcdiff_revision(size_t revision_number) {
 const char* srcml_get_src_encoding() {
 
     return srcml_archive_get_src_encoding(&global_archive);
-
 }
 
 /**
@@ -521,7 +500,6 @@ const char* srcml_get_src_encoding() {
 const char* srcml_get_xml_encoding() {
 
     return srcml_archive_get_xml_encoding(&global_archive);
-
 }
 
 /**
@@ -532,7 +510,6 @@ const char* srcml_get_xml_encoding() {
 const char* srcml_get_revision() {
 
     return srcml_archive_get_revision(&global_archive);
-
 }
 
 /**
@@ -543,7 +520,6 @@ const char* srcml_get_revision() {
 const char* srcml_get_language() {
 
     return srcml_archive_get_language(&global_archive);
-
 }
 
 /**
@@ -555,7 +531,6 @@ const char* srcml_get_language() {
 const char* srcml_get_filename() {
 
     return srcml_unit_get_filename(&global_unit);
-
 }
 
 /**
@@ -567,7 +542,6 @@ const char* srcml_get_filename() {
 const char* srcml_get_url() {
 
     return srcml_archive_get_url(&global_archive);
-
 }
 
 /**
@@ -578,7 +552,6 @@ const char* srcml_get_url() {
 const char* srcml_get_version() {
 
     return srcml_archive_get_version(&global_archive);
-
 }
 
 /**
@@ -589,7 +562,6 @@ const char* srcml_get_version() {
 const char* srcml_get_timestamp() {
 
     return srcml_unit_get_timestamp(&global_unit);
-
 }
 
 /**
@@ -600,7 +572,6 @@ const char* srcml_get_timestamp() {
 const char* srcml_get_hash() {
 
     return srcml_unit_get_hash(&global_unit);
-
 }
 
 /**
@@ -611,7 +582,6 @@ const char* srcml_get_hash() {
 unsigned long long srcml_get_options() {
 
     return srcml_archive_get_options(&global_archive);
-
 }
 
 /**
@@ -622,7 +592,6 @@ unsigned long long srcml_get_options() {
 size_t srcml_get_tabstop() {
 
     return srcml_archive_get_tabstop(&global_archive);
-
 }
 
 /**
@@ -633,7 +602,6 @@ size_t srcml_get_tabstop() {
 size_t srcml_get_namespace_size() {
 
     return srcml_archive_get_namespace_size(&global_archive);
-
 }
 
 /**
@@ -646,7 +614,6 @@ size_t srcml_get_namespace_size() {
 const char* srcml_get_namespace_prefix(size_t pos) {
 
     return srcml_archive_get_namespace_prefix(&global_archive, pos);
-
 }
 
 /**
@@ -659,7 +626,6 @@ const char* srcml_get_namespace_prefix(size_t pos) {
 const char* srcml_get_prefix_from_uri(const char* namespace_uri) {
 
     return srcml_archive_get_prefix_from_uri(&global_archive, namespace_uri);
-
 }
 
 /**
@@ -672,7 +638,6 @@ const char* srcml_get_prefix_from_uri(const char* namespace_uri) {
 const char* srcml_get_namespace_uri(size_t pos) {
 
     return srcml_archive_get_namespace_uri(&global_archive, pos);
-
 }
 
 /**
@@ -685,7 +650,6 @@ const char* srcml_get_namespace_uri(size_t pos) {
 const char* srcml_get_uri_from_prefix(const char* prefix) {
 
     return srcml_archive_get_uri_from_prefix(&global_archive, prefix);
-
 }
 
 /**
@@ -696,7 +660,6 @@ const char* srcml_get_uri_from_prefix(const char* prefix) {
 const char* srcml_get_processing_instruction_target() {
 
     return srcml_archive_get_processing_instruction_target(&global_archive);
-
 }
 
 /**
@@ -708,7 +671,6 @@ const char* srcml_get_processing_instruction_target() {
 const char* srcml_get_processing_instruction_data() {
 
     return srcml_archive_get_processing_instruction_data(&global_archive);
-
 }
 
 /**
@@ -719,7 +681,6 @@ const char* srcml_get_processing_instruction_data() {
 size_t srcml_get_macro_list_size() {
 
     return srcml_archive_get_macro_list_size(&global_archive);
-
 }
 
 /**
@@ -732,7 +693,6 @@ size_t srcml_get_macro_list_size() {
 const char* srcml_get_macro_token(size_t pos) {
 
     return srcml_archive_get_macro_token(&global_archive, pos);
-
 }
 
 /**
@@ -746,7 +706,6 @@ const char* srcml_get_macro_token_type(const char* token) {
 
     return srcml_archive_get_macro_token_type(&global_archive, token
                                               );
-
 }
 
 /**
@@ -759,7 +718,6 @@ const char* srcml_get_macro_token_type(const char* token) {
 const char* srcml_get_macro_type(size_t pos) {
 
     return srcml_archive_get_macro_type(&global_archive, pos);
-
 }
 
 /**
@@ -772,7 +730,6 @@ const char* srcml_get_macro_type(size_t pos) {
 size_t srcml_get_srcdiff_revision() {
 
     return srcml_archive_get_srcdiff_revision(&global_archive);
-
 }
 
 /******************************************************************************
@@ -856,7 +813,6 @@ const char * srcml_check_extension(const char* filename) {
     }
 
     return srcml_archive_check_extension(&global_archive, filename);
-
 }
 
 /**
@@ -869,7 +825,6 @@ const char * srcml_check_extension(const char* filename) {
 int srcml_check_encoding(const char* encoding) {
 
     return xmlParseCharEncoding(encoding) > 0;
-
 }
 
 /**
@@ -938,5 +893,4 @@ void srcml_memory_free(char * buffer) {
     if(buffer == 0) return;
 
     free((void*)buffer);
-
 }
