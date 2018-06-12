@@ -27,15 +27,28 @@
 
 #include <libxml/parserInternals.h>
 
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, const boost::optional<size_t> & revision_number, int unit = 0);
-/// @todo needs test cases
-int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, const boost::optional<size_t> & revision_number, int unit = 0);
+/**
+ * dlopen_libxslt
+ *
+ * Get a handle to libxslt dynamically loaded
+ *
+ * @returns Return handle on success and NULL on failure
+ */
+void* dlopen_libxslt();
+
+/**
+ * dlopen_libexslt
+ *
+ * Get a handle to libexslt dynamically loaded
+ *
+ * @returns Return handle on success and NULL on failure
+ */
+void* dlopen_libexslt();
+
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
-				const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
-				OPTION_TYPE options, srcml_archive* out_archive);
-#ifdef WITH_LIBXSLT
-int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const std::vector<std::string>& params, int paramcount, OPTION_TYPE options, srcml_archive* out_archive);
-#endif
-int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* out_archive);
+                const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
+                OPTION_TYPE options, srcml_archive* oarchive);
+
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* oarchive);
 
 #endif

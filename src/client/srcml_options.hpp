@@ -48,7 +48,7 @@ inline bool option(int option) {
 
 inline void enable(int option) {
 
-	SRCMLOptions::opt &= option;
+	SRCMLOptions::opt |= option;
 }
 
 #endif

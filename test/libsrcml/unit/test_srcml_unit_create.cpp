@@ -46,7 +46,7 @@ int main(int, char* argv[]) {
         dassert(unit->version, boost::none);
         dassert(unit->timestamp, boost::none);
         dassert(unit->hash, boost::none);
-        dassert(unit->unit, boost::none);
+        dassert(unit->srcml, "");
 
         srcml_unit_free(unit);
         srcml_archive_free(archive);

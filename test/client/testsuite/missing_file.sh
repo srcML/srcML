@@ -8,13 +8,13 @@ source $(dirname "$0")/framework_test.sh
 # check missingfile
 
 srcml foo.c
-check_exit 1 "WARNING srcml: Unable to open file foo.c
+check_exit 1 "srcml: Unable to open file foo.c
 "
 
 srcml abc.c
-check_exit 1 "WARNING srcml: Unable to open file abc.c
+check_exit 1 "srcml: Unable to open file abc.c
 "
 
 srcml ../src/foo.c
-check_exit 1 "WARNING srcml: Unable to open file ../src/foo.c
+check_exit 1 "srcml: Unable to open file ../src/foo.c
 "

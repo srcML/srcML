@@ -34,6 +34,7 @@
 #include <src_input_text.hpp>
 #include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
+#include <transform_srcml.hpp>
 #include <TraceLog.hpp>
 #include <input_file.hpp>
 #include <curl_input_file.hpp>
@@ -43,8 +44,6 @@
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
 
-bool createdsrcml = false;
-
 int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
@@ -52,27 +51,17 @@ int srcml_handler_dispatch(ParseQueue& queue,
                           const srcml_output_dest& destination) {
 
     // call appropriate handler
-    if (input.state == SRCML && input.protocol == "file" && !input.compressions.empty()) {
+    if (input.state == SRCML) {
 
-        // may have some compressions/archives
         srcml_input_src uninput = input;
-        uninput.fd = input_archive(uninput);
 
-        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
-
-    } else if (input.state == SRCML && (input.protocol == "file" || input.protocol == "stdin")) {
-
-        return srcml_input_srcml(queue, srcml_arch, input, srcml_request.revision);
-
-    } else if (input.state == SRCML) {
-
-       // input must go through libcurl pipe
-        srcml_input_src uninput = input;
-        if (!input_curl(uninput))
+        // input must go through libcurl pipe
+        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
             return 0;
 
         // may have some compressions/archives
-        uninput.fd = input_archive(uninput);
+        if (!uninput.compressions.empty())
+            uninput.fd = input_archive(uninput);
 
         return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
 
@@ -82,25 +71,9 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
     } else if (input.protocol == "filelist") {
 
-        // always create the archive
-        int status = 0;
-        if (contains<int>(destination)) {
-
-            status = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
-
-        } else {
-
-            status = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
-        }
-        if (status != SRCML_STATUS_OK)
-            return 0;
-        createdsrcml = true;
-
         srcml_archive_enable_full_archive(srcml_arch);
 
-        int num = src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
-
-        return num;
+        return src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
 
     } else if (input.protocol == "file" && input.isdirectory) {
 
@@ -110,30 +83,15 @@ int srcml_handler_dispatch(ParseQueue& queue,
        
         return src_input_file(queue, srcml_arch, srcml_request, input);
 
-    } else if (input.protocol != "file" && curl_supported(input.protocol) && input.extension == ".xml") { 
+    } else {
+
+        srcml_input_src uninput = input;
 
         // input must go through libcurl pipe
-        srcml_input_src uninput = input;
-        if (!input_curl(uninput))
-            return 0;
-
-        // may have some compressions/archives
-        uninput.fd = input_archive(uninput);
-
-        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
-
-    } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
-
-        // input must go through libcurl pipe
-        srcml_input_src uninput = input;
-        if (!input_curl(uninput))
+        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
             return 0;
 
         return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
-
-    } else {
-
-        return src_input_libarchive(queue, srcml_arch, srcml_request, input);
     }
 }
 
@@ -149,23 +107,32 @@ void create_srcml(const srcml_request_t& srcml_request,
         exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
 
+    // open the output
+    int nstatus = SRCML_STATUS_OK;
+    if (contains<int>(destination)) {
+
+        nstatus = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
+
+    } else {
+
+        nstatus = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
+    }
+    if (nstatus != SRCML_STATUS_OK)
+        return;
+
     // set options for the output srcml archive
 
     // xml encoding
-    if (srcml_request.att_xml_encoding) {
-        if (srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str()) != SRCML_STATUS_OK) {
+    if (srcml_request.att_xml_encoding && srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str()) != SRCML_STATUS_OK) {
             // while stored as an attribute, xml encoding is an XML attribute, not a srcML attribute
             SRCMLstatus(ERROR_MSG, "srcml: invalid xml encoding '%s'for srcml archive", *srcml_request.att_xml_encoding);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
-        }
     }
 
     // source encoding
-    if (srcml_request.src_encoding) {
-        if (srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str()) != SRCML_STATUS_OK) {
+    if (srcml_request.src_encoding && srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid source encoding '%s' for srcml archive", *srcml_request.src_encoding);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
-        }
     }
 
     // for single input src archives (e.g., .tar), url attribute is the source url (if not already given)
@@ -179,9 +146,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         // Cleanup filename
         std::string url_name = src_prefix_resource(input_sources[0].filename);
-        while (url_name[0] == '.' || url_name[0] == '/') {
-            url_name.erase(0,1);
-        }
+        url_name = url_name.substr(url_name.find_first_not_of("./"));
         
         if (srcml_archive_set_url(srcml_arch, url_name.c_str()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid url '%s' for srcml archive", url_name);
@@ -190,18 +155,16 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // version
-    if (srcml_request.att_version)
-        if (srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str()) != SRCML_STATUS_OK) {
+    if (srcml_request.att_version && srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid version attribute value for srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
-        }
+    }
 
     // markup options
-    if (srcml_request.markup_options)
-        if (srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options) != SRCML_STATUS_OK) {
+    if (srcml_request.markup_options && srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid options for srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
-        }
+    }
 
     // xml declaration
     if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL) {
@@ -223,7 +186,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
 
-    // non-archive when:
+    // solo unit when:
     //   only one input
     //   no cli request to make it an archive
     //   not a directory (if local file)
@@ -239,12 +202,11 @@ void create_srcml(const srcml_request_t& srcml_request,
                 SRCMLstatus(ERROR_MSG, "srcml: unable to enable hash for srcml archive");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
             }
-        } else {
-            if (srcml_archive_disable_hash(srcml_arch) != SRCML_STATUS_OK) {
+        } else if (srcml_archive_disable_hash(srcml_arch) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: unable to disable hash for srcml archive");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
-            }
         }
+
     } else {
 
         // if this is an archive, then no filename attribute is allowed
@@ -264,7 +226,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
     }
 
-    // rns
+    // register file extension
     for (const auto& ext : srcml_request.language_ext) {
         auto pos = ext.find('=');
         const auto& extension = ext.substr(0, pos);
@@ -285,6 +247,40 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
     }
 
+    // iterate through all transformations added during cli parsing
+    int xpath_index = -1;
+    for (const auto& trans : srcml_request.transformations) {
+        std::string protocol;
+        std::string resource;
+        src_prefix_split_uri(trans, protocol, resource);
+
+        if (protocol == "xpath") {
+            if (apply_xpath(srcml_arch, srcml_arch, resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
+                SRCMLstatus(ERROR_MSG, "srcml: error with xpath transformation");
+                exit(-1);
+            }
+
+        }
+
+        if (protocol == "xslt") {
+            if (apply_xslt(srcml_arch, resource) != SRCML_STATUS_OK) {
+                SRCMLstatus(ERROR_MSG, "srcml: error with xslt transformation");
+                exit(-1);
+            }
+        }
+/*
+        } else if (protocol == "xpathparam") {
+            //std::cerr << protocol << " : " << resource << "\n"; // Stub
+
+        } else if (protocol == "relaxng") {
+            if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
+                SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");
+                exit(-1);
+            }
+        }
+*/
+    }
+
     // start tracing
     TraceLog log;
 
@@ -302,6 +298,8 @@ void create_srcml(const srcml_request_t& srcml_request,
         int numhandled = srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input, destination);
         if (!numhandled)
             status = 1;
+        if (numhandled == -1)
+            status = -1;
     }
 
     // wait for the parsing queue to finish
@@ -310,16 +308,14 @@ void create_srcml(const srcml_request_t& srcml_request,
     // wait for the writing queue to finish
     write_queue.stop();
 
-    // close any created srcML archive
-    if (createdsrcml || write_queue.numWritten()) {
-
+    if (status != -1) {
         srcml_archive_close(srcml_arch);
-        srcml_archive_free(srcml_arch);
-
-        // if we were writing to a file descriptor, then close it
-        if (contains<int>(destination))
-            close(*destination.fd);
     }
+    srcml_archive_free(srcml_arch);
+
+    // if we were writing to a file descriptor, then close it
+    if (contains<int>(destination))
+        close(*destination.fd);
 
     // have to wait to exit
     if (SRCMLStatus::errors())

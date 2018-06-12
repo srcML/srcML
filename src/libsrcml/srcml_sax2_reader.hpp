@@ -38,6 +38,21 @@
 #include <boost/optional.hpp>
 
 /**
+ * thread_args
+ *
+ * Structure to hold information to pass
+ * to thread function.
+ */
+struct thread_args {
+
+    /** control for sax processing */
+    srcSAXController* control;
+
+    /** handler with hooks for sax processing */
+    srcml_reader_handler* handler;
+};
+
+/**
  * srcml_sax2_reader
  *
  * Extend XML Text Reader interface to
@@ -46,59 +61,36 @@
  */
 class srcml_sax2_reader {
 
-private :
+public :
 
     /** control for sax parsing */
     srcSAXController control;
-    /** boolean for marking if read root */
-    bool read_root = false;
-    /** handler with hooks for sax parsing */
+
+    /** hooks for sax parsing */
     srcml_reader_handler handler;
 
-    /** thread running execution */
-    std::thread * thread;
+private :
 
-    void init_constructor();
+    /** thread running execution */
+    std::thread thread;
+    thread_args args = { &control, &handler };
 
 public :
 
     // constructors
-    srcml_sax2_reader(const char * filename, const char * encoding = 0, const boost::optional<size_t>& revision_number = boost::optional<size_t>());
-    srcml_sax2_reader(xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number);
+    srcml_sax2_reader(srcml_archive* archive, const char* filename, const char * encoding = 0, const boost::optional<size_t>& revision_number = boost::optional<size_t>());
+    srcml_sax2_reader(srcml_archive* archive, xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number);
 
     // destructors
     ~srcml_sax2_reader();
 
-    void stop();
-
-    // read attribute and namespace information from root unit.  Does not advance read.
-    int read_root_unit_attributes(boost::optional<std::string>& encoding, 
-                                  boost::optional<std::string>& language,
-                                  boost::optional<std::string>& url,
-                                  boost::optional<std::string>& version,
-                                  std::vector<std::string>& attributes,
-                                  Namespaces& namespaces,
-                                  boost::optional<std::pair<std::string, std::string> >& processing_instruction,
-                                  OPTION_TYPE& options,
-                                  size_t& tabstop,
-                                  std::vector<std::string>& user_macro_list);
-
     /* finds next unit tag if not current unit and sets attributes.  Consumes unit.
        Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
     */
-    int read_unit_attributes(boost::optional<std::string>& language,
-                             boost::optional<std::string>& filename,
-                             boost::optional<std::string>& url,
-                             boost::optional<std::string>& version,
-                             boost::optional<std::string>& timestamp,
-                             boost::optional<std::string>& hash,
-                             std::vector<std::string>& attributes);
+    int read_header(srcml_unit* unit);
 
     // reads the next unit and returns it in parameter as srcML
-    int read_srcml(boost::optional<std::string>& unit, int& content_begin, int& content_end);
-
-    // reads the next unit and returns it in parameter as src
-    int read_src(xmlOutputBufferPtr output_buffer);
+    int read_body(srcml_unit* unit);
 };
 
 #endif

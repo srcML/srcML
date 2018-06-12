@@ -49,6 +49,13 @@ struct ParseRequest {
     boost::optional<std::string> time_stamp;
     unsigned long total_num_inputs = 0;
     boost::optional<std::string> errormsg;
+    bool needsparsing = true;
+    srcml_transformation_result_t results;
+
+    ~ParseRequest() { 
+        if (unit)
+            srcml_unit_free(unit);
+    }
 };
 
 #endif

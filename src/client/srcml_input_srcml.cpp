@@ -38,7 +38,7 @@ int srcml_input_srcml(ParseQueue& queue,
     srcml_archive* srcml_input_archive = srcml_archive_create();
     if (!srcml_input_archive) {
         SRCMLstatus(WARNING_MSG, "srcml: Internal libsrcml error");
-        return 0;
+        return -1;
     }
 
     int open_status = SRCML_STATUS_OK;
@@ -48,11 +48,11 @@ int srcml_input_srcml(ParseQueue& queue,
     open_status = srcml_archive_read_open(srcml_input_archive, srcml_input);
     if (open_status != SRCML_STATUS_OK) {
         if (srcml_input.protocol == "file" )
-            SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
+            SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
         else
-            SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
-        srcml_archive_close(srcml_input_archive);
-        return 0;
+            SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
+
+        return -1;
     }
 
     // output is in srcML
@@ -75,9 +75,13 @@ int srcml_input_srcml(ParseQueue& queue,
         }
     }
 
-    // move to the correct unit
+    // move to the correct unit (if needed)
     for (int i = 1; i < srcml_input.unit; ++i) {
         srcml_unit* unit = srcml_archive_read_unit_header(srcml_input_archive);
+        if (!unit) {
+            SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_input.unit);
+            exit(1);
+        }
         srcml_unit_free(unit);
     }
 
@@ -94,9 +98,10 @@ int srcml_input_srcml(ParseQueue& queue,
 
         unitFound = true;
         // form the parsing request
-        ParseRequest* prequest = new ParseRequest;
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
         prequest->srcml_arch = srcml_output_archive;
         prequest->unit = unit;
+        prequest->needsparsing = false;
 
         // hand request off to the processing queue
         queue.schedule(prequest);

@@ -64,7 +64,7 @@ int src_input_text(ParseQueue& queue,
     while (ptext) {
 
         // form the parsing request
-        ParseRequest* prequest = new ParseRequest;
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
 
         if (option(SRCML_COMMAND_NOARCHIVE))
             prequest->disk_dir = srcml_request.output_filename;
@@ -222,6 +222,7 @@ int src_input_text(ParseQueue& queue,
 
         // schedule for parsing
 end:    count += 1;
+
         queue.schedule(prequest);
     }
 
