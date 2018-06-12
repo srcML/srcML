@@ -24,6 +24,7 @@
 #include <srcml_sax2_reader.hpp>
 #include <UTF8CharBuffer.hpp>
 #include <memory>
+#include <libxml2_utilities.hpp>
 
 /******************************************************************************
  *                                                                            *
@@ -573,29 +574,24 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
 
     const char* encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding, "ISO-8859-1"));
 
-    xmlOutputBufferPtr output_handler = createbuffer(encoding ? xmlFindCharEncodingHandler(encoding) : 0);
+    std::unique_ptr<xmlOutputBuffer> output_handler(createbuffer(encoding ? xmlFindCharEncodingHandler(encoding) : 0));
     if (!output_handler) {
         return SRCML_STATUS_IO_ERROR;
     }
 
-    int status = -1;
     try {
 
         if (!unit->read_body)
             unit->archive->reader->read_body(unit);
 
-        status = SRCML_STATUS_OK;
-
     } catch(...) {
 
-        status = SRCML_STATUS_IO_ERROR;
+        return SRCML_STATUS_IO_ERROR;
     }
 
-    xmlOutputBufferWrite(output_handler, (int) unit->src.size(), unit->src.c_str());
+    xmlOutputBufferWrite(output_handler.get(), (int) unit->src.size(), unit->src.c_str());
 
-    xmlOutputBufferClose(output_handler);
-
-    return status;
+    return SRCML_STATUS_OK;
 }
 
 /**
