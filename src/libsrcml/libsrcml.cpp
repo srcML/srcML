@@ -893,5 +893,5 @@ void srcml_memory_free(char * buffer) {
     if (buffer == nullptr)
         return;
 
-    free((void*)buffer);
+    free(buffer);
 }
