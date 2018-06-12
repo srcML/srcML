@@ -193,7 +193,7 @@ namespace {
             enable(SRCML_COMMAND_XML);
         }
 
-        return std::find_if(request.input_sources.begin(), request.input_sources.end(), is_src) != request.input_sources.end() ||
+        return std::find_if(request.input_sources.begin(), request.input_sources.end(), [](const srcml_input_src& input) { return input.state == SRC; }) != request.input_sources.end() ||
         (request.output_filename.state == SRCML && request.input_sources[0].unit == 0 && !option(SRCML_COMMAND_XML)) ||
         !request.transformations.empty();
     }

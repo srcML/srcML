@@ -110,8 +110,6 @@ inline bool contains<FILE*>(const srcml_input_src& input) { return bool(input.fi
 template <>
 inline bool contains<int>(const srcml_input_src& input) { return bool(input.fd); }
 
-inline bool is_src(const srcml_input_src& input) { return input.state == SRC; }
-
 inline std::ostream& operator<<(std::ostream& out, const srcml_input_src& input) {
 
     out << "filename:" << input.filename << '\n';
