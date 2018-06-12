@@ -145,7 +145,7 @@ int srcml_version_number() {
  */
 int srcml(const char* input_filename, const char* output_filename) {
 
-    if(!input_filename || !output_filename) {
+    if (!input_filename || !output_filename) {
 
         srcml_error = "No input file provided";
         return  SRCML_STATUS_INVALID_ARGUMENT;
@@ -154,7 +154,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     xmlInitParser();
 
-    if(register_languages) {
+    if (register_languages) {
 
         register_languages = false;
         language_extension_registry registry = global_archive.registered_languages;
@@ -174,7 +174,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         }
     }
 
-    if(srcml_check_extension(input_filename)) {
+    if (srcml_check_extension(input_filename)) {
 
         srcml_archive_write_open_filename(&global_archive, output_filename, 0);
         srcml_unit * unit = srcml_unit_create(&global_archive);
@@ -182,14 +182,14 @@ int srcml(const char* input_filename, const char* output_filename) {
         srcml_archive_disable_full_archive(&global_archive);
 
         int status = srcml_unit_set_language(unit, srcml_archive_get_language(&global_archive));
-        if(status != SRCML_STATUS_OK) {
+        if (status != SRCML_STATUS_OK) {
 
             srcml_unit_free(unit);
             return status;
 
         }
         
-        if(srcml_unit_get_filename(&global_unit) != 0)
+        if (srcml_unit_get_filename(&global_unit) != 0)
             srcml_unit_set_filename(unit, srcml_unit_get_filename(&global_unit));
         else
             srcml_unit_set_filename(unit, input_filename);
@@ -199,7 +199,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
 
         status = srcml_unit_parse_filename(unit, input_filename);
-        if(status != SRCML_STATUS_OK) {
+        if (status != SRCML_STATUS_OK) {
 
             srcml_unit_free(unit);
             return status;
@@ -215,16 +215,16 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         bool is_xml = false;
         size_t len = strlen(input_filename);
-        if((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
+        if ((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
             && ((tolower(input_filename[len - 3]) == 'x' && input_filename[len - 4] == '.')
              || (tolower(input_filename[len - 3]) == 'c' && tolower(input_filename[len - 4]) == 'r' && tolower(input_filename[len - 5]) == 's' && tolower(input_filename[len - 6]) == '.')))
            || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
             is_xml = true;
 
         // not xml or handled language
-        if(!is_xml) {
+        if (!is_xml) {
 
-            if(global_archive.language) {
+            if (global_archive.language) {
                 srcml_error = "Language '";
                 srcml_error += global_archive.language->c_str();
                 srcml_error += "' is not supported.";
@@ -785,7 +785,7 @@ size_t srcml_get_language_list_size() {
  */
 const char * srcml_get_language_list(size_t pos) {
 
-    if(pos >= srcml_get_language_list_size()) return NULL;
+    if (pos >= srcml_get_language_list_size()) return NULL;
 
     return langs[pos];
 }
@@ -890,7 +890,8 @@ const char* srcml_error_string() { return srcml_error.c_str(); }
  */
 void srcml_memory_free(char * buffer) {
 
-    if(buffer == 0) return;
+    if (buffer == nullptr)
+        return;
 
     free((void*)buffer);
 }
