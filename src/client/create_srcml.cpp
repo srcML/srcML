@@ -83,18 +83,15 @@ int srcml_handler_dispatch(ParseQueue& queue,
        
         return src_input_file(queue, srcml_arch, srcml_request, input);
 
-    } else if (input.protocol != "file" && curl_supported(input.protocol)) { 
+    } else {
+
+        srcml_input_src uninput = input;
 
         // input must go through libcurl pipe
-        srcml_input_src uninput = input;
-        if (!input_curl(uninput))
+        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
             return 0;
 
         return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
-
-    } else {
-
-        return src_input_libarchive(queue, srcml_arch, srcml_request, input);
     }
 }
 
@@ -126,20 +123,16 @@ void create_srcml(const srcml_request_t& srcml_request,
     // set options for the output srcml archive
 
     // xml encoding
-    if (srcml_request.att_xml_encoding) {
-        if (srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str()) != SRCML_STATUS_OK) {
+    if (srcml_request.att_xml_encoding && srcml_archive_set_xml_encoding(srcml_arch, srcml_request.att_xml_encoding->c_str()) != SRCML_STATUS_OK) {
             // while stored as an attribute, xml encoding is an XML attribute, not a srcML attribute
             SRCMLstatus(ERROR_MSG, "srcml: invalid xml encoding '%s'for srcml archive", *srcml_request.att_xml_encoding);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
-        }
     }
 
     // source encoding
-    if (srcml_request.src_encoding) {
-        if (srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str()) != SRCML_STATUS_OK) {
+    if (srcml_request.src_encoding && srcml_archive_set_src_encoding(srcml_arch, srcml_request.src_encoding->c_str()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid source encoding '%s' for srcml archive", *srcml_request.src_encoding);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
-        }
     }
 
     // for single input src archives (e.g., .tar), url attribute is the source url (if not already given)
@@ -153,9 +146,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         // Cleanup filename
         std::string url_name = src_prefix_resource(input_sources[0].filename);
-        while (url_name[0] == '.' || url_name[0] == '/') {
-            url_name.erase(0,1);
-        }
+        url_name = url_name.substr(url_name.find_first_not_of("./"));
         
         if (srcml_archive_set_url(srcml_arch, url_name.c_str()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid url '%s' for srcml archive", url_name);
@@ -164,18 +155,16 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // version
-    if (srcml_request.att_version)
-        if (srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str()) != SRCML_STATUS_OK) {
+    if (srcml_request.att_version && srcml_archive_set_version(srcml_arch, srcml_request.att_version->c_str()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid version attribute value for srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
-        }
+    }
 
     // markup options
-    if (srcml_request.markup_options)
-        if (srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options) != SRCML_STATUS_OK) {
+    if (srcml_request.markup_options && srcml_archive_set_options(srcml_arch, srcml_archive_get_options(srcml_arch) | *srcml_request.markup_options) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid options for srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
-        }
+    }
 
     // xml declaration
     if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL) {
@@ -219,6 +208,7 @@ void create_srcml(const srcml_request_t& srcml_request,
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
             }
         }
+
     } else {
 
         // if this is an archive, then no filename attribute is allowed
