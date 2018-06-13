@@ -92,8 +92,7 @@ int main(int argc, char * argv[]) {
  
     /*
         Setup the internal pipeline of possible steps:
-        * creating srcml from src files and input srcml files
-        * transforming srcml to srcml
+        * creating srcml from src files and input srcml files, and transforming srcml
         * displaying metadata about a srcml file
         * creating src from srcml
         * compressing output (compressing input performed on an individual input source)
@@ -142,11 +141,11 @@ int main(int argc, char * argv[]) {
     srcml_cleanup_globals();
 
     // debugging information
-    SRCMLstatus(DEBUG_MSG, "CPU Time: %l ms", runtime.cpu_time_elapsed());
     auto realtime = runtime.real_world_elapsed();
-    SRCMLstatus(DEBUG_MSG, "Real Time: %l ms", realtime);
-    SRCMLstatus(DEBUG_MSG, "LOC: %l", TraceLog::totalLOC());
-    SRCMLstatus(DEBUG_MSG, "KLOC/s: %l", realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0);
+    SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
+                           << "Real Time: " << realtime << "ms\n"
+                           << "LOC: " << TraceLog::totalLOC() << '\n'
+                           << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
 
     // error status is 0 unless a critical, error, or warning
     return SRCMLStatus::errors() ? 1 : 0;
