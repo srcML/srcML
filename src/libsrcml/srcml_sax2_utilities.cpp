@@ -41,13 +41,13 @@
  * @returns Return handle on success and NULL on failure
  */
 void* dlopen_library(std::vector<const char*> libnames) {
-
+#ifdef DLLOAD
     for (auto libname : libnames) {
         void* handle = dlopen(libname, RTLD_LAZY);
         if (handle)
             return handle;
     }
-
+#endif
     return 0;
 }
 
