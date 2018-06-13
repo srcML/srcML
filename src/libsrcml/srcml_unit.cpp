@@ -1016,6 +1016,22 @@ struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit) {
     return new_unit;
 }
 
+/** Provides a code of the last error to occur for a unit
+ * @param unit A srcml_unit
+ * @return A code for the last recorded error
+ */
+int srcml_unit_error_number(const struct srcml_unit* unit) {
+    return 0;
+}
+
+/** Provides a description of the last error to occur for a unit
+ * @param unit A srcml_unit
+ * @return A string describing last recorded error
+ */
+const char* srcml_unit_error_string(const struct srcml_unit* unit) {
+    return "";
+}
+
 /**
  * srcml_unit_free
  * @param unit a srcml unit

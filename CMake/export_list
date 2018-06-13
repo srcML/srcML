@@ -66,10 +66,14 @@ _srcml_check_xslt
 _srcml_cleanup_globals
 _srcml_clear_transforms
 _srcml_archive_clone
+_srcml_archive_error_number
+_srcml_archive_error_string
 _srcml_archive_close
 _srcml_archive_create
 _srcml_unit_create
 _srcml_unit_clone
+_srcml_unit_error_number
+_srcml_unit_error_string
 _srcml_disable_option
 _srcml_enable_option
 _srcml_error_string

@@ -75,6 +75,22 @@ srcml_archive* srcml_archive_create() {
     return archive;
 }
 
+/** Provides a code of the last error to occur for an archive
+ * @param archive A srcml_archive
+ * @return Error code for last recorded error
+ */
+int srcml_archive_error_number(const struct srcml_archive* archive) {
+    return 0;
+}
+
+/** Provides a description of the last error to occur for an archive
+ * @param archive A srcml_archive
+ * @return A string describing last recorded error
+ */
+const char* srcml_archive_error_string(const struct srcml_archive* archive) {
+    return "";
+}
+
 /**
  * srcml_archive_free
  * @param archive a srcml_archive
