@@ -1071,27 +1071,6 @@ LIBSRCML_DECL int srcml_append_transform_xpath_attribute(struct srcml_archive* a
 LIBSRCML_DECL int srcml_append_transform_xpath_element(struct srcml_archive* archive, const char* xpath_string,
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element);
-
-/** Append the XPath expression to the list of transformations/queries.
- * Instead of outputting the results in a separate unit tag, output the complete
- * archive marking the XPath results with a user provided element and attribute
- * @param archive A srcml_archive
- * @param xpath_string An XPath expression
- * @param prefix Element prefix
- * @param namespace_uri Element namespace
- * @param element Element name
- * @param attr_prefix An optional attribute prefix for the element
- * @param attr_namespace_uri An optional attribute namespace for the element
- * @param attr_name An optional attribute name for the element
- * @param attr_value An optional attribute value for the element
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_append_transform_xpath_element_attribute(struct srcml_archive* archive, const char* xpath_string,
-                                                            const char* prefix, const char* namespace_uri,
-                                                            const char* element,
-                                                            const char* attr_prefix, const char* attr_namespace_uri,
-                                                            const char* attr_name, const char* attr_value);
 #ifdef WITH_LIBXSLT
 /** Append an XSLT program at the designated filename path to the list of transformations/queries
  * @param archive A srcml_archive
