@@ -34,65 +34,6 @@
 
 /** 
  * srcml_translator
- * @param str_buf buffer to assign output srcML
- * @param size integer to assign size of resulting srcML
- * @param xml_encoding output srcML encoding
- * @param op translator options
- * @param prefix namespace prefix array
- * @param uri namespace uri array
- * @param processing_instruciton a pre-root processing instuction
- * @param tabsize size of tabstop
- * @param language what language to parse in
- * @param revision what version of srcML
- * @param url unit url attribute
- * @param filename unit url attribute
- * @param version unit url attribute
- * @param timestamp unit timestamp attribute
- * @param hash unit hash attribute
- * @param encoding unit source encoding
- * 
- * Constructor for output to memory.
- */
-srcml_translator::srcml_translator(char** str_buf,
-                                 size_t* size,
-                                 const char* xml_encoding,
-                                 OPTION_TYPE& op,
-                                 const Namespaces& namespaces,
-                                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                                 size_t tabsize,
-                                 int language,
-                                 const char* revision,
-                                 const char* url,
-                                 const char* filename,
-                                 const char* version,
-                                 const std::vector<std::string>& attributes,
-                                 const char* timestamp,
-                                 const char* hash,
-                                 const char* encoding)
-    :  Language(language),
-       revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), namespaces(namespaces),
-       options(op),
-       out(0, 0, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
-       str_buffer(str_buf), size(size) {
-
-    buffer = xmlBufferCreate();
-    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
-
-    if (xml_encoding) {
-
-#ifdef LIBXML2_NEW_BUFFER
-        xmlBufShrink(obuffer->conv, xmlBufUse(obuffer->conv));
-#else
-        obuffer->conv->use = 0;
-#endif
-    }
-
-    out.setOutputBuffer(obuffer);
-    out.initNamespaces(namespaces);
-}
-
-/** 
- * srcml_translator
  * @param output_buffer general libxml2 output buffer
  * @param xml_encoding output srcML encoding
  * @param op translator options
@@ -169,14 +110,6 @@ void srcml_translator::close() {
 
     /* FIXME: Crashes when deleted */
     out.close();
-
-    if (str_buffer && buffer->use) {
-
-        (*str_buffer) = (char *)malloc(buffer->use * sizeof(char));
-        memcpy(*str_buffer, buffer->content, (size_t)buffer->use);
-        if (size && *str_buffer)
-            *size = (size_t)buffer->use;
-    }
 }
 
 /**
@@ -321,7 +254,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
     // write out the contents, excluding the start and end unit tags
     int size = unit->content_end - unit->content_begin - 1;
     if (size > 0) {
-        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->unit->c_str() + unit->content_begin), size);
+        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->srcml.c_str() + unit->content_begin), size);
     }
 
     // end the unit 
@@ -342,7 +275,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_unit_raw(const char* xml, int size) {
+bool srcml_translator::add_unit(const char* xml, int size) {
 
     // @todo should not let size be 0
 
@@ -373,7 +306,7 @@ bool srcml_translator::add_unit_raw(const char* xml, int size) {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
+bool srcml_translator::add_unit(xmlNodePtr node, xmlDocPtr doc) {
 
     if (is_outputting_unit)
         return false;

@@ -371,7 +371,7 @@ int main(int, char* argv[]) {
         srcml_archive * iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_a_archive.c_str(), srcml_a_archive.size());
         srcml_unit * unit = srcml_archive_read_unit_header(iarchive);
-        dassert(unit->unit, boost::none);
+        dassert(unit->srcml, "");
         srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);

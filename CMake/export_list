@@ -13,8 +13,7 @@ _srcml_append_transform_xslt_filename
 _srcml_append_transform_xslt_memory
 _srcml_append_transform_xslt_FILE
 _srcml_append_transform_xslt_fd
-_srcml_apply_transforms
-_srcml_apply_transforms_verbose
+_srcml_unit_apply_transforms
 _srcml_archive_check_extension
 _srcml_archive_enable_full_archive
 _srcml_archive_disable_full_archive
@@ -70,6 +69,7 @@ _srcml_archive_clone
 _srcml_archive_close
 _srcml_archive_create
 _srcml_unit_create
+_srcml_unit_clone
 _srcml_disable_option
 _srcml_enable_option
 _srcml_error_string
@@ -155,6 +155,7 @@ _srcml_archive_write_open_io
 _srcml_archive_write_open_memory
 _srcml_archive_write_open_FILE
 _srcml_archive_write_unit
+_srcml_archive_write_string
 _srcml_write_start_unit
 _srcml_write_end_unit
 _srcml_write_start_element

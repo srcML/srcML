@@ -219,7 +219,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->unit = boost::optional<std::string>();
+        unit->srcml.clear();
         dassert(srcml_unit_get_xml_fragment(unit), 0);
         srcml_unit_free(unit);
     }
@@ -227,7 +227,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->unit = "<unit/>";
+        unit->srcml = "<unit/>";
         dassert(srcml_unit_get_xml_fragment(unit), std::string("<unit/>"));
         srcml_unit_free(unit);
     }
@@ -273,7 +273,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->unit = boost::optional<std::string>();
+        unit->srcml.clear();
         char * xml = 0;
         size_t size = 0;
         dassert(srcml_unit_get_xml_standalone(unit, "UTF-8", &xml, &size), SRCML_STATUS_INVALID_ARGUMENT);
@@ -284,7 +284,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->unit = "<unit/>";
+        unit->srcml = "<unit/>";
         char * xml = 0;
         size_t size = 0;
         srcml_unit_get_xml_standalone(unit, 0, &xml, &size);
@@ -296,7 +296,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->unit = "<unit/>";
+        unit->srcml = "<unit/>";
         char * xml = 0;
         size_t size = 0;
         srcml_unit_get_xml_standalone(unit, "UTF-8", &xml, &size);
@@ -308,7 +308,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->unit = "<unit>\xc3\xbf<unit/>";
+        unit->srcml = "<unit>\xc3\xbf<unit/>";
         char * xml = 0;
         size_t size = 0;
         srcml_unit_get_xml_standalone(unit, "ISO-8859-1", &xml, &size);
@@ -366,7 +366,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->unit = "<unit/>";
+        unit->srcml = "<unit/>";
         char * xml = 0;
         size_t size = 0;
         dassert(srcml_unit_get_xml_standalone(unit, 0, 0, &size), SRCML_STATUS_INVALID_ARGUMENT);
@@ -377,7 +377,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->unit = "<unit/>";
+        unit->srcml = "<unit/>";
         char * xml = 0;
         size_t size = 0;
         dassert(srcml_unit_get_xml_standalone(unit, 0, &xml, 0), SRCML_STATUS_INVALID_ARGUMENT);

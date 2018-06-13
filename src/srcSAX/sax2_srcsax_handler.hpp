@@ -23,7 +23,6 @@
 #ifndef INCLUDED_SAX2_SRCSAX_HANDLER_HPP
 #define INCLUDED_SAX2_SRCSAX_HANDLER_HPP
 
-#include <srcml_element.hpp>
 #include <srcsax.hpp>
 
 #include <libxml/parser.h>
@@ -45,21 +44,11 @@ enum srcMLMode {
     END_ROOT
 };
 
-/**
- * declaration
- *
- * Data structure to hold a declaration.
- */
-struct declaration {
-
-    /** declaration type */
-    std::string type;
-
-    /** declaration name */
-    std::string name;
-
-    /** declaration parsing modes */
-    enum { TYPE, NAME, INIT } mode = TYPE;
+enum PROCESS {
+    UNKNOWN,
+    COLLECT_SRC,
+    collect_unit_body,
+    CREATE_DOM,
 };
 
 /**
@@ -73,20 +62,39 @@ struct sax2_srcsax_handler {
     /** hooks for processing */
     srcsax_context* context = nullptr;
 
-    /** temporary storage for root unit */
-    srcml_element root;
-
     /** temporary storage of meta-tags */
-    std::vector<srcml_element> meta_tags;
-
-    /** temporary storage of root characters */
-    std::string characters;
+//    std::vector<srcml_element> meta_tags;
 
     /** used to detect root unit */
     bool is_archive = false;
 
+    int unit_count = 0;
+
     /** the current parsing mode */
     srcMLMode mode = START;
+
+    std::string unitsrc;
+
+    std::string unitsrcml;
+
+    const xmlChar* base = nullptr;
+
+    unsigned long prevconsumed = 0;
+
+    const xmlChar* prevbase = nullptr;
+
+    bool collect_src = false;
+    bool collect_unit_body = true;
+
+    std::string rootnsstr;
+    std::string rootstarttag;
+
+    int content_begin = 0;
+    int content_end = 0;
+
+    int loc = 0;
+
+    bool rootcalled = false;
 };
 
 /**
@@ -134,9 +142,8 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
                int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                const xmlChar** attributes);
 
-
 /**
- * start_element_ns_first
+ * first_start_element
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
  * @param prefix the tag prefix
@@ -150,7 +157,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
  * SAX handler function for start of first element after root
  * Detects archive and acts accordingly.
  */
-void start_element_ns_first(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                          const xmlChar** attributes);
 /**
@@ -173,6 +180,28 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
                const xmlChar** attributes);
 
 /**
+ * end_unit
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of a unit
+ */
+void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
+
+/**
+ * end_root
+ * @param ctx an xmlParserCtxtPtr
+ * @param localname the name of the element tag
+ * @param prefix the tag prefix
+ * @param URI the namespace of tag
+ *
+ * SAX handler function for end of a unit
+ */
+void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
+
+/**
  * start_element_ns
  * @param ctx an xmlParserCtxtPtr
  * @param localname the name of the element tag
@@ -187,7 +216,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
  * SAX handler function for start of an element.
  * Immediately calls supplied handlers function.
  */
-void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+void start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                     int nb_namespaces, const xmlChar** namespaces, int nb_attributes, int nb_defaulted,
                     const xmlChar** attributes);
 
@@ -202,19 +231,7 @@ void start_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix
  * Detects end of unit and calls correct functions
  * for either end_root end_unit or end_element_ns.
  */
-void end_element_ns(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
-
-/**
- * characters_first
- * @param ctx an xmlParserCtxtPtr
- * @param ch the characers
- * @param len number of characters
- *
- * SAX handler function for character handling before we
- * know if we have an archive or not.
- * Immediately calls supplied handlers function.
- */
-void characters_first(void* ctx, const xmlChar* ch, int len);
+void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI);
 
 /**
  * characters_root

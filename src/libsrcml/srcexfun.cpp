@@ -31,6 +31,8 @@
 #include <libxml/parserInternals.h>
 #include <libxml/xmlreader.h>
 
+#include "srcml_sax2_utilities.hpp"
+
 /*
   static xmlChar* unit_url = 0;
   static xmlChar* unit_filename = 0;
@@ -1577,16 +1579,9 @@ void xsltsrcMLRegister () {
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
     typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
     typedef int (*xsltRegisterExtModuleFunction_function) (const xmlChar *, const xmlChar *, xmlXPathFunction);
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
+    void* handle = dlopen_libexslt();
     if (!handle) {
-        handle = dlopen("libexslt.so.0", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libexslt.dylib", RTLD_LAZY);
-            if (!handle) {
-                fprintf(stderr, "Unable to open libexslt library\n");
-                return;
-            }
-        }
+        return;
     }
 
     dlerror();

@@ -119,7 +119,7 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // form the parsing request
-        ParseRequest* prequest = new ParseRequest;
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
         prequest->filename = input_file.resource;
         prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
@@ -206,7 +206,7 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // form the parsing request
-        ParseRequest* prequest = new ParseRequest;
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
 
         if (option(SRCML_COMMAND_NOARCHIVE))
             prequest->disk_dir = srcml_request.output_filename;

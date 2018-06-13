@@ -34,12 +34,16 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
     // Check element namespace
     char const * element_uri = 0;
-    if (element){
+    if (false && element){
 
-        // check first if namespace is already declared
+        // check first if namespace is already declared on the output archive
         element_uri = srcml_archive_get_uri_from_prefix(out_arch, element->prefix->c_str());
 
-        // if not declared, check for xmlns from cli
+        // if not, check on the input archive
+        if (!element_uri) {
+            element_uri = srcml_archive_get_uri_from_prefix(in_arch, element->prefix->c_str());
+        }
+
         if (!element_uri) {
             auto it = xmlns_namespaces.find(*(element->prefix));
             if (it != xmlns_namespaces.end())
@@ -70,6 +74,10 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
             return -1;
         }
     }
+
+    // for xpath the output archive is always a non-solo unit
+    // @todo This doesn't make sense in all cases, and should be revisited
+    srcml_archive_enable_full_archive(out_arch);
 
     // Call appropriate XPath transform
     if (element && attribute) {
@@ -139,10 +147,10 @@ int apply_relaxng(srcml_archive* in_arch, const std::string& transform_input) {
 }
 
 // transform srcml with query or transformation
-void transform_srcml(const srcml_request_t& srcml_request,
-    const srcml_input_t& input_sources,
-    const srcml_output_dest& output) {
-
+void transform_srcml(const srcml_request_t& /* srcml_request */,
+    const srcml_input_t& /* input_sources */,
+    const srcml_output_dest& /* output */) {
+/*
 	// create output archive
 	int status;
 	srcml_archive* out_arch = srcml_archive_create();
@@ -194,6 +202,13 @@ void transform_srcml(const srcml_request_t& srcml_request,
 
     // process the content of the input sources
     for (const auto in_arch : inarchives) {
+
+        // copy over any url that we find
+        // @todo Doesn't seem to work on the output archive
+        auto url = srcml_archive_get_url(in_arch);
+        if (url) {
+            srcml_archive_set_url(out_arch, url);
+        }
 
         // see if we have any XPath output
         bool isxpath = false;
@@ -258,4 +273,5 @@ void transform_srcml(const srcml_request_t& srcml_request,
     if (contains<int>(output)) {
         close(*(output.fd));
     }
+*/
 }

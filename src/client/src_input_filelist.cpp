@@ -48,19 +48,19 @@ int src_input_filelist(ParseQueue& queue,
     }
     if (status != ARCHIVE_OK) {
     	SRCMLstatus(ERROR_MSG, "srcml: Invalid filelist " + input_file);
-        return 1;
+        return -1;
     }
 
     // ARE THE LAST TWO NECESSARY?
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
         SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-directory file format");
-    	return 1;
+    	return -1;
     }
 
     if (strcmp(archive_entry_pathname(entry), "data") != 0) {
         SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-archived file format");
-    	return 1;
+    	return -1;
     }
 
     // if we know the size, create the right sized data_buffer
@@ -105,8 +105,10 @@ int src_input_filelist(ParseQueue& queue,
         // process this file
         // everything in a filelist is assumed to be source, including srcML files, so change the state
         srcml_input_src input(sline);
-     //   input.state = SRC;e
-        srcml_handler_dispatch(queue, srcml_arch, srcml_request, input, destination);
+     //   input.state = SRC;
+        int status = srcml_handler_dispatch(queue, srcml_arch, srcml_request, input, destination);
+        if (status == -1)
+            return -1;
     }
 
     return 1;

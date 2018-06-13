@@ -24,7 +24,6 @@
 #include <srcSAXHandler.hpp>
 #include <sax2_srcsax_handler.hpp>
 
-#include <srcml_element.hpp>
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
 #include <srcml.h>
@@ -93,19 +92,14 @@ private :
     /** collected unit language */
     srcml_unit* unit = nullptr;
 
-    /** output buffer for direct src write */
-    xmlOutputBufferPtr output_buffer = nullptr;
-
     /** has reached end of parsing*/
     bool is_done = false;
     /** has passed root*/
     bool read_root = false;
     /** stop after collecting unit attribute*/
-    bool collect_unit_attributes = false;
+    bool collect_unit_header = false;
     /** collect srcML as parse*/
-    bool collect_srcml = false;
-    /** bool collect src */
-    bool collect_src = false;
+    bool collect_unit_body = false;
 
     /** terminate */
     bool terminate = false;
@@ -265,9 +259,7 @@ public :
     srcml_reader_handler(const boost::optional<size_t>& revision_number)
         : revision_number(revision_number) {
 
-        archive = srcml_archive_create();
-
-        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+//        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
     }
 
     /**
@@ -276,11 +268,7 @@ public :
      * Destructor, deletes mutex and conditions.
      */
     ~srcml_reader_handler() {
-
-        srcml_archive_free(archive);
-        if (unit)
-            srcml_unit_free(unit);
-    }
+     }
 
     /**
      * stop_parser
@@ -403,14 +391,11 @@ public :
         for (int pos = 0; pos < num_attributes; ++pos) {
 
             std::string attribute = (const char*) attributes[pos * 5];
-            std::string value;
-            value.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
+            std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
             value = attribute_revision(value);
 
             // Note: these are ignore instead of placing in attributes.
             if (attribute == "timestamp")
-                ;
-            else if (attribute == "hash")
                 ;
             else if (attribute == "language")
                 ;
@@ -445,8 +430,6 @@ public :
                         archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
                     else if (option == "LINE")
                         archive->options |= SRCML_OPTION_LINE;
-                    else if (option == "CPPIF_CHECK")
-                        archive->options |= SRCML_OPTION_CPPIF_CHECK;
                 }
 
             } else if (attribute == "hash") 
@@ -523,9 +506,6 @@ public :
             }
         }
 
-        unit = srcml_unit_create(archive);
-        unit->unit = "";
-
         is_empty = true;
 
         // collect attributes
@@ -558,7 +538,12 @@ public :
             }
         }
 
-        if (collect_unit_attributes) {
+        auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
+
+        state->collect_unit_body = collect_unit_body;
+
+        if (collect_unit_header) {
 
             // pause
             std::unique_lock<std::mutex> lock(mutex);
@@ -567,41 +552,10 @@ public :
 
             cond.notify_all();
             cond.wait(lock);
+
         }
 
-        if (skip) {
-            get_controller().enable_startElement(false);
-            get_controller().enable_charactersUnit(false);
-            get_controller().enable_comment(false);
-            get_controller().enable_cdataBlock(false);
-        }
-
-        if (collect_srcml) {
-
-            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
-
-            if (!is_archive) {
-
-                if (meta_tags.size()) {
-
-                    *unit->unit += ">";
-                    is_empty = false;
-                }
-
-                for (std::vector<meta_tag>::size_type i = 0; i < meta_tags.size(); ++i) {
-
-                    try {
-
-                        meta_tag & meta_tag = meta_tags.at(i);
-                        write_startTag(meta_tag.localname.c_str(), meta_tag.get_prefix(), 0, 0, (int)meta_tag.attributes.size(), meta_tag.attributes.data());
-                        write_endTag(meta_tag.localname.c_str(), meta_tag.get_prefix(), true);
-
-                    } catch(...) { /** @todo handle */ continue; }
-                }
-            }
-
-            unit->content_begin = (int) unit->unit->size() + 1;
-        }
+        state->collect_unit_body = collect_unit_body;
 
         // number of newlines reset
         loc = 0;
@@ -614,7 +568,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
     }
-
+#if 0
     /**
      * startElement
      * @param localname the name of the element tag
@@ -660,24 +614,7 @@ public :
             }
         }
 
-        if (collect_src && localname[0] == 'e' && localname[1] == 's'
-           && strcmp((const char *)localname, "escape") == 0) {
-
-            std::string svalue;
-            svalue.append((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
-
-            char value = (int)strtol(svalue.c_str(), NULL, 0);
-
-            charactersUnit(&value, 1);
-        }
-
-        if (is_empty && collect_srcml)
-            *unit->unit += ">";
         is_empty = true;
-
-        if (collect_srcml) {
-            write_startTag(localname, prefix, num_namespaces, namespaces, num_attributes, attributes);
-        }
 
         if (terminate)
             stop_parser();
@@ -686,6 +623,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
     }
+#endif
 
     /**
      * endRoot
@@ -757,23 +695,16 @@ public :
         if (issrcdiff)
             srcdiff_stack.pop();
 
-        if (skip) {
+        auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
+	    auto state = (sax2_srcsax_handler*) ctxt->_private;
 
-            get_controller().enable_startElement(true);
-            get_controller().enable_charactersUnit(true);
-            get_controller().enable_comment(true);
-            get_controller().enable_cdataBlock(true);
-        }
+        if (collect_unit_body) {
 
-        //if (is_empty) *unit->unit += ">";
-        if (collect_srcml || collect_src) {
-
-            if (collect_srcml) {
-
-                unit->content_end = (int) unit->unit->size() + 1;
-                
-                write_endTag(localname, prefix, is_empty);
-            }
+		    unit->content_begin = state->content_begin;
+		    unit->content_end = state->content_end;
+		    unit->srcml = std::move(state->unitsrcml);
+		    unit->src = std::move(state->unitsrc);
+            unit->loc = state->loc;
 
             // pause
             std::unique_lock<std::mutex> lock(mutex);
@@ -784,9 +715,6 @@ public :
 
         is_empty = false;
 
-        srcml_unit_free(unit);
-        unit = 0;
-
         if (terminate)
             stop_parser();
 
@@ -795,6 +723,7 @@ public :
 #endif
     }
 
+#if 0
     /**
      * endElementNs
      * @param localname tag name
@@ -827,10 +756,6 @@ public :
             }
         }
 
-        if (collect_srcml) {
-            write_endTag(localname, prefix, is_empty);
-        }
-
         is_empty = false;
 
         if (terminate)
@@ -840,7 +765,9 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
     }
+#endif
 
+#if 0
     /**
      * charactersUnit
      * @param ch the characters
@@ -864,8 +791,6 @@ public :
                 return;
         }        
 
-        if (is_empty && collect_srcml)
-            *unit->unit += ">";
         is_empty = false;
 
         // update LOC
@@ -875,26 +800,6 @@ public :
         if (len)
             lastchar = ch[len - 1];
 
-        if (collect_src) {
-
-            xmlOutputBufferWrite(output_buffer, len, (const char *)ch);
-
-        } else {
-
-            for (int i = 0; i < len; ++i) {
-                char character = (char)ch[i];
-
-                if (character == '&')
-                    (*unit->unit) += "&amp;";
-                else if (character == '<')
-                    (*unit->unit) += "&lt;";
-                else if (character == '>')
-                    (*unit->unit) += "&gt;";
-                else
-                    (*unit->unit) += character;
-            }
-        }
-
         if (terminate)
             stop_parser();
 
@@ -902,7 +807,7 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
 #endif
     }
-
+#endif
     /**
      * metaTag
      * @param localname the name of the element tag
@@ -958,167 +863,6 @@ public :
     }
 
 #pragma GCC diagnostic pop
-
-private :
-
-#define NS_URI(pos) (pos * 2 + 1)
-#define NS_PREFIX(pos) (pos * 2)
-
-    /**
-     * write_startTag
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param num_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param num_attributes the number of attributes on the tag
-     * @param attributes list of attributes
-     *
-     * Write out the start tag to the unit string.
-     */
-    void write_startTag(const char* localname, const char* prefix,
-                           int num_namespaces, const xmlChar** namespaces, int /* num_attributes */,
-                           const std::vector<attribute_t> attributes) {
-
-        *unit->unit += "<";
-        if (prefix) {
-            *unit->unit += prefix;
-            *unit->unit += ":";
-        }
-        *unit->unit += localname;
-
-        for (int pos = 0; pos < num_namespaces; ++pos) {
-
-            if (is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_CPP_NS_URI))
-                continue;
-
-            if (revision_number && is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_DIFF_NS_URI))
-                continue;
-
-            *unit->unit += " xmlns";
-            if (namespaces[NS_PREFIX(pos)]) {
-
-                *unit->unit += ":";
-                *unit->unit += (const char*) namespaces[NS_PREFIX(pos)];
-            }
-
-            *unit->unit += "=\"";
-            *unit->unit += (const char*) namespaces[NS_URI(pos)];
-            *unit->unit += "\"";
-        }
-
-        for (const auto& attr : attributes) {
-
-            std::string value = attribute_revision(*attr.value);
-            if (attr.value && *attr.value != "" && value == "")
-                continue;
-
-            *unit->unit += " ";
-            if (attr.prefix) {
-
-                *unit->unit += *attr.prefix;
-                *unit->unit += ":";
-            }
-            *unit->unit += *attr.localname;
-
-            *unit->unit += "=\"";
-            *unit->unit += value;
-            *unit->unit += "\"";
-        }
-        //*unit->unit += ">";
-    }
-
-   /**
-     * write_startTag
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param num_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param num_attributes the number of attributes on the tag
-     * @param attributes list of attributes
-     *
-     * Write out the start tag to the unit string.
-     */
-    void write_startTag(const char* localname, const char* prefix,
-                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** attributes) {
-
-        *unit->unit += "<";
-        if (prefix) {
-            *unit->unit += prefix;
-            *unit->unit += ":";
-        }
-        *unit->unit += localname;
-
-        for (int pos = 0; pos < num_namespaces; ++pos) {
-
-            if (is_archive && strcmp(localname, "unit") == 0 && !is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_CPP_NS_URI))
-                continue;
-
-            if (revision_number && is_srcml_namespace((const char*) namespaces[NS_URI(pos)], SRCML_DIFF_NS_URI))
-                continue;
-
-            *unit->unit += " xmlns";
-            if (namespaces[NS_PREFIX(pos)]) {
-
-                *unit->unit += ":";
-                *unit->unit += (const char*) namespaces[NS_PREFIX(pos)];
-            }
-
-            *unit->unit += "=\"";
-            *unit->unit += (const char*) namespaces[NS_URI(pos)];
-            *unit->unit += "\"";
-        }
-
-        for (int pos = 0; pos < num_attributes; ++pos) {
-
-            std::string revision;
-            revision.append((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
-            std::string value = attribute_revision(revision);
-            if (revision != "" && value == "") continue;
-
-            *unit->unit += " ";
-            if (attributes[ATTR_PREFIX(pos)]) {
-
-                *unit->unit += (const char*) attributes[ATTR_PREFIX(pos)];
-                *unit->unit += ":";
-            }
-            *unit->unit += (const char*) attributes[ATTR_LOCALNAME(pos)];
-
-            *unit->unit += "=\"";
-            *unit->unit += value;
-            *unit->unit += "\"";
-        }
-        //*unit->unit += ">";
-    }
-
-    /**
-     * endElementNs
-     * @param localname tag name
-     * @param prefix prefix for the tag
-     * @param URI uri for tag
-     *
-     * Write out the end tag to the unit string.
-     */
-    void write_endTag(const char* localname, const char* prefix, bool is_empty) {
-
-        if (is_empty) {
-
-            *unit->unit += "/>";
-            return;
-        }
-
-        *unit->unit += "</";
-        if (prefix) {
-
-            *unit->unit += (const char *)prefix;
-            *unit->unit += ":";
-        }
-        *unit->unit += (const char *)localname;
-
-        *unit->unit += ">";
-    }
 };
 
 #endif

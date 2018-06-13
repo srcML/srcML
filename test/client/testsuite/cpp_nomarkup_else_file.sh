@@ -38,7 +38,7 @@ define fmarkup_else <<- 'STDOUT'
 
 define nomarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" options="CPP_TEXT_ELSE">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
@@ -49,7 +49,7 @@ define nomarkup_else <<- 'STDOUT'
 
 define fnomarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp">
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp" options="CPP_TEXT_ELSE">
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>

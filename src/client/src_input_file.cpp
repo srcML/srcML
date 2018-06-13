@@ -35,7 +35,7 @@ int src_input_file(ParseQueue& queue,
     }
 
     // form the parsing request
-    ParseRequest* prequest = new ParseRequest;
+    std::shared_ptr<ParseRequest> prequest(new ParseRequest);
    
     if (option(SRCML_COMMAND_NOARCHIVE)) {
         prequest->disk_dir = srcml_request.output_filename;

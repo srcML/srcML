@@ -56,24 +56,6 @@ class srcml_translator : public Language {
 public:
 
     // constructor
-    srcml_translator(char** str_buf,
-                     size_t* size,
-                     const char* xml_encoding,
-                     OPTION_TYPE& op,
-                     const Namespaces& namespaces,
-                     boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                     size_t tabsize,
-                     int language,
-                     const char* revision,
-                     const char* url,
-                     const char* filename,
-                     const char* version,
-                     const std::vector<std::string>& attributes,
-                     const char* timestamp,
-                     const char* hash,
-                     const char* encoding);
-
-    // constructor
     srcml_translator(xmlOutputBuffer * output_buffer,
                      const char* xml_encoding,
                      OPTION_TYPE& op,
@@ -97,8 +79,8 @@ public:
     void translate(UTF8CharBuffer* parser_input);
 
     bool add_unit(const srcml_unit* unit);
-    bool add_unit_raw(const char* xml, int size);
-    bool add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc);
+    bool add_unit(const char* xml, int size);
+    bool add_unit(xmlNodePtr node, xmlDocPtr doc);
     bool add_start_unit(const srcml_unit* unit);
     bool add_end_unit();
     bool add_start_element(const char* prefix, const char* name, const char* uri);
@@ -148,7 +130,7 @@ private:
     Namespaces namespaces;
 
     /** translation options */
-    OPTION_TYPE& options;
+    OPTION_TYPE options;
 
     /** buffer to hold output to memory */
     xmlBuffer* buffer = nullptr;
@@ -166,12 +148,6 @@ private:
 
     /** list of user defined macros */
     std::vector<std::string> user_macro_list;
-
-    /** location to store output when output is to memory */
-    char** str_buffer = nullptr;
-    
-    /** location to store size of output when output is to memory */
-    size_t* size = nullptr;
 
     /** mark if have outputted starting unit tag for by element writing */
     bool is_outputting_unit = false;

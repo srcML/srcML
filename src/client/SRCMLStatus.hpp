@@ -55,6 +55,8 @@ public:
       if (option(SRCML_COMMAND_QUIET) && !(msg_type == ERROR_MSG))
         return;
 
+      return;
+      
       switch (msg_type) {
       case ERROR_MSG:
         std::cerr << "ERROR ";

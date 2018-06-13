@@ -29,8 +29,8 @@
  *
  * Context data structure passed between callbacks.
  */
-struct srcsax_context {
-
+class srcsax_context {
+public:
     /** user provided data */
     void* data = nullptr;
 
@@ -42,9 +42,6 @@ struct srcsax_context {
 
     /** is the document an archive */
     int is_archive;
-
-    /** the current unit count */
-    int unit_count = 0;
 
     /** the xml documents encoding */
     const char* encoding;
@@ -66,10 +63,6 @@ struct srcsax_context {
 
 /* srcSAX context creation/open functions */
 srcsax_context* srcsax_create_context_filename(const char* filename, const char* encoding);
-srcsax_context* srcsax_create_context_memory(const char* buffer, size_t buffer_size, const char* encoding);
-srcsax_context* srcsax_create_context_FILE(FILE* srcml_file, const char* encoding);
-srcsax_context* srcsax_create_context_fd(int srcml_fd, const char* encoding);
-srcsax_context* srcsax_create_context_io(void* srcml_context, int (*read_callback)(void* context, char* buffer, int len), int (*close_callback)(void* context), const char* encoding);
 srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
 
 /* srcSAX free function */
