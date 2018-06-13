@@ -172,6 +172,10 @@ struct srcml_archive {
 
     /** raw writes were made */
     bool rawwrites = false;
+
+    /** error reporting */
+    std::string error_string;
+    int error_number = 0;
 };
 
 /**
@@ -234,6 +238,10 @@ struct srcml_unit {
     int content_end = 0;
 
     int loc = 0;
+
+    /** error reporting */
+    std::string error_string;
+    int error_number = 0;
 };
 
 /** Set the hash attribute for the srcml unit
