@@ -21,7 +21,7 @@ gen : testbase
 
 PHONY : testbase
 testbase :
-	cd testsuite && make
+	cd testsuite && make -f Makefile.gen
 	cd ..
 
 PHONY : short
