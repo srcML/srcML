@@ -156,7 +156,6 @@ namespace {
 
     /*
         Create srcML
-
         * One of the input sources is source code
         * Destination is srcML
     */
@@ -172,10 +171,8 @@ namespace {
     }
 
     /*
-        Extract out of srcML
-
-        * ?
-        * 
+        Extract from srcML
+        * Request any sort of metadata
     */
     bool request_display_metadata(const srcml_request_t& request) {
 
@@ -184,7 +181,6 @@ namespace {
 
     /*
         Output is compressed
-
         * Format of output includes compression
     */
     bool request_output_compression(const srcml_request_t& request) {
@@ -194,7 +190,6 @@ namespace {
 
     /*
         Creating source code
-
         * Specific option for source output
         * The destination is not a srcML file and we are not creating srcML, asking for metadata, or performing a transformation
     */
@@ -209,12 +204,15 @@ namespace {
         ;
     }
 
+    /*
+        Does stdin contain xml or source
+    */
     void is_stdin_xml(srcml_request_t& request) {
 
         // stdin input source
         auto& rstdin = request.input_sources[*request.stdindex];
 
-        // stdin accessed as FILE*
+        // stdin accessed as FILE* so we can peek at input
         rstdin.fileptr = fdopen(STDIN_FILENO, "r");
         if (!rstdin.fileptr) {
             SRCMLstatus(ERROR_MSG, "srcml: Unable to open stdin");
