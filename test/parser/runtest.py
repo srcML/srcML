@@ -37,13 +37,14 @@ MAX_COUNT = 29
 sperrorlist = []
 xml_filename = ""
 
-srcmltranslator = os.environ.get("SRC2SRCML")
-if srcmltranslator == "" or srcmltranslator == None:
-    srcmltranslator = "../../bin/srcml"
-
-srcmlutility = os.environ.get("SRCML2SRC")
-if srcmlutility == "" or srcmlutility == None:
-    srcmlutility = "../../bin/srcml"
+srcml_executable = os.environ.get("SRCML")
+if srcml_executable == "" or srcml_executable == None:
+    if os.path.exists("bin/srcml") :
+        srcml_executable = "bin/srcml"
+    elif os.path.exists("../bin/srcml") :
+        srcml_executable = "../bin/srcml"
+    elif os.path.exists("../../bin/srcml") :
+        srcml_executable = "../../bin/srcml"
 
 # Walk into directories in filesystem
 # Ripped from os module and slightly modified
@@ -102,14 +103,14 @@ def safe_communicate_file(command, filename):
 # extracts a particular unit from a srcML file
 def extract_unit(src, count):
 
-    command = [srcmlutility, "--unit=" + str(count), "--xml"]
+    command = [srcml_executable, "--unit=" + str(count), "--xml"]
 
     return safe_communicate(command, src)
 
 # extracts a particular unit from a srcML file
 def extract_all_executable(src):
 
-    command = [srcmlutility, "-0", "--xml"]
+    command = [srcml_executable, "-0", "--xml"]
 
     return safe_communicate(command, src)
 
@@ -154,7 +155,7 @@ def name2filestr(src_filename):
 def srcml2src_executable(srctext, encoding):
 
     # run the srcml processor
-    command = [srcmlutility]
+    command = [srcml_executable]
     command.append("--src-encoding=" + encoding)
 
     return safe_communicate(command, srctext)
@@ -163,7 +164,7 @@ def srcml2src_executable(srctext, encoding):
 def srcml2src(srctext, encoding):
 
     # run the srcml processor
-    utility = srcMLUtility(srctext, len(srctext) + 1, encoding, 0, "")
+    utility = srcml_executable(srctext, len(srctext) + 1, encoding, 0, "")
     source = utility.extract_text(0)
     utility.delete()
 
@@ -190,7 +191,7 @@ def xmldiff(xml_filename1, xml_filename2):
 # find differences of two files
 def src2srcML_executable(text_file, encoding, language, url, filename, prefixlist):
 
-    command = [srcmltranslator, "-l", language, "--encoding=" + encoding]
+    command = [srcml_executable, "-l", language, "--encoding=" + encoding]
 
     if url != "":
         command.extend(["--url", url])
@@ -240,20 +241,20 @@ def src2srcML(text_file, encoding, language, url, filename, read_archive):
 
 def getsrcmlattribute(xml_file, command):
 
-    last_line = safe_communicate([srcmlutility, command], xml_file)
+    last_line = safe_communicate([srcml_executable, command], xml_file)
 
     return last_line.strip()
 
 def getsrcmlattributefile(xml_file, command):
 
-    last_line = safe_communicate_file([srcmlutility, command], xml_file)
+    last_line = safe_communicate_file([srcml_executable, command], xml_file)
 
     return last_line.strip()
 
 def getsrcmlattributeraw(srctext, command):
 
     # run the srcml processor
-    command = [srcmlutility]
+    command = [srcml_executable]
     command.append("--info")
 
     return safe_communicate(command, srctext)
@@ -323,23 +324,16 @@ def nondefaultxmlns(l):
             newl.append(a)
     return newl
 
-# version of src2srcml
-def src2srcmlversion():
-    last_line = safe_communicate([srcmltranslator, "-V"], "")
-
-    return last_line.splitlines()[0].strip()
-
-# version of srcml2src
-def srcml2srcversion():
-
-    last_line = safe_communicate([srcmlutility, "-V"], "")
+# version of srcml
+def srcml_version():
+    last_line = safe_communicate([srcml_executable, "-V"], "")
 
     return last_line.splitlines()[0].strip()
 
 # number of nested units
 def getnested(xml_file):
 
-    snumber = safe_communicate([srcmlutility, "-n"], xml_file)
+    snumber = safe_communicate([srcml_executable, "-n"], xml_file)
 
     if snumber != "":
         return int(snumber)
@@ -380,8 +374,7 @@ while len(sys.argv) > 1 and ( sys.argv[1] == "--dos" or sys.argv[1] == "--exec" 
     sys.argv.pop(0)
 
 if use_exec :
-    print src2srcmlversion()
-    print srcml2srcversion()
+    print srcml_version()
 else :
     sys.path.append("../../python/src")
     from srcml import *
@@ -426,8 +419,8 @@ base_dir = "testsuite"
 
 errorlist = []
 
-#if not(os.path.isfile(srcmltranslator)):
-#       print srcmltranslator + " does not exist."
+#if not(os.path.isfile(srcml_executable)):
+#       print srcml_executable + " does not exist."
 #       exit
 
 m = re.compile(specname + "$")
@@ -709,8 +702,7 @@ f.close()
 # output tool version
 print
 if use_exec :
-    print src2srcmlversion(), srcmltranslator
-    print srcml2srcversion(), srcmlutility
+    print srcml_version(), srcml_executable
 else :
     print version_string()
 

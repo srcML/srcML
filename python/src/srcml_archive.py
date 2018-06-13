@@ -220,56 +220,56 @@ libsrcml.srcml_archive_read_unit_header.restype = c_void_p
 libsrcml.srcml_archive_read_unit_header.argtypes = [c_void_p]
 
 # int srcml_clear_transforms(struct srcml_archive*);
-libsrcml.srcml_clear_transforms.restype = c_int
-libsrcml.srcml_clear_transforms.argtypes = [c_void_p]
+#libsrcml.srcml_clear_transforms.restype = c_int
+#libsrcml.srcml_clear_transforms.argtypes = [c_void_p]
 
 # int srcml_append_transform_xpath(struct srcml_archive*, const char* xpath_string);
-libsrcml.srcml_append_transform_xpath.restype = c_int
-libsrcml.srcml_append_transform_xpath.argtypes = [c_void_p, c_char_p]
+#libsrcml.srcml_append_transform_xpath.restype = c_int
+#libsrcml.srcml_append_transform_xpath.argtypes = [c_void_p, c_char_p]
 
 # int srcml_append_transform_xslt_filename(struct srcml_archive*, const char* xslt_filename);
-libsrcml.srcml_append_transform_xslt_filename.restype = c_int
-libsrcml.srcml_append_transform_xslt_filename.argtypes = [c_void_p, c_char_p]
+#libsrcml.srcml_append_transform_xslt_filename.restype = c_int
+#libsrcml.srcml_append_transform_xslt_filename.argtypes = [c_void_p, c_char_p]
 
 # int srcml_append_transform_xslt_memory(struct srcml_archive*, const char* xslt_buffer, size_t size);
-libsrcml.srcml_append_transform_xslt_memory.restype = c_int
-libsrcml.srcml_append_transform_xslt_memory.argtypes = [c_void_p, c_char_p, c_int]
+#libsrcml.srcml_append_transform_xslt_memory.restype = c_int
+#libsrcml.srcml_append_transform_xslt_memory.argtypes = [c_void_p, c_char_p, c_int]
 
 # int srcml_append_transform_xslt_FILE(struct srcml_archive*, FILE* xslt_file);
-libsrcml.srcml_append_transform_xslt_FILE.restype = c_int
-libsrcml.srcml_append_transform_xslt_FILE.argtypes = [c_void_p, c_void_p]
+#libsrcml.srcml_append_transform_xslt_FILE.restype = c_int
+#libsrcml.srcml_append_transform_xslt_FILE.argtypes = [c_void_p, c_void_p]
 
 # int srcml_append_transform_xslt_fd(struct srcml_archive*, int xslt_fd);
-libsrcml.srcml_append_transform_xslt_fd.restype = c_int
-libsrcml.srcml_append_transform_xslt_fd.argtypes = [c_void_p, c_int]
+#libsrcml.srcml_append_transform_xslt_fd.restype = c_int
+#libsrcml.srcml_append_transform_xslt_fd.argtypes = [c_void_p, c_int]
 
 # int srcml_append_transform_relaxng_filename(struct srcml_archive*, const char* relaxng_filename);
-libsrcml.srcml_append_transform_relaxng_filename.restype = c_int
-libsrcml.srcml_append_transform_relaxng_filename.argtypes = [c_void_p, c_char_p]
+#libsrcml.srcml_append_transform_relaxng_filename.restype = c_int
+#libsrcml.srcml_append_transform_relaxng_filename.argtypes = [c_void_p, c_char_p]
 
 # int srcml_append_transform_relaxng_memory(struct srcml_archive*, const char* relaxng_buffer, size_t size);
-libsrcml.srcml_append_transform_relaxng_memory.restype = c_int
-libsrcml.srcml_append_transform_relaxng_memory.argtypes = [c_void_p, c_char_p, c_int]
+#libsrcml.srcml_append_transform_relaxng_memory.restype = c_int
+#libsrcml.srcml_append_transform_relaxng_memory.argtypes = [c_void_p, c_char_p, c_int]
 
 # int srcml_append_transform_relaxng_FILE(struct srcml_archive*, FILE* relaxng_file);
-libsrcml.srcml_append_transform_relaxng_FILE.restype = c_int
-libsrcml.srcml_append_transform_relaxng_FILE.argtypes = [c_void_p, c_void_p]
+#libsrcml.srcml_append_transform_relaxng_FILE.restype = c_int
+#libsrcml.srcml_append_transform_relaxng_FILE.argtypes = [c_void_p, c_void_p]
 
 # int srcml_append_transform_relaxng_fd(struct srcml_archive*, int relaxng_fd);
-libsrcml.srcml_append_transform_relaxng_fd.restype = c_int
-libsrcml.srcml_append_transform_relaxng_fd.argtypes = [c_void_p, c_int]
+#libsrcml.srcml_append_transform_relaxng_fd.restype = c_int
+#libsrcml.srcml_append_transform_relaxng_fd.argtypes = [c_void_p, c_int]
 
 # int srcml_append_transform_param(struct srcml_archive*, const char* xpath_param_name, const char* xpath_param_value);
-libsrcml.srcml_append_transform_param.restype = c_int
-libsrcml.srcml_append_transform_param.argtypes = [c_void_p, c_char_p, c_char_p]
+#libsrcml.srcml_append_transform_param.restype = c_int
+#libsrcml.srcml_append_transform_param.argtypes = [c_void_p, c_char_p, c_char_p]
 
 # int srcml_append_transform_stringparam(struct srcml_archive*, const char* xpath_param_name, const char* xpath_param_value);
-libsrcml.srcml_append_transform_stringparam.restype = c_int
-libsrcml.srcml_append_transform_stringparam.argtypes = [c_void_p, c_char_p, c_char_p]
+#libsrcml.srcml_append_transform_stringparam.restype = c_int
+#libsrcml.srcml_append_transform_stringparam.argtypes = [c_void_p, c_char_p, c_char_p]
 
 # int srcml_apply_transforms(struct srcml_archive* iarchive, struct srcml_archive* oarchive);
-libsrcml.srcml_apply_transforms.restype = c_int
-libsrcml.srcml_apply_transforms.argtypes = [c_void_p, c_void_p]
+#libsrcml.srcml_apply_transforms.restype = c_int
+#libsrcml.srcml_apply_transforms.argtypes = [c_void_p, c_void_p]
 
 # srcml_archive wrapper
 class srcml_archive :
