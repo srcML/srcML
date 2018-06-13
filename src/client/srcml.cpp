@@ -26,7 +26,6 @@
 #include <create_srcml.hpp>
 #include <compress_srcml.hpp>
 #include <create_src.hpp>
-#include <transform_srcml.hpp>
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
 #include <isxml.hpp>
@@ -34,7 +33,6 @@
 #include <SRCMLStatus.hpp>
 #include <curl/curl.h>
 #include <boost/version.hpp>
-#include <archive.h>
 #include <iostream>
 #include <csignal>
 #include <cmath>
@@ -44,8 +42,8 @@
 #include <unistd.h>
 #endif
 
-// decide if a step is needed
 namespace {
+    // decide if a step is needed
     bool request_create_srcml      (const srcml_request_t&);
     bool request_display_metadata  (const srcml_request_t&);
     bool request_output_compression(const srcml_request_t&);
