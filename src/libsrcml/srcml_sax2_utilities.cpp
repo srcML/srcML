@@ -33,6 +33,12 @@
 #include <dlfcn.h>
 #endif
 
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+#define DLLOAD
+#else
+#undef DLLOAD
+#endif
+
 /**
  * dlopen_library
  *
