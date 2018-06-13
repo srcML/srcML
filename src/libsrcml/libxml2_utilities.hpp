@@ -27,6 +27,7 @@
 #include <libxml/xmlIO.h>
 #include <libxml/relaxng.h>
 #include <algorithm>
+#include <memory>
 
 // std::unique_ptr deleter functions for libxml2
 // usage: std::unique<xmlDoc> p(xmlReadMemory);
