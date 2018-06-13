@@ -139,11 +139,13 @@ int main(int argc, char * argv[]) {
     srcml_cleanup_globals();
 
     // debugging information
-    auto realtime = runtime.real_world_elapsed();
-    SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
-                           << "Real Time: " << realtime << "ms\n"
-                           << "LOC: " << TraceLog::totalLOC() << '\n'
-                           << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
+    if (srcml_request.command & SRCML_DEBUG_MODE) {
+        auto realtime = runtime.real_world_elapsed();
+        SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
+                               << "Real Time: " << realtime << "ms\n"
+                               << "LOC: " << TraceLog::totalLOC() << '\n'
+                               << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
+    }
 
     // error status is 0 unless a critical, error, or warning
     return SRCMLStatus::errors() ? 1 : 0;
