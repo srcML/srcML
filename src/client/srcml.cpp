@@ -50,34 +50,7 @@ namespace {
     bool request_display_metadata  (const srcml_request_t&);
     bool request_output_compression(const srcml_request_t&);
     bool request_create_src        (const srcml_request_t&);
-}
 
-// stdin timeout message
-void timeout(int) {
-
-    fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
-Typical usage includes:
-
-    # convert from a source file to srcML
-    srcml main.cpp -o main.cpp.xml
-
-    # convert from text to srcML
-    srcml --text="int i = 1;" --language C++
-
-    # pipe in source code
-    echo "int i = 1;" | srcml --language C++
-
-    # convert from srcML back to source code 
-    srcml main.cpp.xml -o main.cpp
-
-Consider using the --text option for direct entry of text.
-
-See `srcml --help` for more information.
-)");
-    exit(1);
-}
-
-namespace {
     void is_stdin_xml(srcml_request_t& srcml_request);
 }
 
@@ -249,13 +222,28 @@ namespace {
         }
         rstdin.fd = boost::none;
 
-        // setup a 5 second timeout for stdin from the terminal
+        // stdin from a terminal is not allowed
         if (isatty(0)) {
-//          #ifndef _MSC_BUILD
-//          alarm(5);
-//          signal(SIGALRM, timeout);
-//          #endif
-            timeout(0);
+            fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
+Typical usage includes:
+
+    # convert from a source file to srcML
+    srcml main.cpp -o main.cpp.xml
+
+    # convert from text to srcML
+    srcml --text="int i = 1;" --language C++
+
+    # pipe in source code
+    echo "int i = 1;" | srcml --language C++
+
+    # convert from srcML back to source code 
+    srcml main.cpp.xml -o main.cpp
+
+Consider using the --text option for direct entry of text.
+
+See `srcml --help` for more information.
+)");
+            exit(1);
         }
 
         // determine if the input is srcML or src
