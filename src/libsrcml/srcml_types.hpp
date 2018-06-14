@@ -29,7 +29,9 @@
 #include <libxslt/xsltutils.h>
 #include <libexslt/exslt.h>
 
-class Transformation;
+#include <Transformation.hpp>
+
+#include <memory>
 
 /** string for language Objective-C */
 #define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
@@ -157,7 +159,7 @@ struct srcml_archive {
     /** xmlParserInputBuffer for reading */
     xmlParserInputBufferPtr input = nullptr;
  
-    std::vector<Transformation*> transformations;
+    std::vector<std::shared_ptr<Transformation>> transformations;
 
     /** srcDiff revision number */
     boost::optional<size_t> revision_number;

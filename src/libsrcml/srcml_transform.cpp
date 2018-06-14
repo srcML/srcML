@@ -63,7 +63,7 @@ static int srcml_append_transform_xpath_internal (struct srcml_archive* archive,
     xpathTransformation* trans = new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
             attr_prefix, attr_namespace_uri, attr_name, attr_value);
 
-    archive->transformations.push_back(trans);
+    archive->transformations.emplace_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -108,7 +108,7 @@ int srcml_append_transform_xpath_attribute(struct srcml_archive* archive, const 
 
     // attribute for a previous Xpath where the attribute is blank is appended on
     if (!archive->transformations.empty()) {
-        auto p = dynamic_cast<xpathTransformation*>(archive->transformations.back());
+        auto p = dynamic_cast<xpathTransformation*>(archive->transformations.back().get());
         if (p && p->xpath == xpath_string && p->attr_prefix.empty() && p->attr_uri.empty() && p->attr_name.empty() && p->attr_value.empty()) {
 
             p->attr_prefix = prefix;
@@ -165,7 +165,7 @@ static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPt
 
     xsltTransformation* trans = new xsltTransformation(doc, std::vector<std::string>());
 
-    archive->transformations.push_back(trans);
+    archive->transformations.emplace_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -282,7 +282,7 @@ static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDo
 
     relaxngTransformation* trans = new relaxngTransformation(doc);
 
-    archive->transformations.push_back(trans);
+    archive->transformations.emplace_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -451,8 +451,6 @@ int srcml_clear_transforms(srcml_archive* archive) {
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     // cleanup the transformations
-    for (const auto* p : archive->transformations)
-        delete p;
     archive->transformations.clear();
 
     return SRCML_STATUS_OK;
@@ -494,12 +492,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (fullresults == nullptr)
         return SRCML_STATUS_ERROR;
 
-    const Transformation* lasttrans = nullptr;
     TransformationResult lastresult;
-    for (const auto* trans : archive->transformations) {
-
-        // keep track of the last transformation processed, which might not be the last one in the list
-        lasttrans = trans;
+    for (const auto& trans : archive->transformations) {
 
         // preserve the fullresults to iterate through
         // collect results from this transformation applied to the potentially multiple
