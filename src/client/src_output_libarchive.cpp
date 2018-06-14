@@ -28,6 +28,8 @@
 #include <cstdio>
 #include <string>
 #include <SRCMLStatus.hpp>
+#include <memory>
+#include <libarchive_utilities.hpp>
 
 void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
@@ -49,7 +51,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         }
 
         // setup the entry header
-        archive_entry* entry = archive_entry_new();
+        std::unique_ptr<archive_entry> entry(archive_entry_new());
         if (!entry)
             break;
 
@@ -59,17 +61,17 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         srcml_unit_unparse_memory(unit, &buffer, &buffer_size);
 
         // setup the entry
-        archive_entry_set_pathname(entry, newfilename.c_str());
-        archive_entry_set_size(entry, buffer_size);
-        archive_entry_set_filetype(entry, AE_IFREG);
-        archive_entry_set_perm(entry, 0644);
+        archive_entry_set_pathname(entry.get(), newfilename.c_str());
+        archive_entry_set_size(entry.get(), buffer_size);
+        archive_entry_set_filetype(entry.get(), AE_IFREG);
+        archive_entry_set_perm(entry.get(), 0644);
 
         time_t now = time(NULL);
-        archive_entry_set_atime(entry, now, 0);
-        archive_entry_set_ctime(entry, now, 0);
-        archive_entry_set_mtime(entry, now, 0);
+        archive_entry_set_atime(entry.get(), now, 0);
+        archive_entry_set_ctime(entry.get(), now, 0);
+        archive_entry_set_mtime(entry.get(), now, 0);
 
-        if ((arch_status = archive_write_header(src_archive, entry)) != ARCHIVE_OK)
+        if ((arch_status = archive_write_header(src_archive, entry.get())) != ARCHIVE_OK)
             break;
 
         // write the data into the archive
@@ -80,8 +82,6 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         }
 
         free(buffer);
-
-        archive_entry_free(entry);
 
         srcml_unit_free(unit);
     }

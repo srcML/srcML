@@ -30,6 +30,8 @@
 #include <input_file.hpp>
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
+#include <libarchive_utilities.hpp>
+#include <memory>
 
 class srcMLReadArchive {
 public:
@@ -201,21 +203,21 @@ void create_src(const srcml_request_t& srcml_request,
                 exit(1); //TODO: Need an error code
             }
 
-            archive* ar = archive_write_new();
+            std::unique_ptr<archive> ar(archive_write_new());
 
             // setup format
             for (const auto& ext : destination.archives)
-                archive_write_set_format_by_extension(ar, ext.c_str());
+                archive_write_set_format_by_extension(ar.get(), ext.c_str());
 
             // setup compressions
             for (const auto& ext : destination.compressions)
-                archive_write_set_compression_by_extension(ar, ext.c_str());
+                archive_write_set_compression_by_extension(ar.get(), ext.c_str());
 
             int status = ARCHIVE_OK;
             if (contains<int>(destination)) {
-                status = archive_write_open_fd(ar, destination);
+                status = archive_write_open_fd(ar.get(), destination);
             } else {
-                status = archive_write_open_filename(ar, destination.resource.c_str());
+                status = archive_write_open_filename(ar.get(), destination.resource.c_str());
             }
             if (status != ARCHIVE_OK) {
                 SRCMLstatus(ERROR_MSG, std::to_string(status));
@@ -228,15 +230,8 @@ void create_src(const srcml_request_t& srcml_request,
                 srcMLReadArchive arch(input_source, srcml_request.revision);
 
                 // extract this srcml archive to the source archive
-                src_output_libarchive(arch, ar);
+                src_output_libarchive(arch, ar.get());
             }
-
-            archive_write_close(ar);
-#if ARCHIVE_VERSION_NUMBER >= 3000000
-            archive_write_free(ar);
-#else
-            archive_write_finish(ar);
-#endif
         }
 
     } catch (srcMLReadArchiveError e) {
