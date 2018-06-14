@@ -89,9 +89,6 @@ int srcml_input_srcml(ParseQueue& queue,
     // process each entry in the input srcml archive
     while (srcml_unit* unit =  srcml_archive_read_unit(srcml_input_archive)) {
 
-        // must cache the body of the unit before we read the next one
-        srcml_unit_read_body(unit);
-
 //        srcml_unit_get_language(unit)
 
         unitFound = true;
