@@ -458,6 +458,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         debug_options.add_options()
             ("dev", prog_opts::bool_switch()->notifier(&option_command<SRCML_DEBUG_MODE>), "Enable developer debug mode.")
+            ("timing", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMING>), "Enable timing mode.")
             ;
         experimental_options.add_options()
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")

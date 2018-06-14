@@ -139,7 +139,7 @@ int main(int argc, char * argv[]) {
     srcml_cleanup_globals();
 
     // debugging information
-    if (srcml_request.command & SRCML_DEBUG_MODE) {
+    if (srcml_request.command & (SRCML_DEBUG_MODE | SRCML_COMMAND_TIMING)) {
         auto realtime = runtime.real_world_elapsed();
         SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
                                << "Real Time: " << realtime << "ms\n"

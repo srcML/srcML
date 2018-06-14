@@ -106,6 +106,10 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
                 outs << '\t' << request->runtime << " ms";
                 outs << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
             }
+            if (option(SRCML_COMMAND_TIMING)) {
+                outs << '\t' << request->runtime << " ms";
+                outs << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
+            }
 
             log << 'a' << outs.str();
         }
