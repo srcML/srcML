@@ -89,6 +89,8 @@ public :
     */
     int read_header(srcml_unit* unit);
 
+    int read(srcml_unit* unit);
+
     // reads the next unit and returns it in parameter as srcML
     int read_body(srcml_unit* unit);
 };
