@@ -35,7 +35,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
     long arch_status = ARCHIVE_OK;
     int unitcounter = 0;
-    while (srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch)) {
+    while (srcml_unit* unit = srcml_archive_read_unit(srcml_arch)) {
 
         ++unitcounter;
 

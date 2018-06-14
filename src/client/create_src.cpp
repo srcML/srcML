@@ -130,8 +130,7 @@ void create_src(const srcml_request_t& srcml_request,
 
         // move to the correct unit
         for (int i = 1; i < srcml_request.unit; ++i) {
-            std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit_header(arch.get()));
-            if (!unit) {
+            if (!srcml_archive_skip_unit(arch.get())) {
                 SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
                 exit(1);
             }
@@ -139,7 +138,7 @@ void create_src(const srcml_request_t& srcml_request,
 
         int count = 0;
         while (1) {
-            std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit_header(arch.get()));
+            std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(arch.get()));
             if (srcml_request.unit && !unit) {
                 SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
                 exit(1);
@@ -173,14 +172,13 @@ void create_src(const srcml_request_t& srcml_request,
 
         // move to the correct unit
         for (int i = 1; i < srcml_request.unit; ++i) {
-            std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit_header(arch.get()));
-            if (!unit) {
+            if (!srcml_archive_skip_unit(arch.get())) {
                 SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
                 exit(1);
             }
         }
 
-        std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit_header(arch.get()));
+        std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(arch.get()));
         if (!unit) {
             SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
             exit(4);

@@ -33,7 +33,7 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
         prefix = output_dir;
 
     int count = 0;
-    while (srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch)) {
+    while (srcml_unit* unit = srcml_archive_read_unit(srcml_arch)) {
 
         // construct the relative directory
         boost::filesystem::path out(prefix);

@@ -77,19 +77,17 @@ int srcml_input_srcml(ParseQueue& queue,
 
     // move to the correct unit (if needed)
     for (int i = 1; i < srcml_input.unit; ++i) {
-        srcml_unit* unit = srcml_archive_read_unit_header(srcml_input_archive);
-        if (!unit) {
+        if (!srcml_archive_skip_unit(srcml_input_archive)) {
             SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_input.unit);
             exit(1);
         }
-        srcml_unit_free(unit);
     }
 
     // if we found a valid unit
     bool unitFound = false;
 
     // process each entry in the input srcml archive
-    while (srcml_unit* unit =  srcml_archive_read_unit_header(srcml_input_archive)) {
+    while (srcml_unit* unit =  srcml_archive_read_unit(srcml_input_archive)) {
 
         // must cache the body of the unit before we read the next one
         srcml_unit_read_body(unit);
