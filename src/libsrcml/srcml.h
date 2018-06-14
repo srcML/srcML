@@ -1021,14 +1021,6 @@ LIBSRCML_DECL const char* srcml_archive_check_extension(const struct srcml_archi
  */
 LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive);
 
-/** Read the body of the current unit in the archive
- * @note This is only needed in special cases as the general archive access will perform this automatically
- * @param unit The srcml_unit to read
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_unit_read_body(struct srcml_unit* unit);
-
 /** Read the next unit from the archive
  * @param archive A srcml_archive open for reading
  * @return The read srcml_unit on success
