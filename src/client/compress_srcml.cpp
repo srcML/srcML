@@ -73,6 +73,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
             break;
     }
 
+    archive_entry_free(entry);
     archive_write_close(ar);
     archive_write_free(ar);
 }
