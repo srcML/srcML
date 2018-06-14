@@ -55,10 +55,11 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         if (!entry)
             break;
 
-        // go from srcml back to source in the buffer
+        // Convert from srcML back to source in a buffer
         char* buffer;
         size_t buffer_size;
         srcml_unit_unparse_memory(unit, &buffer, &buffer_size);
+        std::unique_ptr<char> pbuffer(buffer);
 
         // setup the entry
         archive_entry_set_pathname(entry.get(), newfilename.c_str());
@@ -75,13 +76,11 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
             break;
 
         // write the data into the archive
-        arch_status = archive_write_data(src_archive, buffer, (size_t) buffer_size);
+        arch_status = archive_write_data(src_archive, pbuffer.get(), (size_t) buffer_size);
         if (arch_status == -1 /* || arch_status != buffer_size */) {
             SRCMLstatus(WARNING_MSG, "Unable to save " + newfilename + " to source archive");
             break;
         }
-
-        free(buffer);
 
         srcml_unit_free(unit);
     }
