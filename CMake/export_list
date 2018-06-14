@@ -109,6 +109,8 @@ _srcml_archive_read_open_filename
 _srcml_archive_read_open_io
 _srcml_archive_read_open_memory
 _srcml_archive_read_open_FILE
+_srcml_archive_read_unit
+_srcml_archive_skip_unit
 _srcml_archive_read_unit_header
 _srcml_unit_read_body
 _srcml_register_file_extension

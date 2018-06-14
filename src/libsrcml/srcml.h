@@ -1028,6 +1028,20 @@ LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_header(struct srcml_arc
  * @return Status error code on failure
  */
 LIBSRCML_DECL int srcml_unit_read_body(struct srcml_unit* unit);
+
+/** Read the next unit from the archive
+ * @param archive A srcml_archive open for reading
+ * @return The read srcml_unit on success
+ * @return NULL on failure
+ */
+LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive);
+
+/** Skip the next unit from the archive
+ * @param archive A srcml_archive open for reading
+ * @return 1 Succesfully skipped
+ * @return NULL on failure
+ */
+LIBSRCML_DECL int srcml_archive_skip_unit(struct srcml_archive* archive);
 /**@}*/
 
 /**@{ @name XPath query and XSLT transformations */
