@@ -24,6 +24,7 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <SRCMLStatus.hpp>
+#include <memory>
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
 void compress_srcml(const srcml_request_t& /* srcml_request */,
@@ -32,7 +33,10 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
 
     // create a new archive for output that will handle all 
     // types, including source-code files
-    archive* ar = archive_write_new();
+    std::unique_ptr<archive> ar(archive_write_new(), [](archive* p) {
+        archive_write_close(ar);
+        archive_write_free(ar);
+    });
     archive_write_set_format_raw(ar);
 
     // setup compressions
@@ -52,7 +56,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     }
 
     // create a new entry. Note that the pathname doesn't matter
-    archive_entry* entry = archive_entry_new();
+    std::unique_ptr<archive_entry> entry(archive_entry_new(), [](archive_entry* p) { archive_entry_free(p); });
     archive_entry_set_pathname(entry, "test");
     archive_entry_set_filetype(entry, AE_IFREG);
 
@@ -72,9 +76,5 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
         if (status == 0)
             break;
     }
-
-    archive_entry_free(entry);
-    archive_write_close(ar);
-    archive_write_free(ar);
 }
 #endif
