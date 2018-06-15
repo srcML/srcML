@@ -73,6 +73,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize)
 {
     out.initNamespaces(namespaces);
+    out.initWriter();
 }
 
 /**
@@ -119,11 +120,6 @@ void srcml_translator::close() {
  */
 void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
-    if (first) {
-  
-        // Open for write;
-        out.initWriter();
-    }
     first = false;
 
     const int lang = getLanguage();
@@ -338,9 +334,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
         return false;
     is_outputting_unit = true;
 
-    if (first) {
-        out.initWriter();
-    }
     first = false;
  
     int lang = unit->language ? srcml_check_language(unit->language->c_str())

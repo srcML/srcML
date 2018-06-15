@@ -200,6 +200,8 @@ public:
 
     void outputMacroList();
 
+    bool didwrite = false;
+
 private:
 
     // token handler

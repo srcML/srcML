@@ -145,7 +145,8 @@ void srcMLOutput::close() {
 
     if (xout) {
 
-        xmlTextWriterEndDocument(xout);
+        if (didwrite)
+            xmlTextWriterEndDocument(xout);
         xmlFreeTextWriter(xout);
         xout = 0;
         output_buffer = 0;
@@ -244,6 +245,8 @@ void srcMLOutput::outputProcessingInstruction() {
 
     if (depth == 0 && processing_instruction) {
 
+        didwrite = true;
+
         xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.c_str());
         xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.c_str());
         xmlTextWriterEndPI(xout);
@@ -325,6 +328,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const char* encoding,
                             const std::vector<std::string> & attributes,
                             bool output_macrolist) {
+
+    didwrite = true;
 
     // start of main tag
     std::string unitprefix = namespaces[SRC].getPrefix();
