@@ -1019,7 +1019,11 @@ struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit) {
  * @return A code for the last recorded error
  */
 int srcml_unit_error_number(const struct srcml_unit* unit) {
-    return 0;
+
+    if (unit == nullptr) 
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    return unit->error_number;
 }
 
 /** Provides a description of the last error to occur for a unit
@@ -1027,7 +1031,11 @@ int srcml_unit_error_number(const struct srcml_unit* unit) {
  * @return A string describing last recorded error
  */
 const char* srcml_unit_error_string(const struct srcml_unit* unit) {
-    return "";
+
+    if (unit == nullptr) 
+        return "Unit does not exist";
+
+    return unit->error_string.c_str();
 }
 
 /**
