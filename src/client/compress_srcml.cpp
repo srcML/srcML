@@ -24,35 +24,45 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <SRCMLStatus.hpp>
+#include <libarchive_utilities.hpp>
+#include <memory>
 
 #if ARCHIVE_VERSION_NUMBER > 3001002
 void compress_srcml(const srcml_request_t& /* srcml_request */,
                     const srcml_input_t& input_sources,
                     const srcml_output_dest& destination) {
 
+    if (!contains<int>(destination)) {
+        SRCMLStatus(ERROR_MSG, "Internal error: compression only works on file descriptor");
+        exit(1);
+    }
+
     // create a new archive for output that will handle all 
     // types, including source-code files
-    archive* ar = archive_write_new();
-    archive_write_set_format_raw(ar);
+    std::unique_ptr<archive> ar(archive_write_new());
+    if (!ar) {
+        SRCMLStatus(ERROR_MSG, "Unable to create libarchive archive for compression");
+        exit(1);
+    }
+    archive_write_set_format_raw(ar.get());
 
     // setup compressions
     for (const auto& ext : destination.compressions)
         archive_write_set_compression_by_extension(ar, ext.c_str());
 
     // open the new archive based on input source
-    int status = ARCHIVE_OK;
-    if (contains<int>(destination)) {
-        status = archive_write_open_fd(ar, destination);
-    } else {
-        status = archive_write_open_filename(ar, destination.resource.c_str());
-    }
+    int status = archive_write_open_fd(ar, destination);
     if (status != ARCHIVE_OK) {
         SRCMLstatus(ERROR_MSG, std::to_string(status));
         exit(1);
     }
 
     // create a new entry. Note that the pathname doesn't matter
-    archive_entry* entry = archive_entry_new();
+    std::unique_ptr<archive_entry> entry(archive_entry_new());
+    if (!entry) {
+        SRCMLStatus(ERROR_MSG, "Unable to create libarchive entry for compression");
+        exit(1);
+    }
     archive_entry_set_pathname(entry, "test");
     archive_entry_set_filetype(entry, AE_IFREG);
 
@@ -64,7 +74,6 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     }
 
     // write the data into the archive
-    // Note: Assumes input source is a fd, not a filename
     std::vector<char> buffer(4092);
     while (ssize_t s = read(*input_sources[0].fd, &buffer.front(), buffer.size())) {
 
@@ -72,8 +81,5 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
         if (status == 0)
             break;
     }
-
-    archive_write_close(ar);
-    archive_write_free(ar);
 }
 #endif

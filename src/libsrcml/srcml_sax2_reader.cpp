@@ -137,6 +137,43 @@ int srcml_sax2_reader::read_header(srcml_unit* unit) {
 }
 
 /**
+ * read
+ * @param language a location to store the language attribute
+ * @param filename a location to store the filename attribute
+ * @param url a location to store the url attribute
+ * @param version a location to store the version attribute
+ *
+ * Read attributes from next unit.
+ *
+ * @returns 1 on success and 0 on failure.
+ */
+int srcml_sax2_reader::read(srcml_unit* unit) {
+
+    handler.unit = unit;
+
+    if (handler.is_done)
+        return 0;
+
+    handler.skip = true;
+    handler.collect_unit_header = true;
+    handler.collect_unit_body = true;
+    handler.resume_and_wait();
+    handler.collect_unit_body = false;
+    handler.collect_unit_header = false;
+    handler.skip = false;
+
+    if (handler.is_done)
+        return 0;
+
+    handler.unit = 0;
+
+    unit->read_header = true;
+    unit->read_body = true;
+
+    return 1;
+}
+
+/**
  * read_body
  * @param output_buffer output buffer to write text
  *

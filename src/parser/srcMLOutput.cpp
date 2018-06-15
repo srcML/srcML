@@ -91,25 +91,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
-
-}
-
-/**
- * initWriter
- *
- * Initializes output xmlWriter.  Supports delayed initialization.
- */
-int srcMLOutput::initWriter() {
-
     // open the output text writer stream
     xout = xmlNewTextWriter(output_buffer);
-    if (!xout) {
-
-        fprintf(stderr, "srcml: " "Unable to open output buffer\n");
-        return SRCML_STATUS_ERROR;
-    }
-
-    return SRCML_STATUS_OK;
 }
 
 /**
@@ -145,7 +128,8 @@ void srcMLOutput::close() {
 
     if (xout) {
 
-        xmlTextWriterEndDocument(xout);
+        if (didwrite)
+            xmlTextWriterEndDocument(xout);
         xmlFreeTextWriter(xout);
         xout = 0;
         output_buffer = 0;
@@ -244,6 +228,8 @@ void srcMLOutput::outputProcessingInstruction() {
 
     if (depth == 0 && processing_instruction) {
 
+        didwrite = true;
+
         xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.c_str());
         xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.c_str());
         xmlTextWriterEndPI(xout);
@@ -325,6 +311,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const char* encoding,
                             const std::vector<std::string> & attributes,
                             bool output_macrolist) {
+
+    didwrite = true;
 
     // start of main tag
     std::string unitprefix = namespaces[SRC].getPrefix();
@@ -579,26 +567,4 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
     // remainder are treated as text tokens
     processText(token);
-}
-
-/**
- * setOutputBuffer
- * @param output_buffer an output buffer
- *
- * Set to output to output_buffer.  Should be called before initWriter.
- */
-void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
-
-    this->output_buffer = output_buffer;
-}
-
-/**
- * setDepth
- * @param thedepth depth to set to
- *
- * Set the current depth to thedepth
- */
-void srcMLOutput::setDepth(int thedepth) {
-
-    depth = thedepth;
 }

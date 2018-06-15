@@ -1033,13 +1033,19 @@ LIBSRCML_DECL const char* srcml_archive_check_extension(const struct srcml_archi
  */
 LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive);
 
-/** Read the body of the current unit in the archive
- * @note This is only needed in special cases as the general archive access will perform this automatically
- * @param unit The srcml_unit to read
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
+/** Read the next unit from the archive
+ * @param archive A srcml_archive open for reading
+ * @return The read srcml_unit on success
+ * @return NULL on failure
  */
-LIBSRCML_DECL int srcml_unit_read_body(struct srcml_unit* unit);
+LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive);
+
+/** Skip the next unit from the archive
+ * @param archive A srcml_archive open for reading
+ * @return 1 Succesfully skipped
+ * @return NULL on failure
+ */
+LIBSRCML_DECL int srcml_archive_skip_unit(struct srcml_archive* archive);
 /**@}*/
 
 /**@{ @name XPath query and XSLT transformations */
@@ -1083,27 +1089,6 @@ LIBSRCML_DECL int srcml_append_transform_xpath_attribute(struct srcml_archive* a
 LIBSRCML_DECL int srcml_append_transform_xpath_element(struct srcml_archive* archive, const char* xpath_string,
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element);
-
-/** Append the XPath expression to the list of transformations/queries.
- * Instead of outputting the results in a separate unit tag, output the complete
- * archive marking the XPath results with a user provided element and attribute
- * @param archive A srcml_archive
- * @param xpath_string An XPath expression
- * @param prefix Element prefix
- * @param namespace_uri Element namespace
- * @param element Element name
- * @param attr_prefix An optional attribute prefix for the element
- * @param attr_namespace_uri An optional attribute namespace for the element
- * @param attr_name An optional attribute name for the element
- * @param attr_value An optional attribute value for the element
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_append_transform_xpath_element_attribute(struct srcml_archive* archive, const char* xpath_string,
-                                                            const char* prefix, const char* namespace_uri,
-                                                            const char* element,
-                                                            const char* attr_prefix, const char* attr_namespace_uri,
-                                                            const char* attr_name, const char* attr_value);
 #ifdef WITH_LIBXSLT
 /** Append an XSLT program at the designated filename path to the list of transformations/queries
  * @param archive A srcml_archive

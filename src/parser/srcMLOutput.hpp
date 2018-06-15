@@ -77,8 +77,6 @@ public:
                 const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
                 size_t tabsize);
 
-    void setOutputBuffer(xmlOutputBufferPtr output_buffer);
-    int initWriter();
     void initNamespaces(const Namespaces& namespaces);
 
      /**
@@ -89,8 +87,6 @@ public:
     inline xmlTextWriter * getWriter() {
         return xout;
     }
-
-    void setDepth(int thedepth);
 
     // same srcml file can be generated from multiple input token streams
     void setTokenStream(TokenStream& ints);
@@ -199,6 +195,8 @@ public:
     void setMacroList(std::vector<std::string> & list);
 
     void outputMacroList();
+
+    bool didwrite = false;
 
 private:
 

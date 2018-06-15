@@ -1245,100 +1245,12 @@ int srcml_archive_write_string(struct srcml_archive* archive, const char* s, int
 }
 
 /**
- * srcml_archive_read_unit_header
+ * srcml_archive_read_unit
  * @param archive a srcml archive open for reading
  *
  * Read the next unit from the archive.
  * unit contains read attribute.  xml is set to read only if needed
  * in a subsequent call.
- *
- * @returns Return the read srcml_unit on success.
- * On failure returns NULL.
- */
-struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive) {
-
-    if (archive == nullptr)
-        return nullptr;
-
-    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
-        return nullptr;
-
-    srcml_unit* unit = srcml_unit_create(archive);
-
-    int not_done = archive->reader->read_header(unit);
-    if (!not_done) {
-        srcml_unit_free(unit);
-        return nullptr;
-    }
-
-    unit->read_header = true;
-
-    return unit;
-}
-
-/**
- * srcml_archive_read_unit_body
- * @param archive a srcml archive open for reading
- *
- * Read the body (the non-header) from the archive.
- *
- * @note srcml_archive_read_unit_header must first be called
- * @returns Return the read srcml_unit on success.
- * On failure returns NULL.
- */
-int srcml_unit_read_body(struct srcml_unit* unit) {
-
-    if (unit == nullptr || unit->archive == nullptr)
-        return 0;
-
-    if (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
-        return 0;
-
-    if (!unit->read_body)
-        unit->archive->reader->read_body(unit);
-
-    // @todo Isn't this backwards?
-    return !unit->read_body;
-}
-
-/**
- * srcml_archive_read_unit_xml
- * @param archive a srcml archive open for reading
- *
- * Read the next unit from the archive.
- * unit contains the complete srcml only.
- *
- * @returns Return the read srcml_unit on success.
- * On failure returns NULL.
- */
-struct srcml_unit* srcml_archive_read_unit_xml(struct srcml_archive* archive) {
-
-    if (archive == nullptr)
-        return nullptr;
-
-    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
-        return nullptr;
-
-    srcml_unit * unit = srcml_unit_create(archive);
-    int not_done = 0;
-    if (!unit->read_header)
-        not_done = archive->reader->read_header(unit);
-    archive->reader->read_body(unit);
-
-    if (!not_done || !unit->read_body) {
-        srcml_unit_free(unit);
-        unit = nullptr;
-    }
-
-    return unit;
-}
-
-/**
- * srcml_archive_read_unit
- * @param archive a srcml archive open for reading
- *
- * Read the next unit from the archive.
- * unit contains read attributes and complete srcml.
  *
  * @returns Return the read srcml_unit on success.
  * On failure returns NULL.
@@ -1363,6 +1275,36 @@ struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
     }
 
     return unit;
+}
+
+/**
+ * srcml_archive_skip_unit
+ * @param archive a srcml archive open for reading
+ *
+ * Skip the next unit from the archive.
+ *
+ * @returns 1 on success
+ * @returns 0 on failure
+ */
+int srcml_archive_skip_unit(struct srcml_archive* archive) {
+
+    if (archive == nullptr)
+        return 0;
+
+    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
+        return 0;
+
+    srcml_unit* unit = srcml_unit_create(archive);
+
+    int not_done = archive->reader->read_header(unit);
+    if (!not_done) {
+        srcml_unit_free(unit);
+        return 0;
+    }
+
+    unit->read_header = true;
+
+    return 1;
 }
 
 /******************************************************************************

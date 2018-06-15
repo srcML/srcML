@@ -379,7 +379,7 @@ static int srcml_finish_unit(srcml_unit* unit) {
 
     // store the output in a buffer
     // @todo check into xmlBufferDetach()
-    unit->srcml = std::string((const char *)unit->output_buffer->content, unit->output_buffer->use);
+    unit->srcml.assign((const char *)unit->output_buffer->content, unit->output_buffer->use);
 
     xmlBufferFree(unit->output_buffer);
 
@@ -829,9 +829,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     unit->unit_translator = 0;
 
     // store the output in a buffer
-    // @todo check into xmlBufferDetach()
-    unit->srcml.clear();
-    unit->srcml.append((const char *)unit->output_buffer->content, unit->output_buffer->use);
+    unit->srcml.assign((const char *)unit->output_buffer->content, unit->output_buffer->use);
 
     xmlBufferFree(unit->output_buffer);
 

@@ -240,12 +240,13 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 
     if (unit_num > 0 && !(xml)) {
         while (unit_count != unit_num) {
-            unit = srcml_archive_read_unit_header(srcml_arch);
+            // @todo Detect error if unit num wrong
+            srcml_archive_skip_unit(srcml_arch);
             ++unit_count;
         }
     }
     else {
-        unit = srcml_archive_read_unit_header(srcml_arch);
+        unit = srcml_archive_read_unit(srcml_arch);
     }
 
     if (output_template.body) {
@@ -301,7 +302,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 pretty_print(*output_template.body, body_params);
 
             body_params.clear();
-            unit = srcml_archive_read_unit_header(srcml_arch);
+            unit = srcml_archive_read_unit(srcml_arch);
 
             // When you want to print only the information from a specific unit
             if (unit_num > 0 && unit_num == unit_count && !(xml)) {

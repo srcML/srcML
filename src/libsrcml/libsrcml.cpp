@@ -236,7 +236,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         }
 
         srcml_archive_read_open_filename(&global_archive, input_filename);
-        auto unit = srcml_archive_read_unit_header(&global_archive);
+        auto unit = srcml_archive_read_unit(&global_archive);
         srcml_unit_unparse_filename(unit, output_filename, 0);
         srcml_unit_free(unit);
     }
