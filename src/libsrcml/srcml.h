@@ -565,6 +565,18 @@ LIBSRCML_DECL struct srcml_archive* srcml_archive_create();
  */
 LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archive* archive);
 
+/** Provides a code of the last error to occur for an archive
+ * @param archive A srcml_archive
+ * @return Error code for last recorded error
+ */
+LIBSRCML_DECL int srcml_archive_error_number(const struct srcml_archive* archive);
+
+/** Provides a description of the last error to occur for an archive
+ * @param archive A srcml_archive
+ * @return A string describing last recorded error
+ */
+LIBSRCML_DECL const char* srcml_archive_error_string(const struct srcml_archive* archive);
+
 /** Append the srcml_unit unit to the srcml_archive archive
  * @param archive A srcml_archive opened for writing
  * @param unit A srcml_unit to output
@@ -1240,6 +1252,18 @@ LIBSRCML_DECL struct srcml_unit* srcml_unit_create(struct srcml_archive* archive
  * @return The cloned unit
  */
 LIBSRCML_DECL struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit);
+
+/** Provides a code of the last error to occur for a unit
+ * @param unit A srcml_unit
+ * @return A code for the last recorded error
+ */
+LIBSRCML_DECL int srcml_unit_error_number(const struct srcml_unit* unit);
+
+/** Provides a description of the last error to occur for a unit
+ * @param unit A srcml_unit
+ * @return A string describing last recorded error
+ */
+LIBSRCML_DECL const char* srcml_unit_error_string(const struct srcml_unit* unit);
 
 /** Free an allocated unit
  * @param unit The srcml unit to free
