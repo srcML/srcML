@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="import" filename="import_java">
 
-<unit>
+<unit language="Java">
 <import>import <name>a</name>;</import>
 </unit>
 
-<unit>
+<unit language="Java">
 <import>import <name><name>graphics</name><operator>.</operator><name>Rectangle</name></name>;</import>
 </unit>
 
-<unit>
+<unit language="Java">
 <import>import <name><name>graphics</name><operator>.</operator><name>*</name></name>;</import>
 </unit>
 

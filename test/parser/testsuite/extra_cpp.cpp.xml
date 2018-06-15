@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="extra" filename="extra_cpp">
 
-<unit>
+<unit language="C++">
 <constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name><name>int</name><index>[]</index></name></type></decl></parameter>)</parameter_list> <block>{}</block></constructor>
 </unit>
 
-<unit>
+<unit language="C++">
 <function_decl><type><name>int</name></type> (<modifier>*</modifier><name>a</name>)<parameter_list>(<parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>, <parameter><decl><type><name><name>int</name><index>[]</index></name></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>CFE_API_strlen</name></expr></argument>)</argument_list></call></expr></cpp:if>
 
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
@@ -23,7 +23,7 @@
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
-<unit>
+<unit language="C++">
 <block>{
 	<if_stmt><if>if <condition>(<expr><operator>(</operator><call><name>aurora_paranoia_check</name><argument_list>(<argument><expr><name>port</name></expr></argument>, <argument><expr><name><name>tty</name><operator>-&gt;</operator><name>name</name></name></expr></argument>, <argument><expr><literal type="string">"aurora_open"</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></condition> <block>{
 <cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>AURORA_DEBUG</name></cpp:ifdef>
@@ -33,7 +33,7 @@
 }</block>
 </unit>
 
-<unit>
+<unit language="C++">
 <block>{
 <return>return <macro><name>snprintf</name> <argument_list>(<argument>buf</argument>, <argument>size</argument>,
 		 <argument>({ char *s;
@@ -45,19 +45,19 @@
 }</block>
 </unit>
 
-<unit>
+<unit language="C++">
 <block>{
 	<switch>switch <condition>(<expr><call><name>IP_VS_FWD_METHOD</name><argument_list>(<argument><expr><name>cp</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{
 	}</block></switch>
 }</block>
 </unit>
 
-<unit>
+<unit language="C++">
 <if_stmt><if>if <condition>(<expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call> <operator>&lt;</operator> <name>t</name></expr>)</condition><block type="pseudo">
      <empty_stmt>;</empty_stmt></block></if></if_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>a</name></type> <name>b</name> <init>= <expr><block>{ <expr><block>{<expr><sizeof>sizeof<argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></sizeof></expr>, <expr><name>d</name></expr>}</block></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
@@ -72,7 +72,7 @@
 </unit>
 -->
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>a</name></type> <name>b</name><init>=<expr><block>{
     <expr><block>{<expr><literal type="number">1</literal></expr>,<expr><literal type="number">0</literal></expr>,<expr><block>{<expr><block>{<expr><literal type="number">2</literal></expr>,<expr><literal type="number">0</literal></expr>}</block></expr>,<expr><literal type="number">0</literal></expr>}</block></expr>,<expr><block>{<expr><literal type="number">0</literal></expr>}</block></expr>}</block></expr>,
     
@@ -81,7 +81,7 @@
 }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><operator>(</operator><call><name>defined</name><argument_list>(<argument><expr><name>A</name></expr></argument>)</argument_list></call><operator>)</operator></expr></cpp:if>
 <break>break;</break>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>

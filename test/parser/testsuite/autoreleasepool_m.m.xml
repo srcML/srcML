@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="autoreleasepool" filename="autoreleasepool_m">
 
-<unit>
+<unit language="Objective-C">
 <autoreleasepool>@autoreleasepool <block>{}</block></autoreleasepool>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <autoreleasepool>@autoreleasepool <block>{}</block></autoreleasepool>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <autoreleasepool>@autoreleasepool <block>{
     <for>for <control>(<init><decl><type><name>ExtensionFactory</name></type> <name>factory</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition>;</condition><incr/>)</control> <block>{
         <expr_stmt><expr><name>t</name> <operator>=</operator> <operator>(</operator><name>T</name><operator>)</operator> <call><name><name>factory</name><operator>.</operator><name>getElementWrapper</name></name><argument_list>(<argument><expr><name>internal</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>

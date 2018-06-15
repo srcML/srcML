@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="literal" filename="literal_m">
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="string">@"goodmorning"</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="char">@'a'</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="number">@42</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="number">@42.0</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="boolean">@YES</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="boolean">@NO</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="boolean">@true</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="boolean">@false</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="boolean">YES</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="boolean">NO</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <expr_stmt><expr><literal type="nil">nil</literal></expr>;</expr_stmt>
 </unit>
 

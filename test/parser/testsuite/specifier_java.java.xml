@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="specifier" filename="specifier_java">
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><specifier>final</specifier></type></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><specifier>synchronized</specifier></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><specifier>abstract</specifier></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><specifier>native</specifier></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><specifier>strictfp</specifier></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><specifier>transient</specifier></decl>;</decl_stmt>
 </unit>
 

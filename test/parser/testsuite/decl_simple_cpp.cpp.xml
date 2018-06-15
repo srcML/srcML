@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="decl_simple" filename="decl_simple_cpp">
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>s</name></name><modifier>&amp;</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
@@ -22,144 +22,144 @@
 <decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><modifier>*</modifier><modifier>&amp;</modifier><operator>::</operator><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 -->
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><operator>::</operator><modifier>*</modifier><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><operator>::</operator><modifier>&amp;</modifier><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><operator>::</operator><modifier>*</modifier><modifier>&amp;</modifier><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><operator>::</operator><modifier>&amp;</modifier><modifier>*</modifier><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>int</name> <specifier>const</specifier></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>int</name> <specifier>const</specifier> <modifier>*</modifier></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>int</name> <specifier>const</specifier> <modifier>*</modifier> <specifier>const</specifier></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>native</name></type> <name>n</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>strictfp</name></type> <name>s</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>transient</name></type> <name>s</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>volatile</specifier> <name>var</name></type> <name>signal</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>final</name></type> <name>signal</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>override</name></type> <name>signal</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>signal</name></type> <name>override</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>final</name></type> <name>signal</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>signal</name></type> <name>final</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>thread_local</specifier> <name>unsigned</name> <name>int</name></type> <name>rage</name> <init>=<expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{}</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>}</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr><block>{<expr><literal type="number">1</literal></expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>A</name></type> <name>a</name><argument_list>{<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><block>{<expr><name>a</name></expr>}</block></expr></argument>}</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>const</specifier> <name>A</name></type> <name>a</name><argument_list>(<argument><expr><call><name>b</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>foo</name> <name>A</name></type> <name>a</name><argument_list>(<argument><expr><call><name>b</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>foo</name> <name>foo</name> <name>A</name></type> <name>a</name><argument_list>(<argument><expr><call><name>b</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <range>: <expr><literal type="number">3</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <range>: <expr><literal type="number">3</literal></expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr><literal type="number">4</literal></expr></range></decl>, <decl><type ref="prev"/><name>c</name> <range>: <expr><literal type="number">5</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr><name>float</name></expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr><operator>(</operator><name>float</name><operator>)</operator></expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>__block</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>a</name> <specifier>__block</specifier></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>__weak</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>a</name> <specifier>__weak</specifier></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>__strong</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>a</name> <specifier>__strong</specifier></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
@@ -169,47 +169,47 @@
 </unit>
 -->
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>b</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>, <decl><type ref="prev"/><name>c</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>class</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>struct</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>union</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>enum</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>register</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>int</name></type> <name>f</name><argument_list>()</argument_list></decl>, <decl><type ref="prev"/><name>g</name><argument_list>()</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><typename>typename</typename> <name>foo</name></name></type> <name>bar</name> <init>= <expr><call><name><typename>typename</typename> <name>foo</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>emit</name></type> <name>emit</name></decl>;</decl_stmt>
 </unit>
 

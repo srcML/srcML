@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="elseif" filename="elseif">
 
-<unit>
+<unit language="C++">
   <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
     <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
       <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt></block></if>
@@ -14,7 +14,7 @@
       <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block></else></if_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
   <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
     <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
       <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt></block></if>
@@ -25,7 +25,7 @@
       <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block></else></if_stmt></block></if></if_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
   <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
     <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
       <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo">
@@ -50,7 +50,7 @@
 	<break>break;</break></block></else></if_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
   <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
     <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
       <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo">

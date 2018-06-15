@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="catch">
 
-<unit>
+<unit language="Java">
 <catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type>|<type><name>b</name></type></decl></parameter>)</parameter_list> <block>{}</block></catch>
 </unit>
 
-<unit>
+<unit language="Java">
 <catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type>|<type><name>b</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{}</block></catch>
 </unit>
 
-<unit>
+<unit language="Java">
 <catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type>|<type><name>b</name></type>|<type><name>c</name></type> <name>d</name></decl></parameter>)</parameter_list> <block>{}</block></catch>
 </unit>
 
-<unit>
+<unit language="Java">
 <catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type>|<type><name>b</name></type>|<type><name>c</name></type></decl></parameter>)</parameter_list> <block>{}</block></catch>
 </unit>
 

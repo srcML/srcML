@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="modifier" filename="modifier_test.cpp">
   
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>int</name><modifier>*</modifier><modifier>*</modifier><modifier>*</modifier><modifier>&amp;</modifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <function_decl><type><name>void</name></type> (<modifier>*</modifier><name>i</name>)<parameter_list>()</parameter_list>;</function_decl>
 </unit>
 

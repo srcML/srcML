@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="async" filename="async_cs">
 
-<unit>
+<unit language="C#">
 <function><specifier>public</specifier> <specifier>async</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
 <block>{
     <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><operator>await</operator> <call><name>M</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
@@ -10,7 +10,7 @@
 }</block></function>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>async</name></decl>;</decl_stmt>
 </unit>
 
