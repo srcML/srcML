@@ -127,10 +127,6 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
       lang & Language::LANGUAGE_OBJECTIVE_C)
         options |= SRCML_OPTION_CPP;
 
-    // output as inner unit
-    if (isoption(options, SRCML_OPTION_ARCHIVE))
-        out.setDepth(1);
-
     try {
 
         // master lexer with multiple streams
@@ -168,9 +164,6 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
     catch (...) {
         fprintf(stderr, "srcML translator error\n");
     }
-
-    // set back to root
-    out.setDepth(0);
 }
 
 void srcml_translator::prepareOutput() {
@@ -284,9 +277,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
       lang & Language::LANGUAGE_OBJECTIVE_C)
         options |= SRCML_OPTION_CPP;
 
-    if (isoption(options, SRCML_OPTION_ARCHIVE))
-        out.setDepth(1);
-
     // @todo Why are we saving the options then restoring them?
     OPTION_TYPE save_options = options;
 
@@ -302,8 +292,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
                   false);
 
     options = save_options;
-
-    out.setDepth(0);
 
     return true;
 }

@@ -90,8 +90,6 @@ public:
         return xout;
     }
 
-    void setDepth(int thedepth);
-
     // same srcml file can be generated from multiple input token streams
     void setTokenStream(TokenStream& ints);
 

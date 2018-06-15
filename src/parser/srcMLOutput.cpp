@@ -596,14 +596,3 @@ void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
 
     this->output_buffer = output_buffer;
 }
-
-/**
- * setDepth
- * @param thedepth depth to set to
- *
- * Set the current depth to thedepth
- */
-void srcMLOutput::setDepth(int thedepth) {
-
-    depth = thedepth;
-}
