@@ -213,6 +213,7 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2015 or
 ## Packages
 
 * [Python 2.7.XX](https://www.python.org/downloads/)
+* [Java JRE/JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [CMake](http://www.cmake.org)
 * [Visual Studio 2015 or later](https://www.visualstudio.com/downloads/)
 * Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-VS2017.zip)
