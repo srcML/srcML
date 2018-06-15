@@ -73,7 +73,6 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize)
 {
     out.initNamespaces(namespaces);
-    out.initWriter();
 }
 
 /**
@@ -173,9 +172,6 @@ void srcml_translator::prepareOutput() {
     if (!first)
         return;
     first = false;
-
-    // Open for write;
-    out.initWriter();
 
     if ((options & SRCML_OPTION_XML_DECL) > 0)
       out.outputXMLDecl();

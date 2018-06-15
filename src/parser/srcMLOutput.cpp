@@ -91,25 +91,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
-
-}
-
-/**
- * initWriter
- *
- * Initializes output xmlWriter.  Supports delayed initialization.
- */
-int srcMLOutput::initWriter() {
-
     // open the output text writer stream
     xout = xmlNewTextWriter(output_buffer);
-    if (!xout) {
-
-        fprintf(stderr, "srcml: " "Unable to open output buffer\n");
-        return SRCML_STATUS_ERROR;
-    }
-
-    return SRCML_STATUS_OK;
 }
 
 /**
