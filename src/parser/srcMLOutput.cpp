@@ -585,14 +585,3 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
     // remainder are treated as text tokens
     processText(token);
 }
-
-/**
- * setOutputBuffer
- * @param output_buffer an output buffer
- *
- * Set to output to output_buffer.  Should be called before initWriter.
- */
-void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
-
-    this->output_buffer = output_buffer;
-}

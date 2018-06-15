@@ -77,7 +77,6 @@ public:
                 const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
                 size_t tabsize);
 
-    void setOutputBuffer(xmlOutputBufferPtr output_buffer);
     int initWriter();
     void initNamespaces(const Namespaces& namespaces);
 
