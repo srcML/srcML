@@ -63,35 +63,37 @@ int srcml_handler_dispatch(ParseQueue& queue,
             uninput.fd = input_archive(uninput);
 
         return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+    }
 
-    } else if (input.protocol == "text") {
+    if (input.protocol == "text") {
 
         return src_input_text(queue, srcml_arch, srcml_request, input);
+    }
 
-    } else if (input.protocol == "filelist") {
+    if (input.protocol == "filelist") {
 
         srcml_archive_enable_full_archive(srcml_arch);
 
         return src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
+    }
 
-    } else if (input.protocol == "file" && input.isdirectory) {
+    if (input.protocol == "file" && input.isdirectory) {
 
         return src_input_filesystem(queue, srcml_arch, srcml_request, input);
+    }
 
-    } else if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
+    if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
        
         return src_input_file(queue, srcml_arch, srcml_request, input);
-
-    } else {
-
-        srcml_input_src uninput = input;
-
-        // input must go through libcurl pipe
-        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
-            return 0;
-
-        return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
     }
+
+    srcml_input_src uninput = input;
+
+    // input must go through libcurl pipe
+    if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
+        return 0;
+
+    return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
 }
 
 // create srcml from the current request
