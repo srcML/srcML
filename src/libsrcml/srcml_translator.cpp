@@ -336,7 +336,8 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
 
     ++output_unit_depth;
 
-    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST uri) != -1;
+    /** @todo figure out how to register namespaces so this actualy works */
+    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, /*BAD_CAST uri*/0) != -1;
 }
 
 /**

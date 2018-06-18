@@ -365,27 +365,6 @@ int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encod
  *                                                                            *
  ******************************************************************************/
 
-static int srcml_finish_unit(srcml_unit* unit) {
-
-    if (unit == NULL)
-        return SRCML_STATUS_INVALID_ARGUMENT;
-
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
-        return SRCML_STATUS_INVALID_INPUT;
-
-    // finished with any parsing
-    delete unit->unit_translator;
-    unit->unit_translator = 0;
-
-    // store the output in a buffer
-    // @todo check into xmlBufferDetach()
-    unit->srcml.assign((const char *)unit->output_buffer->content, unit->output_buffer->use);
-
-    xmlBufferFree(unit->output_buffer);
-
-    return SRCML_STATUS_OK;
-}
-
 /**
  * srcml_unit_parse_internal
  * @param unit a srcml unit
@@ -437,34 +416,20 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
     if (!srcml_archive_is_full_archive(unit->archive))
         unit->url = unit->archive->url;
 
-    // create the unit start tag
+    // create the unit start tag (start_unit and end_unit must be called together)
     int status = srcml_write_start_unit(unit);
     if (status != SRCML_STATUS_OK)
         return status;
 
-    // record start of content (after the unit start tag)
-    xmlTextWriterFlush(unit->unit_translator->output_textwriter());
-    unit->content_begin = unit->unit_translator->output_buffer()->written + 1;
-
     // parse the input
     unit->unit_translator->translate(input);
-
-    // record end of content (before the unit end tag)
-    xmlTextWriterFlush(unit->unit_translator->output_textwriter());
-    unit->content_end = unit->unit_translator->output_buffer()->written + 1;
 
     // namespaces were updated during translation, may now include 
     // namespaces that were optional
     unit->namespaces = unit->unit_translator->out.getNamespaces();
 
     // create the unit end tag
-    status = srcml_finish_unit(unit);
-    if (status != SRCML_STATUS_OK)
-        return status;
-
-    unit->read_body = true;
-
-    return status;
+    return srcml_write_end_unit(unit);
 }
 
 /**
@@ -804,6 +769,10 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
     // now that everything is ok, transfer the buffer to the unit
     unit->output_buffer = output_buffer.release();
 
+    // record start of content (after the unit start tag)
+    xmlTextWriterFlush(unit->unit_translator->output_textwriter());
+    unit->content_begin = unit->unit_translator->output_buffer()->written + 1;
+
     return SRCML_STATUS_OK;
 }
 
@@ -818,10 +787,14 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
  */
 int srcml_write_end_unit(struct srcml_unit* unit) {
 
-    if (unit == nullptr)
+    if (unit == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->unit_translator == nullptr || !unit->unit_translator->add_end_unit())
+    // record end of content (before the unit end tag)
+    xmlTextWriterFlush(unit->unit_translator->output_textwriter());
+    unit->content_end = unit->unit_translator->output_buffer()->written + 1;
+
+    if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
         return SRCML_STATUS_INVALID_INPUT;
 
     // finished with any parsing
@@ -829,11 +802,14 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     unit->unit_translator = 0;
 
     // store the output in a buffer
+    // @todo check into xmlBufferDetach()
     unit->srcml.assign((const char *)unit->output_buffer->content, unit->output_buffer->use);
 
     xmlBufferFree(unit->output_buffer);
 
-    return srcml_finish_unit(unit);
+    unit->read_body = true;
+
+    return SRCML_STATUS_OK;
 }
 
 /**
@@ -1050,7 +1026,7 @@ void srcml_unit_free(struct srcml_unit* unit) {
         return;
 
     if (unit->unit_translator)
-        srcml_finish_unit(unit);
+        srcml_write_end_unit(unit);
 
     delete unit;
 }
