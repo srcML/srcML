@@ -30,7 +30,6 @@
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
 #include <src_input_filelist.hpp>
-#include <src_input_stdin.hpp>
 #include <src_input_text.hpp>
 #include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
