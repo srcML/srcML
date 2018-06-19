@@ -51,7 +51,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
         archive_write_set_compression_by_extension(ar.get(), ext.c_str());
 
     // open the new archive based on input source
-    int status = archive_write_open_fd(ar.get(), destination);
+    int status = archive_write_open_fd(ar.get(), *destination.fd);
     if (status != ARCHIVE_OK) {
         SRCMLstatus(ERROR_MSG, std::to_string(status));
         exit(1);
@@ -77,7 +77,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     std::vector<char> buffer(4092);
     while (ssize_t s = read(*input_sources[0].fd, &buffer.front(), buffer.size())) {
 
-        ssize_t status = archive_write_data(ar, &buffer.front(), s);
+        ssize_t status = archive_write_data(ar.get(), &buffer.front(), s);
         if (status == 0)
             break;
     }

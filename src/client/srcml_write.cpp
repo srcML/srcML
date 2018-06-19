@@ -30,6 +30,7 @@
 #include <srcml_input_src.hpp>
 #include <SRCMLStatus.hpp>
 #include <stdio.h>
+#include <cstring>
 
 // Public consumption thread function
 void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& destination) {
