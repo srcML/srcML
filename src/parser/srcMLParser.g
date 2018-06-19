@@ -2096,7 +2096,7 @@ do_while[] { ENTRY_DEBUG } :
 // start of for statement
 for_statement[] { ENTRY_DEBUG } :
         {
-            // statement with nested statement after the for group
+            // statement with nested statement after the control group
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start the for statement
@@ -2104,7 +2104,7 @@ for_statement[] { ENTRY_DEBUG } :
         }
         FOR
         {
-            // statement with nested statement after the for group
+            // statement with nested statement after the control group
             startNewMode(MODE_EXPECT | MODE_CONTROL);
         }
 ;
@@ -2112,7 +2112,7 @@ for_statement[] { ENTRY_DEBUG } :
 // start of foreach statement (C#/Qt)
 foreach_statement[] { ENTRY_DEBUG } :
         {
-            // statement with nested statement after the for group
+            // statement with nested statement after the control group
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start the for statement
@@ -2120,7 +2120,7 @@ foreach_statement[] { ENTRY_DEBUG } :
         }
         FOREACH
         {
-            // statement with nested statement after the for group
+            // statement with nested statement after the control group
             if (inLanguage(LANGUAGE_CSHARP))
                 startNewMode(MODE_EXPECT | MODE_CONTROL);
             else
@@ -2128,10 +2128,10 @@ foreach_statement[] { ENTRY_DEBUG } :
         }
 ;
 
-// start of for group, i.e., initialization, test, increment
+// start of control group, i.e., initialization, test, increment
 control_group[] { ENTRY_DEBUG } :
         {
-            // start the for group mode that will end at the next matching
+            // start the control group mode that will end at the next matching
             // parentheses
             replaceMode(MODE_CONTROL, MODE_TOP | MODE_CONTROL_INITIALIZATION | MODE_IGNORE_TERMINATE |
                         MODE_INTERNAL_END_PAREN | MODE_LIST);
@@ -2147,7 +2147,7 @@ control_initialization_action[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT);
 
-            // setup next stage for condition in the for group mode
+            // setup next stage for condition in the control group mode
             replaceMode(MODE_CONTROL_INITIALIZATION, MODE_CONTROL_CONDITION);
 
             // setup a mode for initialization that will end with a ";"
@@ -2187,7 +2187,7 @@ control_condition_action[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_CONTROL_CONDITION | MODE_EXPECT);
 
-            // setup next stage for condition
+            // setup next stage control condition
             replaceMode(MODE_CONTROL_CONDITION, MODE_CONTROL_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
 
             // setup a mode for initialization that will end with a ";"
@@ -2305,7 +2305,7 @@ elseif_statement[] { ENTRY_DEBUG } :
 
             // expect a condition
             // start THEN after condition
-            startNewMode(MODE_CONDITION | MODE_EXPECT);
+            startNewMode(MODE_EXPECT | MODE_CONTROL);
         }
         IF
 ;
@@ -3705,19 +3705,19 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
           Check for MODE_CONTROL_CONDITION before template stuff, since it can conflict
         */
 
-        // inside of for group expecting initialization
+        // inside of control group expecting initialization
         { inMode(MODE_CONTROL | MODE_EXPECT) }?
         control_group |
 
-        // inside of for group expecting initialization
+        // inside of control group expecting initialization
         { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }?
         control_initialization |
 
-        // inside of for group expecting initialization
+        // inside of control group expecting initialization
         { inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }?
         control_condition |
 
-        // inside of for group expecting initialization
+        // inside of control group expecting initialization
         { inMode(MODE_CONTROL_INCREMENT | MODE_EXPECT) }?
         control_increment |
 
@@ -3749,7 +3749,7 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         { inMode(MODE_EXTERN) }?
         extern_name |
 
-        // sometimes end up here, as when for group ends early, or with for-each
+        // sometimes end up here, as when control group ends early, or with for-each
         rparen |
 
         // seem to end up here for colon in ternary operator
@@ -7390,7 +7390,7 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                     cppif_duplicate = false;
 
 
-                // end for group and output pseudo block @todo make sure does not hid other things that use for grammar
+                // end control group and output pseudo block @todo make sure does not hid other things that use for grammar
                 } else if (end_control_incr) {
 
                     if (inMode(MODE_LIST))
