@@ -2142,16 +2142,52 @@ control_group[] { ENTRY_DEBUG } :
         LPAREN
 ;
 
+is_control_terminate[] returns [bool is_terminate = false] {
 
+    int state = mark();
+    ++inputState->guessing;
+
+    int parencount = 0;
+    int bracecount = 0;
+    while (LA(1) != antlr::Token::EOF_TYPE) {
+
+        if (LA(1) == RPAREN)
+            --parencount;
+        else if (LA(1) == LPAREN)
+            ++parencount;
+
+        if (LA(1) == RCURLY)
+            --bracecount;
+        else if (LA(1) == LCURLY)
+            ++bracecount;
+
+        if (parencount < 0 || bracecount < 0) {
+            break;
+        }
+
+        if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0) {
+            is_terminate = true;
+            break;
+        }
+
+        consume();
+    }
+    --inputState->guessing;
+    rewind(state);
+
+} :
+;
 
 control_initialization_pre[] { ENTRY_DEBUG } :
 
         {
-            if(inPrevMode(MODE_IF)) {
-                // check for ; 
+            // check for ; in if control
+            if(inPrevMode(MODE_IF) && !is_control_terminate()) {
+                replaceMode(MODE_CONTROL_INITIALIZATION, MODE_CONTROL_CONDITION);
             }
 
         }
+
         (
         // inside of control group expecting initialization
         { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }?
