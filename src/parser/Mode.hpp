@@ -109,13 +109,13 @@ const static srcMLState::MODE_TYPE MODE_CALL;
  const static srcMLState::MODE_TYPE MODE_CONTROL;
 
 /** for initialization (in header) */
- const static srcMLState::MODE_TYPE MODE_FOR_INITIALIZATION;
+ const static srcMLState::MODE_TYPE MODE_CONTROL_INITIALIZATION;
 
 /** for condition (in header) */
- const static srcMLState::MODE_TYPE MODE_FOR_CONDITION;
+ const static srcMLState::MODE_TYPE MODE_CONTROL_CONDITION;
 
 /** for increment (in header) */
- const static srcMLState::MODE_TYPE MODE_FOR_INCREMENT;
+ const static srcMLState::MODE_TYPE MODE_CONTROL_INCREMENT;
 
 /** preprocessor mode */
  const static srcMLState::MODE_TYPE MODE_PREPROC;

@@ -99,10 +99,10 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     { SFOR_STATEMENT,              { "for",               SRC,      0,         0,     0,      0 }},
     { SFOREACH_STATEMENT,          { "foreach",           SRC,      0,         0,     0,      0 }},
-    { SFOR_CONTROL,                { "control",           SRC,      0,         0,     0,      0 }},
-    { SFOR_INITIALIZATION,         { "init",              SRC,      0,         0,     0,      0 }},
-    { SFOR_CONDITION,              { "condition",         SRC,      0,         0,     0,      0 }},
-    { SFOR_INCREMENT,              { "incr",              SRC,      0,         0,     0,      0 }},
+    { SCONTROL,                    { "control",           SRC,      0,         0,     0,      0 }},
+    { SCONTROL_INITIALIZATION,     { "init",              SRC,      0,         0,     0,      0 }},
+    { SCONTROL_CONDITION,          { "condition",         SRC,      0,         0,     0,      0 }},
+    { SCONTROL_INCREMENT,          { "incr",              SRC,      0,         0,     0,      0 }},
     { SFOR_LIKE_CONTROL,           { "init",              SRC,      0,         0,     0,      0 }},
 
     // functions
