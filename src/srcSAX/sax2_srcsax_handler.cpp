@@ -23,6 +23,7 @@
 #include <sax2_srcsax_handler.hpp>
 #include <string>
 #include <algorithm>
+#include <cstring>
 
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
