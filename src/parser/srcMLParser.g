@@ -2188,7 +2188,10 @@ control_condition_action[] { ENTRY_DEBUG } :
             assertMode(MODE_CONTROL_CONDITION | MODE_EXPECT);
 
             // setup next stage control condition
-            replaceMode(MODE_CONTROL_CONDITION, MODE_CONTROL_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
+            if(inPrevMode(MODE_IF))
+                clearMode(MODE_EXPECT | MODE_CONTROL_CONDITION);
+            else
+                replaceMode(MODE_CONTROL_CONDITION, MODE_CONTROL_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
 
             // setup a mode for initialization that will end with a ";"
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST );
