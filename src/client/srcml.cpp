@@ -37,6 +37,11 @@
 #include <csignal>
 #include <cmath>
 #include <TraceLog.hpp>
+#include <pipe.hpp>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <unistd.h>
+
 
 #ifndef _MSC_BUILD
 #include <unistd.h>
@@ -208,17 +213,6 @@ namespace {
     */
     void is_stdin_xml(srcml_request_t& request) {
 
-        // stdin input source
-        auto& rstdin = request.input_sources[*request.stdindex];
-
-        // stdin accessed as FILE* so we can peek at input
-        rstdin.fileptr = fdopen(STDIN_FILENO, "r");
-        if (!rstdin.fileptr) {
-            SRCMLstatus(ERROR_MSG, "srcml: Unable to open stdin");
-            exit(1);
-        }
-        rstdin.fd = boost::none;
-
         // stdin from a terminal is not allowed
         if (isatty(0)) {
             fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
@@ -243,8 +237,31 @@ See `srcml --help` for more information.
             exit(1);
         }
 
-        // determine if the input is srcML or src
-        rstdin.state = isxml(*(rstdin.fileptr)) ? SRCML : SRC;
+        // stdin input source
+        auto& rstdin = request.input_sources[*request.stdindex];
+
+        // determine if input is srcML or not
+        char buf[4] = { 0 };
+        request.bufsize = read(0, request.buf, 4);
+        rstdin.state = isxml((unsigned char*) request.buf, request.bufsize) ? SRCML : SRC;
+
+        // copy rest of stdin into pipe
+        input_pipe(rstdin, [](const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
+
+            // write the prerequest
+            auto rest = write(*destination.fd, srcml_request.buf, srcml_request.bufsize);
+
+            // copy the rest of the input source
+            char buf[512];
+            int size = 0;
+            do {
+                size = read(*input_sources[0].fd, buf, 512);
+                if (size > 0)
+                    write(*destination.fd, buf, size);
+            } while (size > 0);
+
+            close(*destination.fd);
+        }, request);
     }
 
 }
