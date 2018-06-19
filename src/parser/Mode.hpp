@@ -105,8 +105,8 @@ const static srcMLState::MODE_TYPE MODE_CALL;
  */
  const static srcMLState::MODE_TYPE MODE_TOP_SECTION;
 
-/** in a for heading group i.e. for init/condition/increment */
- const static srcMLState::MODE_TYPE MODE_FOR_CONTROL;
+/** in a for heading group i.e. for init/condition/increment & if init/condition */
+ const static srcMLState::MODE_TYPE MODE_CONTROL;
 
 /** for initialization (in header) */
  const static srcMLState::MODE_TYPE MODE_FOR_INITIALIZATION;
@@ -253,7 +253,7 @@ const static srcMLState::MODE_TYPE MODE_FUNCTION_BODY;
 const static srcMLState::MODE_TYPE MODE_FUNCTION_TYPE;
 
 /** mode to mark end of for control for cppif duplication */
-const static srcMLState::MODE_TYPE MODE_END_FOR_CONTROL;
+const static srcMLState::MODE_TYPE MODE_END_CONTROL;
 
 /** mode for for-like statement */
 const static srcMLState::MODE_TYPE MODE_FOR_LIKE_LIST;

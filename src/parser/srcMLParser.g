@@ -2105,7 +2105,7 @@ for_statement[] { ENTRY_DEBUG } :
         FOR
         {
             // statement with nested statement after the for group
-            startNewMode(MODE_EXPECT | MODE_FOR_CONTROL);
+            startNewMode(MODE_EXPECT | MODE_CONTROL);
         }
 ;
 
@@ -2122,18 +2122,18 @@ foreach_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the for group
             if (inLanguage(LANGUAGE_CSHARP))
-                startNewMode(MODE_EXPECT | MODE_FOR_CONTROL);
+                startNewMode(MODE_EXPECT | MODE_CONTROL);
             else
-                startNewMode(MODE_EXPECT | MODE_FOR_CONTROL | MODE_END_AT_COMMA);
+                startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA);
         }
 ;
 
 // start of for group, i.e., initialization, test, increment
-for_control[] { ENTRY_DEBUG } :
+control_group[] { ENTRY_DEBUG } :
         {
             // start the for group mode that will end at the next matching
             // parentheses
-            replaceMode(MODE_FOR_CONTROL, MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE |
+            replaceMode(MODE_CONTROL, MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE |
                         MODE_INTERNAL_END_PAREN | MODE_LIST);
 
             // start the for heading group element
@@ -2248,7 +2248,7 @@ if_statement[] { ENTRY_DEBUG } :
 
             // expect a condition
             // start THEN after condition
-            startNewMode(MODE_CONDITION | MODE_EXPECT);
+            startNewMode(MODE_EXPECT | MODE_CONTROL);
         }
         IF
         {
@@ -3706,8 +3706,8 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         */
 
         // inside of for group expecting initialization
-        { inMode(MODE_FOR_CONTROL | MODE_EXPECT) }?
-        for_control |
+        { inMode(MODE_CONTROL | MODE_EXPECT) }?
+        control_group |
 
         // inside of for group expecting initialization
         { inMode(MODE_FOR_INITIALIZATION | MODE_EXPECT) }?
@@ -7331,7 +7331,7 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                 endMode(MODE_ASSOCIATION_LIST);
 
             if (end_for_incr || inMode(MODE_LIST | MODE_FOR_CONDITION))
-                setMode(MODE_END_FOR_CONTROL);
+                setMode(MODE_END_CONTROL);
 
         }
         rparen_operator[markup]
@@ -9109,7 +9109,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
-        if (LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_FOR_CONTROL))) {
+        if (LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_CONTROL))) {
             end_order.push_back(TERMINATE);
 
         }
@@ -9192,7 +9192,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                                 cppif_duplicate = true;
 
-                            } else if (inMode(MODE_END_FOR_CONTROL) || inMode(MODE_LIST | MODE_FOR_CONDITION)) {
+                            } else if (inMode(MODE_END_CONTROL) || inMode(MODE_LIST | MODE_FOR_CONDITION)) {
 
                                 cppif_duplicate = true;
 
