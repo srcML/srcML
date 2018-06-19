@@ -2142,6 +2142,27 @@ control_group[] { ENTRY_DEBUG } :
         LPAREN
 ;
 
+
+
+control_initialization_pre[] { ENTRY_DEBUG } :
+
+        {
+            if(inPrevMode(MODE_IF)) {
+                // check for ; 
+            }
+
+        }
+        (
+        // inside of control group expecting initialization
+        { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }?
+        control_initialization |
+
+        // inside of control group expecting initialization
+        { inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }?
+        control_condition
+        )
+;
+
 // for parameter list initialization.  used in multiple places
 control_initialization_action[] { ENTRY_DEBUG } :
         {
@@ -3712,13 +3733,8 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         { inMode(MODE_CONTROL | MODE_EXPECT) }?
         control_group |
 
-        // inside of control group expecting initialization
-        { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }?
-        control_initialization |
-
-        // inside of control group expecting initialization
-        { inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }?
-        control_condition |
+        { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) || inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }?
+        control_initialization_pre |
 
         // inside of control group expecting initialization
         { inMode(MODE_CONTROL_INCREMENT | MODE_EXPECT) }?
