@@ -2142,16 +2142,52 @@ control_group[] { ENTRY_DEBUG } :
         LPAREN
 ;
 
+is_control_terminate[] returns [bool is_terminate = false] {
 
+    int state = mark();
+    ++inputState->guessing;
+
+    int parencount = 0;
+    int bracecount = 0;
+    while (LA(1) != antlr::Token::EOF_TYPE) {
+
+        if (LA(1) == RPAREN)
+            --parencount;
+        else if (LA(1) == LPAREN)
+            ++parencount;
+
+        if (LA(1) == RCURLY)
+            --bracecount;
+        else if (LA(1) == LCURLY)
+            ++bracecount;
+
+        if (parencount < 0 || bracecount < 0) {
+            break;
+        }
+
+        if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0) {
+            is_terminate = true;
+            break;
+        }
+
+        consume();
+    }
+    --inputState->guessing;
+    rewind(state);
+
+} :
+;
 
 control_initialization_pre[] { ENTRY_DEBUG } :
 
         {
-            if(inPrevMode(MODE_IF)) {
-                // check for ; 
+            // check for ; in if control
+            if(inMode(MODE_CONTROL_INITIALIZATION) && inPrevMode(MODE_IF) && !is_control_terminate()) {
+                replaceMode(MODE_CONTROL_INITIALIZATION, MODE_CONTROL_CONDITION);
             }
 
         }
+
         (
         // inside of control group expecting initialization
         { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }?
@@ -2222,11 +2258,13 @@ control_condition_action[] { ENTRY_DEBUG } :
 ;
 
 // for condition
-control_condition[] { ENTRY_DEBUG } :
+control_condition[] { bool in_if_condition = inPrevMode(MODE_IF); ENTRY_DEBUG } :
         control_condition_action
-
+        (
         // non-empty condition
+        { in_if_condition }? condition_inner |
         expression
+        )
 ;
 
 // increment in for parameter list
@@ -3922,17 +3960,21 @@ condition[] { ENTRY_DEBUG } :
         }
         LPAREN
 
-        {
+        condition_inner
+;
+
+condition_inner[] { ENTRY_DEBUG 
             int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; 
             pattern_check(stmt_type, secondtoken, type_count, after_token);
             if (stmt_type == VARIABLE) {
                 startNewMode(MODE_INTERNAL_END_PAREN);
-                control_initialization_variable_declaration(type_count);
             }
 
-        }
-;
+} :
 
+    { stmt_type == VARIABLE }? control_initialization_variable_declaration[type_count]
+    | expression
+;
 // perform an arbitrary look ahead looking for a pattern
 pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bool inparam = false] returns [bool isdecl] {
 
