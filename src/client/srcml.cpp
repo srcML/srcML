@@ -39,11 +39,9 @@
 #include <TraceLog.hpp>
 #include <pipe.hpp>
 #include <sys/types.h>
-#include <sys/uio.h>
-#include <unistd.h>
-
 
 #ifndef _MSC_BUILD
+#include <sys/uio.h>
 #include <unistd.h>
 #endif
 

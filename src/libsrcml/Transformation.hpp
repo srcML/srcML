@@ -25,6 +25,8 @@
 
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
+#include <string>
+#include <vector>
 
 #include <boost/optional.hpp>
 
