@@ -48,10 +48,10 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
 
     // setup compressions
     for (const auto& ext : destination.compressions)
-        archive_write_set_compression_by_extension(ar, ext.c_str());
+        archive_write_set_compression_by_extension(ar.get(), ext.c_str());
 
     // open the new archive based on input source
-    int status = archive_write_open_fd(ar, destination);
+    int status = archive_write_open_fd(ar.get(), destination);
     if (status != ARCHIVE_OK) {
         SRCMLstatus(ERROR_MSG, std::to_string(status));
         exit(1);
@@ -63,12 +63,12 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
         SRCMLStatus(ERROR_MSG, "Unable to create libarchive entry for compression");
         exit(1);
     }
-    archive_entry_set_pathname(entry, "test");
-    archive_entry_set_filetype(entry, AE_IFREG);
+    archive_entry_set_pathname(entry.get(), "test");
+    archive_entry_set_filetype(entry.get(), AE_IFREG);
 
     // create the header for our single entry
     // since this is output, and there is only a single output, any error is fatal
-    if ((status = archive_write_header(ar, entry)) != ARCHIVE_OK) {
+    if ((status = archive_write_header(ar.get(), entry.get())) != ARCHIVE_OK) {
         SRCMLstatus(ERROR_MSG, std::to_string(status));
         exit(1);
     }

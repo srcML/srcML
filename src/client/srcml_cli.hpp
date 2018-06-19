@@ -153,6 +153,9 @@ struct srcml_request_t {
 
     boost::optional<size_t> revision;
 
+    // pre-input
+    char buf[4] = { 0 };
+    ssize_t bufsize = 0;
 };
 
 // parse the CLI options into a srcml client request

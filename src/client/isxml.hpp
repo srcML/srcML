@@ -28,4 +28,7 @@
 // determine if XML
 bool isxml(FILE* infd);
 
+// determine if XML
+bool isxml(unsigned char ar[], int size);
+
 #endif

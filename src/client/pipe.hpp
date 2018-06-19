@@ -29,6 +29,6 @@
 // has to be a typedef for older gcc compilers
 typedef void (*pipe_process)(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
 
-void input_pipe(srcml_input_src& input, pipe_process process);
+void input_pipe(srcml_input_src& input, pipe_process process, srcml_request_t srcml_request = srcml_request_t());
 
 #endif
