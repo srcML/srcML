@@ -23,6 +23,7 @@
 #include <libxml/parserInternals.h>
 
 #include <functional>
+#include <cstring>
 
 /** 
  * libxml_error

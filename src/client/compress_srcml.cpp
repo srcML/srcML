@@ -48,7 +48,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
 
     // setup compressions
     for (const auto& ext : destination.compressions)
-        archive_write_set_compression_by_extension(ar, ext.c_str());
+        archive_write_set_compression_by_extension(ar.get(), ext.c_str());
 
     // open the new archive based on input source
     int status = archive_write_open_fd(ar, destination);
