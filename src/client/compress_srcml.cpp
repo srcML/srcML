@@ -33,7 +33,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
                     const srcml_output_dest& destination) {
 
     if (!contains<int>(destination)) {
-        SRCMLStatus(ERROR_MSG, "Internal error: compression only works on file descriptor");
+        SRCMLStatus(ERROR_MSG, std::string("Internal error: compression only works on file descriptor"));
         exit(1);
     }
 
@@ -41,7 +41,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     // types, including source-code files
     std::unique_ptr<archive> ar(archive_write_new());
     if (!ar) {
-        SRCMLStatus(ERROR_MSG, "Unable to create libarchive archive for compression");
+        SRCMLStatus(ERROR_MSG, std::string("Unable to create libarchive archive for compression"));
         exit(1);
     }
     archive_write_set_format_raw(ar.get());
@@ -60,7 +60,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     // create a new entry. Note that the pathname doesn't matter
     std::unique_ptr<archive_entry> entry(archive_entry_new());
     if (!entry) {
-        SRCMLStatus(ERROR_MSG, "Unable to create libarchive entry for compression");
+        SRCMLStatus(ERROR_MSG, std::string("Unable to create libarchive entry for compression"));
         exit(1);
     }
     archive_entry_set_pathname(entry.get(), "test");
