@@ -155,7 +155,7 @@ struct srcml_request_t {
 
     // pre-input
     char buf[4] = { 0 };
-    int bufsize = 0;
+    ssize_t bufsize = 0;
 };
 
 // parse the CLI options into a srcml client request
