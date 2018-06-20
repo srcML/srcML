@@ -42,13 +42,10 @@ public:
     // writes out the current srcml
     void schedule(std::shared_ptr<ParseRequest> pvalue);
 
-    // end of stream
-    void eos();
-
     // start the write proces
     void start();
 
-    // stop the write process, allowing it to continue
+    // stop the write process, allowing it to finish up
     void stop();
 
     // actual process
@@ -67,6 +64,7 @@ public:
     std::mutex qmutex;
     std::condition_variable cv;
     int total = 0;
+    bool completed = false;
 };
 
 #endif

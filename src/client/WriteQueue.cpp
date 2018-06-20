@@ -49,15 +49,6 @@ void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
     cv.notify_one();
 }
 
-void WriteQueue::eos() {
-
-	// schedule the last one
-    std::shared_ptr<ParseRequest> pvalue(new ParseRequest);
-	pvalue->position = maxposition + 1;
-    pvalue->status = 1000;
-    schedule(pvalue);
-}
-
 void WriteQueue::start() {
 
     // actual thread created here (and not in constructor) because
@@ -68,7 +59,7 @@ void WriteQueue::start() {
 
 void WriteQueue::stop() {
 
-    eos();
+    completed = true;
 
     write_thread.join();
 }
@@ -84,6 +75,8 @@ void WriteQueue::process() {
             std::unique_lock<std::mutex> lock(qmutex);
 
             while (q.empty() || (ordered && (q.top()->position != position + 1))) {
+                if (q.empty() && completed)
+                    return;
                 cv.wait(lock);
             }
 
@@ -91,9 +84,6 @@ void WriteQueue::process() {
             q.pop();
         }
         ++position;
-
-        if (pvalue->status == 1000)
-            break;
 
         // record real units written
         if (pvalue->status == SRCML_STATUS_OK)
