@@ -88,8 +88,34 @@ int main(int argc, char * argv[]) {
         srcml_request.input_sources[0].unit = srcml_request.unit;
 
     // determine if stdin is srcML or src
-    if (srcml_request.stdindex)
+    if (srcml_request.stdindex) {
+
+        // stdin from a terminal is not allowed
+        if (isatty(0)) {
+            fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
+Typical usage includes:
+
+    # convert from a source file to srcML
+    srcml main.cpp -o main.cpp.xml
+
+    # convert from text to srcML
+    srcml --text="int i = 1;" --language C++
+
+    # pipe in source code
+    echo "int i = 1;" | srcml --language C++
+
+    # convert from srcML back to source code 
+    srcml main.cpp.xml -o main.cpp
+
+Consider using the --text option for direct entry of text.
+
+See `srcml --help` for more information.
+)");
+            exit(1);
+        }
+
         is_stdin_xml(srcml_request);
+    }
  
     /*
         Setup the internal pipeline of possible steps:
@@ -210,30 +236,6 @@ namespace {
         Does stdin contain xml or source
     */
     void is_stdin_xml(srcml_request_t& request) {
-
-        // stdin from a terminal is not allowed
-        if (isatty(0)) {
-            fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
-Typical usage includes:
-
-    # convert from a source file to srcML
-    srcml main.cpp -o main.cpp.xml
-
-    # convert from text to srcML
-    srcml --text="int i = 1;" --language C++
-
-    # pipe in source code
-    echo "int i = 1;" | srcml --language C++
-
-    # convert from srcML back to source code 
-    srcml main.cpp.xml -o main.cpp
-
-Consider using the --text option for direct entry of text.
-
-See `srcml --help` for more information.
-)");
-            exit(1);
-        }
 
         // stdin input source
         auto& rstdin = request.input_sources[*request.stdindex];
