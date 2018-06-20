@@ -22,7 +22,7 @@
 
 #include <input_stdin.hpp>
 #include <isxml.hpp>
-#include <pipe.hpp>
+#include <srcml_pipe.hpp>
 #include <sys/types.h>
 #include <sys/uio.h>
 
@@ -39,7 +39,7 @@ void input_stdin(srcml_request_t& request) {
     rstdin.state = isxml((unsigned char*) request.buf, (int) request.bufsize) ? SRCML : SRC;
 
     // copy rest of stdin into pipe
-    input_pipe(rstdin, [](const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
+    srcml_pipe(rstdin, [](const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
 
         // write the prerequest
         write(*destination.fd, srcml_request.buf, srcml_request.bufsize);

@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <pipe.hpp>
+#include <srcml_pipe.hpp>
 #include <input_curl.hpp>
 #include <curl/curl.h>
 #include <SRCMLStatus.hpp>
@@ -80,7 +80,7 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 // downloads URL into file descriptor
 int input_curl(srcml_input_src& input) {
 
-    input_pipe(input, [](const srcml_request_t& /* srcml_request */, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
+    srcml_pipe(input, [](const srcml_request_t& /* srcml_request */, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
 
         // input comes from URL
         std::string url = input_sources[0].filename;
