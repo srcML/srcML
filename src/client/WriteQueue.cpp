@@ -61,6 +61,8 @@ void WriteQueue::stop() {
 
     completed = true;
 
+    cv.notify_one();
+
     write_thread.join();
 }
 
