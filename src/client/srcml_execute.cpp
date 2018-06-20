@@ -31,11 +31,6 @@
 #include <thread>
 #include <list>
 
-void join(std::thread& t)
-{
-    t.join();
-}
-
 void srcml_execute(const srcml_request_t& srcml_request,
                    processing_steps_t& pipeline,
                    const srcml_input_t& input_sources,
@@ -78,5 +73,5 @@ void srcml_execute(const srcml_request_t& srcml_request,
     }
 
     // wait on all threads
-    std::for_each(pipethreads.begin(), pipethreads.end(), join);
+    std::for_each(pipethreads.begin(), pipethreads.end(), [](std::thread& t) { t.join(); });
 }
