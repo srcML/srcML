@@ -38,6 +38,26 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     if (!request)
         return;
 
+    // open the archive (if per-unit)
+    if (request->unit && option(SRCML_COMMAND_NOARCHIVE)) {
+
+        std::string filename;
+        if (option(SRCML_COMMAND_TO_DIRECTORY)) {
+            filename += *request->disk_dir;
+            filename += "/";
+        }
+        filename += *request->disk_filename;
+        filename += ".xml";
+
+        request->srcml_arch = srcml_archive_clone(request->srcml_arch);
+
+        // @todo These should follow the master archive
+        srcml_archive_disable_full_archive(request->srcml_arch);
+        srcml_archive_disable_hash(request->srcml_arch);
+        
+        srcml_archive_write_open_filename(request->srcml_arch, filename.c_str(), 0);
+    }
+
     // output scalar results
     // @todo Make sure this works with filename output, not just file descriptor
     switch (request->results.type) {
@@ -127,6 +147,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
     // close the archive (if per-unit)
     if (request->unit && option(SRCML_COMMAND_NOARCHIVE)) {
+
             srcml_archive_close(request->srcml_arch);
             srcml_archive_free(request->srcml_arch);
     }

@@ -110,16 +110,18 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // open the output
     int nstatus = SRCML_STATUS_OK;
-    if (contains<int>(destination)) {
+    if (!option(SRCML_COMMAND_NOARCHIVE)) {
+        if (contains<int>(destination)) {
 
-        nstatus = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
+            nstatus = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
 
-    } else {
+        } else {
 
-        nstatus = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
+            nstatus = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
+        }
+        if (nstatus != SRCML_STATUS_OK)
+            return;
     }
-    if (nstatus != SRCML_STATUS_OK)
-        return;
 
     // set options for the output srcml archive
 
