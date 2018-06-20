@@ -225,6 +225,5 @@ namespace {
         return (option(SRCML_COMMAND_SRC) || (request.output_filename.state != SRCML &&
             !request_create_srcml(request) &&
             !request_display_metadata(request)));
-        ;
     }
 }
