@@ -28,17 +28,15 @@
 #include <create_src.hpp>
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
-#include <isxml.hpp>
 #include <Timer.hpp>
 #include <SRCMLStatus.hpp>
 #include <curl/curl.h>
+#include <input_stdin.hpp>
 #include <boost/version.hpp>
 #include <iostream>
 #include <csignal>
 #include <cmath>
 #include <TraceLog.hpp>
-#include <pipe.hpp>
-#include <sys/types.h>
 
 #ifndef _MSC_BUILD
 #include <sys/uio.h>
@@ -51,8 +49,6 @@ namespace {
     bool request_display_metadata  (const srcml_request_t&);
     bool request_output_compression(const srcml_request_t&);
     bool request_create_src        (const srcml_request_t&);
-
-    void is_stdin_xml(srcml_request_t& srcml_request);
 }
 
 int main(int argc, char * argv[]) {
@@ -114,7 +110,7 @@ See `srcml --help` for more information.
             exit(1);
         }
 
-        is_stdin_xml(srcml_request);
+        input_stdin(srcml_request);
     }
  
     /*
@@ -231,36 +227,4 @@ namespace {
             !request_display_metadata(request)));
         ;
     }
-
-    /*
-        Does stdin contain xml or source
-    */
-    void is_stdin_xml(srcml_request_t& request) {
-
-        // stdin input source
-        auto& rstdin = request.input_sources[*request.stdindex];
-
-        // determine if input is srcML or not
-        request.bufsize = read(0, request.buf, 4);
-        rstdin.state = isxml((unsigned char*) request.buf, (int) request.bufsize) ? SRCML : SRC;
-
-        // copy rest of stdin into pipe
-        input_pipe(rstdin, [](const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
-
-            // write the prerequest
-            write(*destination.fd, srcml_request.buf, srcml_request.bufsize);
-
-            // copy the rest of the input source
-            char buf[512];
-            ssize_t size = 0;
-            do {
-                size = read(*input_sources[0].fd, buf, 512);
-                if (size > 0)
-                    write(*destination.fd, buf, size);
-            } while (size > 0);
-
-            close(*destination.fd);
-        }, request);
-    }
-
 }
