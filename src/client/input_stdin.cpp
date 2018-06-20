@@ -22,7 +22,7 @@
 
 #include <input_stdin.hpp>
 #include <isxml.hpp>
-#include <pipe.hpp>
+#include <srcml_pipe.hpp>
 #include <sys/types.h>
 #include <sys/uio.h>
 
