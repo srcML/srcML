@@ -57,7 +57,6 @@ namespace {
     bool curl_errors = false;
 }
 
-
 /*
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
     with our own callback does not entail an additional copy
@@ -79,75 +78,71 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
 }
 
 // downloads URL into file descriptor
-void curl_download_url(const srcml_request_t& /* srcml_request */,
-    const srcml_input_t& input_sources,
-    const srcml_output_dest& destination) {
-
-    // input comes from URL
-    std::string url = input_sources[0].filename;
-
-    CURL *curl_handle;
-
-    curl_global_init(CURL_GLOBAL_DEFAULT);
-    curl_handle = curl_easy_init();
-
-    curl_write_info write_info;
-    write_info.outfd = *destination.fd; // output is a file descriptor
-    write_info.currentsize = 0;
-    write_info.curlhandle = curl_handle;
-
-    curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
-    curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
-    curl_easy_setopt(curl_handle, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
-    curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
-
-    // setup to use a write function
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &write_info);
-    curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, our_curl_write_callback);
-
-    curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
-    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-
-    curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1L);
-    curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_TIME, 5L);
-    //curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 0L);
-
-    // start the download
-    CURLcode response;
-    response = curl_easy_perform(curl_handle);
-
-    // check for download errors
-    long http_code = 0;
-    curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
-    if(response != CURLE_OK || http_code != 200) {
-        SRCMLstatus(WARNING_MSG, "srcml: Unable to access URL " + url);
-        setCurlErrors();
-        goCurl(false);
-
-    } else {
-
-        goCurl(true);
-        
-        // ok, no errors, but may have cached data in the buffer, especially for small files
-        if (!write_info.buffer.empty()) {
-            write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size());
-        }
-    }
-
-    // close the output file descriptor we were writing the download to
-    close(write_info.outfd);
-
-    // cleanup out download
-    curl_easy_cleanup(curl_handle);
-
-    // all done with libcurl
-    curl_global_cleanup();
-}
-
 int input_curl(srcml_input_src& input) {
 
-    input_pipe(input, curl_download_url);
+    input_pipe(input, [](const srcml_request_t& /* srcml_request */, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
+
+        // input comes from URL
+        std::string url = input_sources[0].filename;
+
+        CURL *curl_handle;
+
+        curl_global_init(CURL_GLOBAL_DEFAULT);
+        curl_handle = curl_easy_init();
+
+        curl_write_info write_info;
+        write_info.outfd = *destination.fd; // output is a file descriptor
+        write_info.currentsize = 0;
+        write_info.curlhandle = curl_handle;
+
+        curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
+        curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
+        curl_easy_setopt(curl_handle, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
+        curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
+        curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
+
+        // setup to use a write function
+        curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &write_info);
+        curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, our_curl_write_callback);
+
+        curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+
+        curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1L);
+        curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_TIME, 5L);
+        //curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 0L);
+
+        // start the download
+        CURLcode response;
+        response = curl_easy_perform(curl_handle);
+
+        // check for download errors
+        long http_code = 0;
+        curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
+        if(response != CURLE_OK || http_code != 200) {
+            SRCMLstatus(WARNING_MSG, "srcml: Unable to access URL " + url);
+            setCurlErrors();
+            goCurl(false);
+
+        } else {
+
+            goCurl(true);
+            
+            // ok, no errors, but may have cached data in the buffer, especially for small files
+            if (!write_info.buffer.empty()) {
+                write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size());
+            }
+        }
+
+        // close the output file descriptor we were writing the download to
+        close(write_info.outfd);
+
+        // cleanup out download
+        curl_easy_cleanup(curl_handle);
+
+        // all done with libcurl
+        curl_global_cleanup();
+    });
 
     // wait to see if curl is able to download the url at all
     return waitCurl();
