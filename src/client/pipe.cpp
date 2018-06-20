@@ -34,7 +34,7 @@
 
 static std::list<std::thread*> lthreads;
 
-void input_pipe(srcml_input_src& input, pipe_process process, srcml_request_t srcml_request) {
+void srcml_pipe(srcml_input_src& input, pipe_process process, srcml_request_t srcml_request) {
 
     // setup the pipes
     int fds[2] = { -1, -1 };

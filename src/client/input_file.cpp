@@ -29,6 +29,6 @@ void input_file(srcml_input_src& input) {
     if (!input.compressions.empty() /* &&
        (input.compressions.size() > 1 || input.compressions.front() != ".gz")*/) {
 
-        input_pipe(input, decompress_srcml);
+        srcml_pipe(input, decompress_srcml);
     }
 }

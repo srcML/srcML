@@ -147,7 +147,7 @@ void curl_download_url(const srcml_request_t& /* srcml_request */,
 
 int input_curl(srcml_input_src& input) {
 
-    input_pipe(input, curl_download_url);
+    srcml_pipe(input, curl_download_url);
 
     // wait to see if curl is able to download the url at all
     return waitCurl();
