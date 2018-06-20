@@ -108,9 +108,11 @@ namespace {
                 std::cout << "filename=" << "\"" << filename << "\"\n";
         }
 
+        if (unit)
+            srcml_unit_free(unit);
+
         if (long_info) {
 
-            srcml_unit_free(unit);
             ++unit_count;
 
             while (srcml_archive_skip_unit(srcml_arch)) {
@@ -119,10 +121,6 @@ namespace {
             }
 
             std::cout << "units=\"" << unit_count << "\"\n";
-
-        } else if (unit) {
-
-            srcml_unit_free(unit);
         }
     }
 

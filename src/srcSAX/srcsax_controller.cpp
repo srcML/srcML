@@ -192,26 +192,6 @@ int srcsax_parse(srcsax_context* context) {
 }
 
 /**
- * srcsax_parse
- * @param context srcSAX context
- * @param handler sax callback handlers
- *
- * Parse the context using the provide sax handlers.
- * On error calls the error callback function before returning.
- *
- * @returns 0 on success -1 on error.
- */
-int srcsax_parse_handler(srcsax_context* context, srcsax_handler* handler) {
-
-    if (context == 0)
-        return -1;
-
-    context->handler = handler;
-
-    return srcsax_parse(context);
-}
-
-/**
  * srcsax_create_parser_context
  * @param buffer_input a parser input buffer
  *

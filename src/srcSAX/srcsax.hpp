@@ -70,7 +70,6 @@ void srcsax_free_context(srcsax_context * context);
 
 /* srcSAX parse function */
 int srcsax_parse(srcsax_context * context);
-int srcsax_parse_handler(srcsax_context* context, srcsax_handler* handler);
 
 /* srcSAX terminate parse function */
 void srcsax_stop_parser(srcsax_context* context);
