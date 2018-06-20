@@ -313,6 +313,10 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
     srcml_archive_free(srcml_arch);
 
+    // @todo Why doesn't the srcml_archive_close() close this? Is that what libxml does?
+    if (destination.fd)
+        close(*destination.fd);
+
     if (SRCMLStatus::errors())
         exit(1);
 
