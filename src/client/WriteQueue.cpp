@@ -28,6 +28,8 @@ WriteQueue::WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool
             [](std::shared_ptr<ParseRequest> r1, std::shared_ptr<ParseRequest> r2) {
                 return r1->position > r2->position;
             }) {
+
+    write_thread = std::thread(&WriteQueue::process, this);
 }
 
 /* writes out the current srcml */
@@ -47,14 +49,6 @@ void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
 
     // let the write processing know there is something
     cv.notify_one();
-}
-
-void WriteQueue::start() {
-
-    // actual thread created here (and not in constructor) because
-    // at this point we know all object data members are created
-    // and initialized correctly
-    write_thread = std::thread(&WriteQueue::process, this);
 }
 
 void WriteQueue::stop() {

@@ -42,9 +42,6 @@ public:
     // writes out the current srcml
     void schedule(std::shared_ptr<ParseRequest> pvalue);
 
-    // start the write proces
-    void start();
-
     // stop the write process, allowing it to finish up
     void stop();
 
