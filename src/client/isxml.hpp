@@ -23,11 +23,6 @@
 #ifndef INCLUDED_IS_XML_HPP
 #define INCLUDED_IS_XML_HPP
 
-#include <stdio.h>
-
-// determine if XML
-bool isxml(FILE* infd);
-
 // determine if XML
 bool isxml(unsigned char ar[], int size);
 
