@@ -24,9 +24,12 @@
 #include <isxml.hpp>
 #include <srcml_pipe.hpp>
 #include <sys/types.h>
-#include <sys/uio.h>
 
-/*
+#ifndef _MSC_BUILD
+#include <sys/uio.h>
+#endif
+
+ /*
     Does stdin contain xml or source
 */
 void input_stdin(srcml_request_t& request) {
