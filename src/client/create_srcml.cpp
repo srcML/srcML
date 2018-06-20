@@ -313,11 +313,6 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
     srcml_archive_free(srcml_arch);
 
-    // if we were writing to a file descriptor, then close it
-    if (contains<int>(destination))
-        close(*destination.fd);
-
-    // have to wait to exit
     if (SRCMLStatus::errors())
         exit(1);
 
