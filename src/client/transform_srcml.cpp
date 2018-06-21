@@ -198,7 +198,7 @@ void transform_srcml(const srcml_request_t& /* srcml_request */,
     else if (contains<FILE*>(output))
         status = srcml_archive_write_open_FILE(out_arch, output);
     else
-        status = srcml_archive_write_open_filename(out_arch, output.c_str(), 0);
+        status = srcml_archive_write_open_filename(out_arch, output.c_str());
     if (status != SRCML_STATUS_OK) {
         SRCMLstatus(ERROR_MSG, "srcml: error with output archive for transformation");
         exit(-1);

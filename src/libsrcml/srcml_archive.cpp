@@ -899,23 +899,19 @@ static int srcml_archive_write_create_translator_xml_buffer(struct srcml_archive
  * srcml_archive_write_open_filename
  * @param archive a srcml_archive
  * @param srcml_filename name of an output file
- * @param compression amount of compression 0 none to 9 max
  *
  * Open up a srcml_archive for writing.  Set the output
  * to go to the file srcml_filename.
  *
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_archive_write_open_filename(struct srcml_archive* archive, const char* srcml_filename, unsigned short compression) {
+int srcml_archive_write_open_filename(struct srcml_archive* archive, const char* srcml_filename) {
 
     if (archive == nullptr || srcml_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (compression > 9)
-        compression = 9;
-
     archive->type = SRCML_ARCHIVE_WRITE;
-    archive->output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, compression);
+    archive->output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, 0);
 
     return SRCML_STATUS_OK;
 }

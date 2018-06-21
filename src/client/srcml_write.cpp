@@ -55,7 +55,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         srcml_archive_disable_full_archive(request->srcml_arch);
         srcml_archive_disable_hash(request->srcml_arch);
 
-        srcml_archive_write_open_filename(request->srcml_arch, filename.c_str(), 0);
+        srcml_archive_write_open_filename(request->srcml_arch, filename.c_str());
     }
 
     // output scalar results

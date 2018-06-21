@@ -121,7 +121,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         } else {
 
-            nstatus = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
+            nstatus = srcml_archive_write_open_filename(srcml_arch, destination.c_str());
         }
         if (nstatus != SRCML_STATUS_OK)
             return;

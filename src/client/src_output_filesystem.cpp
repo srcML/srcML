@@ -47,7 +47,7 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
         // unparse directory to filename
         log << ++count << out.string();
 
-        srcml_unit_unparse_filename(unit, (const char *)out.c_str(), 0);
+        srcml_unit_unparse_filename(unit, (const char *)out.c_str());
 
         srcml_unit_free(unit);
     }
