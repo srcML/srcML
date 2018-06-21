@@ -54,7 +54,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         // @todo These should follow the master archive
         srcml_archive_disable_full_archive(request->srcml_arch);
         srcml_archive_disable_hash(request->srcml_arch);
-        
+
         srcml_archive_write_open_filename(request->srcml_arch, filename.c_str(), 0);
     }
 
@@ -70,13 +70,13 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
     case SRCML_RESULTS_NUMBER:
         {
-            char s[100] = { 0 };
+            std::string s;
             if (request->results.numberValue != (int) request->results.numberValue)
-                snprintf(s, 100, "%lf\n", request->results.numberValue);
+                s = std::to_string(request->results.numberValue);
             else
-                snprintf(s, 100, "%d\n", (int) request->results.numberValue);
+                s = std::to_string((int) request->results.numberValue);
 
-            srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+            srcml_archive_write_string(request->srcml_arch, s.c_str(), (int) s.size());
         }
         return;
 
