@@ -30,7 +30,14 @@
  *
  * Silence/catch/default libxml2 errors.
  */
-static void libxml_error(void * /*ctx*/, const char* /*msg*/, ...) {}
+static void libxml_error(void * /*ctx*/, const char* msg, ...) {
+    
+    fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+    va_list vl;
+    va_start(vl, msg);
+    vfprintf(stderr, msg, vl);
+    va_end(vl);
+}
 
 /* srcsax_create_parser_context forward declaration */
 static xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buffer_input, xmlCharEncoding enc);

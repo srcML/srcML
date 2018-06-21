@@ -116,6 +116,21 @@ static int reparse_root(void* ctx) {
     xmlSAXHandler roottagsax;
     memset(&roottagsax, 0, sizeof(roottagsax));
     roottagsax.initialized    = XML_SAX2_MAGIC;
+    xmlSetStructuredErrorFunc(ctx, [](void * userData, 
+                     xmlErrorPtr error) {
+
+        auto ctxt = (xmlParserCtxtPtr) userData;
+        if (ctxt == nullptr)
+            return;
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
+        if (state == nullptr)
+            return;
+
+        // @todo Find out real filename to insert in error message
+        // @todo Figure out how to get where error is noted
+        fprintf(stderr, "%s:%d:%d xml error: %s ", error->file, error->line, error->int2, error->message);
+        exit(1);
+    });
 
     roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                      int nb_namespaces, const xmlChar** namespaces,
