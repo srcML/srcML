@@ -314,6 +314,9 @@ void create_srcml(const srcml_request_t& srcml_request,
     // wait for the writing queue to finish
     write_queue.stop();
 
+    if (SRCMLStatus::errors())
+        status = -1;
+
     if (status != -1) {
         srcml_archive_close(srcml_arch);
     }
