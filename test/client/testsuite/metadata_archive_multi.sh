@@ -13,7 +13,7 @@ define nestedfileextra <<- 'STDIN'
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C" filename="a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="Java" filename="b.cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	<unit revision="REVISION" language="Java" filename="b.cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
@@ -53,7 +53,7 @@ define input <<- 'INPUT'
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C" filename="a.cpp" mytag="foo"><expr_stmt lc:line="1"><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="Java" filename="b.cpp" mytag="foo"><expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
+	<unit revision="REVISION" language="Java" filename="b.cpp" mytag="foo"><expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="c.cpp" mytag="foo"><expr_stmt lc:line="1"><expr><name>c</name></expr>;</expr_stmt>
@@ -70,7 +70,7 @@ define file1 <<- 'STDOUT'
 
 define file2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:lc="http://www.srcML.org/srcML/linecol" revision="REVISION" language="Java" filename="b.cpp" mytag="foo"><expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:lc="http://www.srcML.org/srcML/linecol" revision="REVISION" language="Java" filename="b.cpp" mytag="foo"><expr_stmt lc:line="1"><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
@@ -125,7 +125,7 @@ define nestedfileextra <<- 'STDOUT'
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="Java" filename="empty.java">
+	<unit revision="REVISION" language="Java" filename="empty.java">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	</unit>
 
