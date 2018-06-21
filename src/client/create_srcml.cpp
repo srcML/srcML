@@ -55,8 +55,10 @@ int srcml_handler_dispatch(ParseQueue& queue,
         srcml_input_src uninput = input;
 
         // input must go through libcurl pipe
-        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
-            return 0;
+        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput)) {
+            SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml URL %s", uninput.filename);
+            return -1;
+        }
 
         // may have some compressions/archives
         if (!uninput.compressions.empty())
@@ -83,15 +85,17 @@ int srcml_handler_dispatch(ParseQueue& queue,
     }
 
     if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
-       
+
         return src_input_file(queue, srcml_arch, srcml_request, input);
     }
 
     srcml_input_src uninput = input;
 
     // input must go through libcurl pipe
-    if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
-        return 0;
+    if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput)){
+        SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml URL %s", uninput.filename);
+        return -1;
+    }
 
     return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
 }
