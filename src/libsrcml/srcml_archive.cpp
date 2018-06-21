@@ -1331,7 +1331,7 @@ void srcml_archive_close(struct srcml_archive* archive) {
         return;
 
     // if we haven't opened the translator yet, do so now. This will create an empty unit/archive
-    if (!archive->rawwrites && archive->translator == nullptr) {
+    if (archive->type == SRCML_ARCHIVE_WRITE && !archive->rawwrites && archive->translator == nullptr) {
         srcml_archive_write_create_translator_xml_buffer(archive);
     } 
 
