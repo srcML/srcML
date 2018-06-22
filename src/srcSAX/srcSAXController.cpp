@@ -29,19 +29,6 @@
 
 /**
  * srcSAXController
- * @param filename name of a file
- *
- * Constructor
- */
-srcSAXController::srcSAXController(const char* filename, const char* encoding) {
-
-    context = srcsax_create_context_filename(filename, encoding);
-    if (context == NULL)
-        throw std::string("File does not exist");
-}
-
-/**
- * srcSAXController
  * @param input a parser input buffer
  *
  * Constructor

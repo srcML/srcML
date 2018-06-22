@@ -61,21 +61,6 @@ static void* start_routine(thread_args* args) {
 
 /**
  * srcml_sax2_reader
- * @param filename name of a file
- * @param encoding the character encoding
- *
- * Construct a srcml_sax2_reader using a filename
- */
-srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, const char* filename, const char* encoding, const boost::optional<size_t>& revision_number)
-    : control(filename, encoding), handler(revision_number), thread(start_routine, &args) {
-
-    handler.archive = archive;
-
-    handler.wait();
-}
-
-/**
- * srcml_sax2_reader
  * @param input parser input buffer
  *
  * Construct a srcml_sax2_reader using a parser input buffer

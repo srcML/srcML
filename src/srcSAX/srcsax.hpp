@@ -51,9 +51,6 @@ public:
     /** xml parser input buffer */
     xmlParserInputBufferPtr input = nullptr;
 
-    /** boolean to indicate need to free input buffer */
-    bool free_input = false;
-
     /** internally used libxml2 context */
     xmlParserCtxtPtr libxml2_context;
 
@@ -62,7 +59,6 @@ public:
 };
 
 /* srcSAX context creation/open functions */
-srcsax_context* srcsax_create_context_filename(const char* filename, const char* encoding);
 srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
 
 /* srcSAX free function */

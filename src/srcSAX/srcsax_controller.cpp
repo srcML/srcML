@@ -72,7 +72,6 @@ static srcsax_context* srcsax_create_context_inner(bool free_input, const char* 
     }
 
     context->input = input;
-    context->free_input = free_input;
 
     xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
 
@@ -89,26 +88,6 @@ static srcsax_context* srcsax_create_context_inner(bool free_input, const char* 
     context->libxml2_context = libxml2_context;
 
     return context;
-}
-
-/**
- * srcsax_create_context_filename
- * @param filename a filename
- * @param encoding the files character encoding
- *
- * Open the filename with the specified encoding and return a srcSAX context for parsing.
- *
- * @returns srcsax_context context to be used for srcML parsing.
- */
-srcsax_context* srcsax_create_context_filename(const char* filename, const char* encoding) {
-
-    if (filename == 0)
-        return 0;
-
-    return srcsax_create_context_inner(true, encoding, [filename](xmlCharEncoding enc) {
-
-        return xmlParserInputBufferCreateFilename(filename, enc);
-    });
 }
 
 /**
@@ -151,9 +130,6 @@ void srcsax_free_context(srcsax_context* context) {
 
     if (context->libxml2_context)
         xmlFreeParserCtxt(context->libxml2_context);
-    
-    if (context->free_input)
-        xmlFreeParserInputBuffer(context->input);
 
     delete context;
 }
