@@ -51,7 +51,7 @@ static xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buf
  * 
  * @returns srcsax_context context to be used for srcML parsing.
  */
-static srcsax_context* srcsax_create_context_inner(bool free_input, const char* encoding,
+static srcsax_context* srcsax_create_context_inner(const char* encoding,
     std::function<xmlParserInputBufferPtr(xmlCharEncoding)> createxmlParserInputBuffer) {
 
     xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
@@ -106,7 +106,7 @@ srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPt
     if (input == 0)
         return 0;
 
-    return srcsax_create_context_inner(false, 0, [input](xmlCharEncoding) {
+    return srcsax_create_context_inner(0, [input](xmlCharEncoding) {
 
         return input;
     });
