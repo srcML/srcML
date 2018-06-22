@@ -113,9 +113,6 @@ private :
     /** srcDiff namespace */
     bool issrcdiff = false;
 
-    /** number of newlines in unit */
-    int loc = 0;
-
     /**
      * meta_tag
      *
@@ -549,9 +546,6 @@ public :
 
         state->collect_unit_body = collect_unit_body;
 
-        // number of newlines reset
-        loc = 0;
-
         if (terminate)
             stop_parser();
 
@@ -771,9 +765,6 @@ public :
             if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE)
                 return;
         }        
-
-        // update LOC
-        loc += std::count(ch, ch + len, '\n');
 
         if (terminate)
             stop_parser();
