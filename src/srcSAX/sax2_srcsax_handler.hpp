@@ -83,6 +83,8 @@ struct sax2_srcsax_handler {
     bool collect_src = false;
     bool collect_unit_body = true;
 
+    bool callupper = true;
+    
     std::string rootnsstr;
     std::string rootstarttag;
 

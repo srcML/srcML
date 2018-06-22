@@ -336,10 +336,9 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     }
 
     // assume this is not a solo unit, but delay calling the upper levels until we are sure
-    auto save = state->context->handler->start_unit;
-    state->context->handler->start_unit = 0;
+    state->callupper = false;
     start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
-    state->context->handler->start_unit = save;
+    state->callupper = true;
     state->mode = ROOT;
 
     // call the upper-level start_unit for non-archives
@@ -481,7 +480,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     // upper-level start unit handling
     // note: In order to nop this, it is set to 0 sometimes, so have to check
-    if (state->context->handler->start_unit)
+    if (state->callupper)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                             nb_namespaces, namespaces,
                                             nb_attributes, attributes);
