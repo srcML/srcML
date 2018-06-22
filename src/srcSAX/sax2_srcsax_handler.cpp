@@ -243,15 +243,9 @@ void end_document(void* ctx) {
 //        fprintf(stderr, "srcml: %s\n", errmsg);
     }
 
-    if (state->context->terminate)
-        return;
-
     // never found any content, so end the root
 //    if (state->mode != END_ROOT && state->mode != START)
 //        end_root(ctx, state->root.localname, state->root.prefix, state->root.URI);
-
-    if (state->context->terminate)
-        return;
 
     // process any upper layer end document handling
     if (state->context->handler->end_document)
@@ -295,16 +289,12 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // wait to call upper-level callbacks until we know whether this is an archive or not
     // this is done in first_start_element()
 
-    if (state->context->terminate)
-        return;
 /*
     for (auto citr : state->meta_tags) {
 
         state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char*) citr.prefix, (const char*) citr.URI,
                                                           citr.nb_namespaces, citr.namespaces.data(),
                                                           citr.nb_attributes, citr.attributes.data());
-        if (state->context->terminate)
-            return;
     }
 */
     // save the root start tag because we are going to parse it again to generate proper start_root() and start_unit()
@@ -403,8 +393,6 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         return;
     }
 */
-    if (state->context->terminate)
-        return;
 
     // archive when the first element after the root is <unit>
     state->context->is_archive = state->is_archive = (localname == UNIT_ENTRY);
@@ -494,9 +482,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     // update position
     state->base = ctxt->input->cur + 1;
-
-    if (state->context->terminate)
-        return;
 
     // upper-level start unit handling
     if (state->context->handler->start_unit)

@@ -210,8 +210,6 @@ xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buffer_inp
  */
 void srcsax_stop_parser(srcsax_context* context) {
 
-    context->terminate = true;
-
     xmlParserCtxtPtr ctxt = context->libxml2_context;
 
     ctxt->sax->startDocument = 0;

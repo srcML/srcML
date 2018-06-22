@@ -53,9 +53,6 @@ public:
 
     /** internally used libxml2 context */
     xmlParserCtxtPtr libxml2_context;
-
-    /** indicate stop parser */
-    bool terminate = false;
 };
 
 /* srcSAX context creation/open functions */
