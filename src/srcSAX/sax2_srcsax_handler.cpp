@@ -149,7 +149,7 @@ static int reparse_root(void* ctx) {
                             nb_namespaces, namespaces, nb_attributes, attributes);
 
         // call the upper-level start_unit for non-archives
-        if (!state->is_archive)
+        if (!state->context->is_archive)
             state->context->handler->start_unit(state->context, (const char*) localname, 
                     (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     };
@@ -325,7 +325,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // and not delay it
     bool isempty = ctxt->input->cur[0] == '/';
     if (isempty)
-        state->context->is_archive = state->is_archive = false;
+        state->context->is_archive = false;
 
 
     // call the upper-level start_root when an empty element
@@ -344,7 +344,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     state->mode = ROOT;
 
     // call the upper-level start_unit for non-archives
-    if (isempty && !state->is_archive) {
+    if (isempty && !state->context->is_archive) {
         state->context->handler->start_unit(state->context, (const char*) localname, 
                 (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     }
@@ -392,7 +392,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 */
 
     // archive when the first element after the root is <unit>
-    state->context->is_archive = state->is_archive = (localname == UNIT_ENTRY);
+    state->context->is_archive = (localname == UNIT_ENTRY);
 
     // turn off first_start_element() handling
     ctxt->sax->startElementNs = &start_element;
@@ -405,7 +405,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     reparse_root(ctx);
 
     // decide if this start element is for a unit (archive), or just a regular element (solo unit)
-    if (state->is_archive) {
+    if (state->context->is_archive) {
         
         // restart unit count due to call of start_unit() in start_root() when we assumed a solo unit
         state->unit_count = 0;
@@ -465,7 +465,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         if (pos >= 0) {
             // merge the namespaces from the root into this one
             state->unitsrcml.assign((const char*) state->base, pos);
-            if (state->is_archive) {
+            if (state->context->is_archive) {
                 state->unitsrcml.append(state->rootnsstr);
             }
             state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
@@ -695,7 +695,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     // At this point, we have the end of a unit
 
-    if (ctxt->nameNr == 2 || !state->is_archive) {
+    if (ctxt->nameNr == 2 || !state->context->is_archive) {
 
         end_unit(ctx, localname, prefix, URI);
     }

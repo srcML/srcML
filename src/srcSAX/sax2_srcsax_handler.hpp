@@ -65,9 +65,6 @@ struct sax2_srcsax_handler {
     /** temporary storage of meta-tags */
 //    std::vector<srcml_element> meta_tags;
 
-    /** used to detect root unit */
-    bool is_archive = false;
-
     int unit_count = 0;
 
     /** the current parsing mode */
