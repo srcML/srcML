@@ -52,7 +52,7 @@ public:
     xmlParserInputBufferPtr input = nullptr;
 
     /** internally used libxml2 context */
-    xmlParserCtxtPtr libxml2_context;
+    xmlParserCtxtPtr libxml2_context = nullptr;
 };
 
 /* srcSAX context creation/open functions */

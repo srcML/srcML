@@ -327,7 +327,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (isempty)
         state->context->is_archive = false;
 
-
     // call the upper-level start_root when an empty element
     if (isempty) {
         state->rootcalled = true;
