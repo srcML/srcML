@@ -166,6 +166,10 @@ void create_src(const srcml_request_t& srcml_request,
             ++count;
         }
 
+        // don't go through normal closure as non-existent errors are detected
+        // @todo Why?
+        arch.release();
+
     } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
 
         std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
@@ -194,6 +198,9 @@ void create_src(const srcml_request_t& srcml_request,
             SRCMLstatus(ERROR_MSG, "srcml: unable to open output file " + destination.resource);
             exit(4);
         }
+
+        // don't go through regular closure as errors are generated
+        arch.release();
 
     } else {
 
