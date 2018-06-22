@@ -116,9 +116,6 @@ private :
     /** number of newlines in unit */
     int loc = 0;
 
-    /** last character read in */
-    char lastchar = 0;
-
     /**
      * meta_tag
      *
@@ -554,7 +551,6 @@ public :
 
         // number of newlines reset
         loc = 0;
-        lastchar = 0;
 
         if (terminate)
             stop_parser();
@@ -681,10 +677,6 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        // if the last character read in did not have a newline, add one to the loc
-        if (lastchar && lastchar != '\n')
-            ++loc;
-
         if (issrcdiff)
             srcdiff_stack.pop();
 
@@ -782,10 +774,6 @@ public :
 
         // update LOC
         loc += std::count(ch, ch + len, '\n');
-
-        // record the last character so we can determine final line
-        if (len)
-            lastchar = ch[len - 1];
 
         if (terminate)
             stop_parser();
