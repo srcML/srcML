@@ -622,24 +622,6 @@ public :
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-        if (!read_root) {
-
-            {            
-                std::unique_lock<std::mutex> lock(mutex);
-                if (terminate)
-                    stop_parser();
-                wait_root = false;
-                cond.notify_one();
-                cond.wait(lock);
-                read_root = true;
-            }
-
-            if (terminate) {
-
-                stop_parser();
-                return;
-            }
-        }
 
         {
             std::unique_lock<std::mutex> lock(mutex);
