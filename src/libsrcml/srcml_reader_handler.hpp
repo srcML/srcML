@@ -104,9 +104,6 @@ private :
     /** terminate */
     bool terminate = false;
 
-    /** track if empty unit */
-    bool is_empty = false;
-
     /** indicate if we need to wait on the root */
     bool wait_root = true;
 
@@ -506,8 +503,6 @@ public :
             }
         }
 
-        is_empty = true;
-
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
 
@@ -614,8 +609,6 @@ public :
             }
         }
 
-        is_empty = true;
-
         if (terminate)
             stop_parser();
 
@@ -713,8 +706,6 @@ public :
             cond.wait(lock);
         }
 
-        is_empty = false;
-
         if (terminate)
             stop_parser();
 
@@ -756,8 +747,6 @@ public :
             }
         }
 
-        is_empty = false;
-
         if (terminate)
             stop_parser();
 
@@ -790,8 +779,6 @@ public :
             if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE)
                 return;
         }        
-
-        is_empty = false;
 
         // update LOC
         loc += std::count(ch, ch + len, '\n');
