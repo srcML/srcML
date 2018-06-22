@@ -144,13 +144,12 @@ static int reparse_root(void* ctx) {
             return;
 
         // call the upper-level start_root
-        if (state->context->handler->start_root)
-            state->context->handler->start_root(state->context, (const char*) localname, 
+        state->context->handler->start_root(state->context, (const char*) localname, 
                             (const char*) prefix, (const char*) URI,
                             nb_namespaces, namespaces, nb_attributes, attributes);
 
         // call the upper-level start_unit for non-archives
-        if (!state->is_archive && state->context->handler->start_unit)
+        if (!state->is_archive)
             state->context->handler->start_unit(state->context, (const char*) localname, 
                     (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     };
@@ -202,8 +201,7 @@ void start_document(void* ctx) {
         state->context->encoding = (const char *)ctxt->input->encoding;
 
     // process any upper layer start document handling
-    if (state->context->handler->start_document)
-        state->context->handler->start_document(state->context);
+    state->context->handler->start_document(state->context);
 
     SRCSAX_DEBUG_END("");
 }
@@ -248,8 +246,7 @@ void end_document(void* ctx) {
 //        end_root(ctx, state->root.localname, state->root.prefix, state->root.URI);
 
     // process any upper layer end document handling
-    if (state->context->handler->end_document)
-        state->context->handler->end_document(state->context);
+    state->context->handler->end_document(state->context);
 
     SRCSAX_DEBUG_END("");
 }
@@ -332,7 +329,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
 
     // call the upper-level start_root when an empty element
-    if (isempty && state->context->handler->start_root) {
+    if (isempty) {
         state->rootcalled = true;
         state->context->handler->start_root(state->context, (const char*) localname, 
                             (const char*) prefix, (const char*) URI,
@@ -347,7 +344,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     state->mode = ROOT;
 
     // call the upper-level start_unit for non-archives
-    if (isempty && !state->is_archive && state->context->handler->start_unit) {
+    if (isempty && !state->is_archive) {
         state->context->handler->start_unit(state->context, (const char*) localname, 
                 (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     }
@@ -484,6 +481,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     state->base = ctxt->input->cur + 1;
 
     // upper-level start unit handling
+    // note: In order to nop this, it is set to 0 sometimes, so have to check
     if (state->context->handler->start_unit)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                             nb_namespaces, namespaces,
@@ -536,8 +534,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     state->mode = END_UNIT;
 
-    if (state->context->handler->end_unit)
-        state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+    state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
     ctxt->sax->startElementNs = &start_unit;
 
@@ -574,12 +571,10 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         // Basically, reparse the root start tag, collected when first parsed
         reparse_root(ctx);
 
-        if (state->context->handler->end_unit)
-            state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+        state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
     }
 
-    if (state->context->handler->end_root)
-        state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+    state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
     SRCSAX_DEBUG_END(localname);
 }
