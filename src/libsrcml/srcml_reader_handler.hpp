@@ -298,7 +298,7 @@ public :
 
         std::unique_lock<std::mutex> lock(mutex);
 
-        cond.notify_all();
+        cond.notify_one();
     }
 
     /**
@@ -309,7 +309,7 @@ public :
     void resume_and_wait() {
 
         std::unique_lock<std::mutex> lock(mutex);
-        cond.notify_all();
+        cond.notify_one();
         if (is_done)
             return;
 
@@ -325,7 +325,7 @@ public :
 
         is_done = true;
         
-        cond.notify_all();
+        cond.notify_one();
     }
 
     /**
@@ -485,7 +485,7 @@ public :
                 if (terminate)
                     stop_parser();
                 wait_root = false;
-                cond.notify_all();
+                cond.notify_one();
                 cond.wait(lock);
                 read_root = true;        
             }
@@ -539,7 +539,7 @@ public :
             if (terminate)
                 stop_parser();
 
-            cond.notify_all();
+            cond.notify_one();
             cond.wait(lock);
 
         }
@@ -629,7 +629,7 @@ public :
                 if (terminate)
                     stop_parser();
                 wait_root = false;
-                cond.notify_all();
+                cond.notify_one();
                 cond.wait(lock);
                 read_root = true;
             }
@@ -646,7 +646,7 @@ public :
             if (terminate)
                 stop_parser();
             is_done = true;
-            cond.notify_all();
+            cond.notify_one();
         }
 
         if (terminate)
@@ -688,7 +688,7 @@ public :
             // pause
             std::unique_lock<std::mutex> lock(mutex);
             if (terminate) stop_parser();
-            cond.notify_all();
+            cond.notify_one();
             cond.wait(lock);
         }
 
