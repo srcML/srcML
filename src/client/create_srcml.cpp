@@ -61,7 +61,8 @@ int srcml_handler_dispatch(ParseQueue& queue,
         }
 
         // may have some compressions/archives
-        if (!uninput.compressions.empty())
+        // @todo What if there is multiple files in the archive?
+        if (!uninput.compressions.empty() || !uninput.archives.empty())
             uninput.fd = input_archive(uninput);
 
         return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
