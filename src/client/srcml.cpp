@@ -164,7 +164,7 @@ See `srcml --help` for more information.
     srcml_cleanup_globals();
 
     // debugging information
-    if (srcml_request.command & SRCML_DEBUG_MODE) {
+    if (srcml_request.command & SRCML_DEBUG_MODE || srcml_request.command & SRCML_TIMING_MODE) {
         auto realtime = runtime.real_world_elapsed();
         SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
                                << "Real Time: " << realtime << "ms\n"
