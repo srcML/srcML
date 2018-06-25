@@ -106,10 +106,11 @@ else()
     if (APPLE AND EXISTS /usr/local/opt/libarchive)
         set(LibArchive_INCLUDE_DIR /usr/local/opt/libarchive/include)
         set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.dylib)
-    endif()
+    else()
+        find_package(LibArchive 3 REQUIRED)
+   endif()
 
     # Locating packages.e
-    find_package(LibArchive 3 REQUIRED)
     find_package(LibXml2 REQUIRED)
     find_package(CURL REQUIRED)
     find_package(Iconv REQUIRED)
