@@ -183,7 +183,6 @@ check() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        #diff -Z <(echo -en "$1") $STDOUT
         $diff <(echo -en "$1") $STDOUT
         [ ! -s $STDERR ]
 
