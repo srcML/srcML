@@ -2137,7 +2137,11 @@ control_group[] { ENTRY_DEBUG } :
                         MODE_INTERNAL_END_PAREN | MODE_LIST);
 
             // start the for heading group element
-            startElement(SCONTROL);
+            if(inPrevMode(MODE_IF)) {
+                startElement(SCONDITION);
+            } else {
+                startElement(SCONTROL);
+            }
         }
         LPAREN
 ;
@@ -2244,16 +2248,21 @@ control_condition_action[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_CONTROL_CONDITION | MODE_EXPECT);
 
+            bool in_if_mode = inPrevMode(MODE_IF);
+
             // setup next stage control condition
-            if(inPrevMode(MODE_IF))
+            if(in_if_mode)
                 clearMode(MODE_EXPECT | MODE_CONTROL_CONDITION);
             else
                 replaceMode(MODE_CONTROL_CONDITION, MODE_CONTROL_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
 
+
             // setup a mode for initialization that will end with a ";"
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST );
 
-            startElement(SCONTROL_CONDITION);
+            if(!in_if_mode) {
+                startElement(SCONTROL_CONDITION);
+            }
         }
 ;
 
