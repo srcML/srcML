@@ -129,7 +129,7 @@ def extract_all(src, encoding):
 
     archive.read_open_memory(src)
 
-    unit = archive.read_unit_header()
+    unit = archive.read_unit()
     while unit != None :
         srcml = unit.get_xml_fragment()
         if archive.get_url() != None and (archive.get_url().find(".all") != -1 or archive.get_url().find("unicode") != -1):
@@ -137,7 +137,7 @@ def extract_all(src, encoding):
         all.append(srcml)
         unit.unparse_memory()
         src_all.append(unit.src())
-        unit = archive.read_unit_header()
+        unit = archive.read_unit()
 
     archive.close()
 
@@ -376,8 +376,7 @@ while len(sys.argv) > 1 and ( sys.argv[1] == "--dos" or sys.argv[1] == "--exec" 
 if use_exec :
     print srcml_version()
 else :
-    sys.path.append("../../python/src")
-    from srcml import *
+    from python_test_bindings import *
     print version_string()
 
 print
