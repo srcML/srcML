@@ -613,11 +613,10 @@ LIBSRCML_DECL void srcml_archive_free(struct srcml_archive* archive);
 /** Open up a srcml_archive for writing to a given output file
  * @param archive A srcml_archive
  * @param srcml_filename Name of an output file
- * @param compression Amount of compression (0 for none to 9 as the max)
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive* archive, const char* srcml_filename, unsigned short compression);
+LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive* archive, const char* srcml_filename);
 
 /** Open up a srcml_archive for writing to a given memory buffer
  * @param archive A srcml_archive
@@ -1439,11 +1438,10 @@ LIBSRCML_DECL int srcml_unit_parse_io(struct srcml_unit* unit, void * context, s
  * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed
  * @param unit A srcml unit opened for reading
  * @param src_filename Name of a file to output contents of unit as source
- * @param compression Amount of compression (gzip) to apply. Values are 0 - 9
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const char* src_filename, unsigned short compression);
+LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const char* src_filename);
 
 /** Convert the srcML in a unit into source code and place it into a buffer
  * The buffer is allocated in the function and needs to be freed after using.

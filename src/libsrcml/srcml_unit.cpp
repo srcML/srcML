@@ -591,7 +591,7 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_filename(struct srcml_unit* unit, const char* src_filename, unsigned short /* compression */) {
+int srcml_unit_unparse_filename(struct srcml_unit* unit, const char* src_filename) {
 
     if (unit == nullptr || src_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;

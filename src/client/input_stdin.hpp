@@ -1,7 +1,7 @@
 /**
- * @file peek4char.hpp
+ * @file input_stdin.hpp
  *
- * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2018 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -20,12 +20,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_PEEK_4_CHAR_HPP
-#define INCLUDED_PEEK_4_CHAR_HPP
+#ifndef INPUT_STDIN_HPP
+#define INPUT_STDIN_HPP
 
-#include <stdio.h>
+#include <srcml_cli.hpp>
 
-// determine if XML from first four bytes in almost any encoding
-int peek4char(FILE* fp, unsigned char data[]);
+// adjust input for stdin
+void input_stdin(srcml_request_t& srcml_request);
 
 #endif

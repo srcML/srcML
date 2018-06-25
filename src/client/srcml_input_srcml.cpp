@@ -108,7 +108,7 @@ int srcml_input_srcml(ParseQueue& queue,
 
     if (!unitFound) {
         SRCMLstatus(ERROR_MSG, "Requested unit %d out of range.", srcml_input.unit);
-        exit(4);
+        exit(1);
     }
 
     return 1;

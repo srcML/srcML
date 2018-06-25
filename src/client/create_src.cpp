@@ -166,6 +166,10 @@ void create_src(const srcml_request_t& srcml_request,
             ++count;
         }
 
+        // don't go through normal closure as non-existent errors are detected
+        // @todo Why?
+        arch.release();
+
     } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
 
         std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
@@ -189,11 +193,14 @@ void create_src(const srcml_request_t& srcml_request,
         if (srcml_request.src_encoding)
             srcml_archive_set_src_encoding(arch.get(), srcml_request.src_encoding->c_str());
 
-        int status = srcml_unit_unparse_filename(unit.get(), destination.c_str(), 0);
+        int status = srcml_unit_unparse_filename(unit.get(), destination.c_str());
         if (status) {
             SRCMLstatus(ERROR_MSG, "srcml: unable to open output file " + destination.resource);
             exit(4);
         }
+
+        // don't go through regular closure as errors are generated
+        arch.release();
 
     } else {
 

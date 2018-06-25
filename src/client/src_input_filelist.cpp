@@ -39,7 +39,7 @@ int src_input_filelist(ParseQueue& queue,
 
     archive* arch = libarchive_input_file(input_file);
     if (!arch)
-        return 0;
+        return -1;
 
     archive_entry *entry = 0;
     int status = archive_read_next_header(arch, &entry);

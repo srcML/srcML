@@ -103,8 +103,14 @@ else()
     
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-    # Locating packages.
-    find_package(LibArchive REQUIRED)
+    if (EXISTS /usr/local/opt/libarchive)
+        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
+        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.dylib)
+    else()
+        find_package(LibArchive 3 REQUIRED)
+    endif()
+
+    # Locating packages.e
     find_package(LibXml2 REQUIRED)
     find_package(CURL REQUIRED)
     find_package(Iconv REQUIRED)
@@ -113,7 +119,7 @@ else()
     find_package(Boost COMPONENTS program_options filesystem system date_time REQUIRED)
 
     # add include directories
-    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
+    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${ICONV_INCLUDE_DIRS})
 
     if(DYNAMIC_LOAD_ENABLED)
         find_package(LibXslt)

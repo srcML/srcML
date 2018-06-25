@@ -51,18 +51,11 @@ public:
     /** xml parser input buffer */
     xmlParserInputBufferPtr input = nullptr;
 
-    /** boolean to indicate need to free input buffer */
-    bool free_input = false;
-
     /** internally used libxml2 context */
-    xmlParserCtxtPtr libxml2_context;
-
-    /** indicate stop parser */
-    bool terminate = false;
+    xmlParserCtxtPtr libxml2_context = nullptr;
 };
 
 /* srcSAX context creation/open functions */
-srcsax_context* srcsax_create_context_filename(const char* filename, const char* encoding);
 srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
 
 /* srcSAX free function */
@@ -70,7 +63,6 @@ void srcsax_free_context(srcsax_context * context);
 
 /* srcSAX parse function */
 int srcsax_parse(srcsax_context * context);
-int srcsax_parse_handler(srcsax_context* context, srcsax_handler* handler);
 
 /* srcSAX terminate parse function */
 void srcsax_stop_parser(srcsax_context* context);

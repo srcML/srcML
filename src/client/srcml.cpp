@@ -28,22 +28,18 @@
 #include <create_src.hpp>
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
-#include <isxml.hpp>
 #include <Timer.hpp>
 #include <SRCMLStatus.hpp>
 #include <curl/curl.h>
+#include <input_stdin.hpp>
 #include <boost/version.hpp>
 #include <iostream>
 #include <csignal>
 #include <cmath>
 #include <TraceLog.hpp>
-#include <pipe.hpp>
-#include <sys/types.h>
-#include <sys/uio.h>
-#include <unistd.h>
-
 
 #ifndef _MSC_BUILD
+#include <sys/uio.h>
 #include <unistd.h>
 #endif
 
@@ -53,8 +49,6 @@ namespace {
     bool request_display_metadata  (const srcml_request_t&);
     bool request_output_compression(const srcml_request_t&);
     bool request_create_src        (const srcml_request_t&);
-
-    void is_stdin_xml(srcml_request_t& srcml_request);
 }
 
 int main(int argc, char * argv[]) {
@@ -90,8 +84,34 @@ int main(int argc, char * argv[]) {
         srcml_request.input_sources[0].unit = srcml_request.unit;
 
     // determine if stdin is srcML or src
-    if (srcml_request.stdindex)
-        is_stdin_xml(srcml_request);
+    if (srcml_request.stdindex) {
+
+        // stdin from a terminal is not allowed
+        if (isatty(0)) {
+            fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
+Typical usage includes:
+
+    # convert from a source file to srcML
+    srcml main.cpp -o main.cpp.xml
+
+    # convert from text to srcML
+    srcml --text="int i = 1;" --language C++
+
+    # pipe in source code
+    echo "int i = 1;" | srcml --language C++
+
+    # convert from srcML back to source code 
+    srcml main.cpp.xml -o main.cpp
+
+Consider using the --text option for direct entry of text.
+
+See `srcml --help` for more information.
+)");
+            exit(1);
+        }
+
+        input_stdin(srcml_request);
+    }
  
     /*
         Setup the internal pipeline of possible steps:
@@ -144,7 +164,7 @@ int main(int argc, char * argv[]) {
     srcml_cleanup_globals();
 
     // debugging information
-    if (srcml_request.command & SRCML_DEBUG_MODE) {
+    if (srcml_request.command & SRCML_DEBUG_MODE || srcml_request.command & SRCML_TIMING_MODE) {
         auto realtime = runtime.real_world_elapsed();
         SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
                                << "Real Time: " << realtime << "ms\n"
@@ -205,62 +225,5 @@ namespace {
         return (option(SRCML_COMMAND_SRC) || (request.output_filename.state != SRCML &&
             !request_create_srcml(request) &&
             !request_display_metadata(request)));
-        ;
     }
-
-    /*
-        Does stdin contain xml or source
-    */
-    void is_stdin_xml(srcml_request_t& request) {
-
-        // stdin from a terminal is not allowed
-        if (isatty(0)) {
-            fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
-Typical usage includes:
-
-    # convert from a source file to srcML
-    srcml main.cpp -o main.cpp.xml
-
-    # convert from text to srcML
-    srcml --text="int i = 1;" --language C++
-
-    # pipe in source code
-    echo "int i = 1;" | srcml --language C++
-
-    # convert from srcML back to source code 
-    srcml main.cpp.xml -o main.cpp
-
-Consider using the --text option for direct entry of text.
-
-See `srcml --help` for more information.
-)");
-            exit(1);
-        }
-
-        // stdin input source
-        auto& rstdin = request.input_sources[*request.stdindex];
-
-        // determine if input is srcML or not
-        request.bufsize = read(0, request.buf, 4);
-        rstdin.state = isxml((unsigned char*) request.buf, (int) request.bufsize) ? SRCML : SRC;
-
-        // copy rest of stdin into pipe
-        input_pipe(rstdin, [](const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
-
-            // write the prerequest
-            write(*destination.fd, srcml_request.buf, srcml_request.bufsize);
-
-            // copy the rest of the input source
-            char buf[512];
-            ssize_t size = 0;
-            do {
-                size = read(*input_sources[0].fd, buf, 512);
-                if (size > 0)
-                    write(*destination.fd, buf, size);
-            } while (size > 0);
-
-            close(*destination.fd);
-        }, request);
-    }
-
 }
