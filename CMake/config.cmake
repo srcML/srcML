@@ -119,7 +119,7 @@ else()
     find_package(Boost COMPONENTS program_options filesystem system date_time REQUIRED)
 
     # add include directories
-    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
+    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${ICONV_INCLUDE_DIRS})
 
     if(DYNAMIC_LOAD_ENABLED)
         find_package(LibXslt)
