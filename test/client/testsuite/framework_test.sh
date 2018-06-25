@@ -159,32 +159,32 @@ check() {
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        $diff $1 <(echo -en "$2")
-        $diff $STDERR <(echo -en "$3")
+        $diff <(echo -en "$2") $1
+        $diff <(echo -en "$3") $STDERR
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
     elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-        $diff $1 <(echo -en "$2")
+        $diff <(echo -en "$2") $1
         [ ! -s $STDERR ]
 
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        $diff $STDOUT <(echo -en "$1")
-        $diff $STDERR <(echo -en "$2")
+        $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$2") $STDERR
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
-        $diff $STDOUT $1
+        $diff $1 $STDOUT
         [ ! -s $STDERR ]
 
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        #diff -Z $STDOUT <(echo -en "$1")
-        $diff $STDOUT <(echo -en "$1")
+        #diff -Z <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$1") $STDOUT
         [ ! -s $STDERR ]
 
     else
@@ -222,7 +222,7 @@ check_file() {
 
     set -e
 
-    $diff $1 $2
+    $diff $2 $1
     [ ! -s $STDERR ]
 
     if [ $exit_status -ne 0 ]; then
@@ -259,13 +259,13 @@ check_exit() {
     set -e
 
     if [ $# -eq 2 ]; then
-        $diff $STDERR <(echo -en "$2")
+        $diff <(echo -en "$2") $STDERR
         [ ! -s $STDOUT ]
     fi
 
     if [ $# -eq 3 ]; then
-        $diff $STDOUT <(echo -en "$2")
-        $diff $STDERR <(echo -en "$3")
+        $diff <(echo -en "$2") $STDOUT
+        $diff <(echo -en "$3") $STDERR
     fi
 
     set +e
