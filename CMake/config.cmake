@@ -103,12 +103,12 @@ else()
     
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-    if (APPLE AND EXISTS /usr/local/opt/libarchive)
-        set(LibArchive_INCLUDE_DIR /usr/local/opt/libarchive/include)
+    if (EXISTS /usr/local/opt/libarchive)
+        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
         set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.dylib)
     else()
         find_package(LibArchive 3 REQUIRED)
-   endif()
+    endif()
 
     # Locating packages.e
     find_package(LibXml2 REQUIRED)
