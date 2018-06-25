@@ -1,92 +1,92 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="alignof" filename="alignof">
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>()</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>()</argument_list></alignof> <operator>+</operator> <literal type="number">1</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></alignof> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></alignof> <operator>+</operator> <name>c</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof> <operator>+</operator> <call><name>g</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>,<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name> <operator>+</operator> <name>b</name></expr></argument>, <argument><expr><name>c</name> <operator>+</operator> <name>d</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><operator>(</operator><literal type="string">"a"</literal><operator>,</operator> <operator>(</operator><name>mAccWrapCreated</name><operator>-</operator><name>mAccWrapDeleted</name><operator>)</operator><operator>)</operator></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>,<argument><expr><operator>(</operator><name>b</name><operator>,</operator><name>c</name><operator>)</operator></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><operator>&amp;</operator><name>a</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name><operator>&amp;</operator></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof></expr></argument>)</argument_list></alignof> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></alignof> <operator>+</operator> <name>c</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignof> <operator>+</operator> <alignof>alignof<argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></alignof></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><alignas>alignas<argument_list>(<argument><expr>struct <name>X</name></expr></argument>)</argument_list></alignas> <name><name>struct</name> <name>X</name></name></type> <name>y</name></decl>;</decl_stmt>
 </unit>
 

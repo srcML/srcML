@@ -1,7 +1,7 @@
 /**
- * @file peek4char.hpp
+ * @file srcml_pipe.hpp
  *
- * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2017 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -20,12 +20,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_PEEK_4_CHAR_HPP
-#define INCLUDED_PEEK_4_CHAR_HPP
+#ifndef SRCML_PIPE_HPP
+#define SRCML_PIPE_HPP
 
-#include <stdio.h>
+#include <srcml_input_src.hpp>
+#include <srcml_cli.hpp>
 
-// determine if XML from first four bytes in almost any encoding
-int peek4char(FILE* fp, unsigned char data[]);
+// has to be a typedef for older gcc compilers
+typedef void (*srcml_pipe_process)(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
+
+void srcml_pipe(srcml_input_src& input, srcml_pipe_process process, srcml_request_t srcml_request = srcml_request_t());
 
 #endif

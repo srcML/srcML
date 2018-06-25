@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="goto">
 
-<unit>
+<unit language="C++">
 <goto>goto;</goto>
 </unit>
 
-<unit>
+<unit language="C++">
 <goto>goto <name>label</name>;</goto>
 </unit>
 
-<unit>
+<unit language="C++">
 <goto>goto <name>case <literal type="number">1</literal></name>;</goto>
 </unit>
 
-<unit>
+<unit language="C++">
 <goto>goto <name>case <literal type="char">'a'</literal></name>;</goto>
 </unit>
 
-<unit>
+<unit language="C++">
 <goto>goto <name>case b</name>;</goto>
 </unit>
 

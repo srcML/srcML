@@ -3,7 +3,7 @@
 
 
 
-<unit>
+<unit language="C++">
 <throw>throw;</throw>
 </unit>
 

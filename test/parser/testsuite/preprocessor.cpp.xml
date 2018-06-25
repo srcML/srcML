@@ -1,106 +1,106 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="preprocessor">
 
-<unit>
+<unit language="C++">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>a</name></expr></cpp:if>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:if>#<cpp:directive>if</cpp:directive></cpp:if>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro></cpp:define>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive></cpp:define>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro> <cpp:value>@</cpp:value></cpp:define>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>a</name></cpp:ifdef>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:ifdef>#<cpp:directive>ifdef</cpp:directive></cpp:ifdef>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:ifndef>#<cpp:directive>ifndef</cpp:directive> <name>a</name></cpp:ifndef>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:ifndef>#<cpp:directive>ifndef</cpp:directive></cpp:ifndef>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"abc"</cpp:file></cpp:include>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>"asm/if.h"</cpp:file></cpp:include>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;abc&gt;</cpp:file></cpp:include>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;asm/if.h&gt;</cpp:file></cpp:include>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:include>#<cpp:directive>include</cpp:directive></cpp:include>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="line">// a</comment>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="block">/* a
 */</comment>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>A</name></cpp:macro> <cpp:value>"abc"</cpp:value></cpp:define>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive></cpp:define>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:line>#<cpp:directive>line</cpp:directive></cpp:line>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:line>#<cpp:directive>line</cpp:directive> <cpp:number>456</cpp:number></cpp:line>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:line>#<cpp:directive>line</cpp:directive> <cpp:number>456</cpp:number> <cpp:file>"abc"</cpp:file></cpp:line>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>A</name></cpp:macro> \
  <cpp:value>{ 0x7c02eeee, \
  { 0x77, 0x88 } }</cpp:value></cpp:define>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>DEBUG</name></expr></argument>)</argument_list></call> <operator>&amp;&amp;</operator> <call><name>defined</name><argument_list>(<argument><expr><name>__KERNEL__</name></expr></argument>)</argument_list></call></expr></cpp:if>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>HZ_NS</name></cpp:macro> <cpp:value>(1000000000 / HZ)</cpp:value></cpp:define>
 </unit>
 
@@ -120,17 +120,17 @@
 </unit>
 -->
 
-<unit>
+<unit language="C++">
 <label><name>error</name>:</label>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>PCI_VENDOR_ESS_OLD</name></cpp:macro>		<cpp:value>0x1285</cpp:value></cpp:define>		<comment type="block">/* Platform Tech, 
 						the people the maestro 
 						was bought from */</comment>
 </unit>
 
-<unit>
+<unit language="C++">
 <label><name>error</name>:</label>
 
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>PCI_VENDOR_ESS_OLD</name></cpp:macro>		<cpp:value>0x1285</cpp:value></cpp:define>		<comment type="block">/* Platform Tech, 
@@ -138,20 +138,20 @@
 						was bought from */</comment>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro> <cpp:value>"abc"</cpp:value></cpp:define>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro> <cpp:value>"abc</cpp:value></cpp:define>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro> <cpp:value>"abc" "def</cpp:value></cpp:define>
 </unit>
 
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><name>memaddr</name></expr></argument>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
               ()
@@ -159,73 +159,73 @@
      ,<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>int</name></type> <name>g</name></decl>;</decl_stmt>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><macro><name>a</name><argument_list>(<argument>b c</argument>)</argument_list></macro></expr></cpp:if>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="line">//</comment>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif> <comment type="block">/* */</comment>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>restrict</name></expr></cpp:if>
 </unit>
 
-<unit>
+<unit language="C++">
 <function_decl><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>restrict</name></expr></cpp:if>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:pragma>#<cpp:directive>pragma</cpp:directive></cpp:pragma>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name></cpp:pragma>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name> <name>dependency</name></cpp:pragma>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name> <name>dependency</name> <cpp:literal>"string"</cpp:literal></cpp:pragma>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:pragma>#<cpp:directive>pragma</cpp:directive> <name>GCC</name> <name>dependency</name> <cpp:literal>"/usr/include/time.h"</cpp:literal> <name>rerun</name> <name>fixincludes</name></cpp:pragma>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:error>#<cpp:directive>error</cpp:directive></cpp:error>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:error>#<cpp:directive>error</cpp:directive> <cpp:literal>"message"</cpp:literal></cpp:error>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:warning>#<cpp:directive>warning</cpp:directive></cpp:warning>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:warning>#<cpp:directive>warning</cpp:directive> <cpp:literal>"message"</cpp:literal></cpp:warning>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:empty>#</cpp:empty>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:empty>#  </cpp:empty>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:empty># A comment line.  foobar</cpp:empty>
 </unit>
 

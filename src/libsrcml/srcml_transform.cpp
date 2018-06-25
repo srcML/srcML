@@ -37,8 +37,7 @@
 #include <algorithm>
 
 /**
- * srcml_append_transform_xpath_element_attribute
- * @param archive a srcml archive
+ * srcml_append_transform_xpath_internal( * @param archive a srcml archive
  * @param xpath_string an XPath expression
  * @param prefix the element prefix
  * @param namespace_uri the element namespace
@@ -51,7 +50,7 @@
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archive, const char* xpath_string,
+static int srcml_append_transform_xpath_internal (struct srcml_archive* archive, const char* xpath_string,
                                                     const char* prefix, const char* namespace_uri,
                                                     const char* element,
                                                     const char* attr_prefix, const char* attr_namespace_uri,
@@ -64,7 +63,7 @@ int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archiv
     xpathTransformation* trans = new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
             attr_prefix, attr_namespace_uri, attr_name, attr_value);
 
-    archive->transformations.push_back(trans);
+    archive->transformations.emplace_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -81,7 +80,7 @@ int srcml_append_transform_xpath_element_attribute (struct srcml_archive* archiv
  */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
-    return srcml_append_transform_xpath_element_attribute(archive, xpath_string, 0, 0, 0, 0, 0, 0, 0);
+    return srcml_append_transform_xpath_internal(archive, xpath_string, 0, 0, 0, 0, 0, 0, 0);
 }
 
 /**
@@ -100,11 +99,28 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-int srcml_append_transform_xpath_attribute (struct srcml_archive* archive, const char* xpath_string,
+int srcml_append_transform_xpath_attribute(struct srcml_archive* archive, const char* xpath_string,
                                             const char* prefix, const char* namespace_uri,
                                             const char* attr_name, const char* attr_value) {
 
-    return srcml_append_transform_xpath_element_attribute(archive, xpath_string, 0, 0, 0, prefix, namespace_uri, attr_name, attr_value);
+    if (archive == nullptr || xpath_string == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    // attribute for a previous Xpath where the attribute is blank is appended on
+    if (!archive->transformations.empty()) {
+        auto p = dynamic_cast<xpathTransformation*>(archive->transformations.back().get());
+        if (p && p->xpath == xpath_string && p->attr_prefix.empty() && p->attr_uri.empty() && p->attr_name.empty() && p->attr_value.empty()) {
+
+            p->attr_prefix = prefix;
+            p->attr_uri = namespace_uri;
+            p->attr_name = attr_name;
+            p->attr_value = attr_value;
+
+            return SRCML_STATUS_OK;
+        }
+    }
+
+    return srcml_append_transform_xpath_internal(archive, xpath_string, 0, 0, 0, prefix, namespace_uri, attr_name, attr_value);
 }
 
 /**
@@ -126,7 +142,7 @@ int srcml_append_transform_xpath_element(struct srcml_archive* archive, const ch
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element) {
 
-    return srcml_append_transform_xpath_element_attribute(archive, xpath_string, prefix, namespace_uri, element, 0, 0, 0, 0);
+    return srcml_append_transform_xpath_internal(archive, xpath_string, prefix, namespace_uri, element, 0, 0, 0, 0);
 }
 
 #ifdef WITH_LIBXSLT
@@ -149,7 +165,7 @@ static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPt
 
     xsltTransformation* trans = new xsltTransformation(doc, std::vector<std::string>());
 
-    archive->transformations.push_back(trans);
+    archive->transformations.emplace_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -266,7 +282,7 @@ static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDo
 
     relaxngTransformation* trans = new relaxngTransformation(doc);
 
-    archive->transformations.push_back(trans);
+    archive->transformations.emplace_back(trans);
 
     return SRCML_STATUS_OK;
 }
@@ -435,8 +451,6 @@ int srcml_clear_transforms(srcml_archive* archive) {
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     // cleanup the transformations
-    for (const auto* p : archive->transformations)
-        delete p;
     archive->transformations.clear();
 
     return SRCML_STATUS_OK;
@@ -478,12 +492,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (fullresults == nullptr)
         return SRCML_STATUS_ERROR;
 
-    const Transformation* lasttrans = nullptr;
     TransformationResult lastresult;
-    for (const auto* trans : archive->transformations) {
-
-        // keep track of the last transformation processed, which might not be the last one in the list
-        lasttrans = trans;
+    for (const auto& trans : archive->transformations) {
 
         // preserve the fullresults to iterate through
         // collect results from this transformation applied to the potentially multiple

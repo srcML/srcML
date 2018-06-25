@@ -37,7 +37,7 @@
 </xsl:template>
 -->
 
-<xsl:template match="/src:unit/@language">
+<xsl:template match="/src:unit/@language | /src:unit/src:unit/@language">
     <xsl:attribute name="language"><xsl:value-of select="$language"/></xsl:attribute>
 </xsl:template>
 

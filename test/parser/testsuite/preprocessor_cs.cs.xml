@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="preprocessor" filename="preprocessor_cs">
 
-<unit>
+<unit language="C#">
 <cpp:region>#<cpp:directive>region</cpp:directive></cpp:region>
 </unit>
 
-<unit><cpp:region>#<cpp:directive>region</cpp:directive> <name>Class</name></cpp:region>
+<unit language="C#"><cpp:region>#<cpp:directive>region</cpp:directive> <name>Class</name></cpp:region>
 </unit>
 
-<unit>
+<unit language="C#">
 <cpp:region>#<cpp:directive>region</cpp:directive> <name>Class</name> <name>definition</name></cpp:region>
 </unit>
 
-<unit>
+<unit language="C#">
 <cpp:endregion>#<cpp:directive>endregion</cpp:directive></cpp:endregion>
 </unit>
 
-<unit>
+<unit language="C#">
 <cpp:line>#<cpp:directive>line</cpp:directive> <name>hidden</name></cpp:line>
 </unit>
 
-<unit>
+<unit language="C#">
 <cpp:line>#<cpp:directive>line</cpp:directive> <name>default</name></cpp:line>
 </unit>
 

@@ -30,12 +30,33 @@
 #include <srcml_input_src.hpp>
 #include <SRCMLStatus.hpp>
 #include <stdio.h>
+#include <cstring>
 
 // Public consumption thread function
 void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& destination) {
 
     if (!request)
         return;
+
+    // open the archive (if per-unit)
+    if (request->unit && option(SRCML_COMMAND_NOARCHIVE)) {
+
+        std::string filename;
+        if (option(SRCML_COMMAND_TO_DIRECTORY)) {
+            filename += *request->disk_dir;
+            filename += "/";
+        }
+        filename += *request->disk_filename;
+        filename += ".xml";
+
+        request->srcml_arch = srcml_archive_clone(request->srcml_arch);
+
+        // @todo These should follow the master archive
+        srcml_archive_disable_full_archive(request->srcml_arch);
+        srcml_archive_disable_hash(request->srcml_arch);
+
+        srcml_archive_write_open_filename(request->srcml_arch, filename.c_str());
+    }
 
     // output scalar results
     // @todo Make sure this works with filename output, not just file descriptor
@@ -49,13 +70,13 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
     case SRCML_RESULTS_NUMBER:
         {
-            char s[100] = { 0 };
+            std::string s;
             if (request->results.numberValue != (int) request->results.numberValue)
-                snprintf(s, 100, "%lf\n", request->results.numberValue);
+                s = std::to_string(request->results.numberValue);
             else
-                snprintf(s, 100, "%d\n", (int) request->results.numberValue);
+                s = std::to_string((int) request->results.numberValue);
 
-            srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+            srcml_archive_write_string(request->srcml_arch, s.c_str(), (int) s.size());
         }
         return;
 
@@ -126,6 +147,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
     // close the archive (if per-unit)
     if (request->unit && option(SRCML_COMMAND_NOARCHIVE)) {
+
             srcml_archive_close(request->srcml_arch);
             srcml_archive_free(request->srcml_arch);
     }

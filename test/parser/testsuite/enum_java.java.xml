@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="enum">
 
-<unit>
+<unit language="Java">
 <enum_decl>enum <name>foo</name>;</enum_decl>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum_decl>enum <name>foo</name>, <name>bar</name>;</enum_decl>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum>enum <block>{ <decl><name>a</name></decl> }</block></enum>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum>enum <name>a</name> <block>{ <decl><name>b</name></decl> }</block></enum>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name></decl> }</block></enum>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum>enum <name>a</name> <block>{ <decl><name>b</name></decl>, <decl><name>c</name></decl> }</block></enum>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum>enum <block>{ <decl><name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl> }</block></enum>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum>enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl> }</block></enum>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum>enum <block>{ <decl><name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><name>b</name></decl> }</block></enum>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum>enum <name>a</name> <block>{ <decl><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><name>c</name></decl> }</block></enum>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum><specifier>public</specifier> enum <name>Planet</name> <block>{
 
     <decl><name>MERCURY</name> <argument_list>(<argument><expr><literal type="number">3.303e+23</literal></expr></argument>, <argument><expr><literal type="number">2.4397e6</literal></expr></argument>)</argument_list></decl>,
@@ -63,12 +63,12 @@
 }</block></enum>
 </unit>
 
-<unit>
+<unit language="Java">
 <enum><specifier>private</specifier> <specifier>static</specifier> enum <name>RelTypes</name> <super_list><implements>implements <super><name>RelationshipType</name></super></implements></super_list> <block>{}</block></enum>
 
 <function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>main</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{}</block></function></unit>
 
-<unit>
+<unit language="Java">
 <enum><specifier>public</specifier> enum <name>Policy</name> <block>{
 
   <decl><name>DISABLE</name><argument_list>(<argument><expr><name><name>Condition</name><operator>.</operator><name>FALSE</name></name></expr></argument>)</argument_list></decl>,

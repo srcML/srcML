@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="atomic" filename="atomic_c">
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><specifier>_Atomic</specifier> <name>double</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><specifier>const</specifier> <specifier>_Atomic</specifier> <name>double</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><specifier>_Atomic</specifier> <specifier>const</specifier> <name>double</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><atomic>_Atomic<argument_list>()</argument_list></atomic></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><atomic>_Atomic<argument_list>(<argument><expr><name>A</name></expr></argument>)</argument_list></atomic></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><atomic>_Atomic<argument_list>(<argument><expr><call><name>foo</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></atomic></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><atomic>_Atomic<argument_list>(<argument><expr><operator>(</operator><name>A</name><operator>)</operator></expr></argument>)</argument_list></atomic></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><atomic>_Atomic<argument_list>(<argument><expr><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></atomic></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><specifier>const</specifier> <atomic>_Atomic<argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></atomic> <name>A</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
 
-<unit>
+<unit language="C">
 <struct_decl><specifier>_Atomic</specifier> struct <name>s</name>;</struct_decl>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><specifier>_Atomic</specifier> <name><name>struct</name> <name>s</name></name></type> <name>t</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C">
 <decl_stmt><decl><type><atomic>_Atomic<argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></atomic></type> <name>bar</name></decl>;</decl_stmt>
 </unit>
 

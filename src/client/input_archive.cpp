@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <pipe.hpp>
+#include <srcml_pipe.hpp>
 #include <input_archive.hpp>
 #include <unarchive_srcml.hpp>
 
@@ -31,7 +31,7 @@ int input_archive(const srcml_input_src& input) {
     if (!input.archives.empty() || !input.compressions.empty() /* &&
        (input.compressions.size() > 1 || input.compressions.front() != ".gz")*/) {
 
-        input_pipe(uninput, unarchive_srcml);
+        srcml_pipe(uninput, unarchive_srcml);
     }
 
     return *uninput.fd;

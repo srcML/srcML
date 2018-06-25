@@ -61,7 +61,7 @@ void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueu
         // @todo Should this be .srcml?
         xml_filename += *request->filename + ".xml";
 
-        srcml_archive_write_open_filename(request->srcml_arch, xml_filename.c_str(), 0);
+        srcml_archive_write_open_filename(request->srcml_arch, xml_filename.c_str());
     }
 
     std::string original_filename;

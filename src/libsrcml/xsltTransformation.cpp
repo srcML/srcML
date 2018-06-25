@@ -119,10 +119,10 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
  */
 xsltTransformation::~xsltTransformation() {
 
-#ifdef DLLOAD
     xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
 
+#ifdef DLLOAD
     dlclose(libxslt_handle);
     dlclose(libexslt_handle);
 #endif

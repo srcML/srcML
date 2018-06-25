@@ -1,143 +1,143 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="operator" filename="operator_cpp">
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr><operator>,</operator> <literal type="number">0</literal>]</index></name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><literal type="number">1</literal> <operator>.*</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>+=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>-=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>*=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>/=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>%=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&amp;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>|=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>^=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><literal type="number">1</literal> <operator>.*</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>+=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>-=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>*=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>/=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>%=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&amp;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>|=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>^=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>=</operator> <name>a</name> <operator>*</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><name>a</name> <operator>=</operator> <name>a</name> <operator>^</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 

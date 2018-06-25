@@ -67,6 +67,8 @@ const int SRCML_COMMAND_NOARCHIVE                 = 1<<24;
 
 const int SRCML_DEBUG_MODE                        = 1<<25;
 
+const int SRCML_TIMING_MODE                       = 1<<26;
+
 const int SRCML_ARCHIVE                           = 1<<27;
 
 const int SRCML_HASH                              = 1<<28;
@@ -153,6 +155,9 @@ struct srcml_request_t {
 
     boost::optional<size_t> revision;
 
+    // pre-input
+    char buf[4] = { 0 };
+    ssize_t bufsize = 0;
 };
 
 // parse the CLI options into a srcml client request

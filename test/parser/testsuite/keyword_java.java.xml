@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="keyword" filename="keyword_java">
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><name>void</name></type> <name>struct</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><name>void</name></type> <name>union</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><name>void</name></type> <name>typedef</name></decl>;</decl_stmt>
 </unit>
 

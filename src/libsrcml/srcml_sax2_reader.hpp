@@ -78,7 +78,6 @@ private :
 public :
 
     // constructors
-    srcml_sax2_reader(srcml_archive* archive, const char* filename, const char * encoding = 0, const boost::optional<size_t>& revision_number = boost::optional<size_t>());
     srcml_sax2_reader(srcml_archive* archive, xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number);
 
     // destructors
@@ -88,6 +87,8 @@ public :
        Unit is still avaible for readsrcML or read.  But not readUnitAttributes.
     */
     int read_header(srcml_unit* unit);
+
+    int read(srcml_unit* unit);
 
     // reads the next unit and returns it in parameter as srcML
     int read_body(srcml_unit* unit);

@@ -23,9 +23,6 @@ add_subdirectory(client)
 
 file(GLOB SRCSAX_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} srcSAX/*.hpp)
 file(GLOB SRCSAX_SOURCE  RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} srcSAX/*.cpp)
-if(NOT WIN32)
-	list(REMOVE_ITEM SRCSAX_SOURCE srcSAX/srctools_windows.cpp)
-endif()
 
 add_library(srcsax OBJECT ${SRCSAX_SOURCE} ${SRCSAX_HEADERS})
 
@@ -56,8 +53,14 @@ set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_B
 
 buildLib(srcml_shared SHARED)
 set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set_property(TARGET srcml_shared PROPERTY VERSION "0.9.5")
-set_property(TARGET srcml_shared PROPERTY SOVERSION "0.9.5")
+
+# Set libsrcml version
+file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER)
+string(REGEX MATCH "SRCML_VERSION_STRING \"[0-9].[0-9].[0-9]\"" SRCML_VERSION_STRING "${SRCML_HEADER}")
+string(REGEX MATCH "([0-9].[0-9].[0-9])" SRCML_VERSION "${SRCML_VERSION_STRING}")
+
+set_property(TARGET srcml_shared PROPERTY VERSION "${SRCML_VERSION}")
+set_property(TARGET srcml_shared PROPERTY SOVERSION "${SRCML_VERSION}")
 
 if(APPLE)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")

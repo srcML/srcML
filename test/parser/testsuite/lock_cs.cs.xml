@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="lock" filename="lock_cs">
 
-<unit>
+<unit language="C#">
 <lock>lock <init>(<expr><name>p</name></expr>)</init>
 <block>{}</block></lock>
 </unit>
 
-<unit>
+<unit language="C#">
 <lock>lock <init>(<decl><type><name>Object</name></type> <name>thisLock</name> <init>= <expr><operator>new</operator> <call><name>Object</name><argument_list>()</argument_list></call></expr></init></decl>)</init>
 <block>{}</block></lock>
 </unit>

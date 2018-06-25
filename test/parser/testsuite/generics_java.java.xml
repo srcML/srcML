@@ -1,75 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="generics" filename="generics_java">
 
-<unit>
+<unit language="Java">
 <class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>c</name> <init>= <expr><operator>new</operator> <call><name><name>Class</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>c</name> <init>= <expr><operator>new</operator> <call><name><name>Class</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name></type> <name>c</name> <init>= <expr><operator>new</operator> <call><name><name>Class</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>, <argument><name>String</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <function><parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit>
+<unit language="Java">
 <function><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit>
+<unit language="Java">
 <constructor><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>Class</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></constructor>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><name><name>Class</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name></type> <name>c</name> <init>= <expr><operator>new</operator> <argument_list type="generic">&lt;<argument><name>String</name></argument>&gt;</argument_list> <call><name><name>Class</name><argument_list type="generic">&lt;<argument><name>Integer</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><literal type="string">""</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name> <extends>extends <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
-<unit>
+<unit language="Java">
 <class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>?</name> <extends>extends <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
-<unit>
+<unit language="Java">
 <class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>?</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
-<unit>
+<unit language="Java">
 <class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name> <super>super <name>Object</name></super></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
-<unit>
+<unit language="Java">
 <class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>?</name> <super>super <name>Object</name></super></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
-<unit>
+<unit language="Java">
 <interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <block>{}</block></interface>
 </unit>
 
-<unit>
+<unit language="Java">
 <interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <super_list><extends>extends <super><name><name>Collection</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></super></extends></super_list> <block>{}</block></interface>
 </unit>
 
-<unit>
+<unit language="Java">
 <decl_stmt><decl><type><name><name>SortedSet</name><argument_list type="generic">&lt;<argument><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>?</name></argument>,<argument><name>?</name></argument>&gt;</argument_list></name></name></argument>&gt;</argument_list></name></type> <name>sortedEntries</name> <init>= <expr><operator>new</operator> <call><name><name>TreeSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Comparator</name><argument_list type="generic">&lt;<argument><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>?</name></argument>,<argument><name>?</name></argument>&gt;</argument_list></name></name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{}</block></class></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <if_stmt><if>if<condition>(<expr><name>a</name><operator>&lt;</operator> <literal type="number">0</literal> <operator>||</operator> <name>a</name> <operator>&gt;</operator> <literal type="number">9</literal></expr>)</condition><block type="pseudo"><empty_stmt>;</empty_stmt></block></if></if_stmt>
 </unit>
 

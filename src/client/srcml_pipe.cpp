@@ -20,7 +20,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <pipe.hpp>
+#include <srcml_pipe.hpp>
 
 #include <thread>
 
@@ -34,7 +34,7 @@
 
 static std::list<std::thread*> lthreads;
 
-void input_pipe(srcml_input_src& input, pipe_process process) {
+void srcml_pipe(srcml_input_src& input, srcml_pipe_process process, srcml_request_t srcml_request) {
 
     // setup the pipes
     int fds[2] = { -1, -1 };
@@ -52,7 +52,7 @@ void input_pipe(srcml_input_src& input, pipe_process process) {
    	// create a single thread to prefix decompression
     lthreads.push_back(new std::thread(
             process,
-            srcml_request_t(),
+            srcml_request,
             srcml_input_t(1, input),
             srcml_output_dest("-", fds[1])
     ));

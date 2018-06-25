@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="try">
 
-<unit>
+<unit language="C++">
 <try>try <block>{}</block></try>
 </unit>
 
-<unit>
+<unit language="C++">
 <try>try <block>{ <expr_stmt><expr><name>a</name></expr>;</expr_stmt> }</block></try>
 </unit>
 
-<unit>
+<unit language="C++">
 <try>try <block>{ 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt> 
     }</block><catch>catch <block>{}</block></catch></try>
 </unit>
 
-<unit>
+<unit language="C++">
 <try>try <block>{ 
   <try>try <block>{ 
       <expr_stmt><expr><name>a</name></expr>;</expr_stmt> 
@@ -23,7 +23,7 @@
     }</block><catch>catch <block>{}</block></catch></try>
 </unit>
 
-<unit>
+<unit language="C++">
 <try>try <block>{ 
     }</block><catch>catch <block>{
       <try>try <block>{ 
@@ -32,7 +32,7 @@
     }</block></catch></try>
 </unit>
 
-<unit>
+<unit language="C++">
 <try>try <block>{ 
   <try>try <block>{ 
       <expr_stmt><expr><name>a</name></expr>;</expr_stmt> 
@@ -44,12 +44,12 @@
     }</block></catch></try>
 </unit>
 
-<unit>
+<unit language="C++">
 <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo">
   <try>try <block>{}</block> <catch>catch <block>{}</block></catch></try></block></for>
 </unit>
 
-<unit>
+<unit language="C++">
 <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo">
   <try>try <block>{
       <expr_stmt><expr><name>a</name></expr>;</expr_stmt>

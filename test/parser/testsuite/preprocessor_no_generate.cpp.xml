@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="preprocessor">
 
-<unit>
+<unit language="C++">
 <cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 <return>return;</return>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro></cpp:define></unit>
 
 </unit>

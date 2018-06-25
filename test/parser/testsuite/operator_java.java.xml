@@ -1,75 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="operator" filename="operator_java">
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>instanceof</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <import>import <name><name>a</name><operator>.</operator><name>b</name><operator>.</operator><name>*</name></name>;</import>
 </unit>
 
-<unit>
+<unit language="Java">
 <import>import <name><name>a</name><operator>.</operator><name>b</name> <comment type="block">/* */</comment><operator>.</operator><comment type="block">/* */</comment><name>*</name></name>;</import>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;&gt;</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>&gt;&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;&gt;=</operator><operator>&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;&gt;=</operator><operator>&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;&gt;=</operator><operator>&gt;&gt;&gt;</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;&gt;=</operator><operator>&gt;&gt;&gt;=</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 

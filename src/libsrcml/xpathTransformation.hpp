@@ -129,7 +129,7 @@ public :
 
     void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) const;
 
-private :
+public:
     std::string xpath;
     std::string prefix;
     std::string uri;

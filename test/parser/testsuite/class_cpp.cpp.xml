@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="class_cpp">
 
-<unit>
+<unit language="C++">
 <class>class <name>A</name> <block>{<private type="default">
   <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{
     <expr_stmt><expr><call><name>~<name>d</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
@@ -9,27 +9,27 @@
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit language="C++">
 <class>class <block>{<private type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit language="C++">
 <class>class <name>Base1</name> <specifier>final</specifier> <block>{<private type="default"> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit language="C++">
 <macro><name>MACRO</name></macro> <class>class <block>{<private type="default"/>}</block> <decl><name>u</name></decl>;</class>
 </unit>
 
-<unit>
+<unit language="C++">
 <class>class <alignas>alignas<argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></alignas> <name>A</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit language="C++">
 <class>class <alignas>alignas<argument_list>(<argument><expr><operator>(</operator><name>a</name><operator>)</operator></expr></argument>)</argument_list></alignas> <name>A</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit language="C++">
 <class><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>B</name></parameter>&gt;</parameter_list></template>
 class <name>A</name> <block>{<private type="default">
 
@@ -39,19 +39,19 @@ class <name>A</name> <block>{<private type="default">
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit language="C++">
 <class>class <block>{<private type="default"> <typedef>typedef <type><name>a</name></type> <name>b</name>;</typedef> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit language="C++">
 <class>class <block>{<private type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</decl_stmt> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit language="C++">
 <class_decl>class <name>a</name>, <name>b</name>;</class_decl>
 </unit>
 
-<unit>
+<unit language="C++">
 <class_decl>class <name>a</name>, <name>b</name>, <name>c</name>;</class_decl>
 </unit>
 

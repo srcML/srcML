@@ -52,7 +52,7 @@ namespace {
 
         int numUnits = 0;
         while (true) {
-            srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
+            srcml_unit* unit = srcml_archive_read_unit(srcml_arch);
             if (!unit)
                 break;
 
@@ -88,7 +88,7 @@ namespace {
         if (xml_encoding)
             std::cout << "encoding=" << "\"" << xml_encoding << "\"\n";
 
-        srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
+        srcml_unit* unit = srcml_archive_read_unit(srcml_arch);
         int unit_count = 0;
 
         if (!isarchive && unit) {
@@ -108,20 +108,19 @@ namespace {
                 std::cout << "filename=" << "\"" << filename << "\"\n";
         }
 
+        if (unit)
+            srcml_unit_free(unit);
+
         if (long_info) {
 
-            while (unit) {
-                ++unit_count;
+            ++unit_count;
 
-                srcml_unit_free(unit);
-                unit = srcml_archive_read_unit_header(srcml_arch);
+            while (srcml_archive_skip_unit(srcml_arch)) {
+
+                ++unit_count;
             }
 
             std::cout << "units=\"" << unit_count << "\"\n";
-
-        } else if (unit) {
-
-            srcml_unit_free(unit);
         }
     }
 
@@ -130,7 +129,7 @@ namespace {
         int numUnits = 0;
         while (true) {
 
-            srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch);
+            srcml_unit* unit = srcml_archive_read_unit(srcml_arch);
             if (!unit)
                 break;
 

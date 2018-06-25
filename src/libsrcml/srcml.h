@@ -565,6 +565,18 @@ LIBSRCML_DECL struct srcml_archive* srcml_archive_create();
  */
 LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archive* archive);
 
+/** Provides a code of the last error to occur for an archive
+ * @param archive A srcml_archive
+ * @return Error code for last recorded error
+ */
+LIBSRCML_DECL int srcml_archive_error_number(const struct srcml_archive* archive);
+
+/** Provides a description of the last error to occur for an archive
+ * @param archive A srcml_archive
+ * @return A string describing last recorded error
+ */
+LIBSRCML_DECL const char* srcml_archive_error_string(const struct srcml_archive* archive);
+
 /** Append the srcml_unit unit to the srcml_archive archive
  * @param archive A srcml_archive opened for writing
  * @param unit A srcml_unit to output
@@ -601,11 +613,10 @@ LIBSRCML_DECL void srcml_archive_free(struct srcml_archive* archive);
 /** Open up a srcml_archive for writing to a given output file
  * @param archive A srcml_archive
  * @param srcml_filename Name of an output file
- * @param compression Amount of compression (0 for none to 9 as the max)
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive* archive, const char* srcml_filename, unsigned short compression);
+LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive* archive, const char* srcml_filename);
 
 /** Open up a srcml_archive for writing to a given memory buffer
  * @param archive A srcml_archive
@@ -1021,13 +1032,19 @@ LIBSRCML_DECL const char* srcml_archive_check_extension(const struct srcml_archi
  */
 LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive);
 
-/** Read the body of the current unit in the archive
- * @note This is only needed in special cases as the general archive access will perform this automatically
- * @param unit The srcml_unit to read
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
+/** Read the next unit from the archive
+ * @param archive A srcml_archive open for reading
+ * @return The read srcml_unit on success
+ * @return NULL on failure
  */
-LIBSRCML_DECL int srcml_unit_read_body(struct srcml_unit* unit);
+LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive);
+
+/** Skip the next unit from the archive
+ * @param archive A srcml_archive open for reading
+ * @return 1 Succesfully skipped
+ * @return NULL on failure
+ */
+LIBSRCML_DECL int srcml_archive_skip_unit(struct srcml_archive* archive);
 /**@}*/
 
 /**@{ @name XPath query and XSLT transformations */
@@ -1071,27 +1088,6 @@ LIBSRCML_DECL int srcml_append_transform_xpath_attribute(struct srcml_archive* a
 LIBSRCML_DECL int srcml_append_transform_xpath_element(struct srcml_archive* archive, const char* xpath_string,
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element);
-
-/** Append the XPath expression to the list of transformations/queries.
- * Instead of outputting the results in a separate unit tag, output the complete
- * archive marking the XPath results with a user provided element and attribute
- * @param archive A srcml_archive
- * @param xpath_string An XPath expression
- * @param prefix Element prefix
- * @param namespace_uri Element namespace
- * @param element Element name
- * @param attr_prefix An optional attribute prefix for the element
- * @param attr_namespace_uri An optional attribute namespace for the element
- * @param attr_name An optional attribute name for the element
- * @param attr_value An optional attribute value for the element
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_append_transform_xpath_element_attribute(struct srcml_archive* archive, const char* xpath_string,
-                                                            const char* prefix, const char* namespace_uri,
-                                                            const char* element,
-                                                            const char* attr_prefix, const char* attr_namespace_uri,
-                                                            const char* attr_name, const char* attr_value);
 #ifdef WITH_LIBXSLT
 /** Append an XSLT program at the designated filename path to the list of transformations/queries
  * @param archive A srcml_archive
@@ -1255,6 +1251,18 @@ LIBSRCML_DECL struct srcml_unit* srcml_unit_create(struct srcml_archive* archive
  * @return The cloned unit
  */
 LIBSRCML_DECL struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit);
+
+/** Provides a code of the last error to occur for a unit
+ * @param unit A srcml_unit
+ * @return A code for the last recorded error
+ */
+LIBSRCML_DECL int srcml_unit_error_number(const struct srcml_unit* unit);
+
+/** Provides a description of the last error to occur for a unit
+ * @param unit A srcml_unit
+ * @return A string describing last recorded error
+ */
+LIBSRCML_DECL const char* srcml_unit_error_string(const struct srcml_unit* unit);
 
 /** Free an allocated unit
  * @param unit The srcml unit to free
@@ -1430,11 +1438,10 @@ LIBSRCML_DECL int srcml_unit_parse_io(struct srcml_unit* unit, void * context, s
  * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed
  * @param unit A srcml unit opened for reading
  * @param src_filename Name of a file to output contents of unit as source
- * @param compression Amount of compression (gzip) to apply. Values are 0 - 9
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const char* src_filename, unsigned short compression);
+LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const char* src_filename);
 
 /** Convert the srcML in a unit into source code and place it into a buffer
  * The buffer is allocated in the function and needs to be freed after using.

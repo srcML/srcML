@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="function_pointer" filename="function_pointer_cpp">
 
-<unit>
+<unit language="C++">
 <function><type><name>bool</name></type> <name><name>Blit</name><operator>::</operator><name>setShader</name></name><parameter_list>(<parameter><decl><type><name>ShaderId</name></type> <name>source</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>profile</name></decl></parameter>,
 <parameter><function_decl><type><name>D3DShaderType</name> <modifier>*</modifier></type>(<name><name>rx</name><operator>::</operator><name>Renderer9</name><operator>::</operator><modifier>*</modifier><name>createShader</name></name>)<parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>DWORD</name> <modifier>*</modifier></type></decl></parameter>, <parameter><decl><type><name>size_t</name></type> <name>length</name></decl></parameter>)</parameter_list></function_decl></parameter>,
 <parameter><function_decl><type><name>HRESULT</name></type> (<name>WINAPI</name> <name><name>IDirect3DDevice9</name><operator>::</operator><modifier>*</modifier><name>setShader</name></name>)<parameter_list>(<parameter><decl><type><name>D3DShaderType</name><modifier>*</modifier></type></decl></parameter>)</parameter_list></function_decl></parameter>)</parameter_list> <block>{}</block></function>

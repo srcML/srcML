@@ -39,7 +39,7 @@ int src_input_filelist(ParseQueue& queue,
 
     archive* arch = libarchive_input_file(input_file);
     if (!arch)
-        return 0;
+        return -1;
 
     archive_entry *entry = 0;
     int status = archive_read_next_header(arch, &entry);
@@ -77,8 +77,10 @@ int src_input_filelist(ParseQueue& queue,
 #endif
 
     // read the file into a buffer
-    while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK)
+    // @todo Shouldn't we be free'ing this buffer?
+    while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
            vbuffer.insert(vbuffer.end(), buffer, buffer + size);
+    }
 
     char* line = &vbuffer[0];
     while (line < &vbuffer[vbuffer.size() - 1]) {

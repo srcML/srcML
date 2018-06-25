@@ -23,6 +23,7 @@
 #include <sax2_srcsax_handler.hpp>
 #include <string>
 #include <algorithm>
+#include <cstring>
 
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
@@ -115,6 +116,21 @@ static int reparse_root(void* ctx) {
     xmlSAXHandler roottagsax;
     memset(&roottagsax, 0, sizeof(roottagsax));
     roottagsax.initialized    = XML_SAX2_MAGIC;
+    xmlSetStructuredErrorFunc(ctx, [](void * userData, 
+                     xmlErrorPtr error) {
+
+        auto ctxt = (xmlParserCtxtPtr) userData;
+        if (ctxt == nullptr)
+            return;
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
+        if (state == nullptr)
+            return;
+
+        // @todo Find out real filename to insert in error message
+        // @todo Figure out how to get where error is noted
+        fprintf(stderr, "%s:%d:%d xml error: %s ", error->file, error->line, error->int2, error->message);
+        exit(1);
+    });
 
     roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                      int nb_namespaces, const xmlChar** namespaces,
@@ -128,13 +144,12 @@ static int reparse_root(void* ctx) {
             return;
 
         // call the upper-level start_root
-        if (state->context->handler->start_root)
-            state->context->handler->start_root(state->context, (const char*) localname, 
+        state->context->handler->start_root(state->context, (const char*) localname, 
                             (const char*) prefix, (const char*) URI,
                             nb_namespaces, namespaces, nb_attributes, attributes);
 
         // call the upper-level start_unit for non-archives
-        if (!state->is_archive && state->context->handler->start_unit)
+        if (!state->context->is_archive)
             state->context->handler->start_unit(state->context, (const char*) localname, 
                     (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     };
@@ -186,8 +201,7 @@ void start_document(void* ctx) {
         state->context->encoding = (const char *)ctxt->input->encoding;
 
     // process any upper layer start document handling
-    if (state->context->handler->start_document)
-        state->context->handler->start_document(state->context);
+    state->context->handler->start_document(state->context);
 
     SRCSAX_DEBUG_END("");
 }
@@ -227,19 +241,12 @@ void end_document(void* ctx) {
 //        fprintf(stderr, "srcml: %s\n", errmsg);
     }
 
-    if (state->context->terminate)
-        return;
-
     // never found any content, so end the root
 //    if (state->mode != END_ROOT && state->mode != START)
 //        end_root(ctx, state->root.localname, state->root.prefix, state->root.URI);
 
-    if (state->context->terminate)
-        return;
-
     // process any upper layer end document handling
-    if (state->context->handler->end_document)
-        state->context->handler->end_document(state->context);
+    state->context->handler->end_document(state->context);
 
     SRCSAX_DEBUG_END("");
 }
@@ -279,16 +286,12 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // wait to call upper-level callbacks until we know whether this is an archive or not
     // this is done in first_start_element()
 
-    if (state->context->terminate)
-        return;
 /*
     for (auto citr : state->meta_tags) {
 
         state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char*) citr.prefix, (const char*) citr.URI,
                                                           citr.nb_namespaces, citr.namespaces.data(),
                                                           citr.nb_attributes, citr.attributes.data());
-        if (state->context->terminate)
-            return;
     }
 */
     // save the root start tag because we are going to parse it again to generate proper start_root() and start_unit()
@@ -322,11 +325,10 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // and not delay it
     bool isempty = ctxt->input->cur[0] == '/';
     if (isempty)
-        state->context->is_archive = state->is_archive = false;
-
+        state->context->is_archive = false;
 
     // call the upper-level start_root when an empty element
-    if (isempty && state->context->handler->start_root) {
+    if (isempty) {
         state->rootcalled = true;
         state->context->handler->start_root(state->context, (const char*) localname, 
                             (const char*) prefix, (const char*) URI,
@@ -334,14 +336,13 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     }
 
     // assume this is not a solo unit, but delay calling the upper levels until we are sure
-    auto save = state->context->handler->start_unit;
-    state->context->handler->start_unit = 0;
+    state->callupper = false;
     start_unit(ctx, localname, prefix, URI, nb_namespaces, namespaces, nb_attributes, 0, attributes);
-    state->context->handler->start_unit = save;
+    state->callupper = true;
     state->mode = ROOT;
 
     // call the upper-level start_unit for non-archives
-    if (isempty && !state->is_archive && state->context->handler->start_unit) {
+    if (isempty && !state->context->is_archive) {
         state->context->handler->start_unit(state->context, (const char*) localname, 
                 (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     }
@@ -387,11 +388,9 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         return;
     }
 */
-    if (state->context->terminate)
-        return;
 
     // archive when the first element after the root is <unit>
-    state->context->is_archive = state->is_archive = (localname == UNIT_ENTRY);
+    state->context->is_archive = (localname == UNIT_ENTRY);
 
     // turn off first_start_element() handling
     ctxt->sax->startElementNs = &start_element;
@@ -404,7 +403,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     reparse_root(ctx);
 
     // decide if this start element is for a unit (archive), or just a regular element (solo unit)
-    if (state->is_archive) {
+    if (state->context->is_archive) {
         
         // restart unit count due to call of start_unit() in start_root() when we assumed a solo unit
         state->unit_count = 0;
@@ -464,7 +463,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         if (pos >= 0) {
             // merge the namespaces from the root into this one
             state->unitsrcml.assign((const char*) state->base, pos);
-            if (state->is_archive) {
+            if (state->context->is_archive) {
                 state->unitsrcml.append(state->rootnsstr);
             }
             state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
@@ -479,11 +478,9 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // update position
     state->base = ctxt->input->cur + 1;
 
-    if (state->context->terminate)
-        return;
-
     // upper-level start unit handling
-    if (state->context->handler->start_unit)
+    // note: In order to nop this, it is set to 0 sometimes, so have to check
+    if (state->callupper)
         state->context->handler->start_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI,
                                             nb_namespaces, namespaces,
                                             nb_attributes, attributes);
@@ -535,8 +532,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     state->mode = END_UNIT;
 
-    if (state->context->handler->end_unit)
-        state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+    state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
     ctxt->sax->startElementNs = &start_unit;
 
@@ -573,12 +569,10 @@ void end_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
         // Basically, reparse the root start tag, collected when first parsed
         reparse_root(ctx);
 
-        if (state->context->handler->end_unit)
-            state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+        state->context->handler->end_unit(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
     }
 
-    if (state->context->handler->end_root)
-        state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
+    state->context->handler->end_root(state->context, (const char *)localname, (const char *)prefix, (const char *)URI);
 
     SRCSAX_DEBUG_END(localname);
 }
@@ -699,7 +693,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     // At this point, we have the end of a unit
 
-    if (ctxt->nameNr == 2 || !state->is_archive) {
+    if (ctxt->nameNr == 2 || !state->context->is_archive) {
 
         end_unit(ctx, localname, prefix, URI);
     }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="package" filename="package_java">
 
-<unit>
+<unit language="Java">
 <package>package <name>a</name>;</package>
 </unit>
 
-<unit>
+<unit language="Java">
 <package>package <name><name>a</name><operator>.</operator><name>b</name></name>;</package>
 </unit>
 

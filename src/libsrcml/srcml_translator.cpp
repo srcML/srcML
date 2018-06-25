@@ -119,21 +119,12 @@ void srcml_translator::close() {
  */
 void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
-    if (first) {
-  
-        // Open for write;
-        out.initWriter();
-    }
     first = false;
 
     const int lang = getLanguage();
     if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
       lang & Language::LANGUAGE_OBJECTIVE_C)
         options |= SRCML_OPTION_CPP;
-
-    // output as inner unit
-    if (isoption(options, SRCML_OPTION_ARCHIVE))
-        out.setDepth(1);
 
     try {
 
@@ -172,9 +163,6 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
     catch (...) {
         fprintf(stderr, "srcML translator error\n");
     }
-
-    // set back to root
-    out.setDepth(0);
 }
 
 void srcml_translator::prepareOutput() {
@@ -184,9 +172,6 @@ void srcml_translator::prepareOutput() {
     if (!first)
         return;
     first = false;
-
-    // Open for write;
-    out.initWriter();
 
     if ((options & SRCML_OPTION_XML_DECL) > 0)
       out.outputXMLDecl();
@@ -263,64 +248,6 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
     return true;
 }
 
-/**
- * add_unit
- * @param unit srcML to add to archive/non-archive with configuration options
- * @param xml the xml to output
- *
- * Add a unit as string directly to the archive.  If not an archive
- * and supplied unit does not have src namespace add it.  Also, write out
- * a supplied hash as part of output unit if specified.
- * Can not be in by element mode.
- *
- * @returns if succesfully added.
- */
-bool srcml_translator::add_unit(const char* xml, int size) {
-
-    // @todo should not let size be 0
-
-    if (is_outputting_unit)
-        return false;
-
-    prepareOutput();
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0) {
-        out.outputUnitSeparator();
-    }
-
-    if (size > 0)
-        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
-
-    return true;
-}
-
-/**
- * add_unit
- * @param unit srcML to add to archive/non-archive with configuration options
- * @param xml the xml to output
- *
- * Add a unit as string directly to the archive.  If not an archive
- * and supplied unit does not have src namespace add it.  Also, write out
- * a supplied hash as part of output unit if specified.
- * Can not be in by element mode.
- *
- * @returns if succesfully added.
- */
-bool srcml_translator::add_unit(xmlNodePtr node, xmlDocPtr doc) {
-
-    if (is_outputting_unit)
-        return false;
-
-    prepareOutput();
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0) {
-        out.outputUnitSeparator();
-    }
-
-    xmlNodeDumpOutput(out.output_buffer, doc, node, 0, 0, 0);
-
-    return true;
-}
 
 /**
  * add_start_unit
@@ -338,9 +265,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
         return false;
     is_outputting_unit = true;
 
-    if (first) {
-        out.initWriter();
-    }
     first = false;
  
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
@@ -348,9 +272,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
     if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
       lang & Language::LANGUAGE_OBJECTIVE_C)
         options |= SRCML_OPTION_CPP;
-
-    if (isoption(options, SRCML_OPTION_ARCHIVE))
-        out.setDepth(1);
 
     // @todo Why are we saving the options then restoring them?
     OPTION_TYPE save_options = options;
@@ -367,8 +288,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
                   false);
 
     options = save_options;
-
-    out.setDepth(0);
 
     return true;
 }
@@ -417,7 +336,8 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
 
     ++output_unit_depth;
 
-    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST uri) != -1;
+    /** @todo figure out how to register namespaces so this actualy works */
+    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, /*BAD_CAST uri*/0) != -1;
 }
 
 /**

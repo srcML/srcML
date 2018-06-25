@@ -82,10 +82,14 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
     // Call appropriate XPath transform
     if (element && attribute) {
 
-        return srcml_append_transform_xpath_element_attribute (in_arch, transform_input.c_str(),
+        int status = srcml_append_transform_xpath_element(in_arch, transform_input.c_str(),
             element->prefix->c_str(),
             element_uri,
-            element->name->c_str(),
+            element->name->c_str());
+        if (status != SRCML_STATUS_OK)
+            return -1;
+
+        return srcml_append_transform_xpath_attribute(in_arch, transform_input.c_str(),
             attribute->prefix->c_str(),
             attribute_uri,
             attribute->name->c_str(),
@@ -93,14 +97,14 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
     } else if (element) {
 
-        return srcml_append_transform_xpath_element (in_arch, transform_input.c_str(),
+        return srcml_append_transform_xpath_element(in_arch, transform_input.c_str(),
             element->prefix->c_str(),
             element_uri,
             element->name->c_str());
 
     } else if (attribute) {
 
-        return srcml_append_transform_xpath_attribute (in_arch, transform_input.c_str(),
+        return srcml_append_transform_xpath_attribute(in_arch, transform_input.c_str(),
             attribute->prefix->c_str(),
             attribute_uri,
             attribute->name->c_str(),
@@ -194,7 +198,7 @@ void transform_srcml(const srcml_request_t& /* srcml_request */,
     else if (contains<FILE*>(output))
         status = srcml_archive_write_open_FILE(out_arch, output);
     else
-        status = srcml_archive_write_open_filename(out_arch, output.c_str(), 0);
+        status = srcml_archive_write_open_filename(out_arch, output.c_str());
     if (status != SRCML_STATUS_OK) {
         SRCMLstatus(ERROR_MSG, "srcml: error with output archive for transformation");
         exit(-1);

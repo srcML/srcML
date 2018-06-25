@@ -1,7 +1,7 @@
 /**
- * @file pipe.hpp
+ * @file input_stdin.hpp
  *
- * @copyright Copyright (C) 2017 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2018 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
@@ -20,15 +20,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef PIPE_HPP
-#define PIPE_HPP
+#ifndef INPUT_STDIN_HPP
+#define INPUT_STDIN_HPP
 
-#include <srcml_input_src.hpp>
 #include <srcml_cli.hpp>
 
-// has to be a typedef for older gcc compilers
-typedef void (*pipe_process)(const srcml_request_t&, const srcml_input_t&, const srcml_output_dest&);
-
-void input_pipe(srcml_input_src& input, pipe_process process);
+// adjust input for stdin
+void input_stdin(srcml_request_t& srcml_request);
 
 #endif

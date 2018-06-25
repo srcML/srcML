@@ -2251,6 +2251,11 @@ if_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_CONDITION | MODE_EXPECT);
         }
         IF
+        {
+            if (LA(1) == CONSTEXPR) {
+                constexpr_specifier();
+            }
+        }
 ;
 
 /*
@@ -5563,6 +5568,14 @@ template_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
         TEMPLATE
+;
+
+// match a single word specifier
+constexpr_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        CONSTEXPR
 ;
 
 // C++11 specifier

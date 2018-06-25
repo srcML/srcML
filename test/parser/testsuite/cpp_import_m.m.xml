@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="preprocessor" filename="cpp_import">
 
-<unit>
+<unit language="Objective-C">
 <cpp:import>#<cpp:directive>import</cpp:directive> <cpp:file>"abc"</cpp:file></cpp:import>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <cpp:import>#<cpp:directive>import</cpp:directive> <cpp:file>"asm/if.h"</cpp:file></cpp:import>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <cpp:import>#<cpp:directive>import</cpp:directive> <cpp:file>&lt;abc&gt;</cpp:file></cpp:import>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <cpp:import>#<cpp:directive>import</cpp:directive> <cpp:file>&lt;asm/if.h&gt;</cpp:file></cpp:import>
 </unit>
 
-<unit>
+<unit language="Objective-C">
 <cpp:import>#<cpp:directive>import</cpp:directive></cpp:import>
 </unit>
 

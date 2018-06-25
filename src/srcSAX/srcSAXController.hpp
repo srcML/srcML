@@ -60,15 +60,6 @@ public :
 
     /**
      * srcSAXController
-     * @param filename name of a file
-     * @param encoding the xml encoding
-     *
-     * Constructor
-     */
-    srcSAXController(const char* filename, const char* encoding = 0);
-
-    /**
-     * srcSAXController
      * @param input a parser input buffer
      *
      * Constructor

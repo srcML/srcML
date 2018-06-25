@@ -1,79 +1,79 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="decl" filename="decl_cs">
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><specifier>protected</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><specifier>public</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><specifier>public</specifier>  <type><specifier>readonly</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><specifier>public</specifier> <type><specifier>volatile</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>int</name><modifier>?</modifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>int</name></type> <name>multiDimensionalArray1</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>int</name></type> <name>multiDimensionalArray2</name> <init>= <expr><block>{ <expr><block>{ <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr> }</block></expr>, <expr><block>{ <expr><literal type="number">4</literal></expr>, <expr><literal type="number">5</literal></expr>, <expr><literal type="number">6</literal></expr> }</block></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name><name>int</name><index>[<expr/>,<expr/>]</index></name></type> <name>multiDimensionalArray1</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name><name>int</name><index>[<expr/>,<expr/>]</index></name></type> <name>multiDimensionalArray2</name> <init>= <expr><block>{ <expr><block>{ <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr> }</block></expr>, <expr><block>{ <expr><literal type="number">4</literal></expr>, <expr><literal type="number">5</literal></expr>, <expr><literal type="number">6</literal></expr> }</block></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name><name>int</name><index>[<expr/>, <expr/>,<expr/>]</index></name></type> <name>array1</name> <init>= <expr><operator>new</operator> <name><name>int</name><index>[<expr><literal type="number">4</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>native</name></type> <name>n</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>strictfp</name></type> <name>s</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>transient</name></type> <name>s</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><specifier>volatile</specifier> <name>var</name></type> <name>signal</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>union</name></type> <name>signal</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>restrict</name></type> <name>restrict</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C#">
 <decl_stmt><decl><type><name>alias</name></type> <name>alias</name></decl>;</decl_stmt>
 </unit>
 

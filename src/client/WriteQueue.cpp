@@ -28,6 +28,8 @@ WriteQueue::WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool
             [](std::shared_ptr<ParseRequest> r1, std::shared_ptr<ParseRequest> r2) {
                 return r1->position > r2->position;
             }) {
+
+    write_thread = std::thread(&WriteQueue::process, this);
 }
 
 /* writes out the current srcml */
@@ -49,26 +51,11 @@ void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
     cv.notify_one();
 }
 
-void WriteQueue::eos() {
-
-	// schedule the last one
-    std::shared_ptr<ParseRequest> pvalue(new ParseRequest);
-	pvalue->position = maxposition + 1;
-    pvalue->status = 1000;
-    schedule(pvalue);
-}
-
-void WriteQueue::start() {
-
-    // actual thread created here (and not in constructor) because
-    // at this point we know all object data members are created
-    // and initialized correctly
-    write_thread = std::thread(&WriteQueue::process, this);
-}
-
 void WriteQueue::stop() {
 
-    eos();
+    completed = true;
+
+    cv.notify_one();
 
     write_thread.join();
 }
@@ -84,6 +71,8 @@ void WriteQueue::process() {
             std::unique_lock<std::mutex> lock(qmutex);
 
             while (q.empty() || (ordered && (q.top()->position != position + 1))) {
+                if (q.empty() && completed)
+                    return;
                 cv.wait(lock);
             }
 
@@ -91,9 +80,6 @@ void WriteQueue::process() {
             q.pop();
         }
         ++position;
-
-        if (pvalue->status == 1000)
-            break;
 
         // record real units written
         if (pvalue->status == SRCML_STATUS_OK)

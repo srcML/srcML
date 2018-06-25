@@ -30,7 +30,6 @@
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
 #include <src_input_filelist.hpp>
-#include <src_input_stdin.hpp>
 #include <src_input_text.hpp>
 #include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
@@ -56,43 +55,50 @@ int srcml_handler_dispatch(ParseQueue& queue,
         srcml_input_src uninput = input;
 
         // input must go through libcurl pipe
-        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
-            return 0;
+        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput)) {
+            SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml URL %s", uninput.filename);
+            return -1;
+        }
 
         // may have some compressions/archives
-        if (!uninput.compressions.empty())
+        // @todo What if there is multiple files in the archive?
+        if (!uninput.compressions.empty() || !uninput.archives.empty())
             uninput.fd = input_archive(uninput);
 
         return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+    }
 
-    } else if (input.protocol == "text") {
+    if (input.protocol == "text") {
 
         return src_input_text(queue, srcml_arch, srcml_request, input);
+    }
 
-    } else if (input.protocol == "filelist") {
+    if (input.protocol == "filelist") {
 
         srcml_archive_enable_full_archive(srcml_arch);
 
         return src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
+    }
 
-    } else if (input.protocol == "file" && input.isdirectory) {
+    if (input.protocol == "file" && input.isdirectory) {
 
         return src_input_filesystem(queue, srcml_arch, srcml_request, input);
-
-    } else if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
-       
-        return src_input_file(queue, srcml_arch, srcml_request, input);
-
-    } else {
-
-        srcml_input_src uninput = input;
-
-        // input must go through libcurl pipe
-        if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput))
-            return 0;
-
-        return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
     }
+
+    if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
+
+        return src_input_file(queue, srcml_arch, srcml_request, input);
+    }
+
+    srcml_input_src uninput = input;
+
+    // input must go through libcurl pipe
+    if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput)){
+        SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml URL %s", uninput.filename);
+        return -1;
+    }
+
+    return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
 }
 
 // create srcml from the current request
@@ -109,16 +115,18 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // open the output
     int nstatus = SRCML_STATUS_OK;
-    if (contains<int>(destination)) {
+    if (!option(SRCML_COMMAND_NOARCHIVE)) {
+        if (contains<int>(destination)) {
 
-        nstatus = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
+            nstatus = srcml_archive_write_open_fd(srcml_arch, *destination.fd);
 
-    } else {
+        } else {
 
-        nstatus = srcml_archive_write_open_filename(srcml_arch, destination.c_str(), 0);
+            nstatus = srcml_archive_write_open_filename(srcml_arch, destination.c_str());
+        }
+        if (nstatus != SRCML_STATUS_OK)
+            return;
     }
-    if (nstatus != SRCML_STATUS_OK)
-        return;
 
     // set options for the output srcml archive
 
@@ -286,7 +294,6 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // write queue for output of parsing
     WriteQueue write_queue(log, destination, !option(SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER));
-    write_queue.start();
 
     // parsing queue
     ParseQueue parse_queue(srcml_request.max_threads, &write_queue);
@@ -308,16 +315,18 @@ void create_srcml(const srcml_request_t& srcml_request,
     // wait for the writing queue to finish
     write_queue.stop();
 
+    if (SRCMLStatus::errors())
+        status = -1;
+
     if (status != -1) {
         srcml_archive_close(srcml_arch);
     }
     srcml_archive_free(srcml_arch);
 
-    // if we were writing to a file descriptor, then close it
-    if (contains<int>(destination))
+    // @todo Why doesn't the srcml_archive_close() close this? Is that what libxml does?
+    if (destination.fd)
         close(*destination.fd);
 
-    // have to wait to exit
     if (SRCMLStatus::errors())
         exit(1);
 

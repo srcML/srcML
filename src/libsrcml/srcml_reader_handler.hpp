@@ -104,9 +104,6 @@ private :
     /** terminate */
     bool terminate = false;
 
-    /** track if empty unit */
-    bool is_empty = false;
-
     /** indicate if we need to wait on the root */
     bool wait_root = true;
 
@@ -115,12 +112,6 @@ private :
 
     /** srcDiff namespace */
     bool issrcdiff = false;
-
-    /** number of newlines in unit */
-    int loc = 0;
-
-    /** last character read in */
-    char lastchar = 0;
 
     /**
      * meta_tag
@@ -307,7 +298,7 @@ public :
 
         std::unique_lock<std::mutex> lock(mutex);
 
-        cond.notify_all();
+        cond.notify_one();
     }
 
     /**
@@ -318,7 +309,7 @@ public :
     void resume_and_wait() {
 
         std::unique_lock<std::mutex> lock(mutex);
-        cond.notify_all();
+        cond.notify_one();
         if (is_done)
             return;
 
@@ -334,7 +325,7 @@ public :
 
         is_done = true;
         
-        cond.notify_all();
+        cond.notify_one();
     }
 
     /**
@@ -494,7 +485,7 @@ public :
                 if (terminate)
                     stop_parser();
                 wait_root = false;
-                cond.notify_all();
+                cond.notify_one();
                 cond.wait(lock);
                 read_root = true;        
             }
@@ -505,8 +496,6 @@ public :
                 return;
             }
         }
-
-        is_empty = true;
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
@@ -550,16 +539,12 @@ public :
             if (terminate)
                 stop_parser();
 
-            cond.notify_all();
+            cond.notify_one();
             cond.wait(lock);
 
         }
 
         state->collect_unit_body = collect_unit_body;
-
-        // number of newlines reset
-        loc = 0;
-        lastchar = 0;
 
         if (terminate)
             stop_parser();
@@ -614,8 +599,6 @@ public :
             }
         }
 
-        is_empty = true;
-
         if (terminate)
             stop_parser();
 
@@ -639,31 +622,13 @@ public :
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-        if (!read_root) {
-
-            {            
-                std::unique_lock<std::mutex> lock(mutex);
-                if (terminate)
-                    stop_parser();
-                wait_root = false;
-                cond.notify_all();
-                cond.wait(lock);
-                read_root = true;
-            }
-
-            if (terminate) {
-
-                stop_parser();
-                return;
-            }
-        }
 
         {
             std::unique_lock<std::mutex> lock(mutex);
             if (terminate)
                 stop_parser();
             is_done = true;
-            cond.notify_all();
+            cond.notify_one();
         }
 
         if (terminate)
@@ -688,10 +653,6 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        // if the last character read in did not have a newline, add one to the loc
-        if (lastchar && lastchar != '\n')
-            ++loc;
-
         if (issrcdiff)
             srcdiff_stack.pop();
 
@@ -709,11 +670,9 @@ public :
             // pause
             std::unique_lock<std::mutex> lock(mutex);
             if (terminate) stop_parser();
-            cond.notify_all();
+            cond.notify_one();
             cond.wait(lock);
         }
-
-        is_empty = false;
 
         if (terminate)
             stop_parser();
@@ -756,8 +715,6 @@ public :
             }
         }
 
-        is_empty = false;
-
         if (terminate)
             stop_parser();
 
@@ -790,15 +747,6 @@ public :
             if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE)
                 return;
         }        
-
-        is_empty = false;
-
-        // update LOC
-        loc += std::count(ch, ch + len, '\n');
-
-        // record the last character so we can determine final line
-        if (len)
-            lastchar = ch[len - 1];
 
         if (terminate)
             stop_parser();

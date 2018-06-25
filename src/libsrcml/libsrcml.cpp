@@ -176,7 +176,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     if (srcml_check_extension(input_filename)) {
 
-        srcml_archive_write_open_filename(&global_archive, output_filename, 0);
+        srcml_archive_write_open_filename(&global_archive, output_filename);
         srcml_unit * unit = srcml_unit_create(&global_archive);
 
         srcml_archive_disable_full_archive(&global_archive);
@@ -236,8 +236,8 @@ int srcml(const char* input_filename, const char* output_filename) {
         }
 
         srcml_archive_read_open_filename(&global_archive, input_filename);
-        auto unit = srcml_archive_read_unit_header(&global_archive);
-        srcml_unit_unparse_filename(unit, output_filename, 0);
+        auto unit = srcml_archive_read_unit(&global_archive);
+        srcml_unit_unparse_filename(unit, output_filename);
         srcml_unit_free(unit);
     }
 

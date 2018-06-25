@@ -21,24 +21,17 @@
 
 <xsl:import href="str.replace.function.xsl"/>
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="ISO-8859-1" standalone="yes"/>
+<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
-<xsl:param name="language" select="'Java'"/>
+<xsl:variable name="language" select="/src:unit/@language"/>
 
-<!-- trap the current language attribute -->
-<!--
-<xsl:template match="/src:unit">
-  <unit>
-    <xsl:copy-of select="@*[name()!='language']"/>
+
+
+<xsl:template match="/src:unit/src:unit">
+<xsl:copy>
     <xsl:attribute name="language"><xsl:value-of select="$language"/></xsl:attribute>
-
-    <xsl:apply-templates select="node()"/>
-  </unit>
-</xsl:template>
--->
-
-<xsl:template match="/src:unit/@language">
-    <xsl:attribute name="language"><xsl:value-of select="$language"/></xsl:attribute>
+    <xsl:apply-templates select="@* | node()"/>
+</xsl:copy>
 </xsl:template>
 
 <!-- default identity copy -->
