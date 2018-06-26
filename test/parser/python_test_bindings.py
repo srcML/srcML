@@ -24,45 +24,17 @@ import os
 from ctypes import cdll, c_int, c_void_p, c_char_p, c_ulonglong, c_size_t, pointer
 
 LIBSRCML_PATH=""
-if os.path.exists('../bin/libsrcml.dylib') :
-    LIBSRCML_PATH = "../bin/libsrcml.dylib"
-elif os.path.exists('../bin/libsrcml.so') :
-    LIBSRCML_PATH = "../bin/libsrcml.so"
-elif os.path.exists('../bin/libsrcml.dll') :
-    LIBSRCML_PATH = "../bin/libsrcml.dll"
-elif os.path.exists('../../bin/libsrcml.dylib') :
+
+if os.path.exists('../../bin/libsrcml.dylib') :
     LIBSRCML_PATH = "../../bin/libsrcml.dylib"
 elif os.path.exists('../../bin/libsrcml.so') :
     LIBSRCML_PATH = "../../bin/libsrcml.so"
 elif os.path.exists('../../bin/libsrcml.dll') :
     LIBSRCML_PATH = "../../bin/libsrcml.dll"
-elif os.path.exists('../bin/Release/libsrcml.dylib') :
-    LIBSRCML_PATH = "../bin/Release/libsrcml.dylib"
-elif os.path.exists('../bin/Release/libsrcml.so') :
-    LIBSRCML_PATH = "../bin/Release/libsrcml.so"
-elif os.path.exists('../bin/Release/libsrcml.dll') :
-    LIBSRCML_PATH = "../bin/Release/libsrcml.dll"
-elif os.path.exists('../bin/Debug/libsrcml.dylib') :
-    LIBSRCML_PATH = "../bin/Debug/libsrcml.dylib"
-elif os.path.exists('../bin/Debug/libsrcml.so') :
-    LIBSRCML_PATH = "../bin/Debug/libsrcml.so"
-elif os.path.exists('../bin/Debug/libsrcml.dll') :
-    LIBSRCML_PATH = "../bin/Debug/libsrcml.dll"
-# Note: Some of the following do not make sense
-# to be in /usr/bin or /usr/local/bin, so could be
-# weeded out
-elif os.path.exists('/usr/local/lib/libsrcml.dylib') :
-    LIBSRCML_PATH = "/usr/local/lib/libsrcml.dylib"
-elif os.path.exists('/usr/local/lib/libsrcml.so') :
-    LIBSRCML_PATH = "/usr/local/lib/libsrcml.so"
-elif os.path.exists('/usr/local/lib/libsrcml.dll') :
-    LIBSRCML_PATH = "/usr/local/lib/libsrcml.dll"
-elif os.path.exists('/usr/lib/libsrcml.dylib') :
-    LIBSRCML_PATH = "/usr/lib/libsrcml.dylib"
-elif os.path.exists('/usr/lib/libsrcml.so') :
-    LIBSRCML_PATH = "/usr/lib/libsrcml.so"
-elif os.path.exists('/usr/lib/libsrcml.dll') :
-    LIBSRCML_PATH = "/usr/lib/libsrcml.dll"
+elif os.path.exists('../../bin/Release/libsrcml.dll') :
+    LIBSRCML_PATH = "../../bin/Release/libsrcml.dll"
+elif os.path.exists('../../bin/Debug/libsrcml.dll') :
+    LIBSRCML_PATH = "../../bin/Debug/libsrcml.dll"
 
 libsrcml = cdll.LoadLibrary(LIBSRCML_PATH)
 
