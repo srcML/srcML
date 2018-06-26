@@ -93,6 +93,7 @@ int src_input_filesystem(ParseQueue& queue,
 
         // process the first directory on the dirs stack
         auto darchive = archive_read_disk_new();
+        archive_read_disk_set_symlink_physical(darchive);
         archive_read_disk_open(darchive, dirs.front().c_str());
         dirs.pop_front();
 
@@ -107,10 +108,11 @@ int src_input_filesystem(ParseQueue& queue,
                 first = false;
                 continue;
             }
-    
-            if (archive_entry_filetype(entry) & AE_IFDIR)
+
+            // @todo symbolic links?    
+            if (archive_entry_filetype(entry) == AE_IFDIR)
                 curdirs.push_back(archive_entry_pathname(entry));
-            else
+            else if (archive_entry_filetype(entry) == AE_IFREG)
                 files.push_back(archive_entry_pathname(entry));
         }
 
