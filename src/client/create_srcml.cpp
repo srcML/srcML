@@ -38,7 +38,6 @@
 #include <input_file.hpp>
 #include <curl_input_file.hpp>
 #include <input_curl.hpp>
-#include <boost/filesystem.hpp>
 #include <iostream>
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
