@@ -24,24 +24,6 @@ list(REMOVE_ITEM SRCML_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcml.cpp)
 
 srcMLExec(srcml "srcml.cpp;${SRCML_HEADERS};${SRCML_SOURCE}" srcml_shared ${SRCML_LIBRARIES})
 
-if(WIN32)
-    #include_directories(${CMAKE_CURRENT_SOURCE_DIR}/res)
-    #add_executable(srcml srcml.cpp ${SRCML_HEADERS} ${SRCML_SOURCE} res/srcml_win_resources.rc)
-    #target_link_libraries(srcml  srcml_shared ${SRCML_LIBRARIES})
-    
-    if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-        set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-        add_custom_command(TARGET srcml POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${PROJECT_SOURCE_DIR}/deps/${BUILD_ARCH}/$<CONFIGURATION>/bin"
-        $<TARGET_FILE_DIR:srcml>)
-    elseif(WIN32)
-        set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
-    endif()
-else()
-    
-endif()
-
 if(APPLE)							     
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"-u\" \"-r\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
 elseif(NOT WIN32)

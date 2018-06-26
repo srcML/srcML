@@ -24,7 +24,24 @@ set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
 
 set(CPACK_NSIS_MODIFY_PATH ON)
 if(WIN32)
-    set(MSVC_REDIST ${WINDOWS_DEP_PATH}/tools/VC_redist.${BUILD_ARCH}.exe)
+    # Checking the correct version of visual studio we are only supporting
+    # the last 3 versions of the installer. and ONLY the x86 version (we don't have a
+    # 64 bit build of any of the required libraries needed to create a 64 bit version.)
+    if (MSVC12)
+        set(MSVC_VERSION_NUMBER "12.0")
+    elseif(MSVC11)
+        set(MSVC_VERSION_NUMBER "11.0")
+    elseif(MSVC10)
+        set(MSVC_VERSION_NUMBER "10.0")
+    endif()
+    find_program(MSVC_REDIST NAMES vcredist_x86.exe
+      PATHS
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VCExpress\\${MSVC_VERSION_NUMBER};InstallDir]/../../SDK/v${MSVC_VERSION_NUMBER}/BootStrapper/Packages/"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\VisualStudio\\${MSVC_VERSION_NUMBER};InstallDir]/../../SDK/v${MSVC_VERSION_NUMBER}/BootStrapper/Packages/"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\${MSVC_VERSION_NUMBER};InstallDir]/../../SDK/v${MSVC_VERSION_NUMBER}/BootStrapper/Packages/"
+      "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Wow6432Node\\Microsoft\\VisualStudio\\${MSVC_VERSION_NUMBER};InstallDir]/../../VC/redist/1033"
+      REQUIRED
+    )
     get_filename_component(vcredist_name "${MSVC_REDIST}" NAME)
     install(PROGRAMS ${MSVC_REDIST} DESTINATION bin)
     set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\bin\\\\${vcredist_name}\\\" /passive /norestart'")

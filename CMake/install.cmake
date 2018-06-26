@@ -21,6 +21,7 @@
 if(NOT WIN32)
     set(CMAKE_INSTALL_PREFIX "/usr/local")
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    file(GLOB SRCML_DLLS ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release/bin/*.dll)
+    # file(GLOB SRCML_DLLS ${CMAKE_SOURCE_DIR}/dlls/*)
+    file(GLOB SRCML_DLLS ${CMAKE_SOURCE_DIR}/dep/bin/*.dll)
     install(FILES ${SRCML_DLLS} DESTINATION bin)
 endif()
