@@ -83,42 +83,46 @@ int src_input_filesystem(ParseQueue& queue,
 #else
 
     // list of directories with the input as the first one
-    std::deque<std::string> dirs(1, input);
+    std::list<std::string> dirs(1, input);
 
+    int count = 0;
     while (!dirs.empty()) {
 
         // get a list of files (including directories) from the current directory
         std::vector<std::string> files;
 
+        // process the first directory on the dirs stack
         auto darchive = archive_read_disk_new();
         archive_read_disk_open(darchive, dirs.front().c_str());
-        archive_read_disk_descend(darchive);
+        dirs.pop_front();
 
-        archive_entry* entry;
+        archive_entry* entry = archive_entry_new();
+        bool first = true;
         int status = ARCHIVE_OK;
-        int count = 0;
-        while ((status = archive_read_next_header(darchive, &entry)) == ARCHIVE_OK) {
-fprintf(stderr, "DEBUG:  archive_entry_pathname(entry): %s\n", archive_entry_pathname(entry));
+        std::list<std::string> curdirs;
+        while ((status = archive_read_next_header2(darchive, entry)) == ARCHIVE_OK) {
 
-       //     if (archive_read_disk_can_descend(darchive)) {
-fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-
-//                dirs.push_back(archive_entry_pathname(entry));
-
-//                continue;
-//            }
-
-            files.push_back(archive_entry_pathname(entry));
+            if (first) {
+                archive_read_disk_descend(darchive);
+                first = false;
+                continue;
+            }
+    
+            if (archive_entry_filetype(entry) & AE_IFDIR)
+                curdirs.push_back(archive_entry_pathname(entry));
+            else
+                files.push_back(archive_entry_pathname(entry));
         }
-fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         archive_read_close(darchive);
 
+        curdirs.sort();
+        dirs.splice(dirs.end(), std::move(curdirs));
+
         std::sort(files.begin(), files.end());
+        for (auto& filename : files) {
 
-        for (auto filename : files) {
-
-            //src_input_libarchive(queue, srcml_arch, srcml_request, file.string());
+            ++count;
             srcml_input_src input_file(filename);
 
             // If a directory contains archives skip them
@@ -128,10 +132,6 @@ fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
             src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
         }
-
-        dirs.pop_front();
-
-        std::sort(dirs.begin(), dirs.end());
     }
 
 #endif
