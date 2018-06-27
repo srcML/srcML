@@ -230,6 +230,8 @@ struct srcml_unit {
 
     /** srcml from read and after parsing */
     std::string srcml;
+    boost::optional<std::string> srcml_fragment;
+    boost::optional<std::string> srcml_raw;
 
     /** src from read */
     std::string src;
