@@ -2211,10 +2211,16 @@ control_initialization_action[] { ENTRY_DEBUG } :
             // setup next stage for condition in the control group mode
             replaceMode(MODE_CONTROL_INITIALIZATION, MODE_CONTROL_CONDITION);
 
+            bool in_if_mode = inPrevMode(MODE_IF);
+
             // setup a mode for initialization that will end with a ";"
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
 
-            startElement(SCONTROL_INITIALIZATION);
+            if(!in_if_mode) {
+                startElement(SCONTROL_INITIALIZATION);
+            } else {
+                startElement(SDECLARATION_STATEMENT);
+            }
         }
 ;
 
