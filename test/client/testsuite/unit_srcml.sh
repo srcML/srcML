@@ -41,10 +41,24 @@ define sxmlfile2 <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+define sxmlfile2fragment <<- 'STDOUT'
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/b.cpp" hash="aecf18b52d520ab280119febd8ff6c803135ddfc">
+	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	</unit>
+	STDOUT
+
+define sxmlfile2raw <<- 'STDOUT'
+	
+	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	STDOUT
+
 xmlcheck "$sxmlfile2"
 
 srcml -X --unit "2" - <<< "$nestedfile"
 check "$sxmlfile2"
 
-srcml -X --unit "2" <<< "$nestedfile"
-check "$sxmlfile2"
+srcml -X --unit "2" --fragment <<< "$nestedfile"
+check "$sxmlfile2fragment"
+
+srcml -X --unit "2" --raw <<< "$nestedfile"
+check "$sxmlfile2raw"

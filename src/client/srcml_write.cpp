@@ -114,9 +114,15 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             if (option(SRCML_COMMAND_XML_FRAGMENT)) {
                 const char* s = srcml_unit_get_srcml_fragment(request->unit);
                 status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+                if (s[strlen(s) - 1] != '\n') {
+                    srcml_archive_write_string(request->srcml_arch, "\n", 1);
+                }
             } else if (option(SRCML_COMMAND_XML_RAW)) {
                 const char* s = srcml_unit_get_srcml_raw(request->unit);
                 status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+                if (s[strlen(s) - 1] != '\n') {
+                    srcml_archive_write_string(request->srcml_arch, "\n", 1);
+                }
             } else {
                 status = srcml_archive_write_unit(request->srcml_arch, request->unit);
             }

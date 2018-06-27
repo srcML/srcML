@@ -455,7 +455,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->unit_count += 1;
 
-    if (state->collect_unit_body) {
+    if (true || state->collect_unit_body) {
 
         // find end of unit tag name, e.g., end of "<unit" or "<src:unit"
         int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
@@ -547,7 +547,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     ctxt->sax->startElementNs = &start_unit;
 
-    if (state->collect_unit_body)
+    if (true || state->collect_unit_body)
         ctxt->sax->ignorableWhitespace = ctxt->sax->characters = &characters_root;
 
     SRCSAX_DEBUG_END(localname);
