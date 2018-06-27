@@ -457,7 +457,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     if (state->collect_unit_body) {
 
-        // find end of unit tag
+        // find end of unit tag name, e.g., end of "<unit" or "<src:unit"
         int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
 
         if (pos >= 0) {
@@ -466,9 +466,18 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->insert_begin = (int) state->unitsrcml.size();
             if (state->context->is_archive) {
                 state->unitsrcml.append(state->rootnsstr);
+                state->insert_end = (int) state->unitsrcml.size();
             }
-            state->insert_end = (int) state->unitsrcml.size();
+
             state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
+            if (!state->context->is_archive) {
+                // @todo This is a hack
+                std::string& s = state->unitsrcml;
+                auto pos = s.find("xmlns");
+                auto firstquote = s.find("\"", pos + 1);
+                auto secondquote = s.find("\"", firstquote + 1);
+                state->insert_end = (int) secondquote + 2;
+            }
         }
 
         SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
