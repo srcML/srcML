@@ -291,7 +291,7 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_xml_fragment
+ * srcml_unit_get_srcml_fragment
  * @param unit a srcml unit
  *
  * Get the parsed or collected srcml from an archive.
@@ -302,7 +302,7 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
  *
  * @returns the raw unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit) {
+const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
 
     if (unit == nullptr || (!unit->read_body && !unit->read_header))
         return 0;

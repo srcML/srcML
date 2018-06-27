@@ -213,14 +213,14 @@ int main(int, char* argv[]) {
     }
 
     /*
-      srcml_unit_get_xml_fragment
+      srcml_unit_get_srcml_fragment
     */
 
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
         unit->srcml.clear();
-        dassert(srcml_unit_get_xml_fragment(unit), 0);
+        dassert(srcml_unit_get_srcml_fragment(unit), 0);
         srcml_unit_free(unit);
     }
 
@@ -228,7 +228,7 @@ int main(int, char* argv[]) {
 
         srcml_unit * unit = srcml_unit_create(archive);
         unit->srcml = "<unit/>";
-        dassert(srcml_unit_get_xml_fragment(unit), std::string("<unit/>"));
+        dassert(srcml_unit_get_srcml_fragment(unit), std::string("<unit/>"));
         srcml_unit_free(unit);
     }
 
@@ -238,7 +238,7 @@ int main(int, char* argv[]) {
         srcml_archive * iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit * unit = srcml_archive_read_unit_header(iarchive);
-        dassert(srcml_unit_get_xml_fragment(unit), std::string("<unit/>"));
+        dassert(srcml_unit_get_srcml_fragment(unit), std::string("<unit/>"));
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
@@ -250,7 +250,7 @@ int main(int, char* argv[]) {
         srcml_archive * iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit * unit = srcml_unit_create(iarchive);
-        dassert(srcml_unit_get_xml_fragment(unit), 0);
+        dassert(srcml_unit_get_srcml_fragment(unit), 0);
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
@@ -258,12 +258,12 @@ int main(int, char* argv[]) {
 
     {
         srcml_unit * unit = srcml_unit_create(archive);
-        dassert(srcml_unit_get_xml_fragment(unit), 0);
+        dassert(srcml_unit_get_srcml_fragment(unit), 0);
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_get_xml_fragment(0), 0);
+        dassert(srcml_unit_get_srcml_fragment(0), 0);
     }
 
     /*

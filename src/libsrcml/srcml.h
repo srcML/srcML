@@ -1367,11 +1367,11 @@ LIBSRCML_DECL const char* srcml_unit_get_hash(const struct srcml_unit* unit);
  * @param unit A srcml unit opened for reading
  * @return The fragment unit srcML on success and NULL on failure.
  */
-LIBSRCML_DECL const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit);
+LIBSRCML_DECL const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit);
 
 /** Get a complete, valid XML of the srcML from this unit
  * The XML returned is a complete standalone XML
- * @note This may take more time then srcml_unit_get_xml_fragment()
+ * @note This may take more time then srcml_unit_get_srcml_fragment()
  * @note Must free when done using
  * @param unit A srcml unit opened for reading
  * @param xml_encoding The xml encoding to encode the unit
