@@ -314,7 +314,7 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_xml_standalone
+ * srcml_unit_get_srcml
  * @param unit a srcml unit
  * @param xml_encoding the xml encoding to encode the unit
  * @param xml_buffer buffer to return the standalone xml
@@ -329,7 +329,7 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
  *
  * @returns the formatted unit srcML on success and NULL on failure.
  */
-int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size) {
+int srcml_unit_get_srcml(struct srcml_unit* unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size) {
 
     if (unit == nullptr || xml_buffer == nullptr || buffer_size == nullptr || (!unit->read_body && !unit->read_header))
         return SRCML_STATUS_INVALID_ARGUMENT;

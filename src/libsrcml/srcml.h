@@ -1379,7 +1379,7 @@ LIBSRCML_DECL const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit)
  * @param buffer_size The size of the returned buffer
  * @return The standalone unit srcML on success and NULL on failure.
  */
-LIBSRCML_DECL int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size);
+LIBSRCML_DECL int srcml_unit_get_srcml(struct srcml_unit* unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size);
 /**@}*/
 
 /**@{ @name Convert source code to srcML
