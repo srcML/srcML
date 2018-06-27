@@ -1360,26 +1360,35 @@ LIBSRCML_DECL const char* srcml_unit_get_timestamp(const struct srcml_unit* unit
  */
 LIBSRCML_DECL const char* srcml_unit_get_hash(const struct srcml_unit* unit);
 
+/** Get a complete, valid XML of the srcML from this unit
+ * The XML returned is a complete solo srcML unit
+ * @note Do not free
+ * @note String is valid until the unit is freed, or another srcml_unit_get_srcml*() is called
+ * @param unit A srcml unit opened for reading
+ * @return The standalone unit srcML on success and NULL on failure.
+ */
+LIBSRCML_DECL const char* srcml_unit_get_srcml(struct srcml_unit* unit);
+
 /** Get a fragment of the srcML from this unit
- * The XML fragment returned is the raw UTF-8 encoded XML stored internally. It is not well-formed XML, e.g., it is missing 
+ * The XML returned is UTF-8 encoded XML. It is not well-formed XML, e.g., it is missing 
  * the archive namespace declarations
  * @note Do not free
+ * @note String is valid until the unit is freed, or another srcml_unit_get_srcml*() is called
  * @param unit A srcml unit opened for reading
  * @return The fragment unit srcML on success and NULL on failure.
  */
-LIBSRCML_DECL const char* srcml_unit_get_xml_fragment(struct srcml_unit* unit);
+LIBSRCML_DECL const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit);
 
-/** Get a complete, valid XML of the srcML from this unit
- * The XML returned is a complete standalone XML
- * @note This may take more time then srcml_unit_get_xml_fragment()
- * @note Must free when done using
+/** Get the srcML without the enclosing unit tags
+ * The XML fragment returned is UTF-8 encoded XML. It is not well-formed XML, e.g., it is missing 
+ * the archive namespace declarations and may not have a single root.
+ * @note Do not free
+ * @note String is valid until the unit is freed, or another srcml_unit_get_srcml*() is called
  * @param unit A srcml unit opened for reading
- * @param xml_encoding The xml encoding to encode the unit
- * @param xml_buffer Buffer to return the standalone xml
- * @param buffer_size The size of the returned buffer
- * @return The standalone unit srcML on success and NULL on failure.
+ * @return The fragment unit srcML on success and NULL on failure.
  */
-LIBSRCML_DECL int srcml_unit_get_xml_standalone(struct srcml_unit* unit, const char* xml_encoding, char** xml_buffer, size_t* buffer_size);
+LIBSRCML_DECL const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit);
+
 /**@}*/
 
 /**@{ @name Convert source code to srcML
