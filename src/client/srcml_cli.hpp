@@ -73,6 +73,9 @@ const int SRCML_ARCHIVE                           = 1<<27;
 
 const int SRCML_HASH                              = 1<<28;
 
+const int SRCML_COMMAND_XML_RAW                   = 1<<29;
+const int SRCML_COMMAND_XML_FRAGMENT              = 1<<30;
+
 // commands that are simple queries on srcml
 const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_LONGINFO |

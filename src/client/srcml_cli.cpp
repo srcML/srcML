@@ -390,6 +390,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("src-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>), "set the input source encoding")
             ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>), "read list of source file names to form a srcML archive")
             ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
+            ("fragment", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_FRAGMENT>), "output an XML fragment")
+            ("raw", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_FRAGMENT>), "output XML without root unit")
             ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_ARCHIVE>), "store output in a srcML archive, default for multiple input files")
             ("unstable-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER>), "enable non-strict output ordering")
             ("text,t", prog_opts::value< std::vector<std::string> >()->notifier(&raw_text_args), "raw string text to be processed")
@@ -582,6 +584,12 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
           exit(1); // TODO Need a real error code
         }
 
+        // Some options imply others SRCML_COMMAND_XML
+		if (srcml_request.command & SRCML_COMMAND_XML_FRAGMENT)
+			option_command<SRCML_COMMAND_XML>(true);
+
+		if (srcml_request.command & SRCML_COMMAND_XML_RAW)
+			option_command<SRCML_COMMAND_XML>(true);
     }
     // Unknown Option
     catch(boost::program_options::unknown_option& e) {

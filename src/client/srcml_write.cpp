@@ -110,7 +110,16 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
         // if no transformed units, write the main unit
         if (request->results.num_units == 0 && request->unit) {
-            int status = srcml_archive_write_unit(request->srcml_arch, request->unit);
+            int status = SRCML_STATUS_OK;
+            if (option(SRCML_COMMAND_XML_FRAGMENT)) {
+                const char* s = srcml_unit_get_srcml_fragment(request->unit);
+                status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+            } else if (option(SRCML_COMMAND_XML_RAW)) {
+                const char* s = srcml_unit_get_srcml_raw(request->unit);
+                status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+            } else {
+                status = srcml_archive_write_unit(request->srcml_arch, request->unit);
+            }
             if (status != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG) << "Error in writing parsed unit to archive" << '\n';
             }
