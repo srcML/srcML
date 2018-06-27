@@ -311,23 +311,7 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    const char** xml_buffer = 0;
-    int* *buffer_size = 0;
-/*
-    srcml_archive* formatting_archive = srcml_archive_clone(unit->archive);
-    srcml_archive_disable_option(formatting_archive, SRCML_OPTION_ARCHIVE);
-//    if (xml_encoding)
-//        srcml_archive_set_xml_encoding(formatting_archive, xml_encoding);
-    srcml_archive_write_open_memory(formatting_archive, xml_buffer, buffer_size);
-    srcml_archive_write_unit(formatting_archive, unit);
-    srcml_archive_close(formatting_archive);
-    srcml_archive_free(formatting_archive);
-
-    // @todo Don't think this is necessary
-    while (*buffer_size > 0 && (*xml_buffer)[*buffer_size - 1] == '\n')
-        (*xml_buffer)[--(*buffer_size)] = '\0';
-*/
-    return *xml_buffer;
+    return unit->srcml.c_str();
 }
 
 /**
@@ -350,7 +334,17 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    return optional_to_c_str(unit->srcml);
+    if (unit->srcml_fragment)
+        return unit->srcml_fragment->c_str();
+
+    // size of resulting raw version (no unit tag)
+    auto rawsize = unit->srcml.size() - (unit->insert_end - unit->insert_begin);
+    unit->srcml_fragment = "";
+    unit->srcml_fragment->reserve(rawsize);
+    unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
+    unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
+
+    return unit->srcml_fragment->c_str();
 }
 
 /**
@@ -373,7 +367,19 @@ const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    return optional_to_c_str(unit->srcml);
+    if (unit->srcml_raw)
+        return unit->srcml_raw->c_str();
+
+    if (unit->src.empty())
+        return "";
+
+    // size of resulting raw version (no unit tag)
+    unit->srcml_raw = "";
+    int rawsize = unit->content_end - unit->content_begin - 1;
+    unit->srcml_raw->reserve(rawsize);
+    unit->srcml_raw->assign(unit->srcml, unit->content_begin, rawsize);
+
+    return unit->srcml_raw->c_str();
 }
 
 /******************************************************************************
@@ -789,6 +795,8 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
     // record start of content (after the unit start tag)
     xmlTextWriterFlush(unit->unit_translator->output_textwriter());
     unit->content_begin = unit->unit_translator->output_buffer()->written + 1;
+    unit->insert_begin = 0;
+    unit->insert_end = 0;
 
     return SRCML_STATUS_OK;
 }

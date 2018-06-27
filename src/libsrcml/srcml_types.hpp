@@ -240,6 +240,8 @@ struct srcml_unit {
     // int instead of size_t since used with libxml2
     int content_begin = 0;
     int content_end = 0;
+    int insert_begin = 0;
+    int insert_end = 0;
 
     int loc = 0;
 
