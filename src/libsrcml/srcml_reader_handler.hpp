@@ -661,8 +661,10 @@ public :
 
         if (collect_unit_body) {
 
-		    unit->content_begin = state->content_begin;
-		    unit->content_end = state->content_end;
+            unit->content_begin = state->content_begin;
+            unit->content_end = state->content_end;
+            unit->insert_begin = state->insert_begin;
+            unit->insert_end = state->insert_end;
 		    unit->srcml = std::move(state->unitsrcml);
 		    unit->src = std::move(state->unitsrc);
             unit->loc = state->loc;

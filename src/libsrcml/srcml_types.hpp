@@ -230,6 +230,8 @@ struct srcml_unit {
 
     /** srcml from read and after parsing */
     std::string srcml;
+    boost::optional<std::string> srcml_fragment;
+    boost::optional<std::string> srcml_raw;
 
     /** src from read */
     std::string src;
@@ -238,6 +240,8 @@ struct srcml_unit {
     // int instead of size_t since used with libxml2
     int content_begin = 0;
     int content_end = 0;
+    int insert_begin = 0;
+    int insert_end = 0;
 
     int loc = 0;
 

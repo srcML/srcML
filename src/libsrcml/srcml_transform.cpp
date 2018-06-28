@@ -615,6 +615,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         // mark inside the units
         nunit->content_begin = lastresult.unitWrapped ? (int) nunit->srcml.find_first_of('>') + 1 : 0;
         nunit->content_end =   lastresult.unitWrapped ? (int) nunit->srcml.find_last_of('<') + 1  : (int) nunit->srcml.size() + 1;
+        nunit->insert_begin = 0;
+        nunit->insert_end = 0;
 
         result->units[i] = nunit;
     }
