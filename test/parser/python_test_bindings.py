@@ -85,8 +85,8 @@ libsrcml.srcml_unit_set_language.restype = c_int
 libsrcml.srcml_unit_set_language.argtypes = [c_void_p, c_char_p]
 
 # const char* srcml_unit_get_xml_fragment(const struct srcml_unit*);
-libsrcml.srcml_unit_get_xml_fragment.restype = c_char_p
-libsrcml.srcml_unit_get_xml_fragment.argtypes = [c_void_p]
+libsrcml.srcml_unit_get_srcml_raw.restype = c_char_p
+libsrcml.srcml_unit_get_srcml_raw.argtypes = [c_void_p]
 
 # srcml_unit wrapper
 class srcml_unit :
@@ -110,8 +110,8 @@ class srcml_unit :
     def set_language(self, language) :
         check_return(libsrcml.srcml_unit_set_language(self.unit, language))
 
-    def get_xml_fragment(self) :
-        return libsrcml.srcml_unit_get_xml_fragment(self.unit)
+    def get_srcml_raw(self) :
+        return libsrcml.srcml_unit_get_srcml_raw(self.unit)
 
     def src(self) :
         return self.src_buffer.value
