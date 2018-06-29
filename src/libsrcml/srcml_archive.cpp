@@ -144,7 +144,7 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
     new_archive->buffer = nullptr;
     new_archive->size = nullptr;
     new_archive->rawwrites = false;
-    new_archive->error_string;
+    new_archive->error_string = std::string();
     new_archive->error_number = 0;
 
     return new_archive;
