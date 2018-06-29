@@ -28,8 +28,7 @@ int input_archive(const srcml_input_src& input) {
 
     srcml_input_src uninput = input;
 
-    if (!input.archives.empty() || !input.compressions.empty() /* &&
-       (input.compressions.size() > 1 || input.compressions.front() != ".gz")*/) {
+    if (!input.archives.empty() || !input.compressions.empty()) {
 
         srcml_pipe(uninput, unarchive_srcml);
     }
