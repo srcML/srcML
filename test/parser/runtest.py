@@ -228,8 +228,6 @@ def src2srcML(text_file, encoding, language, url, filename, read_archive):
     unit.parse_memory(text_file)
     srcml = unit.get_srcml_raw()
     archive.close()
-    if srcml.endswith("\n"):
-        srcml = srcml[:-1]
 
     return srcml
 

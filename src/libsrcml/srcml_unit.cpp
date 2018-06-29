@@ -370,9 +370,6 @@ const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
     if (unit->srcml_raw)
         return unit->srcml_raw->c_str();
 
-    if (unit->src.empty())
-        return "";
-
     // size of resulting raw version (no unit tag)
     unit->srcml_raw = "";
     int rawsize = unit->content_end - unit->content_begin - 1;
