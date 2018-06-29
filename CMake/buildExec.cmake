@@ -31,7 +31,11 @@ macro(srcMLExec EXEC_NAME EXEC_FILE)
     add_executable(${EXEC_NAME} ${EXEC_FILE})
     target_link_libraries(${EXEC_NAME} ${ARGN})
     if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+		set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+        add_custom_command(TARGET srcml POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${PROJECT_SOURCE_DIR}/deps/${BUILD_ARCH}/$<CONFIGURATION>/bin"
+        $<TARGET_FILE_DIR:srcml>)
     elseif(APPLE)
         set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/srcml_export_list")
     elseif(WIN32)
