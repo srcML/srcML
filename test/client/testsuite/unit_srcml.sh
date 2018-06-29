@@ -52,6 +52,11 @@ define sxmlfile2raw <<- 'STDOUT'
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	STDOUT
 
+define sxmlfile2src <<- 'STDOUT'
+	
+	b;
+	STDOUT
+
 xmlcheck "$sxmlfile2"
 
 srcml -X --unit "2" - <<< "$nestedfile"
@@ -62,3 +67,8 @@ check "$sxmlfile2fragment"
 
 srcml -X --unit "2" --raw <<< "$nestedfile"
 check "$sxmlfile2raw"
+
+srcml --text="\nb;\n" --filename="sub/b.cpp" -l C++ --hash | srcml
+check "$sxmlfile2src"
+
+

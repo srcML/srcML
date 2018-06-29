@@ -1,3 +1,4 @@
+
 /**
  * @file srcml_types.hpp
  *
@@ -234,7 +235,7 @@ struct srcml_unit {
     boost::optional<std::string> srcml_raw;
 
     /** src from read */
-    std::string src;
+    boost::optional<std::string> src;
 
     /** record the begin and end of the actual content */
     // int instead of size_t since used with libxml2
