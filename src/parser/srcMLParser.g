@@ -2257,17 +2257,19 @@ control_condition_action[] { ENTRY_DEBUG } :
             bool in_if_mode = inPrevMode(MODE_IF);
 
             // setup next stage control condition
-            if(in_if_mode)
-                clearMode(MODE_EXPECT | MODE_CONTROL_CONDITION);
-            else
+            if(in_if_mode) {
+                // switch back to if-processing
+                replaceMode(MODE_TOP | MODE_CONTROL_CONDITION  | MODE_IGNORE_TERMINATE | MODE_INTERNAL_END_PAREN, 
+                            MODE_LIST | MODE_EXPRESSION);
+            } else {
                 replaceMode(MODE_CONTROL_CONDITION, MODE_CONTROL_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
-
-
-            // setup a mode for initialization that will end with a ";"
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST );
+                // setup a mode for initialization that will end with a ";"
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST );
+            }
 
             if(!in_if_mode) {
                 startElement(SCONTROL_CONDITION);
+                setMode(MODE_STATEMENT);
             }
         }
 ;
@@ -2325,7 +2327,7 @@ if_statement[] { ENTRY_DEBUG } :
 
             // expect a condition
             // start THEN after condition
-            startNewMode(MODE_EXPECT | MODE_CONTROL);
+            startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_CONDITION);
         }
         IF
         {
@@ -2382,7 +2384,7 @@ elseif_statement[] { ENTRY_DEBUG } :
 
             // expect a condition
             // start THEN after condition
-            startNewMode(MODE_EXPECT | MODE_CONTROL);
+            startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_CONDITION);
         }
         IF
 ;
