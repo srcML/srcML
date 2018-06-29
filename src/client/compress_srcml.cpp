@@ -75,9 +75,9 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
 
     // write the data into the archive
     std::vector<char> buffer(4092);
-    while (ssize_t s = read(*input_sources[0].fd, &buffer.front(), buffer.size())) {
+    while (ssize_t s = read(*input_sources[0].fd, buffer.data(), buffer.size())) {
 
-        ssize_t status = archive_write_data(ar.get(), &buffer.front(), s);
+        ssize_t status = archive_write_data(ar.get(), buffer.data(), s);
         if (status == 0)
             break;
     }
