@@ -2264,13 +2264,10 @@ control_condition_action[] { ENTRY_DEBUG } :
             } else {
                 replaceMode(MODE_CONTROL_CONDITION, MODE_CONTROL_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
                 // setup a mode for initialization that will end with a ";"
-                startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST );
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_STATEMENT);
+                startElement(SCONTROL_CONDITION);
             }
 
-            if(!in_if_mode) {
-                startElement(SCONTROL_CONDITION);
-                setMode(MODE_STATEMENT);
-            }
         }
 ;
 
@@ -2280,7 +2277,8 @@ control_condition[] { bool in_if_condition = inPrevMode(MODE_IF); ENTRY_DEBUG } 
         (
         // non-empty condition
         { in_if_condition }? condition_inner |
-        expression
+        { LA(1) != RPAREN }? expression |
+        rparen[false]
         )
 ;
 
@@ -3989,8 +3987,9 @@ condition_inner[] { ENTRY_DEBUG
 
 } :
 
-    { stmt_type == VARIABLE }? control_initialization_variable_declaration[type_count]
-    | expression
+    { stmt_type == VARIABLE }? control_initialization_variable_declaration[type_count] |
+    { LA(1) != RPAREN }? expression |
+    rparen[false]
 ;
 // perform an arbitrary look ahead looking for a pattern
 pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bool inparam = false] returns [bool isdecl] {
