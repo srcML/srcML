@@ -370,9 +370,6 @@ const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
     if (unit->srcml_raw)
         return unit->srcml_raw->c_str();
 
-    if (unit->src.empty())
-        return "";
-
     // size of resulting raw version (no unit tag)
     unit->srcml_raw = "";
     int rawsize = unit->content_end - unit->content_begin - 1;
@@ -795,8 +792,14 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
     // record start of content (after the unit start tag)
     xmlTextWriterFlush(unit->unit_translator->output_textwriter());
     unit->content_begin = unit->unit_translator->output_buffer()->written + 1;
-    unit->insert_begin = 0;
-    unit->insert_end = 0;
+
+    // @todo This is a hack
+    std::string s = (const char*) xmlBufferContent(unit->output_buffer);
+    auto pos = s.find("xmlns");
+    unit->insert_begin = (int) pos;
+    auto firstquote = s.find("\"", pos + 1);
+    auto secondquote = s.find("\"", firstquote + 1);
+    unit->insert_end = (int) secondquote + 2;
 
     return SRCML_STATUS_OK;
 }
