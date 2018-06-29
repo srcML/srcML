@@ -112,7 +112,7 @@ void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueu
             status = srcml_unit_parse_filename(request->unit, request->disk_filename->c_str());
         }
         else if (request->needsparsing) {
-            status = srcml_unit_parse_memory(request->unit, &request->buffer.front(), request->buffer.size());
+            status = srcml_unit_parse_memory(request->unit, request->buffer.data(), request->buffer.size());
         }
         if (status != SRCML_STATUS_OK) {
             request->status = status;
