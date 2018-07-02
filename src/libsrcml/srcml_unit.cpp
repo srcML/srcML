@@ -340,7 +340,7 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
 
     // size of resulting raw version (no unit tag)
     auto rawsize = unit->srcml.size() - (unit->insert_end - unit->insert_begin);
-    unit->srcml_fragment = "";
+
     unit->srcml_fragment->reserve(rawsize);
     unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
     unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
@@ -368,6 +368,7 @@ const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
+    // raw version is cached
     if (unit->srcml_raw)
         return unit->srcml_raw->c_str();
 
