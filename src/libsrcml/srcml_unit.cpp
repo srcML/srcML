@@ -374,8 +374,10 @@ const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
     // size of resulting raw version (no unit tag)
     unit->srcml_raw = "";
     int rawsize = unit->content_end - unit->content_begin - 1;
-    unit->srcml_raw->reserve(rawsize);
-    unit->srcml_raw->assign(unit->srcml, unit->content_begin, rawsize);
+    if (rawsize > 0) {
+        unit->srcml_raw->reserve(rawsize);
+        unit->srcml_raw->assign(unit->srcml, unit->content_begin, rawsize);
+    }
 
     return unit->srcml_raw->c_str();
 }
