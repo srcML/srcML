@@ -296,14 +296,33 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 */
     // save the root start tag because we are going to parse it again to generate proper start_root() and start_unit()
     // calls after we know whether this is an archive or not
+    state->rootstarttag.reserve(ctxt->input->cur - state->base + 2);
     state->rootstarttag.assign((const char*) state->base, ctxt->input->cur - state->base);
     state->rootstarttag.append("/>");
 
     // record namespace string in an extensible list so we can add the per unit
     if (state->collect_unit_body) {
 
-        state->rootnsstr.clear();
+        // precalculate length
         int ns_length = nb_namespaces * 2;
+        int size = 0;
+        for (int i = 0; i < ns_length; i += 2) {
+
+            // state->rootnsstr += "xmlns";
+            size += 5;
+            if (namespaces[i]) {
+                // state->rootnsstr += ":";
+                // state->rootnsstr += (const char*) namespaces[i];
+                size += 1 + strlen((const char*) namespaces[i]);
+            }
+            // state->rootnsstr += "=\"";
+            // state->rootnsstr += (const char*) namespaces[i + 1];
+            // state->rootnsstr += "\" ";
+            size += 2 + strlen((const char*) namespaces[i + 1]) + 2;
+        }
+
+        state->rootnsstr.reserve(size);
+
         for (int i = 0; i < ns_length; i += 2) {
 
             state->rootnsstr += "xmlns";
