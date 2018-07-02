@@ -57,6 +57,10 @@ define sxmlfile2src <<- 'STDOUT'
 	b;
 	STDOUT
 
+# @todo This should be a single newline.
+define emptysrc <<- 'STDOUT'
+	STDOUT
+
 xmlcheck "$sxmlfile2"
 
 srcml -X --unit "2" - <<< "$nestedfile"
@@ -71,4 +75,6 @@ check "$sxmlfile2raw"
 srcml --text="\nb;\n" --filename="sub/b.cpp" -l C++ --hash | srcml
 check "$sxmlfile2src"
 
+srcml --text="" --filename="sub/b.cpp" -l C++ --hash | srcml
+check "$emptysrc"
 
