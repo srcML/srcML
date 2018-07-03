@@ -1310,11 +1310,10 @@ int srcml_archive_skip_unit(struct srcml_archive* archive) {
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
         return 0;
 
-    srcml_unit* unit = srcml_unit_create(archive);
+    thread_local srcml_unit* unit = srcml_unit_create(archive);
 
     int not_done = archive->reader->read_header(unit);
     if (!not_done) {
-        srcml_unit_free(unit);
         return 0;
     }
 
