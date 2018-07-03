@@ -104,7 +104,6 @@ ALLOPERATORS;
 EOL_PLACEHOLD;
 }
 
-// @todo remove statics possibly breaking point for threading.
 OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1); bool do_not_apply = false;
 } : 
         (
