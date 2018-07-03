@@ -602,7 +602,6 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
     // generate this source from the srcml
     if (true || !unit->src) {
 
-        std::string savesrc = *unit->src;
         unit->src = "";
 
         // parse the srcml collecting the (now needed) src
@@ -647,9 +646,6 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
         context->sax = &charactersax;
 
         xmlParseDocument(context);
-
-        // @todo remove assert
-        assert(unit->src == savestr);
     }
 
     xmlOutputBufferWrite(output_handler.get(), (int) unit->src->size(), unit->src->c_str());

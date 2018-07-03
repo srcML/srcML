@@ -106,7 +106,7 @@ class UTF8CharBuffer : public antlr::CharBuffer {
 public:
 
     /** size of the original character buffer */
-    static const size_t SRCBUFSIZE = 1024;
+    static constexpr size_t SRCBUFSIZE = 1024;
     typedef void * (*srcml_open_callback)(const char * filename);
 
     // Create a character buffer
