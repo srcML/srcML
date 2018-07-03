@@ -53,7 +53,7 @@ namespace {
 
         // enough space to store int as string
         static constexpr int SIZE = sizeof(int) * 4;
-        thread_local static char s[SIZE] = { 0 };
+        thread_local char s[SIZE] = { 0 };
 
         // create string backwards from 1's place
         char* p = s + SIZE - 1;
@@ -470,9 +470,9 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
-    static const std::string& prefix = namespaces[POS].prefix;
-    static const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
-    static const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
+    thread_local const std::string& prefix = namespaces[POS].prefix;
+    thread_local const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
+    thread_local const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
 
     // highly optimized as this is output for every start tag
 
@@ -505,7 +505,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
     if (name[0] == 0)
         return;
 
-    static bool isposition = isoption(options, SRCML_OPTION_POSITION);
+    thread_local bool isposition = isoption(options, SRCML_OPTION_POSITION);
 
     if (isstart(token) || isempty(token)) {
 
