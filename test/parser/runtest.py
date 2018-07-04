@@ -131,9 +131,10 @@ def extract_all(src, encoding):
 
     unit = archive.read_unit()
     while unit != None :
-        srcml = unit.get_xml_fragment()
-        if archive.get_url() != None and (archive.get_url().find(".all") != -1 or archive.get_url().find("unicode") != -1):
-            srcml = "<unit>" + srcml[srcml.find(">") + 1:]
+        srcml = unit.get_xml_raw()
+        srcml = "<unit>" + srcml + "</unit>"
+#        if archive.get_url() != None and (archive.get_url().find(".all") != -1 or archive.get_url().find("unicode") != -1):
+#            srcml = "<unit>" + srcml[srcml.find(">") + 1:]
         all.append(srcml)
         unit.unparse_memory()
         src_all.append(unit.src())
