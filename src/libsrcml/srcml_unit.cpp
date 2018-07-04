@@ -341,6 +341,7 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
     // size of resulting raw version (no unit tag)
     auto rawsize = unit->srcml.size() - (unit->insert_end - unit->insert_begin);
 
+    unit->srcml_fragment = "";
     unit->srcml_fragment->reserve(rawsize);
     unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
     unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
