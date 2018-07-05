@@ -29,9 +29,9 @@
 
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit/src:unit" xml:space="preserve">
-<unit>
+<xsl:copy><xsl:copy-of select="@*"/>
 <struct>struct <name>S</name> <block>{<public type="default"><xsl:copy-of select="*|text()"/></public>}</block>;</struct>
-</unit>
+</xsl:copy>
 </xsl:template>
 
 <!-- default identity copy -->

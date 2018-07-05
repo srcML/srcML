@@ -28,11 +28,11 @@
 <!-- trap the current language attribute -->
 
 <xsl:template match="/src:unit">
-  <unit>
+  <xsl:copy><xsl:copy-of select="@*"/>
     <xsl:copy-of select="@*"/>
 
     <xsl:apply-templates select="node()"/>
-  </unit>
+  </xsl:copy>
 </xsl:template>
 
 <!-- default identity copy -->

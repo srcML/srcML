@@ -6,19 +6,19 @@
 </unit>
 
 <!--
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><modifier>&amp;</modifier><operator>::</operator><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><modifier>*</modifier><operator>::</operator><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><modifier>&amp;</modifier><modifier>*</modifier><operator>::</operator><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name><name>A</name><operator>::</operator><name>b</name><modifier>*</modifier><modifier>&amp;</modifier><operator>::</operator><name>d</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 -->
@@ -164,7 +164,7 @@
 </unit>
 
 <!-- Incorrect with C/C++ mode
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>restrict</name></type> <name>restrict</name></decl>;</decl_stmt>
 </unit>
 -->

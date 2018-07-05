@@ -121,6 +121,7 @@ LANGUAGE_CXX emit
 LANGUAGE_CXX macro_cpp
 LANGUAGE_CXX destructor_cpp
 LANGUAGE_CXX static_assert_cpp
+LANGUAGE_CXX if_cpp
 
 LANGUAGE_CXX_GEN c_cpp_mode.restrict
 LANGUAGE_CXX_GEN c_cpp_mode.mutable
