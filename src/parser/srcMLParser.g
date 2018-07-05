@@ -2385,6 +2385,11 @@ elseif_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_CONDITION);
         }
         IF
+        {
+            if (LA(1) == CONSTEXPR) {
+                constexpr_specifier();
+            }
+        }
 ;
 
 //  start of switch statement
