@@ -6,7 +6,7 @@
 </unit>
 
 <!--
-<unit>
+<unit language="C++">
 <macro><name>D</name><argument_list>(<argument> <if>if <condition>(<expr><name>a</name></expr>)</condition> <then><expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if></if></argument>)</argument_list></macro>
 </unit>
 -->
@@ -16,7 +16,7 @@
 </unit>
 
 <!--
-<unit>
+<unit language="C++">
 <macro><name>D</name><argument_list>(<argument><decl_stmt><type>int</type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init>;</decl_stmt></argument>)</argument_list></macro>
 </unit>
 -->
@@ -26,7 +26,7 @@
 </unit>
 
 <!--
-<unit>
+<unit language="C++">
 <macro><name>D</name><argument_list>(<argument><block>{ <decl_stmt><type>int</type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init>;</decl_stmt> }</block></argument>)</argument_list></macro>
 </unit>
 -->

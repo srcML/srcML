@@ -105,17 +105,17 @@
 </unit>
 
 <!--
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <name>A</name> \
  <block>{ <expr_stmt><expr>0x7c02eeee</expr></expr_stmt>, \
  <block>{ <expr_stmt><expr>0x77</expr></expr_stmt>, <expr_stmt><expr>0x88</expr></expr_stmt> }</block> }</block></cpp:define>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:if>#<cpp:directive>if</cpp:directive> <expr><call><name>defined</name><argument_list>(<argument><expr><name>DEBUG</name></expr></argument>)</argument_list></call> &amp;&amp; <call><name>defined</name><argument_list>(<argument><expr><name>__KERNEL__</name></expr></argument>)</argument_list></call></expr></cpp:if>
 </unit>
 
-<unit>
+<unit language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <name>HZ_NS</name> <expr>(1000000000 / <name>HZ</name>)</expr></cpp:define>
 </unit>
 -->

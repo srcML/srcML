@@ -58,7 +58,7 @@
 </unit>
 
 <!--
-<unit>
+<unit language="C++">
 <decl_stmt><decl><type><name>a</name></type> <name>b</name><init>={
     {1,0,{{2,0</init></decl></decl_stmt>}<srcml:error/>,<expr_stmt><expr><literal type="number">0</literal></expr></expr_stmt>}<srcml:error/>,<block>{<expr_stmt><expr><literal type="number">0</literal></expr></expr_stmt>}</block>}<srcml:error/>,
     

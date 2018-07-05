@@ -46,7 +46,7 @@
 </unit>
 
 <!--
-<unit>
+<unit language="C++">
 <expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr>*<name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 -->

@@ -79,27 +79,27 @@ These are the captures:
 
 So, I do not thing that const exists.
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><modifier>=</modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><modifier>&amp;</modifier><name>s</name></argument>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><modifier>=</modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name></type></decl></parameter>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name> <specifier>const</specifier><modifier>*</modifier></type></decl></parameter>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
 </unit>
 
