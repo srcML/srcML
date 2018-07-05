@@ -70,6 +70,8 @@ srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, xmlParserInputBuffe
 
     handler.archive = archive;
 
+    // Setup thread here after things are created and settled
+    // Do not put in member initialization list as it can cause random crashes
     thread = std::thread(start_routine, &args);
 
     handler.wait();
