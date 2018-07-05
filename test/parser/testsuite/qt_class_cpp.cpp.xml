@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="qt_class_cpp">
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <block>{<public>public <name>slots</name>: </public>}</block>;</class>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <block>{<private>private <name>slots</name>: </private>}</block>;</class>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <block>{<protected>protected <name>slots</name>: </protected>}</block>;</class>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <block>{<public>public <name>Q_SLOTS</name>: </public>}</block>;</class>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <block>{<signals>signals: </signals>}</block>;</class>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>signals</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><type><name>void</name></type> <name>signals</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>void</name></type> <name>signals</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class_decl>class <name>signals</name>;</class_decl>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>signals</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 

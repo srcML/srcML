@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="auto" filename="auto_cpp">
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr><name>auto</name></expr></argument>)</argument_list></decltype></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>auto</name></type> <name>x</name></decl></parameter>, <parameter><decl><type><name>auto</name></type> <name>y</name></decl></parameter>)</parameter_list> <block>{<return>return <expr><name>x</name> <operator>+</operator> <name>y</name></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 

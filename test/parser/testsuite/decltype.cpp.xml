@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="decltype" filename="decltype">
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr><name>int</name></expr></argument>)</argument_list></decltype></type></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><decltype>decltype<argument_list>()</argument_list></decltype></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr><name>A</name></expr></argument>)</argument_list></decltype></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr><call><name>foo</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decltype></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr><operator>(</operator><name>A</name><operator>)</operator></expr></argument>)</argument_list></decltype></type> <name>x1</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></decltype></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><specifier>const</specifier> <decltype>decltype<argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></decltype> <name>A</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><decltype>decltype<argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></decltype></type> <name>A</name><parameter_list>()</parameter_list> -&gt; <type><decltype>decltype<argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></decltype></type>;</function_decl>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr>struct <name>X</name></expr></argument>)</argument_list></decltype></type> <name>y</name></decl>;</decl_stmt>
 </unit>
 

@@ -1,158 +1,158 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="macro"><macro-list token="VEC" type="src:name"/>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>( <argument>if (a) b;</argument>)</argument_list></macro>
 </unit>
 
 <!--
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument> <if>if <condition>(<expr><name>a</name></expr>)</condition> <then><expr_stmt><expr><name>b</name></expr>;</expr_stmt></then></if></if></argument>)</argument_list></macro>
 </unit>
 -->
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>int i = <literal type="number">0</literal>;</argument>)</argument_list></macro>
 </unit>
 
 <!--
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument><decl_stmt><type>int</type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init>;</decl_stmt></argument>)</argument_list></macro>
 </unit>
 -->
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>{ int i = <literal type="number">0</literal>;}</argument>)</argument_list></macro>
 </unit>
 
 <!--
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument><block>{ <decl_stmt><type>int</type> <name>i</name><init>=<expr><literal type="number">0</literal></expr></init>;</decl_stmt> }</block></argument>)</argument_list></macro>
 </unit>
 -->
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>if (a) b</argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>(if (a) b)</argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>a</argument>, <argument>if (a) b</argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>a</argument>, <argument>(if (a) b)</argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>int i = <literal type="number">0</literal></argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>(int i = <literal type="number">0</literal>)</argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>a</argument>, <argument>int i = <literal type="number">0</literal></argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>int i = <literal type="number">0</literal></argument>, <argument>a</argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>a</argument>, <argument>(int i = <literal type="number">0</literal>)</argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>(int i = <literal type="number">0</literal>)</argument>, <argument>a</argument>)</argument_list></macro>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <block>{<macro><name>D</name><argument_list>(<argument>a</argument>)</argument_list></macro>}</block>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>a</argument>)</argument_list></macro><if_stmt><if>if<empty_stmt>;</empty_stmt></if></if_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>D</name><argument_list>(<argument>a</argument>)</argument_list></macro><block>{}</block>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>A</name><argument_list>(<argument><literal type="number">1</literal></argument>)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><operator>.</operator><name>macro</name> <name><name>a</name>
 <cpp:empty># comment</cpp:empty>
 <cpp:empty>#</cpp:empty>
 <operator>.</operator><name>endm</name></name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><specifier>static</specifier> <type><name>void</name></type>
 <name>lto_read_decls</name> <parameter_list>(<parameter><decl><type><macro><name>VEC</name><argument_list>(<argument>ld_plugin_symbol_resolution_t</argument>,<argument>heap</argument>)</argument_list></macro> <modifier>*</modifier></type><name>resolutions</name></decl></parameter>)</parameter_list>
 <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <if_stmt><if>if<empty_stmt>;</empty_stmt></if></if_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <while>while<empty_stmt>;</empty_stmt></while>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <for>for<empty_stmt>;</empty_stmt></for>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <decl_stmt><decl><specifier>static</specifier> <type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><operator>.</operator><name>macro</name></expr>
 <cpp:empty>#(</cpp:empty>
 ;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><operator>.</operator><name>macro</name></expr>
 <cpp:empty># (</cpp:empty>
 ;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>M</name><argument_list>(<argument><literal type="string">"foobar"</literal></argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>M</name><argument_list>(<argument><literal type="char">'f'</literal></argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>M</name><argument_list>(<argument><literal type="complex">3i</literal></argument>)</argument_list></macro> <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>MACRO</name> <name><name>struct</name> <name>s</name></name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><type><name>MACRO</name> <name><name>struct</name> <name>s</name></name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>MACRO</name> <name><name>struct</name> <name>s</name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 

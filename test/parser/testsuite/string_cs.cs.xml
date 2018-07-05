@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="string" filename="string_cs">
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><literal type="string">@"goodmorning"</literal></expr>;</expr_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><literal type="string">@"c:\Docs\Source\a.txt"</literal></expr>;</expr_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><literal type="string">@"c:\Docs\Source\"</literal></expr>;</expr_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><literal type="string">@"""Ahoy!""criedthecaptain."</literal></expr>;</expr_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><literal type="string">@"'Ahoy!'""criedthecaptain."""</literal></expr>;</expr_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><literal type="string">@"""'Ahoy!'criedthecaptain."""</literal></expr>;</expr_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><literal type="string">@"""""""Ahoy!""criedthecaptain."""""</literal></expr>;</expr_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><literal type="string">@"one
 two
 three"</literal></expr>;</expr_stmt>

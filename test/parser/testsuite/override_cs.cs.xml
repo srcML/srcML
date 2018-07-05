@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="override" filename="override_cs">
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
   <function><specifier>public</specifier> <specifier>override</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
 <block>{}</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>public</specifier> <specifier>override</specifier> <type><name>int</name></type> <name>GetX</name> <block>{
       <function><name>get</name> <block>{
           <return>return <expr><name>x</name></expr>;</return>

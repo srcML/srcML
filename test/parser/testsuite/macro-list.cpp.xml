@@ -1,63 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="macro-list" filename="macro-list"><macro-list token="MACRO" type="src:macro"/><macro-list token="NAME" type="src:name"/><macro-list token="TYPE" type="src:type"/><macro-list token="CASE" type="src:case"/><macro-list token="LABEL" type="src:label"/><macro-list token="SPECIFIER" type="src:specifier"/>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>MACRO</name><parameter_list>()</parameter_list></cpp:macro></cpp:define>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>MACRO</name><argument_list>()</argument_list></macro><empty_stmt>;</empty_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>NAME</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>name</cpp:value></cpp:define>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><macro><name>NAME</name><argument_list>(<argument>A</argument>)</argument_list></macro></type> <name>name</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>TYPE</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>type</cpp:value></cpp:define>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><macro><name>TYPE</name><argument_list>(<argument>A</argument>)</argument_list></macro></type> <name>type</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>CASE</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>case A</cpp:value></cpp:define>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <block>{ <case><macro><name>CASE</name><argument_list>(<argument>A</argument>)</argument_list></macro>:</case> <break>break;</break> }</block>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <block>{ <case><macro><name>CASE</name><argument_list>(<argument>A</argument>)</argument_list></macro> <expr><name>b</name></expr>:</case> <break>break;</break> }</block>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>LABEL</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>A</cpp:value></cpp:define>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <label><macro><name>LABEL</name></macro>:</label> <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <label><macro><name>LABEL</name><argument_list>(<argument>A</argument>)</argument_list></macro>:</label> <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>SPECIFIER</name><parameter_list>(<parameter><type><name>A</name></type></parameter>)</parameter_list></cpp:macro> <cpp:value>name</cpp:value></cpp:define>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <constructor_decl><specifier><macro><name>SPECIFIER</name></macro></specifier> <name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list>;</constructor_decl>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <constructor_decl><specifier><macro><name>SPECIFIER</name><argument_list>(<argument>INLINE</argument>)</argument_list></macro></specifier> <name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list>;</constructor_decl>
 </unit>
 

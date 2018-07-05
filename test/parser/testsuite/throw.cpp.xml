@@ -3,7 +3,7 @@
 
 
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <throw>throw;</throw>
 </unit>
 

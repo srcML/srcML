@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="attributes" filename="attributes_cs">
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><attribute>[<expr><name>System</name></expr>]</attribute>
 <specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
         <function><attribute>[<expr><name>System</name></expr>]</attribute>
         <specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>OperationsBaseData</name><parameter_list>()</parameter_list> <block>{
         }</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><attribute>[<expr><name>System</name></expr>]</attribute> class <name>C</name> <block>{}</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <struct><attribute>[<expr><name>System</name></expr>]</attribute> struct <name>C</name> <block>{}</block></struct>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><attribute>[<expr><name>System</name></expr>]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><attribute>[<expr><name>System</name></expr>]</attribute> <specifier>public</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><attribute>[<expr><name>System</name></expr>]</attribute> <specifier>public</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><attribute>[<expr><name>System</name></expr>]</attribute> <specifier>public</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>]</attribute><attribute>[<expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><attribute>[<expr><name>System</name></expr>]</attribute> <specifier>public</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><attribute>[<expr><name>System</name></expr>, <expr><name>System</name></expr>]</attribute> <specifier>public</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><attribute>[<target>method</target>: <expr><name>SomeAttr</name></expr>]</attribute> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><attribute>[<target>return</target>: <expr><name>SomeAttr</name></expr>]</attribute> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><attribute>[<target>field</target>: <expr><name>SomeAttr</name></expr>]</attribute> <specifier>private</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <event><attribute>[<target>event</target>: <expr><name>SomeAttr</name></expr>]</attribute>event <type><name>void</name></type> <name>f</name>;</event>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><specifier>public</specifier> <type><name>void</name></type> <name>f</name><parameter_list>( <parameter><decl><type><attribute>[<target>param</target>: <expr><name>SomeAttr</name></expr>]</attribute><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>public</specifier> <type><name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
     <function><attribute>[<target>property</target>: <expr><name>SomeAttr</name></expr>]</attribute><name>get</name> <block>{}</block></function>
 }</block></property>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><attribute>[<target>type</target>: <expr><name>SomeAttr</name></expr>]</attribute> <specifier>public</specifier> class <name>C</name> <block>{}</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <attribute>[<target>assembly</target>: <expr><name>SomeAttr</name></expr>]</attribute>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <attribute>[<target>module</target>: <expr><name>SomeAttr</name></expr>]</attribute>
 </unit>
 

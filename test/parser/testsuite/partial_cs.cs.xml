@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="partial" filename="partial_cs">
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function_decl><specifier>partial</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>partial</specifier> class <name>C</name> <block>{}</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>partial</specifier> class <name>C</name> <block>{
     <function_decl><specifier>partial</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
 }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><specifier>partial</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list><block>{}</block></function>
 </unit>
 

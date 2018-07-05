@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="function_decl" filename="function_decl_c">
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>*</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>^</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function_decl><type><name>__LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_write_open_filename</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>srcml_archive</name></name><modifier>*</modifier></type></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>char</name><modifier>*</modifier></type> <name>srcml_filename</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>s</name></name></type></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 

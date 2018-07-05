@@ -1,115 +1,115 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="attributes" filename="attributes_cpp">
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><attribute>[[<expr><name>System</name></expr>]]</attribute>
 <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
         <function><attribute>[[<expr><name>System</name></expr>]]</attribute>
         <specifier>static</specifier> <type><name>void</name></type> <name>OperationsBaseData</name><parameter_list>()</parameter_list> <block>{
         }</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class><attribute>[[<expr><name>System</name></expr>]]</attribute> class <name>C</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <struct><attribute>[[<expr><name>System</name></expr>]]</attribute> struct <name>C</name> <block>{<public type="default"/>}</block>;</struct>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><attribute>[[<expr><name>System</name></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><attribute>[[<expr><name>System</name></expr>]]</attribute> <type><specifier>const</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>]]</attribute><attribute>[[<expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><attribute>[[<expr><name>System</name></expr>, <expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><attribute>[[<expr><call><name>System</name><argument_list>()</argument_list></call></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><attribute>[[<expr><name>System</name></expr>, <expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><attribute>[[<expr><call><name>System</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>, <expr><name>System</name></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><attribute>[[<expr><call><name><name>System</name><operator>::</operator><name>system</name></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>]]</attribute> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><attribute>[[]]</attribute> <type><name>int</name> <modifier>&amp;</modifier> <attribute>[[]]</attribute></type> <name>b</name> <init>= <expr><name>a</name></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><attribute>[[]]</attribute> <type><name>int</name></type> <name><name>a</name><index>[]</index></name> <attribute>[[]]</attribute></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class_decl>class <attribute>[[]]</attribute> <name>a</name>;</class_decl>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <attribute>[[]]</attribute> <name>a</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <struct_decl>struct <attribute>[[]]</attribute> <name>a</name>;</struct_decl>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <struct>struct <attribute>[[]]</attribute> <name>a</name> <block>{<public type="default"/>}</block>;</struct>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <union>union <attribute>[[]]</attribute> <name>a</name> <block>{<public type="default"/>}</block>;</union>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <enum>enum <attribute>[[]]</attribute> <name>a</name> <block>{}</block>;</enum>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <enum type="class">enum class <attribute>[[]]</attribute> <name>a</name> <block>{}</block>;</enum>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <enum type="class">enum class <attribute>[[]]</attribute> <name>Enum2</name> : <type><specifier>const</specifier> <name>unsigned</name> <name>int</name></type> <block>{<decl><name>Val1</name></decl>, <decl><name>Val2</name></decl>}</block>;</enum>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>unsigned</name> <name>int</name></type> <name>a</name> <attribute>[[]]</attribute> <range>: <expr><literal type="number">3</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <attribute>[[<expr><name>noreturn</name></expr>]]</attribute>
 </unit>
 

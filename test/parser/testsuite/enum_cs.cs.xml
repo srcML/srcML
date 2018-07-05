@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="enum" filename="enum_cs">
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <enum_decl><specifier>public</specifier> enum;</enum_decl>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <enum_decl><specifier>public</specifier> enum <name>foo</name>;</enum_decl>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <enum_decl><specifier>public</specifier> enum <name>foo</name>, <name>bar</name>;</enum_decl>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <enum><specifier>public</specifier> enum <block>{}</block>;</enum>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <enum>enum <name>Days</name>
     <super_list>:<super><name>ushort</name></super></super_list>
 <block>{

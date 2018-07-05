@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="destructor" filename="destructor_cs">
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{}</block></destructor>
 }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
     <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{
         <try>try <block>{}</block> <catch>catch<parameter_list>()</parameter_list><block>{}</block></catch></try>
@@ -15,19 +15,19 @@
 }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{
     <destructor_decl><name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl>
 }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{
     <destructor_decl><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl>
 }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{
     <destructor><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~<name>A</name></name><parameter_list>()</parameter_list> <block>{}</block></destructor>
 }</block></class>

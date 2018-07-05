@@ -1,111 +1,111 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="typedef">
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>int</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>long</name> <name>int</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>signed</name> <name>char</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>short</name> <name>int</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>unsigned</name> <name>char</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>unsigned</name> <name>short</name> <name>int</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>unsigned</name> <name>int</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>unsigned</name> <name>long</name> <name>int</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>bool</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>char</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>wchar_t</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>float</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>double</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>long</name> <name>double</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>void</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>int</name><modifier>*</modifier></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>int</name></type> <name>a</name>, <name>b</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><specifier>const</specifier> <name>int</name></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><specifier>const</specifier> <modifier>*</modifier> <name>int</name> <modifier>*</modifier></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <function_decl><type><name>int</name></type> (<modifier>*</modifier><name>ENGINE_CTRL_FUNC_PTR</name>)<parameter_list>(<parameter><decl><type><name>ENGINE</name> <modifier>*</modifier></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>long</name></type></decl></parameter>, <parameter><decl><type><name>void</name> <modifier>*</modifier></type></decl></parameter>, <parameter><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>f</name>)<parameter_list>()</parameter_list></function_decl></parameter>)</parameter_list>;</function_decl></typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <function_decl><type><name>int</name></type> (<modifier>*</modifier><name>ENGINE_CTRL_FUNC_PTR</name>) <macro><name>D</name><argument_list>(<argument>a</argument>)</argument_list></macro> <parameter_list>(<parameter><decl><type><name>ENGINE</name> <modifier>*</modifier></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>long</name></type></decl></parameter>, <parameter><decl><type><name>void</name> <modifier>*</modifier></type></decl></parameter>, <parameter><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>f</name>)<parameter_list>()</parameter_list></function_decl></parameter>)</parameter_list>;</function_decl></typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><enum>enum <block>{ <decl><name>a</name></decl> }</block></enum></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name></decl> }</block></enum></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><enum>enum <block>{ <decl><name>a</name></decl>, <decl><name>b</name> <init>= <expr><name>c</name></expr></init></decl> }</block></enum></type> <name>a</name>;</typedef>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name>float</name> <name>SFtype</name></type> <name>__attribute__</name> ((<name>mode</name> (<name>SF</name>)));</typedef>
 </unit>
 

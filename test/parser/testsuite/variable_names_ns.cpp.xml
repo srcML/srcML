@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="variable_names_ns">
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><name>a</name><operator>::</operator></name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><operator>::</operator><name>a</name></name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><name>a</name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><name>_a</name><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><name>a</name><operator>::</operator><name>_b</name></name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><name>_a</name><operator>::</operator><name>_b</name></name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><name>a</name><operator>::</operator><name>b</name><operator>::</operator><name>c</name></name></expr>;</expr_stmt>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><name>a</name><operator>::</operator><name>b</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 

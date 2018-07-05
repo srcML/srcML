@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="expression" filename="expression_m">
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <expr_stmt><expr><call><name>@protocol</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>  
 

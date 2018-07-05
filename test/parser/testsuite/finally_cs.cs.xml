@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="finally">
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
     <try>try <block>{}</block>
       <catch>catch <block>{}</block></catch>
       <finally>finally <block>{}</block></finally></try>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
     <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
       <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
       <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
     <try>try <block>{
         <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
           <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
@@ -23,7 +23,7 @@
       <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
     <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
       <catch>catch <block>{
           <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
@@ -33,7 +33,7 @@
       <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
     <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
       <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
       <finally>finally <block>{
@@ -43,7 +43,7 @@
           }</block></finally></try>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
     <try>try <block>{
         <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
           <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
@@ -61,21 +61,21 @@
           }</block></finally></try>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
     <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo">
       <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
         <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
         <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></block></for>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
     <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
       <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
         <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>
         <finally>finally <block>{<expr_stmt><expr><name>c</name></expr>;</expr_stmt>}</block></finally></try></block></while>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
     <if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
         <try>try <block>{<expr_stmt><expr><name>a</name></expr>;</expr_stmt>}</block>
           <catch>catch <block>{<expr_stmt><expr><name>b</name></expr>;</expr_stmt>}</block></catch>

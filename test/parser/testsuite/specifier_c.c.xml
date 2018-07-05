@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="specifier" filename="specifier_c">
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>register</specifier></type></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><specifier>inline</specifier></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><specifier>extern</specifier></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>restrict</specifier></type></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>_Complex</specifier></type></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>_Imaginary</specifier></type></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><specifier>_Noreturn</specifier></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>_Thread_local</specifier></type></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>__block</specifier></type></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>__weak</specifier></type></decl>;</decl_stmt>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>__strong</specifier></type></decl>;</decl_stmt>
 </unit>
 

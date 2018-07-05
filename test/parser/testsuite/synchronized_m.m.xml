@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="synchronized" filename="synchronized_m">
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <synchronized>@synchronized<init>(<expr><name>foo</name></expr>)</init> <block>{}</block></synchronized>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <synchronized>@synchronized<init>(<expr><name>factories</name></expr>)</init> <block>{}</block></synchronized>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <synchronized>@synchronized<init>(<expr><name>factories</name></expr>)</init> <block>{
     <for>for <control>(<init><decl><type><name>ExtensionFactory</name></type> <name>factory</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition>;</condition><incr/>)</control> <block>{
         <expr_stmt><expr><name>t</name> <operator>=</operator> <operator>(</operator><name>T</name><operator>)</operator> <call><name><name>factory</name><operator>.</operator><name>getElementWrapper</name></name><argument_list>(<argument><expr><name>internal</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>

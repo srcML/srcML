@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="container_literal" filename="container_literal_m">
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <expr_stmt><expr><index>@[ ]</index></expr>;</expr_stmt>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <expr_stmt><expr><index>@[ <expr><literal type="number">0</literal></expr> ]</index></expr>;</expr_stmt>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <expr_stmt><expr><index>@[ <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr> ]</index></expr>;</expr_stmt>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <decl_stmt><decl><type><name>NSArray</name> <modifier>*</modifier></type><name>array</name> <init>= <expr><index>@[ <expr><name>@Hello</name></expr>, <expr><name>NSApp</name></expr>, <expr><call>[<receiver><expr><name>NSNumber</name></expr></receiver> <message><selector><name>numberWithInt</name>:</selector><argument><expr><literal type="number">42</literal></expr></argument></message>]</call></expr> ]</index></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <expr_stmt><expr><literal type="number">1</literal> <operator>+</operator> <block>@{ }</block></expr>;</expr_stmt>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <expr_stmt><expr><literal type="number">1</literal> <operator>+</operator> <block>@{ <expr><literal type="number">0</literal></expr> }</block></expr>;</expr_stmt>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <expr_stmt><expr><literal type="number">1</literal> <operator>+</operator> <block>@{ <expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr> }</block></expr>;</expr_stmt>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <decl_stmt><decl><type><name>NSArray</name> <modifier>*</modifier></type><name>array</name> <init>= <expr><block>@{ <expr><name>@Hello</name></expr>, <expr><name>NSApp</name></expr>, <expr><call>[<receiver><expr><name>NSNumber</name></expr></receiver> <message><selector><name>numberWithInt</name>:</selector><argument><expr><literal type="number">42</literal></expr></argument></message>]</call></expr> }</block></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit language="Objective-C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
     <decl_stmt><decl><type><name>NSDictionary</name> <modifier>*</modifier></type><name>dictionary</name> <init>= <expr><block>@{
     <expr><literal type="string">@"name"</literal></expr> : <expr><call><name>NSUserName</name><argument_list>()</argument_list></call></expr>,
     <expr><literal type="string">@"date"</literal></expr> : <expr><call>[<receiver><expr><name>NSDate</name></expr></receiver> <message><selector><name>date</name></selector></message>]</call></expr>,

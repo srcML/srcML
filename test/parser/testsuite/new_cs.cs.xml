@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="new" filename="new_cs">
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>Foo</name> <block>{ <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><operator>new</operator> <call><name>Foo</name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></function> }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>Foo</name> <block>{ <function_decl><specifier>new</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl> }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>Foo</name> <block>{ <decl_stmt><decl><specifier>new</specifier> <type><name>void</name></type> <name>a</name></decl>;</decl_stmt> }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>Foo</name> <block>{ 
 
     <class><specifier>new</specifier> <specifier>public</specifier> class <name>Bar</name> <block>{
@@ -27,7 +27,7 @@
 }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>Foo</name> <block>{ 
 
 	<property><specifier>new</specifier> <specifier>public</specifier> <type><name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
@@ -37,7 +37,7 @@
 }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>Foo</name> <block>{ 
 
 	<enum><specifier>new</specifier> <specifier>public</specifier> enum <block>{}</block>;</enum>
@@ -45,7 +45,7 @@
 }</block></class>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>Foo</name> <block>{ 
 
 	<enum><specifier>public</specifier> <specifier>new</specifier> enum <block>{}</block>;</enum>
@@ -55,7 +55,7 @@
 
 
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <struct>struct <name>Foo</name> <block>{ 
 
 	<enum><specifier>public</specifier> <specifier>new</specifier> enum <block>{}</block>;</enum>
@@ -63,11 +63,11 @@
 }</block></struct>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <constructor><specifier>public</specifier> <specifier>new</specifier> <name>A</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
 </unit>
 
-<unit language="C#">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function_decl><specifier>public</specifier> <specifier>new</specifier> <type><name>void</name></type> <name>A</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 

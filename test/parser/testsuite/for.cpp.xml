@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="for">
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <for>for <control>(<init><expr><name>depth</name> <operator>=</operator> <literal type="number">0</literal></expr><operator>,</operator> <expr><name>p</name> <operator>=</operator> <name>r</name></expr>;</init> <condition><expr><name>depth</name> <operator>&lt;</operator> <name>MAX_IORES_LEVEL</name></expr>;</condition> <incr><expr><name>depth</name><operator>++</operator></expr><operator>,</operator> <expr><name>p</name> <operator>=</operator> <name><name>p</name><operator>-&gt;</operator><name>parent</name></name></expr></incr>)</control><block type="pseudo">
      <empty_stmt>;</empty_stmt></block></for>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <block>{
 <for>for <control>(<init><expr><name>ei</name> <operator>=</operator> <call><name>ei_start</name> <argument_list>(<argument><expr><name><name>ENTRY_BLOCK_PTR</name><operator>-&gt;</operator><name>succs</name></name></expr></argument>)</argument_list></call></expr>;</init> <condition><expr><operator>(</operator><name>tmp</name> <operator>=</operator> <call><name>ei_safe_edge</name> <argument_list>(<argument><expr><name>ei</name></expr></argument>)</argument_list></call><operator>)</operator></expr>;</condition> <incr/>)</control><block type="pseudo">
   <empty_stmt>;</empty_stmt></block></for>
 }</block>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><type ref="prev"/><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><literal type="number">1</literal></expr>;</condition> <incr/>)</control><block type="pseudo">
 <empty_stmt>;</empty_stmt></block></for>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><type ref="prev"/><name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl><type ref="prev"/><name>c</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><literal type="number">1</literal></expr>;</condition> <incr/>)</control><block type="pseudo">
 <empty_stmt>;</empty_stmt></block></for>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl>;</init> <condition><expr><literal type="number">1</literal></expr>;</condition> <incr/>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></for></unit>
 
 </unit>

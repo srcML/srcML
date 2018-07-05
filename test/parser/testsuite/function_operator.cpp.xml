@@ -1,194 +1,194 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="function_operator">
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>+</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>-</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>*</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>/</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>%</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>^</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&amp;</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>|</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>~</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>!</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&lt;</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&gt;</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>+=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>-=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>*=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>/=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>%=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>^=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&amp;=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>|=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&lt;&lt;</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&gt;&gt;</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&gt;&gt;=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&lt;&lt;=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>==</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>!=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&lt;=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&gt;=</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>&amp;&amp;</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>||</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>++</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>--</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>-&gt;*</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>,</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>-&gt;</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>[]</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>()</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator <name>new</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator <name>new[]</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator <name>delete</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator <name>delete[]</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><name>operator <name>int</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name>operator<name>+</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><type><name>int</name></type> <name><name>a</name><operator>::</operator><name>operator<name>+</name></name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><name><name>a</name><operator>::</operator><name>operator <name>A</name></name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function type="operator"><name><name>b</name><operator>::</operator><name>a</name><operator>::</operator><name>operator <name>A</name></name></name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit language="C++"><function_decl type="operator"><name>operator <name><name>std</name><operator>::</operator><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list></name></name></name><parameter_list>()</parameter_list>;</function_decl></unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++"><function_decl type="operator"><name>operator <name><name>std</name><operator>::</operator><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list></name></name></name><parameter_list>()</parameter_list>;</function_decl></unit>
 
 </unit>

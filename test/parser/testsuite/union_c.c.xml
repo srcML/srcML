@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="cunion">
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union_decl>union <name>A</name>;</union_decl>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union>union <name>A</name> <block>{}</block>;</union>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union>union <macro><name>M</name></macro> <name>A</name> <block>{}</block>;</union>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union>union <name>A</name> <block>{ }</block>;</union>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union>union <name>A</name> <block>{
 }</block>;</union>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union>union <name>A</name> <block>{}</block>;</union>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union>union <name>a</name> <block>{
     <function_decl><type><name>void</name></type> <name>b</name><parameter_list>()</parameter_list>;</function_decl>
 }</block>;</union>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <macro><name>MACRO</name></macro> <union>union <block>{}</block> <decl><name>u</name></decl>;</union>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union>union <block>{ <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</decl_stmt> }</block>;</union>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union_decl>union <name>a</name>, <name>b</name>;</union_decl>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union_decl>union <name>a</name>, <name>b</name>, <name>c</name>;</union_decl>
 </unit>
 
