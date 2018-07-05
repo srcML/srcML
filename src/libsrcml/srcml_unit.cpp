@@ -341,6 +341,7 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
     // size of resulting raw version (no unit tag)
     auto rawsize = unit->srcml.size() - (unit->insert_end - unit->insert_begin);
 
+    unit->srcml_fragment = "";
     unit->srcml_fragment->reserve(rawsize);
     unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
     unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
@@ -377,6 +378,7 @@ const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
     if (rawsize <= 0)
         return "";
 
+    unit->srcml_raw = "";
     unit->srcml_raw->assign(unit->srcml, unit->content_begin, rawsize);
 
     return unit->srcml_raw->c_str();
@@ -602,10 +604,6 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
     // generate this source from the srcml
     if (true || !unit->src) {
 
-<<<<<<< HEAD
-        std::string savesrc = *unit->src;
-=======
->>>>>>> srcML/develop
         unit->src = "";
 
         // parse the srcml collecting the (now needed) src

@@ -66,9 +66,13 @@ static void* start_routine(thread_args* args) {
  * Construct a srcml_sax2_reader using a parser input buffer
  */
 srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number)
-    : control(input), handler(revision_number), thread(start_routine, &args) {
+    : control(input), handler(revision_number) {
 
     handler.archive = archive;
+
+    // Setup thread here after things are created and settled
+    // Do not put in member initialization list as it can cause random crashes
+    thread = std::thread(start_routine, &args);
 
     handler.wait();
 }
