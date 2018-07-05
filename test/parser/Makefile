@@ -41,6 +41,6 @@ shortjava : testbase
 	@export SRC2SRCML=${SRC2SRCML}; export SRCML2SRC=${SRCML2SRC}; time ./runtest.py ".*\.all" Java
 
 clean :
-	cd testsuite && make clean
+	cd testsuite && make -f Makefile.gen clean
 	cd ..
 	rm -f srcMLTestReport*
