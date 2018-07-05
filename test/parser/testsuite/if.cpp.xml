@@ -170,8 +170,4 @@
 <if_stmt><if>if <condition>(<expr><name>emit</name></expr>)</condition> <block>{}</block></if></if_stmt>
 </unit>
 
-<unit language="C++">
-<if_stmt><if>if <specifier>constexpr</specifier> <condition>(<expr><name>emit</name></expr>)</condition> <block>{}</block></if></if_stmt>
-</unit>
-
 </unit>
