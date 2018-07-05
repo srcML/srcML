@@ -28,12 +28,12 @@
 </xsl:template>
 
 <!-- wrap the entire contents of the unit inside a block -->
-<xsl:template match="src:unit/src:unit"><unit><xsl:text>
+<xsl:template match="src:unit/src:unit"><xsl:copy><xsl:copy-of select="@*"/><xsl:text>
 </xsl:text><if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition> <block>{
     <xsl:copy-of select="*|text()"/>}</block></if>
 <else>else <block>{
     <xsl:copy-of select="*|text()"/>}</block></else></if_stmt><xsl:text>
-</xsl:text></unit>
+</xsl:text></xsl:copy>
 </xsl:template>
 
 <!-- default identity copy -->
