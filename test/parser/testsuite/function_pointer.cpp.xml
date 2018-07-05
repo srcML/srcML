@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="function_pointer" filename="function_pointer">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="function_pointer" filename="function_pointer">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><function_decl><type><name>double</name></type> (<modifier>*</modifier><name>g</name>)<parameter_list>()</parameter_list></function_decl></parameter>)</parameter_list>;</function_decl>

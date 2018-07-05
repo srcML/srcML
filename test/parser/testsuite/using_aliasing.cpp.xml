@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="using_aliasing">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="using_aliasing">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <using>using <name>a</name> <init>= <type><specifier>const</specifier> <name>int</name></type></init>;</using>

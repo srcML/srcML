@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="foreach">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="foreach">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>b</name></expr></range></decl></init>)</control><block type="pseudo">

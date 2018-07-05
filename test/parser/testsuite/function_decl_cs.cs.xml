@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="function_decl" filename="function_decl_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="function_decl" filename="function_decl_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>*</modifier></type></decl></parameter>)</parameter_list>;</function_decl>

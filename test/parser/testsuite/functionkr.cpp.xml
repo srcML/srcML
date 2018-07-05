@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="functionkr">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C" url="functionkr">
 
 <unit language="C">
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list>

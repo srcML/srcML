@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="decl_simple">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="decl_simple">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>

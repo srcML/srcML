@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="new" filename="new_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="new" filename="new_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>Foo</name> <block>{ <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><operator>new</operator> <call><name>Foo</name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></function> }</block></class>

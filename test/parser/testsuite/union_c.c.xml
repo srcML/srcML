@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="cunion">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C" url="cunion">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <union_decl>union <name>A</name>;</union_decl>

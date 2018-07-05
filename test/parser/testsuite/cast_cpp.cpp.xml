@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="cast" filename="cast_cpp">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="cast" filename="cast_cpp">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>A</name></type> <name>a</name> <init>= <expr><operator>(</operator><name>A</name><operator>)</operator><name>a</name></expr></init></decl>;</decl_stmt>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="cast" filename="reinterpret_cast">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="cast" filename="reinterpret_cast">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><cast type="reinterpret">reinterpret_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>()</argument_list></cast></expr>;</expr_stmt>

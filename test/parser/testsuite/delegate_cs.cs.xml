@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="delegate" filename="delegate_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="delegate" filename="delegate_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name><name>button1</name><operator>.</operator><name>Click</name></name> <operator>+=</operator> <delegate><name>delegate</name><parameter_list>(<parameter><decl><type><name><name>System</name><operator>.</operator><name>Object</name></name></type> <name>o</name></decl></parameter>, <parameter><decl><type><name><name>System</name><operator>.</operator><name>EventArgs</name></name></type> <name>e</name></decl></parameter>)</parameter_list>

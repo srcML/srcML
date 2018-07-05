@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="lambda" filename="lambda_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="lambda" filename="lambda_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>w</name></decl></parameter></parameter_list> =&gt;<block type="pseudo"> <expr><name><name>w</name><operator>.</operator><name>Length</name></name></expr></block></lambda></expr>;</expr_stmt>

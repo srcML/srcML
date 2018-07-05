@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="function_pointer" filename="function_pointer_cpp">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="function_pointer" filename="function_pointer_cpp">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><type><name>bool</name></type> <name><name>Blit</name><operator>::</operator><name>setShader</name></name><parameter_list>(<parameter><decl><type><name>ShaderId</name></type> <name>source</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>profile</name></decl></parameter>,

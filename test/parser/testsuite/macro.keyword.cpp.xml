@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="macro.keyword">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="macro.keyword">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>a</name></macro> <if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><empty_stmt>;</empty_stmt></block></if></if_stmt>

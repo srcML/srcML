@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="macro-list" filename="macro-list"><macro-list token="MACRO" type="src:macro"/><macro-list token="NAME" type="src:name"/><macro-list token="TYPE" type="src:type"/><macro-list token="CASE" type="src:case"/><macro-list token="LABEL" type="src:label"/><macro-list token="SPECIFIER" type="src:specifier"/>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="macro-list" filename="macro-list"><macro-list token="MACRO" type="src:macro"/><macro-list token="NAME" type="src:name"/><macro-list token="TYPE" type="src:type"/><macro-list token="CASE" type="src:case"/><macro-list token="LABEL" type="src:label"/><macro-list token="SPECIFIER" type="src:specifier"/>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>MACRO</name><parameter_list>()</parameter_list></cpp:macro></cpp:define>

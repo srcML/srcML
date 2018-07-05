@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="typedef_template">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="typedef_template">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <typedef>typedef <type><name><name>a</name><argument_list type="generic">&lt;<argument><expr><name>b</name></expr></argument>&gt;</argument_list></name></type> <name>a</name>;</typedef>

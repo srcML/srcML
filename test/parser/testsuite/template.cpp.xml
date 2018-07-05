@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="template">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="template">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>n</name></parameter>&gt;</parameter_list></template> <type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list>;</function_decl>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="decltype" filename="decltype">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="decltype" filename="decltype">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><decltype>decltype<argument_list>(<argument><expr><name>int</name></expr></argument>)</argument_list></decltype></type></decl>;</decl_stmt>

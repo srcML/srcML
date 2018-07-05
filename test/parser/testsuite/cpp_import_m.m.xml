@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="preprocessor" filename="cpp_import">
+<unit xmlns="http://www.srcML.org/srcML/src" language="Objective-C" url="preprocessor" filename="cpp_import">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <cpp:import>#<cpp:directive>import</cpp:directive> <cpp:file>"abc"</cpp:file></cpp:import>

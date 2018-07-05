@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="alignof" filename="alignof">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="alignof" filename="alignof">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><alignof>alignof<argument_list>()</argument_list></alignof></expr>;</expr_stmt>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="for">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="for">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <for>for <control>(<init><expr><name>depth</name> <operator>=</operator> <literal type="number">0</literal></expr><operator>,</operator> <expr><name>p</name> <operator>=</operator> <name>r</name></expr>;</init> <condition><expr><name>depth</name> <operator>&lt;</operator> <name>MAX_IORES_LEVEL</name></expr>;</condition> <incr><expr><name>depth</name><operator>++</operator></expr><operator>,</operator> <expr><name>p</name> <operator>=</operator> <name><name>p</name><operator>-&gt;</operator><name>parent</name></name></expr></incr>)</control><block type="pseudo">

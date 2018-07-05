@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="for">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="for">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><block type="pseudo">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="unsafe" filename="unsafe_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="unsafe" filename="unsafe_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <unsafe>unsafe <block>{<expr_stmt><expr><name>a</name> <operator>+</operator> <name>b</name></expr></expr_stmt>}</block></unsafe>

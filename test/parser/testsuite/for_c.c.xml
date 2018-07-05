@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="for" filename="for_c">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C" url="for" filename="for_c">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>, <decl><type ref="prev"/><name>b</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</init> <condition><expr><literal type="number">1</literal></expr>;</condition> <incr/>)</control><block type="pseudo">

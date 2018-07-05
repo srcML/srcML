@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" language="C++" url="openmp">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:omp="http://www.srcML.org/srcML/openmp" language="C++" url="openmp">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name></omp:directive></cpp:pragma>

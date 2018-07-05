@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="protocol" filename="protocol_declaration_m">
+<unit xmlns="http://www.srcML.org/srcML/src" language="Objective-C" url="protocol" filename="protocol_declaration_m">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <protocol_decl>@protocol;</protocol_decl>
