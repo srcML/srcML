@@ -31,11 +31,11 @@
 
 <!-- filter out any if statements with an else -->
 <xsl:template match="src:unit/src:unit" xml:space="preserve">
-<unit>
+<xsl:copy><xsl:copy-of select="@*"/>
 <block>{
 <xsl:copy-of select="*|text()"/>
 }</block>
-</unit>
+</xsl:copy>
 </xsl:template>
 
 <!-- default identity copy -->
