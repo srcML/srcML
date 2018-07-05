@@ -190,7 +190,7 @@ void start_document(void* ctx) {
 
     // save for dictionary lookup of common elements
     UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", strlen("unit"));
-    MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro_list", strlen("macro_list"));
+    MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", strlen("macro-list"));
     ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
 
     // save the encoding from the input
@@ -397,16 +397,16 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
         return;
 
     SRCSAX_DEBUG_START(localname);
-/*
+
     // if macros are found, then must return, but first save them if necessary
     if (localname == MACRO_LIST_ENTRY) {
-
+/*
         state->meta_tags.emplace_back(srcml_element(localname, prefix, URI,
                                                     nb_namespaces, namespaces,
                                                     nb_attributes, nb_defaulted, attributes));
+*/
         return;
     }
-*/
 
     // archive when the first element after the root is <unit>
     state->context->is_archive = (localname == UNIT_ENTRY);
