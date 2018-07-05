@@ -369,6 +369,14 @@ element clean_element_input(const std::basic_string< char >& element_input);
 // Sanitize attribute input
 attribute clean_attribute_input(const std::basic_string< char >& attribute_input);
 
+template<typename T, typename T2>
+T notifier_name(T value, T2 value2, const char* name) {
+    value->notifier(value2);
+    value->value_name(name);
+
+    return value;
+}
+
 // Interpretation of CLI options
 srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
@@ -399,7 +407,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         markup_options.add_options()
             ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.srcML.org/srcML/position'")
-            ("tabs", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::tabs>), "set tabs arg characters apart.  Default is 8")
+            ("tabs", notifier_name(prog_opts::value<int>(), &option_field<&srcml_request_t::tabs>, "NUM"), "set tabs NUM characters apart.  Default is 8")
             ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "enable preprocessor parsing and markup for Java and non-C/C++ languages")
             ("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_MARKUP_IF0>), "markup cpp #if 0 regions")
             ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
@@ -412,17 +420,13 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix), "set the namespace. arg format PREFIX=URI")
             ;
 
-        auto prefix = prog_opts::value<std::string>();
-        prefix->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>);
-        prefix->value_name("URI");
-
         metadata_options.add_options()
             ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the filename attribute")
             ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the url attribute")
             ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the version attribute")
             ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_HASH>), "add hash to srcml output")
             ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
-            ("prefix,p", prefix, "display prefix of namespace given by URI and exit")
+            ("prefix,p", notifier_name(prog_opts::value<std::string>(), &option_field<&srcml_request_t::xmlns_prefix_query>, "URI"), "display prefix of namespace given by URI and exit")
             ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "display source language and exit")
             ("show-url", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_URL>), "display source url name and exit")
             ("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "display source filename and exit")
@@ -435,16 +439,16 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         srcml2src_options.add_options()
             ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "output in text instead of XML")
-            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir), "extract all files from srcML and create them in the filesystem")
+            ("to-dir", notifier_name(prog_opts::value<std::string>(), &option_to_dir, "DIRECTORY"), "extract all files from srcML and create them in DIRECTORY in the filesystem")
             ;
 
         query_transform.add_options()
-            ("relaxng", prog_opts::value< std::vector<std::string> >(), "output individual units that match RELAXNG file or URI")
-            ("xpath", prog_opts::value< std::vector<std::string> >(), "apply XPATH expression to each individual unit")
-            ("xslt", prog_opts::value< std::vector<std::string> >(), "apply XSLT file or URI transformation to each individual unit")
-            ("attribute", prog_opts::value< std::vector<std::string> >(), "add attribute to xpath query")
-            ("element", prog_opts::value< std::vector<std::string> >(), "add element to xpath query")
-            ("unit,U", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::unit>), "extract individual unit number from srcML")
+            ("relaxng", prog_opts::value< std::vector<std::string> >()->value_name("RELAXNG_URI"), "output individual units that match RELAXNG_URI")
+            ("xpath", prog_opts::value< std::vector<std::string> >()->value_name("XPATH"), "apply XPATH expression to each individual unit")
+            ("xslt", prog_opts::value< std::vector<std::string> >()->value_name("XSLT_URI"), "apply XSLT_URI transformation to each individual unit")
+            ("attribute", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:URI=\"VALUE\""), "add attribute PREFIX:URI=\"VALUE\" to element results of xpath query")
+            ("element", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:URI"), "wrap results of XPath query with element PREFIX:URI")
+            ("unit,U", notifier_name(prog_opts::value<int>(), &option_field<&srcml_request_t::unit>, "NUM"), "extract individual unit NUM from srcML")
             ("revision", prog_opts::value<size_t>()->notifier(&option_field<&srcml_request_t::revision>), "extract the given revision (0 = original, 1 = modified)")
             ;
 
