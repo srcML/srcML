@@ -602,7 +602,8 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
 
     // if this unit was parsed from source, then the src does not exist
     // generate this source from the srcml
-    if (true || !unit->src) {
+    // @todo Should this be an option to turn off/on? For debugging?
+    if (/* true || */ !unit->src) {
 
         unit->src = "";
 

@@ -29,6 +29,13 @@
     <xsl:attribute name="language"><xsl:value-of select="$language"/></xsl:attribute>
 </xsl:template>
 
+<!-- Remove any namespaces from unit for Java test cases (basically to get rid of cpp namespace) -->
+<xsl:template match="src:unit/src:unit[contains(@language, 'Java')]">FOO
+  <xsl:element name="FOO">
+   <xsl:apply-templates select="@* | node()"/>
+  </xsl:element>
+</xsl:template>
+
 <!-- default identity copy -->
 <xsl:template match="@*|node()">
 	<xsl:copy>

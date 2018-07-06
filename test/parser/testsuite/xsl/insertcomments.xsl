@@ -40,6 +40,18 @@
   <xsl:apply-templates select="." mode="replace"/>
 </xsl:template>
 
+<!-- Remove any namespaces from unit for Java test cases (basically to get rid of cpp namespace) -->
+<xsl:template match="src:unit/src:unit">
+<xsl:choose>
+<xsl:when test="contains(@language, 'Java')">
+  <xsl:element name="{local-name()}">
+   <xsl:apply-templates select="@* | node()"/>
+  </xsl:element>
+</xsl:when>
+<xsl:otherwise><xsl:copy-of select="."/></xsl:otherwise>
+</xsl:choose>
+</xsl:template>
+
 <xsl:template match="text()[contains(., ' ')]" mode="replace">
   <xsl:value-of select="substring-before(., ' ')"/>
   <xsl:value-of select="' '"/>
