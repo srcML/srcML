@@ -335,12 +335,14 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
+    // cached fragment
     if (unit->srcml_fragment)
         return unit->srcml_fragment->c_str();
 
     // size of resulting raw version (no unit tag)
     auto rawsize = unit->srcml.size() - (unit->insert_end - unit->insert_begin);
 
+    // construct the fragment from the full srcML, excluding the inserted root tag stuff (including namespaces)
     unit->srcml_fragment = "";
     unit->srcml_fragment->reserve(rawsize);
     unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
@@ -378,8 +380,7 @@ const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
     if (rawsize <= 0)
         return "";
 
-    unit->srcml_raw = "";
-    unit->srcml_raw->assign(unit->srcml, unit->content_begin, rawsize);
+    unit->srcml_raw = std::string(unit->srcml, unit->content_begin, rawsize);
 
     return unit->srcml_raw->c_str();
 }
