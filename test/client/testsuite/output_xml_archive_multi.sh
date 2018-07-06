@@ -35,7 +35,7 @@ define outputb <<- 'STDOUT'
 define output <<- 'STDOUT'
 	STDOUT
 
-xmlcheck "$output"
+#xmlcheck "$output"
 xmlcheck "$outputa"
 xmlcheck "$outputb"
 xmlcheck "$srcml"
