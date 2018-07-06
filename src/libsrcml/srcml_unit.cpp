@@ -850,12 +850,13 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
     xmlTextWriterFlush(unit->unit_translator->output_textwriter());
     unit->content_begin = unit->unit_translator->output_buffer()->written + 1;
 
-    // @todo This is a hack
-    std::string s = (const char*) xmlBufferContent(unit->output_buffer);
-    auto pos = s.find("xmlns");
+    // record end of content (after xmlns for srcML)
+    // @todo Only records for srcML namespace, not user-defined
+    const char* s = (const char*) xmlBufferContent(unit->output_buffer);
+    auto pos = strstr(s, "xmlns") - s;
     unit->insert_begin = (int) pos;
-    auto firstquote = s.find("\"", pos + 1);
-    auto secondquote = s.find("\"", firstquote + 1);
+    auto firstquote = strchr(s + pos + 1, '\"') - s;
+    auto secondquote = strchr(s + firstquote + 1, '\"') - s;
     unit->insert_end = (int) secondquote + 2;
 
     return SRCML_STATUS_OK;
