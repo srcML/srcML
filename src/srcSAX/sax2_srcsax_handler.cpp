@@ -481,6 +481,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
         if (pos >= 0) {
             // merge the namespaces from the root into this one
+            state->unitsrcml.reserve(ctxt->input->cur - state->base + 1 + (state->context->is_archive ? state->rootnsstr.size() : 0));
             state->unitsrcml.assign((const char*) state->base, pos);
             state->insert_begin = (int) state->unitsrcml.size();
             if (state->context->is_archive) {
@@ -489,6 +490,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             }
 
             state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
+
             if (!state->context->is_archive) {
                 // @todo This is a hack
                 std::string& s = state->unitsrcml;
