@@ -184,8 +184,6 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
 
     if (archive == NULL || xslt_filename == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
-  //  if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
-//    return SRCML_STATUS_INVALID_IO_OPERATION;
 
     std::unique_ptr<xmlDoc> doc(xmlReadFile(xslt_filename, 0, 0));
     if (doc == nullptr)
@@ -391,12 +389,9 @@ int srcml_append_transform_param(srcml_archive* archive, const char* xpath_param
 
     if (archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
-    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
-        return SRCML_STATUS_INVALID_IO_OPERATION;
     if (archive->transformations.size() == 0)
         return SRCML_STATUS_NO_TRANSFORMATION;
 
-    archive->transformations.back()->xsl_parameters.pop_back();
     archive->transformations.back()->xsl_parameters.push_back(xpath_param_name);
     archive->transformations.back()->xsl_parameters.push_back(xpath_param_value);
 
@@ -609,6 +604,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             // very important to flush to make sure the unit contents are all present
             // also performs a free of resources
             xmlOutputBufferClose(output);
+
             break;
         }
 

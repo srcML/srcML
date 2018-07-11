@@ -275,10 +275,21 @@ void create_srcml(const srcml_request_t& srcml_request,
                 exit(-1);
             }
         }
-/*
-        } else if (protocol == "xpathparam") {
-            //std::cerr << protocol << " : " << resource << "\n"; // Stub
+        
+        if (protocol == "xpathparam") {
 
+            // split resource into name and value
+            auto pos = resource.find('=');
+            std::string name = resource.substr(0, pos);
+            std::string value = resource.substr(pos + 1);
+            // @todo Should we always wrap?
+            if (value[0] != '"') {
+                value.insert(value.begin(), '"');
+                value.append("\"");
+            }
+            srcml_append_transform_param(srcml_arch, name.c_str(), value.c_str());
+        }
+/*
         } else if (protocol == "relaxng") {
             if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");

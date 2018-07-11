@@ -142,9 +142,9 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int position) cons
 
     // convert to c-array of c-strings, null terminated
     // @todo Extract Function
-    std::vector<const char*> cparams(params.size() + 1);
-    for (size_t i = 0; i < params.size(); ++i) {
-        cparams[i] = params[i].c_str();
+    std::vector<const char*> cparams(xsl_parameters.size() + 1);
+    for (size_t i = 0; i < xsl_parameters.size(); ++i) {
+        cparams[i] = xsl_parameters[i].c_str();
     }
     cparams.back() = 0;
 
