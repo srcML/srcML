@@ -284,7 +284,7 @@ void create_srcml(const srcml_request_t& srcml_request,
             std::string value = resource.substr(pos + 1);
             // @todo Should we always wrap?
             if (value[0] != '"') {
-                value.insert(value.begin(), '"');
+                value.insert(0, 1, '"');
                 value.append("\"");
             }
             srcml_append_transform_param(srcml_arch, name.c_str(), value.c_str());
