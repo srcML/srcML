@@ -255,16 +255,16 @@ void option_field<&srcml_request_t::tabs>(int value) {
 }
 
 void option_output_filename(const std::string& value) {
-  srcml_request.output_filename = srcml_output_dest(value == "-" ? "stdout://-" : value);
+    srcml_request.output_filename = srcml_output_dest(value == "-" ? "stdout://-" : value);
 
-  if (srcml_request.output_filename.protocol == "file")  {
-    if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension == ""
-        && srcml_request.output_filename.filename[srcml_request.output_filename.filename.length() - 1] == '/')) {
+    if (srcml_request.output_filename.protocol == "file")  {
+      if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension == ""
+          && srcml_request.output_filename.filename[srcml_request.output_filename.filename.length() - 1] == '/')) {
 
-      srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
-      srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
+        srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
+        srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
+      }
     }
-  }
 }
 
 void option_xmlns_uri(const std::string& value) {
@@ -273,8 +273,8 @@ void option_xmlns_uri(const std::string& value) {
 }
 
 void option_xmlns_prefix(const std::vector<std::string>& values) {
-    for (const auto& value : values )
-    {
+    for (const auto& value : values ) {
+
       std::size_t delim = value.find("=");
       if (delim == std::string::npos) {
         SRCMLstatus(ERROR_MSG, "srcml: xmlns format missing \"=\"");
@@ -311,9 +311,9 @@ void positional_args(const std::vector<std::string>& value) {
 }
 
 void raw_text_args(const std::vector<std::string>& value) {
-  for (const auto& raw_text : value) {
-    srcml_request.input_sources.push_back(src_prefix_add_uri("text", raw_text));
-  }
+    for (const auto& raw_text : value) {
+        srcml_request.input_sources.push_back(src_prefix_add_uri("text", raw_text));
+    }
 }
 
 void raw_null_text_arg(const std::vector<std::string>& value) {
@@ -364,10 +364,10 @@ std::pair<std::string, std::string> custom_parser(const std::string& s);
 void debug_cli_opts(const struct srcml_request_t srcml_request);
 
 // Sanitize element input
-element clean_element_input(const std::basic_string< char >& element_input);
+element clean_element_input(const std::string& element_input);
 
 // Sanitize attribute input
-attribute clean_attribute_input(const std::basic_string< char >& attribute_input);
+attribute clean_attribute_input(const std::string& attribute_input);
 
 template<typename T, typename T2>
 T notifier_name(T value, T2 value2, const char* name) {
@@ -506,35 +506,35 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // loop the cli options in the order they were processed/received
         for (const auto& option : parsedOptions) {
-          if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam"
+            if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam"
              || option.string_key == "element" || option.string_key == "attribute") {
 
-            if (option.string_key == "xpath")
-              srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
+                if (option.string_key == "xpath")
+                    srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
 
-            for (const auto& vals : option.value) {
-              if (option.string_key == "element" && srcml_request.xpath_query_support.size() < 1) {
+                for (const auto& vals : option.value) {
+                    if (option.string_key == "element" && srcml_request.xpath_query_support.size() < 1) {
 
-                SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
-                exit(SRCML_STATUS_INVALID_ARGUMENT);
-              }
-              if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() < 1) {
+                        SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
+                        exit(SRCML_STATUS_INVALID_ARGUMENT);
+                    }
+                    if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() < 1) {
 
-                SRCMLstatus(ERROR_MSG, "srcml: attribute option must follow an --xpath option");
-                exit(SRCML_STATUS_INVALID_ARGUMENT);
-              }
+                        SRCMLstatus(ERROR_MSG, "srcml: attribute option must follow an --xpath option");
+                        exit(SRCML_STATUS_INVALID_ARGUMENT);
+                    }
 
-              if (option.string_key == "element") {
-                srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first = clean_element_input(vals);
-              }
-              else if (option.string_key == "attribute") {
-                srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].second = clean_attribute_input(vals);
-              }
-              else {
-                srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
-              }
+                    if (option.string_key == "element") {
+                        srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first = clean_element_input(vals);
+                    }
+                    else if (option.string_key == "attribute") {
+                        srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].second = clean_attribute_input(vals);
+                    }
+                    else {
+                        srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
+                    }
+                }
             }
-          }
         }
 
         prog_opts::store(cliopts , cli_map);
@@ -553,19 +553,19 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // If input was from stdin, then artificially put a "-" into the list of input files
         if (srcml_request.input_sources.empty())
-          positional_args(std::vector<std::string>(1, "stdin://-"));
+            positional_args(std::vector<std::string>(1, "stdin://-"));
 
         if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {
-          auto url = srcml_request.input_sources[0].resource;
-          while (url.length() > 0 && (url[0] == '.' || url[0] == '/')) {
-            url.erase(0,1);
-          }
-          srcml_request.att_url = url;
+            auto url = srcml_request.input_sources[0].resource;
+            while (url.length() > 0 && (url[0] == '.' || url[0] == '/')) {
+                url.erase(0,1);
+            }
+            srcml_request.att_url = url;
         }
 
         // If position option is used without tabs...set default tab of 8
         if ((*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0) || srcml_request.tabs == 0)
-          srcml_request.tabs = 8;
+            srcml_request.tabs = 8;
 
 #if defined(__GNUG__) && !defined(__MINGW32__)
         // automatic interactive use from stdin (not on redirect or pipe)
@@ -575,29 +575,29 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // check namespaces
         for (size_t i = 0; i < srcml_get_namespace_size(); ++i) {
-          std::string prefix = srcml_get_namespace_prefix(i);
-          std::string uri = srcml_get_namespace_uri(i);
+            std::string prefix = srcml_get_namespace_prefix(i);
+            std::string uri = srcml_get_namespace_uri(i);
 
-          // A reserved prefix wasn't used or it was set to the same uri
-          if (srcml_request.xmlns_namespaces.find(prefix) == srcml_request.xmlns_namespaces.end() || srcml_request.xmlns_namespaces[prefix] == uri) {
-            continue;
-          }
+            // A reserved prefix wasn't used or it was set to the same uri
+            if (srcml_request.xmlns_namespaces.find(prefix) == srcml_request.xmlns_namespaces.end() || srcml_request.xmlns_namespaces[prefix] == uri) {
+                continue;
+            }
 
-          // A reserved uri is set to a different prefix
-          if (srcml_request.xmlns_namespace_uris.find(uri) != srcml_request.xmlns_namespaces.end() && srcml_request.xmlns_namespace_uris[uri] != prefix) {
-            continue;
-          }
+            // A reserved uri is set to a different prefix
+            if (srcml_request.xmlns_namespace_uris.find(uri) != srcml_request.xmlns_namespaces.end() && srcml_request.xmlns_namespace_uris[uri] != prefix) {
+                continue;
+            }
 
-          SRCMLstatus(ERROR_MSG, "srcml: prefix \"" + prefix + "\" assigned multiple URIs \"" + uri + "\", \"" + srcml_request.xmlns_namespaces[prefix] + "\"");
-          exit(1); // TODO Need a real error code
+            SRCMLstatus(ERROR_MSG, "srcml: prefix \"" + prefix + "\" assigned multiple URIs \"" + uri + "\", \"" + srcml_request.xmlns_namespaces[prefix] + "\"");
+            exit(1); // TODO Need a real error code
         }
 
         // Some options imply others SRCML_COMMAND_XML
-		if (srcml_request.command & SRCML_COMMAND_XML_FRAGMENT)
-			option_command<SRCML_COMMAND_XML>(true);
+        if (srcml_request.command & SRCML_COMMAND_XML_FRAGMENT)
+            option_command<SRCML_COMMAND_XML>(true);
 
-		if (srcml_request.command & SRCML_COMMAND_XML_RAW)
-			option_command<SRCML_COMMAND_XML>(true);
+        if (srcml_request.command & SRCML_COMMAND_XML_RAW)
+            option_command<SRCML_COMMAND_XML>(true);
     }
     // Unknown Option
     catch(boost::program_options::unknown_option& e) {
@@ -658,8 +658,8 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
 
 // Check for dependent options
 void option_dependency(const prog_opts::variables_map& vm,
-                        const char* option, const char* dependent_option)
-{
+                        const char* option, const char* dependent_option) {
+
     if (vm.count(option) && !vm[option].defaulted()) {
         if (vm.count(dependent_option) == 0) {
             throw std::logic_error(std::string("Option '") + option
@@ -669,76 +669,75 @@ void option_dependency(const prog_opts::variables_map& vm,
 }
 
 bool is_transformation(const srcml_input_src& input) {
-  std::string ext = input.extension;
+    std::string ext = input.extension;
 
-  if (ext == ".rng") {
-    srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", input.filename));
-    return true;
-  }
+    if (ext == ".rng") {
+        srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", input.filename));
+        return true;
+    }
 
-  if (ext == ".xsl") {
-    srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));
-    return true;
-  }
+    if (ext == ".xsl") {
+        srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));
+        return true;
+    }
 
-  return false;
+    return false;
 }
 
-element clean_element_input(const std::basic_string< char >& element_input) {
-  std::string vals = element_input;
-  size_t elemn_index = vals.find(":");
+element clean_element_input(const std::string& element_input) {
+    std::string vals = element_input;
+    size_t elemn_index = vals.find(":");
 
-  // Element requires a prefix
-  if (elemn_index == std::string::npos) {
-    exit(1);
-  }
+    // Element requires a prefix
+    if (elemn_index == std::string::npos) {
+        exit(1);
+    }
 
-  element elem;
-  elem.prefix = vals.substr(0, elemn_index);
-  elem.name = vals.substr(elemn_index + 1);
-  return elem;
+    element elem;
+    elem.prefix = vals.substr(0, elemn_index);
+    elem.name = vals.substr(elemn_index + 1);
+    return elem;
 }
 
-attribute clean_attribute_input(const std::basic_string< char >& attribute_input) {
-  std::string vals = attribute_input;
-  size_t attrib_colon = vals.find(":");
-  size_t attrib_equals = vals.find("=");
+attribute clean_attribute_input(const std::string& attribute_input) {
+    std::string vals = attribute_input;
+    size_t attrib_colon = vals.find(":");
+    size_t attrib_equals = vals.find("=");
 
-  // Attribute must have a value
-  if (attrib_equals == std::string::npos) {
-    SRCMLstatus(ERROR_MSG, "srcml: the attribute %s is missing a value", vals);
-    exit(SRCML_STATUS_INVALID_ARGUMENT);
-  }
+    // Attribute must have a value
+    if (attrib_equals == std::string::npos) {
+        SRCMLstatus(ERROR_MSG, "srcml: the attribute %s is missing a value", vals);
+        exit(SRCML_STATUS_INVALID_ARGUMENT);
+    }
 
-  // Missing prefix requires an element with a prefix
-  if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first)) {
-    SRCMLstatus(ERROR_MSG, "srcml: the attribute %s is missing a prefix or an element with a prefix", vals);
-    exit(SRCML_STATUS_INVALID_ARGUMENT);
-  }
+    // Missing prefix requires an element with a prefix
+    if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first)) {
+        SRCMLstatus(ERROR_MSG, "srcml: the attribute %s is missing a prefix or an element with a prefix", vals);
+        exit(SRCML_STATUS_INVALID_ARGUMENT);
+    }
 
-  attribute attrib;
+    attribute attrib;
 
-  if (attrib_colon != std::string::npos) {
-    attrib.prefix = vals.substr(0, attrib_colon);
-    attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
-  }
-  else {
-    attrib.prefix = srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first->prefix;
-    attrib.name = vals.substr(0, attrib_equals);
-  }
+    if (attrib_colon != std::string::npos) {
+        attrib.prefix = vals.substr(0, attrib_colon);
+        attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
+    } else {
+        attrib.prefix = srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first->prefix;
+        attrib.name = vals.substr(0, attrib_equals);
+    }
 
-  size_t attrib_value_start = attrib_equals + 1;
+    size_t attrib_value_start = attrib_equals + 1;
 
-  // value may be wrapped with quotes that need to be removed
-  if (vals[attrib_value_start] == '\'' || vals[attrib_value_start] == '"')
-    ++attrib_value_start;
+    // value may be wrapped with quotes that need to be removed
+    if (vals[attrib_value_start] == '\'' || vals[attrib_value_start] == '"')
+        ++attrib_value_start;
 
-  size_t attrib_value_size = vals.size() - attrib_value_start;
+    size_t attrib_value_size = vals.size() - attrib_value_start;
 
-  if (vals[attrib_value_start + attrib_value_size - 1] == '\'' || vals[attrib_value_start + attrib_value_size - 1] == '"')
-    --attrib_value_size;
+    if (vals[attrib_value_start + attrib_value_size - 1] == '\'' || vals[attrib_value_start + attrib_value_size - 1] == '"')
+        --attrib_value_size;
 
-  attrib.value = vals.substr(attrib_value_start, attrib_value_size);
+    attrib.value = vals.substr(attrib_value_start, attrib_value_size);
 
-  return attrib;
+    return attrib;
 }
