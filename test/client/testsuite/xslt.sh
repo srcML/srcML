@@ -67,7 +67,7 @@ define srcml <<- 'STDOUT'
 
 define srcmljava <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="Java"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java"/>
 	STDOUT
 
 xmlcheck "$srcml"
