@@ -416,17 +416,13 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
     if (archive->transformations.size() == 0)
         return SRCML_STATUS_NO_TRANSFORMATION;
 
-    archive->transformations.back()->xsl_parameters.pop_back();
     archive->transformations.back()->xsl_parameters.push_back(xpath_param_name);
 
-    size_t xpath_param_value_length = strlen(xpath_param_value);
-    char * string_value = new char[xpath_param_value_length + 3];
-    string_value[0] = '"';
-    strncpy(string_value + 1, xpath_param_value, xpath_param_value_length);
-    string_value[xpath_param_value_length + 1] = '"';
-    string_value[xpath_param_value_length + 2] = 0;
+    std::string parenvalue = "\"";
+    parenvalue += xpath_param_value;
+    parenvalue += "\"";
 
-    archive->transformations.back()->xsl_parameters.push_back(string_value);
+    archive->transformations.back()->xsl_parameters.push_back(parenvalue);
 
     return SRCML_STATUS_OK;
 }
