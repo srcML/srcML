@@ -620,33 +620,35 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         nunit->insert_end = 0;
 
         // update the unit attributes with the transformed result based on the root tag
-        xmlSAXHandler roottagsax;
-        memset(&roottagsax, 0, sizeof(roottagsax));
-        roottagsax.initialized    = XML_SAX2_MAGIC;
-        roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                         int nb_namespaces, const xmlChar** namespaces,
-                         int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
+        if (lastresult.unitWrapped) {
+            xmlSAXHandler roottagsax;
+            memset(&roottagsax, 0, sizeof(roottagsax));
+            roottagsax.initialized    = XML_SAX2_MAGIC;
+            roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
+                             int nb_namespaces, const xmlChar** namespaces,
+                             int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
-            auto ctxt = (xmlParserCtxtPtr) ctx;
-            if (ctxt == nullptr)
-                return;
-            auto unit = (srcml_unit*) ctxt->_private;
-            if (unit == nullptr)
-                return;
+                auto ctxt = (xmlParserCtxtPtr) ctx;
+                if (ctxt == nullptr)
+                    return;
+                auto unit = (srcml_unit*) ctxt->_private;
+                if (unit == nullptr)
+                    return;
 
-            unit_update_attributes(unit, nb_attributes, attributes);
-        };
+                unit_update_attributes(unit, nb_attributes, attributes);
+            };
 
-        // extract the start tag
-        std::string starttag = nunit->srcml.substr(0, unit->content_begin) + "/>";
+            // extract the start tag
+            std::string starttag = nunit->srcml.substr(0, unit->content_begin) + "/>";
 
-        // parse the start tag updating the unit
-        xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(starttag.c_str(), (int) starttag.size());
-        context->_private = nunit;
-        context->sax = &roottagsax;
+            // parse the start tag updating the unit
+            xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(starttag.c_str(), (int) starttag.size());
+            context->_private = nunit;
+            context->sax = &roottagsax;
 
-        // @todo Handle error
-        xmlParseDocument(context);
+            // @todo Handle error
+            xmlParseDocument(context);
+        }
 
         result->units[i] = nunit;
     }
