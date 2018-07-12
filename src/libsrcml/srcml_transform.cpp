@@ -161,14 +161,14 @@ int srcml_append_transform_xpath_element(struct srcml_archive* archive, const ch
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-static int srcml_append_transform_xslt_internal(srcml_archive* archive, xmlDocPtr doc) {
+static int srcml_append_transform_xslt_internal(srcml_archive* archive, std::unique_ptr<xmlDoc> doc) {
 
     if (archive == NULL || doc == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
   //  if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
  //   return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    xsltTransformation* trans = new xsltTransformation(doc, std::vector<std::string>());
+    xsltTransformation* trans = new xsltTransformation(doc.release(), std::vector<std::string>());
 
     archive->transformations.emplace_back(trans);
 
@@ -194,7 +194,7 @@ int srcml_append_transform_xslt_filename(srcml_archive* archive, const char* xsl
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_xslt_internal(archive, doc.get());
+    return srcml_append_transform_xslt_internal(archive, std::move(doc));
 }
 
 /**
@@ -217,7 +217,7 @@ int srcml_append_transform_xslt_memory(srcml_archive* archive, const char* xslt_
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_xslt_internal(archive, doc.get());
+    return srcml_append_transform_xslt_internal(archive, std::move(doc));
 }
 
 /**
@@ -240,7 +240,7 @@ int srcml_append_transform_xslt_FILE(srcml_archive* archive, FILE* xslt_file) {
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_xslt_internal(archive, doc.get());
+    return srcml_append_transform_xslt_internal(archive, std::move(doc));
 }
 
 /**
@@ -262,7 +262,7 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_xslt_internal(archive, doc.get());
+    return srcml_append_transform_xslt_internal(archive, std::move(doc));
 }
 #endif
 
