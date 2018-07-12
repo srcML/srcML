@@ -166,9 +166,7 @@ static int srcml_append_transform_xslt_internal(srcml_archive* archive, std::uni
   //  if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
  //   return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    xsltTransformation* trans = new xsltTransformation(doc.release(), std::vector<std::string>());
-
-    archive->transformations.emplace_back(trans);
+    archive->transformations.push_back(std::unique_ptr<Transformation>(new xsltTransformation(doc.release(), std::vector<std::string>())));
 
     return SRCML_STATUS_OK;
 }
@@ -281,9 +279,7 @@ static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDo
 //    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
 //    return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    relaxngTransformation* trans = new relaxngTransformation(doc);
-
-    archive->transformations.emplace_back(trans);
+    archive->transformations.push_back(std::unique_ptr<Transformation>(new relaxngTransformation(doc)));
 
     return SRCML_STATUS_OK;
 }
