@@ -65,10 +65,8 @@ static int srcml_append_transform_xpath_internal (struct srcml_archive* archive,
 //    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
 //        return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    xpathTransformation* trans = new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
-            attr_prefix, attr_namespace_uri, attr_name, attr_value);
-
-    archive->transformations.emplace_back(trans);
+    archive->transformations.push_back(std::unique_ptr<Transformation>(new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
+            attr_prefix, attr_namespace_uri, attr_name, attr_value)));
 
     return SRCML_STATUS_OK;
 }
