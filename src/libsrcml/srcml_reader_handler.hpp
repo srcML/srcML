@@ -28,6 +28,8 @@
 #include <srcml_macros.hpp>
 #include <srcml.h>
 
+#include <unit_utilities.hpp>
+
 #include <libxml/parser.h>
 #include <stdio.h>
 #include <srcmlns.hpp>
@@ -498,34 +500,7 @@ public :
         }
 
         // collect attributes
-        for (int pos = 0; pos < num_attributes; ++pos) {
-
-            std::string attribute = (const char*) attributes[pos * 5];
-            std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
-            value = attribute_revision(value);
-            
-            if (attribute == "timestamp")
-                srcml_unit_set_timestamp(unit, value.c_str());
-            else if (attribute == "hash")
-                srcml_unit_set_hash(unit, value.c_str());
-            else if (attribute == "language")
-                srcml_unit_set_language(unit, value.c_str());
-            else if (attribute == "revision")
-                unit->revision = value;
-            else if (attribute == "filename")
-                srcml_unit_set_filename(unit, value.c_str());
-            else if (attribute == "version")
-                srcml_unit_set_version(unit, value.c_str());
-            else if (attribute == "tabs" || attribute == "options" || attribute == "hash")
-                ;
-            else if (attribute == "src-encoding")
-                archive->options |= SRCML_OPTION_STORE_ENCODING, srcml_unit_set_src_encoding(unit, value.c_str());
-            else {
-
-                unit->attributes.push_back(attribute);
-                unit->attributes.push_back(value);
-            }
-        }
+        unit_update_attributes(unit, num_attributes, attributes);
 
         auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
         auto state = (sax2_srcsax_handler*) ctxt->_private;
