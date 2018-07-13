@@ -217,9 +217,8 @@ COMMENT_TEXT {
         '\043'..'\045' | 
 
         '&'
-                { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
-//        '&'
 //                { $setText("&amp;"); } |
+                { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
 
         '\047' /* '\'' */
                 { if (prevLA != '\\' && mode == CHAR_END) { $setType(mode); selector->pop(); } } |
@@ -251,15 +250,13 @@ COMMENT_TEXT {
         '\060'..';' | 
 
         '<'
-                { text.erase(realbegin); text += "&lt;"; realbegin += 3; } |
-//        '<'
 //                { $setText("&lt;"); } |
+                { text.erase(realbegin); text += "&lt;"; realbegin += 3; } |
         '=' | 
 
         '>'
-                { text.erase(realbegin); text += "&gt;"; realbegin += 3; } |
-//        '>'
 //                { $setText("&gt;"); } |
+                { text.erase(realbegin); text += "&gt;"; realbegin += 3; } |
 
         '?'..'[' |
 
