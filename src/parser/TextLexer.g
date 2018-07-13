@@ -29,12 +29,6 @@
  * including whitespace, is passed through unused.
  */
 
-header {
-
-    #include <iostream>
-
-}
-
 options {
 	language="Cpp";
     namespaceAntlr="antlr";

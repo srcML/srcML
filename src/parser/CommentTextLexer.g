@@ -103,23 +103,15 @@ public:
     void init(int m, bool onpreproclinestate, bool nescape = false, bool rstring = false, std::string dstring = "", bool is_line = false, long lnumber = -1, OPTION_TYPE op = 0) {
 
         onpreprocline = onpreproclinestate;
-
         mode = m;
-
         noescape = nescape;
-        
         rawstring = rstring;
-
         delimiter = dstring;
-
         isline = is_line;
-
         line_number = lnumber;
-
         options = op;
     }
 }
-
 
 /*
   Any text inside a comment, string, or character
