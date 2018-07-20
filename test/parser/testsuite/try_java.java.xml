@@ -37,4 +37,10 @@
  		 <decl><type><name>int</name></type> <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>)</init> <block>{}</block></try></block></else></if_stmt>
 </unit>
 
+<unit>
+<try>try <init>(<decl><type><name>Stmt</name></type> <name>stmt</name> <init>= <expr><call><name>create</name><argument_list>()</argument_list></call></expr></init></decl>)</init> <block>{
+}</block> <catch>catch <parameter_list>(<parameter><decl><type><name>Exception</name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{
+}</block></catch></try>
+</unit>
+
 </unit>
