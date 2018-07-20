@@ -6625,7 +6625,13 @@ try_statement[] { ENTRY_DEBUG } :
 
 // try statement with resources
 try_statement_with_resource[] { ENTRY_DEBUG } :
-        for_like_statement_pre[STRY_BLOCK]
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
+
+            // start of the try statement
+            startElement(STRY_BLOCK);
+        }
 
         TRY
 
