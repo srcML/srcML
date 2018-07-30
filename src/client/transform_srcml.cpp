@@ -251,7 +251,7 @@ void transform_srcml(const srcml_request_t& /* srcml_request */,
                     exit(-1);
                 }
 
-            } else if (protocol == "xpathparam") {
+            } else if (protocol == "xsltparam") {
 				//std::cerr << protocol << " : " << resource << "\n"; // Stub
 
             } else if (protocol == "relaxng") {

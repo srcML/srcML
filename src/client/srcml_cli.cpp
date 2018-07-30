@@ -475,7 +475,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "output and update existing srcml")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "immediate output while parsing, default for keyboard input")
             ("xml-processing", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xml_processing>), "add XML processing instruction")
-            ("xpathparam", prog_opts::value< std::vector<std::string> >(), "passes a parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL")
+            ("xslt-param", prog_opts::value< std::vector<std::string> >(), "passes a string parameter NAME and VAL arg to the XSLT program. arg format NAME=VAL. VAL is assumed to be a string. String must be UTF-8 encoded.")
             ("pretty", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_field<&srcml_request_t::pretty_format>), "custom formatting for output")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "run a user defined external script or application on srcml client output")
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "set the line endings for a desired environment \"Windows\" or \"Unix\"")
@@ -506,7 +506,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         // loop the cli options in the order they were processed/received
         for (const auto& option : parsedOptions) {
-            if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xpathparam"
+            if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xslt-param"
              || option.string_key == "element" || option.string_key == "attribute") {
 
                 if (option.string_key == "xpath")
