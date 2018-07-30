@@ -259,7 +259,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     for (const auto& trans : srcml_request.transformations) {
         std::string protocol;
         std::string resource;
-        src_prefix_split_uri(trans, protocol, resource);
+        std::tie(protocol, resource) = src_prefix_split_uri(trans);
 
         if (protocol == "xpath") {
             if (apply_xpath(srcml_arch, srcml_arch, resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
