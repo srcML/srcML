@@ -75,53 +75,53 @@ createfile sub/a.cpp.xml "$srcml"
 createfile copy.xsl "$copyxslt"
 createfile setlanguage.xsl "$setlanguage"
 
-# xslt copy xpathparam NAME=VALUE
-srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' sub/a.cpp.xml
+# xslt copy xslt-param NAME=VALUE
+srcml --xslt=copy.xsl --xslt-param 'NAME=VALUE' sub/a.cpp.xml
 check "$srcml"
 
-srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' < sub/a.cpp.xml
+srcml --xslt=copy.xsl --xslt-param 'NAME=VALUE' < sub/a.cpp.xml
 check "$srcml"
 
-srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' sub/a.cpp.xml -o sub/b.cpp.xml
+srcml --xslt=copy.xsl --xslt-param 'NAME=VALUE' sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' -o sub/b.cpp.xml sub/a.cpp.xml
+srcml --xslt=copy.xsl --xslt-param 'NAME=VALUE' -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-srcml --xslt=copy.xsl --xpathparam 'NAME=VALUE' -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml --xslt=copy.xsl --xslt-param 'NAME=VALUE' -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
 
-# xslt copy xpathparam name="a"
-srcml --xslt=copy.xsl --xpathparam 'name="a"' sub/a.cpp.xml
+# xslt copy xslt-param name="a"
+srcml --xslt=copy.xsl --xslt-param 'name="a"' sub/a.cpp.xml
 check "$srcml"
 
-srcml --xslt=copy.xsl --xpathparam 'name="a"' < sub/a.cpp.xml
+srcml --xslt=copy.xsl --xslt-param 'name="a"' < sub/a.cpp.xml
 check "$srcml"
 
-srcml --xslt=copy.xsl --xpathparam 'name="a"' sub/a.cpp.xml -o sub/b.cpp.xml
+srcml --xslt=copy.xsl --xslt-param 'name="a"' sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-srcml --xslt=copy.xsl --xpathparam 'name="a"' -o sub/b.cpp.xml sub/a.cpp.xml
+srcml --xslt=copy.xsl --xslt-param 'name="a"' -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-srcml --xslt=copy.xsl --xpathparam 'name="a"' -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml --xslt=copy.xsl --xslt-param 'name="a"' -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
 
-srcml --xslt=setlanguage.xsl --xpathparam 'language="Java"' sub/a.cpp.xml
+srcml --xslt=setlanguage.xsl --xslt-param 'language="Java"' sub/a.cpp.xml
 check "$srcmljava"
 
-srcml --xslt=setlanguage.xsl --xpathparam 'language="Java"' < sub/a.cpp.xml
+srcml --xslt=setlanguage.xsl --xslt-param 'language="Java"' < sub/a.cpp.xml
 check "$srcmljava"
 
-srcml --xslt=setlanguage.xsl --xpathparam 'language="Java"' sub/a.cpp.xml -o sub/b.java.xml
+srcml --xslt=setlanguage.xsl --xslt-param 'language="Java"' sub/a.cpp.xml -o sub/b.java.xml
 check sub/b.java.xml "$srcmljava"
 
-srcml --xslt=setlanguage.xsl --xpathparam 'language="Java"' -o sub/b.java.xml sub/a.cpp.xml
+srcml --xslt=setlanguage.xsl --xslt-param 'language="Java"' -o sub/b.java.xml sub/a.cpp.xml
 check sub/b.java.xml "$srcmljava"
 
-srcml --xslt=setlanguage.xsl --xpathparam 'language="Java"' -o sub/b.java.xml < sub/a.cpp.xml
+srcml --xslt=setlanguage.xsl --xslt-param 'language="Java"' -o sub/b.java.xml < sub/a.cpp.xml
 check sub/b.java.xml "$srcmljava"
 
 
