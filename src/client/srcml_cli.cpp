@@ -385,7 +385,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "Display most metadata except srcML file count and exit")
             ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "Display all metadata including srcML file count and exit")
             ("jobs,j", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->value_name("NUM")->default_value(4), "Allow up to NUM threads for source parsing")
-            ("output,o", prog_opts::value<std::string>()->notifier(&option_output_filename)->value_name("FILE")->default_value(""), "Write ouput to FILE")
+            ("output,o", prog_opts::value<std::string>()->notifier(&option_output_filename)->value_name("FILE")->default_value(""), "Write output to FILE")
             ;
 
         src2srcml_options.add_options()
