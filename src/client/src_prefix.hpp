@@ -24,12 +24,13 @@
 #define SRC_PREFIX_HPP
 
 #include <string>
+#include <tuple>
 
 std::string src_prefix_add_uri(const std::string& protocol, const std::string& resource);
 
 std::string src_prefix_add_uri(const std::string& input_file);
 
-void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource);
+std::tuple<std::string, std::string> src_prefix_split_uri(const std::string& input_file);
 
 std::string src_prefix_protocol(const std::string& input_file);
 

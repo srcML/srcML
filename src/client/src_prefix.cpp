@@ -49,17 +49,15 @@ std::string src_prefix_add_uri(const std::string& input_file) {
     return input_file;
 }
 
-void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource){
+std::tuple<std::string, std::string> src_prefix_split_uri(const std::string& input_file){
     // Extract function split_uri(input_file, protocol, resource)
     size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
 
     if (prefixPos == std::string::npos) {
-        protocol = "";
-        resource = input_file;
-        return;
+        return std::tuple<std::string, std::string>("", input_file);
     }
-    protocol = input_file.substr(0, prefixPos);
-    resource = input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR));
+
+    return std::tuple<std::string, std::string>(input_file.substr(0, prefixPos), input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR)));
 }
 
 std::string src_prefix_resource(const std::string& input_file) {
