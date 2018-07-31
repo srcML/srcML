@@ -369,14 +369,6 @@ element clean_element_input(const std::string& element_input);
 // Sanitize attribute input
 attribute clean_attribute_input(const std::string& attribute_input);
 
-template<typename T, typename T2>
-T notifier_name(T value, T2 value2, const char* name) {
-    value->notifier(value2);
-    value->value_name(name);
-
-    return value;
-}
-
 // Interpretation of CLI options
 srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
@@ -407,7 +399,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         markup_options.add_options()
             ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "include line/column attributes, namespace 'http://www.srcML.org/srcML/position'")
-            ("tabs", notifier_name(prog_opts::value<int>(), &option_field<&srcml_request_t::tabs>, "NUM"), "set tabs NUM characters apart.  Default is 8")
+            ("tabs", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::tabs>)->value_name("NUM"), "set tabs NUM characters apart.  Default is 8")
             ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "enable preprocessor parsing and markup for Java and non-C/C++ languages")
             ("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_MARKUP_IF0>), "markup cpp #if 0 regions")
             ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "leave cpp #else regions as text")
@@ -434,12 +426,12 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the version attribute")
             ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_HASH>), "add hash to srcml output")
             ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
-            ("prefix,p", notifier_name(prog_opts::value<std::string>(), &option_field<&srcml_request_t::xmlns_prefix_query>, "URI"), "display prefix of namespace given by URI and exit")
+            ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>)->value_name("URI"), "display prefix of namespace given by URI and exit")
            ;
 
         srcml2src_options.add_options()
             ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "output in text instead of XML")
-            ("to-dir", notifier_name(prog_opts::value<std::string>(), &option_to_dir, "DIRECTORY"), "extract all files from srcML and create them in DIRECTORY in the filesystem")
+            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir)->value_name("DIRECTORY"), "extract all files from srcML and create them in DIRECTORY in the filesystem")
             ;
 
         query_transform.add_options()
@@ -449,7 +441,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("xslt-param", prog_opts::value< std::vector<std::string> >()->value_name("NAME=\"VALUE\""), "passes a string parameter NAME and VALUE to the XSLT program where VALUE is a UTF-8 encoding string")
             ("attribute", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:URI=\"VALUE\""), "add attribute PREFIX:URI=\"VALUE\" to element results of xpath query")
             ("element", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:URI"), "wrap results of XPath query with element PREFIX:URI")
-            ("unit,U", notifier_name(prog_opts::value<int>(), &option_field<&srcml_request_t::unit>, "NUM"), "extract individual unit NUM from srcML")
+            ("unit,U", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::unit>)->value_name("NUM"), "extract individual unit NUM from srcML")
             ("revision", prog_opts::value<size_t>()->notifier(&option_field<&srcml_request_t::revision>), "extract the given revision (0 = original, 1 = modified)")
             ;
 
