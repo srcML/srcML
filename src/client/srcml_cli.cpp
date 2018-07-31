@@ -406,10 +406,10 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         xml_form.add_options()
-            ("xml-encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->default_value("UTF-8"),"set output XML encoding. Default is UTF-8")
+            ("xml-encoding,x", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->value_name("ENCODING")->default_value("UTF-8"),"set output XML encoding. Default is UTF-8")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "do not output the XML declaration")
-            ("xmlns", prog_opts::value<std::string>()->notifier(&option_xmlns_uri), "set the default namespace to arg")
-            ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix), "set the namespace. arg format PREFIX=URI")
+            ("xmlns", prog_opts::value<std::string>()->notifier(&option_xmlns_uri)->value_name("URI"), "set the default namespace URI")
+            ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix)->value_name("PREFIX=\"URI\""), "set the namespace URI for PREFIX")
             ;
 
         metadata_options.add_options()
@@ -438,7 +438,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("relaxng", prog_opts::value< std::vector<std::string> >()->value_name("URI"), "output individual units that match the RelaxNG pattern at the given URI")
             ("xpath", prog_opts::value< std::vector<std::string> >()->value_name("XPATH"), "apply XPATH expression to each individual unit")
             ("xslt", prog_opts::value< std::vector<std::string> >()->value_name("URI"), "apply the XSLT transformation at the given URI to each individual unit")
-            ("xslt-param", prog_opts::value< std::vector<std::string> >()->value_name("NAME=\"VALUE\""), "passes a string parameter NAME and VALUE to the XSLT program where VALUE is a UTF-8 encoding string")
+            ("xslt-param", prog_opts::value< std::vector<std::string> >()->value_name("NAME=\"VALUE\""), "passes a string parameter NAME with VALUE to the XSLT program where VALUE is a UTF-8 encoding string")
             ("attribute", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:URI=\"VALUE\""), "add attribute PREFIX:URI=\"VALUE\" to element results of xpath query")
             ("element", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:URI"), "wrap results of XPath query with element PREFIX:URI")
             ("unit,U", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::unit>)->value_name("NUM"), "extract individual unit NUM from srcML")
