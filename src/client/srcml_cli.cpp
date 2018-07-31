@@ -28,7 +28,13 @@
 
 namespace prog_opts = boost::program_options;
 
-const char* SRCML_HEADER = "";
+const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
+       srcml [options] <srcML_infile>... [-o <src_outfile>]
+
+  Translates C, C++, C#, and Java source code to and from the XML
+  source-code representation srcML. Also support transformation and querying of srcML.
+)";
+
 
 const char* SRCML_FOOTER = R"(
   Have a question or need to report a bug?
@@ -37,7 +43,7 @@ const char* SRCML_FOOTER = R"(
 
 const char* SRC2SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
 
-  Translates C, C++, and Java source code into the XML
+  Translates C, C++, C#, and Java source code into the XML
   source-code representation srcML. Input can be from standard input, a file,
   a directory, or an archive file, i.e., tar, cpio, and zip. Multiple files
   are stored in a srcML archive.
@@ -46,7 +52,7 @@ const char* SRC2SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <sr
   for a language can be registered, and can be directly set using the --language
   option.
   
-  By default, output is to stdout.You can specify a file for output using the
+  By default, output is to stdout. You can specify a file for output using the
   --output or -o option. When no filenames are given, input is from stdin and
   output is to stdout. An input filename of '-' also reads from stdin.
 
@@ -385,16 +391,16 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         src2srcml_options.add_options()
-            ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>), "set the language to C, C++, or Java")
-            ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>), "register file extension EXT for source-code language LANG. arg format EXT=LANG")
-            ("src-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>), "set the input source encoding")
+            ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>)->value_name("LANG"), "set the source-code language to C, C++, C#, or Java")
+            ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>)->value_name("EXT=LANG"), "register file extension EXT for source-code language LANG")
+            ("src-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>)->value_name("ENCODING"), "set the input source-code encoding")
             ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>), "read list of source file names to form a srcML archive")
             ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
             ("fragment", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_FRAGMENT>), "output an XML fragment")
             ("raw", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_RAW>), "output XML without root unit")
             ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_ARCHIVE>), "store output in a srcML archive, default for multiple input files")
             ("unstable-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER>), "enable non-strict output ordering")
-            ("text,t", prog_opts::value< std::vector<std::string> >()->notifier(&raw_text_args), "raw string text to be processed")
+            ("text,t", prog_opts::value< std::vector<std::string> >()->notifier(&raw_text_args)->value_name("STRING"), "raw string source-code input")
             ;
 
         markup_options.add_options()
