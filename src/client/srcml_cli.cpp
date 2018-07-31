@@ -421,12 +421,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         metadata_options.add_options()
-            ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the filename attribute")
-            ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the url attribute")
-            ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the version attribute")
-            ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_HASH>), "add hash to srcml output")
-            ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
-            ("prefix,p", notifier_name(prog_opts::value<std::string>(), &option_field<&srcml_request_t::xmlns_prefix_query>, "URI"), "display prefix of namespace given by URI and exit")
             ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "display source language and exit")
             ("show-url", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_URL>), "display source url name and exit")
             ("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "display source filename and exit")
@@ -435,7 +429,13 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("show-hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_HASH>), "display hash and exit")
             ("show-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_ENCODING>), "display xml encoding and exit")
             ("show-unit-count", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "display number of srcML files and exit")
-            ;
+            ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>), "set the filename attribute")
+            ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>), "set the url attribute")
+            ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>), "set the version attribute")
+            ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_HASH>), "add hash to srcml output")
+            ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "add timestamp to srcml output")
+            ("prefix,p", notifier_name(prog_opts::value<std::string>(), &option_field<&srcml_request_t::xmlns_prefix_query>, "URI"), "display prefix of namespace given by URI and exit")
+           ;
 
         srcml2src_options.add_options()
             ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "output in text instead of XML")
