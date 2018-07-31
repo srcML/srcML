@@ -443,9 +443,9 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         query_transform.add_options()
-            ("relaxng", prog_opts::value< std::vector<std::string> >()->value_name("RELAXNG_URI"), "output individual units that match RELAXNG_URI")
+            ("relaxng", prog_opts::value< std::vector<std::string> >()->value_name("URI"), "output individual units that match the RelaxNG pattern at the given URI")
             ("xpath", prog_opts::value< std::vector<std::string> >()->value_name("XPATH"), "apply XPATH expression to each individual unit")
-            ("xslt", prog_opts::value< std::vector<std::string> >()->value_name("XSLT_URI"), "apply XSLT_URI transformation to each individual unit")
+            ("xslt", prog_opts::value< std::vector<std::string> >()->value_name("URI"), "apply the XSLT transformation at the given URI to each individual unit")
             ("xslt-param", prog_opts::value< std::vector<std::string> >()->value_name("NAME=\"VALUE\""), "passes a string parameter NAME and VALUE to the XSLT program where VALUE is a UTF-8 encoding string")
             ("attribute", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:URI=\"VALUE\""), "add attribute PREFIX:URI=\"VALUE\" to element results of xpath query")
             ("element", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:URI"), "wrap results of XPath query with element PREFIX:URI")
