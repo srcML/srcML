@@ -434,7 +434,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         srcml2src_options.add_options()
             ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "Output in text instead of XML")
-            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir)->value_name("DIRECTORY"), "Extract all files from srcML and create them in DIRECTORY in the filesystem")
+            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir)->value_name("DIRECTORY"), "Extract source-code files from srcML to a DIRECTORY in the filesystem")
             ;
 
         query_transform.add_options()
