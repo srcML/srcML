@@ -380,8 +380,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("list", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LIST>), "list all files in the srcML archive and exit")
             ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "display most metadata except srcML file count and exit")
             ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "display all metadata including srcML file count and exit")
-            ("jobs,j", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->default_value(4), "set the maximum number of threads srcml can spawn")
-            ("output,o", prog_opts::value<std::string>()->notifier(&option_output_filename)->default_value("stdout://-"), "write ouput to a file")
+            ("jobs,j", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->value_name("NUM")->default_value(4), "allow up to NUM threads for source parsing")
+            ("output,o", prog_opts::value<std::string>()->notifier(&option_output_filename)->value_name("FILE")->default_value("stdout://-"), "write ouput to FILE")
             ;
 
         src2srcml_options.add_options()
