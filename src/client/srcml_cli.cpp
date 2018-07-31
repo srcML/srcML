@@ -82,10 +82,7 @@ const char* SRC2SRCML_FOOTER = R"(Examples:
   
   Set encoding of srcML file to ISO-8859-1:
   srcml --xml-encoding=ISO-8859-1 m.cpp m.cpp.xml
-  
-  Have a question or need to report a bug?
-  Contact us at http://www.srcml.org/support.html
-  www.srcML.org)";
+)";
 
 const char* SRCML2SRC_HEADER = R"(Usage: srcml [options] <srcML_infile>... [-o <src_outfile>]
   
@@ -120,10 +117,7 @@ const char* SRCML2SRC_FOOTER = R"(Examples:
   
   Read from file m.cpp.xml, output language attribute to stdout:
   srcml m.cpp.xml --show-language
-  
-  Have a question or need to report a bug?
-  Contact us at http://www.srcml.org/support.html
-  www.srcML.org)";
+)";
 
 srcml_request_t srcml_request;
 
@@ -328,6 +322,9 @@ void raw_null_text_arg(const std::vector<std::string>& value) {
 }
 
 void option_help(const std::string& help_opt) {
+
+    int status = 0;
+
     if (help_opt.empty()) {
         // TODO: A new header and footer for the general option
         std::cout << SRCML_HEADER << "\n";
@@ -335,25 +332,26 @@ void option_help(const std::string& help_opt) {
 
         std::cout << src2srcml;
         std::cout << srcml2src;
-
-        std::cout << SRCML_FOOTER << "\n";
     }
     else if (help_opt == "src2srcml") {
         std::cout << SRC2SRCML_HEADER << "\n";
         std::cout << src2srcml << "\n";
-        std::cout << SRC2SRCML_FOOTER << "\n";
+        std::cout << SRC2SRCML_FOOTER;
     }
     else if (help_opt == "srcml2src") {
         std::cout << SRCML2SRC_HEADER << "\n";
         std::cout << srcml2src << "\n";
-        std::cout << SRCML2SRC_FOOTER << "\n";
+        std::cout << SRCML2SRC_FOOTER;
     }
     else {
         std::cout << "Unknown module '"
                   << help_opt << "' in --help\n";
-        exit(1);
+        status = 1;
     }
-    exit(0);
+
+    std::cout << SRCML_FOOTER << "\n";
+
+    exit(status);
 }
 
 /* Function used to check that 'opt1' and 'opt2' are not specified
