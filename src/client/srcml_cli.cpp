@@ -331,10 +331,10 @@ void option_help(const std::string& help_opt) {
     if (help_opt.empty()) {
         // TODO: A new header and footer for the general option
         std::cout << SRCML_HEADER << "\n";
-        std::cout << general << "\n";
+        std::cout << general;
 
-        std::cout << src2srcml << "\n";
-        std::cout << srcml2src << "\n";
+        std::cout << src2srcml;
+        std::cout << srcml2src;
 
         std::cout << SRCML_FOOTER << "\n";
     }
