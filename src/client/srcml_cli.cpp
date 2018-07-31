@@ -32,7 +32,7 @@ const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_
        srcml [options] <srcML_infile>... [-o <src_outfile>]
 
   Translates C, C++, C#, and Java source code to and from the XML
-  source-code representation srcML. Also support transformation and querying of srcML.
+  source-code representation srcML. Also supports querying and transformation of srcML.
 )";
 
 
@@ -379,7 +379,7 @@ attribute clean_attribute_input(const std::string& attribute_input);
 srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
         general.add_options()
-            ("help,h", prog_opts::value<std::string>()->notifier(&option_help),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
+            ("help,h", prog_opts::value<std::string>()->notifier(&option_help)->value_name("MODULE"),"display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "display version number and exit")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "conversion and status information to stderr")
             ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "suppress status messages")
@@ -394,7 +394,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>)->value_name("LANG"), "set the source-code language to C, C++, C#, or Java")
             ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>)->value_name("EXT=LANG"), "register file extension EXT for source-code language LANG")
             ("src-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>)->value_name("ENCODING"), "set the input source-code encoding")
-            ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>), "read list of source file names to form a srcML archive")
+            ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>)->value_name("FILE"), "read list of source-code filenames to form a srcML archive")
             ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "output in XML instead of text")
             ("fragment", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_FRAGMENT>), "output an XML fragment")
             ("raw", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_RAW>), "output XML without root unit")
