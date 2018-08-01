@@ -139,6 +139,7 @@ prog_opts::options_description metadata_options("METADATA OPTIONS");
 
 prog_opts::options_description src2srcml("");
 prog_opts::options_description srcml2src("");
+prog_opts::options_description display("");
 
 
 // Positional Args
@@ -328,10 +329,7 @@ void option_help(const std::string& help_opt) {
     if (help_opt.empty()) {
         // TODO: A new header and footer for the general option
         std::cout << SRCML_HEADER << "\n";
-        std::cout << general;
-
-        std::cout << src2srcml;
-        std::cout << srcml2src;
+        std::cout << display;
     }
     else if (help_opt == "src2srcml") {
         std::cout << SRC2SRCML_HEADER << "\n";
@@ -489,7 +487,9 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         all.add(general).add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options).add(srcml2src_options).
             add(query_transform).add(positional_options).add(implicit_value_handlers).add(deprecated_options).add(debug_options).add(experimental_options);
 
-        // Positional Args
+        // Group all display options
+        display.add(general).add(src2srcml).add(srcml2src);
+
         input_file.add("input-files", -1);
 
         // Assign the CLI args to the map
