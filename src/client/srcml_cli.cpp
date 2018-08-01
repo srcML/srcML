@@ -412,7 +412,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("xml-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->value_name("ENCODING")->default_value("UTF-8"),"Set output XML encoding. Default is UTF-8")
             ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "Do not output the XML declaration")
             ("xmlns", prog_opts::value<std::string>()->notifier(&option_xmlns_uri)->value_name("URI"), "Set the default namespace URI")
-            ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix)->value_name("PREFIX=\"URI\""), "Set the namespace URI for PREFIX")
+            ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix)->value_name("PREFIX=\"URI\""), "Declare the PREFIX for the namespace URI")
             ;
 
         metadata_options.add_options()
