@@ -377,13 +377,13 @@ attribute clean_attribute_input(const std::string& attribute_input);
 srcml_request_t parseCLI(int argc, char* argv[]) {
     try {
         general.add_options()
-            ("help,h", prog_opts::value<std::string>()->notifier(&option_help)->value_name("MODULE"),"Display this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
-            ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "Display version number and exit")
+            ("help,h", prog_opts::value<std::string>()->notifier(&option_help)->value_name("MODULE"),"Output this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
+            ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "Output version number and exit")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "Conversion and status information to stderr")
             ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "Suppress status messages")
             ("list", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LIST>), "List all files in the srcML archive and exit")
-            ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "Display most metadata except srcML file count and exit")
-            ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "Display all metadata including srcML file count and exit")
+            ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "Output most metadata except srcML file count and exit")
+            ("longinfo,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "Output all metadata including srcML file count and exit")
             ("jobs,j", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->value_name("NUM")->default_value(4), "Allow up to NUM threads for source parsing")
             ("output,o", prog_opts::value<std::string>()->notifier(&option_output_filename)->value_name("FILE")->default_value(""), "Write output to FILE")
             ;
@@ -416,20 +416,20 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         metadata_options.add_options()
-            ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "Display source language and exit")
-            ("show-url", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_URL>), "Display source url name and exit")
-            ("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "Display source filename and exit")
-            ("show-src-version", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION>), "Display source version and exit")
-            ("show-timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP>), "Display timestamp and exit")
-            ("show-hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_HASH>), "Display hash and exit")
-            ("show-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_ENCODING>), "Display xml encoding and exit")
-            ("show-unit-count", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "Display number of srcML files and exit")
+            ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "Output source language and exit")
+            ("show-url", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_URL>), "Output source url name and exit")
+            ("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "Output source filename and exit")
+            ("show-src-version", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION>), "Output source version and exit")
+            ("show-timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP>), "Output timestamp and exit")
+            ("show-hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_HASH>), "Output hash and exit")
+            ("show-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_ENCODING>), "Output xml encoding and exit")
+            ("show-unit-count", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "Output number of srcML files and exit")
             ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>)->value_name("FILENAME"), "Set the filename attribute")
             ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>)->value_name("URL"), "Set the url attribute")
             ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>)->value_name("VERSION"), "Set the version attribute")
             ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_HASH>), "Include hash attribute")
             ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "Include timestamp attribute")
-            ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>)->value_name("URI"), "Display prefix of namespace given by URI and exit")
+            ("prefix,p", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>)->value_name("URI"), "Output prefix of namespace given by URI and exit")
            ;
 
         srcml2src_options.add_options()
@@ -458,7 +458,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         deprecated_options.add_options()
-            ("units,n", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_UNITS>), "Display number of srcML files and exit")
+            ("units,n", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_UNITS>), "Output number of srcML files and exit")
             ("expression,e", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_EXPRESSION>), "Expression mode for translating a single expression not in a statement")
             ;
 
