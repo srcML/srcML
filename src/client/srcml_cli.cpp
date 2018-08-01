@@ -33,8 +33,10 @@ const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_
 
   Translates C, C++, C#, and Java source code to and from the XML
   source-code representation srcML. Also supports querying and transformation of srcML.
-)";
 
+  Source-code input can be from text, standard input, a file,
+  a directory, or an archive file, i.e., tar, cpio, and zip. Multiple files
+  are stored in a srcML archive.)";
 
 const char* SRCML_FOOTER = R"(
   Have a question or need to report a bug?
@@ -388,14 +390,14 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         src2srcml_options.add_options()
             ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>)->value_name("LANG"), "Set the source-code language to C, C++, C#, or Java. Only necessary for --text option")
-            ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>)->value_name("EXT=LANG"), "Register file extension EXT for source-code language LANG")
+            ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>)->value_name("EXT=LANG"), "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
             ("src-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>)->value_name("ENCODING"), "Set the input source-code encoding")
-            ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>)->value_name("FILE"), "Read list of source-code files to form a srcML archive")
+            ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>)->value_name("FILE"), "Input source-code filenames from FILE")
             ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "Output in XML instead of text")
             ("fragment", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_FRAGMENT>), "Output an XML fragment")
             ("raw", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_RAW>), "Output XML without root unit")
             ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_ARCHIVE>), "Store output in a srcML archive, default for multiple input files")
-            ("text,t", prog_opts::value< std::vector<std::string> >()->notifier(&raw_text_args)->value_name("STRING"), "Input source-code from string, e.g., --text=\"int a;\"")
+            ("text,t", prog_opts::value< std::vector<std::string> >()->notifier(&raw_text_args)->value_name("STRING"), "Input source code from string, e.g., --text=\"int a;\"")
             ;
 
         markup_options.add_options()
