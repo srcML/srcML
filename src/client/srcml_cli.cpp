@@ -488,7 +488,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             add(query_transform).add(positional_options).add(implicit_value_handlers).add(deprecated_options).add(debug_options).add(experimental_options);
 
         // Group all display options
-        display.add(general).add(src2srcml).add(srcml2src);
+        display.add(general).add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options).add(srcml2src_options).add(query_transform);
 
         input_file.add("input-files", -1);
 
