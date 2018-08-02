@@ -53,13 +53,13 @@ check "$info"
 srcml --info sub/archive_multi.xml
 check "$info"
 
-srcml --all-info sub/archive_multi.xml
+srcml --full-into sub/archive_multi.xml
 check "$longinfo"
 
-srcml sub/archive_multi.xml --all-info
+srcml sub/archive_multi.xml --full-into
 check "$longinfo"
 
-srcml --all-info < sub/archive_multi.xml
+srcml --full-into < sub/archive_multi.xml
 check "$longinfo"
 
 
@@ -99,11 +99,11 @@ check "$info"
 srcml --info sub/archive_single.xml
 check "$info"
 
-srcml --all-info sub/archive_single.xml
+srcml --full-into sub/archive_single.xml
 check "$longinfo"
 
-srcml sub/archive_single.xml --all-info
+srcml sub/archive_single.xml --full-into
 check "$longinfo"
 
-srcml --all-info < sub/archive_single.xml
+srcml --full-into < sub/archive_single.xml
 check "$longinfo"
