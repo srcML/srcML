@@ -401,11 +401,11 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         markup_options.add_options()
-            ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "Include line/column attributes, namespace 'http://www.srcML.org/srcML/position'")
-            ("tabs", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::tabs>)->value_name("NUM"), "Set tabs NUM characters apart, default is 8")
-            ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "Enable preprocessor parsing and markup for Java and non-C/C++ languages")
+            ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "Include start and end attributes with line/column of each element")
+            ("tabs", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::tabs>)->value_name("NUM"), "Set tab stop at every NUM characters, default of 8")
+            ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "Enable preprocessor parsing and markup (default for C/C++/C#)")
             ("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_MARKUP_IF0>), "Markup preprocessor #if 0 regions")
-            ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "Leave cpp #else regions as text")
+            ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "Do not markup preprocessor #else/#elif regions")
             ;
 
         xml_form.add_options()
