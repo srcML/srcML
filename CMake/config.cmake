@@ -106,7 +106,7 @@ else()
 
     if (EXISTS /usr/local/opt/libarchive)
         set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
-        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/local/lib/liblz4.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
     else()
         find_package(LibArchive 3 REQUIRED)
     endif()
