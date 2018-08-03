@@ -104,11 +104,20 @@ else()
     
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-    if (APPLE)
-        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
-        set(LibArchive_LIBRARIES /Users/collard/srcML-data/libarchive-3.3.2/.libs/libarchive.a /usr/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
-    else()
+    # libarchive 3 is necessary
+    if(NOT APPLE)
         find_package(LibArchive 3 REQUIRED)
+
+    # macOS with homebrew
+    elseif(EXISTS "/usr/local/opt/libarchive")
+        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
+        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+
+    # macOS with custom-built libarchive
+    else()
+        set(LibArchive_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/../libarchive/libarchive)
+        set(LibArchive_LIBRARIES  ${CMAKE_SOURCE_DIR}/../libarchive/.libs/libarchive.a /usr/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+
     endif()
 
     # Locating packages.e
