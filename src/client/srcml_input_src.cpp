@@ -139,11 +139,7 @@ int srcml_close_callback(void* context) {
     archive* libarchive_srcml = (archive*) context;
 
     archive_read_close(libarchive_srcml);
-#if ARCHIVE_VERSION_NUMBER >= 3000000
     archive_read_free(libarchive_srcml);
-#else
-    archive_read_finish(libarchive_srcml);
-#endif
 
     return 0;
 }

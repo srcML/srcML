@@ -70,11 +70,7 @@ int src_input_filelist(ParseQueue& queue,
 
     const char* buffer;
     size_t size;
-#if ARCHIVE_VERSION_NUMBER < 3000000
-    off_t offset;
-#else
     int64_t offset;
-#endif
 
     // read the file into a buffer
     // @todo Shouldn't we be free'ing this buffer?
