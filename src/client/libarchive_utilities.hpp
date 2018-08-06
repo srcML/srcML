@@ -34,11 +34,7 @@ namespace std {
     struct default_delete<archive> {
         void operator()(archive* ar) { 
             archive_write_close(ar);
-#if ARCHIVE_VERSION_NUMBER >= 3000000
             archive_write_free(ar);
-#else
-            archive_write_finish(ar);
-#endif
         }
     };
 

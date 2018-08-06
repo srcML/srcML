@@ -33,59 +33,10 @@
 #include <archive.h>
 #include <archive_entry.h>
 
-#if ARCHIVE_VERSION_NUMBER < 3000000
-#include <boost/filesystem.hpp>
-#endif
-
 int src_input_filesystem(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
                           const std::string& input) {
-
-#if ARCHIVE_VERSION_NUMBER < 3000000
-
-    // list of directories with the input as the first one
-    std::list<boost::filesystem::path> dirs(1, boost::filesystem::path(input));
-
-    while (!dirs.empty()) {
-
-        // prepare a list of sorted files for the back() directory
-        std::vector<boost::filesystem::path> files(boost::filesystem::directory_iterator(dirs.back()),
-                                                   boost::filesystem::directory_iterator());
-        sort(files.begin(), files.end());
-        dirs.pop_back();
-
-        // process the files from the top directory
-        for (const auto& file : files) {
-            
-            // TODO: Are we ignoring other types? symlinks? Should state so here.
-            // Skip ALL symlinks (files or directories)
-            if (is_symlink(file)) {
-                continue;
-            }
-
-            // regular files are passed to the handler
-            if (is_regular_file(file)) {
-
-                //src_input_libarchive(queue, srcml_arch, srcml_request, file.string());
-                srcml_input_src input_file(file.string());
-
-                // If a directory contains archives skip them
-                if (!(input_file.archives.empty())) {
-                    input_file.skip = true;
-                }
-
-                src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
-
-            // directories are put at the back
-            } else if (is_directory(file)) {
-
-                dirs.push_back(file);
-            }
-        }
-    }
-
-#else
 
     // get a list of files (including directories) from the current directory
     std::vector<std::string> files;
@@ -126,8 +77,6 @@ int src_input_filesystem(ParseQueue& queue,
 
         src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
     }
-
-#endif
 
     return 1;
 }

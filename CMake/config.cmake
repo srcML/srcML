@@ -96,7 +96,7 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug/lib)
     set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
     set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
-    find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
+    find_package(Boost COMPONENTS program_options REQUIRED)
 
 else()
 
@@ -104,11 +104,20 @@ else()
     
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-    if (EXISTS /usr/local/opt/libarchive)
-        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
-        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.dylib)
-    else()
+    # libarchive 3 is necessary
+    if(NOT APPLE)
         find_package(LibArchive 3 REQUIRED)
+
+    # macOS with homebrew
+    elseif(EXISTS "/usr/local/opt/libarchive")
+        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
+        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+
+    # macOS with custom-built libarchive
+    else()
+        set(LibArchive_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/../libarchive/libarchive)
+        set(LibArchive_LIBRARIES  ${CMAKE_SOURCE_DIR}/../libarchive/.libs/libarchive.a /usr/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+
     endif()
 
     # Locating packages.e
@@ -117,7 +126,7 @@ else()
     find_package(Iconv REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
-    find_package(Boost COMPONENTS program_options filesystem system date_time REQUIRED)
+    find_package(Boost COMPONENTS program_options REQUIRED)
 
     # add include directories
     include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${ICONV_INCLUDE_DIRS})
