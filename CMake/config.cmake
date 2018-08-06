@@ -183,10 +183,6 @@ find_package(PythonInterp REQUIRED)
 #    endif()
 #endif()
 
-if(EXISTS ${Boost_INCLUDE_DIR}/boost/mpl/vector/vector150_c.hpp)
-    add_definitions(-DSRCML_BOOST_MPL_LARGE)
-endif()
-
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
 if(NOT CMAKE_BUILD_TYPE)
