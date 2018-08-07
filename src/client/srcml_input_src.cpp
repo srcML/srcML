@@ -56,7 +56,7 @@ srcml_input_src::srcml_input_src(const std::string& other) : arch(0), state(INDE
     filename = src_prefix_add_uri(other);
 
     // filename into protocol and resource
-    src_prefix_split_uri(filename, protocol, resource);
+    std::tie(protocol, resource) = src_prefix_split_uri(filename);
 
     // remove any query string
     if (protocol != "text" && protocol != "filelist" && protocol != "stdin") {
@@ -139,11 +139,7 @@ int srcml_close_callback(void* context) {
     archive* libarchive_srcml = (archive*) context;
 
     archive_read_close(libarchive_srcml);
-#if ARCHIVE_VERSION_NUMBER >= 3000000
     archive_read_free(libarchive_srcml);
-#else
-    archive_read_finish(libarchive_srcml);
-#endif
 
     return 0;
 }

@@ -50,11 +50,11 @@ check "$info"
 srcml --info sub/unit.cpp.xml
 check "$info"
 
-srcml --longinfo sub/unit.cpp.xml
+srcml --full-info sub/unit.cpp.xml
 check "$longinfo"
 
-srcml sub/unit.cpp.xml --longinfo
+srcml sub/unit.cpp.xml --full-info
 check "$longinfo"
 
-srcml --longinfo < sub/unit.cpp.xml
+srcml --full-info < sub/unit.cpp.xml
 check "$longinfo"

@@ -51,9 +51,9 @@ if(NOT DYNAMIC_LOAD_ENABLED)
 endif()
 
 # Turn ON/OFF tests
-option(BUILD_PARSER_TESTS "Include tests for parser" ON)
 option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
-option(BUILD_UNIT_TESTS "Build unit tests for libsrcml" OFF)
+option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" OFF)
+option(BUILD_PARSER_TESTS "Include tests for parser" ON)
 
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 option(BUILD_PYTHON_BINDINGS "Build Python language bindings/wrapper" OFF)
@@ -96,7 +96,7 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug/lib)
     set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
     set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
-    find_package(Boost COMPONENTS program_options filesystem system thread date_time REQUIRED)
+    find_package(Boost COMPONENTS program_options REQUIRED)
 
 else()
 
@@ -104,11 +104,20 @@ else()
     
     set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-    if (EXISTS /usr/local/opt/libarchive)
-        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
-        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.dylib)
-    else()
+    # libarchive 3 is necessary
+    if(NOT APPLE)
         find_package(LibArchive 3 REQUIRED)
+
+    # macOS with homebrew
+    elseif(EXISTS "/usr/local/opt/libarchive")
+        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
+        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+
+    # macOS with custom-built libarchive
+    else()
+        set(LibArchive_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/../libarchive/libarchive)
+        set(LibArchive_LIBRARIES  ${CMAKE_SOURCE_DIR}/../libarchive/.libs/libarchive.a /usr/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+
     endif()
 
     # Locating packages.e
@@ -117,7 +126,7 @@ else()
     find_package(Iconv REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
-    find_package(Boost COMPONENTS program_options filesystem system date_time REQUIRED)
+    find_package(Boost COMPONENTS program_options REQUIRED)
 
     # add include directories
     include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${ICONV_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
@@ -182,10 +191,6 @@ find_package(PythonInterp REQUIRED)
 #        message(FATAL_ERROR "Version of python found is not 2.6.X")
 #    endif()
 #endif()
-
-if(EXISTS ${Boost_INCLUDE_DIR}/boost/mpl/vector/vector150_c.hpp)
-    add_definitions(-DSRCML_BOOST_MPL_LARGE)
-endif()
 
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.

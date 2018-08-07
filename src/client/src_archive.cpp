@@ -29,14 +29,10 @@ namespace {
 
     // map from file extension to libarchive write format calls
     std::unordered_map<std::string, int (*)(struct archive *)> format_callsmap = {
-#if ARCHIVE_VERSION_NUMBER >= 3000000
         { ".7z", archive_write_set_format_7zip },
-#endif
         { ".ar", archive_write_set_format_ar_bsd },
         { ".cpio", archive_write_set_format_cpio },
-#if ARCHIVE_VERSION_NUMBER >= 3000000
         { ".iso", archive_write_set_format_iso9660 },
-#endif
         { ".mtree", archive_write_set_format_mtree },
         { ".pax", archive_write_set_format_pax },
         { ".shar", archive_write_set_format_shar },
@@ -55,7 +51,6 @@ namespace {
     // map from file extension to libarchive write compression calls
     std::unordered_map<std::string, int (*)(struct archive *)> compression_callsmap = {
 
-#if ARCHIVE_VERSION_NUMBER >= 3000000
         { ".bz2" , archive_write_add_filter_bzip2 },
         { ".gz"  , archive_write_add_filter_gzip },
         { ".lz"  , archive_write_add_filter_lzma },
@@ -69,21 +64,6 @@ namespace {
         { ".xar",  archive_write_add_filter_xz },
         { ".xz"  , archive_write_add_filter_xz },
         { ".z"   , archive_write_add_filter_compress },
-#else
-        { ".bz2" , archive_write_set_compression_bzip2 },
-        { ".gz"  , archive_write_set_compression_gzip },
-        { ".lz"  , archive_write_set_compression_lzma },
-        { ".lzma", archive_write_set_compression_lzma },
-        { ".taz",  archive_write_set_compression_compress },  // (archive w/ compression)
-        { ".tb2",  archive_write_set_compression_bzip2 },  // (archive w/ compression)
-        { ".tbz2", archive_write_set_compression_bzip2 }, // (archive w/ compression)
-        { ".tgz",  archive_write_set_compression_gzip },  // (archive w/ compression)
-        { ".tlz",  archive_write_set_compression_lzma },  // (archive w/ compression)
-        { ".txz",  archive_write_set_compression_xz },  // (archive w/ compression)
-        { ".xar",  archive_write_set_compression_xz },
-        { ".xz"  , archive_write_set_compression_xz },
-        { ".z"   , archive_write_set_compression_compress },
-#endif
     };
 
     // map from language to file extension

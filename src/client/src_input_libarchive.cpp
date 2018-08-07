@@ -52,13 +52,6 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     archive_read_support_format_raw(arch);
     archive_read_support_format_empty(arch);
 
-    /* Check libarchive version enable version specific features/syntax */
-#if ARCHIVE_VERSION_NUMBER < 3000000
-    // V2 Only Settings
-    // Compressions
-    archive_read_support_compression_all(arch);
-#else
-    // V3 Only Settings
     // File Formats
     archive_read_support_format_7zip(arch);
     archive_read_support_format_cab(arch);
@@ -67,7 +60,6 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     // Compressions
     archive_read_support_filter_all(arch);
-#endif
 
     int status;
     const int buffer_size = 16384;

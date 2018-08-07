@@ -358,23 +358,21 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
        setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
 
-#define ADD_MACRO_LITERAL(token, type) \
-    if(user_macro_list.at(i + 1) == type) { \
-        literals[user_macro_list.at(i).c_str()] = token; \
-        continue; \
-    }
-
     // @todo check for exception
     for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
-        ADD_MACRO_LITERAL(MACRO_NAME, "src:macro")
-        ADD_MACRO_LITERAL(MACRO_TYPE_NAME, "src:name")
-        ADD_MACRO_LITERAL(MACRO_TYPE_NAME, "src:type")
-        ADD_MACRO_LITERAL(MACRO_CASE, "src:case")
-        ADD_MACRO_LITERAL(MACRO_LABEL, "src:label")
-        ADD_MACRO_LITERAL(MACRO_SPECIFIER, "src:specifier")
+        if (user_macro_list[i + 1] == "src:macro")
+            literals[user_macro_list[i].c_str()] = MACRO_NAME;
+        else if (user_macro_list[i + 1] == "src:name")
+            literals[user_macro_list[i].c_str()] = MACRO_TYPE_NAME;
+        else if (user_macro_list[i + 1] == "src:type")
+            literals[user_macro_list[i].c_str()] = MACRO_TYPE_NAME;
+        else if (user_macro_list[i + 1] == "src:case")
+            literals[user_macro_list[i].c_str()] = MACRO_CASE;
+        else if (user_macro_list[i + 1] == "src:label")
+            literals[user_macro_list[i].c_str()] = MACRO_LABEL;
+        else if (user_macro_list[i + 1] == "src:specifier")
+            literals[user_macro_list[i].c_str()] = MACRO_SPECIFIER;
     }
-
-#undef ADD_MACRO_LITERAL
 
     constexpr const keyword keyword_map[] = {
         // common keywords

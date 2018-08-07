@@ -103,23 +103,15 @@ public:
     void init(int m, bool onpreproclinestate, bool nescape = false, bool rstring = false, std::string dstring = "", bool is_line = false, long lnumber = -1, OPTION_TYPE op = 0) {
 
         onpreprocline = onpreproclinestate;
-
         mode = m;
-
         noescape = nescape;
-        
         rawstring = rstring;
-
         delimiter = dstring;
-
         isline = is_line;
-
         line_number = lnumber;
-
         options = op;
     }
 }
-
 
 /*
   Any text inside a comment, string, or character
@@ -217,9 +209,8 @@ COMMENT_TEXT {
         '\043'..'\045' | 
 
         '&'
-                { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
-//        '&'
 //                { $setText("&amp;"); } |
+                { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
 
         '\047' /* '\'' */
                 { if (prevLA != '\\' && mode == CHAR_END) { $setType(mode); selector->pop(); } } |
@@ -251,15 +242,13 @@ COMMENT_TEXT {
         '\060'..';' | 
 
         '<'
-                { text.erase(realbegin); text += "&lt;"; realbegin += 3; } |
-//        '<'
 //                { $setText("&lt;"); } |
+                { text.erase(realbegin); text += "&lt;"; realbegin += 3; } |
         '=' | 
 
         '>'
-                { text.erase(realbegin); text += "&gt;"; realbegin += 3; } |
-//        '>'
 //                { $setText("&gt;"); } |
+                { text.erase(realbegin); text += "&gt;"; realbegin += 3; } |
 
         '?'..'[' |
 

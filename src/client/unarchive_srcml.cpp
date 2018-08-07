@@ -48,14 +48,6 @@ void unarchive_srcml(const srcml_request_t& /* srcml_request */,
     // just a bunch of bytes
     archive_read_support_format_raw(libarchive_srcml.get());
 
-    /* Check libarchive version enable version specific features/syntax */
-#if ARCHIVE_VERSION_NUMBER < 3000000
-    // V2 Only Settings
-    // Compressions
-    archive_read_support_compression_all(libarchive_srcml.get());
-
-#else
-    // V3 Only Settings
     // File Formats
     archive_read_support_format_7zip(libarchive_srcml.get());
     archive_read_support_format_cab(libarchive_srcml.get());
@@ -64,7 +56,6 @@ void unarchive_srcml(const srcml_request_t& /* srcml_request */,
 
     // Compressions
     archive_read_support_filter_all(libarchive_srcml.get());
-#endif    // setup unarchiveions
 
     int status = ARCHIVE_OK;
     const int buffer_size = 16384;

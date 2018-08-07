@@ -65,10 +65,8 @@ static int srcml_append_transform_xpath_internal (struct srcml_archive* archive,
 //    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
 //        return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    xpathTransformation* trans = new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
-            attr_prefix, attr_namespace_uri, attr_name, attr_value);
-
-    archive->transformations.emplace_back(trans);
+    archive->transformations.push_back(std::unique_ptr<Transformation>(new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
+            attr_prefix, attr_namespace_uri, attr_name, attr_value)));
 
     return SRCML_STATUS_OK;
 }
@@ -168,9 +166,7 @@ static int srcml_append_transform_xslt_internal(srcml_archive* archive, std::uni
   //  if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
  //   return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    xsltTransformation* trans = new xsltTransformation(doc.release(), std::vector<std::string>());
-
-    archive->transformations.emplace_back(trans);
+    archive->transformations.push_back(std::unique_ptr<Transformation>(new xsltTransformation(doc.release(), std::vector<std::string>())));
 
     return SRCML_STATUS_OK;
 }
@@ -283,9 +279,7 @@ static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDo
 //    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
 //    return SRCML_STATUS_INVALID_IO_OPERATION;
 
-    relaxngTransformation* trans = new relaxngTransformation(doc);
-
-    archive->transformations.emplace_back(trans);
+    archive->transformations.push_back(std::unique_ptr<Transformation>(new relaxngTransformation(doc)));
 
     return SRCML_STATUS_OK;
 }
@@ -422,17 +416,13 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
     if (archive->transformations.size() == 0)
         return SRCML_STATUS_NO_TRANSFORMATION;
 
-    archive->transformations.back()->xsl_parameters.pop_back();
     archive->transformations.back()->xsl_parameters.push_back(xpath_param_name);
 
-    size_t xpath_param_value_length = strlen(xpath_param_value);
-    char * string_value = new char[xpath_param_value_length + 3];
-    string_value[0] = '"';
-    strncpy(string_value + 1, xpath_param_value, xpath_param_value_length);
-    string_value[xpath_param_value_length + 1] = '"';
-    string_value[xpath_param_value_length + 2] = 0;
+    std::string parenvalue = "\"";
+    parenvalue += xpath_param_value;
+    parenvalue += "\"";
 
-    archive->transformations.back()->xsl_parameters.push_back(string_value);
+    archive->transformations.back()->xsl_parameters.push_back(parenvalue);
 
     return SRCML_STATUS_OK;
 }

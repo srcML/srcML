@@ -257,9 +257,10 @@ void create_srcml(const srcml_request_t& srcml_request,
     // iterate through all transformations added during cli parsing
     int xpath_index = -1;
     for (const auto& trans : srcml_request.transformations) {
+
         std::string protocol;
         std::string resource;
-        src_prefix_split_uri(trans, protocol, resource);
+        std::tie(protocol, resource) = src_prefix_split_uri(trans);
 
         if (protocol == "xpath") {
             if (apply_xpath(srcml_arch, srcml_arch, resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
@@ -276,7 +277,7 @@ void create_srcml(const srcml_request_t& srcml_request,
             }
         }
         
-        if (protocol == "xpathparam") {
+        if (protocol == "xslt-param") {
 
             // split resource into name and value
             auto pos = resource.find('=');
@@ -287,6 +288,7 @@ void create_srcml(const srcml_request_t& srcml_request,
                 value.insert(0, 1, '"');
                 value.append("\"");
             }
+
             srcml_append_transform_param(srcml_arch, name.c_str(), value.c_str());
         }
 /*

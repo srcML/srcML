@@ -144,12 +144,7 @@ See `srcml --help` for more information.
     // step (srcml|src)->compressed
     if (request_output_compression(srcml_request)) {
 
-#if ARCHIVE_VERSION_NUMBER > 3001002
         pipeline.push_back(compress_srcml);
-#else
-        SRCMLstatus(ERROR_MSG, "srcml: Unsupported output compression");
-        exit(1);
-#endif
     }
 
     // should always have something to do

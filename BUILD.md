@@ -34,7 +34,7 @@ Out of source builds (builds outside the source directory) are recommended, howe
 
 ### Unix Distribution Specifics
 
-#### OSX
+#### OS X and macOS
 
 ##### Packages Required
 
@@ -56,16 +56,15 @@ Additional packages that may not needed, but are recommended (for timing etc.):
 
 Distribution of dmg/pkg:
 
-* PackageMaker
+* pkgbuild
 
 ##### Notes
 
-* OS X does not install header files for libarchive. You can download these from Apple's:
+* The srcML client requires LibArchive with a version >= 3.  OS X and macOS includes a version < 3. Because of this, LibArchive is
+  statically linked into the client. There are two sources:
 
-    * [archive.h](https://opensource.apple.com/source/libarchive/libarchive-41.70.1/libarchive/libarchive/archive.h)
-    * [archive_entry.h](http://www.opensource.apple.com/source/libarchive/libarchive-30/libarchive/libarchive/archive_entry.h?txt)
-
-* PackageMaker is currently being used. However, it is deprecated and no longer available. A conversion to pkgbuild is in progress
+    * Install the libarchive that is part of brew, `brew install libarchive`
+    * Download and build LibArchive in a directory `libarchive` parallel to the source directory, typically ~/libarchive
 
 #### Fedora
 
