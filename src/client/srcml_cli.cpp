@@ -445,7 +445,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("xslt", prog_opts::value< std::vector<std::string> >()->value_name("URI"), "Apply the XSLT transformation at the given URI to each individual unit")
             ("xslt-param", prog_opts::value< std::vector<std::string> >()->value_name("NAME=\"VALUE\""), "Passes a string parameter NAME with VALUE to the XSLT program where VALUE is a UTF-8 encoding string")
             ("relaxng", prog_opts::value< std::vector<std::string> >()->value_name("URI"), "Output individual units that match the RelaxNG pattern at the given URI")
-            ("revision", prog_opts::value<size_t>()->notifier(&option_field<&srcml_request_t::revision>), "Extract the given revision (0 = original, 1 = modified)")
             ;
 
         positional_options.add_options()
@@ -468,6 +467,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
             
         experimental_options.add_options()
+            ("revision", prog_opts::value<size_t>()->notifier(&option_field<&srcml_request_t::revision>), "Extract the given revision (0 = original, 1 = modified)")
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "Output and update existing srcml")
             ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "Immediate output while parsing, default for keyboard input")
             ("xml-processing", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xml_processing>), "Add XML processing instruction")
