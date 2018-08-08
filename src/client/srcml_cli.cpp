@@ -127,7 +127,7 @@ srcml_request_t srcml_request;
 prog_opts::options_description general("GENERAL OPTIONS");
 prog_opts::options_description src2srcml_options("CREATING SRCML");
 prog_opts::options_description srcml2src_options("EXTRACTING SOURCE CODE");
-prog_opts::options_description query_transform("TRANSFORMATIONS");
+prog_opts::options_description query_transform("QUERY & TRANSFORMATION");
 prog_opts::options_description positional_options("POSITIONAL");
 prog_opts::options_description deprecated_options("DEPRECATED OPTIONS");
 prog_opts::options_description debug_options("DEBUG OPTIONS");
