@@ -27,6 +27,11 @@ createfile sub/a.cpp.xml "$srcml"
 srcml --list sub/a.cpp.xml
 check "$output"
 
+srcml -L sub/a.cpp.xml
+check "$output"
+
 srcml --list < sub/a.cpp.xml
 check "$output"
 
+srcml -L < sub/a.cpp.xml
+check "$output"
