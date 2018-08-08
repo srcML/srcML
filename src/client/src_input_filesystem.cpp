@@ -43,9 +43,12 @@ int src_input_filesystem(ParseQueue& queue,
 
     // start at the root of the tree
     auto darchive = archive_read_disk_new();
+#if  ARCHIVE_VERSION_NUMBER >= 3002003
     archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_ACL | ARCHIVE_READDISK_NO_XATTR | ARCHIVE_READDISK_NO_FFLAGS);
+#else
+    archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_XATTR);
+#endif
     archive_read_disk_open(darchive, input.c_str());
-
     archive_entry* entry = nullptr;
     bool first = true;
     int status = ARCHIVE_OK;
