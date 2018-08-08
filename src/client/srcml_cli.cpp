@@ -381,11 +381,8 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "Output version number and exit")
             ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "Conversion and status information to stderr")
             ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "Suppress status messages")
-            ("list", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LIST>), "List all files in the srcML archive and exit")
-            ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "Output most metadata except srcML file count and exit")
-            ("full-info,I", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "Output all metadata including srcML file count and exit")
-            ("jobs,j", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->value_name("NUM")->default_value(4), "Allow up to NUM threads for source parsing")
             ("output,o", prog_opts::value<std::string>()->notifier(&option_output_filename)->value_name("FILE")->default_value(""), "Write output to FILE")
+            ("jobs,j", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->value_name("NUM")->default_value(4), "Allow up to NUM threads for source parsing")
             ;
 
         src2srcml_options.add_options()
@@ -416,6 +413,9 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
 
         metadata_options.add_options()
+            ("list,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LIST>), "List all files in the srcML archive and exit")
+            ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "Output most metadata except srcML file count and exit")
+            ("full-info,I", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "Output all metadata including srcML file count and exit")
             ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "Output source language and exit")
             ("show-url", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_URL>), "Output source url name and exit")
             ("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "Output source filename and exit")
