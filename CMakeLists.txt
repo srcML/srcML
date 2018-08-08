@@ -49,10 +49,4 @@ if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if(${BUILD_LANGUAGE_BINDINGS})
-    add_subdirectory(bindings)
-endif()
-
-add_subdirectory(python)
-
 add_subdirectory(CMake/post-install)
