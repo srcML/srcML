@@ -139,9 +139,13 @@ if(${GENERATE_DOCUMENTATION})
         DEPENDS ${CMAKE_BINARY_DIR}/srcml.md
     )
     ADD_CUSTOM_TARGET(doc ALL DEPENDS ${DOXYGEN_OUTPUT_DIR}/html ${DOXYGEN_OUTPUT_DIR}/latex ${CMAKE_BINARY_DIR}/srcml ${CMAKE_BINARY_DIR}/srcml.html)
+
+    # man1 for srcml manpage
     install(FILES ${CMAKE_BINARY_DIR}/srcml RENAME srcml.1 DESTINATION /usr/local/share/man/man1)
-#    install(FILES ${CMAKE_BINARY_DIR}/srcml ${CMAKE_BINARY_DIR}/srcml.html DESTINATION doc/man)
-#    install(DIRECTORY ${DOXYGEN_OUTPUT_DIR}/html ${DOXYGEN_OUTPUT_DIR}/latex DESTINATION doc)
+
+    # share for srcml manpage in html, and libsrcml doxygen documentation
+    install(FILES ${CMAKE_BINARY_DIR}/srcml.html DESTINATION /usr/local/share/srcml/doc)
+    install(DIRECTORY ${DOXYGEN_OUTPUT_DIR}/html ${DOXYGEN_OUTPUT_DIR}/latex DESTINATION /usr/local/share/srcml/doc/doxygen)
 
 endif()
 
