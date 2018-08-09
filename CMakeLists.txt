@@ -53,6 +53,10 @@ if(${BUILD_LANGUAGE_BINDINGS})
     add_subdirectory(bindings)
 endif()
 
+if(${BUILD_DOCUMENTATION})
+    add_subdirectory(doc)
+endif()
+
 add_subdirectory(python)
 
 add_subdirectory(CMake/post-install)
