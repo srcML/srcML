@@ -41,7 +41,7 @@ mkdir $outputdir/pkg_client
 cp $build_root/bin/srcml $outputdir/pkg_client
 
 mkdir $outputdir/pkg_lib
-cp $build_root/bin/libsrcml* $outputdir/pkg_lib
+cp $build_root/bin/*.dylib $outputdir/pkg_lib
 
 mkdir $outputdir/pkg_include
 cp $source_root/src/libsrcml/srcml.h $outputdir/pkg_include

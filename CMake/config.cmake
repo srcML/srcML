@@ -55,6 +55,9 @@ option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
 option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" OFF)
 option(BUILD_PARSER_TESTS "Include tests for parser" ON)
 
+# Turn building libsrcml statically ON/OFF
+option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
+
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 option(BUILD_PYTHON_BINDINGS "Build Python language bindings/wrapper" OFF)
 
