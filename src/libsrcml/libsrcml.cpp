@@ -47,10 +47,7 @@
  *
  * Global structure to hold error string.
  */
-#ifdef STATIC_GLOBALS
-static
-#endif
-std::string srcml_error;
+static std::string srcml_error;
 
 /**
  * @var global_archive
@@ -59,20 +56,14 @@ std::string srcml_error;
  * Archive is used for both read and write first call to srcml()
  * initializes other parameters.
  */
-#ifdef STATIC_GLOBALS
-static
-#endif
-srcml_archive global_archive;
+static srcml_archive global_archive;
 
 /**
  * @var global_unit
  *
  * global unit for use with srcml() function.  Defaulted values.
  */
-#ifdef STATIC_GLOBALS
-static
-#endif
-srcml_unit global_unit;
+static srcml_unit global_unit;
 
 /**
  * @var register_languages
