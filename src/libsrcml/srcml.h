@@ -588,7 +588,8 @@ LIBSRCML_DECL int srcml_archive_write_unit(struct srcml_archive* archive, struct
 
 /** Append the string to the srcml_archive archive
  * @param archive A srcml_archive opened for writing
- * @param unit A srcml_unit to output
+ * @param s String to write
+ * @param len Length of the string to write
  * @note Can not mix with by element mode.
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
