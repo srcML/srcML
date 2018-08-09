@@ -28,12 +28,12 @@
  * * Querying and transformation in the srcML format
  *
  * The API is broken up into the following sections:
- *    - @subpage macros : Options, status codes, and global values
- *    - @subpage utility : Checking library support and freeing memory
- *    - @subpage convenience : The simplistic single source-code file to srcML file conversion
- *    - @subpage archive : Operations on and involving core data structure of srcML
- *    - @subpage unit : Operations on and involving the building blocks of an archive
- *    - @subpage srcDiff : A syntactic differencing tool integrated into srcML
+ *    - @subpage srcml_macros : Options, status codes, and global values
+ *    - @subpage srcml_utility : Checking library support and freeing memory
+ *    - @subpage srcml_convenience : The simplistic single source-code file to srcML file conversion
+ *    - @subpage srcml_archive : Operations on and involving core data structure of srcML
+ *    - @subpage srcml_unit : Operations on and involving the building blocks of an archive
+ *    - @subpage srcml_srcDiff : A syntactic differencing tool integrated into srcML
  */
 
 #ifndef INCLUDED_SRCML_H
@@ -57,7 +57,7 @@ typedef SSIZE_T ssize_t;
 #define LIBSRCML_DECL
 #endif
 
-/** @defgroup macros Macros
+/** @defgroup srcml_macros Macros
     @{ */
 
 /**@{ @name Current Version */
@@ -149,7 +149,7 @@ struct srcml_archive;
  */
 struct srcml_unit;
 
-/** @defgroup utility Utility functions
+/** @defgroup srcml_utility Utility functions
     @{
  */
 
@@ -233,7 +233,7 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
 /**@}*/
 /**@}*/
 
-/** @defgroup convenience Convenience functions
+/** @defgroup srcml_convenience Convenience functions
 
   Straightforward functions for translating single source-code files to and from the srcML format. 
   A complete program to convert from a source-code file to srcML:
@@ -553,7 +553,7 @@ LIBSRCML_DECL const char* srcml_get_macro_type(size_t pos);
 LIBSRCML_DECL void srcml_cleanup_globals();
 /**@}*/
 
-/** @defgroup archive Archive
+/** @defgroup srcml_archive Archive
     @{
 */
 /** Create a new srcml archive.
@@ -1239,7 +1239,7 @@ LIBSRCML_DECL int srcml_clear_transforms(struct srcml_archive* archive);
 /**@}*/
 /**@}*/
 
-/** @defgroup unit Unit
+/** @defgroup srcml_unit Unit
     @{
 */
 /** Create a new srcml_unit tied to the srcml archive
@@ -1533,7 +1533,7 @@ LIBSRCML_DECL int srcml_write_string(struct srcml_unit* unit, const char * conte
 /**@}*/
 /**@}*/
 
-/** @defgroup srcDiff srcDiff
+/** @defgroup srcml_srcDiff srcDiff
     @{
 */
 /** Constant for original srcDiff revision number */
