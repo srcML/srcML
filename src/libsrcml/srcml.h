@@ -136,12 +136,16 @@ const unsigned int SRCML_OPTION_STORE_ENCODING    = 1<<26;
 /**@}*/
 
 /**
- * @struct srcml_archive Encapsulates multiple srcML units into one srcML archive
+ * @struct srcml_archive
+ *
+ * Encapsulates multiple srcML units into one srcML archive
  */
 struct srcml_archive;
 
 /**
- * @struct srcml_unit The srcML markup of one source-code file
+ * @struct srcml_unit
+ *
+ * The srcML markup of one source-code file
  */
 struct srcml_unit;
 
