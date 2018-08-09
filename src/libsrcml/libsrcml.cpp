@@ -43,13 +43,6 @@
 #endif
 
 /**
- * @var srcml_error
- *
- * Global structure to hold error string.
- */
-static std::string srcml_error;
-
-/**
  * @var global_archive
  *
  * global archive for use with srcml() function.  Defaulted values.
@@ -138,7 +131,7 @@ int srcml(const char* input_filename, const char* output_filename) {
 
     if (!input_filename || !output_filename) {
 
-        srcml_error = "No input file provided";
+        global_archive.error_string = "No input file provided";
         return  SRCML_STATUS_INVALID_ARGUMENT;
 
     }
@@ -216,11 +209,11 @@ int srcml(const char* input_filename, const char* output_filename) {
         if (!is_xml) {
 
             if (global_archive.language) {
-                srcml_error = "Language '";
-                srcml_error += global_archive.language->c_str();
-                srcml_error += "' is not supported.";
+                global_archive.error_string = "Language '";
+                global_archive.error_string += global_archive.language->c_str();
+                global_archive.error_string += "' is not supported.";
             } else
-                srcml_error = "No language provided.";
+                global_archive.error_string = "No language provided.";
 
             return SRCML_STATUS_INVALID_INPUT;
 
@@ -863,9 +856,9 @@ int srcml_check_exslt() {
 /**
  * srcml_error_string
  *
- * @returns Return a string describing last recorded error.
+ * @returns Return a string describing last recorded error for convenience functions.
  */
-const char* srcml_error_string() { return srcml_error.c_str(); }
+const char* srcml_error_string() { return global_archive.error_string.c_str(); }
 
 
 /******************************************************************************
