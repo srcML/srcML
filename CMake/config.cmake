@@ -113,12 +113,7 @@ else()
     if(NOT APPLE)
         find_package(LibArchive 3 REQUIRED)
 
-    # macOS with homebrew
-    elseif(EXISTS "/usr/local/opt/libarchive")
-        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
-        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
-
-    # macOS with custom-built libarchive
+     # macOS with custom-built libarchive
     elseif(EXISTS "${OSX_LIBARCHIVE_PATH}")
 
         # different versions of libarchive place the generated libarchive.a in different places
@@ -127,6 +122,11 @@ else()
         set(LibArchive_INCLUDE_DIRS ${OSX_LIBARCHIVE_PATH}/libarchive)
 
         set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} /usr/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+    
+    # macOS with homebrew
+    elseif(EXISTS "/usr/local/opt/libarchive")
+        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
+        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
 
     else()
         message(FATAL_ERROR "Unable to find libarchive >= 3 via homebrew or local build at ${OSX_LIBARCHIVE_PATH}")
