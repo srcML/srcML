@@ -38,7 +38,7 @@ cp $build_root/bin/srcml pkg_client
 
 echo "LIB"
 mkdir pkg_lib
-cp $build_root/bin/*.dylib pkg_lib
+cp --preserve=links $build_root/bin/*.dylib pkg_lib
 
 echo "INCLUDE"
 mkdir pkg_include
@@ -61,7 +61,7 @@ cp $source_root/doc/manpage/srcml pkg_manpage/srcml.1
 # STRIP BIN/LIB
 echo "STRIP EXE AND LIB"
 strip -u -r pkg_client/srcml
-strip -x pkg_lib/libsrcml.dylib
+strip -x pkg_lib/libsrcml.*
 
 echo "CREATE PACKAGES"
 pkgbuild --root pkg_client --identifier com.srcml.client --version $version_num --install-location /usr/local/bin client.pkg
