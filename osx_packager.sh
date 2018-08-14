@@ -38,7 +38,7 @@ cp $build_root/bin/srcml pkg_client
 
 echo "LIB"
 mkdir pkg_lib
-cp --preserve=links $build_root/bin/*.dylib pkg_lib
+cp -R $build_root/bin/*.dylib pkg_lib
 
 echo "INCLUDE"
 mkdir pkg_include
