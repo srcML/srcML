@@ -167,7 +167,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
 
     // Applying the transformation and transferring the results
     // to the XPath archive.
-    rc = srcml_apply_transforms(processedArchive, xpathResultArchive);
+//    rc = srcml_apply_transforms(processedArchive, xpathResultArchive);
     if(rc != SRCML_STATUS_OK) {
         cout << rc << endl;
         cout << "Last Error string: " << srcml_error_string() << endl;
