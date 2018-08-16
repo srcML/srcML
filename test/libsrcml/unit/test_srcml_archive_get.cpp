@@ -84,7 +84,7 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_src_encoding(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
-
+#if 0
     /*
       srcml_archive_get_revision
     */
@@ -115,7 +115,7 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_version(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
-
+#endif
     /*
       srcml_archive_get_language
     */
