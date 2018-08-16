@@ -81,7 +81,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_src_encoding(archive, "foo");
-        dassert(srcml_archive_get_xml_encoding(archive), std::string("foo"));
+        dassert(srcml_archive_get_src_encoding(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
 
@@ -112,7 +112,7 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_version(archive, "foo");
-        dassert(srcml_archive_get_revision(archive), std::string("foo"));
+        dassert(srcml_archive_get_version(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
 
