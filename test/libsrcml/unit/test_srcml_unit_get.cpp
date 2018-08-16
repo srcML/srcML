@@ -237,7 +237,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
-        srcml_unit * unit = srcml_archive_read_unit_header(iarchive);
+        srcml_unit * unit = srcml_archive_read_unit(iarchive);
         dassert(srcml_unit_get_srcml_fragment(unit), std::string("<unit/>"));
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);
@@ -322,7 +322,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
-        srcml_unit * unit = srcml_archive_read_unit_header(iarchive);
+        srcml_unit * unit = srcml_archive_read_unit(iarchive);
         char * xml = 0;
 //        size_t size = 0;
 //        srcml_unit_get_srcml(unit, "UTF-8", &xml, &size);

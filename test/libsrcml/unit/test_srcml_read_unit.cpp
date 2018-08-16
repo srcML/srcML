@@ -191,23 +191,23 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        dassert(srcml_archive_read_unit_header(archive), 0);
+        dassert(srcml_archive_read_unit(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
-        dassert(srcml_archive_read_unit_header(0), 0);
+        dassert(srcml_archive_read_unit(0), 0);
     }
 
     /*
-      srcml_archive_read_unit_header
+      srcml_archive_read_unit
     */
 
     {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml.c_str(), srcml.size());
-        srcml_unit * unit = srcml_archive_read_unit_header(archive);
+        srcml_unit * unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_get_language(unit), std::string("C"));
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_archive_get_url(archive), 0);
@@ -223,7 +223,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_full.c_str(), srcml_full.size());
-        srcml_unit * unit = srcml_archive_read_unit_header(archive);
+        srcml_unit * unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_get_language(unit), std::string("C++"));
         dassert(srcml_unit_get_filename(unit), std::string("project"));
         dassert(srcml_archive_get_url(archive), std::string("test"));
@@ -239,7 +239,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
-        srcml_unit * unit = srcml_archive_read_unit_header(archive);
+        srcml_unit * unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_get_language(unit), std::string("C++"));
         dassert(srcml_unit_get_filename(unit), std::string("project"));
         dassert(srcml_archive_get_url(archive), std::string("test"));
@@ -255,21 +255,21 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_two.c_str(), srcml_two.size());
-        srcml_unit * unit = srcml_archive_read_unit_header(archive);
+        srcml_unit * unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_get_language(unit), std::string("C"));
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_archive_get_url(archive), 0);
         dassert(srcml_unit_get_version(unit), 0);
         dassert(unit->srcml, "");
         srcml_unit_free(unit);
-        unit = srcml_archive_read_unit_header(archive);
+        unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_get_language(unit), std::string("C"));
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_archive_get_url(archive), 0);
         dassert(srcml_unit_get_version(unit), 0);
         dassert(unit->srcml, "");
         srcml_unit_free(unit);
-        unit = srcml_archive_read_unit_header(archive);
+        unit = srcml_archive_read_unit(archive);
         dassert(unit, 0);
 
         srcml_unit_free(unit);
@@ -280,12 +280,12 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        dassert(srcml_archive_read_unit_header(archive), 0);
+        dassert(srcml_archive_read_unit(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
-        dassert(srcml_archive_read_unit_header(0), 0);
+        dassert(srcml_archive_read_unit(0), 0);
     }
 
     srcml_cleanup_globals();
