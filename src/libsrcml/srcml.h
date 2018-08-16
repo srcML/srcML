@@ -445,7 +445,7 @@ LIBSRCML_DECL const char* srcml_get_filename();
 LIBSRCML_DECL const char* srcml_get_url();
 
 /**
- * @return The versiot attribute on success
+ * @return The version attribute on success
  * @return NULL on failure
  */
 LIBSRCML_DECL const char* srcml_get_version();
