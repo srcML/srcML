@@ -36,6 +36,7 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
+     //   dassert(srcml_archive_get_xml_encoding(archive), 0);
 //        dassert(archive->type, SRCML_ARCHIVE_INVALID);
 //        dassert(archive->encoding, boost::none);
 //        dassert(archive->src_encoding, boost::none);
@@ -65,7 +66,7 @@ int main(int, char* argv[]) {
 //        assert(archive->context.empty());
 //        assert(!archive->revision_number.is_initialized());
 
-        srcml_archive_free(archive);
+ //       srcml_archive_free(archive);
     }
 
     return 0;

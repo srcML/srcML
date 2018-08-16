@@ -36,6 +36,7 @@
 #include <vector>
 #include <fstream>
 
+#if 0
 
 typedef boost::shared_ptr<xmlDoc> xml_doc_shared_ptr_t; 
 
@@ -295,7 +296,11 @@ int summaryAndResultsDisplay() {
     return 0;
 }
 
+#endif
+
 int main(int, char* argv[]) {
+
+#if 0
     cout << "---------------------------------------------------" << endl;
     cout << "                   Running XPath Tests" << endl;
     cout << "---------------------------------------------------" << endl;
@@ -2004,5 +2009,7 @@ int main(int, char* argv[]) {
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
+
+#endif
 }
 

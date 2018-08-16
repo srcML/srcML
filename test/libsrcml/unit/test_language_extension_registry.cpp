@@ -27,9 +27,11 @@
 
 int main(int, char* argv[]) {
 
+#if 0
     /*
         at
     */
+
     {
         language_extension_registry reg_ext;
         reg_ext.register_user_ext("cpp", "C++");
@@ -242,7 +244,7 @@ int main(int, char* argv[]) {
         dassert(get_language(reg_ext_one.at(4)), Language::LANGUAGE_JAVA);
         dassert(get_extension(reg_ext_one.at(4)), "java");
     }
-
+#endif
     return 0;
 
 }

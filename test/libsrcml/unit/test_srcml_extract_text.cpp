@@ -45,6 +45,7 @@
 
 int main(int, char* argv[]) {
 
+#if 0
     /*
       srcml_extract_text
     */
@@ -134,7 +135,8 @@ int main(int, char* argv[]) {
     }
 
     srcml_cleanup_globals();
-
+#endif
+    
     return 0;
 
 }

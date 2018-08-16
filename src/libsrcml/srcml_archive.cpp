@@ -60,17 +60,22 @@ const char* srcml_archive_check_extension(const srcml_archive* archive, const ch
  * @returns the created archive.
  */
 srcml_archive* srcml_archive_create() {
-    
+    fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
     srcml_archive* archive;
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
     try {
 
         archive = new srcml_archive;
 
     } catch(...) { return nullptr; }
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     xmlInitParser();
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     archive->registered_languages.register_standard_file_extensions();
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     return archive;
 }
