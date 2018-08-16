@@ -63,8 +63,8 @@ int main(int argc, char * argv[]) {
 
     // version
     if (option(SRCML_COMMAND_VERSION)) {
-        std::cout << "libsrcml " << srcml_version_string() << '\n'
-                  << "srcml " << srcml_version_string() << '\n'
+        std::cout << "srcml " << srcml_version_string() << '\n'
+                  << "libsrcml " << srcml_version_string() << '\n'
                   << archive_version_string() << '\n';
         return 0;
     }
@@ -72,8 +72,8 @@ int main(int argc, char * argv[]) {
     // debug info
     if (srcml_request.command & SRCML_DEBUG_MODE) {
         SRCMLstatus(DEBUG_MSG) << "Library Versions: " << '\n'
-                               << "libsrcml " << srcml_version_string() << '\n'
                                << "srcml " << srcml_version_string() << '\n'
+                               << "libsrcml " << srcml_version_string() << '\n'
                                <<  archive_version_string() << '\n'
                                << "libcurl " << curl_version_info(CURLVERSION_NOW)->version << '\n'
                                << "libboost " << BOOST_LIB_VERSION << '\n';
