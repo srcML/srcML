@@ -27,8 +27,6 @@
 #include <cassert>
 
 #include <srcml.h>
-#include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
 
@@ -36,13 +34,18 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-     //   dassert(srcml_archive_get_xml_encoding(archive), 0);
-//        dassert(archive->type, SRCML_ARCHIVE_INVALID);
-//        dassert(archive->encoding, boost::none);
-//        dassert(archive->src_encoding, boost::none);
-//        dassert(archive->language, boost::none);
-//        dassert(archive->url, boost::none);
-//        dassert(archive->version, boost::none);
+        dassert(srcml_archive_get_language(archive), 0);
+        dassert(srcml_archive_get_xml_encoding(archive), 0);
+        dassert(srcml_archive_get_src_encoding(archive), 0);
+        dassert(srcml_archive_get_url(archive), 0);
+        dassert(srcml_archive_get_version(archive), 0);
+        dassert(srcml_archive_get_tabstop(archive), 8);
+        // @todo Does 1 namespace make sense by default?
+        dassert(srcml_archive_get_namespace_size(archive), 1);
+//        fprintf(stderr, "DEBUG:  %s %s %d srcml_archive_get_namespace_uri(archive, 1): %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) srcml_archive_get_namespace_uri(archive, 1));
+
+
+//        dassert(srcml_archive_get_namespace_uri(archive, 1), std::string("http://www.srcML.org/srcML/src"));
 //        dassert(archive->attributes.size(), 0);
 
 //        dassert(archive->options, (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL 
@@ -58,9 +61,6 @@ int main(int, char* argv[]) {
 
 //        dassert(archive->user_macro_list.size(), 0);
 
-//        dassert(archive->translator, 0);
-//        dassert(archive->reader, 0);
-//        dassert(archive->input, 0);
 
 //        dassert(archive->transformations.size(), 0);
 //        assert(archive->context.empty());
