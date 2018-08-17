@@ -27,8 +27,6 @@
 #include <cassert>
 
 #include <srcml.h>
-#include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
 
@@ -43,7 +41,6 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->encoding = boost::optional<std::string>();
         dassert(srcml_unit_get_src_encoding(unit), 0);
         srcml_unit_free(unit);
     }
@@ -51,7 +48,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->encoding = "foo";
+        srcml_unit_set_src_encoding(unit, "foo");
         dassert(srcml_unit_get_src_encoding(unit), std::string("foo"));
         srcml_unit_free(unit);
     }
@@ -74,7 +71,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->revision = boost::optional<std::string>();
+//        unit->revision = boost::optional<std::string>();
         dassert(srcml_unit_get_revision(unit), 0);
         srcml_unit_free(unit);
     }
@@ -87,8 +84,8 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->revision = "foo";
-        dassert(srcml_unit_get_revision(unit), std::string("foo"));
+        srcml_unit_set_version(unit, "foo");
+        dassert(srcml_unit_get_version(unit), std::string("foo"));
         srcml_unit_free(unit);
     }
 
@@ -99,7 +96,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->language = boost::optional<std::string>();
+//        unit->language = boost::optional<std::string>();
         dassert(srcml_unit_get_language(unit), 0);
         srcml_unit_free(unit);
     }
@@ -107,7 +104,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->language = "foo";
+//        unit->language = "foo";
         dassert(srcml_unit_get_language(unit), std::string("foo"));
         srcml_unit_free(unit);
     }
@@ -123,7 +120,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->filename = boost::optional<std::string>();
+//        unit->filename = boost::optional<std::string>();
         dassert(srcml_unit_get_filename(unit), 0);
         srcml_unit_free(unit);
     }
@@ -131,7 +128,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->filename = "foo";
+//        unit->filename = "foo";
         dassert(srcml_unit_get_filename(unit), std::string("foo"));
         srcml_unit_free(unit);
     }
@@ -147,7 +144,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->version = boost::optional<std::string>();
+//        unit->version = boost::optional<std::string>();
         dassert(srcml_unit_get_version(unit), 0);
         srcml_unit_free(unit);
     }
@@ -155,7 +152,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->version = "foo";
+//        unit->version = "foo";
         dassert(srcml_unit_get_version(unit), std::string("foo"));
         srcml_unit_free(unit);
     }
@@ -171,7 +168,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->timestamp = boost::optional<std::string>();
+//        unit->timestamp = boost::optional<std::string>();
         dassert(srcml_unit_get_timestamp(unit), 0);
         srcml_unit_free(unit);
     }
@@ -179,7 +176,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->timestamp = "foo";
+//        unit->timestamp = "foo";
         dassert(srcml_unit_get_timestamp(unit), std::string("foo"));
         srcml_unit_free(unit);
     }
@@ -195,7 +192,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->hash = boost::optional<std::string>();
+//        unit->hash = boost::optional<std::string>();
         dassert(srcml_unit_get_hash(unit), 0);
         srcml_unit_free(unit);
     }
@@ -203,7 +200,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->hash = "foo";
+//        unit->hash = "foo";
         dassert(srcml_unit_get_hash(unit), std::string("foo"));
         srcml_unit_free(unit);
     }
@@ -219,7 +216,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml.clear();
+//        unit->srcml.clear();
         dassert(srcml_unit_get_srcml_fragment(unit), 0);
         srcml_unit_free(unit);
     }
@@ -227,7 +224,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
         dassert(srcml_unit_get_srcml_fragment(unit), std::string("<unit/>"));
         srcml_unit_free(unit);
     }
@@ -273,7 +270,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml.clear();
+//        unit->srcml.clear();
 //        char * xml = 0;
 //        size_t size = 0;
 //        dassert(srcml_unit_get_srcml(unit, "UTF-8", &xml, &size), SRCML_STATUS_INVALID_ARGUMENT);
@@ -284,7 +281,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
         char * xml = 0;
 //        size_t size = 0;
 //        srcml_unit_get_srcml(unit, 0, &xml, &size);
@@ -296,7 +293,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
         char * xml = 0;
 //        size_t size = 0;
 //        srcml_unit_get_srcml(unit, "UTF-8", &xml, &size);
@@ -308,7 +305,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit>\xc3\xbf<unit/>";
+//        unit->srcml = "<unit>\xc3\xbf<unit/>";
         char * xml = 0;
 //        size_t size = 0;
 //        srcml_unit_get_srcml(unit, "ISO-8859-1", &xml, &size);
@@ -366,7 +363,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
 //        char * xml = 0;
 //        size_t size = 0;
 //        dassert(srcml_unit_get_srcml(unit, 0, 0, &size), SRCML_STATUS_INVALID_ARGUMENT);
@@ -377,7 +374,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
 //        char * xml = 0;
 //        size_t size = 0;
 //        dassert(srcml_unit_get_srcml(unit, 0, &xml, 0), SRCML_STATUS_INVALID_ARGUMENT);
