@@ -94,7 +94,7 @@ if (OS_NAME STREQUAL "Ubuntu" OR OS_NAME STREQUAL "Linux Mint")
 	include(debian)
 endif()
 
-if (OS_NAME STREQUAL "Fedora" OR OS_NAME STREQUAL "openSUSE")
+if (OS_NAME STREQUAL "Fedora" OR OS_NAME STREQUAL "openSUSE" OR OS_NAME STREQUAL "openSUSE Leap")
 	include(rpm)
 endif()
 
