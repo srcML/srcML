@@ -88,7 +88,7 @@ endif()
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
 # include other specific configurations
-MESAGE(STATUS "Load Package Config for: ${OS_NAME}")
+MESSAGE(STATUS "Load Package Config for: ${OS_NAME}")
 
 if (OS_NAME STREQUAL "Ubuntu" OR OS_NAME STREQUAL "Linux Mint")
 	include(debian)
