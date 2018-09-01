@@ -34,7 +34,7 @@ if(EXISTS /etc/redhat-release)
 elseif(EXISTS /etc/os-release)
 
     file(READ /etc/os-release OS_RELEASE)
-    string(REGEX MATCH "^NAME=([a-zA-Z]*)" OS_NAME ${OS_RELEASE})
+    string(REGEX MATCH "^NAME=\"([a-zA-Z]*)\"" OS_NAME ${OS_RELEASE})
     set(OS_NAME ${CMAKE_MATCH_1})
 
 endif()
