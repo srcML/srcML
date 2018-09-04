@@ -30,7 +30,7 @@
 #   can be made
 
 # current revision number, replaced in expected output strings
-export REVISION=0.9.5
+export REVISION=1.0.0
 
 # construct a temporary directory name based on the test name (without the .sh)
 TEMPDIR=./tmp/$(basename $0 .sh)

@@ -62,9 +62,9 @@ typedef SSIZE_T ssize_t;
 
 /**@{ @name Current Version */
 /** Number representing libsrcml version */
-#define SRCML_VERSION_NUMBER 9005
+#define SRCML_VERSION_NUMBER 1000
 /** String containing libsrcml version */
-#define SRCML_VERSION_STRING "0.9.5"
+#define SRCML_VERSION_STRING "1.0.0"
 /**@}*/
 
 /**@{ @name Status */
