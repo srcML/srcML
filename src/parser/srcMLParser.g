@@ -8760,7 +8760,10 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG} :
                 startElement(STYPE);
 
             // statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL);
+            auto mode = MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL;
+            if (inLanguage(LANGUAGE_CSHARP))
+            	mode |= MODE_END_AT_BLOCK_NO_TERMINATE;
+            startNewMode(mode);
 
             // start the enum definition
             if (inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {
