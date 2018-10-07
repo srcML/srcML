@@ -211,7 +211,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     // if the unit has namespaces, then use those
     Namespaces mergedns = unit->archive->namespaces;
-    if (!(options & SRCML_OPTION_ARCHIVE) && unit->namespaces) {
+    if (unit->namespaces) {
         mergedns += *unit->namespaces;
     }
 

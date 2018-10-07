@@ -888,8 +888,9 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     unit->unit_translator = 0;
 
     // store the output in a buffer
-    // @todo check into xmlBufferDetach()
-    unit->srcml.assign((const char *)unit->output_buffer->content, unit->output_buffer->use);
+    char* srcml = (char*) xmlBufferDetach(unit->output_buffer);
+    unit->srcml.assign(srcml);
+    free(srcml);
 
     xmlBufferFree(unit->output_buffer);
 
