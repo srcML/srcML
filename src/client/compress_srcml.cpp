@@ -27,6 +27,7 @@
 #include <libarchive_utilities.hpp>
 #include <memory>
 
+#if ARCHIVE_VERSION_NUMBER >= 3002000
 void compress_srcml(const srcml_request_t& /* srcml_request */,
                     const srcml_input_t& input_sources,
                     const srcml_output_dest& destination) {
@@ -81,3 +82,4 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
             break;
     }
 }
+#endif
