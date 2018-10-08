@@ -26,42 +26,6 @@
 #include <archive.h>
 #include <archive_entry.h>
 
-static __LA_MODE_T curperm() {
-
-    // permissions of current directory
-    auto darchive = archive_read_disk_new();
-#if ARCHIVE_VERSION_NUMBER >= 3002003
-    archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_ACL | ARCHIVE_READDISK_NO_XATTR | ARCHIVE_READDISK_NO_FFLAGS);
-#elif ARCHIVE_VERSION_NUMBER >= 3002000
-    archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_XATTR);
-#endif
-    archive_read_disk_open(darchive, ".");
-    archive_entry* dentry = nullptr;
-    archive_read_next_header(darchive, &dentry);
-    auto perm = archive_entry_perm(dentry);
-//    archive_read_free(darchive);
-//    archive_entry_free(dentry);
-
-    return perm;
-}
-
-static void ourmkdir(const std::string& path, __LA_MODE_T perm) {
-
-    // assume path is directory name (don't split yet)
-    std::string curdirname = path;
-
-    // create new directory
-    auto a = archive_write_disk_new();
-    auto entry = archive_entry_new();
-    archive_entry_set_pathname(entry, curdirname.c_str());
-    archive_entry_set_filetype(entry, AE_IFDIR);
-    archive_entry_set_perm(entry, perm);
-    archive_write_header(a, entry);
-    archive_write_finish_entry(a);
-    archive_write_free(a);
-    archive_entry_free(entry);
-}
-
 void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
 
     // construct the relative directory
@@ -69,9 +33,12 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
     if (output_dir != "." && output_dir != "./")
         prefix = output_dir;
 
-    auto perm = curperm();
-
+    auto a = archive_write_disk_new();
+    auto entry = archive_entry_new();
+    archive_entry_set_filetype(entry, AE_IFDIR); 
+    archive_entry_set_perm(entry, 0744);
     int count = 0;
+    std::string last;
     while (srcml_unit* unit = srcml_archive_read_unit(srcml_arch)) {
 
         const char* cfilename = srcml_unit_get_filename(unit);
@@ -82,20 +49,23 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
         std::string filename = cfilename;
 
         // separate pathname from filename
-        std::string path = filename.rfind('/') != std::string::npos ? filename.substr(0, filename.rfind('/')) : "";
-
-        // construct the relative directory
-        std::string fullpath = prefix;
-        if (!path.empty()) {
-            fullpath += '/';
-            fullpath += path;
-        }
-
-        ourmkdir(fullpath, perm);
+        std::string path = prefix;
+        path += '/';
+        auto pos = filename.rfind('/');
+        path += pos != std::string::npos ? filename.substr(0, pos) : "";
 
         std::string fullfilename = prefix;
         fullfilename += "/";
         fullfilename += filename;
+
+        // use libarchive to create the file path
+        // @todo Can we get away with no permission on final file?
+        if (last != path) {
+            archive_entry_set_pathname(entry, path.c_str());
+            archive_write_header(a, entry);
+            archive_write_finish_entry(a);
+        }
+        last = path;
 
         // unparse directory to filename
         log << ++count << fullfilename;
@@ -104,4 +74,8 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
 
         srcml_unit_free(unit);
     }
+
+    archive_entry_free(entry);
+    archive_write_close(a);
+    archive_write_free(a);
 }
