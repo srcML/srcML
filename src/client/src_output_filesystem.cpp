@@ -30,12 +30,12 @@ static __LA_MODE_T curperm() {
 
     // permissions of current directory
     auto darchive = archive_read_disk_new();
-#if  ARCHIVE_VERSION_NUMBER >= 3002003
+#if ARCHIVE_VERSION_NUMBER >= 3002003
     archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_ACL | ARCHIVE_READDISK_NO_XATTR | ARCHIVE_READDISK_NO_FFLAGS);
-#else
+#elif ARCHIVE_VERSION_NUMBER >= 3002000
     archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_XATTR);
 #endif
-     archive_read_disk_open(darchive, ".");
+    archive_read_disk_open(darchive, ".");
     archive_entry* dentry = nullptr;
     archive_read_next_header(darchive, &dentry);
     auto perm = archive_entry_perm(dentry);
