@@ -814,12 +814,15 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
         // turn off option for archive so XML generated has full namespaces
         auto options = unit->archive->options;
         options &= ~(unsigned long long)(SRCML_OPTION_ARCHIVE);
-    
+
+        if (!(unit->namespaces))
+            unit->namespaces = unit->archive->namespaces;
+
         unit->unit_translator = new srcml_translator(
             obuffer,
             optional_to_c_str(unit->archive->encoding, "UTF-8"),
             options,
-            unit->archive->namespaces,
+            *(unit->namespaces),
             boost::none,
             unit->archive->tabstop,
             unit->derived_language,
@@ -883,18 +886,23 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
         return SRCML_STATUS_INVALID_INPUT;
 
+    xmlTextWriterFlush(unit->unit_translator->output_textwriter());
+
     // store the output in a buffer
     char* srcml = (char*) xmlBufferDetach(unit->output_buffer);
 
-//    srcml_write_start_unit(unit);
-//	char* start_tag = (char*) xmlBufferDetach(unit->output_buffer);
+    int save = unit->content_begin;
 
-    unit->srcml.assign(srcml);
+    srcml_write_start_unit(unit);
+	char* start_tag = (char*) xmlBufferDetach(unit->output_buffer);
 
-//    unit->srcml.append(">");
-//    unit->srcml.append(srcml + unit->content_begin);
+    unit->srcml.assign(start_tag);
+    unit->srcml.append(">");
+    unit->srcml.append(srcml + save);
 
-//    free(start_tag);
+    unit->content_end += (unit->content_begin - save);
+
+    free(start_tag);
     free(srcml);
 
     // finished with any parsing
