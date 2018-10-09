@@ -883,14 +883,23 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
         return SRCML_STATUS_INVALID_INPUT;
 
+    // store the output in a buffer
+    char* srcml = (char*) xmlBufferDetach(unit->output_buffer);
+
+//    srcml_write_start_unit(unit);
+//	char* start_tag = (char*) xmlBufferDetach(unit->output_buffer);
+
+    unit->srcml.assign(srcml);
+
+//    unit->srcml.append(">");
+//    unit->srcml.append(srcml + unit->content_begin);
+
+//    free(start_tag);
+    free(srcml);
+
     // finished with any parsing
     delete unit->unit_translator;
     unit->unit_translator = 0;
-
-    // store the output in a buffer
-    char* srcml = (char*) xmlBufferDetach(unit->output_buffer);
-    unit->srcml.assign(srcml);
-    free(srcml);
 
     xmlBufferFree(unit->output_buffer);
 
