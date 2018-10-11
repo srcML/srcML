@@ -25,7 +25,7 @@ header {
 }
 
 options {
-	language="Cpp";
+    language="Cpp";
     namespaceAntlr="antlr";
     namespaceStd="std";
 }
@@ -39,179 +39,174 @@ options {
 }
 
 tokens {
-EOL_BACKSLASH;
+    EOL_BACKSLASH;
 
-TEMPOPS;
-TEMPOPE;
-EQUAL;
-LPAREN; // = "(";
-DESTOP; // = "~";
-LCURLY; // = "{";
-RCURLY; // = "}";
-LBRACKET; // = "[";
-ATLBRACKET; // = "@[";
-RBRACKET; // = "]";
-COMMA; // = ",";
-RPAREN; // = ")";
-TERMINATE; // = ";";
-PREPROC;
-COLON; // = ":";
-QMARK;
+    TEMPOPS;
+    TEMPOPE;
+    EQUAL;
+    LPAREN; // = "(";
+    DESTOP; // = "~";
+    LCURLY; // = "{";
+    RCURLY; // = "}";
+    LBRACKET; // = "[";
+    ATLBRACKET; // = "@[";
+    RBRACKET; // = "]";
+    COMMA; // = ",";
+    RPAREN; // = ")";
+    TERMINATE; // = ";";
+    PREPROC;
+    COLON; // = ":";
+    QMARK;
 
-ASSIGNMENT; // +=, -=, etc.
+    ASSIGNMENT; // +=, -=, etc.
 
-// Java
-BAR; // |
+    // Java
+    BAR; // |
 
-// C++
-TRETURN; // ->
-MPDEREF;
-DOTDEREF;
+    // C++
+    TRETURN; // ->
+    MPDEREF;
+    DOTDEREF;
 
-// C#
-LAMBDA;
+    // C#
+    LAMBDA;
 
-// define value in master grammar so that it depends on language
-DCOLON;
+    // define value in master grammar so that it depends on language
+    DCOLON;
 
-MEMBERPOINTER; // = ".*";
-PERIOD; // = ".";
-MULTOPS; // = "*";
-REFOPS;  // = "&";
-RVALUEREF; // = "&&";
+    MEMBERPOINTER; // = ".*";
+    PERIOD; // = ".";
+    MULTOPS; // = "*";
+    REFOPS;  // = "&";
+    RVALUEREF; // = "&&";
 
-DOTDOT;
-DOTDOTDOT;
+    DOTDOT;
+    DOTDOTDOT;
 
-// Objective-C
-CSPEC;
-MSPEC;
+    // Objective-C
+    CSPEC;
+    MSPEC;
 
-// Apple
-BLOCKOP;
+    // Apple
+    BLOCKOP;
 
-// literals
-LITERAL_FALSE;
-LITERAL_TRUE;
+    // literals
+    LITERAL_FALSE;
+    LITERAL_TRUE;
 
-// Other
-CUDA;
+    // Other
+    CUDA;
 
-ATSIGN;
+    ATSIGN;
 
-ALLOPERATORS;
+    ALLOPERATORS;
 
-EOL_PLACEHOLD;
+    EOL_PLACEHOLD;
 }
 
-OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1); bool do_not_apply = false;
-} : 
-        (
-            '#' {
+OPERATORS options { testLiterals = true; } {
+    bool star = false;
+    int start = LA(1);
+    bool do_not_apply = false;
+} : (
+    '#'
+    {
+        if (startline) {
 
-            if (startline) {
+            $setType(PREPROC); 
 
-                $setType(PREPROC); 
+            // record that we are on a preprocessor line,
+            // primarily so that unterminated strings in
+            // a preprocessor line will end at the right spot
+            onpreprocline = true; 
 
-                // record that we are on a preprocessor line,
-                // primarily so that unterminated strings in
-                // a preprocessor line will end at the right spot
-                onpreprocline = true; 
-
-                if(isoption(options, SRCML_OPTION_LINE)) {
-                    int start = mark();
-                    ++inputState->guessing;
-                    if(LA(1) == 'l') {
-                        consume();  
-                        if(LA(1) == 'i') {
+            if (isoption(options, SRCML_OPTION_LINE)) {
+                int start = mark();
+                ++inputState->guessing;
+                if (LA(1) == 'l') {
+                    consume();  
+                    if (LA(1) == 'i') {
+                        consume();
+                        if (LA(1) ==  'n') {
                             consume();
-                            if(LA(1) ==  'n') {
-                                consume();
-                                if(LA(1) ==  'e')
-                                    isline = true;
-                            }
+                            if (LA(1) ==  'e')
+                                isline = true;
                         }
                     }
-                    --inputState->guessing;
-                    rewind(start);
                 }
-
+                --inputState->guessing;
+                rewind(start);
             }
-        }   |
-/*
-        ({ !stop && !(gt && (LA(1) == '>' || LA(1) == ':' || LA(1) == '&' || LA(1) == '*')) && (dcoloncount < 2) }?
+        }
+    } |
 
-         ( '*' { gt = true; } | '|' | ':' { ++dcoloncount; } | '`' | '=' { if (LA(1) != '=') stop = true; } | '!' | '%' | '+' | '^' | '-' |
-           '&' { gt = true; } | 
-           '>' { if (realbegin == _begin) gt = true;  } | 
-           '<' { gt = true; }) { ++realbegin; } )+ */ 
+    '+' {
+          if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=')
+            $setType(CSPEC);
+        }
+        ('+' | '=' { $setType(ASSIGNMENT); } )? |
+    '-' {
+          if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=')
+            $setType(MSPEC);
+        } 
+        ('-' | '=' { $setType(ASSIGNMENT); } | '>' { star = true; $setType(TRETURN); })? ({ star }? '*' { $setType(MPDEREF); })? |
+    '*' ('=' { $setType(ASSIGNMENT); } )? |
+    '%' ('=' { $setType(ASSIGNMENT); } )? |
+    '^' { if (LA(1) != '=') $setType(BLOCKOP); } ('=' { $setType(ASSIGNMENT); } )? |
+    '|' ('|')? ('=' { $setType(ASSIGNMENT); } )? |
+    '`' |
+    '!' ('=')? |
+    ':' (':')? |
+    '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setType(LAMBDA); } |) |
 
-       '+' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=') $setType(CSPEC); } ('+' | '=' { $setType(ASSIGNMENT); } )? |
-       '-' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=') $setType(MSPEC); } 
-           ('-' | '=' { $setType(ASSIGNMENT); } | '>' { star = true; $setType(TRETURN);})? ({ star }? '*' { $setType(MPDEREF); })? |
-       '*' ('=' { $setType(ASSIGNMENT); } )? |
-//       '/' ('=')? |
-       '%' ('=' { $setType(ASSIGNMENT); } )? |
-       '^' { if(LA(1) != '=') $setType(BLOCKOP); } ('=' { $setType(ASSIGNMENT); } )? |
-       '|' ('|')? ('=' { $setType(ASSIGNMENT); } )? |
-       '`' |
-       '!' ('=')? |
-       ':' (':')? |
-       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setType(LAMBDA); } |) |
+    '&' (options { greedy = true; } : '&' { star = true; } | '=' { $setType(ASSIGNMENT); } )?
+         ({ star }? '=' )? | 
 
-       '&' {  }
-            (options { greedy = true; } : '&' { star = true; } | '=' { $setType(ASSIGNMENT); } )?
-             ({ star }? '=' {  } )? | 
-     
-       '>' {  } (('>' '=') => '>' '=' { $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' {  })?  { do_not_apply = false; } |
+    '>' (('>' '=') => '>' '=' { $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' )?  { do_not_apply = false; } |
 
-       '<' {  }
-            (options { greedy = true; } : '<' {  } (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setType(CUDA); })? | '=' {  })?
-            ('=' { $setType(ASSIGNMENT); })? |
+    '<' (options { greedy = true; } : '<' (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setType(CUDA); })? | '=' )?
+        ('=' { $setType(ASSIGNMENT); })? |
 
-//       '<' { gt = true;  } 
-//            ('<' {  gt = true; })? ('=')? |
+    // match these as individual operators only
+    ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
 
-        // match these as individual operators only
-        ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
-
-            // names can start with a @ in C#
-            '@' { $setType(ATSIGN); }
-            ( 
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-              '(' { $setType(LPAREN); }
-            |
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-              '[' { $setType(ATLBRACKET); }
-            |
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-              '{' { $setType(LCURLY); }
-            |
-            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
-            { $setType(NAME); }
-            |
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }? CONSTANTS
-            { $setType(CONSTANTS); }
-            |
-            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? 
-              { if(LA(1) == '"') {
-                atstring = true; 
-                $setType(STRING_START);
-                } else {
-                  $setType(CHAR_START);
-                }
-              }
-              STRING_START
-            |
-            )
+        // names can start with a @ in C#
+        '@' { $setType(ATSIGN); }
+        ( 
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+          '(' { $setType(LPAREN); }
         |
-
-        '?' { $setType(QMARK); } ('?' { $setType(OPERATORS); })* | // part of ternary
-        '~'  | // has to be separate if part of name
-
-        '.' ({ !inLanguage(LANGUAGE_JAVA) }? '*' { $setType(DOTDEREF); } | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
-
-        '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+          '[' { $setType(ATLBRACKET); }
+        |
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+          '{' { $setType(LCURLY); }
+        |
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
+        { $setType(NAME); }
+        |
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }? CONSTANTS
+        { $setType(CONSTANTS); }
+        |
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? 
+          { if (LA(1) == '"') {
+            atstring = true; 
+            $setType(STRING_START);
+            } else {
+              $setType(CHAR_START);
+            }
+          }
+          STRING_START
+        |
         )
-        { startline = false; lastpos = getColumn(); prev = start; }
+    |
+
+    '?' { $setType(QMARK); } ('?' { $setType(OPERATORS); })* | // part of ternary
+    '~'  | // has to be separate if part of name
+
+    '.' ({ !inLanguage(LANGUAGE_JAVA) }? '*' { $setType(DOTDEREF); } | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
+
+    '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
+    )
+    { startline = false; lastpos = getColumn(); prev = start; }
 ;

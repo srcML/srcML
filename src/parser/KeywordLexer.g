@@ -502,7 +502,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         
         // special C++ operators
         { "::"           , DCOLON        , LANGUAGE_CXX_FAMILY }, 
-        { "&&"   , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
+        { "&&"           , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
 
         // special C++ constant values
         { "false"        , LITERAL_FALSE         , LANGUAGE_OO }, 
