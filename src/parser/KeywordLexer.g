@@ -409,9 +409,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 	    { "{"            , LCURLY        , LANGUAGE_ALL }, 
 	    { "["            , LBRACKET      , LANGUAGE_ALL }, 
 
-	    { "&lt;"         , TEMPOPS       , LANGUAGE_ALL }, 
-	    { "&gt;"         , TEMPOPE       , LANGUAGE_ALL },
-	    { "&amp;"        , REFOPS        , LANGUAGE_ALL }, 
+	    { "<"            , TEMPOPS       , LANGUAGE_ALL }, 
+	    { ">"            , TEMPOPE       , LANGUAGE_ALL },
+	    { "&"            , REFOPS        , LANGUAGE_ALL }, 
 	    { "="            , EQUAL         , LANGUAGE_ALL }, 
 
         { "."            , PERIOD        , LANGUAGE_ALL }, 
@@ -502,7 +502,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         
         // special C++ operators
         { "::"           , DCOLON        , LANGUAGE_CXX_FAMILY }, 
-        { "&amp;&amp;"   , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
+        { "&&"   , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
 
         // special C++ constant values
         { "false"        , LITERAL_FALSE         , LANGUAGE_OO }, 

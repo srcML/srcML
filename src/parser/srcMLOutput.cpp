@@ -436,7 +436,30 @@ void srcMLOutput::outputMacroList() {
  */
 inline void srcMLOutput::processText(const std::string& str) {
 
-    xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
+    if (strpbrk(str.c_str(), "<>&") == nullptr) {
+
+        xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
+
+    } else {
+
+        // delimiter is not limited to chars, and must be escaped
+        std::string s;
+        for (char c : str) {
+
+            if (c == '<') {
+                s += "&lt;";
+            } else if (c == '>') {
+                s += "&gt;";
+            } else if (c == '&') {
+                s += "&amp;";
+            } else {
+                s += c;
+            }
+        }
+
+        xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s.data(), (int)s.size());
+
+    }
 }
 
 /**

@@ -142,13 +142,13 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
         ({ !stop && !(gt && (LA(1) == '>' || LA(1) == ':' || LA(1) == '&' || LA(1) == '*')) && (dcoloncount < 2) }?
 
          ( '*' { gt = true; } | '|' | ':' { ++dcoloncount; } | '`' | '=' { if (LA(1) != '=') stop = true; } | '!' | '%' | '+' | '^' | '-' |
-           '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; gt = true; } | 
-           '>' { if (realbegin == _begin) gt = true; text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
-           '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; }) { ++realbegin; } )+ */ 
+           '&' { gt = true; } | 
+           '>' { if (realbegin == _begin) gt = true;  } | 
+           '<' { gt = true; }) { ++realbegin; } )+ */ 
 
        '+' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=') $setType(CSPEC); } ('+' | '=' { $setType(ASSIGNMENT); } )? |
        '-' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=') $setType(MSPEC); } 
-           ('-' | '=' { $setType(ASSIGNMENT); } | '>' { star = true; $setText("-&gt;"); $setType(TRETURN);})? ({ star }? '*' { $setText("-&gt;*"); $setType(MPDEREF); })? |
+           ('-' | '=' { $setType(ASSIGNMENT); } | '>' { star = true; $setType(TRETURN);})? ({ star }? '*' { $setType(MPDEREF); })? |
        '*' ('=' { $setType(ASSIGNMENT); } )? |
 //       '/' ('=')? |
        '%' ('=' { $setType(ASSIGNMENT); } )? |
@@ -157,20 +157,20 @@ OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1
        '`' |
        '!' ('=')? |
        ':' (':')? |
-       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
+       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setType(LAMBDA); } |) |
 
-       '&' { $setText("&amp;"); }
-            (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); $setType(ASSIGNMENT); } )?
-             ({ star }? '=' { $setText("&amp;&amp;="); } )? | 
+       '&' {  }
+            (options { greedy = true; } : '&' { star = true; } | '=' { $setType(ASSIGNMENT); } )?
+             ({ star }? '=' {  } )? | 
      
-       '>' { $setText("&gt;"); } (('>' '=') => '>' '=' { $setText("&gt;&gt;="); $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' { $setText("&gt;="); })?  { do_not_apply = false; } |
+       '>' {  } (('>' '=') => '>' '=' { $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' {  })?  { do_not_apply = false; } |
 
-       '<' { $setText("&lt;"); }
-            (options { greedy = true; } : '<' { $setText("&lt;&lt;"); } (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setText("&lt;&lt;&lt;"); $setType(CUDA); })? | '=' { $setText("&lt;="); })?
-            ('=' { $setText("&lt;&lt;="); $setType(ASSIGNMENT); })? |
+       '<' {  }
+            (options { greedy = true; } : '<' {  } (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setType(CUDA); })? | '=' {  })?
+            ('=' { $setType(ASSIGNMENT); })? |
 
-//       '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; realbegin += 3; } 
-//            ('<' { text.erase(realbegin); text += "&lt;"; realbegin += 4; gt = true; })? ('=')? |
+//       '<' { gt = true;  } 
+//            ('<' {  gt = true; })? ('=')? |
 
         // match these as individual operators only
         ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
