@@ -106,7 +106,6 @@ tokens {
 
 OPERATORS options { testLiterals = true; } {
     int start = LA(1);
-    bool do_not_apply = false;
 } : (
     '#'
     {
@@ -140,13 +139,13 @@ OPERATORS options { testLiterals = true; } {
     } |
 
     '+' {
-          if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=')
-            $setType(CSPEC);
+            if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=')
+                $setType(CSPEC);
         }
         ('+' | '=' { $setType(ASSIGNMENT); } )? |
     '-' {
-          if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=')
-            $setType(MSPEC);
+            if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=')
+                $setType(MSPEC);
         } 
         ('-' | '=' { $setType(ASSIGNMENT); } | '>' { $setType(TRETURN); } ('*' { $setType(MPDEREF); })? )?  |
     '*' ('=' { $setType(ASSIGNMENT); } )? |
@@ -156,12 +155,12 @@ OPERATORS options { testLiterals = true; } {
     '`' |
     '!' ('=')? |
     ':' (':')? |
+
     '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setType(LAMBDA); } |) |
 
-    '&' (options { greedy = true; } : '&' ('=' )? | '=' { $setType(ASSIGNMENT); } )?
-          | 
+    '&' (options { greedy = true; } : '&' ('=' )? | '=' { $setType(ASSIGNMENT); } )? | 
 
-    '>' (('>' '=') => '>' '=' { $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' )?  { do_not_apply = false; } |
+    '>' (('>' '=') => '>' '=' { $setType(ASSIGNMENT); } )? ({ _ttype != ASSIGNMENT }? '=' )? |
 
     '<' (options { greedy = true; } : '<' (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setType(CUDA); })? | '=' )?
         ('=' { $setType(ASSIGNMENT); })? |
@@ -169,9 +168,9 @@ OPERATORS options { testLiterals = true; } {
     // match these as individual operators only
     ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
 
-        // names can start with a @ in C#
-        '@' { $setType(ATSIGN); }
-        ( 
+    // names can start with a @ in C#
+    '@' { $setType(ATSIGN); } (
+
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
           '(' { $setType(LPAREN); }
         |
@@ -181,24 +180,21 @@ OPERATORS options { testLiterals = true; } {
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
           '{' { $setType(LCURLY); }
         |
-        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
-        { $setType(NAME); }
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            NAME { $setType(NAME); }
         |
-        { inLanguage(LANGUAGE_OBJECTIVE_C) }? CONSTANTS
-        { $setType(CONSTANTS); }
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            CONSTANTS { $setType(CONSTANTS); }
         |
-        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? 
-          { if (LA(1) == '"') {
-            atstring = true; 
-            $setType(STRING_START);
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? {
+            if (LA(1) == '"') {
+                atstring = true; 
+                $setType(STRING_START);
             } else {
-              $setType(CHAR_START);
+                $setType(CHAR_START);
             }
-          }
-          STRING_START
-        |
-        )
-    |
+        }
+        STRING_START | ) |
 
     '?' { $setType(QMARK); } ('?' { $setType(OPERATORS); })* | // part of ternary
     '~'  | // has to be separate if part of name
