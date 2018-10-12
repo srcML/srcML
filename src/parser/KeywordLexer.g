@@ -307,6 +307,8 @@ tokens {
 
     // OpenMp
     OMP_OMP;
+
+    ASSIGNMENT; // +=, -=, etc.
 }
 
 {
@@ -397,6 +399,22 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         { "."            , PERIOD        , LANGUAGE_ALL }, 
         { "*"            , MULTOPS       , LANGUAGE_ALL }, 
+        { "*="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "%="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "^"            , BLOCKOP       , LANGUAGE_ALL }, 
+        { "^="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "|="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "||="          , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "+="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "-="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "->"           , TRETURN       , LANGUAGE_ALL }, 
+        { "->*"          , MPDEREF       , LANGUAGE_ALL }, 
+        { "?"            , QMARK         , LANGUAGE_ALL }, 
+        { ".."           , DOTDOT        , LANGUAGE_ALL }, 
+        { "..."          , DOTDOTDOT     , LANGUAGE_ALL }, 
+        { "&="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "&&="          , ASSIGNMENT    , LANGUAGE_ALL }, 
+    //    { "??"           , OPERATORS     , LANGUAGE_ALL }, 
 
         // C and C++ specific keywords
         { "main"         , MAIN           , LANGUAGE_C_FAMILY }, 
@@ -631,6 +649,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@compatibility_alias" , COMPATIBILITY_ALIAS , LANGUAGE_OBJECTIVE_C },
         { "@class"               , ATCLASS             , LANGUAGE_OBJECTIVE_C },
         { "nil"                  , NIL                 , LANGUAGE_OBJECTIVE_C },
+        { "@("                   , LPAREN              , LANGUAGE_OBJECTIVE_C },
 
         // Apple
         { "__block"         , BLOCK            , LANGUAGE_CXX | LANGUAGE_C | LANGUAGE_OBJECTIVE_C },

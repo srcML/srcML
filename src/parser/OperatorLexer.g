@@ -58,8 +58,6 @@ tokens {
     COLON; // = ":";
     QMARK;
 
-    ASSIGNMENT; // +=, -=, etc.
-
     // Java
     BAR; // |
 
@@ -142,23 +140,24 @@ OPERATORS options { testLiterals = true; } {
             if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=')
                 $setType(CSPEC);
         }
-        ('+' | '=' { $setType(ASSIGNMENT); } )? |
+        ('+' | '=' )? |
     '-' {
             if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=')
                 $setType(MSPEC);
         } 
-        ('-' | '=' { $setType(ASSIGNMENT); } | '>' { $setType(TRETURN); } ('*' { $setType(MPDEREF); })? )?  |
-    '*' ('=' { $setType(ASSIGNMENT); } )? |
-    '%' ('=' { $setType(ASSIGNMENT); } )? |
-    '^' { $setType(BLOCKOP); } ('=' { $setType(ASSIGNMENT); } )? |
-    '|' ('|')? ('=' { $setType(ASSIGNMENT); } )? |
+        ('-' | '=' | '>' ('*')? )?  |
+    '*' ('=')? |
+    '%' ('=')? |
+    '^' ('=')? |
+    '|' ('|')? ('=')? |
     '`' |
     '!' ('=')? |
     ':' (':')? |
 
     '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setType(LAMBDA); } |) |
 
-    '&' (options { greedy = true; } : '&' ('=' )? | '=' { $setType(ASSIGNMENT); } )? | 
+    // &, &&, &&=, &=
+    '&' ('&')? ('=')? |
 
     '>' (('>' '=') => '>' '=' { $setType(ASSIGNMENT); } )? ({ _ttype != ASSIGNMENT }? '=' )? |
 
@@ -172,7 +171,7 @@ OPERATORS options { testLiterals = true; } {
     '@' { $setType(ATSIGN); } (
 
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-          '(' { $setType(LPAREN); }
+          '(' 
         |
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
           '[' { $setType(ATLBRACKET); }
@@ -196,10 +195,10 @@ OPERATORS options { testLiterals = true; } {
         }
         STRING_START | ) |
 
-    '?' { $setType(QMARK); } ('?' { $setType(OPERATORS); })* | // part of ternary
+    '?' ('?')* | // part of ternary
     '~'  | // has to be separate if part of name
 
-    '.' ({ !inLanguage(LANGUAGE_JAVA) }? '*' { $setType(DOTDEREF); } | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
+    '.' ({ !inLanguage(LANGUAGE_JAVA) }? '*' { $setType(DOTDEREF); } | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS | ) |
 
     '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
     )
