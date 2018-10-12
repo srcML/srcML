@@ -639,8 +639,19 @@ private:
         while (paused)
             fillTokenBuffer();
 
-        while (isoption(options, SRCML_OPTION_POSITION) && ends.size() > 1) {
-            fillTokenBuffer();
+        // to calculate end position, need to buffer until end token in reached
+        // to prevent infinite loops, consume is called if no progress is made on the
+        // current token, e.g., double max const(); 
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            auto curline = LT(1)->getLine();
+            auto curcolumn = LT(1)->getColumn();
+            while (ends.size() > 1) {
+                fillTokenBuffer();
+                if (LT(1)->getLine() == curline && LT(1)->getColumn() == curcolumn)
+                    consume();
+                curline = LT(1)->getLine();
+                curcolumn = LT(1)->getColumn();
+            }
         }
 
         // pop and send back the top token
