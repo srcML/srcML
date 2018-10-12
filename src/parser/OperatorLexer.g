@@ -35,7 +35,7 @@ class OperatorLexer extends TextLexer;
 options {
     k = 1;
     testLiterals = false;
-    importVocab=TextLexer;
+    importVocab = TextLexer;
 }
 
 tokens {

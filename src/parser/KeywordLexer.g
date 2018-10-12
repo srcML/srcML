@@ -64,15 +64,14 @@ int KeywordLexer::next_char() {
     --inputState->guessing;
 
     return token;
-
 }
 
 }
 
 options {
-	language="Cpp";
-    namespaceAntlr="antlr";
-    namespaceStd="std";
+	language = "Cpp";
+    namespaceAntlr = "antlr";
+    namespaceStd = "std";
 }
 
 class KeywordLexer extends OperatorLexer;
@@ -83,8 +82,8 @@ options {
     testLiterals = false;
     noConstructors = true;
     defaultErrorHandler = false;
-    importVocab=OperatorLexer;
-//    codeGenBitsetTestThreshold=20; 
+    importVocab = OperatorLexer;
+//    codeGenBitsetTestThreshold = 20; 
 }
 
 tokens {
@@ -179,22 +178,6 @@ tokens {
     MACRO_CASE;
     MACRO_LABEL;
     MACRO_SPECIFIER;
-
-    // specifiers that are not needed for parsing
-    /*
-    REGISTER = "register";
-    MUTABLE = "mutable";
-    VOLATILE = "volatile";
-
-    // Standard type keywords do not need to be identified
-	BOOL = "bool";
-	CHAR = "char";
-    INT = "int";
-    SHORT = "short";
-    LONG = "long";
-    DOUBLE = "double";
-    FLOAT = "float";
-    */
 
     // exception handling
 	TRY;
@@ -324,23 +307,21 @@ tokens {
 
     // OpenMp
     OMP_OMP;
-
 }
 
 {
 public:
-
-OPTION_TYPE & options;
-bool onpreprocline;
-bool startline;
-bool atstring;
-bool rawstring;
-std::string delimiter;
-bool isline;
-long line_number;
-int lastpos;
-int prev;
-int currentmode;
+    OPTION_TYPE & options;
+    bool onpreprocline;
+    bool startline;
+    bool atstring;
+    bool rawstring;
+    std::string delimiter;
+    bool isline;
+    long line_number;
+    int lastpos;
+    int prev;
+    int currentmode;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
@@ -354,7 +335,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
     : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true),
     atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1), lastpos(0), prev(0)
 {
-    if(isoption(options, SRCML_OPTION_LINE))
+    if (isoption(options, SRCML_OPTION_LINE))
        setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
 
@@ -672,18 +653,17 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
     for (unsigned int i = 0; i < (sizeof(keyword_map) / sizeof(keyword_map[0])); ++i)
         if (inLanguage(keyword_map[i].language))
             literals[keyword_map[i].text] = keyword_map[i].token;
-
 }
 
 private:
     antlr::TokenStreamSelector* selector;
 public:
     void setSelector(antlr::TokenStreamSelector* selector_) {
-        selector=selector_;
+        selector = selector_;
     }
 }
 
 protected
 SPECIAL_CHARS :
-        '\3'..'\377'
+    '\3'..'\377'
 ;

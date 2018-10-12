@@ -125,10 +125,10 @@ COMMENT_TEXT {
     int prevprevLA = 0;
 } :
 
-/*
-  Changing the type makes it the last token, and only handle a control character
-  token as the first token
-*/
+    /*
+      Changing the type makes it the last token, and only handle a control character
+      token as the first token
+    */
     ({ _ttype == COMMENT_TEXT &&
 
         // only allow control characters the first (and only) time through
@@ -139,11 +139,10 @@ COMMENT_TEXT {
      }
      (
     '\000'..'\010'
-            // will only occur the first time this rule matches, and then will exit
-            { $setType(CONTROL_CHAR); } |
+        // will only occur the first time this rule matches, and then will exit
+        { $setType(CONTROL_CHAR); } |
 
     '\011' /* '\t' */ |
-
     { 
         /*
         if (rawstring && first && LA(1) == '\012') {
@@ -157,39 +156,39 @@ COMMENT_TEXT {
     }
     '\012' /* '\n' */ { 
 
-          // make sure to count newlines even when inside of comments
-          newline();
-          if (isoption(options, SRCML_OPTION_LINE))
-              setLine(getLine() + (1 << 16));
+        // make sure to count newlines even when inside of comments
+        newline();
+        if (isoption(options, SRCML_OPTION_LINE))
+          setLine(getLine() + (1 << 16));
 
-          // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-          if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+        // end at EOL when for line comment, or the end of a string or char on a preprocessor line
+        if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
 
-              rawstring = false;
-              $setType(mode); selector->pop();
-          }
+          rawstring = false;
+          $setType(mode); selector->pop();
+        }
     } |
 
     //        '\015' /* '\r' - misc character since converted to '\n' in input buffer */ |
 
     '\013'..'\037'
-            // will only occur the first time this rule matches, and then will exit
-            { $setType(CONTROL_CHAR); } |
+        // will only occur the first time this rule matches, and then will exit
+        { $setType(CONTROL_CHAR); } |
 
     '\040'..'\041' |
 
     '\042' /* '\"' */ {
         if (noescape) {
 
-                int count = 1;
-                while (LA(1) == '\042') {
-                    match("\"");
-                    ++count;
-                }
+            int count = 1;
+            while (LA(1) == '\042') {
+                match("\"");
+                ++count;
+            }
 
-                if (count % 2 == 1) {
-                    $setType(mode); selector->pop();
-                }
+            if (count % 2 == 1) {
+                $setType(mode); selector->pop();
+            }
 
         } else if ((prevLA != '\\') && mode == STRING_END && !rawstring) {
             $setType(mode); selector->pop();
@@ -200,8 +199,12 @@ COMMENT_TEXT {
 
     '&' |
 
-    '\047' /* '\'' */
-            { if (prevLA != '\\' && mode == CHAR_END) { $setType(mode); selector->pop(); } } |
+    '\047' /* '\'' */ {
+        if (prevLA != '\\' && mode == CHAR_END) {
+            $setType(mode);
+            selector->pop();
+        }
+    } |
 
     '\050' |
 
@@ -243,7 +246,10 @@ COMMENT_TEXT {
         if ((mode == STRING_END || mode == CHAR_END) && onpreprocline) {
 
             // skip over whitespace after line continuation character
+            // @todo Couldn't this be a tab?
             while (LA(1) == ' ') {
+            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
                 consume();
                 prevLA = 0;
                 prevprevLA = 0;
@@ -262,8 +268,8 @@ COMMENT_TEXT {
         }
     } |
 
-    ']'..'\377')
-    {
+    ']'..'\377') {
+
         // not the first character anymore
         first = false;
 

@@ -41,7 +41,7 @@ options {
 	k = 1;
 	testLiterals = false; 
     charVocabulary = '\000'..'\377';
-    importVocab=CommentTextLexer;
+    importVocab = CommentTextLexer;
 }
 
 tokens {
@@ -56,84 +56,81 @@ tokens {
 
 {
 public:
-
-bool onpreprocline;
-bool rawstring;
-std::string delimiter;
-int currentmode;
-
+    bool onpreprocline;
+    bool rawstring;
+    std::string delimiter;
+    int currentmode;
 }
 
 STRING_START :
-        { startline = false; }
-        (
-            // double quoted string
-            // strings are allowed to span multiple lines
-            // special case is when it is one a preprocessor line, e.g.,
-            // #define a "abc
-            // note that the "abc does not end at the end of this line,
-            // but the #define must end, so EOL is not a valid string character
-            '"' {
+    { startline = false; }
+    (
+        // double quoted string
+        // strings are allowed to span multiple lines
+        // special case is when it is one a preprocessor line, e.g.,
+        // #define a "abc
+        // note that the "abc does not end at the end of this line,
+        // but the #define must end, so EOL is not a valid string character
+        '"' {
 
-                if(rawstring) {
-                    while(LA(1) != '(' && LA(1) != '\n') {
-                        delimiter += LA(1);
-                        consume();
-                    }
-
-                    if(LA(1) == '\n') {
-                         delimiter = "";
-                    } else {
-                        match('(');
-                    }
+            if (rawstring) {
+                while (LA(1) != '(' && LA(1) != '\n') {
+                    delimiter += LA(1);
+                    consume();
                 }
-                changetotextlexer(STRING_END); } |
 
-            // character literal or single quoted string
-            '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
-        )
-        { atstring = false; rawstring = false; delimiter = ""; }
+                if (LA(1) == '\n') {
+                     delimiter = "";
+                } else {
+                    match('(');
+                }
+            }
+            changetotextlexer(STRING_END); } |
+
+        // character literal or single quoted string
+        '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
+    )
+    { atstring = false; rawstring = false; delimiter = ""; }
 ;
 
 CONSTANTS :
-        { startline = false; }
-        ('0'..'9') (options { greedy = true; } : '0'..'9' | '_')*
-        (options { greedy = true; } : '.' | '0'..'9')*
-        (options { greedy = true; } : 'e' ('+' | '-')* ('0'..'9')*)?
-        (options { greedy = true; } : 'i' { $setType(COMPLEX_NUMBER); })*
-        (options { greedy = true; } : NAME)*
-
-        {
-            if(onpreprocline && isline) {
-                line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
-            }
+    { startline = false; }
+    ('0'..'9') (options { greedy = true; } : '0'..'9' | '_')*
+    (options { greedy = true; } : '.' | '0'..'9')*
+    (options { greedy = true; } : 'e' ('+' | '-')* ('0'..'9')*)?
+    (options { greedy = true; } : 'i' { $setType(COMPLEX_NUMBER); })*
+    (options { greedy = true; } : NAME)*
+    {
+        if (onpreprocline && isline) {
+            line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
         }
+    }
 ;
 
 NAME options { testLiterals = true; } { char lastchar = LA(1); } :
-        { startline = false; }
-        ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
-        (
+    { startline = false; }
+    ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+    (
 
-            { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
-            { $setType(STRING_START); } STRING_START |
+        { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
+        { $setType(STRING_START); } STRING_START |
 
-            { inLanguage(LANGUAGE_CXX) && lastchar == 'R' }?
-            { $setType(STRING_START); rawstring = true; } STRING_START |
+        { inLanguage(LANGUAGE_CXX) && lastchar == 'R' }?
+        { $setType(STRING_START); rawstring = true; } STRING_START |
 
-            { lastchar == 'u' }? ('8' '"')=> '8'
-            { $setType(STRING_START); } STRING_START |
+        { lastchar == 'u' }? ('8' '"')=> '8'
+        { $setType(STRING_START); } STRING_START |
 
-            { inLanguage(LANGUAGE_CXX) && lastchar == 'u' }? ('8' 'R' '"')=> '8' 'R'
-            { $setType(STRING_START); rawstring = true; } STRING_START |
+        { inLanguage(LANGUAGE_CXX) && lastchar == 'u' }? ('8' 'R' '"')=> '8' 'R'
+        { $setType(STRING_START); rawstring = true; } STRING_START |
 
-            { inLanguage(LANGUAGE_CXX) && (lastchar == 'L' || lastchar == 'U' || lastchar == 'u')}? ('R' '"')=> 'R'
-            { $setType(STRING_START); rawstring = true; } STRING_START |
+        { inLanguage(LANGUAGE_CXX) && (lastchar == 'L' || lastchar == 'U' || lastchar == 'u')}? ('R' '"')=> 'R'
+        { $setType(STRING_START); rawstring = true; } STRING_START |
 
-            ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')*)
+        ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')*)
 
 /*
-            if(false) {
+            if (false) {
                 static const boost::regex macro_name_match("[A-Z][A-Z_]+");
                 static const boost::match_flag_type flags = boost::match_default;
             
@@ -147,109 +144,98 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
                 bool is_regex_match = match_res && 
                     (what[0].length() == (boost::match_results<std::string::const_iterator>::difference_type)temp_name.size());
                 
-                if(is_regex_match) $setType(MACRO_NAME);
+                if (is_regex_match) $setType(MACRO_NAME);
             }
 */
         )
 ;
 
 /*
-                if(inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!')) {
-                    $setType(LINE_DOXYGEN_COMMENT_START);
-                    mode = LINE_DOXYGEN_COMMENT_END;
-                }
+    if (inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!')) {
+        $setType(LINE_DOXYGEN_COMMENT_START);
+        mode = LINE_DOXYGEN_COMMENT_END;
+    }
 */                
 
 // Single-line comments (no EOL)
-LINE_COMMENT_START
-    :   '/' ('/' { currentmode = LINE_COMMENT_END; }
-                (('/' | '!') { $setType(LINE_DOXYGEN_COMMENT_START); currentmode = LINE_DOXYGEN_COMMENT_END; })?
-            {
-                changetotextlexer(currentmode);
+LINE_COMMENT_START :   '/' ('/' 
+    { currentmode = LINE_COMMENT_END; }
+        (('/' | '!') { $setType(LINE_DOXYGEN_COMMENT_START); currentmode = LINE_DOXYGEN_COMMENT_END; })?
+    {
+        changetotextlexer(currentmode);
 
-                // when we return, we may have eaten the EOL, so we will turn back on startline
-                startline = true;
+        // when we return, we may have eaten the EOL, so we will turn back on startline
+        startline = true;
 
-                onpreprocline = false;
-            } |
-            '*'
-            { 
-                $setType(BLOCK_COMMENT_START);
-                int mode = BLOCK_COMMENT_END;
+        onpreprocline = false;
+    } |
+    '*'
+    { 
+        $setType(BLOCK_COMMENT_START);
+        int mode = BLOCK_COMMENT_END;
 
-                // have "/*" followed by anything except "/", e.g., "/*/"
-                if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*' && next_char() != '/') {
+        // have "/*" followed by anything except "/", e.g., "/*/"
+        if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*' && next_char() != '/') {
 
-                        $setType(JAVADOC_COMMENT_START);
-                        mode = JAVADOC_COMMENT_END;
+            $setType(JAVADOC_COMMENT_START);
+            mode = JAVADOC_COMMENT_END;
 
-                } else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!') && next_char() != '/') {
+        } else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!') && next_char() != '/') {
 
-                        $setType(DOXYGEN_COMMENT_START);
-                        mode = DOXYGEN_COMMENT_END;
-                }
+            $setType(DOXYGEN_COMMENT_START);
+            mode = DOXYGEN_COMMENT_END;
+        }
 
-                changetotextlexer(mode);
+        changetotextlexer(mode);
 
-                // comment are removed before includes are processed, so we are at the start of a line
-                startline = true;
-            } |
+        // comment are removed before includes are processed, so we are at the start of a line
+        startline = true;
+    } |
 
-            '=' { $setType(ASSIGNMENT); } |
+    '=' { $setType(ASSIGNMENT); } |
 
-            { $setType(OPERATORS); }
-        )
-
-;
+    { $setType(OPERATORS); }
+);
 
 // whitespace (except for newline)
-WS :
-        (
-            // single space
-            ' '  |
+WS : (
+    // single space
+    ' '  |
 
-            // horizontal tab
-            '\t'
-        )+
-
-    ;
+    // horizontal tab
+    '\t'
+)+ ;
 
 // end of line
-EOL :
-        '\n'
-        { 
-            // onpreprocline is turned on when on a preprocessor line
-            // to prevent mostly string ending problems.
-            // it has to be turned back on when the EOL is reached
-            onpreprocline = false;
+EOL : '\n' { 
 
-            // mark that we are starting a new line, so preproc
-            // can be detected
-            startline = true;
+    // onpreprocline is turned on when on a preprocessor line
+    // to prevent mostly string ending problems.
+    // it has to be turned back on when the EOL is reached
+    onpreprocline = false;
 
-            // record to new lines for optional positions
-            newline();
-            if(isoption(options, SRCML_OPTION_LINE))
-                setLine(getLine() + (1 << 16));
-            if(isline && line_number > -1) setLine((int)(line_number << 16 | (getLine() & 0xFFFF)));
-            isline = false;
-            line_number = -1;
-        }
-;
-/*
-EOL_BACKSLASH :
-        '\\' EOL
-    ;
-*/
+    // mark that we are starting a new line, so preproc
+    // can be detected
+    startline = true;
+
+    // record to new lines for optional positions
+    newline();
+    if (isoption(options, SRCML_OPTION_LINE))
+        setLine(getLine() + (1 << 16));
+    if (isline && line_number > -1) setLine((int)(line_number << 16 | (getLine() & 0xFFFF)));
+    isline = false;
+    line_number = -1;
+} ;
+
 /*
   Encode the control character in the text, so that is can be
   issued in an escape character.
 */
 CONTROL_CHAR :
-        { startline = true; }
-        (
+    { startline = true; }
+    (
         '\000'..'\010' |
         '\013'..'\014' |
         '\016'..'\037'
-        )
+    )
 ;
