@@ -105,7 +105,6 @@ tokens {
 }
 
 OPERATORS options { testLiterals = true; } {
-    bool star = false;
     int start = LA(1);
     bool do_not_apply = false;
 } : (
@@ -149,7 +148,7 @@ OPERATORS options { testLiterals = true; } {
           if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=')
             $setType(MSPEC);
         } 
-        ('-' | '=' { $setType(ASSIGNMENT); } | '>' { star = true; $setType(TRETURN); })? ({ star }? '*' { $setType(MPDEREF); })? |
+        ('-' | '=' { $setType(ASSIGNMENT); } | '>' { $setType(TRETURN); } ('*' { $setType(MPDEREF); })? )?  |
     '*' ('=' { $setType(ASSIGNMENT); } )? |
     '%' ('=' { $setType(ASSIGNMENT); } )? |
     '^' { if (LA(1) != '=') $setType(BLOCKOP); } ('=' { $setType(ASSIGNMENT); } )? |
@@ -159,8 +158,8 @@ OPERATORS options { testLiterals = true; } {
     ':' (':')? |
     '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setType(LAMBDA); } |) |
 
-    '&' (options { greedy = true; } : '&' { star = true; } | '=' { $setType(ASSIGNMENT); } )?
-         ({ star }? '=' )? | 
+    '&' (options { greedy = true; } : '&' ('=' )? | '=' { $setType(ASSIGNMENT); } )?
+          | 
 
     '>' (('>' '=') => '>' '=' { $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' )?  { do_not_apply = false; } |
 
