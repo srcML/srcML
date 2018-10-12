@@ -154,8 +154,9 @@ OPERATORS options { testLiterals = true; } {
     // >, >>=, >=, not >>
     '>' (('>' '=') => '>' '=')? ('=')? |
 
-    '<' (options { greedy = true; } : '<' (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setType(CUDA); })? | '=' )?
-        ('=' { $setType(ASSIGNMENT); })? |
+    // <, << (C/C++), <=, <<< (CUDA)
+    '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
+       // ('=' { $setType(ASSIGNMENT); })? |
 
     // match these as individual operators only
     ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
@@ -167,10 +168,10 @@ OPERATORS options { testLiterals = true; } {
           '(' 
         |
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-          '[' { $setType(ATLBRACKET); }
+          '['
         |
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-          '{' { $setType(LCURLY); }
+          '{'
         |
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
             NAME { $setType(NAME); }

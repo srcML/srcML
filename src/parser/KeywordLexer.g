@@ -415,8 +415,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "&="           , ASSIGNMENT    , LANGUAGE_ALL }, 
         { "&&="          , ASSIGNMENT    , LANGUAGE_ALL }, 
         { ">>="          , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "<<="          , ASSIGNMENT    , LANGUAGE_ALL }, 
         { "-"            , MSPEC         , LANGUAGE_JAVA }, 
         { "+"            , CSPEC         , LANGUAGE_JAVA }, 
+        { "<<<"          , CUDA          , LANGUAGE_C | LANGUAGE_CXX }, 
 
         // C and C++ specific keywords
         { "main"         , MAIN           , LANGUAGE_C_FAMILY }, 
@@ -652,6 +654,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@class"               , ATCLASS             , LANGUAGE_OBJECTIVE_C },
         { "nil"                  , NIL                 , LANGUAGE_OBJECTIVE_C },
         { "@("                   , LPAREN              , LANGUAGE_OBJECTIVE_C },
+        { "@["                   , ATLBRACKET          , LANGUAGE_OBJECTIVE_C },
+        { "@{"                   , LCURLY              , LANGUAGE_OBJECTIVE_C },
 
         // Apple
         { "__block"         , BLOCK            , LANGUAGE_CXX | LANGUAGE_C | LANGUAGE_OBJECTIVE_C },
