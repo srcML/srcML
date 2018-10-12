@@ -249,20 +249,9 @@ COMMENT_TEXT {
             // @todo Couldn't this be a tab?
             while (LA(1) == ' ') {
                 consume();
-                prevLA = 0;
-                prevprevLA = 0;
             }
-
-            // treat newline as part of string
-            if (LA(1) == '\n') {
-
-                consume();
-                newline();
-                if (isoption(options, SRCML_OPTION_LINE))
-                    setLine(getLine() + (1 << 16));
-                prevLA = 0;
-                prevprevLA = 0;
-            }
+            prevLA = 0;
+            prevprevLA = 0;
         }
     } |
 
