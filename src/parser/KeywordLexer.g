@@ -416,9 +416,12 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "&&="          , ASSIGNMENT    , LANGUAGE_ALL }, 
         { ">>="          , ASSIGNMENT    , LANGUAGE_ALL }, 
         { "<<="          , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { ".*"           , DOTDEREF      , LANGUAGE_C_FAMILY }, 
         { "-"            , MSPEC         , LANGUAGE_JAVA }, 
         { "+"            , CSPEC         , LANGUAGE_JAVA }, 
         { "<<<"          , CUDA          , LANGUAGE_C | LANGUAGE_CXX }, 
+        { "=>"           , LAMBDA        , LANGUAGE_CSHARP }, 
+        { "@"            , ATSIGN        , LANGUAGE_ALL }, 
 
         // C and C++ specific keywords
         { "main"         , MAIN           , LANGUAGE_C_FAMILY }, 

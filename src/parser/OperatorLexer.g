@@ -156,13 +156,12 @@ OPERATORS options { testLiterals = true; } {
 
     // <, << (C/C++), <=, <<< (CUDA)
     '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
-       // ('=' { $setType(ASSIGNMENT); })? |
 
     // match these as individual operators only
     ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
 
     // names can start with a @ in C#
-    '@' { $setType(ATSIGN); } (
+    '@' (
 
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
           '(' 
@@ -192,7 +191,7 @@ OPERATORS options { testLiterals = true; } {
     '?' ('?')* | // part of ternary
     '~'  | // has to be separate if part of name
 
-    '.' ({ !inLanguage(LANGUAGE_JAVA) }? '*' { $setType(DOTDEREF); } | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS | ) |
+    '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS | ) |
 
     '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
     )
