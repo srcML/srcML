@@ -136,16 +136,8 @@ OPERATORS options { testLiterals = true; } {
         }
     } |
 
-    '+' {
-            if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=')
-                $setType(CSPEC);
-        }
-        ('+' | '=' )? |
-    '-' {
-            if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=')
-                $setType(MSPEC);
-        } 
-        ('-' | '=' | '>' ('*')? )?  |
+    '+' ('+' | '=')? |
+    '-' ('-' | '=' | '>' ('*')? )?  |
     '*' ('=')? |
     '%' ('=')? |
     '^' ('=')? |
@@ -159,7 +151,8 @@ OPERATORS options { testLiterals = true; } {
     // &, &&, &&=, &=
     '&' ('&')? ('=')? |
 
-    '>' (('>' '=') => '>' '=' { $setType(ASSIGNMENT); } )? ({ _ttype != ASSIGNMENT }? '=' )? |
+    // >, >>=, >=, not >>
+    '>' (('>' '=') => '>' '=')? ('=')? |
 
     '<' (options { greedy = true; } : '<' (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setType(CUDA); })? | '=' )?
         ('=' { $setType(ASSIGNMENT); })? |

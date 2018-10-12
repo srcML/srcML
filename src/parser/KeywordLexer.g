@@ -414,7 +414,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "..."          , DOTDOTDOT     , LANGUAGE_ALL }, 
         { "&="           , ASSIGNMENT    , LANGUAGE_ALL }, 
         { "&&="          , ASSIGNMENT    , LANGUAGE_ALL }, 
-    //    { "??"           , OPERATORS     , LANGUAGE_ALL }, 
+        { ">>="          , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "-"            , MSPEC         , LANGUAGE_JAVA }, 
+        { "+"            , CSPEC         , LANGUAGE_JAVA }, 
 
         // C and C++ specific keywords
         { "main"         , MAIN           , LANGUAGE_C_FAMILY }, 
