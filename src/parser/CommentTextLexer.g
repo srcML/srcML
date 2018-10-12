@@ -248,8 +248,6 @@ COMMENT_TEXT {
             // skip over whitespace after line continuation character
             // @todo Couldn't this be a tab?
             while (LA(1) == ' ') {
-            fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-
                 consume();
                 prevLA = 0;
                 prevprevLA = 0;
