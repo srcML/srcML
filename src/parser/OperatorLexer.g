@@ -150,7 +150,7 @@ OPERATORS options { testLiterals = true; } {
         ('-' | '=' { $setType(ASSIGNMENT); } | '>' { $setType(TRETURN); } ('*' { $setType(MPDEREF); })? )?  |
     '*' ('=' { $setType(ASSIGNMENT); } )? |
     '%' ('=' { $setType(ASSIGNMENT); } )? |
-    '^' { if (LA(1) != '=') $setType(BLOCKOP); } ('=' { $setType(ASSIGNMENT); } )? |
+    '^' { $setType(BLOCKOP); } ('=' { $setType(ASSIGNMENT); } )? |
     '|' ('|')? ('=' { $setType(ASSIGNMENT); } )? |
     '`' |
     '!' ('=')? |
