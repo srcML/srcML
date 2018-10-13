@@ -116,10 +116,11 @@ OPERATORS options { testLiterals = true; } {
             // a preprocessor line will end at the right spot
             onpreprocline = true; 
 
+            // @todo Remove need to guess, and check where name is set
             if (isoption(options, SRCML_OPTION_LINE)) {
-                int start = mark();
-                ++inputState->guessing;
                 if (LA(1) == 'l') {
+                    int start = mark();
+                    ++inputState->guessing;
                     consume();  
                     if (LA(1) == 'i') {
                         consume();
@@ -129,9 +130,9 @@ OPERATORS options { testLiterals = true; } {
                                 isline = true;
                         }
                     }
+                    --inputState->guessing;
+                    rewind(start);
                 }
-                --inputState->guessing;
-                rewind(start);
             }
         }
     } |
