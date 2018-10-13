@@ -107,28 +107,17 @@ CONSTANTS :
     }
 ;
 
-NAME options { testLiterals = true; } { char lastchar = LA(1); } :
+NAME options { testLiterals = true; } :
     { startline = false; }
     ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+    ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')*)
     (
-
-        { lastchar == 'L' || lastchar == 'U' || lastchar == 'u' }?
+        { text == "L" || text == "U" || text == "u" || text == "u8" }?
         { $setType(STRING_START); } STRING_START |
 
-        { inLanguage(LANGUAGE_CXX) && lastchar == 'R' }?
-        { $setType(STRING_START); rawstring = true; } STRING_START |
-
-        { lastchar == 'u' }? ('8' '"')=> '8'
-        { $setType(STRING_START); } STRING_START |
-
-        { inLanguage(LANGUAGE_CXX) && lastchar == 'u' }? ('8' 'R' '"')=> '8' 'R'
-        { $setType(STRING_START); rawstring = true; } STRING_START |
-
-        { inLanguage(LANGUAGE_CXX) && (lastchar == 'L' || lastchar == 'U' || lastchar == 'u')}? ('R' '"')=> 'R'
-        { $setType(STRING_START); rawstring = true; } STRING_START |
-
-        ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')*)
-
+        { inLanguage(LANGUAGE_CXX) && (text == "R" || text == "u8R" || text == "LR" || text == "UR" || text == "uR") }?
+        { $setType(STRING_START); rawstring = true; } STRING_START
+    )?
 /*
             if (false) {
                 static const boost::regex macro_name_match("[A-Z][A-Z_]+");
@@ -147,7 +136,6 @@ NAME options { testLiterals = true; } { char lastchar = LA(1); } :
                 if (is_regex_match) $setType(MACRO_NAME);
             }
 */
-        )
 ;
 
 /*
