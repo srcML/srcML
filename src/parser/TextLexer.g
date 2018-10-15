@@ -57,6 +57,7 @@ tokens {
 {
 public:
     bool onpreprocline;
+//    bool firstpreprocline;
     bool rawstring;
     std::string delimiter;
     int currentmode;
@@ -101,6 +102,7 @@ CONSTANTS :
     (options { greedy = true; } : 'i' { $setType(COMPLEX_NUMBER); })*
     (options { greedy = true; } : NAME)*
     {
+        //firstpreprocline = false;
         if (onpreprocline && isline) {
             line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
         }
@@ -118,6 +120,15 @@ NAME options { testLiterals = true; } :
         { inLanguage(LANGUAGE_CXX) && (text == "R" || text == "u8R" || text == "LR" || text == "UR" || text == "uR") }?
         { $setType(STRING_START); rawstring = true; } STRING_START
     )?
+    {
+        /*
+        if (firstpreprocline) {
+            if (text == "line")
+                isline = true;
+        }
+        firstpreprocline = false;
+        */
+    }
 /*
             if (false) {
                 static const boost::regex macro_name_match("[A-Z][A-Z_]+");
@@ -146,7 +157,7 @@ NAME options { testLiterals = true; } :
 */                
 
 // Single-line comments (no EOL)
-LINE_COMMENT_START :   '/' ('/' 
+LINE_COMMENT_START options { testLiterals = true; } :   '/' ('/' 
     { currentmode = LINE_COMMENT_END; }
         (('/' | '!') { $setType(LINE_DOXYGEN_COMMENT_START); currentmode = LINE_DOXYGEN_COMMENT_END; })?
     {
@@ -157,7 +168,18 @@ LINE_COMMENT_START :   '/' ('/'
 
         onpreprocline = false;
     } |
-    '*'
+    '*' /*{ 
+        $setType(BLOCK_COMMENT_START);
+        int mode = BLOCK_COMMENT_END; } 
+        (
+
+        { inLanguage(LANGUAGE_JAVA) }? '*' { $setType(JAVADOC_COMMENT_START);
+            mode = JAVADOC_COMMENT_END; } |
+
+        { inLanguage(LANGUAGE_CXX) }? ('*' |  '!') { $setType(DOXYGEN_COMMENT_START);
+            mode = DOXYGEN_COMMENT_END; }
+
+        )? */
     { 
         $setType(BLOCK_COMMENT_START);
         int mode = BLOCK_COMMENT_END;
@@ -180,10 +202,8 @@ LINE_COMMENT_START :   '/' ('/'
         startline = true;
     } |
 
-    '=' { $setType(ASSIGNMENT); } |
-
-    { $setType(OPERATORS); }
-);
+    '=' )?
+;
 
 // whitespace (except for newline)
 WS : (

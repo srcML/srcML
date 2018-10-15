@@ -115,25 +115,7 @@ OPERATORS options { testLiterals = true; } {
             // primarily so that unterminated strings in
             // a preprocessor line will end at the right spot
             onpreprocline = true; 
-
-            // @todo Remove need to guess, and check where name is set
-            if (isoption(options, SRCML_OPTION_LINE)) {
-                if (LA(1) == 'l') {
-                    int start = mark();
-                    ++inputState->guessing;
-                    consume();  
-                    if (LA(1) == 'i') {
-                        consume();
-                        if (LA(1) ==  'n') {
-                            consume();
-                            if (LA(1) ==  'e')
-                                isline = true;
-                        }
-                    }
-                    --inputState->guessing;
-                    rewind(start);
-                }
-            }
+            //firstpreprocline = true;
         }
     } |
 
@@ -147,7 +129,7 @@ OPERATORS options { testLiterals = true; } {
     '!' ('=')? |
     ':' (':')? |
 
-    '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setType(LAMBDA); } |) |
+    '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>')? |
 
     // &, &&, &&=, &=
     '&' ('&')? ('=')? |
@@ -187,12 +169,12 @@ OPERATORS options { testLiterals = true; } {
                 $setType(CHAR_START);
             }
         }
-        STRING_START | ) |
+        STRING_START )? |
 
     '?' ('?')* | // part of ternary
     '~'  | // has to be separate if part of name
 
-    '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS | ) |
+    '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS )? |
 
     '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
     )
