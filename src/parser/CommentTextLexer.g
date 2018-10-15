@@ -55,6 +55,7 @@ tokens {
 
     // never explicitly given (only set to)
     // so must be declared
+    WHOLE_COMMENT;
     BLOCK_COMMENT_END;
     LINE_COMMENT_END;
     STRING_END;

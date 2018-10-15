@@ -169,16 +169,16 @@ LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; } : '/'
             mode = BLOCK_COMMENT_END;
         }
         (
-            { inLanguage(LANGUAGE_JAVA) && next_char() != '/' }? '*'
+            { inLanguage(LANGUAGE_JAVA) }? '*'
             {
                 $setType(JAVADOC_COMMENT_START);
                 mode = JAVADOC_COMMENT_END;
-            } |
-            { inLanguage(LANGUAGE_CXX) && next_char() != '/' }? ('*' | '!')
+            } ('/' { $setType(WHOLE_COMMENT); mode = 0; })? |
+            { inLanguage(LANGUAGE_CXX) }? ('*' | '!')
             {
                 $setType(DOXYGEN_COMMENT_START);
                 mode = DOXYGEN_COMMENT_END;
-            } 
+            } ('/' { $setType(WHOLE_COMMENT); mode = 0; })?
         )? |
 
     // /= is an operator

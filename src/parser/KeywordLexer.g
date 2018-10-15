@@ -50,22 +50,6 @@ void KeywordLexer::changetotextlexer(int typeend) {
     ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline, line_number, options);
 }
 
-int KeywordLexer::next_char() {
-
-    ++inputState->guessing;
-    int start = mark();
-
-    consume();
-
-    int token = LA(1);
-
-    rewind(start);
-
-    --inputState->guessing;
-
-    return token;
-}
-
 }
 
 options {
@@ -329,8 +313,6 @@ public:
 struct keyword { char const * const text; int token; int language; };
 
 void changetotextlexer(int typeend);
-
-int next_char();
 
 KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
              std::vector<std::string> user_macro_list)
