@@ -41,28 +41,28 @@ options {
 tokens {
     EOL_BACKSLASH;
 
-    TEMPOPS;
-    TEMPOPE;
-    EQUAL;
-    LPAREN; // = "(";
-    DESTOP; // = "~";
-    LCURLY; // = "{";
-    RCURLY; // = "}";
-    LBRACKET; // = "[";
-    ATLBRACKET; // = "@[";
-    RBRACKET; // = "]";
-    COMMA; // = ",";
-    RPAREN; // = ")";
-    TERMINATE; // = ";";
+    TEMPOPS;    // "<";
+    TEMPOPE;    // ">";
+    EQUAL;      // "=";
+    LPAREN;     // "(";
+    DESTOP;     // "~";
+    LCURLY;     // "{";
+    RCURLY;     // "}";
+    LBRACKET;   // "[";
+    ATLBRACKET; // "@[";
+    RBRACKET;   // "]";
+    COMMA;      // ",";
+    RPAREN;     // ")";
+    TERMINATE;  // ";";
     PREPROC;
-    COLON; // = ":";
+    COLON;      // ":";
     QMARK;
 
     // Java
-    BAR; // |
+    BAR;        // "|"
 
     // C++
-    TRETURN; // ->
+    TRETURN;    // ->
     MPDEREF;
     DOTDEREF;
 
@@ -72,11 +72,11 @@ tokens {
     // define value in master grammar so that it depends on language
     DCOLON;
 
-    MEMBERPOINTER; // = ".*";
-    PERIOD; // = ".";
-    MULTOPS; // = "*";
-    REFOPS;  // = "&";
-    RVALUEREF; // = "&&";
+    MEMBERPOINTER;  // ".*";
+    PERIOD;         // ".";
+    MULTOPS;        // "*";
+    REFOPS;         // "&";
+    RVALUEREF;      // "&&";
 
     DOTDOT;
     DOTDOTDOT;
