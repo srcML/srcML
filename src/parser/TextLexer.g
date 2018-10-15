@@ -156,33 +156,38 @@ NAME options { testLiterals = true; } :
 */                
 
 // Single-line comments (no EOL)
-LINE_COMMENT_START options { testLiterals = true; } { int currentmode = 0; } : '/' 
+LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; } : '/' 
     ('/' 
-        { currentmode = LINE_COMMENT_END; }
-        (('/' | '!') { $setType(LINE_DOXYGEN_COMMENT_START); currentmode = LINE_DOXYGEN_COMMENT_END; })? |
+        { mode = LINE_COMMENT_END; }
+        (('/' | '!') {
+            $setType(LINE_DOXYGEN_COMMENT_START);
+            mode = LINE_DOXYGEN_COMMENT_END; 
+        })? |
     '*'
-    { 
-        $setType(BLOCK_COMMENT_START);
-        currentmode = BLOCK_COMMENT_END;
-
-        // have "/*" followed by anything except "/", e.g., "/*/"
-        if (inLanguage(LANGUAGE_JAVA) && LA(1) == '*' && next_char() != '/') {
-
-            $setType(JAVADOC_COMMENT_START);
-            currentmode = JAVADOC_COMMENT_END;
-
-        } else if (inLanguage(LANGUAGE_CXX) && (LA(1) == '*' || LA(1) == '!') && next_char() != '/') {
-
-            $setType(DOXYGEN_COMMENT_START);
-            currentmode = DOXYGEN_COMMENT_END;
+        { 
+            $setType(BLOCK_COMMENT_START);
+            mode = BLOCK_COMMENT_END;
         }
-    } |
+        (
+            { inLanguage(LANGUAGE_JAVA) && next_char() != '/' }? '*'
+            {
+                $setType(JAVADOC_COMMENT_START);
+                mode = JAVADOC_COMMENT_END;
+            } |
+            { inLanguage(LANGUAGE_CXX) && next_char() != '/' }? ('*' | '!')
+            {
+                $setType(DOXYGEN_COMMENT_START);
+                mode = DOXYGEN_COMMENT_END;
+            } 
+        )? |
 
+    // /= is an operator
     '=' )?
-    {
-        if (currentmode != 0) {
 
-            changetotextlexer(currentmode);
+    {
+        if (mode != 0) {
+
+            changetotextlexer(mode);
 
             // when we return, we may have eaten the EOL, so we will turn back on startline
             startline = true;
