@@ -58,6 +58,7 @@ tokens {
     WHOLE_COMMENT;
     BLOCK_COMMENT_END;
     LINE_COMMENT_END;
+    RAW_STRING_END;
     STRING_END;
     CHAR_END;
     CONTROL_CHAR;
@@ -86,7 +87,12 @@ OPTION_TYPE options;
 
 CommentTextLexer(const antlr::LexerSharedInputState& state)
 	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), rawstring(false), delimiter("")
-{}
+{
+    if (mode == RAW_STRING_END) {
+        rawstring = true;
+        mode = STRING_END;
+    }
+}
 
 private:
     antlr::TokenStreamSelector* selector;
@@ -105,6 +111,11 @@ public:
         rawstring = rstring;
         delimiter = dstring;
         options = op;
+
+        if (mode == RAW_STRING_END) {
+            rawstring = true;
+            mode = STRING_END;
+        }
     }
 }
 

@@ -100,7 +100,7 @@ RAW_STRING_START :
             match('(');
         }
 
-        changetotextlexer(STRING_END); 
+        changetotextlexer(RAW_STRING_END); 
 
         atstring = false; rawstring = false;
     }
