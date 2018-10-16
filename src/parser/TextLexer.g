@@ -85,12 +85,18 @@ STRING_START :
                     match('(');
                 }
             }
-            changetotextlexer(STRING_END); } |
+            changetotextlexer(STRING_END); } 
+    )
+    { atstring = false; rawstring = false; delimiter = ""; }
+;
 
+CHAR_START :
+    { startline = false; }
+    (
         // character literal or single quoted string
         '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
     )
-    { atstring = false; rawstring = false; delimiter = ""; }
+    { atstring = false; }
 ;
 
 CONSTANTS :

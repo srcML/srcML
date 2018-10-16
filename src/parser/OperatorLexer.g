@@ -162,12 +162,13 @@ OPERATORS options { testLiterals = true; } {
             CONSTANTS { $setType(CONSTANTS); }
         |
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? {
-            if (LA(1) == '"') {
-                atstring = true; 
-                $setType(STRING_START);
-            } else {
-                $setType(CHAR_START);
-            }
+            $setType(CHAR_START);
+        }
+        CHAR_START |
+
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? {
+            atstring = true; 
+            $setType(STRING_START);
         }
         STRING_START )? |
 
