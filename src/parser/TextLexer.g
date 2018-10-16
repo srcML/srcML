@@ -64,39 +64,38 @@ public:
 
 STRING_START :
     { startline = false; }
-    (
-        // double quoted string
-        // strings are allowed to span multiple lines
-        // special case is when it is one a preprocessor line, e.g.,
-        // #define a "abc
-        // note that the "abc does not end at the end of this line,
-        // but the #define must end, so EOL is not a valid string character
-        '"' {
 
-            if (rawstring) {
-                while (LA(1) != '(' && LA(1) != '\n') {
-                    delimiter += LA(1);
-                    consume();
-                }
+    // double quoted string
+    // strings are allowed to span multiple lines
+    // special case is when it is one a preprocessor line, e.g.,
+    // #define a "abc
+    // note that the "abc does not end at the end of this line,
+    // but the #define must end, so EOL is not a valid string character
+    '"' {
 
-                if (LA(1) == '\n') {
-                     delimiter = "";
-                } else {
-                    match('(');
-                }
+        if (rawstring) {
+            while (LA(1) != '(' && LA(1) != '\n') {
+                delimiter += LA(1);
+                consume();
             }
-            changetotextlexer(STRING_END); } 
-    )
-    { atstring = false; rawstring = false; delimiter = ""; }
+
+            if (LA(1) == '\n') {
+                 delimiter = "";
+            } else {
+                match('(');
+            }
+        }
+        changetotextlexer(STRING_END); 
+
+        atstring = false; rawstring = false; delimiter = "";
+    }
 ;
 
 CHAR_START :
     { startline = false; }
-    (
-        // character literal or single quoted string
-        '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
-    )
-    { atstring = false; }
+
+    // character literal or single quoted string
+    '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
 ;
 
 CONSTANTS :
