@@ -72,25 +72,39 @@ STRING_START :
     // note that the "abc does not end at the end of this line,
     // but the #define must end, so EOL is not a valid string character
     '"' {
-
-        if (rawstring) {
-            while (LA(1) != '(' && LA(1) != '\n') {
-                delimiter += LA(1);
-                consume();
-            }
-
-            if (LA(1) == '\n') {
-                 delimiter = "";
-            } else {
-                match('(');
-            }
-        }
         changetotextlexer(STRING_END); 
 
         atstring = false; rawstring = false; delimiter = "";
     }
 ;
 
+protected
+RAW_STRING_START :
+    { startline = false; }
+
+    // double quoted string
+    // strings are allowed to span multiple lines
+    // special case is when it is one a preprocessor line, e.g.,
+    // #define a "abc
+    // note that the "abc does not end at the end of this line,
+    // but the #define must end, so EOL is not a valid string character
+    '"' {
+        while (LA(1) != '(' && LA(1) != '\n') {
+            delimiter += LA(1);
+            consume();
+        }
+
+        if (LA(1) == '\n') {
+             delimiter = "";
+        } else {
+            match('(');
+        }
+
+        changetotextlexer(STRING_END); 
+
+        atstring = false; rawstring = false;
+    }
+;
 CHAR_START :
     { startline = false; }
 
@@ -122,7 +136,7 @@ NAME options { testLiterals = true; } :
         { $setType(STRING_START); } STRING_START |
 
         { inLanguage(LANGUAGE_CXX) && (text == "R" || text == "u8R" || text == "LR" || text == "UR" || text == "uR") }?
-        { $setType(STRING_START); rawstring = true; } STRING_START
+        { $setType(STRING_START); rawstring = true; } RAW_STRING_START
     )?
     {
         /*
