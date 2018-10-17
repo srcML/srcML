@@ -79,20 +79,13 @@ bool onpreprocline;
 // ignore character escapes
 bool noescape;
 
-bool rawstring;
-
 std::string delimiter;
 
 OPTION_TYPE options;
 
 CommentTextLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), rawstring(false), delimiter("")
-{
-    if (mode == RAW_STRING_END) {
-        rawstring = true;
-        mode = STRING_END;
-    }
-}
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), delimiter("")
+{}
 
 private:
     antlr::TokenStreamSelector* selector;
@@ -103,19 +96,13 @@ public:
     }
 
     // reinitialize comment lexer
-    void init(int m, bool onpreproclinestate, bool nescape = false, bool rstring = false, std::string dstring = "", bool /* is_line */ = false, long /* lnumber */ = -1, OPTION_TYPE op = 0) {
+    void init(int m, bool onpreproclinestate, bool nescape = false, std::string dstring = "", bool /* is_line */ = false, long /* lnumber */ = -1, OPTION_TYPE op = 0) {
 
         onpreprocline = onpreproclinestate;
         mode = m;
         noescape = nescape;
-        rawstring = rstring;
         delimiter = dstring;
         options = op;
-
-        if (mode == RAW_STRING_END) {
-            rawstring = true;
-            mode = STRING_END;
-        }
     }
 }
 
@@ -174,9 +161,8 @@ COMMENT_TEXT {
           setLine(getLine() + (1 << 16));
 
         // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-        if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+        if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
 
-          rawstring = false;
           $setType(mode); selector->pop();
         }
     } |
@@ -190,6 +176,7 @@ COMMENT_TEXT {
     '\040'..'\041' |
 
     '\042' /* '\"' */ {
+
         if (noescape) {
 
             int count = 1;
@@ -202,7 +189,7 @@ COMMENT_TEXT {
                 $setType(mode); selector->pop();
             }
 
-        } else if ((prevLA != '\\') && mode == STRING_END && !rawstring) {
+        } else if ((prevLA != '\\') && (mode == STRING_END)) {
             $setType(mode); selector->pop();
         } 
     } |
@@ -222,7 +209,7 @@ COMMENT_TEXT {
 
     '\051' /* ')' */
     {
-        if (rawstring) {
+        if (mode == RAW_STRING_END) {
 
             // compare the stored delimiter to what is here, stopping at the end 
             // of a line (delimiter cannot span lines)
@@ -233,7 +220,7 @@ COMMENT_TEXT {
             }
 
             if (pos == delimiter.size() && LA(1) != '\n') {
-                rawstring = false;
+                mode = STRING_END;
             }
         }
     } |
@@ -241,7 +228,11 @@ COMMENT_TEXT {
     '\052'..'\056' |
 
     '\057' /* '/' */
-            { if (prevLA == '*' && ((mode == BLOCK_COMMENT_END) || (mode == JAVADOC_COMMENT_END) || (mode == DOXYGEN_COMMENT_END) ) ) { $setType(mode); selector->pop(); } } |
+        { if (prevLA == '*' && ((mode == BLOCK_COMMENT_END) ||
+                                (mode == JAVADOC_COMMENT_END) ||
+                                (mode == DOXYGEN_COMMENT_END) ) )
+            { $setType(mode); selector->pop(); }
+        } |
 
     '\060'..';' | 
 
@@ -255,7 +246,7 @@ COMMENT_TEXT {
         if (prevLA == '\\')
             prevprevLA = 0;
 
-        if ((mode == STRING_END || mode == CHAR_END) && onpreprocline) {
+        if ((mode == STRING_END || mode == RAW_STRING_END || mode == CHAR_END) && onpreprocline) {
 
             // skip over whitespace after line continuation character
             // @todo Couldn't this be a tab?
@@ -277,10 +268,9 @@ COMMENT_TEXT {
             to end before the newline is consumed. Strings and characters on a preprocessor line also need to end, even if unterminated
         */
         if (_ttype == COMMENT_TEXT &&
-            ((LA(1) == '\n' && !rawstring) || LA(1) == EOF_CHAR) &&
-            (((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))
+            ((LA(1) == '\n' && !(mode == RAW_STRING_END)) || LA(1) == EOF_CHAR) &&
+            ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline || mode == RAW_STRING_END))
              || (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END))) {
-            rawstring = false;
             $setType(mode);
             selector->pop();
         }

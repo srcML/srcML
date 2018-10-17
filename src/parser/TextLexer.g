@@ -58,7 +58,6 @@ tokens {
 public:
     bool onpreprocline;
 //    bool firstpreprocline;
-    bool rawstring;
     std::string delimiter;
 }
 
@@ -74,7 +73,7 @@ STRING_START :
     '"' {
         changetotextlexer(STRING_END); 
 
-        atstring = false; rawstring = false; delimiter = "";
+        atstring = false; delimiter = "";
     }
 ;
 
@@ -102,7 +101,7 @@ RAW_STRING_START :
 
         changetotextlexer(RAW_STRING_END); 
 
-        atstring = false; rawstring = false;
+        atstring = false;
     }
 ;
 CHAR_START :
@@ -136,7 +135,7 @@ NAME options { testLiterals = true; } :
         { $setType(STRING_START); } STRING_START |
 
         { inLanguage(LANGUAGE_CXX) && (text == "R" || text == "u8R" || text == "LR" || text == "UR" || text == "uR") }?
-        { $setType(STRING_START); rawstring = true; } RAW_STRING_START
+        { $setType(STRING_START); } RAW_STRING_START
     )?
     {
         /*

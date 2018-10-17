@@ -47,7 +47,7 @@ header "post_include_cpp" {
 
 void KeywordLexer::changetotextlexer(int typeend) {
     selector->push("text"); 
-    ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline, line_number, options);
+    ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, delimiter, isline, line_number, options);
 }
 
 }
