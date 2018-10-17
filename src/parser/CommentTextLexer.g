@@ -142,17 +142,7 @@ COMMENT_TEXT {
         { $setType(CONTROL_CHAR); } |
 
     '\011' /* '\t' */ |
-    { 
-        /*
-        if (rawstring && first && LA(1) == '\012') {
 
-            rawstring = false;
-            $setType(mode);
-            selector->pop();
-            goto newline_break;
-        } 
-        */
-    }
     '\012' /* '\n' */ { 
 
         // make sure to count newlines even when inside of comments
@@ -162,8 +152,8 @@ COMMENT_TEXT {
 
         // end at EOL when for line comment, or the end of a string or char on a preprocessor line
         if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
-
-          $setType(mode); selector->pop();
+          $setType(mode);
+          selector->pop();
         }
     } |
 
@@ -190,7 +180,8 @@ COMMENT_TEXT {
             }
 
         } else if ((prevLA != '\\') && (mode == STRING_END)) {
-            $setType(mode); selector->pop();
+            $setType(mode);
+            selector->pop();
         } 
     } |
 
@@ -243,17 +234,7 @@ COMMENT_TEXT {
 
     '\\' { 
         // wipe out previous escape character
-        if (prevLA == '\\')
-            prevprevLA = 0;
-
-        if ((mode == STRING_END || mode == RAW_STRING_END || mode == CHAR_END) && onpreprocline) {
-
-            // skip over whitespace after line continuation character
-            // @todo Couldn't this be a tab?
-            while (LA(1) == ' ') {
-                consume();
-            }
-            prevLA = 0;
+        if (prevLA == '\\') {
             prevprevLA = 0;
         }
     } |
@@ -264,13 +245,14 @@ COMMENT_TEXT {
         first = false;
 
         /* 
-            About to read a newline, or the end of the files.  Line comments need
+            About to read a newline, or the EOF.  Line comments need
             to end before the newline is consumed. Strings and characters on a preprocessor line also need to end, even if unterminated
         */
         if (_ttype == COMMENT_TEXT &&
-            ((LA(1) == '\n' && !(mode == RAW_STRING_END)) || LA(1) == EOF_CHAR) &&
+            ((LA(1) == '\n' && mode != RAW_STRING_END) || LA(1) == EOF_CHAR) &&
             ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline || mode == RAW_STRING_END))
-             || (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END))) {
+             || mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END)) {
+
             $setType(mode);
             selector->pop();
         }
