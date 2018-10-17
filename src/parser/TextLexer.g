@@ -45,6 +45,7 @@ options {
 }
 
 tokens {
+    // @todo Check that all of these are used here, and if not move them
     BLOCK_COMMENT_START;
     JAVADOC_COMMENT_START;
     DOXYGEN_COMMENT_START;
@@ -57,6 +58,7 @@ tokens {
 {
 public:
     bool onpreprocline;
+    // @todo Figure out what this was going to be for
 //    bool firstpreprocline;
     std::string delimiter;
 }
@@ -73,7 +75,7 @@ STRING_START :
     '"' {
         changetotextlexer(STRING_END); 
 
-        atstring = false; delimiter = "";
+        atstring = false;
     }
 ;
 
@@ -98,7 +100,7 @@ RAW_STRING_START :
 protected
 RSTRING_DELIMITER:
     { delimiter = ""; }
-    (options { greedy = true; } : { delimiter += LA(1); } ~('(' | '\n'))*
+    (options { greedy = true; } : { delimiter += LA(1); } ~('(' | ')' | '\\' | '\n' | ' ' | '\t' ))*
 ;
 
 CHAR_START :
@@ -134,41 +136,7 @@ NAME options { testLiterals = true; } :
         { inLanguage(LANGUAGE_CXX) && (text == "R" || text == "u8R" || text == "LR" || text == "UR" || text == "uR") }?
         { $setType(STRING_START); } RAW_STRING_START
     )?
-    {
-        /*
-        if (firstpreprocline) {
-            if (text == "line")
-                isline = true;
-        }
-        firstpreprocline = false;
-        */
-    }
-/*
-            if (false) {
-                static const boost::regex macro_name_match("[A-Z][A-Z_]+");
-                static const boost::match_flag_type flags = boost::match_default;
-            
-                std::string temp_name = text.substr(_begin, text.length()-_begin);
-                
-                std::string::const_iterator start = temp_name.begin();
-                std::string::const_iterator end = temp_name.end();
-                boost::match_results<std::string::const_iterator> what;
-                bool match_res = boost::regex_search(start, end, what, macro_name_match, flags);
-                
-                bool is_regex_match = match_res && 
-                    (what[0].length() == (boost::match_results<std::string::const_iterator>::difference_type)temp_name.size());
-                
-                if (is_regex_match) $setType(MACRO_NAME);
-            }
-*/
 ;
-
-/*
-    if (inLanguage(LANGUAGE_CXX) && (LA(1) == '/' || LA(1) == '!')) {
-        $setType(LINE_DOXYGEN_COMMENT_START);
-        mode = LINE_DOXYGEN_COMMENT_END;
-    }
-*/                
 
 // Single-line comments (no EOL)
 LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; } : '/' 
