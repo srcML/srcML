@@ -87,23 +87,20 @@ RAW_STRING_START :
     // #define a "abc
     // note that the "abc does not end at the end of this line,
     // but the #define must end, so EOL is not a valid string character
-    '"' {
-        while (LA(1) != '(' && LA(1) != '\n') {
-            delimiter += LA(1);
-            consume();
-        }
-
-        if (LA(1) == '\n') {
-             delimiter = "";
-        } else {
-            match('(');
-        }
-
-        changetotextlexer(RAW_STRING_END); 
+    '"' RSTRING_DELIMITER ('(')?
+    {
+        changetotextlexer(RAW_STRING_END, delimiter); 
 
         atstring = false;
     }
 ;
+
+protected
+RSTRING_DELIMITER:
+    { delimiter = ""; }
+    (options { greedy = true; } : { delimiter += LA(1); } ~('(' | '\n'))*
+;
+
 CHAR_START :
     { startline = false; }
 

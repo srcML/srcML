@@ -79,12 +79,16 @@ bool onpreprocline;
 // ignore character escapes
 bool noescape;
 
+std::string delimiter1;
+
 std::string delimiter;
+
+int dquote_count = 0;
 
 OPTION_TYPE options;
 
 CommentTextLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), delimiter("")
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), delimiter1("")
 {}
 
 private:
@@ -101,7 +105,7 @@ public:
         onpreprocline = onpreproclinestate;
         mode = m;
         noescape = nescape;
-        delimiter = dstring;
+        delimiter1 = dstring;
         options = op;
     }
 }
@@ -165,24 +169,15 @@ COMMENT_TEXT {
 
     '\040'..'\041' |
 
-    '\042' /* '\"' */ {
-
-        if (noescape) {
-
-            int count = 1;
-            while (LA(1) == '\042') {
-                match("\"");
-                ++count;
-            }
-
-            if (count % 2 == 1) {
-                $setType(mode); selector->pop();
-            }
-
-        } else if ((prevLA != '\\') && (mode == STRING_END)) {
+    '\042' /* '\"' */
+        { dquote_count = 1; }
+        (options { greedy = true; } : '\042' { ++dquote_count; })*
+    {
+        if ((noescape && (dquote_count % 2 == 1)) ||
+            (!noescape && (prevLA != '\\') && (mode == STRING_END))) {
             $setType(mode);
             selector->pop();
-        } 
+        }
     } |
 
     '\043'..'\045' | 
@@ -199,22 +194,15 @@ COMMENT_TEXT {
     '\050' |
 
     '\051' /* ')' */
-    {
-        if (mode == RAW_STRING_END) {
-
-            // compare the stored delimiter to what is here, stopping at the end 
-            // of a line (delimiter cannot span lines)
-            std::string::size_type pos = 0;
-            while (pos < delimiter.size() && LA(1) == delimiter[pos] && LA(1) != '\n') {
-                ++pos;
-                consume();
-            }
-
-            if (pos == delimiter.size() && LA(1) != '\n') {
+        // collect the rstring delimiter
+        ({ mode == RAW_STRING_END }? RSTRING_DELIMITER)?
+        {
+            // for R-strings (C++) compare the at the end to the one from the start
+            // after the delimiter, there must be a quote to end the string
+            if (mode == RAW_STRING_END && delimiter == delimiter1 && LA(1) == '"') {
                 mode = STRING_END;
             }
-        }
-    } |
+        } |
 
     '\052'..'\056' |
 
@@ -257,4 +245,11 @@ COMMENT_TEXT {
             selector->pop();
         }
    } )+
+;
+
+protected
+RSTRING_DELIMITER:
+    { delimiter = ""; }
+    (options { greedy = true; } : { delimiter.size() < delimiter1.size() }? { delimiter += LA(1); } 
+        ~('(' | ')' | '\\' | '\n' | ' ' | '\t' ))*
 ;
