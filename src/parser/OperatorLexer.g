@@ -41,30 +41,28 @@ options {
 tokens {
     EOL_BACKSLASH;
 
-    TEMPOPS;
-    TEMPOPE;
-    EQUAL;
-    LPAREN; // = "(";
-    DESTOP; // = "~";
-    LCURLY; // = "{";
-    RCURLY; // = "}";
-    LBRACKET; // = "[";
-    ATLBRACKET; // = "@[";
-    RBRACKET; // = "]";
-    COMMA; // = ",";
-    RPAREN; // = ")";
-    TERMINATE; // = ";";
+    TEMPOPS;    // "<";
+    TEMPOPE;    // ">";
+    EQUAL;      // "=";
+    LPAREN;     // "(";
+    DESTOP;     // "~";
+    LCURLY;     // "{";
+    RCURLY;     // "}";
+    LBRACKET;   // "[";
+    ATLBRACKET; // "@[";
+    RBRACKET;   // "]";
+    COMMA;      // ",";
+    RPAREN;     // ")";
+    TERMINATE;  // ";";
     PREPROC;
-    COLON; // = ":";
+    COLON;      // ":";
     QMARK;
 
-    ASSIGNMENT; // +=, -=, etc.
-
     // Java
-    BAR; // |
+    BAR;        // "|"
 
     // C++
-    TRETURN; // ->
+    TRETURN;    // ->
     MPDEREF;
     DOTDEREF;
 
@@ -74,11 +72,11 @@ tokens {
     // define value in master grammar so that it depends on language
     DCOLON;
 
-    MEMBERPOINTER; // = ".*";
-    PERIOD; // = ".";
-    MULTOPS; // = "*";
-    REFOPS;  // = "&";
-    RVALUEREF; // = "&&";
+    MEMBERPOINTER;  // ".*";
+    PERIOD;         // ".";
+    MULTOPS;        // "*";
+    REFOPS;         // "&";
+    RVALUEREF;      // "&&";
 
     DOTDOT;
     DOTDOTDOT;
@@ -117,68 +115,45 @@ OPERATORS options { testLiterals = true; } {
             // primarily so that unterminated strings in
             // a preprocessor line will end at the right spot
             onpreprocline = true; 
-
-            if (isoption(options, SRCML_OPTION_LINE)) {
-                int start = mark();
-                ++inputState->guessing;
-                if (LA(1) == 'l') {
-                    consume();  
-                    if (LA(1) == 'i') {
-                        consume();
-                        if (LA(1) ==  'n') {
-                            consume();
-                            if (LA(1) ==  'e')
-                                isline = true;
-                        }
-                    }
-                }
-                --inputState->guessing;
-                rewind(start);
-            }
+            //firstpreprocline = true;
         }
     } |
 
-    '+' {
-            if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=')
-                $setType(CSPEC);
-        }
-        ('+' | '=' { $setType(ASSIGNMENT); } )? |
-    '-' {
-            if (inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=')
-                $setType(MSPEC);
-        } 
-        ('-' | '=' { $setType(ASSIGNMENT); } | '>' { $setType(TRETURN); } ('*' { $setType(MPDEREF); })? )?  |
-    '*' ('=' { $setType(ASSIGNMENT); } )? |
-    '%' ('=' { $setType(ASSIGNMENT); } )? |
-    '^' { $setType(BLOCKOP); } ('=' { $setType(ASSIGNMENT); } )? |
-    '|' ('|')? ('=' { $setType(ASSIGNMENT); } )? |
+    '+' ('+' | '=')? |
+    '-' ('-' | '=' | '>' ('*')? )?  |
+    '*' ('=')? |
+    '%' ('=')? |
+    '^' ('=')? |
+    '|' ('|')? ('=')? |
     '`' |
     '!' ('=')? |
     ':' (':')? |
 
-    '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setType(LAMBDA); } |) |
+    '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>')? |
 
-    '&' (options { greedy = true; } : '&' ('=' )? | '=' { $setType(ASSIGNMENT); } )? | 
+    // &, &&, &&=, &=
+    '&' ('&')? ('=')? |
 
-    '>' (('>' '=') => '>' '=' { $setType(ASSIGNMENT); } )? ({ _ttype != ASSIGNMENT }? '=' )? |
+    // >, >>=, >=, not >>
+    '>' (('>' '=') => '>' '=')? ('=')? |
 
-    '<' (options { greedy = true; } : '<' (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setType(CUDA); })? | '=' )?
-        ('=' { $setType(ASSIGNMENT); })? |
+    // <, << (C/C++), <=, <<< (CUDA)
+    '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
 
     // match these as individual operators only
     ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
 
     // names can start with a @ in C#
-    '@' { $setType(ATSIGN); } (
+    '@' (
 
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-          '(' { $setType(LPAREN); }
+          '(' 
         |
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-          '[' { $setType(ATLBRACKET); }
+          '['
         |
         { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-          '{' { $setType(LCURLY); }
+          '{'
         |
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
             NAME { $setType(NAME); }
@@ -187,19 +162,20 @@ OPERATORS options { testLiterals = true; } {
             CONSTANTS { $setType(CONSTANTS); }
         |
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? {
-            if (LA(1) == '"') {
-                atstring = true; 
-                $setType(STRING_START);
-            } else {
-                $setType(CHAR_START);
-            }
+            $setType(CHAR_START);
         }
-        STRING_START | ) |
+        CHAR_START |
 
-    '?' { $setType(QMARK); } ('?' { $setType(OPERATORS); })* | // part of ternary
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? {
+            atstring = true; 
+            $setType(STRING_START);
+        }
+        STRING_START )? |
+
+    '?' ('?')* | // part of ternary
     '~'  | // has to be separate if part of name
 
-    '.' ({ !inLanguage(LANGUAGE_JAVA) }? '*' { $setType(DOTDEREF); } | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
+    '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS )? |
 
     '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
     )

@@ -395,6 +395,17 @@ private:
 
                 break;
 
+            case srcMLParser::WHOLE_COMMENT:
+
+                pushSSkipToken(srcMLParser::SCOMMENT);
+                pushSkipToken();
+                srcMLParser::consume();
+                slastcolumn = LT(1)->getColumn() - 1;
+                slastline = LT(1)->getLine();
+                pushESkipToken(srcMLParser::SCOMMENT);
+
+                break;
+
             case srcMLParser::BLOCK_COMMENT_END:
                 pushSkipToken();
                 srcMLParser::consume();

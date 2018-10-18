@@ -7804,7 +7804,7 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
             if (markup)
                 startElement(SSTRING);
         }
-        (STRING_START STRING_END)
+        (STRING_START (STRING_END | RAW_STRING_END))
 ;
 
 // Only start and end of character are put directly through the parser.

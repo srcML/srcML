@@ -108,7 +108,7 @@ token_set(srcMLParser, modifier_tokens_set,
 
 token_set(srcMLParser, skip_tokens_set,
     srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLParser::EOL_BACKSLASH, srcMLParser::BLOCK_COMMENT_START, srcMLParser::BLOCK_COMMENT_END, srcMLParser::LINE_COMMENT_END, srcMLParser::COMMENT_TEXT, 
-    srcMLParser::LINE_COMMENT_START, srcMLParser::JAVADOC_COMMENT_START, srcMLParser::DOXYGEN_COMMENT_START, srcMLParser::LINE_DOXYGEN_COMMENT_START, srcMLParser::EOL
+    srcMLParser::LINE_COMMENT_START, srcMLParser::JAVADOC_COMMENT_START, srcMLParser::DOXYGEN_COMMENT_START, srcMLParser::LINE_DOXYGEN_COMMENT_START, srcMLParser::EOL, srcMLParser::WHOLE_COMMENT
 )
 
 token_set(srcMLParser, class_tokens_set,
@@ -152,6 +152,7 @@ token_set(srcMLParser, whitespace_token_set,
     srcMLParser::WS,
     srcMLParser::CONTROL_CHAR,
     srcMLParser::EOL_BACKSLASH,
+    srcMLParser::WHOLE_COMMENT,
     srcMLParser::BLOCK_COMMENT_START,
     srcMLParser::BLOCK_COMMENT_END,
     srcMLParser::JAVADOC_COMMENT_END,
