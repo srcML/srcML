@@ -60,7 +60,7 @@ int src_input_filesystem(ParseQueue& queue,
             continue;
         }
 
-        if (archive_entry_filetype(entry) == AE_IFLNK)
+        if (archive_entry_filetype(entry) != AE_IFREG)
             continue;
 
         files.push_back(archive_entry_pathname(entry));
