@@ -814,12 +814,15 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
         // turn off option for archive so XML generated has full namespaces
         auto options = unit->archive->options;
         options &= ~(unsigned long long)(SRCML_OPTION_ARCHIVE);
-    
+
+        if (!(unit->namespaces))
+            unit->namespaces = unit->archive->namespaces;
+
         unit->unit_translator = new srcml_translator(
             obuffer,
             optional_to_c_str(unit->archive->encoding, "UTF-8"),
             options,
-            unit->archive->namespaces,
+            *(unit->namespaces),
             boost::none,
             unit->archive->tabstop,
             unit->derived_language,
@@ -880,16 +883,43 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     xmlTextWriterFlush(unit->unit_translator->output_textwriter());
     unit->content_end = unit->unit_translator->output_buffer()->written + 1;
 
+    // end the unit (and any open elements)
     if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
         return SRCML_STATUS_INVALID_INPUT;
+
+    // flush before detaching
+    // @todo Is this needed?
+    xmlTextWriterFlush(unit->unit_translator->output_textwriter());
+
+    // store the generated srcml in a char buffer
+    char* srcml = (char*) xmlBufferDetach(unit->output_buffer);
+
+    // record the current content_begin (which may change)
+    int save = unit->content_begin;
+
+    // redo the start element with the namespaces found in the document
+    srcml_write_start_unit(unit);
+	char* start_tag = (char*) xmlBufferDetach(unit->output_buffer);
+
+    // recreate the unit with the newly generated start tag, which
+    // contains all the used namespaces
+    unit->srcml.assign(start_tag);
+    if (unit->content_begin != unit->content_end) {
+        unit->srcml.append(">");
+        unit->srcml.append(srcml + save);
+    } else {
+        unit->srcml.append("/>");
+    }
+
+    // content end is changed since the start unit tag was rewritten
+    unit->content_end += (unit->content_begin - save);
+
+    free(start_tag);
+    free(srcml);
 
     // finished with any parsing
     delete unit->unit_translator;
     unit->unit_translator = 0;
-
-    // store the output in a buffer
-    // @todo check into xmlBufferDetach()
-    unit->srcml.assign((const char *)unit->output_buffer->content, unit->output_buffer->use);
 
     xmlBufferFree(unit->output_buffer);
 
