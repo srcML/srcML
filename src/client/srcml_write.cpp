@@ -38,6 +38,16 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     if (!request)
         return;
 
+    if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
+
+        if (option(SRCML_COMMAND_VERBOSE))
+            log << '-' << (request->filename ? *request->filename : "");
+        else
+            SRCMLstatus(ERROR_MSG, "Extension not supported");
+
+        return;
+    }
+
     // open the archive (if per-unit)
     if (request->unit && option(SRCML_COMMAND_NOARCHIVE)) {
 
@@ -146,13 +156,6 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
             log << 'a' << outs.str();
         }
-
-    } else if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
-
-        if (option(SRCML_COMMAND_VERBOSE))
-            log << '-' << (request->filename ? *request->filename : "");
-        else
-            SRCMLstatus(ERROR_MSG, "Extension not supported");
 
     } else if (request->errormsg) {
         SRCMLstatus(WARNING_MSG, *(request->errormsg));
