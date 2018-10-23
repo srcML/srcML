@@ -13,27 +13,27 @@ define empty_srcml_archive <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-createfile list-empty.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml"
+createfile list-empty.txt "https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/emptyunit.xml"
 
 srcml --files-from list-empty.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile list-empty-bz2.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.bz2"
+createfile list-empty-bz2.txt "https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/emptyunit.xml.bz2"
 
 srcml --files-from list-empty-bz2.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile list-empty-gz.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.gz"
+createfile list-empty-gz.txt "https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/emptyunit.xml.gz"
 
 srcml --files-from list-empty-gz.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile list-empty-bz2-gz.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.bz2.gz"
+createfile list-empty-bz2-gz.txt "https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/emptyunit.xml.bz2.gz"
 
 srcml --files-from list-empty-bz2-gz.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile list-empty-gz-b2.txt "https://raw.githubusercontent.com/srcML/test-data/master/srcml/emptyunit.xml.gz.bz2"
+createfile list-empty-gz-b2.txt "https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/emptyunit.xml.gz.bz2"
 
 srcml --files-from list-empty-gz-b2.txt --url="test"
 check "$empty_srcml_archive"

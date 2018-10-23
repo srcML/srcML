@@ -8,63 +8,63 @@ define srca <<- 'STDOUT'
 	STDOUT
 
 # input from a valid remote srcml file
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml
 check "$srca"
 
 mkdir sub
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml -o sub/unit.cpp
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml -o sub/unit.cpp
 check sub/unit.cpp "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml --unit 1
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml --unit 1
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml --unit 1 -o sub/unit.cpp
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml --unit 1 -o sub/unit.cpp
 check sub/unit.cpp "$srca"
 
 # input from a compressed srcml file
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.bz2
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.bz2
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.gz
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.gz
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.bz2.gz
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.bz2.gz
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.gz.bz2
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.gz.bz2
 check "$srca"
 
 # input from an archived srcml file
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.cpio
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.cpio
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.cpio.bz2
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.cpio.bz2
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.cpio.gz
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.cpio.gz
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tar.bz2
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.tar.bz2
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tar.gz
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.tar.gz
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tar
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.tar
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tbz2
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.tbz2
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.tgz
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.tgz
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.zip
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip.bz2
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.zip.bz2
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/unit.xml.zip.gz
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml.zip.gz
 check "$srca"
