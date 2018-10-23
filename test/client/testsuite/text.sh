@@ -198,7 +198,7 @@ check "\03;"
 
 # escaped \e
 srcml -l C++ --text="\ee;\e" | srcml
-check "\ee;\e"
+check "\x1be;\x1b"
 
 exit 0
 
