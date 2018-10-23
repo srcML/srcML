@@ -52,6 +52,8 @@ const unsigned int SRCML_OPTION_DEBUG             = 1<<24;
 /** Is a fragment, i.e., no unit element */
 const unsigned int SRCML_OPTION_FRAGMENT = 1<<21;
 
+const unsigned int SRCML_OPTION_CPP_DECLARED = 1<<25;
+
  /** Create an archive */
 const unsigned int SRCML_OPTION_ARCHIVE           = 1<<0;
  /** Output hash attribute on each unit (default: on) */

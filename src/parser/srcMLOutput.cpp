@@ -251,8 +251,9 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     // based on options, turn on specific namespaces (i.e., mark as used)
     auto& view = namespaces.get<nstags::uri>();
 
-    if (isoption(options, SRCML_OPTION_CPP))
+    if (isoption(options, SRCML_OPTION_CPP_DECLARED)) {
         view.find(SRCML_CPP_NS_URI)->flags |= NS_USED;
+    }
 
     if (isoption(options, SRCML_OPTION_POSITION))
         view.find(SRCML_POSITION_NS_URI)->flags |= NS_USED;
