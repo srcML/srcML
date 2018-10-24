@@ -895,7 +895,8 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     char* srcml = (char*) xmlBufferDetach(unit->output_buffer);
 
     // record the current content_begin (which may change)
-    int save = unit->content_begin;
+    int content_begin = unit->content_begin;
+    int content_end = unit->content_end;
 
     // redo the start element with the namespaces found in the document
     srcml_write_start_unit(unit);
@@ -904,15 +905,16 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     // recreate the unit with the newly generated start tag, which
     // contains all the used namespaces
     unit->srcml.assign(start_tag);
-    if (unit->content_begin != unit->content_end) {
+
+    if (content_begin != content_end) {
         unit->srcml.append(">");
-        unit->srcml.append(srcml + save);
+        unit->srcml.append(srcml + content_begin);
     } else {
         unit->srcml.append("/>");
     }
 
     // content end is changed since the start unit tag was rewritten
-    unit->content_end += (unit->content_begin - save);
+    unit->content_end += (unit->content_begin - content_begin);
 
     free(start_tag);
     free(srcml);
