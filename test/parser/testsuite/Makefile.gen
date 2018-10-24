@@ -89,8 +89,6 @@ XSLT=xsltproc
 # merge separate srcML units into one
 XSLT_MERGEUNIT_XSL=xsl/mergeunit.xsl
 XSLT_MERGEUNIT=${XSLT} ${XSLT_MERGEUNIT_XSL}
-XSLT_MERGEUNIT_PROBLEM_XSL=xsl/mergeunitproblem.xsl
-XSLT_MERGEUNIT_PROBLEM=${XSLT} ${XSLT_MERGEUNIT_PROBLEM_XSL}
 
 # generate nested conditionals
 XSLT_NESTCOND_XSL=xsl/nestcond.xsl
@@ -107,12 +105,9 @@ XSLT_DEFN2DECL=${XSLT} ${XSLT_DEFN2DECL_XSL}
 # wrap in a block
 XSLT_BLOCKUNIT=${XSLT} xsl/insertblock.xsl
 
-XSLT_BLOCKUNIT_PROBLEM=${XSLT} xsl/insertblockproblem.xsl
-
 XSLT_STRUCTUNIT=${XSLT} xsl/insertstruct.xsl
 
 XSLT_BLOCKUNIT_JAVA=${XSLT} xsl/insertblock.java.xsl
-XSLT_BLOCKUNIT_PROBLEM_JAVA=${XSLT} xsl/insertblockproblem.java.xsl
 
 XSLT_ADDEXPLICIT=${XSLT} xsl/addexplicit.xsl
 
@@ -153,31 +148,22 @@ XSLT_INTERFACE2IMPLEMENTATION=${XSLT} ${XSLT_INTERFACE2IMPLEMENTATION_XSL}
 # insert comments
 XSLT_INSERTCOMMENT=${XSLT} xsl/insertcomments.xsl
 
-XSLT_INSERTCOMMENT_PROBLEM=${XSLT} xsl/insertcommentsproblem.xsl
-
 # insert preprocessor
 XSLT_INSERTPREPROC=${XSLT} xsl/insertpreproc.xsl
-
-XSLT_INSERTPREPROC_PROBLEM=${XSLT} xsl/insertpreprocproblem.xsl
 
 # nest if
 XSLT_INSERTIFTHENELSE=${XSLT} xsl/nestif.xsl
 XSLT_INSERTIFTHENELSE_JAVA=${XSLT} xsl/nestif.java.xsl
-XSLT_INSERTIFTHENELSE_PROBLEM=${XSLT} xsl/nestifproblem.xsl
-XSLT_INSERTIFTHENELSE_PROBLEM_JAVA=${XSLT} xsl/nestifproblem.java.xsl
 
 # insert form feed
 XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
-XSLT_INSERTFORMFEED_PROBLEM=${XSLT} xsl/insertformfeedproblem.xsl
 
 ##
 # Test cases for one language are generated from test cases for another language.
 
 XSLT_SETLANGUAGE_XSL=xsl/setlanguage.xsl
-XSLT_SETLANGUAGE_PROBLEM_XSL=xsl/setlanguageproblem.xsl
 
 XSLT_REMOVECPP_XSL=xsl/removecpp.xsl
-XSLT_REMOVECPP_PROBLEM_XSL=xsl/removecppproblem.xsl
 
 XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
 
@@ -194,21 +180,7 @@ XSLT_SETLANGUAGE_CXX_11=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAG
 XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
 XSLT_SETLANGUAGE_ASPECTJ=${XSLT} --stringparam language "AspectJ" ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_PROBLEM=${XSLT} ${XSLT_SETLANGUAGE_PROBLEM_XSL}
-
-XSLT_SETLANGUAGE_PROBLEM_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
-
-XSLT_SETLANGUAGE_PROBLEM_CS=${XSLT} --stringparam language "C\#" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
-
-XSLT_SETLANGUAGE_PROBLEM_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
-
-XSLT_SETLANGUAGE_PROBLEM_CXX_11=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
-
-XSLT_SETLANGUAGE_PROBLEM_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
-XSLT_SETLANGUAGE_PROBLEM_ASPECTJ=${XSLT} --stringparam language "AspectJ" ${XSLT_SETLANGUAGE_PROBLEM_XSL}
-
 XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
-XSLT_REMOVECPP_PROBLEM=${XSLT} ${XSLT_REMOVECPP_PROBLEM_XSL}
 
 # try/catch/finally/throw keywords to @try/@catch/@finally/throw keywords
 XSLT_KEYWORD2MKEYWORD_XSL=xsl/keyword2mkeyword.xsl
@@ -361,96 +333,6 @@ allinonejava : allinall.java.xml
 
 cleanall :
 	rm -f allinall.*
-
-problem.java.xml : problem.cpp.xml
-	${XSLT_SETLANGUAGE_PROBLEM_JAVA} $< | ${XSLT_REMOVECPP_PROBLEM} - > $@
-
-problem.aj.xml : problem.java.xml
-	${XSLT_SETLANGUAGE_PROBLEM_ASPECTJ} $< > $@
-
-problem.c.xml : problem.cpp.xml
-	${XSLT_SETLANGUAGE_PROBLEM_C} $< > $@
-
-problem.cs.xml : problem.cpp.xml
-	${XSLT_SETLANGUAGE_PROBLEM_CS} $< > $@
-
-problem.all.cpp.xml : problem.cpp.xml
-	${XSLT_MERGEUNIT_PROBLEM} $< > $@
-problem.all.c.xml : problem.c.xml
-	${XSLT_MERGEUNIT_PROBLEM} $< > $@
-problem.all.cs.xml : problem.cs.xml
-	${XSLT_MERGEUNIT_PROBLEM} $< > $@
-problem.all.m.xml : problem.m.xml
-	${XSLT_MERGEUNIT_PROBLEM} $< > $@
-problem.all.java.xml : problem.java.xml
-	${XSLT_MERGEUNIT_PROBLEM} $< > $@
-problem.all.aj.xml : problem.aj.xml
-	${XSLT_MERGEUNIT_PROBLEM} $< > $@
-
-problem.block.cpp.xml : problem.cpp.xml
-	${XSLT_BLOCKUNIT_PROBLEM} $< > $@
-problem.block.c.xml : problem.c.xml
-	${XSLT_BLOCKUNIT_PROBLEM} $< > $@
-problem.block.cs.xml : problem.cs.xml
-	${XSLT_BLOCKUNIT_PROBLEM} $< > $@
-problem.block.m.xml : problem.m.xml
-	${XSLT_BLOCKUNIT_PROBLEM} $< > $@
-problem.block.java.xml : problem.java.xml
-	${XSLT_BLOCKUNIT_PROBLEM_JAVA} $< > $@
-problem.block.aj.xml : problem.aj.xml
-	${XSLT_BLOCKUNIT_PROBLEM_JAVA} $< > $@
-
-problem.comment.cpp.xml : problem.cpp.xml
-	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-problem.comment.c.xml : problem.c.xml
-	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-problem.comment.cs.xml : problem.cs.xml
-	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-problem.comment.m.xml : problem.m.xml
-	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-problem.comment.java.xml : problem.java.xml
-	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-problem.comment.aj.xml : problem.aj.xml
-	${XSLT_INSERTCOMMENT_PROBLEM} $< > $@
-
-problem.preproc.cpp.xml : problem.cpp.xml
-	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-problem.preproc.c.xml : problem.c.xml
-	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-problem.preproc.cs.xml : problem.cs.xml
-	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-problem.preproc.m.xml : problem.m.xml
-	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-problem.preproc.java.xml : problem.java.xml
-	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-problem.preproc.aj.xml : problem.aj.xml
-	${XSLT_INSERTPREPROC_PROBLEM} $< > $@
-
-problem.ifthenelse.cpp.xml : problem.cpp.xml
-	${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
-problem.ifthenelse.c.xml : problem.c.xml
-	${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
-problem.ifthenelse.cs.xml : problem.cs.xml
-	${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
-problem.ifthenelse.m.xml : problem.m.xml
-	${XSLT_INSERTIFTHENELSE_PROBLEM} $< > $@
-problem.ifthenelse.java.xml : problem.java.xml
-	${XSLT_INSERTIFTHENELSE_PROBLEM_JAVA} $< > $@
-problem.ifthenelse.aj.xml : problem.aj.xml
-	${XSLT_INSERTIFTHENELSE_PROBLEM_JAVA} $< > $@
-
-problem.formfeed.cpp.xml : problem.cpp.xml
-	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-problem.formfeed.c.xml : problem.c.xml
-	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-problem.formfeed.cs.xml : problem.cs.xml
-	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-problem.formfeed.m.xml : problem.m.xml
-	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-problem.formfeed.java.xml : problem.java.xml
-	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
-problem.formfeed.aj.xml : problem.aj.xml
-	${XSLT_INSERTFORMFEED_PROBLEM} $< > $@
 
 %.cpp : %.cpp.xml
 	${XSLT_IDENTITY} $< > $@
@@ -708,7 +590,7 @@ class_implementation_m.m.xml : class_interface_m.m.xml ${XSLT_INTERFACE2IMPLEMEN
 
 # Java finallly from C#
 finally_java.java.xml : finally_cs.cs.xml ${XSLT_SETLANGUAGE_CS_XSL}
-	${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP_PROBLEM} - > $@
+	${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@
 
 # Objective-C try from C++
 try_m.m.xml : try.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
