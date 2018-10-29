@@ -28,7 +28,7 @@ check empty-remote.xml "$empty_srcml"
 
 # file list of non-existent files
 define open_error <<- 'STDERR'
-	srcml: Unable to open file nonexistent1.txt
+	srcml: Extension not supported nonexistent1.txt
 	STDERR
 
 createfile nonexistent_files.txt "nonexistent1.txt"
