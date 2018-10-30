@@ -42,7 +42,7 @@ check_exit 1 "$open_error"
 
 # file list references itself
 define open_error <<- 'STDOUT'
-	srcml: Unable to open file loop.txt
+	srcml: Extension not supported loop.txt
 	STDOUT
 
 createfile loop.txt "loop.txt"

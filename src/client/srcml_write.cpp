@@ -43,9 +43,9 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         if (option(SRCML_COMMAND_VERBOSE))
             log << '-' << (request->filename ? *request->filename : "");
         else if (request->disk_filename)
-            SRCMLstatus(ERROR_MSG, "srcml: Extension not supported %s", *(request->disk_filename));
+            SRCMLstatus(WARNING_MSG, "srcml: Extension not supported %s", *(request->disk_filename));
         else
-            SRCMLstatus(ERROR_MSG, "srcml: Extension not supported");
+            SRCMLstatus(WARNING_MSG, "srcml: Extension not supported");
 
         return;
     }
