@@ -45,5 +45,5 @@ set(CPACK_DEBIAN_PACKAGE_SUGGESTS "yes")
 # set extra processing
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "")
 
-# set install for manpage (Need to generate the man page before running cpack -G DEB)
-install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/man/man1")
+# set install for manpage (Run cpack -G DEB)
+install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "share/man/man1")
