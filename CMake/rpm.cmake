@@ -32,10 +32,8 @@ set(CPACK_RPM_PACKAGE_RELEASE 1)
 # set what package provides
 #set(CPACK_RPM_PACKAGE_PROVIDES "")
 
-# set install for manpage (Need to generate the manpage before running cpack -G RPM)
-if (OS_NAME STREQUAL "Fedora")
-	set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/share /usr/local/share/man /usr/local/share/man/man1)
-	install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/share/man/man1")
-endif()
+# set install for manpage (Run cpack -G RPM)
+set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/share /usr/local/share/man /usr/local/share/man/man1)
+install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/share/man/man1")
 
 
