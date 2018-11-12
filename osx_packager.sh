@@ -51,12 +51,10 @@ cp $source_root/COPYING.txt pkg_resources/LICENSE.txt
 cp $source_root/README.md pkg_resources/README.txt
 cp $source_root/CMake/background.png pkg_resources/BACKGROUND.png
 
-# BUILD THE MAN PAGES AND COPY THE FILES
+# COPY THE MAN PAGE 
 echo "MANPAGES"
 mkdir pkg_manpage
-(cd $source_root/doc/manpage; touch srcml.md; ./replace_variables.sh srcml_input.md srcml.md; ronn srcml.md --manual=srcml)
-cp $source_root/doc/manpage/srcml pkg_manpage/srcml.1
-(cd $source_root/doc/manpage; rm srcml srcml.html srcml.md srcml.md-e)
+cp $source_root/doc/manpage/srcml.1 pkg_manpage/srcml.1
 
 # STRIP BIN/LIB
 echo "STRIP EXE AND LIB"
