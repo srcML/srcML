@@ -157,6 +157,12 @@ else()
         add_definitions(-DWITH_LIBXSLT)
     endif()
 
+    # Helps with new path on default antlr2 install using homebrew on MacOS Mojave
+    if(EXISTS /usr/local/opt/antlr@2 AND APPLE)
+        list (APPEND CMAKE_PREFIX_PATH "/usr/local/opt/antlr@2")
+        include_directories("/usr/local/opt/antlr@2/include")
+    endif()
+
     # Locating the antlr library.
     find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
 
