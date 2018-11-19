@@ -328,7 +328,7 @@ bool srcml_translator::add_end_unit() {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* uri) {
+bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* /* uri */) {
 
     if (!is_outputting_unit || name == 0)
         return false;
