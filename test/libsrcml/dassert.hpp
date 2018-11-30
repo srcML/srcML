@@ -29,6 +29,6 @@
         std::cerr << "'" << LEFT << "'" << "\n";        \
         std::cerr << "'" << RIGHT << "'" << "\n";       \
 		std::cerr << argv[0] << ": " __FILE__ << ":" << __LINE__ << ": " << __FUNCTION__ << " Check '" << #LEFT << "' == '" << #RIGHT << "' failed.\n"; \
-		exit(1); }
+		exit(1); } else { std::cerr << __LINE__ << '\n'; }
 
 #endif
