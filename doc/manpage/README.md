@@ -9,4 +9,8 @@ To generate the man pages for srcml:
 gem install ronn
 ```
 
-2. cmake ../srcML -DGENERATE_CLIENT_DOC=ON
+2. In the build directory
+
+```
+cmake ../srcML -DGENERATE_CLIENT_DOC=ON
+```
