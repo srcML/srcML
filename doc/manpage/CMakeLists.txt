@@ -89,8 +89,7 @@ set(XPATH_OPTION_LONG "xpath")
 set(ATTRIBUTE_LONG "attribute")
 set(ELEMENT_LONG "element")
 set(XSLT_LONG "xslt")
-# @todo Rename constant
-set(XPATH_PARAM_LONG "xslt-param")
+set(XSLT_PARAM "xslt-param")
 set(RELAXNG_OPTION_LONG "relaxng")
 
 #set(LONG_INFO_FLAG_SHORT "L")
