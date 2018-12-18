@@ -60,7 +60,7 @@ const char* srcml_archive_check_extension(const srcml_archive* archive, const ch
  * @returns the created archive.
  */
 srcml_archive* srcml_archive_create() {
-    
+
     srcml_archive* archive;
     try {
 
@@ -389,6 +389,9 @@ int srcml_archive_enable_option(struct srcml_archive* archive, unsigned long lon
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    if (archive->options & SRCML_OPTION_CPP)
+        archive->options |= SRCML_OPTION_CPP_DECLARED;
+
     archive->options |= option;
 
     return SRCML_STATUS_OK;
@@ -483,6 +486,7 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
     std::string suri = uri;
     if (suri == SRCML_CPP_NS_URI) {
         archive->options |= SRCML_OPTION_CPP;
+        archive->options |= SRCML_OPTION_CPP_DECLARED;
     } else if (suri == SRCML_ERROR_NS_URI) {
         archive->options |= SRCML_OPTION_DEBUG;
     } else if (suri == SRCML_POSITION_NS_URI) {

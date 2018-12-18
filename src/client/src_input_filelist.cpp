@@ -82,6 +82,7 @@ int src_input_filelist(ParseQueue& queue,
     while (line < &vbuffer[vbuffer.size() - 1]) {
 
     	// find the line
+        // @todo use strchr()
     	char* startline = line;
     	while (*line != '\n' && line != &vbuffer[vbuffer.size() - 1])
     		++line;
@@ -90,6 +91,7 @@ int src_input_filelist(ParseQueue& queue,
     	std::string sline(startline, line - startline);
 
 		// skip comment lines
+        // @todo trim then comment lines?
 		if (sline[0] == '#')
 			continue;
 

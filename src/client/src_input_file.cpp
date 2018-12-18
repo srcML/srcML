@@ -50,7 +50,6 @@ int src_input_file(ParseQueue& queue,
     prequest->version = srcml_request.att_version;
     prequest->srcml_arch = srcml_arch;
     prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
-    prequest->total_num_inputs = srcml_request.input_sources.size();
 
     if (prequest->language.empty())
             if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))

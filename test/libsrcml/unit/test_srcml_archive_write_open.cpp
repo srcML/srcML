@@ -84,14 +84,14 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        dassert(srcml_archive_write_open_filename(archive, 0, 0), SRCML_STATUS_INVALID_ARGUM);
+        dassert(srcml_archive_write_open_filename(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
 
     }
 
     {
-        dassert(srcml_archive_write_open_filename(0, "project.xml", 0), SRCML_STATUS_INVALID_ARGUM);
+        dassert(srcml_archive_write_open_filename(0, "project.xml"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*

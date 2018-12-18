@@ -28,7 +28,7 @@ an input source-code file or providing no input source-code file. Similarly,
 standard output may be specified with the '-' character for the output srcML
 file or by not providing an output srcML file.
 
-A source-code language must be specified when input is from standard input.
+A source-code language must be specified when input uses the --text option.
 
 
 ## GENERAL OPTIONS
@@ -168,7 +168,7 @@ The default is to markup these regions.
 in these regions, leaving out markup.
 
 
-### XML FORM
+### XML FORMAT
 
 The following options control the format of the XML.
 
@@ -409,7 +409,7 @@ before the XML declaration may not be processed correctly by `srcml`
 and by other libxml2-based tools (e.g., xmllint). Use the LE or BE
 version of the encoding, e.g., UTF-32BE, UTF-32LE, instead.
 
-Report bugs to collard@uakron.edu
+Report bugs at http://www.srcml.org/support.html
 
 
 
@@ -428,7 +428,7 @@ and Heather Guarnera.
 
 ## COPYRIGHT
 
-Copyright (C) 2013-2015 srcML, LLC. (www.srcML.org)
+Copyright (C) 2013-2018 srcML, LLC. (www.srcML.org)
 
 The srcML Toolkit is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

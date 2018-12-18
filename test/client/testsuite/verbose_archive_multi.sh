@@ -23,7 +23,7 @@ define foutput <<- 'STDERR'
 	    1 sub/a.cpp	C++	1	a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8
 	    2 sub/b.cpp	C++	1	9a1e1d3d0e27715d29bcfbf72b891b3ece985b36
 
-	srcML Files: 2	non-srcML Files: 0	Errors: 0	Total Files: 2
+	Source Files: 2	Other Files: 0	Errors: 0	Total Files: 2
 	STDERR
 
 xmlcheck "$fsrcml"

@@ -184,30 +184,6 @@ int main(int, char* argv[]) {
     }
 
     /*
-      srcml_unit_set_hash
-    */
-
-    {
-
-        srcml_unit * unit = srcml_unit_create(archive);
-        srcml_unit_set_hash(unit, 0);
-        dassert(unit->hash, boost::none);
-        srcml_unit_free(unit);
-    }
-
-    {
-
-        srcml_unit * unit = srcml_unit_create(archive);
-        srcml_unit_set_hash(unit, "foo");
-        dassert(*unit->hash, "foo");
-        srcml_unit_free(unit);
-    }
-
-    {
-        dassert(srcml_unit_set_hash(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    /*
       srcml_unit_unparse_set_eol
     */
 

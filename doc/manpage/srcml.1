@@ -1,0 +1,390 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "SRCML" "" "November 2018" "" "srcml"
+.
+.SH "NAME"
+\fBsrcml\fR
+.
+.P
+srcML format conversion, query, and manipulation
+.
+.SH "SYNOPSIS"
+\fBsrcml\fR [\fIsrcML\-options]\fR [\fItransformations]\fR [\fIoutput\-src\-options]\fR [\fIgeneral\-options]\fR [input] [output]
+.
+.SH "DESCRIPTION"
+The program \fBsrcml\fR allows you to work with the srcML format\. The srcML format allows the use of XML for addressing, querying, and transformation of source code\. Source code can be translated into the XML source\-code representation srcML, where the code can be queried and manipulated using standard XML tools, many of which are available directly from the \fBsrcml\fR program\. Code in the srcML format can be converted back to source code\.
+.
+.P
+In the srcML format, all text from the original source\-code file is preserved including white\-space, comments, and preprocessor statements\. No preprocessing of the source code is done\. In addition, the tool can be applied to individual source\-code files, or code fragments\.
+.
+.P
+The conversion to the srcML format uses a custom parser that is fast and tolerant to incomplete source code and uncompilable code\.
+.
+.P
+Standard input may be specified by using the character \'\-\' in the place of an input source\-code file or providing no input source\-code file\. Similarly, standard output may be specified with the \'\-\' character for the output srcML file or by not providing an output srcML file\.
+.
+.P
+A source\-code language must be specified when input uses the \-\-text option\.
+.
+.SH "GENERAL OPTIONS"
+.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Output the help and exit\.
+.
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Output the version of \fBsrcml\fR then exit\.
+.
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Conversion and status information to stderr, including encodings used\. Especially useful with for monitoring progress of the from file list option, a directory, or source\-code archive (e\.g\. tar\.gz)\. The signal SIGUSR1 can be used to toggle this option\.
+.
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Supresses status messages\.
+.
+.TP
+\fB\-i\fR, \fB\-\-info\fR
+Display most metadata, except the unit count (file count) in a srcML archive, then exit\.
+.
+.TP
+\fB\-\-longinfo\fR
+Display most metadata including the unit (file) count in a srcML archive, then exit\.
+.
+.TP
+\fB\-\-jobs=<num>\fR
+Sets the maximum number of threads \fBsrcml\fR can spawn\.
+.
+.SH "CREATING SRCML"
+The following describe options for creating srcML\. The format of the input affects the format of the output, unless otherwise specified\. If the input is source\-code files, then the output is expected to be in srcML format\. If the input is in srcML format, then the output is in source\-code format\.
+.
+.TP
+\fB\-l\fR, \fB\-\-language=<language>\fR
+The programming language of the source\-code file\. Allowable values are C, C++, C#, or Java\. The language affects parsing, the allowed markup, and what is considered a keyword\. The value is also stored individually as an attribute in each unit element\.
+.
+.IP
+If not specified, the programming language is based on the file extension\. Language must be specified if using standard input\. If the file extension is not available or not in the standard list, then the program will skip that file\. This allows you to run \fBsrcml\fR on a project directory with many source\-code files and config files, and only the files with supported extensions will be parsed by \fBsrcml\fR\.
+.
+.TP
+\fB\-\-register\-ext="<extension>=<language>"\fR
+Sets the \fIextension\fR to associate with a given \fIlanguage\fR\. Note that the extensions do not contain the period character \'\.\'\.
+.
+.IP
+A common use of this is C++ files that use the \.h extension for header files\. By default these will be translated as C source\-code files\. This option can be used to override this behavior\.
+.
+.TP
+\fB\-\-src\-encoding=<encoding>\fR
+Sets the input encoding of the source\-code file to \fIencoding\fR\. The default is to try to automatically determine this when possible\. Used for any necessary source\-code text translation to the encoding used in the srcML file\. Possible encodings, such as "UTF\-16", "ISO\-10646\-UCS\-2", or "ISO\-8859\-1" can be obtained by using the command \fBiconv \-l\fR on UNIX platforms\.
+.
+.TP
+\fB\-\-files\-from=<file>\fR
+Treats the input file as a list of source files\. Each file is separately translated and collectively stored into a single srcML archive\. The list has a single filename on each line starting at the beginning of the line\. Blank lines and lines that begin with the character \'#\' are ignored\. As with input and output files, using the character \'\-\' in place of a file name takes the input list from standard input\.
+.
+.TP
+\fB\-o\fR, \fB\-\-output=<output\-file>\fR
+Write to output srcML file, URI, or source code file\. By default, it writes to standard output\.
+.
+.TP
+\fB\-X\fR,\fB\-\-output\-xml\fR
+Outputs XML in srcML format\. This is the default when the input is source code or files containing source code\.
+.
+.TP
+\fB\-r\fR, \fB\-\-archive\fR
+Creates a srcML archive, which can contain multiple files in the srcML format\. Default with when provided more than one file or a directory as input\.
+.
+.TP
+\fB\-\-in\-order\fR
+Enables strict output ordering\. Useful for comparison when the output is an archive of multiple srcML documents\.
+.
+.TP
+\fB\-t\fR, \fB\-\-text=<text>\fR
+Processes the raw \fItext\fR string as input, respecting the escaped newline charater\. Useful for short text inputs\. Equivalent to \fBecho <text> | srcml\fR with the relevant language specification\.
+.
+.SS "MARKUP OPTIONS"
+Optional line and column attributes are used to indicate the position of an element in the original source code document\. Both the line and column start at 1\. The column position is based on the tab settings with a default tab size of 8\. Other tab sizes can be set using the tabs\.
+.
+.TP
+\fB\-\-position\fR
+Insert line and column attributes into each start element\. These attributes have a default prefix of "pos" in the namespace "http://www\.srcML\.org/srcML/position"\.
+.
+.TP
+\fB\-\-tabs=<tabsize>\fR
+Set the tab size\. Default is 8\. Use of this option automatically turns on the position attributes\.
+.
+.P
+This set of options allows control over how preprocessing regions are handled, i\.e\., whether parsing and markup occur\. In all cases the text is preserved\.
+.
+.TP
+\fB\-\-cpp\fR
+Turns on parsing and markup of preprocessor statements in non\-C/C++ languages such as Java\. Can also be enabled by defining a prefix for this cpp namespace URL, for example, \fB\-\-xmlns:cpp="http://www\.srcML\.org/srcML/cpp"\fR\.
+.
+.TP
+\fB\-\-cpp\-no\-markup\-else\fR
+Only place text in #else and #elif regions, leaving out markup\. The default is to markup these regions\.
+.
+.TP
+\fB\-\-cpp\-markup\-if0\fR
+Place markup in #if 0 regions\. The default is to only place text in these regions, leaving out markup\.
+.
+.SS "XML FORMAT"
+The following options control the format of the XML\.
+.
+.TP
+\fB\-x\fR, \fB\-\-xml\-encoding=<encoding>\fR
+Sets the xml encoding of the output srcML file to encoding\. The default is UTF\-8\. Possible encodings can be obtained by using the command \fBiconv \-l\fR on UNIX platforms\. The attribute is stored only on the root element\.
+.
+.TP
+\fB\-\-no\-xml\-declaration\fR
+No output of the default XML declaration\. Useful when the output is to be placed inside another XML document\.
+.
+.TP
+\fB\-\-no\-namespace\-decl\fR
+No output of namespace declarations\. Useful when the output is to be placed inside another XML document\.
+.
+.P
+The following options can be used to change the prefixes\. Each extensions to the srcML markup has its own namespace\. These are indicated in the srcML document by the declaration of the specific extension namespace\. These flags make it easier to declare, and are an alternative way to turn on options by declaring the URI for an option\.
+.
+.TP
+\fB\-\-xmlns=<uri>\fR
+Sets the URI for the default namespace\.
+.
+.TP
+\fB\-\-xmlns:<prefix>=<uri>\fR
+Sets the namespace prefix PREFIX for the namespace URI\. There is a set of standard URIs for the elements in srcML, each with a predefined prefix\. The predefined URIs and prefixes for them include (given in xmlns notation):
+.
+.IP "\(bu" 4
+cpp=http://www\.srcML\.org/srcML/cpp
+.
+.IP "\(bu" 4
+err=http://www\.srcML\.org/srcML/srcerr
+.
+.IP "\(bu" 4
+pos=http://www\.srcML\.org/srcML/position
+.
+.IP "" 0
+
+.
+.SS "METADATA OPTIONS"
+This set of options allows control over various metadata stored in the srcML document\.
+.
+.TP
+\fB\-f\fR, \fB\-\-filename=<filename>\fR
+The value of the filename attribute is typically obtained from the input filename\. This option allows you to specify a different filename for standard input or where the filename is not contained in the input path\.
+.
+.TP
+\fB\-\-url=<url>\fR
+The url attribute on the root element can be defined\. This is purely descriptive and has no interpretation by \fBsrcml\fR\. It is useful for specifying a directory or defining the source protocol\.
+.
+.TP
+\fB\-s\fR, \fB\-\-src\-version=<version>\fR
+Sets the value of the attribute version to version\. This is a purely\-descriptive attribute, where the value has no interpretation by \fBsrcml\fR\. The attribute is applied to the root element, and in the case of a srcML archive, it is also applied to each unit in the archive\.
+.
+.TP
+\fB\-\-hash\fR
+The value of the hash attribute is a SHA\-1 hash generated based on the contents of the source\-code file\. This is enabled by default when working with srcML archives\.
+.
+.TP
+\fB\-\-timestamp\fR
+Sets the timestamp of the output srcML file to the last modified time of the input source\-code archive\. This is the last modified time based on the archive files\.
+.
+.P
+The following options allow viewing various metadata stored in the srcML document\.
+.
+.TP
+\fB\-p\fR, \fB\-\-prefix=<uri>\fR
+Display a prefix given by a \fIURI\fR and exit\. See [XML FORM][]\.
+.
+.TP
+\fB\-\-show\-filename\fR
+Display the filename and exit\.
+.
+.TP
+\fB\-\-show\-language\fR
+Display language and exit\.
+.
+.TP
+\fB\-\-show\-url\fR
+Display URL of the root element and exit\.
+.
+.TP
+\fB\-\-show\-src\-version\fR
+Display the source\-code version attribute and exit\.
+.
+.TP
+\fB\-\-show\-timestamp\fR
+Display the timestamp attribute and exit\.
+.
+.TP
+\fB\-\-show\-hash\fR
+Display the hash value and exit\.
+.
+.TP
+\fB\-\-show\-encoding\fR
+Display the XML encoding and exit\.
+.
+.TP
+\fB\-\-show\-unit\-count\fR
+Display the unit count and exit\.
+.
+.SS "EXAMPLES"
+.
+.TP
+srcml input\.cpp
+Create a srcML unit from input\.cpp, using C++ parsing rules, and output to standard out\.
+.
+.TP
+echo "int a;" | srcml \-l C++
+Create a srcML unit from standard in, using C++ parsing rules, and output to standard out\.
+.
+.TP
+srcml dir\.xml \-\-show\-unit\-count
+Create a srcML archive from all files contained in the dir directory, using their extensions to determine the markup parsing rules, and output the number of units contained in the archive to standard out\.
+.
+.TP
+srcml input\.java \-\-cpp
+Create a srcML unit from input\.java, using Java parsing rules as well as C++ parsing rules for preprocessor directives\.
+.
+.SH "EXTRACTING SOURCE CODE"
+The following describe options that are only applicable for when the output is desired in source\-code format\.
+.
+.TP
+\fB\-o\fR, \fB\-\-output=<output\-file>\fR
+Write to output srcML file, URI, or source code file\. By default, it writes to standard output\.
+.
+.TP
+\fB\-S\fR, \fB\-\-output\-src\fR
+Outputs text in source code format\. This is the default when the input is in srcML format\.
+.
+.TP
+\fB\-\-to\-dir=<directory>\fR
+Extract all files from srcML and create them in the file system at \fIdirectory\fR\.
+.
+.SS "EXAMPLES"
+.
+.TP
+srcml dir/ \-o dir\.xml
+Create a srcML archive from all files contained in the dir directory, using their extensions to determine the markup parsing rules, and write the resulting srcML archive to dir\.xml\.
+.
+.TP
+srcml archive\.xml \-\-to\-dir=\.
+Re\-create all files based on the srcML units in archive\.xml, using the current directory as the root directory\.
+.
+.SH "TRANSFORMATIONS"
+.
+.TP
+\fB\-\-apply\-root\fR
+Apply an XSLT program or Xpath query to the root element\.
+.
+.TP
+\fB\-\-relaxng=<file|uri>\fR
+Output individual units that match the RELAXNG \fIfile\fR or \fIuri\fR\.
+.
+.TP
+\fB\-\-xpath=<expression>\fR
+Apply Xpath \fIexpression\fR query to each individual unit\.
+.
+.TP
+\fB\-\-xslt=<file|uri>\fR
+Apply a transformation from an XSLT \fIfile\fR or \fIuri\fR to each individual unit\.
+.
+.TP
+\fB\-\-attribute=<arg>\fR
+Add attribute \fIarg\fR to the Xpath query\.
+.
+.TP
+\fB\-\-element=<arg>\fR
+Add element \fIarg\fR to the Xpath query\.
+.
+.TP
+\fB\-U\fR, \fB\-\-unit <n>\fR
+Extract individual \fIn\fRth unit from srcML archive\.
+.
+.SS "EXAMPLES"
+.
+.TP
+srcml a\.cpp \-\-xpath="//src:name" \-\-attribute="cpp:foo=test"
+Convert a\.cpp to srcML and add the attribute cpp:foo=test to all src:name elements as found by the XPath query\. Output the results to standard out\.
+.
+.TP
+srcml archive\.xml \-\-xpath "//src:unit/@filename"
+Execute the XPath query on archive\.xml, outputting the filename attribute of each unit in the archive to standard out\.
+.
+.SH "SIGNAL PROCESSING"
+The following signals may be used to control srcml:
+.
+.TP
+SIGUSR1
+Toggles verbose option\. Useful with multiple input files\.
+.
+.TP
+SIGINT
+Completes current file translation (and output) with multiple input files\. The input file currently being translated is allowed to complete, the complex document is closed, and then the program stops\. More than one SIGINT causes default behavior\.
+.
+.IP
+This special SIGINT handling only occurs with multiple input files in srcML archives\.
+.
+.SH "RETURN STATUS"
+.
+.IP "\(bu" 4
+0: Normal
+.
+.IP "\(bu" 4
+1: Error
+.
+.IP "\(bu" 4
+2: Invalid argument
+.
+.IP "\(bu" 4
+3: Invalid input
+.
+.IP "\(bu" 4
+4: Invalid read I/O operation (such as write on read only archive)
+.
+.IP "\(bu" 4
+5: Error with input
+.
+.IP "\(bu" 4
+6: Uninitialized unit
+.
+.IP "\(bu" 4
+7: Unset language
+.
+.IP "\(bu" 4
+8: There are no transformations
+.
+.IP "" 0
+.
+.SH "CAVEATS"
+Translation is performed based on local information with no symbol table\. For non\-CFG languages, i\.e\., C/C++, and with macros this may lead to incorrect markup\.
+.
+.P
+Line endings are normalized in XML formats including srcML\.
+.
+.SH "BUGS"
+Java language mode does may not contain every Java language element\.
+.
+.P
+Libxml2 directly supports many encodings beyond UTF\-8, UTF\-16, and ISO\-8859\-1 through iconv\. However, the BOM (Byte Order Mark) immediately before the XML declaration may not be processed correctly by \fBsrcml\fR and by other libxml2\-based tools (e\.g\., xmllint)\. Use the LE or BE version of the encoding, e\.g\., UTF\-32BE, UTF\-32LE, instead\.
+.
+.P
+Report bugs at http://www\.srcml\.org/support\.html
+.
+.SH "SEE ALSO"
+\fBsrcml\fR(1)
+.
+.SH "AUTHORS"
+Written by Michael L\. Collard, Michael Decker, Brian Bartman, Drew Guarnera, and Heather Guarnera\.
+.
+.SH "COPYRIGHT"
+Copyright (C) 2013\-2018 srcML, LLC\. (www\.srcML\.org)
+.
+.P
+The srcML Toolkit is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version\.
+.
+.P
+The srcML Toolkit is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\. See the GNU General Public License for more details\.
+.
+.P
+You should have received a copy of the GNU General Public License along with the srcML Toolkit; if not, write to the Free Software Foundation, Inc\., 59 Temple Place, Suite 330, Boston, MA 02111\-1307 USA

@@ -25,7 +25,7 @@ header {
 }
 
 options {
-	language="Cpp";
+    language="Cpp";
     namespaceAntlr="antlr";
     namespaceStd="std";
 }
@@ -35,183 +35,149 @@ class OperatorLexer extends TextLexer;
 options {
     k = 1;
     testLiterals = false;
-    importVocab=TextLexer;
+    importVocab = TextLexer;
 }
 
 tokens {
-EOL_BACKSLASH;
+    EOL_BACKSLASH;
 
-TEMPOPS;
-TEMPOPE;
-EQUAL;
-LPAREN; // = "(";
-DESTOP; // = "~";
-LCURLY; // = "{";
-RCURLY; // = "}";
-LBRACKET; // = "[";
-ATLBRACKET; // = "@[";
-RBRACKET; // = "]";
-COMMA; // = ",";
-RPAREN; // = ")";
-TERMINATE; // = ";";
-PREPROC;
-COLON; // = ":";
-QMARK;
+    TEMPOPS;    // "<";
+    TEMPOPE;    // ">";
+    EQUAL;      // "=";
+    LPAREN;     // "(";
+    DESTOP;     // "~";
+    LCURLY;     // "{";
+    RCURLY;     // "}";
+    LBRACKET;   // "[";
+    ATLBRACKET; // "@[";
+    RBRACKET;   // "]";
+    COMMA;      // ",";
+    RPAREN;     // ")";
+    TERMINATE;  // ";";
+    PREPROC;
+    COLON;      // ":";
+    QMARK;
 
-ASSIGNMENT; // +=, -=, etc.
+    // Java
+    BAR;        // "|"
 
-// Java
-BAR; // |
+    // C++
+    TRETURN;    // ->
+    MPDEREF;
+    DOTDEREF;
 
-// C++
-TRETURN; // ->
-MPDEREF;
-DOTDEREF;
+    // C#
+    LAMBDA;
 
-// C#
-LAMBDA;
+    // define value in master grammar so that it depends on language
+    DCOLON;
 
-// define value in master grammar so that it depends on language
-DCOLON;
+    MEMBERPOINTER;  // ".*";
+    PERIOD;         // ".";
+    MULTOPS;        // "*";
+    REFOPS;         // "&";
+    RVALUEREF;      // "&&";
 
-MEMBERPOINTER; // = ".*";
-PERIOD; // = ".";
-MULTOPS; // = "*";
-REFOPS;  // = "&";
-RVALUEREF; // = "&&";
+    DOTDOT;
+    DOTDOTDOT;
 
-DOTDOT;
-DOTDOTDOT;
+    // Objective-C
+    CSPEC;
+    MSPEC;
 
-// Objective-C
-CSPEC;
-MSPEC;
+    // Apple
+    BLOCKOP;
 
-// Apple
-BLOCKOP;
+    // literals
+    LITERAL_FALSE;
+    LITERAL_TRUE;
 
-// literals
-LITERAL_FALSE;
-LITERAL_TRUE;
+    // Other
+    CUDA;
 
-// Other
-CUDA;
+    ATSIGN;
 
-ATSIGN;
+    ALLOPERATORS;
 
-ALLOPERATORS;
-
-EOL_PLACEHOLD;
+    EOL_PLACEHOLD;
 }
 
-OPERATORS options { testLiterals = true; } { bool star = false; int start = LA(1); bool do_not_apply = false;
-} : 
-        (
-            '#' {
+OPERATORS options { testLiterals = true; } {
+    int start = LA(1);
+} : (
+    '#'
+    {
+        if (startline) {
 
-            if (startline) {
+            $setType(PREPROC); 
 
-                $setType(PREPROC); 
+            // record that we are on a preprocessor line,
+            // primarily so that unterminated strings in
+            // a preprocessor line will end at the right spot
+            onpreprocline = true; 
+            //firstpreprocline = true;
+        }
+    } |
 
-                // record that we are on a preprocessor line,
-                // primarily so that unterminated strings in
-                // a preprocessor line will end at the right spot
-                onpreprocline = true; 
+    '+' ('+' | '=')? |
+    '-' ('-' | '=' | '>' ('*')? )?  |
+    '*' ('=')? |
+    '%' ('=')? |
+    '^' ('=')? |
+    '|' ('|')? ('=')? |
+    '`' |
+    '!' ('=')? |
+    ':' (':')? |
 
-                if(isoption(options, SRCML_OPTION_LINE)) {
-                    int start = mark();
-                    ++inputState->guessing;
-                    if(LA(1) == 'l') {
-                        consume();  
-                        if(LA(1) == 'i') {
-                            consume();
-                            if(LA(1) ==  'n') {
-                                consume();
-                                if(LA(1) ==  'e')
-                                    isline = true;
-                            }
-                        }
-                    }
-                    --inputState->guessing;
-                    rewind(start);
-                }
+    '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>')? |
 
-            }
-        }   |
-/*
-        ({ !stop && !(gt && (LA(1) == '>' || LA(1) == ':' || LA(1) == '&' || LA(1) == '*')) && (dcoloncount < 2) }?
+    // &, &&, &&=, &=
+    '&' ('&')? ('=')? |
 
-         ( '*' { gt = true; } | '|' | ':' { ++dcoloncount; } | '`' | '=' { if (LA(1) != '=') stop = true; } | '!' | '%' | '+' | '^' | '-' |
-           '&' { text.erase(realbegin); text += "&amp;"; realbegin += 4; gt = true; } | 
-           '>' { if (realbegin == _begin) gt = true; text.erase(realbegin); text += "&gt;"; realbegin += 3; } | 
-           '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; }) { ++realbegin; } )+ */ 
+    // >, >>=, >=, not >>
+    '>' (('>' '=') => '>' '=')? ('=')? |
 
-       '+' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '+' && LA(1) != '=') $setType(CSPEC); } ('+' | '=' { $setType(ASSIGNMENT); } )? |
-       '-' { if(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) != '-' && LA(1) != '=') $setType(MSPEC); } 
-           ('-' | '=' { $setType(ASSIGNMENT); } | '>' { star = true; $setText("-&gt;"); $setType(TRETURN);})? ({ star }? '*' { $setText("-&gt;*"); $setType(MPDEREF); })? |
-       '*' ('=' { $setType(ASSIGNMENT); } )? |
-//       '/' ('=')? |
-       '%' ('=' { $setType(ASSIGNMENT); } )? |
-       '^' { if(LA(1) != '=') $setType(BLOCKOP); } ('=' { $setType(ASSIGNMENT); } )? |
-       '|' ('|')? ('=' { $setType(ASSIGNMENT); } )? |
-       '`' |
-       '!' ('=')? |
-       ':' (':')? |
-       '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>' { $setText("=&gt;"); $setType(LAMBDA); } |) |
+    // <, << (C/C++), <=, <<< (CUDA)
+    '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
 
-       '&' { $setText("&amp;"); }
-            (options { greedy = true; } : '&' { $setText("&amp;&amp;"); star = true; } | '=' { $setText("&amp;="); $setType(ASSIGNMENT); } )?
-             ({ star }? '=' { $setText("&amp;&amp;="); } )? | 
-     
-       '>' { $setText("&gt;"); } (('>' '=') => '>' '=' { $setText("&gt;&gt;="); $setType(ASSIGNMENT); do_not_apply = true; })? ({ !do_not_apply }? '=' { $setText("&gt;="); })?  { do_not_apply = false; } |
+    // match these as individual operators only
+    ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
 
-       '<' { $setText("&lt;"); }
-            (options { greedy = true; } : '<' { $setText("&lt;&lt;"); } (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' { $setText("&lt;&lt;&lt;"); $setType(CUDA); })? | '=' { $setText("&lt;="); })?
-            ('=' { $setText("&lt;&lt;="); $setType(ASSIGNMENT); })? |
+    // names can start with a @ in C#
+    '@' (
 
-//       '<' { text.erase(realbegin); text += "&lt;"; realbegin += 3; gt = true; realbegin += 3; } 
-//            ('<' { text.erase(realbegin); text += "&lt;"; realbegin += 4; gt = true; })? ('=')? |
-
-        // match these as individual operators only
-        ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
-
-            // names can start with a @ in C#
-            '@' { $setType(ATSIGN); }
-            ( 
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-              '(' { $setType(LPAREN); }
-            |
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-              '[' { $setType(ATLBRACKET); }
-            |
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-              '{' { $setType(LCURLY); }
-            |
-            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? NAME
-            { $setType(NAME); }
-            |
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }? CONSTANTS
-            { $setType(CONSTANTS); }
-            |
-            { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? 
-              { if(LA(1) == '"') {
-                atstring = true; 
-                $setType(STRING_START);
-                } else {
-                  $setType(CHAR_START);
-                }
-              }
-              STRING_START
-            |
-            )
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+          '(' 
         |
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+          '['
+        |
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+          '{'
+        |
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            NAME { $setType(NAME); }
+        |
+        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            CONSTANTS { $setType(CONSTANTS); }
+        |
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? {
+            $setType(CHAR_START);
+        }
+        CHAR_START |
 
-        '?' { $setType(QMARK); } ('?' { $setType(OPERATORS); })* | // part of ternary
-        '~'  | // has to be separate if part of name
+        { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }? {
+            atstring = true; 
+            $setType(STRING_START);
+        }
+        STRING_START )? |
 
-        '.' ({ !inLanguage(LANGUAGE_JAVA) }? '*' { $setType(DOTDEREF); } | '.' ( '.' { $setType(DOTDOTDOT); } | { $setType(DOTDOT); }) | { $setType(CONSTANTS); } CONSTANTS | ) |
+    '?' ('?')* | // part of ternary
+    '~'  | // has to be separate if part of name
 
-        '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
-        )
-        { startline = false; lastpos = getColumn(); prev = start; }
+    '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS )? |
+
+    '\\' ( EOL { $setType(EOL_BACKSLASH); } )*
+    )
+    { startline = false; lastpos = getColumn(); prev = start; }
 ;

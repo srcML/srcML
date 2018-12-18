@@ -62,9 +62,9 @@ typedef SSIZE_T ssize_t;
 
 /**@{ @name Current Version */
 /** Number representing libsrcml version */
-#define SRCML_VERSION_NUMBER 9005
+#define SRCML_VERSION_NUMBER 1000
 /** String containing libsrcml version */
-#define SRCML_VERSION_STRING "0.9.5"
+#define SRCML_VERSION_STRING "1.0.0"
 /**@}*/
 
 /**@{ @name Status */
@@ -136,12 +136,16 @@ const unsigned int SRCML_OPTION_STORE_ENCODING    = 1<<26;
 /**@}*/
 
 /**
- * @struct srcml_archive Encapsulates multiple srcML units into one srcML archive
+ * @struct srcml_archive
+ *
+ * Encapsulates multiple srcML units into one srcML archive
  */
 struct srcml_archive;
 
 /**
- * @struct srcml_unit The srcML markup of one source-code file
+ * @struct srcml_unit
+ *
+ * The srcML markup of one source-code file
  */
 struct srcml_unit;
 
@@ -441,7 +445,7 @@ LIBSRCML_DECL const char* srcml_get_filename();
 LIBSRCML_DECL const char* srcml_get_url();
 
 /**
- * @return The versiot attribute on success
+ * @return The version attribute on success
  * @return NULL on failure
  */
 LIBSRCML_DECL const char* srcml_get_version();
@@ -588,7 +592,8 @@ LIBSRCML_DECL int srcml_archive_write_unit(struct srcml_archive* archive, struct
 
 /** Append the string to the srcml_archive archive
  * @param archive A srcml_archive opened for writing
- * @param unit A srcml_unit to output
+ * @param s String to write
+ * @param len Length of the string to write
  * @note Can not mix with by element mode.
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure

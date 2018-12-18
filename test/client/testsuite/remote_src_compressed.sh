@@ -11,16 +11,16 @@ define srcml_with_url <<- 'STDOUT'
 	STDOUT
 
 # compression only
-srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp.bz2 --url="test" --filename="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.bz2 --url="test" --filename="test"
 check "$srcml_with_url"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp.gz --url="test" --filename="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.gz --url="test" --filename="test"
 check "$srcml_with_url"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp.bz2.gz --url="test" --filename="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.bz2.gz --url="test" --filename="test"
 check "$srcml_with_url"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/source/a.cpp.gz.bz2 --url="test" --filename="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.gz.bz2 --url="test" --filename="test"
 check "$srcml_with_url"
 
 
@@ -31,14 +31,14 @@ define empty_srcml_with_url <<- 'STDOUT'
 	STDOUT
 
 # compressed
-srcml https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.bz2 --url="test" --filename="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.bz2 --url="test" --filename="test"
 check "$empty_srcml_with_url"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.gz --url="test" --filename="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.gz --url="test" --filename="test"
 check "$empty_srcml_with_url"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.bz2.gz --url="test" --filename="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.bz2.gz --url="test" --filename="test"
 check "$empty_srcml_with_url"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.gz.bz2 --url="test" --filename="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.gz.bz2 --url="test" --filename="test"
 check "$empty_srcml_with_url"

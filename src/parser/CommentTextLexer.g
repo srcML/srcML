@@ -55,8 +55,10 @@ tokens {
 
     // never explicitly given (only set to)
     // so must be declared
+    WHOLE_COMMENT;
     BLOCK_COMMENT_END;
     LINE_COMMENT_END;
+    RAW_STRING_END;
     STRING_END;
     CHAR_END;
     CONTROL_CHAR;
@@ -77,18 +79,16 @@ bool onpreprocline;
 // ignore character escapes
 bool noescape;
 
-bool rawstring;
+std::string delimiter1;
 
 std::string delimiter;
 
-bool isline;
-
-long line_number;
+int dquote_count = 0;
 
 OPTION_TYPE options;
 
 CommentTextLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), rawstring(false), delimiter(""), isline(false), line_number(-1)
+	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), delimiter1("")
 {}
 
 private:
@@ -100,15 +100,12 @@ public:
     }
 
     // reinitialize comment lexer
-    void init(int m, bool onpreproclinestate, bool nescape = false, bool rstring = false, std::string dstring = "", bool is_line = false, long lnumber = -1, OPTION_TYPE op = 0) {
+    void init(int m, bool onpreproclinestate, bool nescape = false, std::string dstring = "", bool /* is_line */ = false, long /* lnumber */ = -1, OPTION_TYPE op = 0) {
 
         onpreprocline = onpreproclinestate;
         mode = m;
         noescape = nescape;
-        rawstring = rstring;
-        delimiter = dstring;
-        isline = is_line;
-        line_number = lnumber;
+        delimiter1 = dstring;
         options = op;
     }
 }
@@ -129,178 +126,130 @@ COMMENT_TEXT {
     // record the previous character
     int prevLA = 0;
     int prevprevLA = 0;
-
-    std::string::size_type realbegin = _begin;
-
 } :
 
-/*
-  Changing the type makes it the last token, and only handle a control character
-  token as the first token
-*/
-        ({ _ttype == COMMENT_TEXT &&
+    /*
+      Changing the type makes it the last token, and only handle a control character
+      token as the first token
+    */
+    ({ _ttype == COMMENT_TEXT &&
 
-            // only allow control characters the first (and only) time through
-            (LA(1) > '\037' || LA(1) == '\011' || LA(1) == '\012' || first) }? {
+        // only allow control characters the first (and only) time through
+        (LA(1) > '\037' || LA(1) == '\011' || LA(1) == '\012' || first) }? {
 
-            prevLA = prevprevLA;
-            prevprevLA = LA(1);
-         }
-         (
-        '\000'..'\010'
-                // will only occur the first time this rule matches, and then will exit
-                { $setType(CONTROL_CHAR); } |
+        prevLA = prevprevLA;
+        prevprevLA = LA(1);
+     }
+     (
+    '\000'..'\010'
+        // will only occur the first time this rule matches, and then will exit
+        { $setType(CONTROL_CHAR); } |
 
-        '\011' /* '\t' */ |
+    '\011' /* '\t' */ |
 
-        { 
-            /*
-            if(rawstring && first && LA(1) == '\012') {
+    '\012' /* '\n' */ { 
 
-                rawstring = false;
-                $setType(mode);
-                selector->pop();
-                goto newline_break;
-            } 
-            */
+        // make sure to count newlines even when inside of comments
+        newline();
+        if (isoption(options, SRCML_OPTION_LINE))
+          setLine(getLine() + (1 << 16));
+
+        // end at EOL when for line comment, or the end of a string or char on a preprocessor line
+        if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+          $setType(mode);
+          selector->pop();
         }
-        '\012' /* '\n' */ { 
+    } |
 
-              // make sure to count newlines even when inside of comments
-              newline();
-              if(isoption(options, SRCML_OPTION_LINE))
-                  setLine(getLine() + (1 << 16));
+    //        '\015' /* '\r' - misc character since converted to '\n' in input buffer */ |
 
-              // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-              if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || ((mode == STRING_END || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+    '\013'..'\037'
+        // will only occur the first time this rule matches, and then will exit
+        { $setType(CONTROL_CHAR); } |
 
-                  rawstring = false;
-                  $setType(mode); selector->pop();
-              }
-        } |
+    '\040'..'\041' |
 
-//        '\015' /* '\r' - misc character since converted to '\n' in input buffer */ |
+    '\042' /* '\"' */
+        { dquote_count = 1; }
+        (options { greedy = true; } : '\042' { ++dquote_count; })*
+    {
+        if ((noescape && (dquote_count % 2 == 1)) ||
+            (!noescape && (prevLA != '\\') && (mode == STRING_END))) {
+            $setType(mode);
+            selector->pop();
+        }
+    } |
 
-        '\013'..'\037'
-                // will only occur the first time this rule matches, and then will exit
-                { $setType(CONTROL_CHAR); } |
+    '\043'..'\045' | 
 
-        '\040'..'\041' |
+    '&' |
 
-        '\042' /* '\"' */
-                {
-                    if (noescape) {
+    '\047' /* '\'' */ {
+        if (prevLA != '\\' && mode == CHAR_END) {
+            $setType(mode);
+            selector->pop();
+        }
+    } |
 
-                            int count = 1;
-                            while (LA(1) == '\042') {
-                                match("\"");
-                                ++count;
-                            }
+    '\050' |
 
-                            if (count % 2 == 1) {
-                                $setType(mode); selector->pop();
-                            }
-
-                    } else if ((prevLA != '\\') && mode == STRING_END && !rawstring) {
-                        $setType(mode); selector->pop();
-                    } 
-                } |
-
-        '\043'..'\045' | 
-
-        '&'
-//                { $setText("&amp;"); } |
-                { text.erase(realbegin); text += "&amp;"; realbegin += 4; } | 
-
-        '\047' /* '\'' */
-                { if (prevLA != '\\' && mode == CHAR_END) { $setType(mode); selector->pop(); } } |
-
-        '\050' |
-
-        '\051' /* ')' */ { if(rawstring) {
-
-                // compare the stored delimiter to what is here, stopping at the end 
-                // of a line (delimiter cannot span lines)
-                std::string::size_type pos = 0;
-                while(pos < delimiter.size() && LA(1) == delimiter[pos] && LA(1) != '\n') {
-                    ++pos;
-                    consume();
-                }
-
-                if(pos == delimiter.size() && LA(1) != '\n') {
-                    rawstring = false;
-                }
-
-            }
-        } |
-
-        '\052'..'\056' |
-
-        '\057' /* '/' */
-                { if (prevLA == '*' && ((mode == BLOCK_COMMENT_END) || (mode == JAVADOC_COMMENT_END) || (mode == DOXYGEN_COMMENT_END) ) ) { $setType(mode); selector->pop(); } } |
-
-        '\060'..';' | 
-
-        '<'
-//                { $setText("&lt;"); } |
-                { text.erase(realbegin); text += "&lt;"; realbegin += 3; } |
-        '=' | 
-
-        '>'
-//                { $setText("&gt;"); } |
-                { text.erase(realbegin); text += "&gt;"; realbegin += 3; } |
-
-        '?'..'[' |
-
-        '\\'    // wipe out previous escape character
-                { if (prevLA == '\\') prevprevLA = 0; } 
-
-                {
-                    if ((mode == STRING_END || mode == CHAR_END) && onpreprocline) {
-
-                        // skip over whitespace after line continuation character
-                        while (LA(1) == ' ') {
-                            consume();
-                            prevLA = 0;
-                            prevprevLA = 0;
-                        }
-
-                        // treat newline as part of string
-                        if (LA(1) == '\n') {
-
-                            consume();
-                            newline();
-                            if(isoption(options, SRCML_OPTION_LINE))
-                                setLine(getLine() + (1 << 16));
-                            prevLA = 0;
-                            prevprevLA = 0;
-                        }
-                    }
-                }
-
-            |
-
-        ']'..'\377'
-        )
+    '\051' /* ')' */
+        // collect the rstring delimiter
+        ({ mode == RAW_STRING_END }? RSTRING_DELIMITER)?
         {
-/*         newline_break: */
-
-            ++realbegin;
-
-            // not the first character anymore
-            first = false;
-
-            // about to read a newline, or the end of the files.  Line comments need to end before the newline is consumed.
-            // strings and characters on a preprocessor line also need to end, even if unterminated
-            if (_ttype == COMMENT_TEXT && ((LA(1) == '\n' && !rawstring) || LA(1) == EOF_CHAR) &&
-                (((mode == STRING_END || mode == CHAR_END) && (onpreprocline || rawstring))
-                 || (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END))) {
-                rawstring = false;
-                $setType(mode);
-                selector->pop();
+            // for R-strings (C++) compare the at the end to the one from the start
+            // after the delimiter, there must be a quote to end the string
+            if (mode == RAW_STRING_END && delimiter == delimiter1 && LA(1) == '"') {
+                mode = STRING_END;
             }
+        } |
 
-        _saveIndex = _saveIndex + 0;
+    '\052'..'\056' |
 
-       } )+
+    '\057' /* '/' */
+        { if (prevLA == '*' && ((mode == BLOCK_COMMENT_END) ||
+                                (mode == JAVADOC_COMMENT_END) ||
+                                (mode == DOXYGEN_COMMENT_END) ) )
+            { $setType(mode); selector->pop(); }
+        } |
+
+    '\060'..';' | 
+
+    '<' |
+    '=' | 
+    '>' |
+    '?'..'[' |
+
+    '\\' { 
+        // wipe out previous escape character
+        if (prevLA == '\\') {
+            prevprevLA = 0;
+        }
+    } |
+
+    ']'..'\377') {
+
+        // not the first character anymore
+        first = false;
+
+        /* 
+            About to read a newline, or the EOF.  Line comments need
+            to end before the newline is consumed. Strings and characters on a preprocessor line also need to end, even if unterminated
+        */
+        if (_ttype == COMMENT_TEXT &&
+            ((LA(1) == '\n' && mode != RAW_STRING_END) || LA(1) == EOF_CHAR) &&
+            ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline || mode == RAW_STRING_END))
+             || mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END)) {
+
+            $setType(mode);
+            selector->pop();
+        }
+   } )+
+;
+
+protected
+RSTRING_DELIMITER:
+    { delimiter = ""; }
+    (options { greedy = true; } : { delimiter.size() < delimiter1.size() }? { delimiter += LA(1); } 
+        ~('(' | ')' | '\\' | '\n' | ' ' | '\t' ))*
 ;

@@ -69,6 +69,6 @@ TraceLog::~TraceLog() {
 
     int total = count + num_skipped + num_error;
 
-    std::clog << "\nsrcML Files: " << count << "\tnon-srcML Files: " << num_skipped << "\tErrors: " << num_error << "\tTotal Files: " << total << "\n";
+    std::clog << "\nSource Files: " << count << "\tOther Files: " << num_skipped << "\tErrors: " << num_error << "\tTotal Files: " << total << "\n";
 }
 

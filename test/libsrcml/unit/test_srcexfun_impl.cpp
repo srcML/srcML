@@ -36,6 +36,7 @@
 #include <vector>
 #include <fstream>
 
+#if 0
 
 typedef boost::shared_ptr<xmlDoc> xml_doc_shared_ptr_t; 
 
@@ -167,7 +168,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
 
     // Applying the transformation and transferring the results
     // to the XPath archive.
-    rc = srcml_apply_transforms(processedArchive, xpathResultArchive);
+//    rc = srcml_apply_transforms(processedArchive, xpathResultArchive);
     if(rc != SRCML_STATUS_OK) {
         cout << rc << endl;
         cout << "Last Error string: " << srcml_error_string() << endl;
@@ -295,7 +296,11 @@ int summaryAndResultsDisplay() {
     return 0;
 }
 
+#endif
+
 int main(int, char* argv[]) {
+
+#if 0
     cout << "---------------------------------------------------" << endl;
     cout << "                   Running XPath Tests" << endl;
     cout << "---------------------------------------------------" << endl;
@@ -2004,5 +2009,7 @@ int main(int, char* argv[]) {
     xmlCleanupParser();
     // Checking for and displaying failed tests.
     return summaryAndResultsDisplay();
+
+#endif
 }
 

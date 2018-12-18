@@ -19,9 +19,10 @@
 
 option(GENERATE_DOCUMENTATION "Enables the generation of documentation during the build and installation process." off)
 if(${GENERATE_DOCUMENTATION})
+
     find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ${WINDOWS_DEP_PATH}/bin)
     find_package(Doxygen REQUIRED)
-    configure_file("${CMAKE_SOURCE_DIR}/doc/config" "${CMAKE_BINARY_DIR}/config")
+    configure_file("${CMAKE_SOURCE_DIR}/doc/doxygen/config" "${CMAKE_BINARY_DIR}/config")
     SET(DOXYGEN_INPUT "${CMAKE_BINARY_DIR}/config")
     SET(DOXYGEN_OUTPUT_DIR "${CMAKE_BINARY_DIR}")
     ADD_CUSTOM_COMMAND(
@@ -132,7 +133,7 @@ if(${GENERATE_DOCUMENTATION})
     set(PRETTY_FLAG_LONG "pretty")
 
     # Custom commands for creating things using the ronn executable.
-    configure_file(${CMAKE_SOURCE_DIR}/doc/srcml_input.cfg ${CMAKE_BINARY_DIR}/srcml.md)
+    configure_file(${CMAKE_SOURCE_DIR}/doc/manpage/srcml_input.cfg ${CMAKE_BINARY_DIR}/srcml.md)
     add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml ${CMAKE_BINARY_DIR}/srcml.html 
         COMMAND ${RONN_EXE} ${CMAKE_BINARY_DIR}/srcml.md --manual=srcml
         DEPENDS ${CMAKE_BINARY_DIR}/srcml.md

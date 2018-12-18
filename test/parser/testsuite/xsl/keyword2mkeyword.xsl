@@ -45,7 +45,7 @@
 </xsl:template>
 
 <!-- trap the current language attribute -->
-<xsl:template match="/src:unit/@language">
+<xsl:template match="src:unit/@language">
     <xsl:attribute name="language">Objective-C</xsl:attribute>
 </xsl:template>
 

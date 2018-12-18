@@ -27,12 +27,11 @@
 
 <!-- trap the current language attribute -->
 
-<xsl:template match="/src:unit">
-  <xsl:copy><xsl:copy-of select="@*"/>
-    <xsl:copy-of select="@*"/>
-
-    <xsl:apply-templates select="node()"/>
-  </xsl:copy>
+<xsl:template match="/src:unit/src:unit">
+    <xsl:element name="{name()}" namespace="{namespace-uri()}">
+      <xsl:copy-of select="@*"/>
+      <xsl:apply-templates/>
+    </xsl:element>
 </xsl:template>
 
 <!-- default identity copy -->

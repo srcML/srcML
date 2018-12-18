@@ -45,34 +45,18 @@ header {
 
 header "post_include_cpp" {
 
-void KeywordLexer::changetotextlexer(int typeend) {
+void KeywordLexer::changetotextlexer(int typeend, const std::string delim) {
+
     selector->push("text"); 
-    ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, rawstring, delimiter, isline, line_number, options);
-}
-
-int KeywordLexer::next_char() {
-
-    ++inputState->guessing;
-    int start = mark();
-
-    consume();
-
-    int token = LA(1);
-
-    rewind(start);
-
-    --inputState->guessing;
-
-    return token;
-
+    ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, delim, isline, line_number, options);
 }
 
 }
 
 options {
-	language="Cpp";
-    namespaceAntlr="antlr";
-    namespaceStd="std";
+	language = "Cpp";
+    namespaceAntlr = "antlr";
+    namespaceStd = "std";
 }
 
 class KeywordLexer extends OperatorLexer;
@@ -83,8 +67,8 @@ options {
     testLiterals = false;
     noConstructors = true;
     defaultErrorHandler = false;
-    importVocab=OperatorLexer;
-//    codeGenBitsetTestThreshold=20; 
+    importVocab = OperatorLexer;
+//    codeGenBitsetTestThreshold = 20; 
 }
 
 tokens {
@@ -179,22 +163,6 @@ tokens {
     MACRO_CASE;
     MACRO_LABEL;
     MACRO_SPECIFIER;
-
-    // specifiers that are not needed for parsing
-    /*
-    REGISTER = "register";
-    MUTABLE = "mutable";
-    VOLATILE = "volatile";
-
-    // Standard type keywords do not need to be identified
-	BOOL = "bool";
-	CHAR = "char";
-    INT = "int";
-    SHORT = "short";
-    LONG = "long";
-    DOUBLE = "double";
-    FLOAT = "float";
-    */
 
     // exception handling
 	TRY;
@@ -325,36 +293,34 @@ tokens {
     // OpenMp
     OMP_OMP;
 
+    ASSIGNMENT; // +=, -=, etc.
 }
 
 {
 public:
-
-OPTION_TYPE & options;
-bool onpreprocline;
-bool startline;
-bool atstring;
-bool rawstring;
-std::string delimiter;
-bool isline;
-long line_number;
-int lastpos;
-int prev;
-int currentmode;
+    OPTION_TYPE & options;
+    bool onpreprocline;
+    bool startline;
+    bool atstring;
+    bool rawstring;
+    std::string delimiter;
+    bool isline;
+    long line_number;
+    int lastpos;
+    int prev;
+    int currentmode;
 
 // map from text of literal to token number, adjusted to language
 struct keyword { char const * const text; int token; int language; };
 
-void changetotextlexer(int typeend);
-
-int next_char();
+void changetotextlexer(int typeend, const std::string delimiter = "");
 
 KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
              std::vector<std::string> user_macro_list)
     : antlr::CharScanner(pinput,true), Language(language), options(options), onpreprocline(false), startline(true),
     atstring(false), rawstring(false), delimiter(""), isline(false), line_number(-1), lastpos(0), prev(0)
 {
-    if(isoption(options, SRCML_OPTION_LINE))
+    if (isoption(options, SRCML_OPTION_LINE))
        setLine(getLine() + (1 << 16));
     setTokenObjectFactory(srcMLToken::factory);
 
@@ -409,13 +375,47 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 	    { "{"            , LCURLY        , LANGUAGE_ALL }, 
 	    { "["            , LBRACKET      , LANGUAGE_ALL }, 
 
-	    { "&lt;"         , TEMPOPS       , LANGUAGE_ALL }, 
-	    { "&gt;"         , TEMPOPE       , LANGUAGE_ALL },
-	    { "&amp;"        , REFOPS        , LANGUAGE_ALL }, 
+	    { "<"            , TEMPOPS       , LANGUAGE_ALL }, 
+	    { ">"            , TEMPOPE       , LANGUAGE_ALL },
+	    { "&"            , REFOPS        , LANGUAGE_ALL }, 
 	    { "="            , EQUAL         , LANGUAGE_ALL }, 
 
         { "."            , PERIOD        , LANGUAGE_ALL }, 
         { "*"            , MULTOPS       , LANGUAGE_ALL }, 
+        { "*="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "%="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "/="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "/"            , OPERATORS     , LANGUAGE_ALL }, 
+        { "^"            , BLOCKOP       , LANGUAGE_ALL }, 
+        { "^="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "|="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "||="          , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "+="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "-="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "->"           , TRETURN       , LANGUAGE_ALL }, 
+        { "->*"          , MPDEREF       , LANGUAGE_ALL }, 
+        { "?"            , QMARK         , LANGUAGE_ALL }, 
+        { ".."           , DOTDOT        , LANGUAGE_ALL }, 
+        { "..."          , DOTDOTDOT     , LANGUAGE_ALL }, 
+        { "&="           , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "&&="          , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { ">>="          , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { "<<="          , ASSIGNMENT    , LANGUAGE_ALL }, 
+        { ".*"           , DOTDEREF      , LANGUAGE_C_FAMILY }, 
+        { "-"            , MSPEC         , LANGUAGE_JAVA }, 
+        { "+"            , CSPEC         , LANGUAGE_JAVA }, 
+        { "<<<"          , CUDA          , LANGUAGE_C | LANGUAGE_CXX }, 
+        { "=>"           , LAMBDA        , LANGUAGE_CSHARP }, 
+        { "@"            , ATSIGN        , LANGUAGE_ALL }, 
+        { "u\""          , STRING_START  , LANGUAGE_ALL }, 
+        { "u8\""         , STRING_START  , LANGUAGE_ALL }, 
+        { "U\""          , STRING_START  , LANGUAGE_ALL }, 
+        { "L\""          , STRING_START  , LANGUAGE_ALL }, 
+        { "R\""          , STRING_START  , LANGUAGE_CXX }, 
+        { "LR\""         , STRING_START  , LANGUAGE_CXX }, 
+        { "uR\""         , STRING_START  , LANGUAGE_CXX }, 
+        { "UR\""         , STRING_START  , LANGUAGE_CXX }, 
+        { "u8R\""        , STRING_START  , LANGUAGE_CXX }, 
 
         // C and C++ specific keywords
         { "main"         , MAIN           , LANGUAGE_C_FAMILY }, 
@@ -502,7 +502,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         
         // special C++ operators
         { "::"           , DCOLON        , LANGUAGE_CXX_FAMILY }, 
-        { "&amp;&amp;"   , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
+        { "&&"           , RVALUEREF     , LANGUAGE_CXX_FAMILY }, 
 
         // special C++ constant values
         { "false"        , LITERAL_FALSE         , LANGUAGE_OO }, 
@@ -650,6 +650,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "@compatibility_alias" , COMPATIBILITY_ALIAS , LANGUAGE_OBJECTIVE_C },
         { "@class"               , ATCLASS             , LANGUAGE_OBJECTIVE_C },
         { "nil"                  , NIL                 , LANGUAGE_OBJECTIVE_C },
+        { "@("                   , LPAREN              , LANGUAGE_OBJECTIVE_C },
+        { "@["                   , ATLBRACKET          , LANGUAGE_OBJECTIVE_C },
+        { "@{"                   , LCURLY              , LANGUAGE_OBJECTIVE_C },
 
         // Apple
         { "__block"         , BLOCK            , LANGUAGE_CXX | LANGUAGE_C | LANGUAGE_OBJECTIVE_C },
@@ -672,18 +675,17 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
     for (unsigned int i = 0; i < (sizeof(keyword_map) / sizeof(keyword_map[0])); ++i)
         if (inLanguage(keyword_map[i].language))
             literals[keyword_map[i].text] = keyword_map[i].token;
-
 }
 
 private:
     antlr::TokenStreamSelector* selector;
 public:
     void setSelector(antlr::TokenStreamSelector* selector_) {
-        selector=selector_;
+        selector = selector_;
     }
 }
 
 protected
 SPECIAL_CHARS :
-        '\3'..'\377'
+    '\3'..'\377'
 ;

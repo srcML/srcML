@@ -115,7 +115,8 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
  */
 xsltTransformation::~xsltTransformation() {
 
-    xsltFreeStylesheet(stylesheet);
+    // @todo Memory leak. Crashes when more than one transformation
+//    xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
 
 #ifdef DLLOAD

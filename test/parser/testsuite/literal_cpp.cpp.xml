@@ -57,6 +57,18 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<expr_stmt><expr><literal type="string">u8R"&lt;&lt;&lt;(I'm a "raw UTF-8" string.)&lt;&lt;&lt;"</literal></expr>;</expr_stmt> 
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<expr_stmt><expr><literal type="string">u8R"&lt;&lt;&lt;(I'm a "raw UTF-8" string.)&lt;&lt;&lt;"</literal></expr>;</expr_stmt> 
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<expr_stmt><expr><literal type="string">u8R"a&lt;b(I'm a "raw UTF-8" string.)a&lt;b"</literal></expr>;</expr_stmt> 
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><literal type="string">u8R"XXX(I'm a "raw UTF-8
 " string.)XXX"</literal></expr>;</expr_stmt> 
 </unit>

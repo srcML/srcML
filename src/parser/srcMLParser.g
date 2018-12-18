@@ -7355,7 +7355,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         (
             OPERATORS | ASSIGNMENT | TEMPOPS |
             TEMPOPE (options { greedy = true;  } : ({ SkipBufferSize() == 0 }? TEMPOPE) ({ SkipBufferSize() == 0 }? TEMPOPE)?
-             | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == "&gt;&gt;=" }? ASSIGNMENT))? |
+             | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == ">>=" }? ASSIGNMENT))? |
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
@@ -7804,7 +7804,7 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
             if (markup)
                 startElement(SSTRING);
         }
-        (STRING_START STRING_END)
+        (STRING_START (STRING_END | RAW_STRING_END))
 ;
 
 // Only start and end of character are put directly through the parser.
@@ -8760,7 +8760,10 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG} :
                 startElement(STYPE);
 
             // statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL);
+            auto mode = MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL;
+            if (inLanguage(LANGUAGE_CSHARP))
+            	mode |= MODE_END_AT_BLOCK_NO_TERMINATE;
+            startNewMode(mode);
 
             // start the enum definition
             if (inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {

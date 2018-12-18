@@ -312,7 +312,11 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // convert input sources to srcml
     int status = 0;
+    bool always_archive = false;    
     for (const auto& input : input_sources) {
+
+        if (input.protocol == "filelist")
+            always_archive = true;
 
         int numhandled = srcml_handler_dispatch(parse_queue, srcml_arch, srcml_request, input, destination);
         if (!numhandled)
@@ -330,7 +334,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (SRCMLStatus::errors())
         status = -1;
 
-    if (status != -1) {
+    if (status != -1 || always_archive) {
         srcml_archive_close(srcml_arch);
     }
     srcml_archive_free(srcml_arch);

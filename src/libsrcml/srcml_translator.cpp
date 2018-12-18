@@ -211,17 +211,19 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     // if the unit has namespaces, then use those
     Namespaces mergedns = unit->archive->namespaces;
-    if (!(options & SRCML_OPTION_ARCHIVE) && unit->namespaces) {
+
+    if (unit->namespaces) {
         mergedns += *unit->namespaces;
     }
 
     std::string language = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
 
     // @todo have to set this up here, not sure why
-    if (language == "C" || language == "C++" || language == "C#" || language == "Objective-C")
-        options |= SRCML_OPTION_CPP;
-    else
-        options &= ~SRCML_OPTION_CPP;
+    if (language == "C" || language == "C++" || language == "C#" || language == "Objective-C") {
+        options |= SRCML_OPTION_CPP_DECLARED;
+    } else {
+        options &= ~SRCML_OPTION_CPP_DECLARED;
+    }
 
     // create a new unit start tag with all new info (hash value, namespaces actually used, etc.)
     out.initNamespaces(mergedns);
@@ -326,7 +328,7 @@ bool srcml_translator::add_end_unit() {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* uri) {
+bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* /* uri */) {
 
     if (!is_outputting_unit || name == 0)
         return false;

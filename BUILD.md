@@ -207,19 +207,18 @@ to download and install the lastest version of cmake.
 
 ## Windows Using MSVC
 
-Building in Windows requires that you have MSVC installed. Visual Studio 2015 or newer is known to work, while older versions have not been tested.
+Building in Windows requires that you have MSVC installed. Visual Studio 2017 or newer is known to work, while older versions have not been tested. This build only supports 64-bit binaries.
 
 ## Packages
 
 * [Python 2.7.XX](https://www.python.org/downloads/)
 * [Java JRE/JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [CMake](http://www.cmake.org)
-* [Visual Studio 2015 or later](https://www.visualstudio.com/downloads/)
-* Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-VS2017.zip)
-* Zipped [Visual Studio 2015 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-VS2015.zip)
+* [Visual Studio 2017 or later](https://www.visualstudio.com/downloads/)
+* Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-06_20_18-VS2017.zip)
 
 ##### Instructions
-* Install Visual Studio 2015 or newer, CMake, and Python 2.7.XX
+* Install Visual Studio 2017 or newer, CMake, and Python 2.7.XX
 * Locate the source code for srcML
 * Extract the zipped build dependencies
     * The extracted folder will be named deps, and its structure will look like the following:
@@ -228,7 +227,6 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2015 or
             include/
             tools/
             x64/
-            x86/
     ```        
     * When copied into the srcML source code directory the result should look like the following:
     ```
@@ -243,7 +241,6 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2015 or
                     include/
                     tools/
                     x64/
-                    x86/
                 doc/
                 ...etc...
     ```
@@ -253,7 +250,7 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2015 or
 * Graphical Interface Build:
     * Open the CMake GUI program.
     * Browser for the srcML source code directory and your target build directory
-    * Hit configure and select the appropriate Visual Studio version and architecture (x86 or x64) as the target system.
+    * Hit configure and select the appropriate Visual Studio version and x64 architecture as the target system.
     * Click Generate
     * Open srcML.sln with Visual Studio located in your the target build directory
     * Right click Project "ALL_BUILD" and choose "build"

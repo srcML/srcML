@@ -12,46 +12,46 @@ define empty_srcml_archive <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-createfile "list-empty-cpio-bz2.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.cpio.bz2"
+createfile "list-empty-cpio-bz2.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.cpio.bz2"
 srcml --files-from list-empty-cpio-bz2.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-cpio-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.cpio.gz"
+createfile "list-empty-cpio-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.cpio.gz"
 srcml --files-from list-empty-cpio-gz.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-tar-bz2.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.tar.bz2"
+createfile "list-empty-tar-bz2.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.tar.bz2"
 srcml --files-from list-empty-tar-bz2.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-tar-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.tar.gz"
+createfile "list-empty-tar-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.tar.gz"
 srcml --files-from list-empty-tar-gz.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-tbz2.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.tbz2"
+createfile "list-empty-tbz2.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.tbz2"
 srcml --files-from list-empty-tbz2.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-tgz.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.tgz"
+createfile "list-empty-tgz.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.tgz"
 srcml --files-from list-empty-tgz.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-zip-bz2.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.zip.bz2"
+createfile "list-empty-zip-bz2.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.zip.bz2"
 srcml --files-from list-empty-zip-bz2.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-zip-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.zip.gz"
+createfile "list-empty-zip-gz.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.zip.gz"
 srcml --files-from list-empty-zip-gz.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-zip.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.zip"
+createfile "list-empty-zip.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.zip"
 srcml --files-from list-empty-zip.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-cpio.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.cpio"
+createfile "list-empty-cpio.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.cpio"
 srcml --files-from list-empty-cpio.txt --url="test"
 check "$empty_srcml_archive"
 
-createfile "list-empty-tar.txt" "https://raw.githubusercontent.com/srcML/test-data/master/empty/empty.cpp.tar"
+createfile "list-empty-tar.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.tar"
 srcml --files-from list-empty-tar.txt --url="test"
 check "$empty_srcml_archive"

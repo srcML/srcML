@@ -43,9 +43,12 @@ int src_input_filesystem(ParseQueue& queue,
 
     // start at the root of the tree
     auto darchive = archive_read_disk_new();
+#if ARCHIVE_VERSION_NUMBER >= 3002003
     archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_ACL | ARCHIVE_READDISK_NO_XATTR | ARCHIVE_READDISK_NO_FFLAGS);
+#elif ARCHIVE_VERSION_NUMBER >= 3002000
+    archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_XATTR);
+#endif
     archive_read_disk_open(darchive, input.c_str());
-
     archive_entry* entry = nullptr;
     bool first = true;
     int status = ARCHIVE_OK;
@@ -57,7 +60,7 @@ int src_input_filesystem(ParseQueue& queue,
             continue;
         }
 
-        if (archive_entry_filetype(entry) == AE_IFLNK)
+        if (archive_entry_filetype(entry) != AE_IFREG)
             continue;
 
         files.push_back(archive_entry_pathname(entry));

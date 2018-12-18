@@ -17,32 +17,32 @@ xmlcheck "$input"
 createfile sub/a.xml "$input"
 
 # from a file
-srcml -U 1 -X -p "http://www.srcML.org/srcML/cpp" sub/a.xml
+srcml -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" sub/a.xml
 check "cpp"
 
-srcml sub/a.xml -U 1 -X -p "http://www.srcML.org/srcML/cpp"
+srcml sub/a.xml -U 1 -X --prefix "http://www.srcML.org/srcML/cpp"
 check "cpp"
 
-srcml -p "http://www.srcML.org/srcML/src" sub/a.xml
+srcml --prefix "http://www.srcML.org/srcML/src" sub/a.xml
 check ""
 
-srcml sub/a.xml -p "http://www.srcML.org/srcML/src"
+srcml sub/a.xml --prefix "http://www.srcML.org/srcML/src"
 check ""
 
-srcml -p "foo.com" sub/a.xml
+srcml --prefix "foo.com" sub/a.xml
 check "foo"
 
-srcml sub/a.xml -p "foo.com"
+srcml sub/a.xml --prefix "foo.com"
 check "foo"
 
-srcml -p "nonexistent.com" sub/a.xml
+srcml --prefix "nonexistent.com" sub/a.xml
 check
 
-srcml sub/a.xml -p "nonexistent.com"
+srcml sub/a.xml --prefix "nonexistent.com"
 check
 
 # standard in
-srcml -U 1 -X -p "http://www.srcML.org/srcML/cpp" <<< "$input"
+srcml -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
 srcml -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
@@ -51,7 +51,7 @@ check "cpp"
 srcml -U 1 -X --prefix="http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
 
-srcml -p "http://www.srcML.org/srcML/src" <<< "$input"
+srcml --prefix "http://www.srcML.org/srcML/src" <<< "$input"
 check ""
 
 srcml --prefix "http://www.srcML.org/srcML/src" <<< "$input"
@@ -75,42 +75,36 @@ define archive_multi <<- 'INPUT'
 
 createfile sub/archive_multi.xml "$archive_multi"
 
-srcml -U 1 -X -p "http://www.srcML.org/srcML/cpp" sub/archive_multi.xml
+srcml -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" sub/archive_multi.xml
 check "cpp"
 
-srcml sub/archive_multi.xml -U 1 -X -p "http://www.srcML.org/srcML/cpp"
+srcml sub/archive_multi.xml -U 1 -X --prefix "http://www.srcML.org/srcML/cpp"
 check "cpp"
 
-srcml -p "http://www.srcML.org/srcML/src" sub/archive_multi.xml
+srcml --prefix "http://www.srcML.org/srcML/src" sub/archive_multi.xml
 check ""
 
-srcml sub/archive_multi.xml -p "http://www.srcML.org/srcML/src"
+srcml sub/archive_multi.xml --prefix "http://www.srcML.org/srcML/src"
 check ""
 
-srcml -p "foo.com" sub/archive_multi.xml
+srcml --prefix "foo.com" sub/archive_multi.xml
 check "foo"
 
-srcml sub/archive_multi.xml -p "foo.com"
+srcml sub/archive_multi.xml --prefix "foo.com"
 check "foo"
 
-srcml -p "nonexistent.com" sub/archive_multi.xml
+srcml --prefix "nonexistent.com" sub/archive_multi.xml
 check
 
-srcml sub/archive_multi.xml -p "nonexistent.com"
+srcml sub/archive_multi.xml --prefix "nonexistent.com"
 check
 
 # standard in
-srcml -U 1 -X  -p "http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
-check "cpp"
-
 srcml -U 1 -X --prefix "http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
 check "cpp"
 
 srcml -U 1 -X --prefix="http://www.srcML.org/srcML/cpp" <<< "$archive_multi"
 check "cpp"
-
-srcml -p "http://www.srcML.org/srcML/src" <<< "$archive_multi"
-check ""
 
 srcml --prefix "http://www.srcML.org/srcML/src" <<< "$archive_multi"
 check ""

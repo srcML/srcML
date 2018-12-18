@@ -18,11 +18,23 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<enum><specifier>public</specifier> enum <block>{}</block></enum>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <enum>enum <name>Days</name>
     <super_list>:<super><name>ushort</name></super></super_list>
 <block>{
     <decl><name>Sat</name><init>=<expr><literal type="number">1</literal></expr></init></decl>, <decl><name>Sun</name></decl>, <decl><name>Mon</name></decl>, <decl><name>Tue</name></decl>, <decl><name>Wed</name></decl>, <decl><name>Thu</name></decl>, <decl><name>Fri</name></decl>
 }</block>;</enum>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<enum>enum <name>Days</name>
+    <super_list>:<super><name>ushort</name></super></super_list>
+<block>{
+    <decl><name>Sat</name><init>=<expr><literal type="number">1</literal></expr></init></decl>, <decl><name>Sun</name></decl>, <decl><name>Mon</name></decl>, <decl><name>Tue</name></decl>, <decl><name>Wed</name></decl>, <decl><name>Thu</name></decl>, <decl><name>Fri</name></decl>
+}</block></enum>
 </unit>
 
 </unit>

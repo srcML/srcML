@@ -55,9 +55,9 @@ set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <bugs@srcML.org>")
  
 # package version
-set(CPACK_PACKAGE_VERSION_MAJOR "0")
-set(CPACK_PACKAGE_VERSION_MINOR "9")
-set(CPACK_PACKAGE_VERSION_PATCH "5")
+set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
 
 # license
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING.txt)
@@ -88,10 +88,19 @@ endif()
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
 # include other specific configurations
-include(debian)
-include(rpm)
-include(packageMaker)
-include(nsis)
+MESSAGE(STATUS "Load Package Config for: ${OS_NAME}")
+
+if (OS_NAME STREQUAL "Ubuntu" OR OS_NAME STREQUAL "Linux Mint")
+	include(debian)
+endif()
+
+if (OS_NAME STREQUAL "Fedora" OR OS_NAME STREQUAL "openSUSE" OR OS_NAME STREQUAL "openSUSE Leap" OR OS_NAME STREQUAL "CentOS")
+	include(rpm)
+endif()
+
+if (WIN32)
+	include(nsis)
+endif()
 
 # needs to be last so not overwritten
 include(CPack)

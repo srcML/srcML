@@ -8,18 +8,18 @@ define srca <<- 'STDOUT'
 	STDOUT
 
 # input from a valid remote srcML archive with one unit
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-single.xml
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/archive-single.xml
 check "$srca"
 
 mkdir sub
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-single.xml -o sub/archive_single.cpp
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/archive-single.xml -o sub/archive_single.cpp
 check sub/archive_single.cpp "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-single.xml --unit 1
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/archive-single.xml --unit 1
 check "$srca"
 
-srcml https://raw.githubusercontent.com/srcML/test-data/master/srcml/archive-single.xml --unit 1 -o sub/archive_single.cpp
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/archive-single.xml --unit 1 -o sub/archive_single.cpp
 check sub/archive_single.cpp "$srca"
 
 # input from a compressed srcml file

@@ -63,8 +63,8 @@ int main(int argc, char * argv[]) {
 
     // version
     if (option(SRCML_COMMAND_VERSION)) {
-        std::cout << "libsrcml " << srcml_version_string() << '\n'
-                  << "srcml " << srcml_version_string() << '\n'
+        std::cout << "srcml " << srcml_version_string() << '\n'
+                  << "libsrcml " << srcml_version_string() << '\n'
                   << archive_version_string() << '\n';
         return 0;
     }
@@ -72,8 +72,8 @@ int main(int argc, char * argv[]) {
     // debug info
     if (srcml_request.command & SRCML_DEBUG_MODE) {
         SRCMLstatus(DEBUG_MSG) << "Library Versions: " << '\n'
-                               << "libsrcml " << srcml_version_string() << '\n'
                                << "srcml " << srcml_version_string() << '\n'
+                               << "libsrcml " << srcml_version_string() << '\n'
                                <<  archive_version_string() << '\n'
                                << "libcurl " << curl_version_info(CURLVERSION_NOW)->version << '\n'
                                << "libboost " << BOOST_LIB_VERSION << '\n';
@@ -143,8 +143,11 @@ See `srcml --help` for more information.
 
     // step (srcml|src)->compressed
     if (request_output_compression(srcml_request)) {
-
+#if ARCHIVE_VERSION_NUMBER >= 3002000
         pipeline.push_back(compress_srcml);
+#else
+    SRCMLstatus(ERROR_MSG, "srcml: Unable to compress output with the libraries on this platform");
+#endif
     }
 
     // should always have something to do
@@ -213,9 +216,6 @@ namespace {
         * The destination is not a srcML file and we are not creating srcML, asking for metadata, or performing a transformation
     */
     bool request_create_src(const srcml_request_t& request) {
-
-        if (!request.transformations.empty())
-            return false;
 
         return (option(SRCML_COMMAND_SRC) || (request.output_filename.state != SRCML &&
             !request_create_srcml(request) &&
