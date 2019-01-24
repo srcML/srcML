@@ -475,6 +475,9 @@ const std::string& UTF8CharBuffer::getEncoding() const {
  * place in buffer if requested.
  */
 UTF8CharBuffer::~UTF8CharBuffer() {
+    if(sio.context) {
+        sio.close_callback(sio.context);
+    }
 
     if (ic)
         iconv_close(ic);
