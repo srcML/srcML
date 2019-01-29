@@ -33,7 +33,13 @@ set(CPACK_RPM_PACKAGE_RELEASE 1)
 #set(CPACK_RPM_PACKAGE_PROVIDES "")
 
 # set install for manpage (Run cpack -G RPM)
-set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/share /usr/local/share/man /usr/local/share/man/man1)
-install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/share/man/man1")
+
+if (OS_NAME STREQUAL "Fedora" OR OS_NAME STREQUAL "CentOS")
+    set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/share /usr/local/share/man /usr/local/share/man/man1)
+    install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/share/man/man1")
+elseif (OS_NAME STREQUAL "openSUSE" OR OS_NAME STREQUAL "openSUSE Leap")
+    set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/man /usr/local/man/man1)
+    install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/man/man1")
+endif()
 
 
