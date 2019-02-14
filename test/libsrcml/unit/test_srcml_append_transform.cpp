@@ -680,7 +680,8 @@ int main(int, char* argv[]) {
         f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(archive, f);
         fclose(f);
-        fd = OPEN("copy.xsl", O_RDONLY, 0);
+
+        fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(archive, fd);
         CLOSE(fd);
 
