@@ -53,33 +53,14 @@ int main(int, char* argv[]) {
     const std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" directory=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
     const std::string srcml_full_python = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"Python\" directory=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
 
-    std::string copy;
-    {
-        std::ifstream in("copy.xsl");
-        char c = 0;
-        while(in.get(c)) {
-            copy += c;
-        }
-    }
+    std::ifstream in("copy.xsl");
+    std::string copy((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
 
-    std::string setlanguage;
-    {
-        std::ifstream in("setlanguage.xsl");
-        char c = 0;
-        while(in.get(c)) {
-            setlanguage += c;
-        }
-    }
+    std::ifstream inlang("setlanguage.xsl");
+    std::string setlanguage((std::istreambuf_iterator<char>(inlang)), std::istreambuf_iterator<char>());
 
-    std::string schema;
-    {
-        std::ifstream in("schema.rng");
-        char c = 0;
-        while(in.get(c)) {
-            schema += c;
-        }
-    }
-
+    std::ifstream inschema("schema.rng");
+    std::string schema((std::istreambuf_iterator<char>(inschema)), std::istreambuf_iterator<char>());
     
     //  srcml_apply_transforms
     
