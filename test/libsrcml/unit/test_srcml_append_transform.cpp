@@ -26,12 +26,10 @@
 #include <srcml_macros.hpp>
 
 #include <stdio.h>
-#include <string.h>
+#include <cstring>
 #include <cassert>
 
 #include <srcml.h>
-#include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
 #include <string>
 #include <fstream>
