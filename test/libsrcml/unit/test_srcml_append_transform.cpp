@@ -46,23 +46,11 @@
 
 int main(int, char* argv[]) {
 
-    std::string copy;
-    {
-        std::ifstream in("copy.xsl");
-        char c = 0;
-        while(in.get(c)) {
-            copy += c;
-        }
-    }
+    std::ifstream in("copy.xsl");
+    std::string copy((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
 
-    std::string schema;
-    {
-        std::ifstream in("schema.rng");
-        char c = 0;
-        while(in.get(c)) {
-            schema += c;
-        }
-    }
+    std::ifstream inschema("schema.rng");
+    std::string schema((std::istreambuf_iterator<char>(inschema)), std::istreambuf_iterator<char>());
 
     std::string s = "<unit/>";
 
