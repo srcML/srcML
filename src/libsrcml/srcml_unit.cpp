@@ -26,6 +26,7 @@
 #include <memory>
 #include <libxml2_utilities.hpp>
 #include <cstring>
+#include <fcntl.h>
 
 /******************************************************************************
  *                                                                            *
@@ -432,7 +433,6 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
 
     UTF8CharBuffer* input = 0;
     try {
-
         input = createUTF8CharBuffer(src_encoding, output_hash, unit->hash);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
@@ -474,10 +474,13 @@ int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename)
     if (unit == nullptr || src_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_unit_parse_internal(unit, src_filename, [src_filename](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
+    // open the file and use the file descriptor version
+    int fd = open(src_filename, O_RDONLY);
+    if (fd == -1) {
+        return SRCML_STATUS_IO_ERROR;
+    }
 
-        return new UTF8CharBuffer(src_filename, encoding, output_hash, hash);
-    });
+    return srcml_unit_parse_fd(unit, fd);
 }
 
 /**
