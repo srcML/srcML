@@ -272,8 +272,8 @@ int main(int, char* argv[]) {
         srcml_unit_set_filename(unit, "project");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_version(unit, "1");
-        srcml_unit_set_src_encoding(unit, "UTF-8")
-        srcml_archive_set_src_encoding(archive, "UTF-8")
+        srcml_unit_set_src_encoding(unit, "UTF-8");
+        srcml_archive_set_src_encoding(archive, "UTF-8");
         const char* code = "/* ✓ */\n";
         srcml_unit_parse_memory(unit, code, strlen(code));
 
@@ -291,6 +291,7 @@ int main(int, char* argv[]) {
         char * s = 0;
         size_t size;
         srcml_archive * archive = srcml_archive_create();
+        srcml_archive_disable_hash(archive);
         srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_archive_set_language(archive, "C++");
         srcml_archive_set_url(archive, "test");
@@ -298,9 +299,14 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
+        srcml_unit_set_language(unit, "C++");
         srcml_unit_set_version(unit, "1");
-        dassert(srcml_unit_get_srcml_fragment(unit), utf8_srcml_no_xmldecl);
+        srcml_unit_set_src_encoding(unit, "UTF-8");
+        const char* code = "/* ✓ */\n";
+        srcml_unit_parse_memory(unit, code, strlen(code));
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -313,6 +319,7 @@ int main(int, char* argv[]) {
         char * s = 0;
         size_t size;
         srcml_archive * archive = srcml_archive_create();
+        srcml_archive_disable_hash(archive);
         srcml_archive_set_xml_encoding(archive, "UTF-8");
         srcml_archive_set_language(archive, "C++");
         srcml_archive_set_url(archive, "test");
