@@ -40,14 +40,14 @@ int main(int argc, char* argv[]) {
     srcml_archive_read_open_filename(archive, "project.xml");
 
     /* add all the files to the archive */
-    while ((unit = srcml_archive_read_unit_header(archive))) {
+    while ((unit = srcml_archive_read_unit(archive))) {
 
         /* can inquire about the current unit */
         language = srcml_unit_get_language(unit);
         filename = srcml_unit_get_filename(unit);
 
         /* uparse and write to a file */
-        srcml_unit_unparse_filename(unit, filename, 0);
+        srcml_unit_unparse_filename(unit, filename);
 
         srcml_unit_free(unit);
     }

@@ -45,11 +45,11 @@ int main(int argc, char* argv[]) {
     otherarchive = srcml_archive_clone(iarchive);
 
     /* open a srcML archive for output */
-    srcml_archive_write_open_filename(includearchive, "project_include.xml", 0);
-    srcml_archive_write_open_filename(otherarchive, "project_other.xml", 0);
+    srcml_archive_write_open_filename(includearchive, "project_include.xml");
+    srcml_archive_write_open_filename(otherarchive, "project_other.xml");
 
     /* copy the files from the input archive to the output archive */
-    while ((unit = srcml_archive_read_unit_header(iarchive))) {
+    while ((unit = srcml_archive_read_unit(iarchive))) {
 
         /* Get the filename */
         const char* filename = srcml_unit_get_filename(unit);

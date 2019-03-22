@@ -42,10 +42,10 @@ int main(int argc, char* argv[]) {
     oarchive = srcml_archive_clone(iarchive);
 
     /* open a srcML archive for output */
-    srcml_archive_write_open_filename(oarchive, "project2.xml", 0);
+    srcml_archive_write_open_filename(oarchive, "project2.xml");
 
     /* copy the files from the input archive to the output archive */
-    while ((unit = srcml_archive_read_unit_header(iarchive))) {
+    while ((unit = srcml_archive_read_unit(iarchive))) {
 
         /* Translate to srcml and append to the archive */
         srcml_archive_write_unit(oarchive, unit);

@@ -35,7 +35,7 @@ int main(int argc, char * argv[]) {
     struct srcml_archive * oarchive;
     srcml_archive_read_open_filename(iarchive, "project.xml");
     oarchive = srcml_archive_clone(iarchive);
-    srcml_archive_write_open_filename(oarchive, "relaxng.xml", 0);
+    srcml_archive_write_open_filename(oarchive, "relaxng.xml");
 
     srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
 

@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
     */
 
     /* open a srcML archive for output */
-    srcml_archive_write_open_filename(archive, "project.xml", 0);
+    srcml_archive_write_open_filename(archive, "project.xml");
 
     /* add all files on the command line to the archive */
     for (i = 1; i < argc; ++i) {

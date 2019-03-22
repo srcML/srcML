@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
     archive = srcml_archive_create();
     srcml_archive_read_open_filename(archive, "project.xml");
 
-    while((unit = srcml_archive_read_unit_header(archive))) {
+    while((unit = srcml_archive_read_unit(archive))) {
 
         puts(srcml_unit_get_filename(unit));
         srcml_unit_free(unit);

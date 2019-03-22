@@ -35,7 +35,7 @@ int main(int argc, char * argv[]) {
     struct srcml_archive * oarchive;
     srcml_archive_read_open_filename(iarchive, "project.xml");
     oarchive = srcml_archive_clone(iarchive);
-    srcml_archive_write_open_filename(oarchive, "transform.xml", 0);
+    srcml_archive_write_open_filename(oarchive, "transform.xml");
 
     srcml_append_transform_xpath(iarchive, "//src:unit");
     srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
