@@ -21,7 +21,11 @@
 file(GLOB LIB_TESTS test_*.cpp)
 foreach(LIB_TEST ${LIB_TESTS})
 	get_filename_component(TEST_NAME ${LIB_TEST} NAME_WE)
-  	addUnitTest(${TEST_NAME} ${TEST_NAME}.cpp)
+    add_executable(${TEST_NAME} ${LIB_TEST})
+    target_link_libraries(${TEST_NAME} srcml_shared)
+    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+    set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 15)
 endforeach()
 
 add_definitions(-DSRCML_XPATH_EXFUN_TEST_DIR="${CMAKE_BINARY_DIR}/bin/xpath_test_data")
