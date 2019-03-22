@@ -32,13 +32,13 @@
 # By default all tests are linked against the srcml_static library.
 #
 #
-macro(addUnitTest TEST_NAME FILE_NAME)
-    add_executable(${TEST_NAME} ${FILE_NAME})
-    target_link_libraries(${TEST_NAME} srcml_shared ${ARGN})
-    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
-    set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 15)
-endmacro()
+#macro(addUnitTest TEST_NAME FILE_NAME)
+#    add_executable(${TEST_NAME} ${FILE_NAME})
+#    target_link_libraries(${TEST_NAME} srcml_shared ${ARGN})
+#    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+#    set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+#    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 15)
+#endmacro()
 
 #
 # addPythonTest
@@ -54,11 +54,11 @@ macro(addPythonTest TEST_NAME)
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
-    copyDependentFile(${TEST_NAME})
+    file(COPY (${TEST_NAME}) DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 foreach(FILE ${ARGN})
 
-    copyDependentFile(${FILE})
+    file(COPY (${FILE}) DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 endforeach()
 
@@ -71,9 +71,9 @@ endmacro()
 # This copies a file given as TARGET_NAME to the current binary directory
 # of the build.
 #
-macro(copyDependentFile TARGET_NAME)
-    file(COPY ${TARGET_NAME} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-endmacro()
+#macro(copyDependentFile TARGET_NAME)
+#    file(COPY ${TARGET_NAME} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#endmacro()
 
 #
 # Creates a temporary target which is used

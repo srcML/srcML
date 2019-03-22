@@ -34,8 +34,6 @@ file(COPY xpath_test_data DESTINATION "${CMAKE_BINARY_DIR}/bin")
 # Copying xpath test data into correct loction.
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
-    copyDependentFile(copy.xsl)
-    copyDependentFile(setlanguage.xsl)
-    copyDependentFile(schema.rng)  
+    file(COPY copy.xsl setlanguage.xsl schema.rng DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 endif()
