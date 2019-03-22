@@ -38,9 +38,9 @@ int main(int argc, char * argv[]) {
     srcml_archive_write_open_filename(oarchive, "xslt.xml");
 
     srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
-
+/*
     srcml_apply_transforms(iarchive, oarchive);
-
+*/
     srcml_archive_close(iarchive);
     srcml_archive_close(oarchive);
 

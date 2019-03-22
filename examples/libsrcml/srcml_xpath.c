@@ -38,9 +38,9 @@ int main(int argc, char * argv[]) {
     srcml_archive_write_open_filename(oarchive, "xpath.xml");
 
     srcml_append_transform_xpath(iarchive, "//src:unit");
-
-    srcml_apply_transforms(iarchive, oarchive);
-
+/*
+    srcml_unit_apply_transforms(iarchive, oarchive);
+*/
     srcml_archive_close(iarchive);
     srcml_archive_close(oarchive);
 
