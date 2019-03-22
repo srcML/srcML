@@ -22,34 +22,26 @@ file(GLOB PARSER_SOURCE *.cpp)
 
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
 
+macro(lexerFiles LEXER)
+    set(${LEXER}LexerOutputFiles
+        ${CMAKE_GENERATED_SOURCE_DIR}/${LEXER}Lexer.cpp
+        ${CMAKE_GENERATED_SOURCE_DIR}/${LEXER}Lexer.hpp
+        ${CMAKE_GENERATED_SOURCE_DIR}/${LEXER}LexerTokenTypes.hpp
+        ${CMAKE_GENERATED_SOURCE_DIR}/${LEXER}LexerTokenTypes.txt
+        ${CMAKE_GENERATED_SOURCE_DIR}/expanded${LEXER}Lexer.g
+    )
+endmacro()
+
 # Running ANTLR on CommentTextLexer.g
-set(CommentTextLexerOutputFiles
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexerTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexerTokenTypes.txt
-    ${CMAKE_GENERATED_SOURCE_DIR}/expandedCommentTextLexer.g
-)
+lexerFiles(CommentText)
 RunAntlr("${CommentTextLexerOutputFiles}" CommentTextLexer.g "" "")
 
 # Running ANTLR on TextLexer.g
-set(TextLexerOutputFiles
-    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexer.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexerTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexerTokenTypes.txt
-    ${CMAKE_GENERATED_SOURCE_DIR}/expandedTextLexer.g
-)
+lexerFiles(Text)
 RunAntlr("${TextLexerOutputFiles}" TextLexer.g ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp "")
 
 # Running ANTLR on OperatorLexer.g
-set(OperatorLexerOutputFiles
-    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexerTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexerTokenTypes.txt
-    ${CMAKE_GENERATED_SOURCE_DIR}/expandedOperatorLexer.g
-)
+lexerFiles(Operator)
 RunAntlr("${OperatorLexerOutputFiles}"
     OperatorLexer.g
     ${CMAKE_GENERATED_SOURCE_DIR}/TextLexer.cpp
@@ -57,14 +49,7 @@ RunAntlr("${OperatorLexerOutputFiles}"
 )
 
 # Running ANTLR on KeywordLexer.g
-set(KeywordLexerOutputFiles
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexerTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexerTokenTypes.txt
-    ${CMAKE_GENERATED_SOURCE_DIR}/expandedKeywordLexer.g
-)
-
+lexerFiles(Keyword)
 RunAntlr("${KeywordLexerOutputFiles}"
     KeywordLexer.g
     ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.cpp
