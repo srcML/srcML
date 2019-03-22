@@ -126,7 +126,7 @@ int main(int, char* argv[]) {
         // @todo change to blackbox test
         // dassert(archive->type, SRCML_ARCHIVE_READ);
         // dassert(!archive->reader, 0);
-        dassert(srcml_archive_get_namespace_prefix(archive, 0), "s");
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
@@ -229,7 +229,7 @@ int main(int, char* argv[]) {
         // @todo change to blackbox test
         // dassert(archive->type, SRCML_ARCHIVE_READ);
         // dassert(!archive->reader, 0);
-        dassert(srcml_archive_get_namespace_prefix(archive, 0), "s");
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
@@ -340,7 +340,7 @@ int main(int, char* argv[]) {
         // @todo change to blackbox test
         // dassert(archive->type, SRCML_ARCHIVE_READ);
         // dassert(!archive->reader, 0);
-        dassert(srcml_archive_get_namespace_prefix(archive, 0), "s");
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
@@ -453,7 +453,7 @@ int main(int, char* argv[]) {
         // @todo change to blackbox test
         // dassert(archive->type, SRCML_ARCHIVE_READ);
         // dassert(!archive->reader, 0);
-        dassert(srcml_archive_get_namespace_prefix(archive, 0), "s");
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
@@ -566,7 +566,7 @@ int main(int, char* argv[]) {
         // @todo change to blackbox test
         // dassert(archive->type, SRCML_ARCHIVE_READ);
         // dassert(!archive->reader, 0);
-        dassert(srcml_archive_get_namespace_prefix(archive, 0), "s");
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
         dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);

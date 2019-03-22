@@ -398,8 +398,8 @@ int main(int, char* argv[]) {
 
         srcml_archive_register_namespace(archive, "foo", "http://www.srcML.org/srcML/src");
 
-        dassert(srcml_archive_get_namespace_prefix(archive, 0), "foo");
-        dassert(srcml_archive_get_namespace_uri(archive, 0) , "http://www.srcML.org/srcML/src");
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("foo"));
+        dassert(srcml_archive_get_namespace_uri(archive, 0) , std::string("http://www.srcML.org/srcML/src"));
         srcml_archive_free(archive);
 
     }

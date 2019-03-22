@@ -133,7 +133,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="SRCML_VERSION_STRI
     src_file_macro << src_macro;
     src_file_macro.close();
 
-    dassert("FALSE", "TRUE");
+    dassert("FALSE", std::string("TRUE"));
     /*
       srcml_unit_parse_filename
     */
@@ -721,7 +721,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="SRCML_VERSION_STRI
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C");
         dassert(srcml_unit_parse_memory(unit, src.c_str(), 0), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_srcml_fragment(unit), "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\"/>");
+        dassert(srcml_unit_get_srcml_fragment(unit), std::string("<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\"/>"));
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -735,7 +735,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="SRCML_VERSION_STRI
         srcml_unit * unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C");
         dassert(srcml_unit_parse_memory(unit, 0, 0), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_srcml_fragment(unit), "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\"/>");
+        dassert(srcml_unit_get_srcml_fragment(unit), std::string("<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\"/>"));
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);

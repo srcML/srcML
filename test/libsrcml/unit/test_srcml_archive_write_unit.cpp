@@ -518,7 +518,7 @@ int main(int, char* argv[]) {
     {
         srcml_archive * archive = srcml_archive_create();
         srcml_unit * unit = srcml_unit_create(archive);
-        dassert(srcml_unit_get_srcml_fragment(unit), "<unit/>");
+        dassert(srcml_unit_get_srcml_fragment(unit), std::string("<unit/>"));
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_INVALID_IO_OPERATION);
         srcml_unit_free(unit);
         srcml_archive_free(archive);
