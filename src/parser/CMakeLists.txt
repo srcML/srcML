@@ -22,6 +22,47 @@ file(GLOB PARSER_SOURCE *.cpp)
 
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
 
+# 
+# RunAntlr
+# Executes ANTLR executable on the provided files.
+# 
+# Takes 3 parameters OUTPUT_FILES INPUT_FILES DEPENDENCIES and 
+#    1 optional parameter INCLUDE_GRAMMAR
+# Use with named arguments.
+#
+macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
+    if("${INCLUDE_GRAMMAR}" STREQUAL "")
+        if(WIN32)
+            # Handling windows relative path problem (Not sure why this is an issue but it's given me a headache).
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES}
+            )
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND touch ${OUTPUT_FILES}
+            )
+        endif()
+    else()
+        if(WIN32)
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES}
+            )
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND touch ${OUTPUT_FILES}
+            )
+        endif()
+    endif()
+endmacro(RunAntlr)
+
 macro(lexerFiles LEXER)
     set(${LEXER}LexerOutputFiles
         ${CMAKE_GENERATED_SOURCE_DIR}/${LEXER}Lexer.cpp
@@ -80,6 +121,7 @@ endforeach()
 list(REMOVE_ITEM PARSER_HEADERS ${updatedRemoveList})
 list(REMOVE_ITEM PARSER_SOURCE ${updatedRemoveList})
 
+# @TODO Why are these the same?
 if(WIN32)
 add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
