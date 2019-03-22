@@ -19,9 +19,24 @@
 
 # add cli tests
 file(GLOB CLI_TESTS *.sh)
-file(GLOB IGNORE framework_test.sh)
-list(REMOVE_ITEM CLI_TESTS ${IGNORE})
+list(REMOVE_ITEM CLI_TESTS framework_test.sh)
+
+# @TODO Not sure this is needed. Tests work without copying
+if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+
+    copyDependentFile(framework_test.sh)
+
+endif()
 
 foreach(CLI_TEST ${CLI_TESTS})
-  addBashTest(${CLI_TEST} framework_test.sh)
+    get_filename_component(TEST_NAME ${CLI_TEST} NAME)
+    add_test(NAME ${TEST_NAME} COMMAND ${CLI_TEST})
+
+    # @TODO Not sure this is needed. Tests work without copying
+    if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+
+        copyDependentFile(${CLI_TEST})
+
+    endif()
+
 endforeach()

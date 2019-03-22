@@ -67,31 +67,6 @@ endif()
 endmacro()
 
 #
-# addBashTest
-# - TEST_NAME the name of the bash file.
-# Adds a test that executes the given bash file.
-# additional arguments are dependent files that need to be copied.
-#
-#
-macro(addBashTest TEST_FILE)
-    get_filename_component(TEST_NAME ${TEST_FILE} NAME)
-    add_test(NAME ${TEST_NAME} COMMAND ${TEST_FILE})
-
-if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
-
-    copyDependentFile(${TEST_FILE})
-
-foreach(FILE ${ARGN})
-
-    copyDependentFile(${FILE})
-
-endforeach()
-
-endif()
-
-endmacro()
-
-#
 # copyDependentFile
 # This copies a file given as TARGET_NAME to the current binary directory
 # of the build.
