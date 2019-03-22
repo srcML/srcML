@@ -101,56 +101,6 @@ macro(copyDependentFile TARGET_NAME)
 endmacro()
 
 #
-# Process string list of files
-# This takes a list of files and creates the generated names for each file.
-# The string list is not a list but a space separated string of files.
-#
-macro(stringListTofileNames INPUT FILE_SUFFIX OUTPUT)
-    string(REPLACE " " ";" OUTPUT_LIST ${INPUT})
-    set(outputTemp "")
-    foreach(temp ${OUTPUT_LIST})
-        set(outputTemp "${outputTemp}${temp}${FILE_SUFFIX} ")
-    endforeach()
-    set(${OUTPUT} ${outputTemp})
-endmacro()
-
-
-#
-# Removes the file extension from a current file, this is used while generating files
-# during testing when we need to convert a file from for example .cpp.xml to .cpp.
-#
-# NOTICE: This makes the assumption that there IS a file extension present it
-# will fail if there isn't.
-#
-#
-macro(stripFileExt FILE_NAME OUTPUT)
-    string(FIND ${FILE_NAME} "." LAST_POINT REVERSE)
-    string(SUBSTRING ${FILE_NAME} 0 ${LAST_POINT} ${OUTPUT})
-endmacro()
-
-#
-# Locates the first dot and creates a sub string from
-# upto that point in the provided FILE_NAME string
-#
-macro(stripAllFileExts FILE_NAME OUTPUT)
-    string(FIND ${FILE_NAME} "." LAST_POINT)
-    string(SUBSTRING ${FILE_NAME} 0 ${LAST_POINT} ${OUTPUT})
-endmacro()
-
-
-#
-# appendFileExtToList
-# Takes a list of files as the extra arguments and appends a suffix to each one
-# and stores them in OUTPUT.
-#
-macro(appendFileExtToList FILE_SUFFIX OUTPUT)
-    set(${OUTPUT} "")
-    foreach(temp ${ARGN})
-        list(APPEND ${OUTPUT} ${temp}${FILE_SUFFIX} )
-    endforeach()
-endmacro()
-
-#
 # Creates a temporary target which is used
 # for debugging the build system.
 #
@@ -174,29 +124,4 @@ macro(createProbDep PROBLEM_TYPE LANGUAGE_EXT)
         DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml
         COMMAND echo "Built problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml"
     )
-endmacro()
-
-#
-# Creates a list of unique items with a given name.
-#
-macro(createUniqueList OUTPUT)
-    set(${OUTPUT} "")
-    foreach(ITEM ${ARGN})
-        list(REMOVE_ITEM ${OUTPUT} ${ITEM})
-        list(APPEND ${OUTPUT} ${ITEM})
-    endforeach()
-endmacro()
-
-#
-# Check to see if an element is a match for one of the elements within
-# the list given to ARGN and returns true if so otherwise false.
-#
-macro(matchesOneInList OUTPUT INPUT)
-    set(${OUTPUT} OFF)
-    foreach(ELEMENT ${ARGN})
-        if(${INPUT} MATCHES ${ELEMENT})
-            set(${OUTPUT} ON)
-            break()
-        endif()
-    endforeach()
 endmacro()
