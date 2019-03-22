@@ -47,24 +47,24 @@
 # additional arguments are dependent files that need to be copied.
 #
 #
-macro(addPythonTest TEST_NAME)
+#macro(addPythonTest TEST_NAME)
 
-    add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_NAME})
-    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 10)
+#    add_test(NAME ${TEST_NAME} COMMAND ${PYTHON_EXECUTABLE} ${TEST_NAME})
+#    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 10)
 
-if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+#if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
-    file(COPY (${TEST_NAME}) DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#    file(COPY (${TEST_NAME}) DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-foreach(FILE ${ARGN})
+#foreach(FILE ${ARGN})
 
-    file(COPY (${FILE}) DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+#    file(COPY (${FILE}) DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-endforeach()
+#endforeach()
 
-endif()
+#endif()
 
-endmacro()
+#endmacro()
 
 #
 # copyDependentFile
@@ -80,13 +80,13 @@ endmacro()
 # for debugging the build system.
 #
 #
-macro(tempTarget TARGET)
-    string(REPLACE ";" " " DISPLAYED_ARGN "${ARGN}")
-    add_custom_target(${TARGET}
-        COMMAND echo "Build ${TARGET}: dpenedencies: ${DISPLAYED_ARGN}"
-        DEPENDS ${ARGN}
-    )
-endmacro()
+#macro(tempTarget TARGET)
+#    string(REPLACE ";" " " DISPLAYED_ARGN "${ARGN}")
+#    add_custom_target(${TARGET}
+#        COMMAND echo "Build ${TARGET}: dpenedencies: ${DISPLAYED_ARGN}"
+#        DEPENDS ${ARGN}
+#    )
+#endmacro()
 
 
 #
@@ -94,9 +94,9 @@ endmacro()
 # by other functions within this file. This allows individual targets to be invoked
 # with make using the file name as the target name.
 #
-macro(createProbDep PROBLEM_TYPE LANGUAGE_EXT)
-    add_custom_target(problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml
-        COMMAND echo "Built problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml"
-    )
-endmacro()
+#macro(createProbDep PROBLEM_TYPE LANGUAGE_EXT)
+#    add_custom_target(problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml
+#        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml
+#        COMMAND echo "Built problem.${PROBLEM_TYPE}.${LANGUAGE_EXT}.xml"
+#    )
+#endmacro()
