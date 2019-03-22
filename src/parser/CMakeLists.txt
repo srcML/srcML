@@ -110,12 +110,7 @@ RunAntlr("${srcMLParserOutputFiles}"
     "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
 
-set(updatedRemoveList "")
-foreach(itemToRemove ${KeywordLexerOutputFiles} ${srcMLParserOutputFiles} ${OperatorLexerOutputFiles} ${TextLexerOutputFiles} ${CommentTextLexerOutputFiles})
-    get_filename_component(absPath ${itemToRemove} ABSOLUTE)
-    list(APPEND updatedRemoveList ${absPath})
-endforeach()
-
+set(updatedRemoveList ${KeywordLexerOutputFiles} ${srcMLParserOutputFiles} ${OperatorLexerOutputFiles} ${TextLexerOutputFiles} ${CommentTextLexerOutputFiles})
 
 # Removing generated files from file list.
 list(REMOVE_ITEM PARSER_HEADERS ${updatedRemoveList})
