@@ -31,6 +31,7 @@ set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
 # Use with named arguments.
 #
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
+
     if("${INCLUDE_GRAMMAR}" STREQUAL "")
         if(WIN32)
             # Handling windows relative path problem (Not sure why this is an issue but it's given me a headache).
@@ -75,11 +76,19 @@ endmacro()
 
 # Running ANTLR on CommentTextLexer.g
 lexerFiles(CommentText)
-RunAntlr("${CommentTextLexerOutputFiles}" CommentTextLexer.g "" "")
+RunAntlr("${CommentTextLexerOutputFiles}"
+    CommentTextLexer.g
+    ""
+    ""
+)
 
 # Running ANTLR on TextLexer.g
 lexerFiles(Text)
-RunAntlr("${TextLexerOutputFiles}" TextLexer.g ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp "")
+RunAntlr("${TextLexerOutputFiles}"
+    TextLexer.g
+    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
+    ""
+)
 
 # Running ANTLR on OperatorLexer.g
 lexerFiles(Operator)
