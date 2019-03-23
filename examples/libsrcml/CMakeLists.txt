@@ -20,6 +20,8 @@
 # add cli tests
 file(GLOB EXAMPLES "srcml_*.c")
 
+set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c99")
+
 foreach(EXAMPLE ${EXAMPLES})
     get_filename_component(EXAMPLE_NAME ${EXAMPLE} NAME_WE)
     add_executable(${EXAMPLE_NAME} ${EXAMPLE})
