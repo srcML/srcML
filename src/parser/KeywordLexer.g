@@ -23,6 +23,7 @@
 header "pre_include_hpp" {
     #include <cstring>
     #pragma GCC diagnostic ignored "-Wunused-parameter"
+    #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 }
 
 header {

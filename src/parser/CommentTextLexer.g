@@ -25,10 +25,10 @@
 header "pre_include_hpp" {
    #include <cstring>
    #pragma GCC diagnostic ignored "-Wunused-parameter"
+   #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 }
 
 header {
-   #pragma GCC diagnostic warning "-Wunused-parameter"
    #include <iostream>
    #include "antlr/TokenStreamSelector.hpp"
    #include <srcml_types.hpp>
