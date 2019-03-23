@@ -24,24 +24,18 @@
   Gather info from an archive from a given unit.
 */
 
-#include <stdio.h>
 #include "srcml.h"
 
 int main(int argc, char* argv[]) {
 
-    struct srcml_archive * archive;
-    struct srcml_unit * unit;
-
-    archive = srcml_archive_create();
+    struct srcml_archive* archive = srcml_archive_create();
     srcml_archive_read_open_filename(archive, "project.xml");
 
-    while((unit = srcml_archive_read_unit(archive))) {
-
+    struct srcml_unit* unit = 0;
+    while ((unit = srcml_archive_read_unit(archive))) {
         puts(srcml_unit_get_filename(unit));
         srcml_unit_free(unit);
-
     }
-
 
     srcml_archive_close(archive);
     srcml_archive_free(archive);

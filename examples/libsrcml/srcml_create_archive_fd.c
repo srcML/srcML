@@ -33,48 +33,40 @@
 #include <unistd.h>
 #endif
 
-#include <srcml_macros.hpp>
-
-
 int main(int argc, char* argv[]) {
-    int i;
-    int srcml_output;
-    int srcml_input;
-    struct srcml_archive* archive;
-    struct srcml_unit* unit;
 
     /* create a new srcml archive structure */
-    archive = srcml_archive_create();
+    struct srcml_archive* archive = srcml_archive_create();
 
     /* setup our output file using a file descriptor */
-    srcml_output = OPEN("project.xml", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+    int srcml_output = open("project.xml", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 
     /* open a srcML archive for output */
     srcml_archive_write_open_fd(archive, srcml_output);
 
     /* add all the files to the archive */
-    for (i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i) {
 
-        unit = srcml_unit_create(archive);
+        struct srcml_unit* unit = srcml_unit_create(archive);
 
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
         /* Translate to srcml */
-        srcml_input = OPEN(argv[i], O_RDONLY, 0);
+        int srcml_input = open(argv[i], O_RDONLY, 0);
         srcml_unit_parse_fd(unit, srcml_input);
 
         /* Append to the archive */
         srcml_archive_write_unit(archive, unit);
 
         srcml_unit_free(unit);
-        CLOSE(srcml_input);
+        close(srcml_input);
     }
 
     /* close the srcML archive */
     srcml_archive_close(archive);
 
     /* file can now be closed also */
-    CLOSE(srcml_output);
+    close(srcml_output);
 
     /* free the srcML archive data */
     srcml_archive_free(archive);

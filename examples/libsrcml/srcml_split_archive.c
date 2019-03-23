@@ -28,27 +28,23 @@
 #include <string.h>
 
 int main(int argc, char* argv[]) {
-    int i;
-    struct srcml_archive* iarchive;
-    struct srcml_archive* includearchive;
-    struct srcml_archive* otherarchive;
-    struct srcml_unit* unit;
 
     /* open up an existing archive */
-    iarchive = srcml_archive_create();
+    struct srcml_archive* iarchive = srcml_archive_create();
     srcml_archive_read_open_filename(iarchive, "project.xml");
 
     /* create a new srcml archive structure */
     /* options and attributes of cloned archive start the same as
        the original archive */
-    includearchive = srcml_archive_clone(iarchive);
-    otherarchive = srcml_archive_clone(iarchive);
+    struct srcml_archive* includearchive = srcml_archive_clone(iarchive);
+    struct srcml_archive* otherarchive = srcml_archive_clone(iarchive);
 
     /* open a srcML archive for output */
     srcml_archive_write_open_filename(includearchive, "project_include.xml");
     srcml_archive_write_open_filename(otherarchive, "project_other.xml");
 
     /* copy the files from the input archive to the output archive */
+    struct srcml_unit* unit = 0;
     while ((unit = srcml_archive_read_unit(iarchive))) {
 
         /* Get the filename */

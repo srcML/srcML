@@ -29,23 +29,19 @@
 #include <string.h>
 
 int main(int argc, char* argv[]) {
-    struct srcml_archive* iarchive;
-    struct srcml_archive* oarchive;
+
     int num_units = 0;
     struct srcml_unit* units[10];
-    const char* inputfile;
-    const char* outputfile;
-
-    inputfile = "project.xml";
-    outputfile = "project_tmp.xml";
+    const char* inputfile = "project.xml";
+    const char* outputfile = "project_tmp.xml";
 
     /* open up an existing archive */
-    iarchive = srcml_archive_create();
+    struct srcml_archive* iarchive = srcml_archive_create();
 
     /* create a new srcml archive structure */
     /* options and attributes of cloned archive start the same as
        the original archive */
-    oarchive = srcml_archive_clone(iarchive);
+    struct srcml_archive* oarchive = srcml_archive_clone(iarchive);
     srcml_archive_read_open_filename(iarchive, inputfile);
     while (1) {
 
@@ -64,7 +60,7 @@ int main(int argc, char* argv[]) {
 
             if(strcmp(srcml_unit_get_filename(units[j]), srcml_unit_get_filename(units[j - 1])) < 0) {
 
-                struct srcml_unit * tmp_unit = units[j];
+                struct srcml_unit* tmp_unit = units[j];
                 units[j] = units[j - 1];
                 units[j - 1] = tmp_unit;
 

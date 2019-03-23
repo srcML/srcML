@@ -30,14 +30,8 @@
 #include <stdlib.h>
 
 int main(int argc, char* argv[]) {
-    const char* language;
-    const char* filename;
-    struct srcml_archive* archive;
-    struct srcml_unit* unit;
-    int srcml_input;
-    char * buffer;
-    size_t size = 0;
-    char* s =
+
+    const char* s =
         "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
         "<unit xmlns=\"http://www.sdml.info/srcML/src\">"
         ""
@@ -50,18 +44,21 @@ int main(int argc, char* argv[]) {
         "</unit>";
 
     /* create a new srcml archive structure */
-    archive = srcml_archive_create();
+    struct srcml_archive* archive = srcml_archive_create();
 
     srcml_archive_read_open_memory(archive, s, strlen(s));
 
     /* add all the files to the archive */
+    struct srcml_unit* unit = 0;
     while ((unit = srcml_archive_read_unit(archive))) {
 
         /* can inquire about the current unit */
-        language = srcml_unit_get_language(unit);
-        filename = srcml_unit_get_filename(unit);
+        const char* language = srcml_unit_get_language(unit);
+        const char* filename = srcml_unit_get_filename(unit);
 
         /* uparse and write to a file */
+        char* buffer = 0;;
+        size_t size = 0;
         srcml_unit_unparse_memory(unit, &buffer, &size);
 
         printf("%s", buffer);
