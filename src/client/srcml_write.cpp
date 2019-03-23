@@ -33,7 +33,7 @@
 #include <cstring>
 
 // Public consumption thread function
-void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& destination) {
+void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& /* destination */) {
 
     if (!request)
         return;
