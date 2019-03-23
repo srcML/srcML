@@ -62,13 +62,6 @@ option(BUILD_PARSER_TESTS "Include tests for parser" ON)
 option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
 
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
-option(BUILD_PYTHON_BINDINGS "Build Python language bindings/wrapper" OFF)
-
-if(${BUILD_PYTHON_BINDINGS})
-    set(BUILD_LANGUAGE_BINDINGS true)
-else()
-    set(BUILD_LANGUAGE_BINDINGS false)
-endif()
 
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
