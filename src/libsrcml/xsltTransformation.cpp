@@ -63,7 +63,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     char* error;
 
     dlerror();
-    xsltApplyStylesheetUser = (xsltApplyStylesheetUser_t) dlsym(libxslt_handle, "xsltApplyStylesheetUser");
+    *(void**)(&xsltApplyStylesheetUser) = dlsym(libxslt_handle, "xsltApplyStylesheetUser");
     if ((error = dlerror()) != NULL) {
         dlclose(libxslt_handle);
         libxslt_handle = 0;
@@ -71,7 +71,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     }
 
     dlerror();
-    xsltParseStylesheetDoc = (xsltParseStylesheetDoc_t) dlsym(libxslt_handle, "xsltParseStylesheetDoc");
+    *(void**)(&xsltParseStylesheetDoc) = dlsym(libxslt_handle, "xsltParseStylesheetDoc");
     if ((error = dlerror()) != NULL) {
         dlclose(libxslt_handle);
         libxslt_handle = 0;
@@ -79,7 +79,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     }
 
     dlerror();
-    xsltCleanupGlobals = (xsltCleanupGlobals_t) dlsym(libxslt_handle, "xsltCleanupGlobals");
+    *(void**)(&xsltCleanupGlobals) = dlsym(libxslt_handle, "xsltCleanupGlobals");
     if ((error = dlerror()) != NULL) {
         dlclose(libxslt_handle);
         libxslt_handle = 0;
@@ -87,7 +87,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     }
 
     dlerror();
-    xsltFreeStylesheet = (xsltFreeStylesheet_t) dlsym(libxslt_handle, "xsltFreeStylesheet");
+    *(void**)(&xsltFreeStylesheet) = dlsym(libxslt_handle, "xsltFreeStylesheet");
     if ((error = dlerror()) != NULL) {
         dlclose(libxslt_handle);
         libxslt_handle = 0;
@@ -173,7 +173,8 @@ void dlexsltRegisterAll(void* handle) {
     typedef void (*exsltRegisterAll_t)();
 
     dlerror();
-    auto exsltRegisterAll = (exsltRegisterAll_t) dlsym(handle, "exsltRegisterAll");
+    exsltRegisterAll_t exsltRegisterAll;
+    *(void **) (&exsltRegisterAll) = dlsym(handle, "exsltRegisterAll");
     char* error;
     if ((error = dlerror()) != NULL) {
         dlclose(handle);
