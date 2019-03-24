@@ -125,7 +125,7 @@ set(updatedRemoveList ${KeywordLexerOutputFiles} ${srcMLParserOutputFiles} ${Ope
 list(REMOVE_ITEM PARSER_HEADERS ${updatedRemoveList})
 list(REMOVE_ITEM PARSER_SOURCE ${updatedRemoveList})
 
-# @TODO Why are these the same?
+# @BUILD Why are these the same? Can the if be eliminated?
 if(WIN32)
 add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp

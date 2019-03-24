@@ -40,6 +40,7 @@ macro(srcMLExec EXEC_NAME EXEC_FILE)
         # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
         set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list /dev/null")
     elseif(WIN32)
+        # @BUILD Why this when there is a MSVC case above?
         set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
     else()
         set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
