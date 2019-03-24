@@ -79,11 +79,6 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     include_directories(${WINDOWS_DEP_PATH}/include)
     link_directories(${WINDOWS_DEP_PATH}/${BUILD_ARCH}/$(ConfigurationName)/lib)
     
-    # @TODO SVN INTEGRATION?
-    if(ENABLE_SVN_INTEGRATION)
-        message(FATAL_ERROR "SVN integration not tested on windows.")
-    endif()
-    
     set(LIBXSLT_LIBRARIES libxslt.lib)
     set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)
     set(LibArchive_LIBRARIES archive.lib)
