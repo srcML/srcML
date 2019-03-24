@@ -31,9 +31,5 @@ endforeach()
 add_definitions(-DSRCML_XPATH_EXFUN_TEST_DIR="${CMAKE_BINARY_DIR}/bin/xpath_test_data")
 file(COPY xpath_test_data DESTINATION "${CMAKE_BINARY_DIR}/bin")
 
-# Copying xpath test data into correct loction.
-if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
-
-    file(COPY copy.xsl setlanguage.xsl schema.rng DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-endif()
+# Copying xpath test data into correct loction
+file(COPY copy.xsl setlanguage.xsl schema.rng DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

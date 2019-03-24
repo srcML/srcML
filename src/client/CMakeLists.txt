@@ -17,7 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
 file(GLOB SRCML_HEADERS *.hpp)
 file(GLOB SRCML_SOURCE *.cpp)
 list(REMOVE_ITEM SRCML_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcml.cpp)

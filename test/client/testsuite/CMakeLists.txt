@@ -22,11 +22,7 @@ file(GLOB CLI_TESTS *.sh)
 list(REMOVE_ITEM CLI_TESTS framework_test.sh)
 
 # @TODO Not sure this is needed. Tests work without copying
-if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
-
-	file(COPY framework_test.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-endif()
+file(COPY framework_test.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 foreach(CLI_TEST ${CLI_TESTS})
     get_filename_component(TEST_NAME ${CLI_TEST} NAME)
@@ -34,8 +30,4 @@ foreach(CLI_TEST ${CLI_TESTS})
 endforeach()
 
 # @TODO Not sure this is needed. Tests work without copying
-if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
-
-	file(COPY ${CLI_TESTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-endif()
+file(COPY ${CLI_TESTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

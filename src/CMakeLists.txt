@@ -68,17 +68,18 @@ elseif(NOT ("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC") AND NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.so\")")
 endif()
 
+set(LIBDIR "lib")
+
+# openSUSE installs in lib64
 if(OS_NAME STREQUAL "openSUSE" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-	if (BUILD_LIBSRCML_STATIC)
-		install(TARGETS srcml_shared srcml_static RUNTIME DESTINATION bin LIBRARY DESTINATION lib64 ARCHIVE DESTINATION lib64)
-	else()
-		install(TARGETS srcml_shared RUNTIME DESTINATION bin LIBRARY DESTINATION lib64 ARCHIVE DESTINATION lib64)
-	endif()
-else()
-	if (BUILD_LIBSRCML_STATIC)
-		install(TARGETS srcml_shared srcml_static RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
-	else()
-		install(TARGETS srcml_shared RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
-	endif()
+    set(LIBDIR "lib64")
 endif()
 
+# which types of libraries
+if (BUILD_LIBSRCML_STATIC)
+    set(LIBTYPES "srcml_shared srcml_static")
+else()
+    set(LIBTYPES "srcml_shared")
+endif()
+
+install(TARGETS ${LIBTYPES} RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIBDIR} ARCHIVE DESTINATION ${LIBDIR})
