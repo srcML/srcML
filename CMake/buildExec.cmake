@@ -28,6 +28,7 @@
 # - All subsequent arguments are linked as libraries.
 #
 macro(srcMLExec EXEC_NAME EXEC_FILE)
+    message("HERE: ${EXEC_NAME}")
     add_executable(${EXEC_NAME} ${EXEC_FILE})
     target_link_libraries(${EXEC_NAME} ${ARGN})
     if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
@@ -37,7 +38,9 @@ macro(srcMLExec EXEC_NAME EXEC_FILE)
         "${PROJECT_SOURCE_DIR}/deps/${BUILD_ARCH}/$<CONFIGURATION>/bin"
         $<TARGET_FILE_DIR:srcml>)
     elseif(APPLE)
-        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/srcml_export_list")
+        # Making the exported_symbols_list an empty file reduces size of executable
+        # @TODO Does this work for other UNIX platforms?
+        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list /dev/null")
     elseif(WIN32)
         set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
     else()
