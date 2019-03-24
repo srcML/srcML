@@ -59,8 +59,7 @@ file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER)
 string(REGEX MATCH "SRCML_VERSION_STRING \"[0-9].[0-9].[0-9]\"" SRCML_VERSION_STRING "${SRCML_HEADER}")
 string(REGEX MATCH "([0-9].[0-9].[0-9])" SRCML_VERSION "${SRCML_VERSION_STRING}")
 
-set_property(TARGET srcml_shared PROPERTY VERSION "${SRCML_VERSION}")
-set_property(TARGET srcml_shared PROPERTY SOVERSION "${SRCML_VERSION}")
+set_target_properties(srcml_shared PROPERTIES VERSION "${SRCML_VERSION}" SOVERSION "${SRCML_VERSION}")
 
 if(APPLE)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")
