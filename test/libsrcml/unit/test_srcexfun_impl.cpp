@@ -71,7 +71,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
 
     {
 
-        std::ifstream in_file(SRCML_XPATH_EXFUN_TEST_DIR + string("/") + testFile);
+        std::ifstream in_file(testFile);
         assert(in_file.good());
 
     }
@@ -110,7 +110,7 @@ void run_xpath_test(std::string const& testFile, std::string const& xpathToTest,
         cout << "Last Error string: " << srcml_error_string() << endl;
         throw std::runtime_error("Failed to set language.");
     }
-    string fullTestFilePath = SRCML_XPATH_EXFUN_TEST_DIR + string("/") + testFile;
+    string fullTestFilePath = testFile;
     rc = srcml_unit_parse_filename(unit, fullTestFilePath.c_str());
     if(rc != SRCML_STATUS_OK) {
         cout << rc << endl;

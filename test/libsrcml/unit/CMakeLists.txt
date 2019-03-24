@@ -28,8 +28,5 @@ foreach(LIB_TEST ${LIB_TESTS})
     set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 15)
 endforeach()
 
-add_definitions(-DSRCML_XPATH_EXFUN_TEST_DIR="${CMAKE_BINARY_DIR}/bin/xpath_test_data")
-file(COPY xpath_test_data DESTINATION "${CMAKE_BINARY_DIR}/bin")
-
-# Copying xpath test data into correct loction
+# Copying xpath test data
 file(COPY copy.xsl setlanguage.xsl schema.rng DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
