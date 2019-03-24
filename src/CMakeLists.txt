@@ -30,14 +30,13 @@ macro(buildLib LIB_NAME LIB_TYPE)
 
     add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 
-if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
-elseif(APPLE)
-    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list" MACOSX_RPATH OFF)
-else()
-    set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
-
-endif()
+    if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+        set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
+    elseif(APPLE)
+        set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list" MACOSX_RPATH OFF)
+    else()
+        set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
+    endif()
 
     target_link_libraries(${LIB_NAME} PRIVATE ${LIBSRCML_LIBRARIES})
 endmacro()
