@@ -9029,7 +9029,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } (omp_directive | (cpp_literal | cpp_symbol)*) |
+        } ((OMP_OMP)=> omp_directive | (CHAR_START | STRING_START | TEMPOPS)=> cpp_literal | cpp_symbol)* |
 
         ERRORPREC
         {
