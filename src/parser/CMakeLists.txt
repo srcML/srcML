@@ -17,8 +17,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB PARSER_HEADERS *.hpp)
-file(GLOB PARSER_SOURCE *.cpp)
+file(GLOB PARSER_SOURCE *.hpp *.cpp)
 
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
 
@@ -119,19 +118,12 @@ RunAntlr("${srcMLParserOutputFiles}"
     "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
 
-set(updatedRemoveList ${KeywordLexerOutputFiles} ${srcMLParserOutputFiles} ${OperatorLexerOutputFiles} ${TextLexerOutputFiles} ${CommentTextLexerOutputFiles})
-
-# Removing generated files from file list.
-list(REMOVE_ITEM PARSER_HEADERS ${updatedRemoveList})
-list(REMOVE_ITEM PARSER_SOURCE ${updatedRemoveList})
-
 # @BUILD Why are these the same? Can the if be eliminated?
 if(WIN32)
 add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${PARSER_HEADERS}
     ${PARSER_SOURCE}
 )
 else()
@@ -139,7 +131,6 @@ add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${PARSER_HEADERS}
     ${PARSER_SOURCE}
 )
 endif()
