@@ -21,32 +21,22 @@ add_subdirectory(parser)
 add_subdirectory(libsrcml)
 add_subdirectory(client)
 
-# buildLib
-#  Used to help with the creation of the srcML library.
-#  - LIB_NAME is the name of the library and target
-#  - LIB_TYPE is either STATIC or SHARED.
-# 
-macro(buildLib LIB_NAME LIB_TYPE)
-
-    add_library(${LIB_NAME} ${LIB_TYPE} $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
-
-    if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-        set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
-    elseif(APPLE)
-        set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list" MACOSX_RPATH OFF)
-    else()
-        set_target_properties(${LIB_NAME} PROPERTIES OUTPUT_NAME srcml)
-    endif()
-
-    target_link_libraries(${LIB_NAME} PRIVATE ${LIBSRCML_LIBRARIES})
-endmacro()
-
 # Building static and dynamic libraries for srcML.
-buildLib(srcml_static STATIC)
+add_library(srcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+target_link_libraries(srcml_static PRIVATE ${LIBSRCML_LIBRARIES})
 
-buildLib(srcml_shared SHARED)
+add_library(srcml_shared SHARED $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+target_link_libraries(srcml_shared PRIVATE ${LIBSRCML_LIBRARIES})
+
+if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+    set_target_properties(srcml_shared srcml_static PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
+elseif(APPLE)
+    set_target_properties(srcml_shared srcml_static PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/export_list" MACOSX_RPATH OFF)
+else()
+    set_target_properties(srcml_shared srcml_static PROPERTIES OUTPUT_NAME srcml)
+endif()
 
 # Set libsrcml version
 file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER)
