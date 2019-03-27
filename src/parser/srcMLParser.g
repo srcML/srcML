@@ -136,7 +136,7 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
+#define ENTRY_DEBUG RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
 #ifdef ENTRY_DEBUG
 #define ENTRY_DEBUG_START ruledepth = 0;
 #endif
@@ -789,6 +789,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
+        && !inTransparentMode(MODE_INTERNAL_END_CURLY)
         && (!inLanguage(LANGUAGE_CXX) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
 
         { inMode(MODE_ARGUMENT_LIST) }? call_argument_list |
@@ -1935,7 +1936,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& ise
             // record token after argument list to differentiate between call and macro
             markend[postcalltoken] |
 
-            LPAREN set_int[call_count, 1]
+            (LPAREN | { inLanguage(LANGUAGE_CXX) }? LCURLY) set_int[call_count, 1]
         )
 ;
 
@@ -8061,7 +8062,9 @@ argument[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP)  && look_past_rule(&srcMLParser::identifier) == COLON }? argument_named_csharp)*
         (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP) }? argument_modifier_csharp)*
 
+
         (
+
         { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
 
         (type_identifier) => expression_process type_identifier
