@@ -1883,15 +1883,15 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
             (((!inLanguage(LANGUAGE_OBJECTIVE_C) || !inTransparentMode(MODE_OBJECTIVE_C_CALL)) && (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID))
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
-            || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
+            || (!inLanguage(LANGUAGE_CSHARP) && !inTransparentMode(MODE_INTERNAL_END_CURLY) &&postcalltoken == RCURLY)
             || (postnametoken != 1 && postcalltoken == 1 /* EOF ? */)
             || postcalltoken == TEMPLATE || postcalltoken == INLINE
             || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED || postcalltoken == SIGNAL
             || postcalltoken == ATREQUIRED || postcalltoken == ATOPTIONAL
             || postcalltoken == STATIC || postcalltoken == CONST)
             && (save_first != DECLTYPE))
-
             type = MACRO;
+
         if (inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
             type = NOCALL;
 
