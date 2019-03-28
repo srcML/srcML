@@ -182,7 +182,16 @@ COMMENT_TEXT {
               }
         } |
 
-//        '\015' /* '\r' - misc character since converted to '\n' in input buffer */ |
+        '\042' /* '\"' */
+            { dquote_count = 1; }
+            (options { greedy = true; } : { prevLA != '\\' }? '\042' { ++dquote_count; })*
+        {
+            if ((noescape && (dquote_count % 2 == 1)) ||
+                (!noescape && (prevLA != '\\') && (mode == STRING_END))) {
+                $setType(mode);
+                selector->pop();
+        }
+        } |
 
         '\013'..'\037'
                 // will only occur the first time this rule matches, and then will exit
