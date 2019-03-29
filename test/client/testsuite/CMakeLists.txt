@@ -19,14 +19,16 @@
 
 # add cli tests
 file(GLOB CLI_TESTS *.sh)
-list(REMOVE_ITEM CLI_TESTS framework_test.sh)
 
 # @BUILD This is not needed
 #file(COPY framework_test.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 foreach(CLI_TEST ${CLI_TESTS})
     get_filename_component(TEST_NAME ${CLI_TEST} NAME)
-    add_test(NAME ${TEST_NAME} COMMAND ${CLI_TEST})
+
+    if(NOT TEST_NAME STREQUAL "framework_test.sh")
+        add_test(NAME ${TEST_NAME} COMMAND ${CLI_TEST})
+    endif()
 endforeach()
 
 # @BUILD This is not needed. Tests are pulled from the src directory when ctest is run
