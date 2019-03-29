@@ -38,7 +38,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_unit * unit = srcml_unit_create(archive);
-
+/*
         dassert(unit->archive, archive);
         dassert(unit->language, boost::none);
         dassert(unit->filename, boost::none);
@@ -47,7 +47,7 @@ int main(int, char* argv[]) {
         dassert(unit->timestamp, boost::none);
         dassert(unit->hash, boost::none);
         dassert(unit->srcml, "");
-
+*/
         srcml_unit_free(unit);
         srcml_archive_free(archive);
     }

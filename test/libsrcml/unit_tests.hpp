@@ -19,4 +19,4 @@
  */
 
 #include <dassert.hpp>
-#include <boost_optional_string_output.hpp>
+#include <iostream>
