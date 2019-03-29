@@ -27,6 +27,7 @@
 #include <srcmlns.hpp>
 #include <unordered_set>
 #include <algorithm>
+#include <boost/functional/hash.hpp>
 #include <iostream> // for debugging only
 
 namespace {
@@ -278,7 +279,7 @@ namespace {
     };
 
     template<> struct ScopedDescendentsTraversalImpl<EXCLUSIVE> {
-        static void traverse(NodeNameSet const& scope, xmlChar const* const returnTrueOn, xmlXPathParserContextPtr ctxt) {
+        static void traverse(NodeNameSet const& /* scope */, xmlChar const* const returnTrueOn, xmlXPathParserContextPtr ctxt) {
             xmlNodePtr currentNode = ctxt->context->node;
             xmlNodePtr input = currentNode;
             xmlNodePtr temp = 0;
@@ -294,10 +295,13 @@ namespace {
                     if(xmlStrEqual(returnTrueOn, currentNode->name) != 0) {
                         xmlXPathReturnTrue(ctxt); return;
                     } else {
+// @TODO FIX BUILD
+#if 0
                         NodeNameSet::iterator locatedElementIter = scope.find(currentNode->name);
                         if(locatedElementIter != scope.end()) {
                             goto STRAIF_SIBLINGS;
                         }
+#endif
                     }
                 }
             }
