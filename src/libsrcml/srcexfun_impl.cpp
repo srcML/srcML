@@ -25,7 +25,7 @@
 #include <libxml/xmlerror.h>
 
 #include <srcmlns.hpp>
-#include <boost/unordered_set.hpp>
+#include <unordered_set>
 #include <algorithm>
 #include <iostream> // for debugging only
 
@@ -134,7 +134,7 @@ namespace {
         }
     };
     /* Type used for handling nodesets without storing any more then then a pointer to the statically allocated tag name. */
-    typedef boost::unordered_set<XmlCharConstPtr, XmlCharHasher, XmlCharEqualityComparer> NodeNameSet;
+    typedef std::unordered_set<XmlCharConstPtr, XmlCharHasher, XmlCharEqualityComparer> NodeNameSet;
 
     NodeNameSet has_return_node_init() {
         NodeNameSet ret;
