@@ -128,7 +128,7 @@ static int reparse_root(void* ctx) {
 
         // @todo Find out real filename to insert in error message
         // @todo Figure out how to get where error is noted
-        fprintf(stderr, "%s:%d:%d xml error: %s ", error->file, error->line, error->int2, error->message);
+        fprintf(stderr, "srcml: %d:%d %d|%s", error->line, error->int2, error->code, error->message);
         exit(1);
     });
 
