@@ -31,22 +31,22 @@ createfile sub/a.cpp "a;
 srcml sub/a.cpp --xmlns:pre=foo.com -o sub/a.xml
 
 # from a file
-srcml sub/a.xml --xpath="//src:name" --element="pre:element"
+srcml sub/a.xml --xpath="//src:name" --element="pre:element" --xmlns:pre=foo.com
 check "$result"
 
-srcml --xpath="//src:name" sub/a.xml --element="pre:element"
+srcml --xpath="//src:name" sub/a.xml --element="pre:element" --xmlns:pre=foo.com
 check "$result"
 
 # from standard input
-echo "a;" | srcml -l C++ --xmlns:pre=foo.com --xpath="//src:name" --element="pre:element"
+echo "a;" | srcml -l C++ --xmlns:pre=foo.com --xpath="//src:name" --element="pre:element" --xmlns:pre=foo.com
 check "$resultstdin"
 
 # output to a file
-srcml sub/a.xml --xpath="//src:name" --element="pre:element" -o result.xml
+srcml sub/a.xml --xpath="//src:name" --element="pre:element" --xmlns:pre=foo.com -o result.xml
 check result.xml "$result"
 
-srcml --xpath="//src:name" sub/a.xml --element="pre:element" -o result.xml
+srcml --xpath="//src:name" sub/a.xml --element="pre:element" --xmlns:pre=foo.com -o result.xml
 check result.xml "$result"
 
-echo "a;" | srcml -l C++  --xmlns:pre=foo.com --xpath="//src:name" --element="pre:element" -o result.xml
+echo "a;" | srcml -l C++  --xmlns:pre=foo.com --xpath="//src:name" --element="pre:element" --xmlns:pre=foo.com -o result.xml
 check result.xml "$resultstdin"

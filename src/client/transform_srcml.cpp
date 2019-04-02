@@ -34,7 +34,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
     // Check element namespace
     char const * element_uri = 0;
-    if (false && element){
+    if (element){
 
         // check first if namespace is already declared on the output archive
         element_uri = srcml_archive_get_uri_from_prefix(out_arch, element->prefix->c_str());
