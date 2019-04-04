@@ -1,6 +1,10 @@
 #ifndef INCLUDED_SRCML_MACROS_HPP
 #define INCLUDED_SRCML_MACROS_HPP
 
+#ifdef _MSC_BUILD
+#include <io.h>
+#endif
+
 /**
  * isoption
  * @param options the set options
