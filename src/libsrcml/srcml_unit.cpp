@@ -27,6 +27,7 @@
 #include <libxml2_utilities.hpp>
 #include <cstring>
 #include <fcntl.h>
+#include <srcml_macros.hpp>
 
 /******************************************************************************
  *                                                                            *
@@ -475,7 +476,7 @@ int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     // open the file and use the file descriptor version
-    int src_fd = open(src_filename, O_RDONLY);
+    int src_fd = OPEN(src_filename, O_RDONLY, 0);
     if (src_fd == -1) {
         return SRCML_STATUS_IO_ERROR;
     }
