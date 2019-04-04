@@ -26,11 +26,6 @@
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
 
-// transform srcml with query or transformation
-void transform_srcml(const srcml_request_t& srcml_request,
-				     const srcml_input_t& input_sources,
-                     const srcml_output_dest& output);
-
 int apply_xslt(srcml_archive* in_arch, const std::string& transform_input);
 
 int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces);
