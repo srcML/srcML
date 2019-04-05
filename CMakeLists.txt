@@ -33,6 +33,11 @@ option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 # Turn ON/OFF building libsrcml statically
 option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
 
+# The default configuration is to compile in DEBUG mode
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif()
+
 enable_testing()
 include(CTest)
 
