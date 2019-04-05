@@ -25,31 +25,27 @@
 #
 # - All subsequent arguments are linked as libraries.
 #
-macro(srcMLExec EXEC_NAME EXEC_FILE)
-    add_executable(${EXEC_NAME} ${EXEC_FILE})
-    target_link_libraries(${EXEC_NAME} ${ARGN})
-    if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-		set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-        add_custom_command(TARGET srcml POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${PROJECT_SOURCE_DIR}/deps/${BUILD_ARCH}/$<CONFIGURATION>/bin"
-        $<TARGET_FILE_DIR:srcml>)
-    elseif(APPLE)
-        # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
-        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list /dev/null")
-    elseif(WIN32)
-        # @BUILD Why this when there is a MSVC case above?
-        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
-    else()
-        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-    endif()
-endmacro()
-
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
-srcMLExec(srcml "${CLIENT_SOURCE}" srcml_shared ${SRCML_LIBRARIES})
+add_executable(srcml ${CLIENT_SOURCE})
+target_link_libraries(srcml srcml_shared ${SRCML_LIBRARIES})
+if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    add_custom_command(TARGET srcml POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${PROJECT_SOURCE_DIR}/deps/${BUILD_ARCH}/$<CONFIGURATION>/bin"
+    $<TARGET_FILE_DIR:srcml>)
+elseif(APPLE)
+    # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
+    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list /dev/null")
+elseif(WIN32)
+    # @BUILD Why this when there is a MSVC case above?
+    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
+else()
+    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+endif()
 
-if(APPLE)							     
+if(APPLE)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"-u\" \"-r\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
 elseif(NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
