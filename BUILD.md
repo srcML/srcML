@@ -28,36 +28,26 @@ Out of source builds (builds outside the source directory) are required. In sour
 
 #### macOX
 
-##### Packages Required
+The main packages required may be installed via brew:
 
-* antlr2
-* boost
-* cmake
+    `brew install antlr2 boost cmake`
 
-For srcML documentation generation:
+The srcML client requires at least LibArchive 3. macOX includes version 2.8. Because of this, LibArchive is
+  statically linked into the client. There are two options
 
-* man2html
-* ronn
-* doxygen
+* Use brew to install a more recent version:
+
+    `brew install libarchive`
+
+* Download and build LibArchive in a directory `libarchive` parallel to the source directory, typically ~/libarchive
+
+To generate srcML documentation:
+
+    `brew install man2html doxygen`
 
 Additional packages that may not needed, but are recommended (for timing etc.):
 
-* coreutils
-* gnu-sed
-* gnu-time
-
-Distribution of dmg/pkg:
-
-* pkgbuild
-
-##### Notes
-
-* The srcML client requires LibArchive with a version >= 3. OS X and macOS includes a version < 3. Because of this, LibArchive is
-  statically linked into the client. There are two sources:
-
-    * Install the libarchive that is part of brew, `brew install libarchive`
-    * Download and build LibArchive in a directory `libarchive` parallel to the source directory, typically ~/libarchive
-
+    `brew install coreutils gnu-sed gnu-time`
 
 #### Linux Builds
 
