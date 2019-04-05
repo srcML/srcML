@@ -27,7 +27,7 @@
 #include <cassert>
 
 #include <srcml.h>
-#include <srcml_types.hpp>
+// #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
@@ -99,7 +99,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->revision = boost::optional<std::string>();
+//        archive->revision = boost::optional<std::string>();
         dassert(srcml_archive_get_revision(archive), 0);
         srcml_archive_free(archive);
     }
@@ -123,7 +123,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->language = boost::optional<std::string>();
+////        archive->language = boost::optional<std::string>();
         dassert(srcml_archive_get_language(archive), 0);
         srcml_archive_free(archive);
     }
@@ -131,7 +131,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->language = "foo";
+////        archive->language = "foo";
         dassert(srcml_archive_get_language(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
@@ -147,7 +147,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->url = boost::optional<std::string>();
+//        archive->url = boost::optional<std::string>();
         dassert(srcml_archive_get_url(archive), 0);
         srcml_archive_free(archive);
     }
@@ -155,7 +155,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->url = "foo";
+//        archive->url = "foo";
         dassert(srcml_archive_get_url(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
@@ -171,7 +171,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->version = boost::optional<std::string>();
+//        archive->version = boost::optional<std::string>();
         dassert(srcml_archive_get_version(archive), 0);
         srcml_archive_free(archive);
     }
@@ -179,7 +179,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->version = "foo";
+//        archive->version = "foo";
         dassert(srcml_archive_get_version(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
@@ -196,7 +196,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
 
-        archive->options = 1;
+//        archive->options = 1;
 
         dassert(srcml_archive_get_options(archive), 1);
         srcml_archive_free(archive);
@@ -206,7 +206,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
 
-        archive->options = 1 | 2;
+//        archive->options = 1 | 2;
 
         dassert(srcml_archive_get_options(archive), (1 | 2));
         srcml_archive_free(archive);
@@ -224,7 +224,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
 
-        archive->tabstop = 4;
+//        archive->tabstop = 4;
 
         dassert(srcml_archive_get_tabstop(archive), 4);
         srcml_archive_free(archive);
@@ -571,7 +571,7 @@ int main(int, char* argv[]) {
     {
 
         srcml_archive * archive = srcml_archive_create();
-        archive->revision_number = SRCDIFF_REVISION_ORIGINAL;
+//        archive->revision_number = SRCDIFF_REVISION_ORIGINAL;
         dassert(srcml_archive_get_srcdiff_revision(archive), SRCDIFF_REVISION_ORIGINAL);
 
         srcml_archive_free(archive);
