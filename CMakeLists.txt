@@ -22,6 +22,17 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(srcML)
 
+# Turn ON/OFF tests
+option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
+option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" OFF)
+option(BUILD_PARSER_TESTS "Include tests for parser" ON)
+
+# Turn ON/OFF building examples
+option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
+
+# Turn ON/OFF building libsrcml statically
+option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
+
 enable_testing()
 include(CTest)
 
