@@ -19,7 +19,8 @@
 #
 #    The CMake project file for srcML.
 #
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.11)
+
 project(srcML)
 
 # Turn ON/OFF tests
