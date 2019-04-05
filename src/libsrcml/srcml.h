@@ -1093,7 +1093,7 @@ LIBSRCML_DECL int srcml_append_transform_xpath_attribute(struct srcml_archive* a
 LIBSRCML_DECL int srcml_append_transform_xpath_element(struct srcml_archive* archive, const char* xpath_string,
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element);
-#ifdef WITH_LIBXSLT
+
 /** Append an XSLT program at the designated filename path to the list of transformations/queries
  * @param archive A srcml_archive
  * @param xslt_filename An XSLT program filename path
@@ -1132,7 +1132,6 @@ LIBSRCML_DECL int srcml_append_transform_xslt_FILE(struct srcml_archive* archive
  * @return Status error codes on failure
  */
 LIBSRCML_DECL int srcml_append_transform_xslt_fd(struct srcml_archive* archive, int xslt_fd);
-#endif
 
 /** Append the RelaxNG schema from a filename path to the list of transformations/queries
  * @param archive A srcml_archive
