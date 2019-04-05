@@ -19,7 +19,7 @@ To generate a makefile in your build directory:
     make install
 
  Client tests are enabled by default, while libsrcml and parser tests are disabled by default.
- These tests can be enabled/disabled via the cmake command, e.g.,
+ These tests can be enabled/disabled via the cmake command, e.g. with a parallel source directory,
 
     cmake -DBUILD_CLIENT_TESTS=OFF -DBUILD_LIBSRCML_TESTS=ON -DBUILD_PARSER_TESTS=ON ../srcML
 
