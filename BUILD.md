@@ -5,64 +5,60 @@ macOS, Fedora, Ubuntu, CentOS, OpenSUSE, and Windows Visual Studio.
 
 Out of source builds (builds outside the source directory) are required. In source builds are not supported.
 
----
-
 ## Unix
 
-* To generate a makefile in the current directory run, for out of source builds:
+To generate a makefile in your build directory:
 
-    `cmake <path_to_srcml>`
+    cmake <path_to_srcml>
 
-* The following make commands are supported with their usual meaning
+ The following make commands are supported with their usual meaning
 
-    `make`  
-    `make clean`  
-    `make test`
+    make  
+    make clean  
+    make test  
 
-* Client tests are enabled by default, while libsrcml and parser tests are disabled by default.
-    These tests can be enabled/disabled via the cmake command, e.g.,
+ Client tests are enabled by default, while libsrcml and parser tests are disabled by default.
+ These tests can be enabled/disabled via the cmake command, e.g.,
 
-    `cmake -DBUILD_CLIENT_TESTS=OFF -DBUILD_LIBSRCML_TESTS=ON -DBUILD_PARSER_TESTS=ON ../srcML`
+    cmake -DBUILD_CLIENT_TESTS=OFF -DBUILD_LIBSRCML_TESTS=ON -DBUILD_PARSER_TESTS=ON ../srcML
 
-* You may need to run `ldconfig` to get the link to the libsrcml shared library path up to date
+ You may need to run `ldconfig` to get the link to the libsrcml shared library path up to date
 
-#### macOX
+### macOS
 
 The main packages required may be installed via brew:
 
-    `brew install antlr2 boost cmake`
+    brew install antlr2 boost cmake
 
-The srcML client requires at least LibArchive 3. macOX includes version 2.8. Because of this, LibArchive is
-  statically linked into the client. There are two options
+The srcML client requires at least LibArchive 3. macOS includes version 2.8. Because of this, LibArchive is
+statically linked into the client. There are two options
 
 * Use brew to install a more recent version:
 
     `brew install libarchive`
 
-* Download and build LibArchive in a directory `libarchive` parallel to the source directory, typically ~/libarchive
+* Download and build LibArchive in a directory `libarchive` parallel to the source directory, typically \~/libarchive
 
 To generate srcML documentation:
 
-    `brew install man2html doxygen`
+    brew install man2html doxygen
 
 Additional packages that may not needed, but are recommended (for timing etc.):
 
-    `brew install coreutils gnu-sed gnu-time`
+    brew install coreutils gnu-sed gnu-time
 
-#### Linux Builds
+#### Linux
 
 Linux builds for Ubuntu, Fedora, CentOS and OpenSUSE are supported.
 
-To find what is needed, it is recommended to consult the dockerfiles for the particular version:
+To find what is needed, it is recommended to consult these dockerfiles for the particular distribution:
 
-* Ubuntu: https://github.com/srcML/Docker/blob/ubuntu_latest/base/Dockerfile
-* Fedora: https://github.com/srcML/Docker/blob/fedora_latest/base/Dockerfile
-* CentOS: https://github.com/srcML/Docker/blob/centos_latest/base/Dockerfile
-* OpenSUSE:  https://github.com/srcML/Docker/blob/opensuse_latest/base/Dockerfile
+* [Ubuntu](https://github.com/srcML/Docker/blob/ubuntu_latest/base/Dockerfile)
+* [Fedora](https://github.com/srcML/Docker/blob/fedora_latest/base/Dockerfile)
+* [CentOS](https://github.com/srcML/Docker/blob/centos_latest/base/Dockerfile)
+* [OpenSUSE](https://github.com/srcML/Docker/blob/opensuse_latest/base/Dockerfile)
 
-Commands to install what is needed can be adapted from these, and they are tested to work.
-
-You will also find dockerfiles for other versions of these distributions.
+Commands to install what is needed can be adapted from these, and they are tested to work. You will also find dockerfiles for older versions of these distributions.
 
 ## Windows Using MSVC
 
