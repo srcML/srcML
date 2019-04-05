@@ -27,7 +27,6 @@
 #include <cassert>
 
 #include <srcml.h>
-#include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
 
