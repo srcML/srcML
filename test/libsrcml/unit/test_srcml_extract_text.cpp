@@ -36,7 +36,7 @@
 
 #include <srcml_sax2_utilities.hpp>
 #include <srcml.h>
-#include <srcml_types.hpp>
+// #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
 #include <libxml/xmlIO.h>

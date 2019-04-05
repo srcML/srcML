@@ -40,7 +40,7 @@
 #include <dassert.hpp>
 #include <srcml.h>
 
-#include <srcml_types.hpp>
+// #include <srcml_types.hpp>
 
 int main(int, char* []) {
 #if 0

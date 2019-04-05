@@ -38,7 +38,7 @@
 #include <fcntl.h>
 
 #include <srcml.h>
-#include <srcml_types.hpp>
+// #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
@@ -265,7 +265,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
         dassert(srcml_unit_unparse_filename(unit, "project.c"),  SRCML_STATUS_INVALID_IO_OPERATION);
 
         srcml_unit_free(unit);
@@ -452,7 +452,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
         dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_INVALID_IO_OPERATION);
 
         srcml_unit_free(unit);
@@ -680,7 +680,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
         FILE * file = fopen("project.c", "w");
         dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_INVALID_IO_OPERATION);
         fclose(file);
@@ -914,7 +914,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_INVALID_IO_OPERATION);
         CLOSE(fd);
@@ -1132,7 +1132,7 @@ int main(int, char* argv[]) {
 
         srcml_archive * archive = srcml_archive_create();
         srcml_unit * unit = srcml_unit_create(archive);
-        unit->srcml = "<unit/>";
+//        unit->srcml = "<unit/>";
         FILE * file = fopen("project.c", "w");
         dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_IO_OPERATION);
         fclose(file);

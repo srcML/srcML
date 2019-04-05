@@ -38,7 +38,7 @@
 #include <fcntl.h>
 
 #include <srcml.h>
-#include <srcml_types.hpp>
+// #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
@@ -117,7 +117,7 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
         srcml_append_transform_xpath(iarchive, "//src:unit");
         srcml_archive * oarchive = srcml_archive_clone(iarchive);
-        srcml_archive_enable_option(oarchive, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_full_archive(oarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
 //        srcml_apply_transforms(iarchive, oarchive);
@@ -140,7 +140,7 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
         srcml_append_transform_xpath(iarchive, "//src:unit");
         srcml_archive * oarchive = srcml_archive_clone(iarchive);
-        srcml_archive_enable_option(oarchive, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_full_archive(oarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
 //        srcml_apply_transforms(iarchive, oarchive);
@@ -1156,7 +1156,7 @@ int main(int, char* argv[]) {
         CLOSE(fd);
 
         srcml_archive * oarchive = srcml_archive_clone(iarchive);
-        srcml_archive_enable_option(oarchive, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_full_archive(oarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
 //        srcml_apply_transforms(iarchive, oarchive);
@@ -1198,7 +1198,7 @@ int main(int, char* argv[]) {
         CLOSE(fd);
 
         srcml_archive * oarchive = srcml_archive_clone(iarchive);
-        srcml_archive_enable_option(oarchive, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_full_archive(oarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
 //        srcml_apply_transforms(iarchive, oarchive);
