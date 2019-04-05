@@ -16,6 +16,7 @@ To generate a makefile in your build directory:
     make  
     make clean  
     make test  
+    make install
 
  Client tests are enabled by default, while libsrcml and parser tests are disabled by default.
  These tests can be enabled/disabled via the cmake command, e.g.,
