@@ -117,11 +117,6 @@ else()
 
 endif()
 
-
-
-# Finding antlr binary.
-find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
-
 find_package(PythonInterp REQUIRED)
 
 # Enforcing that the version of python being used must have a major version of 2.
