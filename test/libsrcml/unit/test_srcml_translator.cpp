@@ -24,6 +24,8 @@
   Unit tests for srcml_translator.
 
 */
+
+#if 0
 #include <stdio.h>
 #include <string.h>
 #ifndef _MSC_BUILD
@@ -39,7 +41,7 @@
 #include <cassert>
 #include <dassert.hpp>
 #include <srcml.h>
-
+#endif
 // #include <srcml_types.hpp>
 
 int main(int, char* []) {
