@@ -64,7 +64,6 @@ option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 
 # Setting some windows only properties.
-# @todo this breaks mingw32 build.
 if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
 
     if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
@@ -210,10 +209,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 if(${CMAKE_COMPILER_IS_GNUCXX})
 
-    string(FIND ${CMAKE_CXX_COMPILER} "mingw32" IS_MINGW32)
-    if(IS_MINGW32 EQUAL -1)
-      set(USE_FPIC -fPIC)
-    endif()
+    set(USE_FPIC -fPIC)
 
     set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros")
     # Adding global compiler definitions.                                                                                      
