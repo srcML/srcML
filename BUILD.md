@@ -13,10 +13,6 @@ Out of source builds (builds outside the source directory) are required. In sour
 
     `cmake <path_to_srcml>`
 
-* For in source builds, use:
-
-    `cmake .`
-
 * The following make commands are supported with their usual meaning
 
     `make`  
