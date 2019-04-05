@@ -24,7 +24,7 @@
   Gather info from an archive from a given unit.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 
 int main(int argc, char* argv[]) {
 

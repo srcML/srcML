@@ -25,7 +25,7 @@
 */
 
 #include <stdio.h>
-#include "srcml.h"
+#include <srcml.h>
 
 int main(int argc, char* argv[]) {
 

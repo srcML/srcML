@@ -25,7 +25,7 @@
   Not especially useful, but does show how units can be rearranged.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 #include <string.h>
 
 int main(int argc, char* argv[]) {

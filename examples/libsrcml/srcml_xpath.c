@@ -24,7 +24,7 @@
   XPath usage.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 
 int main(int argc, char * argv[]) {
 

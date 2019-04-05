@@ -24,7 +24,7 @@
   Create an archive, file by file, with an output memory.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 #include <stdio.h>
 #include <string.h>
 #include <fcntl.h>

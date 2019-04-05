@@ -22,7 +22,7 @@
   Example program of the use of the convenience funcion C API for srcML.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 
 int main(int argc, char* argv[]) {
 

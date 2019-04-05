@@ -24,7 +24,7 @@
   Create an archive, file by file, with an output file descriptor
 */
 
-#include "srcml.h"
+#include <srcml.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #ifdef _MSC_BUILD

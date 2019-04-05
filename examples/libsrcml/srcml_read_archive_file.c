@@ -24,7 +24,7 @@
   Take an archive and extract the invidual units and write to a filesystem.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {
