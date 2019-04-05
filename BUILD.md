@@ -20,9 +20,9 @@ Out of source builds (builds outside the source directory) are required. In sour
     `make test`
 
 * Client tests are enabled by default, while libsrcml and parser tests are disabled by default.
-    These tests can be enabled/disabled via the cmake command:
+    These tests can be enabled/disabled via the cmake command, e.g.,
 
-    `cmake -DBUILD_CLIENT_TESTS=OFF -DBUILD_LIBSRCML_TESTS=ON -DBUILD_PARSER_TESTS=ON`
+    `cmake -DBUILD_CLIENT_TESTS=OFF -DBUILD_LIBSRCML_TESTS=ON -DBUILD_PARSER_TESTS=ON ../srcML`
 
 * You may need to run `ldconfig` to get the link to the libsrcml shared library path up to date
 
