@@ -44,11 +44,6 @@ endif()
 
 set(OS_NAME ${OS_NAME} CACHE INTERNAL "Detected OS name")
 
-# Dynamic Load libraries (Unix only)
-if(NOT WIN32)
-    option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
-endif()
-
 if(NOT DYNAMIC_LOAD_ENABLED)
     add_definitions(-DNO_DLLOAD)
 endif()
