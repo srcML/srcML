@@ -19,4 +19,10 @@
 
 include_directories(.)
 
+include_directories(/usr/local/include)
+
+set(CMAKE_CXX_FLAGS "--std=c++11")
+
+add_definitions(-DWITH_LIBXSLT)
+
 add_subdirectory(unit)
