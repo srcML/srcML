@@ -196,31 +196,3 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-if(${CMAKE_COMPILER_IS_GNUCXX})
-
-    set(USE_FPIC -fPIC)
-
-    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros")
-    # Adding global compiler definitions.                                                                                      
-    set(CMAKE_CXX_FLAGS "${USE_FPIC} --std=c++0x ${GCC_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
-    set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG --coverage -fprofile-arcs")
-
-elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xClang")
-    # Configuring the Clang compiler
-    set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
-    set(CMAKE_CXX_FLAGS "-fPIC --std=c++11 ${CLANG_WARNINGS}")
-    set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
-    set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
-    
-elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xIntel")
-    message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
-    
-elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-    # message(STATUS "MSVC Compiler not completely configured yet")
-    set(MSVC_WARNINGS "/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${MSVC_WARNINGS} /Od /ZI /MDd")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${MSVC_WARNINGS} /Ox")
-else()
-    message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
-endif()
