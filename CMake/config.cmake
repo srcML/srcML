@@ -44,11 +44,6 @@ endif()
 
 set(OS_NAME ${OS_NAME} CACHE INTERNAL "Detected OS name")
 
-if(NOT DYNAMIC_LOAD_ENABLED)
-    add_definitions(-DNO_DLLOAD)
-endif()
-
-
 # Setting some windows only properties.
 if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
 
