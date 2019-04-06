@@ -128,10 +128,10 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL 
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
     
-elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xIntel")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
     
-elseif("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # message(STATUS "MSVC Compiler not completely configured yet")
     set(MSVC_WARNINGS "/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${MSVC_WARNINGS} /Od /ZI /MDd")
@@ -143,10 +143,10 @@ endif()
 if(DYNAMIC_LOAD_ENABLED)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${ICONV_LIBRARIES} dl pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
-elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC" AND NOT WIN32)
+elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND NOT WIN32)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${ICONV_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
-elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} ${ANTLR_LIBRARY} ${ICONV_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")
 else()
@@ -163,7 +163,7 @@ if(NOT WIN32 AND APPLE)
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} pthread CACHE INTERNAL "Libraries needed to build srcml")
 elseif(NOT WIN32)
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} crypto pthread CACHE INTERNAL "Libraries needed to build srcml")
-elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "xMSVC")
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 crypto CACHE INTERNAL "Libraries needed to build srcml")
 else()
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 ${LIBSRCML_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
@@ -199,7 +199,7 @@ set_target_properties(srcml_shared PROPERTIES VERSION "${SRCML_VERSION}" SOVERSI
 
 if(APPLE)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")
-elseif(NOT ("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC") AND NOT WIN32)
+elseif(NOT (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") AND NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.so\")")
 endif()
 
