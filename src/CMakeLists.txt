@@ -80,7 +80,7 @@ else()
         message(FATAL_ERROR "Unable to find libarchive >= 3 via homebrew or local build at ${OSX_LIBARCHIVE_PATH}")
     endif()
 
-    # Locating packages.e
+    # Locating packages
     find_package(LibXml2 REQUIRED)
     find_package(CURL REQUIRED)
     find_package(Iconv REQUIRED)
@@ -89,7 +89,7 @@ else()
     find_package(Boost COMPONENTS program_options REQUIRED)
 
     # add include directories
-    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${ICONV_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
+    include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${Iconv_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIR} ${Boost_INCLUDE_DIR})
 
     if(DYNAMIC_LOAD_ENABLED)
         find_package(LibXslt)
