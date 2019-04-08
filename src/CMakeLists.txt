@@ -21,6 +21,8 @@ if(NOT DYNAMIC_LOAD_ENABLED)
     add_definitions(-DNO_DLLOAD)
 endif()
 
+set(CMAKE_CXX_STANDARD 11)
+
 if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
 
     if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
@@ -117,14 +119,14 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
 
     set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros")
     # Adding global compiler definitions.                                                                                      
-    set(CMAKE_CXX_FLAGS "${USE_FPIC} --std=c++0x ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "${USE_FPIC} ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG --coverage -fprofile-arcs")
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
     # Configuring the Clang compiler
     set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
-    set(CMAKE_CXX_FLAGS "-fPIC --std=c++11 ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
     
