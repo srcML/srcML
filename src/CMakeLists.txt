@@ -27,7 +27,7 @@ set(CMAKE_CXX_STANDARD 11)
 # Should be default in cmake 3.14
 cmake_policy(SET CMP0087 NEW)
 
-if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
     if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
         set(BUILD_ARCH "x86")
@@ -169,7 +169,7 @@ if(NOT WIN32 AND APPLE)
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} pthread CACHE INTERNAL "Libraries needed to build srcml")
 elseif(NOT WIN32)
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} crypto pthread CACHE INTERNAL "Libraries needed to build srcml")
-elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "xMSVC")
+elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 crypto CACHE INTERNAL "Libraries needed to build srcml")
 else()
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 ${LIBSRCML_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
@@ -188,7 +188,7 @@ add_library(srcml_shared SHARED $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrc
 set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 target_link_libraries(srcml_shared PRIVATE ${LIBSRCML_LIBRARIES})
 
-if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set_target_properties(srcml_shared srcml_static PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
 elseif(APPLE)
     set_target_properties(srcml_shared srcml_static PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/src/libsrcml/export_list" MACOSX_RPATH OFF)
