@@ -23,6 +23,10 @@ endif()
 
 set(CMAKE_CXX_STANDARD 11)
 
+# Needed to expand generator expressions in install()
+# Should be default in cmake 3.14
+cmake_policy(SET CMP0087 NEW)
+
 if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
 
     if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
@@ -199,10 +203,8 @@ set(SRCML_VERSION ${CMAKE_MATCH_1})
 
 set_target_properties(srcml_shared PROPERTIES VERSION "${SRCML_VERSION}" SOVERSION "${SRCML_VERSION}")
 
-if(APPLE)
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.dylib\")")
-elseif(NOT (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") AND NOT WIN32)
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"${CMAKE_BINARY_DIR}/bin/libsrcml.so\")")
+if(NOT (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") AND NOT WIN32)
+    install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"$<TARGET_FILE:srcml_shared>\")")
 endif()
 
 set(LIBDIR "lib")
