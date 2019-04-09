@@ -49,7 +49,8 @@ include(CTest)
 
 # Setting up Project includes.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
-include (srcml)
+include(packageConfig)
+include(doc)
 
 set(CMAKE_MACOSX_RPATH 1)
 
