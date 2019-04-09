@@ -222,3 +222,7 @@ else()
 endif()
 
 install(TARGETS ${LIBTYPES} RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIBDIR} ARCHIVE DESTINATION ${LIBDIR})
+
+if(APPLE)
+    install(CODE "execute_process(COMMAND /usr/bin/install_name_tool -id /usr/local/lib/libsrcml.dylib /usr/local/lib/libsrcml.dylib)")
+endif()

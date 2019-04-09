@@ -19,4 +19,3 @@
 
 include (packageConfig)
 include (doc)
-include (install)
