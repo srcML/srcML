@@ -57,7 +57,7 @@ set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
 
 # Setting up source include directories.
-include_directories(BEFORE src/client src/libsrcml src/parser src/srcSAX ${CMAKE_GENERATED_SOURCE_DIR})
+include_directories(BEFORE src/client src/libsrcml src/parser ${CMAKE_GENERATED_SOURCE_DIR})
 
 # Setting major and minor version numbers (TODO fix this so that it is set using something
 # more correct that being input from within the build system).
