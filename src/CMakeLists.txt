@@ -119,20 +119,18 @@ endif()
 
 if(${CMAKE_COMPILER_IS_GNUCXX})
 
-    set(USE_FPIC -fPIC)
-
-    set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros")
-    # Adding global compiler definitions.                                                                                      
-    set(CMAKE_CXX_FLAGS "${USE_FPIC} ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG --coverage -fprofile-arcs")
 
+    add_compile_options(-fPIC -Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros)
+
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+
     # Configuring the Clang compiler
-    set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
-    set(CMAKE_CXX_FLAGS "-fPIC ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
+
+    add_compile_options(-fPIC -Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast)
     
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
