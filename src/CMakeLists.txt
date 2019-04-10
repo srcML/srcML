@@ -207,12 +207,9 @@ if(NOT (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") AND NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"$<TARGET_FILE:srcml_shared>\")")
 endif()
 
-set(LIBDIR "lib")
+include(GNUInstallDirs)
 
-# openSUSE installs in lib64
-if(OS_NAME STREQUAL "openSUSE" AND CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-    set(LIBDIR "lib64")
-endif()
+set(LIBDIR ${CMAKE_INSTALL_LIBDIR})
 
 # which types of libraries
 if (BUILD_LIBSRCML_STATIC)
