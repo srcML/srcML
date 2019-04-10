@@ -136,10 +136,12 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
     
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    # message(STATUS "MSVC Compiler not completely configured yet")
-    set(MSVC_WARNINGS "/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${MSVC_WARNINGS} /Od /ZI /MDd")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${MSVC_WARNINGS} /Ox")
+
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od /ZI /MDd")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Ox")
+
+    add_compile_options(/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS)
+
 else()
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
 endif()
