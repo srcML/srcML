@@ -212,13 +212,11 @@ include(GNUInstallDirs)
 set(LIBDIR ${CMAKE_INSTALL_LIBDIR})
 
 # which types of libraries
+install(TARGETS srcml_shared RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIBDIR} ARCHIVE DESTINATION ${LIBDIR})
 if (BUILD_LIBSRCML_STATIC)
-    set(LIBTYPES "srcml_shared srcml_static")
-else()
-    set(LIBTYPES "srcml_shared")
+    install(TARGETS srcml_static RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIBDIR} ARCHIVE DESTINATION ${LIBDIR})
 endif()
 
-install(TARGETS ${LIBTYPES} RUNTIME DESTINATION bin LIBRARY DESTINATION ${LIBDIR} ARCHIVE DESTINATION ${LIBDIR})
 
 if(APPLE)
     install(CODE "execute_process(COMMAND /usr/bin/install_name_tool -id /usr/local/lib/libsrcml.dylib /usr/local/lib/libsrcml.dylib)")
