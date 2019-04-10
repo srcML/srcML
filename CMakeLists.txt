@@ -19,7 +19,7 @@
 #
 #    The CMake project file for srcML.
 #
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.14)
 
 project(srcML)
 
@@ -89,4 +89,3 @@ elseif(EXISTS /etc/os-release)
 endif()
 
 set(OS_NAME ${OS_NAME} CACHE INTERNAL "Detected OS name")
-
