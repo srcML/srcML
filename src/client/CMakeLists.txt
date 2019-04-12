@@ -28,7 +28,12 @@
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
 add_executable(srcml ${CLIENT_SOURCE})
-target_link_libraries(srcml srcml_shared ${SRCML_LIBRARIES})
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
+    target_link_libraries(srcml srcml_shared ${SRCML_LIBRARIES} gcov)
+else()
+    target_link_libraries(srcml srcml_shared ${SRCML_LIBRARIES})
+endif()
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     add_custom_command(TARGET srcml POST_BUILD
