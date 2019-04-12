@@ -39,7 +39,10 @@ void srcml_pipe(srcml_input_src& input, srcml_pipe_process process, srcml_reques
     // setup the pipes
     int fds[2] = { -1, -1 };
 #if !defined(_MSC_BUILD) && !defined(__MINGW32__)
-    pipe(fds);
+    if (pipe(fds) == -1) {
+        perror("srcml");
+        return;
+    }
 #else
     HANDLE read_pipe;
     HANDLE write_pipe;

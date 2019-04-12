@@ -153,7 +153,10 @@ void create_src(const srcml_request_t& srcml_request,
 
             // null separator before every unit (except the first)
             if (count) {
-                write(1, "", 1);
+                if (write(1, "", 1) == -1) {
+                    SRCMLstatus(ERROR_MSG, "Unable to write to stdout");
+                    break;
+                }
             }
 
             // unaparse directly to the destintation
