@@ -1,1 +1,1 @@
-sudo ldconfig 
+ldconfig 
