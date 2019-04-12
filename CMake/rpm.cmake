@@ -33,7 +33,7 @@ set(CPACK_RPM_PACKAGE_RELEASE 1)
 #set(CPACK_RPM_PACKAGE_PROVIDES "")
 
 # set post install script
-set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/post.sh")
+set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/CMake/post.sh")
 
 # set install for manpage (Run cpack -G RPM)
 include(GNUInstallDirs)
