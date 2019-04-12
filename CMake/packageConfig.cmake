@@ -88,19 +88,9 @@ endif()
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
 # include other specific configurations
-MESSAGE(STATUS "Load Package Config for: ${OS_NAME}")
-
-if (OS_NAME STREQUAL "Ubuntu" OR OS_NAME STREQUAL "Linux Mint")
-	include(debian)
-endif()
-
-if (OS_NAME STREQUAL "Fedora" OR OS_NAME STREQUAL "openSUSE" OR OS_NAME STREQUAL "openSUSE Leap" OR OS_NAME STREQUAL "CentOS")
-	include(rpm)
-endif()
-
-if (WIN32)
-	include(nsis)
-endif()
+include(debian)
+include(rpm)
+include(nsis)
 
 # needs to be last so not overwritten
 include(CPack)
