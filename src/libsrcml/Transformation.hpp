@@ -35,8 +35,8 @@ struct TransformationResult {
         : nodeset(nodeset), unitWrapped(wrapped) {}
     int nodeType = 0;
     xmlNodeSetPtr nodeset = nullptr;
-    double numberValue;
-    bool boolValue;
+    double numberValue = 0.0;
+    bool boolValue = false;
     std::string stringValue;
     bool unitWrapped = false;
 };
