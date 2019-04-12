@@ -130,7 +130,9 @@ int input_curl(srcml_input_src& input) {
             
             // ok, no errors, but may have cached data in the buffer, especially for small files
             if (!write_info.buffer.empty()) {
-                write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size());
+                if (write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size()) == -1) {
+                    SRCMLstatus(WARNING_MSG, "srcml: Buffer error with URL " + url);
+                }
             }
         }
 
