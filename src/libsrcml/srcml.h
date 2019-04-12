@@ -1220,7 +1220,7 @@ struct srcml_transformation_result_t {
     /** Array of srcml units for type SRCML_RESULTS_UNIT */
     struct srcml_unit** units;
     /** Result for type SRCML_RESULTS_BOOLEAN */
-    bool boolValue;
+    int boolValue;
     /** Result for type SRCML_RESULTS_NUMBER */
     double numberValue;
     /** Result for type SRCML_RESULTS_STRING */

@@ -17,8 +17,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-copyDependentFile("runtest.py")
-copyDependentFile("python_test_bindings.py")
+file(COPY runtest.py python_test_bindings.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(testsuite)
 

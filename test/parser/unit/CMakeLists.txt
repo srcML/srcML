@@ -17,8 +17,13 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-addUnitTest(test_srcMLState test_srcMLState.cpp)
-addUnitTest(test_Language test_Language.cpp)
-addUnitTest(test_UTF8CharBuffer test_UTF8CharBuffer.cpp ${LIBXML2_LIBRARIES})
-
-
+# Build and add tests
+file(GLOB LIB_TESTS test_*.cpp)
+foreach(LIB_TEST ${LIB_TESTS})
+	get_filename_component(TEST_NAME ${LIB_TEST} NAME_WE)
+    add_executable(${TEST_NAME} ${LIB_TEST})
+    target_link_libraries(${TEST_NAME} srcml_shared)
+    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+    set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 15)
+endforeach()

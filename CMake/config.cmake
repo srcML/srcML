@@ -37,7 +37,7 @@ if(EXISTS /etc/redhat-release)
 
 elseif(EXISTS /etc/os-release)
     file(READ /etc/os-release OS_RELEASE)
-    string(REGEX MATCH "^NAME=\"([a-zA-Z]*)\"" OS_NAME ${OS_RELEASE})
+    string(REGEX MATCH "^NAME=\"([a-zA-Z ]*)\"" OS_NAME ${OS_RELEASE})
     set(OS_NAME ${CMAKE_MATCH_1})
 
 endif()
@@ -62,13 +62,6 @@ option(BUILD_PARSER_TESTS "Include tests for parser" ON)
 option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
 
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
-option(BUILD_PYTHON_BINDINGS "Build Python language bindings/wrapper" OFF)
-
-if(${BUILD_PYTHON_BINDINGS})
-    set(BUILD_LANGUAGE_BINDINGS true)
-else()
-    set(BUILD_LANGUAGE_BINDINGS false)
-endif()
 
 # Setting some windows only properties.
 # @todo this breaks mingw32 build.
@@ -85,10 +78,6 @@ if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
 
     include_directories(${WINDOWS_DEP_PATH}/include)
     link_directories(${WINDOWS_DEP_PATH}/${BUILD_ARCH}/$(ConfigurationName)/lib)
-    
-    if(ENABLE_SVN_INTEGRATION)
-        message(FATAL_ERROR "SVN integration not tested on windows.")
-    endif()
     
     set(LIBXSLT_LIBRARIES libxslt.lib)
     set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)

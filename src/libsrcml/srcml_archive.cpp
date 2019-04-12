@@ -1361,8 +1361,10 @@ void srcml_archive_close(struct srcml_archive* archive) {
 
     // Give the user the completed buffer if opened using srcml_archive_write_open_memory() 
     if (archive->buffer && archive->size) {
-        (*archive->buffer) = (char *) xmlBufferDetach(archive->xbuffer);
+
+        // record the size before the buffer is detached
         *archive->size = (size_t) archive->xbuffer->use;
+        (*archive->buffer) = (char *) xmlBufferDetach(archive->xbuffer);
     }
 
     if (archive->reader) {

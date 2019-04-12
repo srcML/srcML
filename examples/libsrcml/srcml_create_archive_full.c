@@ -28,15 +28,13 @@
 #include "srcml.h"
 
 int main(int argc, char* argv[]) {
-    int i;
-    struct srcml_archive* archive;
 
     /*
       Setup archive
     */
 
     /* create a new srcml archive structure */
-    archive = srcml_archive_create();
+    struct srcml_archive* archive = srcml_archive_create();
 
     /* setup options and attributes */
     srcml_archive_set_version(archive, "211");
@@ -59,10 +57,10 @@ int main(int argc, char* argv[]) {
     */
 
     /* open a srcML archive for output */
-    srcml_archive_write_open_filename(archive, "project.xml", 0);
+    srcml_archive_write_open_filename(archive, "project.xml");
 
     /* add all files on the command line to the archive */
-    for (i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i) {
 
         /* Setup this entry */
         struct srcml_unit* unit = srcml_unit_create(archive);

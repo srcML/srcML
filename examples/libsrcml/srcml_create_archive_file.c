@@ -28,28 +28,24 @@
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {
-    int i;
-    struct srcml_archive* archive;
-    FILE* srcml_output;
-    FILE* srcml_input;
 
     /* create a new srcml archive structure */
-    archive = srcml_archive_create();
+    struct srcml_archive* archive = srcml_archive_create();
 
     /* setup our output file using a FILE* */
-    srcml_output = fopen("project.xml", "w");
+    FILE* srcml_output = fopen("project.xml", "w");
 
     /* open a srcML archive for output */
     srcml_archive_write_open_FILE(archive, srcml_output);
 
     /* add all the files to the archive */
-    for (i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i) {
 
         struct srcml_unit* unit = srcml_unit_create(archive);
 
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
-        srcml_input = fopen(argv[i], "r");
+        FILE* srcml_input = fopen(argv[i], "r");
         srcml_unit_parse_FILE(unit, srcml_input);
 
         srcml_archive_write_unit(archive, unit);

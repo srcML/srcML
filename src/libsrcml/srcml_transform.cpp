@@ -83,6 +83,9 @@ static int srcml_append_transform_xpath_internal (struct srcml_archive* archive,
  */
 int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_string) {
 
+    if (archive == nullptr || xpath_string == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
     return srcml_append_transform_xpath_internal(archive, xpath_string, 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -97,7 +100,7 @@ int srcml_append_transform_xpath(srcml_archive* archive, const char* xpath_strin
  *
  * Append the XPath expression to the list
  * of transformation/queries.  As of yet no way to specify context.
- * Instead of outputting the results each in a separte unit tag.  Output the complete
+ * Instead of outputting the results each in a separate unit tag.  Output the complete
  * archive marking the xpath results with a user provided attribute.
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
@@ -106,7 +109,9 @@ int srcml_append_transform_xpath_attribute(struct srcml_archive* archive, const 
                                             const char* prefix, const char* namespace_uri,
                                             const char* attr_name, const char* attr_value) {
 
-    if (archive == nullptr || xpath_string == nullptr)
+    if (archive == nullptr || xpath_string == nullptr ||
+        prefix == nullptr || namespace_uri == nullptr ||
+        attr_name == nullptr || attr_value == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     // attribute for a previous Xpath where the attribute is blank is appended on
@@ -144,6 +149,10 @@ int srcml_append_transform_xpath_attribute(struct srcml_archive* archive, const 
 int srcml_append_transform_xpath_element(struct srcml_archive* archive, const char* xpath_string,
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element) {
+    if (archive == nullptr || xpath_string == nullptr ||
+        prefix == nullptr || namespace_uri == nullptr ||
+        element == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_xpath_internal(archive, xpath_string, prefix, namespace_uri, element, 0, 0, 0, 0);
 }

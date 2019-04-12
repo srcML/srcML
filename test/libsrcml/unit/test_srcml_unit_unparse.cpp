@@ -115,11 +115,8 @@ int main(int, char* argv[]) {
         srcml_unit * unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_filename(unit, "project.c");
         std::ifstream src_file("project.c");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -136,11 +133,8 @@ int main(int, char* argv[]) {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_filename(unit, "project_utf8.cpp");
         std::ifstream src_file("project_utf8.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -157,11 +151,8 @@ int main(int, char* argv[]) {
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_filename(unit, "project_latin_from_utf8.cpp");
         std::ifstream src_file("project_latin_from_utf8.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -178,11 +169,8 @@ int main(int, char* argv[]) {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_filename(unit, "project_latin.cpp");
         std::ifstream src_file("project_latin.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
@@ -199,11 +187,8 @@ int main(int, char* argv[]) {
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_filename(unit, "project_latin_from_latin.cpp");
         std::ifstream src_file("project_latin_from_latin.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
@@ -219,11 +204,8 @@ int main(int, char* argv[]) {
         srcml_unit * unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_filename(unit, "project_macro.cpp");
         std::ifstream src_file("project_macro.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src_macro);
 
         srcml_unit_free(unit);
@@ -239,11 +221,8 @@ int main(int, char* argv[]) {
         srcml_unit * unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_filename(unit, "project_macro_single.cpp");
         std::ifstream src_file("project_macro_single.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src_macro);
 
         srcml_unit_free(unit);
@@ -259,11 +238,8 @@ int main(int, char* argv[]) {
         srcml_unit * unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_filename(unit, "project.c");
         std::ifstream src_file("project.c");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -538,11 +514,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project.c");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -561,11 +534,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_utf8.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -584,11 +554,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_latin_from_utf8.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -607,11 +574,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_latin.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
@@ -630,11 +594,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_latin_from_latin.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
@@ -652,11 +613,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_macro.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src_macro);
 
         srcml_unit_free(unit);
@@ -674,11 +632,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_macro_single.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src_macro);
 
         srcml_unit_free(unit);
@@ -696,11 +651,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project.c");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -780,11 +732,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project.c");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -805,11 +754,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_utf8.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -830,11 +776,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_latin_from_utf8.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -855,11 +798,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_latin.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
@@ -880,11 +820,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_latin_from_latin.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
@@ -904,11 +841,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_macro.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src_macro);
 
         srcml_unit_free(unit);
@@ -928,11 +862,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project_macro_single.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src_macro);
 
         srcml_unit_free(unit);
@@ -952,11 +883,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
         std::ifstream src_file("project.c");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -1038,11 +966,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project.c");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -1061,11 +986,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_utf8.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -1084,11 +1006,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_latin_from_utf8.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -1107,11 +1026,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_latin.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
@@ -1130,11 +1046,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_latin_from_latin.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
@@ -1152,11 +1065,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_macro.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src_macro);
 
         srcml_unit_free(unit);
@@ -1174,11 +1084,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_macro_single.cpp");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src_macro);
 
         srcml_unit_free(unit);
@@ -1196,11 +1103,8 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project.c");
-        std::string aunit;
-        char c = 0;
-        while(src_file.get(c)) {
-            aunit += c;
-        }
+        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+
         dassert(aunit, src);
 
         srcml_unit_free(unit);

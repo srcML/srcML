@@ -36,7 +36,7 @@
 //extern srcml_archive global_archive;
 //extern srcml_unit global_unit;
 
-int main(int, char* argv[]) {
+int main(int, char* []) {
 #if 0
     /*
       srcml_set_src_encoding

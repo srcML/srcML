@@ -24,11 +24,13 @@
 
 header "pre_include_hpp" {
    #include <cstring>
+   #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+   #pragma GCC diagnostic ignored "-Wunknown-warning-option"
    #pragma GCC diagnostic ignored "-Wunused-parameter"
+   #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 }
 
 header {
-   #pragma GCC diagnostic warning "-Wunused-parameter"
    #include <iostream>
    #include "antlr/TokenStreamSelector.hpp"
    #include <srcml_types.hpp>
@@ -171,7 +173,7 @@ COMMENT_TEXT {
 
     '\042' /* '\"' */
         { dquote_count = 1; }
-        (options { greedy = true; } : '\042' { ++dquote_count; })*
+        (options { greedy = true; } : { prevLA != '\\' }? '\042' { ++dquote_count; })*
     {
         if ((noescape && (dquote_count % 2 == 1)) ||
             (!noescape && (prevLA != '\\') && (mode == STRING_END))) {

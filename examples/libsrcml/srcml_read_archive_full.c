@@ -27,27 +27,23 @@
 #include "srcml.h"
 
 int main(int argc, char* argv[]) {
-    int i;
-    const char* language;
-    const char* filename;
-    struct srcml_archive* archive;
-    struct srcml_unit* unit;
 
     /* create a new srcml archive structure */
-    archive = srcml_archive_create();
+    struct srcml_archive* archive = srcml_archive_create();
 
     /* open a srcML archive for input */
     srcml_archive_read_open_filename(archive, "project.xml");
 
     /* add all the files to the archive */
-    while ((unit = srcml_archive_read_unit_header(archive))) {
+    struct srcml_unit* unit = 0;
+    while ((unit = srcml_archive_read_unit(archive))) {
 
         /* can inquire about the current unit */
-        language = srcml_unit_get_language(unit);
-        filename = srcml_unit_get_filename(unit);
+        const char* language = srcml_unit_get_language(unit);
+        const char* filename = srcml_unit_get_filename(unit);
 
         /* uparse and write to a file */
-        srcml_unit_unparse_filename(unit, filename, 0);
+        srcml_unit_unparse_filename(unit, filename);
 
         srcml_unit_free(unit);
     }

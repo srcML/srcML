@@ -17,10 +17,9 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB LIBSRCML_HEADERS *.h *.hpp)
-file(GLOB LIBSRCML_SOURCE *.cpp)
+file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
 
-add_library(libsrcml OBJECT ${LIBSRCML_HEADERS} ${LIBSRCML_SOURCE})
+add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
 add_dependencies(libsrcml parser)
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION include)

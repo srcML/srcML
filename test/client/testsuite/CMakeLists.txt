@@ -19,9 +19,15 @@
 
 # add cli tests
 file(GLOB CLI_TESTS *.sh)
-file(GLOB IGNORE framework_test.sh)
-list(REMOVE_ITEM CLI_TESTS ${IGNORE})
+list(REMOVE_ITEM CLI_TESTS framework_test.sh)
+
+# @BUILD This is not needed
+#file(COPY framework_test.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 foreach(CLI_TEST ${CLI_TESTS})
-  addBashTest(${CLI_TEST} framework_test.sh)
+    get_filename_component(TEST_NAME ${CLI_TEST} NAME)
+    add_test(NAME ${TEST_NAME} COMMAND ${CLI_TEST})
 endforeach()
+
+# @BUILD This is not needed. Tests are pulled from the src directory when ctest is run
+#file(COPY ${CLI_TESTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

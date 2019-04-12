@@ -42,7 +42,7 @@
 
 #include <srcml_types.hpp>
 
-int main(int, char* argv[]) {
+int main(int, char* []) {
 #if 0
     std::ofstream file("a.cpp");
     file << "a;";

@@ -24,23 +24,19 @@
   XSLT usage.
 */
 
-#include <stdio.h>
-#include <string.h>
-
 #include <srcml.h>
 
 int main(int argc, char * argv[]) {
 
-    struct srcml_archive * iarchive = srcml_archive_create();
-    struct srcml_archive * oarchive;
+    struct srcml_archive* iarchive = srcml_archive_create();
     srcml_archive_read_open_filename(iarchive, "project.xml");
-    oarchive = srcml_archive_clone(iarchive);
-    srcml_archive_write_open_filename(oarchive, "xslt.xml", 0);
+    struct srcml_archive* oarchive = srcml_archive_clone(iarchive);
+    srcml_archive_write_open_filename(oarchive, "xslt.xml");
 
     srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
-
+/*
     srcml_apply_transforms(iarchive, oarchive);
-
+*/
     srcml_archive_close(iarchive);
     srcml_archive_close(oarchive);
 

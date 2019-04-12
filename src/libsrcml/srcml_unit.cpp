@@ -26,6 +26,7 @@
 #include <memory>
 #include <libxml2_utilities.hpp>
 #include <cstring>
+#include <fcntl.h>
 
 /******************************************************************************
  *                                                                            *
@@ -423,15 +424,15 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
 
     unit->derived_language = lang;
 
-    if (*unit->language == "C++" || *unit->language == "C" || *unit->language == "Objective-C" || *unit->language == "C#")
-        unit->archive->options |= SRCML_OPTION_CPP;
+    // @TODO Verify that this really isn't needed. Causes issue with srcml()
+    // if (*unit->language == "C++" || *unit->language == "C" || *unit->language == "Objective-C" || *unit->language == "C#")
+    //        unit->archive->options |= SRCML_OPTION_CPP;
 
     const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
     bool output_hash = !unit->hash && unit->archive->options & SRCML_OPTION_HASH;
 
     UTF8CharBuffer* input = 0;
     try {
-
         input = createUTF8CharBuffer(src_encoding, output_hash, unit->hash);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
@@ -473,9 +474,15 @@ int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename)
     if (unit == nullptr || src_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_unit_parse_internal(unit, src_filename, [src_filename](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
+    // open the file and use the file descriptor version
+    int src_fd = open(src_filename, O_RDONLY);
+    if (src_fd == -1) {
+        return SRCML_STATUS_IO_ERROR;
+    }
 
-        return new UTF8CharBuffer(src_filename, encoding, output_hash, hash);
+    return srcml_unit_parse_internal(unit, src_filename, [src_fd](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
+
+        return new UTF8CharBuffer(src_fd, encoding, output_hash, hash);
     });
 }
 

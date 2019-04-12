@@ -37,8 +37,10 @@ macro(srcMLExec EXEC_NAME EXEC_FILE)
         "${PROJECT_SOURCE_DIR}/deps/${BUILD_ARCH}/$<CONFIGURATION>/bin"
         $<TARGET_FILE_DIR:srcml>)
     elseif(APPLE)
-        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list ${CMAKE_SOURCE_DIR}/CMake/srcml_export_list")
+        # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
+        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list /dev/null")
     elseif(WIN32)
+        # @BUILD Why this when there is a MSVC case above?
         set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
     else()
         set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
