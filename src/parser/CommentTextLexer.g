@@ -78,8 +78,6 @@ bool rawstring;
 
 std::string delimiter;
 
-int dquote_count;
-
 bool isline;
 
 long line_number;
@@ -202,16 +200,23 @@ COMMENT_TEXT {
         '\040'..'\041' |
 
         '\042' /* '\"' */
-    '\042' /* '\"' */
-        { dquote_count = 1; }
-        (options { greedy = true; } : '\042' { ++dquote_count; })*
-        {
-            if ((noescape && (dquote_count % 2 == 1)) ||
-                (!noescape && (prevLA != '\\') && (mode == STRING_END))) {
-                $setType(mode);
-                selector->pop();
-            }
-        } |
+                {
+                    if (noescape) {
+
+                            int count = 1;
+                            while (LA(1) == '\042') {
+                                match("\"");
+                                ++count;
+                            }
+
+                            if (count % 2 == 1) {
+                                $setType(mode); selector->pop();
+                            }
+
+                    } else if ((prevLA != '\\') && mode == STRING_END && !rawstring) {
+                        $setType(mode); selector->pop();
+                    } 
+                } |
 
         '\043'..'\045' | 
 
