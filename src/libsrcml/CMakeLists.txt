@@ -22,13 +22,16 @@ file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
 add_dependencies(libsrcml parser)
 
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION include)
+include(GNUInstallDirs)
 
-if(OS_NAME STREQUAL "Fedora")
-    set(CMAKE_INSTALL_PREFIX "/usr")
-elseif(EXISTS "/etc/redhat-release")
-    set(CMAKE_INSTALL_PREFIX "/usr")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+#if(OS_NAME STREQUAL "Fedora")
+#    set(CMAKE_INSTALL_PREFIX "/usr")
+#elseif(EXISTS "/etc/redhat-release")
+#    set(CMAKE_INSTALL_PREFIX "/usr")
+#else
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     file(GLOB SRCML_DLLS ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release/bin/*.dll)
     install(FILES ${SRCML_DLLS} DESTINATION bin)
 endif()
