@@ -71,21 +71,3 @@ add_subdirectory(test)
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
-
-if(EXISTS /etc/redhat-release)
-
-    file(READ /etc/redhat-release REDHAT_RELEASE)
-    if ( REDHAT_RELEASE MATCHES "Fedora" )
-        string(REGEX MATCH "Fedora" OS_NAME ${REDHAT_RELEASE})
-    elseif( REDHAT_RELEASE MATCHES "CentOS" )
-        string(REGEX MATCH "CentOS" OS_NAME ${REDHAT_RELEASE})
-    endif()
-
-elseif(EXISTS /etc/os-release)
-    file(READ /etc/os-release OS_RELEASE)
-    string(REGEX MATCH "^NAME=\"([a-zA-Z ]*)\"" OS_NAME ${OS_RELEASE})
-    set(OS_NAME ${CMAKE_MATCH_1})
-
-endif()
-
-set(OS_NAME ${OS_NAME} CACHE INTERNAL "Detected OS name")
