@@ -40,12 +40,7 @@ include(GNUInstallDirs)
 
 install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION ${CMAKE_INSTALL_MANDIR})
 
-if (OS_NAME STREQUAL "Fedora" OR OS_NAME STREQUAL "CentOS")
-    set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/share /usr/local/share/man /usr/local/share/man/man1)
-#install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/share/man/man1")
-elseif (OS_NAME STREQUAL "openSUSE" OR OS_NAME STREQUAL "openSUSE Leap")
-    set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/man /usr/local/man/man1)
-#    install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/man/man1")
-endif()
-
-
+# cpack puts directories leading to the installed files into the RPM. Since they are already
+# created, this leads to a conflict with other packages. This excludes these (which are mostly documentation)
+# Note that there is no problem with this list including directories that are not needed
+set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/man /usr/local/man/man1 /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man1)
