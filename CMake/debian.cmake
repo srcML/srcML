@@ -51,4 +51,4 @@ include(GNUInstallDirs)
 message("CMAKE_INSTALL_MANDIR: ${CMAKE_INSTALL_MANDIR}")
 
 # @TODO This may not be working
-install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION ${CMAKE_INSTALL_MANDIR})
+install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)

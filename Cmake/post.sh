@@ -1,1 +1,1 @@
-ldconfig 
+ldconfig

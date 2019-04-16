@@ -38,7 +38,7 @@ set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/CMake/post.s
 # set install for manpage (Run cpack -G RPM)
 include(GNUInstallDirs)
 
-install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION ${CMAKE_INSTALL_MANDIR})
+install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
 # cpack puts directories leading to the installed files into the RPM. Since they are already
 # created, this leads to a conflict with other packages. This excludes these (which are mostly documentation)
