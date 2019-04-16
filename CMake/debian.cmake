@@ -20,13 +20,12 @@
 # Debian package name
 set(CPACK_DEBIAN_PACKAGE_NAME "srcML")
 
-
 # architecture
-if(CMAKE_SYSTEM_PROCESSOR STREQUAL "i686")
-    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
-else()
-    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-endif()
+# if(CMAKE_SYSTEM_PROCESSOR STREQUAL "i686")
+#     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
+# else()
+#     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+# endif()
 
 # autogenerate dependency information
 set(CPACK_DEBIAN_PACKAGE_DEBUG ON)
@@ -44,11 +43,6 @@ set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "yes")
 # package suggests
 set(CPACK_DEBIAN_PACKAGE_SUGGESTS "yes")
 
-# set install for manpage (Run cpack -G DEB)
-# @TODO Have this called higher up
-include(GNUInstallDirs)
-
-message("CMAKE_INSTALL_MANDIR: ${CMAKE_INSTALL_MANDIR}")
-
-# @TODO This may not be working
+# set install for manpage
+# @TODO Put in new doc build
 install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)

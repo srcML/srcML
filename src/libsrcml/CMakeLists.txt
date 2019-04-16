@@ -22,8 +22,6 @@ file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
 add_dependencies(libsrcml parser)
 
-include(GNUInstallDirs)
-
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

@@ -47,6 +47,9 @@ endif()
 enable_testing()
 include(CTest)
 
+# used as defaults for installation and packaging
+include(GNUInstallDirs)
+
 # Setting up Project includes.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include(packageConfig)

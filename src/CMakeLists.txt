@@ -215,8 +215,6 @@ if(NOT (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC") AND NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\"  \"-x\" \"$<TARGET_FILE:srcml_shared>\")")
 endif()
 
-include(GNUInstallDirs)
-
 # which types of libraries
 install(TARGETS srcml_shared RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 if (BUILD_LIBSRCML_STATIC)
