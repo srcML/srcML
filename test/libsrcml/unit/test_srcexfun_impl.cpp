@@ -24,7 +24,6 @@
 
 #include <libxml/tree.h>
 #include <libxml/parser.h>
-#include <boost/shared_ptr.hpp>
 #include <libxml/xpathInternals.h>
 
 #include <iostream>

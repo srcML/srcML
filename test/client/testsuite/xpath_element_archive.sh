@@ -26,16 +26,15 @@ createfile b.cpp "b;
 srcml a.cpp b.cpp --xmlns:pre=foo.com -o archive.xml
 
 # from a file
-srcml archive.xml --xpath="//src:name" --element="pre:element"
+srcml archive.xml --xpath="//src:name" --element="pre:element" --xmlns:pre=foo.com
 check "$result"
 
-srcml --xpath="//src:name" archive.xml --element="pre:element"
+srcml --xpath="//src:name" archive.xml --element="pre:element" --xmlns:pre=foo.com
 check "$result"
 
 # output to a file
-srcml archive.xml --xpath="//src:name" --element="pre:element" -o result.xml
+srcml archive.xml --xpath="//src:name" --element="pre:element" --xmlns:pre=foo.com -o result.xml
 check result.xml "$result"
 
-srcml --xpath="//src:name" archive.xml --element="pre:element" -o result.xml
+srcml --xpath="//src:name" archive.xml --element="pre:element" --xmlns:pre=foo.com -o result.xml
 check result.xml "$result"
-

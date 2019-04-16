@@ -50,7 +50,10 @@ void srcml_execute(const srcml_request_t& srcml_request,
         fds[0] = fds[1] = -1;
         if (pipeline.size() > 1 && !last) {
 #if !defined(_MSC_BUILD) && !defined(__MINGW32__)
-            pipe(fds);
+            if (pipe(fds) == -1) {
+                perror("srcml");
+                return;
+            }
 #else
             HANDLE read_pipe;
             HANDLE write_pipe;

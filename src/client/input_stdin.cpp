@@ -45,7 +45,10 @@ void input_stdin(srcml_request_t& request) {
     srcml_pipe(rstdin, [](const srcml_request_t& srcml_request, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
 
         // write the prerequest
-        write(*destination.fd, srcml_request.buf, srcml_request.bufsize);
+        if (write(*destination.fd, srcml_request.buf, srcml_request.bufsize) == -1) {
+            close(*destination.fd);
+            return;
+        }
 
         // copy the rest of the input source
         char buf[512];
@@ -53,7 +56,11 @@ void input_stdin(srcml_request_t& request) {
         do {
             size = read(*input_sources[0].fd, buf, 512);
             if (size > 0)
-                write(*destination.fd, buf, size);
+                if (write(*destination.fd, buf, size) == -1) {
+                    close(*destination.fd);
+                    return;
+                }
+
         } while (size > 0);
 
         close(*destination.fd);
