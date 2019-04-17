@@ -1,5 +1,5 @@
 ##
-# @file doc.cmake
+# @file CMakeLists.txt
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
@@ -17,13 +17,10 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-option(GENERATE_CLIENT_DOC "Enables the generation of the client documentation during build and installation." off)
-option(GENERATE_LIBSRCML_DOC "Enables the generation of the libsrcml documentation during build and installation." off)
-
 if(GENERATE_CLIENT_DOC)
-    add_subdirectory(doc/manpage)
+    add_subdirectory(manpage)
 endif()
 
 if(GENERATE_LIBSRCML_DOC)
-    add_subdirectory(doc/doxygen)
+    add_subdirectory(doxygen)
 endif()
