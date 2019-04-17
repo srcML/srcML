@@ -27,7 +27,8 @@ set(CPACK_RPM_PACKAGE_NAME "srcML")
 set(CPACK_RPM_PACKAGE_RELEASE 1)
 
 # post install script for ldconfig
-set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/CMake/post.sh")
+file(WRITE ${CPACK_PACKAGE_DIRECTORY}/post.sh "ldconfig")
+set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE ${CPACK_PACKAGE_DIRECTORY}/post.sh)
 
 # install for manpage (Run cpack -G RPM)
 # @TODO Put in new doc build
