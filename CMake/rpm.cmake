@@ -23,7 +23,7 @@ set(CPACK_RPM_PACKAGE_NAME "srcML")
 # architecture
 #set(CPACK_RPM_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 
-# package release number (as oppossed to srcML release)
+# package release number (NOT srcML release)
 set(CPACK_RPM_PACKAGE_RELEASE 1)
 
 # post install script for ldconfig

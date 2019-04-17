@@ -21,7 +21,7 @@
 #
 cmake_minimum_required(VERSION 3.14)
 
-project(srcML)
+project(srcML VERSION 1.0.0)
 
 # Turn ON/OFF tests
 option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)

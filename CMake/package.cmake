@@ -47,9 +47,7 @@ set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <bugs@srcML.org>")
  
 # package version
-set(CPACK_PACKAGE_VERSION_MAJOR "1")
-set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "0")
+# set as part of project()
 
 # license
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING.txt)
