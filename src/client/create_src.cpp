@@ -33,6 +33,10 @@
 #include <libarchive_utilities.hpp>
 #include <memory>
 
+#if defined(WIN32) || defined(WIN64)
+#pragma warning(disable : 4996)
+#endif
+
 // std::unique_ptr deleter functions for libsrcml
 // Will deallocate automatically at end of std::unique_ptr lifetime
 namespace std {

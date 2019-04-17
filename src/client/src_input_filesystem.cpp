@@ -33,6 +33,10 @@
 #include <archive.h>
 #include <archive_entry.h>
 
+#if defined(WIN32) || defined(WIN64)
+#pragma warning(disable : 4996)
+#endif
+
 int src_input_filesystem(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
