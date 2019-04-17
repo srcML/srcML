@@ -34,6 +34,9 @@ option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 # Turn ON/OFF building libsrcml statically
 option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
 
+option(GENERATE_CLIENT_DOC "Generate client documentation" ON)
+option(GENERATE_LIBSRCML_DOC "Generate libsrcml documentation" ON)
+
 # The default configuration is to compile in DEBUG mode
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
@@ -53,7 +56,6 @@ include(GNUInstallDirs)
 # Setting up Project includes.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include(packageConfig)
-include(doc)
 
 set(CMAKE_MACOSX_RPATH 1)
 
@@ -74,3 +76,5 @@ add_subdirectory(test)
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
+
+add_subdirectory(doc)
