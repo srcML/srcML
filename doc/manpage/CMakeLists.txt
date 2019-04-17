@@ -17,7 +17,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ${WINDOWS_DEP_PATH}/bin)
+find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ~/gems/bin/ronn ${WINDOWS_DEP_PATH}/bin)
 
 # Configure file properties used to configure the file srcml.cfg
 set(HELP_FLAG_LONG "help")
@@ -125,14 +125,19 @@ set(SRCML_STATUS_INVALID_LANGUAGE "6")
 #set(SRCML_STATUS_NO_TRANSFORMATION "8")
 set(PRETTY_FLAG_LONG "pretty")
 
-# Custom commands for creating things using the ronn executable.
+# Custom commands for creating things using the ronn executable
 configure_file(${CMAKE_SOURCE_DIR}/doc/manpage/srcml.cfg ${CMAKE_BINARY_DIR}/srcml.md)
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html 
-    COMMAND ${RONN_EXE} ${CMAKE_BINARY_DIR}/srcml.md --manual=srcml.1
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.1
+    COMMAND ${RONN_EXE} ${CMAKE_BINARY_DIR}/srcml.1.md --manual=srcml
+    DEPENDS ${CMAKE_BINARY_DIR}/srcml.1.md
+)
+
+configure_file(${CMAKE_SOURCE_DIR}/doc/manpage/srcml.cfg ${CMAKE_BINARY_DIR}/srcml.1.md)
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.html 
+    COMMAND ${RONN_EXE} ${CMAKE_BINARY_DIR}/srcml.md --manual=srcml
     DEPENDS ${CMAKE_BINARY_DIR}/srcml.md
 )
-ADD_CUSTOM_TARGET(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html)
-#install(FILES ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html DESTINATION doc/man)
+
+add_custom_target(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html)
 
 install(FILES ${CMAKE_BINARY_DIR}/srcml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
-
