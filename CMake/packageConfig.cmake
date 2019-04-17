@@ -17,21 +17,13 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-##
-#
-#
-# CMake directives and config for CPack.
-
-# set package name
+# package name
 set(CPACK_PACKAGE_NAME "srcML") 
 
-# set package name
-#set(CPACK_PACKAGE_FILE_NAME "srcML-${CMAKE_SYSTEM_NAME}")
-
-# set executables
+# executables and text label
 set(CPACK_PACKAGE_EXECUTABLES srcml;srcML)
 
-# set Desktop links
+# desktop links
 set(CPACK_CREATE_DESKTOP_LINKS srcml)
 
 # Generator settings
@@ -42,7 +34,7 @@ else()
     set(CPACK_GENERATOR "TGZ;TBZ2")
 endif()
  
-# set summary
+# summary
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 
 # description
@@ -62,18 +54,13 @@ set(CPACK_PACKAGE_VERSION_PATCH "0")
 # license
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING.txt)
 
-
 # README
 set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
 
 # welcome message
 set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/CMake/welcome.txt)
 
-
-#install(FILES ${CMAKE_SOURCE_DIR}/README.md RENAME README.txt DESTINATION .)
-#install(FILES ${CMAKE_SOURCE_DIR}/COPYING.txt DESTINATION .)
-
-
+# icon
 if(WIN32)
     install(FILES ${CMAKE_SOURCE_DIR}/CMake/srcml_icon.ico DESTINATION .)
 else()
@@ -84,10 +71,10 @@ endif()
 # strip executables
 #set(CPACK_STRIP_FILES ON)
  
-# set output directory
+# output directory
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
-# include other specific configurations
+# specific configurations
 include(debian)
 include(rpm)
 include(nsis)
