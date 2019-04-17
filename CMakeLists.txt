@@ -53,9 +53,9 @@ include(CTest)
 # used as defaults for installation and packaging
 include(GNUInstallDirs)
 
-# Setting up Project includes.
+# package includes
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
-include(packageConfig)
+include(package)
 
 set(CMAKE_MACOSX_RPATH 1)
 

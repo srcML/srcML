@@ -1,5 +1,5 @@
 ##
-# @file packageConfig.cmake
+# @file package.cmake
 #
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
