@@ -42,7 +42,3 @@ set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "yes")
 
 # package suggests
 set(CPACK_DEBIAN_PACKAGE_SUGGESTS "yes")
-
-# set install for manpage
-# @TODO Put in new doc build
-install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)

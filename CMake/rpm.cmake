@@ -30,10 +30,6 @@ set(CPACK_RPM_PACKAGE_RELEASE 1)
 file(WRITE ${CPACK_PACKAGE_DIRECTORY}/post.sh "ldconfig")
 set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE ${CPACK_PACKAGE_DIRECTORY}/post.sh)
 
-# install for manpage (Run cpack -G RPM)
-# @TODO Put in new doc build
-install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
-
 # cpack puts directories leading to the installed files into the RPM. Since they are already
 # created, this leads to a conflict with other packages. This excludes these (which are mostly documentation)
 # Note that there is no problem with this list including directories that are not needed

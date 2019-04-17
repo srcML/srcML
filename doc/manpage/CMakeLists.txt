@@ -132,4 +132,7 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.
     DEPENDS ${CMAKE_BINARY_DIR}/srcml.md
 )
 ADD_CUSTOM_TARGET(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html)
-install(FILES ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html DESTINATION doc/man)
+#install(FILES ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html DESTINATION doc/man)
+
+install(FILES ${CMAKE_BINARY_DIR}/srcml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+
