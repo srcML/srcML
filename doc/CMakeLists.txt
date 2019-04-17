@@ -17,10 +17,10 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-if(GENERATE_CLIENT_DOC)
+if(BUILD_CLIENT_DOC)
     add_subdirectory(manpage)
 endif()
 
-if(GENERATE_LIBSRCML_DOC)
+if(BUILD_LIBSRCML_DOC)
     add_subdirectory(doxygen)
 endif()

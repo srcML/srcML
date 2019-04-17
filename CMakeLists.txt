@@ -34,8 +34,8 @@ option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 # Turn ON/OFF building libsrcml statically
 option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
 
-option(GENERATE_CLIENT_DOC "Generate client documentation" OFF)
-option(GENERATE_LIBSRCML_DOC "Generate libsrcml documentation" OFF)
+option(BUILD_CLIENT_DOC "Generate client documentation" OFF)
+option(BUILD_LIBSRCML_DOC "Generate libsrcml documentation" OFF)
 
 # The default configuration is to compile in DEBUG mode
 if(NOT CMAKE_BUILD_TYPE)

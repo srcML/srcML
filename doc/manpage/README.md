@@ -12,5 +12,5 @@ gem install ronn
 2. In the build directory
 
 ```
-cmake ../srcML -DGENERATE_CLIENT_DOC=ON
+cmake ../srcML -DBUILD_CLIENT_DOC=ON
 ```
