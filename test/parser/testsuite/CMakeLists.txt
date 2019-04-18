@@ -26,9 +26,9 @@ if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
 	file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl)
 
-	file(GLOB XSL_TRANS ./xsl/*)
+	file(GLOB XSL ./xsl/*)
 
-	foreach(xslfile ${XSL_TRANS})
+	foreach(xslfile ${XSL})
 		configure_file(${xslfile} xsl COPYONLY)
 	endforeach()
 
