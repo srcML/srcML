@@ -115,7 +115,6 @@ endif()
 
 if(${CMAKE_COMPILER_IS_GNUCXX})
 
-    message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
     add_compile_options(
         -fPIC -Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros
         "$<$<CONFIG:RELEASE>:-O3;-DNDEBUG>"
@@ -160,17 +159,19 @@ endif()
 
 
 if(NOT WIN32 AND NOT APPLE)
-list(APPEND LIBSRCML_LIBRARIES rt crypto)
+    list(APPEND LIBSRCML_LIBRARIES rt crypto)
 endif()
 
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES}
+                CACHE INTERNAL "Libraries needed to build srcml")
 if(NOT WIN32 AND APPLE)
-    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} pthread CACHE INTERNAL "Libraries needed to build srcml")
+    list(APPEND SRCML_LIBRARIES pthread)
 elseif(NOT WIN32)
-    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} crypto pthread CACHE INTERNAL "Libraries needed to build srcml")
+    list(APPEND SRCML_LIBRARIES crypto pthread)
 elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 crypto CACHE INTERNAL "Libraries needed to build srcml")
+    list(APPEND SRCML_LIBRARIES ws2_32 crypto)
 else()
-    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 ${LIBSRCML_LIBRARIES} CACHE INTERNAL "Libraries needed to build srcml")
+    list(APPEND SRCML_LIBRARIES ws2_32 ${LIBSRCML_LIBRARIES})
 endif()
 
 add_subdirectory(parser)
