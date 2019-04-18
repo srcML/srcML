@@ -17,15 +17,12 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB PARSER_TESTS *.xml)
-
 configure_file(Makefile.gen ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 configure_file(suite.txt ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl)
 
 file(GLOB XSL ./xsl/*)
-
 foreach(xslfile ${XSL})
     configure_file(${xslfile} xsl COPYONLY)
 endforeach()
