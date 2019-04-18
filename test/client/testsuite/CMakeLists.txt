@@ -18,12 +18,12 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # add cli tests
-file(GLOB CLI_TESTS *.sh)
+file(GLOB CLIENT_TESTS *.sh)
 
-foreach(CLI_TEST ${CLI_TESTS})
-    get_filename_component(TEST_NAME ${CLI_TEST} NAME)
+foreach(CLIENT_TEST ${CLIENT_TESTS})
+    get_filename_component(TEST_NAME ${CLIENT_TEST} NAME)
 
     if(NOT TEST_NAME STREQUAL "framework_test.sh")
-        add_test(NAME ${TEST_NAME} COMMAND ${CLI_TEST})
+        add_test(NAME ${TEST_NAME} COMMAND ${CLIENT_TEST})
     endif()
 endforeach()
