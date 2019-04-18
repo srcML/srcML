@@ -21,12 +21,15 @@ file(GLOB PARSER_TESTS *.xml)
 
 if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
 
-	file(COPY Makefile.gen suite.txt ${PARSER_TESTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+	configure_file(Makefile.gen ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+	configure_file(suite.txt ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 	file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl)
 
 	file(GLOB XSL_TRANS ./xsl/*)
 
-	file(COPY ${XSL_TRANS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/xsl)
+	foreach(xslfile ${XSL_TRANS})
+		configure_file(${xslfile} xsl COPYONLY)
+	endforeach()
 
 endif()

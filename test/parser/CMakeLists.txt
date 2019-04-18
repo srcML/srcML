@@ -29,14 +29,15 @@ find_package(PythonInterp REQUIRED)
 #    endif()
 #endif()
 
-file(COPY runtest.py python_test_bindings.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+configure_file(runtest.py ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(python_test_bindings.py ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 add_subdirectory(testsuite)
 
 add_custom_target(gentest COMMAND cd testsuite && make -f Makefile.gen)
 add_custom_target(cleantest COMMAND cd testsuite && make -f Makefile.gen clean)
 
-# Collection of targest to manage parser testing, and parser test reports
+# Collection of targets to manage parser testing and parser test reports
 add_custom_target(run COMMAND time ./runtest.py DEPENDS gentest)
 add_custom_target(c COMMAND time ./runtest.py C DEPENDS gentest)
 add_custom_target(java COMMAND time ./runtest.py Java DEPENDS gentest)
