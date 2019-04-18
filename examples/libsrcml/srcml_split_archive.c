@@ -24,7 +24,7 @@
   Split an archive into two, one for .h files and one for other extensions
 */
 
-#include "srcml.h"
+#include <srcml.h>
 #include <string.h>
 
 int main(int argc, char* argv[]) {

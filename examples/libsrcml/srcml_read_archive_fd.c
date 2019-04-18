@@ -24,7 +24,7 @@
   Take an archive and extract the invidual units and write to a filesystem.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #ifdef _MSC_BUILD

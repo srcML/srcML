@@ -17,32 +17,20 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# set RPM package name
+# RPM package name
 set(CPACK_RPM_PACKAGE_NAME "srcML")
 
-# set architecture
-set(CPACK_RPM_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+# architecture
+#set(CPACK_RPM_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 
-# package release number
+# package release number (NOT srcML release)
 set(CPACK_RPM_PACKAGE_RELEASE 1)
 
-# set what it requires  These need to be updated or set for different operating systems
-#set(CPACK_RPM_PACKAGE_REQUIRES "libxml2 >= 2.7.8, libxslt >= 1.1.26, libarchive >= 3.0.3")
+# post install script for ldconfig
+file(WRITE ${CPACK_PACKAGE_DIRECTORY}/post.sh "ldconfig")
+set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE ${CPACK_PACKAGE_DIRECTORY}/post.sh)
 
-# set what package provides
-#set(CPACK_RPM_PACKAGE_PROVIDES "")
-
-# set post install script
-set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${CMAKE_CURRENT_SOURCE_DIR}/post.sh")
-
-# set install for manpage (Run cpack -G RPM)
-
-if (OS_NAME STREQUAL "Fedora" OR OS_NAME STREQUAL "CentOS")
-    set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/share /usr/local/share/man /usr/local/share/man/man1)
-    install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/share/man/man1")
-elseif (OS_NAME STREQUAL "openSUSE" OR OS_NAME STREQUAL "openSUSE Leap")
-    set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION /usr/local /usr/local/man /usr/local/man/man1)
-    install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "local/man/man1")
-endif()
-
-
+# cpack puts directories leading to the installed files into the RPM. Since they are already
+# created, this leads to a conflict with other packages. This excludes these (which are mostly documentation)
+# Note that there is no problem with this list including directories that are not needed
+set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 ${CMAKE_INSTALL_MANDIR} /usr/local /usr/local/man /usr/local/man/man1 /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1 /usr/share/man1)

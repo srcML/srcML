@@ -25,6 +25,10 @@
 #include <Timer.hpp>
 #include <string>
 
+#if defined(WIN32) || defined(WIN64)
+#pragma warning(disable : 4996)
+#endif
+
 bool curl_supported(const std::string& input_protocol) {
     const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
     for (int i = 0; curl_types[i] != NULL; ++i) {

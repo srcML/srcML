@@ -17,38 +17,28 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# set Debian package name
+# Debian package name
 set(CPACK_DEBIAN_PACKAGE_NAME "srcML")
+
+# architecture
+# if(CMAKE_SYSTEM_PROCESSOR STREQUAL "i686")
+#     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
+# else()
+#     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+# endif()
 
 # autogenerate dependency information
 set(CPACK_DEBIAN_PACKAGE_DEBUG ON)
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
-set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
 
-# set architecture
-if(CMAKE_SYSTEM_PROCESSOR STREQUAL "i686")
-    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
-else()
-    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-endif()
-
-# set dependencies These need to be checked and updated or made to be os specific
-#set(CPACK_DEBIAN_PACKAGE_DEPENDS "libxml2 (>= 2.7.8), libxslt1.1 (>= 1.1.26), libarchive12 (>= 3.0.3)")
-
-# set package type
+# package type
 set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
 
-# set the package priority
+# package priority
 set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 
-# set recommended package
+# recommended package
 set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "yes")
 
-# set package suggests
+# package suggests
 set(CPACK_DEBIAN_PACKAGE_SUGGESTS "yes")
-
-# set extra processing
-set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "")
-
-# set install for manpage (Run cpack -G DEB)
-install(FILES "${CMAKE_SOURCE_DIR}/doc/manpage/srcml.1" DESTINATION "share/man/man1")

@@ -38,8 +38,6 @@
 #include <fcntl.h>
 
 #include <srcml.h>
-// #include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
 

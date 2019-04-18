@@ -34,12 +34,7 @@
 #endif
 #include <fcntl.h>
 
-#include <srcml_sax2_utilities.hpp>
 #include <srcml.h>
-// #include <srcml_types.hpp>
-#include <srcmlns.hpp>
-
-#include <libxml/xmlIO.h>
 
 #include <unit_tests.hpp>
 

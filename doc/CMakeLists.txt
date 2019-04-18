@@ -1,8 +1,7 @@
+##
+# @file CMakeLists.txt
 #
-# CMakeLists.txt
-# @copyright
-# 
-# Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,9 +17,10 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# For final installation into /usr/local/lib, libsrcml.dylib requires a non-relative pathname inside the library
-# If not, then the python bindings will not work. This is due to security features.
-if(APPLE)
-    install(CODE "execute_process(COMMAND /usr/bin/install_name_tool -id /usr/local/lib/libsrcml.dylib /usr/local/lib/libsrcml.dylib)")
-#    install(CODE "execute_process(COMMAND otool -L /usr/local/lib/libsrcml.dylib)")
+if(BUILD_CLIENT_DOC)
+    add_subdirectory(manpage)
+endif()
+
+if(BUILD_LIBSRCML_DOC)
+    add_subdirectory(doxygen)
 endif()

@@ -29,6 +29,10 @@
 #define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
+#if defined(WIN32) || defined(WIN64)
+#pragma warning(disable : 4996)
+#endif
+
 namespace {
     std::string cur_extension(const std::string& filename) {
 

@@ -24,7 +24,7 @@
   Create an archive, file by file, with an output filename.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 
 int main(int argc, char* argv[]) {
 

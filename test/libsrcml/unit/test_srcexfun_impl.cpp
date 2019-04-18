@@ -22,10 +22,6 @@
 #include <srcml.h>
 #include <srcmlns.hpp>
 
-#include <libxml/tree.h>
-#include <libxml/parser.h>
-#include <libxml/xpathInternals.h>
-
 #include <iostream>
 #include <string>
 #include <stdexcept>

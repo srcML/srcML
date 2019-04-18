@@ -19,29 +19,56 @@
 #
 #    The CMake project file for srcML.
 #
-cmake_minimum_required(VERSION 2.8.12)
-project(srcML)
+cmake_minimum_required(VERSION 3.14)
+
+project(srcML VERSION 1.0.0)
+
+# Turn ON/OFF tests
+option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
+option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" OFF)
+option(BUILD_PARSER_TESTS "Include tests for parser" ON)
+
+# Turn ON/OFF building examples
+option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
+
+# Turn ON/OFF building libsrcml statically
+option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
+
+option(BUILD_CLIENT_DOC "Generate client documentation" OFF)
+option(BUILD_LIBSRCML_DOC "Generate libsrcml documentation" OFF)
+
+# The default configuration is to compile in Release mode
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
+endif()
+
+# Dynamic Load libraries (Unix only)
+if(NOT WIN32)
+    option(DYNAMIC_LOAD_ENABLED "Dynamically load some libraries such as libxslt and libexslt" ON)
+endif()
 
 enable_testing()
 include(CTest)
 
-# Setting up Project includes.
+# used as defaults for installation and packaging
+include(GNUInstallDirs)
+
+# package includes
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
-include (srcml)
+include(package)
 
 set(CMAKE_MACOSX_RPATH 1)
 
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
 
 # Setting up source include directories.
-include_directories(BEFORE src/client src/libsrcml src/parser src/srcSAX ${CMAKE_GENERATED_SOURCE_DIR})
+include_directories(BEFORE src/client src/libsrcml src/parser ${CMAKE_GENERATED_SOURCE_DIR})
 
 # Setting major and minor version numbers (TODO fix this so that it is set using something
 # more correct that being input from within the build system).
 add_definitions(-DVERSION=\"1\")
 add_definitions(-DREVISION=\"1\")
 
-# Including extra directories.
 add_subdirectory(src)
 add_subdirectory(test)
 
@@ -49,4 +76,4 @@ if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-add_subdirectory(CMake/post-install)
+add_subdirectory(doc)
