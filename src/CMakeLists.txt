@@ -23,10 +23,6 @@ endif()
 
 set(CMAKE_CXX_STANDARD 11)
 
-# Needed to expand generator expressions in install()
-# Should be default in cmake 3.14
-cmake_policy(SET CMP0087 NEW)
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
     if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
