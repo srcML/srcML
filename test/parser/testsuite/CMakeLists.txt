@@ -19,17 +19,13 @@
 
 file(GLOB PARSER_TESTS *.xml)
 
-if(NOT ${CMAKE_SOURCE_DIR} MATCHES ${CMAKE_BINARY_DIR})
+configure_file(Makefile.gen ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+configure_file(suite.txt ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
-	configure_file(Makefile.gen ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
-	configure_file(suite.txt ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl)
 
-	file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl)
+file(GLOB XSL ./xsl/*)
 
-	file(GLOB XSL ./xsl/*)
-
-	foreach(xslfile ${XSL})
-		configure_file(${xslfile} xsl COPYONLY)
-	endforeach()
-
-endif()
+foreach(xslfile ${XSL})
+    configure_file(${xslfile} xsl COPYONLY)
+endforeach()
