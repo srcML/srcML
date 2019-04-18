@@ -143,18 +143,6 @@ else()
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
 endif()
 
-set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES}
-                CACHE INTERNAL "Libraries needed to build srcml")
-if(NOT WIN32 AND APPLE)
-    list(APPEND SRCML_LIBRARIES pthread)
-elseif(NOT WIN32)
-    list(APPEND SRCML_LIBRARIES crypto pthread)
-elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    list(APPEND SRCML_LIBRARIES ws2_32 crypto)
-else()
-    list(APPEND SRCML_LIBRARIES ws2_32 ${LIBSRCML_LIBRARIES})
-endif()
-
 add_subdirectory(parser)
 add_subdirectory(libsrcml)
 add_subdirectory(client)
