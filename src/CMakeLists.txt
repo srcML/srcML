@@ -119,7 +119,6 @@ endif()
 
 if(${CMAKE_COMPILER_IS_GNUCXX})
 
-    message("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
     add_compile_options(
         -fPIC -Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros
         "$<$<CONFIG:RELEASE>:-O3;-DNDEBUG>"
