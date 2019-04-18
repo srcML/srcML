@@ -17,9 +17,8 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# add cli tests
+# add client tests
 file(GLOB CLIENT_TESTS *.sh)
-
 foreach(CLIENT_TEST ${CLIENT_TESTS})
     get_filename_component(TEST_NAME ${CLIENT_TEST} NAME)
 

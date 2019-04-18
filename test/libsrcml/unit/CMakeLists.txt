@@ -28,7 +28,7 @@ foreach(LIB_TEST ${LIB_TESTS})
     set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 15)
 endforeach()
 
-# Copying xpath test data
+# Copy xpath test data
 configure_file(copy.xsl ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 configure_file(setlanguage.xsl ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 configure_file(schema.rng ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
