@@ -653,8 +653,9 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
-            fprintf(stderr, "srcml: Internal error");
-            exit(1);
+//            fprintf(stderr, "srcml: Internal error");
+//            exit(1);
+            return;
         }
 
         SRCML_DEBUG("BASE", (const char*) state->base, srcmllen);
