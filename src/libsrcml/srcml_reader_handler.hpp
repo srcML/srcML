@@ -376,12 +376,17 @@ public :
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
+        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
 
         if (!is_archive)
             srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+fprintf(stderr, "DEBUG:  %s %s %d num_attributes: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) num_attributes);
+
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
             std::string attribute = (const char*) attributes[pos * 5];
             std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
@@ -396,8 +401,14 @@ public :
                 archive->revision = value;
             else if (attribute == "filename")
                 ;
-            else if (attribute == "url")
+            else if (attribute == "url") {
+                fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
                 srcml_archive_set_url(archive, value.c_str());
+
+                fprintf(stderr, "DEBUG:  %s %s %d srcml_archive_get_url(archive): %s\n", __FILE__,  __FUNCTION__, __LINE__, srcml_archive_get_url(archive));
+
+            }
             else if (attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
             else if (attribute == "tabs")

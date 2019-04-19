@@ -1092,6 +1092,7 @@ int srcml_archive_read_open_filename(struct srcml_archive* archive, const char* 
  * @returns Return SRCML_STATUS_OK on success and a status error code on failure.
  */
 int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* buffer, size_t buffer_size) {
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     if (archive == nullptr || buffer == nullptr || buffer_size <= 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -1282,17 +1283,24 @@ struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
 
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
         return nullptr;
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     srcml_unit * unit = srcml_unit_create(archive);
     int not_done = 0;
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
     if (!unit->read_header)
         not_done = archive->reader->read_header(unit);
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
     archive->reader->read_body(unit);
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     if (!not_done || !unit->read_body) {
         srcml_unit_free(unit);
         unit = nullptr;
     }
+
+    fprintf(stderr, "DEBUG:  %s %s %d srcml_archive_get_url(archive): %s\n", __FILE__,  __FUNCTION__, __LINE__, srcml_archive_get_url(archive));
 
     return unit;
 }

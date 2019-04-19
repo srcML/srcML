@@ -29,6 +29,7 @@
 #include <libxml/parserInternals.h>
 #include <libxml/tree.h>
 
+#define SRCSAX_DEBUG
 #ifdef SRCSAX_DEBUG
     #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase); 
     #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch); 
@@ -104,6 +105,7 @@ static void update_ctx(void* ctx) {
 
 // unit and root delayed-start processing
 static int reparse_root(void* ctx) {
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     if (ctxt == nullptr)
@@ -153,6 +155,7 @@ static int reparse_root(void* ctx) {
             state->context->handler->start_unit(state->context, (const char*) localname, 
                     (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     };
+fprintf(stderr, "DEBUG:  %s %s %d state->rootstarttag: %s\n", __FILE__,  __FUNCTION__, __LINE__,  state->rootstarttag.c_str());
 
     xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(state->rootstarttag.c_str(), (int) state->rootstarttag.size());
     context->_private = state;
@@ -202,6 +205,11 @@ void start_document(void* ctx) {
 
     // process any upper layer start document handling
     state->context->handler->start_document(state->context);
+fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (long) ctxt->input->cur);
+fprintf(stderr, "DEBUG:  %s %s %d state->base: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (long) state->base);
+
+
+
 
     SRCSAX_DEBUG_END("");
 }
@@ -277,7 +285,13 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (state == nullptr)
         return;
 
+fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (long) ctxt->input->cur);
+fprintf(stderr, "DEBUG:  %s %s %d state->base: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (long) state->base);
+
     update_ctx(ctx);
+
+fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (long) ctxt->input->cur);
+fprintf(stderr, "DEBUG:  %s %s %d state->base: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (long) state->base);
 
     SRCSAX_DEBUG_START(localname);
 
@@ -299,6 +313,14 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     state->rootstarttag.reserve(ctxt->input->cur - state->base + 2);
     state->rootstarttag.assign((const char*) state->base, ctxt->input->cur - state->base);
     state->rootstarttag.append("/>");
+
+fprintf(stderr, "DEBUG:  %s %s %d ctxt->input->cur: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (long) ctxt->input->cur);
+fprintf(stderr, "DEBUG:  %s %s %d state->base : %d\n", __FILE__,  __FUNCTION__, __LINE__,  (long) state->base );
+
+
+
+    fprintf(stderr, "DEBUG:  %s %s %d state->rootstarttag: %s\n", __FILE__,  __FUNCTION__, __LINE__,  state->rootstarttag.c_str());
+
 
     // record namespace string in an extensible list so we can add the per unit
     if (state->collect_unit_body) {
@@ -335,6 +357,8 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->rootnsstr += "\" ";
         }
     }
+
+fprintf(stderr, "DEBUG:  %s %s %d state->unitsrcml: %s\n", __FILE__,  __FUNCTION__, __LINE__,  state->unitsrcml.c_str());
 
     SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
 
@@ -388,6 +412,8 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces,
                          int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
+fprintf(stderr, "DEBUG:  %s %s %d nb_attributes: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) nb_attributes);
+
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     if (ctxt == nullptr)
@@ -407,9 +433,11 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 */
         return;
     }
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     // archive when the first element after the root is <unit>
     state->context->is_archive = (localname == UNIT_ENTRY);
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     // turn off first_start_element() handling
     ctxt->sax->startElementNs = &start_element;
@@ -420,6 +448,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     // waited because we did not know yet if this was an archive
     // Basically, reparse the root start tag, collected when first parsed
     reparse_root(ctx);
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     // decide if this start element is for a unit (archive), or just a regular element (solo unit)
     if (state->context->is_archive) {
