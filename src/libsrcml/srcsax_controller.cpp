@@ -32,7 +32,6 @@
  */
 static void libxml_error(void * /*ctx*/, const char* msg, ...) {
     
-    fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
     va_list vl;
     va_start(vl, msg);
     vfprintf(stderr, msg, vl);
