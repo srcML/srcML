@@ -17,19 +17,12 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-# add cli tests
-file(GLOB CLI_TESTS *.sh)
-
-# @BUILD This is not needed
-#file(COPY framework_test.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
-foreach(CLI_TEST ${CLI_TESTS})
-    get_filename_component(TEST_NAME ${CLI_TEST} NAME)
+# add client tests
+file(GLOB CLIENT_TESTS *.sh)
+foreach(CLIENT_TEST ${CLIENT_TESTS})
+    get_filename_component(TEST_NAME ${CLIENT_TEST} NAME)
 
     if(NOT TEST_NAME STREQUAL "framework_test.sh")
-        add_test(NAME ${TEST_NAME} COMMAND ${CLI_TEST})
+        add_test(NAME ${TEST_NAME} COMMAND ${CLIENT_TEST})
     endif()
 endforeach()
-
-# @BUILD This is not needed. Tests are pulled from the src directory when ctest is run
-#file(COPY ${CLI_TESTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
