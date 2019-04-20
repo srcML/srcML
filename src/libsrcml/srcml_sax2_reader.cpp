@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <cstring>
 
+#include <iostream>
+
 /**
  * start_routine
  * @param arguments thread_args structure with control and handler
@@ -86,8 +88,13 @@ srcml_sax2_reader::~srcml_sax2_reader() {
 
     handler.stop();
     
-    if (thread.joinable())
-        thread.join();
+    if (thread.joinable()) {
+        try {
+            thread.join();
+        } catch(const std::system_error& e) {
+            std::cerr << "srcml: Internal error " << e.code() << " meaning " << e.what() << '\n';
+        }
+    }
 }
 
 /**
