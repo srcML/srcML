@@ -87,9 +87,8 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2017 or
     * When copied into the srcML source code directory the result should look like the following:
     ```
         srcML/
-                bindings/
                 BUILD.md
-                CMake/
+                Package/
                 CMakeLists.txt
                 COPYING.txt
                 CTestConfig.cmake
