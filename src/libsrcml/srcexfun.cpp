@@ -115,8 +115,6 @@ static void srcContextFunction (xmlXPathParserContextPtr ctxt, int nargs) {
         return;
     }
 
-    fprintf(stderr, "DEBUG:  %s %s %d\n", __FILE__,  __FUNCTION__, __LINE__);
-
     valuePush(ctxt, xmlXPathNewFloat(Position));
 }
 
