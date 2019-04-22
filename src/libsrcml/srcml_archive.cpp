@@ -1287,12 +1287,14 @@ struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
     int not_done = 0;
     if (!unit->read_header)
         not_done = archive->reader->read_header(unit);
+
     archive->reader->read_body(unit);
 
     if (!not_done || !unit->read_body) {
         srcml_unit_free(unit);
         unit = nullptr;
     }
+
 
     return unit;
 }

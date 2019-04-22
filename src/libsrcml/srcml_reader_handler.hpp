@@ -382,7 +382,6 @@ public :
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
-
             std::string attribute = (const char*) attributes[pos * 5];
             std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
             value = attribute_revision(value);
@@ -396,8 +395,10 @@ public :
                 archive->revision = value;
             else if (attribute == "filename")
                 ;
-            else if (attribute == "url")
+            else if (attribute == "url") {
                 srcml_archive_set_url(archive, value.c_str());
+
+            }
             else if (attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
             else if (attribute == "tabs")
