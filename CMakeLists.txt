@@ -53,10 +53,6 @@ include(CTest)
 # used as defaults for installation and packaging
 include(GNUInstallDirs)
 
-# package includes
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
-include(package)
-
 set(CMAKE_MACOSX_RPATH 1)
 
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
@@ -77,3 +73,6 @@ if(BUILD_EXAMPLES)
 endif()
 
 add_subdirectory(doc)
+
+# packaging
+add_subdirectory(Package)
