@@ -59,6 +59,8 @@ TransformationResult relaxngTransformation::relaxngTransformation::apply(xmlDocP
     if (n != 0)
         return TransformationResult();
 
+    auto newdoc = xmlCopyDoc(doc, 1);
+
     // transformation result is nodeset with single unit, and the unit is wrapped
-    return TransformationResult(xmlXPathNodeSetCreate(doc->children), true);
+    return TransformationResult(xmlXPathNodeSetCreate(newdoc->children), true);
 }

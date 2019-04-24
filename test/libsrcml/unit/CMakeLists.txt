@@ -29,6 +29,7 @@ foreach(LIB_TEST ${LIB_TESTS})
 endforeach()
 
 # Copy xpath test data
-configure_file(copy.xsl ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+message("HERE ${CMAKE_CURRENT_BINARY_DIR}")
+configure_file(copy.xsl copy.xsl COPYONLY)
 configure_file(setlanguage.xsl ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 configure_file(schema.rng ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)

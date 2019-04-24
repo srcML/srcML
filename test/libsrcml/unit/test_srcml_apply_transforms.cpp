@@ -1140,16 +1140,20 @@ int main(int, char* argv[]) {
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml.c_str(), srcml.size());
 
+        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
         srcml_append_transform_xpath(iarchive, "//src:unit");
 
-        srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
+  //      fprintf(stderr, "DEBUG:  %s %s %d srcml_append_transform_xslt_filename(iarchive, copy.xsl): %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) srcml_append_transform_xslt_filename(iarchive, "copy.xsl"));
+
+;
         srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
         FILE * f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-        CLOSE(fd);
+     //   CLOSE(fd);
+        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
         srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
@@ -1158,14 +1162,18 @@ int main(int, char* argv[]) {
         fclose(f);
         fd = OPEN("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
-        CLOSE(fd);
+   //     CLOSE(fd);
+        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
         srcml_transformation_result_t result;
+        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
         srcml_unit_apply_transforms(iarchive, unit, &result);
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         srcml_archive_write_unit(oarchive, result.units[0]);
         srcml_clear_transforms(iarchive);
@@ -1174,6 +1182,7 @@ int main(int, char* argv[]) {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
+
         dassert(std::string(s, size), srcml);
         free(s);
     }
