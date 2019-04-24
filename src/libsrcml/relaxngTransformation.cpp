@@ -54,8 +54,9 @@ relaxngTransformation::relaxngTransformation(/* OPTION_TYPE& options, */ xmlDocP
  */
 TransformationResult relaxngTransformation::relaxngTransformation::apply(xmlDocPtr doc, int /* position */) const {
 
+    // 0 means it validated
     int n = xmlRelaxNGValidateDoc(rngctx.get(), doc);
-    if (n == 0)
+    if (n != 0)
         return TransformationResult();
 
     // transformation result is nodeset with single unit, and the unit is wrapped
