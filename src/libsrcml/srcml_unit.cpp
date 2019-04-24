@@ -884,8 +884,11 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
  */
 int srcml_write_end_unit(struct srcml_unit* unit) {
 
-    if (unit == NULL)
+    if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if (unit->unit_translator == nullptr)
+        return SRCML_STATUS_INVALID_INPUT;
 
     // record end of content (before the unit end tag)
     xmlTextWriterFlush(unit->unit_translator->output_textwriter());
