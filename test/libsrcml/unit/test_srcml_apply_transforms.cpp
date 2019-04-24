@@ -19,7 +19,6 @@
 */
 
 /*
-
   Test cases for srcml_apply_transforms
 */
 
@@ -1324,5 +1323,4 @@ fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
     srcml_cleanup_globals();
 
     return 0;
-
 }
