@@ -54,6 +54,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_disable_full_archive(archive);
+        srcml_archive_disable_hash(archive);
         srcml_archive_set_url(archive, "url");
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit * unit = srcml_unit_create(archive);
