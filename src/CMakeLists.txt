@@ -121,16 +121,12 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
 
     add_compile_options(
         -fPIC -Wno-long-long -Wall -Wextra  -Wall -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros
-        "$<$<CONFIG:RELEASE>:-O3;-DNDEBUG>"
-        "$<$<CONFIG:DEBUG>:-O0;-g;-DDEBUG;--coverage;-fprofile-arcs>"
     )
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
 
     add_compile_options(
         -fPIC -Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast
-        "$<$<CONFIG:RELEASE>:-O3;-DNDEBUG>"
-        "$<$<CONFIG:DEBUG>:-O0;-g;-DDEBUG>"
     )
 
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
