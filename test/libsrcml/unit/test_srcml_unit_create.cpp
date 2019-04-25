@@ -31,8 +31,8 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 /*
         dassert(unit->archive, archive);
         dassert(unit->language, boost::none);

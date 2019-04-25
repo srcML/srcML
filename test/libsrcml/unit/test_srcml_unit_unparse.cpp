@@ -40,7 +40,7 @@
 
 int write_callback(void * context, const char * buffer, size_t len) {
 
-    return (int)fwrite(buffer, 1, len, (FILE *)context);
+    return (int)fwrite(buffer, 1, len, (FILE*)context);
 
 }
 
@@ -104,9 +104,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_filename(unit, "project.c");
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
@@ -121,9 +121,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_filename(unit, "project_utf8.cpp");
         std::ifstream src_file("project_utf8.cpp");
@@ -139,9 +139,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_filename(unit, "project_latin_from_utf8.cpp");
         std::ifstream src_file("project_latin_from_utf8.cpp");
@@ -157,9 +157,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_filename(unit, "project_latin.cpp");
         std::ifstream src_file("project_latin.cpp");
@@ -175,9 +175,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_filename(unit, "project_latin_from_latin.cpp");
         std::ifstream src_file("project_latin_from_latin.cpp");
@@ -193,9 +193,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_filename(unit, "project_macro.cpp");
         std::ifstream src_file("project_macro.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
@@ -210,9 +210,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_filename(unit, "project_macro_single.cpp");
         std::ifstream src_file("project_macro_single.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
@@ -227,9 +227,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_filename(unit, "project.c");
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
@@ -244,9 +244,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_unit_unparse_filename(unit, "project.c"), SRCML_STATUS_UNINITIALIZED_UNIT);
 
         srcml_unit_free(unit);
@@ -257,8 +257,8 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 //        unit->srcml = "<unit/>";
         dassert(srcml_unit_unparse_filename(unit, "project.c"),  SRCML_STATUS_INVALID_IO_OPERATION);
 
@@ -270,9 +270,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_unparse_filename(unit, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_unit_free(unit);
@@ -283,7 +283,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         dassert(srcml_unit_unparse_filename(0, "project.c"), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -300,9 +300,9 @@ int main(int, char* argv[]) {
 
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_memory(unit, &s, &size);
         dassert(s, src);
 
@@ -316,9 +316,9 @@ int main(int, char* argv[]) {
 
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_memory(unit, &s, &size);
         dassert(s, utf8_src);
@@ -333,9 +333,9 @@ int main(int, char* argv[]) {
 
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_memory(unit, &s, &size);
         dassert(s, utf8_src);
@@ -350,9 +350,9 @@ int main(int, char* argv[]) {
 
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_memory(unit, &s, &size);
         dassert(s, latin_src);
@@ -367,9 +367,9 @@ int main(int, char* argv[]) {
 
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_memory(unit, &s, &size);
         dassert(s, latin_src);
@@ -384,9 +384,9 @@ int main(int, char* argv[]) {
 
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_memory(unit, &s, &size);
         dassert(s, src_macro);
 
@@ -400,9 +400,9 @@ int main(int, char* argv[]) {
 
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_memory(unit, &s, &size);
         dassert(s, src_macro);
 
@@ -415,9 +415,9 @@ int main(int, char* argv[]) {
     {
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_unparse_memory(unit, &s, &size);
         dassert(s, src);
 
@@ -430,9 +430,9 @@ int main(int, char* argv[]) {
     {
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_UNINITIALIZED_UNIT);
 
         srcml_unit_free(unit);
@@ -444,8 +444,8 @@ int main(int, char* argv[]) {
     {
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 //        unit->srcml = "<unit/>";
         dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_INVALID_IO_OPERATION);
 
@@ -457,9 +457,9 @@ int main(int, char* argv[]) {
 
     {
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_unparse_memory(unit, 0, &size), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_unit_free(unit);
@@ -470,9 +470,9 @@ int main(int, char* argv[]) {
 
     {
         char *s;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_unparse_memory(unit, &s, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_unit_free(unit);
@@ -484,9 +484,9 @@ int main(int, char* argv[]) {
     {
         char * s;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_unparse_memory(0, &s, &size), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_unit_free(unit);
@@ -501,10 +501,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project.c", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project.c", "w");
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project.c");
@@ -520,10 +520,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_utf8.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_utf8.cpp", "w");
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
@@ -540,10 +540,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_latin_from_utf8.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_latin_from_utf8.cpp", "w");
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
@@ -560,10 +560,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_latin.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_latin.cpp", "w");
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
@@ -580,10 +580,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_latin_from_latin.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_latin_from_latin.cpp", "w");
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
@@ -600,10 +600,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_macro.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_macro.cpp", "w");
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_macro.cpp");
@@ -619,10 +619,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_macro_single.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_macro_single.cpp", "w");
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project_macro_single.cpp");
@@ -638,10 +638,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project.c", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project.c", "w");
         srcml_unit_unparse_FILE(unit, file);
         fclose(file);
         std::ifstream src_file("project.c");
@@ -657,10 +657,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_unit_create(archive);
-        FILE * file = fopen("project.c", "w");
+        srcml_unit* unit = srcml_unit_create(archive);
+        FILE* file = fopen("project.c", "w");
         dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_UNINITIALIZED_UNIT);
         fclose(file);
 
@@ -672,10 +672,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 //        unit->srcml = "<unit/>";
-        FILE * file = fopen("project.c", "w");
+        FILE* file = fopen("project.c", "w");
         dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_INVALID_IO_OPERATION);
         fclose(file);
 
@@ -687,9 +687,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_unparse_FILE(unit, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_unit_free(unit);
@@ -700,10 +700,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project.c", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project.c", "w");
         dassert(srcml_unit_unparse_FILE(0, file), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
 
@@ -719,9 +719,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
@@ -740,9 +740,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_fd(unit, fd);
@@ -762,9 +762,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_latin_from_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_fd(unit, fd);
@@ -784,9 +784,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_fd(unit, fd);
@@ -806,9 +806,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_latin_from_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_fd(unit, fd);
@@ -828,9 +828,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_macro.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
@@ -849,9 +849,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_macro_single.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
@@ -870,9 +870,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_unparse_fd(unit, fd);
         CLOSE(fd);
@@ -891,9 +891,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_UNINITIALIZED_UNIT);
         CLOSE(fd);
@@ -906,8 +906,8 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 //        unit->srcml = "<unit/>";
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_INVALID_IO_OPERATION);
@@ -921,9 +921,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_unparse_fd(unit, -1), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_unit_free(unit);
@@ -934,9 +934,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         dassert(srcml_unit_unparse_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
         CLOSE(fd);
@@ -953,10 +953,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project.c", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project.c", "w");
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project.c");
@@ -972,10 +972,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_utf8.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_utf8.cpp", "w");
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
@@ -992,10 +992,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_latin_from_utf8.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_latin_from_utf8.cpp", "w");
         srcml_unit_set_src_encoding(unit, "UTF-8");
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
@@ -1012,10 +1012,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_latin.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_latin.cpp", "w");
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
@@ -1032,10 +1032,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_latin_from_latin.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_latin_from_latin.cpp", "w");
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
@@ -1052,10 +1052,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_macro.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_macro.cpp", "w");
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_macro.cpp");
@@ -1071,10 +1071,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project_macro_single.cpp", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project_macro_single.cpp", "w");
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project_macro_single.cpp");
@@ -1090,10 +1090,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project.c", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project.c", "w");
         srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
         fclose(file);
         std::ifstream src_file("project.c");
@@ -1109,10 +1109,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_unit_create(archive);
-        FILE * file = fopen("project.c", "w");
+        srcml_unit* unit = srcml_unit_create(archive);
+        FILE* file = fopen("project.c", "w");
         dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_UNINITIALIZED_UNIT);
         fclose(file);
 
@@ -1124,10 +1124,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 //        unit->srcml = "<unit/>";
-        FILE * file = fopen("project.c", "w");
+        FILE* file = fopen("project.c", "w");
         dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_IO_OPERATION);
         fclose(file);
 
@@ -1139,9 +1139,9 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
+        srcml_unit* unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_unparse_io(unit, 0, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_unit_free(unit);
@@ -1152,10 +1152,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project.c", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project.c", "w");
         dassert(srcml_unit_unparse_io(unit, (void *)file, 0, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
 
@@ -1167,10 +1167,10 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
-        srcml_unit * unit = srcml_archive_read_unit(archive);
-        FILE * file = fopen("project.c", "w");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        FILE* file = fopen("project.c", "w");
         dassert(srcml_unit_unparse_io(0, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
 

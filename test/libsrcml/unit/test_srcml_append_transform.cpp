@@ -275,7 +275,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, s.c_str(), s.size());
 
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         dassert(srcml_append_transform_xslt_FILE(archive, f), SRCML_STATUS_OK);
         fclose(f);
 
@@ -286,7 +286,7 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
 
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         dassert(srcml_append_transform_xslt_FILE(archive, f), SRCML_STATUS_OK);
         fclose(f);
 
@@ -304,7 +304,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         dassert(srcml_append_transform_xslt_FILE(0, f), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(f);
     }
@@ -442,7 +442,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, s.c_str(), s.size());
 
-        FILE * f = fopen("schema.rng", "r");
+        FILE* f = fopen("schema.rng", "r");
         dassert(srcml_append_transform_relaxng_FILE(archive, f), SRCML_STATUS_OK);
         fclose(f);
 
@@ -453,7 +453,7 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
 
-        FILE * f = fopen("schema.rng", "r");
+        FILE* f = fopen("schema.rng", "r");
         dassert(srcml_append_transform_relaxng_FILE(archive, f), SRCML_STATUS_OK);
         fclose(f);
 
@@ -471,7 +471,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * f = fopen("schema.rng", "r");
+        FILE* f = fopen("schema.rng", "r");
         dassert(srcml_append_transform_relaxng_FILE(0, f), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(f);
     }
@@ -628,7 +628,7 @@ int main(int, char* argv[]) {
         dassert(srcml_append_transform_xslt_filename(archive, "copy.xsl"), SRCML_STATUS_OK);
         dassert(srcml_append_transform_xslt_memory(archive, copy.c_str(), copy.size()), SRCML_STATUS_OK);
         
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         dassert(srcml_append_transform_xslt_FILE(archive, f), SRCML_STATUS_OK);
         fclose(f);
         

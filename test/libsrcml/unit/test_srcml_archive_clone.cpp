@@ -31,7 +31,7 @@ int main(int, char* /* argv */[]) {
 
 #if 0
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         archive->type = SRCML_ARCHIVE_READ;
         archive->encoding = "e";
         archive->language = "l";
@@ -56,7 +56,7 @@ int main(int, char* /* argv */[]) {
         archive->transformations.push_back(trans);
         archive->revision_number = SRCDIFF_REVISION_ORIGINAL;
 
-        srcml_archive * new_archive = srcml_archive_clone(archive);
+        srcml_archive* new_archive = srcml_archive_clone(archive);
 
         dassert(new_archive->type, SRCML_ARCHIVE_INVALID);
         dassert(*new_archive->encoding, "e");

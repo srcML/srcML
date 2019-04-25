@@ -39,7 +39,7 @@
 #include <dassert.hpp>
 
 ssize_t read_callback(void * context, void * buffer, size_t len) {
-    return (int)fread(buffer, 1, len, (FILE *)context);
+    return (int)fread(buffer, 1, len, (FILE*)context);
 
 }
 
@@ -83,7 +83,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
 
         // @todo change to blackbox test
@@ -98,7 +98,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_single.xml");
 
         // @todo change to blackbox test
@@ -114,7 +114,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_ns.xml");
 
         // @todo change to blackbox test
@@ -128,7 +128,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
 
         // @todo change to blackbox test
@@ -146,7 +146,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
 
         // @todo change to blackbox test
@@ -164,14 +164,14 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_filename(archive, "foobar.xml"), SRCML_STATUS_IO_ERROR);
 
         srcml_archive_free(archive);
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_filename(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
@@ -186,7 +186,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml.c_str(), srcml.size());
 
         // @todo change to blackbox test
@@ -201,7 +201,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
 
         // @todo change to blackbox test
@@ -217,7 +217,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_ns.c_str(), srcml_ns.size());
 
         // @todo change to blackbox test
@@ -231,7 +231,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_macro.c_str(), srcml_macro.size());
 
         // @todo change to blackbox test
@@ -249,7 +249,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_macro_single.c_str(), srcml_macro_single.size());
 
         // @todo change to blackbox test
@@ -267,14 +267,14 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_memory(archive, 0, 1), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_memory(archive, srcml.c_str(), 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
@@ -289,9 +289,9 @@ int main(int, char* argv[]) {
     */
 
     {
-        FILE * file = fopen("project.xml", "r");
+        FILE* file = fopen("project.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
         // @todo change to blackbox test
@@ -307,9 +307,9 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * file = fopen("project_single.xml", "r");
+        FILE* file = fopen("project_single.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
         // @todo change to blackbox test
@@ -326,9 +326,9 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * file = fopen("project_ns.xml", "r");
+        FILE* file = fopen("project_ns.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
         // @todo change to blackbox test
@@ -343,9 +343,9 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * file = fopen("project_macro.xml", "r");
+        FILE* file = fopen("project_macro.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
         // @todo change to blackbox test
@@ -364,9 +364,9 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * file = fopen("project_macro_single.xml", "r");
+        FILE* file = fopen("project_macro_single.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
         // @todo change to blackbox test
@@ -385,14 +385,14 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_FILE(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
     }
 
     {
-        FILE * file = fopen("project_ns.xml", "r");
+        FILE* file = fopen("project_ns.xml", "r");
         dassert(srcml_archive_read_open_FILE(0, file), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
     }
@@ -404,7 +404,7 @@ int main(int, char* argv[]) {
     {
         int fd = OPEN("project.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
         // @todo change to blackbox test
@@ -422,7 +422,7 @@ int main(int, char* argv[]) {
     {
         int fd = OPEN("project_single.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
         // @todo change to blackbox test
@@ -441,7 +441,7 @@ int main(int, char* argv[]) {
     {
         int fd = OPEN("project_ns.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
         // @todo change to blackbox test
@@ -458,7 +458,7 @@ int main(int, char* argv[]) {
     {
         int fd = OPEN("project_macro.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
         // @todo change to blackbox test
@@ -479,7 +479,7 @@ int main(int, char* argv[]) {
     {
         int fd = OPEN("project_macro_single.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
         // @todo change to blackbox test
@@ -498,7 +498,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_fd(archive, -1), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
@@ -515,9 +515,9 @@ int main(int, char* argv[]) {
     */
 
     {
-        FILE * file = fopen("project.xml", "r");
+        FILE* file = fopen("project.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
         // @todo change to blackbox test
@@ -533,9 +533,9 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * file = fopen("project_single.xml", "r");
+        FILE* file = fopen("project_single.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
         // @todo change to blackbox test
@@ -552,9 +552,9 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * file = fopen("project_ns.xml", "r");
+        FILE* file = fopen("project_ns.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
         // @todo change to blackbox test
@@ -569,9 +569,9 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * file = fopen("project_macro.xml", "r");
+        FILE* file = fopen("project_macro.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
         // @todo change to blackbox test
@@ -590,9 +590,9 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * file = fopen("project_macro_single.xml", "r");
+        FILE* file = fopen("project_macro_single.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
         // @todo change to blackbox test
@@ -611,15 +611,15 @@ int main(int, char* argv[]) {
     }
 
     {
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_io(archive, 0, read_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
     }
 
     {
-        FILE * file = fopen("project_ns.xml", "r");
-        srcml_archive * archive = srcml_archive_create();
+        FILE* file = fopen("project_ns.xml", "r");
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_io(archive, (void *)file, 0, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
@@ -627,7 +627,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE * file = fopen("project_ns.xml", "r");
+        FILE* file = fopen("project_ns.xml", "r");
         dassert(srcml_archive_read_open_io(0, (void *)file, read_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
     }

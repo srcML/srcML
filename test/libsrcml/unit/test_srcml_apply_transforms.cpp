@@ -443,7 +443,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml.c_str(), srcml.size());
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
@@ -469,7 +469,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
@@ -495,7 +495,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
@@ -521,7 +521,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
@@ -547,7 +547,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
-        FILE * f = fopen("setlanguage.xsl", "r");
+        FILE* f = fopen("setlanguage.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         srcml_append_transform_param(iarchive, "language", "\"Python\"");
@@ -913,7 +913,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml.c_str(), srcml.size());
-        FILE * f = fopen("schema.rng", "r");
+        FILE* f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(iarchive, f);
         fclose(f);
 
@@ -940,7 +940,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
-        FILE * f = fopen("schema.rng", "r");
+        FILE* f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(iarchive, f);
         fclose(f);
 
@@ -967,7 +967,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
-        FILE * f = fopen("schema.rng", "r");
+        FILE* f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(iarchive, f);
         fclose(f);
 
@@ -994,7 +994,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
-        FILE * f = fopen("schema.rng", "r");
+        FILE* f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(iarchive, f);
         fclose(f);
 
@@ -1141,7 +1141,7 @@ int main(int, char* argv[]) {
 
 ;
         srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         int fd = OPEN("copy.xsl", O_RDONLY, 0);
@@ -1191,7 +1191,7 @@ fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
         srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         int fd = OPEN("copy.xsl", O_RDONLY, 0);
@@ -1235,7 +1235,7 @@ fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
         srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         int fd = OPEN("copy.xsl", O_RDONLY, 0);
@@ -1280,7 +1280,7 @@ fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
         srcml_append_transform_xslt_memory(iarchive, copy.c_str(), copy.size());
-        FILE * f = fopen("copy.xsl", "r");
+        FILE* f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
         int fd = OPEN("copy.xsl", O_RDONLY, 0);

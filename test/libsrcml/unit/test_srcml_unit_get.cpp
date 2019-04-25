@@ -215,7 +215,7 @@ int main(int, char* argv[]) {
     {
         const char * s = "<unit/>";
 
-        srcml_archive * iarchive = srcml_archive_create();
+        srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit* unit = srcml_unit_create(iarchive);
         dassert(srcml_unit_get_srcml_fragment(unit), 0);
@@ -272,7 +272,7 @@ int main(int, char* argv[]) {
     {
         const char * s = "<unit/>";
 
-        srcml_archive * iarchive = srcml_archive_create();
+        srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
         char * xml = 0;
@@ -289,7 +289,7 @@ int main(int, char* argv[]) {
     {
         const char * s = "<unit/>";
 
-        srcml_archive * iarchive = srcml_archive_create();
+        srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, s, strlen(s));
         srcml_unit* unit = srcml_unit_create(iarchive);
 //        char * xml = 0;
