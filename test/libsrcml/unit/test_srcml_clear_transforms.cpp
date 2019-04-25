@@ -84,7 +84,6 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
     }
 
-
     {
         srcml_archive * archive = srcml_archive_create();
 //        archive->type = SRCML_ARCHIVE_RW;
@@ -210,5 +209,4 @@ int main(int, char* argv[]) {
     srcml_cleanup_globals();
 
     return 0;
-
 }

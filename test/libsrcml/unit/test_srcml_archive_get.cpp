@@ -101,7 +101,6 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_revision(0), 0);
     }
 
-
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_version(archive, "foo");

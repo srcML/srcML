@@ -572,5 +572,4 @@ int main(int, char* argv[]) {
     srcml_cleanup_globals();
 
     return 0;
-
 }

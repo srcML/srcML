@@ -50,7 +50,6 @@ int write_callback(void * context, const char * buffer, size_t len) {
 int close_callback(void * context UNUSED) {
 
     return 0;
-
 }
 
 int main(int, char* argv[]) {

@@ -58,5 +58,4 @@ int main(int, char* argv[]) {
     srcml_archive_free(archive);
 
     return 0;
-
 }

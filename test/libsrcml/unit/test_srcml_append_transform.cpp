@@ -114,7 +114,6 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, s.c_str(), s.size());
 
-
         dassert(srcml_append_transform_xpath_attribute(archive, "//src:unit", "foo", "bar", 0, "value"), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_close(archive);

@@ -43,8 +43,6 @@ int main(int, char* argv[]) {
     std::string start_unit = "<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">";
     std::string end_unit = "</unit>\n";
 
-
-
     /*
       srcml_write_start_unit
     */
@@ -238,7 +236,6 @@ int main(int, char* argv[]) {
         dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
         free(s);
     }
-
 
     {
         char * s = 0;
@@ -678,7 +675,6 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
     }
 
-
     {
         char * s = 0;
         size_t size;
@@ -701,5 +697,4 @@ int main(int, char* argv[]) {
     srcml_cleanup_globals();
 
     return 0;
-
 }

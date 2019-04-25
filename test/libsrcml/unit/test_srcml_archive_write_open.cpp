@@ -52,7 +52,6 @@ int write_callback(void * context, const char * buffer, size_t len) {
 int close_callback(void * context UNUSED) {
 
     return 0;
-
 }
 
 int main(int, char* argv[]) {
@@ -77,7 +76,6 @@ int main(int, char* argv[]) {
         // check file either does not exist or empty
         std::ifstream result_file("project.xml");
         //assert(!result_file);
-
 
     }
 
@@ -280,13 +278,10 @@ int main(int, char* argv[]) {
 
    }
 
-
-
     UNLINK("project.xml");
     UNLINK("project_ns.xml");
 
     srcml_cleanup_globals();
 
     return 0;
-
 }

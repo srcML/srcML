@@ -50,7 +50,6 @@ ssize_t read_callback(void * context, void * buffer, size_t len) {
 int close_callback(void * context UNUSED) {
 
     return 0;
-
 }
 
 int main(int, char* argv[]) {
@@ -1118,7 +1117,6 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
         srcml_archive_close(archive);
         srcml_archive_free(archive);
     }
-
 
     {
         srcml_archive * archive = srcml_archive_create();

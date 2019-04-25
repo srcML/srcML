@@ -101,7 +101,6 @@ int main(int, char* []) {
 
         srcml_translator translator(output_buffer, "ISO-8859-1", op, namespace_prefix, namespace_uri, processing_instruction, 4, Language::LANGUAGE_CXX, "", "", "", "", attributes, 0, 0, 0);
 
-
         translator.close();
         xmlBufferFree(buffer);
 
@@ -193,7 +192,6 @@ int main(int, char* []) {
     /*
         add_unit (namespace/attribute add)
     */
-
 
     {
 

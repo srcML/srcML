@@ -50,7 +50,6 @@ ssize_t read_callback(void * context, void * buffer, size_t len) {
 
 int close_callback(void * context UNUSED) {
     return 0;
-
 }
 
 int main(int, char* argv[]) {
@@ -647,5 +646,4 @@ int main(int, char* argv[]) {
     srcml_cleanup_globals();
 
     return 0;
-
 }

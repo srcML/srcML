@@ -159,5 +159,4 @@ int main(int, char* argv[]) {
     UNLINK("project_full.cpp.xml");
 
     return 0;
-
 }
