@@ -22,14 +22,11 @@
 
   Test cases for srcml_archive_read_unit
 */
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
-#include <fstream>
-// #include <unistd.h>
-#include <fcntl.h>
 
 #include <srcml.h>
+
+#include <fstream>
+#include <fcntl.h>
 
 #include <dassert.hpp>
 

@@ -23,11 +23,10 @@
   Test cases for read open for archives
 */
 
+#include <srcml.h>
+    
 #include <srcml_macros.hpp>
 
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 #include <fstream>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -37,8 +36,6 @@
 #endif
 #include <fcntl.h>
 
-#include <srcml.h>
-    
 #include <dassert.hpp>
 
 ssize_t read_callback(void * context, void * buffer, size_t len) {

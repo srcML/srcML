@@ -22,9 +22,6 @@
 
   Test cases for srcml_archive_get_*.
 */
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 
 #include <srcml.h>
 

@@ -22,9 +22,6 @@
 
   Test cases for srcml_archive_create.
 */
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 
 #include <srcml.h>
 
@@ -42,7 +39,6 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_tabstop(archive), 8);
         // @todo Does 1 namespace make sense by default?
         dassert(srcml_archive_get_namespace_size(archive), 1);
-//        fprintf(stderr, "DEBUG:  %s %s %d srcml_archive_get_namespace_uri(archive, 1): %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) srcml_archive_get_namespace_uri(archive, 1));
 
 //        dassert(srcml_archive_get_namespace_uri(archive, 1), std::string("http://www.srcML.org/srcML/src"));
 //        dassert(archive->attributes.size(), 0);

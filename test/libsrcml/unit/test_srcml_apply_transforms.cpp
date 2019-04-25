@@ -22,11 +22,10 @@
   Test cases for srcml_apply_transforms
 */
 
+#include <srcml.h>
+
 #include <srcml_macros.hpp>
 
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 #include <fstream>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -35,8 +34,6 @@
 #include <io.h>
 #endif
 #include <fcntl.h>
-
-#include <srcml.h>
 
 #include <dassert.hpp>
 

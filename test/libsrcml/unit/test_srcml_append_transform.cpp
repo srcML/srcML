@@ -23,16 +23,13 @@
   Test cases for srcml_append_transform_*
 */
 
-#include <srcml_macros.hpp>
-
-#include <stdio.h>
-#include <cstring>
-#include <cassert>
-
 #include <srcml.h>
+
+#include <srcml_macros.hpp>
 
 #include <string>
 #include <fstream>
+
 #if defined(__GNUC__) && !defined(__MINGW32__)
 #include <unistd.h>
 #else

@@ -23,17 +23,19 @@
   Test cases for global functions
 */
 
-#include <srcml_macros.hpp>
-
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
-#include <string>
-#include <fstream>
-#include <unistd.h>
-
 #include <srcml.h>
 
+#include <srcml_macros.hpp>
+
+#include <string>
+#include <fstream>
+
+#if defined(__GNUC__) && !defined(__MINGW32__)
+#include <unistd.h>
+#else
+#include <io.h>
+#endif
+#include <fcntl.h>
 
 #include <dassert.hpp>
 
