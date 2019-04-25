@@ -38,8 +38,7 @@
 #include <fcntl.h>
 
 #include <srcml.h>
-    #include <srcmlns.hpp>
-
+    
 #include <dassert.hpp>
 
 ssize_t read_callback(void * context, void * buffer, size_t len) {
