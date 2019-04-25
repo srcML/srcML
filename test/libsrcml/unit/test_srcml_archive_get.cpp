@@ -27,12 +27,8 @@
 #include <cassert>
 
 #include <srcml.h>
-// #include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
 #include <unit_tests.hpp>
-
-#include <boost/optional.hpp>
 
 int main(int, char* argv[]) {
 
@@ -79,21 +75,20 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_src_encoding(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
-#if 0
+
     /*
       srcml_archive_get_revision
     */
-
+    // @TODO How can both of these be true?
     {
         srcml_archive * archive = srcml_archive_create();
-        dassert(srcml_archive_get_revision(archive), std::string(SRCML_VERSION_STRING));
+//        dassert(srcml_archive_get_revision(archive), std::string(SRCML_VERSION_STRING));
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive * archive = srcml_archive_create();
-//        archive->revision = boost::optional<std::string>();
-        dassert(srcml_archive_get_revision(archive), 0);
+//        dassert(srcml_archive_get_revision(archive), 0);
         srcml_archive_free(archive);
     }
 
@@ -101,29 +96,28 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_revision(0), 0);
     }
 
+
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_version(archive, "foo");
         dassert(srcml_archive_get_version(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
-#endif
+
     /*
       srcml_archive_get_language
     */
 
     {
         srcml_archive * archive = srcml_archive_create();
-////        archive->language = boost::optional<std::string>();
-
         dassert(srcml_archive_get_language(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive * archive = srcml_archive_create();
-////        archive->language = "foo";
-//        dassert(srcml_archive_get_language(archive), std::string("foo"));
+        srcml_archive_set_language(archive, "foo");
+        dassert(srcml_archive_get_language(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
 
@@ -137,7 +131,6 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive * archive = srcml_archive_create();
-//        archive->url = boost::optional<std::string>();
         dassert(srcml_archive_get_url(archive), 0);
         srcml_archive_free(archive);
     }
@@ -145,7 +138,6 @@ int main(int, char* argv[]) {
     {
         srcml_archive * archive = srcml_archive_create();
         srcml_archive_set_url(archive, "foo");
-//        archive->url = "foo";
         dassert(srcml_archive_get_url(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
