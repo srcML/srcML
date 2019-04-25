@@ -34,7 +34,7 @@
 #include <srcml.h>
 #include <srcmlns.hpp>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 int main(int, char* argv[]) {
 

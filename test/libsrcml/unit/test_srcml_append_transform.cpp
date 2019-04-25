@@ -40,7 +40,7 @@
 #endif
 #include <fcntl.h>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 int main(int, char* argv[]) {
 

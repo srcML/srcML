@@ -40,7 +40,7 @@
 #include <srcml.h>
     #include <srcmlns.hpp>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 ssize_t read_callback(void * context, void * buffer, size_t len) {
     return (int)fread(buffer, 1, len, (FILE *)context);

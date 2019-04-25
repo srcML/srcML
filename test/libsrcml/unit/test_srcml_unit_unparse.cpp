@@ -39,7 +39,7 @@
 
 #include <srcml.h>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 int write_callback(void * context, const char * buffer, size_t len) {
 

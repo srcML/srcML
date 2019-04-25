@@ -40,7 +40,7 @@
 #include <srcml.h>
 #include <srcmlns.hpp>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 int write_callback(void * context, const char * buffer, size_t len) {
 

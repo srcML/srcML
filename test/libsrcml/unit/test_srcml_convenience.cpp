@@ -34,7 +34,7 @@
 #include <srcml.h>
 #include <srcmlns.hpp>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 extern srcml_archive global_archive;
 extern srcml_unit global_unit;
