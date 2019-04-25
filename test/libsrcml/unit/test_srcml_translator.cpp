@@ -42,7 +42,6 @@
 #include <dassert.hpp>
 #include <srcml.h>
 #endif
-// #include <srcml_types.hpp>
 
 int main(int, char* []) {
 #if 0
