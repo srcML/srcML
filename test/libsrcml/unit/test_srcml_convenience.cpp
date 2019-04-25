@@ -89,12 +89,8 @@ int main(int, char* argv[]) {
 
     {
         srcml("a.cpp", "project.cpp.xml");
-        std::string res_srcml;
         std::ifstream project("project.cpp.xml");
-        char c = 0;
-        while(project.get(c)) {
-            res_srcml += c;
-        }
+        std::string res_srcml((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_srcml, asrcml);
     }
@@ -102,12 +98,8 @@ int main(int, char* argv[]) {
     {
         srcml_set_language(SRCML_LANGUAGE_C);
         srcml("a.cpp", "project.c.xml");
-        std::string res_srcml;
         std::ifstream project("project.c.xml");
-        char c = 0;
-        while(project.get(c)) {
-            res_srcml += c;
-        }
+        std::string res_srcml((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_srcml, srcml_c);
 
@@ -120,36 +112,24 @@ int main(int, char* argv[]) {
         srcml_set_version("1");
         srcml_register_namespace("s", "http://www.srcML.org/srcML/src");
         srcml("a.cpp", "project_full.cpp.xml");
-        std::string res_srcml;
         std::ifstream project("project_full.cpp.xml");
-        char c = 0;
-        while(project.get(c)) {
-            res_srcml += c;
-        }
+        std::string res_srcml((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_srcml, srcml_full);
     }
 
     {
         srcml("project.xml", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
     }
 
     {
         srcml("project.srcML", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
     }
@@ -157,12 +137,8 @@ int main(int, char* argv[]) {
     {
         srcml_set_language(SRCML_LANGUAGE_XML);
         srcml("project", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
 
@@ -171,24 +147,16 @@ int main(int, char* argv[]) {
 
     {
         srcml("project_c.xml", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
     }
 
     {
         srcml("project_full.xml", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
     }
