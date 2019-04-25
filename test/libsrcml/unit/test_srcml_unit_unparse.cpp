@@ -53,22 +53,53 @@ int main(int, char* argv[]) {
 
     const std::string src = "a;\n";
     const std::string src_macro = "MACRO1;\nMACRO2;\n";
-    const std::string utf8_src = "/* \u2713 */\n";
+    const std::string utf8_src = "/* ✓ */\n";
     const std::string latin_src = "/* \xfe\xff */\n";
 
-    const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
+    const std::string srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src">
 
-    const std::string utf8_srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u2713 */</comment>\n</unit>\n";
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
 
-    const std::string latin_srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \u00fe\u00ff */</comment>\n</unit>\n";
+</unit>
+)";
 
-    const std::string latin_from_utf8_srcml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* &#10003; */</comment>\n</unit>\n";
+    const std::string utf8_srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" dir="test" filename="project" version="1"><comment type="block">/* ✓ */</comment>
+</unit>
+)";
 
-    const std::string latin_from_latin_srcml = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><comment type=\"block\">/* \xfe\xff */</comment>\n</unit>\n";
+    const std::string latin_srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" dir="test" filename="project" version="1"><comment type="block">/* þÿ */</comment>
+</unit>
+)";
 
-    const std::string srcml_macro = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" dir=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/>\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>\n\n</unit>\n";
+    const std::string latin_from_utf8_srcml = R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" dir="test" filename="project" version="1"><comment type="block">/* &#10003; */</comment>
+</unit>
+)";
 
-    const std::string srcml_macro_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" dir=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>\n";
+    const std::string latin_from_latin_srcml = R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" dir="test" filename="project" version="1"><comment type="block">/* þÿ */</comment>
+</unit>
+)";
+
+    const std::string srcml_macro = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" dir="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="a.cpp"><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
+<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
+</unit>
+
+</unit>
+)";
+
+    const std::string srcml_macro_single = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" dir="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
+<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
+</unit>
+)";
 
     std::ofstream srcml_file("project.xml");
     srcml_file << srcml;
@@ -164,6 +195,7 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_filename(unit, "project_latin.cpp");
         std::ifstream src_file("project_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
+fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE__,  aunit.c_str());
 
         dassert(aunit, latin_src);
 

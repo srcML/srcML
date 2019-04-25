@@ -47,7 +47,7 @@ int main(int, char* argv[]) {
     std::ifstream inschema("schema.rng");
     std::string schema((std::istreambuf_iterator<char>(inschema)), std::istreambuf_iterator<char>());
 
-    std::string s = "<unit/>";
+    std::string s = R"(<unit/>)";
 
     /*
       srcml_append_transform_xpath

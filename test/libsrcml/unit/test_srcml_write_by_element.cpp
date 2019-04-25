@@ -30,14 +30,22 @@
 
 int main(int, char* argv[]) {
 
-    std::string xml_decl ="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-    std::string empty_unit = "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\"/>\n";
-    std::string empty_inner_unit = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\"/>\n";
-    std::string start_root_unit_tag = "<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\" url=\"url\">\n\n";
-    std::string end_root_unit_tag = "\n</unit>\n";
+    std::string xml_decl =R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+)";
+    std::string empty_unit = R"(<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" version="1" timestamp="today"/>
+)";
+    std::string empty_inner_unit = R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" version="1" timestamp="today"/>
+)";
+    std::string start_root_unit_tag = R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" url="url">
 
-    std::string start_unit = "<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">";
-    std::string end_unit = "</unit>\n";
+)";
+    std::string end_root_unit_tag = R"(
+</unit>
+)";
+
+    std::string start_unit = R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">")";
+    std::string end_unit = R"(</unit>
+)";
 
     /*
       srcml_write_start_unit
@@ -170,7 +178,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element/>)" + end_unit);
         free(s);
     }
 
@@ -189,7 +197,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element/>)" + end_unit);
         free(s);
     }
 
@@ -209,7 +217,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<foo:element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<foo:element/>)" + end_unit);
         free(s);
     }
 
@@ -229,7 +237,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element xmlns="bar"/>)" + end_unit);
         free(s);
     }
 
@@ -249,7 +257,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<foo:element xmlns:foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<foo:element xmlns:foo="bar"/>)" + end_unit);
         free(s);
     }
 
@@ -271,7 +279,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element/><element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element/><element/>)" + end_unit);
         free(s);
     }
 
@@ -292,7 +300,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element/><element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element/><element/>)" + end_unit);
         free(s);
     }
 
@@ -314,7 +322,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element><element/></element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element><element/></element>)" + end_unit);
         free(s);
     }
 
@@ -334,7 +342,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element><element/></element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element><element/></element>)" + end_unit);
         free(s);
     }
 
@@ -412,7 +420,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns:foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element xmlns:foo="bar"/>)" + end_unit);
         free(s);
     }
 
@@ -433,7 +441,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element xmlns="bar"/>)" + end_unit);
         free(s);
     }
 
@@ -490,7 +498,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element foo="bar"/>)" + end_unit);
         free(s);
     }
 
@@ -511,7 +519,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element f:foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element f:foo="bar"/>)" + end_unit);
         free(s);
     }
 
@@ -532,7 +540,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element foo=\"bar\" xmlns=\"b\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element foo="bar" xmlns="b"/>)" + end_unit);
         free(s);
     }
 
@@ -553,7 +561,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element f:foo=\"bar\" xmlns:f=\"b\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element f:foo="bar" xmlns:f="b"/>)" + end_unit);
         free(s);
     }
 
@@ -574,7 +582,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element foo="bar"/>)" + end_unit);
         free(s);
     }
 
@@ -631,7 +639,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element>foo</element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element>foo</element>)" + end_unit);
         free(s);
     }
 
@@ -654,7 +662,7 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element><element>foo</element></element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element><element>foo</element></element>)" + end_unit);
         free(s);
     }
 

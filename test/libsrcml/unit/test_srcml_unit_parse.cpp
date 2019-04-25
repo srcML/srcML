@@ -52,7 +52,7 @@ int close_callback(void * context UNUSED) {
 int main(int, char* argv[]) {
 
     const std::string src = "a;\n";
-    const std::string src_bom = "\xEF\xBB\xBF""a;\n";
+    const std::string src_bom = "\xEF\xBB\xBF" "a;\n";
     const std::string utf8_src = "/* \u2713 */\n";
     const std::string latin_src = "/* \xfe\xff */\n";
     const std::string src_macro = "MACRO1;\nMACRO2;\n";
