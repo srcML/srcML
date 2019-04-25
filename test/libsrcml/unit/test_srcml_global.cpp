@@ -37,8 +37,6 @@
 
 #include <unit_tests.hpp>
 
-extern srcml_archive global_archive;
-
 int main(int, char* argv[]) {
 
     /*
