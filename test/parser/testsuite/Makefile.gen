@@ -109,8 +109,6 @@ XSLT_BLOCKUNIT=${XSLT} xsl/insertblock.xsl
 
 XSLT_STRUCTUNIT=${XSLT} xsl/insertstruct.xsl
 
-XSLT_BLOCKUNIT_JAVA=${XSLT} xsl/insertblock.java.xsl
-
 XSLT_ADDEXPLICIT=${XSLT} xsl/addexplicit.xsl
 
 XSLT_ADDVIRTUAL=${XSLT} xsl/addvirtual.xsl
@@ -152,7 +150,6 @@ XSLT_INSERTPREPROC=${XSLT} xsl/insertpreproc.xsl
 
 # nest if
 XSLT_INSERTIFTHENELSE=${XSLT} xsl/nestif.xsl
-XSLT_INSERTIFTHENELSE_JAVA=${XSLT} xsl/nestif.java.xsl
 
 # insert form feed
 XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
@@ -362,10 +359,10 @@ cleanall :
 	${XSLT_BLOCKUNIT} $< > $@
 
 %.block.java.xml : %.java.xml
-	${XSLT_BLOCKUNIT_JAVA} $< > $@
+	${XSLT_BLOCKUNIT} $< > $@
 
 %.block.aj.xml : %.aj.xml
-	${XSLT_BLOCKUNIT_JAVA} $< > $@
+	${XSLT_BLOCKUNIT} $< > $@
 
 %.comment.cpp.xml : %.cpp.xml
 	${XSLT_INSERTCOMMENT} $< > $@
@@ -416,10 +413,10 @@ cleanall :
 	${XSLT_INSERTIFTHENELSE} $< > $@
 
 %.ifthenelse.java.xml : %.java.xml
-	${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
+	${XSLT_INSERTIFTHENELSE} $< > $@
 
 %.ifthenelse.aj.xml : %.aj.xml
-	${XSLT_INSERTIFTHENELSE_JAVA} $< > $@
+	${XSLT_INSERTIFTHENELSE} $< > $@
 
 %.formfeed.cpp.xml : %.cpp.xml
 	${XSLT_INSERTFORMFEED} $< > $@
