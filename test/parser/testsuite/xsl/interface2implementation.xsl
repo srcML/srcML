@@ -16,21 +16,7 @@
 	Converts srcML Objective-C class interface to class implementation
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
-
-<xsl:template match="/src:unit/text()[1]">
-
-  <xsl:comment>Generated from class_interface_m.m.xml by stylesheet interface2implementation.xsl</xsl:comment>
-  <xsl:copy/>
-
-</xsl:template>
-
-<!-- change the filename attribute on the unit from "class" to "interface" -->
-<xsl:template match="src:unit/@filename">
-	<xsl:attribute name="filename">
-		<xsl:value-of select="str:replace(., 'interface', 'implementation')"/>
-	</xsl:attribute>
-</xsl:template>
+<xsl:import href="copy.xsl"/>
 
 <!-- change the class keyword to a interface keyword -->
 <xsl:template match="src:class/@type">
@@ -38,15 +24,8 @@
 </xsl:template>
 
 <!-- change the class keyword to a interface keyword -->
-<xsl:template match="src:class/text()">
+<xsl:template match="src:class/text()[1]">
 	<xsl:value-of select="str:replace(., 'interface', 'implementation')"/>
-</xsl:template>
-
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>

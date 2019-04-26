@@ -4,9 +4,7 @@
 	xmlns="http://www.srcML.org/srcML/src"
 	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
-	xmlns:func="http://exslt.org/functions"
-	xmlns:exsl="http://exslt.org/common"
-	extension-element-prefixes="str exsl func"
+	extension-element-prefixes="str"
 	exclude-result-prefixes="src"
 	version="1.0">
 
@@ -16,37 +14,13 @@
 	Rename a default variable NAME to a given passed in name.
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
+<xsl:import href="copy.xsl"/>
 
-<!-- change the url attribute on any unit from "if" to "while" -->
-<xsl:template match="src:unit/@url">
-	<xsl:attribute name="url">
-		<xsl:value-of select="concat(., '.', $new_name)"/>
-	</xsl:attribute>
-</xsl:template>
+<xsl:param name="new_name"/>
 
 <!-- put in text identifier name -->
-<xsl:template match="src:name/text()[1]">
+<xsl:template match="src:name/text()[1] | src:specifier/text()[1]">
 	<xsl:value-of select="str:replace(., 'NAME', $new_name)"/>
-</xsl:template>
-
-<!-- put in text specifier name -->
-<xsl:template match="src:specifier/text()[1]">
-	<xsl:value-of select="str:replace(., 'NAME', $new_name)"/>
-</xsl:template>
-
-<!-- change the filename attribute on the unit from "if" to "while" -->
-<xsl:template match="src:unit/@filename">
-	<xsl:attribute name="filename">
-		<xsl:value-of select="concat(., '.', $new_name)"/>
-	</xsl:attribute>
-</xsl:template>
-
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>

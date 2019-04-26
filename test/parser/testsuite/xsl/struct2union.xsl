@@ -16,53 +16,21 @@
 	Converts srcML struct statement test cases to union statement test cases
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
+<xsl:import href="copy.xsl"/>
 
-<xsl:template match="/src:unit/text()[1]">
-
-  <xsl:comment>Generated from struct.cpp.xml by stylesheet struct2union.xsl</xsl:comment>
-  <xsl:copy/>
-
-</xsl:template>
-
-<!-- change the url attribute on any unit from "struct" to "union" -->
-<xsl:template match="src:unit/@url">
-	<xsl:attribute name="url">
-		<xsl:value-of select="str:replace(., 'struct', 'union')"/>
-	</xsl:attribute>
-</xsl:template>
-
-<!-- change the filename attribute on the unit from "struct" to "union" -->
-<xsl:template match="src:unit/@filename">
-	<xsl:attribute name="filename">
-		<xsl:value-of select="str:replace(., 'struct', 'union')"/>
-	</xsl:attribute>
-</xsl:template>
-
-<!-- change the if element to a while element -->
+<!-- change struct element to union element -->
 <xsl:template match="src:struct">
-	<union>
-		<xsl:apply-templates/> <!-- select="*|@*|text()"/> -->
-	</union>
+	<union><xsl:apply-templates/></union>
 </xsl:template>
 
-<!-- change the if element to a while element -->
+<!-- change struct deleclaration to union declaration -->
 <xsl:template match="src:struct_decl">
-	<union_decl>
-		<xsl:apply-templates/> <!-- select="*|@*|text()"/> -->
-	</union_decl>
+	<union_decl><xsl:apply-templates/></union_decl>
 </xsl:template>
 
 <!-- change the struct keyword to a union keyword -->
-<xsl:template match="text()[contains(., 'struct')]">
+<xsl:template match="src:struct/text()[1] | src:struct_decl/text()[1]">
 	<xsl:value-of select="str:replace(., 'struct', 'union')"/>
-</xsl:template>
-
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>
