@@ -1,1 +1,0 @@
-int register * foo;

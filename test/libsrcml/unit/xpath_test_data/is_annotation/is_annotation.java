@@ -1,5 +1,0 @@
-
-@interface x { }
-
-interface x { }
-
