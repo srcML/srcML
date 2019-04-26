@@ -134,7 +134,6 @@ int main(int, char* argv[]) {
     */
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -147,11 +146,9 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -165,11 +162,9 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -183,11 +178,9 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -202,11 +195,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -220,11 +211,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -237,11 +226,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -254,11 +241,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -271,11 +256,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
@@ -284,11 +267,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
 //        unit->srcml = "<unit/>";
@@ -297,11 +278,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -310,18 +289,15 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         dassert(srcml_unit_unparse_filename(0, "project.c"), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     /*
@@ -329,7 +305,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     */
 
     {
-
         char * s;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
@@ -345,7 +320,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     }
 
     {
-
         char * s;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
@@ -362,7 +336,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     }
 
     {
-
         char * s;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
@@ -379,7 +352,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     }
 
     {
-
         char * s;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
@@ -396,7 +368,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     }
 
     {
-
         char * s;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
@@ -413,7 +384,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     }
 
     {
-
         char * s;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
@@ -429,7 +399,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     }
 
     {
-
         char * s;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
@@ -470,7 +439,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
@@ -484,7 +452,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
@@ -497,7 +464,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
@@ -510,7 +476,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
@@ -524,7 +489,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     /*
@@ -532,7 +496,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     */
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -547,11 +510,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -567,11 +528,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -587,11 +546,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -607,11 +564,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -627,11 +582,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -646,11 +599,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -665,11 +616,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -684,11 +633,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
@@ -699,11 +646,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
 //        unit->srcml = "<unit/>";
@@ -714,11 +659,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -727,11 +670,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -742,7 +683,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     /*
@@ -750,7 +690,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     */
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -767,11 +706,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_archive_free(archive);
 
         UNLINK("project.c");
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -789,11 +726,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_archive_free(archive);
 
         UNLINK("project_utf8.cpp");
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -811,11 +746,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_archive_free(archive);
 
         UNLINK("project_latin_from_utf8.cpp");
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -833,11 +766,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_archive_free(archive);
 
         UNLINK("project_latin.cpp");
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -855,11 +786,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_archive_free(archive);
 
         UNLINK("project_latin_from_latin.cpp");
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -876,11 +805,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_archive_free(archive);
 
         UNLINK("project_macro.cpp");
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -897,11 +824,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_archive_free(archive);
 
         UNLINK("project_macro_single.cpp");
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -918,11 +843,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_archive_free(archive);
 
         UNLINK("project.c");
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
@@ -933,11 +856,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
 //        unit->srcml = "<unit/>";
@@ -948,11 +869,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -961,11 +880,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -976,7 +893,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     /*
@@ -984,7 +900,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
     */
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -999,11 +914,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1019,11 +932,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1039,11 +950,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1059,11 +968,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1079,11 +986,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1098,11 +1003,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1117,11 +1020,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1136,11 +1037,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
@@ -1151,11 +1050,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
 //        unit->srcml = "<unit/>";
@@ -1166,11 +1063,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1179,11 +1074,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1194,11 +1087,9 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
@@ -1209,7 +1100,6 @@ fprintf(stderr, "DEBUG:  %s %s %d aunit: %s\n", __FILE__,  __FUNCTION__, __LINE_
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     UNLINK("project.c");

@@ -16,22 +16,9 @@
 	Adds explicit specifier to constructors
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
-
-<!-- change the url attribute on any unit from "if" to "while" -->
-<xsl:template match="src:unit/@url">
-	<xsl:attribute name="url">
-		<xsl:value-of select="str:replace(., 'constructor', 'constructor_explicit')"/>
-	</xsl:attribute>
-</xsl:template>
+<xsl:import href="copy.xsl"/>
 
 <!-- filter the then elements, but not the contents of the then -->
 <xsl:template match="src:constructor" xml:space="preserve"><constructor><specifier>explicit</specifier><xsl:text> </xsl:text><xsl:apply-templates/></constructor></xsl:template>
-
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
-</xsl:template>
 
 </xsl:stylesheet>

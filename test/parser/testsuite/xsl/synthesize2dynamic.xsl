@@ -4,9 +4,7 @@
 	xmlns="http://www.srcML.org/srcML/src"
 	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
-	xmlns:func="http://exslt.org/functions"
-	xmlns:exsl="http://exslt.org/common"
-	extension-element-prefixes="str exsl func"
+	extension-element-prefixes="str"
 	exclude-result-prefixes="src cpp"
 	version="1.0">
 
@@ -16,29 +14,16 @@
     Convert @synthesize to @dynamic.
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
+<xsl:import href="copy.xsl"/>
 
-<xsl:template match="src:unit/@url">
-    <xsl:attribute name="url"><xsl:value-of select="str:replace(., 'synthesize', 'dynamic')"/></xsl:attribute>
-</xsl:template>
-
-<xsl:template match="src:unit/@filename">
-    <xsl:attribute name="filename"><xsl:value-of select="str:replace(., 'synthesize', 'dynamic')"/></xsl:attribute>
-</xsl:template>
-
-<xsl:template match="src:synthesize/text()">
-    <xsl:value-of select="str:replace(., '@synthesize', '@dynamic')"/>
-</xsl:template>
-
+<!-- convert synthesize element to dynamic element -->
 <xsl:template match="src:synthesize">
     <dynamic><xsl:apply-templates select="@*|node()"/></dynamic>
 </xsl:template>
 
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
+<!-- convert synthesize keyword to dynamic-->
+<xsl:template match="src:synthesize/text()[1]">
+    <xsl:value-of select="str:replace(., '@synthesize', '@dynamic')"/>
 </xsl:template>
 
 </xsl:stylesheet>

@@ -3,9 +3,6 @@
 	xmlns:src="http://www.srcML.org/srcML/src"
 	xmlns="http://www.srcML.org/srcML/src"
 	xmlns:cpp="http://www.srcML.org/srcML/cpp"
-	xmlns:str="http://exslt.org/strings"
-	xmlns:func="http://exslt.org/functions"
-	extension-element-prefixes="str func"
 	exclude-result-prefixes="src"
 	version="1.0">
 
@@ -15,14 +12,7 @@
 	Contents are duplicated to then and else parts of if
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
-
-<!-- change the url attribute on any unit from "*" to "*.ifthenelse"-->
-<xsl:template match="src:unit/@url">
-	<xsl:attribute name="url">
-		<xsl:value-of select="."/><xsl:text>.ifthenelse</xsl:text>
-	</xsl:attribute>
-</xsl:template>
+<xsl:import href="copy.xsl"/>
 
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit/src:unit"><xsl:copy><xsl:copy-of select="@*"/><xsl:text>
@@ -31,13 +21,6 @@
 <else>else <block>{
     <xsl:copy-of select="*|text()"/>}</block></else></if_stmt><xsl:text>
 </xsl:text></xsl:copy>
-</xsl:template>
-
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>

@@ -4,10 +4,8 @@
 	xmlns="http://www.srcML.org/srcML/src"
 	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	xmlns:str="http://exslt.org/strings"
-	xmlns:func="http://exslt.org/functions"
-	xmlns:exsl="http://exslt.org/common"
-	extension-element-prefixes="str exsl func"
-	exclude-result-prefixes="src cpp"
+	extension-element-prefixes="str"
+	exclude-result-prefixes="src"
 	version="1.0">
 
 <!--
@@ -16,34 +14,27 @@
     Converts try/catch/finally/throw keywords to @try/@catch/@finally/@throw keywords
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
+<xsl:import href="copy.xsl"/>
 
-<xsl:template match="src:try/text()">
+<xsl:template match="src:try/text()[1]">
     <xsl:value-of select="str:replace(., 'try', '@try')"/>
 </xsl:template>
 
-<xsl:template match="src:catch/text()">
+<xsl:template match="src:catch/text()[1]">
     <xsl:value-of select="str:replace(., 'catch', '@catch')"/>
 </xsl:template>
 
-<xsl:template match="src:finally/text()">
+<xsl:template match="src:finally/text()[1]">
     <xsl:value-of select="str:replace(., 'finally', '@finally')"/>
 </xsl:template>
 
-<xsl:template match="src:throw/text()">
+<xsl:template match="src:throw/text()[1]">
     <xsl:value-of select="str:replace(., 'throw', '@throw')"/>
 </xsl:template>
 
 <!-- trap the current language attribute -->
 <xsl:template match="src:unit/@language">
     <xsl:attribute name="language">Objective-C</xsl:attribute>
-</xsl:template>
-
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>

@@ -446,8 +446,8 @@ function_asterisk_decl.cpp.xml : function_asterisk.cpp.xml ${XSLT_DEFN2DECL_XSL}
 	${XSLT_DEFN2DECL} --url=$(shell srcml --show-url $<) $< > $@
 
 # const function from function
-function_const.cpp.xml : function.cpp.xml ${XSLT_DEFN2DECL_XSL}
-	${XSLT_ADDCONST} --url=$(shell srcml --show-url $<) $< > $@
+function_const.cpp.xml : function.cpp.xml ${XSLT_ADDCONST_XSL}
+	${XSLT_ADDCONST} --url=$(shell srcml --show-url $<).const $< > $@
 
 # while from if
 while.cpp.xml : if.cpp.xml ${XSLT_IF2WHILE_XSL}
@@ -462,19 +462,19 @@ return.cpp.xml : return_base.cpp.xml ${XSLT_INSRT_XSL}
 	${XSLT_INSERTEXPR} --url=$(shell srcml --show-url $<) $< > $@
 
 # constructor from constructor base
-constructor.cpp.xml : constructor_base.cpp.xml ${XSLT_DEFN2DECL_XSL}
+constructor.cpp.xml : constructor_base.cpp.xml
 	cp $< $@
 
 # explicit constructor from constructor
-constructor_explicit.cpp.xml : constructor.cpp.xml ${XSLT_INSRT_XSL}
+constructor_explicit.cpp.xml : constructor.cpp.xml ${XSLT_ADDEXPLICIT_XSL}
 	${XSLT_ADDEXPLICIT} --url=$(shell srcml --show-url $<) $< > $@
 
 # virtual destructor from destructor
-destructor_virtual.cpp.xml : destructor.cpp.xml ${XSLT_INSRT_XSL}
+destructor_virtual.cpp.xml : destructor.cpp.xml ${XSLT_ADDVIRTUAL_XSL}
 	${XSLT_ADDVIRTUAL} --url=$(shell srcml --show-url $<).virtual $< > $@
 
 # throw from throw base
-throw.cpp.xml : throw_base.cpp.xml ${XSLT_INSRT_XSL}
+throw.cpp.xml : throw_base.cpp.xml ${XSLT_INSERTEXPR_XSL}
 	${XSLT_INSERTEXPR} --url=$(shell srcml --show-url $<) $< > $@
 
 # struct from class

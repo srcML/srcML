@@ -16,7 +16,7 @@
 	Merges embedded units
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
+<xsl:import href="copy.xsl"/>
 
 <!-- create a new root element -->
 <xsl:template match="/src:unit">
@@ -50,16 +50,6 @@
 <!-- filter out start and end elements  -->
 <xsl:template match="/src:unit/src:unit">
 	<xsl:apply-templates/>
-</xsl:template>
-
-<!-- filter out comments -->
-<xsl:template match="comment()"/>
-
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>

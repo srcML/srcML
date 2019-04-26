@@ -16,24 +16,11 @@
 	Converts srcML if statement test cases to if statement test cases with blocks around the then and else statements.
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
-
-<!-- change the filename attribute on the unit from "if" to "while" -->
-<xsl:template match="src:unit/@url">
-	<xsl:attribute name="url">if</xsl:attribute>
-</xsl:template>
-
+<xsl:import href="copy.xsl"/>
 
 <!-- filter the then elements, but not the contents of the then -->
 <xsl:template match="src:if_stmt/src:if[not(.//src:if)]/src:block[@type='pseudo'] | src:if_stmt/src:else[not(.//src:if_stmt)]/src:*">
   <block>{ <xsl:choose><xsl:when test="@type='pseudo'"><xsl:copy-of select="node()"/></xsl:when><xsl:otherwise><xsl:copy-of select="."/></xsl:otherwise></xsl:choose> }</block>
-</xsl:template>
-
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>

@@ -11,31 +11,17 @@
 	version="1.0">
 
 <!--
-	addexplicit.xsl
+	addconst.xsl
 
-	Adds explicit specifier to constructors
+	Adds const specifier to parameters
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
+<xsl:import href="copy.xsl"/>
 
-<!-- change the url attribute on any unit -->
-<xsl:template match="src:unit/@url">
-	<xsl:attribute name="url">
-		<xsl:value-of select="str:replace(., 'function', 'function_const')"/>
-	</xsl:attribute>
-</xsl:template>
-
-<xsl:template match="src:function/src:formal_params">
-	<xsl:copy-of select="."/>
-
-	<xsl:text> </xsl:text>
+<xsl:template match="src:function[not(src:specifier='const')]/src:block">
 	<specifier>const</specifier>
-</xsl:template>
-
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
+	<xsl:text> </xsl:text>
+	<xsl:copy-of select="."/>
 </xsl:template>
 
 </xsl:stylesheet>

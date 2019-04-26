@@ -16,28 +16,7 @@
 	Converts srcML Java class definition to interface definition
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
-
-<xsl:template match="/src:unit/text()[1]">
-
-  <xsl:comment>Generated from class_java.cpp.xml by stylesheet class2interface.xsl</xsl:comment>
-  <xsl:copy/>
-
-</xsl:template>
-
-<!-- change the url attribute on any unit from "class" to "interface" -->
-<xsl:template match="src:unit/@url">
-	<xsl:attribute name="url">
-		<xsl:value-of select="str:replace(., 'class', 'interface')"/>
-	</xsl:attribute>
-</xsl:template>
-
-<!-- change the filename attribute on the unit from "class" to "interface" -->
-<xsl:template match="src:unit/@filename">
-	<xsl:attribute name="filename">
-		<xsl:value-of select="str:replace(., 'class', 'interface')"/>
-	</xsl:attribute>
-</xsl:template>
+<xsl:import href="copy.xsl"/>
 
 <xsl:template match="src:class">
 	<class type="interface">
@@ -60,13 +39,6 @@
 <!-- change the class keyword to a interface keyword -->
 <xsl:template match="src:class/text()|src:class_decl/text()">
 	<xsl:value-of select="str:replace(., 'class', 'interface')"/>
-</xsl:template>
-
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>

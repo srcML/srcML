@@ -16,9 +16,9 @@
 	Inserts expressions into statements
 -->
 
-<xsl:param name="expr_filename"/>
+<xsl:import href="copy.xsl"/>
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
+<xsl:param name="expr_filename"/>
 
 <xsl:variable name="expressions" select="document($expr_filename)//src:expr"/>
 
@@ -73,13 +73,6 @@
 	</xsl:otherwise>
 	</xsl:choose>
 
-</xsl:template>
-
-<!-- default identity copy -->
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>
