@@ -21,47 +21,23 @@
 <xsl:variable name="cmt" xml:space="preserve"> <comment type="block">/* a */</comment></xsl:variable> 
 
 <!-- change url name -->
-<xsl:template match="src:unit/@url">
+<xsl:template match="/src:unit/@url">
 	<xsl:attribute name="url">
 		<xsl:value-of select="."/><xsl:text>.comment</xsl:text>
 	</xsl:attribute>
 </xsl:template>
 
-<xsl:template match="src:comment">
+<xsl:template match="src:comment | src:literal">
   <xsl:copy-of select="."/>
 </xsl:template>
 
-<xsl:template match="src:unit/src:unit//text()[contains(., ' ') and not(ancestor::src:literal)]">
-  <xsl:apply-templates select="." mode="replace"/>
-</xsl:template>
-
-<!-- Remove any namespaces from unit for Java test cases (basically to get rid of cpp namespace) -->
-<xsl:template match="src:unit/src:unit">
-<xsl:choose>
-<xsl:when test="contains(@language, 'Java')">
-  <xsl:element name="{local-name()}">
-   <xsl:apply-templates select="@* | node()"/>
-  </xsl:element>
-</xsl:when>
-<xsl:otherwise><xsl:copy-of select="."/></xsl:otherwise>
-</xsl:choose>
-</xsl:template>
-
-<xsl:template match="text()[contains(., ' ')]" mode="replace">
+<xsl:template match="text()[contains(., ' ')]">
   <xsl:value-of select="substring-before(., ' ')"/>
   <xsl:value-of select="' '"/>
   <xsl:copy-of select="$cmt"/>
   <xsl:value-of select="' '"/>
   <xsl:value-of select="substring-after(., ' ')"/>
-<!--  <xsl:apply-templates select="substring-after(., ' ')" mode="replace"/> -->
 </xsl:template>
-
-<xsl:template match="text()" mode="replace">
-  <xsl:value-of select="."/><xsl:value-of select="abc"/>
-</xsl:template>
-
-<!-- filter out comments -->
-<xsl:template match="comment()"/>
 
 <xsl:template match="@*|node()">
 	<xsl:copy>
