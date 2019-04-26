@@ -20,13 +20,6 @@
 
 <xsl:variable name="cmt" xml:space="preserve"> <comment type="block">/* a */</comment></xsl:variable> 
 
-<!-- change url name -->
-<xsl:template match="/src:unit/@url">
-	<xsl:attribute name="url">
-		<xsl:value-of select="."/><xsl:text>.comment</xsl:text>
-	</xsl:attribute>
-</xsl:template>
-
 <xsl:template match="src:comment | src:literal">
   <xsl:copy-of select="."/>
 </xsl:template>

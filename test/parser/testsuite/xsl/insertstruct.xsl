@@ -13,15 +13,6 @@
 
 <xsl:import href="copy.xsl"/>
 
-<!-- change the url attribute on any unit from "*" to "*.block"-->
-<!--
-<xsl:template match="src:unit/@url">
-    <xsl:attribute name="url">
-        <xsl:value-of select="."/><xsl:text>.block</xsl:text>
-    </xsl:attribute>
-</xsl:template>
--->
-
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit">
 <xsl:copy><xsl:copy-of select="@*"/>

@@ -18,15 +18,6 @@
 
 <xsl:import href="insertcomments.xsl"/>
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
-
 <xsl:variable name="cmt" xml:space="preserve"> <escape char="0x0c"/></xsl:variable> 
-
-<!-- change url name -->
-<xsl:template match="src:unit/@url">
-	<xsl:attribute name="url">
-		<xsl:value-of select="."/><xsl:text>.formfeed</xsl:text>
-	</xsl:attribute>
-</xsl:template>
 
 </xsl:stylesheet>

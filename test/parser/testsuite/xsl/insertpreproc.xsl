@@ -18,11 +18,4 @@
 </xsl:text><cpp:define>#<cpp:directive>define</cpp:directive></cpp:define><xsl:text>
 </xsl:text></xsl:variable> 
 
-<!-- change url name -->
-<xsl:template match="src:unit/@url">
-	<xsl:attribute name="url">
-		<xsl:value-of select="."/><xsl:text>.preproc</xsl:text>
-	</xsl:attribute>
-</xsl:template>
-
 </xsl:stylesheet>
