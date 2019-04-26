@@ -102,6 +102,11 @@ int srcml_input_srcml(ParseQueue& queue,
         prequest->unit = unit;
         prequest->needsparsing = false;
 
+        // if the archive has a language (set by the user) then use that
+        // this is a way of converting language
+        if (srcml_archive_get_language(srcml_output_archive))
+            srcml_unit_set_language(prequest->unit, srcml_archive_get_language(srcml_output_archive));
+
         // hand request off to the processing queue
         queue.schedule(prequest);
 
