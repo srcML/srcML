@@ -163,22 +163,18 @@ XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
 ##
 # Test cases for one language are generated from test cases for another language.
 
-XSLT_SETLANGUAGE_XSL=xsl/setlanguage.xsl
+XSLT_SETLANGUAGE_C=srcml --language="C" --output-xml
 
-XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CS=srcml --language="C\#" --output-xml
 
-XSLT_SETLANGUAGE_C=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="C"' --output-xml
+XSLT_SETLANGUAGE_OBJECTIVE_C=srcml --language="Objective-C" --output-xml
 
-XSLT_SETLANGUAGE_CS=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="C\#"' --output-xml
+XSLT_SETLANGUAGE_CXX=srcml --language="CXX" --output-xml
 
-XSLT_SETLANGUAGE_OBJECTIVE_C=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="Objective-C"' --output-xml
+XSLT_SETLANGUAGE_CXX_11=srcml --language="C++11" --output-xml
 
-XSLT_SETLANGUAGE_CXX=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="CXX"' --output-xml
-
-XSLT_SETLANGUAGE_CXX_11=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="C++11"' --output-xml
-
-XSLT_SETLANGUAGE_JAVA=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="Java"' --output-xml
-XSLT_SETLANGUAGE_ASPECTJ=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="AspectJ"' --output-xml
+XSLT_SETLANGUAGE_JAVA=srcml --language="Java" --output-xml
+XSLT_SETLANGUAGE_ASPECTJ=srcml --language="AspectJ" --output-xml
 
 # try/catch/finally/throw keywords to @try/@catch/@finally/throw keywords
 XSLT_KEYWORD2MKEYWORD_XSL=xsl/keyword2mkeyword.xsl
