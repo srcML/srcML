@@ -27,16 +27,16 @@
 
 #include <dassert.hpp>
 
-int main(int, char* /* argv */[]) {
+int main(int argc, char* argv[]) {
 
-#if 0
     {
         srcml_archive* archive = srcml_archive_create();
-        archive->type = SRCML_ARCHIVE_READ;
-        archive->encoding = "e";
-        archive->language = "l";
-        archive->url = "u";
-        archive->version = "v";
+        srcml_archive_set_src_encoding(archive, "e");
+        srcml_archive_set_url(archive, "u");
+        srcml_archive_set_version(archive, "v");
+        srcml_archive_set_options(archive, 1 | 2);
+        srcml_archive_set_tabstop(archive, 4);
+/*e
         archive->attributes.push_back("a");
         archive->attributes.push_back("a");
         archive->options = 1 | 2;
@@ -55,15 +55,15 @@ int main(int, char* /* argv */[]) {
         trans.arguments.str = "//src:unit";
         archive->transformations.push_back(trans);
         archive->revision_number = SRCDIFF_REVISION_ORIGINAL;
-
+*/
         srcml_archive* new_archive = srcml_archive_clone(archive);
+        dassert(srcml_archive_get_src_encoding(new_archive), std::string("e"));
+        dassert(srcml_archive_get_url(new_archive), std::string("u"));
+        dassert(srcml_archive_get_version(new_archive), std::string("v"));
+        dassert(srcml_archive_get_options(new_archive), (1 | 2));
+        dassert(srcml_archive_get_tabstop(new_archive), 4);
 
-        dassert(new_archive->type, SRCML_ARCHIVE_INVALID);
-        dassert(*new_archive->encoding, "e");
-        dassert(new_archive->src_encoding, boost::none);
-        dassert(*new_archive->language, "l");
-        dassert(*new_archive->url, "u");
-        dassert(*new_archive->version, "v");
+/*
         dassert(new_archive->attributes.size(), 2);
         dassert(new_archive->attributes.at(0), "a");
         dassert(new_archive->attributes.at(1), "a");
@@ -91,11 +91,10 @@ int main(int, char* /* argv */[]) {
 
         dassert(*new_archive->revision_number, SRCDIFF_REVISION_ORIGINAL)
 
-        archive->translator = 0;
-        archive->reader = 0;
-        archive->input = 0;
+*/
         srcml_archive_free(archive);
         srcml_archive_free(new_archive);
+
     }
 
     {
@@ -103,7 +102,6 @@ int main(int, char* /* argv */[]) {
         dassert(srcml_archive_clone(0), 0);
 
     }
-#endif
 
     return 0;
 }
