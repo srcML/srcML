@@ -168,7 +168,6 @@ XSLT_SETLANGUAGE_CXX=srcml --language="CXX" --output-xml
 XSLT_SETLANGUAGE_CXX_11=srcml --language="C++11" --output-xml
 
 XSLT_SETLANGUAGE_JAVA=srcml --language="Java" --output-xml
-XSLT_SETLANGUAGE_ASPECTJ=srcml --language="AspectJ" --output-xml
 
 # try/catch/finally/throw keywords to @try/@catch/@finally/throw keywords
 XSLT_KEYWORD2MKEYWORD_XSL=xsl/keyword2mkeyword.xsl
@@ -208,10 +207,6 @@ BASE_JAVA_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA_GEN)
 BASE_JAVA_ALL = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
 GEN_JAVA= ${foreach nm, $(BASE_JAVA_ALL_GEN), $(nm).java.xml}
 
-#BASE_ASPECTJ_ALL_GEN = $(BASE_COMMON) $(GEN_BASE) $(BASE_OO) $(BASE_JAVA)
-
-#GEN_ASPECTJ= ${foreach nm, $(BASE_ASPECTJ_ALL_GEN), $(nm).aj.xml}
-
 SEP_PLUS= ${SEP_FILES} ${GEN_SEP}
 SEP_PLUSNOPREPROC= ${SEP_BASE} ${GEN_SEP}
 
@@ -224,7 +219,6 @@ GEN_ALL= ${foreach nm, $(SEP_PLUS), $(nm).all.cpp.xml} extra_cpp.all.cpp.xml \
 	       	${foreach nm, $(BASE_CS_ALL), $(nm).all.cs.xml} \
 	       	${foreach nm, $(BASE_OBJECTIVE_C_ALL), $(nm).all.m.xml} \
 	       	${foreach nm, $(BASE_JAVA_ALL), $(nm).all.java.xml} \
-	    	${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).all.aj.xml} \
 			extra_c.all.c.xml extra_cpp.all.cpp.xml
 
 # generated cases for blocks
@@ -234,7 +228,6 @@ GEN_BLOCK= ${foreach nm, $(SEP_PLUS),          $(nm).block.cpp.xml} \
            	${foreach nm, $(BASE_OBJECTIVE_C_ALL),    $(nm).block.m.xml} \
 	       	${foreach nm, $(BASE_CXX_11_ALL), $(nm).block.cpp11.xml} \
            	${foreach nm, $(BASE_JAVA_ALL), $(nm).block.java.xml} \
-	       	${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).block.aj.xml} \
 		 	extra_c.block.c.xml extra_cpp.block.cpp.xml
 
 # generated cases for structs
@@ -247,7 +240,6 @@ GEN_COMMENT= ${foreach nm, $(SEP_PLUS),          $(nm).comment.cpp.xml} \
 	       ${foreach nm, $(BASE_OBJECTIVE_C_ALL),    $(nm).comment.m.xml} \
 	       ${foreach nm, $(BASE_CXX_11_ALL), $(nm).comment.cpp11.xml} \
 	       ${foreach nm, $(BASE_JAVA_ALL), $(nm).comment.java.xml} \
-	       ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).comment.aj.xml} \
 		   extra_c.comment.c.xml extra_cpp.comment.cpp.xml
 
 # generated cases for formfeed
@@ -255,9 +247,8 @@ GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 		     ${foreach nm, $(BASE_C_ALL),    $(nm).formfeed.c.xml} \
 		     ${foreach nm, $(BASE_CS_ALL),    $(nm).formfeed.cs.xml} \
 		     ${foreach nm, $(BASE_OBJECTIVE_C_ALL),    $(nm).formfeed.m.xml} \
-	             ${foreach nm, $(BASE_CXX_11_ALL), $(nm).formfeed.cpp11.xml} \
+             ${foreach nm, $(BASE_CXX_11_ALL), $(nm).formfeed.cpp11.xml} \
 		     ${foreach nm, $(BASE_JAVA_ALL), $(nm).formfeed.java.xml} \
-	             ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).formfeed.aj.xml} \
 		     extra_c.formfeed.c.xml extra_cpp.formfeed.cpp.xml
 
 # generated test cases for preproc
@@ -275,7 +266,6 @@ GEN_IFTHENELSE= ${foreach nm, $(SEP_PLUS), $(nm).ifthenelse.cpp.xml} \
 	           ${foreach nm, $(BASE_OBJECTIVE_C_ALL), $(nm).ifthenelse.m.xml} \
 	           ${foreach nm, $(BASE_CXX_11_ALL), $(nm).ifthenelse.cpp11.xml} \
 	           ${foreach nm, $(BASE_JAVA_ALL), $(nm).ifthenelse.java.xml} \
-	           ${foreach nm, $(BASE_ASPECTJ_ALL), $(nm).ifthenelse.aj.xml} \
 		   extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml
 
 allinall.c.xml :
@@ -439,9 +429,6 @@ cleanall :
 %.java.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_JAVA} $< > $@
 
-%.aj.xml : %.java.xml
-	${XSLT_SETLANGUAGE_ASPECTJ} $< > $@
-
 %.c.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_C} $< > $@
 
@@ -457,7 +444,7 @@ cleanall :
 %.cpp11.xml : %.cpp.xml
 	${XSLT_SETLANGUAGE_CXX_11} $< > $@
 
-GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_OBJECTIVE_C) $(GEN_CXX) $(GEN_ASPECTJ) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} ${GEN_STRUCT}
+GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_OBJECTIVE_C) $(GEN_CXX) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} ${GEN_STRUCT}
 
 GEN_CPP_BASE=${GEN_SEP} ${foreach nm, $(SEP_PLUS), $(nm).all} ${foreach nm, $(SEP_PLUS), $(nm).block} ${foreach nm, $(SEP_PLUS), $(nm).comment} ${foreach nm, $(SEP_PLUS), $(nm).preproc} ${foreach nm, $(SEP_PLUS), $(nm).struct}
 
