@@ -330,9 +330,6 @@ cleanall :
 %.all.java.xml : %.java.xml
 	${XSLT_MERGEUNIT} $< > $@
 
-%.all.aj.xml : %.aj.xml
-	${XSLT_MERGEUNIT} $< > $@
-
 %.block.cpp.xml : %.cpp.xml
 	${XSLT_BLOCKUNIT} $< > $@
 
@@ -351,9 +348,6 @@ cleanall :
 %.block.java.xml : %.java.xml
 	${XSLT_BLOCKUNIT} $< > $@
 
-%.block.aj.xml : %.aj.xml
-	${XSLT_BLOCKUNIT} $< > $@
-
 %.comment.cpp.xml : %.cpp.xml
 	${XSLT_INSERTCOMMENT} $< > $@
 
@@ -367,9 +361,6 @@ cleanall :
 	${XSLT_INSERTCOMMENT} $< > $@
 
 %.comment.java.xml : %.java.xml
-	${XSLT_INSERTCOMMENT} $< > $@
-
-%.comment.aj.xml : %.aj.xml
 	${XSLT_INSERTCOMMENT} $< > $@
 
 %.preproc.cpp.xml : %.cpp.xml
@@ -387,9 +378,6 @@ cleanall :
 %.preproc.java.xml : %.java.xml
 	${XSLT_INSERTPREPROC} $< > $@
 
-%.preproc.aj.xml : %.aj.xml
-	${XSLT_INSERTPREPROC} $< > $@
-
 %.ifthenelse.cpp.xml : %.cpp.xml
 	${XSLT_INSERTIFTHENELSE} $< > $@
 
@@ -405,9 +393,6 @@ cleanall :
 %.ifthenelse.java.xml : %.java.xml
 	${XSLT_INSERTIFTHENELSE} $< > $@
 
-%.ifthenelse.aj.xml : %.aj.xml
-	${XSLT_INSERTIFTHENELSE} $< > $@
-
 %.formfeed.cpp.xml : %.cpp.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
@@ -421,9 +406,6 @@ cleanall :
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.formfeed.java.xml : %.java.xml
-	${XSLT_INSERTFORMFEED} $< > $@
-
-%.formfeed.aj.xml : %.aj.xml
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
