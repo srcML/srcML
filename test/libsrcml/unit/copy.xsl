@@ -8,9 +8,6 @@
 	copy.xsl
 
 	Identity transformation.
-
-	Michael L. Collard
-	collard@uakron.edu
 -->
 
 <xsl:output method="xml" version="1.0" encoding="UTF-8" standalone="yes"/>
