@@ -14,13 +14,6 @@
 	interface2implementation.xsl
 
 	Converts srcML Objective-C class interface to class implementation
-
-	Modified from class2interface.xsl written by:
-	Michael L. Collard
-	collard@cs.kent.edu
-
-	Michael John Decker
-	mdecker6@kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

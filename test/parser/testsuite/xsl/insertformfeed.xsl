@@ -14,9 +14,6 @@
 	insertformfeed.xsl
 
 	Inserts formfeeds at every opportunity
-
-	Michael L. Collard
-	collard@cs.kent.edu
 -->
 
 <xsl:import href="insertcomments.xsl"/>

@@ -13,9 +13,6 @@
 	insertblock.xsl
 
 	Inserts a block around the contents in each unit
-
-	Michael L. Collard
-	collard@uakron.edu
 -->
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>

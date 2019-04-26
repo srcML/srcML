@@ -13,9 +13,6 @@
 	nestif.xsl
 
 	Contents are duplicated to then and else parts of if
-
-	Michael L. Collard
-	collard@uakron.edu
 -->
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>

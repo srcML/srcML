@@ -14,9 +14,6 @@
     synthesize2dynamic.xsl
 
     Convert @synthesize to @dynamic.
-
-    Michael John Decker
-    mdecker6@kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

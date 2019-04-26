@@ -14,9 +14,6 @@
 	class2struct.xsl
 
 	Converts srcML class statement test cases to struct statement test cases
-
-	Michael L. Collard
-	collard@cs.kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

@@ -4,9 +4,6 @@
 
 <!--
 	Copies from input to output
-
-	Michael L. Collard
-	collard@mcs.kent.edu
 -->
 
 <xsl:output method="text"/>

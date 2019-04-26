@@ -14,9 +14,6 @@
 	insertcomments.xsl
 
 	Inserts comments at every opportunity
-
-	Michael L. Collard
-	collard@uakron.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

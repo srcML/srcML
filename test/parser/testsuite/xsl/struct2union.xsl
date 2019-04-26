@@ -14,9 +14,6 @@
 	struct2union.xsl
 
 	Converts srcML struct statement test cases to union statement test cases
-
-	Michael L. Collard
-	collard@cs.kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

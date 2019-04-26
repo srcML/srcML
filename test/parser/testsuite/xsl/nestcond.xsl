@@ -14,9 +14,6 @@
 	nestcond.xsl
 
 	Replaces conditions with conditions with extra parentheses
-
-	Michael L. Collard
-	collard@cs.kent.edu
 -->
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>

@@ -13,9 +13,6 @@
 	insertblock.java.xsl
 
 	Inserts a block around each unit for Java
-
-	Michael L. Collard
-	collard@uakron.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

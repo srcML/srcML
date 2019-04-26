@@ -14,9 +14,6 @@
 	mergeunit.xsl
 
 	Merges embedded units
-
-	Michael L. Collard
-	collard@mcs.kent.edu
 -->
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>

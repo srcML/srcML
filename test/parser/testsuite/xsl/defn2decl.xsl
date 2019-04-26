@@ -14,9 +14,6 @@
 	defn2decl.xsl
 
 	Converts srcML function definitions to function declarations
-
-	Michael L. Collard
-	collard@cs.kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

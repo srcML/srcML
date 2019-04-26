@@ -14,9 +14,6 @@
 	removecpp.xsl
 
 	Remove http://www.srcML.org/srcML/cpp namespace
-
-	Michael L. Collard
-	collard@cs.kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

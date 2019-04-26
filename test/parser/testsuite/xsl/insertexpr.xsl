@@ -14,9 +14,6 @@
 	insertexpr.xsl
 
 	Inserts expressions into statements
-
-	Michael L. Collard
-	collard@mcs.kent.edu
 -->
 
 <xsl:param name="expr_filename"/>

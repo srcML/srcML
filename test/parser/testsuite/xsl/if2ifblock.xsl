@@ -14,9 +14,6 @@
 	if2blockif.xsl
 
 	Converts srcML if statement test cases to if statement test cases with blocks around the then and else statements.
-
-	Michael L. Collard
-	collard@cs.kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

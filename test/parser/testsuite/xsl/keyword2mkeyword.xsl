@@ -14,14 +14,6 @@
     keyword2mkeyword.xsl
 
     Converts try/catch/finally/throw keywords to @try/@catch/@finally/@throw keywords
-
-    Modified from: setlanguage.xsl
-    Originally by:
-	Michael L. Collard
-	collard@cs.kent.edu
-
-    Michael John Decker
-    mdecker6@kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

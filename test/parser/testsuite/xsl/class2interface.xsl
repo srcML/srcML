@@ -14,9 +14,6 @@
 	class2interface.xsl
 
 	Converts srcML Java class definition to interface definition
-
-	Michael L. Collard
-	collard@cs.kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

@@ -14,9 +14,6 @@
 	addexplicit.xsl
 
 	Adds explicit specifier to constructors
-
-	Michael L. Collard
-	collard@mcs.kent.edu
 -->
 
 <xsl:import href="str.replace.function.xsl"/>

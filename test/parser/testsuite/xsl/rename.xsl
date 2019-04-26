@@ -14,13 +14,7 @@
 	rename.xsl
 
 	Rename a default variable NAME to a given passed in name.
-
-	Michael John Decker
-	mdecker6@kent.edu
-
-	Adapted from Michael L. Collard's for2while.xsl
 -->
-
 
 <xsl:import href="str.replace.function.xsl"/>
 
