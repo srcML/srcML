@@ -313,118 +313,118 @@ cleanall :
 	rm -f allinall.*
 
 %.cpp : %.cpp.xml
-	${XSLT_IDENTITY} $< > $@
+	${XSLT_IDENTITY} --url=$(shell srcml --show-url $<) $< > $@
 
 %.all.cpp.xml : %.cpp.xml
-	${XSLT_MERGEUNIT} $< > $@
+	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
 
 %.all.c.xml : %.c.xml
-	${XSLT_MERGEUNIT} $< > $@
+	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
 
 %.all.cs.xml : %.cs.xml
-	${XSLT_MERGEUNIT} $< > $@
+	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
 
 %.all.m.xml : %.m.xml
-	${XSLT_MERGEUNIT} $< > $@
+	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
 
 %.all.java.xml : %.java.xml
-	${XSLT_MERGEUNIT} $< > $@
+	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
 
 %.block.cpp.xml : %.cpp.xml
-	${XSLT_BLOCKUNIT} $< > $@
+	${XSLT_BLOCKUNIT} --url=$(shell srcml --show-url $<).block $< > $@
 
 %.struct.cpp.xml : %.cpp.xml
-	${XSLT_STRUCTUNIT} $< > $@
+	${XSLT_STRUCTUNIT} --url=$(shell srcml --show-url $<).struct $< > $@
 
 %.block.c.xml : %.c.xml
-	${XSLT_BLOCKUNIT} $< > $@
+	${XSLT_BLOCKUNIT} --url=$(shell srcml --show-url $<).block $< > $@
 
 %.block.cs.xml : %.cs.xml
-	${XSLT_BLOCKUNIT} $< > $@
+	${XSLT_BLOCKUNIT} --url=$(shell srcml --show-url $<).block $< > $@
 
 %.block.m.xml : %.m.xml
-	${XSLT_BLOCKUNIT} $< > $@
+	${XSLT_BLOCKUNIT} --url=$(shell srcml --show-url $<).block $< > $@
 
 %.block.java.xml : %.java.xml
-	${XSLT_BLOCKUNIT} $< > $@
+	${XSLT_BLOCKUNIT} --url=$(shell srcml --show-url $<).block $< > $@
 
 %.comment.cpp.xml : %.cpp.xml
-	${XSLT_INSERTCOMMENT} $< > $@
+	${XSLT_INSERTCOMMENT} --url=$(shell srcml --show-url $<).comment $< > $@
 
 %.comment.c.xml : %.c.xml
-	${XSLT_INSERTCOMMENT} $< > $@
+	${XSLT_INSERTCOMMENT} --url=$(shell srcml --show-url $<).comment $< > $@
 
 %.comment.cs.xml : %.cs.xml
-	${XSLT_INSERTCOMMENT} $< > $@
+	${XSLT_INSERTCOMMENT} --url=$(shell srcml --show-url $<).comment $< > $@
 
 %.comment.m.xml : %.m.xml
-	${XSLT_INSERTCOMMENT} $< > $@
+	${XSLT_INSERTCOMMENT} --url=$(shell srcml --show-url $<).comment $< > $@
 
 %.comment.java.xml : %.java.xml
-	${XSLT_INSERTCOMMENT} $< > $@
+	${XSLT_INSERTCOMMENT} --url=$(shell srcml --show-url $<).comment $< > $@
 
 %.preproc.cpp.xml : %.cpp.xml
-	${XSLT_INSERTPREPROC} $< > $@
+	${XSLT_INSERTPREPROC} --url=$(shell srcml --show-url $<).preproc $< > $@
 
 %.preproc.c.xml : %.c.xml
-	${XSLT_INSERTPREPROC} $< > $@
+	${XSLT_INSERTPREPROC} --url=$(shell srcml --show-url $<).preproc $< > $@
 
 %.preproc.cs.xml : %.cs.xml
-	${XSLT_INSERTPREPROC} $< > $@
+	${XSLT_INSERTPREPROC} --url=$(shell srcml --show-url $<).preproc $< > $@
 
 %.preproc.m.xml : %.m.xml
-	${XSLT_INSERTPREPROC} $< > $@
+	${XSLT_INSERTPREPROC} --url=$(shell srcml --show-url $<).preproc $< > $@
 
 %.preproc.java.xml : %.java.xml
-	${XSLT_INSERTPREPROC} $< > $@
+	${XSLT_INSERTPREPROC} --url=$(shell srcml --show-url $<).preproc $< > $@
 
 %.ifthenelse.cpp.xml : %.cpp.xml
-	${XSLT_INSERTIFTHENELSE} $< > $@
+	${XSLT_INSERTIFTHENELSE} --url=$(shell srcml --show-url $<).ifthenelse $< > $@
 
 %.ifthenelse.c.xml : %.c.xml
-	${XSLT_INSERTIFTHENELSE} $< > $@
+	${XSLT_INSERTIFTHENELSE} --url=$(shell srcml --show-url $<).ifthenelse $< > $@
 
 %.ifthenelse.cs.xml : %.cs.xml
-	${XSLT_INSERTIFTHENELSE} $< > $@
+	${XSLT_INSERTIFTHENELSE} --url=$(shell srcml --show-url $<).ifthenelse $< > $@
 
 %.ifthenelse.m.xml : %.m.xml
-	${XSLT_INSERTIFTHENELSE} $< > $@
+	${XSLT_INSERTIFTHENELSE} --url=$(shell srcml --show-url $<).ifthenelse $< > $@
 
 %.ifthenelse.java.xml : %.java.xml
-	${XSLT_INSERTIFTHENELSE} $< > $@
+	${XSLT_INSERTIFTHENELSE} --url=$(shell srcml --show-url $<).ifthenelse $< > $@
 
 %.formfeed.cpp.xml : %.cpp.xml
-	${XSLT_INSERTFORMFEED} $< > $@
+	${XSLT_INSERTFORMFEED} --url=$(shell srcml --show-url $<).formfeed $< > $@
 
 %.formfeed.c.xml : %.c.xml
-	${XSLT_INSERTFORMFEED} $< > $@
+	${XSLT_INSERTFORMFEED} --url=$(shell srcml --show-url $<).formfeed $< > $@
 
 %.formfeed.cs.xml : %.cs.xml
-	${XSLT_INSERTFORMFEED} $< > $@
+	${XSLT_INSERTFORMFEED} --url=$(shell srcml --show-url $<).formfeed $< > $@
 
 %.formfeed.m.xml : %.m.xml
-	${XSLT_INSERTFORMFEED} $< > $@
+	${XSLT_INSERTFORMFEED} --url=$(shell srcml --show-url $<).formfeed $< > $@
 
 %.formfeed.java.xml : %.java.xml
-	${XSLT_INSERTFORMFEED} $< > $@
+	${XSLT_INSERTFORMFEED} --url=$(shell srcml --show-url $<).formfeed $< > $@
 
 %.java.xml : %.cpp.xml
-	${XSLT_SETLANGUAGE_JAVA} $< > $@
+	${XSLT_SETLANGUAGE_JAVA} --url=$(shell srcml --show-url $<) $< > $@
 
 %.c.xml : %.cpp.xml
-	${XSLT_SETLANGUAGE_C} $< > $@
+	${XSLT_SETLANGUAGE_C} --url=$(shell srcml --show-url $<) $< > $@
 
 %.cs.xml : %.cpp.xml
-	${XSLT_SETLANGUAGE_CS} $< > $@
+	${XSLT_SETLANGUAGE_CS} --url=$(shell srcml --show-url $<) $< > $@
 
 %.m.xml : %.cpp.xml
-	${XSLT_SETLANGUAGE_OBJECTIVE_C} $< > $@
+	${XSLT_SETLANGUAGE_OBJECTIVE_C} --url=$(shell srcml --show-url $<) $< > $@
 
 %.m.xml : %.c.xml
-	${XSLT_SETLANGUAGE_OBJECTIVE_C} $< > $@
+	${XSLT_SETLANGUAGE_OBJECTIVE_C} --url=$(shell srcml --show-url $<) $< > $@
 
 %.cpp11.xml : %.cpp.xml
-	${XSLT_SETLANGUAGE_CXX_11} $< > $@
+	${XSLT_SETLANGUAGE_CXX_11} --url=$(shell srcml --show-url $<) $< > $@
 
 GEN_FILES= $(GEN_JAVA) $(GEN_C) $(GEN_CS) $(GEN_OBJECTIVE_C) $(GEN_CXX) ${GEN_PART} ${GEN_ALL} ${GEN_BLOCK} ${GEN_COMMENT} ${GEN_PREPROC} ${GEN_IFTHENELSE} ${GEN_FORMFEED} ${GEN_STRUCT}
 
@@ -440,26 +440,26 @@ gen : ${GEN_FILES}
 
 # function declaration from function
 function_decl.cpp.xml : function.cpp.xml ${XSLT_DEFN2DECL_XSL}
-	${XSLT_DEFN2DECL} $< > $@
+	${XSLT_DEFN2DECL} --url=$(shell srcml --show-url $<) $< > $@
 
 function_asterisk_decl.cpp.xml : function_asterisk.cpp.xml ${XSLT_DEFN2DECL_XSL}
-	${XSLT_DEFN2DECL} $< > $@
+	${XSLT_DEFN2DECL} --url=$(shell srcml --show-url $<) $< > $@
 
 # const function from function
 function_const.cpp.xml : function.cpp.xml ${XSLT_DEFN2DECL_XSL}
-	${XSLT_ADDCONST} $< > $@
+	${XSLT_ADDCONST} --url=$(shell srcml --show-url $<) $< > $@
 
 # while from if
 while.cpp.xml : if.cpp.xml ${XSLT_IF2WHILE_XSL}
-	${XSLT_IF2WHILE} $< > $@
+	${XSLT_IF2WHILE} --url=while $< > $@
 
 # if with a nested conditional from if
 ifnestcond.cpp.xml : if.cpp.xml ${XSLT_NESTCOND_XSL}
-	${XSLT_NESTCOND} $< > $@
+	${XSLT_NESTCOND} --url=$(shell srcml --show-url $<) $< > $@
 
 # return from return base
 return.cpp.xml : return_base.cpp.xml ${XSLT_INSRT_XSL}
-	${XSLT_INSERTEXPR} $< > $@
+	${XSLT_INSERTEXPR} --url=$(shell srcml --show-url $<) $< > $@
 
 # constructor from constructor base
 constructor.cpp.xml : constructor_base.cpp.xml ${XSLT_DEFN2DECL_XSL}
@@ -467,36 +467,35 @@ constructor.cpp.xml : constructor_base.cpp.xml ${XSLT_DEFN2DECL_XSL}
 
 # explicit constructor from constructor
 constructor_explicit.cpp.xml : constructor.cpp.xml ${XSLT_INSRT_XSL}
-	${XSLT_ADDEXPLICIT} $< > $@
+	${XSLT_ADDEXPLICIT} --url=$(shell srcml --show-url $<) $< > $@
 
 # virtual destructor from destructor
 destructor_virtual.cpp.xml : destructor.cpp.xml ${XSLT_INSRT_XSL}
-	${XSLT_ADDVIRTUAL} $< > $@
+	${XSLT_ADDVIRTUAL} --url=$(shell srcml --show-url $<).virtual $< > $@
 
 # throw from throw base
 throw.cpp.xml : throw_base.cpp.xml ${XSLT_INSRT_XSL}
-	${XSLT_INSERTEXPR} $< > $@
+	${XSLT_INSERTEXPR} --url=$(shell srcml --show-url $<) $< > $@
 
 # struct from class
 struct.cpp.xml : class.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
-	${XSLT_CLASS2STRUCT} $< > $@
-
+	${XSLT_CLASS2STRUCT} --url=struct $< > $@
 
 # union from struct
 union.cpp.xml : struct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
-	${XSLT_STRUCT2UNION} $< > $@
+	${XSLT_STRUCT2UNION} --url=union $< > $@
 
 # struct from class
 struct_cpp.cpp.xml : class_cpp.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
-	${XSLT_CLASS2STRUCT} $< > $@
+	${XSLT_CLASS2STRUCT} --url=struct $< > $@
 
 # union from struct
 union_cpp.cpp.xml : struct_cpp.cpp.xml ${XSLT_STRUCT2UNION_XSL}
-	${XSLT_STRUCT2UNION} $< > $@
+	${XSLT_STRUCT2UNION} --url=union $< > $@
 
 # struct from class
 struct_cs.cs.xml : class_cs.cs.xml ${XSLT_CLASS2STRUCT_XSL}
-	${XSLT_CLASS2STRUCT} $< > $@
+	${XSLT_CLASS2STRUCT} --url=struct $< > $@
 
 # union from struct
 #union_cs.cs.xml : struct_cs.cs.xml ${XSLT_STRUCT2UNION_XSL}
@@ -504,15 +503,15 @@ struct_cs.cs.xml : class_cs.cs.xml ${XSLT_CLASS2STRUCT_XSL}
 
 # union from struct
 union_c.c.xml : struct_c.c.xml ${XSLT_STRUCT2UNION_XSL}
-	${XSLT_STRUCT2UNION} $< > $@
+	${XSLT_STRUCT2UNION} --url=union $< > $@
 
 # interface from class
 interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
-	${XSLT_CLASS2INTERFACE} $< > $@
+	${XSLT_CLASS2INTERFACE} --url=interface $< > $@
 
 # if with blocks from if
 ifblock.cpp.xml : if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
-	${XSLT_IF2IFBLOCK} $< > $@
+	${XSLT_IF2IFBLOCK} --url=if.block $< > $@
 
 c_cpp_mode.restrict.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_enum_template xsl/c_cpp_mode_specifier_template xsl/c_cpp_mode_call_template
 	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp.xml
@@ -542,35 +541,35 @@ c_cpp_mode.class.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_decl_tem
 
 # class implementation from class interface
 class_implementation_m.m.xml : class_interface_m.m.xml ${XSLT_INTERFACE2IMPLEMENTATION_XSL}
-	${XSLT_INTERFACE2IMPLEMENTATION} $< > $@
+	${XSLT_INTERFACE2IMPLEMENTATION} --url=class_implementation $< > $@
 
 # Java finallly from C#
 finally_java.java.xml : finally_cs.cs.xml ${XSLT_SETLANGUAGE_CS_XSL}
-	${XSLT_SETLANGUAGE_JAVA} $< > $@
+	${XSLT_SETLANGUAGE_JAVA} --url=finally $< > $@
 
 # Objective-C try from C++
 try_m.m.xml : try.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
-	${XSLT_KEYWORD2MKEYWORD} $< > $@
+	${XSLT_KEYWORD2MKEYWORD} --url=try $< > $@
 
 # Objective-C catch from C++
 catch_m.m.xml : catch_form.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
-	${XSLT_KEYWORD2MKEYWORD} $< > $@
+	${XSLT_KEYWORD2MKEYWORD} --url=catch $< > $@
 
 # Objective-C finally from C++
 finally_m.m.xml : finally_cs.cs.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
-	${XSLT_KEYWORD2MKEYWORD} $< > $@
+	${XSLT_KEYWORD2MKEYWORD} --url=finally $< > $@
 
 # Objective-C throw from C++
 throw_m.m.xml : throw.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
-	${XSLT_KEYWORD2MKEYWORD} $< > $@
+	${XSLT_KEYWORD2MKEYWORD} --url=throw $< > $@
 
 # Objective-C throw from C++
 throw_base_m.m.xml : throw_base.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
-	${XSLT_KEYWORD2MKEYWORD} $< > $@
+	${XSLT_KEYWORD2MKEYWORD} --url=throw $< > $@
 
 # Objective-C dynamic from synthesize
 dynamic_m.m.xml : synthesize_m.m.xml ${XSLT_SYNTHESIZE2DYNAMIC_XSL}
-	${XSLT_SYNTHESIZE2DYNAMIC} $< > $@
+	${XSLT_SYNTHESIZE2DYNAMIC} --url=dynamic $< > $@
 
 clean :
-	rm -f ${GEN_FILES}
+	@rm -f ${GEN_FILES}

@@ -1,64 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="interface" filename="interface_java">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" url="interface">
 
-<unit language="Java">
-<interface_decl>interface <name>A</name>;</interface_decl>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface">interface <name>A</name> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface_decl>interface <name>A</name>, <name>B</name>;</interface_decl>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface">interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface>interface <name>A</name> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface"><specifier>public</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface>interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends></super_list> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface"><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface><specifier>public</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends></super_list> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface">interface <name>A</name> <super_list><implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends></super_list> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface"><specifier>public</specifier> interface <name>A</name> <super_list><implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface>interface <name>A</name> <super_list><implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface"><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super_list><implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface><specifier>public</specifier> interface <name>A</name> <super_list><implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface">interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends> <implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super_list><implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface"><specifier>public</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends> <implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface>interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends> <implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface"><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends> <implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface><specifier>public</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends> <implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface">interface <name>test</name> <super_list><extends>extends <super><name>Object</name></super></extends> <implements>implements <super><name>Cloneable</name></super></implements></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface><specifier>public</specifier> <specifier>final</specifier> interface <name>A</name> <super_list><extends>extends <super><name>B</name></super>, <super><name>C</name></super></extends> <implements>implements <super><name>D</name></super>, <super><name>E</name></super></implements></super_list> <block>{}</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface">interface <name>test</name> <super_list><implements>implements <super><name>Cloneable</name></super></implements> <extends>extends <super><name>Object</name></super></extends></super_list> <block>{}</block></class>
 </unit>
 
-<unit language="Java">
-<interface>interface <name>test</name> <super_list><extends>extends <super><name>Object</name></super></extends> <implements>implements <super><name>Cloneable</name></super></implements></super_list> <block>{}</block></interface>
-</unit>
-
-<unit language="Java">
-<interface>interface <name>test</name> <super_list><implements>implements <super><name>Cloneable</name></super></implements> <extends>extends <super><name>Object</name></super></extends></super_list> <block>{}</block></interface>
-</unit>
-
-<unit language="Java">
-<interface>interface <name>D</name> <super_list><implements>implements <super><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super></implements></super_list> <block>{ }</block></interface>
+<unit revision="1.0.0" language="Java"><!--Generated from class_java.cpp.xml by stylesheet class2interface.xsl-->
+<class type="interface">interface <name>D</name> <super_list><implements>implements <super><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super></implements></super_list> <block>{ }</block></class>
 </unit>
 
 </unit>
