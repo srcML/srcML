@@ -122,9 +122,6 @@ XSLT_IDENTITY=${XSLT} xsl/identity.xsl
 XSLT_INSERTEXPR=srcml --xslt xsl/insertexpr.xsl --xslt-param 'expr_filename="../expression.cpp.xml"' 
 XSLT_INSERTEXPR_XSL= expression.cpp.xml xsl/insertexpr.xsl
 
-XSLT_INSERTDECL=srcml --xslt xsl/insertparam.xsl --xslt-param 'decl_filename="../decl_simple.cpp.xml"' 
-XSLT_INSERTDECL_XSL= decl_simple.cpp.xml xsl/insertdecl.xsl
-
 XSLT_STRUCT2UNION_XSL=xsl/struct2union.xsl
 XSLT_STRUCT2UNION=${XSLT} ${XSLT_STRUCT2UNION_XSL}
 
