@@ -24,7 +24,7 @@
 */
 #include <srcml.h>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 int main(int, char* argv[]) {
 
@@ -32,15 +32,15 @@ int main(int, char* argv[]) {
       srcml_check_extension
     */
 
-    srcml_archive * archive = srcml_archive_create();
-    srcml_archive_register_file_extension(archive, "cpp", "C++");
+    srcml_archive* archive = srcml_archive_create();
+    srcml_archive_register_file_extension(archive, "h", "C++");
 
     {
-        dassert(srcml_archive_check_extension(archive, "a.cpp"), std::string("C++"));
+        dassert(srcml_archive_check_extension(archive, "a.h"), std::string("C++"));
     }
 
     {
-        dassert(srcml_archive_check_extension(archive, "a.cpp.gz"), std::string("C++"));
+        dassert(srcml_archive_check_extension(archive, "a.h.gz"), std::string("C++"));
     }
 
     {
@@ -52,11 +52,10 @@ int main(int, char* argv[]) {
     }
 
     {
-        dassert(srcml_archive_check_extension(0, "a.cpp"), 0);
+        dassert(srcml_archive_check_extension(0, "a.h"), 0);
     }
 
     srcml_archive_free(archive);
 
     return 0;
-
 }

@@ -22,17 +22,14 @@
 
   Test cases for srcml_unit_set_*.
 */
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 
 #include <srcml.h>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 int main(int, char* argv[]) {
 
-    srcml_archive * archive = srcml_archive_create();
+    srcml_archive* archive = srcml_archive_create();
 
     /*
       srcml_unit_set_src_encoding
@@ -40,7 +37,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, 0);
 //        dassert(unit->encoding, boost::none);
         srcml_unit_free(unit);
@@ -48,7 +45,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, "foo");
 //        dassert(*unit->encoding, "foo");
         srcml_unit_free(unit);
@@ -64,7 +61,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, 0);
 //        dassert(unit->language, boost::none);
         srcml_unit_free(unit);
@@ -72,7 +69,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "foo");
 //        dassert(*unit->language, "foo");
         srcml_unit_free(unit);
@@ -88,7 +85,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, 0);
 //        dassert(unit->filename, boost::none);
         srcml_unit_free(unit);
@@ -96,7 +93,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "foo");
 //        dassert(*unit->filename, "foo");
         srcml_unit_free(unit);
@@ -112,7 +109,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_version(unit, 0);
 //        dassert(unit->version, boost::none);
         srcml_unit_free(unit);
@@ -120,7 +117,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_version(unit, "foo");
 //        dassert(*unit->version, "foo");
         srcml_unit_free(unit);
@@ -130,13 +127,13 @@ int main(int, char* argv[]) {
         const char * v1 = "version1";
         const char * v2 = "version2";
 
-        srcml_unit * unit1 = srcml_unit_create(archive);
+        srcml_unit* unit1 = srcml_unit_create(archive);
         int status = srcml_unit_set_version(unit1, v1);
         dassert(status, SRCML_STATUS_OK);
        // dassert(*unit1->version, v1);
         assert(strcmp(srcml_unit_get_version(unit1), v1) == 0);
 
-        srcml_unit * unit2 = srcml_unit_create(archive);
+        srcml_unit* unit2 = srcml_unit_create(archive);
         status = srcml_unit_set_version(unit2, v2);
         dassert(status, SRCML_STATUS_OK);
 //        dassert(*unit2->version, v2);
@@ -163,7 +160,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_timestamp(unit, 0);
 //        dassert(unit->timestamp, boost::none);
         srcml_unit_free(unit);
@@ -171,7 +168,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_timestamp(unit, "foo");
 //        dassert(*unit->timestamp, "foo");
         srcml_unit_free(unit);
@@ -187,7 +184,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_unparse_set_eol(unit, SOURCE_OUTPUT_EOL_AUTO);
 //        dassert(unit->eol, SOURCE_OUTPUT_EOL_AUTO);
         srcml_unit_free(unit);
@@ -195,7 +192,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_unparse_set_eol(unit, SOURCE_OUTPUT_EOL_CRLF);
 //        dassert(unit->eol, SOURCE_OUTPUT_EOL_CRLF);
         srcml_unit_free(unit);
@@ -203,7 +200,7 @@ int main(int, char* argv[]) {
 
     {
 
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_unit_unparse_set_eol(unit, SOURCE_OUTPUT_EOL_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_unit_free(unit);
     }

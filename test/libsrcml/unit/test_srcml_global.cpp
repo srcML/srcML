@@ -23,21 +23,20 @@
   Test cases for global functions
 */
 
+#include <srcml.h>
+
 #include <srcml_macros.hpp>
 
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 #include <string>
 #include <fstream>
 
-#include <srcml.h>
-// #include <srcml_types.hpp>
-#include <srcmlns.hpp>
+#if defined(__GNUC__) && !defined(__MINGW32__)
+#include <unistd.h>
+#else
+#include <io.h>
+#endif
 
-#include <unit_tests.hpp>
-
-extern srcml_archive global_archive;
+#include <dassert.hpp>
 
 int main(int, char* argv[]) {
 
@@ -159,5 +158,4 @@ int main(int, char* argv[]) {
     UNLINK("project_full.cpp.xml");
 
     return 0;
-
 }

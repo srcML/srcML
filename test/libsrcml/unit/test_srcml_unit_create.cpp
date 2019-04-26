@@ -22,22 +22,17 @@
 
   Test cases for srcml_unit_create.
 */
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 
 #include <srcml.h>
-// #include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 int main(int, char* argv[]) {
 
     {
 
-        srcml_archive * archive = srcml_archive_create();
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 /*
         dassert(unit->archive, archive);
         dassert(unit->language, boost::none);

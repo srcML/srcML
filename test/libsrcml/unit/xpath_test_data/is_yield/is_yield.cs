@@ -1,3 +1,0 @@
-yield break;
-
-yield return;

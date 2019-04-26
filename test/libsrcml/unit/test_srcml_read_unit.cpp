@@ -22,47 +22,97 @@
 
   Test cases for srcml_archive_read_unit
 */
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
-#include <fstream>
-// #include <unistd.h>
-#include <fcntl.h>
 
 #include <srcml.h>
-// #include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
-#include <unit_tests.hpp>
+#include <fstream>
+#include <fcntl.h>
+
+#include <dassert.hpp>
 
 int main(int, char* argv[]) {
-    const std::string srcml_a = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_a = R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>)";
 
-    const std::string srcml_b = "<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>";
+    const std::string srcml_b = R"(<s:unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="test" filename="project" version="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
+</s:unit>)";
 
-    const std::string srcml_b_single = "<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>";
+    const std::string srcml_b_single = R"(<s:unit xmlns:s="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="test" filename="project" version="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
+</s:unit>)";
 
-    const std::string srcml_b_two = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_b_two = R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" filename="project.c"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>)";
 
-    const std::string srcml_timestamp_inner = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" timestamp=\"today\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_timestamp_inner = R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" timestamp="today" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>)";
 
-    const std::string srcml_timestamp_single_inner = "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" timestamp=\"today\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_timestamp_single_inner = R"(<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" timestamp="today" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>)";
 
-    const std::string srcml_hash_inner = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" hash=\"0123456789abcdef\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_hash_inner = R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" hash="0123456789abcdef" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>)";
 
-    const std::string srcml_hash_single_inner = "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" hash=\"0123456789abcdef\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>";
+    const std::string srcml_hash_single_inner = R"(<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" hash="0123456789abcdef" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>)";
 
-    const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
-    const std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\">\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
-    const std::string srcml_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n";
+    const std::string srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src">
 
-    const std::string srcml_two = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
 
-    const std::string srcml_timestamp = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" timestamp=\"today\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
-    const std::string srcml_timestamp_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" timestamp=\"today\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
+</unit>
+)";
+    const std::string srcml_full = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<s:unit xmlns:s="http://www.srcML.org/srcML/src">
 
-    const std::string srcml_hash = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" hash=\"0123456789abcdef\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
-    const std::string srcml_hash_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" hash=\"0123456789abcdef\" language=\"C\" filename=\"project.c\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
+<s:unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="test" filename="project" version="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
+</s:unit>
+
+</s:unit>
+)";
+    const std::string srcml_single = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<s:unit xmlns:s="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="test" filename="project" version="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
+</s:unit>
+)";
+
+    const std::string srcml_two = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" filename="project.c"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+)";
+
+    const std::string srcml_timestamp = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" timestamp="today" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+)";
+    const std::string srcml_timestamp_single = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" timestamp="today" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+    const std::string srcml_hash = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" hash="0123456789abcdef" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+
+</unit>
+)";
+    const std::string srcml_hash_single = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" hash="0123456789abcdef" language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
 
     /*
       srcml_archive_read_unit

@@ -23,35 +23,41 @@
   Test cases for global functions
 */
 
+#include <srcml.h>
+
 #include <srcml_macros.hpp>
 
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 #include <string>
 #include <fstream>
 
-#include <srcml.h>
-#include <srcmlns.hpp>
+#if defined(__GNUC__) && !defined(__MINGW32__)
+#include <unistd.h>
+#else
+#include <io.h>
+#endif
+#include <fcntl.h>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
 extern srcml_archive global_archive;
 extern srcml_unit global_unit;
 
 std::string src = "int a;\n";
 
-std::string asrcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\" hash=\"56f54d1636dfec63c3e1586e5e4bdc9a455bb9f6\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
-    "</unit>\n";
+std::string asrcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" hash="56f54d1636dfec63c3e1586e5e4bdc9a455bb9f6"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+)";
 
-std::string srcml_c = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C\" filename=\"a.cpp\" hash=\"56f54d1636dfec63c3e1586e5e4bdc9a455bb9f6\"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>\n"
-    "</unit>\n";
+std::string srcml_c = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C" filename="a.cpp" hash="56f54d1636dfec63c3e1586e5e4bdc9a455bb9f6"><decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+)";
 
-std::string srcml_full = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
-    "<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" url=\"url\" filename=\"file\" version=\"1\" hash=\"56f54d1636dfec63c3e1586e5e4bdc9a455bb9f6\"><s:decl_stmt><s:decl><s:type><s:name>int</s:name></s:type> <s:name>a</s:name></s:decl>;</s:decl_stmt>\n"
-    "</s:unit>\n";
+std::string srcml_full = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<s:unit xmlns:s="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="url" filename="file" version="1" hash="56f54d1636dfec63c3e1586e5e4bdc9a455bb9f6"><s:decl_stmt><s:decl><s:type><s:name>int</s:name></s:type> <s:name>a</s:name></s:decl>;</s:decl_stmt>
+</s:unit>
+)";
 
 int main(int, char* argv[]) {
 
@@ -89,12 +95,8 @@ int main(int, char* argv[]) {
 
     {
         srcml("a.cpp", "project.cpp.xml");
-        std::string res_srcml;
         std::ifstream project("project.cpp.xml");
-        char c = 0;
-        while(project.get(c)) {
-            res_srcml += c;
-        }
+        std::string res_srcml((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_srcml, asrcml);
     }
@@ -102,12 +104,8 @@ int main(int, char* argv[]) {
     {
         srcml_set_language(SRCML_LANGUAGE_C);
         srcml("a.cpp", "project.c.xml");
-        std::string res_srcml;
         std::ifstream project("project.c.xml");
-        char c = 0;
-        while(project.get(c)) {
-            res_srcml += c;
-        }
+        std::string res_srcml((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_srcml, srcml_c);
 
@@ -120,36 +118,24 @@ int main(int, char* argv[]) {
         srcml_set_version("1");
         srcml_register_namespace("s", "http://www.srcML.org/srcML/src");
         srcml("a.cpp", "project_full.cpp.xml");
-        std::string res_srcml;
         std::ifstream project("project_full.cpp.xml");
-        char c = 0;
-        while(project.get(c)) {
-            res_srcml += c;
-        }
+        std::string res_srcml((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_srcml, srcml_full);
     }
 
     {
         srcml("project.xml", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
     }
 
     {
         srcml("project.srcML", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
     }
@@ -157,12 +143,8 @@ int main(int, char* argv[]) {
     {
         srcml_set_language(SRCML_LANGUAGE_XML);
         srcml("project", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
 
@@ -171,24 +153,16 @@ int main(int, char* argv[]) {
 
     {
         srcml("project_c.xml", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
     }
 
     {
         srcml("project_full.xml", "inta.cpp");
-        std::string res_src;
         std::ifstream project("inta.cpp");
-        char c = 0;
-        while(project.get(c)) {
-            res_src += c;
-        }
+        std::string res_src((std::istreambuf_iterator<char>(project)), std::istreambuf_iterator<char>());
 
         dassert(res_src, src);
     }
@@ -211,5 +185,4 @@ int main(int, char* argv[]) {
     UNLINK("project_full.cpp.xml");
 
     return 0;
-
 }

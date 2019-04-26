@@ -21,8 +21,7 @@
 #ifndef INCLUDED_DASSERT_HPP
 #define INCLUDED_DASSERT_HPP
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
 
 /** Wrap C assertion to print out difference @todo use auto keyword so only run left/righthand side once and avoid side affects. */
 #define dassert(LEFT, RIGHT) if(!((LEFT) == (RIGHT))) { \
