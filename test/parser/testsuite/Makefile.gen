@@ -84,7 +84,9 @@ echobase :
 echogen :
 	@echo ${GEN_BASE}
 
-XSLT=xsltproc
+#XSLT=xsltproc
+
+XSLT=srcml --output-xml --xslt 
 
 # merge separate srcML units into one
 XSLT_MERGEUNIT_XSL=xsl/mergeunit.xsl
@@ -117,10 +119,10 @@ XSLT_ADDCONST=${XSLT} xsl/addconst.xsl
 
 XSLT_IDENTITY=${XSLT} xsl/identity.xsl
 
-XSLT_INSERTEXPR=${XSLT} --param expr_filename "../expression.cpp.xml" xsl/insertexpr.xsl
+XSLT_INSERTEXPR=srcml --xslt xsl/insertexpr.xsl --xslt-param 'expr_filename="../expression.cpp.xml"' 
 XSLT_INSERTEXPR_XSL= expression.cpp.xml xsl/insertexpr.xsl
 
-XSLT_INSERTDECL=${XSLT} --param decl_filename "../decl_simple.cpp.xml" xsl/insertparam.xsl
+XSLT_INSERTDECL=srcml --xslt xsl/insertparam.xsl --xslt-param 'decl_filename="../decl_simple.cpp.xml"' 
 XSLT_INSERTDECL_XSL= decl_simple.cpp.xml xsl/insertdecl.xsl
 
 XSLT_STRUCT2UNION_XSL=xsl/struct2union.xsl
@@ -163,24 +165,20 @@ XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
 
 XSLT_SETLANGUAGE_XSL=xsl/setlanguage.xsl
 
-XSLT_REMOVECPP_XSL=xsl/removecpp.xsl
-
 XSLT_SETLANGUAGE=${XSLT} ${XSLT_SETLANGUAGE_XSL}
 
-XSLT_SETLANGUAGE_C=${XSLT} --stringparam language "C" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_C=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="C"' --output-xml
 
-XSLT_SETLANGUAGE_CS=${XSLT} --stringparam language "C\#" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CS=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="C\#"' --output-xml
 
-XSLT_SETLANGUAGE_OBJECTIVE_C=${XSLT} --stringparam language "Objective-C" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_OBJECTIVE_C=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="Objective-C"' --output-xml
 
-XSLT_SETLANGUAGE_CXX=${XSLT} --stringparam language "CXX" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CXX=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="CXX"' --output-xml
 
-XSLT_SETLANGUAGE_CXX_11=${XSLT} --stringparam language "C++11" ${XSLT_SETLANGUAGE_XSL}
+XSLT_SETLANGUAGE_CXX_11=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="C++11"' --output-xml
 
-XSLT_SETLANGUAGE_JAVA=${XSLT} --stringparam language "Java" ${XSLT_SETLANGUAGE_XSL}
-XSLT_SETLANGUAGE_ASPECTJ=${XSLT} --stringparam language "AspectJ" ${XSLT_SETLANGUAGE_XSL}
-
-XSLT_REMOVECPP=${XSLT} ${XSLT_REMOVECPP_XSL}
+XSLT_SETLANGUAGE_JAVA=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="Java"' --output-xml
+XSLT_SETLANGUAGE_ASPECTJ=srcml --xslt ${XSLT_SETLANGUAGE_XSL} --xslt-param 'language="AspectJ"' --output-xml
 
 # try/catch/finally/throw keywords to @try/@catch/@finally/throw keywords
 XSLT_KEYWORD2MKEYWORD_XSL=xsl/keyword2mkeyword.xsl
@@ -339,7 +337,6 @@ cleanall :
 
 %.all.cpp.xml : %.cpp.xml
 	${XSLT_MERGEUNIT} $< > $@
-	echo "$<"
 
 %.all.c.xml : %.c.xml
 	${XSLT_MERGEUNIT} $< > $@
@@ -450,7 +447,7 @@ cleanall :
 	${XSLT_INSERTFORMFEED} $< > $@
 
 %.java.xml : %.cpp.xml
-	${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@
+	${XSLT_SETLANGUAGE_JAVA} $< > $@
 
 %.aj.xml : %.java.xml
 	${XSLT_SETLANGUAGE_ASPECTJ} $< > $@
@@ -559,30 +556,30 @@ ifblock.cpp.xml : if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
 	${XSLT_IF2IFBLOCK} $< > $@
 
 c_cpp_mode.restrict.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_enum_template xsl/c_cpp_mode_specifier_template xsl/c_cpp_mode_call_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
-	${XSLT} --stringparam new_name restrict ${XSLT_RENAME_XSL} $@.temp > $@
-	${RM} $@.temp
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp.xml
+	srcml --output-xml --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="restrict"' $@.temp.xml > $@
+	${RM} $@.temp.xml
 
 c_cpp_mode.mutable.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_enum_template xsl/c_cpp_mode_specifier_template xsl/c_cpp_mode_call_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
-	${XSLT} --stringparam new_name mutable ${XSLT_RENAME_XSL} $@.temp > $@
-	${RM} $@.temp
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp.xml
+	srcml --output-xml --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="mutable"' $@.temp.xml > $@
+	${RM} $@.temp.xml
 
 c_cpp_mode.try.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_simple_decl_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_enum_template xsl/c_cpp_mode_call_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
-	${XSLT} --stringparam new_name try ${XSLT_RENAME_XSL} $@.temp > $@
-	${RM} $@.temp
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp.xml
+	srcml --output-xml --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="try"' $@.temp.xml > $@
+	${RM} $@.temp.xml
 
 c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_simple_decl_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_enum_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
-	${XSLT} --stringparam new_name catch ${XSLT_RENAME_XSL} $@.temp > $@
-	${RM} $@.temp
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp.xml
+	srcml --output-xml --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="catch"' $@.temp.xml > $@
+	${RM} $@.temp.xml
 
 
 c_cpp_mode.class.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_call_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp
-	${XSLT} --stringparam new_name class ${XSLT_RENAME_XSL} $@.temp > $@
-	${RM} $@.temp
+	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer > $@.temp.xml
+	srcml --output-xml --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="class"' $@.temp.xml > $@
+	${RM} $@.temp.xml
 
 # class implementation from class interface
 class_implementation_m.m.xml : class_interface_m.m.xml ${XSLT_INTERFACE2IMPLEMENTATION_XSL}
@@ -590,7 +587,7 @@ class_implementation_m.m.xml : class_interface_m.m.xml ${XSLT_INTERFACE2IMPLEMEN
 
 # Java finallly from C#
 finally_java.java.xml : finally_cs.cs.xml ${XSLT_SETLANGUAGE_CS_XSL}
-	${XSLT_SETLANGUAGE_JAVA} $< | ${XSLT_REMOVECPP} - > $@
+	${XSLT_SETLANGUAGE_JAVA} $< > $@
 
 # Objective-C try from C++
 try_m.m.xml : try.cpp.xml ${XSLT_KEYWORD2MKEYWORD_XSL}
