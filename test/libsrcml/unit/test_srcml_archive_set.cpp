@@ -109,7 +109,7 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_url(archive, "foo");
-//        dassert(*archive->url, "foo");
+        dassert(srcml_archive_get_url(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
 
@@ -124,14 +124,14 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_version(archive, 0);
-//        dassert(archive->version, boost::none);
+        dassert(srcml_archive_get_version(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_version(archive, "foo");
-//        dassert(*archive->version, "foo");
+        dassert(srcml_archive_get_version(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
 
