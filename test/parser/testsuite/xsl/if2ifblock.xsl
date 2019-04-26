@@ -16,8 +16,6 @@
 	Converts srcML if statement test cases to if statement test cases with blocks around the then and else statements.
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
 <!-- change the filename attribute on the unit from "if" to "while" -->

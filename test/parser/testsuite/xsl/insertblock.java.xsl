@@ -15,8 +15,6 @@
 	Inserts a block around each unit for Java
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
 <!-- change the url attribute on any unit from "*" to "*.block"-->

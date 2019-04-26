@@ -16,8 +16,6 @@
 	Converts srcML if statement test cases to while statement test cases
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
 <func:function name="src:ifwithelse">

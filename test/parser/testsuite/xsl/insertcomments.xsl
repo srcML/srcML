@@ -16,8 +16,6 @@
 	Inserts comments at every opportunity
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
 <xsl:variable name="cmt" xml:space="preserve"> <comment type="block">/* a */</comment></xsl:variable> 

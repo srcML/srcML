@@ -16,8 +16,6 @@
 	Converts srcML struct statement test cases to union statement test cases
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
 <xsl:template match="/src:unit/text()[1]">

@@ -16,8 +16,6 @@
 	Adds explicit specifier to constructors
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
 <!-- change the url attribute on any unit -->

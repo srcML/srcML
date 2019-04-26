@@ -16,8 +16,6 @@
 	Converts srcML Java class definition to interface definition
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
 <xsl:template match="/src:unit/text()[1]">

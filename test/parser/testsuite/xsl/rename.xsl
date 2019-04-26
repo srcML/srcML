@@ -16,8 +16,6 @@
 	Rename a default variable NAME to a given passed in name.
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
 <!-- change the url attribute on any unit from "if" to "while" -->

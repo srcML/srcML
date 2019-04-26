@@ -16,8 +16,6 @@
     Converts try/catch/finally/throw keywords to @try/@catch/@finally/@throw keywords
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
 <xsl:template match="src:try/text()">

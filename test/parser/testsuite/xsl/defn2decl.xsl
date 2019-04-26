@@ -16,8 +16,6 @@
 	Converts srcML function definitions to function declarations
 -->
 
-<xsl:import href="str.replace.function.xsl"/>
-
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8"/>
 
 <!-- change the url attribute on any unit from "if" to "while" -->
