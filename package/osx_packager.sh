@@ -46,10 +46,10 @@ cp $source_root/src/libsrcml/srcml.h pkg_include
 
 echo "RESOURCES"
 mkdir pkg_resources
-cp $source_root/Package/welcome.txt pkg_resources/WELCOME.txt
+cp $source_root/package/welcome.txt pkg_resources/WELCOME.txt
 cp $source_root/COPYING.txt pkg_resources/LICENSE.txt
 cp $source_root/README.md pkg_resources/README.txt
-cp $source_root/Package/background.png pkg_resources/BACKGROUND.png
+cp $source_root/package/background.png pkg_resources/BACKGROUND.png
 
 # COPY THE MAN PAGE 
 echo "MANPAGES"

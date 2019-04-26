@@ -75,4 +75,4 @@ endif()
 add_subdirectory(doc)
 
 # packaging
-add_subdirectory(Package)
+add_subdirectory(package)

@@ -56,14 +56,14 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING.txt)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
 
 # welcome message
-set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/Package/welcome.txt)
+set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.txt)
 
 # icon
 if(WIN32)
-    install(FILES ${CMAKE_SOURCE_DIR}/Package/srcml_icon.ico DESTINATION .)
+    install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION .)
 else()
     # icon
-    set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/Package/srcml_icon.ico)
+    set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 endif()
 
 # strip executables
@@ -73,7 +73,7 @@ endif()
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
 # specific configurations
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/Package)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/package)
 include(debian)
 include(rpm)
 include(nsis)

@@ -18,8 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # set icons
-set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/Package/srcml_icon.ico)
-set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/Package/srcml_icon.ico)
+set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
+set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
 
 set(CPACK_NSIS_MODIFY_PATH ON)

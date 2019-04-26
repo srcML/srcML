@@ -88,7 +88,7 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2017 or
     ```
         srcML/
                 BUILD.md
-                Package/
+                package/
                 CMakeLists.txt
                 COPYING.txt
                 CTestConfig.cmake
