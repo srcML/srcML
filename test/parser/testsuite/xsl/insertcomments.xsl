@@ -16,7 +16,7 @@
 	Inserts comments at every opportunity
 -->
 
-<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
+<xsl:import href="copy.xsl"/>
 
 <xsl:variable name="cmt" xml:space="preserve"> <comment type="block">/* a */</comment></xsl:variable> 
 
@@ -37,12 +37,6 @@
   <xsl:copy-of select="$cmt"/>
   <xsl:value-of select="' '"/>
   <xsl:value-of select="substring-after(., ' ')"/>
-</xsl:template>
-
-<xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>
