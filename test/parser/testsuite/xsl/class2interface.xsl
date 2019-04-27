@@ -19,21 +19,15 @@
 <xsl:import href="copy.xsl"/>
 
 <xsl:template match="src:class">
-	<class type="interface">
+	<interface>
 		<xsl:apply-templates/>
-	</class>
+	</interface>
 </xsl:template>
 
 <xsl:template match="src:class_decl">
 	<interface_decl>
 		<xsl:apply-templates/>
 	</interface_decl>
-</xsl:template>
-
-<xsl:template match="src:private[@type='default']">
-	<public type="default">
-		<xsl:apply-templates/>
-	</public>
 </xsl:template>
 
 <!-- change the class keyword to a interface keyword -->
