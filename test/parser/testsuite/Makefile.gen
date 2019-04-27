@@ -253,9 +253,10 @@ GEN_FORMFEED = ${foreach nm, $(SEP_PLUS),          $(nm).formfeed.cpp.xml} \
 
 # generated test cases for preproc
 BASE_OBJECTIVE_C_PART=$(filter-out cpp_import_m,$(BASE_OBJECTIVE_C_ALL))
+BASE_CS_PART=$(filter-out preprocessor_cs,$(BASE_CS_ALL))
 GEN_PREPROC= ${foreach nm, $(SEP_PLUSNOPREPROC), $(nm).preproc.cpp.xml} \
 	           	${foreach nm, $(BASE_C_ALL), $(nm).preproc.c.xml} \
-	           	${foreach nm, $(BASE_CS_ALL), $(nm).preproc.cs.xml} \
+	           	${foreach nm, $(BASE_CS_PART), $(nm).preproc.cs.xml} \
 	           	${foreach nm, $(BASE_OBJECTIVE_C_PART), $(nm).preproc.m.xml} \
                	${foreach nm, $(BASE_CXX_11_ALL), $(nm).preproc.cpp11.xml} \
 				extra_c.preproc.c.xml extra_cpp.preproc.cpp.xml
