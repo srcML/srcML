@@ -444,10 +444,16 @@ try:
 
                 f = open(xml_filename, "r")
 
+                # need to get the language from the first nested unit
                 line1 = f.readline()
                 filexml = line1
                 s = f.readline()
                 filexml += s
+                s = f.readline()
+                filexml += s
+                s = f.readline()
+                filexml += s
+                s = filexml
 
                 language = s.split("language=\"")[1].split('"')[0]
 
