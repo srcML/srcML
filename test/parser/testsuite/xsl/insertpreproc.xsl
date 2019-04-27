@@ -3,7 +3,7 @@
 	xmlns:src="http://www.srcML.org/srcML/src"
 	xmlns="http://www.srcML.org/srcML/src"
 	xmlns:cpp="http://www.srcML.org/srcML/cpp"
-	exclude-result-prefixes="src"
+	exclude-result-prefixes="src cpp"
 	version="1.0">
 
 <!--

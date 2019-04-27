@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C" url="functionkr">
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list>
      <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>,<parameter><decl><type><name>b</name></type></decl></parameter>)</parameter_list>
      <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
      <decl_stmt><decl><type><name>double</name></type> <name>b</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list>
      <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>, <decl><type ref="prev"/><name>b</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list>
      <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>,<parameter><decl><type><name>b</name></type></decl></parameter>)</parameter_list>
      <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
      <decl_stmt><decl><type><specifier>const</specifier> <name>double</name></type> <name>b</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list>
      <decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl>, <decl><type ref="prev"/><name>b</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <decl_stmt><decl><type><name>final</name></type> <name>override</name></decl>;</decl_stmt> <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <decl_stmt><decl><type><name>override</name></type> <name>final</name></decl>;</decl_stmt> <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>k_and_r</name><parameter_list>(<parameter><decl><type><name>string1</name></type></decl></parameter>, <parameter><decl><type><name>string2</name></type></decl></parameter>)</parameter_list>
     <decl_stmt><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>string1</name></decl>, <decl><type ref="prev"><modifier>*</modifier></type><name>string2</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>k_and_r</name><parameter_list>(<parameter><decl><type><name>n1</name></type></decl></parameter>, <parameter><decl><type><name>n2</name></type></decl></parameter>)</parameter_list>
     <decl_stmt><decl><type><name>int</name> <modifier>*</modifier></type><name>n1</name></decl>, <decl><type ref="prev"><modifier>*</modifier></type><name>n2</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>k_and_r</name><parameter_list>(<parameter><decl><type><name>n1</name></type></decl></parameter>, <parameter><decl><type><name>n2</name></type></decl></parameter>)</parameter_list>
     <decl_stmt><decl><type><name>int</name></type> <name>n1</name></decl>, <decl><type ref="prev"><modifier>*</modifier></type><name>n2</name></decl>;</decl_stmt>
 <block>{}</block></function>
 </unit>
 
-<unit language="C">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>k_and_r</name><parameter_list>(<parameter><decl><type><name>n1</name></type></decl></parameter>, <parameter><decl><type><name>n2</name></type></decl></parameter>)</parameter_list>
     <decl_stmt><decl><type><name>int</name><modifier>*</modifier></type> <name>n1</name></decl>, <decl><type ref="prev"/><name>n2</name></decl>;</decl_stmt>
 <block>{}</block></function>
