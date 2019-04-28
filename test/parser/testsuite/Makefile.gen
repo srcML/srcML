@@ -318,19 +318,29 @@ cleanall :
 	${XSLT_IDENTITY} --url=$(shell srcml --show-url $<) $< > $@
 
 %.all.cpp.xml : %.cpp.xml
-	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
+	srcml --unit=1 --output-xml $< | sed 's|</unit>||g' > $@
+	srcml --output-xml-raw $< >> $@
+	echo "</unit>" >> $@
 
 %.all.c.xml : %.c.xml
-	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
+	srcml --unit=1 --output-xml $< | sed 's|</unit>||g' > $@
+	srcml --output-xml-raw $< >> $@
+	echo "</unit>" >> $@
 
 %.all.cs.xml : %.cs.xml
-	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
+	srcml --unit=1 --output-xml $< | sed 's|</unit>||g' > $@
+	srcml --output-xml-raw $< >> $@
+	echo "</unit>" >> $@
 
 %.all.m.xml : %.m.xml
-	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
+	srcml --unit=1 --output-xml $< | sed 's|</unit>||g' > $@
+	srcml --output-xml-raw $< >> $@
+	echo "</unit>" >> $@
 
 %.all.java.xml : %.java.xml
-	${XSLT_MERGEUNIT} $< --url=$(shell srcml --show-url $<).all > $@
+	srcml --unit=1 --output-xml $< | sed 's|</unit>||g' > $@
+	srcml --output-xml-raw $< >> $@
+	echo "</unit>" >> $@
 
 %.block.cpp.xml : %.cpp.xml
 	${XSLT_BLOCKUNIT} --url=$(shell srcml --show-url $<).block $< > $@
