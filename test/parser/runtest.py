@@ -455,7 +455,12 @@ try:
                 filexml += s
                 s = filexml
 
-                language = s.split("language=\"")[1].split('"')[0]
+#                language = s.split("language=\"")[1].split('"')[0]
+                part = s.split("language=\"")
+                language = part[1].split('"')[0] if len(part) > 1 else None
+                if language == None:
+                    print "\nError: Missing language ", xml_filename
+                    continue
 
                 part = s.split("url=\"")
                 url = part[1].split('"')[0] if len(part) > 1 else None
