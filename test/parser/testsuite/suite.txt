@@ -237,7 +237,6 @@ LANGUAGE_JAVA catch_form_java
 LANGUAGE_JAVA try_java
 LANGUAGE_JAVA decl_java
 LANGUAGE_JAVA specifier_java
-LANGUAGE_JAVA foreach
 LANGUAGE_JAVA enum_java
 LANGUAGE_JAVA import_java
 LANGUAGE_JAVA assert_java
