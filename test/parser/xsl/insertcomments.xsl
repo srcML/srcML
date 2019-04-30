@@ -18,18 +18,18 @@
 
 <xsl:import href="copy.xsl"/>
 
-<xsl:variable name="cmt" xml:space="preserve"> <comment type="block">/* a */</comment></xsl:variable> 
+<xsl:variable name="cmt" xml:space="preserve"> <comment type="block">/* a */</comment> </xsl:variable> 
 
 <xsl:template match="src:comment | src:literal">
   <xsl:copy-of select="."/>
 </xsl:template>
 
-<xsl:template match="text()[contains(., ' ')]">
+<xsl:template match="text()[contains(., ' ')]"><xsl:value-of select="concat(substring-before(., ' '), $cmt, substring-after(., ' '))"/>
+	<!--
   <xsl:value-of select="substring-before(., ' ')"/>
-  <xsl:value-of select="' '"/>
   <xsl:copy-of select="$cmt"/>
-  <xsl:value-of select="' '"/>
   <xsl:value-of select="substring-after(., ' ')"/>
+-->
 </xsl:template>
 
 </xsl:stylesheet>
