@@ -53,7 +53,11 @@ void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
 
 void WriteQueue::stop() {
 
-    completed = true;
+    {
+        std::unique_lock<std::mutex> lock(qmutex);
+
+        completed = true;
+    }
 
     cv.notify_one();
 
