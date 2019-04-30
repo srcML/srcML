@@ -88,10 +88,6 @@ echogen :
 
 XSLT=srcml --output-xml --xslt 
 
-# merge separate srcML units into one
-XSLT_MERGEUNIT_XSL=xsl/mergeunit.xsl
-XSLT_MERGEUNIT=${XSLT} ${XSLT_MERGEUNIT_XSL}
-
 # generate nested conditionals
 XSLT_NESTCOND_XSL=xsl/nestcond.xsl
 XSLT_NESTCOND=${XSLT} ${XSLT_NESTCOND_XSL}
