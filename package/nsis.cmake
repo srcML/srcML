@@ -30,4 +30,4 @@ if(WIN32)
     set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\bin\\\\${vcredist_name}\\\" /passive /norestart'")
 endif()
 # set contact in add/remove programs
-set(CPACK_NSIS_CONTACT "Software Developement Laboratories <bugs@srcML.org>")
+set(CPACK_NSIS_CONTACT "srcML <srcML.org>")
