@@ -512,20 +512,20 @@ interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
 ifblock.cpp.xml : if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
 	${XSLT_IF2IFBLOCK} --url=if.block $< > $@
 
-c_cpp_mode.restrict.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template.txt ${XSLDIR}/c_cpp_mode_enum_template.txt ${XSLDIR}/c_cpp_mode_specifier_template.txt ${XSLDIR}/c_cpp_mode_call_template.txt
-	${CAT} ${XSLDIR}/c_cpp_mode_header.txt $^ ${XSLDIR}/c_cpp_mode_footer.txt |	srcml --output-xml --url=$(shell srcml --show-url $<).restrict --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="restrict"' > $@
+c_cpp_mode.restrict.cpp.xml : c_cpp_mode_basic.template c_cpp_mode_enum.template c_cpp_mode_specifier.template c_cpp_mode_call.template
+	${CAT} c_cpp_mode_header.template $^ c_cpp_mode_footer.template |	srcml --output-xml --url=$(shell srcml --show-url $<).restrict --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="restrict"' > $@
 
-c_cpp_mode.mutable.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template.txt ${XSLDIR}/c_cpp_mode_enum_template.txt ${XSLDIR}/c_cpp_mode_specifier_template.txt ${XSLDIR}/c_cpp_mode_call_template.txt
-	${CAT} ${XSLDIR}/c_cpp_mode_header.txt $^ ${XSLDIR}/c_cpp_mode_footer.txt |	srcml --output-xml --url=$(shell srcml --show-url $<).mutable --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="mutable"' > $@
+c_cpp_mode.mutable.cpp.xml : c_cpp_mode_basic.template c_cpp_mode_enum.template c_cpp_mode_specifier.template c_cpp_mode_call.template
+	${CAT} c_cpp_mode_header.template $^ c_cpp_mode_footer.template |	srcml --output-xml --url=$(shell srcml --show-url $<).mutable --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="mutable"' > $@
 
-c_cpp_mode.try.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template.txt ${XSLDIR}/c_cpp_mode_simple_decl_template.txt ${XSLDIR}/c_cpp_mode_decl_template.txt ${XSLDIR}/c_cpp_mode_single_template.txt ${XSLDIR}/c_cpp_mode_enum_template.txt ${XSLDIR}/c_cpp_mode_call_template.txt
-	${CAT} ${XSLDIR}/c_cpp_mode_header.txt $^ ${XSLDIR}/c_cpp_mode_footer.txt |	srcml --output-xml --url=$(shell srcml --show-url $<).try --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="try"' > $@
+c_cpp_mode.try.cpp.xml : c_cpp_mode_basic.template c_cpp_mode_simple_decl.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_enum.template c_cpp_mode_call.template
+	${CAT} c_cpp_mode_header.template $^ c_cpp_mode_footer.template |	srcml --output-xml --url=$(shell srcml --show-url $<).try --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="try"' > $@
 
-c_cpp_mode.catch.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template.txt ${XSLDIR}/c_cpp_mode_simple_decl_template.txt ${XSLDIR}/c_cpp_mode_decl_template.txt ${XSLDIR}/c_cpp_mode_single_template.txt ${XSLDIR}/c_cpp_mode_enum_template.txt
-	${CAT} ${XSLDIR}/c_cpp_mode_header.txt $^ ${XSLDIR}/c_cpp_mode_footer.txt |	srcml --output-xml --url=$(shell srcml --show-url $<).catch --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="catch"' > $@
+c_cpp_mode.catch.cpp.xml : c_cpp_mode_basic.template c_cpp_mode_simple_decl.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_enum.template
+	${CAT} c_cpp_mode_header.template $^ c_cpp_mode_footer.template |	srcml --output-xml --url=$(shell srcml --show-url $<).catch --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="catch"' > $@
 
-c_cpp_mode.class.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template.txt ${XSLDIR}/c_cpp_mode_decl_template.txt ${XSLDIR}/c_cpp_mode_single_template.txt ${XSLDIR}/c_cpp_mode_call_template.txt
-	${CAT} ${XSLDIR}/c_cpp_mode_header.txt $^ ${XSLDIR}/c_cpp_mode_footer.txt |	srcml --output-xml --url=$(shell srcml --show-url $<).class --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="class"' > $@
+c_cpp_mode.class.cpp.xml : c_cpp_mode_basic.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_call.template
+	${CAT} c_cpp_mode_header.template $^ c_cpp_mode_footer.template |	srcml --output-xml --url=$(shell srcml --show-url $<).class --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="class"' > $@
 
 # class implementation from class interface
 class_implementation_m.m.xml : class_interface_m.m.xml ${XSLT_INTERFACE2IMPLEMENTATION_XSL}
