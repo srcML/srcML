@@ -87,50 +87,51 @@ echogen :
 #XSLT=xsltproc
 
 XSLT=srcml --output-xml --xslt 
+XSLDIR=../xsl
 
 # generate nested conditionals
-XSLT_NESTCOND_XSL=xsl/nestcond.xsl
+XSLT_NESTCOND_XSL=${XSLDIR}/nestcond.xsl
 XSLT_NESTCOND=${XSLT} ${XSLT_NESTCOND_XSL}
 
 # if to while conversion
-XSLT_IF2WHILE_XSL=xsl/if2while.xsl
+XSLT_IF2WHILE_XSL=${XSLDIR}/if2while.xsl
 XSLT_IF2WHILE=${XSLT} ${XSLT_IF2WHILE_XSL}
 
 # definition to declaration conversion
-XSLT_DEFN2DECL_XSL=xsl/defn2decl.xsl
+XSLT_DEFN2DECL_XSL=${XSLDIR}/defn2decl.xsl
 XSLT_DEFN2DECL=${XSLT} ${XSLT_DEFN2DECL_XSL}
 
 # wrap in a block
-XSLT_BLOCKUNIT=${XSLT} xsl/insertblock.xsl
+XSLT_BLOCKUNIT=${XSLT} ${XSLDIR}/insertblock.xsl
 
-XSLT_STRUCTUNIT=${XSLT} xsl/insertstruct.xsl
+XSLT_STRUCTUNIT=${XSLT} ${XSLDIR}/insertstruct.xsl
 
-XSLT_ADDEXPLICIT=${XSLT} xsl/addexplicit.xsl
+XSLT_ADDEXPLICIT=${XSLT} ${XSLDIR}/addexplicit.xsl
 
-XSLT_ADDVIRTUAL=${XSLT} xsl/addvirtual.xsl
+XSLT_ADDVIRTUAL=${XSLT} ${XSLDIR}/addvirtual.xsl
 
-XSLT_ADDCONST=${XSLT} xsl/addconst.xsl
+XSLT_ADDCONST=${XSLT} ${XSLDIR}/addconst.xsl
 
-XSLT_IDENTITY=${XSLT} xsl/identity.xsl
+XSLT_IDENTITY=${XSLT} ${XSLDIR}/identity.xsl
 
-XSLT_INSERTEXPR=srcml --xslt xsl/insertexpr.xsl --xslt-param 'expr_filename="../expression.cpp.xml"' 
-XSLT_INSERTEXPR_XSL= expression.cpp.xml xsl/insertexpr.xsl
+XSLT_INSERTEXPR=srcml --xslt ${XSLDIR}/insertexpr.xsl --xslt-param 'expr_filename="../expression.cpp.xml"' 
+XSLT_INSERTEXPR_XSL= expression.cpp.xml ${XSLDIR}/insertexpr.xsl
 
-XSLT_STRUCT2UNION_XSL=xsl/struct2union.xsl
+XSLT_STRUCT2UNION_XSL=${XSLDIR}/struct2union.xsl
 XSLT_STRUCT2UNION=${XSLT} ${XSLT_STRUCT2UNION_XSL}
 
-XSLT_CLASS2STRUCT_XSL=xsl/class2struct.xsl
+XSLT_CLASS2STRUCT_XSL=${XSLDIR}/class2struct.xsl
 XSLT_CLASS2STRUCT=${XSLT} ${XSLT_CLASS2STRUCT_XSL}
 
-XSLT_CLASS2INTERFACE_XSL=xsl/class2interface.xsl
+XSLT_CLASS2INTERFACE_XSL=${XSLDIR}/class2interface.xsl
 XSLT_CLASS2INTERFACE=${XSLT} ${XSLT_CLASS2INTERFACE_XSL}
 
-XSLT_IF2IFBLOCK_XSL=xsl/if2ifblock.xsl
+XSLT_IF2IFBLOCK_XSL=${XSLDIR}/if2ifblock.xsl
 XSLT_IF2IFBLOCK=${XSLT} ${XSLT_IF2IFBLOCK_XSL}
 
-XSLT_RENAME_XSL=xsl/rename.xsl
+XSLT_RENAME_XSL=${XSLDIR}/rename.xsl
 
-XSLT_INTERFACE2IMPLEMENTATION_XSL=xsl/interface2implementation.xsl
+XSLT_INTERFACE2IMPLEMENTATION_XSL=${XSLDIR}/interface2implementation.xsl
 XSLT_INTERFACE2IMPLEMENTATION=${XSLT} ${XSLT_INTERFACE2IMPLEMENTATION_XSL}
 
 ##
@@ -139,16 +140,16 @@ XSLT_INTERFACE2IMPLEMENTATION=${XSLT} ${XSLT_INTERFACE2IMPLEMENTATION_XSL}
 # generated from the non-comment and preprocessor cases.
 
 # insert comments
-XSLT_INSERTCOMMENT=${XSLT} xsl/insertcomments.xsl
+XSLT_INSERTCOMMENT=${XSLT} ${XSLDIR}/insertcomments.xsl
 
 # insert preprocessor
-XSLT_INSERTPREPROC=${XSLT} xsl/insertpreproc.xsl
+XSLT_INSERTPREPROC=${XSLT} ${XSLDIR}/insertpreproc.xsl
 
 # nest if
-XSLT_INSERTIFTHENELSE=${XSLT} xsl/nestif.xsl
+XSLT_INSERTIFTHENELSE=${XSLT} ${XSLDIR}/nestif.xsl
 
 # insert form feed
-XSLT_INSERTFORMFEED=${XSLT} xsl/insertformfeed.xsl
+XSLT_INSERTFORMFEED=${XSLT} ${XSLDIR}/insertformfeed.xsl
 
 ##
 # Test cases for one language are generated from test cases for another language.
@@ -164,11 +165,11 @@ XSLT_SETLANGUAGE_CXX=srcml --language="CXX" --output-xml
 XSLT_SETLANGUAGE_JAVA=srcml --language="Java" --output-xml
 
 # try/catch/finally/throw keywords to @try/@catch/@finally/throw keywords
-XSLT_KEYWORD2MKEYWORD_XSL=xsl/keyword2mkeyword.xsl
+XSLT_KEYWORD2MKEYWORD_XSL=${XSLDIR}/keyword2mkeyword.xsl
 XSLT_KEYWORD2MKEYWORD=${XSLT} ${XSLT_KEYWORD2MKEYWORD_XSL}
 
 # convert @synthesize to @dynamic
-XSLT_SYNTHESIZE2DYNAMIC_XSL=xsl/synthesize2dynamic.xsl
+XSLT_SYNTHESIZE2DYNAMIC_XSL=${XSLDIR}/synthesize2dynamic.xsl
 XSLT_SYNTHESIZE2DYNAMIC=${XSLT} ${XSLT_SYNTHESIZE2DYNAMIC_XSL}
 
 SEP_BASE=$(BASE_COMMON) $(BASE_C_FAMILY) $(BASE_CXX) $(BASE_OO)
@@ -511,20 +512,20 @@ interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
 ifblock.cpp.xml : if.cpp.xml ${XSLT_IF2IFBLOCK_XSL}
 	${XSLT_IF2IFBLOCK} --url=if.block $< > $@
 
-c_cpp_mode.restrict.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_enum_template xsl/c_cpp_mode_specifier_template xsl/c_cpp_mode_call_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).restrict --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="restrict"' > $@
+c_cpp_mode.restrict.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template ${XSLDIR}/c_cpp_mode_enum_template ${XSLDIR}/c_cpp_mode_specifier_template ${XSLDIR}/c_cpp_mode_call_template
+	${CAT} ${XSLDIR}/c_cpp_mode_header $^ ${XSLDIR}/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).restrict --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="restrict"' > $@
 
-c_cpp_mode.mutable.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_enum_template xsl/c_cpp_mode_specifier_template xsl/c_cpp_mode_call_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).mutable --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="mutable"' > $@
+c_cpp_mode.mutable.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template ${XSLDIR}/c_cpp_mode_enum_template ${XSLDIR}/c_cpp_mode_specifier_template ${XSLDIR}/c_cpp_mode_call_template
+	${CAT} ${XSLDIR}/c_cpp_mode_header $^ ${XSLDIR}/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).mutable --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="mutable"' > $@
 
-c_cpp_mode.try.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_simple_decl_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_enum_template xsl/c_cpp_mode_call_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).try --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="try"' > $@
+c_cpp_mode.try.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template ${XSLDIR}/c_cpp_mode_simple_decl_template ${XSLDIR}/c_cpp_mode_decl_template ${XSLDIR}/c_cpp_mode_single_template ${XSLDIR}/c_cpp_mode_enum_template ${XSLDIR}/c_cpp_mode_call_template
+	${CAT} ${XSLDIR}/c_cpp_mode_header $^ ${XSLDIR}/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).try --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="try"' > $@
 
-c_cpp_mode.catch.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_simple_decl_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_enum_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).catch --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="catch"' > $@
+c_cpp_mode.catch.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template ${XSLDIR}/c_cpp_mode_simple_decl_template ${XSLDIR}/c_cpp_mode_decl_template ${XSLDIR}/c_cpp_mode_single_template ${XSLDIR}/c_cpp_mode_enum_template
+	${CAT} ${XSLDIR}/c_cpp_mode_header $^ ${XSLDIR}/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).catch --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="catch"' > $@
 
-c_cpp_mode.class.cpp.xml : xsl/c_cpp_mode_basic_template xsl/c_cpp_mode_decl_template xsl/c_cpp_mode_single_template xsl/c_cpp_mode_call_template
-	${CAT} xsl/c_cpp_mode_header $^ xsl/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).class --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="class"' > $@
+c_cpp_mode.class.cpp.xml : ${XSLDIR}/c_cpp_mode_basic_template ${XSLDIR}/c_cpp_mode_decl_template ${XSLDIR}/c_cpp_mode_single_template ${XSLDIR}/c_cpp_mode_call_template
+	${CAT} ${XSLDIR}/c_cpp_mode_header $^ ${XSLDIR}/c_cpp_mode_footer |	srcml --output-xml --url=$(shell srcml --show-url $<).class --xslt ${XSLT_RENAME_XSL} --xslt-param 'new_name="class"' > $@
 
 # class implementation from class interface
 class_implementation_m.m.xml : class_interface_m.m.xml ${XSLT_INTERFACE2IMPLEMENTATION_XSL}

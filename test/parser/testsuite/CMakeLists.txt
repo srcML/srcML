@@ -24,10 +24,3 @@ file(GLOB PARSE_TESTS *.xml)
 foreach(PARSE_TEST ${PARSE_TESTS})
 	configure_file(${PARSE_TEST} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 endforeach()
-
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl)
-
-file(GLOB XSL ./xsl/*)
-foreach(xslfile ${XSL})
-    configure_file(${xslfile} xsl COPYONLY)
-endforeach()

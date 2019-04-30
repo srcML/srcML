@@ -34,6 +34,13 @@ configure_file(python_test_bindings.py ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 add_subdirectory(testsuite)
 
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl)
+
+file(GLOB XSL ./xsl/*)
+foreach(xslfile ${XSL})
+    configure_file(${xslfile} xsl COPYONLY)
+endforeach()
+
 add_custom_target(gentest COMMAND cd testsuite && make -f Makefile.gen)
 add_custom_target(cleantest COMMAND cd testsuite && make -f Makefile.gen clean)
 
