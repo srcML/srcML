@@ -24,12 +24,10 @@
   <xsl:copy-of select="."/>
 </xsl:template>
 
-<xsl:template match="text()[contains(., ' ')]"><xsl:value-of select="concat(substring-before(., ' '), $cmt, substring-after(., ' '))"/>
-	<!--
+<xsl:template match="text()[contains(., ' ')]">
   <xsl:value-of select="substring-before(., ' ')"/>
   <xsl:copy-of select="$cmt"/>
   <xsl:value-of select="substring-after(., ' ')"/>
--->
 </xsl:template>
 
 </xsl:stylesheet>
