@@ -117,14 +117,11 @@ XSLT_IDENTITY=${XSLT} ${XSLDIR}/identity.xsl
 XSLT_INSERTEXPR=srcml --xslt ${XSLDIR}/insertexpr.xsl --xslt-param 'expr_filename="../expression.cpp.xml"' 
 XSLT_INSERTEXPR_XSL= expression.cpp.xml ${XSLDIR}/insertexpr.xsl
 
-XSLT_STRUCT2UNION_XSL=${XSLDIR}/struct2union.xsl
-XSLT_STRUCT2UNION=${XSLT} ${XSLT_STRUCT2UNION_XSL}
+XSLT_STRUCT2UNION=${XSLT} ${XSLDIR}/struct2union.xsl
 
-XSLT_CLASS2STRUCT_XSL=${XSLDIR}/class2struct.xsl
-XSLT_CLASS2STRUCT=${XSLT} ${XSLT_CLASS2STRUCT_XSL}
+XSLT_CLASS2STRUCT=${XSLT} ${XSLDIR}/class2struct.xsl
 
-XSLT_CLASS2INTERFACE_XSL=${XSLDIR}/class2interface.xsl
-XSLT_CLASS2INTERFACE=${XSLT} ${XSLT_CLASS2INTERFACE_XSL}
+XSLT_CLASS2INTERFACE=${XSLT} ${XSLDIR}/class2interface.xsl
 
 XSLT_IF2IFBLOCK_XSL=${XSLDIR}/if2ifblock.xsl
 XSLT_IF2IFBLOCK=${XSLT} ${XSLT_IF2IFBLOCK_XSL}
@@ -436,23 +433,23 @@ throw.cpp.xml : throw_base.cpp.xml ${XSLT_INSERTEXPR_XSL}
 	${XSLT_INSERTEXPR} --url=$(shell srcml --show-url $<) $< > $@
 
 # struct from class
-struct.cpp.xml : class.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
+struct.cpp.xml : class.cpp.xml
 	${XSLT_CLASS2STRUCT} --url=struct $< > $@
 
 # union from struct
-union.cpp.xml : struct.cpp.xml ${XSLT_STRUCT2UNION_XSL}
+union.cpp.xml : struct.cpp.xml
 	${XSLT_STRUCT2UNION} --url=union $< > $@
 
 # struct from class
-struct_cpp.cpp.xml : class_cpp.cpp.xml ${XSLT_CLASS2STRUCT_XSL}
+struct_cpp.cpp.xml : class_cpp.cpp.xml
 	${XSLT_CLASS2STRUCT} --url=struct $< > $@
 
 # union from struct
-union_cpp.cpp.xml : struct_cpp.cpp.xml ${XSLT_STRUCT2UNION_XSL}
+union_cpp.cpp.xml : struct_cpp.cpp.xml
 	${XSLT_STRUCT2UNION} --url=union $< > $@
 
 # struct from class
-struct_cs.cs.xml : class_cs.cs.xml ${XSLT_CLASS2STRUCT_XSL}
+struct_cs.cs.xml : class_cs.cs.xml
 	${XSLT_CLASS2STRUCT} --url=struct $< > $@
 
 # union from struct
@@ -460,11 +457,11 @@ struct_cs.cs.xml : class_cs.cs.xml ${XSLT_CLASS2STRUCT_XSL}
 	#${XSLT_STRUCT2UNION} $< > $@
 
 # union from struct
-union_c.c.xml : struct_c.c.xml ${XSLT_STRUCT2UNION_XSL}
+union_c.c.xml : struct_c.c.xml
 	${XSLT_STRUCT2UNION} --url=union $< > $@
 
 # interface from class
-interface_java.java.xml : class_java.java.xml ${XSLT_CLASS2INTERFACE_XSL}
+interface_java.java.xml : class_java.java.xml
 	${XSLT_CLASS2INTERFACE} --url=interface $< > $@
 
 # if with blocks from if
