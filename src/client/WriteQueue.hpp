@@ -25,7 +25,6 @@
 
 #include <srcml.h>
 #include <ParseRequest.hpp>
-#include <ctpl_stl.h>
 #include <mutex>
 #include <condition_variable>
 #include <queue>
