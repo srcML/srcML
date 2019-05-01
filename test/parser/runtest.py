@@ -50,29 +50,18 @@ if srcml_executable == "" or srcml_executable == None:
 # Ripped from os module and slightly modified
 # for alphabetical sorting
 #
-def sortedWalk(top, topdown=True, onerror=None):
+def sortedWalk(top):
     from os.path import join, isdir, islink
 
     names = os.listdir(top)
     names.sort()
-    dirs, nondirs = [], []
-
+    nondirs = []
     for name in names:
-        if isdir(os.path.join(top, name)):
-            dirs.append(name)
-        else:
+        # only process xml files
+        if os.path.splitext(name)[1] == ".xml":
             nondirs.append(name)
 
-    if topdown:
-        yield top, dirs, nondirs
-    for name in dirs:
-        path = join(top, name)
-        if not os.path.islink(path):
-            for x in sortedWalk(path, topdown, onerror):
-                yield x
-    if not topdown:
-        yield top, dirs, nondirs
-
+    yield nondirs
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
@@ -85,27 +74,6 @@ def safe_communicate(command, inp):
         except OSError, (errornum, strerror):
             sperrorlist.append((command, xml_filename, errornum, strerror))
             raise
-
-# extracts a particular unit from a srcML file
-def safe_communicate_file(command, filename):
-
-    newcommand = command[:]
-    newcommand.append(filename)
-    try:
-        return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
-    except OSError, (errornum, strerror):
-        try:
-            return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
-        except OSError, (errornum, strerror):
-            sperrorlist.append((command, xml_filename, errornum, strerror))
-            raise
-
-# extracts a particular unit from a srcML file
-def extract_unit(src, count):
-
-    command = [srcml_executable, "--unit=" + str(count), "--xml"]
-
-    return safe_communicate(command, src)
 
 # extracts a particular unit from a srcML file
 def extract_all_executable(src):
@@ -143,11 +111,6 @@ def extract_all(src, encoding):
     src_all.append(0)
 
     return all, src_all, archive
-
-def name2filestr(src_filename):
-    file = open(src_filename).read()
-
-    return file
 
 # converts a srcML file back to text
 def srcml2src_executable(srctext, encoding):
@@ -231,46 +194,11 @@ def src2srcML(text_file, encoding, language, url, filename, read_archive):
 
     return srcml
 
-
 def getsrcmlattribute(xml_file, command):
 
     last_line = safe_communicate([srcml_executable, command], xml_file)
 
     return last_line.strip()
-
-def getsrcmlattributefile(xml_file, command):
-
-    last_line = safe_communicate_file([srcml_executable, command], xml_file)
-
-    return last_line.strip()
-
-def getsrcmlattributeraw(srctext, command):
-
-    # run the srcml processor
-    command = [srcml_executable]
-    command.append("--info")
-
-    return safe_communicate(command, srctext)
-
-# url attribute
-def geturl(xml_file):
-
-    return getsrcmlattribute(xml_file, "-d")
-
-# language attribute
-def getlanguage(xml_file):
-
-    return getsrcmlattribute(xml_file, "-l")
-
-# xml encoding
-def getencoding(xml_file):
-
-    return getsrcmlattribute(xml_file, "-x")
-
-# version attribute
-def getversion(xml_file):
-
-    return getsrcmlattribute(xml_file, "-x")
 
 # filename attribute
 def getfilename(xml_file):
@@ -288,17 +216,6 @@ def getfullxmlns_executable(xml_file):
     return l
 
 # xmlns attribute
-def getfullxmlns(xml_file):
-
-    archive = srcml_archive()
-    archive.read_open_memory(xml_file)
-    l = archive.get_options()
-
-    archive.close()
-
-    return l
-
-# xmlns attribute
 def defaultxmlns(l):
 
     newl = []
@@ -308,30 +225,11 @@ def defaultxmlns(l):
             newl.append(a)
     return newl
 
-def nondefaultxmlns(l):
-
-    newl = []
-    for a in l:
-        url = a.split('=')[1]
-        if not(url == 'http://www.sdml.info/srcML/src' or url == 'http://www.sdml.info/srcML/cpp' or url == 'http://www.sdml.info/srcML/srcerr'):
-            newl.append(a)
-    return newl
-
 # version of srcml
 def srcml_version():
     last_line = safe_communicate([srcml_executable, "-V"], "")
 
     return last_line.splitlines()[0].strip()
-
-# number of nested units
-def getnested(xml_file):
-
-    snumber = safe_communicate([srcml_executable, "-n"], xml_file)
-
-    if snumber != "":
-        return int(snumber)
-    else:
-        return 0
 
 class Tee(object):
     def __init__(self, name):
@@ -351,7 +249,6 @@ Tee(error_filename)
 
 print "Testing:"
 print
-
 
 # Handle optional dos line endings
 doseol = False
@@ -411,10 +308,6 @@ base_dir = "testsuite"
 
 errorlist = []
 
-#if not(os.path.isfile(srcml_executable)):
-#       print srcml_executable + " does not exist."
-#       exit
-
 m = re.compile(specname + "$")
 
 # source url
@@ -429,18 +322,14 @@ total_count = 0
 try:
 
     # process all files
-    for root, dirs, files in sortedWalk(source_dir, topdown=True):
+    for files in sortedWalk(source_dir):
 
         # process all files
         for name in files:
             try:
 
-                # only process xml files
-                if os.path.splitext(name)[1] != ".xml":
-                    continue
-
                 # full path of the file
-                xml_filename = os.path.join(root, name)
+                xml_filename = os.path.join(source_dir, name)
 
                 f = open(xml_filename, "r")
 
