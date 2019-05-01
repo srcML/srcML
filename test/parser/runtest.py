@@ -215,14 +215,14 @@ def src2srcML(text_file, encoding, language, url, filename, read_archive):
         filename = None;
 
     archive = read_archive.clone()
-    if url.find("problem") != -1 :
+    if url != None and url.find("problem") != -1 :
         archive.set_xml_encoding("ISO-8859-1")
 
     archive.write_open_memory()
 
     unit = srcml_unit(archive)
     unit.set_language(language)
-    if url.find("unicode") != -1 :
+    if url != None and url.find("unicode") != -1 :
         unit.set_src_encoding("UTF-8")
 
     unit.parse_memory(text_file)
@@ -483,7 +483,9 @@ try:
 
                 # output language and url
                 print
-                print language.ljust(FIELD_WIDTH_LANGUAGE), " ", url.ljust(FIELD_WIDTH_URL), " ",
+                print language.ljust(FIELD_WIDTH_LANGUAGE), " ", 
+                if url != None:
+                    print url.ljust(FIELD_WIDTH_URL), " ",
 
                 # encoding of the outer unit
                 part = line1.split("encoding=\"")
@@ -574,7 +576,10 @@ try:
                         if result != "":
                             error_count += 1
 
-                            errorlist.append((url + " " + language, count, result, name))
+                            if url != None:
+                                errorlist.append((url + " " + language, count, result, name))
+                            else:
+                                errorlist.append(("UNKNOWN" + " " + language, count, result, name))
 
                             # part of list of nested unit number in output
                             print "\033[0;31m" + str(count) + "\033[0m",
