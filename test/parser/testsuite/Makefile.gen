@@ -1,30 +1,18 @@
 ##
-# Makefile for srcML translator, src2srcml
+# Generate srcML parser testsuite
 
-EXE_DIR = ../bin/
-OBJ_DIR = ../obj/
-
-WD=${shell pwd}
-
-#SRC2SRCML=${WD}/../bin/src2srcml
-#SRCML2SRC=${WD}/../bin/srcml2src
-
-SRCENCODING=
-#SRCENCODING=--src-encoding=ISO-8859-1
-
+# Each test case if for a set of languages
+# defined in the file suite.txt
 define language
 ${shell grep '$1 ' suite.txt | grep -v '^#' | cut -d' ' -f2- | tr -s '\n' ' '}
 endef
 
-UNAME=$(firstword $(wildcard /usr/bin/uname /bin/uname))
-
 CAT=cat
 RM=rm
-ifeq (${UNAME},"")
+ifeq ($(uname),"")
 CAT=type
 RM=del
 endif
-
 
 ##
 # General lists of test cases
@@ -258,7 +246,7 @@ GEN_IFTHENELSE= ${foreach nm, $(SEP_PLUS), $(nm).ifthenelse.cpp.xml} \
 		   extra_c.ifthenelse.c.xml extra_cpp.ifthenelse.cpp.xml
 
 cleanall :
-	rm -f allinall.*
+	${RM} -f allinall.*
 
 %.cpp : %.cpp.xml
 	${XSLT_IDENTITY} --url=$(shell srcml --show-url $<) $< > $@
@@ -516,4 +504,4 @@ dynamic_m.m.xml : synthesize_m.m.xml ${XSLT_SYNTHESIZE2DYNAMIC_XSL}
 	${XSLT_SYNTHESIZE2DYNAMIC} --url=dynamic $< > $@
 
 clean :
-	@rm -f ${GEN_FILES}
+	@${RM} -f ${GEN_FILES}
