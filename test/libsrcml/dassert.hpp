@@ -22,6 +22,7 @@
 #define INCLUDED_DASSERT_HPP
 
 #include <iostream>
+#include <assert.h>
 
 /** Wrap C assertion to print out difference @todo use auto keyword so only run left/righthand side once and avoid side affects. */
 #define dassert(LEFT, RIGHT) if(!((LEFT) == (RIGHT))) { \
