@@ -27,6 +27,8 @@
 
 #include <dassert.hpp>
 
+#include <string.h>
+
 int main(int, char* argv[]) {
 
     const std::string srcml_a = R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
