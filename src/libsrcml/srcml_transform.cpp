@@ -637,8 +637,12 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 unit_update_attributes(unit, nb_attributes, attributes);
             };
 
-            // extract the start tag
-            std::string starttag = nunit->srcml.substr(0, nunit->content_begin - 1) + "/>";
+            // extract the start tag, turning it into an empty tag
+            // note: it may be an empty tag already
+            std::string starttag = nunit->srcml.substr(0, nunit->content_begin - 1);
+            if (starttag.back() != '/')
+                starttag += "/";
+            starttag += ">";
 
             // parse the start tag updating the unit
             xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(starttag.c_str(), (int) starttag.size());
