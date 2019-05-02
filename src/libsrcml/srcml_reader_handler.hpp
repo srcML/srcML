@@ -338,7 +338,11 @@ public :
      */
     void stop() {
 
-        terminate = true;
+        {
+            std::unique_lock<std::mutex> lock(mutex);
+
+            terminate = true;
+        }
 
         resume();
     }
@@ -517,7 +521,6 @@ public :
 
             cond.notify_one();
             cond.wait(lock);
-
         }
 
         state->collect_unit_body = collect_unit_body;
