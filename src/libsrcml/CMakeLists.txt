@@ -35,9 +35,12 @@ if(NOT WIN32 AND NOT APPLE)
     list(APPEND LIBSRCML_LIBRARIES rt crypto)
 endif()
 
+include_directories(. ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_INSTALL_INCLUDEDIR})
+
 # Building static and dynamic libraries for srcML.
 add_library(srcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(srcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+target_include_directories(srcml_static PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
 target_link_libraries(srcml_static PRIVATE ${LIBSRCML_LIBRARIES})
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(srcml_static PRIVATE gcov)
@@ -45,6 +48,7 @@ endif()
 
 add_library(srcml_shared SHARED $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(srcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+target_include_directories(srcml_shared PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
 target_link_libraries(srcml_shared PRIVATE ${LIBSRCML_LIBRARIES})
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(srcml_shared PRIVATE gcov)

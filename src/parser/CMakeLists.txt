@@ -136,5 +136,4 @@ add_library(parser OBJECT
 )
 endif()
 
-target_include_directories(parser PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_GENERATED_SOURCE_DIR})
-
+target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_GENERATED_SOURCE_DIR})
