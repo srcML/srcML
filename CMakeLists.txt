@@ -79,16 +79,6 @@ include(GNUInstallDirs)
 
 set(CMAKE_MACOSX_RPATH 1)
 
-set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
-
-# Setting up source include directories.
-include_directories(BEFORE src/client src/libsrcml src/parser ${CMAKE_GENERATED_SOURCE_DIR})
-
-# Setting major and minor version numbers (TODO fix this so that it is set using something
-# more correct that being input from within the build system).
-add_definitions(-DVERSION=\"1\")
-add_definitions(-DREVISION=\"1\")
-
 add_subdirectory(src)
 add_subdirectory(test)
 

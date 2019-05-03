@@ -22,7 +22,7 @@ find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/b
 
 file(GLOB PARSER_SOURCE *.hpp *.cpp)
 
-set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
+include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_GENERATED_SOURCE_DIR})
 
 # 
 # RunAntlr

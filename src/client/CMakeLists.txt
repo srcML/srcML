@@ -26,6 +26,8 @@
 # - All subsequent arguments are linked as libraries.
 #
 
+include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+
 set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES}
                 CACHE INTERNAL "Libraries needed to build srcml")
 if(NOT WIN32 AND APPLE)
