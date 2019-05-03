@@ -66,13 +66,13 @@ xmlcheck "$sxmlfile2"
 srcml -X --unit "2" - <<< "$nestedfile"
 check "$sxmlfile2"
 
-srcml --unit "2" --output-xml-fragment <<< "$nestedfile"
+srcml --unit "2" --output-xml-outer <<< "$nestedfile"
 check "$sxmlfile2fragment"
 
 srcml --unit "2" -F <<< "$nestedfile"
 check "$sxmlfile2fragment"
 
-srcml --unit "2" --output-xml-raw <<< "$nestedfile"
+srcml --unit "2" --output-xml-inner <<< "$nestedfile"
 check "$sxmlfile2raw"
 
 srcml --unit "2" -R <<< "$nestedfile"

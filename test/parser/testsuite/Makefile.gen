@@ -253,27 +253,27 @@ cleanall :
 
 %.all.cpp.xml : %.cpp.xml
 	srcml --unit=1 --url=$(shell srcml --show-url $<).all --output-xml $< | sed 's|</unit>||g' > $@
-	srcml --output-xml-raw $< >> $@
+	srcml --output-xml-inner $< >> $@
 	echo "</unit>" >> $@
 
 %.all.c.xml : %.c.xml
 	srcml --unit=1 --url=$(shell srcml --show-url $<).all --output-xml $< | sed 's|</unit>||g' > $@
-	srcml --output-xml-raw $< >> $@
+	srcml --output-xml-inner $< >> $@
 	echo "</unit>" >> $@
 
 %.all.cs.xml : %.cs.xml
 	srcml --unit=1 --url=$(shell srcml --show-url $<).all --output-xml $< | sed 's|</unit>||g' > $@
-	srcml --output-xml-raw $< >> $@
+	srcml --output-xml-inner $< >> $@
 	echo "</unit>" >> $@
 
 %.all.m.xml : %.m.xml
 	srcml --unit=1 --url=$(shell srcml --show-url $<).all --output-xml $< | sed 's|</unit>||g' > $@
-	srcml --output-xml-raw $< >> $@
+	srcml --output-xml-inner $< >> $@
 	echo "</unit>" >> $@
 
 %.all.java.xml : %.java.xml
 	srcml --unit=1 --url=$(shell srcml --show-url $<).all --output-xml $< | sed 's|</unit>||g' > $@
-	srcml --output-xml-raw $< >> $@
+	srcml --output-xml-inner $< >> $@
 	echo "</unit>" >> $@
 
 %.block.cpp.xml : %.cpp.xml
