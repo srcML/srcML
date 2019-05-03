@@ -22,8 +22,6 @@ find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/b
 
 file(GLOB PARSER_SOURCE *.hpp *.cpp)
 
-include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_GENERATED_SOURCE_DIR})
-
 # 
 # RunAntlr
 # Executes ANTLR executable on the provided files.
@@ -137,3 +135,6 @@ add_library(parser OBJECT
     ${PARSER_SOURCE}
 )
 endif()
+
+target_include_directories(parser PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_GENERATED_SOURCE_DIR})
+

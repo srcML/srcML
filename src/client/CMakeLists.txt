@@ -26,8 +26,6 @@
 # - All subsequent arguments are linked as libraries.
 #
 
-include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
-
 set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES}
                 CACHE INTERNAL "Libraries needed to build srcml")
 if(NOT WIN32 AND APPLE)
@@ -43,6 +41,8 @@ endif()
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
 add_executable(srcml ${CLIENT_SOURCE})
+target_include_directories(srcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(srcml srcml_shared ${SRCML_LIBRARIES} gcov)
 else()

@@ -25,8 +25,6 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
 
-include_directories(BEFORE libsrcml parser ${CMAKE_GENERATED_SOURCE_DIR})
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
     if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")

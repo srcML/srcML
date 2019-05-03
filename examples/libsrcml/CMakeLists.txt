@@ -17,8 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_SOURCE_DIR}/src/parser)
-
 # add cli tests
 file(GLOB EXAMPLES "srcml_*.c")
 
@@ -27,6 +25,7 @@ set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c99")
 foreach(EXAMPLE ${EXAMPLES})
     get_filename_component(EXAMPLE_NAME ${EXAMPLE} NAME_WE)
     add_executable(${EXAMPLE_NAME} ${EXAMPLE})
+	target_include_directories(${EXAMPLE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/libsrcml)
     target_link_libraries(${EXAMPLE_NAME} srcml_shared)
     # @TODO Do we need these as a test?
 #    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)

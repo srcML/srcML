@@ -82,6 +82,7 @@ endif()
 file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
 
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
+target_include_directories(libsrcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
 add_dependencies(libsrcml parser)
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
