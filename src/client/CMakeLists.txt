@@ -41,6 +41,8 @@ endif()
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
 add_executable(srcml ${CLIENT_SOURCE})
+target_include_directories(srcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(srcml srcml_shared ${SRCML_LIBRARIES} gcov)
 else()

@@ -28,14 +28,38 @@ option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
 option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" OFF)
 option(BUILD_PARSER_TESTS "Include tests for parser" ON)
 
+# Turn ON building all tests
+option(BUILD_ALL_TESTS "Build all tests" OFF)
+if(BUILD_ALL_TESTS)
+	set(BUILD_CLIENT_TESTS ON)
+	set(BUILD_LIBSRCML_TESTS ON)
+	set(BUILD_PARSER_TESTS ON)
+endif()
+
 # Turn ON/OFF building examples
 option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 
+# Turn ON/OFF building documentation
+option(BUILD_CLIENT_DOC "Build client documentation" OFF)
+option(BUILD_LIBSRCML_DOC "Build libsrcml documentation" OFF)
+
+# Turn ON building all documentation
+option(BUILD_ALL_DOCS "Build all documentation" OFF)
+if(BUILD_ALL_DOCS)
+	set(BUILD_CLIENT_DOC ON)
+	set(BUILD_LIBSRCML_DOC ON)
+endif()
+
+# Turn ON everything
+option(BUILD_ALL "Build all test, documentation, and examples" OFF)
+if(BUILD_ALL)
+	set(BUILD_ALL_TESTS ON)
+	set(BUILD_EXAMPLES ON)
+	set(BUILD_ALL_DOCS ON)
+endif()
+
 # Turn ON/OFF building libsrcml statically
 option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
-
-option(BUILD_CLIENT_DOC "Generate client documentation" OFF)
-option(BUILD_LIBSRCML_DOC "Generate libsrcml documentation" OFF)
 
 # The default configuration is to compile in Release mode
 if(NOT CMAKE_BUILD_TYPE)
@@ -54,16 +78,6 @@ include(CTest)
 include(GNUInstallDirs)
 
 set(CMAKE_MACOSX_RPATH 1)
-
-set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
-
-# Setting up source include directories.
-include_directories(BEFORE src/client src/libsrcml src/parser ${CMAKE_GENERATED_SOURCE_DIR})
-
-# Setting major and minor version numbers (TODO fix this so that it is set using something
-# more correct that being input from within the build system).
-add_definitions(-DVERSION=\"1\")
-add_definitions(-DREVISION=\"1\")
 
 add_subdirectory(src)
 add_subdirectory(test)
