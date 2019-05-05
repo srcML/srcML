@@ -26,6 +26,10 @@ int main(int argc, char* argv[]) {
     if (argc > 1)
         language = argv[1];
 
+    int unitnum = 0;
+    if (argc > 2)
+        unitnum = atoi(argv[2]);
+
     // get a list of files (including directories) from the current directory
     std::vector<std::string> files;
 
@@ -69,8 +73,6 @@ int main(int argc, char* argv[]) {
     int failed = 0;
     for (auto& filename : files) {
 
-fprintf(stderr, "DEBUG:  %s %s %d filename: %s\n", __FILE__,  __FUNCTION__, __LINE__,  filename.c_str());
-
         bool found = true;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, filename.c_str());
@@ -93,6 +95,9 @@ fprintf(stderr, "DEBUG:  %s %s %d filename: %s\n", __FILE__,  __FUNCTION__, __LI
             }
             ++count;
             ++total;
+
+            if (unitnum > 0 && count > unitnum)
+                break;
 
             ++ltotal[unit_language];
 
@@ -134,11 +139,9 @@ fprintf(stderr, "DEBUG:  %s %s %d filename: %s\n", __FILE__,  __FUNCTION__, __LI
         }
         if (found)
             std::cout << '\n';
-fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         srcml_archive_close(archive);
-        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-
+        srcml_archive_free(archive);
     }
 
     // error report
