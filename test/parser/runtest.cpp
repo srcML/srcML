@@ -11,8 +11,8 @@
 #include <list>
 #include <deque>
 #include <vector>
-#include <unordered_map>
 #include <map>
+#include <string.h>
 #include <archive.h>
 #include <archive_entry.h>
 
@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
         if (archive_entry_filetype(entry) != AE_IFREG)
             continue;
 
-        files.push_back(archive_entry_pathname(entry));
+        files.push_back(filename);
     }
     archive_read_close(darchive);
 
@@ -101,14 +101,14 @@ int main(int argc, char* argv[]) {
             srcml_unit_unparse_memory(unit, &buffer, &size);
 
             // get the srcml
-            std::string xml = srcml_unit_get_srcml_raw(unit);
+            const char* xml = srcml_unit_get_srcml_raw(unit);
 
             srcml_unit* outunit = srcml_unit_clone(unit);
             srcml_unit_set_language(outunit, srcml_unit_get_language(unit));
 
             srcml_unit_parse_memory(outunit, buffer, size);
 
-            std::string sout = srcml_unit_get_srcml_raw(outunit);
+            const char* sout = srcml_unit_get_srcml_raw(outunit);
 
             if (line_count >= 75) {
                 std::cout << '\n' << std::setw(FIELD_WIDTH_LANGUAGE) << " " << std::setw(FIELD_WIDTH_URL) << std::left << "...";
@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
 
             line_count += std::to_string(count).size() + 1;
 
-            if (sout == xml) {
+            if (strcmp(sout, xml) == 0) {
                 std::cout << "\033[0;33m" << count << "\033[0m";
             } else {
                 ++failed;
@@ -136,6 +136,7 @@ int main(int argc, char* argv[]) {
         srcml_archive_close(archive);
     }
 
+    // error report
     double percent = double(failed * 100) / total;
     std::cout << "\nErrors: " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
 
