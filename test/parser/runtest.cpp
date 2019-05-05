@@ -15,6 +15,7 @@
 #include <string.h>
 #include <archive.h>
 #include <archive_entry.h>
+#include <algorithm>
 
 const int FIELD_WIDTH_LANGUAGE = 12;
 const int FIELD_WIDTH_URL = 30;
@@ -67,6 +68,8 @@ int main(int argc, char* argv[]) {
 
     std::map<std::string, int> ltotal;
     std::map<std::string, int> misses;
+
+    std::vector<std::string> errors;
 
     int line_count = 0;
     int total = 0;
@@ -129,6 +132,20 @@ int main(int argc, char* argv[]) {
             } else {
                 ++failed;
                 ++misses[unit_language];
+
+                std::string errreport = unit_language;
+                errreport += '\t';
+                errreport += url;
+                errreport += '\t';
+                errreport += std::to_string(count);
+                errreport += '\n';
+                errreport += "test:";
+                errreport += xml;
+                errreport += '\n';
+                errreport += "srcml:";
+                errreport += sout;
+                errreport += '\n';
+                errors.push_back(errreport);
                 std::cout << "\033[0;31m" << count << "\033[0m";
             }
             std::cout << " ";
@@ -145,12 +162,16 @@ int main(int argc, char* argv[]) {
     }
 
     // error report
+    std::cout << "Errors:\n";
+    for (const auto& err : errors) {
+        std::cout << err;
+    }
     double percent = double(failed * 100) / total;
-    std::cout << "\nErrors: " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
+    std::cout << "\nCounts: " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
 
-    for (auto& kv : misses) {
-        double percent = double(kv.second * 100) / ltotal[kv.first];
-        std::cout << "        " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << kv.first << std::setw(6) << std::right << kv.second << std::setw(6) << std::right << ltotal[kv.first] << '\t' << std::setprecision(2) << percent << "%" << '\n';
+    for (auto& kv : ltotal) {
+        double percent = double(misses[kv.first] * 100) / kv.second;
+        std::cout << "        " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << kv.first << std::setw(6) << std::right << misses[kv.first] << std::setw(6) << std::right << kv.second << '\t' << std::setprecision(2) << percent << "%" << '\n';
     }
 
     return 0;
