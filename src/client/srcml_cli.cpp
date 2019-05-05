@@ -475,6 +475,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "Run a user defined external script or application on srcml client output")
             ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "Set the line endings for a desired environment \"Windows\" or \"Unix\"")
             ("unstable-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER>), "Enable non-strict output ordering")
+            ("parser-test", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_PARSER_TEST>), "Run parser tests on the input files")
             ;
 
         // Group src2srcml Options

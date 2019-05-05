@@ -24,6 +24,8 @@
 #include <srcml.h>
 #include <ParseRequest.hpp>
 #include <iostream>
+#include <iomanip>
+#include <map>
 #include <srcml_options.hpp>
 #include <TraceLog.hpp>
 #include <srcml_cli.hpp>
@@ -31,6 +33,9 @@
 #include <SRCMLStatus.hpp>
 #include <stdio.h>
 #include <cstring>
+
+const int FIELD_WIDTH_LANGUAGE = 12;
+const int FIELD_WIDTH_URL = 30;
 
 // Public consumption thread function
 void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& /* destination */) {
@@ -46,6 +51,95 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             SRCMLstatus(WARNING_MSG, "srcml: Extension not supported %s", *(request->disk_filename));
         else
             SRCMLstatus(WARNING_MSG, "srcml: Extension not supported");
+
+        return;
+    }
+
+    static std::string previous_filename;
+    static int count = 0;
+    static int total = 0;
+    static int line_count = 0;
+    static std::string url;
+    static std::map<std::string, int> ltotal;
+    static std::map<std::string, int> misses;
+    static int failed = 0;
+    static std::string unit_language;
+    static std::vector<std::string> errors;
+    if (option(SRCML_COMMAND_PARSER_TEST)) {
+
+        auto unit = request->unit;
+
+        if (request->url)
+            url = *request->url;
+
+        if (previous_filename.empty() || (request->filename && *request->filename != previous_filename)) {
+
+            if (request->filename)
+                previous_filename = *request->filename;
+            count = 0;
+
+            unit_language = srcml_unit_get_language(unit);
+
+            std::cout << '\n' << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language;
+            std::cout << std::setw(FIELD_WIDTH_URL) << std::left << url;
+            line_count = 0;
+        }
+
+        ++count;
+
+        ++total;
+
+        ++ltotal[unit_language];
+
+        // get the src
+        char* buffer = 0;
+        size_t size = 0;
+        srcml_unit_set_src_encoding(unit, "UTF-8");
+        srcml_unit_unparse_memory(unit, &buffer, &size);
+
+        // get the srcml
+        const char* xml = srcml_unit_get_srcml_raw(unit);
+
+        srcml_unit* outunit = srcml_unit_clone(unit);
+        srcml_unit_set_language(outunit, srcml_unit_get_language(unit));
+
+        srcml_unit_parse_memory(outunit, buffer, size);
+
+        const char* sout = srcml_unit_get_srcml_raw(outunit);
+
+        if (line_count >= 75) {
+            std::cout << '\n' << std::setw(FIELD_WIDTH_LANGUAGE) << " " << std::setw(FIELD_WIDTH_URL) << std::left << "...";
+            line_count = 0;
+        }
+
+        line_count += std::to_string(count).size() + 1;
+
+        if (strcmp(sout, xml) == 0) {
+            std::cout << "\033[0;33m" << count << "\033[0m";
+        } else {
+            ++failed;
+            ++misses[unit_language];
+
+            std::string errreport = unit_language;
+            errreport += '\t';
+            errreport += url;
+            errreport += '\t';
+            errreport += std::to_string(count);
+            errreport += '\n';
+            errreport += "test:";
+            errreport += xml;
+            errreport += '\n';
+            errreport += "srcml:";
+            errreport += sout;
+            errreport += '\n';
+            errors.push_back(errreport);
+            std::cout << "\033[0;31m" << count << "\033[0m";
+        }
+        std::cout << " ";
+
+        free(buffer);
+        srcml_unit_free(outunit);
+     //   srcml_unit_free(unit);
 
         return;
     }
