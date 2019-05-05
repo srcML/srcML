@@ -42,20 +42,20 @@ int main(int argc, char* argv[]) {
     int status = ARCHIVE_OK;
     while ((status = archive_read_next_header(darchive, &entry)) == ARCHIVE_OK) {
 
-        archive_read_disk_descend(darchive);
         if (first) {
+            archive_read_disk_descend(darchive);
             first = false;
             continue;
         }
+
+        if (archive_entry_filetype(entry) != AE_IFREG)
+            continue;
 
         std::string filename = archive_entry_pathname(entry);
         if (filename.substr(filename.find_last_of(".") + 1) != "xml")
             continue;
 
-        if (archive_entry_filetype(entry) != AE_IFREG)
-            continue;
-
-        files.push_back(filename);
+        files.push_back(std::move(filename));
     }
     archive_read_close(darchive);
 
@@ -69,6 +69,8 @@ int main(int argc, char* argv[]) {
     int failed = 0;
     for (auto& filename : files) {
 
+fprintf(stderr, "DEBUG:  %s %s %d filename: %s\n", __FILE__,  __FUNCTION__, __LINE__,  filename.c_str());
+
         bool found = true;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, filename.c_str());
@@ -80,15 +82,15 @@ int main(int argc, char* argv[]) {
 
             if (first) {
                 unit_language = srcml_unit_get_language(unit);
-                if (!language.empty() && language != unit_language) {
+                if (!language.empty() && language != unit_language && language != url) {
                     found = false;
                     break;
                 }
                 std::cout << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << srcml_unit_get_language(unit);
                 std::cout << std::setw(FIELD_WIDTH_URL) << std::left << url;
                 line_count = 0;
+                first = false;
             }
-            first = false;
             ++count;
             ++total;
 
@@ -132,8 +134,11 @@ int main(int argc, char* argv[]) {
         }
         if (found)
             std::cout << '\n';
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         srcml_archive_close(archive);
+        fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
     }
 
     // error report
