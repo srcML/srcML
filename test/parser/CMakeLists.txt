@@ -53,3 +53,35 @@ add_custom_target(cs COMMAND time ./runtest.py CS DEPENDS gentest)
 add_custom_target(cleanreport COMMAND rm srcMLTestReport*.txt)
 add_custom_target(purge COMMAND ls -t srcMLTestReport*.txt | sed '1d' | xargs rm)
 add_custom_target(report COMMAND ls -t srcMLTestReport*.txt | head -1 | xargs cat)
+
+set(CMAKE_CXX_STANDARD 11)
+
+set(OSX_LIBARCHIVE_PATH ${CMAKE_SOURCE_DIR}/../libarchive)
+
+# libarchive 3 is necessary
+if(NOT APPLE)
+    find_package(LibArchive 3 REQUIRED)
+
+ # macOS with custom-built libarchive
+elseif(EXISTS "${OSX_LIBARCHIVE_PATH}")
+
+    # different versions of libarchive place the generated libarchive.a in different places
+    find_library(LIBARCHIVE_LOCAL_LIBRARY NAMES libarchive.a PATHS ${OSX_LIBARCHIVE_PATH} PATH_SUFFIXES libarchive /.libs NO_DEFAULT_PATH)
+
+    set(LibArchive_INCLUDE_DIRS ${OSX_LIBARCHIVE_PATH}/libarchive)
+
+    set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} /usr/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+
+# macOS with homebrew
+elseif(EXISTS "/usr/local/opt/libarchive")
+    set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
+    set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+
+else()
+    message(FATAL_ERROR "Unable to find libarchive >= 3 via homebrew or local build at ${OSX_LIBARCHIVE_PATH}")
+endif()
+
+add_executable(runtest runtest.cpp)
+target_include_directories(runtest PRIVATE ${CMAKE_SOURCE_DIR}/src/libsrcml ${LibArchive_INCLUDE_DIRS})
+target_link_libraries(runtest srcml_shared ${SRCML_LIBRARIES} ${LibArchive_LIBRARIES})
+
