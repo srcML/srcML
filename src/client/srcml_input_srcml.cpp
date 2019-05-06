@@ -116,6 +116,12 @@ int srcml_input_srcml(ParseQueue& queue,
         // one-time through for individual unit
         if (srcml_input.unit)
             break;
+
+        std::string unit_language;
+        if (srcml_unit_get_language(unit))
+            unit_language = srcml_unit_get_language(unit);
+        if (option(SRCML_COMMAND_PARSER_TEST)) {
+        }
     }
 
     if (!unitFound) {
