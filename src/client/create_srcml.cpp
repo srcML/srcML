@@ -65,7 +65,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
         if (!uninput.compressions.empty() || !uninput.archives.empty())
             uninput.fd = input_archive(uninput);
 
-        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+        return srcml_input_srcml(queue, srcml_arch, srcml_request, uninput, srcml_request.revision);
     }
 
     if (input.protocol == "text") {

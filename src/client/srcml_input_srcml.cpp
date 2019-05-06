@@ -35,6 +35,7 @@
 
 int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
+                       const srcml_request_t& srcml_request,
                        const srcml_input_src& srcml_input,
                        const boost::optional<size_t> & revision) {
 
@@ -93,9 +94,18 @@ int srcml_input_srcml(ParseQueue& queue,
     // process each entry in the input srcml archive
     while (srcml_unit* unit =  srcml_archive_read_unit(srcml_input_archive)) {
 
-//        srcml_unit_get_language(unit)
-
         unitFound = true;
+
+        // if in parser test mode, check if language specified
+        std::string unit_language;
+        if (srcml_unit_get_language(unit))
+            unit_language = srcml_unit_get_language(unit);
+        if (option(SRCML_COMMAND_PARSER_TEST) && srcml_request.att_language &&
+            srcml_request.att_language != unit_language) {
+            srcml_unit_free(unit);
+            break;
+        }
+
         // form the parsing request
         std::shared_ptr<ParseRequest> prequest(new ParseRequest);
         prequest->srcml_arch = srcml_output_archive;
@@ -117,11 +127,6 @@ int srcml_input_srcml(ParseQueue& queue,
         if (srcml_input.unit)
             break;
 
-        std::string unit_language;
-        if (srcml_unit_get_language(unit))
-            unit_language = srcml_unit_get_language(unit);
-        if (option(SRCML_COMMAND_PARSER_TEST)) {
-        }
     }
 
     if (!unitFound) {
