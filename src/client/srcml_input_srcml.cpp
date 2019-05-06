@@ -102,8 +102,8 @@ int srcml_input_srcml(ParseQueue& queue,
         prequest->unit = unit;
         prequest->needsparsing = false;
         prequest->filename = srcml_input.c_str();
-        prequest->url = srcml_archive_get_url(srcml_input_archive);
-//        prequest->disk_filename = srcml_input.c_str();
+        if (srcml_archive_get_url(srcml_input_archive)) 
+            prequest->url = srcml_archive_get_url(srcml_input_archive);
 
         // if the archive has a language (set by the user) then use that
         // this is a way of converting language
