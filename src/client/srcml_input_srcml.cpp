@@ -81,7 +81,8 @@ int srcml_input_srcml(ParseQueue& queue,
     }
 
     // move to the correct unit (if needed)
-    for (int i = 1; i < srcml_input.unit; ++i) {
+    // @todo Why isn't srcml_input.unit working?
+    for (int i = 1; i < option(SRCML_COMMAND_PARSER_TEST) ? srcml_request.unit : srcml_input.unit; ++i) {
         if (!srcml_archive_skip_unit(srcml_input_archive)) {
             SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_input.unit);
             exit(1);
@@ -97,13 +98,15 @@ int srcml_input_srcml(ParseQueue& queue,
         unitFound = true;
 
         // if in parser test mode, check if language specified
-        std::string unit_language;
-        if (srcml_unit_get_language(unit))
-            unit_language = srcml_unit_get_language(unit);
-        if (option(SRCML_COMMAND_PARSER_TEST) && srcml_request.att_language &&
-            srcml_request.att_language != unit_language) {
-            srcml_unit_free(unit);
-            break;
+        if (option(SRCML_COMMAND_PARSER_TEST)) {
+
+            std::string unit_language;
+            if (srcml_unit_get_language(unit))
+                unit_language = srcml_unit_get_language(unit);
+            if (srcml_request.att_language && srcml_request.att_language != unit_language) {
+                srcml_unit_free(unit);
+                break;
+            }
         }
 
         // form the parsing request
@@ -124,9 +127,8 @@ int srcml_input_srcml(ParseQueue& queue,
         queue.schedule(prequest);
 
         // one-time through for individual unit
-        if (srcml_input.unit)
+        if (option(SRCML_COMMAND_PARSER_TEST) ? srcml_request.unit : srcml_input.unit)
             break;
-
     }
 
     if (!unitFound) {
