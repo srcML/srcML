@@ -29,6 +29,7 @@
 #include <iomanip>
 #include <ParserTest.hpp>
 #include <sstream>
+#include <cstring>
 
 void ParserTest::entry(const ParseRequest* request, srcml_unit* unit) {
 
