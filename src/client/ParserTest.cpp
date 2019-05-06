@@ -88,10 +88,13 @@ void ParserTest::entry(const ParseRequest* request, srcml_unit* unit) {
         errreport += '\t';
         errreport += std::to_string(count);
         errreport += '\n';
+        errreport += "\033[0;30;1m";
         errreport += "test:";
+        errreport += "\033[0m";
         errreport += xml;
-        errreport += '\n';
+        errreport += "\033[0;30;1m";
         errreport += "srcml:";
+        errreport += "\033[0m";
         errreport += sout;
         errreport += '\n';
         errors.push_back(errreport);
@@ -115,7 +118,7 @@ void ParserTest::report() {
         std::cout << err;
     }
     double percent = double(failed * 100) / total;
-    std::cout << "\nCounts: " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
+    std::cout << "\033[0;30;1m" << "\nCounts: " << "\033[0m" << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
 
     for (auto& kv : ltotal) {
         double percent = double(misses[kv.first] * 100) / kv.second;
