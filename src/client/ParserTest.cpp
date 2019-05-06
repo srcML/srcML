@@ -28,8 +28,10 @@
 #include <iostream>
 #include <iomanip>
 #include <ParserTest.hpp>
+#include <sstream>
+#include <cstring>
 
-void ParserTest::entry(const ParseRequest* request, srcml_unit* unit) {
+void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcml_unit* unit) {
 
     if (request->url)
         url = *request->url;
@@ -42,8 +44,12 @@ void ParserTest::entry(const ParseRequest* request, srcml_unit* unit) {
 
         unit_language = srcml_unit_get_language(unit);
 
-        std::cout << '\n' << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language;
-        std::cout << std::setw(FIELD_WIDTH_URL) << std::left << url;
+        std::ostringstream sout;
+        sout << '\n' << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language;
+        sout << std::setw(FIELD_WIDTH_URL) << std::left << url;
+
+        srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
+
         line_count = 0;
     }
 
@@ -70,14 +76,19 @@ void ParserTest::entry(const ParseRequest* request, srcml_unit* unit) {
     const char* sout = srcml_unit_get_srcml_raw(outunit);
 
     if (line_count >= 75) {
-        std::cout << '\n' << std::setw(FIELD_WIDTH_LANGUAGE) << " " << std::setw(FIELD_WIDTH_URL) << std::left << "...";
+        std::ostringstream sout;
+        sout << '\n' << std::setw(FIELD_WIDTH_LANGUAGE) << " " << std::setw(FIELD_WIDTH_URL) << std::left << "...";
+        srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
+
         line_count = 0;
     }
 
     line_count += std::to_string(count).size() + 1;
 
     if (strcmp(sout, xml) == 0) {
-        std::cout << "\033[0;33m" << count << "\033[0m";
+        std::ostringstream sout;
+        sout << "\033[0;33m" << count << "\033[0m";
+        srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
     } else {
         ++failed;
         ++misses[unit_language];
@@ -85,6 +96,8 @@ void ParserTest::entry(const ParseRequest* request, srcml_unit* unit) {
         std::string errreport = unit_language;
         errreport += '\t';
         errreport += url;
+        errreport += '\t';
+        errreport += previous_filename;
         errreport += '\t';
         errreport += std::to_string(count);
         errreport += '\n';
@@ -98,9 +111,13 @@ void ParserTest::entry(const ParseRequest* request, srcml_unit* unit) {
         errreport += sout;
         errreport += '\n';
         errors.push_back(errreport);
-        std::cout << "\033[0;31m" << count << "\033[0m";
+
+        std::string result = "\033[0;31m";
+        result += std::to_string(count);
+        result += "\033[0m";
+        srcml_archive_write_string(archive, result.c_str(), (int) result.size());
     }
-    std::cout << " ";
+    srcml_archive_write_string(archive, " ", 1);
 
     free(buffer);
     srcml_unit_free(outunit);
@@ -108,21 +125,27 @@ void ParserTest::entry(const ParseRequest* request, srcml_unit* unit) {
 
 }
 
-void ParserTest::report() {
+void ParserTest::report(srcml_archive* archive) {
     if (!total)
         return;
 
     // error report
-    std::cout << "Errors:\n";
+    std::string errrep = "\n\nErrors:\n";
+    srcml_archive_write_string(archive, errrep.c_str(), (int) errrep.size());
     for (const auto& err : errors) {
-        std::cout << err;
+        srcml_archive_write_string(archive, err.c_str(), (int) err.size());
     }
     double percent = double(failed * 100) / total;
-    std::cout << "\033[0;30;1m" << "\nCounts: " << "\033[0m" << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
+    std::ostringstream sout;
+    sout << "\033[0;30;1m" << "\nCounts: " << "\033[0m" << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
+    srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
 
     for (auto& kv : ltotal) {
         double percent = double(misses[kv.first] * 100) / kv.second;
-        std::cout << "        " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << kv.first << std::setw(6) << std::right << misses[kv.first] << std::setw(6) << std::right << kv.second << '\t' << std::setprecision(2) << percent << "%" << '\n';
+        std::ostringstream sout;
+        sout << "        " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << kv.first << std::setw(6) << std::right << misses[kv.first] << std::setw(6) << std::right << kv.second << '\t' << std::setprecision(2) << percent << "%" << '\n';
+
+        srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
     }
 }
 

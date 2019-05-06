@@ -53,7 +53,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
     if (option(SRCML_COMMAND_PARSER_TEST)) {
 
-        ParserTest::entry(request.get(), request->unit);
+        ParserTest::entry(request.get(), request->srcml_arch, request->unit);
 
         return;
     }
