@@ -41,6 +41,7 @@
 #include <iostream>
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
+#include <ParserTest.hpp>
 
 int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
@@ -338,6 +339,10 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_close(srcml_arch);
     }
     srcml_archive_free(srcml_arch);
+
+    if (option(SRCML_COMMAND_PARSER_TEST)) {
+        ParserTest::report();
+    }
 
     // @todo Why doesn't the srcml_archive_close() close this? Is that what libxml does?
     if (destination.fd)
