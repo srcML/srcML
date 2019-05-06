@@ -97,6 +97,8 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         errreport += '\t';
         errreport += url;
         errreport += '\t';
+        errreport += previous_filename;
+        errreport += '\t';
         errreport += std::to_string(count);
         errreport += '\n';
         errreport += "\033[0;30;1m";
