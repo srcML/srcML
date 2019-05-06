@@ -314,7 +314,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // convert input sources to srcml
     int status = 0;
-    bool always_archive = false;    
+    bool always_archive = option(SRCML_COMMAND_PARSER_TEST);    
     for (const auto& input : input_sources) {
 
         if (input.protocol == "filelist")
