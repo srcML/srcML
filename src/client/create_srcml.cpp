@@ -336,14 +336,14 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (SRCMLStatus::errors())
         status = -1;
 
+    if (option(SRCML_COMMAND_PARSER_TEST)) {
+        ParserTest::report(srcml_arch);
+    }
+
     if (status != -1 || always_archive) {
         srcml_archive_close(srcml_arch);
     }
     srcml_archive_free(srcml_arch);
-
-    if (option(SRCML_COMMAND_PARSER_TEST)) {
-        ParserTest::report();
-    }
 
     // @todo Why doesn't the srcml_archive_close() close this? Is that what libxml does?
     if (destination.fd)
