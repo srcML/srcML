@@ -31,6 +31,8 @@
 #include <sstream>
 #include <cstring>
 
+#define str2arg(s) s, strlen(s)
+
 void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcml_unit* unit) {
 
     if (request->url)
@@ -112,10 +114,10 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         errreport += '\n';
         errors.push_back(errreport);
 
-        std::string result = "\033[0;31m";
-        result += std::to_string(count);
-        result += "\033[0m";
+        srcml_archive_write_string(archive, str2arg("\033[0;31m"));
+        std::string result = std::to_string(count);
         srcml_archive_write_string(archive, result.c_str(), (int) result.size());
+        srcml_archive_write_string(archive, str2arg("\033[0m"));
     }
     srcml_archive_write_string(archive, " ", 1);
 
@@ -130,8 +132,7 @@ void ParserTest::report(srcml_archive* archive) {
         return;
 
     // error report
-    std::string errrep = "\n\nErrors:\n";
-    srcml_archive_write_string(archive, errrep.c_str(), (int) errrep.size());
+    srcml_archive_write_string(archive, str2arg("\n\nErrors:\n"));
     for (const auto& err : errors) {
         srcml_archive_write_string(archive, err.c_str(), (int) err.size());
     }
