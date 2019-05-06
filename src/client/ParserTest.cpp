@@ -113,7 +113,7 @@ void ParserTest::report() {
         return;
 
     // error report
-    std::cout << "Errors:\n";
+    std::cout << "\n\nErrors:\n";
     for (const auto& err : errors) {
         std::cout << err;
     }
