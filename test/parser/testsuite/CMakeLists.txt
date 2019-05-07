@@ -34,7 +34,7 @@ endforeach()
 set(ALLGEN)
 
 # Sets the language of the result
-macro(setlanguage LANG URL)
+macro(setlanguage LANG URL BASEEXT)
 	# convert from language to extension
 	if(LANG STREQUAL "Java")
 		set(LANGEXT "java")
@@ -49,7 +49,7 @@ macro(setlanguage LANG URL)
 	endif()
 
 	# assumes a C++ base
-	set(BASE "${URL}.cpp.xml")
+	set(BASE "${URL}.${BASEEXT}.xml")
 
 	# strip _base from URL
 	string(REGEX REPLACE "_base" "" PRODURL "${URL}")
@@ -166,7 +166,7 @@ foreach(GEN ${SUITE})
 		# base is C++, so these just get added
 		list(APPEND ALLGEN "${URL}.cpp.xml")
 		foreach(LANG "Java" "C#" "Objective-C" "C")
-			setlanguage("${LANG}" "${URL}")
+			setlanguage("${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_ALL_GEN")
@@ -193,7 +193,7 @@ foreach(GEN ${SUITE})
 
 		list(APPEND ALLGEN "${URL}.cpp.xml")
 		foreach(LANG "C#")
-			setlanguage("${LANG}" "${URL}")
+			setlanguage("${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
@@ -204,14 +204,17 @@ foreach(GEN ${SUITE})
 	elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
 		list(APPEND ALLGEN "${URL}.cpp.xml")
-		foreach(LANG "C#" "C")
-			setlanguage("${LANG}" "${URL}")
+		foreach(LANG "C#" "C++" "Objective-C")
+			setlanguage("${LANG}" "${URL}" "c")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_C_ONLY")
 
 		# exist, just add to list
 		list(APPEND ALLGEN "${URL}.c.xml")
+		foreach(LANG "Objective-C")
+			setlanguage("${LANG}" "${URL}" "c")
+		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_JAVA")
 
@@ -238,7 +241,7 @@ foreach(GEN ${SUITE})
 		# base is C++, so these just get added
 		list(APPEND ALLGEN "${URL}.cpp.xml")
 		foreach(LANG "C#" "Java")
-			setlanguage("${LANG}" "${URL}")
+			setlanguage("${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	endif()
