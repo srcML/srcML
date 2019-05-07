@@ -121,6 +121,36 @@ transform(throw.cpp.xml throw_m.m.xml "throw" "keyword2mkeyword.xsl")
 transform(throw_base.cpp.xml throw_base_m.m.xml "throw" "keyword2mkeyword.xsl")
 transform(synthesize_m.m.xml dynamic_m.m.xml "dynamic" "synthesize2dynamic.xsl")
 
+execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_header.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_enum.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_specifier.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_call.template
+			    COMMAND srcml --output-xml --url="c_cpp_mode.restrict" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="restrict" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.restrict.cpp.xml
+)
+list(APPEND ALLGEN "c_cpp_mode.restrict.cpp.xml")
+
+
+execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_header.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_enum.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_specifier.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_call.template
+			    COMMAND srcml --output-xml --url="c_cpp_mode.mutable" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="mutable" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.mutable.cpp.xml
+)
+list(APPEND ALLGEN "c_cpp_mode.mutable.cpp.xml")
+
+
+execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_simple_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_single.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_enum.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_call.template
+			    COMMAND srcml --output-xml --url="c_cpp_mode.try" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="try" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.try.cpp.xml
+)
+list(APPEND ALLGEN "c_cpp_mode.try.cpp.xml")
+
+
+execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_simple_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_single.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_enum.template
+			    COMMAND srcml --output-xml --url="c_cpp_mode.catch" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="catch" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.catch.cpp.xml
+)
+list(APPEND ALLGEN "c_cpp_mode.catch.cpp.xml")
+
+
+execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_single.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_call.template
+			    COMMAND srcml --output-xml --url="c_cpp_mode.class" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="class" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.class.cpp.xml
+)
+list(APPEND ALLGEN "c_cpp_mode.class.cpp.xml")
+
+
 # Process all tests in suite.txt according to their categories
 file(STRINGS suite.txt SUITE REGEX "LANGUAGE_")
 foreach(GEN ${SUITE})
@@ -220,7 +250,7 @@ foreach(GENURL ${ALLGEN})
 
 	string(REGEX MATCH "([a-z_]+)\.([a-z_]+)\.xml" _ "${GENURL}")
 
-	foreach(XSLTYPE "formfeed" "comment" "block" "preproc" "struct")
+	foreach(XSLTYPE "formfeed" "comment" "block" "preproc" "struct" "ifthenelse")
 		set(PRODUCT "${CMAKE_MATCH_1}.${XSLTYPE}.${CMAKE_MATCH_2}.xml")
 		execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insert${XSLTYPE}.xsl --url=${CMAKE_MATCH_1}.formfeed ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
 				    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
