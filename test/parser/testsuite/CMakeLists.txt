@@ -30,10 +30,12 @@ foreach(TEMPLATE_TEST ${TEMPLATE_TESTS})
 	configure_file(${TEMPLATE_TEST} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 endforeach()
 
+# all individual existing or generated so that variations (formfeed, etc.) can be built
 set(ALLGEN)
 
+# Sets the language of the result
 macro(setlanguage LANG URL)
-	set(BASE "${URL}.cpp.xml")
+	# convert from language to extension
 	if(LANG STREQUAL "Java")
 		set(LANGEXT "java")
 	elseif(LANG STREQUAL "Objective-C")
@@ -45,73 +47,77 @@ macro(setlanguage LANG URL)
 	else()
 		set(LANGEXT "cpp")
 	endif()
+
+	# assumes a C++ base
+	set(BASE "${URL}.cpp.xml")
 	set(PRODUCT "${URL}.${LANGEXT}.xml")
 	execute_process(COMMAND srcml --language=${LANG} --output-xml ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
 				    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+
+	# record product so that variation are generated
 	list(APPEND ALLGEN "${PRODUCT}")
 endmacro()
 
-macro(applyxslt BASE PRODUCT URL XSLT)
-
+# Transforms BASE into PRODUCT with XSLT and applies the given URL
+macro(transform BASE PRODUCT URL XSLT)
 	execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
 			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
 endmacro()
 
-# generate special cases
-applyxslt(class.cpp.xml struct.cpp.xml "struct" "class2struct.xsl")
-applyxslt(class_cpp.cpp.xml struct_cpp.cpp.xml "struct" "class2struct.xsl")
-applyxslt(class_cs.cs.xml struct_cs.cs.xml "struct" "class2struct.xsl")
+# Generate special transformations
 
-applyxslt(struct.cpp.xml union.cpp.xml "union" "struct2union.xsl")
-applyxslt(struct_cpp.cpp.xml union_cpp.cpp.xml "union" "struct2union.xsl")
-applyxslt(struct_cs.cs.xml union_cs.cs.xml "union" "struct2union.xsl")
-applyxslt(struct_c.c.xml union_c.c.xml "union" "struct2union.xsl")
+# class -> struct
+transform(class.cpp.xml struct.cpp.xml "struct" "class2struct.xsl")
+transform(class_cpp.cpp.xml struct_cpp.cpp.xml "struct" "class2struct.xsl")
+transform(class_cs.cs.xml struct_cs.cs.xml "struct" "class2struct.xsl")
 
-file(COPY constructor_base.cpp.xml DESTINATION constructor.cpp.xml)
+# struct -> union
+transform(struct.cpp.xml union.cpp.xml "union" "struct2union.xsl")
+transform(struct_cpp.cpp.xml union_cpp.cpp.xml "union" "struct2union.xsl")
+transform(struct_cs.cs.xml union_cs.cs.xml "union" "struct2union.xsl")
+transform(struct_c.c.xml union_c.c.xml "union" "struct2union.xsl")
 
-applyxslt(function.cpp.xml function_const.cpp.xml "const" "addconst.xsl")
-applyxslt(constructor.cpp.xml constructor_explicit.cpp.xml "constructor" "addexplicit.xsl")
-applyxslt(if.cpp.xml while.cpp.xml "while" "if2while.xsl")
-applyxslt(if.cpp.xml ifnestcond.cpp.xml "if" "nestcond.xsl")
-applyxslt(destructor.cpp.xml destructor_virtual.cpp.xml "destructor.virtual" "addvirtual.xsl")
-applyxslt(throw.cpp.xml throw_base.cpp.xml "throw" "insertexpr.xsl")
-applyxslt(class_java.java.xml interface_java.java.xml "interface" "class2interface.xsl")
-applyxslt(if.cpp.xml ifblock.cpp.xml "if.block" "if2ifblock.xsl")
+configure_file(constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
 
+# if -> while
+transform(if.cpp.xml while.cpp.xml "while" "if2while.xsl")
+
+# C++ special transformations
+transform(function.cpp.xml function_const.cpp.xml "const" "addconst.xsl")
+transform(constructor.cpp.xml constructor_explicit.cpp.xml "constructor" "addexplicit.xsl")
+transform(if.cpp.xml ifnestcond.cpp.xml "if" "nestcond.xsl")
+transform(destructor.cpp.xml destructor_virtual.cpp.xml "destructor.virtual" "addvirtual.xsl")
+transform(throw.cpp.xml throw_base.cpp.xml "throw" "insertexpr.xsl")
+transform(class_java.java.xml interface_java.java.xml "interface" "class2interface.xsl")
+transform(if.cpp.xml ifblock.cpp.xml "if.block" "if2ifblock.xsl")
 execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return ${CMAKE_CURRENT_BINARY_DIR}/return_base.cpp.xml
 			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/return.cpp.xml)
+transform(function.cpp.xml function_decl.cpp.xml "function" "defn2decl.xsl")
 
-applyxslt(function.cpp.xml function_decl.cpp.xml "function" "defn2decl.xsl")
-#applyxslt(function_asterisk.cpp.xml function_asterisk_decl.cpp.xml "function" "defn2decl.xsl")
+# Was in Makefile.gen, but cannot find the file
+#transform(function_asterisk.cpp.xml function_asterisk_decl.cpp.xml "function" "defn2decl.xsl")
 
-applyxslt(class_interface_m.m.xml class_implementation_m.m.xml "function" "interface2implementation.xsl")
+# C# special transformations
+transform(class_interface_m.m.xml class_implementation_m.m.xml "function" "interface2implementation.xsl")
+transform(try.cpp.xml try_m.m.xml "try" "keyword2mkeyword.xsl")
+transform(catch_form.cpp.xml catch_m.m.xml "catch" "keyword2mkeyword.xsl")
+transform(finally_cs.cs.xml finally_java.java.xml "finally" "keyword2mkeyword.xsl")
 
-applyxslt(try.cpp.xml try_m.m.xml "try" "keyword2mkeyword.xsl")
-applyxslt(catch_form.cpp.xml catch_m.m.xml "catch" "keyword2mkeyword.xsl")
+#execute_process(COMMAND srcml --output-xml --set-language xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
+#			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
 
-applyxslt(finally_cs.cs.xml finally_java.java.xml "finally" "keyword2mkeyword.xsl")
-
-execute_process(COMMAND srcml --output-xml --set-language xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
-			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-
-# Java finally from C#
+# C# finally -> Java finally
 execute_process(COMMAND srcml --language=Java --output-xml ${CMAKE_CURRENT_BINARY_DIR}/finally_cs.cs.xml
 				    -o ${CMAKE_CURRENT_BINARY_DIR}/finally_java.java.xml)
 
-# Objective-C try from C++
-applyxslt(try.cpp.xml try_m.m.xml "try" "keyword2mkeyword.xsl")
+# Objective-C try, catch, finally, throw from C++
+transform(try.cpp.xml try_m.m.xml "try" "keyword2mkeyword.xsl")
+transform(catch_form.cpp.xml catch_m.m.xml "catch" "keyword2mkeyword.xsl")
+transform(finally_cs.cs.xml finally_m.m.xml "finally" "keyword2mkeyword.xsl")
+transform(throw.cpp.xml throw_m.m.xml "throw" "keyword2mkeyword.xsl")
+transform(throw_base.cpp.xml throw_base_m.m.xml "throw" "keyword2mkeyword.xsl")
 
-# Objective-C catch from C++
-applyxslt(catch_form.cpp.xml catch_m.m.xml "catch" "keyword2mkeyword.xsl")
-
-# Objective-C finally from C++
-applyxslt(finally_cs.cs.xml finally_m.m.xml "finally" "keyword2mkeyword.xsl")
-
-# Objective-C throw from C++
-applyxslt(throw.cpp.xml throw_m.m.xml "throw" "keyword2mkeyword.xsl")
-applyxslt(throw_base.cpp.xml throw_base_m.m.xml "throw" "keyword2mkeyword.xsl")
-
-# keep track of all individual existing or created
+# Process all tests in suite.txt according to their categories
 file(STRINGS suite.txt SUITE REGEX "LANGUAGE_")
 foreach(GEN ${SUITE})
 
@@ -205,17 +211,14 @@ foreach(GEN ${SUITE})
 
 endforeach()
 
+# Generate variations: formfeed, comment, block, etc.
 foreach(GENURL ${ALLGEN})
 
-#	message("GENURL |${GENURL}|")
-
-	# formfeed
 	string(REGEX MATCH "([a-z_]+)\.([a-z_]+)\.xml" _ "${GENURL}")
-	set(BASE "${GENURL}")
 
 	foreach(XSLTYPE "formfeed" "comment" "block" "preproc" "struct")
 		set(PRODUCT "${CMAKE_MATCH_1}.${XSLTYPE}.${CMAKE_MATCH_2}.xml")
-		execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insert${XSLTYPE}.xsl --url=${CMAKE_MATCH_1}.formfeed ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
+		execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insert${XSLTYPE}.xsl --url=${CMAKE_MATCH_1}.formfeed ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
 				    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
 	endforeach()
 
