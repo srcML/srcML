@@ -50,7 +50,10 @@ macro(setlanguage LANG URL)
 
 	# assumes a C++ base
 	set(BASE "${URL}.cpp.xml")
-	set(PRODUCT "${URL}.${LANGEXT}.xml")
+
+	# strip _base from URL
+	string(REGEX REPLACE "_base" "" PRODURL "${URL}")
+	set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
 	execute_process(COMMAND srcml --language=${LANG} --output-xml ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
 				    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
 
@@ -116,6 +119,7 @@ transform(catch_form.cpp.xml catch_m.m.xml "catch" "keyword2mkeyword.xsl")
 transform(finally_cs.cs.xml finally_m.m.xml "finally" "keyword2mkeyword.xsl")
 transform(throw.cpp.xml throw_m.m.xml "throw" "keyword2mkeyword.xsl")
 transform(throw_base.cpp.xml throw_base_m.m.xml "throw" "keyword2mkeyword.xsl")
+transform(synthesize_m.m.xml dynamic_m.m.xml "dynamic" "synthesize2dynamic.xsl")
 
 # Process all tests in suite.txt according to their categories
 file(STRINGS suite.txt SUITE REGEX "LANGUAGE_")
