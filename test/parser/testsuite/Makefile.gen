@@ -102,7 +102,7 @@ XSLT_ADDCONST=${XSLT} ${XSLDIR}/addconst.xsl
 
 XSLT_IDENTITY=${XSLT} ${XSLDIR}/identity.xsl
 
-XSLT_INSERTEXPR=srcml --xslt ${XSLDIR}/insertexpr.xsl --xslt-param 'expr_filename="../expression.cpp.xml"' 
+XSLT_INSERTEXPR=srcml --xslt ${XSLDIR}/insertexpr.xsl --xslt-param 'expr_filename="expression.cpp.xml"' 
 XSLT_INSERTEXPR_XSL= expression.cpp.xml ${XSLDIR}/insertexpr.xsl
 
 XSLT_STRUCT2UNION=${XSLT} ${XSLDIR}/struct2union.xsl
