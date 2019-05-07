@@ -30,16 +30,23 @@ foreach(TEMPLATE_TEST ${TEMPLATE_TESTS})
 	configure_file(${TEMPLATE_TEST} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 endforeach()
 
-set(LANG_EXTENSIONS ";Java:java;C#:cs;C++:cpp;Objective-C:m;C:c;")
-
 set(ALLGEN)
 
 macro(setlanguage LANG URL)
 	set(BASE "${URL}.cpp.xml")
-	string(REGEX MATCH ";${LANG}:([a-z]+);" _ "${LANG_EXTENSIONS}")
-	set(LANGEXT ${CMAKE_MATCH_1})
+	if(LANG STREQUAL "Java")
+		set(LANGEXT "java")
+	elseif(LANG STREQUAL "Objective-C")
+		set(LANGEXT "m")
+	elseif(LANG STREQUAL "C#")
+		set(LANGEXT "cs")
+	elseif(LANG STREQUAL "C")
+		set(LANGEXT "c")
+	else()
+		set(LANGEXT "cpp")
+	endif()
 	set(PRODUCT "${URL}.${LANGEXT}.xml")
-	execute_process(COMMAND srcml --language=${LANG} --output-xml ${CMAKE_CURRENT_SOURCE_DIR}/${BASE}
+	execute_process(COMMAND srcml --language=${LANG} --output-xml ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
 				    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
 	list(APPEND ALLGEN "${PRODUCT}")
 endmacro()
@@ -61,6 +68,48 @@ applyxslt(struct_cs.cs.xml union_cs.cs.xml "union" "struct2union.xsl")
 applyxslt(struct_c.c.xml union_c.c.xml "union" "struct2union.xsl")
 
 file(COPY constructor_base.cpp.xml DESTINATION constructor.cpp.xml)
+
+applyxslt(function.cpp.xml function_const.cpp.xml "const" "addconst.xsl")
+applyxslt(constructor.cpp.xml constructor_explicit.cpp.xml "constructor" "addexplicit.xsl")
+applyxslt(if.cpp.xml while.cpp.xml "while" "if2while.xsl")
+applyxslt(if.cpp.xml ifnestcond.cpp.xml "if" "nestcond.xsl")
+applyxslt(destructor.cpp.xml destructor_virtual.cpp.xml "destructor.virtual" "addvirtual.xsl")
+applyxslt(throw.cpp.xml throw_base.cpp.xml "throw" "insertexpr.xsl")
+applyxslt(class_java.java.xml interface_java.java.xml "interface" "class2interface.xsl")
+applyxslt(if.cpp.xml ifblock.cpp.xml "if.block" "if2ifblock.xsl")
+
+execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return ${CMAKE_CURRENT_BINARY_DIR}/return_base.cpp.xml
+			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/return.cpp.xml)
+
+applyxslt(function.cpp.xml function_decl.cpp.xml "function" "defn2decl.xsl")
+#applyxslt(function_asterisk.cpp.xml function_asterisk_decl.cpp.xml "function" "defn2decl.xsl")
+
+applyxslt(class_interface_m.m.xml class_implementation_m.m.xml "function" "interface2implementation.xsl")
+
+applyxslt(try.cpp.xml try_m.m.xml "try" "keyword2mkeyword.xsl")
+applyxslt(catch_form.cpp.xml catch_m.m.xml "catch" "keyword2mkeyword.xsl")
+
+applyxslt(finally_cs.cs.xml finally_java.java.xml "finally" "keyword2mkeyword.xsl")
+
+execute_process(COMMAND srcml --output-xml --set-language xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
+			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+
+# Java finally from C#
+execute_process(COMMAND srcml --language=Java --output-xml ${CMAKE_CURRENT_BINARY_DIR}/finally_cs.cs.xml
+				    -o ${CMAKE_CURRENT_BINARY_DIR}/finally_java.java.xml)
+
+# Objective-C try from C++
+applyxslt(try.cpp.xml try_m.m.xml "try" "keyword2mkeyword.xsl")
+
+# Objective-C catch from C++
+applyxslt(catch_form.cpp.xml catch_m.m.xml "catch" "keyword2mkeyword.xsl")
+
+# Objective-C finally from C++
+applyxslt(finally_cs.cs.xml finally_m.m.xml "finally" "keyword2mkeyword.xsl")
+
+# Objective-C throw from C++
+applyxslt(throw.cpp.xml throw_m.m.xml "throw" "keyword2mkeyword.xsl")
+applyxslt(throw_base.cpp.xml throw_base_m.m.xml "throw" "keyword2mkeyword.xsl")
 
 # keep track of all individual existing or created
 file(STRINGS suite.txt SUITE REGEX "LANGUAGE_")
@@ -142,7 +191,7 @@ foreach(GEN ${SUITE})
 	elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C_GEN")
 
 		# explicitly generated
-		list(APPEND ALLGEN "${URL}.c.xml")
+		list(APPEND ALLGEN "${URL}.m.xml")
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_OO")
 
