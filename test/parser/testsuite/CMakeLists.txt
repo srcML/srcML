@@ -18,6 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 option(FORCE_REBUILD OFF "Force a rebuild of all parser tests")
+option(ONEPASS OFF "One pass through any loop")
 
 message(STATUS "Generating Parser Testfiles:")
 
@@ -246,6 +247,9 @@ foreach(GEN ${SUITE})
 
 	endif()
 
+	if(ONEPASS)
+		break()
+	endif()
 endforeach()
 
 message(STATUS "  Generating context variations")
@@ -273,18 +277,32 @@ foreach(GENURL ${ALLGEN})
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
-			COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL}# -o ${URL}.preproc.${LANGEXT}.xml
-			COMMAND sed "s|</unit>||g"
+			COMMAND srcml --output-xml-inner ${GENURL}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-			OUTPUT_VARIABLE STUFF
+			OUTPUT_VARIABLE ALL_INNER
 		)
-	endif()
 
-	string(APPEND STUFF "</unit>")
-	file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml )
+		execute_process(
+			COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL}
+			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+			OUTPUT_VARIABLE ALLHEADER
+		)
+
+		message(${GENURL})
+		string(LENGTH "${ALLHEADER}" SIZE)
+		message("SIZE ${SIZE}")
+		math(EXPR NEWSIZE "${SIZE} - 8")
+		string(SUBSTRING "${ALLHEADER}" 0 ${NEWSIZE} ALLCONTENT)
+		file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml "${ALLCONTENT}" "${ALL_INNER}" "</unit>")
+
+	endif()
 
 	if(LANGEXT STREQUAL "java")
 		file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.preproc.java.xml)
+	endif()
+
+	if(ONEPASS)
+		break()
 	endif()
 
 endforeach()
