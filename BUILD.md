@@ -67,14 +67,13 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2017 or
 
 ## Packages
 
-* [Python 2.7.XX](https://www.python.org/downloads/)
 * [Java JRE/JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [CMake](http://www.cmake.org)
 * [Visual Studio 2017 or later](https://www.visualstudio.com/downloads/)
 * Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-06_20_18-VS2017.zip)
 
 ##### Instructions
-* Install Visual Studio 2017 or newer, CMake, and Python 2.7.XX
+* Install Visual Studio 2017 or newer, CMake
 * Locate the source code for srcML
 * Extract the zipped build dependencies
     * The extracted folder will be named deps, and its structure will look like the following:
@@ -101,7 +100,6 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2017 or
     ```
 * NOTES:
     * Building srcml should be done in a separate directory external to the source code to avoid issues
-    * If Python 2.7.XX is not in the windows PATH environment variable, you may need to provide CMake with the path to python.exe
 * Graphical Interface Build:
     * Open the CMake GUI program.
     * Browser for the srcML source code directory and your target build directory

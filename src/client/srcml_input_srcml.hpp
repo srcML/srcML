@@ -25,6 +25,7 @@
 #define SRCML_INPUT_SRCML_HPP
 
 #include <boost/optional.hpp>
+#include <srcml_cli.hpp>
 
 class ParseQueue;
 class srcml_input_src;
@@ -32,6 +33,7 @@ struct srcml_archive;
 
 int srcml_input_srcml(ParseQueue& queue,
 					   srcml_archive* srcml_output_archive,
+                       const srcml_request_t& srcml_request,
 					   const srcml_input_src& srcml_input_source,
                        const boost::optional<size_t> & revision);
 

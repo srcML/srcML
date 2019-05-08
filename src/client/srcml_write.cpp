@@ -31,6 +31,7 @@
 #include <SRCMLStatus.hpp>
 #include <stdio.h>
 #include <cstring>
+#include <ParserTest.hpp>
 
 // Public consumption thread function
 void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& /* destination */) {
@@ -46,6 +47,13 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             SRCMLstatus(WARNING_MSG, "srcml: Extension not supported %s", *(request->disk_filename));
         else
             SRCMLstatus(WARNING_MSG, "srcml: Extension not supported");
+
+        return;
+    }
+
+    if (option(SRCML_COMMAND_PARSER_TEST)) {
+
+        ParserTest::entry(request.get(), request->srcml_arch, request->unit);
 
         return;
     }
