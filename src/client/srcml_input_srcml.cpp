@@ -35,6 +35,7 @@
 
 int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
+                       const srcml_request_t& srcml_request,
                        const srcml_input_src& srcml_input,
                        const boost::optional<size_t> & revision) {
 
@@ -80,7 +81,8 @@ int srcml_input_srcml(ParseQueue& queue,
     }
 
     // move to the correct unit (if needed)
-    for (int i = 1; i < srcml_input.unit; ++i) {
+    // @todo Why isn't srcml_input.unit working?
+    for (int i = 1; i < option(SRCML_COMMAND_PARSER_TEST) ? srcml_request.unit : srcml_input.unit; ++i) {
         if (!srcml_archive_skip_unit(srcml_input_archive)) {
             SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_input.unit);
             exit(1);
@@ -93,14 +95,28 @@ int srcml_input_srcml(ParseQueue& queue,
     // process each entry in the input srcml archive
     while (srcml_unit* unit =  srcml_archive_read_unit(srcml_input_archive)) {
 
-//        srcml_unit_get_language(unit)
-
         unitFound = true;
+
+        // if in parser test mode, check if language specified
+        if (option(SRCML_COMMAND_PARSER_TEST)) {
+
+            std::string unit_language;
+            if (srcml_unit_get_language(unit))
+                unit_language = srcml_unit_get_language(unit);
+            if (srcml_request.att_language && srcml_request.att_language != unit_language) {
+                srcml_unit_free(unit);
+                break;
+            }
+        }
+
         // form the parsing request
         std::shared_ptr<ParseRequest> prequest(new ParseRequest);
         prequest->srcml_arch = srcml_output_archive;
         prequest->unit = unit;
         prequest->needsparsing = false;
+        prequest->filename = srcml_input.c_str();
+        if (srcml_archive_get_url(srcml_input_archive)) 
+            prequest->url = srcml_archive_get_url(srcml_input_archive);
 
         // if the archive has a language (set by the user) then use that
         // this is a way of converting language
@@ -111,7 +127,7 @@ int srcml_input_srcml(ParseQueue& queue,
         queue.schedule(prequest);
 
         // one-time through for individual unit
-        if (srcml_input.unit)
+        if (option(SRCML_COMMAND_PARSER_TEST) ? srcml_request.unit : srcml_input.unit)
             break;
     }
 

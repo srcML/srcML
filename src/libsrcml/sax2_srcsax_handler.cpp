@@ -117,7 +117,7 @@ static int reparse_root(void* ctx) {
     memset(&roottagsax, 0, sizeof(roottagsax));
     roottagsax.initialized    = XML_SAX2_MAGIC;
     xmlSetStructuredErrorFunc(ctx, [](void * userData, 
-                     xmlErrorPtr error) {
+                     xmlErrorPtr /* error */) {
 
         auto ctxt = (xmlParserCtxtPtr) userData;
         if (ctxt == nullptr)
@@ -128,8 +128,8 @@ static int reparse_root(void* ctx) {
 
         // @todo Find out real filename to insert in error message
         // @todo Figure out how to get where error is noted
-        fprintf(stderr, "srcml: %d:%d %d|%s", error->line, error->int2, error->code, error->message);
-        exit(1);
+        //fprintf(stderr, "srcml: %d:%d %d|%s", error->line, error->int2, error->code, error->message);
+       // exit(1);
     });
 
     roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
