@@ -21,12 +21,12 @@ LANGUAGE_ALL_BASE continue
 LANGUAGE_ALL_BASE ternary
 
 LANGUAGE_ALL_GEN while
-LANGUAGE_ALL_GEN ifnestcond 
-LANGUAGE_ALL_GEN return 
-LANGUAGE_ALL_GEN function_decl 
-LANGUAGE_ALL_GEN ifblock 
+LANGUAGE_ALL_GEN ifnestcond
+LANGUAGE_ALL_GEN return
+LANGUAGE_ALL_GEN function_decl
+LANGUAGE_ALL_GEN ifblock
 
-LANGUAGE_CXX_FAMILY constructor_explicit 
+LANGUAGE_CXX_FAMILY constructor_explicit
 LANGUAGE_CXX_FAMILY destructor_virtual
 LANGUAGE_CXX_FAMILY function_const
 LANGUAGE_CXX_FAMILY struct
@@ -68,7 +68,7 @@ LANGUAGE_C_ONLY function_decl_c
 LANGUAGE_C_ONLY operator_c
 
 LANGUAGE_CXX friend
-LANGUAGE_CXX namespace
+LANGUAGE_CXX_FAMILY namespace
 LANGUAGE_CXX template
 LANGUAGE_CXX typedef_template
 LANGUAGE_CXX constructor

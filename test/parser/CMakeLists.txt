@@ -19,19 +19,9 @@
 
 add_subdirectory(testsuite)
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/xsl)
-
-file(GLOB XSL ./xsl/*)
-foreach(xslfile ${XSL})
-    configure_file(${xslfile} xsl COPYONLY)
-endforeach()
-
-add_custom_target(gentest COMMAND cd testsuite && make -f Makefile.gen)
-add_custom_target(cleantest COMMAND cd testsuite && make -f Makefile.gen clean)
-
-# Collection of targets to manage parser testing and parser test reports
-#add_custom_target(run COMMAND time ./runtest.py DEPENDS gentest)
-#add_custom_target(c COMMAND time ./runtest.py C DEPENDS gentest)
-#add_custom_target(java COMMAND time ./runtest.py Java DEPENDS gentest)
-#add_custom_target(cpp COMMAND time ./runtest.py C++ DEPENDS gentest)
-#add_custom_target(cs COMMAND time ./runtest.py CS DEPENDS gentest)
+# Collection of targets to manage parser testing
+add_custom_target(run COMMAND time srcml --parser-test testsuite)
+add_custom_target(c COMMAND time srcml --parser-test --language="C" testsuite)
+add_custom_target(cpp COMMAND time srcml --parser-test --language="C++" testsuite)
+add_custom_target(java COMMAND time srcml --parser-test --language="Java" testsuite)
+add_custom_target(cs COMMAND time srcml --parser-test --language="C\#" testsuite)

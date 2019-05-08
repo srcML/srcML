@@ -11,7 +11,7 @@
     Inserts a struct around the contents in each unit
 -->
 
-<xsl:import href="copy.xsl"/>
+<xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit">
