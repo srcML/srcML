@@ -67,6 +67,9 @@ endmacro()
 macro(transform BASE PRODUCT URL XSLT)
 	execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
 			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+
+	# record product so that variation are generated
+	list(APPEND ALLGEN "${PRODUCT}")
 endmacro()
 
 # Generate special transformations
