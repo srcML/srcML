@@ -107,14 +107,14 @@ transform(function.cpp.xml function_decl.cpp.xml "function" "defn2decl.xsl")
 # Was in Makefile.gen, but cannot find the file
 #transform(function_asterisk.cpp.xml function_asterisk_decl.cpp.xml "function" "defn2decl.xsl")
 
-# C# special transformations
+# Objective-C special transformations
 transform(class_interface_m.m.xml class_implementation_m.m.xml "function" interface2implementation.xsl)
 transform(try.cpp.xml             try_m.m.xml                  "try"      keyword2mkeyword.xsl)
 transform(catch_form.cpp.xml      catch_m.m.xml                "catch"    keyword2mkeyword.xsl)
-transform(finally_cs.cs.xml       finally_java.java.xml        "finally"  keyword2mkeyword.xsl)
 
 # C# finally -> Java finally
-setlanguage("C#" "Java" "finally_cs" "cs")
+execute_process(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # Objective-C try, catch, finally, throw from C++
 transform(try.cpp.xml        try_m.m.xml        "try"     keyword2mkeyword.xsl)
@@ -273,8 +273,18 @@ foreach(GENURL ${ALLGEN})
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
+			COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL}# -o ${URL}.preproc.${LANGEXT}.xml
+			COMMAND sed "s|</unit>||g"
 			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+			OUTPUT_VARIABLE STUFF
 		)
+	endif()
+
+	string(APPEND STUFF "</unit>")
+	file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml )
+
+	if(LANGEXT STREQUAL "java")
+		file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.preproc.java.xml)
 	endif()
 
 endforeach()
