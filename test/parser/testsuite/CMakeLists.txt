@@ -17,22 +17,12 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-message(STATUS "Generate parser test cases")
+message(STATUS "Generating parser test cases")
 
 set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
-configure_file(Makefile.gen ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
-configure_file(suite.txt ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
-
 file(GLOB PARSE_TESTS *.xml)
-foreach(PARSE_TEST ${PARSE_TESTS})
-	configure_file(${PARSE_TEST} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
-endforeach()
-
-file(GLOB TEMPLATE_TESTS *.template)
-foreach(TEMPLATE_TEST ${TEMPLATE_TESTS})
-	configure_file(${TEMPLATE_TEST} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
-endforeach()
+file(COPY ${PARSE_TESTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 # all individual existing or generated so that variations (formfeed, etc.) can be built
 set(ALLGEN)
@@ -59,9 +49,10 @@ macro(setlanguage LANG URL BASEEXT)
 	string(REGEX REPLACE "_base" "" PRODURL "${URL}")
 	set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
 
-	if (${CMAKE_CURRENT_BINARY_DIR}/${BASE} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-		execute_process(COMMAND srcml --language=${LANG} --output-xml ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
-				    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+	if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+		execute_process(COMMAND srcml --language=${LANG} --output-xml ${BASE}
+				    OUTPUT_FILE ${PRODUCT}
+				    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 	endif()
 
 	# record product so that variation are generated
@@ -70,9 +61,10 @@ endmacro()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
 macro(transform BASE PRODUCT URL XSLT)
-	if (${CMAKE_CURRENT_BINARY_DIR}/${BASE} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-		execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
-		    		    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+	if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+		execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=url ${BASE}
+		    		    OUTPUT_FILE ${PRODUCT}
+		    		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 	endif()
 
 	# record product so that variation are generated
@@ -105,7 +97,7 @@ transform(destructor.cpp.xml destructor_virtual.cpp.xml "destructor.virtual" "ad
 transform(throw.cpp.xml throw_base.cpp.xml "throw" "insertexpr.xsl")
 transform(class_java.java.xml interface_java.java.xml "interface" "class2interface.xsl")
 transform(if.cpp.xml ifblock.cpp.xml "if.block" "if2ifblock.xsl")
-execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return ${CMAKE_CURRENT_BINARY_DIR}/return_base.cpp.xml
+execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return ${CMAKE_CURRENT_BINARY_DIR}/return_base.cpp.xml
 			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/return.cpp.xml)
 transform(function.cpp.xml function_decl.cpp.xml "function" "defn2decl.xsl")
 
@@ -113,53 +105,68 @@ transform(function.cpp.xml function_decl.cpp.xml "function" "defn2decl.xsl")
 #transform(function_asterisk.cpp.xml function_asterisk_decl.cpp.xml "function" "defn2decl.xsl")
 
 # C# special transformations
-transform(class_interface_m.m.xml class_implementation_m.m.xml "function" "interface2implementation.xsl")
-transform(try.cpp.xml try_m.m.xml "try" "keyword2mkeyword.xsl")
-transform(catch_form.cpp.xml catch_m.m.xml "catch" "keyword2mkeyword.xsl")
-transform(finally_cs.cs.xml finally_java.java.xml "finally" "keyword2mkeyword.xsl")
+transform(class_interface_m.m.xml class_implementation_m.m.xml "function" interface2implementation.xsl)
+transform(try.cpp.xml             try_m.m.xml                  "try"      keyword2mkeyword.xsl)
+transform(catch_form.cpp.xml      catch_m.m.xml                "catch"    keyword2mkeyword.xsl)
+transform(finally_cs.cs.xml       finally_java.java.xml        "finally"  keyword2mkeyword.xsl)
 
-#execute_process(COMMAND srcml --output-xml --set-language xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
+#execute_process(COMMAND srcml --output-xml --set-language xslt ${XSLT_DIR}/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
 #			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
 
 # C# finally -> Java finally
-execute_process(COMMAND srcml --language=Java --output-xml ${CMAKE_CURRENT_BINARY_DIR}/finally_cs.cs.xml
-				    -o ${CMAKE_CURRENT_BINARY_DIR}/finally_java.java.xml)
+execute_process(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
+				WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # Objective-C try, catch, finally, throw from C++
-transform(try.cpp.xml try_m.m.xml "try" "keyword2mkeyword.xsl")
-transform(catch_form.cpp.xml catch_m.m.xml "catch" "keyword2mkeyword.xsl")
-transform(finally_cs.cs.xml finally_m.m.xml "finally" "keyword2mkeyword.xsl")
-transform(throw.cpp.xml throw_m.m.xml "throw" "keyword2mkeyword.xsl")
-transform(throw_base.cpp.xml throw_base_m.m.xml "throw" "keyword2mkeyword.xsl")
-transform(synthesize_m.m.xml dynamic_m.m.xml "dynamic" "synthesize2dynamic.xsl")
+transform(try.cpp.xml        try_m.m.xml        "try"     keyword2mkeyword.xsl)
+transform(catch_form.cpp.xml catch_m.m.xml      "catch"   keyword2mkeyword.xsl)
+transform(finally_cs.cs.xml  finally_m.m.xml    "finally" keyword2mkeyword.xsl)
+transform(throw.cpp.xml      throw_m.m.xml      "throw"   keyword2mkeyword.xsl)
+transform(throw_base.cpp.xml throw_base_m.m.xml "throw"   keyword2mkeyword.xsl)
+transform(synthesize_m.m.xml dynamic_m.m.xml    "dynamic" synthesize2dynamic.xsl)
 
-execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_header.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_enum.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_specifier.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_call.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_footer.template
-			    COMMAND srcml --output-xml --url="c_cpp_mode.restrict" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="restrict" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.restrict.cpp.xml
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.restrict.cpp.xml)
+	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_enum.template c_cpp_mode_specifier.template c_cpp_mode_call.template c_cpp_mode_footer.template
+			    	COMMAND srcml --output-xml --url="c_cpp_mode.restrict" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="restrict" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.restrict.cpp.xml
+			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
+endif()
 list(APPEND ALLGEN "c_cpp_mode.restrict.cpp.xml")
 
-execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_header.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_enum.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_specifier.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_call.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_footer.template
-			    COMMAND srcml --output-xml --url="c_cpp_mode.mutable" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="mutable" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.mutable.cpp.xml
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.mutable.cpp.xml)
+	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_enum.template c_cpp_mode_specifier.template c_cpp_mode_call.template c_cpp_mode_footer.template
+			    	COMMAND srcml --output-xml --url="c_cpp_mode.mutable" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="mutable" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.mutable.cpp.xml
+			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
+endif()
 list(APPEND ALLGEN "c_cpp_mode.mutable.cpp.xml")
 
-execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_header.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_simple_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_single.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_enum.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_call.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_footer.template
-			    COMMAND srcml --output-xml --url="c_cpp_mode.try" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="try" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.try.cpp.xml
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.try.cpp.xml)
+	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_simple_decl.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_enum.template c_cpp_mode_call.template c_cpp_mode_footer.template
+			    	COMMAND srcml --output-xml --url="c_cpp_mode.try" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="try" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.try.cpp.xml
+			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
+endif()
 list(APPEND ALLGEN "c_cpp_mode.try.cpp.xml")
 
-execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_header.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_simple_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_single.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_enum.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_footer.template
-			    COMMAND srcml --output-xml --url="c_cpp_mode.catch" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="catch" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.catch.cpp.xml
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.catch.cpp.xml)
+	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_simple_decl.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_enum.template c_cpp_mode_footer.template
+			    	COMMAND srcml --output-xml --url="c_cpp_mode.catch" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="catch" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.catch.cpp.xml
+			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
+endif()
 list(APPEND ALLGEN "c_cpp_mode.catch.cpp.xml")
 
-execute_process(COMMAND cat ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_header.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_basic.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_decl.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_single.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_call.template ${CMAKE_CURRENT_SOURCE_DIR}/c_cpp_mode_footer.template
-			    COMMAND srcml --output-xml --url="c_cpp_mode.class" --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/rename.xsl --xslt-param=new_name="class" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.class.cpp.xml
+if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.class.cpp.xml)
+	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_call.template c_cpp_mode_footer.template
+			    	COMMAND srcml --output-xml --url="c_cpp_mode.class" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="class" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.class.cpp.xml
+			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
+endif()
 list(APPEND ALLGEN "c_cpp_mode.class.cpp.xml")
 
 # Process all tests in suite.txt according to their categories
-file(STRINGS suite.txt SUITE REGEX "LANGUAGE_")
+file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/suite.txt SUITE REGEX "LANGUAGE_")
 foreach(GEN ${SUITE})
 
 	# split into category and url
@@ -266,7 +273,7 @@ foreach(GENURL ${ALLGEN})
 	set(LANGEXT "${CMAKE_MATCH_2}")
 
 	# Generate "formfeed" "comment" "block" "struct" "ifthenelse" in parallel
-	if (${CMAKE_CURRENT_BINARY_DIR}/${GENURL} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${URL}.formfeed.${LANGEXT}.xml)
+	if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.formfeed.${LANGEXT}.xml)
 		execute_process(
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
