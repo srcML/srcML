@@ -62,7 +62,7 @@ endmacro()
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
 macro(transform BASE PRODUCT URL XSLT)
 	if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-		execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=url ${BASE}
+		execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=${URL} ${BASE}
 		    		    OUTPUT_FILE ${PRODUCT}
 		    		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 	endif()
