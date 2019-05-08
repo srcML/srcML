@@ -18,7 +18,7 @@
 </xsl:text><cpp:define>#<cpp:directive>define</cpp:directive></cpp:define><xsl:text>
 </xsl:text></xsl:variable> 
 
-<xsl:template match="src:comment | src:literal | cpp:*">
+<xsl:template match="src:name | src:comment | src:literal | cpp:*">
   <xsl:copy-of select="."/>
 </xsl:template>
 
