@@ -17,7 +17,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-message(STATUS "Generating parser test cases")
+message(STATUS "Generating parser test cases...")
 
 set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
@@ -286,3 +286,7 @@ foreach(GENURL ${ALLGEN})
 	endif()
 
 endforeach()
+
+file(GLOB TEST_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.xml)
+list(LENGTH TEST_FILES LEN)
+message(STATUS "Parser test files installed: ${LEN}")
