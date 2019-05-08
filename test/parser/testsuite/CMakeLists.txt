@@ -19,7 +19,7 @@
 
 option(FORCE_REBUILD OFF "Force a rebuild of all parser tests")
 
-message(STATUS "Generating parser test cases:")
+message(STATUS "Generating parser test files:")
 
 set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
@@ -284,4 +284,4 @@ message(STATUS "  Generated insertions")
 
 file(GLOB TEST_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.xml)
 list(LENGTH TEST_FILES LEN)
-message(STATUS "Parser test files installed: ${LEN}")
+message(STATUS "  Installed Parser Test files: ${LEN}")
