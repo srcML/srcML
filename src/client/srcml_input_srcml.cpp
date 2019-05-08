@@ -82,7 +82,7 @@ int srcml_input_srcml(ParseQueue& queue,
 
     // move to the correct unit (if needed)
     // @todo Why isn't srcml_input.unit working?
-    for (int i = 1; i < option(SRCML_COMMAND_PARSER_TEST) ? srcml_request.unit : srcml_input.unit; ++i) {
+    for (int i = 1; i < (option(SRCML_COMMAND_PARSER_TEST) ? srcml_request.unit : srcml_input.unit); ++i) {
         if (!srcml_archive_skip_unit(srcml_input_archive)) {
             SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_input.unit);
             exit(1);
