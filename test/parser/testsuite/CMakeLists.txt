@@ -19,6 +19,8 @@
 
 message(STATUS "Generate parser test cases")
 
+set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
+
 configure_file(Makefile.gen ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 configure_file(suite.txt ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
@@ -260,24 +262,20 @@ endforeach()
 foreach(GENURL ${ALLGEN})
 
 	string(REGEX MATCH "([a-z_]+)\.([a-z_]+)\.xml" _ "${GENURL}")
+	set(URL "${CMAKE_MATCH_1}")
+	set(LANGEXT "${CMAKE_MATCH_2}")
 
-	foreach(XSLTYPE "formfeed" "comment" "block" "struct" "ifthenelse")
-		set(PRODUCT "${CMAKE_MATCH_1}.${XSLTYPE}.${CMAKE_MATCH_2}.xml")
-		if (${CMAKE_CURRENT_BINARY_DIR}/${GENURL} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-			execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insert${XSLTYPE}.xsl --url=${CMAKE_MATCH_1}.formfeed ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
-			   			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-		endif()
-	endforeach()
-
-	foreach(XSLTYPE "preproc")
-		if(CMAKE_MATCH_1 STREQUAL "cpp_import_m")
-			continue()
-		endif()
-		set(PRODUCT "${CMAKE_MATCH_1}.${XSLTYPE}.${CMAKE_MATCH_2}.xml")
-		if (${CMAKE_CURRENT_BINARY_DIR}/${GENURL} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-			execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insert${XSLTYPE}.xsl --url=${CMAKE_MATCH_1}.formfeed ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
-		    			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-		endif()
-	endforeach()
+	# Generate "formfeed" "comment" "block" "struct" "ifthenelse" in parallel
+	if (${CMAKE_CURRENT_BINARY_DIR}/${GENURL} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${URL}.formfeed.${LANGEXT}.xml)
+		execute_process(
+			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
+			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
+			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
+			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
+			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
+			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
+			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+		)
+	endif()
 
 endforeach()
