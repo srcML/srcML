@@ -56,8 +56,11 @@ macro(setlanguage LANG URL BASEEXT)
 	# strip _base from URL
 	string(REGEX REPLACE "_base" "" PRODURL "${URL}")
 	set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
-	execute_process(COMMAND srcml --language=${LANG} --output-xml ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
+
+	if (${CMAKE_CURRENT_BINARY_DIR}/${BASE} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+		execute_process(COMMAND srcml --language=${LANG} --output-xml ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
 				    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+	endif()
 
 	# record product so that variation are generated
 	list(APPEND ALLGEN "${PRODUCT}")
@@ -65,8 +68,10 @@ endmacro()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
 macro(transform BASE PRODUCT URL XSLT)
-	execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
-			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+	if (${CMAKE_CURRENT_BINARY_DIR}/${BASE} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+		execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
+		    		    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+	endif()
 
 	# record product so that variation are generated
 	list(APPEND ALLGEN "${PRODUCT}")
@@ -256,10 +261,23 @@ foreach(GENURL ${ALLGEN})
 
 	string(REGEX MATCH "([a-z_]+)\.([a-z_]+)\.xml" _ "${GENURL}")
 
-	foreach(XSLTYPE "formfeed" "comment" "block" "preproc" "struct" "ifthenelse")
+	foreach(XSLTYPE "formfeed" "comment" "block" "struct" "ifthenelse")
 		set(PRODUCT "${CMAKE_MATCH_1}.${XSLTYPE}.${CMAKE_MATCH_2}.xml")
-		execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insert${XSLTYPE}.xsl --url=${CMAKE_MATCH_1}.formfeed ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
-				    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+		if (${CMAKE_CURRENT_BINARY_DIR}/${GENURL} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+			execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insert${XSLTYPE}.xsl --url=${CMAKE_MATCH_1}.formfeed ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
+			   			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+		endif()
+	endforeach()
+
+	foreach(XSLTYPE "preproc")
+		if(CMAKE_MATCH_1 STREQUAL "cpp_import_m")
+			continue()
+		endif()
+		set(PRODUCT "${CMAKE_MATCH_1}.${XSLTYPE}.${CMAKE_MATCH_2}.xml")
+		if (${CMAKE_CURRENT_BINARY_DIR}/${GENURL} IS_NEWER_THAN ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+			execute_process(COMMAND srcml --output-xml --xslt ${CMAKE_CURRENT_SOURCE_DIR}/../xsl/insert${XSLTYPE}.xsl --url=${CMAKE_MATCH_1}.formfeed ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
+		    			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+		endif()
 	endforeach()
 
 endforeach()
