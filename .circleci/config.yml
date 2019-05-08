@@ -12,5 +12,4 @@ jobs:
         - run: cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
         - run: cd build && make && make install && ldconfig
         - run: ln -s build/bin bin
-        - run: cd test/parser/testsuite && make -f Makefile.gen
         - run: cd test/parser && srcml --parser-test testsuite
