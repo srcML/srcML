@@ -15,7 +15,7 @@
 
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit">
-<xsl:copy><xsl:copy-of select="@*"/>
+<xsl:copy>
 <struct>struct <name>S</name> <block>{<public type="default"><xsl:copy-of select="*|text()"/></public>}</block>;</struct>
 </xsl:copy>
 </xsl:template>
