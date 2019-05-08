@@ -175,6 +175,9 @@ foreach(GEN ${SUITE})
 
 		# explicitly generated
 		list(APPEND ALLGEN "${URL}.cpp.xml")
+		foreach(LANG "Java" "C#" "Objective-C" "C")
+			setlanguage("${LANG}" "${URL}" "cpp")
+		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP")
 
@@ -206,8 +209,8 @@ foreach(GEN ${SUITE})
 	elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
 		list(APPEND ALLGEN "${URL}.cpp.xml")
-		foreach(LANG "C#" "C++" "Objective-C")
-			setlanguage("${LANG}" "${URL}" "c")
+		foreach(LANG "C#" "C" "Objective-C")
+			setlanguage("${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_C_ONLY")
