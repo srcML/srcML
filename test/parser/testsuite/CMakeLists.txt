@@ -269,7 +269,8 @@ foreach(GENURL ${ALLGEN})
 		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.block.${LANGEXT}.xml OR
 		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.struct.${LANGEXT}.xml OR
 		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.ifthenelse.${LANGEXT}.xml OR
-		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.preproc.${LANGEXT}.xml)
+		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.preproc.${LANGEXT}.xml OR
+		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml)
 		execute_process(
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
@@ -277,18 +278,18 @@ foreach(GENURL ${ALLGEN})
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
-			COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.preproc.${LANGEXT}.template
+			COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
 			COMMAND srcml --output-xml-inner ${GENURL}
 			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 			OUTPUT_VARIABLE ALL_INNER
 		)
 
-		file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.preproc.${LANGEXT}.template ALLHEADER)
+		file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template ALLHEADER)
 		string(LENGTH "${ALLHEADER}" SIZE)
 		math(EXPR NEWSIZE "${SIZE} - 8")
 		string(SUBSTRING "${ALLHEADER}" 0 ${NEWSIZE} ALLCONTENT)
 		file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml "${ALLCONTENT}" "${ALL_INNER}" "</unit>")
-		file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.preproc.${LANGEXT}.template)
+		file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template)
 
 	endif()
 
