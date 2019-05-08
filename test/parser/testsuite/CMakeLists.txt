@@ -19,18 +19,17 @@
 
 option(FORCE_REBUILD OFF "Force a rebuild of all parser tests")
 
-message(STATUS "Generating parser test files:")
+message(STATUS "Generating Parser Testfiles:")
 
 set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
 file(GLOB PARSE_TESTS *.xml)
 file(COPY ${PARSE_TESTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
-# all individual existing or generated so that variations (formfeed, etc.) can be built
 set(ALLGEN)
 
 # Sets the language of the result
-macro(setlanguage LANG URL BASEEXT)
+macro(setlanguage INLANG LANG URL BASEEXT)
 	# convert from language to extension
 	if(LANG STREQUAL "Java")
 		set(LANGEXT "java")
@@ -52,9 +51,9 @@ macro(setlanguage LANG URL BASEEXT)
 	set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
 
 	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-		execute_process(COMMAND srcml --language=${LANG} --output-xml ${BASE}
-				    OUTPUT_FILE ${PRODUCT}
-				    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+		file(READ ${CMAKE_CURRENT_BINARY_DIR}/${BASE} IN_CONTENTS)
+		string(REPLACE "language=\"${INLANG}\"" "language=\"${LANG}\"" CONTENTS "${IN_CONTENTS}")
+		file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT} "${CONTENTS}")
 	endif()
 
 	# record product so that variation are generated
@@ -74,6 +73,7 @@ macro(transform BASE PRODUCT URL XSLT)
 endmacro()
 
 # Generate special transformations
+message(STATUS "  Generating transformations")
 
 # class -> struct
 transform(class.cpp.xml struct.cpp.xml "struct" "class2struct.xsl")
@@ -127,7 +127,7 @@ transform(throw.cpp.xml      throw_m.m.xml      "throw"   keyword2mkeyword.xsl)
 transform(throw_base.cpp.xml throw_base_m.m.xml "throw"   keyword2mkeyword.xsl)
 transform(synthesize_m.m.xml dynamic_m.m.xml    "dynamic" synthesize2dynamic.xsl)
 
-message(STATUS "  Generated transformations")
+message(STATUS "  Generating from templates")
 
 # Template-based C in C++ mode
 function(template OUT_FILE NAME IN_FILES)
@@ -149,7 +149,7 @@ template(c_cpp_mode.try.cpp.xml      try      "c_cpp_mode_header.template;c_cpp_
 template(c_cpp_mode.catch.cpp.xml    catch    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_footer.template")
 template(c_cpp_mode.class.cpp.xml    class    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
 
-message(STATUS "  Generated from templates")
+message(STATUS "  Generating language variations")
 
 # Process all tests in suite.txt according to their categories
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/suite.txt SUITE REGEX "LANGUAGE_")
@@ -166,7 +166,7 @@ foreach(GEN ${SUITE})
 		# base is C++, so these just get added
 		list(APPEND ALLGEN "${URL}.cpp.xml")
 		foreach(LANG "Java" "C#" "Objective-C" "C")
-			setlanguage("${LANG}" "${URL}" "cpp")
+			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_ALL_GEN")
@@ -174,7 +174,7 @@ foreach(GEN ${SUITE})
 		# explicitly generated
 		list(APPEND ALLGEN "${URL}.cpp.xml")
 		foreach(LANG "Java" "C#" "Objective-C" "C")
-			setlanguage("${LANG}" "${URL}" "cpp")
+			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP")
@@ -196,7 +196,7 @@ foreach(GEN ${SUITE})
 
 		list(APPEND ALLGEN "${URL}.cpp.xml")
 		foreach(LANG "C#")
-			setlanguage("${LANG}" "${URL}" "cpp")
+			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
@@ -208,7 +208,7 @@ foreach(GEN ${SUITE})
 
 		list(APPEND ALLGEN "${URL}.cpp.xml")
 		foreach(LANG "C#" "C" "Objective-C")
-			setlanguage("${LANG}" "${URL}" "cpp")
+			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_C_ONLY")
@@ -216,7 +216,7 @@ foreach(GEN ${SUITE})
 		# exist, just add to list
 		list(APPEND ALLGEN "${URL}.c.xml")
 		foreach(LANG "Objective-C")
-			setlanguage("${LANG}" "${URL}" "c")
+			setlanguage("C" "${LANG}" "${URL}" "c")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_JAVA")
@@ -244,14 +244,14 @@ foreach(GEN ${SUITE})
 		# base is C++, so these just get added
 		list(APPEND ALLGEN "${URL}.cpp.xml")
 		foreach(LANG "C#" "Java")
-			setlanguage("${LANG}" "${URL}" "cpp")
+			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	endif()
 
 endforeach()
 
-message(STATUS "  Generated language variations")
+message(STATUS "  Generating insertions")
 
 # Generate variations: formfeed, comment, block, etc.
 foreach(GENURL ${ALLGEN})
@@ -279,8 +279,6 @@ foreach(GENURL ${ALLGEN})
 	endif()
 
 endforeach()
-
-message(STATUS "  Generated insertions")
 
 file(GLOB TEST_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.xml)
 list(LENGTH TEST_FILES LEN)
