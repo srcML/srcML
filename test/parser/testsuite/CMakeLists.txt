@@ -30,6 +30,7 @@ set(ALLGEN)
 
 # Sets the language of the result
 macro(setlanguage INLANG LANG URL BASEEXT)
+
 	# convert from language to extension
 	if(LANG STREQUAL "Java")
 		set(LANGEXT "java")
@@ -112,12 +113,8 @@ transform(try.cpp.xml             try_m.m.xml                  "try"      keywor
 transform(catch_form.cpp.xml      catch_m.m.xml                "catch"    keyword2mkeyword.xsl)
 transform(finally_cs.cs.xml       finally_java.java.xml        "finally"  keyword2mkeyword.xsl)
 
-#execute_process(COMMAND srcml --output-xml --set-language xslt ${XSLT_DIR}/${XSLT} --url=url ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
-#			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-
 # C# finally -> Java finally
-execute_process(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
-				WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+setlanguage("C#" "Java" "finally_cs" "cs")
 
 # Objective-C try, catch, finally, throw from C++
 transform(try.cpp.xml        try_m.m.xml        "try"     keyword2mkeyword.xsl)
@@ -251,7 +248,9 @@ foreach(GEN ${SUITE})
 
 endforeach()
 
-message(STATUS "  Generating insertions")
+message(STATUS "  Generating context variations")
+
+set(COMMANDS)
 
 # Generate variations: formfeed, comment, block, etc.
 foreach(GENURL ${ALLGEN})
