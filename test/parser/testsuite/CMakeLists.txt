@@ -17,7 +17,9 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-message(STATUS "Generating parser test cases...")
+option(FORCE_REBUILD OFF "Force a rebuild of all parser tests")
+
+message(STATUS "Generating parser test cases:")
 
 set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
@@ -49,7 +51,7 @@ macro(setlanguage LANG URL BASEEXT)
 	string(REGEX REPLACE "_base" "" PRODURL "${URL}")
 	set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
 
-	if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
 		execute_process(COMMAND srcml --language=${LANG} --output-xml ${BASE}
 				    OUTPUT_FILE ${PRODUCT}
 				    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
@@ -61,7 +63,7 @@ endmacro()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
 macro(transform BASE PRODUCT URL XSLT)
-	if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
 		execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=${URL} ${BASE}
 		    		    OUTPUT_FILE ${PRODUCT}
 		    		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
@@ -125,45 +127,29 @@ transform(throw.cpp.xml      throw_m.m.xml      "throw"   keyword2mkeyword.xsl)
 transform(throw_base.cpp.xml throw_base_m.m.xml "throw"   keyword2mkeyword.xsl)
 transform(synthesize_m.m.xml dynamic_m.m.xml    "dynamic" synthesize2dynamic.xsl)
 
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.restrict.cpp.xml)
-	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_enum.template c_cpp_mode_specifier.template c_cpp_mode_call.template c_cpp_mode_footer.template
-			    	COMMAND srcml --output-xml --url="c_cpp_mode.restrict" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="restrict" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.restrict.cpp.xml
-			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-endif()
-list(APPEND ALLGEN "c_cpp_mode.restrict.cpp.xml")
+message(STATUS "  Generated transformations")
 
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.mutable.cpp.xml)
-	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_enum.template c_cpp_mode_specifier.template c_cpp_mode_call.template c_cpp_mode_footer.template
-			    	COMMAND srcml --output-xml --url="c_cpp_mode.mutable" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="mutable" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.mutable.cpp.xml
-			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-endif()
-list(APPEND ALLGEN "c_cpp_mode.mutable.cpp.xml")
+# Template-based C in C++ mode
+function(template OUT_FILE NAME IN_FILES)
+	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE})
+		list(TRANSFORM IN_FILES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
+		foreach(FILE ${IN_FILES})
+			file(READ ${FILE} S)
+			set(RAW_CONTENTS "${RAW_CONTENTS}${S}")
+		endforeach()
+		string(CONFIGURE "${RAW_CONTENTS}" CONTENTS)
+		file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/${OUT_FILE} "${CONTENTS}")
+	endif()
+	list(APPEND ALLGEN "${OUT_FILE}")
+endfunction()
 
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.try.cpp.xml)
-	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_simple_decl.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_enum.template c_cpp_mode_call.template c_cpp_mode_footer.template
-			    	COMMAND srcml --output-xml --url="c_cpp_mode.try" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="try" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.try.cpp.xml
-			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-endif()
-list(APPEND ALLGEN "c_cpp_mode.try.cpp.xml")
+template(c_cpp_mode.restrict.cpp.xml restrict "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+template(c_cpp_mode.mutable.cpp.xml  mutable  "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+template(c_cpp_mode.try.cpp.xml      try      "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+template(c_cpp_mode.catch.cpp.xml    catch    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_footer.template")
+template(c_cpp_mode.class.cpp.xml    class    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
 
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.catch.cpp.xml)
-	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_simple_decl.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_enum.template c_cpp_mode_footer.template
-			    	COMMAND srcml --output-xml --url="c_cpp_mode.catch" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="catch" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.catch.cpp.xml
-			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-endif()
-list(APPEND ALLGEN "c_cpp_mode.catch.cpp.xml")
-
-if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.class.cpp.xml)
-	execute_process(COMMAND cat c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_call.template c_cpp_mode_footer.template
-			    	COMMAND srcml --output-xml --url="c_cpp_mode.class" --xslt ${XSLT_DIR}/rename.xsl --xslt-param=new_name="class" -o ${CMAKE_CURRENT_BINARY_DIR}/c_cpp_mode.class.cpp.xml
-			    	WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-endif()
-list(APPEND ALLGEN "c_cpp_mode.class.cpp.xml")
+message(STATUS "  Generated from templates")
 
 # Process all tests in suite.txt according to their categories
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/suite.txt SUITE REGEX "LANGUAGE_")
@@ -265,6 +251,8 @@ foreach(GEN ${SUITE})
 
 endforeach()
 
+message(STATUS "  Generated language variations")
+
 # Generate variations: formfeed, comment, block, etc.
 foreach(GENURL ${ALLGEN})
 
@@ -273,7 +261,12 @@ foreach(GENURL ${ALLGEN})
 	set(LANGEXT "${CMAKE_MATCH_2}")
 
 	# Generate "formfeed" "comment" "block" "struct" "ifthenelse" in parallel
-	if (NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.formfeed.${LANGEXT}.xml)
+	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.formfeed.${LANGEXT}.xml OR
+		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.comment.${LANGEXT}.xml OR
+		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.block.${LANGEXT}.xml OR
+		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.struct.${LANGEXT}.xml OR
+		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.ifthenelse.${LANGEXT}.xml OR
+		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.preproc.${LANGEXT}.xml)
 		execute_process(
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
 			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
@@ -286,6 +279,8 @@ foreach(GENURL ${ALLGEN})
 	endif()
 
 endforeach()
+
+message(STATUS "  Generated insertions")
 
 file(GLOB TEST_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.xml)
 list(LENGTH TEST_FILES LEN)
