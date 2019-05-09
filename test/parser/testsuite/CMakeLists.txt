@@ -85,7 +85,6 @@ transform(class_cs.cs.xml struct_cs.cs.xml "struct" "class2struct.xsl")
 # struct -> union
 transform(struct.cpp.xml union.cpp.xml "union" "struct2union.xsl")
 transform(struct_cpp.cpp.xml union_cpp.cpp.xml "union" "struct2union.xsl")
-transform(struct_cs.cs.xml union_cs.cs.xml "union" "struct2union.xsl")
 transform(struct_c.c.xml union_c.c.xml "union" "struct2union.xsl")
 
 configure_file(constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
@@ -205,7 +204,14 @@ foreach(GEN ${SUITE})
 	elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
 		list(APPEND ALLGEN "${URL}.cpp.xml")
-		foreach(LANG "C#" "C" "Objective-C")
+		foreach(LANG "C" "C#" "Objective-C")
+			setlanguage("C++" "${LANG}" "${URL}" "cpp")
+		endforeach()
+
+	elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY_NO_SHARP")
+
+		list(APPEND ALLGEN "${URL}.cpp.xml")
+		foreach(LANG "C" "Objective-C")
 			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
 
