@@ -135,13 +135,15 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
             std::reverse(ssout.begin(), ssout.end());
         }
 
-        std::string errreport = unit_language;
+        std::string errreport = "\033[0;30;1m";
+        errreport += unit_language;
         errreport += '\t';
         errreport += url;
         errreport += '\t';
         errreport += previous_filename;
         errreport += '\t';
         errreport += std::to_string(count);
+        errreport += "\033[0m";
         errreport += '\n';
         errreport += "\033[0;30;1m";
         errreport += "test:\n";
