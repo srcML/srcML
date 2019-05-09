@@ -36,4 +36,3 @@ add_custom_target(CSHARP COMMENT "Runs all C language parser test cases"
                          COMMAND time srcml --parser-test --language="C\#"  ${TESTSUITE} VERBATIM)
 
 add_subdirectory(testsuite)
-
