@@ -52,7 +52,7 @@ void input_stdin(srcml_request_t& request) {
 
         // copy the rest of the input source
         char buf[512];
-        ssize_t size = 0;
+        size_t size = 0;
         do {
             size = read(*input_sources[0].fd, buf, 512);
             if (size > 0)

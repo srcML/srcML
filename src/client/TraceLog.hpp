@@ -33,11 +33,11 @@ public:
     friend TraceLog& operator<<(TraceLog& tlog, char c);
     friend TraceLog& operator<<(TraceLog& tlog, const std::string& s);
 
-    inline void totalLOC(long floc) {
+    inline void totalLOC(size_t floc) {
     	loc += floc;
     }
 
-    inline static long totalLOC() {
+    inline static size_t totalLOC() {
     	return loc;
     }
 
@@ -48,7 +48,7 @@ private:
     int count = 0;
     int num_skipped = 0;
     int num_error = 0;
-    static long loc;
+    static size_t loc;
 };
 
 #endif
