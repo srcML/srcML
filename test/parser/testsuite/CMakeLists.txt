@@ -264,25 +264,34 @@ foreach(GENURL ${ALLGEN})
 	set(LANGEXT "${CMAKE_MATCH_2}")
 
 	# Generate "formfeed" "comment" "block" "struct" "ifthenelse" in parallel
-	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.formfeed.${LANGEXT}.xml OR
-		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.comment.${LANGEXT}.xml OR
-		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.block.${LANGEXT}.xml OR
-		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.struct.${LANGEXT}.xml OR
-		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.ifthenelse.${LANGEXT}.xml OR
-		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.preproc.${LANGEXT}.xml OR
-		NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml)
-		execute_process(
-			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
-			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
-			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
-			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
-			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
-			COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
-			COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
-			COMMAND srcml --output-xml-inner ${GENURL}
-			WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-			OUTPUT_VARIABLE ALL_INNER
-		)
+	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.formfeed.${LANGEXT}.xml)
+		if(LANGEXT STREQUAL "java")
+			execute_process(
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
+#				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
+#				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
+				COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
+				COMMAND srcml --output-xml-inner ${GENURL}
+				WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+				OUTPUT_VARIABLE ALL_INNER
+			)
+		else()
+			execute_process(
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
+				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
+				COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
+				COMMAND srcml --output-xml-inner ${GENURL}
+				WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+				OUTPUT_VARIABLE ALL_INNER
+			)
+		endif()
 
 		file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template ALLHEADER)
 		string(LENGTH "${ALLHEADER}" SIZE)
@@ -291,10 +300,6 @@ foreach(GENURL ${ALLGEN})
 		file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml "${ALLCONTENT}" "${ALL_INNER}" "</unit>")
 		file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template)
 
-	endif()
-
-	if(LANGEXT STREQUAL "java")
-		file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.preproc.java.xml)
 	endif()
 
 	if(ONEPASS)
