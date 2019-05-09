@@ -30,6 +30,7 @@
 #include <ParserTest.hpp>
 #include <sstream>
 #include <cstring>
+#include <algorithm>
 
 #define str2arg(s) s, strlen(s)
 
@@ -95,6 +96,45 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         ++failed;
         ++misses[unit_language];
 
+        std::string sxml = xml;
+        std::string ssout = sout;
+
+        const int CUTOFF = 5;
+        if (std::count(sxml.begin(), sxml.end(), '\n') > CUTOFF ||
+            std::count(ssout.begin(), ssout.end(), '\n') > CUTOFF) {
+
+            // find where the strings are different
+            auto off = std::mismatch(sxml.begin(), sxml.end(), ssout.begin());
+            while (off.first != sxml.begin() && *off.first != '\n') {
+                off.first = std::prev(off.first);
+                off.second = std::prev(off.second);
+            }
+            if (*off.first == '\n') {
+                off.first = std::next(off.first);
+                off.second = std::next(off.second);
+            }
+            sxml.erase(sxml.begin(), off.first);
+            ssout.erase(ssout.begin(), off.second);
+
+            std::reverse(sxml.begin(), sxml.end());
+            std::reverse(ssout.begin(), ssout.end());
+
+            off = std::mismatch(sxml.begin(), sxml.end(), ssout.begin());
+            while (off.first != sxml.begin() && *off.first != '\n') {
+                off.first = std::prev(off.first);
+                off.second = std::prev(off.second);
+            }
+            if (*off.first == '\n') {
+                off.first = std::next(off.first);
+                off.second = std::next(off.second);
+            }
+            sxml.erase(sxml.begin(), off.first);
+            ssout.erase(ssout.begin(), off.second);
+
+            std::reverse(sxml.begin(), sxml.end());
+            std::reverse(ssout.begin(), ssout.end());
+        }
+
         std::string errreport = unit_language;
         errreport += '\t';
         errreport += url;
@@ -106,13 +146,13 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         errreport += "\033[0;30;1m";
         errreport += "test:\n";
         errreport += "\033[0m";
-        errreport += xml;
+        errreport += sxml;
         errreport += "\033[0;30;1m";
         if (xml[strlen(xml) - 1] != '\n')
             errreport += '\n';
         errreport += "srcml:\n";
         errreport += "\033[0m";
-        errreport += sout;
+        errreport += ssout;
         errreport += '\n';
         errors.push_back(errreport);
 
