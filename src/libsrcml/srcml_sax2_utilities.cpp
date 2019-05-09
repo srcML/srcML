@@ -29,10 +29,6 @@
 #include <libexslt/exslt.h>
 #endif
 
-#if defined(WIN32) || defined(WIN64)
-#pragma warning(disable : 4996)
-#endif
-
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #endif
