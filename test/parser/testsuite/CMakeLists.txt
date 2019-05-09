@@ -149,7 +149,7 @@ template(c_cpp_mode.class.cpp.xml    class    "c_cpp_mode_header.template;c_cpp_
 message(STATUS "  Generating language variations")
 
 # Process all tests in suite.txt according to their categories
-file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/suite.txt SUITE REGEX "LANGUAGE_")
+file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/suite.txt SUITE REGEX "^LANGUAGE_")
 foreach(GEN ${SUITE})
 
 	# split into category and url
