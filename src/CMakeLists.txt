@@ -29,17 +29,11 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
     message("MSVC BUILD")
 
-    if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
-        set(BUILD_ARCH "x86")
-    else()
-        set(BUILD_ARCH "x64")
-    endif()
-
     add_definitions(-DWITH_LIBXSLT)
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
 
     include_directories(${WINDOWS_DEP_PATH}/include)
-    link_directories(${WINDOWS_DEP_PATH}/${BUILD_ARCH}/$(ConfigurationName)/lib)
+    link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
     
     set(LIBXSLT_LIBRARIES libxslt.lib)
     set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)
@@ -49,8 +43,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(ANTLR_LIBRARY antlr.lib)
 
     set(Boost_NO_SYSTEM_PATHS ON)
-    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release/lib)
-    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug/lib)
+    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/release/lib)
+    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/debug/lib)
     set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
     set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
     set(Boost_INCLUDE_DIRS ${WINDOWS_DEP_PATH}/include)
