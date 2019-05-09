@@ -104,11 +104,13 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         errreport += std::to_string(count);
         errreport += '\n';
         errreport += "\033[0;30;1m";
-        errreport += "test:";
+        errreport += "test:\n";
         errreport += "\033[0m";
         errreport += xml;
         errreport += "\033[0;30;1m";
-        errreport += "srcml:";
+        if (xml[strlen(xml) - 1] != '\n')
+            errreport += '\n';
+        errreport += "srcml:\n";
         errreport += "\033[0m";
         errreport += sout;
         errreport += '\n';
