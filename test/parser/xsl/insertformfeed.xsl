@@ -16,7 +16,7 @@
 	Inserts formfeeds at every opportunity
 -->
 
-<xsl:import href="insertcomments.xsl"/>
+<xsl:import href="insertcomment.xsl"/>
 
 <xsl:variable name="cmt" xml:space="preserve"> <escape char="0x0c"/></xsl:variable> 
 

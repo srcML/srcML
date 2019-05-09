@@ -26,6 +26,7 @@
 
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
+#include <srcml_input_srcml.hpp>
 
 #include <list>
 #include <deque>
@@ -67,6 +68,12 @@ int src_input_filesystem(ParseQueue& queue,
         if (archive_entry_filetype(entry) != AE_IFREG)
             continue;
 
+        if (srcml_request.command & SRCML_COMMAND_PARSER_TEST) {
+            std::string filename = archive_entry_pathname(entry);
+            if (filename.substr(filename.find_last_of(".") + 1) != "xml")
+                continue;
+        }
+
         files.push_back(archive_entry_pathname(entry));
     }
     archive_read_close(darchive);
@@ -78,11 +85,15 @@ int src_input_filesystem(ParseQueue& queue,
         srcml_input_src input_file(filename);
 
         // If a directory contains archives skip them
-        if (!(input_file.archives.empty())) {
+        if (!(srcml_request.command & SRCML_COMMAND_PARSER_TEST) && !(input_file.archives.empty())) {
             input_file.skip = true;
         }
 
-        src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
+        if (srcml_request.command & SRCML_COMMAND_PARSER_TEST) {
+            srcml_input_srcml(queue, srcml_arch, srcml_request, input_file, srcml_request.revision);
+        } else {
+            src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
+        }
     }
 
     return 1;

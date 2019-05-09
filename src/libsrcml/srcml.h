@@ -1381,7 +1381,7 @@ LIBSRCML_DECL const char* srcml_unit_get_srcml(struct srcml_unit* unit);
  * @param unit A srcml unit opened for reading
  * @return The fragment unit srcML on success and NULL on failure.
  */
-LIBSRCML_DECL const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit);
+LIBSRCML_DECL const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit);
 
 /** Get the srcML without the enclosing unit tags
  * The XML fragment returned is UTF-8 encoded XML. It is not well-formed XML, e.g., it is missing 
@@ -1391,7 +1391,7 @@ LIBSRCML_DECL const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit)
  * @param unit A srcml unit opened for reading
  * @return The fragment unit srcML on success and NULL on failure.
  */
-LIBSRCML_DECL const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit);
+LIBSRCML_DECL const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit);
 
 /**@}*/
 

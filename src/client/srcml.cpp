@@ -187,6 +187,9 @@ namespace {
             enable(SRCML_COMMAND_XML);
         }
 
+        if (option(SRCML_COMMAND_PARSER_TEST))
+            return true;
+
         return std::find_if(request.input_sources.begin(), request.input_sources.end(), [](const srcml_input_src& input) { return input.state == SRC; }) != request.input_sources.end() ||
         (request.output_filename.state == SRCML || option(SRCML_COMMAND_XML)) ||
         !request.transformations.empty();

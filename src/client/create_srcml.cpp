@@ -41,6 +41,7 @@
 #include <iostream>
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
+#include <ParserTest.hpp>
 
 int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
@@ -64,7 +65,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
         if (!uninput.compressions.empty() || !uninput.archives.empty())
             uninput.fd = input_archive(uninput);
 
-        return srcml_input_srcml(queue, srcml_arch, uninput, srcml_request.revision);
+        return srcml_input_srcml(queue, srcml_arch, srcml_request, uninput, srcml_request.revision);
     }
 
     if (input.protocol == "text") {
@@ -292,6 +293,7 @@ void create_srcml(const srcml_request_t& srcml_request,
             srcml_append_transform_param(srcml_arch, name.c_str(), value.c_str());
         }
 /*
+        // @todo Why is this not required?
         } else if (protocol == "relaxng") {
             if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");
@@ -312,7 +314,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // convert input sources to srcml
     int status = 0;
-    bool always_archive = false;    
+    bool always_archive = option(SRCML_COMMAND_PARSER_TEST);    
     for (const auto& input : input_sources) {
 
         if (input.protocol == "filelist")
@@ -333,6 +335,10 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     if (SRCMLStatus::errors())
         status = -1;
+
+    if (option(SRCML_COMMAND_PARSER_TEST)) {
+        ParserTest::report(srcml_arch);
+    }
 
     if (status != -1 || always_archive) {
         srcml_archive_close(srcml_arch);

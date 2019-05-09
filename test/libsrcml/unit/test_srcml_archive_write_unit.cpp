@@ -423,7 +423,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_version(unit, "1");
         const char* code = "/* þÿ */\n";
         srcml_unit_parse_memory(unit, code, strlen(code));
-        dassert(srcml_unit_get_srcml_fragment(unit), latin_srcml_no_xmldecl);
+        dassert(srcml_unit_get_srcml_outer(unit), latin_srcml_no_xmldecl);
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -448,7 +448,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_version(unit, "1");
         const char* code = "/* þÿ */\n";
         srcml_unit_parse_memory(unit, code, strlen(code));
-        dassert(srcml_unit_get_srcml_fragment(unit), latin_srcml_no_xmldecl);
+        dassert(srcml_unit_get_srcml_outer(unit), latin_srcml_no_xmldecl);
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -470,7 +470,7 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "a.cpp");
-        dassert(srcml_unit_get_srcml_fragment(unit), srcml_macro_no_xmldecl);
+        dassert(srcml_unit_get_srcml_outer(unit), srcml_macro_no_xmldecl);
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -494,7 +494,7 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
         srcml_unit_set_version(unit, "1");
-        dassert(srcml_unit_get_srcml_fragment(unit), srcml_macro_single_no_xmldecl);
+        dassert(srcml_unit_get_srcml_outer(unit), srcml_macro_single_no_xmldecl);
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -596,14 +596,14 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;\n", 3);
         srcml_unit_set_filename(unit, "a.cpp");
-//        dassert(srcml_unit_get_srcml_fragment(unit), srcml_old_uri_a);
+//        dassert(srcml_unit_get_srcml_outer(unit), srcml_old_uri_a);
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;\n", 3);
-//        dassert(srcml_unit_get_srcml_fragment(unit), srcml_old_uri_a);
+//        dassert(srcml_unit_get_srcml_outer(unit), srcml_old_uri_a);
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -631,7 +631,7 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "", 0);
-    //    dassert(srcml_unit_get_srcml_fragment(unit), std::string("<unit/>"));
+    //    dassert(srcml_unit_get_srcml_outer(unit), std::string("<unit/>"));
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_INVALID_IO_OPERATION);
         srcml_unit_free(unit);
         srcml_archive_free(archive);
