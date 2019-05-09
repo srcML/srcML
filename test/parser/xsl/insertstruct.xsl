@@ -13,8 +13,7 @@
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 
-<!-- wrap the entire contents of the unit inside a block -->
-<xsl:template match="src:unit">
+<xsl:template match="src:unit[@language='C++']">
 <xsl:copy>
 <struct>struct <name>S</name> <block>{<public type="default"><xsl:text>
 </xsl:text><xsl:copy-of select="*|text()"/><xsl:text>
@@ -22,7 +21,15 @@
 </xsl:copy>
 </xsl:template>
 
-<xsl:template match="src:unit[@language='C']">
+<xsl:template match="src:unit[@language='C#']">
+<xsl:copy>
+<struct>struct <name>S</name> <block>{<xsl:text>
+</xsl:text><xsl:copy-of select="*|text()"/><xsl:text>
+</xsl:text>}</block></struct>
+</xsl:copy>
+</xsl:template>
+
+<xsl:template match="src:unit">
 <xsl:copy>
 <struct>struct <name>S</name> <block>{<xsl:text>
 </xsl:text><xsl:copy-of select="*|text()"/><xsl:text>
