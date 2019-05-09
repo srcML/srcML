@@ -26,7 +26,8 @@ LANGUAGE_ALL_GEN return
 LANGUAGE_ALL_GEN function_decl
 LANGUAGE_ALL_GEN ifblock
 
-LANGUAGE_CXX_FAMILY constructor_explicit
+#LANGUAGE_CXX_FAMILY constructor_explicit
+LANGUAGE_CXX_GEN constructor_explicit
 LANGUAGE_CXX destructor_virtual
 LANGUAGE_CXX_FAMILY function_const
 #LANGUAGE_CXX_FAMILY struct
