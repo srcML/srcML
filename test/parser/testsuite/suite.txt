@@ -100,7 +100,6 @@ LANGUAGE_CXX decl_simple_cpp
 LANGUAGE_CXX cast_cpp
 LANGUAGE_CXX function_decl_cpp
 LANGUAGE_CXX constructor_cpp
-LANGUAGE_CXX enum_cpp
 LANGUAGE_CXX expression_cpp
 LANGUAGE_CXX attributes_cpp
 LANGUAGE_CXX lambda_cpp
