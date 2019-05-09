@@ -53,6 +53,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug/lib)
     set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
     set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
+    set(Boost_INCLUDE_DIRS ${WINDOWS_DEP_PATH}/include)
     find_package(Boost COMPONENTS program_options REQUIRED)
 
 else()
