@@ -27,17 +27,13 @@ set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
-    if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
-        set(BUILD_ARCH "x86")
-    else()
-        set(BUILD_ARCH "x64")
-    endif()
+    message("MSVC BUILD")
 
     add_definitions(-DWITH_LIBXSLT)
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
 
     include_directories(${WINDOWS_DEP_PATH}/include)
-    link_directories(${WINDOWS_DEP_PATH}/${BUILD_ARCH}/$(ConfigurationName)/lib)
+    link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
     
     set(LIBXSLT_LIBRARIES libxslt.lib)
     set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)
@@ -47,10 +43,11 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(ANTLR_LIBRARY antlr.lib)
 
     set(Boost_NO_SYSTEM_PATHS ON)
-    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release/lib)
-    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/debug/lib)
+    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/release/lib)
+    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/debug/lib)
     set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
     set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
+    set(Boost_INCLUDE_DIRS ${WINDOWS_DEP_PATH}/include)
     find_package(Boost COMPONENTS program_options REQUIRED)
 
 else()
@@ -135,7 +132,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od /ZI /MDd")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /Ox")
 
-    add_compile_options(/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS)
+    add_compile_options(/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS)
 
 else()
     message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")

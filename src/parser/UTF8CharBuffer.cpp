@@ -37,10 +37,6 @@
 #include <io.h>
 #endif
 
-#if defined(WIN32) || defined(WIN64)
-#pragma warning(disable : 4996)
-#endif
-
 namespace {
     template<typename T>
     struct Context {

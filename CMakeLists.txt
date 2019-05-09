@@ -26,7 +26,7 @@ project(srcML VERSION 1.0.0)
 # Turn ON/OFF tests
 option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
 option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" OFF)
-option(BUILD_PARSER_TESTS "Include tests for parser" ON)
+option(BUILD_PARSER_TESTS "Include tests for parser" OFF)
 
 # Turn ON building all tests
 option(BUILD_ALL_TESTS "Build all tests" OFF)

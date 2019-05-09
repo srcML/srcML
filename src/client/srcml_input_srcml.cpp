@@ -29,10 +29,6 @@
 #include <srcmlns.hpp>
 #include <SRCMLStatus.hpp>
 
-#if defined(WIN32) || defined(WIN64)
-#pragma warning(disable : 4996)
-#endif
-
 int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_request_t& srcml_request,

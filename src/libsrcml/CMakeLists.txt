@@ -92,6 +92,6 @@ add_dependencies(libsrcml parser)
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    file(GLOB SRCML_DLLS ${WINDOWS_DEP_PATH}/${BUILD_ARCH}/release/bin/*.dll)
+    file(GLOB SRCML_DLLS ${WINDOWS_DEP_PATH}/release/bin/*.dll)
     install(FILES ${SRCML_DLLS} DESTINATION bin)
 endif()

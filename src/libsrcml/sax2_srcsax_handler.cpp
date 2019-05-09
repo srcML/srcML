@@ -189,9 +189,9 @@ void start_document(void* ctx) {
     SRCSAX_DEBUG_START("");
 
     // save for dictionary lookup of common elements
-    UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", strlen("unit"));
-    MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", strlen("macro-list"));
-    ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
+    UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", (int) strlen("unit"));
+    MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", (int) strlen("macro-list"));
+    ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", (int) strlen("escape"));
 
     // save the encoding from the input
     state->context->encoding = "UTF-8";
@@ -316,12 +316,12 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             if (namespaces[i]) {
                 // state->rootnsstr += ":";
                 // state->rootnsstr += (const char*) namespaces[i];
-                size += 1 + strlen((const char*) namespaces[i]);
+                size += 1 + (int) strlen((const char*) namespaces[i]);
             }
             // state->rootnsstr += "=\"";
             // state->rootnsstr += (const char*) namespaces[i + 1];
             // state->rootnsstr += "\" ";
-            size += 2 + strlen((const char*) namespaces[i + 1]) + 2;
+            size += 2 + (int) strlen((const char*) namespaces[i + 1]) + 2;
         }
 
         state->rootnsstr.reserve(size);
@@ -805,7 +805,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     state->unitsrc.append((const char*) ch, len);
 
-    state->loc += std::count((const char*) ch, (const char*) ch + len, '\n');
+    state->loc += (int) std::count((const char*) ch, (const char*) ch + len, '\n');
 
     update_ctx(ctx);
 
