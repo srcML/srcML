@@ -16,7 +16,17 @@
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit">
 <xsl:copy>
-<struct>struct <name>S</name> <block>{<public type="default"><xsl:copy-of select="*|text()"/></public>}</block>;</struct>
+<struct>struct <name>S</name> <block>{<public type="default"><xsl:text>
+</xsl:text><xsl:copy-of select="*|text()"/></public><xsl:text>
+</xsl:text>}</block>;</struct>
+</xsl:copy>
+</xsl:template>
+
+<xsl:template match="src:unit[@language='C']">
+<xsl:copy>
+<struct>struct <name>S</name> <block>{<xsl:text>
+</xsl:text><xsl:copy-of select="*|text()"/><xsl:text>
+</xsl:text>}</block>;</struct>
 </xsl:copy>
 </xsl:template>
 
