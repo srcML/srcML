@@ -17,8 +17,8 @@
 <xsl:template match="src:unit">
 <xsl:copy>
 <struct>struct <name>S</name> <block>{<public type="default"><xsl:text>
-</xsl:text><xsl:copy-of select="*|text()"/></public><xsl:text>
-</xsl:text>}</block>;</struct>
+</xsl:text><xsl:copy-of select="*|text()"/><xsl:text>
+</xsl:text></public>}</block>;</struct>
 </xsl:copy>
 </xsl:template>
 
