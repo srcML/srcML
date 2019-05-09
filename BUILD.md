@@ -70,7 +70,7 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2017 or
 * [Java JRE/JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [CMake](http://www.cmake.org)
 * [Visual Studio 2017 or later](https://www.visualstudio.com/downloads/)
-* Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.cs.kent.edu/build/deps-06_20_18-VS2017.zip)
+* Zipped [Visual Studio 2017 Build Dependencies](http://www.sdml.cs.kent.edu/build/VS2017_Dependencies-06_20_18.zip)
 
 ##### Instructions
 * Install Visual Studio 2017 or newer, CMake
