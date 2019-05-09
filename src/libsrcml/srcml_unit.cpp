@@ -318,7 +318,7 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_srcml_fragment
+ * srcml_unit_get_srcml_outer
  * @param unit a srcml unit
  *
  * Get the parsed or collected srcml from an archive.
@@ -329,7 +329,7 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
  *
  * @returns the raw unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
+const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
 
     if (unit == nullptr || (!unit->read_body && !unit->read_header))
         return 0;
@@ -354,7 +354,7 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_get_srcml_fragment
+ * srcml_unit_get_srcml_outer
  * @param unit a srcml unit
  *
  * Get the parsed or collected srcml from an archive.
@@ -365,7 +365,7 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
  *
  * @returns the raw unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
+const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
 
     if (unit == nullptr || (!unit->read_body && !unit->read_header))
         return 0;

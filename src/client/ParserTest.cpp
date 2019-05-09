@@ -68,14 +68,14 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
     srcml_unit_unparse_memory(unit, &buffer, &size);
 
     // get the srcml
-    const char* xml = srcml_unit_get_srcml_raw(unit);
+    const char* xml = srcml_unit_get_srcml_inner(unit);
 
     srcml_unit* outunit = srcml_unit_clone(unit);
     srcml_unit_set_language(outunit, srcml_unit_get_language(unit));
 
     srcml_unit_parse_memory(outunit, buffer, size);
 
-    const char* sout = srcml_unit_get_srcml_raw(outunit);
+    const char* sout = srcml_unit_get_srcml_inner(outunit);
 
     if (line_count >= 75) {
         std::ostringstream sout;

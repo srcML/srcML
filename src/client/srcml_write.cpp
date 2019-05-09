@@ -132,13 +132,13 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         if (request->results.num_units == 0 && request->unit) {
             int status = SRCML_STATUS_OK;
             if (option(SRCML_COMMAND_XML_FRAGMENT)) {
-                const char* s = srcml_unit_get_srcml_fragment(request->unit);
+                const char* s = srcml_unit_get_srcml_outer(request->unit);
                 status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
                 if (s[strlen(s) - 1] != '\n') {
                     srcml_archive_write_string(request->srcml_arch, "\n", 1);
                 }
             } else if (option(SRCML_COMMAND_XML_RAW)) {
-                const char* s = srcml_unit_get_srcml_raw(request->unit);
+                const char* s = srcml_unit_get_srcml_inner(request->unit);
                 status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
                 // when non-blank and does not end in newline, add one in
                 if (s[0] != '\0' && s[strlen(s) - 1] != '\n') {
