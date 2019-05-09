@@ -53,6 +53,7 @@ private:
     static int failed;
     static std::string unit_language;
     static std::vector<std::string> errors;
+    static std::vector<std::string> summary;
 };
 
 #endif

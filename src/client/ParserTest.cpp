@@ -158,6 +158,21 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         errreport += '\n';
         errors.push_back(errreport);
 
+        std::string sumreport = unit_language;
+        sumreport += '\t';
+        sumreport += url;
+        sumreport += '\t';
+        sumreport += previous_filename;
+        sumreport += '\t';
+        if (!summary.empty() && sumreport == summary.back().substr(0, sumreport.size())) {
+            sumreport = summary.back().substr(0, summary.back().size() - 1);
+            sumreport += ',';
+            summary.pop_back();
+        }
+        sumreport += std::to_string(count);
+        sumreport += '\n';
+        summary.push_back(sumreport);
+
         srcml_archive_write_string(archive, str2arg("\033[0;31m"));
         std::string result = std::to_string(count);
         srcml_archive_write_string(archive, result.c_str(), (int) result.size());
@@ -178,6 +193,11 @@ void ParserTest::report(srcml_archive* archive) {
     // error report
     srcml_archive_write_string(archive, str2arg("\n\nErrors:\n"));
     for (const auto& err : errors) {
+        srcml_archive_write_string(archive, err.c_str(), (int) err.size());
+    }
+    // summary report
+    srcml_archive_write_string(archive, str2arg("\n\nSummary:\n"));
+    for (const auto& err : summary) {
         srcml_archive_write_string(archive, err.c_str(), (int) err.size());
     }
     double percent = double(failed * 100) / total;
@@ -204,3 +224,4 @@ std::map<std::string, int> ParserTest::misses;
 int ParserTest::failed = 0;
 std::string ParserTest::unit_language;
 std::vector<std::string> ParserTest::errors;
+std::vector<std::string> ParserTest::summary;
