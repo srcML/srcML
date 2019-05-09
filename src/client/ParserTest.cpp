@@ -85,7 +85,7 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         line_count = 0;
     }
 
-    line_count += std::to_string(count).size() + 1;
+    line_count += (int)std::to_string(count).size() + 1;
 
     if (strcmp(sout, xml) == 0) {
         std::ostringstream sout;
