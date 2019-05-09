@@ -27,6 +27,8 @@ set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
+    message("MSVC BUILD")
+
     if ("${CMAKE_EXE_LINKER_FLAGS}" STREQUAL "/machine:X86")
         set(BUILD_ARCH "x86")
     else()
