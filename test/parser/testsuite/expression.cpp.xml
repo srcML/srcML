@@ -70,10 +70,6 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>d</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><name>a</name><index>[<expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>d</name></expr></argument>)</argument_list></call></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
