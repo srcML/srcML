@@ -25,7 +25,10 @@ message(STATUS "Generating Parser Testfiles:")
 set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
 file(GLOB PARSE_TESTS *.xml)
-file(COPY ${PARSE_TESTS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+foreach(PATH ${PARSE_TESTS})
+	get_filename_component(F ${PATH} NAME)
+	configure_file(${F} ${CMAKE_CURRENT_BINARY_DIR}/${F} COPYONLY)
+endforeach()
 
 set(ALLGEN)
 
@@ -49,29 +52,38 @@ macro(setlanguage INLANG LANG URL BASEEXT)
 	set(BASE "${URL}.${BASEEXT}.xml")
 
 	# strip _base from URL
-	string(REGEX REPLACE "_base" "" PRODURL "${URL}")
-	set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
+#	string(REGEX REPLACE "_base" "" PRODURL "${URL}")
+#	set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
+	set(PRODUCT "${URL}.${LANGEXT}.xml")
 
-	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-		file(READ ${CMAKE_CURRENT_BINARY_DIR}/${BASE} IN_CONTENTS)
-		string(REPLACE "language=\"${INLANG}\"" "language=\"${LANG}\"" CONTENTS "${IN_CONTENTS}")
-		file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT} "${CONTENTS}")
-	endif()
+#	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
+#		file(READ ${CMAKE_CURRENT_BINARY_DIR}/${BASE} IN_CONTENTS)
+#		string(REPLACE "language=\"${INLANG}\"" "language=\"${LANG}\"" CONTENTS "${IN_CONTENTS}")
+#		file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT} "${CONTENTS}")
+#	endif()
+
+	add_custom_command(COMMAND srcml --output-xml --language=${LANG} ${BASE} -o ${PRODUCT}
+				DEPENDS ${BASE}
+			    OUTPUT ${PRODUCT}
+    		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 	# record product so that variation are generated
-	list(APPEND ALLGEN "${PRODUCT}")
+	list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}")
 endmacro()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
 macro(transform BASE PRODUCT URL XSLT)
-	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT})
-		execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=${URL} ${BASE}
-		    		    OUTPUT_FILE ${PRODUCT}
-		    		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-	endif()
+
+#	execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=${URL} ${BASE}
+#	    		    OUTPUT_FILE ${PRODUCT}
+#		    		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+	add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=${URL} ${BASE} -o ${PRODUCT}
+	    		    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}
+	    		    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
+	    		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 	# record product so that variation are generated
-	list(APPEND ALLGEN "${PRODUCT}")
+	list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}")
 endmacro()
 
 # Generate special transformations
@@ -87,7 +99,7 @@ transform(struct.cpp.xml union.cpp.xml "union" "struct2union.xsl")
 transform(struct_cpp.cpp.xml union_cpp.cpp.xml "union" "struct2union.xsl")
 transform(struct_c.c.xml union_c.c.xml "union" "struct2union.xsl")
 
-configure_file(constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
+configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
 
 # if -> while
 transform(if.cpp.xml while.cpp.xml "while" "if2while.xsl")
@@ -97,11 +109,20 @@ transform(function.cpp.xml function_const.cpp.xml "const" "addconst.xsl")
 transform(constructor.cpp.xml constructor_explicit.cpp.xml "constructor" "addexplicit.xsl")
 transform(if.cpp.xml ifnestcond.cpp.xml "if" "nestcond.xsl")
 transform(destructor.cpp.xml destructor_virtual.cpp.xml "destructor.virtual" "addvirtual.xsl")
-transform(throw.cpp.xml throw_base.cpp.xml "throw" "insertexpr.xsl")
+transform(throw_base.cpp.xml throw.cpp.xml "throw" "insertexpr.xsl")
 transform(class_java.java.xml interface_java.java.xml "interface" "class2interface.xsl")
 transform(if.cpp.xml ifblock.cpp.xml "if.block" "if2ifblock.xsl")
-execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return ${CMAKE_CURRENT_BINARY_DIR}/return_base.cpp.xml
-			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/return.cpp.xml)
+#execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return ${CMAKE_CURRENT_BINARY_DIR}/return_base.cpp.xml
+#			    OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/return.cpp.xml)
+
+add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return return_base.cpp.xml
+							-o return.cpp.xml
+				DEPENDS return_base.cpp.xml
+			    OUTPUT return.cpp.xml
+    		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+list(APPEND ALLGEN ${CMAKE_CURRENT_BINARY_DIR}/return.cpp.xml)
+
 transform(function.cpp.xml function_decl.cpp.xml "function" "defn2decl.xsl")
 
 # Was in Makefile.gen, but cannot find the file
@@ -113,8 +134,13 @@ transform(try.cpp.xml             try_m.m.xml                  "try"      keywor
 transform(catch_form.cpp.xml      catch_m.m.xml                "catch"    keyword2mkeyword.xsl)
 
 # C# finally -> Java finally
-execute_process(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
-                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+#execute_process(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
+#                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
+				DEPENDS finally_cs.cs.xml
+			    OUTPUT finally_java.java.xml
+    		    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # Objective-C try, catch, finally, throw from C++
 transform(try.cpp.xml        try_m.m.xml        "try"     keyword2mkeyword.xsl)
@@ -137,14 +163,14 @@ function(template OUT_FILE NAME IN_FILES)
 		string(CONFIGURE "${RAW_CONTENTS}" CONTENTS)
 		file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/${OUT_FILE} "${CONTENTS}")
 	endif()
-	list(APPEND ALLGEN "${OUT_FILE}")
+	list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE}")
 endfunction()
 
-template(c_cpp_mode.restrict.cpp.xml restrict "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
-template(c_cpp_mode.mutable.cpp.xml  mutable  "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
-template(c_cpp_mode.try.cpp.xml      try      "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
-template(c_cpp_mode.catch.cpp.xml    catch    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_footer.template")
-template(c_cpp_mode.class.cpp.xml    class    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+#template(c_cpp_mode_restrict.cpp.xml restrict "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+#template(c_cpp_mode_mutable.cpp.xml  mutable  "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+#template(c_cpp_mode_try.cpp.xml      try      "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+#template(c_cpp_mode_catch.cpp.xml    catch    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_footer.template")
+#template(c_cpp_mode_class.cpp.xml    class    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
 
 message(STATUS "  Generating language variations")
 
@@ -161,7 +187,7 @@ foreach(GEN ${SUITE})
 	if(CATEGORY STREQUAL "LANGUAGE_ALL_BASE")
 
 		# base is C++, so these just get added
-		list(APPEND ALLGEN "${URL}.cpp.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
 		foreach(LANG "Java" "C#" "Objective-C" "C")
 			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
@@ -169,7 +195,7 @@ foreach(GEN ${SUITE})
 	elseif(CATEGORY STREQUAL "LANGUAGE_ALL_GEN")
 
 		# explicitly generated
-		list(APPEND ALLGEN "${URL}.cpp.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
 		foreach(LANG "Java" "C#" "Objective-C" "C")
 			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
@@ -177,21 +203,21 @@ foreach(GEN ${SUITE})
 	elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP")
 
 		# exist, just add to list
-		list(APPEND ALLGEN "${URL}.cs.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cs.xml")
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP_GEN")
 
 		# explicitly generated
-		list(APPEND ALLGEN "${URL}.cs.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cs.xml")
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_CXX")
 
 		# exist, just add to list
-		list(APPEND ALLGEN "${URL}.cpp.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_CXX_FAMILY")
 
-		list(APPEND ALLGEN "${URL}.cpp.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
 		foreach(LANG "C#")
 			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
@@ -199,18 +225,18 @@ foreach(GEN ${SUITE})
 	elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
 
 		# explicitly generated
-		list(APPEND ALLGEN "${URL}.cpp.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
-		list(APPEND ALLGEN "${URL}.cpp.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
 		foreach(LANG "C" "C#" "Objective-C")
 			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY_NO_SHARP")
 
-		list(APPEND ALLGEN "${URL}.cpp.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
 		foreach(LANG "C" "Objective-C")
 			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
@@ -218,7 +244,7 @@ foreach(GEN ${SUITE})
 	elseif(CATEGORY STREQUAL "LANGUAGE_C_ONLY")
 
 		# exist, just add to list
-		list(APPEND ALLGEN "${URL}.c.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.c.xml")
 		foreach(LANG "Objective-C")
 			setlanguage("C" "${LANG}" "${URL}" "c")
 		endforeach()
@@ -226,27 +252,27 @@ foreach(GEN ${SUITE})
 	elseif(CATEGORY STREQUAL "LANGUAGE_JAVA")
 
 		# exist, just add to list
-		list(APPEND ALLGEN "${URL}.java.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.java.xml")
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_JAVA_GEN")
 
 		# explicitly generated
-		list(APPEND ALLGEN "${URL}.java.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.java.xml")
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C")
 
 		# exist, just add to list
-		list(APPEND ALLGEN "${URL}.m.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.m.xml")
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C_GEN")
 
 		# explicitly generated
-		list(APPEND ALLGEN "${URL}.m.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.m.xml")
 
 	elseif(CATEGORY STREQUAL "LANGUAGE_OO")
 
 		# base is C++, so these just get added
-		list(APPEND ALLGEN "${URL}.cpp.xml")
+		list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
 		foreach(LANG "C#" "Java")
 			setlanguage("C++" "${LANG}" "${URL}" "cpp")
 		endforeach()
@@ -257,6 +283,8 @@ foreach(GEN ${SUITE})
 		break()
 	endif()
 endforeach()
+
+list(REMOVE_DUPLICATES ALLGEN)
 
 message(STATUS "  Generating context variations")
 
@@ -269,10 +297,28 @@ foreach(GENURL ${ALLGEN})
 	set(URL "${CMAKE_MATCH_1}")
 	set(LANGEXT "${CMAKE_MATCH_2}")
 
+	message("${GENURL}")
+
+	if(GENURL STREQUAL "try")
+		message("TRY")
+	endif()
+
 	# Generate "formfeed" "comment" "block" "struct" "ifthenelse" in parallel
 	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.formfeed.${LANGEXT}.xml)
 		if(LANGEXT STREQUAL "java")
-			execute_process(
+# 			execute_process(
+# 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
+# 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
+# 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
+# #				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
+# 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
+# #				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
+# 				COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
+# 				COMMAND srcml --output-xml-inner ${GENURL}
+# 				WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+# 				OUTPUT_VARIABLE ALL_INNER
+# 			)
+			add_custom_command(
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
@@ -281,11 +327,28 @@ foreach(GENURL ${ALLGEN})
 #				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
 				COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
 				COMMAND srcml --output-xml-inner ${GENURL}
+				DEPENDS ${GENURL}
 				WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-				OUTPUT_VARIABLE ALL_INNER
+				OUTPUT ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml
+#				OUTPUT_VARIABLE ALL_INNER
 			)
+			list(APPEND ALLGEN ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
+			list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
+
 		else()
-			execute_process(
+			# execute_process(
+			# 	COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
+			# 	COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
+			# 	COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
+			# 	COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
+			# 	COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
+			# 	COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
+			# 	COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
+			# 	COMMAND srcml --output-xml-inner ${GENURL}
+			# 	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+			# 	OUTPUT_VARIABLE ALL_INNER
+			# )
+			add_custom_command(
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
@@ -293,26 +356,42 @@ foreach(GENURL ${ALLGEN})
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
 				COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
-				COMMAND srcml --output-xml-inner ${GENURL}
+				COMMAND srcml --output-xml-inner ${GENURL} -o ${URL}.all.${LANGEXT}.template
+				DEPENDS ${GENURL}
 				WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-				OUTPUT_VARIABLE ALL_INNER
+#				OUTPUT ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml
+#				 ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml
+				OUTPUT ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml
+				 ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml
 			)
 		endif()
 
-		file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template ALLHEADER)
-		string(LENGTH "${ALLHEADER}" SIZE)
-		math(EXPR NEWSIZE "${SIZE} - 8")
-		string(SUBSTRING "${ALLHEADER}" 0 ${NEWSIZE} ALLCONTENT)
-		file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml "${ALLCONTENT}" "${ALL_INNER}" "</unit>")
-		file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template)
+		list(APPEND ALLGEN ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
+		list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml)
 
+		# file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template ALLHEADER)
+		# string(LENGTH "${ALLHEADER}" SIZE)
+		# math(EXPR NEWSIZE "${SIZE} - 8")
+		# string(SUBSTRING "${ALLHEADER}" 0 ${NEWSIZE} ALLCONTENT)
+		# file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml "${ALLCONTENT}" "${ALL_INNER}" "</unit>")
+		# file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template)
+
+		# list(APPEND ALLGEN ${URL}.all.${LANGEXT}.xml)
+		# list(APPEND COMMANDS ${URL}.all.${LANGEXT}.xml)
 	endif()
+
+	message("DONE ${GENURL}")
 
 	if(ONEPASS)
 		break()
 	endif()
 
 endforeach()
+
+list(REMOVE_DUPLICATES COMMANDS)
+list(TRANSFORM COMMANDS PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
+
+add_custom_target(transforms DEPENDS ${COMMANDS})
 
 file(GLOB TEST_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.xml)
 list(LENGTH TEST_FILES LEN)
