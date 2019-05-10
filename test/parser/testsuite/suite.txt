@@ -128,11 +128,11 @@ LANGUAGE_CXX destructor_cpp
 LANGUAGE_CXX static_assert_cpp
 LANGUAGE_CXX if_cpp
 
-LANGUAGE_CXX_GEN c_cpp_mode.restrict
-LANGUAGE_CXX_GEN c_cpp_mode.mutable
-LANGUAGE_CXX_GEN c_cpp_mode.try
-LANGUAGE_CXX_GEN c_cpp_mode.catch
-LANGUAGE_CXX_GEN c_cpp_mode.class
+LANGUAGE_CXX_GEN c_cpp_mode_restrict
+LANGUAGE_CXX_GEN c_cpp_mode_mutable
+LANGUAGE_CXX_GEN c_cpp_mode_try
+LANGUAGE_CXX_GEN c_cpp_mode_catch
+LANGUAGE_CXX_GEN c_cpp_mode_class
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern

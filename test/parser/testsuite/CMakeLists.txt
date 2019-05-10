@@ -166,11 +166,11 @@ function(template OUT_FILE NAME IN_FILES)
 	list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE}")
 endfunction()
 
-#template(c_cpp_mode_restrict.cpp.xml restrict "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
-#template(c_cpp_mode_mutable.cpp.xml  mutable  "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
-#template(c_cpp_mode_try.cpp.xml      try      "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
-#template(c_cpp_mode_catch.cpp.xml    catch    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_footer.template")
-#template(c_cpp_mode_class.cpp.xml    class    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+template(c_cpp_mode_restrict.cpp.xml restrict "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+template(c_cpp_mode_mutable.cpp.xml  mutable  "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+template(c_cpp_mode_try.cpp.xml      try      "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
+template(c_cpp_mode_catch.cpp.xml    catch    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_footer.template")
+template(c_cpp_mode_class.cpp.xml    class    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
 
 message(STATUS "  Generating language variations")
 
@@ -326,7 +326,7 @@ foreach(GENURL ${ALLGEN})
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
 #				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
 				COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
-				COMMAND srcml --output-xml-inner ${GENURL}
+				COMMAND srcml --output-xml-inner ${GENURL} -o ${URL}.all.${LANGEXT}.template
 				DEPENDS ${GENURL}
 				WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 				OUTPUT ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml
@@ -364,10 +364,9 @@ foreach(GENURL ${ALLGEN})
 				OUTPUT ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml
 				 ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml
 			)
+			list(APPEND ALLGEN ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
+			list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml)
 		endif()
-
-		list(APPEND ALLGEN ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
-		list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml)
 
 		# file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template ALLHEADER)
 		# string(LENGTH "${ALLHEADER}" SIZE)
