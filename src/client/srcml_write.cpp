@@ -144,6 +144,30 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
                 if (s[0] != '\0' && s[strlen(s) - 1] != '\n') {
                     srcml_archive_write_string(request->srcml_arch, "\n", 1);
                 }
+            } else if (option(SRCML_COMMAND_CAT_XML)) {
+                static bool first = true;
+                if (first) {
+                    auto sarchive = srcml_archive_clone(request->srcml_arch);
+                    srcml_archive_disable_full_archive(sarchive);
+                    srcml_archive_disable_hash(sarchive);
+                    char* buffer = 0;
+                    size_t size = 0;
+                    srcml_archive_write_open_memory(sarchive, &buffer, &size);
+                    auto aunit = srcml_unit_clone(request->unit);
+                    srcml_unit_parse_memory(aunit, "", 0);
+                    srcml_archive_write_unit(sarchive, aunit);
+                    srcml_archive_close(sarchive);
+                    status = srcml_archive_write_string(request->srcml_arch, buffer, (int) size - 51);
+                    status = srcml_archive_write_string(request->srcml_arch, ">", 1);
+
+                    first = false;
+                }
+                const char* s = srcml_unit_get_srcml_inner(request->unit);
+                status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+                // when non-blank and does not end in newline, add one in
+                if (s[0] != '\0' && s[strlen(s) - 1] != '\n') {
+                    srcml_archive_write_string(request->srcml_arch, "\n", 1);
+                }
             } else {
                 status = srcml_archive_write_unit(request->srcml_arch, request->unit);
             }

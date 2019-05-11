@@ -76,6 +76,8 @@ const int SRCML_COMMAND_XML_FRAGMENT              = 1<<28;
 
 const int SRCML_COMMAND_PARSER_TEST               = 1<<29;
 
+const int SRCML_COMMAND_CAT_XML                   = 1<<30;
+
 // commands that are simple queries on srcml
 const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_LONGINFO |

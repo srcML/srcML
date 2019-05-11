@@ -336,6 +336,11 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (SRCMLStatus::errors())
         status = -1;
 
+    if (option(SRCML_COMMAND_CAT_XML)) {
+        const char* endtag = "</unit>\n";
+        srcml_archive_write_string(srcml_arch, endtag, (int) strlen(endtag));
+    }
+
     if (option(SRCML_COMMAND_PARSER_TEST)) {
         ParserTest::report(srcml_arch);
     }

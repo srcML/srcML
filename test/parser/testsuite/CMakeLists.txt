@@ -317,31 +317,14 @@ foreach(GENURL ${ALLGEN})
         list(APPEND COMMANDS ${URL}.${VARIATION}.${LANGEXT}.xml)
     endforeach()
 
-    # add_custom_command(
-    #     COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} |
-    #             sed "s|</unit>||g" > ${URL}.all.${LANGEXT}.xml.p1 VERBATIM
-    #     COMMAND srcml --output-xml-inner ${GENURL} > ${URL}.all.${LANGEXT}.p2 VERBATIM
-    #     COMMAND echo "</unit>" > ${URL}.all.${LANGEXT}.xml.p3 VERBATIM
-    #     COMMAND cat ${URL}.all.${LANGEXT}.xml.p1 ${URL}.all.${LANGEXT}.p2 ${URL}.all.${LANGEXT}.xml.p3 >
-    #             ${URL}.all.${LANGEXT}.xml VERBATIM
-    #     #COMMAND rm -f ${URL}.all.${LANGEXT}.xml{.p1,.p2,.p3}
-    #     DEPENDS ${GENURL}
-    #     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    #     OUTPUT ${URL}.all.${LANGEXT}.xml
-    # )
-    # list(APPEND COMMANDS ${URL}.all.${LANGEXT}.xml)
-
-    # file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template ALLHEADER)
-    # string(LENGTH "${ALLHEADER}" SIZE)
-    # math(EXPR NEWSIZE "${SIZE} - 8")
-    # string(SUBSTRING "${ALLHEADER}" 0 ${NEWSIZE} ALLCONTENT)
-    # file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.xml "${ALLCONTENT}" "${ALL_INNER}" "</unit>")
-    # file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template)
-
-    # list(APPEND ALLGEN ${URL}.all.${LANGEXT}.xml)
-    # list(APPEND COMMANDS ${URL}.all.${LANGEXT}.xml)
-
-    #message("DONE ${GENURL}")
+    # all is generated separately because it does not use an XSLT transformation
+    add_custom_command(
+        COMMAND srcml --cat --url=${URL}.all ${GENURL} -o ${URL}.all.${LANGEXT}.xml
+        DEPENDS ${GENURL}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        OUTPUT ${URL}.all.${LANGEXT}.xml
+    )
+    list(APPEND COMMANDS ${URL}.all.${LANGEXT}.xml)
 
     if(ONEPASS)
         break()

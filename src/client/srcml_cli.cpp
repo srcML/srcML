@@ -464,6 +464,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             ;
             
         experimental_options.add_options()
+            ("cat", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_CAT_XML>), "Cat all the XML units into a single unit")
             ("revision", prog_opts::value<size_t>()->notifier(&option_field<&srcml_request_t::revision>), "Extract the given revision (0 = original, 1 = modified)")
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "Output and update existing srcml")
             ("xml-processing", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xml_processing>), "Add XML processing instruction")
