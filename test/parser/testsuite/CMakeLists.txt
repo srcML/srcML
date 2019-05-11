@@ -294,45 +294,35 @@ foreach(GENURL ${ALLGEN})
     string(SUBSTRING "${EXTENSION}" 1 -1 LANGEXT)
 
     # Generate "formfeed" "comment" "block" "struct" "ifthenelse"
-    set(DEPENDENTS ${URL}.formfeed.${LANGEXT}.xml
-                   ${URL}.comment.${LANGEXT}.xml
-                   ${URL}.block.${LANGEXT}.xml
-                   ${URL}.ifthenelse.${LANGEXT}.xml
-                   ${URL}.all.${LANGEXT}.xml)
-    
-    add_custom_command(
-        COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
-        COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
-        COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
-        COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
-        COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} |
-                sed "s|</unit>||g" > ${URL}.all.${LANGEXT}.xml.p1 VERBATIM
-        COMMAND srcml --output-xml-inner ${GENURL} > ${URL}.all.${LANGEXT}.p2 VERBATIM
-        COMMAND echo "</unit>" > ${URL}.all.${LANGEXT}.xml.p3 VERBATIM
-        COMMAND cat ${URL}.all.${LANGEXT}.xml.p1 ${URL}.all.${LANGEXT}.p2 ${URL}.all.${LANGEXT}.xml.p3 >
-                ${URL}.all.${LANGEXT}.xml VERBATIM
-        #COMMAND rm -f ${URL}.all.${LANGEXT}.xml{.p1,.p2,.p3}
-        DEPENDS ${GENURL}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        OUTPUT ${DEPENDENTS}
-    )
-    list(APPEND COMMANDS ${DEPENDENTS})
 
-    # generate struct and preproc variations for non-Java
-    if(NOT LANGEXT STREQUAL "java")
-        set(DEPENDENTS 
-                   ${URL}.struct.${LANGEXT}.xml
-                   ${URL}.preproc.${LANGEXT}.xml)
+    foreach(VARIATION "formfeed" "comment" "block" "struct" "preproc" "ifthenelse")
+        if(LANGEXT STREQUAL "java" AND (VARIATION STREQUAL "struct" OR VARIATION STREQUAL "preproc"))
+            continue()
+        endif()
 
         add_custom_command(
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
+            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
+                     -o ${URL}.${VARIATION}.${LANGEXT}.xml
             DEPENDS ${GENURL}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            OUTPUT ${DEPENDENTS}
+            OUTPUT ${URL}.${VARIATION}.${LANGEXT}.xml
         )
-        list(APPEND COMMANDS ${DEPENDENTS})
-    endif()
+        list(APPEND COMMANDS ${URL}.${VARIATION}.${LANGEXT}.xml)
+    endforeach()
+
+    # add_custom_command(
+    #     COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} |
+    #             sed "s|</unit>||g" > ${URL}.all.${LANGEXT}.xml.p1 VERBATIM
+    #     COMMAND srcml --output-xml-inner ${GENURL} > ${URL}.all.${LANGEXT}.p2 VERBATIM
+    #     COMMAND echo "</unit>" > ${URL}.all.${LANGEXT}.xml.p3 VERBATIM
+    #     COMMAND cat ${URL}.all.${LANGEXT}.xml.p1 ${URL}.all.${LANGEXT}.p2 ${URL}.all.${LANGEXT}.xml.p3 >
+    #             ${URL}.all.${LANGEXT}.xml VERBATIM
+    #     #COMMAND rm -f ${URL}.all.${LANGEXT}.xml{.p1,.p2,.p3}
+    #     DEPENDS ${GENURL}
+    #     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    #     OUTPUT ${URL}.all.${LANGEXT}.xml
+    # )
+    # list(APPEND COMMANDS ${URL}.all.${LANGEXT}.xml)
 
     # file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template ALLHEADER)
     # string(LENGTH "${ALLHEADER}" SIZE)
