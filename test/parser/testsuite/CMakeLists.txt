@@ -276,6 +276,7 @@ foreach(GEN ${SUITE})
 endforeach()
 
 list(REMOVE_DUPLICATES ALLGEN)
+list(SORT ALLGEN)
 
 add_custom_target(singletests DEPENDS ${ALLGEN})
 
