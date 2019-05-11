@@ -286,45 +286,39 @@ set(COMMANDS)
 # Generate variations: formfeed, comment, block, etc.
 foreach(GENURL ${ALLGEN})
 
+    # ${URL}.${LANGEXT}.xml
     get_filename_component(SRCFILENAME "${GENURL}" NAME_WLE)
     get_filename_component(URL "${SRCFILENAME}" NAME_WLE)
     get_filename_component(EXTENSION "${SRCFILENAME}" LAST_EXT)
+    # remove '.'
     string(SUBSTRING "${EXTENSION}" 1 -1 LANGEXT)
 
-    # Generate "formfeed" "comment" "block" "struct" "ifthenelse" in parallel
-    if(LANGEXT STREQUAL "java")
-        add_custom_command(
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
-#               COMMAND if [ "${LANGEXT}" != "java" ]\; then srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml\; else exit 0\; fi
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
-#               COMMAND if [ "${LANGEXT}" != "java" ]\; then srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml\; else exit 0\; fi
-            COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
-            COMMAND srcml --output-xml-inner ${GENURL} -o ${URL}.all.${LANGEXT}.template
-            DEPENDS ${GENURL}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            OUTPUT ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml
-        )
-        list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml) ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
-
-    else()
-        add_custom_command(
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
-            COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
-            COMMAND srcml --output-xml-inner ${GENURL} -o ${URL}.all.${LANGEXT}.template
-            DEPENDS ${GENURL}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            OUTPUT ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml
-             ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml
-        )
-        list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml)
+    # structural variations generated for each base item
+    set(DEPENDENTS ${URL}.formfeed.${LANGEXT}.xml
+                   ${URL}.comment.${LANGEXT}.xml
+                   ${URL}.block.${LANGEXT}.xml
+                   ${URL}.ifthenelse.${LANGEXT}.xml)
+    if(NOT LANGEXT STREQUAL "java")
+        list(APPEND DEPENDENTS 
+                   ${URL}.struct.${LANGEXT}.xml
+                   ${URL}.preproc.${LANGEXT}.xml)
     endif()
+
+    # Generate "formfeed" "comment" "block" "struct" "ifthenelse" in parallel
+    add_custom_command(
+        COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
+        COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
+        COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
+        COMMAND if [ "${LANGEXT}" != "java" ]\; then srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml\; else exit 0\; fi
+        COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
+        COMMAND if [ "${LANGEXT}" != "java" ]\; then srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml\; else exit 0\; fi
+        COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
+        COMMAND srcml --output-xml-inner ${GENURL} -o ${URL}.all.${LANGEXT}.template
+        DEPENDS ${GENURL}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        OUTPUT ${DEPENDENTS}
+    )
+    list(APPEND COMMANDS ${DEPENDENTS})
 
     # file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template ALLHEADER)
     # string(LENGTH "${ALLHEADER}" SIZE)
