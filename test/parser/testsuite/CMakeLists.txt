@@ -199,7 +199,7 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP_GEN")
 
         # explicitly generated
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cs.xml")
+        #list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cs.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX")
 
@@ -216,7 +216,7 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
 
         # explicitly generated
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
+        #list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
@@ -248,7 +248,7 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_JAVA_GEN")
 
         # explicitly generated
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.java.xml")
+        #list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.java.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C")
 
@@ -258,7 +258,7 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C_GEN")
 
         # explicitly generated
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.m.xml")
+        #list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.m.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OO")
 
@@ -275,8 +275,13 @@ foreach(GEN ${SUITE})
     endif()
 endforeach()
 
-list(REMOVE_DUPLICATES ALLGEN)
 list(SORT ALLGEN)
+#file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/before.txt "${ALLGEN}")
+# this should not be necessary, but without it there are some issues
+# with empty srcML files
+list(REMOVE_DUPLICATES ALLGEN)
+#file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/after.txt "${ALLGEN}")
+
 
 add_custom_target(singletests DEPENDS ${ALLGEN})
 
@@ -297,6 +302,7 @@ foreach(GENURL ${ALLGEN})
     # Generate "formfeed" "comment" "block" "struct" "ifthenelse"
 
     foreach(VARIATION "formfeed" "comment" "block" "struct" "preproc" "ifthenelse")
+        # preproc and struct do not work with Java
         if(LANGEXT STREQUAL "java" AND (VARIATION STREQUAL "struct" OR VARIATION STREQUAL "preproc"))
             continue()
         endif()
@@ -343,7 +349,7 @@ foreach(GENURL ${ALLGEN})
 
 endforeach()
 
-list(REMOVE_DUPLICATES COMMANDS)
+#list(REMOVE_DUPLICATES COMMANDS)
 list(TRANSFORM COMMANDS PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
 
 add_custom_target(wraptests DEPENDS ${COMMANDS})

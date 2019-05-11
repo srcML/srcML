@@ -22,14 +22,14 @@ LANGUAGE_ALL_BASE ternary
 
 LANGUAGE_ALL_GEN while
 LANGUAGE_ALL_GEN ifnestcond
-LANGUAGE_ALL_GEN return
+# LANGUAGE_ALL_GEN return
 LANGUAGE_ALL_GEN function_decl
 LANGUAGE_ALL_GEN ifblock
 
 #LANGUAGE_CXX_FAMILY constructor_explicit
 LANGUAGE_CXX_GEN constructor_explicit
-LANGUAGE_CXX destructor_virtual
-LANGUAGE_CXX_FAMILY function_const
+LANGUAGE_CXX_GEN destructor_virtual
+#LANGUAGE_CXX_FAMILY function_const
 #LANGUAGE_CXX_FAMILY struct
 #LANGUAGE_C_FAMILY_NO_SHARP union
 
@@ -91,7 +91,7 @@ LANGUAGE_CXX typedef_struct
 LANGUAGE_CXX operator
 LANGUAGE_CXX function_cpp
 LANGUAGE_CXX call_ns
-LANGUAGE_CXX expression_pointer
+#LANGUAGE_CXX expression_pointer
 LANGUAGE_CXX enum_cpp
 LANGUAGE_CXX operator_cpp
 LANGUAGE_CXX call_cpp
@@ -225,7 +225,7 @@ LANGUAGE_OBJECTIVE_C_GEN dynamic_m
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
 LANGUAGE_JAVA keyword_java
-LANGUAGE_JAVA interface_java
+LANGUAGE_JAVA_GEN interface_java
 LANGUAGE_JAVA package_java
 LANGUAGE_JAVA finally_java
 LANGUAGE_JAVA generics_java
