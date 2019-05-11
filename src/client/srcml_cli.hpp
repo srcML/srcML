@@ -42,8 +42,8 @@ const int SRCML_COMMAND_QUIET                     = 1<<4;
 const int SRCML_COMMAND_VERBOSE                   = 1<<5;
 const int SRCML_COMMAND_VERSION                   = 1<<6;
 
-const int SRCML_COMMAND_EXPRESSION                = 1<<7;
-const int SRCML_COMMAND_INTERACTIVE               = 1<<8;
+//const int SRCML_COMMAND_EXPRESSION                = 1<<7;
+//const int SRCML_COMMAND_INTERACTIVE               = 1<<8;
 const int SRCML_COMMAND_XML                       = 1<<9;
 const int SRCML_COMMAND_SRC                       = 1<<10;
 const int SRCML_COMMAND_LIST                      = 1<<11;

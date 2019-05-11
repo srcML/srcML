@@ -180,8 +180,6 @@ void option_command_deprecated(bool opt) {
       // Notify user of deprecated options
       if (command == SRCML_COMMAND_UNITS)
         SRCMLstatus(INFO_MSG, "srcml: use of option --units or -n is deprecated");
-      if (command == SRCML_COMMAND_EXPRESSION)
-        SRCMLstatus(INFO_MSG, "srcml: use of option --expression or -e is deprecated");
     }
 }
 
@@ -458,7 +456,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         deprecated_options.add_options()
             ("units,n", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_UNITS>), "Output number of srcML files and exit")
-            ("expression,e", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_EXPRESSION>), "Expression mode for translating a single expression not in a statement")
             ;
 
         debug_options.add_options()
@@ -469,7 +466,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         experimental_options.add_options()
             ("revision", prog_opts::value<size_t>()->notifier(&option_field<&srcml_request_t::revision>), "Extract the given revision (0 = original, 1 = modified)")
             ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "Output and update existing srcml")
-            ("interactive,c", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INTERACTIVE>), "Immediate output while parsing, default for keyboard input")
             ("xml-processing", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xml_processing>), "Add XML processing instruction")
             ("pretty", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_field<&srcml_request_t::pretty_format>), "Custom formatting for output")
             ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "Run a user defined external script or application on srcml client output")
@@ -565,12 +561,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // If position option is used without tabs...set default tab of 8
         if ((*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0) || srcml_request.tabs == 0)
             srcml_request.tabs = 8;
-
-#if defined(__GNUG__) && !defined(__MINGW32__)
-        // automatic interactive use from stdin (not on redirect or pipe)
-        if (isatty(STDIN_FILENO))
-            option_command<SRCML_COMMAND_INTERACTIVE>(true);
-#endif
 
         // check namespaces
         for (size_t i = 0; i < srcml_get_namespace_size(); ++i) {
