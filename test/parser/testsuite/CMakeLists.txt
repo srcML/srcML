@@ -155,6 +155,7 @@ message(STATUS "  Generating from templates")
 # Template-based C in C++ mode
 function(template OUT_FILE NAME IN_FILES)
 	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE})
+		message("TRANSFORMING: ${OUT_FILE}")
 		list(TRANSFORM IN_FILES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 		foreach(FILE ${IN_FILES})
 			file(READ ${FILE} S)
@@ -297,7 +298,7 @@ foreach(GENURL ${ALLGEN})
 	set(URL "${CMAKE_MATCH_1}")
 	set(LANGEXT "${CMAKE_MATCH_2}")
 
-	message("${GENURL}")
+	#message("${GENURL}")
 
 	if(GENURL STREQUAL "try")
 		message("TRY")
@@ -322,9 +323,9 @@ foreach(GENURL ${ALLGEN})
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertformfeed.xsl   --url=${URL}.formfeed   ${GENURL} -o ${URL}.formfeed.${LANGEXT}.xml
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertcomment.xsl    --url=${URL}.comment    ${GENURL} -o ${URL}.comment.${LANGEXT}.xml
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertblock.xsl      --url=${URL}.block      ${GENURL} -o ${URL}.block.${LANGEXT}.xml
-#				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
+				COMMAND [ "${LANGEXT}" != "java" ] && srcml --output-xml --xslt ${XSLT_DIR}/insertstruct.xsl     --url=${URL}.struct     ${GENURL} -o ${URL}.struct.${LANGEXT}.xml
 				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertifthenelse.xsl --url=${URL}.ifthenelse ${GENURL} -o ${URL}.ifthenelse.${LANGEXT}.xml
-#				COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
+				COMMAND [ "${LANGEXT}" != "java" ] && srcml --output-xml --xslt ${XSLT_DIR}/insertpreproc.xsl    --url=${URL}.preproc    ${GENURL} -o ${URL}.preproc.${LANGEXT}.xml
 				COMMAND srcml --unit=1 --url=${URL}.all --output-xml ${GENURL} -o ${URL}.all.${LANGEXT}.template
 				COMMAND srcml --output-xml-inner ${GENURL} -o ${URL}.all.${LANGEXT}.template
 				DEPENDS ${GENURL}
@@ -333,7 +334,7 @@ foreach(GENURL ${ALLGEN})
 #				OUTPUT_VARIABLE ALL_INNER
 			)
 			list(APPEND ALLGEN ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
-			list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
+			list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml) #${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
 
 		else()
 			# execute_process(
@@ -365,7 +366,7 @@ foreach(GENURL ${ALLGEN})
 				 ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml
 			)
 			list(APPEND ALLGEN ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml)
-			list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml)
+			list(APPEND COMMANDS ${URL}.formfeed.${LANGEXT}.xml) # ${URL}.comment.${LANGEXT}.xml ${URL}.block.${LANGEXT}.xml ${URL}.struct.${LANGEXT}.xml ${URL}.ifthenelse.${LANGEXT}.xml ${URL}.preproc.${LANGEXT}.xml)
 		endif()
 
 		# file(READ ${CMAKE_CURRENT_BINARY_DIR}/${URL}.all.${LANGEXT}.template ALLHEADER)
@@ -379,7 +380,7 @@ foreach(GENURL ${ALLGEN})
 		# list(APPEND COMMANDS ${URL}.all.${LANGEXT}.xml)
 	endif()
 
-	message("DONE ${GENURL}")
+	#message("DONE ${GENURL}")
 
 	if(ONEPASS)
 		break()
