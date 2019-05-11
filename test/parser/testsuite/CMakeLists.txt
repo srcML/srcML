@@ -296,15 +296,10 @@ set(COMMANDS)
 # Generate variations: formfeed, comment, block, etc.
 foreach(GENURL ${ALLGEN})
 
-	string(REGEX MATCH "([a-z_]+)\.([a-z_]+)\.xml" _ "${GENURL}")
-	set(URL "${CMAKE_MATCH_1}")
-	set(LANGEXT "${CMAKE_MATCH_2}")
-
-	#message("${GENURL}")
-
-	if(GENURL STREQUAL "try")
-		message("TRY")
-	endif()
+	get_filename_component(SRCFILENAME "${GENURL}" NAME_WLE)
+	get_filename_component(URL "${SRCFILENAME}" NAME_WLE)
+	get_filename_component(EXTENSION "${SRCFILENAME}" LAST_EXT)
+	string(SUBSTRING "${EXTENSION}" 1 -1 LANGEXT)
 
 	# Generate "formfeed" "comment" "block" "struct" "ifthenelse" in parallel
 	if (FORCE_REBUILD OR NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/${URL}.formfeed.${LANGEXT}.xml)
