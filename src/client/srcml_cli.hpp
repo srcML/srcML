@@ -42,41 +42,39 @@ const int SRCML_COMMAND_QUIET                     = 1<<4;
 const int SRCML_COMMAND_VERBOSE                   = 1<<5;
 const int SRCML_COMMAND_VERSION                   = 1<<6;
 
-//const int SRCML_COMMAND_EXPRESSION                = 1<<7;
-//const int SRCML_COMMAND_INTERACTIVE               = 1<<8;
-const int SRCML_COMMAND_XML                       = 1<<9;
-const int SRCML_COMMAND_SRC                       = 1<<10;
-const int SRCML_COMMAND_LIST                      = 1<<11;
-const int SRCML_COMMAND_UNITS                     = 1<<12;
+const int SRCML_COMMAND_XML                       = 1<<7;
+const int SRCML_COMMAND_SRC                       = 1<<8;
+const int SRCML_COMMAND_LIST                      = 1<<9;
+const int SRCML_COMMAND_UNITS                     = 1<<10;
 
-const int SRCML_COMMAND_TO_DIRECTORY              = 1<<13;
-const int SRCML_COMMAND_TIMESTAMP                 = 1<<14;
+const int SRCML_COMMAND_TO_DIRECTORY              = 1<<11;
+const int SRCML_COMMAND_TIMESTAMP                 = 1<<12;
 
-const int SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE    = 1<<15;
-const int SRCML_COMMAND_DISPLAY_SRCML_URL         = 1<<16;
-const int SRCML_COMMAND_DISPLAY_SRCML_FILENAME    = 1<<17;
-const int SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION = 1<<18;
-const int SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP   = 1<<19;
-const int SRCML_COMMAND_DISPLAY_SRCML_HASH        = 1<<20;
-const int SRCML_COMMAND_DISPLAY_SRCML_ENCODING    = 1<<21;
+const int SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE    = 1<<13;
+const int SRCML_COMMAND_DISPLAY_SRCML_URL         = 1<<14;
+const int SRCML_COMMAND_DISPLAY_SRCML_FILENAME    = 1<<15;
+const int SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION = 1<<16;
+const int SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP   = 1<<17;
+const int SRCML_COMMAND_DISPLAY_SRCML_HASH        = 1<<18;
+const int SRCML_COMMAND_DISPLAY_SRCML_ENCODING    = 1<<19;
 
-const int SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER     = 1<<22;
-const int SRCML_COMMAND_UPDATE                    = 1<<23;
+const int SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER     = 1<<20;
+const int SRCML_COMMAND_UPDATE                    = 1<<21;
 
-const int SRCML_COMMAND_NOARCHIVE                 = 1<<24;
+const int SRCML_COMMAND_NOARCHIVE                 = 1<<22;
 
-const int SRCML_DEBUG_MODE                        = 1<<25;
+const int SRCML_DEBUG_MODE                        = 1<<23;
 
-const int SRCML_TIMING_MODE                       = 1<<26;
+const int SRCML_TIMING_MODE                       = 1<<24;
 
-const int SRCML_ARCHIVE                           = 1<<27;
+const int SRCML_ARCHIVE                           = 1<<25;
 
-const int SRCML_HASH                              = 1<<28;
+const int SRCML_HASH                              = 1<<26;
 
-const int SRCML_COMMAND_XML_RAW                   = 1<<29;
-const int SRCML_COMMAND_XML_FRAGMENT              = 1<<30;
+const int SRCML_COMMAND_XML_RAW                   = 1<<27;
+const int SRCML_COMMAND_XML_FRAGMENT              = 1<<28;
 
-const int SRCML_COMMAND_PARSER_TEST               = 1<<31;
+const int SRCML_COMMAND_PARSER_TEST               = 1<<29;
 
 // commands that are simple queries on srcml
 const int SRCML_COMMAND_INSRCML =
