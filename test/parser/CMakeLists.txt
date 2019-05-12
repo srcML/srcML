@@ -23,16 +23,16 @@ set(TESTSUITE ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
 add_custom_target(run    COMMENT "Runs all parser test cases"
                          COMMAND time srcml --parser-test ${CMAKE_CURRENT_BINARY_DIR}/testsuite VERBATIM)
 add_custom_target(c      COMMENT "Runs all C parser test cases"
-                         COMMAND time srcml --parser-test --language="C"    ${TESTSUITE} VERBATIM)
+                         COMMAND time srcml --parser-test --language=C    ${TESTSUITE} VERBATIM)
 add_custom_target(cpp    COMMENT "Runs all C++ parser test cases"
-                         COMMAND time srcml --parser-test --language="C++"  ${TESTSUITE} VERBATIM)
+                         COMMAND time srcml --parser-test --language=C++  ${TESTSUITE} VERBATIM)
 add_custom_target(C++    COMMENT "Runs all C++ parser test cases"
-                         COMMAND time srcml --parser-test --language="C++"  ${TESTSUITE} VERBATIM)
+                         COMMAND time srcml --parser-test --language=C++  ${TESTSUITE} VERBATIM)
 add_custom_target(java   COMMENT "Runs all C++ parser test cases"
-                         COMMAND time srcml --parser-test --language="Java" ${TESTSUITE} VERBATIM)
+                         COMMAND time srcml --parser-test --language=Java ${TESTSUITE} VERBATIM)
 add_custom_target(cs     COMMENT "Runs all C language parser test cases"
-                         COMMAND time srcml --parser-test --language="C\#"  ${TESTSUITE} VERBATIM)
+                         COMMAND time srcml --parser-test --language=C\#  ${TESTSUITE} VERBATIM)
 add_custom_target(CSHARP COMMENT "Runs all C language parser test cases"
-                         COMMAND time srcml --parser-test --language="C\#"  ${TESTSUITE} VERBATIM)
+                         COMMAND time srcml --parser-test --language=C\#  ${TESTSUITE} VERBATIM)
 
 add_subdirectory(testsuite)
