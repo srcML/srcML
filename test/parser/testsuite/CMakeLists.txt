@@ -18,7 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 option(FORCE_REBUILD OFF "Force a rebuild of all parser tests")
-option(ONEPASS OFF "One pass through any loop")
 
 message(STATUS "Generating Parser Testfiles:")
 
@@ -96,7 +95,7 @@ add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml 
 
 message(STATUS "  Generating from templates")
 
-# Template-based C in C++ mode
+# Template-based test cases
 function(template OUT_FILE NAME)
 
     set(IN_FILES ${ARGN})
@@ -225,9 +224,6 @@ foreach(GEN ${SUITE})
 
     endif()
 
-    if(ONEPASS)
-        break()
-    endif()
 endforeach()
 
 list(SORT ALLGEN)
@@ -278,10 +274,6 @@ foreach(GENURL ${ALLGEN})
         OUTPUT ${URL}.all.${LANGEXT}.xml
     )
     list(APPEND COMMANDS ${URL}.all.${LANGEXT}.xml)
-
-    if(ONEPASS)
-        break()
-    endif()
 
 endforeach()
 
