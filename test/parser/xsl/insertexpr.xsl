@@ -23,7 +23,7 @@
 <xsl:variable name="expressions" select="document($expr_filename)//src:expr"/>
 
 <!-- select the examples with an expression -->
-<xsl:template match="/src:unit/src:unit[.//src:expr]">
+<xsl:template match="src:unit[.//src:expr]">
 
 	<xsl:variable name="m" select="."/>
 
@@ -34,10 +34,11 @@
 		</xsl:apply-templates>
 
 	</xsl:for-each>
+
 </xsl:template>
 
 <!-- select the examples with an expression -->
-<xsl:template match="/src:unit/src:unit" mode="insert">
+<xsl:template match="src:unit" mode="insert">
 	<xsl:param name="newexpr"/>
 
 	<xsl:text>

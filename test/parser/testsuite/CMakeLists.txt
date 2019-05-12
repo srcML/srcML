@@ -66,9 +66,19 @@ endmacro()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
 macro(transform PRODUCT BASE URL XSLT)
-    add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=${URL} ${BASE} -o ${PRODUCT}
-                    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}
-                    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
+
+    # set(EXTRA)
+    # set(IN_FILES ${ARGN})
+    # foreach(FILE ${IN_FILES})
+    #     set(EXTRA "${EXTRA} --xslt-param=${FILE}")
+    # endforeach()
+
+    # Passing xslt params is not working, so set here for insertexpr
+    set(EXTRA --xslt-param=expr_filename=${CMAKE_CURRENT_BINARY_DIR}/expression.cpp.xml)
+
+    add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${BASE} -o ${PRODUCT}
+                    OUTPUT ${PRODUCT}
+                    DEPENDS ${BASE}
                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}")
@@ -78,14 +88,6 @@ endmacro()
 message(STATUS "  Generating transformations")
 
 configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
-
-add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return return_base.cpp.xml
-                            -o return.cpp.xml
-                   DEPENDS return_base.cpp.xml
-                   OUTPUT return.cpp.xml
-                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
-list(APPEND ALLGEN ${CMAKE_CURRENT_BINARY_DIR}/return.cpp.xml)
 
 add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
                    DEPENDS finally_cs.cs.xml

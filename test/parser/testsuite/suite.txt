@@ -296,6 +296,8 @@ LANGUAGE_TRANSFORM throw_m.m.xml throw.cpp.xml throw keyword2mkeyword.xsl
 LANGUAGE_TRANSFORM throw_base_m.m.xml throw_base.cpp.xml throw keyword2mkeyword.xsl
 LANGUAGE_TRANSFORM dynamic_m.m.xml synthesize_m.m.xml dynamic synthesize2dynamic.xsl
 
+LANGUAGE_TRANSFORM return.cpp.xml return_base.cpp.xml return insertexpr.xsl expr_filename=\"${CMAKE_CURRENT_BINARY_DIR}/expression.cpp.xml\"
+
 LANGUAGE_TEMPLATE c_cpp_mode_restrict.cpp.xml restrict c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
 LANGUAGE_TEMPLATE c_cpp_mode_mutable.cpp.xml mutable c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
 LANGUAGE_TEMPLATE c_cpp_mode_try.cpp.xml try c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_simple_decl.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_enum.in c_cpp_mode_call.in c_cpp_mode_footer.in
