@@ -59,7 +59,7 @@ macro(setlanguage INLANG LANG URL BASEEXT)
                 COMMENT "Generating parser testfile ${PRODUCT}"
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-    list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}")
+    list(APPEND ALLGEN "${PRODUCT}")
 endmacro()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
@@ -80,11 +80,11 @@ macro(transform PRODUCT BASE URL XSLT)
                     COMMENT "Generating parser testfile ${PRODUCT}"
                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-    list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}")
+    list(APPEND ALLGEN "${PRODUCT}")
 endmacro()
 
 # Generate special transformations
-message(STATUS "  Generating transformations")
+message(STATUS "  Generating special transformation targets")
 
 configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
 
@@ -92,8 +92,6 @@ add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml 
                    DEPENDS finally_cs.cs.xml
                    OUTPUT finally_java.java.xml
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
-message(STATUS "  Generating from templates")
 
 # Template-based test cases
 function(template OUT_FILE NAME)
@@ -106,10 +104,10 @@ function(template OUT_FILE NAME)
 
     file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/${OUT_FILE} "${CONTENTS}")
 
-    list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE}")
+    list(APPEND ALLGEN "${OUT_FILE}")
 endfunction()
 
-message(STATUS "  Generating language variations")
+message(STATUS "  Generating suite targets")
 
 # Process all tests in suite.txt according to their categories
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/suite.txt SUITE REGEX "^LANGUAGE_")
@@ -124,7 +122,7 @@ foreach(GEN ${SUITE})
     if(CATEGORY STREQUAL "LANGUAGE_ALL_BASE")
 
         # base is C++, so these just get added
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
+        list(APPEND ALLGEN "${URL}.cpp.xml")
         foreach(LANG "Java" "C#" "Objective-C" "C")
             setlanguage("C++" "${LANG}" "${URL}" "cpp")
         endforeach()
@@ -132,7 +130,7 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_ALL_GEN")
 
         # explicitly generated
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
+        list(APPEND ALLGEN "${URL}.cpp.xml")
         foreach(LANG "Java" "C#" "Objective-C" "C")
             setlanguage("C++" "${LANG}" "${URL}" "cpp")
         endforeach()
@@ -140,21 +138,21 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP")
 
         # exist, just add to list
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cs.xml")
+        list(APPEND ALLGEN "${URL}.cs.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP_GEN")
 
         # explicitly generated
-        #list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cs.xml")
+        #list(APPEND ALLGEN "${URL}.cs.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX")
 
         # exist, just add to list
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
+        list(APPEND ALLGEN "${URL}.cpp.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_FAMILY")
 
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
+        list(APPEND ALLGEN "${URL}.cpp.xml")
         foreach(LANG "C#")
             setlanguage("C++" "${LANG}" "${URL}" "cpp")
         endforeach()
@@ -162,18 +160,18 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
 
         # explicitly generated
-        #list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
+        #list(APPEND ALLGEN "${URL}.cpp.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
+        list(APPEND ALLGEN "${URL}.cpp.xml")
         foreach(LANG "C" "C#" "Objective-C")
             setlanguage("C++" "${LANG}" "${URL}" "cpp")
         endforeach()
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY_NO_SHARP")
 
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
+        list(APPEND ALLGEN "${URL}.cpp.xml")
         foreach(LANG "C" "Objective-C")
             setlanguage("C++" "${LANG}" "${URL}" "cpp")
         endforeach()
@@ -181,7 +179,7 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_C_ONLY")
 
         # exist, just add to list
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.c.xml")
+        list(APPEND ALLGEN "${URL}.c.xml")
         foreach(LANG "Objective-C")
             setlanguage("C" "${LANG}" "${URL}" "c")
         endforeach()
@@ -189,27 +187,27 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_JAVA")
 
         # exist, just add to list
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.java.xml")
+        list(APPEND ALLGEN "${URL}.java.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_JAVA_GEN")
 
         # explicitly generated
-        #list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.java.xml")
+        #list(APPEND ALLGEN "${URL}.java.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C")
 
         # exist, just add to list
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.m.xml")
+        list(APPEND ALLGEN "${URL}.m.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C_GEN")
 
         # explicitly generated
-        #list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.m.xml")
+        #list(APPEND ALLGEN "${URL}.m.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OO")
 
         # base is C++, so these just get added
-        list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${URL}.cpp.xml")
+        list(APPEND ALLGEN "${URL}.cpp.xml")
         foreach(LANG "C#" "Java")
             setlanguage("C++" "${LANG}" "${URL}" "cpp")
         endforeach()
@@ -233,9 +231,10 @@ list(SORT ALLGEN)
 list(REMOVE_DUPLICATES ALLGEN)
 #file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/after.txt "${ALLGEN}")
 
-add_custom_target(parser_solitary DEPENDS ${ALLGEN})
+add_custom_target(parser_solitary DEPENDS ${ALLGEN}
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-message(STATUS "  Generating context variations")
+message(STATUS "  Generating context variation targets")
 
 set(COMMANDS)
 
@@ -279,11 +278,10 @@ foreach(GENURL ${ALLGEN})
 
 endforeach()
 
-#list(REMOVE_DUPLICATES COMMANDS)
-list(TRANSFORM COMMANDS PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
-
-add_custom_target(parser_tests DEPENDS ${COMMANDS})
+add_custom_target(parser_tests DEPENDS ${COMMANDS}
+                  COMMENT "Generated parser testfile target"
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB TEST_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.xml)
 list(LENGTH TEST_FILES LEN)
-message(STATUS "  Installed Parser Test files: ${LEN}")
+message(STATUS "  Installed Parser Testfiles: ${LEN}")
