@@ -96,12 +96,17 @@ add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml 
 # Template-based test cases
 function(template OUT_FILE NAME)
 
+    # cat all the files into one string
     set(IN_FILES ${ARGN})
     foreach(FILE ${IN_FILES})
         file(READ ${CMAKE_CURRENT_SOURCE_DIR}/${FILE} S)
-        set(CONTENTS "${CONTENTS}${S}")
+        set(RAWCONTENTS "${RAWCONTENTS}${S}")
     endforeach()
 
+    # replace the placeholder (in configure_file() format)
+    string(REPLACE "\$$\{NAME\}" "${NAME}" CONTENTS "${RAWCONTENTS}")
+
+    # write the substituted string
     file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/${OUT_FILE} "${CONTENTS}")
 
     list(APPEND ALLGEN "${OUT_FILE}")
@@ -225,11 +230,11 @@ foreach(GEN ${SUITE})
 endforeach()
 
 list(SORT ALLGEN)
-#file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/before.txt "${ALLGEN}")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/before.txt "${ALLGEN}")
 # this should not be necessary, but without it there are some issues
 # with empty srcML files
 list(REMOVE_DUPLICATES ALLGEN)
-#file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/after.txt "${ALLGEN}")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/after.txt "${ALLGEN}")
 
 add_custom_target(parser_solitary DEPENDS ${ALLGEN}
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
