@@ -235,7 +235,7 @@ list(SORT ALLGEN)
 list(REMOVE_DUPLICATES ALLGEN)
 #file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/after.txt "${ALLGEN}")
 
-add_custom_target(singletests DEPENDS ${ALLGEN})
+add_custom_target(parser_solitary DEPENDS ${ALLGEN})
 
 message(STATUS "  Generating context variations")
 
@@ -286,7 +286,7 @@ endforeach()
 #list(REMOVE_DUPLICATES COMMANDS)
 list(TRANSFORM COMMANDS PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
 
-add_custom_target(wraptests DEPENDS ${COMMANDS})
+add_custom_target(parser_tests DEPENDS ${COMMANDS})
 
 file(GLOB TEST_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.xml)
 list(LENGTH TEST_FILES LEN)
