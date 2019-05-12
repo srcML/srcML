@@ -255,9 +255,9 @@ LANGUAGE_OO specifier_oo
 LANGUAGE_OO throw_base
 LANGUAGE_OO throw
 
-TEMPLATE c_cpp_mode_restrict.cpp.xml restrict c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_enum.template c_cpp_mode_specifier.template c_cpp_mode_call.template c_cpp_mode_footer.template
-TEMPLATE c_cpp_mode_mutable.cpp.xml  mutable  c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_enum.template c_cpp_mode_specifier.template c_cpp_mode_call.template c_cpp_mode_footer.template
-TEMPLATE c_cpp_mode_try.cpp.xml      try      c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_simple_decl.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_enum.template c_cpp_mode_call.template c_cpp_mode_footer.template
-TEMPLATE c_cpp_mode_catch.cpp.xml    catch    c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_simple_decl.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_enum.template c_cpp_mode_footer.template
-TEMPLATE c_cpp_mode_class.cpp.xml    class    c_cpp_mode_header.template c_cpp_mode_basic.template c_cpp_mode_decl.template c_cpp_mode_single.template c_cpp_mode_call.template c_cpp_mode_footer.template
+TEMPLATE c_cpp_mode_restrict.cpp.xml restrict c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
+TEMPLATE c_cpp_mode_mutable.cpp.xml  mutable  c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
+TEMPLATE c_cpp_mode_try.cpp.xml      try      c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_simple_decl.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_enum.in c_cpp_mode_call.in c_cpp_mode_footer.in
+TEMPLATE c_cpp_mode_catch.cpp.xml    catch    c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_simple_decl.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_enum.in c_cpp_mode_footer.in
+TEMPLATE c_cpp_mode_class.cpp.xml    class    c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_call.in c_cpp_mode_footer.in
 

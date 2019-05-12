@@ -148,15 +148,17 @@ message(STATUS "  Generating from templates")
 
 # Template-based C in C++ mode
 function(template OUT_FILE NAME)
+
     set(IN_FILES ${ARGN})
     foreach(FILE ${IN_FILES})
         file(READ ${CMAKE_CURRENT_SOURCE_DIR}/${FILE} S)
-        set(RAW_CONTENTS "${RAW_CONTENTS}${S}")
+        set(CONTENTS "${CONTENTS}${S}")
     endforeach()
-    string(CONFIGURE "${RAW_CONTENTS}" CONTENTS)
+
     file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/${OUT_FILE} "${CONTENTS}")
 
     list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE}")
+    add_dependencies(${OUT_FILE} ${IN_FILES})
 endfunction()
 
 message(STATUS "  Generating language variations")
