@@ -255,9 +255,50 @@ LANGUAGE_OO specifier_oo
 LANGUAGE_OO throw_base
 LANGUAGE_OO throw
 
-TEMPLATE c_cpp_mode_restrict.cpp.xml restrict c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
-TEMPLATE c_cpp_mode_mutable.cpp.xml  mutable  c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
-TEMPLATE c_cpp_mode_try.cpp.xml      try      c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_simple_decl.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_enum.in c_cpp_mode_call.in c_cpp_mode_footer.in
-TEMPLATE c_cpp_mode_catch.cpp.xml    catch    c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_simple_decl.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_enum.in c_cpp_mode_footer.in
-TEMPLATE c_cpp_mode_class.cpp.xml    class    c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_call.in c_cpp_mode_footer.in
+
+# class -> struct
+LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl
+LANGUAGE_TRANSFORM struct_cpp.cpp.xml class_cpp.cpp.xml struct class2struct.xsl
+LANGUAGE_TRANSFORM struct_cs.cs.xml class_cs.cs.xml struct class2struct.xsl
+
+# struct -> union
+LANGUAGE_TRANSFORM union.cpp.xml struct.cpp.xml union struct2union.xsl
+LANGUAGE_TRANSFORM union_cpp.cpp.xml struct_cpp.cpp.xml union struct2union.xsl
+LANGUAGE_TRANSFORM union_c.c.xml struct_c.c.xml union struct2union.xsl
+
+# if -> while
+LANGUAGE_TRANSFORM while.cpp.xml if.cpp.xml while if2while.xsl
+
+# C++ special transformations
+LANGUAGE_TRANSFORM function_const.cpp.xml function.cpp.xml const addconst.xsl
+LANGUAGE_TRANSFORM constructor_explicit.cpp.xml constructor.cpp.xml constructor addexplicit.xsl
+LANGUAGE_TRANSFORM ifnestcond.cpp.xml if.cpp.xml if nestcond.xsl
+LANGUAGE_TRANSFORM destructor_virtual.cpp.xml destructor.cpp.xml destructor.virtual addvirtual.xsl
+LANGUAGE_TRANSFORM throw.cpp.xml throw_base.cpp.xml throw insertexpr.xsl
+LANGUAGE_TRANSFORM interface_java.java.xml class_java.java.xml interface class2interface.xsl
+LANGUAGE_TRANSFORM ifblock.cpp.xml if.cpp.xml if.block if2ifblock.xsl
+
+LANGUAGE_TRANSFORM function_decl.cpp.xml function.cpp.xml function defn2decl.xsl
+
+# Was in Makefile.gen, but cannot find the file
+#LANGUAGE_TRANSFORM function_asterisk.cpp.xml function_asterisk_decl.cpp.xml function defn2decl.xsl
+
+# Objective-C special transformations
+LANGUAGE_TRANSFORM class_implementation_m.m.xml class_interface_m.m.xml function interface2implementation.xsl
+LANGUAGE_TRANSFORM try_m.m.xml try.cpp.xml try keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM catch_m.m.xml catch_form.cpp.xml catch keyword2mkeyword.xsl
+
+# Objective-C try, catch, finally, throw from C++
+LANGUAGE_TRANSFORM try_m.m.xml try.cpp.xml try keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM catch_m.m.xml catch_form.cpp.xml catch keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM finally_m.m.xml finally_cs.cs.xml finally keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM throw_m.m.xml throw.cpp.xml throw keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM throw_base_m.m.xml throw_base.cpp.xml throw keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM dynamic_m.m.xml synthesize_m.m.xml dynamic synthesize2dynamic.xsl
+
+LANGUAGE_TEMPLATE c_cpp_mode_restrict.cpp.xml restrict c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
+LANGUAGE_TEMPLATE c_cpp_mode_mutable.cpp.xml mutable c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
+LANGUAGE_TEMPLATE c_cpp_mode_try.cpp.xml try c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_simple_decl.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_enum.in c_cpp_mode_call.in c_cpp_mode_footer.in
+LANGUAGE_TEMPLATE c_cpp_mode_catch.cpp.xml catch c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_simple_decl.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_enum.in c_cpp_mode_footer.in
+LANGUAGE_TEMPLATE c_cpp_mode_class.cpp.xml class c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_call.in c_cpp_mode_footer.in
 

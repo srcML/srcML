@@ -61,53 +61,23 @@ macro(setlanguage INLANG LANG URL BASEEXT)
                 OUTPUT ${PRODUCT}
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-    # record product so that variation are generated
     list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}")
 endmacro()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
-macro(transform BASE PRODUCT URL XSLT)
-
-#   execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=${URL} ${BASE}
-#                   OUTPUT_FILE ${PRODUCT}
-#                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+macro(transform PRODUCT BASE URL XSLT)
     add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} --url=${URL} ${BASE} -o ${PRODUCT}
                     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}
                     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${BASE}
                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-    # record product so that variation are generated
     list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}")
 endmacro()
 
 # Generate special transformations
 message(STATUS "  Generating transformations")
 
-# class -> struct
-transform(class.cpp.xml struct.cpp.xml "struct" "class2struct.xsl")
-transform(class_cpp.cpp.xml struct_cpp.cpp.xml "struct" "class2struct.xsl")
-transform(class_cs.cs.xml struct_cs.cs.xml "struct" "class2struct.xsl")
-
-# struct -> union
-transform(struct.cpp.xml union.cpp.xml "union" "struct2union.xsl")
-transform(struct_cpp.cpp.xml union_cpp.cpp.xml "union" "struct2union.xsl")
-transform(struct_c.c.xml union_c.c.xml "union" "struct2union.xsl")
-
 configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
-
-# if -> while
-transform(if.cpp.xml while.cpp.xml "while" "if2while.xsl")
-
-# C++ special transformations
-transform(function.cpp.xml function_const.cpp.xml "const" "addconst.xsl")
-transform(constructor.cpp.xml constructor_explicit.cpp.xml "constructor" "addexplicit.xsl")
-transform(if.cpp.xml ifnestcond.cpp.xml "if" "nestcond.xsl")
-transform(destructor.cpp.xml destructor_virtual.cpp.xml "destructor.virtual" "addvirtual.xsl")
-transform(throw_base.cpp.xml throw.cpp.xml "throw" "insertexpr.xsl")
-transform(class_java.java.xml interface_java.java.xml "interface" "class2interface.xsl")
-transform(if.cpp.xml ifblock.cpp.xml "if.block" "if2ifblock.xsl")
-#execute_process(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return ${CMAKE_CURRENT_BINARY_DIR}/return_base.cpp.xml
-#               OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/return.cpp.xml)
 
 add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertexpr.xsl --xslt-param=expr_filename="../testsuite/expression.cpp.xml" --url=return return_base.cpp.xml
                             -o return.cpp.xml
@@ -117,32 +87,10 @@ add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insertexpr.xsl 
 
 list(APPEND ALLGEN ${CMAKE_CURRENT_BINARY_DIR}/return.cpp.xml)
 
-transform(function.cpp.xml function_decl.cpp.xml "function" "defn2decl.xsl")
-
-# Was in Makefile.gen, but cannot find the file
-#transform(function_asterisk.cpp.xml function_asterisk_decl.cpp.xml "function" "defn2decl.xsl")
-
-# Objective-C special transformations
-transform(class_interface_m.m.xml class_implementation_m.m.xml "function" interface2implementation.xsl)
-transform(try.cpp.xml             try_m.m.xml                  "try"      keyword2mkeyword.xsl)
-transform(catch_form.cpp.xml      catch_m.m.xml                "catch"    keyword2mkeyword.xsl)
-
-# C# finally -> Java finally
-#execute_process(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
-#                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
 add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
                    DEPENDS finally_cs.cs.xml
                    OUTPUT finally_java.java.xml
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
-# Objective-C try, catch, finally, throw from C++
-transform(try.cpp.xml        try_m.m.xml        "try"     keyword2mkeyword.xsl)
-transform(catch_form.cpp.xml catch_m.m.xml      "catch"   keyword2mkeyword.xsl)
-transform(finally_cs.cs.xml  finally_m.m.xml    "finally" keyword2mkeyword.xsl)
-transform(throw.cpp.xml      throw_m.m.xml      "throw"   keyword2mkeyword.xsl)
-transform(throw_base.cpp.xml throw_base_m.m.xml "throw"   keyword2mkeyword.xsl)
-transform(synthesize_m.m.xml dynamic_m.m.xml    "dynamic" synthesize2dynamic.xsl)
 
 message(STATUS "  Generating from templates")
 
@@ -158,7 +106,6 @@ function(template OUT_FILE NAME)
     file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/${OUT_FILE} "${CONTENTS}")
 
     list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE}")
-    add_dependencies(${OUT_FILE} ${IN_FILES})
 endfunction()
 
 message(STATUS "  Generating language variations")
@@ -171,6 +118,7 @@ foreach(GEN ${SUITE})
     separate_arguments(GEN)
     list(GET GEN 0 CATEGORY)
     list(GET GEN 1 URL)
+    list(SUBLIST GEN 1 -1 FULLURL)
 
     if(CATEGORY STREQUAL "LANGUAGE_ALL_BASE")
 
@@ -265,9 +213,13 @@ foreach(GEN ${SUITE})
             setlanguage("C++" "${LANG}" "${URL}" "cpp")
         endforeach()
 
-    elseif(CATEGORY STREQUAL "TEMPLATE")
+    elseif(CATEGORY STREQUAL "LANGUAGE_TEMPLATE")
 
-        template(${URL})
+        template(${FULLURL})
+
+    elseif(CATEGORY STREQUAL "LANGUAGE_TRANSFORM")
+
+        transform(${FULLURL})
 
     endif()
 
@@ -282,7 +234,6 @@ list(SORT ALLGEN)
 # with empty srcML files
 list(REMOVE_DUPLICATES ALLGEN)
 #file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/after.txt "${ALLGEN}")
-
 
 add_custom_target(singletests DEPENDS ${ALLGEN})
 
@@ -301,7 +252,6 @@ foreach(GENURL ${ALLGEN})
     string(SUBSTRING "${EXTENSION}" 1 -1 LANGEXT)
 
     # Generate "formfeed" "comment" "block" "struct" "ifthenelse"
-
     foreach(VARIATION "formfeed" "comment" "block" "struct" "preproc" "ifthenelse")
         # preproc and struct do not work with Java
         if(LANGEXT STREQUAL "java" AND (VARIATION STREQUAL "struct" OR VARIATION STREQUAL "preproc"))
