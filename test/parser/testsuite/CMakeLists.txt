@@ -17,8 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-option(FORCE_REBUILD OFF "Force a rebuild of all parser tests")
-
 message(STATUS "Generating Parser Testfiles:")
 
 set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
