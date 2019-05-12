@@ -208,11 +208,10 @@ foreach(GEN ${SUITE})
 endforeach()
 
 list(SORT ALLGEN)
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/before.txt "${ALLGEN}")
+
 # this should not be necessary, but without it there are some issues
 # with empty srcML files
 list(REMOVE_DUPLICATES ALLGEN)
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/after.txt "${ALLGEN}")
 
 add_custom_target(parser_solitary DEPENDS ${ALLGEN}
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
