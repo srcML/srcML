@@ -33,28 +33,32 @@ set(ALLGEN)
 set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m")
 
 # Sets the language of the result
-macro(setlanguage INLANG LANG URL BASEEXT)
-
-    # convert from language to extension
-    list(FIND LANGLIST "${LANG}" LANGPOS)
-    math(EXPR LANGEXTPOS "${LANGPOS} + 1")
-    list(GET LANGLIST "${LANGEXTPOS}" LANGEXT)
+macro(setlanguage INLANG URL BASEEXT)
 
     # assumes a C++ base
     set(BASE "${URL}.${BASEEXT}.xml")
 
-    # strip _base from URL
-#   string(REGEX REPLACE "_base" "" PRODURL "${URL}")
-#   set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
-    set(PRODUCT "${URL}.${LANGEXT}.xml")
+    set(PRODUCT_LANGS ${ARGN})
+    foreach(LANG ${PRODUCT_LANGS})
 
-    add_custom_command(COMMAND srcml --output-xml --language=${LANG} ${BASE} -o ${PRODUCT}
-                DEPENDS ${BASE}
-                OUTPUT ${PRODUCT}
-                COMMENT "Generating parser testfile ${PRODUCT}"
-                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+        # convert from language to extension
+        list(FIND LANGLIST "${LANG}" LANGPOS)
+        math(EXPR LANGEXTPOS "${LANGPOS} + 1")
+        list(GET LANGLIST "${LANGEXTPOS}" LANGEXT)
 
-    list(APPEND ALLGEN "${PRODUCT}")
+        # strip _base from URL
+        # string(REGEX REPLACE "_base" "" PRODURL "${URL}")
+        # set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
+        set(PRODUCT "${URL}.${LANGEXT}.xml")
+
+        add_custom_command(COMMAND srcml --output-xml --language=${LANG} ${BASE} -o ${PRODUCT}
+                    DEPENDS ${BASE}
+                    OUTPUT ${PRODUCT}
+                    COMMENT "Generating parser testfile ${PRODUCT}"
+                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+        list(APPEND ALLGEN "${PRODUCT}")
+    endforeach()
 endmacro()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
@@ -123,17 +127,13 @@ foreach(GEN ${SUITE})
 
         # base is C++, so these just get added
         list(APPEND ALLGEN "${URL}.cpp.xml")
-        foreach(LANG "Java" "C#" "Objective-C" "C")
-            setlanguage("C++" "${LANG}" "${URL}" "cpp")
-        endforeach()
+        setlanguage("C++" "${URL}" "cpp" "Java" "C#" "Objective-C" "C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_ALL_GEN")
 
         # explicitly generated
         list(APPEND ALLGEN "${URL}.cpp.xml")
-        foreach(LANG "Java" "C#" "Objective-C" "C")
-            setlanguage("C++" "${LANG}" "${URL}" "cpp")
-        endforeach()
+        setlanguage("C++" "${URL}" "cpp" "Java" "C#" "Objective-C" "C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP")
 
@@ -153,64 +153,42 @@ foreach(GEN ${SUITE})
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_FAMILY")
 
         list(APPEND ALLGEN "${URL}.cpp.xml")
-        foreach(LANG "C#")
-            setlanguage("C++" "${LANG}" "${URL}" "cpp")
-        endforeach()
+        setlanguage("C++" "${URL}" "cpp" "C#")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
-
-        # explicitly generated
-        #list(APPEND ALLGEN "${URL}.cpp.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
         list(APPEND ALLGEN "${URL}.cpp.xml")
-        foreach(LANG "C" "C#" "Objective-C")
-            setlanguage("C++" "${LANG}" "${URL}" "cpp")
-        endforeach()
+        setlanguage("C++" "${URL}" "cpp" "C" "C#" "Objective-C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY_NO_SHARP")
 
         list(APPEND ALLGEN "${URL}.cpp.xml")
-        foreach(LANG "C" "Objective-C")
-            setlanguage("C++" "${LANG}" "${URL}" "cpp")
-        endforeach()
-
+        setlanguage("C++" "${URL}" "cpp" "C" "Objective-C")
+ 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_ONLY")
 
-        # exist, just add to list
         list(APPEND ALLGEN "${URL}.c.xml")
-        foreach(LANG "Objective-C")
-            setlanguage("C" "${LANG}" "${URL}" "c")
-        endforeach()
+        setlanguage("C" "${URL}" "c" "Objective-C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_JAVA")
 
-        # exist, just add to list
         list(APPEND ALLGEN "${URL}.java.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_JAVA_GEN")
 
-        # explicitly generated
-        #list(APPEND ALLGEN "${URL}.java.xml")
-
     elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C")
 
-        # exist, just add to list
         list(APPEND ALLGEN "${URL}.m.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C_GEN")
-
-        # explicitly generated
-        #list(APPEND ALLGEN "${URL}.m.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OO")
 
         # base is C++, so these just get added
         list(APPEND ALLGEN "${URL}.cpp.xml")
-        foreach(LANG "C#" "Java")
-            setlanguage("C++" "${LANG}" "${URL}" "cpp")
-        endforeach()
+        setlanguage("C++" "${URL}" "cpp" "C#" "Java")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_TEMPLATE")
 
@@ -278,7 +256,15 @@ foreach(GENURL ${ALLGEN})
 
 endforeach()
 
-add_custom_target(parser_tests DEPENDS ${COMMANDS}
+# shows number of parser testfiles
+add_custom_command(
+    COMMAND ls *.xml | wc -l
+    COMMENT "Total Parser Testfiles: "
+    DEPENDS ${COMMANDS}
+    OUTPUT parser_testfile_count
+)
+
+add_custom_target(parser_tests DEPENDS ${COMMANDS} parser_testfile_count
                   COMMENT "Generated parser testfile target"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
