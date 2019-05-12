@@ -29,21 +29,16 @@ endforeach()
 
 set(ALLGEN)
 
+# Language name to extension mapping
+set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m")
+
 # Sets the language of the result
 macro(setlanguage INLANG LANG URL BASEEXT)
 
     # convert from language to extension
-    if(LANG STREQUAL "Java")
-        set(LANGEXT "java")
-    elseif(LANG STREQUAL "Objective-C")
-        set(LANGEXT "m")
-    elseif(LANG STREQUAL "C#")
-        set(LANGEXT "cs")
-    elseif(LANG STREQUAL "C")
-        set(LANGEXT "c")
-    else()
-        set(LANGEXT "cpp")
-    endif()
+    list(FIND LANGLIST "${LANG}" LANGPOS)
+    math(EXPR LANGEXTPOS "${LANGPOS} + 1")
+    list(GET LANGLIST "${LANGEXTPOS}" LANGEXT)
 
     # assumes a C++ base
     set(BASE "${URL}.${BASEEXT}.xml")
