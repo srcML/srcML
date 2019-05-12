@@ -147,22 +147,17 @@ transform(synthesize_m.m.xml dynamic_m.m.xml    "dynamic" synthesize2dynamic.xsl
 message(STATUS "  Generating from templates")
 
 # Template-based C in C++ mode
-function(template OUT_FILE NAME IN_FILES)
-    list(TRANSFORM IN_FILES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
+function(template OUT_FILE NAME)
+    set(IN_FILES ${ARGN})
     foreach(FILE ${IN_FILES})
-        file(READ ${FILE} S)
+        file(READ ${CMAKE_CURRENT_SOURCE_DIR}/${FILE} S)
         set(RAW_CONTENTS "${RAW_CONTENTS}${S}")
     endforeach()
     string(CONFIGURE "${RAW_CONTENTS}" CONTENTS)
     file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/${OUT_FILE} "${CONTENTS}")
+
     list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE}")
 endfunction()
-
-template(c_cpp_mode_restrict.cpp.xml restrict "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
-template(c_cpp_mode_mutable.cpp.xml  mutable  "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_enum.template;c_cpp_mode_specifier.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
-template(c_cpp_mode_try.cpp.xml      try      "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
-template(c_cpp_mode_catch.cpp.xml    catch    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_simple_decl.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_enum.template;c_cpp_mode_footer.template")
-template(c_cpp_mode_class.cpp.xml    class    "c_cpp_mode_header.template;c_cpp_mode_basic.template;c_cpp_mode_decl.template;c_cpp_mode_single.template;c_cpp_mode_call.template;c_cpp_mode_footer.template")
 
 message(STATUS "  Generating language variations")
 
@@ -267,6 +262,10 @@ foreach(GEN ${SUITE})
         foreach(LANG "C#" "Java")
             setlanguage("C++" "${LANG}" "${URL}" "cpp")
         endforeach()
+
+    elseif(CATEGORY STREQUAL "TEMPLATE")
+
+        template(${URL})
 
     endif()
 
