@@ -56,6 +56,7 @@ macro(setlanguage INLANG LANG URL BASEEXT)
     add_custom_command(COMMAND srcml --output-xml --language=${LANG} ${BASE} -o ${PRODUCT}
                 DEPENDS ${BASE}
                 OUTPUT ${PRODUCT}
+                COMMENT "Generating parser testfile ${PRODUCT}"
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}")
@@ -76,6 +77,7 @@ macro(transform PRODUCT BASE URL XSLT)
     add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${BASE} -o ${PRODUCT}
                     OUTPUT ${PRODUCT}
                     DEPENDS ${BASE}
+                    COMMENT "Generating parser testfile ${PRODUCT}"
                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     list(APPEND ALLGEN "${CMAKE_CURRENT_BINARY_DIR}/${PRODUCT}")
@@ -257,6 +259,7 @@ foreach(GENURL ${ALLGEN})
         add_custom_command(
             COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
                      -o ${URL}.${VARIATION}.${LANGEXT}.xml
+            COMMENT "Generating parser testfile ${URL}.${VARIATION}.${LANGEXT}.xml"
             DEPENDS ${GENURL}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             OUTPUT ${URL}.${VARIATION}.${LANGEXT}.xml
@@ -267,6 +270,7 @@ foreach(GENURL ${ALLGEN})
     # all is generated separately because it does not use an XSLT transformation
     add_custom_command(
         COMMAND srcml --cat --url=${URL}.all ${GENURL} -o ${URL}.all.${LANGEXT}.xml
+        COMMENT "Generating parser testfile ${URL}.all.${LANGEXT}.xml"
         DEPENDS ${GENURL}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         OUTPUT ${URL}.all.${LANGEXT}.xml
