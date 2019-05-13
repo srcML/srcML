@@ -60,7 +60,7 @@ macro(setlanguage INLANG URL)
         set(OUTFILE "${URL}.${LANGEXT}.xml")
 
         add_custom_command(COMMAND srcml --output-xml --language=${LANG} ${BASEFILE} -o ${OUTFILE}
-                    DEPENDS ${BASEFILE}
+                    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${BASEFILE}
                     OUTPUT ${OUTFILE}
                     COMMENT "Generating parser testfile ${OUTFILE}"
                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
@@ -83,7 +83,7 @@ macro(transform OUTFILE INFILE URL XSLT)
 
     add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${INFILE} -o ${OUTFILE}
                        OUTPUT ${OUTFILE}
-                       DEPENDS ${INFILE}
+                       DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${INFILE}
                        COMMENT "Generating parser testfile ${OUTFILE}"
                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -96,7 +96,7 @@ message(STATUS "  Generating special transformation targets")
 configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
 
 add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
-                   DEPENDS finally_cs.cs.xml
+                   DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/finally_cs.cs.xml
                    OUTPUT finally_java.java.xml
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -104,18 +104,20 @@ add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml 
 macro(template OUT_FILE NAME)
 
     # cat all the files into one string
+    set(RAWCONTENTS "")
     foreach(FILE ${ARGN})
         file(READ ${CMAKE_CURRENT_SOURCE_DIR}/${FILE} S)
         set(RAWCONTENTS "${RAWCONTENTS}${S}")
     endforeach()
 
     # replace the placeholder (in configure_file() format)
-    string(REPLACE "\$$\{NAME\}" "${NAME}" CONTENTS "${RAWCONTENTS}")
+    string(REPLACE "\$\{NAME\}" "${NAME}" CONTENTS "${RAWCONTENTS}")
 
     # write the substituted string
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE} "${CONTENTS}")
 
     list(APPEND TESTFILES "${OUT_FILE}")
+
 endmacro()
 
 message(STATUS "  Generating suite targets")
@@ -215,9 +217,6 @@ list(SORT TESTFILES)
 # with empty srcML files
 list(REMOVE_DUPLICATES TESTFILES)
 
-add_custom_target(parser_solitary DEPENDS ${TESTFILES}
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
 message(STATUS "  Generating context variation targets")
 
 set(CONTEXT_FILES)
@@ -243,7 +242,7 @@ foreach(GENURL ${TESTFILES})
             COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
                      -o ${URL}.${VARIATION}.${LANGEXT}.xml
             COMMENT "Generating parser testfile ${URL}.${VARIATION}.${LANGEXT}.xml"
-            DEPENDS ${GENURL}
+            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             OUTPUT ${URL}.${VARIATION}.${LANGEXT}.xml
         )
@@ -254,13 +253,17 @@ foreach(GENURL ${TESTFILES})
     add_custom_command(
         COMMAND srcml --cat --url=${URL}.all ${GENURL} -o ${URL}.all.${LANGEXT}.xml
         COMMENT "Generating parser testfile ${URL}.all.${LANGEXT}.xml"
-        DEPENDS ${GENURL}
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         OUTPUT ${URL}.all.${LANGEXT}.xml
     )
     list(APPEND CONTEXT_FILES ${URL}.all.${LANGEXT}.xml)
 
 endforeach()
+
+# specify the build directory, as the WORKING_DIRECTORY does not always seem to
+# be used in the DEPENDS
+list(TRANSFORM CONTEXT_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
 
 # display number of parser testfiles
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/.count "echo '-- Total Parser Testfiles: ' | tr -d '\n'; ls *.xml | wc -l | tr -d ' '")
