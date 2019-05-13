@@ -159,13 +159,13 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         errors.push_back(errreport);
 
         std::ostringstream ossumreport;
-        ossumreport << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language << std::setw(FIELD_WIDTH_URL) << std::left << url << " " << std::setw(FIELD_WIDTH_URL) << previous_filename << '\t';
+        ossumreport << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language << std::setw(FIELD_WIDTH_URL) << std::left << url << " " << std::setw(FIELD_WIDTH_URL) << previous_filename << ' ';
         if (!summary.empty() && ossumreport.str() == summary.back().substr(0, ossumreport.str().size())) {
-            ossumreport.str() = summary.back().substr(0, summary.back().size() - 1);
+            ossumreport << summary.back().substr(ossumreport.str().size());
             ossumreport << ',';
             summary.pop_back();
         }
-        ossumreport << count << '\n';
+        ossumreport << count;
         summary.push_back(ossumreport.str());
 
         srcml_archive_write_string(archive, str2arg("\033[0;31m"));
@@ -195,6 +195,7 @@ void ParserTest::report(srcml_archive* archive) {
     std::sort(summary.begin(), summary.end());
     for (const auto& err : summary) {
         srcml_archive_write_string(archive, err.c_str(), (int) err.size());
+        srcml_archive_write_string(archive, "\n", 1);
     }
     double percent = double(failed * 100) / total;
     std::ostringstream sout;
