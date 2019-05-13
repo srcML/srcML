@@ -158,20 +158,15 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         errreport += '\n';
         errors.push_back(errreport);
 
-        std::string sumreport = unit_language;
-        sumreport += '\t';
-        sumreport += url;
-        sumreport += '\t';
-        sumreport += previous_filename;
-        sumreport += '\t';
-        if (!summary.empty() && sumreport == summary.back().substr(0, sumreport.size())) {
-            sumreport = summary.back().substr(0, summary.back().size() - 1);
-            sumreport += ',';
+        std::ostringstream ossumreport;
+        ossumreport << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language << std::setw(FIELD_WIDTH_URL) << std::left << url << " " << std::setw(FIELD_WIDTH_URL) << previous_filename << '\t';
+        if (!summary.empty() && ossumreport.str() == summary.back().substr(0, ossumreport.str().size())) {
+            ossumreport.str() = summary.back().substr(0, summary.back().size() - 1);
+            ossumreport << ',';
             summary.pop_back();
         }
-        sumreport += std::to_string(count);
-        sumreport += '\n';
-        summary.push_back(sumreport);
+        ossumreport << count << '\n';
+        summary.push_back(ossumreport.str());
 
         srcml_archive_write_string(archive, str2arg("\033[0;31m"));
         std::string result = std::to_string(count);
@@ -197,6 +192,7 @@ void ParserTest::report(srcml_archive* archive) {
     }
     // summary report
     srcml_archive_write_string(archive, str2arg("\n\nSummary:\n"));
+    std::sort(summary.begin(), summary.end());
     for (const auto& err : summary) {
         srcml_archive_write_string(archive, err.c_str(), (int) err.size());
     }
