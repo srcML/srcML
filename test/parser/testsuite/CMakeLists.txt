@@ -260,18 +260,16 @@ foreach(GENURL ${ALLGEN})
 
 endforeach()
 
-# shows number of parser testfiles
+# display number of parser testfiles
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/.count "echo '-- Total Parser Testfiles: ' | tr -d '\n'; ls *.xml | wc -l | tr -d ' '")
 add_custom_command(
-    COMMAND ls *.xml | wc -l
-    COMMENT "Total Parser Testfiles: "
+    COMMAND source .count
+    COMMENT ""
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS ${COMMANDS}
     OUTPUT parser_testfile_count
 )
 
-add_custom_target(parser_tests DEPENDS ${COMMANDS} parser_testfile_count
+add_custom_target(parser_tests DEPENDS parser_testfile_count
                   COMMENT "Generated parser testfile target"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-
-file(GLOB TEST_FILES ${CMAKE_CURRENT_BINARY_DIR}/*.xml)
-list(LENGTH TEST_FILES LEN)
-message(STATUS "  Installed Parser Testfiles: ${LEN}")
