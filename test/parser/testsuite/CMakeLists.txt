@@ -234,7 +234,8 @@ foreach(GENURL ${TESTFILES})
     # Generate "formfeed" "comment" "block" "struct" "ifthenelse"
     foreach(VARIATION "formfeed" "comment" "block" "struct" "preproc" "ifthenelse")
         # preproc and struct do not work with Java
-        if(LANGEXT STREQUAL "java" AND (VARIATION STREQUAL "struct" OR VARIATION STREQUAL "preproc"))
+        if((LANGEXT STREQUAL "java" AND (VARIATION STREQUAL "struct" OR VARIATION STREQUAL "preproc")) OR
+           (LANGEXT STREQUAL "cs" AND VARIATION STREQUAL "struct"))
             continue()
         endif()
 
