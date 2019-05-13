@@ -95,11 +95,13 @@
 <operator>.</operator><name>endm</name></name></expr>;</expr_stmt>
 </unit>
 -->
+<!--
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><specifier>static</specifier> <type><name>void</name></type>
 <name>lto_read_decls</name> <parameter_list>(<parameter><decl><type><macro><name>VEC</name><argument_list>(<argument>ld_plugin_symbol_resolution_t</argument>,<argument>heap</argument>)</argument_list></macro> <modifier>*</modifier></type><name>resolutions</name></decl></parameter>)</parameter_list>
 <block>{}</block></function>
 </unit>
+-->
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <macro><name>M</name><argument_list>(<argument>A</argument>)</argument_list></macro> <if_stmt><if>if<empty_stmt>;</empty_stmt></if></if_stmt>
