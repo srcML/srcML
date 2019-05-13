@@ -135,28 +135,12 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
             std::reverse(ssout.begin(), ssout.end());
         }
 
-        std::string errreport = "\033[0;30;1m";
-        errreport += unit_language;
-        errreport += '\t';
-        errreport += url;
-        errreport += '\t';
-        errreport += previous_filename;
-        errreport += '\t';
-        errreport += std::to_string(count);
-        errreport += "\033[0m";
-        errreport += '\n';
-        errreport += "\033[0;30;1m";
-        errreport += "test:\n";
-        errreport += "\033[0m";
-        errreport += sxml;
-        errreport += "\033[0;30;1m";
-        if (xml[strlen(xml) - 1] != '\n')
-            errreport += '\n';
-        errreport += "srcml:\n";
-        errreport += "\033[0m";
-        errreport += ssout;
-        errreport += '\n';
-        errors.push_back(errreport);
+        std::ostringstream oserrreport;
+        oserrreport << "\033[0;30;1m" << unit_language << '\t' << url << '\t' << previous_filename << '\t' << std::to_string(count) << "\033[0m" << '\n' << "\033[0;30;1m" << "test:\n" << "\033[0m" << sxml << "\033[0;30;1m";
+         if (xml[strlen(xml) - 1] != '\n')
+            oserrreport << '\n';
+        oserrreport << "srcml:\n" << "\033[0m" << ssout << '\n';
+        errors.push_back(oserrreport.str());
 
         std::ostringstream ossumreport;
         ossumreport << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language << std::setw(FIELD_WIDTH_URL) << std::left << url << " " << std::setw(FIELD_WIDTH_URL) << previous_filename << ' ';
