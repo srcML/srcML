@@ -40,7 +40,7 @@ function(lang2ext LANG EXT)
 endfunction()
 
 # Sets the language of the result
-function(setlanguage INLANG URL)
+macro(setlanguage INLANG URL)
 
     # convert from input language to input extension
     lang2ext("${INLANG}" INFILE_EXT)
@@ -67,10 +67,10 @@ function(setlanguage INLANG URL)
 
         list(APPEND TESTFILES "${OUTFILE}")
     endforeach()
-endfunction()
+endmacro()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
-function(transform OUTFILE INFILE URL XSLT)
+macro(transform OUTFILE INFILE URL XSLT)
 
     # set(EXTRA)
     # set(IN_FILES ${ARGN})
@@ -88,7 +88,7 @@ function(transform OUTFILE INFILE URL XSLT)
                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     list(APPEND TESTFILES "${OUTFILE}")
-endfunction()
+endmacro()
 
 # Generate special transformations
 message(STATUS "  Generating special transformation targets")
@@ -101,7 +101,7 @@ add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml 
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 # Template-based test cases
-function(template OUT_FILE NAME)
+macro(template OUT_FILE NAME)
 
     # cat all the files into one string
     foreach(FILE ${ARGN})
@@ -113,10 +113,10 @@ function(template OUT_FILE NAME)
     string(REPLACE "\$$\{NAME\}" "${NAME}" CONTENTS "${RAWCONTENTS}")
 
     # write the substituted string
-    file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/${OUT_FILE} "${CONTENTS}")
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE} "${CONTENTS}")
 
     list(APPEND TESTFILES "${OUT_FILE}")
-endfunction()
+endmacro()
 
 message(STATUS "  Generating suite targets")
 
@@ -268,7 +268,7 @@ add_custom_command(
     COMMAND source .count
     COMMENT ""
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${COMMANDS}
+    DEPENDS ${CONTEXT_FILES}
     OUTPUT parser_testfile_count
 )
 
