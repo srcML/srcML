@@ -21,53 +21,56 @@ message(STATUS "Generating Parser Testfiles:")
 
 set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
+# copy starting set of test cases
 file(GLOB PARSE_TESTS *.xml)
 foreach(PATH ${PARSE_TESTS})
-    get_filename_component(F ${PATH} NAME)
-    configure_file(${F} ${CMAKE_CURRENT_BINARY_DIR}/${F} COPYONLY)
+    get_filename_component(FILENAME ${PATH} NAME)
+    configure_file(${FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} COPYONLY)
 endforeach()
 
-set(ALLGEN)
+set(TESTFILES)
 
-# Language name to extension mapping
+# convert from input language to input extension
 set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m")
+function(lang2ext LANG EXT)
+    list(FIND LANGLIST "${LANG}" LANG_POS)
+    math(EXPR EXT_POS "${LANG_POS} + 1")
+    list(GET LANGLIST "${EXT_POS}" INFILE_EXT)
+    set(${EXT} "${INFILE_EXT}" PARENT_SCOPE)
+endfunction()
 
 # Sets the language of the result
-macro(setlanguage INLANG URL)
+function(setlanguage INLANG URL)
 
     # convert from input language to input extension
-    list(FIND LANGLIST "${INLANG}" INLANGPOS)
-    math(EXPR INLANGEXTPOS "${INLANGPOS} + 1")
-    list(GET LANGLIST "${INLANGEXTPOS}" BASEEXT)
+    lang2ext("${INLANG}" INFILE_EXT)
 
     # assumes a C++ base
-    set(BASE "${URL}.${BASEEXT}.xml")
+    set(BASEFILE "${URL}.${INFILE_EXT}.xml")
 
     set(PRODUCT_LANGS ${ARGN})
-    foreach(LANG ${PRODUCT_LANGS})
+    foreach(LANG ${ARGN})
 
         # convert from language to extension
-        list(FIND LANGLIST "${LANG}" LANGPOS)
-        math(EXPR LANGEXTPOS "${LANGPOS} + 1")
-        list(GET LANGLIST "${LANGEXTPOS}" LANGEXT)
+        lang2ext("${LANG}" LANGEXT)
 
         # strip _base from URL
         # string(REGEX REPLACE "_base" "" PRODURL "${URL}")
         # set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
-        set(PRODUCT "${URL}.${LANGEXT}.xml")
+        set(OUTFILE "${URL}.${LANGEXT}.xml")
 
-        add_custom_command(COMMAND srcml --output-xml --language=${LANG} ${BASE} -o ${PRODUCT}
-                    DEPENDS ${BASE}
-                    OUTPUT ${PRODUCT}
-                    COMMENT "Generating parser testfile ${PRODUCT}"
+        add_custom_command(COMMAND srcml --output-xml --language=${LANG} ${BASEFILE} -o ${OUTFILE}
+                    DEPENDS ${BASEFILE}
+                    OUTPUT ${OUTFILE}
+                    COMMENT "Generating parser testfile ${OUTFILE}"
                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-        list(APPEND ALLGEN "${PRODUCT}")
+        list(APPEND TESTFILES "${OUTFILE}")
     endforeach()
-endmacro()
+endfunction()
 
 # Transforms BASE into PRODUCT with XSLT and applies the given URL
-macro(transform PRODUCT BASE URL XSLT)
+function(transform OUTFILE INFILE URL XSLT)
 
     # set(EXTRA)
     # set(IN_FILES ${ARGN})
@@ -78,14 +81,14 @@ macro(transform PRODUCT BASE URL XSLT)
     # Passing xslt params is not working, so set here for insertexpr
     set(EXTRA --xslt-param=expr_filename=${CMAKE_CURRENT_BINARY_DIR}/expression.cpp.xml)
 
-    add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${BASE} -o ${PRODUCT}
-                    OUTPUT ${PRODUCT}
-                    DEPENDS ${BASE}
-                    COMMENT "Generating parser testfile ${PRODUCT}"
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+    add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${INFILE} -o ${OUTFILE}
+                       OUTPUT ${OUTFILE}
+                       DEPENDS ${INFILE}
+                       COMMENT "Generating parser testfile ${OUTFILE}"
+                       WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-    list(APPEND ALLGEN "${PRODUCT}")
-endmacro()
+    list(APPEND TESTFILES "${OUTFILE}")
+endfunction()
 
 # Generate special transformations
 message(STATUS "  Generating special transformation targets")
@@ -101,8 +104,7 @@ add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml 
 function(template OUT_FILE NAME)
 
     # cat all the files into one string
-    set(IN_FILES ${ARGN})
-    foreach(FILE ${IN_FILES})
+    foreach(FILE ${ARGN})
         file(READ ${CMAKE_CURRENT_SOURCE_DIR}/${FILE} S)
         set(RAWCONTENTS "${RAWCONTENTS}${S}")
     endforeach()
@@ -113,7 +115,7 @@ function(template OUT_FILE NAME)
     # write the substituted string
     file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/${OUT_FILE} "${CONTENTS}")
 
-    list(APPEND ALLGEN "${OUT_FILE}")
+    list(APPEND TESTFILES "${OUT_FILE}")
 endfunction()
 
 message(STATUS "  Generating suite targets")
@@ -131,68 +133,68 @@ foreach(GEN ${SUITE})
     if(CATEGORY STREQUAL "LANGUAGE_ALL_BASE")
 
         # base is C++, so these just get added
-        list(APPEND ALLGEN "${URL}.cpp.xml")
+        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_ALL_GEN")
 
         # explicitly generated
-        list(APPEND ALLGEN "${URL}.cpp.xml")
+        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP")
 
         # exist, just add to list
-        list(APPEND ALLGEN "${URL}.cs.xml")
+        list(APPEND TESTFILES "${URL}.cs.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP_GEN")
 
         # explicitly generated
-        #list(APPEND ALLGEN "${URL}.cs.xml")
+        #list(APPEND TESTFILES "${URL}.cs.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX")
 
         # exist, just add to list
-        list(APPEND ALLGEN "${URL}.cpp.xml")
+        list(APPEND TESTFILES "${URL}.cpp.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_FAMILY")
 
-        list(APPEND ALLGEN "${URL}.cpp.xml")
+        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C#")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
-        list(APPEND ALLGEN "${URL}.cpp.xml")
+        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C" "C#" "Objective-C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY_NO_SHARP")
 
-        list(APPEND ALLGEN "${URL}.cpp.xml")
+        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C" "Objective-C")
  
     elseif(CATEGORY STREQUAL "LANGUAGE_C_ONLY")
 
-        list(APPEND ALLGEN "${URL}.c.xml")
+        list(APPEND TESTFILES "${URL}.c.xml")
         setlanguage("C" "${URL}" "Objective-C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_JAVA")
 
-        list(APPEND ALLGEN "${URL}.java.xml")
+        list(APPEND TESTFILES "${URL}.java.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_JAVA_GEN")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C")
 
-        list(APPEND ALLGEN "${URL}.m.xml")
+        list(APPEND TESTFILES "${URL}.m.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C_GEN")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OO")
 
         # base is C++, so these just get added
-        list(APPEND ALLGEN "${URL}.cpp.xml")
+        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C#" "Java")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_TEMPLATE")
@@ -207,21 +209,21 @@ foreach(GEN ${SUITE})
 
 endforeach()
 
-list(SORT ALLGEN)
+list(SORT TESTFILES)
 
 # this should not be necessary, but without it there are some issues
 # with empty srcML files
-list(REMOVE_DUPLICATES ALLGEN)
+list(REMOVE_DUPLICATES TESTFILES)
 
-add_custom_target(parser_solitary DEPENDS ${ALLGEN}
+add_custom_target(parser_solitary DEPENDS ${TESTFILES}
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
 message(STATUS "  Generating context variation targets")
 
-set(COMMANDS)
+set(CONTEXT_FILES)
 
 # Generate variations: formfeed, comment, block, etc.
-foreach(GENURL ${ALLGEN})
+foreach(GENURL ${TESTFILES})
 
     # ${URL}.${LANGEXT}.xml
     get_filename_component(SRCFILENAME "${GENURL}" NAME_WLE)
@@ -245,7 +247,7 @@ foreach(GENURL ${ALLGEN})
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             OUTPUT ${URL}.${VARIATION}.${LANGEXT}.xml
         )
-        list(APPEND COMMANDS ${URL}.${VARIATION}.${LANGEXT}.xml)
+        list(APPEND CONTEXT_FILES ${URL}.${VARIATION}.${LANGEXT}.xml)
     endforeach()
 
     # all is generated separately because it does not use an XSLT transformation
@@ -256,7 +258,7 @@ foreach(GENURL ${ALLGEN})
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         OUTPUT ${URL}.all.${LANGEXT}.xml
     )
-    list(APPEND COMMANDS ${URL}.all.${LANGEXT}.xml)
+    list(APPEND CONTEXT_FILES ${URL}.all.${LANGEXT}.xml)
 
 endforeach()
 
