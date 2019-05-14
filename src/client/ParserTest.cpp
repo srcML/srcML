@@ -69,14 +69,18 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
     srcml_unit_unparse_memory(unit, &buffer, &size);
 
     // get the srcml
-    const char* xml = srcml_unit_get_srcml_inner(unit);
+    std::string sxml;
+    if (srcml_unit_get_srcml_inner(unit))
+        sxml = srcml_unit_get_srcml_inner(unit);
 
     srcml_unit* outunit = srcml_unit_clone(unit);
     srcml_unit_set_language(outunit, srcml_unit_get_language(unit));
 
     srcml_unit_parse_memory(outunit, buffer, size);
 
-    const char* sout = srcml_unit_get_srcml_inner(outunit);
+    std::string ssout;
+    if (srcml_unit_get_srcml_inner(outunit))
+        ssout = srcml_unit_get_srcml_inner(outunit);
 
     if (line_count >= 75) {
         std::ostringstream sout;
@@ -88,16 +92,17 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
 
     line_count += (int)std::to_string(count).size() + 1;
 
-    if (strcmp(sout, xml) == 0) {
-        std::ostringstream sout;
-        sout << "\033[0;33m" << count << "\033[0m";
-        srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
+    if (ssout == sxml) {
+        std::ostringstream output;
+        output << "\033[0;33m" << count << "\033[0m";
+        srcml_archive_write_string(archive, output.str().c_str(), (int) output.str().size());
     } else {
+        std::ostringstream output;
+        output << "\033[0;31m" << count << "\033[0m";
+        srcml_archive_write_string(archive, output.str().c_str(), (int) output.str().size());
+
         ++failed;
         ++misses[unit_language];
-
-        std::string sxml = xml;
-        std::string ssout = sout;
 
         const int CUTOFF = 5;
         if (std::count(sxml.begin(), sxml.end(), '\n') > CUTOFF ||
@@ -105,6 +110,8 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
 
             // find where the strings are different
             auto off = std::mismatch(sxml.begin(), sxml.end(), ssout.begin());
+
+            // backup to right after the previous newline
             while (off.first != sxml.begin() && *off.first != '\n') {
                 off.first = std::prev(off.first);
                 off.second = std::prev(off.second);
@@ -113,13 +120,15 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
                 off.first = std::next(off.first);
                 off.second = std::next(off.second);
             }
+
+            // remove the common start of the strings
             sxml.erase(sxml.begin(), off.first);
             ssout.erase(ssout.begin(), off.second);
 
-            std::reverse(sxml.begin(), sxml.end());
-            std::reverse(ssout.begin(), ssout.end());
+            // find where the strings are different at the end
+            const auto endoff = std::mismatch(sxml.rbegin(), sxml.rend(), ssout.rbegin());
 
-            off = std::mismatch(sxml.begin(), sxml.end(), ssout.begin());
+            // backup to right before the previous newline
             while (off.first != sxml.begin() && *off.first != '\n') {
                 off.first = std::prev(off.first);
                 off.second = std::prev(off.second);
@@ -128,34 +137,31 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
                 off.first = std::next(off.first);
                 off.second = std::next(off.second);
             }
-            sxml.erase(sxml.begin(), off.first);
-            ssout.erase(ssout.begin(), off.second);
-
-            std::reverse(sxml.begin(), sxml.end());
-            std::reverse(ssout.begin(), ssout.end());
+            
+            // remove the common end of the strings
+            sxml.resize(sxml.size() - std::distance(sxml.rbegin(), endoff.first));
+            ssout.resize(ssout.size() - std::distance(ssout.rbegin(), endoff.second));
         }
 
-        std::ostringstream oserrreport;
-        oserrreport << "\033[0;30;1m" << unit_language << '\t' << url << '\t' << previous_filename << '\t' << std::to_string(count) << "\033[0m" << '\n' << "\033[0;30;1m" << "test:\n" << "\033[0m" << sxml << "\033[0;30;1m";
-         if (xml[strlen(xml) - 1] != '\n')
-            oserrreport << '\n';
-        oserrreport << "srcml:\n" << "\033[0m" << ssout << '\n';
-        errors.push_back(oserrreport.str());
+        // record for the error report
+        std::ostringstream error_report;
+        error_report << "\033[0;30;1m" << unit_language << '\t' << url << '\t' << previous_filename << '\t' << std::to_string(count) << "\033[0m" << '\n' << "\033[0;30;1m"
+                     << "test:\n" << "\033[0m" << sxml << "\033[0;30;1m";
+         if (sxml.back() != '\n')
+            error_report << '\n';
+        error_report << "srcml:\n" << "\033[0m" << ssout << '\n';
+        errors.push_back(error_report.str());
 
-        std::ostringstream ossumreport;
-        ossumreport << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language << std::setw(FIELD_WIDTH_URL) << std::left << url << " " << std::setw(FIELD_WIDTH_URL) << previous_filename << ' ';
-        if (!summary.empty() && ossumreport.str() == summary.back().substr(0, ossumreport.str().size())) {
-            ossumreport << summary.back().substr(ossumreport.str().size());
-            ossumreport << ',';
+        // record for the summary report
+        std::ostringstream summary_report;
+        summary_report << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language << std::setw(FIELD_WIDTH_URL) << std::left << url << " " << std::setw(FIELD_WIDTH_URL) << previous_filename << ' ';
+        if (!summary.empty() && summary_report.str() == summary.back().substr(0, summary_report.str().size())) {
+            summary_report << summary.back().substr(summary_report.str().size());
+            summary_report << ',';
             summary.pop_back();
         }
-        ossumreport << count;
-        summary.push_back(ossumreport.str());
-
-        srcml_archive_write_string(archive, str2arg("\033[0;31m"));
-        std::string result = std::to_string(count);
-        srcml_archive_write_string(archive, result.c_str(), (int) result.size());
-        srcml_archive_write_string(archive, str2arg("\033[0m"));
+        summary_report << count;
+        summary.push_back(summary_report.str());
     }
     srcml_archive_write_string(archive, " ", 1);
 
