@@ -77,8 +77,6 @@ include(CTest)
 # used as defaults for installation and packaging
 include(GNUInstallDirs)
 
-set(CMAKE_MACOSX_RPATH 1)
-
 add_subdirectory(src)
 add_subdirectory(test)
 
