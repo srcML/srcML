@@ -31,9 +31,9 @@ option(BUILD_PARSER_TESTS "Include tests for parser" OFF)
 # Turn ON building all tests
 option(BUILD_ALL_TESTS "Build all tests" OFF)
 if(BUILD_ALL_TESTS)
-	set(BUILD_CLIENT_TESTS ON)
-	set(BUILD_LIBSRCML_TESTS ON)
-	set(BUILD_PARSER_TESTS ON)
+    set(BUILD_CLIENT_TESTS ON)
+    set(BUILD_LIBSRCML_TESTS ON)
+    set(BUILD_PARSER_TESTS ON)
 endif()
 
 # Turn ON/OFF building examples
@@ -46,16 +46,16 @@ option(BUILD_LIBSRCML_DOC "Build libsrcml documentation" OFF)
 # Turn ON building all documentation
 option(BUILD_ALL_DOCS "Build all documentation" OFF)
 if(BUILD_ALL_DOCS)
-	set(BUILD_CLIENT_DOC ON)
-	set(BUILD_LIBSRCML_DOC ON)
+    set(BUILD_CLIENT_DOC ON)
+    set(BUILD_LIBSRCML_DOC ON)
 endif()
 
 # Turn ON everything
 option(BUILD_ALL "Build all test, documentation, and examples" OFF)
 if(BUILD_ALL)
-	set(BUILD_ALL_TESTS ON)
-	set(BUILD_EXAMPLES ON)
-	set(BUILD_ALL_DOCS ON)
+    set(BUILD_ALL_TESTS ON)
+    set(BUILD_EXAMPLES ON)
+    set(BUILD_ALL_DOCS ON)
 endif()
 
 # Turn ON/OFF building libsrcml statically
@@ -76,6 +76,15 @@ include(CTest)
 
 # used as defaults for installation and packaging
 include(GNUInstallDirs)
+
+# Fedora and CentOS do not put /usr/local/{bin,lib64} on the default search paths
+# So change installation to /usr
+if(NOT CMAKE_INSTALL_PREFIX AND EXISTS /etc/os-release)
+    file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
+    if(DISTRO MATCHES "CentOS|Fedora")
+        set(CMAKE_INSTALL_PREFIX /usr)
+    endif()
+ endif()
 
 add_subdirectory(src)
 add_subdirectory(test)
