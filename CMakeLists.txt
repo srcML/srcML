@@ -74,17 +74,17 @@ endif()
 enable_testing()
 include(CTest)
 
-# used as defaults for installation and packaging
-include(GNUInstallDirs)
-
 # Fedora and CentOS do not put /usr/local/{bin,lib64} on the default search paths
 # So change installation to /usr
-if(NOT CMAKE_INSTALL_PREFIX AND EXISTS /etc/os-release)
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND EXISTS /etc/os-release)
     file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
     if(DISTRO MATCHES "CentOS|Fedora")
         set(CMAKE_INSTALL_PREFIX /usr)
     endif()
- endif()
+endif()
+
+# used as defaults for installation and packaging
+include(GNUInstallDirs)
 
 add_subdirectory(src)
 add_subdirectory(test)
