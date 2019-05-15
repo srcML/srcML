@@ -110,6 +110,7 @@ int srcml_input_srcml(ParseQueue& queue,
         prequest->srcml_arch = srcml_output_archive;
         prequest->unit = unit;
         prequest->needsparsing = false;
+        prequest->parsertest_filename = srcml_input.filename;
 
         if (srcml_archive_get_url(srcml_input_archive)) 
             prequest->url = srcml_archive_get_url(srcml_input_archive);
