@@ -167,5 +167,6 @@ struct srcml_request_t {
 
 // parse the CLI options into a srcml client request
 srcml_request_t parseCLI(int argc, char* argv[]);
+srcml_request_t parseCLI11(int argc, char* argv[]);
 
 #endif

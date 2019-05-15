@@ -56,8 +56,10 @@ int main(int argc, char * argv[]) {
     Timer runtime = Timer();
 
     // parse the command line
-    auto srcml_request = parseCLI(argc, argv);
+    auto srcml_request = parseCLI11(argc, argv);
 
+    exit(0);
+    
     // global access to options
     SRCMLOptions::set(srcml_request.command);
 

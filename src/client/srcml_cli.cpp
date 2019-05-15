@@ -25,6 +25,7 @@
 #include <boost/program_options.hpp>
 #include <stdlib.h>
 #include <SRCMLStatus.hpp>
+#include <CLI11.hpp>
 
 namespace prog_opts = boost::program_options;
 
@@ -121,7 +122,104 @@ const char* SRCML2SRC_FOOTER = R"(Examples:
   srcml m.cpp.xml --show-language
 )";
 
+
 srcml_request_t srcml_request;
+
+bool f(const std::string&) { return false; }
+
+srcml_request_t parseCLI11(int argc, char* argv[]) {
+
+    srcml_request_t srcml_request;
+
+    auto& request = srcml_request;
+
+    CLI::App app{SRCML_HEADER};
+
+    std::string str;
+
+    std::string filename = "default";
+
+
+    app.add_option_function<std::string>("-o,--output",
+
+        [&request](const std::string& value) {
+            request.output_filename = srcml_output_dest(value == "" ? "stdout://-" : value);
+
+            if (request.output_filename.protocol == "file")  {
+               if (request.output_filename.isdirectory || (request.output_filename.extension == ""
+                   && request.output_filename.filename[request.output_filename.filename.length() - 1] == '/')) {
+
+                request.command |= SRCML_COMMAND_TO_DIRECTORY;
+                request.command |= SRCML_COMMAND_NOARCHIVE;
+               }
+            }
+        }
+
+    , "Write output to FILE")->type_name("FILE");
+
+    request.att_xml_encoding = "UTF-8";
+    app.add_option_function<std::string>("--xml-encoding",
+        [&request](const std::string& value) {
+
+            // required since an error occurs if checked in client
+            if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
+                SRCMLstatus(ERROR_MSG, "srcml: invalid xml encoding \"%s\"", value);
+                exit(CLI_ERROR_INVALID_ARGUMENT);
+            }
+            request.att_xml_encoding = value;
+
+        }, "Set output XML encoding. Default is UTF-8")->type_name("ENCODING");
+//             ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "Output in XML instead of text")
+
+/*
+        src2srcml_options.add_options()
+            ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>)->value_name("FILE"), "Input source-code filenames from FILE")
+            ("text,t", prog_opts::value< std::vector<std::string> >()->notifier(&raw_text_args)->value_name("STRING"), "Input source code from string, e.g., --text=\"int a;\"")
+            ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>)->value_name("LANG"), "Set the source-code language to C, C++, C#, or Java. Required for --text option")
+            ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>)->value_name("EXT=LANG"), "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
+            ("src-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>)->value_name("ENCODING"), "Set the input source-code encoding")
+            ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_ARCHIVE>), "Create a srcML archive, default for multiple input files")
+            ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "Output in XML instead of text")
+            ("output-xml-outer", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_FRAGMENT>), "Output an inner unit from an XML archive")
+            ("output-xml-inner", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_RAW>), "Output contents of XML unit")
+            ;
+
+*/
+    app.add_option("--files-from", [&](const std::vector<std::string>& value)->bool {
+
+        srcml_request.files_from = value;
+        for (const auto& inputFile : value) {
+            srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", inputFile));
+        }
+        return true;
+    }, "Input source-code filenames from FILE")->type_name("FILE")->group("CREATING SRCML");
+    app.add_option("--text,-t", [&](const std::vector<std::string>& value)->bool {
+        for (const auto& raw_text : value) {
+            srcml_request.input_sources.push_back(src_prefix_add_uri("text", raw_text));
+        }
+        return true;
+    }, "Input source code from STRING, e.g., --text=\"int a;\"")->type_name("STRING");
+    app.add_option("--language,-l", request.att_language, "Set the source-code language to C, C++, C#, or Java. Required for --text option")->type_name("LANG")->group("CREATING SRCML");
+//    app.add_flag_callback("--register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>)->value_name("EXT=LANG"), "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
+
+    app.add_option("--src-encoding", request.src_encoding, "Set the input source-code encoding")->type_name("ENCODING")->group("CREATING SRCML");
+    app.add_flag_callback("--archive,-r", [&request]() { request.command |= SRCML_ARCHIVE; }, "Create a srcML archive, default for multiple input files")->group("CREATING SRCML");
+    app.add_flag_callback("--output-xml,-X",[&request]() { request.command |= SRCML_COMMAND_XML; }, "Output in XML instead of text")->group("CREATING SRCML");
+    app.add_flag_callback("--output-xml-outer",[&request]() { request.command |= SRCML_COMMAND_XML_FRAGMENT; }, "Output an inner unit from an XML archive")->group("CREATING SRCML");
+    app.add_flag_callback("--output-xml-inner",[&request]() { request.command |= SRCML_COMMAND_XML_RAW; }, "Output contents of XML unit")->group("CREATING SRCML");
+
+    //app.add_subcommand(src2srcml);
+
+    //CLI11_PARSE(app, argc, argv);
+    try {
+        app.parse(argc, argv);
+    } catch (const CLI::ParseError &e) {
+        app.exit(e);
+    }
+
+    return request;
+}
+
 
 // Define Program Options
 prog_opts::options_description general("GENERAL OPTIONS");
