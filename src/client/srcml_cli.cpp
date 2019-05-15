@@ -209,12 +209,11 @@ void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& 
 // option src encoding
 template <>
 void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
-/*
-    if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
+
+    if (value.empty() /* || srcml_check_encoding(value.c_str()) == 0 */) {
         SRCMLstatus(ERROR_MSG, "srcml: invalid src encoding \"" + value + "\"");
         exit(CLI_ERROR_INVALID_ARGUMENT);
     }
-    */
     srcml_request.src_encoding = value;
 }
 
@@ -222,6 +221,7 @@ void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
 template <>
 void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) {
 
+    // required since an error occurs if checked in client
     if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
         SRCMLstatus(ERROR_MSG, "srcml: invalid xml encoding \"%s\"", value);
         exit(CLI_ERROR_INVALID_ARGUMENT);
