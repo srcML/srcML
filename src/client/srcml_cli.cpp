@@ -143,7 +143,6 @@ prog_opts::options_description src2srcml("");
 prog_opts::options_description srcml2src("");
 prog_opts::options_description display("");
 
-
 // Positional Args
 prog_opts::positional_options_description input_file;
 
