@@ -33,29 +33,24 @@ xmlcheck "$expr_stmt_fsxmlfile"
 createfile sub/a.cpp "a"
 createfile sub/b.cpp "b;"
 
-# Deprecated warning message
-define deprecated_warning <<- 'STDERR'
-	srcml: use of option --expression or -e is deprecated
-STDERR
-
 # expression only
-srcml -e sub/a.cpp
-check "$fsxmlfile" "$deprecated_warning"
+srcml sub/a.cpp
+check "$fsxmlfile"
 
-srcml --expression sub/a.cpp
-check "$fsxmlfile" "$deprecated_warning"
+srcml sub/a.cpp
+check "$fsxmlfile"
 
-srcml sub/a.cpp -e
-check "$fsxmlfile" "$deprecated_warning"
+srcml sub/a.cpp
+check "$fsxmlfile"
 
-srcml sub/a.cpp --expression
-check "$fsxmlfile" "$deprecated_warning"
+srcml sub/a.cpp
+check "$fsxmlfile"
 
-srcml -l C++ --expression -o sub/a.cpp.xml < sub/a.cpp
-check sub/a.cpp.xml "$sxmlfile" "$deprecated_warning"
+srcml -l C++ -o sub/a.cpp.xml < sub/a.cpp
+check sub/a.cpp.xml "$sxmlfile"
 
-srcml --expression sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml "$fsxmlfile" "$deprecated_warning"
+srcml sub/a.cpp -o sub/a.cpp.xml
+check sub/a.cpp.xml "$fsxmlfile"
 
 # auto-detection
 srcml sub/a.cpp
@@ -69,23 +64,23 @@ check sub/a.cpp.xml "$fsxmlfile"
 
 
 # within expression statement
-srcml -e sub/b.cpp
-check "$expr_stmt_fsxmlfile" "$deprecated_warning"
+srcml sub/b.cpp
+check "$expr_stmt_fsxmlfile"
 
-srcml --expression sub/b.cpp
-check "$expr_stmt_fsxmlfile" "$deprecated_warning"
+srcml sub/b.cpp
+check "$expr_stmt_fsxmlfile"
 
-srcml sub/b.cpp -e
-check "$expr_stmt_fsxmlfile" "$deprecated_warning"
+srcml sub/b.cpp
+check "$expr_stmt_fsxmlfile"
 
-srcml sub/b.cpp --expression
-check "$expr_stmt_fsxmlfile" "$deprecated_warning"
+srcml sub/b.cpp
+check "$expr_stmt_fsxmlfile"
 
-srcml -l C++ --expression -o sub/b.cpp.xml < sub/b.cpp
-check sub/b.cpp.xml "$expr_stmt_sxmlfile" "$deprecated_warning"
+srcml -l C++ -o sub/b.cpp.xml < sub/b.cpp
+check sub/b.cpp.xml "$expr_stmt_sxmlfile"
 
-srcml --expression sub/b.cpp -o sub/b.cpp.xml
-check sub/b.cpp.xml "$expr_stmt_fsxmlfile" "$deprecated_warning"
+srcml sub/b.cpp -o sub/b.cpp.xml
+check sub/b.cpp.xml "$expr_stmt_fsxmlfile"
 
 # auto-detection
 srcml sub/b.cpp
