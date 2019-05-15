@@ -42,6 +42,7 @@ struct ParseRequest {
     srcml_unit* unit = nullptr;
     boost::optional<std::string> disk_filename;
     boost::optional<std::string> disk_dir;
+    std::string parsertest_filename;
     int position = 0;
     int status = 0;
     size_t loc = 0;

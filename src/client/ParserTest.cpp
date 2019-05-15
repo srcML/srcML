@@ -39,10 +39,9 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
     if (request->url)
         url = *request->url;
 
-    if (previous_filename.empty() || (request->filename && *request->filename != previous_filename)) {
+    if (previous_filename.empty() || (request->parsertest_filename != previous_filename)) {
 
-        if (request->filename)
-            previous_filename = *request->filename;
+        previous_filename = request->parsertest_filename;
         count = 0;
 
         unit_language = srcml_unit_get_language(unit);
