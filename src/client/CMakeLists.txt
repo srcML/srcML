@@ -26,7 +26,7 @@
 # - All subsequent arguments are linked as libraries.
 #
 
-set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES}
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${CURL_LIBRARIES}
                 CACHE INTERNAL "Libraries needed to build srcml")
 if(NOT WIN32 AND APPLE)
     list(APPEND SRCML_LIBRARIES pthread)
