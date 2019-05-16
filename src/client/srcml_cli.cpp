@@ -158,6 +158,13 @@ public:
 
 };
 
+void option_markup(srcml_request_t& srcml_request, int option) { 
+    if (!srcml_request.markup_options)
+      srcml_request.markup_options = 0;
+
+    *srcml_request.markup_options |= option;
+}
+
 srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     srcml_request_t srcml_request;
@@ -172,9 +179,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         }
     }
 
+    // @todo Put back SRCML_HEADER
     srcMLApp app;
-//    CLI::App app{SRCML_HEADER};
-    app.allow_extras();
+
+    // positional arguments, i.e., input files
+    app.add_option_function<std::vector<std::string>>("InputFiles", [&](const std::vector<std::string>& values) {
+            positional_args(srcml_request, values);
+    }, "");
 
     // general 
     app.add_flag_callback("--version,-V", [&]() { srcml_request.command |= SRCML_COMMAND_VERSION; },
@@ -185,21 +196,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Conversion and status information to stderr")
         ->group("GENERAL");
 
-    app.add_flag_callback("--quiet,-q", [&]() { srcml_request.command |= SRCML_COMMAND_QUIET; },
+    app.add_flag_callback("--quiet,-q",   [&]() { srcml_request.command |= SRCML_COMMAND_QUIET; },
         "Suppress status messages")
         ->group("GENERAL");
 
     app.add_option_function<std::string>("-o,--output", [&](const std::string& value) {
-        srcml_request.output_filename = srcml_output_dest(value == "" ? "stdout://-" : value);
-
-        if (srcml_request.output_filename.protocol == "file")  {
-           if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension == ""
-               && srcml_request.output_filename.filename[srcml_request.output_filename.filename.length() - 1] == '/')) {
-
-            srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
-            srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
-           }
-        }
+        option_output_filename(srcml_request, value);
     }, "Write output to FILE")
         ->type_name("FILE")
         ->group("GENERAL");
@@ -246,7 +248,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Set the input source-code encoding")->type_name("ENCODING")
         ->group("CREATING SRCML");
     
-    app.add_flag_callback("--archive,-r", [&]() { srcml_request.command |= SRCML_ARCHIVE; },
+    app.add_flag_callback("--archive,-r", [&]() { option_markup(srcml_request, SRCML_ARCHIVE); },
         "Create a srcML archive, default for multiple input files")
         ->group("CREATING SRCML");
     
@@ -263,7 +265,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML");
 
     // markup options
-    app.add_flag_callback("--position",[&]() { srcml_request.command |= SRCML_OPTION_POSITION; },
+    app.add_flag_callback("--position",[&]() { option_markup(srcml_request, SRCML_OPTION_POSITION); },
         "Include start and end attributes with line/column of each element")
         ->group("MARKUP OPTIONS");
 
@@ -273,15 +275,15 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("NUM")
         ->group("MARKUP OPTIONS");
 
-    app.add_flag_callback("--cpp",[&]() { srcml_request.command |= SRCML_OPTION_CPP; },
+    app.add_flag_callback("--cpp",[&]() { option_markup(srcml_request, SRCML_OPTION_CPP); },
         "Enable preprocessor parsing and markup (default for C/C++/C#)")
         ->group("MARKUP OPTIONS");
 
-    app.add_flag_callback("--cpp-markup-if0",[&]() { srcml_request.command |= SRCML_OPTION_CPP_MARKUP_IF0; },
+    app.add_flag_callback("--cpp-markup-if0",[&]() { option_markup(srcml_request, SRCML_OPTION_CPP_MARKUP_IF0); },
         "Markup preprocessor #if 0 regions")
         ->group("MARKUP OPTIONS");
 
-    app.add_flag_callback("--cpp-nomarkup-else",[&]() { srcml_request.command |= SRCML_OPTION_CPP_TEXT_ELSE; },
+    app.add_flag_callback("--cpp-nomarkup-else",[&]() { option_markup(srcml_request, SRCML_OPTION_CPP_TEXT_ELSE); },
         "Do not markup preprocessor #else/#elif regions")
         ->group("MARKUP OPTIONS");
 
@@ -300,7 +302,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("ENCODING")
         ->group("ENCODING");
 
-    app.add_flag_callback("--no-xml-declaration",[&]() { srcml_request.command |= SRCML_OPTION_XML_DECL; },
+    app.add_flag_callback("--no-xml-declaration",[&]() { option_markup(srcml_request, SRCML_OPTION_XML_DECL); },
         "Do not output the XML declaration")
         ->type_name("XML")
         ->group("ENCODING");
@@ -379,12 +381,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("VERSION")
         ->group("METADATA");
 
-    app.add_flag_callback("--hash",[&]() { 
-        if (!srcml_request.markup_options)
-          srcml_request.markup_options = 0;
-
-        *srcml_request.markup_options |= SRCML_HASH;
-    }, "Include generated hash attribute")
+    app.add_flag_callback("--hash",[&]() { option_markup(srcml_request, SRCML_HASH); },
+        "Include generated hash attribute")
         ->group("METADATA");
 
     app.add_flag_callback("--timestamp",[&]() { srcml_request.command |= SRCML_COMMAND_TIMESTAMP; },
@@ -441,10 +439,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         app.parse(argc, argv);
     } catch (const CLI::ParseError &e) {
         app.exit(e);
-        exit(1);
+        exit(CLI_ERROR_INVALID_ARGUMENT);
     }
-
-    positional_args(srcml_request, app.remaining());
 
     if (srcml_request.output_filename == "")
         option_output_filename(srcml_request, "");
@@ -600,6 +596,7 @@ void option_output_filename(srcml_request_t& srcml_request, const std::string& v
     }
 }
 
+#if 0
 void option_xmlns_uri(const std::string& value) {
     srcml_request.xmlns_namespaces[""] = value;
     srcml_request.xmlns_namespace_uris[value] = "";
@@ -618,6 +615,7 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
       srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
     }
 }
+#endif
 
 // option output to directory
 void option_to_dir(const std::string& value) {
@@ -630,7 +628,6 @@ void positional_args(srcml_request_t& srcml_request, const std::vector<std::stri
     srcml_request.input_sources.reserve(srcml_request.input_sources.size() + value.size());
 
     for (const auto& iname : value) {
-fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         // record the position of stdin
         if (iname == "-" || iname == "stdin://-")
