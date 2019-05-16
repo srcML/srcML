@@ -133,6 +133,9 @@ srcml_request_t srcml_request;
 void positional_args(srcml_request_t& srcml_request, const std::vector<std::string>& value);
 void option_output_filename(srcml_request_t& srcml_request, const std::string& value);
 
+// tranformation check on input
+bool is_transformation(const srcml_input_src& input);
+
 class srcMLApp : public CLI::App {
 public:
     srcMLApp() {
@@ -189,9 +192,19 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     srcMLApp app;
 
     // positional arguments, i.e., input files
-    app.add_option_function<std::vector<std::string>>("InputFiles", [&](const std::vector<std::string>& values) {
-            positional_args(srcml_request, values);
-    }, "");
+    app.add_option_function<std::vector<std::string>>("InputFiles", [&](const std::vector<std::string>&) {}, "")
+        ->each([&](std::string filename) {
+
+            // record the position of stdin
+            if (filename == "-" || filename == "stdin://-")
+                srcml_request.stdindex = (int) srcml_request.input_sources.size();
+
+            srcml_input_src input(filename);
+
+            if (!(is_transformation(input))) {
+              srcml_request.input_sources.push_back(input);
+            }
+        });
 
     // general 
     app.add_flag_callback("--version,-V", [&]() { srcml_request.command |= SRCML_COMMAND_VERSION; },
@@ -206,9 +219,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Suppress status messages")
         ->group("GENERAL");
 
-    app.add_option_function<std::string>("-o,--output", [&](const std::string& value) {
-        option_output_filename(srcml_request, value);
-    }, "Write output to FILE")
+    app.add_option("-o,--output",
+        "Write output to FILE")
+        ->each([&](std::string value) { option_output_filename(srcml_request, value); })
         ->type_name("FILE")
         ->group("GENERAL");
 
@@ -237,11 +250,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("LANG")
         ->group("CREATING SRCML");
 
-    app.add_option_function<std::string>("--text,-t", [&](const std::string& value) {
-        srcml_request.input_sources.push_back(src_prefix_add_uri("text", value));
-        return true;
-    },
+    app.add_option("--text,-t", 
         "Input source code from STRING, e.g., --text=\"int a;\"")
+        ->each([&](std::string text) { srcml_request.input_sources.push_back(src_prefix_add_uri("text", text)); })
         ->type_name("STRING")
         ->needs(language)
         ->type_size(-1);
@@ -296,16 +307,16 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     // xml_form
     srcml_request.att_xml_encoding = "UTF-8";
-    app.add_option_function<std::string>("--xml-encoding", [&](const std::string& value) {
+    app.add_option("--xml-encoding", srcml_request.att_xml_encoding,
+        "Set output XML encoding. Default is UTF-8")
+        ->check([&](const std::string &value) { 
 
             // required since an error occurs if checked in client
             if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-                SRCMLstatus(ERROR_MSG, "srcml: invalid xml encoding \"%s\"", value);
-                exit(CLI_ERROR_INVALID_ARGUMENT);
+                return std::string("invalid xml encoding \"") + value + "\"";
             }
-            srcml_request.att_xml_encoding = value;
 
-    }, "Set output XML encoding. Default is UTF-8")
+            return std::string(""); })
         ->type_name("ENCODING")
         ->group("ENCODING");
 
@@ -479,9 +490,6 @@ prog_opts::options_description display("");
 // Positional Args
 prog_opts::positional_options_description input_file;
 #endif
-
-// tranformation check on input
-bool is_transformation(const srcml_input_src& input);
 
 /* Most of the no parameter options could be recorded this way */
 template <int option>
