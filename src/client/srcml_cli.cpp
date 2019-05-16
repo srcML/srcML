@@ -130,6 +130,34 @@ srcml_request_t srcml_request;
 void positional_args(srcml_request_t& srcml_request, const std::vector<std::string>& value);
 void option_output_filename(srcml_request_t& srcml_request, const std::string& value);
 
+class srcMLApp : public CLI::App {
+public:
+    srcMLApp() {
+
+        // custom error message
+        failure_message_ = [](const CLI::App *app, const CLI::Error &e) {
+           // return std::string("foo");
+
+            std::string header = std::string("srcml: ") + e.what() + "\n";
+            std::vector<std::string> names;
+
+            // Collect names
+            if(app->get_help_ptr() != nullptr)
+                names.push_back(app->get_help_ptr()->get_name());
+
+            if(app->get_help_all_ptr() != nullptr)
+                names.push_back(app->get_help_all_ptr()->get_name());
+
+            // If any names found, suggest those
+//            if(!names.empty())
+//                header += std::string("srcml: Run with ") + /* detail::join(names, " or ") + */ " for more information.\n";
+
+            return header;
+        };
+    }
+
+};
+
 srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     srcml_request_t srcml_request;
@@ -144,7 +172,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         }
     }
 
-    CLI::App app{SRCML_HEADER};
+    srcMLApp app;
+//    CLI::App app{SRCML_HEADER};
     app.allow_extras();
 
     // general 
