@@ -22,9 +22,12 @@
 
 #include <srcml_cli.hpp>
 #include <src_prefix.hpp>
-//#include <boost/program_options.hpp>
+#include <cstring>
 #include <stdlib.h>
 #include <SRCMLStatus.hpp>
+
+#include <boost/optional/optional_io.hpp>
+#define CLI11_BOOST_OPTIONAL 1
 #include <CLI11.hpp>
 
 #if 0
@@ -169,6 +172,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     srcml_request_t srcml_request;
 
+    // does this need to be an optional?
+    srcml_request.markup_options = 0;
+
     // Convert --xmlns parameters of the form:
     //      --xmlns:pre="URL"
     // into
@@ -224,12 +230,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML");
 
     auto language =
-    app.add_option("--language,-l", *srcml_request.att_language,
+    app.add_option("--language,-l", srcml_request.att_language,
         "Set the source-code language to C, C++, C#, or Java. Required for --text option")
 //        ->check(CLI::IsMember({"C","C++","C#","Java"}))
+        ->expected(1)
         ->type_name("LANG")
         ->group("CREATING SRCML");
-    
+
     app.add_option_function<std::string>("--text,-t", [&](const std::string& value) {
         srcml_request.input_sources.push_back(src_prefix_add_uri("text", value));
         return true;
@@ -244,15 +251,15 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("EXT=LANG")
         ->group("CREATING SRCML");
     
-    app.add_option("--src-encoding", *srcml_request.src_encoding,
+    app.add_option("--src-encoding", srcml_request.src_encoding,
         "Set the input source-code encoding")->type_name("ENCODING")
         ->group("CREATING SRCML");
     
-    app.add_flag_callback("--archive,-r", [&]() { option_markup(srcml_request, SRCML_ARCHIVE); },
+    app.add_flag_callback("--archive,-r", [&]() { *srcml_request.markup_options |= SRCML_ARCHIVE; },
         "Create a srcML archive, default for multiple input files")
         ->group("CREATING SRCML");
     
-    app.add_flag_callback("--output-xml,-X",[&]() { srcml_request.command |= SRCML_COMMAND_XML; },
+    app.add_flag_callback("--output-xml,-X",   [&]() { srcml_request.command |= SRCML_COMMAND_XML; },
         "Output in XML instead of text")
         ->group("CREATING SRCML");
     
@@ -265,25 +272,25 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML");
 
     // markup options
-    app.add_flag_callback("--position",[&]() { option_markup(srcml_request, SRCML_OPTION_POSITION); },
+    app.add_flag_callback("--position",[&]() { *srcml_request.markup_options |= SRCML_OPTION_POSITION; },
         "Include start and end attributes with line/column of each element")
         ->group("MARKUP OPTIONS");
 
-    app.add_option("--tabs", *srcml_request.src_encoding,
+    app.add_option("--tabs", srcml_request.src_encoding,
         "Set tab stop at every NUM characters, default of 8")
         ->check(CLI::Number)
         ->type_name("NUM")
         ->group("MARKUP OPTIONS");
 
-    app.add_flag_callback("--cpp",[&]() { option_markup(srcml_request, SRCML_OPTION_CPP); },
+    app.add_flag_callback("--cpp",[&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP; },
         "Enable preprocessor parsing and markup (default for C/C++/C#)")
         ->group("MARKUP OPTIONS");
 
-    app.add_flag_callback("--cpp-markup-if0",[&]() { option_markup(srcml_request, SRCML_OPTION_CPP_MARKUP_IF0); },
+    app.add_flag_callback("--cpp-markup-if0",[&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP_MARKUP_IF0; },
         "Markup preprocessor #if 0 regions")
         ->group("MARKUP OPTIONS");
 
-    app.add_flag_callback("--cpp-nomarkup-else",[&]() { option_markup(srcml_request, SRCML_OPTION_CPP_TEXT_ELSE); },
+    app.add_flag_callback("--cpp-nomarkup-else",[&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP_TEXT_ELSE; },
         "Do not markup preprocessor #else/#elif regions")
         ->group("MARKUP OPTIONS");
 
@@ -302,7 +309,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("ENCODING")
         ->group("ENCODING");
 
-    app.add_flag_callback("--no-xml-declaration",[&]() { option_markup(srcml_request, SRCML_OPTION_XML_DECL); },
+    app.add_flag_callback("--no-xml-declaration",[&]() { *srcml_request.markup_options |= SRCML_OPTION_XML_DECL; },
         "Do not output the XML declaration")
         ->type_name("XML")
         ->group("ENCODING");
@@ -366,22 +373,22 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Output number of srcML files and exit")
         ->group("METADATA");
 
-    app.add_option("--show-prefix", *srcml_request.xmlns_prefix_query, 
+    app.add_option("--show-prefix", srcml_request.xmlns_prefix_query, 
         "Output prefix of namespace URI and exit")
         ->type_name("URI")
         ->group("METADATA");
 
-    app.add_option("--url", *srcml_request.att_url,
+    app.add_option("--url", srcml_request.att_url,
         "Set the url attribute")
         ->type_name("URL")
         ->group("METADATA");
 
-    app.add_option("--src-version,-s", *srcml_request.att_version, 
+    app.add_option("--src-version,-s", srcml_request.att_version, 
         "Set the version attribute")
         ->type_name("VERSION")
         ->group("METADATA");
 
-    app.add_flag_callback("--hash",[&]() { option_markup(srcml_request, SRCML_HASH); },
+    app.add_flag_callback("--hash",[&]() { *srcml_request.markup_options |= SRCML_HASH; },
         "Include generated hash attribute")
         ->group("METADATA");
 
@@ -636,8 +643,6 @@ void positional_args(srcml_request_t& srcml_request, const std::vector<std::stri
         srcml_input_src input(iname);
 
         if (!(is_transformation(input))) {
-          fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
-
           srcml_request.input_sources.push_back(input);
         }
     }
