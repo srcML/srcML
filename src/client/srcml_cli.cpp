@@ -30,10 +30,6 @@
 #define CLI11_BOOST_OPTIONAL 1
 #include <CLI11.hpp>
 
-#if 0
-namespace prog_opts = boost::program_options;
-#endif
-
 const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
        srcml [options] <srcML_infile>... [-o <src_outfile>]
 
@@ -164,13 +160,6 @@ public:
 
 };
 
-void option_markup(srcml_request_t& srcml_request, int option) { 
-    if (!srcml_request.markup_options)
-      srcml_request.markup_options = 0;
-
-    *srcml_request.markup_options |= option;
-}
-
 srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     srcml_request_t srcml_request;
@@ -266,7 +255,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Set the input source-code encoding")->type_name("ENCODING")
         ->group("CREATING SRCML");
     
-    app.add_flag_callback("--archive,-r", [&]() { *srcml_request.markup_options |= SRCML_ARCHIVE; },
+    app.add_flag_callback("--archive,-r",      [&]() { *srcml_request.markup_options |= SRCML_ARCHIVE; },
         "Create a srcML archive, default for multiple input files")
         ->group("CREATING SRCML");
     
@@ -283,7 +272,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML");
 
     // markup options
-    app.add_flag_callback("--position",[&]() { *srcml_request.markup_options |= SRCML_OPTION_POSITION; },
+    app.add_flag_callback("--position",        [&]() { *srcml_request.markup_options |= SRCML_OPTION_POSITION; },
         "Include start and end attributes with line/column of each element")
         ->group("MARKUP OPTIONS");
 
@@ -293,11 +282,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("NUM")
         ->group("MARKUP OPTIONS");
 
-    app.add_flag_callback("--cpp",[&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP; },
+    app.add_flag_callback("--cpp",              [&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP; },
         "Enable preprocessor parsing and markup (default for C/C++/C#)")
         ->group("MARKUP OPTIONS");
 
-    app.add_flag_callback("--cpp-markup-if0",[&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP_MARKUP_IF0; },
+    app.add_flag_callback("--cpp-markup-if0",   [&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP_MARKUP_IF0; },
         "Markup preprocessor #if 0 regions")
         ->group("MARKUP OPTIONS");
 
@@ -316,7 +305,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
                 return std::string("invalid xml encoding \"") + value + "\"";
             }
 
-            return std::string(""); })
+            return std::string("");
+        })
         ->type_name("ENCODING")
         ->group("ENCODING");
 
@@ -340,43 +330,43 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("ENCODING");
 
     // metadata
-    app.add_flag_callback("--list,-L",[&]() { srcml_request.command |= SRCML_COMMAND_LIST; },
+    app.add_flag_callback("--list,-L",        [&]() { srcml_request.command |= SRCML_COMMAND_LIST; },
         "List all files in the srcML archive and exit")
         ->group("METADATA");
 
-    app.add_flag_callback("--info,-i",[&]() { srcml_request.command |= SRCML_COMMAND_INFO; },
+    app.add_flag_callback("--info,-i",        [&]() { srcml_request.command |= SRCML_COMMAND_INFO; },
         "Output most metadata except srcML file count and exit")
         ->group("METADATA");
 
-    app.add_flag_callback("--full-info,-I",[&]() { srcml_request.command |= SRCML_COMMAND_LONGINFO; },
+    app.add_flag_callback("--full-info,-I",   [&]() { srcml_request.command |= SRCML_COMMAND_LONGINFO; },
         "Output all metadata including srcML file count and exit")
         ->group("METADATA");
 
-    app.add_flag_callback("--show-language",[&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE; },
+    app.add_flag_callback("--show-language",  [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE; },
         "Output source language and exit")
         ->group("METADATA");
 
-    app.add_flag_callback("--show-url",[&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_URL; },
+    app.add_flag_callback("--show-url",       [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_URL; },
         "Output source url and exit")
         ->group("METADATA");
 
-    app.add_flag_callback("--show-filename",[&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_FILENAME; },
+    app.add_flag_callback("--show-filename",  [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_FILENAME; },
         "Output source filename and exit")
         ->group("METADATA");
 
-    app.add_flag_callback("--show-version",[&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION; },
+    app.add_flag_callback("--show-version",   [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION; },
         "Output source version and exit")
         ->group("METADATA");
 
-    app.add_flag_callback("--show-timestamp",[&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP; },
+    app.add_flag_callback("--show-timestamp", [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP; },
         "Output source timestamp and exit")
         ->group("METADATA");
 
-    app.add_flag_callback("--show-hash",[&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_HASH; },
+    app.add_flag_callback("--show-hash",      [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_HASH; },
         "Output source hash and exit")
         ->group("METADATA");
 
-    app.add_flag_callback("--show-encoding",[&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_ENCODING; },
+    app.add_flag_callback("--show-encoding",  [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_ENCODING; },
         "Output xml encoding and exit")
         ->group("METADATA");
 
@@ -399,59 +389,112 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("VERSION")
         ->group("METADATA");
 
-    app.add_flag_callback("--hash",[&]() { *srcml_request.markup_options |= SRCML_HASH; },
+    app.add_flag_callback("--hash",      [&]() { *srcml_request.markup_options |= SRCML_HASH; },
         "Include generated hash attribute")
         ->group("METADATA");
 
-    app.add_flag_callback("--timestamp",[&]() { srcml_request.command |= SRCML_COMMAND_TIMESTAMP; },
+    app.add_flag_callback("--timestamp", [&]() { srcml_request.command |= SRCML_COMMAND_TIMESTAMP; },
         "Include generated timestamp attribute")
         ->group("METADATA");
-#if 0
-        srcml2src_options.add_options()
-            ("unit,U", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::unit>)->value_name("NUM"), "Extract the source code for an individual unit at position NUM in a srcML archive")
-            ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "Output in text instead of XML")
-            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir)->value_name("DIRECTORY"), "Extract source-code files to a DIRECTORY")
-            ;
 
-        query_transform.add_options()
-            ("xpath", prog_opts::value< std::vector<std::string> >()->value_name("XPATH"), "Apply XPATH expression to each individual srcML unit")
-            ("attribute", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:NAME=\"VALUE\""), "Insert attribute PREFIX:NAME=\"VALUE\" into element results of XPath query in original unit")
-            ("element", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:NAME"), "Insert element PREFIX:NAME around each element result of XPath query in original unit")
-            ("xslt", prog_opts::value< std::vector<std::string> >()->value_name("FILE"), "Apply the XSLT program FILE to each unit. FILE can be a url")
-            ("xslt-param", prog_opts::value< std::vector<std::string> >()->value_name("NAME=\"VALUE\""), "Passes the string parameter NAME with UTF-8 encoded string VALUE to the XSLT program")
-            ("relaxng", prog_opts::value< std::vector<std::string> >()->value_name("FILE"), "Output individual units that match the RelaxNG pattern FILE. FILE can be a url")
-            ;
+    // srcml2src
+    app.add_option("--unit,-U", srcml_request.unit, 
+        "Extract the source code for an individual unit at position NUM in a srcML archive")
+        ->type_name("NUM")
+        ->group("SRCML2SRC");
 
-        positional_options.add_options()
-            ("input-files", prog_opts::value< std::vector<std::string> >()->notifier(&positional_args), "Input files")
-            ;
-        
-        // Work arounds for dealing with implicit option properly
-        implicit_value_handlers.add_options()
-            ("text-equals-null", prog_opts::value< std::vector<std::string> >()->notifier(&raw_null_text_arg), "Work around for null text")
-            ;
+    app.add_flag_callback("--output-src,-S",  [&]() { srcml_request.command |= SRCML_COMMAND_SRC; },
+        "Output source code instead of srcML")
+        ->group("SRCML2SRC");
 
-        deprecated_options.add_options()
-            ("units,n", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_UNITS>), "Output number of srcML files and exit")
-            ;
+    app.add_option_function<std::string>("--to-dir", [&](const std::string& value) {
 
-        debug_options.add_options()
-            ("dev", prog_opts::bool_switch()->notifier(&option_command<SRCML_DEBUG_MODE>), "Enable developer debug mode.")
-            ("timing", prog_opts::bool_switch()->notifier(&option_command<SRCML_TIMING_MODE>), "Enable developer timing mode.")
-            ;
-            
-        experimental_options.add_options()
-            ("cat", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_CAT_XML>), "Cat all the XML units into a single unit")
-            ("revision", prog_opts::value<size_t>()->notifier(&option_field<&srcml_request_t::revision>), "Extract the given revision (0 = original, 1 = modified)")
-            ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "Output and update existing srcml")
-            ("xml-processing", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xml_processing>), "Add XML processing instruction")
-            ("pretty", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_field<&srcml_request_t::pretty_format>), "Custom formatting for output")
-            ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "Run a user defined external script or application on srcml client output")
-            ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "Set the line endings for a desired environment \"Windows\" or \"Unix\"")
-            ("unstable-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER>), "Enable non-strict output ordering")
-            ("parser-test", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_PARSER_TEST>), "Run parser tests on the input files")
-            ;
-#endif
+        srcml_request.output_filename = srcml_output_dest(value);
+        srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
+        srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
+        return true;
+    },
+        "Extract source-code files to a DIRECTORY")
+        ->type_name("DIRECTORY")
+        ->group("SRCML2SRC");
+
+    // query/transform
+    app.add_option("--xpath", 
+        "Apply XPATH expression to each individual srcML unit")
+        ->type_name("XPATH")
+        ->group("QUERY/TRANSFORM");
+
+    app.add_option("--attribute", 
+        "Insert attribute PREFIX:NAME=\"VALUE\" into element results of XPath query in original unit")
+        ->type_name("PREFIX:NAME=\"VALUE\"")
+        ->group("QUERY/TRANSFORM");
+
+    app.add_option("--element", 
+        "Insert element PREFIX:NAME around each element result of XPath query in original unit")
+        ->type_name("PREFIX:NAME")
+        ->group("QUERY/TRANSFORM");
+
+    app.add_option("--xslt", 
+        "Apply the XSLT program FILE to each unit. FILE can be a url")
+        ->type_name("FILE")
+        ->group("QUERY/TRANSFORM");
+
+    app.add_option("--xslt-param", 
+        "Passes the string parameter NAME with UTF-8 encoded string VALUE to the XSLT program")
+        ->type_name("NAME=\"VALUE\"")
+        ->group("QUERY/TRANSFORM");
+
+    app.add_option("--relaxng", 
+        "Output individual units that match the RelaxNG pattern FILE. FILE can be a url")
+        ->type_name("FILE")
+        ->group("QUERY/TRANSFORM");
+
+    // debug
+    app.add_flag_callback("--dev",          [&]() { srcml_request.command |= SRCML_DEBUG_MODE; },
+        "Enable developer debug mode.")
+        ->group("DEBUG");
+
+    app.add_flag_callback("--timing",       [&]() { srcml_request.command |= SRCML_TIMING_MODE; },
+        "Enable developer timing mode.")
+        ->group("DEBUG");
+
+    // experimental_options
+    app.add_flag_callback("--cat",      [&]() { srcml_request.command |= SRCML_COMMAND_CAT_XML; },
+        "Cat all the XML units into a single unit")
+        ->group("");
+
+    app.add_flag("--revision", srcml_request.revision, 
+        "Extract the given revision (0 = original, 1 = modified)")
+        ->group("");
+
+    app.add_flag_callback("--update",       [&]() { srcml_request.command |= SRCML_COMMAND_UPDATE; },
+        "Output and update existing srcml")
+        ->group("");
+
+    app.add_flag("--xml-processing", srcml_request.xml_processing,
+        "Add XML processing instruction")
+        ->group("");
+    
+    srcml_request.pretty_format = "";
+    app.add_flag("--pretty", srcml_request.pretty_format,
+        "Custom formatting for output")
+        ->group("");
+    
+    app.add_flag("--external", srcml_request.external,
+        "Run a user defined external script or application on srcml client output")
+        ->group("");
+    
+    app.add_flag("--line-ending", srcml_request.line_ending,
+        "Set the line endings for a desired environment \"Windows\" or \"Unix\"")
+        ->group("");
+    
+    app.add_flag_callback("--unstable-order",   [&]() { srcml_request.command |= SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER; },
+        "Enable non-strict output ordering")
+        ->group("");
+    
+    app.add_flag_callback("--parser-test",      [&]() { srcml_request.command |= SRCML_COMMAND_PARSER_TEST; },
+        "Run parser tests on the input files")
+        ->group("");
 
     try {
         app.parse(argc, argv);
@@ -465,52 +508,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     return srcml_request;
 }
-
-#if 0
-// Define Program Options
-prog_opts::options_description general("GENERAL OPTIONS");
-prog_opts::options_description src2srcml_options("CREATING SRCML");
-prog_opts::options_description srcml2src_options("EXTRACTING SOURCE CODE");
-prog_opts::options_description query_transform("QUERY & TRANSFORMATION");
-prog_opts::options_description positional_options("POSITIONAL");
-prog_opts::options_description deprecated_options("DEPRECATED OPTIONS");
-prog_opts::options_description debug_options("DEBUG OPTIONS");
-prog_opts::options_description experimental_options("EXPERIMENTAL OPTIONS");
-prog_opts::options_description implicit_value_handlers("IMPLICIT VALUE HANDLER");
-prog_opts::options_description all("ALL OPTIONS");
-
-prog_opts::options_description markup_options("MARKUP OPTIONS");
-prog_opts::options_description xml_form("XML FORMAT");
-prog_opts::options_description metadata_options("METADATA OPTIONS");
-
-prog_opts::options_description src2srcml("");
-prog_opts::options_description srcml2src("");
-prog_opts::options_description display("");
-
-// Positional Args
-prog_opts::positional_options_description input_file;
-#endif
-
-/* Most of the no parameter options could be recorded this way */
-template <int option>
-void option_markup(bool opt) {
-    /*
-      If we have markup options the NULL optional arguement needs to
-      first be initializied before the bitwise work can be done.
-    */
-    if (!srcml_request.markup_options)
-        srcml_request.markup_options = 0;
-
-    if (opt)
-        *srcml_request.markup_options |= option;
-}
-
-template <int command>
-void option_command(bool opt) {
-    if (opt)
-      srcml_request.command |= command;
-}
-
 // deprecated option command
 // (This is required as non-deprecated options may use same values)
 template <int command>
@@ -632,13 +629,6 @@ void option_xmlns_prefix(const std::vector<std::string>& values) {
 }
 #endif
 
-// option output to directory
-void option_to_dir(const std::string& value) {
-    srcml_request.output_filename = srcml_output_dest(value);
-    srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
-    srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
-}
-
 void positional_args(srcml_request_t& srcml_request, const std::vector<std::string>& value) {
     srcml_request.input_sources.reserve(srcml_request.input_sources.size() + value.size());
 
@@ -657,17 +647,6 @@ void positional_args(srcml_request_t& srcml_request, const std::vector<std::stri
 }
 
 #if 0
-void raw_text_args(const std::vector<std::string>& value) {
-    for (const auto& raw_text : value) {
-        srcml_request.input_sources.push_back(src_prefix_add_uri("text", raw_text));
-    }
-}
-
-void raw_null_text_arg(const std::vector<std::string>& value) {
-    for (size_t i = 0; i < value.size(); ++i)
-        srcml_request.input_sources.push_back(src_prefix_add_uri("text", ""));
-}
-
 void option_help(const std::string& help_opt) {
 
     int status = 0;
