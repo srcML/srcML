@@ -43,10 +43,12 @@ file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
 
+# @todo Is this necessary? Let CMake determin this instead
+# Maybe coverage is not a default part of Debug?
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
-    target_link_libraries(srcml srcml_shared ${SRCML_LIBRARIES} gcov)
+    target_link_libraries(srcml libsrcml_shared ${SRCML_LIBRARIES} gcov)
 else()
-    target_link_libraries(srcml srcml_shared ${SRCML_LIBRARIES})
+    target_link_libraries(srcml libsrcml_shared ${SRCML_LIBRARIES})
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

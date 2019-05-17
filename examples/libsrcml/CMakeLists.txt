@@ -26,7 +26,7 @@ foreach(EXAMPLE ${EXAMPLES})
     get_filename_component(EXAMPLE_NAME ${EXAMPLE} NAME_WE)
     add_executable(${EXAMPLE_NAME} ${EXAMPLE})
 	target_include_directories(${EXAMPLE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/libsrcml)
-    target_link_libraries(${EXAMPLE_NAME} srcml_shared)
+    target_link_libraries(${EXAMPLE_NAME} libsrcml_shared)
     # @TODO Do we need these as a test?
 #    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 	# @TODO Should we copy the examples?
