@@ -140,7 +140,7 @@ public:
 
         set_help_flag("-h,--help", "Output this help message and exit")->group("GENERAL");
         footer_ = SRCML_FOOTER;
-        
+
         // custom error message
         failure_message_ = [](const CLI::App *app, const CLI::Error &e) {
            // return std::string("foo");
@@ -199,6 +199,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     srcMLApp app{SRCML_HEADER, "srcml"};
     app.formatter(std::make_shared<srcMLFormatter>());
+    app.get_formatter()->column_width(32);
 
     // positional arguments, i.e., input files
     app.add_option_function<std::vector<std::string>>("InputFiles", [&](const std::vector<std::string>&) {}, "")
