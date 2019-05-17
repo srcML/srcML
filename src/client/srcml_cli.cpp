@@ -167,15 +167,25 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // does this need to be an optional?
     srcml_request.markup_options = 0;
 
-    // Convert --xmlns parameters of the form:
-    //      --xmlns:pre="URL"
-    // into
-    //      --xmlns=pre="URL"
-    for (int i = 0; i < argc; ++i) {
-        if ((strncmp(argv[i], "--xmlns", 7) == 0) && argv[i][7] == ':') {
-            argv[i][7] = '=';
+    // Cleanup the arguments for some special cases:
+    //      xmlns prefix: --xmlns:pre="URL" -> --xmlns=pre="URL"
+    //      empty strings on long options, e.g., --text="" -> --text ""
+    std::vector<std::string> commandline;
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+
+        if (arg.substr(0, 8) == "--xmlns:") {
+            arg[7] = '=';
+        }
+
+        if (arg.back() == '=') {
+            commandline.push_back(arg.substr(0, arg.size() - 1));
+            commandline.push_back("");
+        } else {
+            commandline.push_back(arg);
         }
     }
+    std::reverse(commandline.begin(), commandline.end());
 
     // @todo Put back SRCML_HEADER
     srcMLApp app;
@@ -221,12 +231,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("GENERAL");
 
     // src2srcml_options "CREATING SRCML"
-    app.add_option_function<std::string>("--files-from", [&](const std::string& value) {
-        srcml_request.files_from.push_back(value);
-        srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", value));
-        return true;
-    },
+    app.add_option("--files-from", 
         "Input source-code filenames from FILE")
+        ->each([&](const std::string& value) {
+            srcml_request.files_from.push_back(value);
+            srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", value));
+        })
         ->type_name("FILE")
         ->type_size(-1)
         ->group("CREATING SRCML");
@@ -276,12 +286,23 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Include start and end attributes with line/column of each element")
         ->group("MARKUP OPTIONS");
 
-    app.add_option("--tabs", srcml_request.src_encoding,
+    app.add_option("--tabs", srcml_request.tabs,
         "Set tab stop at every NUM characters, default of 8")
         ->check(CLI::Number)
+        ->each([&](std::string){ *srcml_request.markup_options |= SRCML_OPTION_POSITION; })
         ->type_name("NUM")
         ->group("MARKUP OPTIONS");
 
+#if 0
+    // check tabstop
+    if (value < 1) {
+        SRCMLstatus(ERROR_MSG, "srcml: %d is an invalid tab stop. Tab stops must be 1 or higher.", value);
+        exit(1); //ERROR CODE TBD
+    }
+
+    srcml_request.tabs = value;
+    *srcml_request.markup_options |= SRCML_OPTION_POSITION;
+#endif
     app.add_flag_callback("--cpp",              [&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP; },
         "Enable preprocessor parsing and markup (default for C/C++/C#)")
         ->group("MARKUP OPTIONS");
@@ -295,12 +316,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("MARKUP OPTIONS");
 
     // xml_form
+    // @todo Why not check in the client?
     srcml_request.att_xml_encoding = "UTF-8";
     app.add_option("--xml-encoding", srcml_request.att_xml_encoding,
         "Set output XML encoding. Default is UTF-8")
         ->check([&](const std::string &value) { 
 
-            // required since an error occurs if checked in client
             if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
                 return std::string("invalid xml encoding \"") + value + "\"";
             }
@@ -317,7 +338,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     app.add_option_function<std::string>("--xmlns", [&](const std::string& value) {  
 
-        std::size_t delim = value.find("=");
+        auto delim = value.find("=");
         if (delim == std::string::npos) {
             srcml_request.xmlns_namespaces[""] = value;
             srcml_request.xmlns_namespace_uris[value] = "";
@@ -377,6 +398,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     app.add_option("--show-prefix", srcml_request.xmlns_prefix_query, 
         "Output prefix of namespace URI and exit")
         ->type_name("URI")
+        ->group("METADATA");
+
+    app.add_option("--filename", srcml_request.att_filename,
+        "Set the filename attribute")
+        ->type_name("FILENAME")
         ->group("METADATA");
 
     app.add_option("--url", srcml_request.att_url,
@@ -497,7 +523,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("");
 
     try {
-        app.parse(argc, argv);
+        app.parse(commandline);
     } catch (const CLI::ParseError &e) {
         app.exit(e);
         exit(CLI_ERROR_INVALID_ARGUMENT);
@@ -522,29 +548,6 @@ void option_command_deprecated(bool opt) {
 }
 
 #if 0
-// Generic fields
-template <boost::optional<std::string> srcml_request_t::*pfield>
-void option_field(const std::string& value) { srcml_request.*pfield = value; }
-
-template <std::vector<std::string> srcml_request_t::*pfield>
-void option_field(const std::vector<std::string>& value) { srcml_request.*pfield = value; }
-
-template <int srcml_request_t::*pfield>
-void option_field(int value) { srcml_request.*pfield = value; }
-
-template <boost::optional<size_t> srcml_request_t::*pfield>
-void option_field(size_t value) { srcml_request.*pfield = value; }
-
-// option files_from
-template <>
-void option_field<&srcml_request_t::files_from>(const std::vector<std::string>& value) {
-
-    srcml_request.files_from = value;
-    for (const auto& inputFile : value) {
-        srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", inputFile));
-    }
-}
-
 // option src encoding
 template <>
 void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
