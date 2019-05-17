@@ -474,7 +474,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--xslt", 
-        "Apply the XSLT program FILE to each unit. FILE can be a url")
+        "Apply the XSLT program FILE to each unit, where FILE can be a url")
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION");
 
