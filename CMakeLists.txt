@@ -59,7 +59,7 @@ if(BUILD_ALL)
 endif()
 
 # Turn ON/OFF building libsrcml statically
-option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
+option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" ON)
 
 # The default configuration is to compile in Release mode
 if(NOT CMAKE_BUILD_TYPE)
