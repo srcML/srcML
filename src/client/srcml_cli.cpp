@@ -138,7 +138,7 @@ public:
     srcMLApp(std::string app_description, std::string app_name) 
         : CLI::App(app_description, app_name) {
 
-        set_help_flag("-h,--help", "Output this help message and exit")->group("GENERAL");
+        set_help_flag("-h,--help", "Output this help message and exit")->group("GENERAL OPTIONS");
         footer_ = SRCML_FOOTER;
 
         // custom error message
@@ -220,27 +220,27 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // general 
     app.add_flag_callback("--version,-V", [&]() { srcml_request.command |= SRCML_COMMAND_VERSION; },
         "Output version number and exit")
-        ->group("GENERAL");
+        ->group("GENERAL OPTIONS");
 
     app.add_flag_callback("--verbose,-v", [&]() { srcml_request.command |= SRCML_COMMAND_VERBOSE; },
         "Conversion and status information to stderr")
-        ->group("GENERAL");
+        ->group("GENERAL OPTIONS");
 
     app.add_flag_callback("--quiet,-q",   [&]() { srcml_request.command |= SRCML_COMMAND_QUIET; },
         "Suppress status messages")
-        ->group("GENERAL");
+        ->group("GENERAL OPTIONS");
 
     app.add_option("-o,--output",
         "Write output to FILE")
         ->each([&](std::string value) { option_output_filename(srcml_request, value); })
         ->type_name("FILE")
-        ->group("GENERAL");
+        ->group("GENERAL OPTIONS");
 
     srcml_request.max_threads = 4;
     app.add_option("--jobs,-j", srcml_request.max_threads,
         "Allow up to NUM threads for source parsing")
         ->type_name("NUM")
-        ->group("GENERAL");
+        ->group("GENERAL OPTIONS");
 
     // src2srcml_options "CREATING SRCML"
     app.add_option("--files-from", 
@@ -461,40 +461,40 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     app.add_option("--xpath", 
         "Apply XPATH expression to each individual srcML unit")
         ->type_name("XPATH")
-        ->group("QUERY/TRANSFORM");
+        ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--attribute", 
         "Insert attribute PRE:NAME=\"VALUE\" into element results of XPath query in original unit")
         ->type_name("PRE:NAME=\"VALUE\"")
-        ->group("QUERY/TRANSFORM");
+        ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--element", 
         "Insert element PRE:NAME around each element result of XPath query in original unit")
         ->type_name("PRE:NAME")
-        ->group("QUERY/TRANSFORM");
+        ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--xslt", 
         "Apply the XSLT program FILE to each unit. FILE can be a url")
         ->type_name("FILE")
-        ->group("QUERY/TRANSFORM");
+        ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--xslt-param", 
         "Passes the string parameter NAME with UTF-8 encoded string VALUE to the XSLT program")
         ->type_name("NAME=\"VALUE\"")
-        ->group("QUERY/TRANSFORM");
+        ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--relaxng", 
         "Output individual units that match the RelaxNG pattern FILE. FILE can be a url")
         ->type_name("FILE")
-        ->group("QUERY/TRANSFORM");
+        ->group("QUERY & TRANSFORMATION");
 
     // debug
     app.add_flag_callback("--dev",          [&]() { srcml_request.command |= SRCML_DEBUG_MODE; },
-        "Enable developer debug mode.")
+        "Enable developer debug mode")
         ->group("DEBUG");
 
     app.add_flag_callback("--timing",       [&]() { srcml_request.command |= SRCML_TIMING_MODE; },
-        "Enable developer timing mode.")
+        "Enable developer timing mode")
         ->group("DEBUG");
 
     // experimental_options
