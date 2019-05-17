@@ -163,11 +163,23 @@ public:
         };
     }
 
+
 };
 
 class srcMLFormatter : public CLI::Formatter {
-  public:
+public:
     std::string make_usage(const CLI::App *, std::string) const override { return ""; }
+
+    inline std::string make_option_opts(const CLI::Option *opt) const override {
+        std::stringstream out;
+
+        if(opt->get_type_size() != 0) {
+            if(!opt->get_type_name().empty())
+                out << " " << get_label(opt->get_type_name());
+        }
+
+        return out.str();
+    }
 };
 
 srcml_request_t parseCLI11(int argc, char* argv[]) {
@@ -366,85 +378,85 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // metadata
     app.add_flag_callback("--list,-L",        [&]() { srcml_request.command |= SRCML_COMMAND_LIST; },
         "List all files in the srcML archive and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--info,-i",        [&]() { srcml_request.command |= SRCML_COMMAND_INFO; },
         "Output most metadata except srcML file count and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--full-info,-I",   [&]() { srcml_request.command |= SRCML_COMMAND_LONGINFO; },
         "Output all metadata including srcML file count and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--show-language",  [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE; },
         "Output source language and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--show-url",       [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_URL; },
         "Output source url and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--show-filename",  [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_FILENAME; },
         "Output source filename and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--show-version",   [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION; },
         "Output source version and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--show-timestamp", [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP; },
         "Output source timestamp and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--show-hash",      [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_HASH; },
         "Output source hash and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--show-encoding",  [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_ENCODING; },
         "Output xml encoding and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--show-unit-count",[&]() { srcml_request.command |= SRCML_COMMAND_UNITS; },
         "Output number of srcML files and exit")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_option("--show-prefix", srcml_request.xmlns_prefix_query, 
         "Output prefix of namespace URI and exit")
         ->type_name("URI")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_option("--filename", srcml_request.att_filename,
         "Set the filename attribute")
         ->type_name("FILENAME")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_option("--url", srcml_request.att_url,
         "Set the url attribute")
         ->type_name("URL")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_option("--src-version,-s", srcml_request.att_version, 
         "Set the version attribute")
         ->type_name("VERSION")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--hash",      [&]() { *srcml_request.markup_options |= SRCML_HASH; },
         "Include generated hash attribute")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     app.add_flag_callback("--timestamp", [&]() { srcml_request.command |= SRCML_COMMAND_TIMESTAMP; },
         "Include generated timestamp attribute")
-        ->group("METADATA");
+        ->group("METADATA OPTIONS");
 
     // srcml2src
     app.add_option("--unit,-U", srcml_request.unit, 
         "Extract the source code for an individual unit at position NUM in a srcML archive")
         ->type_name("NUM")
-        ->group("SRCML2SRC");
+        ->group("EXTRACTING SOURCE CODE");
 
     app.add_flag_callback("--output-src,-S",  [&]() { srcml_request.command |= SRCML_COMMAND_SRC; },
         "Output source code instead of srcML")
-        ->group("SRCML2SRC");
+        ->group("EXTRACTING SOURCE CODE");
 
     app.add_option_function<std::string>("--to-dir", [&](const std::string& value) {
 
@@ -455,7 +467,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     },
         "Extract source-code files to a DIRECTORY")
         ->type_name("DIRECTORY")
-        ->group("SRCML2SRC");
+        ->group("EXTRACTING SOURCE CODE");
 
     // query/transform
     app.add_option("--xpath", 
@@ -491,11 +503,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // debug
     app.add_flag_callback("--dev",          [&]() { srcml_request.command |= SRCML_DEBUG_MODE; },
         "Enable developer debug mode")
-        ->group("DEBUG");
+        ->group("");
 
     app.add_flag_callback("--timing",       [&]() { srcml_request.command |= SRCML_TIMING_MODE; },
         "Enable developer timing mode")
-        ->group("DEBUG");
+        ->group("");
 
     // experimental_options
     app.add_flag_callback("--cat",      [&]() { srcml_request.command |= SRCML_COMMAND_CAT_XML; },
@@ -514,7 +526,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Add XML processing instruction")
         ->group("");
     
-    srcml_request.pretty_format = "";
     app.add_flag("--pretty", srcml_request.pretty_format,
         "Custom formatting for output")
         ->group("");
