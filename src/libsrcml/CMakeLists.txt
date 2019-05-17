@@ -75,8 +75,14 @@ endif()
 
 # which types of libraries
 install(TARGETS libsrcml_shared RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
-if (BUILD_LIBlibsrcml_static)
+if (BUILD_LIBSRCML_STATIC)
     install(TARGETS libsrcml_static RUNTIME DESTINATION bin LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
+
+if(LINK_LIBSRCML_STATIC AND BUILD_LIBSRCML_STATIC)
+    add_library(libsrcml_link ALIAS libsrcml_static)
+else()
+    add_library(libsrcml_link ALIAS libsrcml_shared)
 endif()
 
 if(APPLE)
