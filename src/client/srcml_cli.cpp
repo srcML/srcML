@@ -275,10 +275,19 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     app.add_option("--text,-t", 
         "Input source code from STRING, e.g., --text=\"int a;\"")
-        ->each([&](std::string text) { srcml_request.input_sources.push_back(src_prefix_add_uri("text", text)); })
+        ->each([&](std::string text) { 
+            srcml_request.input_sources.push_back(src_prefix_add_uri("text", text)); })
+        ->check([&](std::string value) {
+            if (!value.empty() && value[0] == '-') {
+                std::cerr << "srcml: --text: 1 required STRING missing";
+                exit(7);
+            }
+            return "";
+        })
         ->type_name("STRING")
-        ->needs(language)
-        ->type_size(-1)
+        ->expected(1)
+    //    ->needs(language)
+    //    ->type_size(-1)
         ->group("CREATING SRCML");
     
     app.add_option("--register-ext", srcml_request.language_ext,
@@ -298,11 +307,17 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Output in XML instead of text")
         ->group("CREATING SRCML");
     
-    app.add_flag_callback("--output-xml-outer",[&]() { srcml_request.command |= SRCML_COMMAND_XML_FRAGMENT; },
+    app.add_flag_callback("--output-xml-outer",[&]() { 
+        srcml_request.command |= SRCML_COMMAND_XML_FRAGMENT;
+        srcml_request.command |= SRCML_COMMAND_XML;
+    },
         "Output an inner unit from an XML archive")
         ->group("CREATING SRCML");
     
-    app.add_flag_callback("--output-xml-inner",[&]() { srcml_request.command |= SRCML_COMMAND_XML_RAW; },
+    app.add_flag_callback("--output-xml-inner",[&]() {
+        srcml_request.command |= SRCML_COMMAND_XML_RAW;
+        srcml_request.command |= SRCML_COMMAND_XML;
+    },
         "Output contents of XML unit")
         ->group("CREATING SRCML");
 
@@ -311,6 +326,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Include start and end attributes with line/column of each element")
         ->group("MARKUP OPTIONS");
 
+    srcml_request.tabs = 8;
     app.add_option("--tabs", srcml_request.tabs,
         "Set tab stop at every NUM characters, default of 8")
         ->check(CLI::Number)
@@ -425,7 +441,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("URI")
         ->group("METADATA OPTIONS");
 
-    app.add_option("--filename", srcml_request.att_filename,
+    app.add_option("--filename,-f", srcml_request.att_filename,
         "Set the filename attribute")
         ->type_name("FILENAME")
         ->group("METADATA OPTIONS");
@@ -556,6 +572,20 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     if (srcml_request.output_filename == "")
         option_output_filename(srcml_request, "");
 
+    // if no input given, then artificially put a "-" into the list of input files
+    if (srcml_request.input_sources.empty()) {
+        srcml_request.stdindex = 0;
+        srcml_request.input_sources.push_back(srcml_input_src("stdin://-"));
+    }
+
+    if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {
+        auto url = srcml_request.input_sources[0].resource;
+        while (url.length() > 0 && (url[0] == '.' || url[0] == '/')) {
+            url.erase(0,1);
+        }
+        srcml_request.att_url = url;
+    }
+
     return srcml_request;
 }
 // deprecated option command
@@ -623,6 +653,7 @@ void option_field<&srcml_request_t::tabs>(int value) {
 #endif
 
 void option_output_filename(srcml_request_t& srcml_request, const std::string& value) {
+
     srcml_request.output_filename = srcml_output_dest(value == "" ? "stdout://-" : value);
 
     if (srcml_request.output_filename.protocol == "file")  {
@@ -674,36 +705,6 @@ void positional_args(srcml_request_t& srcml_request, const std::vector<std::stri
 }
 
 #if 0
-void option_help(const std::string& help_opt) {
-
-    int status = 0;
-
-    if (help_opt.empty()) {
-        // TODO: A new header and footer for the general option
-        std::cout << SRCML_HEADER << "\n";
-        std::cout << display;
-    }
-    else if (help_opt == "src2srcml") {
-        std::cout << SRC2SRCML_HEADER << "\n";
-        std::cout << src2srcml << "\n";
-        std::cout << SRC2SRCML_FOOTER;
-    }
-    else if (help_opt == "srcml2src") {
-        std::cout << SRCML2SRC_HEADER << "\n";
-        std::cout << srcml2src << "\n";
-        std::cout << SRCML2SRC_FOOTER;
-    }
-    else {
-        std::cout << "Unknown module '"
-                  << help_opt << "' in --help\n";
-        status = 1;
-    }
-
-    std::cout << SRCML_FOOTER << "\n";
-
-    exit(status);
-}
-
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
@@ -901,17 +902,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
         // Format: option_dependency(cli_map, [option], [option]);
         option_dependency(cli_map, "text", "language");
 
-        // If input was from stdin, then artificially put a "-" into the list of input files
-        if (srcml_request.input_sources.empty())
-            positional_args(std::vector<std::string>(1, "stdin://-"));
 
-        if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {
-            auto url = srcml_request.input_sources[0].resource;
-            while (url.length() > 0 && (url[0] == '.' || url[0] == '/')) {
-                url.erase(0,1);
-            }
-            srcml_request.att_url = url;
-        }
 
         // If position option is used without tabs...set default tab of 8
         if ((*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0) || srcml_request.tabs == 0)
@@ -936,9 +927,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
             exit(1); // TODO Need a real error code
         }
 
-        // Some options imply others SRCML_COMMAND_XML
-        if (srcml_request.command & SRCML_COMMAND_XML_FRAGMENT)
-            option_command<SRCML_COMMAND_XML>(true);
+
 
         if (srcml_request.command & SRCML_COMMAND_XML_RAW)
             option_command<SRCML_COMMAND_XML>(true);

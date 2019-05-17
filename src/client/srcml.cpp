@@ -58,8 +58,7 @@ int main(int argc, char * argv[]) {
     // parse the command line
     auto srcml_request = parseCLI11(argc, argv);
 
-//    std::cout << srcml_request;
-//    exit(0);
+ //   std::cout << srcml_request;
 
     // global access to options
     SRCMLOptions::set(srcml_request.command);

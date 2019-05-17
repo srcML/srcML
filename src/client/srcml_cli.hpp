@@ -171,10 +171,16 @@ srcml_request_t parseCLI11(int argc, char* argv[]);
 
 inline std::ostream& operator<<(std::ostream& out, const srcml_request_t srcml_request) {
 
-    // srcml_input_t input_sources;
+    out << "INPUT SOURCES:\n";
+    for (auto& input : srcml_request.input_sources) {
+        out << input;
+    }
 
     // boost::optional<int> stdindex;
+    out << "stdindex: " << (srcml_request.stdindex ? *srcml_request.stdindex : -1) << '\n';
 
+    out << "SRCML_OPTION_CPP: " << (*srcml_request.markup_options & SRCML_OPTION_CPP) << '\n';
+    out << "SRCML_COMMAND_XML_FRAGMENT: " << (srcml_request.command & SRCML_COMMAND_XML_FRAGMENT) << '\n';
     // int command;
     // boost::optional<int> markup_options;
 
@@ -191,12 +197,13 @@ inline std::ostream& operator<<(std::ostream& out, const srcml_request_t srcml_r
 
     // boost::optional<std::string> external;
 
-    // srcml_output_dest output_filename;
+    out << "output_filename: " << srcml_request.output_filename << '\n';
 
     // //filelist:// prefix
     // std::vector<std::string> files_from;
     // std::vector<std::string> language_ext;
-    // int tabs;
+
+    out << "tabs: " << srcml_request.tabs << '\n';
 
     // // xml namespaces
     // boost::optional<std::string> xmlns_prefix_query;
@@ -213,6 +220,7 @@ inline std::ostream& operator<<(std::ostream& out, const srcml_request_t srcml_r
     // std::vector<std::string> transformations;
     // std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;
 
+    out << "unit: " << srcml_request.unit << '\n';
     // int unit = 0;
     // int max_threads;
 
