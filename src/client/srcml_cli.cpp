@@ -38,7 +38,8 @@ source-code representation srcML. Also supports querying and transformation of s
 
 Source-code input can be from text, standard input, a file,
 a directory, or an archive file, i.e., tar, cpio, and zip. Multiple files
-are stored in a srcML archive.)";
+are stored in a srcML archive.
+)";
 
 const char* SRCML_FOOTER = R"(
 Have a question or need to report a bug?
@@ -134,8 +135,12 @@ bool is_transformation(const srcml_input_src& input);
 
 class srcMLApp : public CLI::App {
 public:
-    srcMLApp() {
+    srcMLApp(std::string app_description, std::string app_name) 
+        : CLI::App(app_description, app_name) {
 
+        set_help_flag("-h,--help", "Output this help message and exit")->group("GENERAL");
+        footer_ = SRCML_FOOTER;
+        
         // custom error message
         failure_message_ = [](const CLI::App *app, const CLI::Error &e) {
            // return std::string("foo");
@@ -158,6 +163,11 @@ public:
         };
     }
 
+};
+
+class srcMLFormatter : public CLI::Formatter {
+  public:
+    std::string make_usage(const CLI::App *, std::string) const override { return ""; }
 };
 
 srcml_request_t parseCLI11(int argc, char* argv[]) {
@@ -187,8 +197,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     }
     std::reverse(commandline.begin(), commandline.end());
 
-    // @todo Put back SRCML_HEADER
-    srcMLApp app;
+    srcMLApp app{SRCML_HEADER, "srcml"};
+    app.formatter(std::make_shared<srcMLFormatter>());
 
     // positional arguments, i.e., input files
     app.add_option_function<std::vector<std::string>>("InputFiles", [&](const std::vector<std::string>&) {}, "")
@@ -203,7 +213,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             if (!(is_transformation(input))) {
               srcml_request.input_sources.push_back(input);
             }
-        });
+        })
+        ->group("");
 
     // general 
     app.add_flag_callback("--version,-V", [&]() { srcml_request.command |= SRCML_COMMAND_VERSION; },
@@ -254,7 +265,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->each([&](std::string text) { srcml_request.input_sources.push_back(src_prefix_add_uri("text", text)); })
         ->type_name("STRING")
         ->needs(language)
-        ->type_size(-1);
+        ->type_size(-1)
+        ->group("CREATING SRCML");
     
     app.add_option("--register-ext", srcml_request.language_ext,
         "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
@@ -346,8 +358,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
             srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
         }
-    },  "Set the default namespace URI, or declare the PREFIX for namespace URI")
-        ->type_name("URI, PREFIX=URI")
+    },  "Set the default namespace URI, or declare the PRE for namespace URI")
+        ->type_name("URI, PRE=URI")
         ->group("ENCODING");
 
     // metadata
@@ -451,13 +463,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("QUERY/TRANSFORM");
 
     app.add_option("--attribute", 
-        "Insert attribute PREFIX:NAME=\"VALUE\" into element results of XPath query in original unit")
-        ->type_name("PREFIX:NAME=\"VALUE\"")
+        "Insert attribute PRE:NAME=\"VALUE\" into element results of XPath query in original unit")
+        ->type_name("PRE:NAME=\"VALUE\"")
         ->group("QUERY/TRANSFORM");
 
     app.add_option("--element", 
-        "Insert element PREFIX:NAME around each element result of XPath query in original unit")
-        ->type_name("PREFIX:NAME")
+        "Insert element PRE:NAME around each element result of XPath query in original unit")
+        ->type_name("PRE:NAME")
         ->group("QUERY/TRANSFORM");
 
     app.add_option("--xslt", 
