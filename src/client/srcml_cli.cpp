@@ -147,7 +147,7 @@ public:
         footer_ = SRCML_FOOTER;
 
         // custom error message
-        failure_message_ = [](const CLI::App *app, const CLI::Error &e) {
+        failure_message_ = [](const CLI::App *, const CLI::Error &e) {
 
             return std::string("srcml: ") + e.what() + "\n";
         };
@@ -283,7 +283,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         })
         ->type_name("STRING")
         ->expected(1)
-    //    ->needs(language)
+        ->needs(language)
     //    ->type_size(-1)
         ->group("CREATING SRCML");
     
@@ -590,6 +590,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     try {
         app.parse(commandline);
+    } catch (const CLI::CallForHelp &e) {
+        app.exit(e);
+        exit(0);
     } catch (const CLI::ParseError &e) {
         app.exit(e);
         exit(CLI_ERROR_INVALID_ARGUMENT);
