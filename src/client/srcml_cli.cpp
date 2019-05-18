@@ -593,6 +593,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     } catch (const CLI::CallForHelp &e) {
         app.exit(e);
         exit(0);
+    } catch (const CLI::ExtrasError &e) {
+        app.exit(e);
+        exit(3);
     } catch (const CLI::ParseError &e) {
         app.exit(e);
         exit(CLI_ERROR_INVALID_ARGUMENT);
