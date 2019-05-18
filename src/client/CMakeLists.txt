@@ -40,6 +40,8 @@ endif()
 
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
+find_package(AWSSDK REQUIRED COMPONENTS s3)
+
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
 
@@ -48,7 +50,7 @@ target_include_directories(srcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES} gcov)
 else()
-    target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES})
+    target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES} ${AWSSDK_LINK_LIBRARIES})
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
