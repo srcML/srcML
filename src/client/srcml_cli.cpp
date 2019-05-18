@@ -134,7 +134,6 @@ const char* SRCML2SRC_FOOTER = R"(Examples:
 srcml_request_t srcml_request;
 
 void positional_args(srcml_request_t& srcml_request, const std::vector<std::string>& value);
-void option_output_filename(srcml_request_t& srcml_request, const std::string& value);
 
 // tranformation check on input
 bool is_transformation(srcml_request_t& srcml_request, const srcml_input_src& input);
@@ -149,27 +148,10 @@ public:
 
         // custom error message
         failure_message_ = [](const CLI::App *app, const CLI::Error &e) {
-           // return std::string("foo");
 
-            std::string header = std::string("srcml: ") + e.what() + "\n";
-            std::vector<std::string> names;
-
-            // Collect names
-            if(app->get_help_ptr() != nullptr)
-                names.push_back(app->get_help_ptr()->get_name());
-
-            if(app->get_help_all_ptr() != nullptr)
-                names.push_back(app->get_help_all_ptr()->get_name());
-
-            // If any names found, suggest those
-//            if(!names.empty())
-//                header += std::string("srcml: Run with ") + /* detail::join(names, " or ") + */ " for more information.\n";
-
-            return header;
+            return std::string("srcml: ") + e.what() + "\n";
         };
     }
-
-
 };
 
 class srcMLFormatter : public CLI::Formatter {
@@ -250,7 +232,16 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     app.add_option("-o,--output",
         "Write output to FILE")
-        ->each([&](std::string value) { option_output_filename(srcml_request, value); })
+        ->each([&](std::string value) {
+            srcml_request.output_filename = srcml_output_dest(value);
+
+            if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension.empty()
+                && srcml_request.output_filename.filename.back() == '/')) {
+
+                srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
+                srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
+            }
+        })
         ->type_name("FILE")
         ->group("GENERAL OPTIONS");
 
@@ -561,7 +552,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("");
 
     // experimental_options
-    app.add_flag_callback("--cat",      [&]() { srcml_request.command |= SRCML_COMMAND_CAT_XML; },
+    app.add_flag_callback("--cat",          [&]() { srcml_request.command |= SRCML_COMMAND_CAT_XML; },
         "Cat all the XML units into a single unit")
         ->group("");
 
@@ -605,7 +596,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     }
 
     if (srcml_request.output_filename == "")
-        option_output_filename(srcml_request, "");
+        srcml_request.output_filename = "stdout://-";
 
     // if no input given, then artificially put a "-" into the list of input files
     if (srcml_request.input_sources.empty()) {
@@ -673,20 +664,6 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
 }
 #endif
 
-void option_output_filename(srcml_request_t& srcml_request, const std::string& value) {
-
-    srcml_request.output_filename = srcml_output_dest(value == "" ? "stdout://-" : value);
-
-    if (srcml_request.output_filename.protocol == "file")  {
-      if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension == ""
-          && srcml_request.output_filename.filename[srcml_request.output_filename.filename.length() - 1] == '/')) {
-
-        srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
-        srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
-      }
-    }
-}
-
 #if 0
 void option_xmlns_uri(const std::string& value) {
     srcml_request.xmlns_namespaces[""] = value;
@@ -734,38 +711,9 @@ void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, c
 void option_dependency(const prog_opts::variables_map& vm, const char* option, const char* dependent_option);
 #endif
 
-// Custom Parser Definition
-std::pair<std::string, std::string> custom_parser(const std::string& s);
-
-// Debug
-void debug_cli_opts(const struct srcml_request_t srcml_request);
-
 #if 0
-        // Group src2srcml Options
-        //src2srcml.add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options);
-        src2srcml.add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options);
-
-        // Group srcml2src Options
-        //srcml2src.add(srcml2src_options).add(query_transform);
-        srcml2src.add(srcml2src_options).add(query_transform);
-
-        // Group all Options
-        all.add(general).add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options).add(srcml2src_options).
-            add(query_transform).add(positional_options).add(implicit_value_handlers).add(deprecated_options).add(debug_options).add(experimental_options);
-
-        // Group all display options
-        display.add(general).add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options).add(srcml2src_options).add(query_transform);
 
         input_file.add("input-files", -1);
-
-        // Assign the CLI args to the map
-        prog_opts::variables_map cli_map;
-
-        const auto& cliopts = prog_opts::command_line_parser(argc, argv).options(all).
-                         positional(input_file).extra_parser(custom_parser).run();
-
-        prog_opts::store(cliopts , cli_map);
-        prog_opts::notify(cli_map);
 
         // Check option conflicts
         conflicting_options(cli_map, "quiet", "verbose");
@@ -876,18 +824,13 @@ bool is_transformation(srcml_request_t& srcml_request, const srcml_input_src& in
 }
 
 element clean_element_input(const std::string& element_input) {
-    std::string vals = element_input;
-    size_t elemn_index = vals.find(":");
-
-    // Element requires a prefix
+    size_t elemn_index = element_input.find(":");
     if (elemn_index == std::string::npos) {
+        // Element requires a prefix
         exit(1);
     }
 
-    element elem;
-    elem.prefix = vals.substr(0, elemn_index);
-    elem.name = vals.substr(elemn_index + 1);
-    return elem;
+    return element{ element_input.substr(0, elemn_index), element_input.substr(elemn_index + 1) };
 }
 
 attribute clean_attribute_input(const std::string& attribute_input) {
@@ -902,7 +845,7 @@ attribute clean_attribute_input(const std::string& attribute_input) {
     }
 
     // Missing prefix requires an element with a prefix
-    if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first)) {
+    if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.back().first)) {
         SRCMLstatus(ERROR_MSG, "srcml: the attribute %s is missing a prefix or an element with a prefix", vals);
         exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
@@ -913,7 +856,7 @@ attribute clean_attribute_input(const std::string& attribute_input) {
         attrib.prefix = vals.substr(0, attrib_colon);
         attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
     } else {
-        attrib.prefix = srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first->prefix;
+        attrib.prefix = srcml_request.xpath_query_support.back().first->prefix;
         attrib.name = vals.substr(0, attrib_equals);
     }
 
