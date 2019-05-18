@@ -346,9 +346,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         SRCMLstatus(ERROR_MSG, "srcml: %d is an invalid tab stop. Tab stops must be 1 or higher.", value);
         exit(1); //ERROR CODE TBD
     }
-
-    srcml_request.tabs = value;
-    *srcml_request.markup_options |= SRCML_OPTION_POSITION;
 #endif
     app.add_flag_callback("--cpp",              [&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP; },
         "Enable preprocessor parsing and markup (default for C/C++/C#)")
@@ -495,31 +492,62 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // query/transform
     app.add_option("--xpath", 
         "Apply XPATH expression to each individual srcML unit")
+        ->each([&](std::string value) {
+            srcml_request.transformations.push_back(src_prefix_add_uri("xpath", value));
+            srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
+        })
         ->type_name("XPATH")
         ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--attribute", 
         "Insert attribute PRE:NAME=\"VALUE\" into element results of XPath query in original unit")
+        ->each([&](std::string value) { srcml_request.xpath_query_support.back().second = clean_attribute_input(value); })
+        ->check([&](std::string) {
+            if (srcml_request.xpath_query_support.empty()) {
+
+                SRCMLstatus(ERROR_MSG, "srcml: attribute option must follow an --xpath option");
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+            }
+            return "";
+        })
         ->type_name("PRE:NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--element", 
         "Insert element PRE:NAME around each element result of XPath query in original unit")
+        ->each([&](std::string value) { srcml_request.xpath_query_support.back().first = clean_element_input(value); })
+        ->check([&](std::string) {
+            if (srcml_request.xpath_query_support.empty()) {
+
+                SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+            }
+            return "";
+        })
         ->type_name("PRE:NAME")
         ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--xslt", 
         "Apply the XSLT program FILE to each unit, where FILE can be a url")
+        ->each([&](std::string value) {
+            srcml_request.transformations.push_back(src_prefix_add_uri("xslt", value));
+        })
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--xslt-param", 
         "Passes the string parameter NAME with UTF-8 encoded string VALUE to the XSLT program")
+        ->each([&](std::string value) {
+            srcml_request.transformations.push_back(src_prefix_add_uri("xslt-param", value));
+        })
         ->type_name("NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--relaxng", 
         "Output individual units that match the RelaxNG pattern FILE. FILE can be a url")
+        ->each([&](std::string value) {
+            srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", value));
+        })
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION");
 
@@ -593,39 +621,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         srcml_request.att_url = url;
     }
 
-    // loop the cli options in the order they were processed/received
-    for (const auto& option : app.parse_order()) {
-        if (option->check_lname("relaxng") || option->check_lname("xpath") || option->check_lname("xslt") || option->check_lname("xslt-param")
-            || option->check_lname("element") || option->check_lname("attribute")) {
-
-            if (option->check_lname("xpath"))
-                srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
-
-            for (const auto& vals : option->results()) {
-                if (option->check_lname("element") && srcml_request.xpath_query_support.size() < 1) {
-
-                    SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
-                    exit(SRCML_STATUS_INVALID_ARGUMENT);
-                }
-                if (option->check_lname("attribute") && srcml_request.xpath_query_support.size() < 1) {
-
-                    SRCMLstatus(ERROR_MSG, "srcml: attribute option must follow an --xpath option");
-                    exit(SRCML_STATUS_INVALID_ARGUMENT);
-                }
-
-                if (option->check_lname("element")) {
-                    srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first = clean_element_input(vals);
-                }
-                else if (option->check_lname("attribute")) {
-                    srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].second = clean_attribute_input(vals);
-                }
-                else {
-                    srcml_request.transformations.push_back(src_prefix_add_uri(option->get_lnames()[0], vals));
-                }
-            }
-        }
-    }
-
     return srcml_request;
 }
 // deprecated option command
@@ -675,20 +670,6 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
         exit(6); //ERROR CODE TBD
     }
     srcml_request.att_language = value;
-}
-
-// option tabs
-template <>
-void option_field<&srcml_request_t::tabs>(int value) {
-
-    // check tabstop
-    if (value < 1) {
-        SRCMLstatus(ERROR_MSG, "srcml: %d is an invalid tab stop. Tab stops must be 1 or higher.", value);
-        exit(1); //ERROR CODE TBD
-    }
-
-    srcml_request.tabs = value;
-    *srcml_request.markup_options |= SRCML_OPTION_POSITION;
 }
 #endif
 
@@ -759,112 +740,7 @@ std::pair<std::string, std::string> custom_parser(const std::string& s);
 // Debug
 void debug_cli_opts(const struct srcml_request_t srcml_request);
 
-
 #if 0
-// Interpretation of CLI options
-srcml_request_t parseCLI(int argc, char* argv[]) {
-    try {
-        general.add_options()
-            ("help,h", prog_opts::value<std::string>()->notifier(&option_help)->value_name("MODULE"),"Output this help and exit. USAGE: help or help [module name]. MODULES: src2srcml, srcml2src")
-            ("version,V", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERSION>), "Output version number and exit")
-            ("verbose,v", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_VERBOSE>), "Conversion and status information to stderr")
-            ("quiet,q", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_QUIET>), "Suppress status messages")
-            ("output,o", prog_opts::value<std::string>()->notifier(&option_output_filename)->value_name("FILE")->default_value(""), "Write output to FILE")
-            ("jobs,j", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::max_threads>)->value_name("NUM")->default_value(4), "Allow up to NUM threads for source parsing")
-            ;
-
-        src2srcml_options.add_options()
-            ("files-from", prog_opts::value<std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::files_from>)->value_name("FILE"), "Input source-code filenames from FILE")
-            ("text,t", prog_opts::value< std::vector<std::string> >()->notifier(&raw_text_args)->value_name("STRING"), "Input source code from string, e.g., --text=\"int a;\"")
-            ("language,l", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_language>)->value_name("LANG"), "Set the source-code language to C, C++, C#, or Java. Required for --text option")
-            ("register-ext", prog_opts::value< std::vector<std::string> >()->notifier(&option_field<&srcml_request_t::language_ext>)->value_name("EXT=LANG"), "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
-            ("src-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::src_encoding>)->value_name("ENCODING"), "Set the input source-code encoding")
-            ("archive,r", prog_opts::bool_switch()->notifier(&option_markup<SRCML_ARCHIVE>), "Create a srcML archive, default for multiple input files")
-            ("output-xml,X", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML>), "Output in XML instead of text")
-            ("output-xml-outer", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_FRAGMENT>), "Output an inner unit from an XML archive")
-            ("output-xml-inner", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_XML_RAW>), "Output contents of XML unit")
-            ;
-
-        markup_options.add_options()
-            ("position", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_POSITION>), "Include start and end attributes with line/column of each element")
-            ("tabs", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::tabs>)->value_name("NUM"), "Set tab stop at every NUM characters, default of 8")
-            ("cpp", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP>), "Enable preprocessor parsing and markup (default for C/C++/C#)")
-            ("cpp-markup-if0", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_MARKUP_IF0>), "Markup preprocessor #if 0 regions")
-            ("cpp-nomarkup-else", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_CPP_TEXT_ELSE>), "Do not markup preprocessor #else/#elif regions")
-            ;
-
-        xml_form.add_options()
-            ("xml-encoding", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_xml_encoding>)->value_name("ENCODING")->default_value("UTF-8"),"Set output XML encoding. Default is UTF-8")
-            ("no-xml-declaration", prog_opts::bool_switch()->notifier(&option_markup<SRCML_OPTION_XML_DECL>), "Do not output the XML declaration")
-            ("xmlns", prog_opts::value<std::string>()->notifier(&option_xmlns_uri)->value_name("URI"), "Set the default namespace URI")
-            ("xmlns:", prog_opts::value< std::vector<std::string> >()->notifier(&option_xmlns_prefix)->value_name("PREFIX=\"URI\""), "Declare the PREFIX for namespace URI")
-            ;
-
-        metadata_options.add_options()
-            ("list,L", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LIST>), "List all files in the srcML archive and exit")
-            ("info,i", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_INFO>), "Output most metadata except srcML file count and exit")
-            ("full-info,I", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_LONGINFO>), "Output all metadata including srcML file count and exit")
-            ("show-language", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_LANGUAGE>), "Output source language and exit")
-            ("show-url", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_URL>), "Output source url name and exit")
-            ("show-filename", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_FILENAME>), "Output source filename and exit")
-            ("show-src-version", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION>), "Output source version and exit")
-            ("show-timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP>), "Output timestamp and exit")
-            ("show-hash", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_HASH>), "Output hash and exit")
-            ("show-encoding", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_DISPLAY_SRCML_ENCODING>), "Output xml encoding and exit")
-            ("show-unit-count", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UNITS>), "Output number of srcML files and exit")
-            ("show-prefix", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xmlns_prefix_query>)->value_name("URI"), "Output prefix of namespace URI and exit")
-            ("filename,f", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_filename>)->value_name("FILENAME"), "Set the filename attribute")
-            ("url", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_url>)->value_name("URL"), "Set the url attribute")
-            ("src-version,s", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::att_version>)->value_name("VERSION"), "Set the version attribute")
-            ("hash", prog_opts::bool_switch()->notifier(&option_markup<SRCML_HASH>), "Include generated hash attribute")
-            ("timestamp", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_TIMESTAMP>), "Include generated timestamp attribute")
-           ;
-
-        srcml2src_options.add_options()
-            ("unit,U", prog_opts::value<int>()->notifier(&option_field<&srcml_request_t::unit>)->value_name("NUM"), "Extract the source code for an individual unit at position NUM in a srcML archive")
-            ("output-src,S", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_SRC>), "Output in text instead of XML")
-            ("to-dir", prog_opts::value<std::string>()->notifier(&option_to_dir)->value_name("DIRECTORY"), "Extract source-code files to a DIRECTORY")
-            ;
-
-        query_transform.add_options()
-            ("xpath", prog_opts::value< std::vector<std::string> >()->value_name("XPATH"), "Apply XPATH expression to each individual srcML unit")
-            ("attribute", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:NAME=\"VALUE\""), "Insert attribute PREFIX:NAME=\"VALUE\" into element results of XPath query in original unit")
-            ("element", prog_opts::value< std::vector<std::string> >()->value_name("PREFIX:NAME"), "Insert element PREFIX:NAME around each element result of XPath query in original unit")
-            ("xslt", prog_opts::value< std::vector<std::string> >()->value_name("FILE"), "Apply the XSLT program FILE to each unit. FILE can be a url")
-            ("xslt-param", prog_opts::value< std::vector<std::string> >()->value_name("NAME=\"VALUE\""), "Passes the string parameter NAME with UTF-8 encoded string VALUE to the XSLT program")
-            ("relaxng", prog_opts::value< std::vector<std::string> >()->value_name("FILE"), "Output individual units that match the RelaxNG pattern FILE. FILE can be a url")
-            ;
-
-        positional_options.add_options()
-            ("input-files", prog_opts::value< std::vector<std::string> >()->notifier(&positional_args), "Input files")
-            ;
-        
-        // Work arounds for dealing with implicit option properly
-        implicit_value_handlers.add_options()
-            ("text-equals-null", prog_opts::value< std::vector<std::string> >()->notifier(&raw_null_text_arg), "Work around for null text")
-            ;
-
-        deprecated_options.add_options()
-            ("units,n", prog_opts::bool_switch()->notifier(&option_command_deprecated<SRCML_COMMAND_UNITS>), "Output number of srcML files and exit")
-            ;
-
-        debug_options.add_options()
-            ("dev", prog_opts::bool_switch()->notifier(&option_command<SRCML_DEBUG_MODE>), "Enable developer debug mode.")
-            ("timing", prog_opts::bool_switch()->notifier(&option_command<SRCML_TIMING_MODE>), "Enable developer timing mode.")
-            ;
-            
-        experimental_options.add_options()
-            ("cat", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_CAT_XML>), "Cat all the XML units into a single unit")
-            ("revision", prog_opts::value<size_t>()->notifier(&option_field<&srcml_request_t::revision>), "Extract the given revision (0 = original, 1 = modified)")
-            ("update", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_UPDATE>), "Output and update existing srcml")
-            ("xml-processing", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::xml_processing>), "Add XML processing instruction")
-            ("pretty", prog_opts::value<std::string>()->implicit_value("")->notifier(&option_field<&srcml_request_t::pretty_format>), "Custom formatting for output")
-            ("external", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::external>), "Run a user defined external script or application on srcml client output")
-            ("line-ending", prog_opts::value<std::string>()->notifier(&option_field<&srcml_request_t::line_ending>), "Set the line endings for a desired environment \"Windows\" or \"Unix\"")
-            ("unstable-order", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER>), "Enable non-strict output ordering")
-            ("parser-test", prog_opts::bool_switch()->notifier(&option_command<SRCML_COMMAND_PARSER_TEST>), "Run parser tests on the input files")
-            ;
-
         // Group src2srcml Options
         //src2srcml.add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options);
         src2srcml.add(src2srcml_options).add(markup_options).add(xml_form).add(metadata_options);
@@ -887,41 +763,6 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
         const auto& cliopts = prog_opts::command_line_parser(argc, argv).options(all).
                          positional(input_file).extra_parser(custom_parser).run();
-
-        auto parsedOptions = cliopts.options;
-
-        // loop the cli options in the order they were processed/received
-        for (const auto& option : parsedOptions) {
-            if (option.string_key == "relaxng" || option.string_key == "xpath" || option.string_key == "xslt" || option.string_key == "xslt-param"
-             || option.string_key == "element" || option.string_key == "attribute") {
-
-                if (option.string_key == "xpath")
-                    srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
-
-                for (const auto& vals : option.value) {
-                    if (option.string_key == "element" && srcml_request.xpath_query_support.size() < 1) {
-
-                        SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
-                        exit(SRCML_STATUS_INVALID_ARGUMENT);
-                    }
-                    if (option.string_key == "attribute" && srcml_request.xpath_query_support.size() < 1) {
-
-                        SRCMLstatus(ERROR_MSG, "srcml: attribute option must follow an --xpath option");
-                        exit(SRCML_STATUS_INVALID_ARGUMENT);
-                    }
-
-                    if (option.string_key == "element") {
-                        srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first = clean_element_input(vals);
-                    }
-                    else if (option.string_key == "attribute") {
-                        srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].second = clean_attribute_input(vals);
-                    }
-                    else {
-                        srcml_request.transformations.push_back(src_prefix_add_uri(option.string_key, vals));
-                    }
-                }
-            }
-        }
 
         prog_opts::store(cliopts , cli_map);
         prog_opts::notify(cli_map);
@@ -995,30 +836,7 @@ srcml_request_t parseCLI(int argc, char* argv[]) {
 
     return srcml_request;
 }
-#endif
-
-// Custom parser for xmlns: option
-std::pair<std::string, std::string> custom_parser(const std::string& s) {
-    if (s.find("--xmlns:") == 0)
-        return std::make_pair(std::string("xmlns:"), s.substr(s.find(":")+1));
     
-    // Divert --text="" to a hidden option that allows empty args (implicit work around)
-    if (s.find("--text=") == 0) {
-        auto val = s.substr(s.find("=") + 1);
-        if (val == "")
-            /* We have already determined that we have an empty string, but we need to pass a non-null value.
-                The value doesn't matter as it is not used it just allows the program options to record the correct
-                number of empty strings provided by one or more --text="" uses. */
-            return std::make_pair(std::string("text-equals-null"), " ");
-        else
-            return std::make_pair(std::string("text"), val);
-    }
-
-    return std::make_pair(std::string(), std::string());
-}
-
-#if 0
-
 // Set to detect option conflicts
 void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
     if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
