@@ -137,7 +137,7 @@ void positional_args(srcml_request_t& srcml_request, const std::vector<std::stri
 void option_output_filename(srcml_request_t& srcml_request, const std::string& value);
 
 // tranformation check on input
-bool is_transformation(const srcml_input_src& input);
+bool is_transformation(srcml_request_t& srcml_request, const srcml_input_src& input);
 
 class srcMLApp : public CLI::App {
 public:
@@ -229,7 +229,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
             srcml_input_src input(filename);
 
-            if (!(is_transformation(input))) {
+            if (!(is_transformation(srcml_request, input))) {
               srcml_request.input_sources.push_back(input);
             }
         })
@@ -383,18 +383,19 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("XML")
         ->group("ENCODING");
 
-    app.add_option_function<std::string>("--xmlns", [&](const std::string& value) {  
-
-        auto delim = value.find("=");
-        if (delim == std::string::npos) {
-            srcml_request.xmlns_namespaces[""] = value;
-            srcml_request.xmlns_namespace_uris[value] = "";
-        } else {
-            srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
-            srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
-        }
-    },  "Set the default namespace URI, or declare the PRE for namespace URI")
+    app.add_option("--xmlns", "Set the default namespace URI, or declare the PRE for namespace URI")
+        ->each([&](const std::string& value) {  
+            auto delim = value.find("=");
+            if (delim == std::string::npos) {
+                srcml_request.xmlns_namespaces[""] = value;
+                srcml_request.xmlns_namespace_uris[value] = "";
+            } else {
+                srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
+                srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
+            }
+        })
         ->type_name("URI, PRE=URI")
+        ->expected(1)
         ->group("ENCODING");
 
     // metadata
@@ -422,7 +423,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Output source filename and exit")
         ->group("METADATA OPTIONS");
 
-    app.add_flag_callback("--show-version",   [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION; },
+    app.add_flag_callback("--show-src-version",   [&]() { srcml_request.command |= SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION; },
         "Output source version and exit")
         ->group("METADATA OPTIONS");
 
@@ -737,7 +738,7 @@ void positional_args(srcml_request_t& srcml_request, const std::vector<std::stri
 
         srcml_input_src input(iname);
 
-        if (!(is_transformation(input))) {
+        if (!(is_transformation(srcml_request, input))) {
           srcml_request.input_sources.push_back(input);
         }
     }
@@ -1039,7 +1040,8 @@ void option_dependency(const prog_opts::variables_map& vm,
 }
 #endif
 
-bool is_transformation(const srcml_input_src& input) {
+bool is_transformation(srcml_request_t& srcml_request, const srcml_input_src& input) {
+
     std::string ext = input.extension;
 
     if (ext == ".rng") {
