@@ -30,6 +30,12 @@
 #define CLI11_BOOST_OPTIONAL 1
 #include <CLI11.hpp>
 
+// Sanitize element input
+element clean_element_input(const std::string& element_input);
+
+// Sanitize attribute input
+attribute clean_attribute_input(const std::string& attribute_input);
+
 const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
        srcml [options] <srcML_infile>... [-o <src_outfile>]
 
@@ -586,6 +592,39 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         srcml_request.att_url = url;
     }
 
+    // loop the cli options in the order they were processed/received
+    for (const auto& option : app.parse_order()) {
+        if (option->check_lname("relaxng") || option->check_lname("xpath") || option->check_lname("xslt") || option->check_lname("xslt-param")
+            || option->check_lname("element") || option->check_lname("attribute")) {
+
+            if (option->check_lname("xpath"))
+                srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
+
+            for (const auto& vals : option->results()) {
+                if (option->check_lname("element") && srcml_request.xpath_query_support.size() < 1) {
+
+                    SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
+                    exit(SRCML_STATUS_INVALID_ARGUMENT);
+                }
+                if (option->check_lname("attribute") && srcml_request.xpath_query_support.size() < 1) {
+
+                    SRCMLstatus(ERROR_MSG, "srcml: attribute option must follow an --xpath option");
+                    exit(SRCML_STATUS_INVALID_ARGUMENT);
+                }
+
+                if (option->check_lname("element")) {
+                    srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].first = clean_element_input(vals);
+                }
+                else if (option->check_lname("attribute")) {
+                    srcml_request.xpath_query_support[srcml_request.xpath_query_support.size() - 1].second = clean_attribute_input(vals);
+                }
+                else {
+                    srcml_request.transformations.push_back(src_prefix_add_uri(option->get_lnames()[0], vals));
+                }
+            }
+        }
+    }
+
     return srcml_request;
 }
 // deprecated option command
@@ -719,11 +758,6 @@ std::pair<std::string, std::string> custom_parser(const std::string& s);
 // Debug
 void debug_cli_opts(const struct srcml_request_t srcml_request);
 
-// Sanitize element input
-element clean_element_input(const std::string& element_input);
-
-// Sanitize attribute input
-attribute clean_attribute_input(const std::string& attribute_input);
 
 #if 0
 // Interpretation of CLI options
