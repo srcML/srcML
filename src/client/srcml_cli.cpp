@@ -232,6 +232,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Suppress status messages")
         ->group("GENERAL OPTIONS");
 
+    auto output =
     app.add_option("-o,--output",
         "Write output to FILE")
         ->each([&](std::string value) {
@@ -301,18 +302,21 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     app.add_flag_callback("--archive,-r",      [&]() { *srcml_request.markup_options |= SRCML_ARCHIVE; },
         "Create a srcML archive, default for multiple input files")
         ->group("CREATING SRCML");
-    
+
+    auto output_xml =
     app.add_flag_callback("--output-xml,-X",   [&]() { srcml_request.command |= SRCML_COMMAND_XML; },
         "Output in XML instead of text")
         ->group("CREATING SRCML");
     
+    auto output_xml_outer =
     app.add_flag_callback("--output-xml-outer",[&]() { 
         srcml_request.command |= SRCML_COMMAND_XML_FRAGMENT;
         srcml_request.command |= SRCML_COMMAND_XML;
     },
-        "Output an inner unit from an XML archive")
+        "Output an individual unit from an XML archive")
         ->group("CREATING SRCML");
     
+    auto output_xml_inner =
     app.add_flag_callback("--output-xml-inner",[&]() {
         srcml_request.command |= SRCML_COMMAND_XML_RAW;
         srcml_request.command |= SRCML_COMMAND_XML;
@@ -467,10 +471,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("NUM")
         ->group("EXTRACTING SOURCE CODE");
 
+    auto output_src =
     app.add_flag_callback("--output-src,-S",  [&]() { srcml_request.command |= SRCML_COMMAND_SRC; },
         "Output source code instead of srcML")
         ->group("EXTRACTING SOURCE CODE");
 
+    auto todir =
     app.add_option_function<std::string>("--to-dir", [&](const std::string& value) {
 
         srcml_request.output_filename = srcml_output_dest(value);
@@ -591,7 +597,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("");
 
     quiet->excludes(verbose);
-    verbose->excludes(quiet);
+    output_src->excludes(output_xml);
+    output_src->excludes(output_xml_inner);
+    output_src->excludes(output_xml_outer);
+    output->excludes(todir);
+    output_xml->excludes(output_xml_inner);
+    output_xml->excludes(output_xml_outer);
+    output_xml_outer->excludes(output_xml_inner);
     
     try {
         app.parse(commandline);
