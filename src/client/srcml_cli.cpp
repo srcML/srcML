@@ -160,6 +160,17 @@ public:
 
         return out.str();
     }
+
+    inline std::string make_group(std::string group, bool is_positional, std::vector<const CLI::Option *> opts) const override {
+        std::stringstream out;
+
+        out << /* "\n" << */ group << ":\n";
+        for (const CLI::Option *opt : opts) {
+            out << make_option(opt, is_positional);
+        }
+
+        return out.str();
+    }
 };
 
 srcml_request_t parseCLI11(int argc, char* argv[]) {
