@@ -34,7 +34,7 @@
 element clean_element_input(const std::string& element_input);
 
 // Sanitize attribute input
-attribute clean_attribute_input(const std::string& attribute_input);
+attribute clean_attribute_input(srcml_request_t& srcml_request, const std::string& attribute_input);
 
 const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
        srcml [options] <srcML_infile>... [-o <src_outfile>]
@@ -130,14 +130,6 @@ const char* SRCML2SRC_FOOTER = R"(Examples:
   srcml m.cpp.xml --show-language
 )";
 
-
-srcml_request_t srcml_request;
-
-void positional_args(srcml_request_t& srcml_request, const std::vector<std::string>& value);
-
-// tranformation check on input
-bool is_transformation(srcml_request_t& srcml_request, const srcml_input_src& input);
-
 class srcMLApp : public CLI::App {
 public:
     srcMLApp(std::string app_description, std::string app_name) 
@@ -211,9 +203,17 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
             srcml_input_src input(filename);
 
-            if (!(is_transformation(srcml_request, input))) {
-              srcml_request.input_sources.push_back(input);
+            if (input.extension == ".rng") {
+                srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", input.filename));
+                return;
             }
+
+            if (input.extension == ".xsl") {
+                srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));
+                return;
+            }
+
+            srcml_request.input_sources.push_back(input);
         })
         ->group("");
 
@@ -500,7 +500,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     app.add_option("--attribute", 
         "Insert attribute PRE:NAME=\"VALUE\" into element results of XPath query in original unit")
-        ->each([&](std::string value) { srcml_request.xpath_query_support.back().second = clean_attribute_input(value); })
+        ->each([&](std::string value) { srcml_request.xpath_query_support.back().second = clean_attribute_input(srcml_request, value); })
         ->check([&](std::string) {
             if (srcml_request.xpath_query_support.empty()) {
 
@@ -637,6 +637,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     return srcml_request;
 }
+
+#if 0
 // deprecated option command
 // (This is required as non-deprecated options may use same values)
 template <int command>
@@ -649,6 +651,7 @@ void option_command_deprecated(bool opt) {
         SRCMLstatus(INFO_MSG, "srcml: use of option --units or -n is deprecated");
     }
 }
+#endif
 
 #if 0
 // option src encoding
@@ -687,23 +690,6 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
 }
 #endif
 
-void positional_args(srcml_request_t& srcml_request, const std::vector<std::string>& value) {
-    srcml_request.input_sources.reserve(srcml_request.input_sources.size() + value.size());
-
-    for (const auto& iname : value) {
-
-        // record the position of stdin
-        if (iname == "-" || iname == "stdin://-")
-            srcml_request.stdindex = (int) srcml_request.input_sources.size();
-
-        srcml_input_src input(iname);
-
-        if (!(is_transformation(srcml_request, input))) {
-          srcml_request.input_sources.push_back(input);
-        }
-    }
-}
-
 #if 0
 /* Function used to check that 'opt1' and 'opt2' are not specified
    at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
@@ -714,22 +700,6 @@ void option_dependency(const prog_opts::variables_map& vm, const char* option, c
 #endif
 
 #if 0
-
-        input_file.add("input-files", -1);
-
-        // Check option conflicts
-        conflicting_options(cli_map, "quiet", "verbose");
-        conflicting_options(cli_map, "output", "to-dir");
-        conflicting_options(cli_map, "cpp-text-else", "cpp-markup-else");
-        conflicting_options(cli_map, "cpp-text-if0", "cpp-markup-if0");
-        conflicting_options(cli_map, "output-src", "output-xml");
-
-        // Check dependent options
-        // Format: option_dependency(cli_map, [option], [option]);
-        option_dependency(cli_map, "text", "language");
-
-
-
         // If position option is used without tabs...set default tab of 8
         if ((*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0) || srcml_request.tabs == 0)
             srcml_request.tabs = 8;
@@ -753,10 +723,6 @@ void option_dependency(const prog_opts::variables_map& vm, const char* option, c
             exit(1); // TODO Need a real error code
         }
 
-
-
-        if (srcml_request.command & SRCML_COMMAND_XML_RAW)
-            option_command<SRCML_COMMAND_XML>(true);
     }
     // Unknown Option
     catch(boost::program_options::unknown_option& e) {
@@ -786,44 +752,8 @@ void option_dependency(const prog_opts::variables_map& vm, const char* option, c
 
     return srcml_request;
 }
-    
-// Set to detect option conflicts
-void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2) {
-    if (vm.count(opt1) && !vm[opt1].defaulted() && vm.count(opt2) && !vm[opt2].defaulted()) {
-        SRCMLstatus(ERROR_MSG, "srcml: Conflicting options '%s' and '%s'.", opt1, opt2);
-        exit(15);
-    }
-}
 
-// Check for dependent options
-void option_dependency(const prog_opts::variables_map& vm,
-                        const char* option, const char* dependent_option) {
-
-    if (vm.count(option) && !vm[option].defaulted()) {
-        if (vm.count(dependent_option) == 0) {
-            throw std::logic_error(std::string("Option '") + option
-                                    + "' requires option '" + dependent_option + "'.");
-        }
-    }
-}
 #endif
-
-bool is_transformation(srcml_request_t& srcml_request, const srcml_input_src& input) {
-
-    std::string ext = input.extension;
-
-    if (ext == ".rng") {
-        srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", input.filename));
-        return true;
-    }
-
-    if (ext == ".xsl") {
-        srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));
-        return true;
-    }
-
-    return false;
-}
 
 element clean_element_input(const std::string& element_input) {
     size_t elemn_index = element_input.find(":");
@@ -835,7 +765,7 @@ element clean_element_input(const std::string& element_input) {
     return element{ element_input.substr(0, elemn_index), element_input.substr(elemn_index + 1) };
 }
 
-attribute clean_attribute_input(const std::string& attribute_input) {
+attribute clean_attribute_input(srcml_request_t& srcml_request, const std::string& attribute_input) {
     std::string vals = attribute_input;
     size_t attrib_colon = vals.find(":");
     size_t attrib_equals = vals.find("=");
