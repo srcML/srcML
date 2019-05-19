@@ -222,10 +222,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Output version number and exit")
         ->group("GENERAL OPTIONS");
 
+    auto verbose =
     app.add_flag_callback("--verbose,-v", [&]() { srcml_request.command |= SRCML_COMMAND_VERBOSE; },
         "Conversion and status information to stderr")
         ->group("GENERAL OPTIONS");
 
+    auto quiet =
     app.add_flag_callback("--quiet,-q",   [&]() { srcml_request.command |= SRCML_COMMAND_QUIET; },
         "Suppress status messages")
         ->group("GENERAL OPTIONS");
@@ -588,6 +590,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Run parser tests on the input files")
         ->group("");
 
+    quiet->excludes(verbose);
+    verbose->excludes(quiet);
+    
     try {
         app.parse(commandline);
     } catch (const CLI::CallForHelp &e) {
