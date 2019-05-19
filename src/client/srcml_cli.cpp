@@ -148,24 +148,27 @@ public:
 
 class srcMLFormatter : public CLI::Formatter {
 public:
+    // have our own usage
     std::string make_usage(const CLI::App *, std::string) const override { return ""; }
 
+    // remove NEEDS and ... from help
     inline std::string make_option_opts(const CLI::Option *opt) const override {
         std::stringstream out;
 
-        if(opt->get_type_size() != 0) {
-            if(!opt->get_type_name().empty())
+        if (opt->get_type_size() != 0) {
+            if (!opt->get_type_name().empty())
                 out << " " << get_label(opt->get_type_name());
         }
 
         return out.str();
     }
 
+    // convert from default 2 blank lines between groups to a single newline
     inline std::string make_group(std::string group, bool is_positional, std::vector<const CLI::Option *> opts) const override {
         std::stringstream out;
 
         out << /* "\n" << */ group << ":\n";
-        for (const CLI::Option *opt : opts) {
+        for (const auto* opt : opts) {
             out << make_option(opt, is_positional);
         }
 
