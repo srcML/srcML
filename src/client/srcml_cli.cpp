@@ -30,12 +30,6 @@
 #define CLI11_BOOST_OPTIONAL 1
 #include <CLI11.hpp>
 
-// Sanitize element input
-element clean_element_input(const std::string& element_input);
-
-// Sanitize attribute input
-attribute clean_attribute_input(srcml_request_t& srcml_request, const std::string& attribute_input);
-
 const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
        srcml [options] <srcML_infile>... [-o <src_outfile>]
 
@@ -52,6 +46,7 @@ Have a question or need to report a bug?
 Contact us at http://www.srcml.org/support.html
 www.srcML.org)";
 
+#if 0
 const char* SRC2SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
 
   Translates C, C++, C#, and Java source code into the XML
@@ -130,6 +125,8 @@ const char* SRCML2SRC_FOOTER = R"(Examples:
   srcml m.cpp.xml --show-language
 )";
 
+#endif
+
 class srcMLApp : public CLI::App {
 public:
     srcMLApp(std::string app_description, std::string app_name) 
@@ -140,7 +137,6 @@ public:
 
         // custom error message
         failure_message_ = [](const CLI::App *, const CLI::Error &e) {
-
             return std::string("srcml: ") + e.what() + "\n";
         };
     }
@@ -148,7 +144,7 @@ public:
 
 class srcMLFormatter : public CLI::Formatter {
 public:
-    // have our own usage
+    // user our own usage at the top, included in the header
     std::string make_usage(const CLI::App *, std::string) const override { return ""; }
 
     // remove NEEDS and ... from help
@@ -183,7 +179,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // does this need to be an optional?
     srcml_request.markup_options = 0;
 
-    // Cleanup the arguments for some special cases:
+    // Cleanup the arguments for special cases:
     //      xmlns prefix: --xmlns:pre="URL" -> --xmlns=pre="URL"
     //      empty strings on long options, e.g., --text="" -> --text ""
     std::vector<std::string> commandline;
@@ -206,6 +202,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     srcMLApp app{SRCML_HEADER, "srcml"};
     app.formatter(std::make_shared<srcMLFormatter>());
     app.get_formatter()->column_width(32);
+
+    /*
+        Option setup:
+        * Assumes check() is defined before each() (execution order follows declaration order)
+        * All error handling is through CLI11, or explicit in the lambda (no error messages in called functions)
+        * Options/flags are added, and can be searched, by name on command line, e.g., --language
+    */
 
     // positional arguments, i.e., input files
     app.add_option_function<std::vector<std::string>>("InputFiles", [&](const std::vector<std::string>&) {}, "")
@@ -282,21 +285,28 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     auto language =
     app.add_option("--language,-l", srcml_request.att_language,
         "Set the source-code language to C, C++, C#, or Java. Required for --text option")
-//        ->check(CLI::IsMember({"C","C++","C#","Java"}))
+        ->check([&](std::string lang) {
+            if (lang.empty() || srcml_check_language(lang.c_str()) == 0) {
+                SRCMLstatus(ERROR_MSG, "srcml: invalid language \"%s\"", lang);
+                exit(6); //ERROR CODE TBD
+            }
+            return "";
+        })
         ->expected(1)
         ->type_name("LANG")
         ->group("CREATING SRCML");
 
     app.add_option("--text,-t", 
         "Input source code from STRING, e.g., --text=\"int a;\"")
-        ->each([&](std::string text) { 
-            srcml_request.input_sources.push_back(src_prefix_add_uri("text", text)); })
         ->check([&](std::string value) {
             if (!value.empty() && value[0] == '-') {
                 std::cerr << "srcml: --text: 1 required STRING missing";
                 exit(7);
             }
             return "";
+        })
+        ->each([&](std::string text) { 
+            srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
         })
         ->type_name("STRING")
         ->expected(1)
@@ -343,6 +353,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Include start and end attributes with line/column of each element")
         ->group("MARKUP OPTIONS");
 
+    // default tabs
     srcml_request.tabs = 8;
     app.add_option("--tabs", srcml_request.tabs,
         "Set tab stop at every NUM characters, default of 8")
@@ -514,28 +525,79 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     app.add_option("--attribute", 
         "Insert attribute PRE:NAME=\"VALUE\" into element results of XPath query in original unit")
-        ->each([&](std::string value) { srcml_request.xpath_query_support.back().second = clean_attribute_input(srcml_request, value); })
-        ->check([&](std::string) {
+        ->check([&](std::string value) {
             if (srcml_request.xpath_query_support.empty()) {
 
                 SRCMLstatus(ERROR_MSG, "srcml: attribute option must follow an --xpath option");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
             }
+
+            // Attribute must have a value
+            if (value.find("=") == std::string::npos) {
+                SRCMLstatus(ERROR_MSG, "srcml: the attribute %s is missing a value", value);
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+            }
+
+            // Missing prefix requires an element with a prefix
+            if (value.find(":") == std::string::npos && !(srcml_request.xpath_query_support.back().first)) {
+                SRCMLstatus(ERROR_MSG, "srcml: the attribute %s is missing a prefix or an element with a prefix", value);
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+            }
+
             return "";
+        })
+        ->each([&](std::string value) {
+
+            auto attrib_colon = value.find(":");
+            auto attrib_equals = value.find("=");
+
+            attribute attrib;
+
+            if (attrib_colon != std::string::npos) {
+                // PREFIX:NAME=VALUE
+                attrib.prefix = value.substr(0, attrib_colon);
+                attrib.name = value.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
+            } else {
+                // NAME=VALUE
+                attrib.prefix = srcml_request.xpath_query_support.back().first->prefix;
+                attrib.name = value.substr(0, attrib_equals);
+            }
+
+            // value starts after '='
+            auto attrib_value_start = attrib_equals + 1;
+
+            // value may be wrapped with quotes that need to be removed
+            // ="VALUE", ='VALUE'
+            if (value[attrib_value_start] == '\'' || value[attrib_value_start] == '"')
+                ++attrib_value_start;
+            auto attrib_value_size = value.size() - attrib_value_start;
+            if (value.back() == '\'' || value.back() == '"')
+                --attrib_value_size;
+
+            attrib.value = value.substr(attrib_value_start, attrib_value_size);
+
+            srcml_request.xpath_query_support.back().second = attrib;
         })
         ->type_name("PRE:NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION");
 
     app.add_option("--element", 
         "Insert element PRE:NAME around each element result of XPath query in original unit")
-        ->each([&](std::string value) { srcml_request.xpath_query_support.back().first = clean_element_input(value); })
-        ->check([&](std::string) {
+        ->check([&](std::string value) {
             if (srcml_request.xpath_query_support.empty()) {
-
                 SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
                 exit(SRCML_STATUS_INVALID_ARGUMENT);
             }
+
+            if (value.find(":") == std::string::npos) {
+                SRCMLstatus(ERROR_MSG, "srcml: element uri's require a prefix");
+                exit(SRCML_STATUS_INVALID_ARGUMENT);
+            }
             return "";
+        })
+        ->each([&](std::string value) { 
+            auto elemn_index = value.find(":");
+            srcml_request.xpath_query_support.back().first = element{ value.substr(0, elemn_index), value.substr(elemn_index + 1) };
         })
         ->type_name("PRE:NAME")
         ->group("QUERY & TRANSFORMATION");
@@ -649,23 +711,33 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         srcml_request.att_url = url;
     }
 
+    // check user-provided namespaces as a set compared to standard namespaces
+    // @todo Not sure of this, and that it catches everything
+    for (size_t i = 0; i < srcml_get_namespace_size(); ++i) {
+        std::string std_prefix = srcml_get_namespace_prefix(i);
+        std::string std_uri = srcml_get_namespace_uri(i);
+
+        auto& user_namespaces = srcml_request.xmlns_namespaces;
+        auto& user_uris = srcml_request.xmlns_namespace_uris;
+
+        // A reserved std_prefix wasn't used or it was set to the same std_uri
+        if (user_namespaces.find(std_prefix) == user_namespaces.end() || user_namespaces[std_prefix] == std_uri) {
+            continue;
+        }
+
+        // A reserved uri is set to a different prefix
+        if (user_uris.find(std_uri) != user_namespaces.end() && user_uris[std_uri] != std_prefix) {
+            continue;
+        }
+
+        SRCMLstatus(ERROR_MSG, "srcml: prefix \"" + std_prefix + "\" assigned multiple URIs \"" + std_uri + "\", \"" + user_namespaces[std_prefix] + "\"");
+        exit(1); // TODO Need a real error code
+    }
+
     return srcml_request;
 }
 
-#if 0
-// deprecated option command
-// (This is required as non-deprecated options may use same values)
-template <int command>
-void option_command_deprecated(bool opt) {
-    if (opt) {
-      srcml_request.command |= command;
-
-      // Notify user of deprecated options
-      if (command == SRCML_COMMAND_UNITS)
-        SRCMLstatus(INFO_MSG, "srcml: use of option --units or -n is deprecated");
-    }
-}
-#endif
+// @todo Do we need to deprecate --units, -n?
 
 #if 0
 // option src encoding
@@ -690,134 +762,4 @@ void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) 
     }
     srcml_request.att_xml_encoding = value;
 }
-
-// option language attribute
-template <>
-void option_field<&srcml_request_t::att_language>(const std::string& value) {
-
-    // check language
-    if (value.empty() || srcml_check_language(value.c_str()) == 0) {
-        SRCMLstatus(ERROR_MSG, "srcml: invalid language \"%s\"", value);
-        exit(6); //ERROR CODE TBD
-    }
-    srcml_request.att_language = value;
-}
 #endif
-
-#if 0
-/* Function used to check that 'opt1' and 'opt2' are not specified
-   at the same time. (FROM BOOST LIBRARY EXAMPLES)*/
-void conflicting_options(const prog_opts::variables_map& vm, const char* opt1, const char* opt2);
-
-// Determine dependent options
-void option_dependency(const prog_opts::variables_map& vm, const char* option, const char* dependent_option);
-#endif
-
-#if 0
-        // If position option is used without tabs...set default tab of 8
-        if ((*srcml_request.markup_options & SRCML_OPTION_POSITION && srcml_request.tabs == 0) || srcml_request.tabs == 0)
-            srcml_request.tabs = 8;
-
-        // check namespaces
-        for (size_t i = 0; i < srcml_get_namespace_size(); ++i) {
-            std::string prefix = srcml_get_namespace_prefix(i);
-            std::string uri = srcml_get_namespace_uri(i);
-
-            // A reserved prefix wasn't used or it was set to the same uri
-            if (srcml_request.xmlns_namespaces.find(prefix) == srcml_request.xmlns_namespaces.end() || srcml_request.xmlns_namespaces[prefix] == uri) {
-                continue;
-            }
-
-            // A reserved uri is set to a different prefix
-            if (srcml_request.xmlns_namespace_uris.find(uri) != srcml_request.xmlns_namespaces.end() && srcml_request.xmlns_namespace_uris[uri] != prefix) {
-                continue;
-            }
-
-            SRCMLstatus(ERROR_MSG, "srcml: prefix \"" + prefix + "\" assigned multiple URIs \"" + uri + "\", \"" + srcml_request.xmlns_namespaces[prefix] + "\"");
-            exit(1); // TODO Need a real error code
-        }
-
-    }
-    // Unknown Option
-    catch(boost::program_options::unknown_option& e) {
-        SRCMLstatus(ERROR_MSG, "srcml: %s", e.what());
-        exit(3);
-    }
-    // Missing Option Value
-    catch(boost::program_options::error_with_option_name& e) {
-        std::string error_msg(e.what());
-        
-        /* This allows for --help with no value (currently a work around for implicit issues)
-            We check the error message for a section to identify when --help is used without a value
-            and call the function manually to print the appropriate help message. 
-            Calls to option_help automatically exit the cli. */
-        if (error_msg.find("'--help' is missing") != std::string::npos) {
-                option_help("");
-        }
-
-        SRCMLstatus(ERROR_MSG, "srcml: %s", error_msg);
-        exit(7);
-    }
-    // Catch all other issues with generic error
-    catch(std::exception& e) {
-        SRCMLstatus(ERROR_MSG, "srcml: %s", e.what());
-        exit(1);
-    }
-
-    return srcml_request;
-}
-
-#endif
-
-element clean_element_input(const std::string& element_input) {
-    size_t elemn_index = element_input.find(":");
-    if (elemn_index == std::string::npos) {
-        // Element requires a prefix
-        exit(1);
-    }
-
-    return element{ element_input.substr(0, elemn_index), element_input.substr(elemn_index + 1) };
-}
-
-attribute clean_attribute_input(srcml_request_t& srcml_request, const std::string& attribute_input) {
-    std::string vals = attribute_input;
-    size_t attrib_colon = vals.find(":");
-    size_t attrib_equals = vals.find("=");
-
-    // Attribute must have a value
-    if (attrib_equals == std::string::npos) {
-        SRCMLstatus(ERROR_MSG, "srcml: the attribute %s is missing a value", vals);
-        exit(SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    // Missing prefix requires an element with a prefix
-    if (attrib_colon == std::string::npos && !(srcml_request.xpath_query_support.back().first)) {
-        SRCMLstatus(ERROR_MSG, "srcml: the attribute %s is missing a prefix or an element with a prefix", vals);
-        exit(SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    attribute attrib;
-
-    if (attrib_colon != std::string::npos) {
-        attrib.prefix = vals.substr(0, attrib_colon);
-        attrib.name = vals.substr(attrib_colon + 1, attrib_equals - attrib_colon - 1);
-    } else {
-        attrib.prefix = srcml_request.xpath_query_support.back().first->prefix;
-        attrib.name = vals.substr(0, attrib_equals);
-    }
-
-    size_t attrib_value_start = attrib_equals + 1;
-
-    // value may be wrapped with quotes that need to be removed
-    if (vals[attrib_value_start] == '\'' || vals[attrib_value_start] == '"')
-        ++attrib_value_start;
-
-    size_t attrib_value_size = vals.size() - attrib_value_start;
-
-    if (vals[attrib_value_start + attrib_value_size - 1] == '\'' || vals[attrib_value_start + attrib_value_size - 1] == '"')
-        --attrib_value_size;
-
-    attrib.value = vals.substr(attrib_value_start, attrib_value_size);
-
-    return attrib;
-}
