@@ -670,27 +670,6 @@ void option_field<&srcml_request_t::att_language>(const std::string& value) {
 }
 #endif
 
-#if 0
-void option_xmlns_uri(const std::string& value) {
-    srcml_request.xmlns_namespaces[""] = value;
-    srcml_request.xmlns_namespace_uris[value] = "";
-}
-
-void option_xmlns_prefix(const std::vector<std::string>& values) {
-    for (const auto& value : values ) {
-
-      std::size_t delim = value.find("=");
-      if (delim == std::string::npos) {
-        SRCMLstatus(ERROR_MSG, "srcml: xmlns format missing \"=\"");
-        exit(1); //ERROR CODE TBD
-      }
-
-      srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
-      srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
-    }
-}
-#endif
-
 void positional_args(srcml_request_t& srcml_request, const std::vector<std::string>& value) {
     srcml_request.input_sources.reserve(srcml_request.input_sources.size() + value.size());
 
