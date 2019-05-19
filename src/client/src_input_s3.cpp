@@ -21,6 +21,9 @@
  */
 
 #include <src_input_s3.hpp>
+
+#ifdef LINKING_WITH_AWS_SDK
+
 #include <srcml_options.hpp>
 #include <src_input_libarchive.hpp>
 #include <aws/core/Aws.h>
@@ -301,3 +304,5 @@ int src_input_s3(ParseQueue& queue,
 
     return 1;
 }
+
+#endif

@@ -20,6 +20,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef LINKING_WITH_AWS_SDK
+
 #ifndef SRC_INPUT_S3_HPP
 #define SRC_INPUT_S3_HPP
 
@@ -32,5 +34,7 @@ int src_input_s3(ParseQueue& queue,
                     srcml_archive* srcml_arch,
                     const srcml_request_t& srcml_request,
                     const srcml_input_src& input);
+
+#endif
 
 #endif

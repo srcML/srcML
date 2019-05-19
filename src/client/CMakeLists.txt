@@ -40,8 +40,6 @@ endif()
 
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
-find_package(AWSSDK REQUIRED COMPONENTS s3)
-
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
 
@@ -49,8 +47,12 @@ target_include_directories(srcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
 # Maybe coverage is not a default part of Debug?
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES} gcov)
-else()
+elseif(LINK_AWS_SDK STREQUAL "ON")
+    find_package(AWSSDK REQUIRED COMPONENTS s3)
     target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES} ${AWSSDK_LINK_LIBRARIES})
+    add_compile_definitions(LINKING_WITH_AWS_SDK="LINKING_WITH_AWS_SDK")
+else()
+    target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES})
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

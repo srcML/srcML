@@ -92,10 +92,14 @@ int srcml_handler_dispatch(ParseQueue& queue,
         return src_input_file(queue, srcml_arch, srcml_request, input);
     }
 
+
+
+    #ifdef LINKING_WITH_AWS_SDK
     if (input.protocol == "s3") {
         
         return src_input_s3(queue, srcml_arch, srcml_request, input);
     }
+    #endif
 
     srcml_input_src uninput = input;
 
