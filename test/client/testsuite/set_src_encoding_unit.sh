@@ -74,17 +74,21 @@ iconv -f UTF-8 -t UTF-16BE sub/a.cpp > sub/a_UTF-16BE.cpp
 srcml --src-encoding "UTF-16BE" sub/a_UTF-16BE.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-iconv -f UTF-8 -t ISO-10646-UCS-2 sub/a.cpp > sub/a_ISO-10646-UCS-2.cpp
-srcml --src-encoding "ISO-10646-UCS-2" sub/a_ISO-10646-UCS-2.cpp --filename "sub/a.cpp"
-check "$foutput"
+# Not supported on all platforms
+# @todo Conditionally test?
+# iconv -f UTF-8 -t ISO-10646-UCS-2 sub/a.cpp > sub/a_ISO-10646-UCS-2.cpp
+# srcml --src-encoding "ISO-10646-UCS-2" sub/a_ISO-10646-UCS-2.cpp --filename "sub/a.cpp"
+# check "$foutput"
 
 iconv -f UTF-8 -t UCS-2 sub/a.cpp > sub/a_UCS-2.cpp
 srcml --src-encoding "UCS-2" sub/a_UCS-2.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-iconv -f UTF-8 -t ISO-10646-UCS-4 sub/a.cpp > sub/a_ISO-10646-UCS-4.cpp
-srcml --src-encoding "ISO-10646-UCS-4" sub/a_ISO-10646-UCS-4.cpp --filename "sub/a.cpp"
-check "$foutput"
+# Not supported on all platforms
+# @todo Conditionally test?
+# iconv -f UTF-8 -t ISO-10646-UCS-4 sub/a.cpp > sub/a_ISO-10646-UCS-4.cpp
+# srcml --src-encoding "ISO-10646-UCS-4" sub/a_ISO-10646-UCS-4.cpp --filename "sub/a.cpp"
+# check "$foutput"
 
 iconv -f UTF-8 -t UCS-4 sub/a.cpp > sub/a_UCS-4.cpp
 srcml --src-encoding "UCS-4" sub/a_UCS-4.cpp --filename "sub/a.cpp"
@@ -163,8 +167,9 @@ createfile sub/special_characters_utf8.cpp "$special_characters_utf8_actual"
 createfile sub/chinese_characters_utf8.cpp "$chinese_characters_utf8_actual"
 
 # create utf16 versions of the files
-iconv -f UTF-8 -t UTF-16 sub/special_characters_utf8.cpp | dd conv=swab of=sub/special_characters_utf16.cpp
-iconv -f UTF-8 -t UTF-16 sub/chinese_characters_utf8.cpp | dd conv=swab of=sub/chinese_characters_utf16.cpp
+#iconv -f UTF-8 -t UTF-16 sub/special_characters_utf8.cpp | dd conv=swab of=sub/special_characters_utf16.cpp
+( printf "\xff\xfe" ; iconv -f utf-8 -t utf-16le sub/special_characters_utf8.cpp) > sub/special_characters_utf16.cpp
+( printf "\xff\xfe" ; iconv -f utf-8 -t utf-16le sub/chinese_characters_utf8.cpp) > sub/chinese_characters_utf16.cpp
 
 # If this is removed or commented out, the following cases will fail
 # Not sure why
@@ -179,9 +184,9 @@ srcml --src-encoding "UTF-16" sub/special_characters_utf16.cpp -o sub/special_ch
 srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.cpp -o sub/chinese_characters_utf16.xml
 
 #check sub/special_characters_utf16-srcml.cpp "$special_characters_utf16_actual"
+message "REQUIRED"
 srcml --src-encoding "UTF-16" sub/special_characters_utf16.xml -o sub/special_characters_utf16-srcml.cpp
 check_file sub/special_characters_utf16-srcml.cpp sub/special_characters_utf16.cpp
-
 srcml --src-encoding "UTF-16" sub/special_characters_utf16.xml
 check sub/special_characters_utf16.cpp
 
