@@ -22,10 +22,10 @@
 
 #include <srcml_cli.hpp>
 #include <src_prefix.hpp>
-#include <cstring>
 #include <stdlib.h>
 #include <SRCMLStatus.hpp>
 
+// include of boost required to silence warning
 #include <boost/optional/optional_io.hpp>
 #define CLI11_BOOST_OPTIONAL 1
 #include <CLI11.hpp>
@@ -140,13 +140,15 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
             srcml_input_src input(filename);
 
-            if (input.extension == ".rng") {
-                srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", input.filename));
+            // xslt transformation file
+            if (input.extension == ".xsl") {
+                srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));
                 return;
             }
 
-            if (input.extension == ".xsl") {
-                srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));
+            // relaxng transformation file
+            if (input.extension == ".rng") {
+                srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", input.filename));
                 return;
             }
 
@@ -219,6 +221,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Input source code from STRING, e.g., --text=\"int a;\"")
         ->type_name("STRING")
         ->group("CREATING SRCML")
+        ->expected(1)
+        ->needs(language)
         ->check([&](std::string value) {
             if (!value.empty() && value[0] == '-') {
                 std::cerr << "srcml: --text: 1 required STRING missing";
@@ -228,10 +232,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         })
         ->each([&](std::string text) { 
             srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
-        })
-        ->expected(1)
-        ->needs(language);
-    //    ->type_size(-1)
+        });
     
     app.add_option("--register-ext", srcml_request.language_ext,
         "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
@@ -433,6 +434,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("EXTRACTING SOURCE CODE");
 
     // query/transform
+    auto xpath =
     app.add_option("--xpath", 
         "Apply XPATH expression to each individual srcML unit")
         ->type_name("XPATH")
@@ -446,6 +448,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Insert attribute PRE:NAME=\"VALUE\" into element results of XPath query in original unit")
         ->type_name("PRE:NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION")
+        ->needs(xpath)
         ->check([&](std::string value) {
             if (srcml_request.xpath_query_support.empty()) {
 
@@ -504,6 +507,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Insert element PRE:NAME around each element result of XPath query in original unit")
         ->type_name("PRE:NAME")
         ->group("QUERY & TRANSFORMATION")
+        ->needs(xpath)
         ->check([&](std::string value) {
             if (srcml_request.xpath_query_support.empty()) {
                 SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
@@ -521,6 +525,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.xpath_query_support.back().first = element{ value.substr(0, elemn_index), value.substr(elemn_index + 1) };
         });
 
+    auto xslt =
     app.add_option("--xslt", 
         "Apply the XSLT program FILE to each unit, where FILE can be a url")
         ->type_name("FILE")
@@ -533,6 +538,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Passes the string parameter NAME with UTF-8 encoded string VALUE to the XSLT program")
         ->type_name("NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION")
+        ->needs(xslt)
         ->each([&](std::string value) {
             srcml_request.transformations.push_back(src_prefix_add_uri("xslt-param", value));
         });
