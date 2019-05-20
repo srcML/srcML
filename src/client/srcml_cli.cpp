@@ -127,9 +127,9 @@ const char* SRCML2SRC_FOOTER = R"(Examples:
 
 #endif
 
-class srcMLApp : public CLI::App {
+class srcMLClI : public CLI::App {
 public:
-    srcMLApp(std::string app_description, std::string app_name) 
+    srcMLClI(std::string app_description, std::string app_name) 
         : CLI::App(app_description, app_name) {
 
         set_help_flag("-h,--help", "Output this help message and exit")->group("GENERAL OPTIONS");
@@ -199,7 +199,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     }
     std::reverse(commandline.begin(), commandline.end());
 
-    srcMLApp app{SRCML_HEADER, "srcml"};
+    srcMLClI app{SRCML_HEADER, "srcml"};
     app.formatter(std::make_shared<srcMLFormatter>());
     app.get_formatter()->column_width(32);
 
