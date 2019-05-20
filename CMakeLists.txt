@@ -58,8 +58,9 @@ if(BUILD_ALL)
     set(BUILD_ALL_DOCS ON)
 endif()
 
-# Turn ON/OFF building libsrcml statically
-option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" OFF)
+# Build options
+option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" ON)
+option(LINK_LIBSRCML_STATIC "Link srcml client, tests, and examples with static version of libsrcml" OFF)
 
 # The default configuration is to compile in Release mode
 if(NOT CMAKE_BUILD_TYPE)

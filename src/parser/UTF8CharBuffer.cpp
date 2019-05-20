@@ -317,7 +317,7 @@ ssize_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-8, otherwise check if it is compatible with UTF-8
             if (encoding.empty()) {
                 encoding = "UTF-8";
-            } else if (!compatibleEncodings(encoding.c_str(), "UTF-8")) {
+            } else if (encoding != "UTF-8" && !compatibleEncodings(encoding.c_str(), "UTF-8")) {
                 fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.c_str());
             }
         }
@@ -330,7 +330,7 @@ ssize_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-16, otherwise check if it is compatible with UTF-16
             if (encoding.empty()) {
                 encoding = "UTF-16";
-            } else if (!compatibleEncodings(encoding.c_str(), "UTF-16")) {
+            } else if (encoding != "UTF-16" && !compatibleEncodings(encoding.c_str(), "UTF-16")) {
                 fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.c_str());
             }
         }
@@ -343,7 +343,7 @@ ssize_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-32, otherwise check if it is compatible with UTF-32
             if (encoding.empty()) {
                 encoding = "UTF-32";
-            } else if (!compatibleEncodings(encoding.c_str(), "UTF-32")) {
+            } else if (encoding != "UTF-32" && !compatibleEncodings(encoding.c_str(), "UTF-32")) {
                 fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.c_str());
             }
         }
