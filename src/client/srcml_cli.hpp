@@ -115,7 +115,7 @@ struct srcml_request_t {
 
     boost::optional<int> stdindex;
 
-    int command;
+    int command = 0;
     boost::optional<int> markup_options;
 
     // unit attributes
