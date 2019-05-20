@@ -212,6 +212,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     // positional arguments, i.e., input files
     app.add_option_function<std::vector<std::string>>("InputFiles", [&](const std::vector<std::string>&) {}, "")
+        ->group("")
         ->each([&](std::string filename) {
 
             // record the position of stdin
@@ -231,8 +232,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
 
             srcml_request.input_sources.push_back(input);
-        })
-        ->group("");
+        });
 
     // general 
     app.add_flag_callback("--version,-V", [&]() { srcml_request.command |= SRCML_COMMAND_VERSION; },
@@ -252,6 +252,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     auto output =
     app.add_option("-o,--output",
         "Write output to FILE")
+        ->type_name("FILE")
+        ->group("GENERAL OPTIONS")
         ->each([&](std::string value) {
             srcml_request.output_filename = srcml_output_dest(value);
 
@@ -261,9 +263,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
                 srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
                 srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
             }
-        })
-        ->type_name("FILE")
-        ->group("GENERAL OPTIONS");
+        });
 
     srcml_request.max_threads = 4;
     app.add_option("--jobs,-j", srcml_request.max_threads,
@@ -274,30 +274,32 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // src2srcml_options "CREATING SRCML"
     app.add_option("--files-from", 
         "Input source-code filenames from FILE")
+        ->type_name("FILE")
+        ->group("CREATING SRCML")
+        ->type_size(-1)
         ->each([&](const std::string& value) {
             srcml_request.files_from.push_back(value);
             srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", value));
-        })
-        ->type_name("FILE")
-        ->type_size(-1)
-        ->group("CREATING SRCML");
+        });
 
     auto language =
     app.add_option("--language,-l", srcml_request.att_language,
         "Set the source-code language to C, C++, C#, or Java. Required for --text option")
+        ->type_name("LANG")
+        ->group("CREATING SRCML")
+        ->expected(1)
         ->check([&](std::string lang) {
             if (lang.empty() || srcml_check_language(lang.c_str()) == 0) {
                 SRCMLstatus(ERROR_MSG, "srcml: invalid language \"%s\"", lang);
                 exit(6); //ERROR CODE TBD
             }
             return "";
-        })
-        ->expected(1)
-        ->type_name("LANG")
-        ->group("CREATING SRCML");
+        });
 
     app.add_option("--text,-t", 
         "Input source code from STRING, e.g., --text=\"int a;\"")
+        ->type_name("STRING")
+        ->group("CREATING SRCML")
         ->check([&](std::string value) {
             if (!value.empty() && value[0] == '-') {
                 std::cerr << "srcml: --text: 1 required STRING missing";
@@ -308,11 +310,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->each([&](std::string text) { 
             srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
         })
-        ->type_name("STRING")
         ->expected(1)
-        ->needs(language)
+        ->needs(language);
     //    ->type_size(-1)
-        ->group("CREATING SRCML");
     
     app.add_option("--register-ext", srcml_request.language_ext,
         "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
@@ -357,10 +357,10 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     srcml_request.tabs = 8;
     app.add_option("--tabs", srcml_request.tabs,
         "Set tab stop at every NUM characters, default of 8")
-        ->check(CLI::Number)
-        ->each([&](std::string){ *srcml_request.markup_options |= SRCML_OPTION_POSITION; })
         ->type_name("NUM")
-        ->group("MARKUP OPTIONS");
+        ->group("MARKUP OPTIONS")
+        ->check(CLI::Number)
+        ->each([&](std::string){ *srcml_request.markup_options |= SRCML_OPTION_POSITION; });
 
 #if 0
     // check tabstop
@@ -386,6 +386,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     srcml_request.att_xml_encoding = "UTF-8";
     app.add_option("--xml-encoding", srcml_request.att_xml_encoding,
         "Set output XML encoding. Default is UTF-8")
+        ->type_name("ENCODING")
+        ->group("ENCODING")
         ->check([&](const std::string &value) { 
 
             if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
@@ -393,9 +395,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
 
             return std::string("");
-        })
-        ->type_name("ENCODING")
-        ->group("ENCODING");
+        });
 
     app.add_flag_callback("--no-xml-declaration",[&]() { *srcml_request.markup_options |= SRCML_OPTION_XML_DECL; },
         "Do not output the XML declaration")
@@ -403,6 +403,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("ENCODING");
 
     app.add_option("--xmlns", "Set the default namespace URI, or declare the PRE for namespace URI")
+        ->type_name("URI, PRE=URI")
+        ->group("ENCODING")
+        ->expected(1)
         ->each([&](const std::string& value) {  
             auto delim = value.find("=");
             if (delim == std::string::npos) {
@@ -412,10 +415,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
                 srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
                 srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
             }
-        })
-        ->type_name("URI, PRE=URI")
-        ->expected(1)
-        ->group("ENCODING");
+        });
 
     // metadata
     app.add_flag_callback("--list,-L",        [&]() { srcml_request.command |= SRCML_COMMAND_LIST; },
@@ -516,15 +516,17 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // query/transform
     app.add_option("--xpath", 
         "Apply XPATH expression to each individual srcML unit")
+        ->type_name("XPATH")
+        ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
             srcml_request.transformations.push_back(src_prefix_add_uri("xpath", value));
             srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
-        })
-        ->type_name("XPATH")
-        ->group("QUERY & TRANSFORMATION");
+        });
 
     app.add_option("--attribute", 
         "Insert attribute PRE:NAME=\"VALUE\" into element results of XPath query in original unit")
+        ->type_name("PRE:NAME=\"VALUE\"")
+        ->group("QUERY & TRANSFORMATION")
         ->check([&](std::string value) {
             if (srcml_request.xpath_query_support.empty()) {
 
@@ -577,12 +579,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             attrib.value = value.substr(attrib_value_start, attrib_value_size);
 
             srcml_request.xpath_query_support.back().second = attrib;
-        })
-        ->type_name("PRE:NAME=\"VALUE\"")
-        ->group("QUERY & TRANSFORMATION");
+        });
 
     app.add_option("--element", 
         "Insert element PRE:NAME around each element result of XPath query in original unit")
+        ->type_name("PRE:NAME")
+        ->group("QUERY & TRANSFORMATION")
         ->check([&](std::string value) {
             if (srcml_request.xpath_query_support.empty()) {
                 SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
@@ -598,33 +600,31 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->each([&](std::string value) { 
             auto elemn_index = value.find(":");
             srcml_request.xpath_query_support.back().first = element{ value.substr(0, elemn_index), value.substr(elemn_index + 1) };
-        })
-        ->type_name("PRE:NAME")
-        ->group("QUERY & TRANSFORMATION");
+        });
 
     app.add_option("--xslt", 
         "Apply the XSLT program FILE to each unit, where FILE can be a url")
+        ->type_name("FILE")
+        ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
             srcml_request.transformations.push_back(src_prefix_add_uri("xslt", value));
-        })
-        ->type_name("FILE")
-        ->group("QUERY & TRANSFORMATION");
+        });
 
     app.add_option("--xslt-param", 
         "Passes the string parameter NAME with UTF-8 encoded string VALUE to the XSLT program")
+        ->type_name("NAME=\"VALUE\"")
+        ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
             srcml_request.transformations.push_back(src_prefix_add_uri("xslt-param", value));
-        })
-        ->type_name("NAME=\"VALUE\"")
-        ->group("QUERY & TRANSFORMATION");
+        });
 
     app.add_option("--relaxng", 
         "Output individual units that match the RelaxNG pattern FILE. FILE can be a url")
+        ->type_name("FILE")
+        ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
             srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", value));
-        })
-        ->type_name("FILE")
-        ->group("QUERY & TRANSFORMATION");
+        });
 
     // debug
     app.add_flag_callback("--dev",          [&]() { srcml_request.command |= SRCML_DEBUG_MODE; },
