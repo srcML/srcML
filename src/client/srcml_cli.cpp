@@ -28,7 +28,10 @@
 // include of boost required to silence warning
 #include <boost/optional/optional_io.hpp>
 #define CLI11_BOOST_OPTIONAL 1
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #include <CLI11.hpp>
+#pragma GCC diagnostic pop 
 
 const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
        srcml [options] <srcML_infile>... [-o <src_outfile>]
