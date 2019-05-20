@@ -1,10 +1,9 @@
 version: 2
 jobs:
-    branches:
-      only:
-        - develop
-
     build:
+      branches:
+        only:
+          - develop
       docker:
         - image: srcml/ubuntu_x86_64_base
       steps:
