@@ -45,8 +45,6 @@ const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<5;
 const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
 /** Extra processing of @code#line@endcode for position information */
 const unsigned int SRCML_OPTION_LINE              = 1<<15;
-/** Apply transformations to the entire srcML file (default: each unit */
-const unsigned int SRCML_OPTION_APPLY_ROOT        = 1<<8;
 /** Parser output special tokens for debugging the parser */
 const unsigned int SRCML_OPTION_DEBUG             = 1<<24;
 /** Is a fragment, i.e., no unit element */
