@@ -48,7 +48,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
     set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
     set(Boost_INCLUDE_DIRS ${WINDOWS_DEP_PATH}/include)
-    find_package(Boost COMPONENTS program_options REQUIRED)
+#    find_package(Boost COMPONENTS program_options REQUIRED)
 
 else()
 
@@ -85,7 +85,8 @@ else()
     find_package(Iconv REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
-    find_package(Boost COMPONENTS program_options REQUIRED)
+#    find_package(Boost COMPONENTS program_options REQUIRED)
+    find_package(Boost COMPONENTS REQUIRED)
 
     # add include directories
     include_directories(${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${Iconv_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIR} ${Boost_INCLUDE_DIR})

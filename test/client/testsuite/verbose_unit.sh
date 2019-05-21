@@ -62,3 +62,9 @@ check
 
 srcml --verbose -l C++ -o sub/c.cpp < sub/a.cpp.xml
 check
+
+srcml --verbose --quiet
+check_exit 4
+
+srcml --quiet --verbose
+check_exit 4

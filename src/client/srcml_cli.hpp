@@ -167,5 +167,73 @@ struct srcml_request_t {
 
 // parse the CLI options into a srcml client request
 srcml_request_t parseCLI(int argc, char* argv[]);
+srcml_request_t parseCLI11(int argc, char* argv[]);
+
+inline std::ostream& operator<<(std::ostream& out, const srcml_request_t srcml_request) {
+
+    out << "INPUT SOURCES:\n";
+    for (auto& input : srcml_request.input_sources) {
+        out << input;
+    }
+
+    // boost::optional<int> stdindex;
+    out << "stdindex: " << (srcml_request.stdindex ? *srcml_request.stdindex : -1) << '\n';
+
+    out << "SRCML_OPTION_CPP: " << (*srcml_request.markup_options & SRCML_OPTION_CPP) << '\n';
+    out << "SRCML_COMMAND_XML_FRAGMENT: " << (srcml_request.command & SRCML_COMMAND_XML_FRAGMENT) << '\n';
+    // int command;
+    // boost::optional<int> markup_options;
+
+    // // unit attributes
+    out << "att_language: " << (srcml_request.att_language ? *srcml_request.att_language : "") << '\n';
+    out << "att_filename: " << (srcml_request.att_filename ? *srcml_request.att_filename : "") << '\n';
+    out << "att_url: " << (srcml_request.att_url ? *srcml_request.att_url : "") << '\n';
+    out << "att_xml_encoding: " << (srcml_request.att_xml_encoding ? *srcml_request.att_xml_encoding : "") << '\n';
+    out << "att_version: " << (srcml_request.att_version ? *srcml_request.att_version : "") << '\n';
+
+    // boost::optional<std::string> src_encoding;
+    
+    // boost::optional<std::string> line_ending;
+
+    // boost::optional<std::string> external;
+
+    out << "output_filename: " << srcml_request.output_filename << '\n';
+
+    // //filelist:// prefix
+    // std::vector<std::string> files_from;
+    // std::vector<std::string> language_ext;
+
+    out << "tabs: " << srcml_request.tabs << '\n';
+
+    // // xml namespaces
+    // boost::optional<std::string> xmlns_prefix_query;
+
+    // // xml processing attributes
+    // boost::optional<std::string> xml_processing;    
+
+    // std::map<std::string,std::string> xmlns_namespaces;
+
+    // // Use for checking for overwriting standard namespaces ("", cpp)
+    // std::map<std::string,std::string> xmlns_namespace_uris;
+
+    // // srcml transformation
+    // std::vector<std::string> transformations;
+    // std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;
+
+    out << "unit: " << srcml_request.unit << '\n';
+    // int unit = 0;
+    // int max_threads;
+
+    // boost::optional<std::string> pretty_format;
+
+    // boost::optional<size_t> revision;
+
+    // // pre-input
+    // char buf[4] = { 0 };
+    // size_t bufsize = 0;
+
+
+    return out;
+}
 
 #endif

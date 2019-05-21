@@ -31,28 +31,28 @@ check_exit 4
 
 # source encoding not given
 echo "a;" | srcml -l C++ --src-encoding
-check_exit 7
+check_exit 4
 
 # xml encoding not given
 echo "a;" | srcml -l C++ --xml-encoding
-check_exit 7
+check_exit 4
 
 # invalid language
 echo "a;" | srcml --language bad_language "foobar"
-check_exit 6
+check_exit 4
 
 # missing value
 echo "a;" | srcml --language
-check_exit 7
+check_exit 4
 
 echo "a;" | srcml -l C++ --filename
-check_exit 7
+check_exit 4
 
 echo "a;" | srcml -l C++ --url
-check_exit 7
+check_exit 4
 
 echo "a;" | srcml -l C++ --src-version
-check_exit 7
+check_exit 4
 
 # invalid input filename
 srcml foobar

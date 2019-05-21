@@ -26,7 +26,12 @@
 # - All subsequent arguments are linked as libraries.
 #
 
-set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES}
+set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
+
+file(DOWNLOAD https://github.com/CLIUtils/CLI11/releases/download/v1.8.0/CLI11.hpp ${CMAKE_EXTERNAL_SOURCE_DIR}/CLI11.hpp)
+file(DOWNLOAD https://raw.githubusercontent.com/vit-vit/CTPL/ctpl_v.0.0.2/ctpl_stl.h ${CMAKE_EXTERNAL_SOURCE_DIR}/ctpl_stl.h)
+
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${CURL_LIBRARIES}
                 CACHE INTERNAL "Libraries needed to build srcml")
 if(NOT WIN32 AND APPLE)
     list(APPEND SRCML_LIBRARIES pthread)
@@ -41,7 +46,7 @@ endif()
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
 add_executable(srcml ${CLIENT_SOURCE})
-target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_EXTERNAL_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src/libsrcml)
 
 # @todo Is this necessary? Let CMake determin this instead
 # Maybe coverage is not a default part of Debug?

@@ -23,6 +23,7 @@
 #include <srcml_pretty.hpp>
 #include <iostream>
 #include <vector>
+#include <cstring>
 #include <SRCMLStatus.hpp>
 
 std::string expand_namespace(const std::string& separator, size_t ns_size) {
