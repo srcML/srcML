@@ -41,7 +41,7 @@ endif()
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
 add_executable(srcml ${CLIENT_SOURCE})
-target_include_directories(srcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
 
 # @todo Is this necessary? Let CMake determin this instead
 # Maybe coverage is not a default part of Debug?
