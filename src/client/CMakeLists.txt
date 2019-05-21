@@ -29,6 +29,7 @@
 set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
 
 file(DOWNLOAD https://github.com/CLIUtils/CLI11/releases/download/v1.8.0/CLI11.hpp ${CMAKE_EXTERNAL_SOURCE_DIR}/CLI11.hpp)
+file(DOWNLOAD https://raw.githubusercontent.com/vit-vit/CTPL/ctpl_v.0.0.2/ctpl_stl.h ${CMAKE_EXTERNAL_SOURCE_DIR}/ctpl_stl.h)
 
 set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${CURL_LIBRARIES}
                 CACHE INTERNAL "Libraries needed to build srcml")
