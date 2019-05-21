@@ -21,7 +21,6 @@
  */
 
 #include <srcml_display_metadata.hpp>
-#include <srcml_pretty.hpp>
 #include <src_prefix.hpp>
 #include <srcml.h>
 #include <SRCMLStatus.hpp>
@@ -173,8 +172,9 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         // Overrides all others Perform a pretty output
+        // @todo Integrate back in once testing is added
         if (srcml_request.pretty_format) {
-            srcml_pretty(srcml_arch, *srcml_request.pretty_format, srcml_request);
+//            srcml_pretty(srcml_arch, *srcml_request.pretty_format, srcml_request);
             return;
         }
 
@@ -238,10 +238,11 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
                 std::cout << prefix << '\n';
             }
         }
-
+        // @todo Integrate srcml_pretty back in
+/*
         if (!pretty_meta_header.empty() || !pretty_meta_body.empty())
             srcml_pretty(srcml_arch, pretty_meta_header + " { " + pretty_meta_body + " } ", srcml_request);
-
+*/
         // units
         if (option(SRCML_COMMAND_UNITS))
             std::cout << srcml_unit_count(srcml_arch) << "\n";
