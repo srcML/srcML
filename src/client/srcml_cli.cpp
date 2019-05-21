@@ -25,8 +25,6 @@
 #include <stdlib.h>
 #include <SRCMLStatus.hpp>
 
-// include of boost required to silence warning
-//#include <boost/optional/optional_io.hpp>
 // tell cli11 to use boost optional
 #define CLI11_BOOST_OPTIONAL 1
 // warning in CLI11.hpp
