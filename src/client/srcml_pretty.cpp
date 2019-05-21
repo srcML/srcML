@@ -23,8 +23,6 @@
 #include <srcml_pretty.hpp>
 #include <iostream>
 #include <vector>
-#include <boost/format.hpp>
-#include <boost/algorithm/string.hpp>
 #include <SRCMLStatus.hpp>
 
 std::string expand_namespace(const std::string& separator, size_t ns_size) {
@@ -43,14 +41,27 @@ void show_carret_error(size_t pos) {
     SRCMLstatus(WARNING_MSG, spacing + "^");
 }
 
-void pretty_print(const std::string& format_string, const std::vector<std::string>& args)
-{
-    boost::format output_string(format_string);
-    for (const auto& item : args) {
-        output_string % item;
+void pretty_print(const std::string& format, const std::vector<std::string>& args) {
+
+    std::vector<std::string> thisargs(args.rbegin(), args.rend());
+
+    // replace the first argument in the format with the value
+    // note: Ignoring the format type
+    std::ostringstream format_string;
+    const char* s = format.c_str();
+    while (s && *s) {
+        if (*s == '%' && *++s != '%' && !thisargs.empty()) {
+            auto value = thisargs.back();
+            thisargs.pop_back();
+            format_string << value;
+            ++s;
+            continue;
+        }
+
+        format_string << *s++;
     }
 
-    std::cout << output_string.str();
+    std::cout << format_string.str();
 }
 
 pretty_template_t split_template_sections(const std::string& pretty_input) {
@@ -156,9 +167,10 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
     }
 
     // Find and replace for common escapes
-    boost::replace_all(template_string, "\\n", "\n");
-    boost::replace_all(template_string, "\\t", "\t");
-    boost::replace_all(template_string, "\\r", "\r");
+    // @todo fix this for general use of srcml_pretty
+//    boost::replace_all(template_string, "\\n", "\n");
+//    boost::replace_all(template_string, "\\t", "\t");
+//    boost::replace_all(template_string, "\\r", "\r");
 
     /* Debug for sanity...
     std::cerr << template_string << "\n";

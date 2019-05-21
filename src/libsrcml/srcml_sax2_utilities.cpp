@@ -23,7 +23,6 @@
 
 #include <sstream>
 
-#include <srcexfun.hpp>
 
 #ifdef WITH_LIBXSLT
 #include <libexslt/exslt.h>

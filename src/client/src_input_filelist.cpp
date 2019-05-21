@@ -26,7 +26,6 @@
 #include <src_input_filesystem.hpp>
 #include <create_srcml.hpp>
 #include <iostream>
-#include <boost/algorithm/string.hpp>
 #include <archive.h>
 #include <archive_entry.h>
 #include <SRCMLStatus.hpp>
@@ -47,7 +46,7 @@ int src_input_filelist(ParseQueue& queue,
         return 1;
     }
     if (status != ARCHIVE_OK) {
-    	SRCMLstatus(ERROR_MSG, "srcml: Invalid filelist " + input_file);
+        SRCMLstatus(ERROR_MSG, "srcml: Invalid filelist " + input_file);
         return -1;
     }
 
@@ -55,12 +54,12 @@ int src_input_filelist(ParseQueue& queue,
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
         SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-directory file format");
-    	return -1;
+        return -1;
     }
 
     if (strcmp(archive_entry_pathname(entry), "data") != 0) {
         SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-archived file format");
-    	return -1;
+        return -1;
     }
 
     // if we know the size, create the right sized data_buffer
@@ -81,24 +80,28 @@ int src_input_filelist(ParseQueue& queue,
     char* line = &vbuffer[0];
     while (line < &vbuffer[vbuffer.size() - 1]) {
 
-    	// find the line
+        // find the line
         // @todo use strchr()
-    	char* startline = line;
-    	while (*line != '\n' && line != &vbuffer[vbuffer.size() - 1])
-    		++line;
-    	++line;
+        char* startline = line;
+        while (*line != '\n' && line != &vbuffer[vbuffer.size() - 1])
+            ++line;
+        ++line;
 
-    	std::string sline(startline, line - startline);
+        std::string sline(startline, line - startline);
 
-		// skip comment lines
+        // skip comment lines
         // @todo trim then comment lines?
-		if (sline[0] == '#')
-			continue;
+        if (sline[0] == '#')
+            continue;
 
-		// trim from both ends
-		boost::algorithm::trim(sline);
+        // trim from both ends
+        const std::string WHITESPACE = " \n\r\t\f\v";
+        auto start = sline.find_first_not_of(WHITESPACE);
+        sline = (start == std::string::npos) ? "" : sline.substr(start);
+        auto end = sline.find_last_not_of(WHITESPACE);
+        sline = (end == std::string::npos) ? "" : sline.substr(0, end + 1);
 
-		// skip empty lines
+        // skip empty lines
         if (sline[0] == 0)
             continue;
 
