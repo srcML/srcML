@@ -35,12 +35,12 @@ if(NOT WIN32 AND NOT APPLE)
     list(APPEND LIBSRCML_LIBRARIES rt crypto)
 endif()
 
-include_directories(. ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_INSTALL_INCLUDEDIR})
+include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_INSTALL_INCLUDEDIR})
 
 # Building static and dynamic libraries for srcML.
 add_library(libsrcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(libsrcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-target_include_directories(libsrcml_static PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
+target_include_directories(libsrcml_static BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
 target_link_libraries(libsrcml_static PRIVATE ${LIBSRCML_LIBRARIES})
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(libsrcml_static PRIVATE gcov)
@@ -48,7 +48,7 @@ endif()
 
 add_library(libsrcml_shared SHARED $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(libsrcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-target_include_directories(libsrcml_shared PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
+target_include_directories(libsrcml_shared BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
 target_link_libraries(libsrcml_shared PRIVATE ${LIBSRCML_LIBRARIES})
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(libsrcml_shared PRIVATE gcov)
@@ -92,7 +92,7 @@ endif()
 file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
 
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
-target_include_directories(libsrcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
+target_include_directories(libsrcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
 add_dependencies(libsrcml parser)
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})

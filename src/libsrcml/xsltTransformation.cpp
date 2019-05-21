@@ -105,7 +105,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     if (!stylesheet)
         throw;
 
-    xsltsrcMLRegister();
+//    xsltsrcMLRegister();
 }
 
 /**
@@ -132,10 +132,10 @@ xsltTransformation::~xsltTransformation() {
  * 
  * @returns true on success false on failure.
  */
-TransformationResult xsltTransformation::apply(xmlDocPtr doc, int position) const {
+TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */) const {
 
     // position passed to XSLT program
-    setPosition(position);
+//    setPosition(position);
 
     // convert to c-array of c-strings, null terminated
     // @todo Extract Function
