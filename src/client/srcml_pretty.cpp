@@ -23,7 +23,6 @@
 #include <srcml_pretty.hpp>
 #include <iostream>
 #include <vector>
-#include <boost/algorithm/string.hpp>
 #include <SRCMLStatus.hpp>
 
 std::string expand_namespace(const std::string& separator, size_t ns_size) {
@@ -168,9 +167,10 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
     }
 
     // Find and replace for common escapes
-    boost::replace_all(template_string, "\\n", "\n");
-    boost::replace_all(template_string, "\\t", "\t");
-    boost::replace_all(template_string, "\\r", "\r");
+    // @todo fix this for general use of srcml_pretty
+//    boost::replace_all(template_string, "\\n", "\n");
+//    boost::replace_all(template_string, "\\t", "\t");
+//    boost::replace_all(template_string, "\\r", "\r");
 
     /* Debug for sanity...
     std::cerr << template_string << "\n";
