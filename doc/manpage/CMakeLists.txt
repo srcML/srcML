@@ -17,6 +17,15 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+install(FILES ${CMAKE_BINARY_DIR}/srcml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+
+# For installation only, download the man page
+if(NOT BUILD_CLIENT_DOC)
+	message(STATUS "Downloading manpage")
+	file(DOWNLOAD http://gehry.sdml.cs.kent.edu/build/srcml.1 ${CMAKE_BINARY_DIR}/srcml.1)
+	return()
+endif()
+
 find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ~/gems/bin/ronn ${WINDOWS_DEP_PATH}/bin)
 
 # Configure file properties used to configure the file srcml.cfg
@@ -139,5 +148,3 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.html
 )
 
 add_custom_target(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html)
-
-install(FILES ${CMAKE_BINARY_DIR}/srcml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)

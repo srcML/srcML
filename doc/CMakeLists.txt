@@ -17,7 +17,7 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-if(BUILD_CLIENT_DOC)
+if(BUILD_CLIENT_DOC OR INSTALL_CLIENT_DOC)
     add_subdirectory(manpage)
 endif()
 

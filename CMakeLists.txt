@@ -41,6 +41,7 @@ option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 
 # Turn ON/OFF building documentation
 option(BUILD_CLIENT_DOC "Build client documentation" OFF)
+option(INSTALL_CLIENT_DOC "Install (but do not build) client documentation" OFF)
 option(BUILD_LIBSRCML_DOC "Build libsrcml documentation" OFF)
 
 # Turn ON building all documentation
