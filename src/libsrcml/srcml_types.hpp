@@ -34,9 +34,6 @@
 
 #include <memory>
 
-/** string for language Objective-C */
-#define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
-
 /** Private options */
 
 /** Include any XML namespace declarations */
