@@ -105,19 +105,17 @@ typedef SSIZE_T ssize_t;
 
 /**@{ @name Options */
 /** Issue an XML declaration */
-const unsigned int SRCML_OPTION_XML_DECL          = 1<<4;
+const unsigned int SRCML_OPTION_XML_DECL          = 1<<1;
 /** Include line/column position attributes */
-const unsigned int SRCML_OPTION_POSITION          = 1<<1;
+const unsigned int SRCML_OPTION_POSITION          = 1<<2;
 /** Markup preprocessor elements (default for C, C++) */
-const unsigned int SRCML_OPTION_CPP               = 1<<2;
-
+const unsigned int SRCML_OPTION_CPP               = 1<<3;
 /** Leave as text preprocessor else parts (default: markup) */
-const unsigned int SRCML_OPTION_CPP_TEXT_ELSE     = 1<<6;
+const unsigned int SRCML_OPTION_CPP_TEXT_ELSE     = 1<<4;
 /** Markup preprocessor @code #if 0 @endcode sections (default: leave as text) */
-const unsigned int SRCML_OPTION_CPP_MARKUP_IF0    = 1<<7;
-
+const unsigned int SRCML_OPTION_CPP_MARKUP_IF0    = 1<<5;
 /** Encode the original source encoding as an attribute */
-const unsigned int SRCML_OPTION_STORE_ENCODING    = 1<<26;
+const unsigned int SRCML_OPTION_STORE_ENCODING    = 1<<6;
 /**@}*/
 
 /**@{ @name Source Output EOL Options */

@@ -40,7 +40,7 @@
 /** Private options */
 
 /** Include any XML namespace declarations */
-const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<5;
+const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<8;
 /** Not sure what this used for */
 const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
 /** Extra processing of @code#line@endcode for position information */
