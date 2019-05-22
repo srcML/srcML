@@ -20,8 +20,8 @@
 set(TESTSUITE ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
 
 # targets to manage parser testing
-add_custom_target(run    COMMENT "Runs all parser test cases"
-                         COMMAND time srcml --parser-test ${CMAKE_CURRENT_BINARY_DIR}/testsuite VERBATIM)
+add_custom_target(run_parser_tests COMMENT "Runs all parser test cases"
+                         COMMAND time srcml --parser-test ${TESTSUITE} VERBATIM)
 add_custom_target(c      COMMENT "Runs all C parser test cases"
                          COMMAND time srcml --parser-test --language=C    ${TESTSUITE} VERBATIM)
 add_custom_target(cpp    COMMENT "Runs all C++ parser test cases"
