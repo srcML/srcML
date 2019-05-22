@@ -31,26 +31,7 @@
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
-#include <memory>
-
-// std::unique_ptr deleter functions for libsrcml
-// Will deallocate automatically at end of std::unique_ptr lifetime
-namespace std {
-    template<>
-    struct default_delete<srcml_archive> {
-        void operator()(srcml_archive* arch) { 
-            srcml_archive_close(arch);
-            srcml_archive_free(arch);
-        }
-    };
-
-    template<>
-    struct default_delete<srcml_unit> {
-        void operator()(srcml_unit* unit) { 
-            srcml_unit_free(unit);
-        }
-    };
-}
+#include <srcml_utilities.hpp>
 
 static srcml_archive* srcml_read_open_internal(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
 
