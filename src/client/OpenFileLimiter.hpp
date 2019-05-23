@@ -24,6 +24,7 @@
 #define ARCHIVE_OPEN_HPP
 
 #include <mutex>
+#include <condition_variable>
 
 class OpenFileLimiter {
 public:
