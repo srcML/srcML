@@ -28,12 +28,16 @@
 #include <srcml_cli.hpp>
 #include <srcmlns.hpp>
 #include <SRCMLStatus.hpp>
+#include <OpenFileLimiter.hpp>
 
 int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_request_t& srcml_request,
                        const srcml_input_src& srcml_input,
                        const boost::optional<size_t> & revision) {
+
+    // keep total number of open files under control
+    OpenFileLimiter::open();
 
     // open the srcml input archive
     srcml_archive* srcml_input_archive = srcml_archive_create();
@@ -94,12 +98,12 @@ int srcml_input_srcml(ParseQueue& queue,
         unitFound = true;
 
         // if in parser test mode, check if language specified
-        if (option(SRCML_COMMAND_PARSER_TEST)) {
+        if (option(SRCML_COMMAND_PARSER_TEST) && srcml_request.att_language) {
 
             std::string unit_language;
             if (srcml_unit_get_language(unit))
                 unit_language = srcml_unit_get_language(unit);
-            if (srcml_request.att_language && srcml_request.att_language != unit_language) {
+            if (srcml_request.att_language != unit_language) {
                 srcml_unit_free(unit);
                 break;
             }
@@ -127,6 +131,12 @@ int srcml_input_srcml(ParseQueue& queue,
         if (option(SRCML_COMMAND_PARSER_TEST) ? srcml_request.unit : srcml_input.unit)
             break;
     }
+
+    // request to close input archive when finished units
+    std::shared_ptr<ParseRequest> prequest(new ParseRequest);
+    prequest->input_archive = srcml_input_archive;
+    prequest->needsparsing = false;
+    queue.schedule(prequest);
 
     if (!unitFound) {
         SRCMLstatus(ERROR_MSG, "Requested unit %d out of range.", srcml_input.unit);

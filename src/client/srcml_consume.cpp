@@ -37,7 +37,7 @@
 void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueue* write_queue) {
 
     // error passthrough to output for proper output in trace
-    if (request->status) {
+    if (request->input_archive || request->status) {
         request->unit = 0;
         write_queue->schedule(request);
         return;

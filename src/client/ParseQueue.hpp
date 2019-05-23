@@ -23,7 +23,6 @@
 #ifndef PARSE_QUEUE_HPP
 #define PARSE_QUEUE_HPP
 
-#include <functional>
 #include <ParseRequest.hpp>
 #include <WriteQueue.hpp>
 #include <ctpl_stl.h>

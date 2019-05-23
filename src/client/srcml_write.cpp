@@ -32,12 +32,21 @@
 #include <stdio.h>
 #include <cstring>
 #include <ParserTest.hpp>
+#include <OpenFileLimiter.hpp>
 
 // Public consumption thread function
 void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& /* destination */) {
 
     if (!request)
         return;
+
+    if (request->input_archive) {
+        srcml_archive_close(request->input_archive);
+        srcml_archive_free(request->input_archive);
+        request->input_archive = nullptr;
+        OpenFileLimiter::close();
+        return;
+    }
 
     if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
