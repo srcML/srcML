@@ -31,10 +31,14 @@
 #include <sstream>
 #include <cstring>
 #include <algorithm>
+#include <srcml_cli.hpp>
+#include <srcml_options.hpp>
 
 #define str2arg(s) s, strlen(s)
 
 void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcml_unit* unit) {
+
+    bool color = !(SRCMLOptions::get() & SRCML_COMMAND_NO_COLOR);
 
     if (request->url)
         url = *request->url;
@@ -93,11 +97,11 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
 
     if (ssout == sxml) {
         std::ostringstream output;
-        output << "\033[0;33m" << count << "\033[0m";
+        output << (color ? "\033[0;33m" : "") << count << (color ? "\033[0m" : "");
         srcml_archive_write_string(archive, output.str().c_str(), (int) output.str().size());
     } else {
         std::ostringstream output;
-        output << "\033[0;31m" << count << "\033[0m";
+        output << (color ? "\033[0;31m" : "-") << count << (color ? "\033[0m" : "");
         srcml_archive_write_string(archive, output.str().c_str(), (int) output.str().size());
 
         ++failed;
@@ -144,11 +148,11 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
 
         // record for the error report
         std::ostringstream error_report;
-        error_report << "\033[0;30;1m" << unit_language << '\t' << url << '\t' << previous_filename << '\t' << std::to_string(count) << "\033[0m" << '\n' << "\033[0;30;1m"
-                     << "test:\n" << "\033[0m" << sxml << "\033[0;30;1m";
+        error_report << (color ? "\033[0;30;1m" : "") << unit_language << '\t' << url << '\t' << previous_filename << '\t' << std::to_string(count) << (color ? "\033[0m" : "") << '\n' << (color ? "\033[0;30;1m" : "") << " "
+                     << "test:\n" << (color ? "\033[0m" : "") << sxml << (color ? "\033[0;30;1m" : "");
          if (sxml.back() != '\n')
             error_report << '\n';
-        error_report << "srcml:\n" << "\033[0m" << ssout << '\n';
+        error_report << "srcml:\n" << (color ? "\033[0m" : "") << ssout << '\n';
         errors.push_back(error_report.str());
 
         // record for the summary report
@@ -174,6 +178,8 @@ void ParserTest::report(srcml_archive* archive) {
     if (!total)
         return;
 
+    bool color = !(SRCMLOptions::get() & SRCML_COMMAND_NO_COLOR);
+
     // error report
     srcml_archive_write_string(archive, str2arg("\n\nErrors:\n"));
     for (const auto& err : errors) {
@@ -188,7 +194,7 @@ void ParserTest::report(srcml_archive* archive) {
     }
     double percent = double(failed * 100) / total;
     std::ostringstream sout;
-    sout << "\033[0;30;1m" << "\nCounts: " << "\033[0m" << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
+    sout << (color ? "\033[0;30;1m" : "") << "\nCounts: " << (color ? "\033[0m" : "") << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
     srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
 
     for (auto& kv : ltotal) {

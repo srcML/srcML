@@ -598,6 +598,10 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Run parser tests on the input files")
         ->group("");
 
+    app.add_flag_callback("--no-color",   [&]() { srcml_request.command |= SRCML_COMMAND_NO_COLOR; },
+        "Suppress colorization of output")
+        ->group("");
+
     quiet->excludes(verbose);
     output_src->excludes(output_xml);
     output_src->excludes(output_xml_inner);
