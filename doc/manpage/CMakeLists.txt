@@ -19,12 +19,19 @@
 
 install(FILES ${CMAKE_BINARY_DIR}/srcml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
 
+set(REMOTE_MANPAGE_NAME srcml-${PROJECT_VERSION}.troff)
+
 # For installation only, download the man page
 if(NOT BUILD_CLIENT_DOC)
-	message(STATUS "Downloading manpage")
-	file(DOWNLOAD http://gehry.sdml.cs.kent.edu/build/srcml.1 ${CMAKE_BINARY_DIR}/srcml.1)
+	set(MANPAGE_URL http://gehry.sdml.cs.kent.edu/build/${REMOTE_MANPAGE_NAME})
+	message(STATUS "Downloading manpage from ${MANPAGE_URL}")
+	file(DOWNLOAD ${MANPAGE_URL} ${CMAKE_BINARY_DIR}/srcml.1)
 	return()
 endif()
+
+# Upload the generated manpage for download by other installs
+# Requires permission by default user
+add_custom_target(publish_manpage COMMAND rsync --inplace ${CMAKE_BINARY_DIR}/srcml.1 gehry.sdml.cs.kent.edu:/var/www/html/sdml/build/${REMOTE_MANPAGE_NAME})
 
 find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ~/gems/bin/ronn ${WINDOWS_DEP_PATH}/bin)
 
