@@ -127,7 +127,7 @@ srcml_input_src& srcml_input_src::operator=(const std::string& other) { srcml_in
 srcml_input_src& srcml_input_src::operator=(FILE* other) { fileptr = other; return *this; }
 srcml_input_src& srcml_input_src::operator=(int other) { fd = other; return *this; }
 
-ssize_t srcml_read_callback(void* context, void * buffer, size_t len) {
+int srcml_read_callback(void* context, char* buffer, int len) {
     archive* libarchive_srcml = (archive*) context;
 
     ssize_t status = archive_read_data(libarchive_srcml, buffer, len);

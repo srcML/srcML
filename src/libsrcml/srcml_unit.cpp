@@ -780,14 +780,14 @@ int srcml_unit_unparse_fd(struct srcml_unit* unit, int srcml_fd) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_io(struct srcml_unit* unit, void* context, int (*write_callback)(void* context, const char* buffer, size_t len), int (*close_callback)(void* context)) {
+int srcml_unit_unparse_io(struct srcml_unit* unit, void* context, int (*write_callback)(void* context, const char* buffer, int len), int (*close_callback)(void* context)) {
 
     if (unit == nullptr || context == nullptr || write_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_unit_unparse_internal(unit, [write_callback, close_callback, context](xmlCharEncodingHandlerPtr handler) {
 
-        return xmlOutputBufferCreateIO((int (*const)(void *, const char *, int))write_callback, close_callback, context, handler);
+        return xmlOutputBufferCreateIO(write_callback, close_callback, context, handler);
     });
 }
 
