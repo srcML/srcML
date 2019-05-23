@@ -324,7 +324,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     TraceLog log;
 
     // write queue for output of parsing
-    WriteQueue write_queue(log, destination, !option(SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER));
+    WriteQueue write_queue(log, destination);
 
     // parsing queue
     ParseQueue parse_queue(srcml_request.max_threads, &write_queue);

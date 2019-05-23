@@ -58,7 +58,8 @@ const int SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP   = 1<<17;
 const int SRCML_COMMAND_DISPLAY_SRCML_HASH        = 1<<18;
 const int SRCML_COMMAND_DISPLAY_SRCML_ENCODING    = 1<<19;
 
-const int SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER     = 1<<20;
+//const int                                       = 1<<20;
+
 const int SRCML_COMMAND_UPDATE                    = 1<<21;
 
 const int SRCML_COMMAND_NOARCHIVE                 = 1<<22;

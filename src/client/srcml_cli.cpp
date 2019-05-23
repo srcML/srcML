@@ -594,10 +594,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Set the line endings for a desired environment \"Windows\" or \"Unix\"")
         ->group("");
     
-    app.add_flag_callback("--unstable-order",   [&]() { srcml_request.command |= SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER; },
-        "Enable non-strict output ordering")
-        ->group("");
-    
     app.add_flag_callback("--parser-test",      [&]() { srcml_request.command |= SRCML_COMMAND_PARSER_TEST; },
         "Run parser tests on the input files")
         ->group("");
