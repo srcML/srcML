@@ -276,6 +276,6 @@ add_custom_command(
     OUTPUT parser_testfile_count
 )
 
-add_custom_target(parser_tests DEPENDS parser_testfile_count
+add_custom_target(gen_parser_tests DEPENDS parser_testfile_count
                   COMMENT "Generated parser testfile target"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
