@@ -18,7 +18,7 @@
 
 <xsl:import href="copy.xsl"/>
 
-<xsl:variable name="cmt" xml:space="preserve"> <comment type="block">/* a */</comment> </xsl:variable> 
+<xsl:variable name="cmt" xml:space="preserve"><xsl:text> </xsl:text><comment type="block">/* a */</comment><xsl:text> </xsl:text></xsl:variable> 
 
 <xsl:template match="src:name | src:comment | src:literal">
   <xsl:copy-of select="."/>

@@ -29,7 +29,7 @@
 </xsl:template>
 
 <!-- change the struct keyword to a union keyword -->
-<xsl:template match="src:struct/text()[1] | src:struct_decl/text()[1]">
+<xsl:template match="src:struct/text() | src:struct_decl/text()">
 	<xsl:value-of select="str:replace(., 'struct', 'union')"/>
 </xsl:template>
 

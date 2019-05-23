@@ -40,7 +40,7 @@
 </xsl:template>
 
 <!-- change the class keyword to a struct keyword -->
-<xsl:template match="src:class/text()[1] | src:class_decl/text()[1]">
+<xsl:template match="src:class/text() | src:class_decl/text()">
 	<xsl:value-of select="str:replace(., 'class', 'struct')"/>
 </xsl:template>
 
