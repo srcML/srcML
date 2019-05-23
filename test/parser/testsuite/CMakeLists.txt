@@ -269,7 +269,7 @@ list(TRANSFORM CONTEXT_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
 # display number of parser testfiles
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/.count "echo '-- Total Parser Testfiles: ' | tr -d '\n'; ls *.xml | wc -l | tr -d ' '")
 add_custom_command(
-    COMMAND source .count
+    COMMAND . ./.count
     COMMENT ""
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS ${CONTEXT_FILES}
