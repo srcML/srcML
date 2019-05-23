@@ -197,14 +197,21 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("GENERAL OPTIONS");
 
     // src2srcml_options "CREATING SRCML"
-    app.add_option("--files-from", 
-        "Input source-code filenames from FILE")
-        ->type_name("FILE")
+    auto text =
+    app.add_option("--text,-t", 
+        "Input source code from STRING, e.g., --text=\"int a;\"")
+        ->type_name("STRING")
         ->group("CREATING SRCML")
-        ->type_size(-1)
-        ->each([&](const std::string& value) {
-            srcml_request.files_from.push_back(value);
-            srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", value));
+        ->expected(1)
+        ->check([&](std::string value) {
+            if (!value.empty() && value[0] == '-') {
+                std::cerr << "srcml: --text: 1 required STRING missing";
+                exit(7);
+            }
+            return "";
+        })
+        ->each([&](std::string text) { 
+            srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
         });
 
     auto language =
@@ -220,22 +227,16 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
             return "";
         });
+    text->needs(language);
 
-    app.add_option("--text,-t", 
-        "Input source code from STRING, e.g., --text=\"int a;\"")
-        ->type_name("STRING")
+    app.add_option("--files-from", 
+        "Input source-code filenames from FILE")
+        ->type_name("FILE")
         ->group("CREATING SRCML")
-        ->expected(1)
-        ->needs(language)
-        ->check([&](std::string value) {
-            if (!value.empty() && value[0] == '-') {
-                std::cerr << "srcml: --text: 1 required STRING missing";
-                exit(7);
-            }
-            return "";
-        })
-        ->each([&](std::string text) { 
-            srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
+        ->type_size(-1)
+        ->each([&](const std::string& value) {
+            srcml_request.files_from.push_back(value);
+            srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", value));
         });
     
     app.add_option("--register-ext", srcml_request.language_ext,

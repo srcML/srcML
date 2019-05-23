@@ -17,6 +17,22 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+install(FILES ${CMAKE_BINARY_DIR}/srcml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+
+set(REMOTE_MANPAGE_NAME srcml-${PROJECT_VERSION}.troff)
+
+# For installation only, download the man page
+if(NOT BUILD_CLIENT_DOC)
+	set(MANPAGE_URL http://gehry.sdml.cs.kent.edu/build/${REMOTE_MANPAGE_NAME})
+	message(STATUS "Downloading manpage from ${MANPAGE_URL}")
+	file(DOWNLOAD ${MANPAGE_URL} ${CMAKE_BINARY_DIR}/srcml.1)
+	return()
+endif()
+
+# Upload the generated manpage for download by other installs
+# Requires permission by default user
+add_custom_target(publish_manpage COMMAND rsync --inplace ${CMAKE_BINARY_DIR}/srcml.1 gehry.sdml.cs.kent.edu:/var/www/html/sdml/build/${REMOTE_MANPAGE_NAME})
+
 find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ~/gems/bin/ronn ${WINDOWS_DEP_PATH}/bin)
 
 # Configure file properties used to configure the file srcml.cfg
@@ -139,5 +155,3 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.html
 )
 
 add_custom_target(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html)
-
-install(FILES ${CMAKE_BINARY_DIR}/srcml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
