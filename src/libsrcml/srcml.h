@@ -656,7 +656,7 @@ LIBSRCML_DECL int srcml_archive_write_open_fd(struct srcml_archive* archive, int
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_archive_write_open_io(struct srcml_archive* archive, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context));
+LIBSRCML_DECL int srcml_archive_write_open_io(struct srcml_archive* archive, void * context, int (*write_callback)(void * context, const char* buffer, int len), int (*close_callback)(void * context));
 /**@}*/
 
 /**@{ @name Open for Read
@@ -702,7 +702,7 @@ LIBSRCML_DECL int srcml_archive_read_open_fd(struct srcml_archive* archive, int 
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_IO_ERROR
  */
-LIBSRCML_DECL int srcml_archive_read_open_io(struct srcml_archive* archive, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context));
+LIBSRCML_DECL int srcml_archive_read_open_io(struct srcml_archive* archive, void * context, int (*read_callback)(void * context, char* buffer, int len), int (*close_callback)(void * context));
 /**@}*/
 
 /**@{ @name Archive Options */
@@ -1489,7 +1489,7 @@ LIBSRCML_DECL int srcml_unit_unparse_fd(struct srcml_unit* unit, int fd);
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_unit_unparse_io(struct srcml_unit* unit, void * context, int (*write_callback)(void * context, const char * buffer, size_t len), int (*close_callback)(void * context));
+LIBSRCML_DECL int srcml_unit_unparse_io(struct srcml_unit* unit, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
 /**@}*/
 
 /**@{ @name Iteratively build a unit */
