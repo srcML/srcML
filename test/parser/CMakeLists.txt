@@ -19,27 +19,32 @@
 
 set(TESTSUITE *.xml)
 
+set(FLAGS "")
+if(WIN32)
+     set(FLAGS "--no-color")
+endif()
+
 # targets to manage parser testing
 add_custom_target(run_parser_tests COMMENT "Run all parser test cases"
-                         COMMAND /bin/bash -c 'time srcml --parser-test ${TESTSUITE}'
+                         COMMAND /bin/bash -c 'time srcml --parser-test ${FLAGS} ${TESTSUITE}'
                          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
 add_custom_target(c      COMMENT "Run all C parser test cases"
-                         COMMAND /bin/bash -c 'time srcml --parser-test --language=C    ${TESTSUITE}'
+                         COMMAND /bin/bash -c 'time srcml --parser-test ${FLAGS} --language=C    ${TESTSUITE}'
                          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
 add_custom_target(cpp    COMMENT "Run all C++ parser test cases"
-                         COMMAND /bin/bash -c 'time srcml --parser-test --language=C++  ${TESTSUITE}'
+                         COMMAND /bin/bash -c 'time srcml --parser-test ${FLAGS} --language=C++  ${TESTSUITE}'
                          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
 add_custom_target(C++    COMMENT "Run all C++ parser test cases"
-                         COMMAND /bin/bash -c 'time srcml --parser-test --language=C++  ${TESTSUITE}'
+                         COMMAND /bin/bash -c 'time srcml --parser-test ${FLAGS} --language=C++  ${TESTSUITE}'
                          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
 add_custom_target(java   COMMENT "Run all Java parser test cases"
-                         COMMAND /bin/bash -c 'time srcml --parser-test --language=Java ${TESTSUITE}'
+                         COMMAND /bin/bash -c 'time srcml --parser-test ${FLAGS} --language=Java ${TESTSUITE}'
                          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
 add_custom_target(cs     COMMENT "Run all C\# language parser test cases"
-                         COMMAND /bin/bash -c 'time srcml --parser-test --language=C\#  ${TESTSUITE}'
+                         COMMAND /bin/bash -c 'time srcml --parser-test ${FLAGS} --language=C\#  ${TESTSUITE}'
                          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
 add_custom_target(CSHARP COMMENT "Run all C\# language parser test cases"
-                         COMMAND /bin/bash -c 'time srcml --parser-test --language=C\#  ${TESTSUITE}'
+                         COMMAND /bin/bash -c 'time srcml --parser-test ${FLAGS} --language=C\#  ${TESTSUITE}'
                          WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
 
 add_subdirectory(testsuite)
