@@ -276,6 +276,12 @@ add_custom_command(
     OUTPUT parser_testfile_count
 )
 
+if(NOT WIN32)
 add_custom_target(gen_parser_tests DEPENDS parser_testfile_count
                   COMMENT "Generated parser testfile target"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+else()
+add_custom_target(gen_parser_tests DEPENDS ${CONTEXT_FILES}
+                  COMMENT "Generated parser testfile target"
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+endif()
