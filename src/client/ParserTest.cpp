@@ -194,13 +194,25 @@ void ParserTest::report(srcml_archive* archive) {
     }
     double percent = double(failed * 100) / total;
     std::ostringstream sout;
-    sout << (color ? "\033[0;30;1m" : "") << "\nCounts: " << (color ? "\033[0m" : "") << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t' << std::setprecision(2) << percent << "%" << '\n';
+    sout << (color ? "\033[0;30;1m" : "") << "\nCounts: " << (color ? "\033[0m" : "") << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << "Total" << std::setw(6) << std::right << failed << std::setw(6) << std::right << total << '\t';
+    sout << std::setw(4) << std::right;
+    if (percent == 0 || percent >= 1)
+        sout << std::setprecision(2) << percent;
+    else
+        sout << "<1";
+    sout << "%" << '\n';
     srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
 
     for (auto& kv : ltotal) {
         double percent = double(misses[kv.first] * 100) / kv.second;
         std::ostringstream sout;
-        sout << "        " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << kv.first << std::setw(6) << std::right << misses[kv.first] << std::setw(6) << std::right << kv.second << '\t' << std::setprecision(2) << percent << "%" << '\n';
+        sout << "        " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << kv.first << std::setw(6) << std::right << misses[kv.first] << std::setw(6) << std::right << kv.second << '\t';
+        sout << std::setw(4) << std::right;
+        if (percent == 0 || percent >= 1)
+            sout << std::setprecision(2) << percent;
+        else
+            sout << "<1";
+        sout << "%" << '\n';
 
         srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
     }
