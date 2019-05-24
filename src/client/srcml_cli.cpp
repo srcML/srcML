@@ -594,7 +594,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Set the line endings for a desired environment \"Windows\" or \"Unix\"")
         ->group("");
     
-    app.add_flag_callback("--parser-test",      [&]() { srcml_request.command |= SRCML_COMMAND_PARSER_TEST; },
+    app.add_flag_callback("--parser-test",      [&]() {
+
+        srcml_request.command |= SRCML_COMMAND_PARSER_TEST; 
+        srcml_request.command |= SRCML_TIMING_MODE; 
+    },
         "Run parser tests on the input files")
         ->group("");
 
