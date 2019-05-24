@@ -167,9 +167,11 @@ See `srcml --help` for more information.
     if (srcml_request.command & SRCML_DEBUG_MODE || srcml_request.command & SRCML_TIMING_MODE) {
         auto realtime = runtime.real_world_elapsed();
         SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
-                               << "Real Time: " << realtime << "ms\n"
-                               << "LOC: " << TraceLog::totalLOC() << '\n'
-                               << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
+                               << "Real Time: " << realtime << "ms\n";
+        if (TraceLog::totalLOC() > 0) {
+            SRCMLstatus(DEBUG_MSG) << "LOC: " << TraceLog::totalLOC() << '\n'
+                                   << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
+        }
     }
 
     // error status is 0 unless a critical, error, or warning
