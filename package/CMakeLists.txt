@@ -31,9 +31,16 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CPACK_PACKAGE_FILE_NAME "srcML-Win")
 else()
     set(CPACK_PACKAGE_FILE_NAME "srcML")
-    set(CPACK_GENERATOR "TGZ;TBZ2")
+    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+		set(CPACK_GENERATOR "TGZ;TBZ2")
+	elseif(DISTRO MATCHES "Ubuntu")
+		set(CPACK_GENERATOR "DEB;TGZ;TBZ2")
+	else()
+		set(CPACK_GENERATOR "RPM;TGZ;TBZ2")
+	endif()
 endif()
- 
+message(STATUS "CPACK_GENERATOR ${CPACK_GENERATOR}")
+
 # summary
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 

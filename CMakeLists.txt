@@ -80,6 +80,7 @@ include(CTest)
 # So change installation to /usr
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND EXISTS /etc/os-release)
     file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
+    message(STATUS "DISTRO ${DISTRO}")
     if(DISTRO MATCHES "CentOS|Fedora")
         set(CMAKE_INSTALL_PREFIX /usr)
     endif()
