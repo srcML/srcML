@@ -1,5 +1,5 @@
 /**
- * @pretty.cpp
+ * @file srcml_pretty.cpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
