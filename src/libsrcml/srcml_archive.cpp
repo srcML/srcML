@@ -1372,7 +1372,9 @@ void srcml_archive_close(struct srcml_archive* archive) {
     }
 
     if (archive->input) {
-        xmlFreeParserInputBuffer(archive->input);
+    	// @todo verify that this is called for every input use of archive
+    	// as part of xmlNewIOInputStream()
+        //xmlFreeParserInputBuffer(archive->input);
         archive->input = nullptr;
     }
 
