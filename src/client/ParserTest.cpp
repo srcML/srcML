@@ -33,6 +33,7 @@
 #include <algorithm>
 #include <srcml_cli.hpp>
 #include <srcml_options.hpp>
+#include <srcml_utilities.hpp>
 
 #define str2arg(s) s, strlen(s)
 
@@ -66,7 +67,7 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
     ++ltotal[unit_language];
 
     // get the src
-    char* buffer = 0;
+    char* buffer = nullptr;
     size_t size = 0;
     srcml_unit_set_src_encoding(unit, "UTF-8");
     srcml_unit_unparse_memory(unit, &buffer, &size);
@@ -76,14 +77,14 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
     if (srcml_unit_get_srcml_inner(unit))
         sxml = srcml_unit_get_srcml_inner(unit);
 
-    srcml_unit* outunit = srcml_unit_clone(unit);
-    srcml_unit_set_language(outunit, srcml_unit_get_language(unit));
+    std::unique_ptr<srcml_unit> outunit(srcml_unit_clone(unit));
+    srcml_unit_set_language(outunit.get(), srcml_unit_get_language(unit));
 
-    srcml_unit_parse_memory(outunit, buffer, size);
+    srcml_unit_parse_memory(outunit.get(), buffer, size);
 
     std::string ssout;
-    if (srcml_unit_get_srcml_inner(outunit))
-        ssout = srcml_unit_get_srcml_inner(outunit);
+    if (srcml_unit_get_srcml_inner(outunit.get()))
+        ssout = srcml_unit_get_srcml_inner(outunit.get());
 
     if (line_count >= 75) {
         std::ostringstream sout;
@@ -169,7 +170,6 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
     srcml_archive_write_string(archive, " ", 1);
 
     free(buffer);
-    srcml_unit_free(outunit);
  //   srcml_unit_free(unit);
 
 }
