@@ -149,9 +149,6 @@ struct srcml_archive {
 
     /** a srcMLReader for reading */
     srcml_sax2_reader* reader = nullptr;
-
-    /** xmlParserInputBuffer for reading */
-    xmlParserInputBufferPtr input = nullptr;
  
     std::vector<std::shared_ptr<Transformation>> transformations;
 

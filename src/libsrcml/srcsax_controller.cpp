@@ -66,7 +66,6 @@ srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPt
     try {
         context = new srcsax_context();
     } catch (...) {
-
         xmlFreeParserInputBuffer(input);
         return 0;
     }
@@ -74,9 +73,7 @@ srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPt
     context->input = input;
 
     xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
     if (libxml2_context == nullptr) {
-
         xmlFreeParserInputBuffer(input);
         delete context;
         return 0;

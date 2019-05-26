@@ -138,7 +138,6 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
     new_archive->type = SRCML_ARCHIVE_INVALID;
     new_archive->translator = nullptr;
     new_archive->reader = nullptr;
-    new_archive->input = nullptr;
     new_archive->output_buffer = nullptr;
     new_archive->xbuffer = nullptr;
     new_archive->buffer = nullptr;
@@ -1043,15 +1042,14 @@ int srcml_archive_write_open_io(struct srcml_archive* archive, void * context, i
  * Reads and sets the open type as well as gathers the attributes
  * and sets the options from the opened srcML Archive.
  */
-static int srcml_archive_read_open_internal(struct srcml_archive* archive) {
+static int srcml_archive_read_open_internal(struct srcml_archive* archive, xmlParserInputBufferPtr input) {
 
     try {
 
-        archive->reader = new srcml_sax2_reader(archive, archive->input, archive->revision_number);
+        archive->reader = new srcml_sax2_reader(archive, input, archive->revision_number);
 
     } catch(...) {
 
-        xmlFreeParserInputBuffer(archive->input);
         return SRCML_STATUS_IO_ERROR;
     }
 
@@ -1075,9 +1073,9 @@ int srcml_archive_read_open_filename(struct srcml_archive* archive, const char* 
     if (archive == nullptr || srcml_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateFilename(srcml_filename, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    auto input = xmlParserInputBufferCreateFilename(srcml_filename, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-    return srcml_archive_read_open_internal(archive);
+    return srcml_archive_read_open_internal(archive, input);
 }
 
 /**
@@ -1097,30 +1095,30 @@ int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* bu
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlCharEncoding encoding = archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE;
-    archive->input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding);
+    auto input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding);
 
     // @todo Really do not think this is needed. xmlAllocParserInputBuffer() is called inside of xmlParserInputBufferCreateMem()
-    if (encoding != XML_CHAR_ENCODING_NONE && archive->input && archive->input->encoder) {
+    if (encoding != XML_CHAR_ENCODING_NONE && input && input->encoder) {
 
 #ifdef LIBXML2_NEW_BUFFER
         xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(encoding);
-        xmlBufPtr save_buf = archive->input->raw;
-        archive->input->raw = archive->input->buffer;
-        archive->input->buffer = temp_parser->buffer;
+        xmlBufPtr save_buf = input->raw;
+        input->raw = input->buffer;
+        input->buffer = temp_parser->buffer;
         temp_parser->buffer = save_buf;
         xmlFreeParserInputBuffer(temp_parser);
 #else
-        if (archive->input->raw)
-            xmlBufferFree(archive->input->raw);
-        archive->input->raw = archive->input->buffer;
-        archive->input->rawconsumed = 0;
-        archive->input->buffer = xmlBufferCreate();
+        if (input->raw)
+            xmlBufferFree(input->raw);
+        input->raw = input->buffer;
+        input->rawconsumed = 0;
+        input->buffer = xmlBufferCreate();
 #endif
 
-        xmlParserInputBufferGrow(archive->input, buffer_size > 4096 ? (int)buffer_size : 4096);
+        xmlParserInputBufferGrow(input, buffer_size > 4096 ? (int)buffer_size : 4096);
     }
 
-    return srcml_archive_read_open_internal(archive);
+    return srcml_archive_read_open_internal(archive, input);
 }
 
 /**
@@ -1138,9 +1136,9 @@ int srcml_archive_read_open_FILE(struct srcml_archive* archive, FILE* srcml_file
     if (archive == nullptr || srcml_file == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateFile(srcml_file, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    auto input = xmlParserInputBufferCreateFile(srcml_file, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-    return srcml_archive_read_open_internal(archive);
+    return srcml_archive_read_open_internal(archive, input);
 }
 
 /**
@@ -1158,10 +1156,10 @@ int srcml_archive_read_open_fd(struct srcml_archive* archive, int srcml_fd) {
     if (archive == nullptr || srcml_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateFd(srcml_fd, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
-    archive->input->closecallback = nullptr;
+    auto input = xmlParserInputBufferCreateFd(srcml_fd, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    input->closecallback = nullptr;
 
-    return srcml_archive_read_open_internal(archive);
+    return srcml_archive_read_open_internal(archive, input);
 }
 
 /**
@@ -1181,9 +1179,9 @@ int srcml_archive_read_open_io(struct srcml_archive* archive, void * context, in
     if (archive == nullptr || context == nullptr || read_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->input = xmlParserInputBufferCreateIO(read_callback, close_callback, context, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    auto input = xmlParserInputBufferCreateIO(read_callback, close_callback, context, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
 
-    return srcml_archive_read_open_internal(archive);
+    return srcml_archive_read_open_internal(archive, input);
 }
 
 /******************************************************************************
@@ -1369,13 +1367,6 @@ void srcml_archive_close(struct srcml_archive* archive) {
     if (archive->reader) {
         delete archive->reader;
         archive->reader = nullptr;
-    }
-
-    if (archive->input) {
-    	// @todo verify that this is called for every input use of archive
-    	// as part of xmlNewIOInputStream()
-        //xmlFreeParserInputBuffer(archive->input);
-        archive->input = nullptr;
     }
 
     archive->type = SRCML_ARCHIVE_INVALID;
