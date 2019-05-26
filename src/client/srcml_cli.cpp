@@ -549,7 +549,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         });
 
     app.add_option("--relaxng", 
-        "Output individual units that match the RelaxNG pattern FILE. FILE can be a url")
+        "Output individual units that match the RelaxNG pattern FILE, where FILE can be a url")
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
