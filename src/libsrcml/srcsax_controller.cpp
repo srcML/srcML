@@ -42,24 +42,25 @@ static void libxml_error(void * /*ctx*/, const char* msg, ...) {
 static xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buffer_input, xmlCharEncoding enc);
 
 /**
- * srcsax_create_context_inner
- * @param input a libxml2 parser input buffer
+ * srcsax_create_context_parser_input_buffer
+ * @param srcml_context an opened context for opened srcML document
+ * @param read_callback a read callback function
+ * @close_callback a close callback function
+ * @param encoding the files character encoding
  *
- * A helper function that creates the srcSAX context and does error handling.
- * With a supplied xmlParserInputBufferPtr.
- * 
+ * Create a srcsSAX context from a general context and read/close callbacks with the specified encoding.
+ *
  * @returns srcsax_context context to be used for srcML parsing.
  */
-static srcsax_context* srcsax_create_context_inner(const char* encoding,
-    std::function<xmlParserInputBufferPtr(xmlCharEncoding)> createxmlParserInputBuffer) {
+srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input) {
+
+    if (input == 0)
+        return 0;
+
+    const char* encoding = nullptr;
 
     xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
     initGenericErrorDefaultFunc(&error_handler);
-
-    auto enc = encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE;
-    xmlParserInputBufferPtr input = createxmlParserInputBuffer(enc);
-    if (input == 0)
-        return 0;
 
     srcsax_context* context = nullptr;
     try {
@@ -84,28 +85,6 @@ static srcsax_context* srcsax_create_context_inner(const char* encoding,
     context->libxml2_context = libxml2_context;
 
     return context;
-}
-
-/**
- * srcsax_create_context_parser_input_buffer
- * @param srcml_context an opened context for opened srcML document
- * @param read_callback a read callback function
- * @close_callback a close callback function
- * @param encoding the files character encoding
- *
- * Create a srcsSAX context from a general context and read/close callbacks with the specified encoding.
- *
- * @returns srcsax_context context to be used for srcML parsing.
- */
-srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input) {
-
-    if (input == 0)
-        return 0;
-
-    return srcsax_create_context_inner(0, [input](xmlCharEncoding) {
-
-        return input;
-    });
 }
 
 /**
