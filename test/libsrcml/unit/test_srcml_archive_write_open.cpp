@@ -38,7 +38,7 @@
 
 #include <dassert.hpp>
 
-int write_callback(void * context, const char * buffer, size_t len) {
+int write_callback(void * context, const char * buffer, int len) {
 
     return (int)fwrite(buffer, 1, len, (FILE*)context);
 

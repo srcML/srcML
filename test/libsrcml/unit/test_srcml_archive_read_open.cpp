@@ -38,7 +38,7 @@
 
 #include <dassert.hpp>
 
-ssize_t read_callback(void * context, void * buffer, size_t len) {
+int read_callback(void * context, char* buffer, int len) {
     return (int)fread(buffer, 1, len, (FILE*)context);
 
 }
