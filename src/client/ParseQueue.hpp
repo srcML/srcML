@@ -1,5 +1,5 @@
 /**
- * @file parse_queue.hpp
+ * @file ParseQueue.hpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *

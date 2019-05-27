@@ -1,5 +1,5 @@
 /**
- *  @file sax2_srcsax_handler.cpp
+ * @file sax2_srcsax_handler.cpp
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
