@@ -20,6 +20,8 @@
 # Debian package name
 set(CPACK_DEBIAN_PACKAGE_NAME "srcML")
 
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE https://srcMl.org)
+
 # architecture
 # if(CMAKE_SYSTEM_PROCESSOR STREQUAL "i686")
 #     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
@@ -38,7 +40,7 @@ set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
 set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 
 # recommended package
-set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "yes")
+set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, tar, man")
 
 # package suggests
-set(CPACK_DEBIAN_PACKAGE_SUGGESTS "yes")
+#set(CPACK_DEBIAN_PACKAGE_SUGGESTS "yes")

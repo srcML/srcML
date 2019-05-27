@@ -78,4 +78,5 @@ elseif(NOT WIN32)
     install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
 endif()
 
-install(TARGETS srcml RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(TARGETS srcml)
+message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
