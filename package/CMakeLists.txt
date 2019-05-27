@@ -41,6 +41,11 @@ else()
 endif()
 message(STATUS "CPACK_GENERATOR ${CPACK_GENERATOR}")
 
+# Use the same directories as install
+if(NOT CPACK_PACKAGING_INSTALL_PREFIX)
+	set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
+endif()
+
 # summary
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 
