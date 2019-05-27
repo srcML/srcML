@@ -76,11 +76,15 @@ endif()
 enable_testing()
 include(CTest)
 
+# Determine distribution
+# Does not work for all distributions, but does work for supported Linux distributions
+if(EXISTS /etc/os-release)
+    file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
+endif()
+
 # Fedora and CentOS do not put /usr/local/{bin,lib64} on the default search paths
 # So change installation to /usr
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND EXISTS /etc/os-release)
-    file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
-    message(STATUS "DISTRO ${DISTRO}")
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND DISTRO)
     if(DISTRO MATCHES "CentOS|Fedora")
         set(CMAKE_INSTALL_PREFIX /usr)
     endif()
@@ -89,6 +93,7 @@ endif()
 # used as defaults for installation and packaging
 include(GNUInstallDirs)
 
+message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 add_subdirectory(src)
 add_subdirectory(test)
 
