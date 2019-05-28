@@ -115,7 +115,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
     */
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_disable_hash(archive);
         srcml_archive_write_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
@@ -131,7 +131,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_disable_hash(archive);
         srcml_archive_write_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
@@ -148,7 +148,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_disable_hash(archive);
         srcml_archive_set_language(archive, "C");
         srcml_archive_write_open_filename(archive, "project.xml");
@@ -215,7 +215,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_set_url(archive, "test");
         srcml_archive_write_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
@@ -234,7 +234,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_archive_set_url(archive, "test");
         srcml_archive_write_open_filename(archive, "project.xml");
@@ -254,7 +254,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_set_url(archive, "test");
         srcml_archive_write_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
@@ -273,7 +273,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
         srcml_archive_set_url(archive, "test");
         srcml_archive_write_open_filename(archive, "project.xml");
@@ -368,7 +368,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C");

@@ -75,7 +75,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
 
     if (input.protocol == "filelist") {
 
-        srcml_archive_enable_full_archive(srcml_arch);
+        srcml_archive_disable_solitary_unit(srcml_arch);
 
         return src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
     }
@@ -173,7 +173,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     if (srcml_request.markup_options) {
 
         if (*srcml_request.markup_options & SRCML_ARCHIVE)
-            srcml_archive_enable_full_archive(srcml_arch);
+            srcml_archive_disable_solitary_unit(srcml_arch);
         if (*srcml_request.markup_options & SRCML_OPTION_POSITION)
             srcml_archive_enable_option(srcml_arch, SRCML_OPTION_POSITION);
         if (*srcml_request.markup_options & SRCML_OPTION_CPP)
@@ -219,7 +219,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_ARCHIVE)) &&
         !input_sources[0].isdirectory && input_sources[0].archives.empty()) {
 
-        srcml_archive_disable_full_archive(srcml_arch);
+        srcml_archive_enable_solitary_unit(srcml_arch);
         
         // If --hash is used, force hash for single input
         if (*srcml_request.markup_options & SRCML_HASH) {
@@ -240,7 +240,7 @@ void create_srcml(const srcml_request_t& srcml_request,
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
 
-        if (srcml_archive_enable_full_archive(srcml_arch) != SRCML_STATUS_OK) {
+        if (srcml_archive_disable_solitary_unit(srcml_arch) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: unable to enable full srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }

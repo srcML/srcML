@@ -143,7 +143,7 @@ int src_input_text(ParseQueue& queue,
                     if (value == 0) {
                         ptext = epos + offset + 1;
 
-                        srcml_archive_enable_full_archive(srcml_arch);
+                        srcml_archive_disable_solitary_unit(srcml_arch);
 
                         goto end;
                     }
@@ -196,7 +196,7 @@ int src_input_text(ParseQueue& queue,
                     if (value == 0) {
                         ptext = epos + offset;
 
-                        srcml_archive_enable_full_archive(srcml_arch);
+                        srcml_archive_disable_solitary_unit(srcml_arch);
 
                         goto end;
                     }

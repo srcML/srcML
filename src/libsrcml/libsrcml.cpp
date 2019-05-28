@@ -163,7 +163,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         srcml_archive_write_open_filename(&global_archive, output_filename);
         srcml_unit * unit = srcml_unit_create(&global_archive);
 
-        srcml_archive_disable_full_archive(&global_archive);
+        srcml_archive_enable_solitary_unit(&global_archive);
 
         int status = srcml_unit_set_language(unit, srcml_archive_get_language(&global_archive));
         if (status != SRCML_STATUS_OK) {
