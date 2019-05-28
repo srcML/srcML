@@ -26,6 +26,11 @@ set(CPACK_RPM_PACKAGE_NAME "srcML")
 # package release number (NOT srcML release)
 set(CPACK_RPM_PACKAGE_RELEASE 1)
 
+# pre install script to add public key to rpm keyring
+# @todo Does not seem to be called
+#file(WRITE ${CPACK_PACKAGE_DIRECTORY}/pre.sh "curl -L -w '\n' https://github.com/mlcollard.gpg -o srcml.rpg; rpm --import srcml.rpg; rm -f srcml.rpg")
+#set(CPACK_RPM_PRE_INSTALL_SCRIPT_FILE ${CPACK_PACKAGE_DIRECTORY}/pre.sh)
+
 # post install script for ldconfig
 file(WRITE ${CPACK_PACKAGE_DIRECTORY}/post.sh "ldconfig")
 set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE ${CPACK_PACKAGE_DIRECTORY}/post.sh)
