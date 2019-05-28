@@ -96,8 +96,9 @@ const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
 // Error Codes
-// TODO: PUT THE REST HERE
-const int CLI_ERROR_INVALID_ARGUMENT = 4;
+const int CLI_STATUS_OK = 0;
+const int CLI_STATUS_ERROR = 1;
+const int CLI_STATUS_INTERNAL_ERROR = 2;
 
 struct attribute {
     boost::optional<std::string> prefix;

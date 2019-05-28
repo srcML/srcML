@@ -206,7 +206,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->check([&](std::string value) {
             if (!value.empty() && value[0] == '-') {
                 std::cerr << "srcml: --text: 1 required STRING missing";
-                exit(7);
+                exit(CLI_STATUS_ERROR);
             }
             return "";
         })
@@ -223,7 +223,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->check([&](std::string lang) {
             if (lang.empty() || srcml_check_language(lang.c_str()) == 0) {
                 SRCMLstatus(ERROR_MSG, "srcml: invalid language \"%s\"", lang);
-                exit(6); //ERROR CODE TBD
+                exit(CLI_STATUS_ERROR);
             }
             return "";
         });
@@ -619,13 +619,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         app.parse(commandline);
     } catch (const CLI::CallForHelp &e) {
         app.exit(e);
-        exit(0);
+        exit(CLI_STATUS_OK);
     } catch (const CLI::ExtrasError &e) {
         app.exit(e);
-        exit(3);
+        exit(CLI_STATUS_ERROR);
     } catch (const CLI::ParseError &e) {
         app.exit(e);
-        exit(CLI_ERROR_INVALID_ARGUMENT);
+        exit(CLI_STATUS_ERROR);
     }
 
     if (srcml_request.output_filename == "")
@@ -665,7 +665,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         }
 
         SRCMLstatus(ERROR_MSG, "srcml: prefix \"" + std_prefix + "\" assigned multiple URIs \"" + std_uri + "\", \"" + user_namespaces[std_prefix] + "\"");
-        exit(1); // TODO Need a real error code
+        exit(CLI_STATUS_ERROR);
     }
 
     return srcml_request;
