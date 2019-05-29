@@ -81,7 +81,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         request->srcml_arch = srcml_archive_clone(request->srcml_arch);
 
         // @todo These should follow the master archive
-        srcml_archive_disable_full_archive(request->srcml_arch);
+        srcml_archive_enable_solitary_unit(request->srcml_arch);
         srcml_archive_disable_hash(request->srcml_arch);
 
         srcml_archive_write_open_filename(request->srcml_arch, filename.c_str());
@@ -129,7 +129,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         // done, so output has to be a full archive
         // @todo Make sure it is only an xpath transformation
         if (request->results.num_units > 1) {
-            srcml_archive_enable_full_archive(request->srcml_arch);
+            srcml_archive_disable_solitary_unit(request->srcml_arch);
         }
 
         // write out any transformed units
@@ -157,7 +157,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
                 static bool first = true;
                 if (first) {
                     auto sarchive = srcml_archive_clone(request->srcml_arch);
-                    srcml_archive_disable_full_archive(sarchive);
+                    srcml_archive_enable_solitary_unit(sarchive);
                     srcml_archive_disable_hash(sarchive);
                     char* buffer = 0;
                     size_t size = 0;

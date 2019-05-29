@@ -63,8 +63,8 @@ int srcml_input_srcml(ParseQueue& queue,
     // output is in srcML
     if (option(SRCML_COMMAND_XML)) {
 
-        if (srcml_archive_is_full_archive(srcml_input_archive) && srcml_input.unit == 0)
-            srcml_archive_enable_full_archive(srcml_output_archive);
+        if (!srcml_archive_is_solitary_unit(srcml_input_archive) && srcml_input.unit == 0)
+            srcml_archive_disable_solitary_unit(srcml_output_archive);
 
         size_t nsSize = srcml_archive_get_namespace_size(srcml_input_archive);
         for (size_t i = 0; i < nsSize; ++i) {

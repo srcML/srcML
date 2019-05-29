@@ -46,7 +46,7 @@ void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueu
     // NOTE: thread task cannot throw exception
     if (option(SRCML_COMMAND_NOARCHIVE)) {
 
-        srcml_archive_disable_full_archive(request->srcml_arch);
+        srcml_archive_enable_solitary_unit(request->srcml_arch);
         srcml_archive_enable_hash(request->srcml_arch);
 
         // build the output filename mirroring input filesystem

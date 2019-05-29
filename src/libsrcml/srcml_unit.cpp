@@ -441,7 +441,7 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
     unit->encoding = input->getEncoding();
 
     // if this is just a solitary unit (i.e., no archive), the url attribute is on the unit
-    if (!srcml_archive_is_full_archive(unit->archive))
+    if (srcml_archive_is_solitary_unit(unit->archive))
         unit->url = unit->archive->url;
 
     // create the unit start tag (start_unit and end_unit must be called together)

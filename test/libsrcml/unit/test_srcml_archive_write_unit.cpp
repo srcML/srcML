@@ -179,7 +179,7 @@ int main(int, char* argv[]) {
         char * s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_disable_hash(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
@@ -281,7 +281,7 @@ int main(int, char* argv[]) {
         char * s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_disable_hash(archive);
         srcml_archive_register_namespace(archive, "s", "http://www.srcML.org/srcML/src");
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -305,7 +305,7 @@ int main(int, char* argv[]) {
         char * s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_disable_hash(archive);
         srcml_archive_register_namespace(archive, "s", "http://www.srcML.org/srcML/src");
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -484,7 +484,7 @@ int main(int, char* argv[]) {
         char * s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_set_language(archive, "C++");
         srcml_archive_set_url(archive, "test");
         srcml_archive_set_version(archive, "1");
@@ -527,7 +527,7 @@ int main(int, char* argv[]) {
         char * s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_disable_hash(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
@@ -548,7 +548,7 @@ int main(int, char* argv[]) {
         char * s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_disable_hash(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
@@ -569,7 +569,7 @@ int main(int, char* argv[]) {
         char * s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_disable_full_archive(archive);
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_disable_hash(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);

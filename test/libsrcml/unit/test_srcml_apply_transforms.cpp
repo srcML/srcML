@@ -158,7 +158,7 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
         srcml_append_transform_xpath(iarchive, "//src:unit");
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
-        srcml_archive_enable_full_archive(oarchive);
+        srcml_archive_disable_solitary_unit(oarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
@@ -185,7 +185,7 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
         srcml_append_transform_xpath(iarchive, "//src:unit");
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
-        srcml_archive_enable_full_archive(oarchive);
+        srcml_archive_disable_solitary_unit(oarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
@@ -1279,7 +1279,7 @@ int main(int, char* argv[]) {
         CLOSE(fd);
 
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
-        srcml_archive_enable_full_archive(oarchive);
+        srcml_archive_disable_solitary_unit(oarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
@@ -1324,7 +1324,7 @@ int main(int, char* argv[]) {
         CLOSE(fd);
 
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
-        srcml_archive_enable_full_archive(oarchive);
+        srcml_archive_disable_solitary_unit(oarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);

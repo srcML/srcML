@@ -79,7 +79,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
     // for xpath the output archive is always a non-solo unit
     // @todo This doesn't make sense in all cases, and should be revisited
-    srcml_archive_enable_full_archive(out_arch);
+    srcml_archive_disable_solitary_unit(out_arch);
 
     // Call appropriate XPath transform
     if (element && attribute) {

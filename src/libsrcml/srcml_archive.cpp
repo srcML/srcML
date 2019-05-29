@@ -273,9 +273,8 @@ int srcml_archive_set_options(struct srcml_archive* archive, unsigned long long 
 /**
  * @param archive a srcml_archive
  */
-int srcml_archive_is_full_archive(const struct srcml_archive* archive) {
-
-    return (archive->options & SRCML_OPTION_ARCHIVE) != 0;
+int srcml_archive_is_solitary_unit(const struct srcml_archive* archive) {
+    return (archive->options & SRCML_OPTION_ARCHIVE) == 0;
 }
 
 /**
@@ -297,7 +296,7 @@ int srcml_archive_has_hash(const struct srcml_archive* archive) {
 /**
  * @param archive a srcml_archive
  */
-int srcml_archive_enable_full_archive(struct srcml_archive* archive) {
+int srcml_archive_disable_solitary_unit(struct srcml_archive* archive) {
 
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -334,10 +333,9 @@ int srcml_archive_enable_fragment(struct srcml_archive* archive) {
 }
 
 /**
- * srcml_archive_disable_full_archive
  * @param archive a srcml_archive
  */
-int srcml_archive_disable_full_archive(struct srcml_archive* archive) {
+int srcml_archive_enable_solitary_unit(struct srcml_archive* archive) {
 
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
