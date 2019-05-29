@@ -133,12 +133,7 @@ set(XML_PROCESSING_FLAG_LONG "xml-processing")
 set(APPLY_ROOT_FLAG_LONG "apply-root")
 set(STATUS_SUCCESS "0")
 set(STATUS_ERROR "1")
-set(STATUS_INVALID_ARGUMENT "2")
-set(STATUS_INVALID_OPTION "3")
-set(SRCML_STATUS_UNKNOWN_ENCODING "7")
-#set(SRCML_STATUS_IO_ERROR "5")
-set(SRCML_STATUS_INVALID_LANGUAGE "6")
-#set(SRCML_STATUS_NO_TRANSFORMATION "8")
+set(STATUS_INTERNAL_ERROR "2")
 set(PRETTY_FLAG_LONG "pretty")
 
 # Custom commands for creating things using the ronn executable

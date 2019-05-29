@@ -356,8 +356,8 @@ ssize_t UTF8CharBuffer::readChars() {
         ic = iconv_open("UTF-8", encoding.c_str());
         if (ic == (iconv_t) -1) {
             if (errno == EINVAL) {
-                fprintf(stderr, "Conversion from encoding '%s' not supported\n\n", encoding.c_str());
-                exit(4);
+                fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", encoding.c_str());
+                exit(1);
             }
         }
 

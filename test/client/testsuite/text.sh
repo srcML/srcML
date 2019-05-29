@@ -28,7 +28,7 @@ srcml --text="" -l "C++"
 check "$srcml"
 
 srcml --text -l "C++"
-check_exit 7
+check_exit 1
 
 echo -n "" | srcml -l "C++"
 check "$srcml"
@@ -54,10 +54,10 @@ srcml -l C++ --text="" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$srcml"
 
 srcml --text -l "C++" -o sub/a.cpp.xml
-check_exit 7
+check_exit 1
 
 srcml -l C++ --text -o sub/a.cpp.xml
-check_exit 7
+check_exit 1
 
 # simple input
 define asrcml <<- 'STDOUT'
