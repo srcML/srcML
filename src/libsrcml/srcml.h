@@ -20,7 +20,7 @@
 
 /**
  * @mainpage libsrcml
- * 
+ *
  * The functions in libsrcml are for the purposes of:
  *
  * * Converting source code to the srcML format
@@ -101,7 +101,7 @@ typedef SSIZE_T ssize_t;
 #define SRCML_LANGUAGE_JAVA   "Java"
 /** Language XML */
 #define SRCML_LANGUAGE_XML    "xml"
-/**@}*/ 
+/**@}*/
 
 /**@{ @name Options */
 /** Issue an XML declaration */
@@ -129,7 +129,7 @@ const unsigned int SRCML_OPTION_STORE_ENCODING    = 1<<6;
 #define SOURCE_OUTPUT_EOL_CR        2
 /** Source-code end of line is carriage return and new line */
 #define SOURCE_OUTPUT_EOL_CRLF      3
-/**@}*/ 
+/**@}*/
 /**@}*/
 /**@}*/
 
@@ -233,10 +233,10 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
 
 /** @defgroup convenience Convenience functions
 
-  Straightforward functions for translating single source-code files to and from the srcML format. 
+  Straightforward functions for translating single source-code files to and from the srcML format.
   A complete program to convert from a source-code file to srcML:
 
-  @code 
+  @code
   #include <srcml.h>
   int main() {
     srcml("main.cpp", "main.cpp.xml");
@@ -246,7 +246,7 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
 
   A complete program to convert from srcML to a source-code file:
 
-  @code 
+  @code
   #include <srcml.h>
   int main() {
     srcml("main.cpp.xml", "main.cpp");
@@ -382,7 +382,7 @@ LIBSRCML_DECL int srcml_register_namespace(const char* prefix, const char* ns);
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const char* data); 
+LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const char* data);
 
 /** Register a macro (token) to be processed as a special type
  * @param token Name of macro
@@ -758,7 +758,7 @@ LIBSRCML_DECL int srcml_archive_disable_hash(struct srcml_archive* archive);
  */
 LIBSRCML_DECL int srcml_archive_set_xml_encoding(struct srcml_archive* archive, const char* encoding);
 
-/** Set the default source encoding for the srcML archive 
+/** Set the default source encoding for the srcML archive
  * @param archive The srcml_archive to set the source encoding for
  * @param encoding A source-code encoding
  * @retval SRCML_STATUS_OK on success
@@ -832,7 +832,7 @@ LIBSRCML_DECL int srcml_archive_register_namespace(struct srcml_archive* archive
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure.
  */
-LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive* archive, const char* target, const char* data); 
+LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive* archive, const char* target, const char* data);
 
 /** Register a macro (token) to be processed as a special type.
  * @details Here is a list of the currently supported special types:
@@ -981,13 +981,13 @@ LIBSRCML_DECL const char* srcml_archive_get_uri_from_prefix(const struct srcml_a
  * @param archive A srcml archive
  * @return The processing instruction target
  */
-LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_target(const struct srcml_archive* archive); 
+LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_target(const struct srcml_archive* archive);
 
 /**
  * @param archive A srcml archive
  * @return The processing instruction data
  */
-LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_data(const struct srcml_archive* archive); 
+LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_data(const struct srcml_archive* archive);
 
 /**
  * @param archive A srcml_archive
@@ -1096,7 +1096,7 @@ LIBSRCML_DECL int srcml_append_transform_xpath_element(struct srcml_archive* arc
  * @param archive A srcml_archive
  * @param xslt_filename An XSLT program filename path
  * @note Currently no way to specify parameters or context
- * @return SRCML_STATUS_OK on success 
+ * @return SRCML_STATUS_OK on success
  * @return Status error codes on failure.
  */
 LIBSRCML_DECL int srcml_append_transform_xslt_filename(struct srcml_archive* archive, const char* xslt_filename);
@@ -1372,7 +1372,7 @@ LIBSRCML_DECL const char* srcml_unit_get_hash(const struct srcml_unit* unit);
 LIBSRCML_DECL const char* srcml_unit_get_srcml(struct srcml_unit* unit);
 
 /** Get a fragment of the srcML from this unit
- * The XML returned is UTF-8 encoded XML. It is not well-formed XML, e.g., it is missing 
+ * The XML returned is UTF-8 encoded XML. It is not well-formed XML, e.g., it is missing
  * the archive namespace declarations
  * @note Do not free
  * @note String is valid until the unit is freed, or another srcml_unit_get_srcml*() is called
@@ -1382,7 +1382,7 @@ LIBSRCML_DECL const char* srcml_unit_get_srcml(struct srcml_unit* unit);
 LIBSRCML_DECL const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit);
 
 /** Get the srcML without the enclosing unit tags
- * The XML fragment returned is UTF-8 encoded XML. It is not well-formed XML, e.g., it is missing 
+ * The XML fragment returned is UTF-8 encoded XML. It is not well-formed XML, e.g., it is missing
  * the archive namespace declarations and may not have a single root.
  * @note Do not free
  * @note String is valid until the unit is freed, or another srcml_unit_get_srcml*() is called
@@ -1441,7 +1441,7 @@ LIBSRCML_DECL int srcml_unit_parse_fd(struct srcml_unit* unit, int src_fd);
 LIBSRCML_DECL int srcml_unit_parse_io(struct srcml_unit* unit, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context));
 /**@}*/
 
-/**@{ @name Convert srcML to source code 
+/**@{ @name Convert srcML to source code
       @brief srcML in a srcml unit is converted back to source code, and stored in a variety of output destinations
       */
 
