@@ -36,16 +36,16 @@ WriteQueue::WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool
 void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
 
     // push the value on the priority queue
-	{
-		std::lock_guard<std::mutex> lock(qmutex);
+    {
+        std::lock_guard<std::mutex> lock(qmutex);
 
         // record max position for eos()
         if (pvalue->position > maxposition)
             maxposition = pvalue->position;
 
-		// put this request into the queue
-		q.push(pvalue);
-	}
+        // put this request into the queue
+        q.push(pvalue);
+    }
 
     // let the write processing know there is something
     cv.notify_one();

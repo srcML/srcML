@@ -25,30 +25,30 @@
 
 class SRCMLOptions {
 public:
-	friend void enable(int option);
+    friend void enable(int option);
 
     static void set(int options) { 
 
-    	opt = options; 
+        opt = options; 
     }
 
     static int get()  { 
 
-    	return opt; 
+        return opt; 
     }
 
  private:
- 	static int opt;
+    static int opt;
 };
 
 inline bool option(int option) {
 
-	return SRCMLOptions::get() & option;
+    return SRCMLOptions::get() & option;
 }
 
 inline void enable(int option) {
 
-	SRCMLOptions::opt |= option;
+    SRCMLOptions::opt |= option;
 }
 
 #endif

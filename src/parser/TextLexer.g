@@ -30,7 +30,7 @@
  */
 
 options {
-	language="Cpp";
+    language="Cpp";
     namespaceAntlr="antlr";
     namespaceStd="std";
 }
@@ -38,8 +38,8 @@ options {
 class TextLexer extends Lexer;
 
 options {
-	k = 1;
-	testLiterals = false; 
+    k = 1;
+    testLiterals = false; 
     charVocabulary = '\000'..'\377';
     importVocab = CommentTextLexer;
 }

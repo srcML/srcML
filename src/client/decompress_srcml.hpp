@@ -28,7 +28,7 @@
 
 // decompress srcml from the current request
 void decompress_srcml(const srcml_request_t& srcml_request,
-		        const srcml_input_t& input_sources,
+                const srcml_input_t& input_sources,
                 const srcml_output_dest& output);
 
 #endif

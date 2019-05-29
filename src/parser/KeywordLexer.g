@@ -58,7 +58,7 @@ void KeywordLexer::changetotextlexer(int typeend, const std::string delim) {
 }
 
 options {
-	language = "Cpp";
+    language = "Cpp";
     namespaceAntlr = "antlr";
     namespaceStd = "std";
 }
@@ -82,24 +82,24 @@ tokens {
 
     // statements
     BREAK;
-	CONTINUE;
+    CONTINUE;
 
     WHILE;
-	DO;
-	FOR;	
+    DO;
+    FOR;    
 
     IF;
     ELSE;
 
-	SWITCH;
-	CASE;
-	DEFAULT;
+    SWITCH;
+    CASE;
+    DEFAULT;
 
-	ENUM;
+    ENUM;
 
     // C Family
-	TYPEDEF;
-	GOTO;
+    TYPEDEF;
+    GOTO;
     ASM;
     VISUAL_CXX_ASM;
     SIZEOF;
@@ -139,28 +139,28 @@ tokens {
 
     // aggregate types
     UNION;
-	STRUCT;
+    STRUCT;
 
     // types
     VOID;
 
     // functions
-	RETURN;
+    RETURN;
 
     // cpp
     INCLUDE;
-	DEFINE;
-	ELIF;
+    DEFINE;
+    ELIF;
     ENDIF;
     ERRORPREC;
     WARNING;
-	IFDEF;
-	IFNDEF;
+    IFDEF;
+    IFNDEF;
     LINE;
-	PRAGMA;
-	UNDEF;
+    PRAGMA;
+    UNDEF;
 
-	INLINE;
+    INLINE;
 
     // macro
     MACRO_TYPE_NAME;
@@ -169,19 +169,19 @@ tokens {
     MACRO_SPECIFIER;
 
     // exception handling
-	TRY;
-	CATCH;
-	THROW;
+    TRY;
+    CATCH;
+    THROW;
     THROWS;
 
     // class
     CLASS;
-	PUBLIC;
-	PRIVATE;
-	PROTECTED;
+    PUBLIC;
+    PRIVATE;
+    PROTECTED;
     VIRTUAL;
-	FRIEND;
-	OPERATOR;
+    FRIEND;
+    OPERATOR;
     EXPLICIT;
 
     // Qt
@@ -190,11 +190,11 @@ tokens {
     EMIT;
 
     // namespaces
-	NAMESPACE;
-	USING;
+    NAMESPACE;
+    USING;
 
     // templates
-	TEMPLATE;
+    TEMPLATE;
 
     NEW;
     DELETE;
@@ -369,20 +369,20 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
  
         // operators and special characters
         { ")"            , RPAREN        , LANGUAGE_ALL }, 
-	    { ";"            , TERMINATE     , LANGUAGE_ALL }, 
-	    { "("            , LPAREN        , LANGUAGE_ALL }, 
-	    { "~"            , DESTOP        , LANGUAGE_ALL }, 
-	    { ":"            , COLON         , LANGUAGE_ALL }, 
-	    { "}"            , RCURLY        , LANGUAGE_ALL }, 
-	    { ","            , COMMA         , LANGUAGE_ALL }, 
-	    { "]"            , RBRACKET      , LANGUAGE_ALL }, 
-	    { "{"            , LCURLY        , LANGUAGE_ALL }, 
-	    { "["            , LBRACKET      , LANGUAGE_ALL }, 
+        { ";"            , TERMINATE     , LANGUAGE_ALL }, 
+        { "("            , LPAREN        , LANGUAGE_ALL }, 
+        { "~"            , DESTOP        , LANGUAGE_ALL }, 
+        { ":"            , COLON         , LANGUAGE_ALL }, 
+        { "}"            , RCURLY        , LANGUAGE_ALL }, 
+        { ","            , COMMA         , LANGUAGE_ALL }, 
+        { "]"            , RBRACKET      , LANGUAGE_ALL }, 
+        { "{"            , LCURLY        , LANGUAGE_ALL }, 
+        { "["            , LBRACKET      , LANGUAGE_ALL }, 
 
-	    { "<"            , TEMPOPS       , LANGUAGE_ALL }, 
-	    { ">"            , TEMPOPE       , LANGUAGE_ALL },
-	    { "&"            , REFOPS        , LANGUAGE_ALL }, 
-	    { "="            , EQUAL         , LANGUAGE_ALL }, 
+        { "<"            , TEMPOPS       , LANGUAGE_ALL }, 
+        { ">"            , TEMPOPE       , LANGUAGE_ALL },
+        { "&"            , REFOPS        , LANGUAGE_ALL }, 
+        { "="            , EQUAL         , LANGUAGE_ALL }, 
 
         { "."            , PERIOD        , LANGUAGE_ALL }, 
         { "*"            , MULTOPS       , LANGUAGE_ALL }, 
@@ -560,11 +560,11 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "native"        , NATIVE        , LANGUAGE_JAVA },
         { "strictfp"      , STRICTFP      , LANGUAGE_JAVA },
         { "transient"     , TRANSIENT     , LANGUAGE_JAVA }, 
-	    { "|"             , BAR           , LANGUAGE_JAVA }, 
-	    { "@"             , ATSIGN        , LANGUAGE_JAVA }, 
-	    { "null"          , NULLLITERAL   , LANGUAGE_JAVA }, 
-	    { "instanceof"    , OPERATORS     , LANGUAGE_JAVA }, 
-	    { "assert"        , ASSERT        , LANGUAGE_JAVA }, 
+        { "|"             , BAR           , LANGUAGE_JAVA }, 
+        { "@"             , ATSIGN        , LANGUAGE_JAVA }, 
+        { "null"          , NULLLITERAL   , LANGUAGE_JAVA }, 
+        { "instanceof"    , OPERATORS     , LANGUAGE_JAVA }, 
+        { "assert"        , ASSERT        , LANGUAGE_JAVA }, 
 
 
         // C# specific keywords

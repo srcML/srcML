@@ -34,11 +34,11 @@ public:
     friend TraceLog& operator<<(TraceLog& tlog, const std::string& s);
 
     inline void totalLOC(size_t floc) {
-    	loc += floc;
+        loc += floc;
     }
 
     inline static size_t totalLOC() {
-    	return loc;
+        return loc;
     }
 
     ~TraceLog();

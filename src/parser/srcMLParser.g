@@ -342,7 +342,7 @@ void srcMLParser::endAllModes() {
 } /* end include */
 
 options {
-	language="Cpp";
+    language="Cpp";
     namespaceAntlr="antlr";
     namespaceStd="std";
 }
@@ -351,7 +351,7 @@ class srcMLParser extends Parser;
 
 options {
     classHeaderSuffix="public Language, public ModeStack";
-	k=1;
+    k=1;
     importVocab=KeywordLexer;
     defaultErrorHandler=false;
     noConstructors=true;
@@ -388,100 +388,100 @@ tokens {
     SCNAME;
     STYPE;
     STYPEPREV;
-	SCONDITION;
-	SBLOCK;
+    SCONDITION;
+    SBLOCK;
     SPSEUDO_BLOCK;
     SCONTENT;
     SINDEX;
 
     // statements
-	SENUM;
+    SENUM;
     SENUM_DECLARATION;
 
-	SIF_STATEMENT;
+    SIF_STATEMENT;
     SIF;
     STERNARY;
-	STHEN;
-	SELSE;
-	SELSEIF;
+    STHEN;
+    SELSE;
+    SELSEIF;
 
     SWHILE_STATEMENT;
-	SDO_STATEMENT;
+    SDO_STATEMENT;
 
-	SFOR_STATEMENT;
-	SFOREACH_STATEMENT;
+    SFOR_STATEMENT;
+    SFOREACH_STATEMENT;
     SCONTROL;
-	SCONTROL_INITIALIZATION;
-	SCONTROL_CONDITION;
-	SCONTROL_INCREMENT;
+    SCONTROL_INITIALIZATION;
+    SCONTROL_CONDITION;
+    SCONTROL_INCREMENT;
     SFOR_LIKE_CONTROL;
 
-	SEXPRESSION_STATEMENT;
-	SEXPRESSION;
-	SFUNCTION_CALL;
+    SEXPRESSION_STATEMENT;
+    SEXPRESSION;
+    SFUNCTION_CALL;
 
-	SDECLARATION_STATEMENT;
-	SDECLARATION;
-	SDECLARATION_INITIALIZATION;
-	SDECLARATION_RANGE;
+    SDECLARATION_STATEMENT;
+    SDECLARATION;
+    SDECLARATION_INITIALIZATION;
+    SDECLARATION_RANGE;
 
-	SGOTO_STATEMENT;
-	SCONTINUE_STATEMENT;
-	SBREAK_STATEMENT;
-	SLABEL_STATEMENT;
+    SGOTO_STATEMENT;
+    SCONTINUE_STATEMENT;
+    SBREAK_STATEMENT;
+    SLABEL_STATEMENT;
 
-	SSWITCH;
-	SCASE;
-	SDEFAULT;
+    SSWITCH;
+    SCASE;
+    SDEFAULT;
 
     // functions
     SFUNCTION_DEFINITION;
-	SFUNCTION_DECLARATION;
+    SFUNCTION_DECLARATION;
     SFUNCTION_LAMBDA;
-	SFUNCTION_SPECIFIER;
-	SRETURN_STATEMENT;
-	SPARAMETER_LIST;
-	SPARAMETER;
-	SKRPARAMETER_LIST;
-	SKRPARAMETER;
-	SARGUMENT_LIST;
-	SARGUMENT;
+    SFUNCTION_SPECIFIER;
+    SRETURN_STATEMENT;
+    SPARAMETER_LIST;
+    SPARAMETER;
+    SKRPARAMETER_LIST;
+    SKRPARAMETER;
+    SARGUMENT_LIST;
+    SARGUMENT;
     SPSEUDO_PARAMETER_LIST;
     SINDEXER_PARAMETER_LIST;
 
     // class, struct, union
-	SCLASS;
-	SCLASS_DECLARATION;
-	SSTRUCT;
-	SSTRUCT_DECLARATION;
-	SUNION;
-	SUNION_DECLARATION;
+    SCLASS;
+    SCLASS_DECLARATION;
+    SSTRUCT;
+    SSTRUCT_DECLARATION;
+    SUNION;
+    SUNION_DECLARATION;
     SDERIVATION_LIST;
     SDERIVATION;
-	SPUBLIC_ACCESS;
-	SPUBLIC_ACCESS_DEFAULT;
-	SPRIVATE_ACCESS;
-	SPRIVATE_ACCESS_DEFAULT;
-	SPROTECTED_ACCESS;
+    SPUBLIC_ACCESS;
+    SPUBLIC_ACCESS_DEFAULT;
+    SPRIVATE_ACCESS;
+    SPRIVATE_ACCESS_DEFAULT;
+    SPROTECTED_ACCESS;
     SPROTECTED_ACCESS_DEFAULT;
     SMEMBER_INITIALIZATION_LIST;
     SMEMBER_INITIALIZATION;
-	SCONSTRUCTOR_DEFINITION;
-	SCONSTRUCTOR_DECLARATION;
-	SDESTRUCTOR_DEFINITION;
-	SDESTRUCTOR_DECLARATION;
-	SFRIEND;
-	SCLASS_SPECIFIER;
+    SCONSTRUCTOR_DEFINITION;
+    SCONSTRUCTOR_DECLARATION;
+    SDESTRUCTOR_DEFINITION;
+    SDESTRUCTOR_DECLARATION;
+    SFRIEND;
+    SCLASS_SPECIFIER;
 
     // exception handling
-	STRY_BLOCK;
-	SCATCH_BLOCK;
-	SFINALLY_BLOCK;
-	STHROW_STATEMENT;
-	STHROW_SPECIFIER;
-	STHROW_SPECIFIER_JAVA;
+    STRY_BLOCK;
+    SCATCH_BLOCK;
+    SFINALLY_BLOCK;
+    STHROW_STATEMENT;
+    STHROW_SPECIFIER;
+    STHROW_SPECIFIER_JAVA;
 
-	STEMPLATE;
+    STEMPLATE;
     SGENERIC_ARGUMENT;
     SGENERIC_ARGUMENT_LIST;
     STEMPLATE_PARAMETER;
@@ -490,13 +490,13 @@ tokens {
     SGENERIC_PARAMETER_LIST;
 
     // C Family elements
-	STYPEDEF;
-	SASM;
-	SMACRO_CALL;
-	SSIZEOF_CALL;
+    STYPEDEF;
+    SASM;
+    SMACRO_CALL;
+    SSIZEOF_CALL;
     SEXTERN;
-	SNAMESPACE;
-	SUSING_DIRECTIVE;
+    SNAMESPACE;
+    SUSING_DIRECTIVE;
 
     // C
     SATOMIC;
@@ -522,32 +522,32 @@ tokens {
     SREF_QUALIFIER;
 
     // Qt
-	SSIGNAL_ACCESS;
+    SSIGNAL_ACCESS;
     SFOREVER_STATEMENT;
     SEMIT_STATEMENT;
 
     // cpp directive internal elements
-	SCPP_DIRECTIVE;
+    SCPP_DIRECTIVE;
     SCPP_FILENAME;
     SCPP_NUMBER;
     SCPP_LITERAL;
-	SCPP_MACRO_DEFN;
-	SCPP_MACRO_VALUE;
+    SCPP_MACRO_DEFN;
+    SCPP_MACRO_VALUE;
 
     // cpp directives
-	SCPP_ERROR;
+    SCPP_ERROR;
     SCPP_WARNING;
-	SCPP_PRAGMA;
-	SCPP_INCLUDE;
-	SCPP_DEFINE;
-	SCPP_UNDEF;
-	SCPP_LINE;
-	SCPP_IF;
-	SCPP_IFDEF;
-	SCPP_IFNDEF;
-	SCPP_THEN;
-	SCPP_ELSE;
-	SCPP_ELIF;
+    SCPP_PRAGMA;
+    SCPP_INCLUDE;
+    SCPP_DEFINE;
+    SCPP_UNDEF;
+    SCPP_LINE;
+    SCPP_IF;
+    SCPP_IFDEF;
+    SCPP_IFNDEF;
+    SCPP_THEN;
+    SCPP_ELSE;
+    SCPP_ELIF;
     SCPP_EMPTY;
 
     // C# cpp directives
@@ -558,7 +558,7 @@ tokens {
     SCPP_IMPORT;
 
     // This HAS to mark the end of the CPP directives
-	SCPP_ENDIF;
+    SCPP_ENDIF;
 
     // Debug elements
     SMARKER;
@@ -1148,7 +1148,7 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 
 // beginning function declaration/header
 function_declaration[int type_count, int token = SFUNCTION_DECLARATION] { ENTRY_DEBUG } :
-		{
+        {
             startNewMode(MODE_STATEMENT);
 
             startElement(token);
@@ -1416,7 +1416,7 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // handle a C# lambda expression
 lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
-		{
+        {
 
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS | MODE_END_AT_COMMA);      
 
@@ -1430,7 +1430,7 @@ lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 
 // handle a C++11 lambda expression
 lambda_expression_cpp[] { ENTRY_DEBUG } :
-		{
+        {
 
             bool iscall = look_past_rule(&srcMLParser::lambda_expression_full_cpp) == LPAREN;
             if (iscall) {
@@ -1583,7 +1583,7 @@ lambda_java[] { ENTRY_DEBUG } :
 
 // handle the beginning of a function definition
 function_definition[int type_count, int token = SFUNCTION_DEFINITION] { ENTRY_DEBUG } :
-		{
+        {
             startNewMode(MODE_STATEMENT);
 
             startElement(token);
@@ -1652,7 +1652,7 @@ complete_noexcept_list[] { ENTRY_DEBUG } :
 
 // C# property method GET/SET/ADD/REMOVE
 property_method[int element] { ENTRY_DEBUG } :
-		{
+        {
             // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
 
@@ -1665,7 +1665,7 @@ property_method[int element] { ENTRY_DEBUG } :
 
 // handle the name portion of a property method
 property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
-		{
+        {
             startElement(SNAME);
         }
         (GET | SET | ADD | REMOVE)
@@ -8765,7 +8765,7 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG} :
             // statement
             auto mode = MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL;
             if (inLanguage(LANGUAGE_CSHARP))
-            	mode |= MODE_END_AT_BLOCK_NO_TERMINATE;
+                mode |= MODE_END_AT_BLOCK_NO_TERMINATE;
             startNewMode(mode);
 
             // start the enum definition

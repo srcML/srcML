@@ -137,10 +137,10 @@ int apply_xslt(srcml_archive* in_arch, const std::string& transform_input) {
 
 int apply_relaxng(srcml_archive* in_arch, const std::string& transform_input) {
 
-	// relaxng has file input, which may need to be processed
-	int status;
-	srcml_input_src relaxng_file(transform_input.c_str());
-	input_file(relaxng_file);
+    // relaxng has file input, which may need to be processed
+    int status;
+    srcml_input_src relaxng_file(transform_input.c_str());
+    input_file(relaxng_file);
 
     if (contains<int>(relaxng_file))
         status = srcml_append_transform_relaxng_fd(in_arch, relaxng_file);

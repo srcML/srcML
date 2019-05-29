@@ -33,33 +33,33 @@
 class ParseQueue {
 public:
 
-	ParseQueue(int max_threads, WriteQueue* write_queue)
-	    : pool(max_threads), wqueue(write_queue) {}
+    ParseQueue(int max_threads, WriteQueue* write_queue)
+        : pool(max_threads), wqueue(write_queue) {}
 
-	inline void schedule(std::shared_ptr<ParseRequest> pvalue) {
+    inline void schedule(std::shared_ptr<ParseRequest> pvalue) {
 
-		int next;
-		{
-			std::unique_lock<std::mutex> l(e);
+        int next;
+        {
+            std::unique_lock<std::mutex> l(e);
 
-	    	next = ++counter;
-		}
-		pvalue->position = next;
+            next = ++counter;
+        }
+        pvalue->position = next;
 
-	    // error passthrough to output for proper output in trace
-	    if (pvalue->status) {
-	        pvalue->unit = 0;
-	        wqueue->schedule(pvalue);
-	        return;
-	    }
+        // error passthrough to output for proper output in trace
+        if (pvalue->status) {
+            pvalue->unit = 0;
+            wqueue->schedule(pvalue);
+            return;
+        }
 
         pool.push(srcml_consume, pvalue, wqueue);
-	}
+    }
 
-	inline void wait() {
+    inline void wait() {
 
         pool.stop(true);
-	}
+    }
 
 private:
     ctpl::thread_pool pool;

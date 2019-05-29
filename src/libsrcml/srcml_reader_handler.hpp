@@ -204,8 +204,8 @@ private :
          * Return prefix as c string.
          */
        const char * get_prefix() const {
-	 if(prefix) return prefix->c_str();
-	 return 0;
+     if(prefix) return prefix->c_str();
+     return 0;
 
        }
 
@@ -636,7 +636,7 @@ public :
             srcdiff_stack.pop();
 
         auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
-	    auto state = (sax2_srcsax_handler*) ctxt->_private;
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
 
         if (collect_unit_body) {
 
@@ -644,8 +644,8 @@ public :
             unit->content_end = state->content_end;
             unit->insert_begin = state->insert_begin;
             unit->insert_end = state->insert_end;
-		    unit->srcml = std::move(state->unitsrcml);
-		    unit->src = std::move(state->unitsrc);
+            unit->srcml = std::move(state->unitsrcml);
+            unit->src = std::move(state->unitsrc);
             unit->loc = state->loc;
 
             // pause

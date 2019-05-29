@@ -111,7 +111,7 @@ set(srcMLParserOutputFiles
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.hpp
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.txt	
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.txt 
 )
 RunAntlr("${srcMLParserOutputFiles}"
     srcMLParser.g

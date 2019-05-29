@@ -59,22 +59,22 @@ namespace nstags
 
 // data structure for namespaces, prefixes and uri's
 typedef boost::multi_index::multi_index_container<Namespace,
-  	boost::multi_index::indexed_by<
-  		// default access, indexing
-    	boost::multi_index::random_access<
-      		boost::multi_index::tag<nstags::position>
-    	>,
-    	// view based on prefix
-	    boost::multi_index::hashed_non_unique<
-	      boost::multi_index::tag<nstags::prefix>,
-	      boost::multi_index::member<Namespace, std::string, &Namespace::prefix>
-	    >,
-    	// view based on uri
-	    boost::multi_index::hashed_non_unique<
-	      boost::multi_index::tag<nstags::uri>,
-	      boost::multi_index::member<Namespace, std::string, &Namespace::uri>
-	    >
-	>
+    boost::multi_index::indexed_by<
+        // default access, indexing
+        boost::multi_index::random_access<
+            boost::multi_index::tag<nstags::position>
+        >,
+        // view based on prefix
+        boost::multi_index::hashed_non_unique<
+          boost::multi_index::tag<nstags::prefix>,
+          boost::multi_index::member<Namespace, std::string, &Namespace::prefix>
+        >,
+        // view based on uri
+        boost::multi_index::hashed_non_unique<
+          boost::multi_index::tag<nstags::uri>,
+          boost::multi_index::member<Namespace, std::string, &Namespace::uri>
+        >
+    >
 > Namespaces;
 
 /** xml declaration standalone attribute */

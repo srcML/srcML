@@ -1,15 +1,15 @@
 <xsl:stylesheet
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:src="http://www.srcML.org/srcML/src"
-	xmlns="http://www.srcML.org/srcML/src"
-	xmlns:cpp="http://www.srcML.org/srcML/cpp"
-	exclude-result-prefixes="src"
-	version="1.0">
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:src="http://www.srcML.org/srcML/src"
+    xmlns="http://www.srcML.org/srcML/src"
+    xmlns:cpp="http://www.srcML.org/srcML/cpp"
+    exclude-result-prefixes="src"
+    version="1.0">
 
 <!--
-	nestif.xsl
+    nestif.xsl
 
-	Contents are duplicated to then and else parts of if
+    Contents are duplicated to then and else parts of if
 -->
 
 <xsl:import href="copy.xsl"/>

@@ -769,7 +769,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
     // skip over
-	state->base = ctxt->input->cur;
+    state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END_CHARS(ch, len);
 }
@@ -823,13 +823,13 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         state->unitsrcml.append((const char*) ch, len);
 
         // libxml2 passes ctxt->input->cur as ch, so then must increment to len
-	    state->base = ctxt->input->cur + len;
+        state->base = ctxt->input->cur + len;
 
     } else {
 
         // whitespace and escaped characters
         state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
-		state->base = ctxt->input->cur;
+        state->base = ctxt->input->cur;
     }
 
     SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());

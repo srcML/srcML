@@ -33,8 +33,8 @@ typedef void (*process_srcml)(const srcml_request_t& srcml_request, const srcml_
 typedef std::list<process_srcml> processing_steps_t;
 
 void srcml_execute(const srcml_request_t& srcml_request,
-				   processing_steps_t& processing_steps,
-				   const srcml_input_t& input_sources,
+                   processing_steps_t& processing_steps,
+                   const srcml_input_t& input_sources,
                    const srcml_output_dest& output);
 
 #endif

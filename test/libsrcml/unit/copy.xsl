@@ -1,13 +1,13 @@
 <xsl:stylesheet
-	xmlns="http://www.srcML.org/srcML/src"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:cpp="http://www.srcML.org/srcML/cpp"
-	version="1.0">
+    xmlns="http://www.srcML.org/srcML/src"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:cpp="http://www.srcML.org/srcML/cpp"
+    version="1.0">
 
 <!--
-	copy.xsl
+    copy.xsl
 
-	Identity transformation.
+    Identity transformation.
 -->
 
 <xsl:output method="xml" version="1.0" encoding="UTF-8" standalone="yes"/>

@@ -66,14 +66,14 @@ void pretty_print(const std::string& format, const std::vector<std::string>& arg
 }
 
 pretty_template_t split_template_sections(const std::string& pretty_input) {
-	std::string input_template = pretty_input;
+    std::string input_template = pretty_input;
 
-	size_t header_pos = input_template.find("{");
-	size_t footer_pos = input_template.find("}");
+    size_t header_pos = input_template.find("{");
+    size_t footer_pos = input_template.find("}");
 
-	pretty_template_t output_template;
+    pretty_template_t output_template;
 
-	// For %{ %} cases - we'll just pretend we didn't see them.
+    // For %{ %} cases - we'll just pretend we didn't see them.
     if ((footer_pos != 0) && input_template[footer_pos - 1] == '%') {
         input_template.erase(footer_pos - 1, 1);
         footer_pos = std::string::npos;
@@ -83,37 +83,37 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
         header_pos = std::string::npos;
     }
 
-	// Errors: you must have matching { and }.
-	if (header_pos == std::string::npos && footer_pos != std::string::npos) {
+    // Errors: you must have matching { and }.
+    if (header_pos == std::string::npos && footer_pos != std::string::npos) {
         SRCMLstatus(WARNING_MSG, "srcml: Pretty format is missing \"{\"");
-		output_template.error_location = (size_t)0;
-		return output_template;
-	}
-	if (header_pos != std::string::npos && footer_pos == std::string::npos) {
+        output_template.error_location = (size_t)0;
+        return output_template;
+    }
+    if (header_pos != std::string::npos && footer_pos == std::string::npos) {
         SRCMLstatus(WARNING_MSG, "srcml: Pretty format is missing \"}\"");
-		output_template.error_location = (size_t)input_template.length();
-		return output_template;
-	}
+        output_template.error_location = (size_t)input_template.length();
+        return output_template;
+    }
 
-	// Split up the header, body, and footer template strings
-	if (header_pos != std::string::npos && footer_pos != std::string::npos) {
-		if (header_pos > 0) {
-			output_template.header = input_template.substr(0, header_pos - 1);
+    // Split up the header, body, and footer template strings
+    if (header_pos != std::string::npos && footer_pos != std::string::npos) {
+        if (header_pos > 0) {
+            output_template.header = input_template.substr(0, header_pos - 1);
         }
 
-		if (header_pos + 2 <= footer_pos) {
-			output_template.body = input_template.substr(header_pos + 2, footer_pos - header_pos - 3);
+        if (header_pos + 2 <= footer_pos) {
+            output_template.body = input_template.substr(header_pos + 2, footer_pos - header_pos - 3);
         }
 
-		if (!(footer_pos + 2 > input_template.length())) {
-			output_template.footer = input_template.substr(footer_pos + 2);
+        if (!(footer_pos + 2 > input_template.length())) {
+            output_template.footer = input_template.substr(footer_pos + 2);
         }
-	}
-	else {
-		output_template.body = input_template;
-	}
+    }
+    else {
+        output_template.body = input_template;
+    }
 
-	return output_template;
+    return output_template;
 }
 
 boost::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, const std::string& allowed_args, size_t ns_size) {
@@ -352,10 +352,10 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 // TODO: RETURN REAL ERRORS
 int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, const srcml_request_t& srcml_request) {
     int unit_num = srcml_request.unit;
-	pretty_template_t output_template = split_template_sections(pretty_input);
+    pretty_template_t output_template = split_template_sections(pretty_input);
     size_t ns_size = srcml_archive_get_namespace_size(srcml_arch);
 
-	if (output_template.header) {
+    if (output_template.header) {
         output_template.error_location = parse_templates(*output_template.header, output_template.header_args, valid_header_args, ns_size);
         if (output_template.error_location) {
             SRCMLstatus(WARNING_MSG, "srcml: header format error:\n" +
@@ -363,7 +363,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, con
             show_carret_error(*output_template.error_location);
             return -1;
         }
-	}
+    }
 
     if (output_template.body) {
         output_template.error_location = parse_templates(*output_template.body, output_template.body_args, valid_body_args, ns_size);
@@ -375,7 +375,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, con
         }
     }
 
-	if (output_template.footer) {
+    if (output_template.footer) {
         output_template.error_location = parse_templates(*output_template.footer, output_template.footer_args, valid_footer_args, ns_size);
         if (output_template.error_location) {
             SRCMLstatus(WARNING_MSG, "srcml: footer format error:\n" +
@@ -383,7 +383,7 @@ int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, con
             show_carret_error(*output_template.error_location);
             return -1;
         }
-	}
+    }
 
     display_template(srcml_arch, output_template, ns_size, unit_num, option(SRCML_COMMAND_XML));
 

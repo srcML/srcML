@@ -39,7 +39,7 @@ header {
 }
 
 options {
-	language="Cpp";
+    language="Cpp";
     namespaceAntlr="antlr";
     namespaceStd="std";
 }
@@ -90,7 +90,7 @@ int dquote_count = 0;
 OPTION_TYPE options;
 
 CommentTextLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), delimiter1("")
+    : antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), delimiter1("")
 {}
 
 private:

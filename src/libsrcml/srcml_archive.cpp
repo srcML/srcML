@@ -476,7 +476,7 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
         // @todo could easily make these on the root by setting the flags to NS_ROOT
         view.modify(it, [prefix](Namespace& ns) { ns.prefix = prefix; });
     } else {
-		archive->namespaces.push_back({ prefix, uri, NS_REGISTERED });
+        archive->namespaces.push_back({ prefix, uri, NS_REGISTERED });
     }
 
     // namespaces for options enable the options automatically

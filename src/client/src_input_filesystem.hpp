@@ -28,8 +28,8 @@
 #include <ParseQueue.hpp>
 
 int src_input_filesystem(ParseQueue& queue,
-  						  srcml_archive* srcml_arch,
-  						  const srcml_request_t& srcml_request,
-						  const std::string& input_filename);
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const std::string& input_filename);
 
 #endif

@@ -21,30 +21,30 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <block>{
-	<if_stmt><if>if <condition>(<expr><operator>(</operator><call><name>aurora_paranoia_check</name><argument_list>(<argument><expr><name>port</name></expr></argument>, <argument><expr><name><name>tty</name><operator>-&gt;</operator><name>name</name></name></expr></argument>, <argument><expr><literal type="string">"aurora_open"</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></condition> <block>{
+    <if_stmt><if>if <condition>(<expr><operator>(</operator><call><name>aurora_paranoia_check</name><argument_list>(<argument><expr><name>port</name></expr></argument>, <argument><expr><name><name>tty</name><operator>-&gt;</operator><name>name</name></name></expr></argument>, <argument><expr><literal type="string">"aurora_open"</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></condition> <block>{
 <cpp:ifdef>#<cpp:directive>ifdef</cpp:directive> <name>AURORA_DEBUG</name></cpp:ifdef>
-		<expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 <cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-	}</block></if></if_stmt>
+    }</block></if></if_stmt>
 }</block>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <block>{
 <return>return <macro><name>snprintf</name> <argument_list>(<argument>buf</argument>, <argument>size</argument>,
-		 <argument>({ char *s;
+         <argument>({ char *s;
                  switch (urb-&gt;dev-&gt;speed) {
                  case USB_SPEED_LOW:    s = <literal type="string">"ls"</literal>; break;
                  default:               s = <literal type="string">"?"</literal>; break;
                  }; s; })</argument>,
-		 <argument>urb-&gt;actual_length</argument>, <argument>urb-&gt;transfer_buffer_length</argument>)</argument_list></macro>;</return>
+         <argument>urb-&gt;actual_length</argument>, <argument>urb-&gt;transfer_buffer_length</argument>)</argument_list></macro>;</return>
 }</block>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <block>{
-	<switch>switch <condition>(<expr><call><name>IP_VS_FWD_METHOD</name><argument_list>(<argument><expr><name>cp</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{
-	}</block></switch>
+    <switch>switch <condition>(<expr><call><name>IP_VS_FWD_METHOD</name><argument_list>(<argument><expr><name>cp</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{
+    }</block></switch>
 }</block>
 </unit>
 

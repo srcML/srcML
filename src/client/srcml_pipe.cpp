@@ -52,7 +52,7 @@ void srcml_pipe(srcml_input_src& input, srcml_pipe_process process, srcml_reques
     fds[0] = _open_osfhandle((intptr_t)read_pipe, _O_RDONLY);
 #endif
 
-   	// create a single thread to prefix decompression
+    // create a single thread to prefix decompression
     lthreads.push_back(new std::thread(
             process,
             srcml_request,

@@ -36,7 +36,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file);
 
 int src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
-						  const srcml_request_t& srcml_request,
+                          const srcml_request_t& srcml_request,
                           const srcml_input_src& input);
 
 #endif

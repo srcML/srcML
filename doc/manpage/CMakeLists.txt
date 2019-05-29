@@ -23,10 +23,10 @@ set(REMOTE_MANPAGE_NAME srcml-${PROJECT_VERSION}.troff)
 
 # For installation only, download the man page
 if(NOT BUILD_CLIENT_DOC)
-	set(MANPAGE_URL http://gehry.sdml.cs.kent.edu/build/${REMOTE_MANPAGE_NAME})
-	message(STATUS "Downloading manpage from ${MANPAGE_URL}")
-	file(DOWNLOAD ${MANPAGE_URL} ${CMAKE_BINARY_DIR}/srcml.1)
-	return()
+    set(MANPAGE_URL http://gehry.sdml.cs.kent.edu/build/${REMOTE_MANPAGE_NAME})
+    message(STATUS "Downloading manpage from ${MANPAGE_URL}")
+    file(DOWNLOAD ${MANPAGE_URL} ${CMAKE_BINARY_DIR}/srcml.1)
+    return()
 endif()
 
 # Upload the generated manpage for download by other installs

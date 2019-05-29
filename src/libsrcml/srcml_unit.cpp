@@ -911,7 +911,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
 
     // redo the start element with the namespaces found in the document
     srcml_write_start_unit(unit);
-	char* start_tag = (char*) xmlBufferDetach(unit->output_buffer);
+    char* start_tag = (char*) xmlBufferDetach(unit->output_buffer);
 
     // recreate the unit with the newly generated start tag, which
     // contains all the used namespaces

@@ -884,7 +884,7 @@ LIBSRCML_DECL int srcml_archive_is_fragment(const struct srcml_archive* archive)
 LIBSRCML_DECL int srcml_archive_enable_fragment(struct srcml_archive* archive);
 
 /** Disable the output xml as a fragment, i.e., will contain a <unit> element
-	This is the default
+  This is the default
  * @param archive A srcml_archive opened for writing
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
@@ -1200,7 +1200,7 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
 /**
  * Transformation result types
  */
-#define SRCML_RESULTS_NONE 	  0
+#define SRCML_RESULTS_NONE    0
 #define SRCML_RESULTS_UNITS   1
 #define SRCML_RESULTS_BOOLEAN 2
 #define SRCML_RESULTS_NUMBER  3
@@ -1210,7 +1210,7 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
  * Transformation result. Passed to srcml_unit_apply_transforms() to collect results of transformation
  */
 struct srcml_transformation_result_t {
-	/** Transformation result type */
+  /** Transformation result type */
     int type;
     /** Number of units for type SRCML_RESULTS_UNIT */
     int num_units;

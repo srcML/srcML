@@ -29,30 +29,30 @@
 class OpenFileLimiter {
 public:
 
-	static const int MAX_OPEN_FILES = 200;
+    static const int MAX_OPEN_FILES = 200;
 
-	static void open() {
-		std::unique_lock<std::mutex> l(e);
+    static void open() {
+        std::unique_lock<std::mutex> l(e);
 
         while (open_files > MAX_OPEN_FILES) {
             cv.wait(l);
         }
 
-		++open_files;
-	}
+        ++open_files;
+    }
 
-	static void close() {
-		std::unique_lock<std::mutex> l(e);
+    static void close() {
+        std::unique_lock<std::mutex> l(e);
 
-		--open_files;
+        --open_files;
 
-	    cv.notify_one();
-	}
+        cv.notify_one();
+    }
 
 private:
     static std::mutex e;
     static std::condition_variable cv;
-	static int open_files;
+    static int open_files;
 };
 
 #endif

@@ -31,9 +31,9 @@
 #include <srcml_input_src.hpp>
 
 int src_input_filelist(ParseQueue& queue,
- 						srcml_archive* srcml_arch,
-						const srcml_request_t& srcml_request,
-						const std::string& input_filename,
-						const srcml_output_dest& destination);
+                        srcml_archive* srcml_arch,
+                        const srcml_request_t& srcml_request,
+                        const std::string& input_filename,
+                        const srcml_output_dest& destination);
 
 #endif
