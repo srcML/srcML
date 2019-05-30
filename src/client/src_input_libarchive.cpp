@@ -110,9 +110,16 @@ int src_input_libarchive(ParseQueue& queue,
             return 0;
         }
 
+        auto filename = input_file.resource;
+        auto it = filename.begin();
+        while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
+            filename.erase(it, std::next(std::next(it)));
+            it = filename.begin();
+        }
+
         // form the parsing request
         std::shared_ptr<ParseRequest> prequest(new ParseRequest);
-        prequest->filename = input_file.resource;
+        prequest->filename = filename;
         prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
@@ -164,9 +171,10 @@ int src_input_libarchive(ParseQueue& queue,
         // archive entry filename for non-archive input is "data"
         if (filename.empty() || filename == "data") {
             filename = input_file.resource;
-            std::string::iterator it = filename.begin();
-            while (*it == '.' || *it == '/') {
-                filename.erase(it);
+            auto it = filename.begin();
+            while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
+                filename.erase(it, std::next(std::next(it)));
+                it = filename.begin();
             }
         }
 

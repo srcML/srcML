@@ -88,8 +88,10 @@ void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueu
             original_filename = *request->filename;
             
             // Cleanup filename
-            while ((*request->filename)[0] == '.' || (*request->filename)[0] == '/') {
-                request->filename->erase(0,1);
+            auto it = request->filename->begin();
+            while (*it == '.' && std::next(it) != request->filename->end() && *std::next(it) == '/') {
+                request->filename->erase(it, std::next(std::next(it)));
+                it = request->filename->begin();
             }
             
             if ((status = srcml_unit_set_filename(request->unit, request->filename->c_str())) != SRCML_STATUS_OK)
