@@ -52,7 +52,7 @@ static xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buf
  *
  * @returns srcsax_context context to be used for srcML parsing.
  */
-srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input) {
+srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlParserInputBuffer> input) {
 
     if (input == 0)
         return 0;
@@ -66,15 +66,13 @@ srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPt
     try {
         context = new srcsax_context();
     } catch (...) {
-        xmlFreeParserInputBuffer(input);
         return 0;
     }
 
-    context->input = input;
+    context->input = std::move(input);
 
-    xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input.get(), encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
     if (libxml2_context == nullptr) {
-        xmlFreeParserInputBuffer(input);
         delete context;
         return 0;
     }
@@ -99,9 +97,6 @@ void srcsax_free_context(srcsax_context* context) {
     xmlParserInputPtr stream = inputPop(context->libxml2_context);
     stream->buf = 0;
     xmlFreeInputStream(stream);
-
-    if (context->input)
-        xmlFreeParserInputBuffer(context->input);
 
     if (context->libxml2_context)
         xmlFreeParserCtxt(context->libxml2_context);

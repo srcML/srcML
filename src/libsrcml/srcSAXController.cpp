@@ -33,9 +33,9 @@
  *
  * Constructor
  */
-srcSAXController::srcSAXController(xmlParserInputBufferPtr input) {
+srcSAXController::srcSAXController(std::unique_ptr<xmlParserInputBuffer> input) {
 
-    context = srcsax_create_context_parser_input_buffer(input);
+    context = srcsax_create_context_parser_input_buffer(std::move(input));
     if (context == NULL)
         throw std::string("File does not exist");
 }
