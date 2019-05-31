@@ -100,6 +100,9 @@ void srcsax_free_context(srcsax_context* context) {
     stream->buf = 0;
     xmlFreeInputStream(stream);
 
+    if (context->input)
+        xmlFreeParserInputBuffer(context->input);
+
     if (context->libxml2_context)
         xmlFreeParserCtxt(context->libxml2_context);
 
