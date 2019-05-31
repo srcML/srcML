@@ -52,8 +52,8 @@ int src_input_file(ParseQueue& queue,
     prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
 
     if (prequest->language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
-                prequest->language = l;
+        if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
+            prequest->language = l;
     
     prequest->disk_filename = input.resource;
 
