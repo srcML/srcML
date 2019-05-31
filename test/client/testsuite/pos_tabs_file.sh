@@ -48,3 +48,6 @@ check sub/a.cpp.xml "$fsrcml"
 
 srcml --position --tabs 4 -o sub/a.cpp.xml sub/a.cpp
 check sub/a.cpp.xml "$fsrcml"
+
+srcml --xmlns:pos=http://www.srcML.org/srcML/position --tabs 4 -o sub/a.cpp.xml sub/a.cpp
+check sub/a.cpp.xml "$fsrcml"
