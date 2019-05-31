@@ -79,4 +79,4 @@ elseif(NOT WIN32)
 endif()
 
 install(TARGETS srcml)
-message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "CMake install prefix: ${CMAKE_INSTALL_PREFIX}")

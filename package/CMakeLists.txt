@@ -39,7 +39,7 @@ else()
         set(CPACK_GENERATOR "RPM;TGZ;TBZ2")
     endif()
 endif()
-message(STATUS "CPACK_GENERATOR ${CPACK_GENERATOR}")
+message(STATUS "CPack generators: ${CPACK_GENERATOR}")
 
 # Use the same directories as install
 if(NOT CPACK_PACKAGING_INSTALL_PREFIX)
