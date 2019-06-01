@@ -33,6 +33,7 @@
 #include <cstring>
 #include <ParserTest.hpp>
 #include <OpenFileLimiter.hpp>
+#include <srcml_utilities.hpp>
 
 // Public consumption thread function
 void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& /* destination */) {
@@ -162,9 +163,9 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
                     char* buffer = 0;
                     size_t size = 0;
                     srcml_archive_write_open_memory(sarchive, &buffer, &size);
-                    auto aunit = srcml_unit_clone(request->unit);
-                    srcml_unit_parse_memory(aunit, "", 0);
-                    srcml_archive_write_unit(sarchive, aunit);
+                    std::unique_ptr<srcml_unit> aunit(srcml_unit_clone(request->unit));
+                    srcml_unit_parse_memory(aunit.get(), "", 0);
+                    srcml_archive_write_unit(sarchive, aunit.get());
                     srcml_archive_close(sarchive);
                     status = srcml_archive_write_string(request->srcml_arch, buffer, (int) size - 51);
                     status = srcml_archive_write_string(request->srcml_arch, ">", 1);
