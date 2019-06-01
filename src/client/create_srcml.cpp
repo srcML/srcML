@@ -42,6 +42,7 @@
 #include <SRCMLStatus.hpp>
 #include <ParserTest.hpp>
 #include <cstring>
+#include <libarchive_utilities.hpp>
 
 int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,

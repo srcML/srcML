@@ -35,14 +35,14 @@
 
 static srcml_archive* srcml_read_open_internal(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
 
-    srcml_archive* arch = srcml_archive_create();
+    std::unique_ptr<srcml_archive> arch(srcml_archive_create());
     if (!arch)
         return 0;
 
     int status = SRCML_STATUS_OK;
 
     if (revision) {
-        status = srcml_archive_set_srcdiff_revision(arch, *revision);
+        status = srcml_archive_set_srcdiff_revision(arch.get(), *revision);
         if (status != SRCML_STATUS_OK)
             return 0;
     }
@@ -73,16 +73,16 @@ static srcml_archive* srcml_read_open_internal(const srcml_input_src& input_sour
 
     // open input source
     if (curinput.fd) {
-        status = srcml_archive_read_open_fd(arch, *curinput.fd);
+        status = srcml_archive_read_open_fd(arch.get(), *curinput.fd);
     } else {
-        status = srcml_archive_read_open(arch, input_source);
+        status = srcml_archive_read_open(arch.get(), input_source);
     }
     if (status != SRCML_STATUS_OK) {
         SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(input_source.filename));
         return 0;
     }
 
-    return arch;
+    return arch.release();
 }
 
 // create srcml from the current request
