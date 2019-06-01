@@ -132,7 +132,7 @@ int src_input_libarchive(ParseQueue& queue,
         return 1;
     }
 
-    archive* arch = libarchive_input_file(input_file);
+    std::unique_ptr<archive> arch(libarchive_input_file(input_file));
     if (!arch) {
         return 0;
     }
@@ -144,7 +144,7 @@ int src_input_libarchive(ParseQueue& queue,
 
     int status = ARCHIVE_OK;
     while (status == ARCHIVE_OK &&
-           (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
+           (((status = archive_read_next_header(arch.get(), &entry)) == ARCHIVE_OK) ||
             (status == ARCHIVE_EOF && !count))) {
 
         if (status == ARCHIVE_EOF && getCurlErrors())
@@ -247,7 +247,7 @@ int src_input_libarchive(ParseQueue& queue,
 #else
             int64_t offset;
 #endif
-            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
+            while (status == ARCHIVE_OK && archive_read_data_block(arch.get(), (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
             }
 
@@ -264,11 +264,6 @@ int src_input_libarchive(ParseQueue& queue,
 
         ++count;
     }
-#if ARCHIVE_VERSION_NUMBER >= 3000000
-    archive_read_free(arch);
-#else
-    archive_read_finish(arch);
-#endif
 
     return count;
 }
