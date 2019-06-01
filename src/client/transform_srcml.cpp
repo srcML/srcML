@@ -27,6 +27,39 @@
 #include <string>
 #include <SRCMLStatus.hpp>
 
+/*
+    normalize the xpath 
+    src:function -> //src:function
+    count(src:function) -> count(//src:function)
+    //src:function -> //src:function
+    call(src:function) -> call(//src:function)
+*/
+std::string normalize_xpath(std::string nxpath) {
+
+    // trim any leading whitespace
+    while (nxpath[0] == ' ')
+        nxpath.erase(0, 1);
+
+    if (nxpath.substr(0, 5) == "count") {
+
+        while (nxpath[5] == ' ')
+            nxpath.erase(5, 1);
+
+        if (nxpath[5] == '(') {
+
+            while (nxpath[6] == ' ')
+                nxpath.erase(6, 1);
+
+            if (nxpath[6] != '/')
+                nxpath.insert(6, "//");
+        }
+    } else if (nxpath[0] != '/' && nxpath[0] != '(') {
+        nxpath.insert(0, "//");
+    }
+
+    return nxpath;
+}
+
 int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
 
     auto element = xpath_support.first;
@@ -81,17 +114,19 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
     // @todo This doesn't make sense in all cases, and should be revisited
     srcml_archive_disable_solitary_unit(out_arch);
 
+    std::string nxpath = normalize_xpath(transform_input.c_str());
+
     // Call appropriate XPath transform
     if (element && attribute) {
 
-        int status = srcml_append_transform_xpath_element(in_arch, transform_input.c_str(),
+        int status = srcml_append_transform_xpath_element(in_arch, nxpath.c_str(),
             element->prefix->c_str(),
             element_uri,
             element->name->c_str());
         if (status != SRCML_STATUS_OK)
             return -1;
 
-        return srcml_append_transform_xpath_attribute(in_arch, transform_input.c_str(),
+        return srcml_append_transform_xpath_attribute(in_arch, nxpath.c_str(),
             attribute->prefix->c_str(),
             attribute_uri,
             attribute->name->c_str(),
@@ -99,14 +134,14 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
     } else if (element) {
 
-        return srcml_append_transform_xpath_element(in_arch, transform_input.c_str(),
+        return srcml_append_transform_xpath_element(in_arch, nxpath.c_str(),
             element->prefix->c_str(),
             element_uri,
             element->name->c_str());
 
     } else if (attribute) {
 
-        return srcml_append_transform_xpath_attribute(in_arch, transform_input.c_str(),
+        return srcml_append_transform_xpath_attribute(in_arch, nxpath.c_str(),
             attribute->prefix->c_str(),
             attribute_uri,
             attribute->name->c_str(),
@@ -114,7 +149,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
     } else {
 
-        return srcml_append_transform_xpath(in_arch, transform_input.c_str());
+        return srcml_append_transform_xpath(in_arch, nxpath.c_str());
     }
 }
 
