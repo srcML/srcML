@@ -367,6 +367,9 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_close(srcml_arch.get());
     }
 
+    if (destination.fd)
+        close(*destination.fd);
+
     if (SRCMLStatus::errors())
         exit(1);
 }
