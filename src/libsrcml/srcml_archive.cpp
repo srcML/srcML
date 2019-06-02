@@ -1156,7 +1156,6 @@ int srcml_archive_read_open_fd(struct srcml_archive* archive, int srcml_fd) {
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateFd(srcml_fd, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE));
-    input->closecallback = nullptr;
 
     return srcml_archive_read_open_internal(archive, std::move(input));
 }

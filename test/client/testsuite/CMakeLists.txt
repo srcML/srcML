@@ -24,5 +24,6 @@ foreach(CLIENT_TEST ${CLIENT_TESTS})
 
     if(NOT TEST_NAME STREQUAL "framework_test.sh")
         add_test(NAME ${TEST_NAME} COMMAND ${CLIENT_TEST})
+        set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 10) 
     endif()
 endforeach()
