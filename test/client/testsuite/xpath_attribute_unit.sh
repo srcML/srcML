@@ -27,6 +27,18 @@ define result <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+# test setting the attribute on xpath query results
+define resultnop <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pre="foo.com" revision="REVISION">
+
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
+
+	</unit>
+	STDOUT
+
+xmlcheck "$resultstdin"
 xmlcheck "$result"
 createfile a.cpp "a;
 "
@@ -37,6 +49,12 @@ check "$result"
 
 srcml --xpath="//src:name" a.cpp --xmlns:pre=foo.com --attribute="pre:attr=value"
 check "$result"
+
+srcml --xpath="src:name" a.cpp --xmlns:pre=foo.com --attribute="pre:attr=value"
+check "$resultnop"
+
+srcml --xpath="name" a.cpp --xmlns:pre=foo.com --attribute="pre:attr=value"
+check "$resultnop"
 
 # from standard input
 echo "a;" | srcml -l C++ --xpath="//src:name" --xmlns:pre=foo.com --attribute="pre:attr=value"
