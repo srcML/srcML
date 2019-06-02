@@ -29,6 +29,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstring>
+#include <srcml_utilities.hpp>
 
 namespace {
 
@@ -156,16 +157,16 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
     for (const auto& input : src_input) {
         // create the output srcml archive
-        srcml_archive* srcml_arch = srcml_archive_create();
+        std::unique_ptr<srcml_archive> srcml_arch(srcml_archive_create());
 
         int status = SRCML_STATUS_OK;
         if (contains<int>(input)) {
-            status = srcml_archive_read_open_fd(srcml_arch, input);
+            status = srcml_archive_read_open_fd(srcml_arch.get(), input);
         }
         else if (contains<FILE*>(input)){
-            status = srcml_archive_read_open_FILE(srcml_arch, input);
+            status = srcml_archive_read_open_FILE(srcml_arch.get(), input);
         } else {
-            status = srcml_archive_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str()));
+            status = srcml_archive_read_open_filename(srcml_arch.get(), (src_prefix_resource(input).c_str()));
         }
         if (status != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml input cannot not be opened.");
@@ -174,7 +175,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         // Overrides all others Perform a pretty output
         if (srcml_request.pretty_format) {
-            srcml_pretty(srcml_arch, *srcml_request.pretty_format, srcml_request);
+            srcml_pretty(srcml_arch.get(), *srcml_request.pretty_format, srcml_request);
             return;
         }
 
@@ -233,31 +234,28 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         if (srcml_request.xmlns_prefix_query) {
-            const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch, srcml_request.xmlns_prefix_query->c_str());
+            const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch.get(), srcml_request.xmlns_prefix_query->c_str());
             if (prefix) {
                 std::cout << prefix << '\n';
             }
         }
 
         if (!pretty_meta_header.empty() || !pretty_meta_body.empty())
-            srcml_pretty(srcml_arch, pretty_meta_header + " { " + pretty_meta_body + " } ", srcml_request);
+            srcml_pretty(srcml_arch.get(), pretty_meta_header + " { " + pretty_meta_body + " } ", srcml_request);
 
         // units
         if (option(SRCML_COMMAND_UNITS))
-            std::cout << srcml_unit_count(srcml_arch) << "\n";
+            std::cout << srcml_unit_count(srcml_arch.get()) << "\n";
 
         // srcml info
         if (option(SRCML_COMMAND_INFO))
-            srcml_display_info(srcml_arch, false);
+            srcml_display_info(srcml_arch.get(), false);
 
         // srcml long info
         if (option(SRCML_COMMAND_LONGINFO))
-            srcml_display_info(srcml_arch, true);
+            srcml_display_info(srcml_arch.get(), true);
 
         if (option(SRCML_COMMAND_LIST))
-            srcml_list(srcml_arch);
-
-        srcml_archive_close(srcml_arch);
-        srcml_archive_free(srcml_arch);
+            srcml_list(srcml_arch.get());
     }
 }
