@@ -35,6 +35,7 @@
 
 static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
 
+    OpenFileLimiter::open();
     std::unique_ptr<srcml_archive> arch(srcml_archive_create());
     if (!arch)
         return 0;
