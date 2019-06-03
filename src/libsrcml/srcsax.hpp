@@ -23,6 +23,7 @@
 #include <srcsax_handler.hpp>
 
 #include <libxml/parser.h>
+#include <libxml2_utilities.hpp>
 
 /**
  * srcsax_context
@@ -49,14 +50,14 @@ public:
     /* Internal context handling NOT FOR PUBLIC USE */
 
     /** xml parser input buffer */
-    xmlParserInputBufferPtr input = nullptr;
+    std::unique_ptr<xmlParserInputBuffer> input;
 
     /** internally used libxml2 context */
     xmlParserCtxtPtr libxml2_context = nullptr;
 };
 
 /* srcSAX context creation/open functions */
-srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
+srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlParserInputBuffer> input);
 
 /* srcSAX free function */
 void srcsax_free_context(srcsax_context * context);

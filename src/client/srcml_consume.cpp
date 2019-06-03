@@ -37,7 +37,7 @@
 void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueue* write_queue) {
 
     // error passthrough to output for proper output in trace
-    if (request->input_archive || request->status) {
+    if (/* request->input_archive || */ request->status) {
         request->unit = 0;
         write_queue->schedule(request);
         return;
@@ -71,15 +71,16 @@ void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueu
 
         // create the unit start tag
         if (!request->unit) {
-            if (!(request->unit = srcml_unit_create(request->srcml_arch))) {
+            request->unit.reset(srcml_unit_create(request->srcml_arch));
+            if (!request->unit) {
                 throw SRCML_STATUS_ERROR;
             }
         }
 
         // language attribute, required if from memory
         // @todo if request has a language different from input, need to srcml->src->srcml 
-        if (srcml_unit_get_language(request->unit) == 0 || srcml_unit_get_language(request->unit)[0] == '\0')
-            if ((status = srcml_unit_set_language(request->unit, request->language.c_str())) != SRCML_STATUS_OK)
+        if (srcml_unit_get_language(request->unit.get()) == 0 || srcml_unit_get_language(request->unit.get())[0] == '\0')
+            if ((status = srcml_unit_set_language(request->unit.get(), request->language.c_str())) != SRCML_STATUS_OK)
                 throw status;
 
         // (optional) filename attribute
@@ -94,26 +95,26 @@ void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueu
                 it = request->filename->begin();
             }
             
-            if ((status = srcml_unit_set_filename(request->unit, request->filename->c_str())) != SRCML_STATUS_OK)
+            if ((status = srcml_unit_set_filename(request->unit.get(), request->filename->c_str())) != SRCML_STATUS_OK)
                 throw status;
         }
 
         // (optional) version attribute
-        if (request->version && ((status = srcml_unit_set_version(request->unit, request->version->c_str())) != SRCML_STATUS_OK))
+        if (request->version && ((status = srcml_unit_set_version(request->unit.get(), request->version->c_str())) != SRCML_STATUS_OK))
             throw status;
 
         // (optional) timestamp attribute
         if (request->time_stamp)
-            srcml_unit_set_timestamp(request->unit, request->time_stamp->c_str());
+            srcml_unit_set_timestamp(request->unit.get(), request->time_stamp->c_str());
 
         // parse the buffer/file, timing as we go
         Timer parsetime;
 
         if (request->disk_filename) {
-            status = srcml_unit_parse_filename(request->unit, request->disk_filename->c_str());
+            status = srcml_unit_parse_filename(request->unit.get(), request->disk_filename->c_str());
         }
         else if (request->needsparsing) {
-            status = srcml_unit_parse_memory(request->unit, request->buffer.data(), request->buffer.size());
+            status = srcml_unit_parse_memory(request->unit.get(), request->buffer.data(), request->buffer.size());
         }
         if (status != SRCML_STATUS_OK) {
             request->status = status;
@@ -124,18 +125,15 @@ void srcml_consume(int /* n */, std::shared_ptr<ParseRequest> request, WriteQueu
         request->results.type = SRCML_RESULTS_UNITS;
 
         // perform any transformations and add them to the request
-        srcml_unit_apply_transforms(request->srcml_arch, request->unit, &(request->results));
+        srcml_unit_apply_transforms(request->srcml_arch, request->unit.get(), &(request->results));
         if (request->results.type == SRCML_RESULTS_NONE) {
-            srcml_unit_free(request->unit);
-            request->unit = 0;
+            request->unit.reset();
         }
 
     } catch (...) {
 
         request->errormsg = "srcml: Unable to open file " + original_filename;
-        if (request->unit)
-            srcml_unit_free(request->unit);
-        request->unit = 0;
+        request->unit.reset();
     }
 
     // schedule unit for output

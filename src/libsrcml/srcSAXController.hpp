@@ -64,7 +64,7 @@ public :
      *
      * Constructor
      */
-    srcSAXController(xmlParserInputBufferPtr input);
+    srcSAXController(std::unique_ptr<xmlParserInputBuffer> input);
 
     /**
      * getCtxt
