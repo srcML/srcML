@@ -37,10 +37,8 @@ int srcml_input_srcml(ParseQueue& queue,
                        const srcml_input_src& srcml_input,
                        const boost::optional<size_t> & revision) {
 
-    // keep total number of open files under control
-    OpenFileLimiter::open();
-
     // open the srcml input archive
+    OpenFileLimiter::open();
     std::shared_ptr<srcml_archive> srcml_input_archive(srcml_archive_create(), srcml_archive_deleter);
     if (!srcml_input_archive) {
         SRCMLstatus(WARNING_MSG, "srcml: Internal libsrcml error");

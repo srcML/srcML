@@ -151,6 +151,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
     for (const auto& input : src_input) {
         // create the output srcml archive
+        OpenFileLimiter::open();
         std::unique_ptr<srcml_archive> srcml_arch(srcml_archive_create());
 
         int status = SRCML_STATUS_OK;

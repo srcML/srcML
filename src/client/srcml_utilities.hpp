@@ -25,12 +25,15 @@
 #include <archive_entry.h>
 #include <srcml.h>
 #include <memory>
+#include <OpenFileLimiter.hpp>
 
 // std::shared_ptr deleter for srcml archive
 // some compilers will not use the default_delete<srcml_archive> for std::shared_ptr
 inline void srcml_archive_deleter(srcml_archive* arch) { 
     srcml_archive_close(arch);
     srcml_archive_free(arch);
+
+    OpenFileLimiter::close();
 }
 
 // std::unique_ptr deleter functions for srcml
@@ -43,6 +46,8 @@ namespace std {
         void operator()(srcml_archive* arch) { 
             srcml_archive_close(arch);
             srcml_archive_free(arch);
+
+            OpenFileLimiter::close();
         }
     };
 

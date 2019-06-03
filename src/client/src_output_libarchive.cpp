@@ -68,7 +68,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         archive_entry_set_filetype(entry.get(), AE_IFREG);
         archive_entry_set_perm(entry.get(), 0644);
 
-        time_t now = time(NULL);
+        time_t now = time(nullptr);
         archive_entry_set_atime(entry.get(), now, 0);
         archive_entry_set_ctime(entry.get(), now, 0);
         archive_entry_set_mtime(entry.get(), now, 0);
