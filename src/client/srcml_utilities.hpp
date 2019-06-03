@@ -54,4 +54,8 @@ namespace std {
     };
 }
 
+inline std::unique_ptr<srcml_archive> srcml_archive_read_factory(srcml_archive* archive) {
+    return std::unique_ptr<srcml_archive>(archive);
+}
+
 #endif

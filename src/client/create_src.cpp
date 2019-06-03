@@ -33,7 +33,7 @@
 #include <libarchive_utilities.hpp>
 #include <srcml_utilities.hpp>
 
-static srcml_archive* srcml_read_open_internal(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
+static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
 
     std::unique_ptr<srcml_archive> arch(srcml_archive_create());
     if (!arch)
@@ -82,7 +82,7 @@ static srcml_archive* srcml_read_open_internal(const srcml_input_src& input_sour
         return 0;
     }
 
-    return arch.release();
+    return arch;
 }
 
 // create srcml from the current request
@@ -97,7 +97,7 @@ void create_src(const srcml_request_t& srcml_request,
         TraceLog log;
 
         for (const auto& input_source : input_sources) {
-            std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_source, srcml_request.revision));
+            auto arch(srcml_read_open_internal(input_source, srcml_request.revision));
 
             src_output_filesystem(arch.get(), destination, log);
         }
@@ -107,7 +107,7 @@ void create_src(const srcml_request_t& srcml_request,
 
         // srcml->src extract to stdout
 
-        std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
+        auto arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
 
         // move to the correct unit
         for (int i = 1; i < srcml_request.unit; ++i) {
@@ -156,7 +156,7 @@ void create_src(const srcml_request_t& srcml_request,
 
     } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
 
-        std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
+        auto arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
 
         // move to the correct unit
         for (int i = 1; i < srcml_request.unit; ++i) {
@@ -218,7 +218,7 @@ void create_src(const srcml_request_t& srcml_request,
         // extract all the srcml archives to this libarchive
         for (const auto& input_source : input_sources) {
 
-            std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_source, srcml_request.revision));
+            auto arch(srcml_read_open_internal(input_source, srcml_request.revision));
 
             // extract this srcml archive to the source archive
             src_output_libarchive(arch.get(), ar.get());
