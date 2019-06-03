@@ -41,9 +41,6 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     if (!request)
         return;
 
-    if (request->input_archive.use_count() == 1)
-        OpenFileLimiter::close();
-
     if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
         if (option(SRCML_COMMAND_VERBOSE))
