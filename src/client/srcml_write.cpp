@@ -41,13 +41,8 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     if (!request)
         return;
 
-    if (request->input_archive) {
-        srcml_archive_close(request->input_archive);
-        srcml_archive_free(request->input_archive);
-        request->input_archive = nullptr;
+    if (request->input_archive.use_count() == 1)
         OpenFileLimiter::close();
-        return;
-    }
 
     if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
@@ -68,6 +63,11 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         return;
     }
 
+    srcml_archive* output_archive = request->srcml_arch;
+
+    // created for per-unit archive, close() and free() automatic
+    std::unique_ptr<srcml_archive> cloned;
+
     // open the archive (if per-unit)
     if (request->unit && option(SRCML_COMMAND_NOARCHIVE)) {
 
@@ -79,13 +79,14 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         filename += *request->disk_filename;
         filename += ".xml";
 
-        request->srcml_arch = srcml_archive_clone(request->srcml_arch);
+        cloned.reset(srcml_archive_clone(output_archive));
+        output_archive = cloned.get();
 
         // @todo These should follow the master archive
-        srcml_archive_enable_solitary_unit(request->srcml_arch);
-        srcml_archive_disable_hash(request->srcml_arch);
+        srcml_archive_enable_solitary_unit(output_archive);
+        srcml_archive_disable_hash(output_archive);
 
-        srcml_archive_write_open_filename(request->srcml_arch, filename.c_str());
+        srcml_archive_write_open_filename(output_archive, filename.c_str());
     }
 
     // output scalar results
@@ -94,7 +95,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     case SRCML_RESULTS_BOOLEAN:
         {
             const char* boolresult = request->results.boolValue ? "true\n" : "false\n";
-            srcml_archive_write_string(request->srcml_arch, boolresult, (int) strlen(boolresult));
+            srcml_archive_write_string(output_archive, boolresult, (int) strlen(boolresult));
         }
         return;
 
@@ -106,17 +107,17 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             else
                 s = std::to_string((int) request->results.numberValue);
 
-            srcml_archive_write_string(request->srcml_arch, s.c_str(), (int) s.size());
+            srcml_archive_write_string(output_archive, s.c_str(), (int) s.size());
         }
         return;
 
     case SRCML_RESULTS_STRING:
         const char* s = (const char*) request->results.stringValue;
-        srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+        srcml_archive_write_string(output_archive, s, (int) strlen(s));
 
         // if the string does not end in a newline, output one
         if (s[strlen(s) - 1] != '\n')
-            srcml_archive_write_string(request->srcml_arch, "\n", 1);
+            srcml_archive_write_string(output_archive, "\n", 1);
         
         return;
     };
@@ -130,12 +131,12 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         // done, so output has to be a full archive
         // @todo Make sure it is only an xpath transformation
         if (request->results.num_units > 1) {
-            srcml_archive_disable_solitary_unit(request->srcml_arch);
+            srcml_archive_disable_solitary_unit(output_archive);
         }
 
         // write out any transformed units
         for (int i = 0; i < request->results.num_units; ++i) {
-            srcml_archive_write_unit(request->srcml_arch, request->results.units[i]);
+            srcml_archive_write_unit(output_archive, request->results.units[i]);
         }
 
         // if no transformed units, write the main unit
@@ -143,21 +144,21 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             int status = SRCML_STATUS_OK;
             if (option(SRCML_COMMAND_XML_FRAGMENT)) {
                 const char* s = srcml_unit_get_srcml_outer(request->unit);
-                status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+                status = srcml_archive_write_string(output_archive, s, (int) strlen(s));
                 if (s[strlen(s) - 1] != '\n') {
-                    srcml_archive_write_string(request->srcml_arch, "\n", 1);
+                    srcml_archive_write_string(output_archive, "\n", 1);
                 }
             } else if (option(SRCML_COMMAND_XML_RAW)) {
                 const char* s = srcml_unit_get_srcml_inner(request->unit);
-                status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+                status = srcml_archive_write_string(output_archive, s, (int) strlen(s));
                 // when non-blank and does not end in newline, add one in
                 if (s[0] != '\0' && s[strlen(s) - 1] != '\n') {
-                    srcml_archive_write_string(request->srcml_arch, "\n", 1);
+                    srcml_archive_write_string(output_archive, "\n", 1);
                 }
             } else if (option(SRCML_COMMAND_CAT_XML)) {
                 static bool first = true;
                 if (first) {
-                    auto sarchive = srcml_archive_clone(request->srcml_arch);
+                    auto sarchive = srcml_archive_clone(output_archive);
                     srcml_archive_enable_solitary_unit(sarchive);
                     srcml_archive_disable_hash(sarchive);
                     char* buffer = 0;
@@ -167,19 +168,19 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
                     srcml_unit_parse_memory(aunit.get(), "", 0);
                     srcml_archive_write_unit(sarchive, aunit.get());
                     srcml_archive_close(sarchive);
-                    status = srcml_archive_write_string(request->srcml_arch, buffer, (int) size - 51);
-                    status = srcml_archive_write_string(request->srcml_arch, ">", 1);
+                    status = srcml_archive_write_string(output_archive, buffer, (int) size - 51);
+                    status = srcml_archive_write_string(output_archive, ">", 1);
 
                     first = false;
                 }
                 const char* s = srcml_unit_get_srcml_inner(request->unit);
-                status = srcml_archive_write_string(request->srcml_arch, s, (int) strlen(s));
+                status = srcml_archive_write_string(output_archive, s, (int) strlen(s));
                 // when non-blank and does not end in newline, add one in
                 if (s[0] != '\0' && s[strlen(s) - 1] != '\n') {
-                    srcml_archive_write_string(request->srcml_arch, "\n", 1);
+                    srcml_archive_write_string(output_archive, "\n", 1);
                 }
             } else {
-                status = srcml_archive_write_unit(request->srcml_arch, request->unit);
+                status = srcml_archive_write_unit(output_archive, request->unit);
             }
             if (status != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG) << "Error in writing parsed unit to archive" << '\n';
@@ -206,12 +207,5 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
     } else {
         SRCMLstatus(WARNING_MSG, "Internal eror " + std::to_string(request->status));
-    }
-
-    // close the archive (if per-unit)
-    if (request->unit && option(SRCML_COMMAND_NOARCHIVE)) {
-
-            srcml_archive_close(request->srcml_arch);
-            srcml_archive_free(request->srcml_arch);
     }
 }
