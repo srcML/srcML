@@ -26,7 +26,7 @@
 #include <srcml.h>
 #include <string>
 #include <vector>
-
+#include <srcml_utilities.hpp>
 #include <boost/optional.hpp>
 
 struct ParseRequest {
@@ -39,7 +39,7 @@ struct ParseRequest {
     boost::optional<std::string> version;
     std::vector<char> buffer;
     srcml_archive* srcml_arch = nullptr;
-    srcml_unit* unit = nullptr;
+    std::unique_ptr<srcml_unit> unit;
     boost::optional<std::string> disk_filename;
     boost::optional<std::string> disk_dir;
     std::string parsertest_filename;
@@ -52,11 +52,6 @@ struct ParseRequest {
     bool needsparsing = true;
     srcml_transformation_result_t results;
     std::shared_ptr<srcml_archive> input_archive;
-
-    ~ParseRequest() { 
-        if (unit)
-            srcml_unit_free(unit);
-    }
 };
 
 #endif

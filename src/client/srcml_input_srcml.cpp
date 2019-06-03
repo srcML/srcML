@@ -94,7 +94,7 @@ int srcml_input_srcml(ParseQueue& queue,
     bool unitFound = false;
 
     // process each entry in the input srcml archive
-    while (srcml_unit* unit =  srcml_archive_read_unit(srcml_input_archive.get())) {
+    while (std::unique_ptr<srcml_unit> unit{ srcml_archive_read_unit(srcml_input_archive.get())}) {
 
         unitFound = true;
 
@@ -102,10 +102,9 @@ int srcml_input_srcml(ParseQueue& queue,
         if (option(SRCML_COMMAND_PARSER_TEST) && srcml_request.att_language) {
 
             std::string unit_language;
-            if (srcml_unit_get_language(unit))
-                unit_language = srcml_unit_get_language(unit);
+            if (srcml_unit_get_language(unit.get()))
+                unit_language = srcml_unit_get_language(unit.get());
             if (srcml_request.att_language != unit_language) {
-                srcml_unit_free(unit);
                 break;
             }
         }
@@ -113,7 +112,7 @@ int srcml_input_srcml(ParseQueue& queue,
         // form the parsing request
         std::shared_ptr<ParseRequest> prequest(new ParseRequest);
         prequest->srcml_arch = srcml_output_archive;
-        prequest->unit = unit;
+        prequest->unit.swap(unit);
         prequest->needsparsing = false;
         prequest->input_archive = srcml_input_archive;
         prequest->parsertest_filename = srcml_input.resource;
@@ -124,7 +123,7 @@ int srcml_input_srcml(ParseQueue& queue,
         // if the archive has a language (set by the user) then use that
         // this is a way of converting language
         if (srcml_archive_get_language(srcml_output_archive))
-            srcml_unit_set_language(prequest->unit, srcml_archive_get_language(srcml_output_archive));
+            srcml_unit_set_language(prequest->unit.get(), srcml_archive_get_language(srcml_output_archive));
 
         // hand request off to the processing queue
         queue.schedule(prequest);

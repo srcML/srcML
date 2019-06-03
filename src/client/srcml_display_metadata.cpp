@@ -53,17 +53,16 @@ namespace {
 
         int numUnits = 0;
         while (true) {
-            srcml_unit* unit = srcml_archive_read_unit(srcml_arch);
+            std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(srcml_arch));
             if (!unit)
                 break;
 
             ++numUnits;
             std::cout << std::setw(5) << numUnits << " " 
-                      << value(srcml_unit_get_filename(unit)) << '\t'
-                      << value(srcml_unit_get_language(unit)) << '\t'
-                      << value(srcml_unit_get_hash(unit)) << '\n';
+                      << value(srcml_unit_get_filename(unit.get())) << '\t'
+                      << value(srcml_unit_get_language(unit.get())) << '\t'
+                      << value(srcml_unit_get_hash(unit.get())) << '\n';
             // TODO: Other parts of verbose here. Have to collect.
-            srcml_unit_free(unit);
         }
         std::cout << "Total: " << numUnits << '\n';
     }
@@ -89,11 +88,11 @@ namespace {
         if (xml_encoding)
             std::cout << "encoding=" << "\"" << xml_encoding << "\"\n";
 
-        srcml_unit* unit = srcml_archive_read_unit(srcml_arch);
+        std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(srcml_arch));
         int unit_count = 0;
 
         if (!isarchive && unit) {
-            auto language = srcml_unit_get_language(unit);
+            auto language = srcml_unit_get_language(unit.get());
             if (language)
                 std::cout << "language=" << "\"" << language << "\"\n";
         }
@@ -104,13 +103,10 @@ namespace {
         }
 
         if (!isarchive && unit) {
-            auto filename = srcml_unit_get_filename(unit);
+            auto filename = srcml_unit_get_filename(unit.get());
             if (filename)
                 std::cout << "filename=" << "\"" << filename << "\"\n";
         }
-
-        if (unit)
-            srcml_unit_free(unit);
 
         if (long_info) {
 
@@ -130,14 +126,12 @@ namespace {
         int numUnits = 0;
         while (true) {
 
-            srcml_unit* unit = srcml_archive_read_unit(srcml_arch);
+            std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(srcml_arch));
             if (!unit)
                 break;
 
-            if (srcml_unit_get_language(unit))
+            if (srcml_unit_get_language(unit.get()))
                 ++numUnits;
-
-            srcml_unit_free(unit);
         }
 
         return numUnits;

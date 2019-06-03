@@ -25,6 +25,7 @@
 #include <iostream>
 #include <archive.h>
 #include <archive_entry.h>
+#include <srcml_utilities.hpp>
 
 void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
 
@@ -39,9 +40,9 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
     archive_entry_set_perm(entry, 0744);
     int count = 0;
     std::string last;
-    while (srcml_unit* unit = srcml_archive_read_unit(srcml_arch)) {
+    while (std::unique_ptr<srcml_unit> unit{srcml_archive_read_unit(srcml_arch)}) {
 
-        const char* cfilename = srcml_unit_get_filename(unit);
+        const char* cfilename = srcml_unit_get_filename(unit.get());
         // @todo What do we do with no filename?
         if (!cfilename)
             continue;
@@ -70,9 +71,7 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
         // unparse directory to filename
         log << ++count << fullfilename;
 
-        srcml_unit_unparse_filename(unit, fullfilename.c_str());
-
-        srcml_unit_free(unit);
+        srcml_unit_unparse_filename(unit.get(), fullfilename.c_str());
     }
 
     archive_entry_free(entry);
