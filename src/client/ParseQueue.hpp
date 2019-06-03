@@ -29,6 +29,7 @@
 #include <mutex>
 #include <srcml_consume.hpp>
 #include <memory>
+#include <srcml_utilities.hpp>
 
 class ParseQueue {
 public:

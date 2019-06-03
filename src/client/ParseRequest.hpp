@@ -27,6 +27,7 @@
 #include <string>
 #include <vector>
 #include <srcml_utilities.hpp>
+#include <memory>
 #include <boost/optional.hpp>
 
 struct ParseRequest {

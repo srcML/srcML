@@ -21,6 +21,7 @@
  */
 
 #include <srcml_input_srcml.hpp>
+#include <srcml_utilities.hpp>
 #include <ParseQueue.hpp>
 #include <srcml_input_src.hpp>
 #include <srcml.h>
@@ -29,7 +30,6 @@
 #include <srcmlns.hpp>
 #include <SRCMLStatus.hpp>
 #include <OpenFileLimiter.hpp>
-#include <srcml_utilities.hpp>
 
 int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
@@ -41,7 +41,7 @@ int srcml_input_srcml(ParseQueue& queue,
     OpenFileLimiter::open();
 
     // open the srcml input archive
-    std::shared_ptr<srcml_archive> srcml_input_archive(srcml_archive_create());
+    std::shared_ptr<srcml_archive> srcml_input_archive(srcml_archive_create(), srcml_archive_deleter);
     if (!srcml_input_archive) {
         SRCMLstatus(WARNING_MSG, "srcml: Internal libsrcml error");
         return -1;

@@ -24,6 +24,8 @@
 #ifndef SRCML_INPUT_SRCML_HPP
 #define SRCML_INPUT_SRCML_HPP
 
+#include <srcml_utilities.hpp>
+#include <memory>
 #include <boost/optional.hpp>
 #include <srcml_cli.hpp>
 
