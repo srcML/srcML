@@ -22,11 +22,12 @@
 
 #ifndef SRCML_CONSUME_HPP
 #define SRCML_CONSUME_HPP
-#include <ParseRequest.hpp>
+
 #include <memory>
   
+struct ParseRequest;
 class WriteQueue;
 
-void srcml_consume(int n, std::shared_ptr<ParseRequest>, WriteQueue*);
+void srcml_consume(int thread_pool_id, std::shared_ptr<ParseRequest>, WriteQueue*);
 
 #endif
