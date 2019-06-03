@@ -27,7 +27,7 @@
 
 bool curl_supported(const std::string& input_protocol) {
     const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
-    for (int i = 0; curl_types[i] != NULL; ++i) {
+    for (int i = 0; curl_types[i] != nullptr; ++i) {
         if (std::string(curl_types[i]) == input_protocol)
             return true;
     }

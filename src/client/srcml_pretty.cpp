@@ -236,7 +236,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     if (output_template.header) {
         for (const auto& arg : output_template.header_args) {
 
-            const char* param = acquire_metadata(srcml_arch, NULL, arg);
+            const char* param = acquire_metadata(srcml_arch, nullptr, arg);
             if (param) {
                 header_params.push_back(std::string(param));
             }
