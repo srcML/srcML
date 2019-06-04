@@ -43,25 +43,6 @@ void srcml_consume(int /* thread_pool_id */, std::shared_ptr<ParseRequest> reque
         return;
     }
 
-    if (option(SRCML_COMMAND_NOARCHIVE)) {
-
-        srcml_archive_enable_solitary_unit(request->srcml_arch);
-        srcml_archive_enable_hash(request->srcml_arch);
-
-        // build the output filename mirroring input filesystem
-        // ensure that the directory path has a final "/" when appended to filename
-        std::string xml_filename;
-        if (request->disk_dir) {
-            xml_filename += *request->disk_dir;
-            if (request->disk_dir->back() != '/')
-                xml_filename += '/';
-        }
-        // @todo Should this be .srcml?
-        xml_filename += *request->filename + ".xml";
-
-        srcml_archive_write_open_filename(request->srcml_arch, xml_filename.c_str());
-    }
-
     std::string original_filename;
 
     // construct and parse the unit
