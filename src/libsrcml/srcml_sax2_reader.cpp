@@ -48,11 +48,7 @@ static void* start_routine(thread_args* args) {
             // See #1218
             fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
-            // This is not necessary on certain errors (such as missing '>'), as
-            // the thread will finish on its own. But if the document is empty it will
-            // freeze up until it is shut down here.
-            if (error.error_code == XML_ERR_DOCUMENT_EMPTY)
-                args->handler->done();
+            args->handler->done();
         }
 
         // might have to release a lock here or set is_done;
