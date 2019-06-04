@@ -62,7 +62,6 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     srcml_archive* output_archive = request->srcml_arch;
 
     // created for per-unit archive, close() and free() automatic
-    OpenFileLimiter::open();
     std::unique_ptr<srcml_archive> cloned;
 
     // open the archive (if per-unit)
@@ -83,6 +82,8 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             dir.mkdir(path);
         }
 
+        // call file limiter now that we are actually putting a value into cloned
+        OpenFileLimiter::open();
         cloned.reset(srcml_archive_clone(output_archive));
         output_archive = cloned.get();
 
