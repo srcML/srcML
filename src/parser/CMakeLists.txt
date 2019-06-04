@@ -119,21 +119,11 @@ RunAntlr("${srcMLParserOutputFiles}"
     "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
 
-# @BUILD Why are these the same? Can the if be eliminated?
-if(WIN32)
 add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
     ${PARSER_SOURCE}
 )
-else()
-add_library(parser OBJECT
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${PARSER_SOURCE}
-)
-endif()
 
 target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_GENERATED_SOURCE_DIR})
