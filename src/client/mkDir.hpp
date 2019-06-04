@@ -34,7 +34,6 @@ public:
     void mkdir(const std::string& path);
 
     ~mkDir();
-
 private:
 	archive* arch;
 	archive_entry* entry;

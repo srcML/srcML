@@ -34,6 +34,7 @@
 #include <ParserTest.hpp>
 #include <OpenFileLimiter.hpp>
 #include <srcml_utilities.hpp>
+#include <mkDir.hpp>
 
 // Public consumption thread function
 void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& /* destination */) {
@@ -72,8 +73,15 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             filename += *request->disk_dir;
             filename += "/";
         }
-        filename += *request->disk_filename;
+        filename += *request->filename;
         filename += ".xml";
+
+        // create the output directory
+        auto path = filename.substr(0, filename.find_last_of('/'));
+        {
+            mkDir dir;
+            dir.mkdir(path);
+        }
 
         cloned.reset(srcml_archive_clone(output_archive));
         output_archive = cloned.get();
