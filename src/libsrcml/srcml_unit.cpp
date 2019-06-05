@@ -314,8 +314,11 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces))
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        if (!unit->srcml_revision || unit->currevision != (int) *unit->archive->revision_number)
+            unit->srcml_revision = extract_revision(unit->srcml.c_str(), (int) unit->srcml.size(), (int) *unit->archive->revision_number);
         return unit->srcml_revision->c_str();
+    }
 
     return unit->srcml.c_str();
 }
@@ -340,18 +343,23 @@ const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    // cached fragment
-    if (unit->srcml_fragment)
-        return unit->srcml_fragment->c_str();
-
     // size of resulting raw version (no unit tag)
     auto rawsize = unit->srcml.size() - (unit->insert_end - unit->insert_begin);
 
     // construct the fragment from the full srcML, excluding the inserted root tag stuff (including namespaces)
-    unit->srcml_fragment = "";
-    unit->srcml_fragment->reserve(rawsize);
-    unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
-    unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
+    if (!unit->srcml_fragment) {
+        unit->srcml_fragment = "";
+        unit->srcml_fragment->reserve(rawsize);
+        unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
+        unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
+    }
+
+    // if srcdiff versioned, then use that
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        if (!unit->srcml_fragment_revision || unit->currevision != (int) *unit->archive->revision_number)
+            unit->srcml_fragment_revision = extract_revision(unit->srcml_fragment->c_str(), (int) unit->srcml_fragment->size(), (int) *unit->archive->revision_number);
+        return unit->srcml_fragment_revision->c_str();
+    }
 
     return unit->srcml_fragment->c_str();
 }
@@ -376,16 +384,25 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    // raw version is cached
-    if (unit->srcml_raw)
-        return unit->srcml_raw->c_str();
+    auto start = unit->content_begin;
 
     // size of resulting raw version (no unit tag)
     int rawsize = unit->content_end - unit->content_begin - 1;
     if (rawsize <= 0)
         return "";
 
-    unit->srcml_raw = std::string(unit->srcml, unit->content_begin, rawsize);
+    // if srcdiff versioned, then use that
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        if (!unit->srcml_raw_revision || unit->currevision != (int) *unit->archive->revision_number)
+            unit->srcml_raw_revision = extract_revision(unit->srcml.c_str() + start, rawsize, (int) *unit->archive->revision_number);
+        return unit->srcml_raw_revision->c_str();
+    }
+
+    // raw version is cached
+    if (unit->srcml_raw)
+        return unit->srcml_raw->c_str();
+
+    unit->srcml_raw = std::string(unit->srcml, start, rawsize);
 
     return unit->srcml_raw->c_str();
 }
