@@ -169,8 +169,6 @@ struct srcml_archive {
     /** error reporting */
     std::string error_string;
     int error_number = 0;
-
-    bool issrcdiff = false;
 };
 
 /**

@@ -179,3 +179,15 @@ std::string extract_src(const std::string& srcml, boost::optional<int> revision)
 
     return scontext.s;
 }
+
+std::string attribute_revision(const std::string& attribute, int revision) {
+
+    auto pos = attribute.find('|');
+    if (pos == std::string::npos)
+        return attribute;
+
+    if (revision == SRCDIFF_REVISION_ORIGINAL)
+        return attribute.substr(0, pos);
+
+    return attribute.substr(pos + 1);
+}

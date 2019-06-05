@@ -489,11 +489,6 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
     } else if (suri == SRCML_POSITION_NS_URI) {
         archive->options |= SRCML_OPTION_POSITION;
     }
-/*
-    // @todo could this be set elsewhere?
-    else if (uri == SRCML_DIFF_NS_URI)
-        issrcdiff = true;
-*/
 
     return SRCML_STATUS_OK;
 }
@@ -1044,7 +1039,7 @@ static int srcml_archive_read_open_internal(struct srcml_archive* archive, std::
 
     try {
 
-        archive->reader = new srcml_sax2_reader(archive, std::move(input), archive->revision_number);
+        archive->reader = new srcml_sax2_reader(archive, std::move(input));
 
     } catch(...) {
 

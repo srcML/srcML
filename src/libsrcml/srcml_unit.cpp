@@ -314,7 +314,7 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    if (unit->archive->revision_number && unit->archive->issrcdiff)
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces))
         return unit->srcml_revision->c_str();
 
     return unit->srcml.c_str();

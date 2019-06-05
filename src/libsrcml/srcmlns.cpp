@@ -97,3 +97,10 @@ std::string& srcml_uri_normalize(std::string& uri) {
 
     return uri;
 }
+
+
+bool issrcdiff(const Namespaces& namespaces) {
+   auto& view = namespaces.get<nstags::uri>();
+   return view.find(SRCML_DIFF_NS_URI) != view.end();
+}
+

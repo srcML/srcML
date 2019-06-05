@@ -172,4 +172,7 @@ std::string& srcml_uri_normalize(std::string & uri);
 // merge in the other namespace
 Namespaces& operator +=(Namespaces& ns, const Namespaces& otherns);
 
+// is a srcdiff archive
+bool issrcdiff(const Namespaces& namespaces);
+
 #endif
