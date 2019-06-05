@@ -314,6 +314,9 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
+    if (unit->archive->revision_number && unit->archive->issrcdiff)
+        return unit->srcml_revision->c_str();
+
     return unit->srcml.c_str();
 }
 
@@ -613,51 +616,7 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
     // generate this source from the srcml
     // @todo Should this be an option to turn off/on? For debugging?
     if (/* true || */ !unit->src) {
-
-        unit->src = "";
-
-        // parse the srcml collecting the (now needed) src
-        xmlSAXHandler charactersax;
-        memset(&charactersax, 0, sizeof(charactersax));
-        charactersax.initialized    = XML_SAX2_MAGIC;
-
-        charactersax.ignorableWhitespace = charactersax.characters = [](void* ctx, const xmlChar* ch, int len) {
-
-            auto ctxt = (xmlParserCtxtPtr) ctx;
-            if (ctxt == nullptr)
-                return;
-            auto s = (std::string*) ctxt->_private;
-            if (s == nullptr)
-                return;
-
-            s->append((const char*) ch, len);
-        };
-
-        charactersax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* /* prefix */, const xmlChar* URI,
-                         int /* nb_namespaces */, const xmlChar** /* namespaces */,
-                         int /* nb_attributes */, int /* nb_defaulted */, const xmlChar** attributes) {
-
-            auto ctxt = (xmlParserCtxtPtr) ctx;
-            if (ctxt == nullptr)
-                return;
-            auto s = (std::string*) ctxt->_private;
-            if (s == nullptr)
-                return;
-
-            if (strcmp((const char*) localname, "escape") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
-                std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
-
-                char value = (int)strtol(svalue.c_str(), NULL, 0);
-
-                s->append(1, value);
-            }
-        };
-
-        xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(unit->srcml.c_str(), (int) unit->srcml.size());
-        context->_private = &(*unit->src);
-        context->sax = &charactersax;
-
-        xmlParseDocument(context);
+        unit->src = extract_src(unit->srcml);
     }
 
     xmlOutputBufferWrite(output_handler.get(), (int) unit->src->size(), unit->src->c_str());

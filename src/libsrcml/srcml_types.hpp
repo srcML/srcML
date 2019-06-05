@@ -169,6 +169,8 @@ struct srcml_archive {
     /** error reporting */
     std::string error_string;
     int error_number = 0;
+
+    bool issrcdiff = false;
 };
 
 /**
@@ -221,8 +223,11 @@ struct srcml_unit {
 
     /** srcml from read and after parsing */
     std::string srcml;
+    boost::optional<std::string> srcml_revision;
     boost::optional<std::string> srcml_fragment;
+    boost::optional<std::string> srcml_fragment_revision;
     boost::optional<std::string> srcml_raw;
+    boost::optional<std::string> srcml_raw_revision;
 
     /** src from read */
     boost::optional<std::string> src;

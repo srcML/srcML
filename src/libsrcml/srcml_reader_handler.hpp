@@ -447,8 +447,10 @@ public :
 
             srcml_uri_normalize(uri);
 
-            if (uri == SRCML_DIFF_NS_URI)
+            if (uri == SRCML_DIFF_NS_URI) {
+                archive->issrcdiff = true;
                 issrcdiff = true;
+            }
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
         }

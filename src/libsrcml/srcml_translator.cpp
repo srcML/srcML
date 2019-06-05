@@ -31,6 +31,7 @@
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
 #include <srcml_types.hpp>
+#include <unit_utilities.hpp>
 
 /** 
  * srcml_translator
@@ -240,7 +241,14 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     // write out the contents, excluding the start and end unit tags
     int size = unit->content_end - unit->content_begin - 1;
-    if (size > 0) {
+
+    if (unit->archive->issrcdiff && unit->archive->revision_number) {
+
+        std::string s = extract_revision(unit->srcml.c_str() + unit->content_begin, size, (int) *unit->archive->revision_number);
+
+        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST s.c_str(), (int) s.size());
+
+    } else if (size > 0) {
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->srcml.c_str() + unit->content_begin), size);
     }
 
