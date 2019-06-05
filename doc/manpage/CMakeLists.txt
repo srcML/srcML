@@ -138,8 +138,9 @@ set(PRETTY_FLAG_LONG "pretty")
 
 # Custom commands for creating things using the ronn executable
 configure_file(${CMAKE_SOURCE_DIR}/doc/manpage/srcml.cfg ${CMAKE_BINARY_DIR}/srcml.md)
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.1
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.1.gz
     COMMAND ${RONN_EXE} ${CMAKE_BINARY_DIR}/srcml.1.md --manual=srcml
+    COMMAND gzip ${CMAKE_BINARY_DIR}/srcml.1
     DEPENDS ${CMAKE_BINARY_DIR}/srcml.1.md
 )
 
@@ -149,4 +150,4 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.html
     DEPENDS ${CMAKE_BINARY_DIR}/srcml.md
 )
 
-add_custom_target(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html)
+add_custom_target(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1.gz ${CMAKE_BINARY_DIR}/srcml.html)
