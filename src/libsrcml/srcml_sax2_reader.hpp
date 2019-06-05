@@ -78,7 +78,7 @@ private :
 public :
 
     // constructors
-    srcml_sax2_reader(srcml_archive* archive, std::unique_ptr<xmlParserInputBuffer> input, const boost::optional<size_t>& revision_number);
+    srcml_sax2_reader(srcml_archive* archive, std::unique_ptr<xmlParserInputBuffer> input);
 
     // destructors
     ~srcml_sax2_reader();

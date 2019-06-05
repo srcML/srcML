@@ -63,8 +63,8 @@ static void* start_routine(thread_args* args) {
  *
  * Construct a srcml_sax2_reader using a parser input buffer
  */
-srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, std::unique_ptr<xmlParserInputBuffer> input, const boost::optional<size_t>& revision_number)
-    : control(std::move(input)), handler(revision_number) {
+srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, std::unique_ptr<xmlParserInputBuffer> input)
+    : control(std::move(input)), handler() {
 
     handler.archive = archive;
 

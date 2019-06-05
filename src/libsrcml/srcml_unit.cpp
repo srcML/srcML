@@ -314,6 +314,12 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        if (!unit->srcml_revision || unit->currevision != (int) *unit->archive->revision_number)
+            unit->srcml_revision = extract_revision(unit->srcml.c_str(), (int) unit->srcml.size(), (int) *unit->archive->revision_number);
+        return unit->srcml_revision->c_str();
+    }
+
     return unit->srcml.c_str();
 }
 
@@ -337,18 +343,23 @@ const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    // cached fragment
-    if (unit->srcml_fragment)
-        return unit->srcml_fragment->c_str();
-
     // size of resulting raw version (no unit tag)
     auto rawsize = unit->srcml.size() - (unit->insert_end - unit->insert_begin);
 
     // construct the fragment from the full srcML, excluding the inserted root tag stuff (including namespaces)
-    unit->srcml_fragment = "";
-    unit->srcml_fragment->reserve(rawsize);
-    unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
-    unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
+    if (!unit->srcml_fragment) {
+        unit->srcml_fragment = "";
+        unit->srcml_fragment->reserve(rawsize);
+        unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
+        unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
+    }
+
+    // if srcdiff versioned, then use that
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        if (!unit->srcml_fragment_revision || unit->currevision != (int) *unit->archive->revision_number)
+            unit->srcml_fragment_revision = extract_revision(unit->srcml_fragment->c_str(), (int) unit->srcml_fragment->size(), (int) *unit->archive->revision_number);
+        return unit->srcml_fragment_revision->c_str();
+    }
 
     return unit->srcml_fragment->c_str();
 }
@@ -373,16 +384,25 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    // raw version is cached
-    if (unit->srcml_raw)
-        return unit->srcml_raw->c_str();
+    auto start = unit->content_begin;
 
     // size of resulting raw version (no unit tag)
     int rawsize = unit->content_end - unit->content_begin - 1;
     if (rawsize <= 0)
         return "";
 
-    unit->srcml_raw = std::string(unit->srcml, unit->content_begin, rawsize);
+    // if srcdiff versioned, then use that
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        if (!unit->srcml_raw_revision || unit->currevision != (int) *unit->archive->revision_number)
+            unit->srcml_raw_revision = extract_revision(unit->srcml.c_str() + start, rawsize, (int) *unit->archive->revision_number);
+        return unit->srcml_raw_revision->c_str();
+    }
+
+    // raw version is cached
+    if (unit->srcml_raw)
+        return unit->srcml_raw->c_str();
+
+    unit->srcml_raw = std::string(unit->srcml, start, rawsize);
 
     return unit->srcml_raw->c_str();
 }
@@ -613,51 +633,7 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
     // generate this source from the srcml
     // @todo Should this be an option to turn off/on? For debugging?
     if (/* true || */ !unit->src) {
-
-        unit->src = "";
-
-        // parse the srcml collecting the (now needed) src
-        xmlSAXHandler charactersax;
-        memset(&charactersax, 0, sizeof(charactersax));
-        charactersax.initialized    = XML_SAX2_MAGIC;
-
-        charactersax.ignorableWhitespace = charactersax.characters = [](void* ctx, const xmlChar* ch, int len) {
-
-            auto ctxt = (xmlParserCtxtPtr) ctx;
-            if (ctxt == nullptr)
-                return;
-            auto s = (std::string*) ctxt->_private;
-            if (s == nullptr)
-                return;
-
-            s->append((const char*) ch, len);
-        };
-
-        charactersax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* /* prefix */, const xmlChar* URI,
-                         int /* nb_namespaces */, const xmlChar** /* namespaces */,
-                         int /* nb_attributes */, int /* nb_defaulted */, const xmlChar** attributes) {
-
-            auto ctxt = (xmlParserCtxtPtr) ctx;
-            if (ctxt == nullptr)
-                return;
-            auto s = (std::string*) ctxt->_private;
-            if (s == nullptr)
-                return;
-
-            if (strcmp((const char*) localname, "escape") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
-                std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
-
-                char value = (int)strtol(svalue.c_str(), NULL, 0);
-
-                s->append(1, value);
-            }
-        };
-
-        xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(unit->srcml.c_str(), (int) unit->srcml.size());
-        context->_private = &(*unit->src);
-        context->sax = &charactersax;
-
-        xmlParseDocument(context);
+        unit->src = extract_src(unit->srcml);
     }
 
     xmlOutputBufferWrite(output_handler.get(), (int) unit->src->size(), unit->src->c_str());

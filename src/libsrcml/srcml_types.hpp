@@ -221,8 +221,12 @@ struct srcml_unit {
 
     /** srcml from read and after parsing */
     std::string srcml;
+    boost::optional<std::string> srcml_revision;
+    int currevision = -1;
     boost::optional<std::string> srcml_fragment;
+    boost::optional<std::string> srcml_fragment_revision;
     boost::optional<std::string> srcml_raw;
+    boost::optional<std::string> srcml_raw_revision;
 
     /** src from read */
     boost::optional<std::string> src;
