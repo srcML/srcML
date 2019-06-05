@@ -129,7 +129,6 @@ static int reparse_root(void* ctx) {
         // @todo Find out real filename to insert in error message
         // @todo Figure out how to get where error is noted
         //fprintf(stderr, "srcml: %d:%d %d|%s", error->line, error->int2, error->code, error->message);
-       // exit(1);
     });
 
     roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -654,7 +653,6 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
 //            fprintf(stderr, "srcml: Internal error");
-//            exit(1);
             return;
         }
 
@@ -710,7 +708,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
             fprintf(stderr, "srcml: Internal error");
-            exit(1);
+            return;
         }
 
         state->content_end = (int) state->unitsrcml.size() + 1;
