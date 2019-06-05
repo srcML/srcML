@@ -275,7 +275,7 @@ ssize_t UTF8CharBuffer::readChars() {
         ssize_t insize = sio.read_callback ? (int) sio.read_callback(sio.context, raw.data() + inbytesleft, raw.size() - inbytesleft) : 0;
         if (insize == -1) {
             fprintf(stderr, "Error reading: %s", strerror(errno));
-            exit(1);
+            return 0;
         }
 
         // EOF
@@ -357,7 +357,7 @@ ssize_t UTF8CharBuffer::readChars() {
         if (ic == (iconv_t) -1) {
             if (errno == EINVAL) {
                 fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", encoding.c_str());
-                exit(1);
+                return 0;
             }
         }
 
@@ -389,7 +389,7 @@ ssize_t UTF8CharBuffer::readChars() {
         size_t binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
         if (binsize == (size_t) -1) {
             fprintf(stderr, "%s\n", strerror(errno));
-            exit(1);
+            return 0;
         }
 
         // number of bytes cooked is the total size minus the bytes that were "left", i.e., not used, by iconv()
