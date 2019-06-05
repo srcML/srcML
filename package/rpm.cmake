@@ -20,22 +20,13 @@
 # RPM package name
 set(CPACK_RPM_PACKAGE_NAME "srcML")
 
-# architecture
-#set(CPACK_RPM_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
-
 # package release number (NOT srcML release)
 set(CPACK_RPM_PACKAGE_RELEASE 1)
 
-# pre install script to add public key to rpm keyring
-# @todo Does not seem to be called
-#file(WRITE ${CPACK_PACKAGE_DIRECTORY}/pre.sh "curl -L -w '\n' https://github.com/mlcollard.gpg -o srcml.rpg; rpm --import srcml.rpg; rm -f srcml.rpg")
-#set(CPACK_RPM_PRE_INSTALL_SCRIPT_FILE ${CPACK_PACKAGE_DIRECTORY}/pre.sh)
-
-# post install script for ldconfig
-file(WRITE ${CPACK_PACKAGE_DIRECTORY}/post.sh "ldconfig")
-set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE ${CPACK_PACKAGE_DIRECTORY}/post.sh)
+# post-install command for ldconfig
+set(CPACK_RPM_PACKAGE_REQUIRES_POSTUN "ldconfig")
 
 # cpack puts directories leading to the installed files into the RPM. Since they are already
 # created, this leads to a conflict with other packages. This excludes these (which are mostly documentation)
 # Note that there is no problem with this list including directories that are not needed
-set (CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 ${CMAKE_INSTALL_MANDIR} /usr/local /usr/local/man /usr/local/man/man1 /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1 /usr/share/man1)
+set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 ${CMAKE_INSTALL_MANDIR} /usr/local /usr/local/man /usr/local/man/man1 /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1 /usr/share/man1)
