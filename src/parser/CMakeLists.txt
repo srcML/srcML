@@ -44,7 +44,7 @@ macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
             add_custom_command(OUTPUT  ${OUTPUT_FILES}
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-                COMMAND touch ${OUTPUT_FILES}
+                COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
             )
         endif()
     else()
@@ -58,7 +58,7 @@ macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
             add_custom_command(OUTPUT  ${OUTPUT_FILES}
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-                COMMAND touch ${OUTPUT_FILES}
+                COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
             )
         endif()
     endif()

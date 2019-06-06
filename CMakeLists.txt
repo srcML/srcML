@@ -21,7 +21,17 @@
 #
 cmake_minimum_required(VERSION 3.14)
 
-project(srcML VERSION 1.0.0)
+project(srcML VERSION 1.0.0 HOMEPAGE_URL "https://www.srcML.org")
+
+# Set libsrcml version
+file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER)
+string(REGEX MATCH "SRCML_VERSION_STRING \"(([0-9]).([0-9]).([0-9]))\"" _ "${SRCML_HEADER}")
+set(PROJECT_VERSION ${CMAKE_MATCH_1})
+set(PROJECT_VERSION_MAJOR ${CMAKE_MATCH_2})
+set(PROJECT_VERSION_MINOR ${CMAKE_MATCH_3})
+set(PROJECT_VERSION_PATCH ${CMAKE_MATCH_4})
+message(STATUS "-- Project version: ${PROJECT_VERSION}")
+message(STATUS "-- Project major version: ${PROJECT_VERSION_MAJOR}")
 
 # Turn ON/OFF tests
 option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
@@ -43,6 +53,9 @@ option(BUILD_EXAMPLES "Build examples usage files for libsrcml" OFF)
 option(BUILD_CLIENT_DOC "Build client documentation" OFF)
 option(INSTALL_CLIENT_DOC "Install (but do not build) client documentation" OFF)
 option(BUILD_LIBSRCML_DOC "Build libsrcml documentation" OFF)
+if(NOT BUILD_CLIENT_DOC)
+    set(INSTALL_CLIENT_DOC ON)
+endif()
 
 # Turn ON building all documentation
 option(BUILD_ALL_DOCS "Build all documentation" OFF)
@@ -93,12 +106,8 @@ include(GNUInstallDirs)
 
 add_subdirectory(src)
 add_subdirectory(test)
-
-if(BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
-
 add_subdirectory(doc)
+add_subdirectory(examples)
 
 # packaging
 add_subdirectory(package)

@@ -26,6 +26,9 @@
 # - All subsequent arguments are linked as libraries.
 #
 
+# strip executables
+set(CPACK_STRIP_FILES ON)
+ 
 set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
 
 file(DOWNLOAD https://github.com/CLIUtils/CLI11/releases/download/v1.8.0/CLI11.hpp ${CMAKE_EXTERNAL_SOURCE_DIR}/CLI11.hpp)
@@ -72,11 +75,7 @@ else()
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
-if(APPLE)
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"-u\" \"-r\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
-elseif(NOT WIN32)
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
-endif()
+# strip for release mode
+set_target_properties(srcml PROPERTIES LINK_FLAGS_RELEASE -s)
 
-install(TARGETS srcml)
-message(STATUS "CMake install prefix: ${CMAKE_INSTALL_PREFIX}")
+install(TARGETS srcml COMPONENT CLIENT)
