@@ -1,7 +1,7 @@
 ##
 # @file debian.cmake
 #
-# @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,30 +17,58 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-# Debian package name
-set(CPACK_DEBIAN_PACKAGE_NAME "srcML")
+# Turn ON/OFF internal CPackDeb debugging
+set(CPACK_DEBIAN_PACKAGE_DEBUG OFF)
 
-set(CPACK_DEBIAN_PACKAGE_HOMEPAGE https://srcMl.org)
+# Generate user and development rpms
+# Note: Yes, this is CPACK_DEB_, not CPACK_DEBIAN
+set(CPACK_DEB_COMPONENT_INSTALL ON)
 
-# architecture
-# if(CMAKE_SYSTEM_PROCESSOR STREQUAL "i686")
-#     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
-# else()
-#     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-# endif()
+# Debian package names
+# Package names should be lowercase
+set(CPACK_DEBIAN_CLIENT_PACKAGE_NAME "srcml")
+set(CPACK_DEBIAN_DEVELOPMENT_PACKAGE_NAME "srcml-dev")
 
-# autogenerate dependency information
-set(CPACK_DEBIAN_PACKAGE_DEBUG ON)
+# Package filenames
+set(CPACK_DEBIAN_CLIENT_FILE_NAME DEB-DEFAULT)
+set(CPACK_DEBIAN_DEVELOPMENT_FILE_NAME DEB-DEFAULT)
+
+# Package release number (NOT srcml or libsrcml release)
+# Note: Update when package is updated, but not contents
+set(CPACK_DEBIAN_PACKAGE_RELEASE 1)
+
+# Package types
+# Current CPack defaults
+# Note: unclear whether CPACK_DEBIAN_PACKAGE_SECTION is default for components
+set(CPACK_DEBIAN_CLIENT_PACKAGE_SECTION "devel")
+set(CPACK_DEBIAN_DEVELOPMENT_PACKAGE_SECTION "devel")
+
+# Package priorities
+# Current CPack defaults
+# Note: unclear whether CPACK_DEBIAN_PACKAGE_PRIORITY is default for components
+set(CPACK_DEBIAN_CLIENT_PACKAGE_PRIORITY "optional")
+set(CPACK_DEBIAN_DEVELOPMENT_PACKAGE_PRIORITY "optional")
+
+# Copyright file - required by lintian
+# @todo create real copyright file
+install(FILES ${CMAKE_SOURCE_DIR}/COPYING.txt DESTINATION share/doc/srcml RENAME copyright COMPONENT CLIENT)
+install(FILES ${CMAKE_SOURCE_DIR}/COPYING.txt DESTINATION share/doc/srcml RENAME copyright COMPONENT DEVELOPMENT)
+
+# Changelog file - required by lintian
+#set(CPACK_DEB_CHANGELOG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ChangeLog.txt")
+
+# Autogenerate dependency information
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
 
-# package type
-set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
+# Dependency for srcml-dev package on srcml package
+set(CPACK_DEBIAN_DEVELOPMENT_PACKAGE_DEPENDS "srcml >= 1.0.0")
 
-# package priority
-set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
-
-# recommended package
+# Recommended packages
+# Shared between packages srcml and srcml-dev
 set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, tar, man")
 
-# package suggests
-#set(CPACK_DEBIAN_PACKAGE_SUGGESTS "yes")
+# Trigger required for library installed in client to initiate ldconfig
+set(TRIGGERS_FILE "${CMAKE_CURRENT_BINARY_DIR}/triggers")
+file(WRITE "${TRIGGERS_FILE}" "activate-noawait ldconfig\n")
+set(CPACK_DEBIAN_CLIENT_PACKAGE_CONTROL_EXTRA "${TRIGGERS_FILE}")

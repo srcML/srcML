@@ -30,7 +30,6 @@ set(CPACK_CREATE_DESKTOP_LINKS srcml)
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CPACK_PACKAGE_FILE_NAME "srcML-Win")
 else()
-    set(CPACK_PACKAGE_FILE_NAME "srcML")
     if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         set(CPACK_GENERATOR "TGZ;TBZ2")
     elseif(DISTRO MATCHES "Ubuntu")
@@ -41,16 +40,11 @@ else()
 endif()
 message(STATUS "CPack generators: ${CPACK_GENERATOR}")
 
-# Use the same directories as install
-if(NOT CPACK_PACKAGING_INSTALL_PREFIX)
-    set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
-endif()
-
 # summary
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 
 # description
-#set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/doc/src2srcml.xml)
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.txt)
 
 # vendor
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
@@ -83,6 +77,8 @@ endif()
  
 # output directory
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
+
+set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
 # specific configurations
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/package)
