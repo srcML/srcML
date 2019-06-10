@@ -21,9 +21,9 @@
 #
 cmake_minimum_required(VERSION 3.14)
 
-project(srcML VERSION 1.0.0 HOMEPAGE_URL "https://www.srcML.org")
+project(srcML HOMEPAGE_URL "https://www.srcML.org")
 
-# Set libsrcml version
+# Set libsrcml version from src/libsrcml/srcml.h
 file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER)
 string(REGEX MATCH "SRCML_VERSION_STRING \"(([0-9]).([0-9]).([0-9]))\"" _ "${SRCML_HEADER}")
 set(PROJECT_VERSION ${CMAKE_MATCH_1})
