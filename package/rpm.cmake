@@ -37,6 +37,17 @@ set(CPACK_RPM_DEVELOPMENT_FILE_NAME RPM-DEFAULT)
 set(CPACK_ARCHIVE_CLIENT_FILE_NAME "${CPACK_RPM_CLIENT_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
 set(CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME "${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
 
+# Archive packages are not generated with the distro name/version. So fix the archives to agree with the package naming
+# Must be run AFTER RPM packages are built
+add_custom_target(gen_packages
+   COMMAND ${CMAKE_COMMAND} --build . --target package
+   COMMAND bash -c "mv dist/${CPACK_ARCHIVE_CLIENT_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_CLIENT_PACKAGE_NAME}.spec`.tar.gz"
+   COMMAND bash -c "mv dist/${CPACK_ARCHIVE_CLIENT_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_CLIENT_PACKAGE_NAME}.spec`.tar.bz2"
+   COMMAND bash -c "mv dist/${CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}.spec`.tar.gz"
+   COMMAND bash -c "mv dist/${CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}.spec`.tar.bz2"
+   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+   VERBATIM)
+
 # CLIENT package is main, so no extension is added
 set(CPACK_RPM_MAIN_COMPONENT CLIENT)
 
@@ -73,6 +84,6 @@ set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE ${CPACK_BINARY_DIR}/post.sh)
 # This excludes the following, mostly for documentation
 # Note: There is no issue with this list including directories that are not needed
 set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 ${CMAKE_INSTALL_MANDIR}
-		/usr/local /usr/local/include /usr/local/lib64 /usr/local/bin /usr/local/man /usr/local/man/man1 
-		/usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1
-		/usr/share/man1)
+        /usr/local /usr/local/include /usr/local/lib64 /usr/local/bin /usr/local/man /usr/local/man/man1 
+        /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1
+        /usr/share/man1)
