@@ -21,17 +21,17 @@
 #
 cmake_minimum_required(VERSION 3.14)
 
-project(srcML HOMEPAGE_URL "https://www.srcML.org")
-
 # Set libsrcml version from src/libsrcml/srcml.h
+# Extract this first because manually setting major, minor, and patch leads to bugs
 file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER)
-string(REGEX MATCH "SRCML_VERSION_STRING \"(([0-9]).([0-9]).([0-9]))\"" _ "${SRCML_HEADER}")
-set(PROJECT_VERSION ${CMAKE_MATCH_1})
-set(PROJECT_VERSION_MAJOR ${CMAKE_MATCH_2})
-set(PROJECT_VERSION_MINOR ${CMAKE_MATCH_3})
-set(PROJECT_VERSION_PATCH ${CMAKE_MATCH_4})
-message(STATUS "-- Project version: ${PROJECT_VERSION}")
-message(STATUS "-- Project major version: ${PROJECT_VERSION_MAJOR}")
+string(REGEX MATCH "SRCML_VERSION_STRING \"([0-9.]+)\"" _ "${SRCML_HEADER}")
+
+project(srcML VERSION "${CMAKE_MATCH_1}" HOMEPAGE_URL "https://www.srcML.org")
+
+message(STATUS "Project version: ${PROJECT_VERSION}")
+message(STATUS "Project major version: ${PROJECT_VERSION_MAJOR}")
+message(STATUS "Project minor version: ${PROJECT_VERSION_MINOR}")
+message(STATUS "Project patch version: ${PROJECT_VERSION_PATCH}")
 
 # Turn ON/OFF tests
 option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)

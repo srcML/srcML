@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # Turn ON/OFF internal CPackRPM debugging
-set(CPACK_RPM_PACKAGE_DEBUG ON)
+set(CPACK_RPM_PACKAGE_DEBUG OFF)
 
 # Generate user and development rpms
 set(CPACK_RPM_COMPONENT_INSTALL ON)
@@ -28,8 +28,12 @@ set(CPACK_RPM_COMPONENT_INSTALL ON)
 set(CPACK_RPM_PACKAGE_RELEASE "${SRCML_PACKAGE_RELEASE}")
 
 # Package names
-set(CPACK_RPM_CLIENT_PACKAGE_NAME "srcml")
-set(CPACK_RPM_DEVELOPMENT_PACKAGE_NAME "srcml-devel")
+set(CPACK_RPM_CLIENT_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
+set(CPACK_RPM_DEVELOPMENT_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-devel")
+
+# Package filenames
+set(CPACK_RPM_CLIENT_FILE_NAME RPM-DEFAULT)
+set(CPACK_RPM_DEVELOPMENT_FILE_NAME RPM-DEFAULT)
 set(CPACK_ARCHIVE_CLIENT_FILE_NAME "${CPACK_RPM_CLIENT_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
 set(CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME "${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
 
@@ -37,7 +41,7 @@ set(CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME "${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}_$
 set(CPACK_RPM_MAIN_COMPONENT CLIENT)
 
 # srcml-devel package requires srcml package
-set(CPACK_RPM_DEVELOPMENT_PACKAGE_REQUIRES "srcml >= ${PROJECT_VERSION}")
+set(CPACK_RPM_DEVELOPMENT_PACKAGE_REQUIRES "${CPACK_PACKAGE_NAME} >= ${PROJECT_VERSION}")
 
 # Homepage URLs
 # Note: Default should be CMAKE_PROJECT_HOMEPAGE_URL, but isn't due to components
@@ -48,10 +52,6 @@ set(CPACK_RPM_DEVELOPMENT_PACKAGE_URL ${CMAKE_PROJECT_HOMEPAGE_URL})
 # @todo Perhaps both packages should be in "Development/Tools"
 set(CPACK_RPM_CLIENT_PACKAGE_GROUP "Development/Tools")
 set(CPACK_RPM_DEVELOPMENT_PACKAGE_GROUP "Development/Libraries")
-
-# Package filenames
-set(CPACK_RPM_CLIENT_FILE_NAME RPM-DEFAULT)
-set(CPACK_RPM_DEVELOPMENT_FILE_NAME RPM-DEFAULT)
 
 # Adds to the release the distribution
 set(CPACK_RPM_PACKAGE_RELEASE_DIST ON)
@@ -64,9 +64,9 @@ set(CPACK_RPM_PACKAGE_LICENSE "GPLv2+")
 
 # post install script for ldconfig
 # Note: Believe that newline is required
-file(WRITE ${CPACK_PACKAGE_DIRECTORY}/post.sh "/sbin/ldconfig\n")
-set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE   ${CPACK_PACKAGE_DIRECTORY}/post.sh)
-set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE ${CPACK_PACKAGE_DIRECTORY}/post.sh)
+file(WRITE ${CPACK_BINARY_DIR}/post.sh "/sbin/ldconfig\n")
+set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE   ${CPACK_BINARY_DIR}/post.sh)
+set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE ${CPACK_BINARY_DIR}/post.sh)
 
 # CPack puts directories of installed files into the RPM
 # Since they already exist, this is a conflict with other packages

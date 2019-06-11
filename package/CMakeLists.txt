@@ -17,8 +17,8 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-# package name
-set(CPACK_PACKAGE_NAME "srcML") 
+# Package name
+set(CPACK_PACKAGE_NAME "srcml") 
 
 # Package release number (NOT srcml or libsrcml release)
 # Note: Update when package is updated, but not contents
@@ -28,7 +28,7 @@ set(SRCML_PACKAGE_RELEASE 1)
 set(CPACK_PACKAGE_EXECUTABLES srcml;srcML)
 
 # desktop links
-set(CPACK_CREATE_DESKTOP_LINKS srcml)
+set(CPACK_CREATE_DESKTOP_LINKS "${CPACK_PACKAGE_NAME}")
 
 # Generator settings
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -69,12 +69,7 @@ set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
 set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.txt)
 
 # icon
-if(WIN32)
-    install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION .)
-else()
-    # icon
-    set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
-endif()
+set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 
 # strip executables
 #set(CPACK_STRIP_FILES ON)
@@ -86,14 +81,13 @@ set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
 # specific configurations
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/package)
 if (CPACK_GENERATOR MATCHES "RPM")
-    include(rpm)
+    include(rpm.cmake)
+elseif (CPACK_GENERATOR MATCHES "DEB")
+    include(debian.cmake)
+elseif (WIN32)
+    include(nsis.cmake)
 endif()
-if (CPACK_GENERATOR MATCHES "DEB")
-    include(debian)
-endif()
-include(nsis)
 
 # needs to be last so not overwritten
 include(CPack)

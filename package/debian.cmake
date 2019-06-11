@@ -26,8 +26,8 @@ set(CPACK_DEB_COMPONENT_INSTALL ON)
 
 # Debian package names
 # Package names should be lowercase
-set(CPACK_DEBIAN_CLIENT_PACKAGE_NAME "srcml")
-set(CPACK_DEBIAN_DEVELOPMENT_PACKAGE_NAME "srcml-dev")
+set(CPACK_DEBIAN_CLIENT_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
+set(CPACK_DEBIAN_DEVELOPMENT_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-dev")
 
 # Package release number (NOT srcml or libsrcml release)
 # Note: Update when package is updated, but not contents
@@ -73,11 +73,11 @@ set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS_POLICY ">=")
 
-# Dependency for srcml-dev package on srcml package
-set(CPACK_DEBIAN_DEVELOPMENT_PACKAGE_DEPENDS "srcml (>= ${PROJECT_VERSION})")
+# Dependency for -dev package on client package
+set(CPACK_DEBIAN_DEVELOPMENT_PACKAGE_DEPENDS "${CPACK_PACKAGE_NAME} (>= ${PROJECT_VERSION})")
 
 # Recommended packages
-# Shared between packages srcml and srcml-dev
+# Shared between client and dev packages
 set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, tar, man")
 
 # Trigger required for library installed in client to initiate ldconfig

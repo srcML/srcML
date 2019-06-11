@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # set icons
+install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION .)
 set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
