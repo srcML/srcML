@@ -32,21 +32,47 @@ set(CPACK_RPM_CLIENT_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
 set(CPACK_RPM_DEVELOPMENT_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-devel")
 
 # Package filenames
-set(CPACK_RPM_CLIENT_FILE_NAME RPM-DEFAULT)
-set(CPACK_RPM_DEVELOPMENT_FILE_NAME RPM-DEFAULT)
-set(CPACK_ARCHIVE_CLIENT_FILE_NAME "${CPACK_RPM_CLIENT_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
-set(CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME "${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
+if(DISTRO MATCHES "CentOS|Fedora")
+    # CentOS and Fedora generate per-version naming
+    set(CPACK_RPM_CLIENT_FILE_NAME RPM-DEFAULT)
+    set(CPACK_RPM_DEVELOPMENT_FILE_NAME RPM-DEFAULT)
+    set(CPACK_ARCHIVE_CLIENT_FILE_NAME "${CPACK_RPM_CLIENT_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
+    set(CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME "${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
 
-# Archive packages are not generated with the distro name/version. So fix the archives to agree with the package naming
-# Must be run AFTER RPM packages are built
-add_custom_target(gen_packages
-   COMMAND ${CMAKE_COMMAND} --build . --target package
-   COMMAND bash -c "mv dist/${CPACK_ARCHIVE_CLIENT_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_CLIENT_PACKAGE_NAME}.spec`.tar.gz"
-   COMMAND bash -c "mv dist/${CPACK_ARCHIVE_CLIENT_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_CLIENT_PACKAGE_NAME}.spec`.tar.bz2"
-   COMMAND bash -c "mv dist/${CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}.spec`.tar.gz"
-   COMMAND bash -c "mv dist/${CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}.spec`.tar.bz2"
-   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-   VERBATIM)
+    # Archive packages are not generated with the distro name/version. So fix the archives to agree with the package naming
+    # Must be run AFTER RPM packages are built
+    add_custom_target(gen_packages
+       COMMAND ${CMAKE_COMMAND} --build . --target package
+       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_CLIENT_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_CLIENT_PACKAGE_NAME}.spec`.tar.gz"
+       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_CLIENT_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_CLIENT_PACKAGE_NAME}.spec`.tar.bz2"
+       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}.spec`.tar.gz"
+       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_DEVELOPMENT_PACKAGE_NAME}.spec`.tar.bz2"
+       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+       VERBATIM)
+else()
+    # OpenSUSE does not generate per-version naming
+    # Distribution version, e.g., 18.04
+    file(STRINGS "/etc/os-release" OS_RELEASE)
+    string(REGEX MATCH "VERSION_ID=\"\([0-9.]+\)\"" _ "${OS_RELEASE}")
+    set(OS_RELEASE_VERSION_ID "${CMAKE_MATCH_1}")
+    string(REGEX MATCH "ID=\([a-z]+\)" _ "${OS_RELEASE}")
+    set(OS_RELEASE_ID "${CMAKE_MATCH_1}")
+    set(DEBIAN_VERSION "${OS_RELEASE_ID}${OS_RELEASE_VERSION_ID}")
+
+    # Package filenames
+    set(BASE_CLIENT_FILE_NAME "${CPACK_DEBIAN_CLIENT_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${DEBIAN_VERSION}")
+    set(BASE_DEVELOPMENT_FILE_NAME "${CPACK_DEBIAN_DEVELOPMENT_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${DEBIAN_VERSION}")
+    set(CPACK_DEBIAN_CLIENT_FILE_NAME "${BASE_CLIENT_FILE_NAME}.deb")
+    set(CPACK_DEBIAN_DEVELOPMENT_FILE_NAME "${BASE_DEVELOPMENT_FILE_NAME}.deb")
+    set(CPACK_ARCHIVE_CLIENT_FILE_NAME "${BASE_CLIENT_FILE_NAME}")
+    set(CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME "${BASE_DEVELOPMENT_FILE_NAME}")
+
+    # Noop target
+    add_custom_target(gen_packages
+       COMMAND ${CMAKE_COMMAND} --build . --target package
+       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+       VERBATIM)
+endif()
 
 # CLIENT package is main, so no extension is added
 set(CPACK_RPM_MAIN_COMPONENT CLIENT)

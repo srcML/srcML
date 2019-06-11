@@ -49,6 +49,12 @@ set(CPACK_DEBIAN_DEVELOPMENT_FILE_NAME "${BASE_DEVELOPMENT_FILE_NAME}.deb")
 set(CPACK_ARCHIVE_CLIENT_FILE_NAME "${BASE_CLIENT_FILE_NAME}")
 set(CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME "${BASE_DEVELOPMENT_FILE_NAME}")
 
+# Noop target
+add_custom_target(gen_packages
+   COMMAND ${CMAKE_COMMAND} --build . --target package
+   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+   VERBATIM)
+
 # Package types
 # Current CPack defaults
 # Note: unclear whether CPACK_DEBIAN_PACKAGE_SECTION is default for components
