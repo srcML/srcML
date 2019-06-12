@@ -17,7 +17,16 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+# System name
+#execute_process(COMMAND /usr/bin/sw_vers -productVersion OUTPUT_VARIABLE OS_NUMERIC)
+
+#message("macOS${OS_NUMERIC}")
+
+set(CPACK_SYSTEM_NAME "macOS")
+
+message("CPACK_SYSTEM_NAME ${CPACK_SYSTEM_NAME}")
 # Custom template CPack.distribution.dist.in
+# Primarily for background image
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/package")
 
 set(CPACK_COMPONENTS_ONE_PACKAGE_PER_GROUP ON)

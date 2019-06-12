@@ -1,2 +1,2 @@
-Welcome to srcML. This program will guide you through the install of
-the srcML toolkit.
+This will install the srcML client, srcml, and the srcML development kit
+on your computer

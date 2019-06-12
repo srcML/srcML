@@ -34,7 +34,7 @@ set(CPACK_CREATE_DESKTOP_LINKS "${CPACK_PACKAGE_NAME}")
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CPACK_PACKAGE_FILE_NAME "srcML-Win")
 elseif(APPLE)
-    set(CPACK_GENERATOR "PRODUCTBUILD;TGZ;TBZ2")
+    set(CPACK_GENERATOR "productbuild;TGZ;TBZ2")
 else()
     if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         set(CPACK_GENERATOR "TGZ;TBZ2")
@@ -91,6 +91,15 @@ elseif (WIN32)
     include(nsis.cmake)
 elseif (APPLE)
     include(macos.cmake)
+endif()
+
+# Perform any platform-specific fixes or updating of the installer
+# THis noop version basically just runs the normal packaging, e.g., cmake
+if(NOT TARGET gen_packages)
+add_custom_target(gen_packages
+   COMMAND ${CMAKE_COMMAND} --build . --target package
+   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+   VERBATIM)
 endif()
 
 # needs to be last so not overwritten
