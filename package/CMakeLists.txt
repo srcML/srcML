@@ -33,6 +33,8 @@ set(CPACK_CREATE_DESKTOP_LINKS "${CPACK_PACKAGE_NAME}")
 # Generator settings
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(CPACK_PACKAGE_FILE_NAME "srcML-Win")
+elseif(APPLE)
+    set(CPACK_GENERATOR "PRODUCTBUILD;TGZ;TBZ2")
 else()
     if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
         set(CPACK_GENERATOR "TGZ;TBZ2")
@@ -87,6 +89,8 @@ elseif (CPACK_GENERATOR MATCHES "DEB")
     include(debian.cmake)
 elseif (WIN32)
     include(nsis.cmake)
+elseif (APPLE)
+    include(macos.cmake)
 endif()
 
 # needs to be last so not overwritten

@@ -78,7 +78,7 @@ else()
 endif()
 
 if(APPLE)
-    add_custom_command(TARGET libsrcml_shared POST_BUILD COMMAND /usr/bin/install_name_tool -id /usr/local/lib/libsrcml.dylib /usr/local/lib/libsrcml.dylib)
+#    add_custom_command(TARGET libsrcml_shared POST_BUILD COMMAND /usr/bin/install_name_tool -id /usr/local/lib/libsrcml.dylib /usr/local/lib/libsrcml.dylib)
 endif()
 
 file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
