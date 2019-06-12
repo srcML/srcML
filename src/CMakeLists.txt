@@ -62,23 +62,38 @@ else()
     if(NOT APPLE)
         find_package(LibArchive 3 REQUIRED)
 
-     # macOS with custom-built libarchive
-    elseif(EXISTS "${OSX_LIBARCHIVE_PATH}")
+    # # macOS with homebrew
+    # elseif(EXISTS "/usr/local/opt/libarchive")
+    #     set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
+    #     set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+
+    # macOS with custom-built libarchive
+    elseif(EXISTS "${OSX_LIBARCHIVE_PATH}" OR INSTALL_LIBARCHIVE)
+
+        # If we don't have the homebrew, and not locally installed cmake, install it
+        if(NOT EXISTS "${OSX_LIBARCHIVE_PATH}")
+            message(STATUS "Downloading libarchive")
+            file(DOWNLOAD http://www.sdml.cs.kent.edu/build/libarchive-3.3.2.tar.gz ${CMAKE_BINARY_DIR}/../libarchive-332.tar.gz)
+            message(STATUS "Extracting libarchive")
+            execute_process(COMMAND tar xvf libarchive-332.tar.gz WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND mv libarchive-3.3.2 libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND cmake -E remove -f libarchive-332.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            message(STATUS "Building libarchive")
+            execute_process(COMMAND ./configure --without-lz4 --disable-bsdtar --disable-bsdcpio --without-xml2
+                            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../libarchive)
+            execute_process(COMMAND make
+                            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../libarchive)
+            message(STATUS "Completed installing libarchive")
+        endif()
 
         # different versions of libarchive place the generated libarchive.a in different places
         find_library(LIBARCHIVE_LOCAL_LIBRARY NAMES libarchive.a PATHS ${OSX_LIBARCHIVE_PATH} PATH_SUFFIXES libarchive /.libs NO_DEFAULT_PATH)
 
         set(LibArchive_INCLUDE_DIRS ${OSX_LIBARCHIVE_PATH}/libarchive)
-
         set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} /usr/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
-    
-    # macOS with homebrew
-    elseif(EXISTS "/usr/local/opt/libarchive")
-        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
-        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
 
-    else()
-        message(FATAL_ERROR "Unable to find libarchive >= 3 via homebrew or local build at ${OSX_LIBARCHIVE_PATH}")
+    else() 
+        message(FATAL_ERROR "LibArchive >= 3 is required. Either install via homebrew\n% brew install libarchive\nor enable INSTALL_LIBARCHIVE\n% cmake ../srcML ... -DINSTALL_LIBARCHIVE=ON")
     endif()
 
     # Locating packages
