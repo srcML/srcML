@@ -78,4 +78,4 @@ endif()
 # strip for release mode
 set_target_properties(srcml PROPERTIES LINK_FLAGS_RELEASE -s)
 
-install(TARGETS srcml COMPONENT CLIENT)
+install(TARGETS srcml COMPONENT SRCML)

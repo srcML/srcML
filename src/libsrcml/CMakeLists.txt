@@ -66,9 +66,9 @@ else()
 endif()
 
 # which types of libraries
-install(TARGETS libsrcml_shared LIBRARY COMPONENT CLIENT NAMELINK_COMPONENT DEVELOPMENT)
+install(TARGETS libsrcml_shared LIBRARY COMPONENT SRCML NAMELINK_COMPONENT SRCMLDEV)
 if (BUILD_LIBSRCML_STATIC)
-    install(TARGETS libsrcml_static COMPONENT DEVELOPMENT)
+    install(TARGETS libsrcml_static COMPONENT SRCMLDEV)
 endif()
 
 if(LINK_LIBSRCML_STATIC AND BUILD_LIBSRCML_STATIC)
@@ -88,7 +88,7 @@ target_include_directories(libsrcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/par
 add_dependencies(libsrcml parser)
 
 # install the libsrcml include file
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT DEVELOPMENT)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT SRCMLDEV)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     file(GLOB SRCML_DLLS ${WINDOWS_DEP_PATH}/release/bin/*.dll)
