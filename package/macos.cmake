@@ -35,6 +35,7 @@ set(CPACK_COMPONENT_SRCML_REQUIRED ON)
 set(CPACK_COMPONENT_SRCML_DESCRIPTION "srcml cli program with required library")
 set(CPACK_COMPONENT_SRCMLDEV_DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
 
+set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
 
 #set(CPACK_PRODUCTBUILD_COMPONENT_INSTALL ON)
 set(CPACK_PACKAGING_INSTALL_PREFIX /usr/local)
