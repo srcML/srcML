@@ -67,24 +67,44 @@ else()
 
         # If we don't have the homebrew, and not locally installed cmake, install it
         if(NOT EXISTS "${OSX_LIBARCHIVE_PATH}")
-            message(STATUS "Downloading libarchive")
-            file(DOWNLOAD http://www.sdml.cs.kent.edu/build/libarchive-3.3.2.tar.gz ${CMAKE_BINARY_DIR}/../libarchive-332.tar.gz)
-            message(STATUS "Extracting libarchive")
-            execute_process(COMMAND cmake -E tar xvf libarchive-332.tar.gz OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND cmake -E rename libarchive-3.3.2 libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND cmake -E remove -f libarchive-332.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            message(STATUS "Building libarchive")
-            execute_process(COMMAND ./configure --without-lz4 --disable-bsdtar --disable-bsdcpio --without-xml2
+            message(STATUS "Installing local versions of libarchive and xz")
+
+            message(STATUS "  Downloading libarchive")
+            file(DOWNLOAD https://www.libarchive.org/downloads/libarchive-3.3.3.tar.gz ${CMAKE_BINARY_DIR}/../libarchive-333.tar.gz)
+
+            message(STATUS "  Extracting libarchive")
+            execute_process(COMMAND cmake -E tar xvf libarchive-333.tar.gz OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND cmake -E rename libarchive-3.3.3 libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND cmake -E remove -f libarchive-333.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+
+            message(STATUS "  Building libarchive")
+            # mimic brew settings: https://github.com/Homebrew/homebrew-core/blob/master/Formula/libarchive.rb
+            execute_process(COMMAND ./configure --without-lzo2 --without-nettle --without-xml2 --without-openssl --with-expat
                             OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../libarchive)
             execute_process(COMMAND make OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../libarchive)
-            message(STATUS "Completed installing libarchive")
+
+            message(STATUS "  Downloading xz")
+            file(DOWNLOAD https://downloads.sourceforge.net/project/lzmautils/xz-5.2.4.tar.gz ${CMAKE_BINARY_DIR}/../xz-5.2.4.tar.gz)
+
+            message(STATUS "  Extracting xz")
+            execute_process(COMMAND cmake -E tar xvf xz-5.2.4.tar.gz OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND cmake -E rename xz-5.2.4 xz WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND cmake -E remove -f xz-5.2.4.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+
+            message(STATUS "  Building xz")
+            # mimic brew settings: https://github.com/Homebrew/homebrew-core/blob/master/Formula/xz.rb
+            execute_process(COMMAND ./configure --disable-debug --disable-dependency-tracking --disable-silent-rules
+                            OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../xz)
+            execute_process(COMMAND make OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../xz)
+
+            message(STATUS "Completed building local versions of libarchive and xz")
         endif()
 
         # different versions of libarchive place the generated libarchive.a in different places
         find_library(LIBARCHIVE_LOCAL_LIBRARY NAMES libarchive.a PATHS ${OSX_LIBARCHIVE_PATH} PATH_SUFFIXES libarchive /.libs NO_DEFAULT_PATH)
 
         set(LibArchive_INCLUDE_DIRS ${OSX_LIBARCHIVE_PATH}/libarchive)
-        set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} /usr/lib/liblzma.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+        set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} ${CMAKE_BINARY_DIR}/../xz/src/liblzma/.libs/liblzma.5.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
 
     # macOS with homebrew
     elseif(EXISTS "/usr/local/opt/libarchive")
@@ -101,7 +121,6 @@ else()
     find_package(Iconv REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
-#    find_package(Boost COMPONENTS program_options REQUIRED)
     find_package(Boost COMPONENTS REQUIRED)
 
     # add include directories
