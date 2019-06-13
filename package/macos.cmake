@@ -27,13 +27,13 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/package")
 
 set(CPACK_COMPONENTS_GROUPING IGNORE)
 
-set(CPACK_COMPONENT_SRCML_DISPLAY_NAME "srcml")
-set(CPACK_COMPONENT_SRCMLDEV_DISPLAY_NAME "srcml-dev")
+#set(CPACK_COMPONENT_SRCML_DISPLAY_NAME "srcml")
+#set(CPACK_COMPONENT_SRCMLDEV_DISPLAY_NAME "srcml-dev")
 
 set(CPACK_COMPONENT_SRCML_REQUIRED ON)
 
-set(CPACK_COMPONENT_SRCML_DESCRIPTION "srcml cli program with required library")
-set(CPACK_COMPONENT_SRCMLDEV_DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
+#set(CPACK_COMPONENT_SRCML_DESCRIPTION "srcml cli program with required library")
+#set(CPACK_COMPONENT_SRCMLDEV_DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
 
 set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
 
@@ -46,3 +46,8 @@ set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 configure_file(${CMAKE_SOURCE_DIR}/package/background.png ${CMAKE_BINARY_DIR}/pkg_resources/background.png COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/package/Installed.html ${CMAKE_BINARY_DIR}/pkg_resources/installed.html COPYONLY)
 set(CPACK_PRODUCTBUILD_RESOURCES_DIR ${CMAKE_BINARY_DIR}/pkg_resources)
+
+# Package filenames
+set(CPACK_ARCHIVE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
+set(CPACK_ARCHIVE_SRCMLDEV_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-dev-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
+

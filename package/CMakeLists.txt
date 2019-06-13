@@ -84,7 +84,7 @@ message(STATUS "CPack generators: ${CPACK_GENERATOR}")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 
 # description
-set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.txt)
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.html)
 
 # vendor
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
@@ -102,7 +102,7 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING.txt)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
 
 # welcome message
-set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.txt)
+set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.html)
 
 # icon
 set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
