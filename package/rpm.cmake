@@ -41,7 +41,7 @@ if(DISTRO MATCHES "CentOS|Fedora")
 
     # Archive packages are not generated with the distro name/version. So fix the archives to agree with the package naming
     # Must be run AFTER RPM packages are built
-    add_custom_target(gen_packages
+    add_custom_target(gen_package
        COMMAND ${CMAKE_COMMAND} --build . --target package
        COMMAND bash -c "mv dist/${CPACK_ARCHIVE_CLIENT_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_CLIENT_PACKAGE_NAME}.spec`.tar.gz"
        COMMAND bash -c "mv dist/${CPACK_ARCHIVE_CLIENT_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_CLIENT_PACKAGE_NAME}.spec`.tar.bz2"
@@ -66,12 +66,6 @@ else()
     set(CPACK_DEBIAN_DEVELOPMENT_FILE_NAME "${BASE_DEVELOPMENT_FILE_NAME}.deb")
     set(CPACK_ARCHIVE_CLIENT_FILE_NAME "${BASE_CLIENT_FILE_NAME}")
     set(CPACK_ARCHIVE_DEVELOPMENT_FILE_NAME "${BASE_DEVELOPMENT_FILE_NAME}")
-
-    # Noop target
-    add_custom_target(gen_packages
-       COMMAND ${CMAKE_COMMAND} --build . --target package
-       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-       VERBATIM)
 endif()
 
 # CLIENT package is main, so no extension is added

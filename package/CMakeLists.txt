@@ -95,11 +95,11 @@ endif()
 
 # Perform any platform-specific fixes or updating of the installer
 # THis noop version basically just runs the normal packaging, e.g., cmake
-if(NOT TARGET gen_packages)
-add_custom_target(gen_packages
-   COMMAND ${CMAKE_COMMAND} --build . --target package
-   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-   VERBATIM)
+if(NOT TARGET gen_package)
+    add_custom_target(gen_package
+       COMMAND ${CMAKE_COMMAND} --build . --target package
+       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+       VERBATIM)
 endif()
 
 # needs to be last so not overwritten
