@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+</head>
+<body>
+
+<p>The srcml client and development package are now installed.</p>
+
+<p>The srcml client and development package are now installed.</p>
+
+<h3>Convert from a source file to the srcML format:</h3>
+
+<pre><code class="console">srcml main.cpp -o main.cpp.xml
+</code></pre>
+
+<h3>Convert from the srcML format back to source code</h3>
+
+<pre><code class="console">srcml main.cpp.xml -o main.cpp.xml
+</code></pre>
+
+<h3>Convert text code fragment</h3>
+
+<pre><code class="console">srcml --text=&quot;int a = b;&quot; -l C++ -o fragment.cpp.xml
+</code></pre>
+
+<p>Note the programming language (C, C++, C#, or Java) must be specified for the &#8211;text option</p>
+
+<h3>Convert entire project to srcML</h3>
+
+<pre><code class="console">srcml --verbose project -o project.xml
+</code></pre>
+
+</body>
+</html>

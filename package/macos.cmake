@@ -25,7 +25,16 @@ set(CPACK_SYSTEM_NAME "macOS-${OS_NUMERIC}")
 # Primarily for background image
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/package")
 
-set(CPACK_COMPONENTS_ONE_PACKAGE_PER_GROUP ON)
+set(CPACK_COMPONENTS_GROUPING IGNORE)
+
+set(CPACK_COMPONENT_SRCML_DISPLAY_NAME "srcml")
+set(CPACK_COMPONENT_SRCMLDEV_DISPLAY_NAME "srcml-dev")
+
+set(CPACK_COMPONENT_SRCML_REQUIRED ON)
+
+set(CPACK_COMPONENT_SRCML_DESCRIPTION "srcml cli program with required library")
+set(CPACK_COMPONENT_SRCMLDEV_DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
+
 
 #set(CPACK_PRODUCTBUILD_COMPONENT_INSTALL ON)
 set(CPACK_PACKAGING_INSTALL_PREFIX /usr/local)
@@ -34,4 +43,5 @@ set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING.txt)
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 configure_file(${CMAKE_SOURCE_DIR}/package/background.png ${CMAKE_BINARY_DIR}/pkg_resources/BACKGROUND.png COPYONLY)
+configure_file(${CMAKE_SOURCE_DIR}/package/Installed.html ${CMAKE_BINARY_DIR}/pkg_resources/Installed.html COPYONLY)
 set(CPACK_PRODUCTBUILD_RESOURCES_DIR ${CMAKE_BINARY_DIR}/pkg_resources)
