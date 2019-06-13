@@ -104,7 +104,7 @@ else()
         find_library(LIBARCHIVE_LOCAL_LIBRARY NAMES libarchive.a PATHS ${OSX_LIBARCHIVE_PATH} PATH_SUFFIXES libarchive /.libs NO_DEFAULT_PATH)
 
         set(LibArchive_INCLUDE_DIRS ${OSX_LIBARCHIVE_PATH}/libarchive)
-        set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} ${CMAKE_BINARY_DIR}/../xz/src/liblzma/.libs/liblzma.5.dylib /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+        set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} ${CMAKE_BINARY_DIR}/../xz/src/liblzma/.libs/liblzma.a /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
 
     # macOS with homebrew
     elseif(EXISTS "/usr/local/opt/libarchive")
