@@ -1,2 +1,0 @@
-This will install the srcML client, srcml, and the srcML development kit
-on your computer
