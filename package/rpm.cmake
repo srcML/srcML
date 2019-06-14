@@ -33,6 +33,7 @@ set(CPACK_RPM_SRCMLDEV_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-devel")
 
 # Package filenames
 if(DISTRO MATCHES "CentOS|Fedora")
+
     # CentOS and Fedora generate per-version naming
     set(CPACK_RPM_SRCML_FILE_NAME RPM-DEFAULT)
     set(CPACK_RPM_SRCMLDEV_FILE_NAME RPM-DEFAULT)

@@ -73,9 +73,9 @@ else()
             file(DOWNLOAD https://www.libarchive.org/downloads/libarchive-3.3.3.tar.gz ${CMAKE_BINARY_DIR}/../libarchive-333.tar.gz)
 
             message(STATUS "  Extracting libarchive")
-            execute_process(COMMAND cmake -E tar xvf libarchive-333.tar.gz OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND cmake -E rename libarchive-3.3.3 libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND cmake -E remove -f libarchive-333.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf libarchive-333.tar.gz OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E rename libarchive-3.3.3 libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E remove -f libarchive-333.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
 
             message(STATUS "  Building libarchive")
             # mimic brew settings: https://github.com/Homebrew/homebrew-core/blob/master/Formula/libarchive.rb
@@ -87,9 +87,9 @@ else()
             file(DOWNLOAD https://downloads.sourceforge.net/project/lzmautils/xz-5.2.4.tar.gz ${CMAKE_BINARY_DIR}/../xz-5.2.4.tar.gz)
 
             message(STATUS "  Extracting xz")
-            execute_process(COMMAND cmake -E tar xvf xz-5.2.4.tar.gz OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND cmake -E rename xz-5.2.4 xz WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND cmake -E remove -f xz-5.2.4.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf xz-5.2.4.tar.gz OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E rename xz-5.2.4 xz WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E remove -f xz-5.2.4.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
 
             message(STATUS "  Building xz")
             # mimic brew settings: https://github.com/Homebrew/homebrew-core/blob/master/Formula/xz.rb
