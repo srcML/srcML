@@ -9,9 +9,19 @@ define output <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
 	STDOUT
 
+define outputnocpp <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"/>
+	STDOUT
+
 define foutput <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp"/>
+	STDOUT
+
+define foutputnocpp <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 
 xmlcheck "$output"
@@ -20,19 +30,19 @@ createfile sub/a.cpp ""
 
 # separate
 srcml --xmlns="http://www.srcML.org/srcML/src" sub/a.cpp
-check "$foutput"
+check "$foutputnocpp"
 
 echo -n "" | srcml -l C++ --xmlns="http://www.srcML.org/srcML/src"
-check "$output"
+check "$outputnocpp"
 
 echo -n "" | srcml -l C++ --xmlns:cpp="http://www.srcML.org/srcML/cpp"
 check "$output"
 
 echo -n "" | srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" -o sub/a.cpp.xml
-check sub/a.cpp.xml "$output"
+check sub/a.cpp.xml "$outputnocpp"
 
 srcml --xmlns="http://www.srcML.org/srcML/src" sub/a.cpp -o sub/a.cpp.xml
-check sub/a.cpp.xml "$foutput"
+check sub/a.cpp.xml "$foutputnocpp"
 
 srcml --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp
 check "$foutput"
@@ -47,7 +57,7 @@ check sub/a.cpp.xml "$foutput"
 echo -n "" | srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp"
 check "$output"
 
-echo -n "" | srcml --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp
+srcml --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp
 check "$foutput"
 
 echo -n "" | srcml -l C++ --xmlns="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" -o sub/a.cpp.xml

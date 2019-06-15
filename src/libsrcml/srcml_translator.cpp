@@ -228,13 +228,6 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     std::string language = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
 
-    // @todo have to set this up here, not sure why
-    if (language == "C" || language == "C++" || language == "C#" || language == "Objective-C") {
-        options |= SRCML_OPTION_CPP_DECLARED;
-    } else {
-        options &= ~SRCML_OPTION_CPP_DECLARED;
-    }
-
     // create a new unit start tag with all new info (hash value, namespaces actually used, etc.)
     out.initNamespaces(mergedns);
     auto nrevision = unit->archive->revision_number;
@@ -292,7 +285,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
     if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
       lang & Language::LANGUAGE_OBJECTIVE_C) {
         options |= SRCML_OPTION_CPP;
-        options |= SRCML_OPTION_CPP_DECLARED;
     }
 
     // @todo Why are we saving the options then restoring them?
