@@ -95,7 +95,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     install(FILES ${SRCML_DLLS} DESTINATION bin)
 endif()
 
-set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
+if(NOT APPLE)
+	set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
+endif()
 
 if(APPLE)
     add_custom_command(TARGET libsrcml_static POST_BUILD
