@@ -172,6 +172,8 @@ See `srcml --help` for more information.
             SRCMLstatus(DEBUG_MSG) << "LOC: " << TraceLog::totalLOC() << '\n'
                                    << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
         }
+
+        SRCMLstatus(DEBUG_MSG) << "Status: " << (SRCMLStatus::errors() ? 1 : 0);
     }
 
     // error status is 0 unless a critical, error, or warning
