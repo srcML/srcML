@@ -26,7 +26,7 @@
 // * Update prefixes
 // * Add an new uri's
 // * Or flags
-Namespaces& operator +=(Namespaces& namespaces, const Namespaces& otherns) {
+Namespaces& operator+=(Namespaces& namespaces, const Namespaces& otherns) {
 
     for (const auto& ns : otherns) {
 
@@ -43,6 +43,15 @@ Namespaces& operator +=(Namespaces& namespaces, const Namespaces& otherns) {
             // create a new entry for this URI
             namespaces.push_back({ ns.prefix, ns.uri, ns.flags });
         }
+    }
+
+    // @FIXME A total hack
+    if (otherns.get<nstags::uri>().find(SRCML_CPP_NS_URI)->flags & NS_USED) {
+        auto& view = namespaces.get<nstags::uri>();
+        view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags |= NS_USED; });
+    } else {
+        auto& view = namespaces.get<nstags::uri>();
+        view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags &= ~NS_USED; });
     }
 
     return namespaces;

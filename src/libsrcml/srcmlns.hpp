@@ -38,7 +38,8 @@
 enum {
   NS_REQUIRED   = 1 << 0, // required for all srcML, and must be on the root
   NS_ROOT       = 1 << 1, // belongs on root tag only
-  NS_USED       = 1 << 2, // was the namespace used
+  // @todo Figure out why 1<<2 did not work
+  NS_USED       = 1 << 5, // was the namespace used
   NS_REGISTERED = 1 << 3, // registered by the user
   NS_STANDARD   = 1 << 4, // standard uri for srcML
 };
